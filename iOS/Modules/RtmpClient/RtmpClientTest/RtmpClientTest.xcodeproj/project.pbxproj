@@ -1,0 +1,529 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 500520131E94A26200C45E22 /* libCommon-C-Library.a */; };
+		500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995221E8F930A001E1355 /* libRtmpClient.a */; };
+		50C9948E1E8F911E001E1355 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C9948D1E8F911E001E1355 /* main.m */; };
+		50C994911E8F911E001E1355 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C994901E8F911E001E1355 /* AppDelegate.m */; };
+		50C994941E8F911E001E1355 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C994931E8F911E001E1355 /* ViewController.m */; };
+		50C994971E8F911E001E1355 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C994951E8F911E001E1355 /* Main.storyboard */; };
+		50C994991E8F911E001E1355 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50C994981E8F911E001E1355 /* Assets.xcassets */; };
+		50C9949C1E8F911E001E1355 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */; };
+		50C995811E8F9E1B001E1355 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995801E8F9E1B001E1355 /* libz.tbd */; };
+		50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995821E8F9E2E001E1355 /* libstdc++.tbd */; };
+		50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BF81E94F46100116A4B /* VideoToolbox.framework */; };
+		50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BFA1E94F46A00116A4B /* AVFoundation.framework */; };
+		8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		500520121E94A26200C45E22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 505D868C1C7EF748006FDAC7;
+			remoteInfo = "Common-C-Library";
+		};
+		500520141E94A26700C45E22 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 505D868B1C7EF748006FDAC7;
+			remoteInfo = "Common-C-Library";
+		};
+		50C995211E8F930A001E1355 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 50C994B81E8F9281001E1355;
+			remoteInfo = RtmpClient;
+		};
+		50C995231E8F93A1001E1355 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 50C994B71E8F9281001E1355;
+			remoteInfo = RtmpClient;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
+		50C994891E8F911E001E1355 /* RtmpClientTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RtmpClientTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		50C9948D1E8F911E001E1355 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		50C9948F1E8F911E001E1355 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		50C994901E8F911E001E1355 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		50C994921E8F911E001E1355 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		50C994931E8F911E001E1355 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		50C994961E8F911E001E1355 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		50C994981E8F911E001E1355 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		50C9949B1E8F911E001E1355 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		50C9949D1E8F911E001E1355 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RtmpClient.xcodeproj; path = ../RtmpClient.xcodeproj; sourceTree = "<group>"; };
+		50C995801E8F9E1B001E1355 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		50C995821E8F9E2E001E1355 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		50F18BF81E94F46100116A4B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		50F18BFA1E94F46A00116A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RtmpClientTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE17A865FD417A671B581711 /* Pods-RtmpClientTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RtmpClientTest.release.xcconfig"; path = "Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest.release.xcconfig"; sourceTree = "<group>"; };
+		CA070A2EB98CA5A0244570A4 /* Pods-RtmpClientTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RtmpClientTest.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest.debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		50C994861E8F911E001E1355 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */,
+				50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */,
+				500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */,
+				500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */,
+				50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */,
+				50C995811E8F9E1B001E1355 /* libz.tbd in Frameworks */,
+				8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A16BB52D16BA4B732C36DFD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				CA070A2EB98CA5A0244570A4 /* Pods-RtmpClientTest.debug.xcconfig */,
+				AE17A865FD417A671B581711 /* Pods-RtmpClientTest.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		5005200F1E94A26200C45E22 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				500520131E94A26200C45E22 /* libCommon-C-Library.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50C994801E8F911E001E1355 = {
+			isa = PBXGroup;
+			children = (
+				5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */,
+				50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */,
+				50C9948B1E8F911E001E1355 /* RtmpClientTest */,
+				50C9948A1E8F911E001E1355 /* Products */,
+				50C9957F1E8F9E1B001E1355 /* Frameworks */,
+				2A16BB52D16BA4B732C36DFD /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		50C9948A1E8F911E001E1355 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50C994891E8F911E001E1355 /* RtmpClientTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50C9948B1E8F911E001E1355 /* RtmpClientTest */ = {
+			isa = PBXGroup;
+			children = (
+				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
+				50C994901E8F911E001E1355 /* AppDelegate.m */,
+				50C994921E8F911E001E1355 /* ViewController.h */,
+				50C994931E8F911E001E1355 /* ViewController.m */,
+				50C994951E8F911E001E1355 /* Main.storyboard */,
+				50C994981E8F911E001E1355 /* Assets.xcassets */,
+				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
+				50C9949D1E8F911E001E1355 /* Info.plist */,
+				50C9948C1E8F911E001E1355 /* Supporting Files */,
+			);
+			path = RtmpClientTest;
+			sourceTree = "<group>";
+		};
+		50C9948C1E8F911E001E1355 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				50C9948D1E8F911E001E1355 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		50C9951E1E8F930A001E1355 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50C995221E8F930A001E1355 /* libRtmpClient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50C9957F1E8F9E1B001E1355 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				50F18BFA1E94F46A00116A4B /* AVFoundation.framework */,
+				50F18BF81E94F46100116A4B /* VideoToolbox.framework */,
+				50C995821E8F9E2E001E1355 /* libstdc++.tbd */,
+				50C995801E8F9E1B001E1355 /* libz.tbd */,
+				962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		50C994881E8F911E001E1355 /* RtmpClientTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50C994A01E8F911E001E1355 /* Build configuration list for PBXNativeTarget "RtmpClientTest" */;
+			buildPhases = (
+				DB92BD37078AA1A25D567F24 /* [CP] Check Pods Manifest.lock */,
+				50C994851E8F911E001E1355 /* Sources */,
+				50C994861E8F911E001E1355 /* Frameworks */,
+				50C994871E8F911E001E1355 /* Resources */,
+				2B274C3BC9FB50D261955739 /* [CP] Embed Pods Frameworks */,
+				3C0D67589744FEDDF3E51281 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				500520151E94A26700C45E22 /* PBXTargetDependency */,
+				50C995241E8F93A1001E1355 /* PBXTargetDependency */,
+			);
+			name = RtmpClientTest;
+			productName = RtmpClientTest;
+			productReference = 50C994891E8F911E001E1355 /* RtmpClientTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		50C994811E8F911E001E1355 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = net.qdating;
+				TargetAttributes = {
+					50C994881E8F911E001E1355 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = MK37J4UMHH;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 50C994841E8F911E001E1355 /* Build configuration list for PBXProject "RtmpClientTest" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 50C994801E8F911E001E1355;
+			productRefGroup = 50C9948A1E8F911E001E1355 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 5005200F1E94A26200C45E22 /* Products */;
+					ProjectRef = 5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */;
+				},
+				{
+					ProductGroup = 50C9951E1E8F930A001E1355 /* Products */;
+					ProjectRef = 50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				50C994881E8F911E001E1355 /* RtmpClientTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		500520131E94A26200C45E22 /* libCommon-C-Library.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libCommon-C-Library.a";
+			remoteRef = 500520121E94A26200C45E22 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		50C995221E8F930A001E1355 /* libRtmpClient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRtmpClient.a;
+			remoteRef = 50C995211E8F930A001E1355 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		50C994871E8F911E001E1355 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50C9949C1E8F911E001E1355 /* LaunchScreen.storyboard in Resources */,
+				50C994991E8F911E001E1355 /* Assets.xcassets in Resources */,
+				50C994971E8F911E001E1355 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2B274C3BC9FB50D261955739 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3C0D67589744FEDDF3E51281 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RtmpClientTest/Pods-RtmpClientTest-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DB92BD37078AA1A25D567F24 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		50C994851E8F911E001E1355 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50C994941E8F911E001E1355 /* ViewController.m in Sources */,
+				50C994911E8F911E001E1355 /* AppDelegate.m in Sources */,
+				50C9948E1E8F911E001E1355 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		500520151E94A26700C45E22 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Common-C-Library";
+			targetProxy = 500520141E94A26700C45E22 /* PBXContainerItemProxy */;
+		};
+		50C995241E8F93A1001E1355 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = RtmpClient;
+			targetProxy = 50C995231E8F93A1001E1355 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		50C994951E8F911E001E1355 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50C994961E8F911E001E1355 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				50C9949B1E8F911E001E1355 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		50C9949E1E8F911E001E1355 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		50C9949F1E8F911E001E1355 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50C994A11E8F911E001E1355 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CA070A2EB98CA5A0244570A4 /* Pods-RtmpClientTest.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = MK37J4UMHH;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../RtmpClient/",
+				);
+				INFOPLIST_FILE = RtmpClientTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = net.qdating.RtmpClientTest123;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		50C994A21E8F911E001E1355 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = AE17A865FD417A671B581711 /* Pods-RtmpClientTest.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = MK37J4UMHH;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${SRCROOT}/../RtmpClient/",
+				);
+				INFOPLIST_FILE = RtmpClientTest/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = net.qdating.RtmpClientTest123;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		50C994841E8F911E001E1355 /* Build configuration list for PBXProject "RtmpClientTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50C9949E1E8F911E001E1355 /* Debug */,
+				50C9949F1E8F911E001E1355 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50C994A01E8F911E001E1355 /* Build configuration list for PBXNativeTarget "RtmpClientTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50C994A11E8F911E001E1355 /* Debug */,
+				50C994A21E8F911E001E1355 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 50C994811E8F911E001E1355 /* Project object */;
+}

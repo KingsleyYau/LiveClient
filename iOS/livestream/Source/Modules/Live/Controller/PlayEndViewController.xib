@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayEndViewController">
+            <connections>
+                <outlet property="imageViewHeader" destination="mub-7s-Xnn" id="afe-e3-52N"/>
+                <outlet property="liverNameLabel" destination="zfj-jZ-Tgd" id="uiQ-sZ-zzK"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="KXu-hT-4fl"/>
+                <outlet property="viewverLabel" destination="xR5-jx-s6N" id="OGC-Xi-oUB"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" alpha="0.80000000000000004" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live stream ended" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qGv-6L-gQd" userLabel="Title Label">
+                    <rect key="frame" x="10" y="30" width="355" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Login_Main_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="mub-7s-Xnn" userLabel="Room Image View" customClass="UIImageViewTopFit">
+                    <rect key="frame" x="123.5" y="71" width="128" height="128"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="mub-7s-Xnn" secondAttribute="height" multiplier="1:1" id="R4E-68-WQs"/>
+                        <constraint firstAttribute="height" constant="128" id="gHz-GU-mwm"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="64"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dia Moustafa" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zfj-jZ-Tgd" userLabel="Name Label">
+                    <rect key="frame" x="10" y="219" width="355" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12344" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xR5-jx-s6N" userLabel="Viewers Label">
+                    <rect key="frame" x="10" y="250" width="355" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share live stream to" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PRX-1z-5tv" userLabel="Share Label">
+                    <rect key="frame" x="10" y="281" width="355" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hpp-ja-VXp" userLabel="Facebook Button">
+                    <rect key="frame" x="153.5" y="312" width="67" height="30"/>
+                    <state key="normal" title="Facebook"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KKc-CG-g5Q" userLabel="Follow Button">
+                    <rect key="frame" x="165" y="352" width="44" height="30"/>
+                    <state key="normal" title="Follow"/>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8gt-Fm-0qL" userLabel="Cancel Button">
+                    <rect key="frame" x="117" y="392" width="140" height="30"/>
+                    <state key="normal" title="Return to homepage"/>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="Yti-PM-Fk6"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="qGv-6L-gQd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="ACI-J2-Dtz"/>
+                <constraint firstItem="KKc-CG-g5Q" firstAttribute="top" secondItem="hpp-ja-VXp" secondAttribute="bottom" constant="10" id="GPP-MK-8oo"/>
+                <constraint firstItem="zfj-jZ-Tgd" firstAttribute="top" secondItem="mub-7s-Xnn" secondAttribute="bottom" constant="20" id="GV5-ub-vEX"/>
+                <constraint firstItem="8gt-Fm-0qL" firstAttribute="top" secondItem="KKc-CG-g5Q" secondAttribute="bottom" constant="10" id="Jvt-2q-dwV"/>
+                <constraint firstItem="KKc-CG-g5Q" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="L5S-Xb-cY6"/>
+                <constraint firstItem="PRX-1z-5tv" firstAttribute="top" secondItem="xR5-jx-s6N" secondAttribute="bottom" constant="10" id="Ov1-zb-7E4"/>
+                <constraint firstItem="PRX-1z-5tv" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="Uua-Y8-e09"/>
+                <constraint firstItem="zfj-jZ-Tgd" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="YGN-AY-26m"/>
+                <constraint firstItem="8gt-Fm-0qL" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="a6L-Tz-Geh"/>
+                <constraint firstAttribute="trailing" secondItem="xR5-jx-s6N" secondAttribute="trailing" constant="10" id="c0y-wz-Vst"/>
+                <constraint firstItem="hpp-ja-VXp" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="dFM-Yx-gZg"/>
+                <constraint firstItem="mub-7s-Xnn" firstAttribute="top" secondItem="qGv-6L-gQd" secondAttribute="bottom" constant="20" id="g7a-55-UnM"/>
+                <constraint firstItem="mub-7s-Xnn" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="jr8-Ky-eGs"/>
+                <constraint firstItem="xR5-jx-s6N" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="o2Y-ol-uu2"/>
+                <constraint firstItem="qGv-6L-gQd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30" id="o5i-JD-mj4"/>
+                <constraint firstAttribute="leading" secondItem="zfj-jZ-Tgd" secondAttribute="leading" constant="-10" id="oQw-IZ-52V"/>
+                <constraint firstItem="PRX-1z-5tv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="pnE-5J-AAB"/>
+                <constraint firstItem="xR5-jx-s6N" firstAttribute="top" secondItem="zfj-jZ-Tgd" secondAttribute="bottom" constant="10" id="waZ-q5-6C5"/>
+                <constraint firstItem="hpp-ja-VXp" firstAttribute="top" secondItem="PRX-1z-5tv" secondAttribute="bottom" constant="10" id="ymb-bi-kow"/>
+                <constraint firstItem="qGv-6L-gQd" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="zcc-mW-WZs"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="Login_Main_Logo" width="156" height="208"/>
+    </resources>
+</document>

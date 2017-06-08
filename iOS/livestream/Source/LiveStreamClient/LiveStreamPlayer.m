@@ -1,0 +1,159 @@
+//
+//  LiveStreamPlayer.m
+//  livestream
+//
+//  Created by Max on 2017/4/14.
+//  Copyright © 2017年 net.qdating. All rights reserved.
+//
+
+#import "LiveStreamPlayer.h"
+
+#import <AVFoundation/AVFoundation.h>
+#import <CoreVideo/CoreVideo.h>
+
+#import "RtmpPlayerOC.h"
+
+#import "GPUImagePicture.h"
+
+#import "ImageCVPixelBufferInput.h"
+
+@interface LiveStreamPlayer() <RtmpPlayerOCDelegate>
+#pragma mark - 传输处理
+@property (strong) RtmpPlayerOC* player;
+
+/**
+ 显示界面
+ */
+@property (nonatomic, strong) AVSampleBufferDisplayLayer *videoLayer;
+
+@property (nonatomic, strong) ImageCVPixelBufferInput* pixelBufferInput;
+
+@property (strong) NSString * _Nonnull url;
+@property (strong) NSString * _Nonnull recordFilePath;
+@property (strong) NSString * _Nullable recordH264FilePath;
+@property (strong) NSString * _Nullable recordAACFilePath;
+
+@property (assign) BOOL isStart;
+
+@property (assign) BOOL isRunning;
+
+@end
+
+@implementation LiveStreamPlayer
+
+#pragma mark - 获取实例
++ (instancetype)instance
+{
+    LiveStreamPlayer *obj = [[[self class] alloc] init];
+    return obj;
+}
+
+- (instancetype)init
+{
+    if(self = [super init] ) {
+        self.player = [RtmpPlayerOC instance];
+        self.player.delegate = self;
+        
+        self.pixelBufferInput = [[ImageCVPixelBufferInput alloc] init];
+    }
+    
+    return self;
+}
+
+- (void)dealloc {
+}
+
+#pragma mark - 对外接口
+- (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
+    NSLog(@"LiveStreamPlayer::playUrl( url : %@, recordFilePath : %@, recordH264FilePath : %@ )", url, recordFilePath, recordH264FilePath);
+    
+    self.url = url;
+    self.recordFilePath = recordFilePath;
+    self.recordH264FilePath = recordH264FilePath;
+    self.recordAACFilePath = recordAACFilePath;
+
+    [self stop];
+    
+    BOOL bFlag = NO;
+    @synchronized (self) {
+        self.isStart = YES;
+        bFlag = [self start];
+    }
+    
+    return bFlag;
+}
+
+- (void)stop {
+    @synchronized (self) {
+        self.isStart = NO;
+        [self cancel];
+    }
+
+}
+
+#pragma mark - 私有方法
+- (void)setPlayView:(GPUImageView *)playView {
+    if( _playView != playView ) {
+        
+        _playView = playView;
+        
+        [self.pixelBufferInput removeAllTargets];
+        [self.pixelBufferInput addTarget:_playView];
+    }
+}
+
+- (BOOL)start {
+    NSLog(@"LiveStreamPlayer::start()");
+    
+    BOOL bFlag = YES;
+
+    if( self.isRunning == NO ) {
+        self.isRunning = YES;
+        
+        bFlag = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+        if( bFlag ) {
+
+        }
+    }
+    
+    return bFlag;
+}
+
+
+- (void)cancel {
+    NSLog(@"LiveStreamPlayer::cancel()");
+    
+    if( self.isRunning == YES ) {
+        self.isRunning = NO;
+
+        [self.player stop];
+    }
+    
+}
+
+#pragma mark - 视频接收处理
+- (void)rtmpPlayerOCOnRecvVideoBuffer:(RtmpPlayerOC * _Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
+    if( buffer ) {
+        // 这里显示视频
+        [self.pixelBufferInput processCVPixelBuffer:buffer];
+    }
+}
+
+- (void)rtmpPlayerOCOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOCOnDisconnect()");
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        @synchronized (self) {
+            // 先停止
+            [self cancel];
+            
+            // 断线重连
+            if( self.isStart ) {
+                // 重连
+                [self start];
+            }
+        }
+    });
+}
+
+@end

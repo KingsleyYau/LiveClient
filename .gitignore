@@ -1,0 +1,10 @@
+
+*.xcworkspacedata
+
+*.xcuserstate
+
+*.xcscheme
+
+*.xcbkptlist
+
+livestream/Project/livestream.xcodeproj/xcuserdata/max.xcuserdatad/xcschemes/xcschememanagement.plist

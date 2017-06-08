@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayViewController">
+            <connections>
+                <outlet property="btnChat" destination="8cT-LG-4KU" id="S2Q-nG-PjB"/>
+                <outlet property="btnChatWidth" destination="hL2-fL-VmB" id="w5T-df-sUh"/>
+                <outlet property="btnGift" destination="78D-5d-u6A" id="cOV-jE-p7v"/>
+                <outlet property="btnGiftWidth" destination="uO1-1e-nbJ" id="tdf-cD-gaw"/>
+                <outlet property="btnLouder" destination="33u-Uy-QWi" id="vhd-kt-XZG"/>
+                <outlet property="btnSend" destination="msj-HT-Fvg" id="iMK-xy-85K"/>
+                <outlet property="btnSendWidth" destination="zVN-QR-8R6" id="0qF-w8-lCm"/>
+                <outlet property="btnShare" destination="qow-J2-WM6" id="BaS-Fb-2nf"/>
+                <outlet property="btnShareWidth" destination="5ib-Gy-JdU" id="CLp-JY-7zE"/>
+                <outlet property="inputBackgroundColorView" destination="1xU-lZ-aeO" id="DTw-JE-Sx7"/>
+                <outlet property="inputBackgroundView" destination="5Sz-pp-rZm" id="yEU-sR-X8P"/>
+                <outlet property="inputMessageView" destination="Hef-sh-jU8" id="CjV-1V-7Ls"/>
+                <outlet property="inputMessageViewBottom" destination="s5I-ml-e8g" id="XVH-ys-FkE"/>
+                <outlet property="inputMessageViewHeight" destination="1bZ-H5-9Cs" id="esz-cf-Hbv"/>
+                <outlet property="inputTextField" destination="tJJ-3L-dr9" id="XTz-hz-WYB"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hef-sh-jU8" userLabel="Input Message View">
+                    <rect key="frame" x="0.0" y="614" width="375" height="48"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cT-LG-4KU" userLabel="Chat Button">
+                            <rect key="frame" x="10" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="hL2-fL-VmB"/>
+                                <constraint firstAttribute="width" secondItem="8cT-LG-4KU" secondAttribute="height" multiplier="1:1" id="rpS-2K-OrC"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Chat"/>
+                            <connections>
+                                <action selector="chatAction:" destination="-1" eventType="touchUpInside" id="7P3-8r-UpN"/>
+                            </connections>
+                        </button>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Sz-pp-rZm" userLabel="Input Background View">
+                            <rect key="frame" x="51" y="5" width="162" height="38"/>
+                            <subviews>
+                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1xU-lZ-aeO">
+                                    <rect key="frame" x="0.0" y="0.0" width="162" height="38"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="33u-Uy-QWi" userLabel="Louder Button" customClass="KKCheckButton">
+                                    <rect key="frame" x="0.0" y="3" width="46.5" height="32"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="33u-Uy-QWi" secondAttribute="height" multiplier="52:36" id="yT6-JT-fzd"/>
+                                    </constraints>
+                                    <state key="normal" image="Live_Input_Btn_Louder"/>
+                                    <connections>
+                                        <outlet property="selectedChangeDelegate" destination="-1" id="xuO-7i-Z2s"/>
+                                    </connections>
+                                </button>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="tJJ-3L-dr9" userLabel="Input Text Field" customClass="BLTextField">
+                                    <rect key="frame" x="41.5" y="3" width="115.5" height="32"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                    <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="vdf-rt-WJr"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="33u-Uy-QWi" firstAttribute="leading" secondItem="5Sz-pp-rZm" secondAttribute="leading" id="0lw-8P-t46"/>
+                                <constraint firstItem="1xU-lZ-aeO" firstAttribute="top" secondItem="5Sz-pp-rZm" secondAttribute="top" id="3Ue-x6-oZW"/>
+                                <constraint firstItem="1xU-lZ-aeO" firstAttribute="trailing" secondItem="5Sz-pp-rZm" secondAttribute="trailing" id="8D5-uG-VdD"/>
+                                <constraint firstItem="1xU-lZ-aeO" firstAttribute="bottom" secondItem="5Sz-pp-rZm" secondAttribute="bottom" id="Gat-uB-Vah"/>
+                                <constraint firstItem="33u-Uy-QWi" firstAttribute="top" secondItem="5Sz-pp-rZm" secondAttribute="top" constant="3" id="Ul9-1O-kwa"/>
+                                <constraint firstItem="1xU-lZ-aeO" firstAttribute="leading" secondItem="5Sz-pp-rZm" secondAttribute="leading" id="cqI-ru-XcB"/>
+                                <constraint firstItem="33u-Uy-QWi" firstAttribute="bottom" secondItem="5Sz-pp-rZm" secondAttribute="bottom" constant="-3" id="dl7-Zb-Z0L"/>
+                                <constraint firstItem="tJJ-3L-dr9" firstAttribute="top" secondItem="5Sz-pp-rZm" secondAttribute="top" constant="3" id="irt-ut-jh6"/>
+                                <constraint firstItem="tJJ-3L-dr9" firstAttribute="bottom" secondItem="5Sz-pp-rZm" secondAttribute="bottom" constant="-3" id="nkA-Ja-ZIx"/>
+                                <constraint firstItem="tJJ-3L-dr9" firstAttribute="leading" secondItem="33u-Uy-QWi" secondAttribute="trailing" constant="-5" id="o3z-Gu-Dka"/>
+                                <constraint firstItem="tJJ-3L-dr9" firstAttribute="trailing" secondItem="5Sz-pp-rZm" secondAttribute="trailing" constant="-5" id="r1g-BQ-0jA"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qow-J2-WM6" userLabel="Share Button">
+                            <rect key="frame" x="218" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="5ib-Gy-JdU"/>
+                                <constraint firstAttribute="width" secondItem="qow-J2-WM6" secondAttribute="height" multiplier="1:1" id="eHY-3I-OWI"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Share"/>
+                            <connections>
+                                <action selector="shareAction:" destination="-1" eventType="touchUpInside" id="RPJ-Tp-U1f"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78D-5d-u6A" userLabel="Gift Button">
+                            <rect key="frame" x="259" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="78D-5d-u6A" secondAttribute="height" multiplier="1:1" id="Yrg-oO-eBi"/>
+                                <constraint firstAttribute="width" constant="36" id="uO1-1e-nbJ"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Gift"/>
+                            <connections>
+                                <action selector="giftAction:" destination="-1" eventType="touchUpInside" id="hkU-3D-Eoi"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="msj-HT-Fvg" userLabel="Send Button">
+                            <rect key="frame" x="300" y="5" width="65" height="38"/>
+                            <color key="backgroundColor" red="0.047058823530000002" green="0.92941176469999998" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="65" id="zVN-QR-8R6"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <state key="normal" title="Send">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="sendAction:" destination="-1" eventType="touchUpInside" id="7SV-gb-wS7"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="qow-J2-WM6" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="0qK-KP-Amm"/>
+                        <constraint firstAttribute="height" constant="48" id="1bZ-H5-9Cs"/>
+                        <constraint firstItem="5Sz-pp-rZm" firstAttribute="trailing" secondItem="qow-J2-WM6" secondAttribute="leading" constant="-5" id="670-Pp-3Ow"/>
+                        <constraint firstItem="msj-HT-Fvg" firstAttribute="trailing" secondItem="Hef-sh-jU8" secondAttribute="trailing" constant="-10" id="8m0-aC-v3f"/>
+                        <constraint firstItem="78D-5d-u6A" firstAttribute="trailing" secondItem="msj-HT-Fvg" secondAttribute="leading" constant="-5" id="AGE-rr-cVi"/>
+                        <constraint firstItem="5Sz-pp-rZm" firstAttribute="leading" secondItem="8cT-LG-4KU" secondAttribute="trailing" constant="5" id="BUC-Oe-GtU"/>
+                        <constraint firstItem="msj-HT-Fvg" firstAttribute="top" secondItem="5Sz-pp-rZm" secondAttribute="top" id="OTx-5k-BV6"/>
+                        <constraint firstItem="8cT-LG-4KU" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="ToU-zy-Maq"/>
+                        <constraint firstItem="5Sz-pp-rZm" firstAttribute="top" secondItem="Hef-sh-jU8" secondAttribute="top" constant="5" id="VYK-8w-29b"/>
+                        <constraint firstItem="msj-HT-Fvg" firstAttribute="bottom" secondItem="5Sz-pp-rZm" secondAttribute="bottom" id="axa-P6-wdN"/>
+                        <constraint firstItem="78D-5d-u6A" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="hsN-As-TGv"/>
+                        <constraint firstItem="qow-J2-WM6" firstAttribute="trailing" secondItem="78D-5d-u6A" secondAttribute="leading" constant="-5" id="i4N-Yv-iRg"/>
+                        <constraint firstItem="5Sz-pp-rZm" firstAttribute="bottom" secondItem="Hef-sh-jU8" secondAttribute="bottom" constant="-5" id="jb7-NZ-NyH"/>
+                        <constraint firstItem="8cT-LG-4KU" firstAttribute="leading" secondItem="Hef-sh-jU8" secondAttribute="leading" constant="10" id="vkV-hG-bXm"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Hef-sh-jU8" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="Muv-Rf-iFe"/>
+                <constraint firstItem="Hef-sh-jU8" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="s5I-ml-e8g"/>
+                <constraint firstItem="Hef-sh-jU8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tAB-n9-MQq"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Input_Btn_Louder" width="26" height="18"/>
+        <image name="Live_Publish_Btn_Chat" width="34" height="34"/>
+        <image name="Live_Publish_Btn_Gift" width="37" height="44"/>
+        <image name="Live_Publish_Btn_Share" width="34" height="34"/>
+    </resources>
+</document>

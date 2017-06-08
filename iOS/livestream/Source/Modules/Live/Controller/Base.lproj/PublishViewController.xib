@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PublishViewController">
+            <connections>
+                <outlet property="btnChat" destination="eMy-vM-vcD" id="u24-zD-wJA"/>
+                <outlet property="btnChatWidth" destination="Nwy-Ih-0gN" id="V3h-SG-R6L"/>
+                <outlet property="btnConfig" destination="2ED-Ab-Vfp" id="DV2-jl-3TE"/>
+                <outlet property="btnConfigWidth" destination="t9x-QO-aO5" id="yZT-Sr-TTS"/>
+                <outlet property="btnLouder" destination="1VL-su-382" id="yy3-NJ-0mB"/>
+                <outlet property="btnSend" destination="17S-dQ-05D" id="HXF-Lb-nIE"/>
+                <outlet property="btnSendWidth" destination="WKk-Kc-uAL" id="6u5-gK-hU5"/>
+                <outlet property="btnShare" destination="RIy-p3-fU4" id="w7V-CJ-Ech"/>
+                <outlet property="btnShareWidth" destination="kG9-OF-6zu" id="Jwc-wD-ygF"/>
+                <outlet property="inputBackgroundColorView" destination="B0s-9I-pcI" id="wQ6-bw-ghm"/>
+                <outlet property="inputBackgroundView" destination="ZIr-LM-9E5" id="iUM-J6-RmH"/>
+                <outlet property="inputMessageView" destination="8UL-ti-eOD" id="9d8-5M-YnU"/>
+                <outlet property="inputMessageViewBottom" destination="6vI-fp-L5D" id="eXC-YJ-T9A"/>
+                <outlet property="inputMessageViewHeight" destination="UzI-Vp-JfV" id="Hnh-re-5qV"/>
+                <outlet property="inputTextField" destination="wg6-0P-mXi" id="MXM-qm-sS4"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8UL-ti-eOD" userLabel="Input Message View">
+                    <rect key="frame" x="0.0" y="614" width="375" height="48"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eMy-vM-vcD" userLabel="Chat Button">
+                            <rect key="frame" x="10" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="Nwy-Ih-0gN"/>
+                                <constraint firstAttribute="width" secondItem="eMy-vM-vcD" secondAttribute="height" multiplier="1:1" id="Uky-TB-rqA"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Chat"/>
+                            <connections>
+                                <action selector="chatAction:" destination="-1" eventType="touchUpInside" id="sCp-6W-Bhl"/>
+                            </connections>
+                        </button>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZIr-LM-9E5" userLabel="Input Background View">
+                            <rect key="frame" x="51" y="5" width="162" height="38"/>
+                            <subviews>
+                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B0s-9I-pcI">
+                                    <rect key="frame" x="0.0" y="0.0" width="162" height="38"/>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </view>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1VL-su-382" userLabel="Louder Button" customClass="KKCheckButton">
+                                    <rect key="frame" x="0.0" y="3" width="46" height="32"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="1VL-su-382" secondAttribute="height" multiplier="52:36" id="cgW-qT-rl3"/>
+                                    </constraints>
+                                    <state key="normal" image="Live_Input_Btn_Louder"/>
+                                    <connections>
+                                        <outlet property="selectedChangeDelegate" destination="-1" id="tyO-Lq-nev"/>
+                                    </connections>
+                                </button>
+                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="wg6-0P-mXi" userLabel="Input Text Field" customClass="BLTextField">
+                                    <rect key="frame" x="41" y="3" width="116" height="32"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                    <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-1" id="8J4-Ht-wrO"/>
+                                    </connections>
+                                </textField>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstItem="B0s-9I-pcI" firstAttribute="bottom" secondItem="ZIr-LM-9E5" secondAttribute="bottom" id="0aj-u4-mOV"/>
+                                <constraint firstItem="wg6-0P-mXi" firstAttribute="leading" secondItem="1VL-su-382" secondAttribute="trailing" constant="-5" id="0vb-uo-gn3"/>
+                                <constraint firstItem="wg6-0P-mXi" firstAttribute="bottom" secondItem="ZIr-LM-9E5" secondAttribute="bottom" constant="-3" id="3cB-9i-GSj"/>
+                                <constraint firstItem="1VL-su-382" firstAttribute="top" secondItem="ZIr-LM-9E5" secondAttribute="top" constant="3" id="47X-8i-RoN"/>
+                                <constraint firstItem="B0s-9I-pcI" firstAttribute="leading" secondItem="ZIr-LM-9E5" secondAttribute="leading" id="JMw-pM-1X8"/>
+                                <constraint firstItem="1VL-su-382" firstAttribute="bottom" secondItem="ZIr-LM-9E5" secondAttribute="bottom" constant="-3" id="UVo-xu-HZC"/>
+                                <constraint firstItem="wg6-0P-mXi" firstAttribute="top" secondItem="ZIr-LM-9E5" secondAttribute="top" constant="3" id="dxO-9V-pxr"/>
+                                <constraint firstItem="B0s-9I-pcI" firstAttribute="top" secondItem="ZIr-LM-9E5" secondAttribute="top" id="eB4-f0-4Lc"/>
+                                <constraint firstItem="B0s-9I-pcI" firstAttribute="trailing" secondItem="ZIr-LM-9E5" secondAttribute="trailing" id="jcB-Ed-o4u"/>
+                                <constraint firstItem="1VL-su-382" firstAttribute="leading" secondItem="ZIr-LM-9E5" secondAttribute="leading" id="w4F-Dg-N38"/>
+                                <constraint firstItem="wg6-0P-mXi" firstAttribute="trailing" secondItem="ZIr-LM-9E5" secondAttribute="trailing" constant="-5" id="z3Z-QY-jPn"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RIy-p3-fU4" userLabel="Share Button">
+                            <rect key="frame" x="218" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="RIy-p3-fU4" secondAttribute="height" multiplier="1:1" id="gbp-FA-M9I"/>
+                                <constraint firstAttribute="width" constant="36" id="kG9-OF-6zu"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Share"/>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2ED-Ab-Vfp" userLabel="Config Button" customClass="KKCheckButton">
+                            <rect key="frame" x="259" y="6" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="2ED-Ab-Vfp" secondAttribute="height" multiplier="1:1" id="qmk-tC-yPx"/>
+                                <constraint firstAttribute="width" constant="36" id="t9x-QO-aO5"/>
+                            </constraints>
+                            <state key="normal" image="Live_Publish_Btn_Config"/>
+                            <connections>
+                                <outlet property="selectedChangeDelegate" destination="-1" id="6uT-wo-ZqO"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="17S-dQ-05D" userLabel="Send Button">
+                            <rect key="frame" x="300" y="5" width="65" height="38"/>
+                            <color key="backgroundColor" red="0.047058823529411764" green="0.92941176470588238" blue="0.96078431372549022" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="65" id="WKk-Kc-uAL"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <state key="normal" title="Send">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="sendAction:" destination="-1" eventType="touchUpInside" id="Rdp-yD-tdf"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="17S-dQ-05D" firstAttribute="top" secondItem="ZIr-LM-9E5" secondAttribute="top" id="20Q-LB-nNb"/>
+                        <constraint firstItem="ZIr-LM-9E5" firstAttribute="bottom" secondItem="8UL-ti-eOD" secondAttribute="bottom" constant="-5" id="3sL-zs-Zvk"/>
+                        <constraint firstItem="RIy-p3-fU4" firstAttribute="centerY" secondItem="8UL-ti-eOD" secondAttribute="centerY" id="8ZQ-tv-QPJ"/>
+                        <constraint firstAttribute="height" constant="48" id="UzI-Vp-JfV"/>
+                        <constraint firstItem="RIy-p3-fU4" firstAttribute="trailing" secondItem="2ED-Ab-Vfp" secondAttribute="leading" constant="-5" id="eTU-P0-abB"/>
+                        <constraint firstItem="eMy-vM-vcD" firstAttribute="leading" secondItem="8UL-ti-eOD" secondAttribute="leading" constant="10" id="hHF-fa-D60"/>
+                        <constraint firstItem="ZIr-LM-9E5" firstAttribute="leading" secondItem="eMy-vM-vcD" secondAttribute="trailing" constant="5" id="lI3-aq-FyL"/>
+                        <constraint firstItem="eMy-vM-vcD" firstAttribute="centerY" secondItem="8UL-ti-eOD" secondAttribute="centerY" id="mAE-JH-9cM"/>
+                        <constraint firstItem="17S-dQ-05D" firstAttribute="bottom" secondItem="ZIr-LM-9E5" secondAttribute="bottom" id="pY1-4q-eT8"/>
+                        <constraint firstItem="ZIr-LM-9E5" firstAttribute="top" secondItem="8UL-ti-eOD" secondAttribute="top" constant="5" id="pnI-t9-OEH"/>
+                        <constraint firstItem="2ED-Ab-Vfp" firstAttribute="centerY" secondItem="8UL-ti-eOD" secondAttribute="centerY" id="q4h-Bb-9vG"/>
+                        <constraint firstItem="2ED-Ab-Vfp" firstAttribute="trailing" secondItem="17S-dQ-05D" secondAttribute="leading" constant="-5" id="qU3-fZ-gcO"/>
+                        <constraint firstItem="17S-dQ-05D" firstAttribute="trailing" secondItem="8UL-ti-eOD" secondAttribute="trailing" constant="-10" id="r8O-wR-AbH"/>
+                        <constraint firstItem="ZIr-LM-9E5" firstAttribute="trailing" secondItem="RIy-p3-fU4" secondAttribute="leading" constant="-5" id="uws-3P-k2l"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8UL-ti-eOD" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="6vI-fp-L5D"/>
+                <constraint firstItem="8UL-ti-eOD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="txu-aG-j8t"/>
+                <constraint firstItem="8UL-ti-eOD" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="vak-vX-ceU"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Input_Btn_Louder" width="26" height="18"/>
+        <image name="Live_Publish_Btn_Chat" width="34" height="34"/>
+        <image name="Live_Publish_Btn_Config" width="34" height="34"/>
+        <image name="Live_Publish_Btn_Share" width="34" height="34"/>
+    </resources>
+</document>

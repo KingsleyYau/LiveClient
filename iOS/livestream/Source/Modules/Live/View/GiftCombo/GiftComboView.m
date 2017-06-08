@@ -1,0 +1,236 @@
+//
+//  GiftComboView.m
+//  LiveSendGift
+//
+//  Created by Calvin on 17/5/23.
+//  Copyright © 2017年 com.wujh. All rights reserved.
+//
+
+#import "GiftComboView.h"
+
+static NSInteger const kTimeOut = 3;/**< 超时移除时长 */
+static CGFloat const kRemoveAnimationTime = 0.5;/**< 移除动画时长 */
+static CGFloat const kNumberAnimationTime = 0.1;/**< 数字改变动画时长 */
+static CGFloat const kNumberChangeTime = 1.5;/**< 计时器时长 */
+
+//static CGFloat const kNumberAnimationScaleStart = 2.0;
+//static CGFloat const kNumberAnimationScale = 0.5;
+
+@interface GiftComboView ()
+
+@property (nonatomic ,strong) NSTimer * liveTimer;/**< 定时器控制自身移除 */
+@property (nonatomic ,assign) NSInteger liveTimerForSecond;
+@property (nonatomic ,assign) BOOL isSetNumber;
+@property (nonatomic ,strong) NSTimer * playTimer;
+@end
+
+@implementation GiftComboView
+
+#pragma mark - 初始化
++ (instancetype)giftComboView:(id)owner {
+    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
+    GiftComboView* view = [nibs objectAtIndex:0];
+    return view;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if ( self = [super initWithFrame:frame] ) {
+//        self = [[[NSBundle mainBundle] loadNibNamed:@"GiftComboView" owner:self options:nil] lastObject];
+    }
+    return self;
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.liveTimerForSecond = 0;
+    self.playTime = kNumberChangeTime;
+    
+    self.iconImageView.layer.cornerRadius = self.iconImageView.frame.size.height / 2;
+    self.iconImageView.layer.masksToBounds = YES;
+    
+    self.backView.layer.cornerRadius = self.backView.frame.size.height / 2;
+    self.backView.layer.masksToBounds = YES;
+}
+
+- (void)dealloc {
+    [self stopGiftCombo];
+}
+
+/**
+ 礼物数量自增1使用该方法
+ 
+ @param number 从多少开始计数
+ */
+- (void)addGiftNumberFrom:(NSInteger)number{
+    if (!self.isSetNumber) {
+        self.numberView.number = number;
+        self.isSetNumber = YES;
+    }
+    //每调用一次self.numberView.number get方法 自增1
+    NSInteger num = self.numberView.number;
+    [self.numberView changeNumber:num];
+    [self handleNumber:num];
+ 
+    if (num >= self.endNum) {
+        [self.playTimer invalidate];
+        self.playTimer = nil;
+        return;
+    }
+}
+
+- (void)play {
+    [self addGiftNumberFrom:self.beginNum];
+}
+
+- (void)reset {
+    self.alpha = 1.0;
+    self.transform = CGAffineTransformIdentity;
+    [self.numberView changeNumber:0];
+}
+
+- (void)playGiftCombo
+{
+    if (!self.playTimer) {
+        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime target:self selector:@selector(play) userInfo:nil repeats:YES];
+        _playing = YES;
+    }
+
+}
+
+- (void)stopGiftCombo
+{
+    [self.playTimer invalidate];
+    self.playTimer = nil;
+}
+
+#pragma mark - Private
+/**
+ 处理显示数字 开启定时器
+ 
+ @param number 显示数字的值
+ */
+- (void)handleNumber:(NSInteger )number {
+    
+    self.liveTimerForSecond = 0;
+    
+    [self.numberView.layer removeAllAnimations];
+    self.numberView.transform = CGAffineTransformIdentity;
+    
+    [UIView animateWithDuration:kNumberAnimationTime/2 animations:^{
+        self.numberView.transform = CGAffineTransformMakeScale(2.5, 2.5);
+    } completion:^(BOOL finished) {
+        [UIView animateWithDuration:kNumberAnimationTime animations:^{
+            self.numberView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:kNumberAnimationTime/2 animations:^{
+                self.numberView.transform = CGAffineTransformMakeScale(2.0, 2.0);
+            } completion:^(BOOL finished) {
+               [UIView animateWithDuration:kNumberAnimationTime animations:^{
+                   self.numberView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+               } completion:^(BOOL finished) {
+                   [UIView animateWithDuration:kNumberAnimationTime animations:^{
+                       self.numberView.transform = CGAffineTransformIdentity;
+                   }];
+               }];
+            }];
+        }];
+    }];
+    
+    [self.liveTimer setFireDate:[NSDate date]];
+    
+ 
+    /*
+    self.liveTimerForSecond = 0;
+    [self.numberView.layer removeAllAnimations];
+    
+    self.numberView.transform = CGAffineTransformMakeScale(2.0, 2.0);
+    self.numberView.alpha = 0.0;
+    
+    __block CGFloat time = 0;
+    [UIView animateKeyframesWithDuration:kNumberAnimationTime * 2 delay:0 options:UIViewKeyframeAnimationOptionLayoutSubviews animations:^{
+        [UIView addKeyframeWithRelativeStartTime:time relativeDuration:kNumberAnimationTime * 2 animations:^{
+            self.numberView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+            self.numberView.alpha = 1.0;
+        }];
+        
+        time += kNumberAnimationTime * 2;
+        
+        [UIView addKeyframeWithRelativeStartTime:time relativeDuration:kNumberAnimationTime animations:^{
+            self.numberView.transform = CGAffineTransformMakeScale(1.5, 1.5);
+            self.numberView.alpha = 1.0;
+        }];
+        
+        time += kNumberAnimationTime * 1;
+        
+        [UIView addKeyframeWithRelativeStartTime:time relativeDuration:kNumberAnimationTime animations:^{
+            self.numberView.transform = CGAffineTransformMakeScale(1.0, 1.0);
+            self.numberView.alpha = 1.0;
+        }];
+        
+    } completion:^(BOOL finished) {
+
+    }];
+    
+//    [UIView animateWithDuration:kNumberAnimationTime animations:^{
+//        self.numberView.transform = CGAffineTransformMakeScale(kNumberAnimationScale, kNumberAnimationScale);
+//        self.numberView.alpha = 1.0;
+//    } completion:^(BOOL finished) {
+//        if (finished) {
+////            self.numberView.transform = CGAffineTransformIdentity;
+////            self.numberView.transform = CGAffineTransformMakeScale(kNumberAnimationScaleStart, kNumberAnimationScaleStart);
+//        }
+//    }];
+    
+    [self.liveTimer setFireDate:[NSDate date]];
+     */
+}
+
+- (void)liveTimerRunning {
+    self.liveTimerForSecond += 1;
+    if (self.liveTimerForSecond > kTimeOut) {
+        if (self.isAnimation == YES) {
+            self.isAnimation = NO;
+            return;
+        }
+        self.isAnimation = YES;
+        self.isLeavingAnimation = YES;
+        [UIView animateWithDuration:kRemoveAnimationTime delay:kNumberAnimationTime options:UIViewAnimationOptionCurveEaseIn animations:^{
+            self.transform = CGAffineTransformTranslate(self.transform, 0, -self.frame.size.height * 1.5);
+            self.alpha = 0;
+            
+        } completion:^(BOOL finished) {
+            self.endNum = 0;
+            self.beginNum = 0;
+            self.isLeavingAnimation = NO;
+            self.numberView.number = 0;
+            
+            _playing = NO;
+            
+            // 回调
+            if( [self.delegate respondsToSelector:@selector(playComboFinish:)] ) {
+                [self.delegate playComboFinish:self];
+            }
+        }];
+        
+        [self stopTimer];
+    }
+}
+
+- (NSTimer *)liveTimer {
+    if (!_liveTimer) {
+        _liveTimer =  [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(liveTimerRunning) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:_liveTimer forMode:NSRunLoopCommonModes];
+    }
+    return _liveTimer;
+}
+
+- (void)stopTimer {
+    if (_liveTimer) {
+        [_liveTimer invalidate];
+        _liveTimer = nil;
+    }
+}
+
+@end
+
