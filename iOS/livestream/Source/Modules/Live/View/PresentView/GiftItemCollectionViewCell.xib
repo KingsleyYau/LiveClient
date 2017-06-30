@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GiftItemCollectionViewCell" id="gTV-IL-0wX" customClass="GiftItemCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="crown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dY5-NJ-tG3">
+                        <rect key="frame" x="26.5" y="48" width="37" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.47450980390000003" green="0.47450980390000003" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JfX-bG-a62">
+                        <rect key="frame" x="0.0" y="64" width="90" height="16"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
+                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        <inset key="imageEdgeInsets" minX="10" minY="0.0" maxX="8" maxY="0.0"/>
+                        <state key="normal" title="100" image="Live_Fans_Img_Tips"/>
+                    </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="like_0" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
+                        <rect key="frame" x="25" y="6" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="55T-or-0d8"/>
+                            <constraint firstAttribute="width" constant="40" id="MoY-f3-A8w"/>
+                        </constraints>
+                    </imageView>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Fans_Img_Tips" translatesAutoresizingMaskIntoConstraints="NO" id="mVv-W8-TbS">
+                        <rect key="frame" x="79" y="0.0" width="11" height="11"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="11" id="7GK-Zi-snh"/>
+                            <constraint firstAttribute="height" constant="11" id="ooV-zu-GzG"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="JfX-bG-a62" secondAttribute="bottom" constant="10" id="7eG-fh-QIJ"/>
+                <constraint firstAttribute="trailing" secondItem="JfX-bG-a62" secondAttribute="trailing" id="AdK-Vs-tgb"/>
+                <constraint firstItem="mVv-W8-TbS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="EiU-7e-vCL"/>
+                <constraint firstItem="dY5-NJ-tG3" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="2" id="KDS-gR-buH"/>
+                <constraint firstItem="dY5-NJ-tG3" firstAttribute="centerX" secondItem="iKm-b7-Qu8" secondAttribute="centerX" id="Ls0-QZ-fQH"/>
+                <constraint firstItem="JfX-bG-a62" firstAttribute="centerX" secondItem="iKm-b7-Qu8" secondAttribute="centerX" id="Sr3-oc-5Kf"/>
+                <constraint firstAttribute="trailing" secondItem="mVv-W8-TbS" secondAttribute="trailing" id="ccp-io-8ND"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="6" id="hwS-LE-2Cu"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="m6L-PP-2bI"/>
+                <constraint firstItem="JfX-bG-a62" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="znn-nO-tmw"/>
+            </constraints>
+            <size key="customSize" width="167" height="169"/>
+            <connections>
+                <outlet property="countImage" destination="mVv-W8-TbS" id="WFq-Vd-U6c"/>
+                <outlet property="giftCount" destination="JfX-bG-a62" id="udu-xW-6iP"/>
+                <outlet property="giftImageView" destination="iKm-b7-Qu8" id="kqb-J3-061"/>
+                <outlet property="giftName" destination="dY5-NJ-tG3" id="JxK-jV-KSZ"/>
+            </connections>
+            <point key="canvasLocation" x="-121" y="56"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Live_Fans_Img_Tips" width="15" height="11"/>
+        <image name="like_0" width="31" height="29"/>
+    </resources>
+</document>

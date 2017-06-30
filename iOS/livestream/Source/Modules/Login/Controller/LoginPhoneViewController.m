@@ -171,6 +171,8 @@
     
     self.countryNameLabel.text = [LoginManager manager].fullName;
     self.textFieldZone.text = [NSString stringWithFormat:@"+%@",[LoginManager manager].zipCode];
+    
+    [self.btnLogin setTitleColor:Color(255, 255, 255, 0.7) forState:UIControlStateHighlighted];
 }
 
 - (void)selectCountryWithController{
@@ -192,10 +194,12 @@
         
         if ( self.textFieldPhone.text.length > 0 && textField.text.length > 0 ) {
             
-            [self.btnLogin setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnLogin.userInteractionEnabled = YES;
         }else{
-            [self.btnLogin setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnLogin.userInteractionEnabled = NO;
         }
     }
@@ -209,10 +213,12 @@
         
         if ( sender.text.length > 0 && self.textFieldPassword.text.length > 0 ) {
             
-            [self.btnLogin setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnLogin.userInteractionEnabled = YES;
         }else{
-            [self.btnLogin setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnLogin setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnLogin.userInteractionEnabled = NO;
         }
     }
@@ -323,6 +329,21 @@
     [self.textFieldZone resignFirstResponder];
     [self.textFieldPhone resignFirstResponder];
     [self.textFieldPassword resignFirstResponder];
+}
+
+//  颜色转换为背景图片
+- (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 #pragma mark - 输入回调

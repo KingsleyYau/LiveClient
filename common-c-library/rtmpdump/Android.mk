@@ -1,4 +1,5 @@
-LOCAL_PATH := $(call my-dir)
+MODULE_PATH := $(call my-dir)
+LOCAL_PATH := $(MODULE_PATH)
 
 include $(CLEAR_VARS)
 
@@ -24,5 +25,10 @@ LOCAL_STATIC_LIBRARIES += srs_librtmp
 REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))
 LOCAL_SRC_FILES += $(call all-c-files-under, $(REAL_PATH))
+
+ANDROID_IMP_PATH := android
+ANDROID_IMP_SRC := $(subst $(MODULE_PATH)/,, $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.cpp))
+ANDROID_IMP_SRC += $(subst $(MODULE_PATH)/,, $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.c))
+LOCAL_SRC_FILES += $(ANDROID_IMP_SRC)
 
 include $(BUILD_STATIC_LIBRARY)

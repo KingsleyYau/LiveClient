@@ -8,6 +8,7 @@
 //
 
 #include "FrameBuffer.h"
+namespace coollive {
 FrameBuffer::FrameBuffer() {
     mpFrame = NULL;
     mTimestamp = 0;
@@ -21,4 +22,4 @@ FrameBuffer::FrameBuffer(void* frame, unsigned int timestamp) {
 FrameBuffer::~FrameBuffer() {
     
 }
-
+}

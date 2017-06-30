@@ -9,6 +9,7 @@
 #import "RtmpClient.h"
 
 #include <rtmpdump/RtmpDump.h>
+using namespace coollive;
 
 @interface RtmpClient () {
     

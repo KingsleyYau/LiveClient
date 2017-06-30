@@ -44,7 +44,9 @@ function configure_arm {
 	export CROSS_COMPILE="arm-linux-androideabi-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
 		
-	export CONFIG_PARAM="--disable-asm"
+	export CONFIG_PARAM=""
+
+	export OPTIMIZE_CFLAGS="-marm -march=armv5"
 
 	configure_prefix
 }
@@ -61,7 +63,9 @@ function configure_armv7a {
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
 	export EXTRA_CFLAGS="$EXTRA_CFLAGS -mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=armv7-a "
 	
-	export CONFIG_PARAM="--disable-asm"
+	export CONFIG_PARAM=""
+
+	export OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfpv3-d16 -marm -march=armv7-a"
 
 	configure_prefix
 }
@@ -79,6 +83,8 @@ function configure_arm64 {
 	
 	export CONFIG_PARAM=""
 	
+	export OPTIMIZE_CFLAGS=""
+	
 	configure_prefix
 }
 
@@ -93,7 +99,9 @@ function configure_x86 {
 	export CROSS_COMPILE="i686-linux-android-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
 
-	export CONFIG_PARAM="--disable-asm"
+	export CONFIG_PARAM=""
+
+	export OPTIMIZE_CFLAGS="-m32"
 
 	configure_prefix
 }
@@ -131,9 +139,9 @@ function build_x264 {
 				--enable-static \
 				--enable-pic \
 				--disable-cli \
+				--disable-asm \
 				$CONFIG_PARAM \
 				|| exit 1
-				#--disable-asm \
     		
     		
 	make clean || exit 1
@@ -142,6 +150,44 @@ function build_x264 {
 	
 	cd ..
 	echo "# Build x264 finish for $ARCH_ABI"
+}
+
+function build_fdk_aac {
+	echo "# Start building fdk-aac for $ARCH_ABI"
+	
+	export CC="${CROSS_COMPILE_PREFIX}gcc --sysroot=${SYSROOT}"
+	export CXX="${CROSS_COMPILE_PREFIX}g++ --sysroot=${SYSROOT}"
+	export AR="${CROSS_COMPILE_PREFIX}ar"
+	export LD="${CROSS_COMPILE_PREFIX}ld"
+	export AS="${CROSS_COMPILE_PREFIX}as"
+	export NM="${CROSS_COMPILE_PREFIX}nm"
+	export RANLIB="${CROSS_COMPILE_PREFIX}ranlib"
+	export STRIP="${CROSS_COMPILE_PREFIX}strip"
+	
+	export CFLAGS=$OPTIMIZE_CFLAGS
+	export LDFLAGS="-Wl,-rpath-link=$SYSROOT/usr/lib -L$SYSROOT/usr/lib -nostdlib -lc -lm -ldl -llog"
+		
+	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig/
+  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig/
+    
+	cd fdk-aac-0.1.5
+	
+	./configure \
+				--prefix=$PREFIX \
+				--host=$ARCH-linux \
+				--enable-static \
+				--disable-shared \
+				--with-pic \
+				$CONFIG_PARAM \
+				|| exit 1
+    		
+    		
+	make clean || exit 1
+	make || exit 1
+	make install || exit 1
+	
+	cd ..
+	echo "# Build fdk-aac finish for $ARCH_ABI"
 }
 
 function build_ffmpeg {
@@ -163,29 +209,34 @@ function build_ffmpeg {
 						--enable-static \
 						--enable-gpl \
 						--enable-libx264 \
+						--enable-nonfree \
+    				--enable-libfdk-aac \
 				    --disable-doc \
 				    --enable-version3 \
     				--enable-small \
     				--disable-vda \
    					--disable-iconv \
-				    --disable-encoders \
-				    --enable-encoder=libx264 \
-				    --disable-decoders \
-				    --enable-decoder=h264 \
-    				--disable-demuxers \
-    				--enable-demuxer=h264 \
-    				--disable-parsers \
-    				--enable-parser=h264 \
     				--disable-outdevs \
     				--disable-ffprobe \
     				--disable-ffplay \
     				--disable-ffserver \
+    				--disable-asm \
+						--disable-encoders \
+				    --enable-encoder=libx264 \
+				    --enable-encoder=aac \
+				    --disable-decoders \
+				    --enable-decoder=h264 \
+				    --enable-decoder=libfdk_aac \
+    				--disable-demuxers \
+    				--enable-demuxer=h264 \
+    				--disable-parsers \
+    				--enable-parser=h264
     				$CONFIG_PARAM \
     				|| exit 1
     				#--disable-ffmpeg \
     				#--disable-debug \
-    				#--disable-asm \
 						#--enable-runtime-cpudetect \
+    				
 						
 	make clean || exit 1
 	make || exit
@@ -211,7 +262,7 @@ function build_ffmpeg_so {
 
 # Start Build
 BUILD_ARCH=(arm armv7a x86 arm64)
-#BUILD_ARCH=(arm64)
+#BUILD_ARCH=(x86)
 
 echo "# Starting building..."
 
@@ -220,8 +271,9 @@ for var in ${BUILD_ARCH[@]};do
 	show_enviroment
 	configure_toolchain
 	echo "# Starting building for $ARCH_ABI..."
-	build_x264
-	build_ffmpeg
+	#build_fdk_aac || exit 1
+	#build_x264 || exit 1
+	build_ffmpeg || exit 1
 	echo "# Starting building for $ARCH_ABI finish..."
 done
 

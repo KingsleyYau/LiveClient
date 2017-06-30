@@ -85,6 +85,14 @@
 #import "MBProgressHUD.h"
 #import "MBProgressHUD+MJ.h"
 
+#import "UITableView+FDTemplateLayoutCell.h"
+
+#import "YYText.h"
+
+#import "UIView+YYAdd.h"
+
+#import "YYImage.h"
+
 @interface UIWidget : NSObject
 
 @end

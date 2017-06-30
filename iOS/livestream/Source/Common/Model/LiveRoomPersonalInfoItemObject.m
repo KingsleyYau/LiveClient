@@ -14,6 +14,7 @@
 @implementation LiveRoomPersonalInfoItemObject
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
+        self.photoId  = [coder decodeObjectForKey:@"photoId"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.nickName = [coder decodeObjectForKey:@"nickName"];
         self.gender = (Gender)[coder decodeIntForKey:@"gender"];
@@ -23,6 +24,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.photoId forKey:@"photoId"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeObject:self.nickName forKey:@"nickName"];
     [coder encodeInt:self.gender forKey:@"gender"];

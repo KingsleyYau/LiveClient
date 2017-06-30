@@ -89,6 +89,7 @@ bool HttpRegisterCheckPhoneTask::ParseData(const string& url, bool bFlag, const 
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
          
+            
             if( dataJson.isObject() ) {
                 if (dataJson[REGISER_REGISERED].isInt()) {
                     mRegistered = dataJson[REGISER_REGISERED].asInt();

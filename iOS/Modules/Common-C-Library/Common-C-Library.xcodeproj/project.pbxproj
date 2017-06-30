@@ -80,6 +80,15 @@
 		5095E3FD1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3ED1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp */; };
 		5095E3FE1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3EF1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp */; };
 		509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */; };
+		50A9B9081EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */; };
+		50A9B9091EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */; };
+		50A9B90A1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */; };
+		50A9B90B1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */; };
+		50A9B90C1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */; };
+		50A9B90D1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */; };
+		50A9B90E1EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */; };
+		50A9B90F1EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */; };
+		50A9B9101EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */; };
 		50F383991EE688AC003D2765 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 50F383971EE688AC003D2765 /* mongoose.c */; };
 /* End PBXBuildFile section */
 
@@ -260,6 +269,27 @@
 		5095E4011ED6C037004FFA3B /* HttpLiveRoomViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomViewerItem.h; sourceTree = "<group>"; };
 		509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequestController.cpp; sourceTree = "<group>"; };
 		509A8DA81ECBE6C1004720CF /* HttpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequestController.h; sourceTree = "<group>"; };
+		50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAddLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
+		50A9B8F71EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAddLiveRoomPhotoTask.h; sourceTree = "<group>"; };
+		50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpDelLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
+		50A9B8F91EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpDelLiveRoomPhotoTast.h; sourceTree = "<group>"; };
+		50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomAllGiftListTask.cpp; sourceTree = "<group>"; };
+		50A9B8FB1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomAllGiftListTask.h; sourceTree = "<group>"; };
+		50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomConfigTask.cpp; sourceTree = "<group>"; };
+		50A9B8FD1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomConfigTask.h; sourceTree = "<group>"; };
+		50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomGiftDetailTask.cpp; sourceTree = "<group>"; };
+		50A9B8FF1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomGiftDetailTask.h; sourceTree = "<group>"; };
+		50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomGiftListByUserIdTask.cpp; sourceTree = "<group>"; };
+		50A9B9011EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomGiftListByUserIdTask.h; sourceTree = "<group>"; };
+		50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomPhotoListTask.cpp; sourceTree = "<group>"; };
+		50A9B9031EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomPhotoListTask.h; sourceTree = "<group>"; };
+		50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetUsingLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
+		50A9B9051EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetUsingLiveRoomPhotoTask.h; sourceTree = "<group>"; };
+		50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUploadLiveRoomImgTask.cpp; sourceTree = "<group>"; };
+		50A9B9071EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUploadLiveRoomImgTask.h; sourceTree = "<group>"; };
+		50A9B9111EEFDECB00A4CE50 /* HttpLiveRoomConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomConfigItem.h; sourceTree = "<group>"; };
+		50A9B9121EEFDECB00A4CE50 /* HttpLiveRoomCoverPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomCoverPhotoItem.h; sourceTree = "<group>"; };
+		50A9B9131EEFDECB00A4CE50 /* HttpLiveRoomGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomGiftItem.h; sourceTree = "<group>"; };
 		50F383971EE688AC003D2765 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
 		50F383981EE688AC003D2765 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		D180B77A1D3CD25D00DCFBA5 /* DeviceTypeDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTypeDef.h; sourceTree = "<group>"; };
@@ -279,20 +309,34 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */,
+				50A9B8F71EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.h */,
 				5007B1DD1ECAAA5900C2C17F /* HttpBaseTask.cpp */,
 				5007B1DE1ECAAA5900C2C17F /* HttpBaseTask.h */,
 				5095E3D41ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp */,
 				5095E3D51ED6C02E004FFA3B /* HttpCheckLiveRoomTask.h */,
 				5095E3D61ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp */,
 				5095E3D71ED6C02E004FFA3B /* HttpCloseLiveRoomTask.h */,
+				50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */,
+				50A9B8F91EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTast.h */,
 				5095E3D81ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp */,
 				5095E3D91ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.h */,
+				50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */,
+				50A9B8FB1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.h */,
+				50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */,
+				50A9B8FD1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.h */,
 				5095E3DA1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp */,
 				5095E3DB1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.h */,
+				50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */,
+				50A9B8FF1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.h */,
+				50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */,
+				50A9B9011EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.h */,
 				5095E3DC1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp */,
 				5095E3DD1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.h */,
 				5095E3DE1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp */,
 				5095E3DF1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.h */,
+				50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */,
+				50A9B9031EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.h */,
 				5095E3E01ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp */,
 				5095E3E11ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.h */,
 				5095E3E21ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp */,
@@ -316,8 +360,12 @@
 				5007B1DA1ECAAA3500C2C17F /* HttpRequestTask.h */,
 				5095E3ED1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp */,
 				5095E3EE1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.h */,
+				50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */,
+				50A9B9051EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.h */,
 				5095E3EF1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp */,
 				5095E3F01ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.h */,
+				50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */,
+				50A9B9071EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.h */,
 				5007B1E01ECAAA8200C2C17F /* IHttpTask.h */,
 				5007B1E41ECAB05700C2C17F /* item */,
 			);
@@ -328,6 +376,9 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				50A9B9111EEFDECB00A4CE50 /* HttpLiveRoomConfigItem.h */,
+				50A9B9121EEFDECB00A4CE50 /* HttpLiveRoomCoverPhotoItem.h */,
+				50A9B9131EEFDECB00A4CE50 /* HttpLiveRoomGiftItem.h */,
 				5095E3FF1ED6C037004FFA3B /* HttpLiveRoomInfoItem.h */,
 				5095E4001ED6C037004FFA3B /* HttpLiveRoomPersonalInfoItem.h */,
 				5095E4011ED6C037004FFA3B /* HttpLiveRoomViewerItem.h */,
@@ -656,6 +707,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50A9B9091EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp in Sources */,
 				507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */,
 				5095E3FE1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp in Sources */,
 				504CDA451C7FDB0500DBB429 /* HttpClient.cpp in Sources */,
@@ -672,12 +724,15 @@
 				504CDA341C7FDA4100DBB429 /* AMF3.cpp in Sources */,
 				504CDA2D1C7FDA2D00DBB429 /* xmltest.cpp in Sources */,
 				509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */,
+				50A9B90C1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp in Sources */,
 				5095E3FA1ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp in Sources */,
 				5095E3F71ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp in Sources */,
 				507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */,
+				50A9B90F1EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp in Sources */,
 				501BF3B11C7EFF460052C59F /* IAutoLock.cpp in Sources */,
 				5095E3F81ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp in Sources */,
 				5095E3F31ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp in Sources */,
+				50A9B90D1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp in Sources */,
 				501BF3B01C7EFF460052C59F /* CommonFunc.cpp in Sources */,
 				5095E3F61ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp in Sources */,
 				504CDA071C7FD6AF00DBB429 /* pngwio.c in Sources */,
@@ -694,6 +749,7 @@
 				5095E3FB1ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp in Sources */,
 				501BF3AC1C7EFF460052C59F /* Arithmetic.cpp in Sources */,
 				505D86921C7EF748006FDAC7 /* Common_C_Library.mm in Sources */,
+				50A9B9081EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp in Sources */,
 				5007B1DF1ECAAA5900C2C17F /* HttpBaseTask.cpp in Sources */,
 				504CD9FC1C7FD6AF00DBB429 /* png.c in Sources */,
 				5095E3F41ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp in Sources */,
@@ -716,9 +772,12 @@
 				501BF3B21C7EFF460052C59F /* IPAddress.cpp in Sources */,
 				501BF3CA1C7F00400052C59F /* mztools.c in Sources */,
 				501BF3CB1C7F00400052C59F /* unzip.c in Sources */,
+				50A9B90B1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp in Sources */,
+				50A9B90A1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp in Sources */,
 				501BF3B91C7EFF460052C59F /* md5.c in Sources */,
 				504CDA031C7FD6AF00DBB429 /* pngrtran.c in Sources */,
 				504CDA011C7FD6AF00DBB429 /* pngread.c in Sources */,
+				50A9B9101EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp in Sources */,
 				5095E3FC1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp in Sources */,
 				501BF3C71C7F00400052C59F /* ioapi.c in Sources */,
 				5095E3F51ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp in Sources */,
@@ -728,6 +787,7 @@
 				504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */,
 				504CDA471C7FDB0500DBB429 /* HttpEntiy.cpp in Sources */,
 				504CDA1D1C7FD6EE00DBB429 /* json_reader.cpp in Sources */,
+				50A9B90E1EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp in Sources */,
 				501BF3AB1C7EFF460052C59F /* aes.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -846,7 +906,6 @@
 					"-fpermissive",
 					"-D_HTTPS_SUPPORT",
 					"-DPRINT_JNI_LOG",
-					"-DFILE_JNI_LOG",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

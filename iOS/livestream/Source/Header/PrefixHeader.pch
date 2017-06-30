@@ -27,6 +27,9 @@
 #import "RequestErrorCode.h"
 
 #import "Masonry.h"
+
+#import "AFNetworking.h"
+
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #endif /* PrefixHeader_pch */

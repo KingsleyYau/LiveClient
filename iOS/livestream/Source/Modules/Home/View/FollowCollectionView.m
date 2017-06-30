@@ -69,10 +69,13 @@
     }
     // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    cell.imageViewLoader.sdWebImageView = cell.imageViewContent;
+    cell.imageViewLoader.view = cell.imageViewContent;
     cell.imageViewLoader.url = item.imageUrl;
-//    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
+    [cell.imageViewLoader loadImage];
+    
+//    cell.imageViewLoader.sdWebImageView = cell.imageViewContent;
+//    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
     
     
     cell.nameLabel.text = item.firstName;

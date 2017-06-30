@@ -100,7 +100,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
-    
+    [self.sendButton removeObserver:self forKeyPath:@"highlighted"];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -206,12 +206,15 @@
     
     [self.sendButton setTitle:@"Resend" forState:UIControlStateNormal];
     [self.sendButton setTitleColor:COLOR_WITH_16BAND_RGB(0xf45bae) forState:UIControlStateNormal];
+    [self.sendButton setTitleColor:Color(244, 91, 174, 0.7) forState:UIControlStateHighlighted];
     [self.sendButton setBackgroundColor:[UIColor clearColor]];
     self.sendButton.layer.masksToBounds = YES;
     self.sendButton.layer.cornerRadius = 15/4;
     [self.sendButton.layer setBorderWidth:1];
     [self.sendButton.layer setBorderColor:[COLOR_WITH_16BAND_RGB(0xf45bae) CGColor]];
     [self.sendButton addTarget:self action:@selector(sendRegisterCode) forControlEvents:UIControlEventTouchUpInside];
+    // kvo监听sendButton是否高亮
+    [self.sendButton addObserver:self forKeyPath:@"highlighted" options:NSKeyValueObservingOptionOld|NSKeyValueObservingOptionNew context:nil];
     
     self.timerLabel = [[UILabel alloc] init];
     // 默认的时候，显示计时的Label是隐藏的
@@ -225,6 +228,7 @@
     
     self.labelPhoneNumber.text = [NSString stringWithFormat:@"%@ %@",self.areno,self.phoneNumber];
     
+    [self.btnSignup setTitleColor:Color(255, 255, 255, 0.7) forState:UIControlStateHighlighted];
 }
 
 // 限制密码长度
@@ -239,10 +243,12 @@
     if (self.textFieldCheckcode.text.length > 0 ) {
         
         if (sender.text.length > 0) {
-            [self.btnSignup setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnSignup.userInteractionEnabled = YES;
         }else{
-            [self.btnSignup setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnSignup.userInteractionEnabled = NO;
         }
     }
@@ -254,23 +260,59 @@
     if (sender.text.length > 0 ) {
         
         if (self.textFieldPassword.text.length > 0) {
-            [self.btnSignup setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnSignup.userInteractionEnabled = YES;
         }else{
-            [self.btnSignup setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnSignup setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnSignup.userInteractionEnabled = NO;
         }
         
     } else{
-        [self.btnSignup setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+        [self.btnSignup setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
         self.btnSignup.userInteractionEnabled = NO;
     }
 }
 
+//  颜色转换为背景图片
+- (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+// kvo监听sendButton是否高亮回调
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object
+                       change:(NSDictionary<NSString *,id> *)change context:(void *)context{
+    
+    if([keyPath isEqualToString:@"highlighted"] && object == self.sendButton) {
+        
+        long isHighlighted = [change[@"new"] integerValue];
+        
+        if (isHighlighted) {
+            
+            [self.sendButton.layer setBorderColor:[Color(244, 91, 174, 0.7) CGColor]];
+            
+        }else{
+            
+            [self.sendButton.layer setBorderColor:[COLOR_WITH_16BAND_RGB(0xf45bae) CGColor]];
+        }
+        
+    }
+}
 
 #pragma mark - 获取验证码验证码
 - (void)sendRegisterCode {
-    
+    NSLog(@"按钮isHeight状态%d",self.sendButton.isHighlighted);
     //重新开始计时
     self.timeCount = Time_Count;
     [self setSendCodeBtnInTimer];
@@ -311,6 +353,8 @@
     [self.sendButton.layer setBorderWidth:1];
     [self.sendButton.layer setBorderColor:[COLOR_WITH_16BAND_RGB(0xf45bae) CGColor]];
     [self.timerLabel setHidden:YES];
+    
+    NSLog(@"按钮isHeight状态%d",self.sendButton.isHighlighted);
 }
 
 - (void)setSendCodeBtnInTimer {
@@ -320,6 +364,7 @@
     [self.sendButton.layer setBorderWidth:0];
     [self.sendButton setUserInteractionEnabled:NO];// 不可交互
     [self.timerLabel setHidden:NO];
+    NSLog(@"按钮isHeight状态%d",self.sendButton.isHighlighted);
 }
 
 - (void)addSingleTap {

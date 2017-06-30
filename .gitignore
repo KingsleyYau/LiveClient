@@ -8,3 +8,7 @@
 *.xcbkptlist
 
 livestream/Project/livestream.xcodeproj/xcuserdata/max.xcuserdatad/xcschemes/xcschememanagement.plist
+
+android/coollive/.classpath
+
+*.prefs

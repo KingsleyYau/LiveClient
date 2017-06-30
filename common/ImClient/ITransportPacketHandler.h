@@ -7,7 +7,7 @@
 
 #pragma once
 
-#pragma pack(push, 1)
+//#pragma pack(push, 1)
 
 #include "TaskDef.h"
 #include <json/json/json.h>
@@ -107,4 +107,4 @@ public:
 	virtual UNPACKET_RESULT_TYPE Unpacket(const void* data, size_t dataLen, TransportProtocol& tp) = 0;
 };
 
-#pragma pack(pop)
+//#pragma pack(pop)

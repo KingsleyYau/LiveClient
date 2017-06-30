@@ -17,7 +17,7 @@
 
 #import "LikeView.h"
 
-@interface PlayViewController () <UITextFieldDelegate, KKCheckButtonDelegate,IMLiveRoomManagerDelegate>
+@interface PlayViewController () <UITextFieldDelegate, KKCheckButtonDelegate,IMLiveRoomManagerDelegate,UIGestureRecognizerDelegate>
 /**
  拉流地址
  */
@@ -46,6 +46,9 @@
     [super initCustomParam];
     
     self.url = @"rtmp://172.25.32.17/live/livestream";
+//    self.url = @"rtmp://172.25.32.17/live/max";
+    self.url = @"rtmp://172.25.32.17:1936/aac/max";
+//    self.url = @"rtmp://172.25.32.17:1935/live/fly";
     
     self.liveVC = [[LiveViewController alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:self.liveVC];
@@ -83,6 +86,13 @@
     self.player.playView = self.liveVC.videoView;
     
     [self.view sendSubviewToBack:self.liveVC.view];
+    
+    self.presentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 44);
+    
+    [self.inputTextField addTarget:self
+                           action:@selector(textFieldDidChange:)
+                 forControlEvents:UIControlEventEditingChanged];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -144,6 +154,18 @@
     [self.liveVC.btnCancel addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 
+- (void)textFieldDidChange:(UITextField *)textField {
+    
+    if (textField.text.length > 0) {
+        
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+        self.btnSend.userInteractionEnabled = YES;
+    }else{
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+        self.btnSend.userInteractionEnabled = NO;
+    }
+}
+
 #pragma mark - 直播间信息
 - (void)setLiveInfo:(LiveRoomInfoItemObject *)liveInfo {
     _liveInfo = liveInfo;
@@ -186,7 +208,7 @@
     [self.liveVC.imManager.client fansRoomout:self.liveVC.loginManager.loginItem.token roomId:self.liveVC.roomId];
 }
 
-#pragma mark - IMLiveRoomManagerDelegate(观众接收关闭直播间通知)
+#pragma mark - IM回调
 - (void)onRecvRoomCloseFans:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName fansNum:(int)fansNum {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 关闭输入
@@ -206,15 +228,35 @@
 
 - (IBAction)shareAction:(id)sender {
 
+    [self.liveVC starBigAnimation];
 }
 
 - (IBAction)giftAction:(id)sender {
     
+    [self hiddenBottomView];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        self.presentView.transform = CGAffineTransformMakeTranslation(0, -self.presentView.frame.size.height);
+    } completion:^(BOOL finished) {
+        
+        self.liveVC.msgTableView.hidden = YES;
+        self.liveVC.msgTipsView.hidden = YES;
+        
+    }];
 }
 
 - (IBAction)sendAction:(id)sender {
     if( [self.liveVC sendMsg:self.inputTextField.text isLounder:self.btnLouder.selected] ) {
         self.inputTextField.text = nil;
+        
+        if (self.inputTextField.text.length > 0) {
+            
+            self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+            self.btnSend.userInteractionEnabled = YES;
+        }else{
+            self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+            self.btnSend.userInteractionEnabled = NO;
+        }
     }
 }
 
@@ -226,6 +268,21 @@
 
 - (void)closeAllInputView {
     [self.inputTextField resignFirstResponder];
+}
+
+- (void)hiddenBottomView {
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        
+        self.inputMessageView.transform = CGAffineTransformMakeTranslation(0, 48);
+    }];
+}
+
+- (void)showBottomView {
+    
+    [UIView animateWithDuration:0.2 delay:0.25 options:0 animations:^{
+        self.inputMessageView.transform = CGAffineTransformIdentity;
+    } completion:nil];
 }
 
 #pragma mark - 主播信息控件管理
@@ -242,7 +299,7 @@
 - (void)showLike {
     NSInteger width = 36;
     LikeView* heart = [[LikeView alloc]initWithFrame:CGRectMake(0, 0, width, width)];
-    [self.view addSubview:heart];
+    [self.view insertSubview:heart belowSubview:self.presentView];
     
     // 起始位置
     CGPoint fountainSource = CGPointMake(self.view.bounds.size.width - 20 - width/2.0, self.view.bounds.size.height - width /2.0 - 20);
@@ -272,7 +329,7 @@
     self.inputBackgroundView.layer.cornerRadius = self.inputBackgroundView.frame.size.height / 2;
     [self.btnLouder setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder_Highlighted"] forState:UIControlStateSelected];
     
-    [self.btnChat setImage:[UIImage imageNamed:@"Live_Publish_Btn_Chat_Highlighted"] forState:UIControlStateHighlighted];
+//    [self.btnChat setImage:[UIImage imageNamed:@"Live_Publish_Btn_Chat_Highlighted"] forState:UIControlStateHighlighted];
     [self.btnShare setImage:[UIImage imageNamed:@"Live_Publish_Btn_Share_Highlighted"] forState:UIControlStateHighlighted];
     
     self.btnSend.layer.cornerRadius = self.btnSend.frame.size.height / 2;
@@ -289,7 +346,7 @@
 
 - (void)showInputMessageView {
     self.btnChat.hidden = NO;
-    self.btnChatWidth.constant = 40;
+//    self.btnChatWidth.constant = 40;
     self.btnShare.hidden = NO;
     self.btnShareWidth.constant = 40;
     self.btnGift.hidden = NO;
@@ -302,7 +359,7 @@
 
 - (void)hideInputMessageView {
     self.btnChat.hidden = YES;
-    self.btnChatWidth.constant = 0;
+//    self.btnChatWidth.constant = 0;
     self.btnShare.hidden = YES;
     self.btnShareWidth.constant = 0;
     self.btnGift.hidden = YES;
@@ -347,6 +404,7 @@
 - (void)addSingleTap {
     if( self.singleTap == nil ) {
         self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
+        self.singleTap.delegate = self;
         [self.view addGestureRecognizer:self.singleTap];
     }
 }
@@ -355,12 +413,25 @@
     if( self.singleTap ) {
         [self.view removeGestureRecognizer:self.singleTap];
         self.singleTap = nil;
+        self.singleTap.delegate = nil;
     }
 }
 
 - (void)singleTapAction {
     [self showLike];
     [self closeAllInputView];
+    
+    if (self.presentView.frame.origin.y < SCREEN_HEIGHT) {
+        [UIView animateWithDuration:0.25 animations:^{
+            self.presentView.transform = CGAffineTransformIdentity;
+        } completion:^(BOOL finished) {
+            [self showBottomView];
+            self.liveVC.msgTableView.hidden = NO;
+            if (self.liveVC.unReadMsgCount) {
+                self.liveVC.msgTipsView.hidden = NO;
+            }
+        }];
+    }
 }
 
 #pragma mark - 选择按钮回调
@@ -371,25 +442,21 @@
 }
 
 #pragma mark - 文本输入回调
-- (void)textViewDidChange:(UITextView *)textView {
-    
-}
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    BOOL bFlag = YES;
-    return bFlag;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    BOOL bFlag = YES;
-    
-    [textView scrollRangeToVisible:NSMakeRange(textView.text.length - 1, textView.text.length)];
-    
-    return bFlag;
-}
-
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    bool bFlag = YES;
+    
+    NSString *wholeString = textField.text;
+    NSInteger wholeStringLength = wholeString.length - range.length + string.length;
+    if( wholeStringLength >= MaxInputCount ) {
+        // 超过字符限制
+        bFlag = NO;
+    }
+    
+    return bFlag;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -478,10 +545,12 @@
         self.playEndVC.viewverLabel.text = [NSString stringWithFormat:@"%d",fansNum];
         
         self.playEndVC.imageViewHeaderLoader = [ImageViewLoader loader];
-        self.playEndVC.imageViewHeaderLoader.sdWebImageView = self.playEndVC.imageViewHeader;
+        self.playEndVC.imageViewHeaderLoader.view = self.playEndVC.imageViewHeader;
         self.playEndVC.imageViewHeaderLoader.url = self.liveInfo.photoUrl;
-//        self.playEndVC.imageViewHeaderLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:self.playEndVC.imageViewHeaderLoader.url];
-        [self.playEndVC.imageViewHeaderLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+        self.playEndVC.imageViewHeaderLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:self.playEndVC.imageViewHeaderLoader.url];
+        [self.playEndVC.imageViewHeaderLoader loadImage];
+//        self.playEndVC.imageViewHeaderLoader.sdWebImageView = self.playEndVC.imageViewHeader;
+//        [self.playEndVC.imageViewHeaderLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
         
         
         [self.view addSubview:self.playEndVC.view];
@@ -501,6 +570,17 @@
         } completion:^(BOOL finished) {
             
         }];
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    
+    CGPoint pt = [touch locationInView:self.view];
+    
+    if (!CGRectContainsPoint([self.presentView frame], pt)) {
+        return YES;
+    }else{
+        return NO;
     }
 }
 

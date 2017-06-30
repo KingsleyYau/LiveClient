@@ -35,14 +35,14 @@ public:
     /**
      * 关闭直播间
      * @param token			           用户身份唯一标识
-     * @param photoUrl			       头像文件数据
+     * @param photoId			       头像文件数据
      * @param nickName			       昵称
      * @param gender			       性别（0:男性 1:女性）
      * @param birthday			       出生日期（格式：1980-01-01）
      */
     void SetParam(
                   string token,
-                  string photoUrl,
+                  string photoId,
                   string nickName,
                   Gender gender,
                   string birthday
@@ -56,7 +56,7 @@ public:
     /**
      * 获取头像文件数据
      */
-    const string& GetPhotoUrl();
+    const string& GetPhotoId();
  
     /**
      * 获取昵称
@@ -82,8 +82,8 @@ protected:
     
     // 用户身份唯一标识
     string mToken;
-    // 头像文件数据
-    string mPhotoUrl;
+    // 头像图片ID（可无，无则表示不修改）
+    string mPhotoId;
     // 昵称
     string mNickName;
     // 性别（0:男性 1:女性）

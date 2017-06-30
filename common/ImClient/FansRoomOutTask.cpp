@@ -70,7 +70,8 @@ bool FansRoomOutTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnFansRoomOut(GetSeq(), result, m_errType, m_errMsg);
+        bool success = (m_errType == LCC_ERR_SUCCESS);
+        m_listener->OnFansRoomOut(GetSeq(), success, m_errType, m_errMsg);
 		FileLog("LiveChatClient", "AudienceRoomOutTask::Handle() callback end, result:%d", result);
 	}
 	

@@ -33,36 +33,66 @@
     return height;
 }
 
-+ (id)getUITableViewCell:(UITableView *)tableView {
-    MsgTableViewCell *cell = (MsgTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[MsgTableViewCell cellIdentifier]];
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     
-    if (nil == cell){
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:[MsgTableViewCell cellIdentifier] owner:tableView options:nil];
-        cell = [nib objectAtIndex:0];
-    }
-    
-    cell.label.text = @"";
-    cell.viewLevelBackground.layer.masksToBounds = YES;
-    
-    return cell;
-}
-
-+ (NSString *)textPreDetail {
-    return @"          ";
-}
-
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    
     if (self) {
-        // Initialization code
+     
+        self.lvView = [LevelView getLevelView];
+        [self addSubview:self.lvView];
+        
+        self.messageLabel = [YYLabel new];
+        self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 20, 0);
+        self.messageLabel.displaysAsynchronously = YES;
+        [self addSubview:self.messageLabel];
+        
+        [self.lvView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(@45);
+            make.height.equalTo(@20);
+            make.left.equalTo(@0);
+            make.bottom.equalTo(self.messageLabel.mas_top).offset(24);
+        }];
+        
+        self.backgroundColor = [UIColor clearColor];
+        
     }
     return self;
 }
 
+- (void)updataChatMessage:(MsgItem *)item{
+    
+    self.lvView.levelLabel.text = [NSString stringWithFormat:@"%lld", (long long)item.level, nil];
+    
+    YYTextLinePositionSimpleModifier *modifier = [YYTextLinePositionSimpleModifier new];
+    modifier.fixedLineHeight = 22;
+    
+    // 创建文本容器
+    YYTextContainer *container = [YYTextContainer new];
+    container.linePositionModifier = modifier;
+    container.size = CGSizeMake(SCREEN_WIDTH - 20, CGFLOAT_MAX);
+    container.maximumNumberOfRows = 0;
+    
+    // 生成排版结果
+    YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:item.attText];
+    self.messageLabel.size = layout.textBoundingSize;
+    self.messageLabel.textLayout = layout;
+    
+}
+
++ (NSString *)textPreDetail {
+    return @"           ";
+}
+
+- (CGSize)sizeThatFits:(CGSize)size{
+    
+    CGFloat giftLabelHight = 6;
+    giftLabelHight += self.messageLabel.frame.size.height;
+    return CGSizeMake(SCREEN_WIDTH - 20 , giftLabelHight);
+}
+
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    self.viewLevelBackground.layer.cornerRadius = 10;
 }
 
 @end

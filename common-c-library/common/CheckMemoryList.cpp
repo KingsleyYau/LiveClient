@@ -18,8 +18,8 @@ AllocList::AllocList(void)
 
 AllocList::~AllocList(void)
 {
-	RemoveAll();
-	ReleaseLock();
+	//RemoveAll();
+	//ReleaseLock();
 }
 
 bool AllocList::Insert(AllocHeader* header)

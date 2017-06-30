@@ -107,7 +107,7 @@
 
 - (void)promptViewShow {
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    AppDelegate *delegate = AppDelegate();
     [delegate.window addSubview:self];
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = self.frame;

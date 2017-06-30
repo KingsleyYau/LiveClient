@@ -11,7 +11,7 @@
 static NSInteger const kTimeOut = 3;/**< 超时移除时长 */
 static CGFloat const kRemoveAnimationTime = 0.5;/**< 移除动画时长 */
 static CGFloat const kNumberAnimationTime = 0.1;/**< 数字改变动画时长 */
-static CGFloat const kNumberChangeTime = 1.5;/**< 计时器时长 */
+static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 
 //static CGFloat const kNumberAnimationScaleStart = 2.0;
 //static CGFloat const kNumberAnimationScale = 0.5;
@@ -62,11 +62,11 @@ static CGFloat const kNumberChangeTime = 1.5;/**< 计时器时长 */
  
  @param number 从多少开始计数
  */
-- (void)addGiftNumberFrom:(NSInteger)number{
-    if (!self.isSetNumber) {
-        self.numberView.number = number;
-        self.isSetNumber = YES;
-    }
+- (void)addGiftNumberFrom {
+//    if (!self.isSetNumber) {
+//        self.numberView.number = number;
+//        self.isSetNumber = YES;
+//    }
     //每调用一次self.numberView.number get方法 自增1
     NSInteger num = self.numberView.number;
     [self.numberView changeNumber:num];
@@ -80,19 +80,22 @@ static CGFloat const kNumberChangeTime = 1.5;/**< 计时器时长 */
 }
 
 - (void)play {
-    [self addGiftNumberFrom:self.beginNum];
+    [self addGiftNumberFrom];
 }
 
 - (void)reset {
     self.alpha = 1.0;
     self.transform = CGAffineTransformIdentity;
-    [self.numberView changeNumber:0];
+    [self.numberView changeNumber:self.beginNum];
 }
 
 - (void)playGiftCombo
 {
     if (!self.playTimer) {
         self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime target:self selector:@selector(play) userInfo:nil repeats:YES];
+        [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
+        self.playTimer.fireDate = [NSDate dateWithTimeIntervalSinceNow:0.3];
+        [self.playTimer fire];
         _playing = YES;
     }
 
@@ -116,21 +119,31 @@ static CGFloat const kNumberChangeTime = 1.5;/**< 计时器时长 */
     
     [self.numberView.layer removeAllAnimations];
     self.numberView.transform = CGAffineTransformIdentity;
+    self.numberView.alpha = 0.0;
     
-    [UIView animateWithDuration:kNumberAnimationTime/2 animations:^{
-        self.numberView.transform = CGAffineTransformMakeScale(2.5, 2.5);
+    [UIView animateWithDuration:0.01 animations:^{
+        self.numberView.transform = CGAffineTransformMakeScale(2.2, 2.2);
+        self.numberView.alpha = 0.1;
+        
     } completion:^(BOOL finished) {
-        [UIView animateWithDuration:kNumberAnimationTime animations:^{
+        [UIView animateWithDuration:0.03 animations:^{
             self.numberView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+            self.numberView.alpha = 0.3;
+            
         } completion:^(BOOL finished) {
-            [UIView animateWithDuration:kNumberAnimationTime/2 animations:^{
-                self.numberView.transform = CGAffineTransformMakeScale(2.0, 2.0);
+            [UIView animateWithDuration:0.05 animations:^{
+                self.numberView.transform = CGAffineTransformMakeScale(1.5, 1.5);
+                self.numberView.alpha = 0.5;
+                
             } completion:^(BOOL finished) {
-               [UIView animateWithDuration:kNumberAnimationTime animations:^{
-                   self.numberView.transform = CGAffineTransformMakeScale(0.8, 0.8);
+               [UIView animateWithDuration:0.1 animations:^{
+                   self.numberView.transform = CGAffineTransformMakeScale(0.6, 0.6);
+                   self.numberView.alpha = 0.7;
+                   
                } completion:^(BOOL finished) {
-                   [UIView animateWithDuration:kNumberAnimationTime animations:^{
+                   [UIView animateWithDuration:0.2 animations:^{
                        self.numberView.transform = CGAffineTransformIdentity;
+                       self.numberView.alpha = 1.0;
                    }];
                }];
             }];

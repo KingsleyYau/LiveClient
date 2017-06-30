@@ -7,9 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #include "IImClient.h"
-
 #import "RoomTopFanItemObject.h"
 
 @protocol IMLiveRoomManagerDelegate <NSObject>
@@ -31,6 +29,13 @@
  *  @param errmsg      结果描述
  */
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+
+/**
+ *  2.4.用户被挤掉线回调
+ *
+ *  @param reason     被挤掉理由
+ */
+- (void)onKickOff:(NSString* _Nonnull)reason;
 
 #pragma mark - 直播间主动操作回调
 /**
@@ -74,6 +79,28 @@
  */
 - (void)onGetRoomInfo:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg fansNum:(int)fansNum contribute:(int)contribute;
 
+/**
+ *  3.7.主播禁言观众（直播端把制定观众禁言）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onFansShutUp:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+
+/**
+ *  3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onFansKickOffRoom:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+
 #pragma mark - 直播间接收操作回调
 /**
  *  接收直播间关闭通知(观众)回调
@@ -107,6 +134,25 @@
  *
  */
 - (void)onRecvFansRoomIn:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl;
+/**
+ *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param userId      被禁言用户ID
+ *  @param nickName    被禁言用户昵称
+ *  @param timeOut     禁言时长
+ *
+ */
+- (void)onRecvShutUpNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName timeOut:(int)timeOut;
+/**
+ *  3.10.接收观众踢出直播间通知（观众端／主播端接收观众踢出直播间通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param userId      被禁言用户ID
+ *  @param nickName    被禁言用户昵称
+ *
+ */
+- (void)onRecvKickOffRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName;
 
 #pragma mark - 直播间文本消息信息
 /**
@@ -129,5 +175,77 @@
  *
  */
 - (void)onRecvRoomMsg:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+
+
+#pragma mark - 直播间点赞操作回调
+/**
+ *  5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onSendRoomFav:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+/**
+ *  5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param fromId      发送方的用户ID
+ *
+ */
+- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId;
+
+#pragma mark - 直播间礼物消息操作回调
+/**
+ *  6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *  @param coins       剩余金币数
+ *
+ */
+- (void)onSendRoomGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins;
+/**
+ *  6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）回调
+ *
+ *  @param roomId               直播间ID
+ *  @param fromId               发送方的用户ID
+ *  @param nickName             发送方的昵称
+ *  @param giftId               礼物ID
+ *  @param giftNum              本次发送礼物的数量
+ *  @param multi_click          是否连击礼物
+ *  @param multi_click_start    连击起始数
+ *  @param multi_click_end      连击结束数
+ *  @param multi_click_id       连击ID，相同则表示是同一次连击
+ *
+ */
+- (void)onRecvRoomGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+
+#pragma mark - 直播间弹幕消息操作回调
+/**
+ *  7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *  @param coins       剩余金币数
+ *
+ */
+- (void)onSendRoomToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins;
+/**
+ *  7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
+ *
+ *  @param roomId               直播间ID
+ *  @param fromId               发送方的用户ID
+ *  @param nickName             发送方的昵称
+ *  @param msg                  消息内容
+ *
+ */
+- (void)onRecvRoomToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
 
 @end

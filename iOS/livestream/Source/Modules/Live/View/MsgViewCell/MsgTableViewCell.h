@@ -7,17 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LevelView.h"
+#import "MsgItem.h"
 
 @interface MsgTableViewCell : UITableViewCell
 
-@property (weak) IBOutlet UIView* viewLevelBackground;
+@property (nonatomic, strong) YYLabel *messageLabel;
 
-@property (weak) IBOutlet UILabel* labelLevel;
-@property (weak) IBOutlet UILabel* label;
+@property (nonatomic, strong) LevelView *lvView;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;
-+ (id)getUITableViewCell:(UITableView *)tableView;
 + (NSString *)textPreDetail;
+
+- (void)updataChatMessage:(MsgItem *)item;
 
 @end

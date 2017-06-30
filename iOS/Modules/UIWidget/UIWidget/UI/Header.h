@@ -11,6 +11,6 @@
 
 #define UIWIDGETBUNDLE_NAME @ "UIWidgetBundle.bundle"
 #define UIWIDGETBUNDLE_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent: UIWIDGETBUNDLE_NAME]
-#define UIWIDGETBUNDLE [NSBundle bundleWithPath: UIWIDGETBUNDLE_PATH]
+#define UIWIDGETBUNDLE [NSBundle bundleWithPath: UIWIDGETBUNDLE_PATH] 
 
 #endif /* Header_h */

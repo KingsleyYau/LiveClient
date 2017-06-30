@@ -35,4 +35,26 @@ typedef enum{
 	GENDER_FEMALE = 1
 } Gender;
 
+/*图片类型*/
+typedef enum{
+    IMAGETYPE_UNKNOWN = 0,
+    IMAGETYPE_USER = 1,
+    IMAGETYPE_COVER = 2
+} ImageType;
+
+/*审核状态*/
+typedef enum{
+    EXAMINE_STATUS_UNKNOWN = 0,
+    EXAMINE_STATUS_WAITING = 1,  // 待审核
+    EXAMINE_STATUS_PASS    = 2,  // 通过
+    EXAMINE_STATUS_REFUSE  = 3   // 否决
+}ExamineStatus;
+
+/*礼物类型*/
+typedef enum{
+    GIFTTYPE_UNKNOWN = 0,
+    GIFTTYPE_COMMON = 1,   // 普通礼物
+    GIFTTYPE_Heigh = 2  // 高级礼物（动画）
+}GiftType;
+
 #endif

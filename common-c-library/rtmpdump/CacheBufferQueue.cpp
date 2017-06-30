@@ -7,8 +7,9 @@
 //
 
 #include "CacheBufferQueue.h"
+namespace coollive {
 CacheBufferQueue::CacheBufferQueue() {
-    mMaxBufferCount = 30;
+    mMaxBufferCount = 100;
 }
 
 CacheBufferQueue::CacheBufferQueue(int maxBufferCount) {
@@ -49,4 +50,5 @@ bool CacheBufferQueue::PushBuffer(void* buffer) {
     mBufferList.unlock();
     
     return bFlag;
+}
 }

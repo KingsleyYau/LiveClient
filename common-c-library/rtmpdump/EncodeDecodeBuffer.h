@@ -12,11 +12,15 @@
 
 #include <common/list_lock.h>
 
+namespace coollive {
 class EncodeDecodeBuffer {
 public:
 	EncodeDecodeBuffer();
 	virtual ~EncodeDecodeBuffer();
 
+    EncodeDecodeBuffer(const EncodeDecodeBuffer& item);
+    EncodeDecodeBuffer& operator=(const EncodeDecodeBuffer& item);
+    
 public:
     // 获取buffer指针
     unsigned char* GetBuffer() const;
@@ -30,6 +34,10 @@ public:
     // 重置参数
     void ResetFrame();
 
+public:
+    int mBufferLen;             // 数据已用长度
+    unsigned int mTimestamp;    // 帧时间戳
+    
 private:
     // 释放空间
     inline void ReleaseBuffer();
@@ -38,13 +46,10 @@ private:
     unsigned char* mBuffer;     // 数据缓存
     int mBufferSize;            // 数据空间长度
 
-public:
-    int mBufferLen;             // 数据已用长度
-    unsigned int mTimestamp;    // 帧时间戳
-
 };
 
 // list define
 typedef list_lock<EncodeDecodeBuffer*> EncodeDecodeBufferList;
+}
 
 #endif /* RTMPDUMP_EncodeDecodeBuffer_H_ */

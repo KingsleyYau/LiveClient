@@ -12,7 +12,7 @@ HttpSetLiveRoomModifyInfoTask::HttpSetLiveRoomModifyInfoTask() {
 	// TODO Auto-generated constructor stub
 	mPath = LIVEROOM_SET_MODIFY_INFO;
     mToken = "";
-    mPhotoUrl = "";
+    mPhotoId = "";
     mNickName = "";
     mGender = GENDER_UNKNOWN;
     mBirthday = "";
@@ -28,7 +28,7 @@ void HttpSetLiveRoomModifyInfoTask::SetCallback(IRequestSetLiveRoomModifyInfoCal
 
 void HttpSetLiveRoomModifyInfoTask::SetParam(
                                              string token,
-                                             string photoUrl,
+                                             string photoId,
                                              string nickName,
                                              Gender gender,
                                              string birthday
@@ -44,9 +44,9 @@ void HttpSetLiveRoomModifyInfoTask::SetParam(
         mToken = token;
     }
     
-    if( photoUrl.length() > 0 ) {
-        mHttpEntiy.AddContent(LIVEROOM_PUBLIC_PERSONAL_PHOTOURL, photoUrl.c_str());
-        mPhotoUrl = photoUrl;
+    if( photoId.length() > 0 ) {
+        mHttpEntiy.AddContent(LIVEROOM_PUBLIC_PERSONAL_PHOTOID, photoId.c_str());
+        mPhotoId = photoId;
     }
  
     if( nickName.length() > 0 ) {
@@ -77,7 +77,7 @@ void HttpSetLiveRoomModifyInfoTask::SetParam(
             ")",
             this,
             token.c_str(),
-            photoUrl.c_str(),
+            photoId.c_str(),
             nickName.c_str(),
             gender,
             birthday.c_str()
@@ -88,8 +88,8 @@ const string& HttpSetLiveRoomModifyInfoTask::GetToken() {
     return mToken;
 }
 
-const string& HttpSetLiveRoomModifyInfoTask::GetPhotoUrl() {
-    return mPhotoUrl;
+const string& HttpSetLiveRoomModifyInfoTask::GetPhotoId() {
+    return mPhotoId;
 }
 
 const string& HttpSetLiveRoomModifyInfoTask::GetNickName() {

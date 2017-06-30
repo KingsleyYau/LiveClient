@@ -19,6 +19,7 @@
 
 #define ADTS_HEADER_SIZE 7
 
+namespace coollive {
 static char NaluStartCode[] = {0x00, 0x00, 0x00, 0x01};
 
 class RecvRunnable : public KRunnable {
@@ -325,7 +326,7 @@ void RtmpDump::ReadPackage() {
             Flv2Audio(frame, frame_size, timestamp);
             
         } else if( type == SRS_RTMP_TYPE_VIDEO ) {
-            FileLog("RtmpDump", "RtmpDump::OnRecvVideoFrame(\t\ttimestamp : %d, size : %d )", timestamp, frame_size);
+//            FileLog("RtmpDump", "RtmpDump::OnRecvVideoFrame(\t\ttimestamp : %d, size : %d )", timestamp, frame_size);
             Flv2Video(frame, frame_size, timestamp);
         }
         
@@ -452,7 +453,9 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
 }
 
 void RtmpDump::AddVideoTimestamp(u_int32_t timestamp) {
+    mClientMutex.lock();
     mSendVideoFrameTimestamp += timestamp;
+    mClientMutex.unlock();
 }
 
 bool RtmpDump::SendAudioFrame(
@@ -509,9 +512,18 @@ bool RtmpDump::SendAudioFrame(
 }
 
 void RtmpDump::AddAudioTimestamp(u_int32_t timestamp) {
+    mClientMutex.lock();
     mSendAudioFrameTimestamp += timestamp;
+    mClientMutex.unlock();
 }
 
+void RtmpDump::ResetTimestamp() {
+    mClientMutex.lock();
+    mSendVideoFrameTimestamp = 0;
+    mSendAudioFrameTimestamp = 0;
+    mClientMutex.unlock();
+}
+    
 void RtmpDump::Stop() {
 //    FileLog("rtmpdump", "RtmpDump::Stop( "
 //    		"this : %p, "
@@ -907,4 +919,5 @@ bool RtmpDump::GetADTS(int packetSize, char* header, int headerSize) {
     }
 
     return bFlag;
+}
 }

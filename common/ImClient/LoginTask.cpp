@@ -15,6 +15,7 @@
 
 // 请求参数定义
 #define USERID_PARAM		"userid"	// 帐号ID
+#define TYPE_PARAM          "type"      // 客户端类型（0:ios 1:Android 2:web）
 #define VERSION_PARAM		"ver"       // 客户端内部版本号
 #define TOKEN_PARAM         "token"     // 统一身份验证标识
 
@@ -29,6 +30,7 @@ LoginTask::LoginTask(void)
     m_ver = 0;
 	m_user = "";
 	m_token = "";
+    m_type = CLIENTTYPE_UNKNOW;
 }
 
 LoginTask::~LoginTask(void)
@@ -94,6 +96,7 @@ bool LoginTask::GetSendData(Json::Value& data)
         value[VERSION_PARAM] = m_ver;
         value[USERID_PARAM] = m_user;
         value[TOKEN_PARAM] = m_token;
+       value[TYPE_PARAM] = m_type;
         data = value;
     }
     result = true;
@@ -135,15 +138,17 @@ void LoginTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool LoginTask::InitParam(int version, const string& user, const string& token)
+bool LoginTask::InitParam(int version, const string& user, const string& token, ClientType clientType)
 {
 	bool result = false;
 	if (!user.empty() 
-		&& !token.empty())
+		&& !token.empty()
+        && clientType != CLIENTTYPE_UNKNOW)
 	{
         m_ver = version;
 		m_user = user;
         m_token = token;
+        m_type = clientType;
 
 		result = true;
 	}

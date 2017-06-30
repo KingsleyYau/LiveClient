@@ -59,14 +59,13 @@
                         <outlet property="delegate" destination="-1" id="WoG-sf-EwI"/>
                     </connections>
                 </textField>
-                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbK-7w-LL8" userLabel="Signup Button">
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbK-7w-LL8" userLabel="Signup Button">
                     <rect key="frame" x="75" y="293" width="226" height="48"/>
                     <color key="backgroundColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="226" id="Kz4-4Y-QXK"/>
                         <constraint firstAttribute="height" constant="48" id="i4w-ZM-Ew4"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Sign up">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
@@ -80,7 +79,7 @@
                         <action selector="signUpAction:" destination="-1" eventType="touchUpInside" id="vgo-PW-fd6"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ML2-KK-qLN">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ML2-KK-qLN">
                     <rect key="frame" x="295" y="100" width="60" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="60" id="e8q-nx-YPX"/>

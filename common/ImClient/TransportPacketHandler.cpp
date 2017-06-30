@@ -58,7 +58,7 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
         result = true;
     }
 	
-	FileLog("LiveChatClient", "CTransportPacketHandler::Packet() end, result:%d", result);
+	FileLog("LiveChatClient", "CTransportPacketHandler::Packet() end, result:%d, strData:%s", result,  strData.c_str());
 
 	return result;
 }

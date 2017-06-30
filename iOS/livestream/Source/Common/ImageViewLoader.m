@@ -7,6 +7,7 @@
 //
 
 #import "ImageViewLoader.h"
+#import "AFNetWorkHelpr.h"
 
 @interface ImageViewLoader ()
 
@@ -17,16 +18,17 @@
 @end
 
 @implementation ImageViewLoader
+
 + (instancetype)loader {
     ImageViewLoader* loader = [[ImageViewLoader alloc] init];
     return loader;
 }
 
 - (id)init {
-    if( self = [super init] ) {
-//        self.manager = [[AFHTTPSessionManager manager] initWithBaseURL:nil];
+    self = [super init];
+    
+    if( self ) {
         self.downloadTask = nil;
-        self.delegate = nil;
         self.view = nil;
         self.image = nil;
         self.sdWebImageView = nil;
@@ -64,6 +66,88 @@
     }
     
     return NO;
+}
+
+- (BOOL)loadImage {
+    //    NSLog(@"ImageViewLoader::loadImage( tid : %d, %@, view : %@ )", tid, self, self.view);
+    if( self.image ) {
+        // 直接显示图片
+        return [self displayImage:YES];
+        
+    } else if( self.path && self.path.length > 0 ) {
+        // 尝试加在缓存图片
+        NSData *data = [NSData dataWithContentsOfFile:self.path];
+        self.image = [UIImage imageWithData:data];
+        
+        if( self.image ) {
+            // 直接显示图片
+            return [self displayImage:YES];
+            
+        } else if( self.url && self.url.length > 0 ) {
+            // 下载图片
+            if( self.downloadTask && self.downloadTask.originalRequest ) {
+                // 存在旧的请求
+                if( [self.url isEqualToString:[self.downloadTask.originalRequest.URL absoluteString]] ) {
+                    // 如果是同一个请求
+                    if( self.downloadTask.state == NSURLSessionTaskStateRunning ) {
+                        // 并且在进行中
+                        return YES;
+                    }
+                    
+                } else {
+                    // 取消旧的
+                    [self.downloadTask cancel];
+                }
+            }
+            
+            NSURL* url = [NSURL URLWithString:self.url];
+            NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
+            
+            self.downloadTask = [[AFNetWorkHelpr shareInstrue].manager downloadTaskWithRequest:request progress:^(NSProgress * _Nonnull downloadProgress) {
+                //                NSLog(@"ImageViewLoader::loadImage( completionHandler[ downloadProgress : %@ ] )", downloadProgress);
+                
+            } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+                NSURL* documentsDirectoryURL = nil;
+                if( self.path ) {
+                    documentsDirectoryURL = [NSURL fileURLWithPath:self.path];
+                }
+                return documentsDirectoryURL;
+                
+            } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+                //                NSLog(@"ImageViewLoader::loadImage( completionHandler[ response : %@ ] )", response);
+                //                NSLog(@"ImageViewLoader::loadImage( completionHandler[ filePath : %@ ] )", filePath);
+                //                NSLog(@"ImageViewLoader::loadImage( completionHandler[ error : %@ ] )", error);
+                if( [response isKindOfClass:[NSHTTPURLResponse class]] ) {
+                    if( error == nil && ((NSHTTPURLResponse* )response).statusCode == 200 ) {
+                        // 显示图片
+                        NSData *data = [NSData dataWithContentsOfFile:self.path];
+                        self.image = [UIImage imageWithData:data];
+                        
+                        [self displayImage:YES];
+                        
+                        return;
+                    }
+                }
+                
+                [self displayImage:NO];
+                
+            }];
+            
+            // 开始下载
+            [self.downloadTask resume];
+            
+        } else {
+            // 无url失败
+            return NO;
+            
+        }
+        
+    } else {
+        // 又无图片又无缓存路径失败
+        return NO;
+    }
+    
+    return YES;
 }
 
 - (BOOL)displayImage:(BOOL)success {

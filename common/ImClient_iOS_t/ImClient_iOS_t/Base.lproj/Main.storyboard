@@ -85,12 +85,52 @@
                                     <action selector="getRoomInfo:" destination="BYZ-38-t0r" eventType="touchUpInside" id="flq-tt-Wnq"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aXL-H1-x8f">
+                                <rect key="frame" x="29" y="216" width="104" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="FansShutUp"/>
+                                <connections>
+                                    <action selector="fansShutUp:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jj9-yh-K2b"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MDJ-cl-iPx">
+                                <rect key="frame" x="29" y="254" width="104" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="SendRoomFav"/>
+                                <connections>
+                                    <action selector="sendRoomFav:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lNY-OL-dHR"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yT-iN-uIQ">
+                                <rect key="frame" x="24" y="292" width="115" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="SendRoomToast"/>
+                                <connections>
+                                    <action selector="sendRoomToast:" destination="BYZ-38-t0r" eventType="touchUpInside" id="61j-wL-Hed"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKD-ad-8QS">
+                                <rect key="frame" x="196" y="254" width="104" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="SendRoomGift"/>
+                                <connections>
+                                    <action selector="sendRoomGift:" destination="BYZ-38-t0r" eventType="touchUpInside" id="q3T-gS-kbN"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9AJ-0j-BCU">
                                 <rect key="frame" x="206" y="169" width="85" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="SendMsg"/>
                                 <connections>
                                     <action selector="sendRoomMsg:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQb-qh-HqV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jp5-sv-U52">
+                                <rect key="frame" x="196" y="216" width="120" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="FansKickOff"/>
+                                <connections>
+                                    <action selector="FansKickOff:" destination="BYZ-38-t0r" eventType="touchUpInside" id="T0g-Em-apf"/>
                                 </connections>
                             </button>
                         </subviews>

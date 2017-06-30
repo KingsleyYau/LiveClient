@@ -41,8 +41,11 @@
     
     self.imageViewLoader = [ImageViewLoader loader];
     self.imageViewLoader.url = lists.userHeadUrl;
-    self.imageViewLoader.sdWebImageView = self.userHeadImage;
-    [self.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    self.imageViewLoader.view = self.userHeadImage;
+    self.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:lists.userHeadUrl];
+    [self.imageViewLoader loadImage];
+//    self.imageViewLoader.sdWebImageView = self.userHeadImage;
+//    [self.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
     
     self.userNameLabel.text = lists.userNameStr;
     

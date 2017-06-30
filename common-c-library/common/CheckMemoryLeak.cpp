@@ -23,9 +23,9 @@ void OutputDebugStringf(const char *szFmt, ...)
     va_start(marker, szFmt);  // the varargs start at szFmt
     char szBuf[20480];
     vsnprintf(szBuf, sizeof(szBuf),szFmt, marker);
-	FileLog("leak", "%s", szBuf);
-    //OutputDebugStringA("\n");
-    //OutputDebugStringA(szBuf);
+	//FileLog("leak", "%s", szBuf);
+    OutputDebugStringA(szBuf);
+	OutputDebugStringA("\n");
 }
 
 void * MyAlloc(size_t cbSize, const char *szFile = __FILE__, unsigned int  nLineNo = __LINE__)
@@ -81,7 +81,10 @@ void MyDelete(void *p, const char *szFile = __FILE__, unsigned int  nLineNo = __
 		{
 			// out of bounds
 			g_boundList.Insert(pHeader);
-			
+
+			// print log
+			OutputDebugStringf("bound file:%s, line:%d, size:%d"
+				, pHeader->file, pHeader->nLineNo, pHeader->size);
 		}
 		else {
 			// free momory

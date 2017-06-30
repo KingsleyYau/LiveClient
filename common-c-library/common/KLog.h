@@ -17,10 +17,10 @@ class KLog
 public:
 	typedef enum _tagLogLevel {
 		NO_LOG = 0,
-		ERR_LOG = 1,
-		WARN_LOG = 2,
-		INFO_LOG = 3,
-		DEBUG_LOG = 4
+		ERR_LOG,
+		WARN_LOG,
+		INFO_LOG,
+		DEBUG_LOG
 	} LogLevel;
 
 public:

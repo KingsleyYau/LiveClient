@@ -22,7 +22,7 @@
 using namespace std;
 
 #include "IDecoder.h"
-
+namespace coollive {
 class RtmpDump;
 class RtmpDumpCallback {
 public:
@@ -114,6 +114,11 @@ public:
     void AddAudioTimestamp(u_int32_t timestamp);
     
     /**
+     重置音视频时间
+     */
+    void ResetTimestamp();
+    
+    /**
      断开连接
      */
     void Stop();
@@ -173,5 +178,5 @@ private:
     int mTempAudioRecvBufferSize;
 };
 
-
+}
 #endif /* RtmpDump_hpp */

@@ -10,4 +10,10 @@
 
 @implementation MsgItem
 
+- (id)init {
+    if( self = [super init] ) {
+        self.type = MsgType_Chat;
+    }
+    return self;
+}
 @end

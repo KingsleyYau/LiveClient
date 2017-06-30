@@ -1732,3 +1732,4 @@ Path::make( Value &root ) const
 
 
 } // namespace Json
+

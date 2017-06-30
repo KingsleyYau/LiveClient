@@ -472,6 +472,229 @@ long long HttpRequestController::GetLiveRoomHotList(
     return requestId;
 }
 
+long long HttpRequestController::GetLiveRoomAllGiftList(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& token,
+                             IRequestGetLiveRoomAllGiftListCallback* callback
+                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLiveRoomAllGiftListTask* task = new HttpGetLiveRoomAllGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetLiveRoomGiftListByUserId(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      const string& token,
+                                      const string& roomId,
+                                      IRequestGetLiveRoomGiftListByUserIdCallback* callback
+                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLiveRoomGiftListByUserIdTask* task = new HttpGetLiveRoomGiftListByUserIdTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetLiveRoomGiftDetail(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& token,
+                                const string& giftId,
+                                IRequestGetLiveRoomGiftDetailCallback* callback
+                                                       ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+
+    HttpGetLiveRoomGiftDetailTask* task = new HttpGetLiveRoomGiftDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, giftId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+
+    requestId = (long long)task;
+
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+
+    return requestId;
+}
+
+long long HttpRequestController::GetLiveRoomPhotoList(
+                               HttpRequestManager *pHttpRequestManager,
+                               const string& token,
+                               IRequestGetLiveRoomPhotoListCallback* callback
+                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLiveRoomPhotoListTask* task = new HttpGetLiveRoomPhotoListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::AddLiveRoomPhoto(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& token,
+                           const string& photoId,
+                           IRequestAddLiveRoomPhotoCallback* callback
+                                                  ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAddLiveRoomPhotoTask* task = new HttpAddLiveRoomPhotoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, photoId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetUsingLiveRoomPhoto(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& token,
+                                const string& photoId,
+                                IRequestSetUsingLiveRoomPhotoCallback* callback
+                                                       ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetUsingLiveRoomPhotoTask* task = new HttpSetUsingLiveRoomPhotoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, photoId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::DelLiveRoomPhoto(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& token,
+                           const string& photoId,
+                           IRequestDelLiveRoomPhotoCallback* callback
+                                                  ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpDelLiveRoomPhotoTast* task = new HttpDelLiveRoomPhotoTast();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, photoId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
 long long HttpRequestController::GetLiveRoomUserPhoto(
                                HttpRequestManager *pHttpRequestManager,
                                const string& token,
@@ -539,7 +762,7 @@ long long HttpRequestController::GetLiveRoomModifyInfo(
 long long HttpRequestController::SetLiveRoomModifyInfo(
                                 HttpRequestManager *pHttpRequestManager,
                                 const string& token,
-                                const string& photoUrl,
+                                const string& photoId,
                                 const string& nickName,
                                 Gender gender,
                                 const string& birthday,
@@ -549,7 +772,70 @@ long long HttpRequestController::SetLiveRoomModifyInfo(
     
     HttpSetLiveRoomModifyInfoTask* task = new HttpSetLiveRoomModifyInfoTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(token, photoUrl, nickName, gender, birthday);
+    task->SetParam(token, photoId, nickName, gender, birthday);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetLiveRoomConfig(
+                            HttpRequestManager *pHttpRequestManager,
+                            IRequestGetLiveRoomConfigCallback* callback
+                                                   ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLiveRoomConfigTask* task = new HttpGetLiveRoomConfigTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::UploadLiveRoomImg(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& token,
+                                const ImageType imageType,
+                                const string& imageFileName,
+                                IRequestUploadLiveRoomImgCallback* callback
+                                                       ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUploadLiveRoomImgTask* task = new HttpUploadLiveRoomImgTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(token, imageType, imageFileName);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

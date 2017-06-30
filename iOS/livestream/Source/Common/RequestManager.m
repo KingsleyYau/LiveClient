@@ -19,6 +19,7 @@
 static RequestManager* gManager = nil;
 @interface RequestManager () {
     HttpRequestManager mHttpRequestManager;
+    HttpRequestManager mHttpRequestManagerUpload;
     HttpRequestController mHttpRequestController;
 }
 
@@ -44,6 +45,7 @@ static RequestManager* gManager = nil;
         HttpClient::Init();
         
         mHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
+        mHttpRequestManagerUpload.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
         
     }
     return self;
@@ -60,6 +62,10 @@ static RequestManager* gManager = nil;
 
 - (void)setWebSite:(NSString * _Nonnull)webSite {
     mHttpRequestManager.SetWebSite([webSite UTF8String]);
+}
+
+- (void)setWebSiteUpload:(NSString * _Nonnull)webSite {
+    mHttpRequestManagerUpload.SetWebSite([webSite UTF8String]);
 }
 
 - (void)setAuthorization:(NSString *)user password:(NSString *)password {
@@ -608,7 +614,279 @@ RequestGetLiveRoomHotListCallbackImp gRequestGetLiveRoomHotListCallbackImp;
     return request;
 }
 
+class RequestGetLiveRoomAllGiftListCallbackImp : public IRequestGetLiveRoomAllGiftListCallback {
+public:
+    RequestGetLiveRoomAllGiftListCallbackImp(){};
+    ~RequestGetLiveRoomAllGiftListCallbackImp(){};
+    void OnGetLiveRoomAllGiftList(HttpGetLiveRoomAllGiftListTask* task, bool success, int errnum, const string& errmsg, const GiftItemList& itemList) {
+        NSLog(@"RequestManager::OnGetLiveRoomAllGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        NSMutableArray *array = [NSMutableArray array];
+        for (GiftItemList::const_iterator iter = itemList.begin(); iter != itemList.end(); iter++) {
+            LiveRoomGiftItemObject* item = [[LiveRoomGiftItemObject alloc] init];
+            item.giftId = [NSString stringWithUTF8String:(*iter).giftId.c_str()];
+            item.name = [NSString stringWithUTF8String:(*iter).name.c_str()];
+            item.smallImgUrl = [NSString stringWithUTF8String:(*iter).smallImgUrl.c_str()];
+            item.imgUrl = [NSString stringWithUTF8String:(*iter).imgUrl.c_str()];
+            item.srcUrl = [NSString stringWithUTF8String:(*iter).srcUrl.c_str()];
+            item.coins = (*iter).coins;
+            item.multi_click = (*iter).isMulti_click;
+            item.type = (*iter).type;
+            item.update_time = (*iter).update_time;
+            [array addObject:item];
+            NSLog(@"RequestManager::OnGetLiveRoomPhotoList( task : %p, giftId : %@, name : %@ smallImgUrl : %@ imgUrl : %@ srcUrl : %@ coins :%f type : %d , multi_click : %d update_time: %d", task, item.giftId, item.name, item.smallImgUrl, item.imgUrl, item.srcUrl, item.coins, item.type, item.multi_click, item.update_time);
+        }
+        GetLiveRoomAllGiftListFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetLiveRoomAllGiftListCallbackImp gRequestGetLiveRoomAllGiftListCallbackImp;
+- (NSInteger)getLiveRoomAllGiftList:(NSString * _Nonnull)token
+                      finishHandler:(GetLiveRoomAllGiftListFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetLiveRoomAllGiftList(&mHttpRequestManager, [token UTF8String], &gRequestGetLiveRoomAllGiftListCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
 
+class RequestGetLiveRoomGiftListByUserIdCallbackImp : public IRequestGetLiveRoomGiftListByUserIdCallback {
+public:
+    RequestGetLiveRoomGiftListByUserIdCallbackImp(){};
+    ~RequestGetLiveRoomGiftListByUserIdCallbackImp(){};
+    void OnGetLiveRoomGiftListByUserId(HttpGetLiveRoomGiftListByUserIdTask* task, bool success, int errnum, const string& errmsg, const GiftWithIdItemList& itemList) {
+        NSLog(@"RequestManager::OnGetLiveRoomGiftListByUserId( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        NSMutableArray *array = [NSMutableArray array];
+        for (GiftWithIdItemList::const_iterator iter = itemList.begin(); iter != itemList.end(); iter++) {
+            NSString* item = [NSString stringWithUTF8String:(*iter).c_str()];
+            [array addObject:item];
+            NSLog(@"RequestManager::OnGetLiveRoomGiftListByUserId( task : %p, giftId : %@", task, item);
+        }
+        GetLiveRoomGiftListByUserIdFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetLiveRoomGiftListByUserIdCallbackImp gRequestGetLiveRoomGiftListByUserIdCallbackImp;
+- (NSInteger)getLiveRoomGiftListByUserId:(NSString * _Nonnull)token
+                                  roomId:(NSString * _Nonnull)roomId
+                           finishHandler:(GetLiveRoomGiftListByUserIdFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetLiveRoomGiftListByUserId(&mHttpRequestManager, [token UTF8String], [roomId UTF8String], &gRequestGetLiveRoomGiftListByUserIdCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetLiveRoomGiftDetailCallbackImp : public IRequestGetLiveRoomGiftDetailCallback {
+public:
+    RequestGetLiveRoomGiftDetailCallbackImp(){};
+    ~RequestGetLiveRoomGiftDetailCallbackImp(){};
+    void OnGetLiveRoomGiftDetail(HttpGetLiveRoomGiftDetailTask* task, bool success, int errnum, const string& errmsg, const HttpLiveRoomGiftItem& item) {
+        NSLog(@"RequestManager::OnGetLiveRoomGiftDetail( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        LiveRoomGiftItemObject* Obj = [[LiveRoomGiftItemObject alloc] init];
+        Obj.giftId = [NSString stringWithUTF8String:item.giftId.c_str()];
+        Obj.name = [NSString stringWithUTF8String:item.name.c_str()];
+        Obj.smallImgUrl = [NSString stringWithUTF8String:item.smallImgUrl.c_str()];
+        Obj.imgUrl = [NSString stringWithUTF8String:item.imgUrl.c_str()];
+        Obj.srcUrl = [NSString stringWithUTF8String:item.srcUrl.c_str()];
+        Obj.coins = item.coins;
+        Obj.multi_click = item.isMulti_click;
+        Obj.type = item.type;
+        Obj.update_time = item.update_time;
+
+        
+        NSLog(@"RequestManager::OnGetLiveRoomGiftDetail( task : %p, giftId : %@, name : %@ smallImgUrl : %@ imgUrl : %@ srcUrl : %@ coins :%f type : %d , multi_click : %d update_time: %d", task, Obj.giftId, Obj.name, Obj.smallImgUrl, Obj.imgUrl, Obj.srcUrl, Obj.coins, Obj.type, Obj.multi_click, Obj.update_time);
+        GetLiveRoomGiftDetailFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], Obj);
+        }
+    }
+};
+RequestGetLiveRoomGiftDetailCallbackImp gRequestGetLiveRoomGiftDetailCallbackImp;
+- (NSInteger)getLiveRoomGiftDetail:(NSString * _Nonnull)token
+                            giftId:(NSString * _Nonnull)giftId
+                     finishHandler:(GetLiveRoomGiftDetailFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetLiveRoomGiftDetail(&mHttpRequestManager, [token UTF8String], [giftId UTF8String], &gRequestGetLiveRoomGiftDetailCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetLiveRoomPhotoListCallbackImp : public IRequestGetLiveRoomPhotoListCallback {
+public:
+    RequestGetLiveRoomPhotoListCallbackImp(){};
+    ~RequestGetLiveRoomPhotoListCallbackImp(){};
+    void OnGetLiveRoomPhotoList(HttpGetLiveRoomPhotoListTask* task, bool success, int errnum, const string& errmsg, const CoverPhotoItemList& itemList) {
+        NSLog(@"RequestManager::OnGetLiveRoomPhotoList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        NSMutableArray *array = [NSMutableArray array];
+        for (CoverPhotoItemList::const_iterator iter = itemList.begin(); iter != itemList.end(); iter++) {
+            CoverPhotoItemObject* item = [[CoverPhotoItemObject alloc] init];
+            item.photoId = [NSString stringWithUTF8String:(*iter).photoId.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
+            item.status = (*iter).status;
+            item.in_use = (*iter).isIn_use;
+            [array addObject:item];
+            NSLog(@"RequestManager::OnGetLiveRoomPhotoList( task : %p, photoId : %@, photoUrl : %@ status : %d , in_use : %d", task, item.photoId, item.photoUrl, item.status, item.in_use);
+        }
+        GetLiveRoomPhotoListFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetLiveRoomPhotoListCallbackImp gRequestGetLiveRoomPhotoListCallbackImp;
+
+- (NSInteger)getLiveRoomPhotoList:(NSString * _Nonnull)token
+                    finishHandler:(GetLiveRoomPhotoListFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetLiveRoomPhotoList(&mHttpRequestManager,  [token UTF8String], &gRequestGetLiveRoomPhotoListCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestAddLiveRoomPhotoCallbackImp : public IRequestAddLiveRoomPhotoCallback {
+public:
+    RequestAddLiveRoomPhotoCallbackImp(){};
+    ~RequestAddLiveRoomPhotoCallbackImp(){};
+    void OnAddLiveRoomPhoto(HttpAddLiveRoomPhotoTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"RequestManager::OnAddLiveRoomPhoto( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        AddLiveRoomPhotoFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestAddLiveRoomPhotoCallbackImp gRequestAddLiveRoomPhotoCallbackImp;
+- (NSInteger)addLiveRoomPhoto:(NSString * _Nonnull)token
+                      photoId:(NSString * _Nonnull)photoId
+                finishHandler:(AddLiveRoomPhotoFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.AddLiveRoomPhoto(&mHttpRequestManager, [token UTF8String], [photoId UTF8String], &gRequestAddLiveRoomPhotoCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestSetUsingLiveRoomPhotoCallbackImp : public IRequestSetUsingLiveRoomPhotoCallback {
+public:
+    RequestSetUsingLiveRoomPhotoCallbackImp(){};
+    ~RequestSetUsingLiveRoomPhotoCallbackImp(){};
+    void OnSetUsingLiveRoomPhoto(HttpSetUsingLiveRoomPhotoTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"RequestManager::OnSetUsingLiveRoomPhoto( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        SetUsingLiveRoomPhotoFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestSetUsingLiveRoomPhotoCallbackImp gRequestSetUsingLiveRoomPhotoCallbackImp;
+- (NSInteger)setUsingLiveRoomPhoto:(NSString * _Nonnull)token
+                           photoId:(NSString * _Nonnull)photoId
+                     finishHandler:(SetUsingLiveRoomPhotoFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.SetUsingLiveRoomPhoto(&mHttpRequestManager, [token UTF8String], [photoId UTF8String], &gRequestSetUsingLiveRoomPhotoCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestDelLiveRoomPhotoCallbackImp : public IRequestDelLiveRoomPhotoCallback {
+public:
+    RequestDelLiveRoomPhotoCallbackImp(){};
+    ~RequestDelLiveRoomPhotoCallbackImp(){};
+    void OnDelLiveRoomPhoto(HttpDelLiveRoomPhotoTast* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"RequestManager::OnDelLiveRoomPhoto( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        
+        DelLiveRoomPhotoFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestDelLiveRoomPhotoCallbackImp gRequestDelLiveRoomPhotoCallbackImp;
+- (NSInteger)delLiveRoomPhoto:(NSString * _Nonnull)token
+                      photoId:(NSString * _Nonnull)photoId
+                finishHandler:(DelLiveRoomPhotoFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.DelLiveRoomPhoto(&mHttpRequestManager, [token UTF8String], [photoId UTF8String], &gRequestDelLiveRoomPhotoCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
 
 #pragma mark - 个人信息模块
 
@@ -657,6 +935,7 @@ public:
         GetLiveRoomModifyInfoFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         LiveRoomPersonalInfoItemObject *obj = [[LiveRoomPersonalInfoItemObject alloc] init];
+        obj.photoId = [NSString stringWithUTF8String:item.photoId.c_str()];
         obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
         obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
         obj.gender = item.gender;
@@ -705,13 +984,86 @@ public:
 };
 RequestSetLiveRoomModifyInfoCallbackImp gRequestSetLiveRoomModifyInfoCallbackImp;
 
+
 - (NSInteger)setLiveRoomModifyInfo:(NSString * _Nonnull)token
-                          photoUrl:(NSString * _Nonnull)photoUrl
+                          photoId:(NSString * _Nonnull)photoId
                           nickName:(NSString * _Nonnull)nickName
                             gender:(Gender)gender
                           birthday:(NSString * _Nonnull)birthday
                      finishHandler:(SetLiveRoomModifyInfoFinishHandler _Nullable)finishHandler {
-    NSInteger request = mHttpRequestController.SetLiveRoomModifyInfo(&mHttpRequestManager, [token UTF8String], [photoUrl UTF8String], [nickName UTF8String], gender, [birthday UTF8String], &gRequestSetLiveRoomModifyInfoCallbackImp);
+    NSInteger request = mHttpRequestController.SetLiveRoomModifyInfo(&mHttpRequestManager, [token UTF8String], [photoId UTF8String], [nickName UTF8String], gender, [birthday UTF8String], &gRequestSetLiveRoomModifyInfoCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetLiveRoomConfigCallbackImp : public IRequestGetLiveRoomConfigCallback {
+public:
+    RequestGetLiveRoomConfigCallbackImp(){};
+    ~RequestGetLiveRoomConfigCallbackImp(){};
+    void OnGetLiveRoomConfig(HttpGetLiveRoomConfigTask* task, bool success, int errnum, const string& errmsg, const HttpLiveRoomConfigItem& item) {
+        NSLog(@"RequestManager::OnGetLiveRoomConfig( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+        LiveRoomConfigItemObject *obj = [[LiveRoomConfigItemObject alloc] init];
+        obj.imSvr_ip = [NSString stringWithUTF8String:item.imSvr_ip.c_str()];
+        obj.imSvr_port = item.imSvr_port;
+        obj.httpSvr_ip = [NSString stringWithUTF8String:item.httpSvr_ip.c_str()];
+        obj.httpSvr_port = item.httpSvr_port;
+        obj.uploadSvr_ip = [NSString stringWithUTF8String:item.uploadSvr_ip.c_str()];
+        obj.uploadSvr_port = item.uploadSvr_port;
+         NSLog(@"RequestManager::OnGetLiveRoomConfig( task : %p, success : %s, errnum : %d, errmsg : %s, imSvr_ip : %@, imSvr_port :%d, httpSvr_ip : %@, httpSvr_port :%d, uploadSvr_ip : %@, uploadSvr_port :%d)", task, success?"true":"false", errnum, errmsg.c_str(), obj.imSvr_ip, obj.imSvr_port, obj.httpSvr_ip, obj.httpSvr_port, obj.uploadSvr_ip, obj.uploadSvr_port);
+        GetLiveRoomConfigFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];;
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+RequestGetLiveRoomConfigCallbackImp gRequestGetLiveRoomConfigCallbackImp;
+- (NSInteger)getLiveRoomConfig:(GetLiveRoomConfigFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetLiveRoomConfig(&mHttpRequestManager, &gRequestGetLiveRoomConfigCallbackImp);
+    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestUploadLiveRoomImgCallbackImp : public IRequestUploadLiveRoomImgCallback {
+public:
+    RequestUploadLiveRoomImgCallbackImp(){};
+    ~RequestUploadLiveRoomImgCallbackImp(){};
+    void OnUploadLiveRoomImg(HttpUploadLiveRoomImgTask* task, bool success, int errnum, const string& errmsg, const string& imageId, const string& imageUrl) {
+        NSLog(@"RequestManager::OnUploadLiveRoomImg( task : %p, success : %s, errnum : %d, errmsg : %s, imageId:%s, imageUrl:%s )", task, success?"true":"false", errnum, errmsg.c_str(), imageId.c_str(), imageUrl.c_str());
+        UploadLiveRoomImgFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];;
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if( handler ) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:imageId.c_str()], [NSString stringWithUTF8String:imageUrl.c_str()]);
+        }
+    }
+};
+RequestUploadLiveRoomImgCallbackImp gRequestUploadLiveRoomImgCallbackImp;
+
+- (NSInteger)uploadLiveRoomImg:(NSString * _Nonnull)token
+                     imageType:(ImageType)imageType
+                 imageFileName:(NSString * _Nonnull)imageFileName
+                 finishHandler:(UploadLiveRoomImgFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.UploadLiveRoomImg(&mHttpRequestManagerUpload, [token UTF8String], imageType, [imageFileName UTF8String], &gRequestUploadLiveRoomImgCallbackImp);
     if( request != HTTPREQUEST_INVALIDREQUESTID ) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];

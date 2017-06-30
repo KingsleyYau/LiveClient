@@ -16,6 +16,10 @@
 #import "CloseLiveRoomRequest.h"
 #import "CheckLiveRoomRequest.h"
 
+#import "PlayEndViewController.h"
+
+#import "FileCacheManager.h"
+
 @interface PublishViewController () <UITextFieldDelegate, KKCheckButtonDelegate,IMLiveRoomManagerDelegate>
 
 /**
@@ -52,7 +56,8 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
-    self.url = @"rtmp://172.25.32.17/live/livestream";
+//    self.url = @"rtmp://172.25.32.17/live/livestream";
+    self.url = @"rtmp://172.25.32.17/live/max";
     
     self.sessionManager = [SessionRequestManager manager];
     
@@ -93,7 +98,10 @@
     self.publisher = [LiveStreamPublisher instance];
     self.publisher.publishView = self.liveVC.videoView;
     self.publisher.beauty = YES;
-
+    
+    [self.inputTextField addTarget:self
+                            action:@selector(textFieldDidChange:)
+                  forControlEvents:UIControlEventEditingChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -160,6 +168,18 @@
     [self setupButtonBar];
 }
 
+- (void)textFieldDidChange:(UITextField *)textField {
+    
+    if (textField.text.length > 0) {
+        
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+        self.btnSend.userInteractionEnabled = YES;
+    }else{
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+        self.btnSend.userInteractionEnabled = NO;
+    }
+}
+
 #pragma mark - 直播间信息
 - (NSString *)roomId {
     return self.liveVC.roomId;
@@ -211,6 +231,15 @@
 - (IBAction)sendAction:(id)sender {
     if( [self.liveVC sendMsg:self.inputTextField.text isLounder:self.btnLouder.selected] ) {
         self.inputTextField.text = nil;
+        
+        if (self.inputTextField.text.length > 0) {
+            
+            self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+            self.btnSend.userInteractionEnabled = YES;
+        }else{
+            self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+            self.btnSend.userInteractionEnabled = NO;
+        }
     }
 }
 
@@ -330,10 +359,10 @@
     self.buttonBar = [[KKButtonBar alloc] init];
     [self.view addSubview:self.buttonBar];
     [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@180);
+        make.height.equalTo(@0);
         make.left.equalTo(self.btnConfig.mas_left);
         make.right.equalTo(self.btnConfig.mas_right);
-        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(220);
+        make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(7);
     }];
     
     self.buttonBar.isVertical = YES;
@@ -362,14 +391,15 @@
 }
 
 - (void)showButtonBar {
-    [self.buttonBarBottom uninstall];
-    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_top);
-    }];
+//    [self.buttonBarBottom uninstall];
+    
     
     [UIView animateWithDuration:0.3 animations:^{
         // Make all constraint changes here, Called on parent view
-        [self.view layoutIfNeeded];
+        [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@180);
+            make.bottom.equalTo(self.inputMessageView.mas_top);
+        }];
         
     } completion:^(BOOL finished) {
         
@@ -377,14 +407,15 @@
 }
 
 - (void)hideButtonBar {
-    [self.buttonBarBottom uninstall];
-    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(220);
-    }];
+//    [self.buttonBarBottom uninstall];
+    
     
     [UIView animateWithDuration:0.3 animations:^{
         // Make all constraint changes here, Called on parent view
-        [self.view layoutIfNeeded];
+        [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@0);
+            make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(7);
+        }];
         
     } completion:^(BOOL finished) {
         
@@ -405,25 +436,21 @@
 }
 
 #pragma mark - 文本输入回调
-- (void)textViewDidChange:(UITextView *)textView {
-    
-}
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    BOOL bFlag = YES;
-    return bFlag;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    BOOL bFlag = YES;
-    
-    [textView scrollRangeToVisible:NSMakeRange(textView.text.length - 1, textView.text.length)];
-    
-    return bFlag;
-}
-
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     return YES;
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    bool bFlag = YES;
+    
+    NSString *wholeString = textField.text;
+    NSInteger wholeStringLength = wholeString.length - range.length + string.length;
+    if( wholeStringLength >= MaxInputCount ) {
+        // 超过字符限制
+        bFlag = NO;
+    }
+    
+    return bFlag;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -528,7 +555,7 @@
     [self presentViewController:exitAlertView animated:YES completion:nil];
 }
 
-#pragma mark - IMLiveRoomManagerDelegate(主播接收退出直播间通知)
+#pragma mark - IM回调
 - (void)onRecvRoomCloseBroad:(NSString *)roomId fansNum:(int)fansNum income:(int)income newFans:(int)newFans shares:(int)shares duration:(int)duration {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 关闭输入
@@ -577,7 +604,7 @@
         self.publishEndVC.diamondNumLabel.text = [NSString stringWithFormat:@"%d", income];
         self.publishEndVC.fanNewNumLabel.text = [NSString stringWithFormat:@"%d", newFans];
         self.publishEndVC.shareNumLabel.text = [NSString stringWithFormat:@"%d", shares];
-        [self.publishEndVC.timeButton setTitle:time forState:UIControlStateNormal];
+        [self.publishEndVC.timeLabel setText:time];
         
         [self.view addSubview:self.publishEndVC.view];
         [self.publishEndVC.view mas_updateConstraints:^(MASConstraintMaker *make) {

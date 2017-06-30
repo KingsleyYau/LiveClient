@@ -41,7 +41,7 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(int version, const string& user, const string& token);
+	bool InitParam(int version, const string& user, const string& token, ClientType clientType);
 
 private:
 	IImClientListener*	m_listener;
@@ -51,6 +51,7 @@ private:
     int             m_ver;      // 客户端内部版本号
 	string			m_user;		// 用户名
 	string			m_token;	// 统一验证身份标识
+    ClientType      m_type;     // 客户端类型
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

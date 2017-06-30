@@ -11,38 +11,6 @@
 
 #include "HttpRequestDefine.h"
 
-///* ########################	登录相关 模块  ######################## */
-//
-///* 2.4.登录 */
-///* 接口路径  */
-//#define LOGIN_PATH "/echo_request"
-//
-///**
-// * 请求
-// */
-//#define AUTHORIZATION_ACCOUNT			"account"
-//#define AUTHORIZATION_PASSWORD			"password"
-//#define AUTHORIZATION_DEVICE_ID			"device_id"
-//#define AUTHORIZATION_MODEL				"model"
-//#define AUTHORIZATION_MANUFACTURER		"manufacturer"
-//
-///**
-// * 返回
-// */
-//#define AUTHORIZATION_LADY_ID			"lady_id"
-//#define AUTHORIZATION_SESSIONID			"sessionid"
-//#define AUTHORIZATION_FIRSTNAME 		"firstname"
-//#define AUTHORIZATION_LASTNAME 			"lastname"
-//#define AUTHORIZATION_PHOTO_URL 		"photo_url"
-//#define AUTHORIZATION_AGENT 			"agent"
-//#define AUTHORIZATION_INVITE_CAMFIRST 	"invite_camfirst"
-//
-//#define AUTHORIZATION_AUTH				"auth"
-//#define AUTHORIZATION_AUTH_LOGIN 		"login"
-//#define AUTHORIZATION_AUTH_SEARCH 		"search"
-//#define AUTHORIZATION_AUTH_ADMIRERMAIL	"admirermail"
-//#define AUTHORIZATION_AUTH_LIVECHAT 	"livechat"
-//#define AUTHORIZATION_AUTH_VIDEO 		"video"
 
 /* 公共部分 */
 /* http请求头 */
@@ -155,6 +123,8 @@ static const char* OTHER_LOGIN_TYPE[] =
 #define LIVEROOM_PUBLIC_TOKEN               "token"
 #define LIVEROOM_PUBLIC_START               "start"
 #define LIVEROOM_PUBLIC_STEP                "step"
+#define LIVEROOM_PUBLIC_PHOTOID             "photoid"
+#define LIVEROOM_PUBLIC_GIFTID              "id"
 
 /**
  * 直播间公共部分返回
@@ -215,6 +185,60 @@ static const char* OTHER_LOGIN_TYPE[] =
 #define LIVEROOM_HOT_FANSNUM              "fansnum"
 #define LIVEROOM_HOT_COUNTRY              "country"
 
+/* 3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表) */
+/* 接口路径 */
+#define LIVEROOM_GETALLGIFTLIST             "/liveroom/v1/getAllGiftList"
+
+/**
+ *  返回
+ */
+
+#define LIVEROOM_GIFTNAME              "name"
+#define LIVEROOM_GIFTSMALLIMGURL       "smallimgurl"
+#define LIVEROOM_GIFTIMGURL            "imgurl"
+#define LIVEROOM_GIFTSRCURL            "srcurl"
+#define LIVEROOM_GIFTCOINS             "coins"
+#define LIVEROOM_GIFTMULTI_CLICK       "multi_click"
+#define LIVEROOM_GIFTTYPE              "type"
+#define LIVEROOM_GIFTUPDATE_TIME       "update_time"
+
+/* 3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表） */
+/* 接口路径 */
+#define LIVEROOM_GETGIFTLISTBYUSERID             "/liveroom/v1/getGiftListByUserid"
+
+/* 3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示） */
+/* 接口路径 */
+#define LIVEROOM_GETGiftDetail                  "/liveroom/v1/getGiftDetail"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GiftID                        "giftid"
+
+
+/* 3.10.获取开播封面图列表 */
+/* 接口路径 */
+#define LIVEROOM_GETPHOTOLIST             "/liveroom/v1/getRoomPhotoList"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_PHOTOLIST_PHOTOURL           "photourl"
+#define LIVEROOM_PHOTOLIST_STATUS             "status"
+#define LIVEROOM_PHOTOLIST_INUSE              "in_use"
+
+/* 3.11.添加开播封面图（用于主播添加开播封面图） */
+/* 接口路径 */
+#define LIVEROOM_ADDROOMPHOTO             "/liveroom/v1/addRoomPhoto"
+
+/* 3.12.设置默认使用封面图（用于主播设置默认的封面图） */
+/* 接口路径 */
+#define LIVEROOM_SETUSINGROOMPHOTO         "/liveroom/v1/setUsingRoomPhoto"
+
+/* 3.13.删除开播封面图（用于主播删除开播封面图） */
+/* 接口路径 */
+#define LIVEROOM_DELROOMPHOTO             "/liveroom/v1/delRoomPhoto"
+
 /* ########################	个人信息 模块  ######################## */
 /* 个人信息公共部分 */
 /**
@@ -225,25 +249,57 @@ static const char* OTHER_LOGIN_TYPE[] =
 #define LIVEROOM_PUBLIC_PERSONAL_NICKNAME            "nickname"
 #define LIVEROOM_PUBLIC_PERSONAL_GENDER              "gender"
 #define LIVEROOM_PUBLIC_PERSONAL_BIRTHDAY            "birthday"
+#define LIVEROOM_PUBLIC_PERSONAL_PHOTOID             "photoid"
 
 
 /* 4.1.获取用户头像 */
 /* 接口路径 */
-#define LIVEROOM_PERSONAL_USERPHOTO             "/liveroom/v1/getuserphoto"
+#define LIVEROOM_PERSONAL_USERPHOTO                  "/liveroom/v1/getuserphoto"
 
 /**
  * 请求
  */
-#define LIVEROOM_PERSONAL_USERID            "userid"
-#define LIVEROOM_PERSONAL_PHOTOTYPE         "phototype"
+#define LIVEROOM_PERSONAL_USERID                    "userid"
+#define LIVEROOM_PERSONAL_PHOTOTYPE                 "phototype"
 
 
 /* 4.2.获取可编辑的本人资料 */
 /* 接口路径 */
-#define LIVEROOM_GET_MODIFY_INFO             "/liveroom/v1/getmodifyinfo"
+#define LIVEROOM_GET_MODIFY_INFO                   "/liveroom/v1/getmodifyinfo"
 
 /* 4.3.提交本人资料 */
 /* 接口路径 */
-#define LIVEROOM_SET_MODIFY_INFO             "/liveroom/v1/setmodifyinfo"
+#define LIVEROOM_SET_MODIFY_INFO                   "/liveroom/v1/setmodifyinfo"
+
+/* ########################	其它 模块  ######################## */
+
+/* 5.1.同步配置 */
+/* 接口路径 */
+#define LIVEROOM_GET_CONFIG                       "/liveroom/v1/getconfig"
+
+/**
+ * 返回
+ */
+#define LIVEROOM_IMSVR_IP                       "imsvr_ip"
+#define LIVEROOM_IMSVR_PORT                     "imsvr_port"
+#define LIVEROOM_HTTPSVR_IP                     "httpsvr_ip"
+#define LIVEROOM_HTTPSVR_PORT                   "httpsvr_port"
+#define LIVEROOM_UPLOADSVR_IP                   "uploadsvr_ip"
+#define LIVEROOM_UPLOADSVR_PORT                 "uploadsvr_port"
+
+/* 5.2.上传图片 */
+/* 接口路径 */
+#define LIVEROOM_UPLOADIMG                      "/api/user/uploadImg"
+/**
+ * 请求
+ */
+#define LIVEROOM_UPLOAD_TOKEN                   "token"
+#define LIVEROOM_UPLOAD_TYPE                    "type"
+#define LIVEROOM_UPLOAD_IMAGE                   "img1"
+/**
+ * 返回
+ */
+#define LIVEROOM_UPLOAD_ID                      "id"
+#define LIVEROOM_UPLOAD_URL                     "url"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

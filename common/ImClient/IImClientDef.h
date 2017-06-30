@@ -58,3 +58,19 @@ typedef struct _tRoomTopFan {
 // 直播间观众列表
 typedef list<RoomTopFan> RoomTopFanList;
 
+// 客户端端类型
+typedef enum {
+    CLIENTTYPE_IOS = 0,                        // IOS 客户端
+    CLIENTTYPE_ANDROID = 1,                    // Android 客户端
+    CLIENTTYPE_WEB = 2,                        // Web端
+    CLIENTTYPE_UNKNOW,                         // 未知
+    CLIENTTYPE_BEGIN = CLIENTTYPE_IOS,         // 有效范围起始值
+    CLIENTTYPE_END = CLIENTTYPE_UNKNOW        // 有效范围结束值
+} ClientType;
+
+// int 转换 CLIENT_TYPE
+inline ClientType GetClientType(int value) {
+    return CLIENTTYPE_BEGIN <= value && value < CLIENTTYPE_END ? (ClientType)value : CLIENTTYPE_UNKNOW;
+}
+
+

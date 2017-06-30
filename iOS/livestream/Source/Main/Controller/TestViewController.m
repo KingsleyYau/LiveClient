@@ -35,13 +35,12 @@
     self.publisher.publishView = self.publishView;
     
     self.palyer = [LiveStreamPlayer instance];
-    self.palyer.playView = self.playView;
+    self.palyer.playView = self.publishView;
     
 //    self.url = @"rtmp://103.235.46.39:80/live/livestream";
-    self.url = @"rtmp://172.25.32.17/live/livestream";
-//    self.url = @"rtmp://172.25.32.17:1936/qyg/forowen";
-    
-    
+//    self.url = @"rtmp://172.25.32.17/live/max";
+    self.url = @"rtmp://172.25.32.17:1936/aac/max";
+
     self.requestManager = [RequestManager manager];
     
 }
@@ -80,9 +79,7 @@
             // 停止菊花
             if( bFlag ) {
                 // 发布成功
-                self.playView.hidden = YES;
-                self.publishView.hidden = NO;
-                
+
             } else {
                 // 发布失败
             }
@@ -103,9 +100,7 @@
             // 停止菊花
             if( bFlag ) {
                 // 播放成功
-                self.playView.hidden = NO;
-                self.publishView.hidden = YES;
-                
+
             } else {
                 // 播放失败
             }

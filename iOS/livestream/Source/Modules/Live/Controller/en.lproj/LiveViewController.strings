@@ -1,0 +1,16 @@
+
+/* Class = "UILabel"; text = "13 unread messages"; ObjectID = "Loy-y3-J0X"; */
+"Loy-y3-J0X.text" = "13 unread messages";
+
+/* Class = "UILabel"; text = "Karen"; ObjectID = "q2E-SK-0uL"; */
+"q2E-SK-0uL.text" = "Karen";
+
+/* Class = "UILabel"; text = "21324123"; ObjectID = "u6a-zE-hBx"; */
+"u6a-zE-hBx.text" = "21324123";
+
+/* Class = "UILabel"; text = "1250"; ObjectID = "zIe-Bp-dFc"; */
+"zIe-Bp-dFc.text" = "1250";
+
+"UnRead_Messages" = "unread messages";
+
+"Member_Join" = "joined";

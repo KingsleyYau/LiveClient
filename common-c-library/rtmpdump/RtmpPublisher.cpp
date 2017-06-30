@@ -8,6 +8,7 @@
 
 #include "RtmpPublisher.h"
 
+namespace coollive {
 RtmpPublisher::RtmpPublisher() {
 	mpRtmpPublisherCallback = NULL;
 	mpVideoEncoder = NULL;
@@ -73,6 +74,10 @@ void RtmpPublisher::AddAudioTimestamp(u_int32_t timestamp) {
     mRtmpDump.AddAudioTimestamp(timestamp);
 }
 
+void RtmpPublisher::ResetTimestamp() {
+    mRtmpDump.ResetTimestamp();
+}
+    
 void RtmpPublisher::OnDisconnect(RtmpDump* rtmpDump) {
     if( mpRtmpPublisherCallback ) {
         mpRtmpPublisherCallback->OnDisconnect(this);
@@ -107,4 +112,5 @@ void RtmpPublisher::OnRecvAudioFrame(
                                   u_int32_t timestamp
                                   ) {
 
+}
 }

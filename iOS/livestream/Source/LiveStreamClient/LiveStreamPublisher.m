@@ -300,7 +300,7 @@
     
     // 创建美颜滤镜
     self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
-    self.beautyFilter.beautyLevel = 1.0;
+    self.beautyFilter.beautyLevel = 0.5;
     //    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
     
     if( _beauty ) {

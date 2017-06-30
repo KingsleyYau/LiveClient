@@ -16,4 +16,10 @@
     }
     return self;
 }
+
+- (CGRect)attachmentBoundsForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(CGRect)lineFrag glyphPosition:(CGPoint)position characterIndex:(NSUInteger)charIndex {
+    return [super attachmentBoundsForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
+//    return CGRectMake(0, 0, lineFrag.size.height, lineFrag.size.height);
+}
+
 @end

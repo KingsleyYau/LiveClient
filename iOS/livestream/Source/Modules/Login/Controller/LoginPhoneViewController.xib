@@ -69,14 +69,13 @@
                         <outlet property="delegate" destination="-1" id="Tlj-5X-XoZ"/>
                     </connections>
                 </textField>
-                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8kK-by-2P9" userLabel="Login Button">
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8kK-by-2P9" userLabel="Login Button">
                     <rect key="frame" x="47" y="300" width="226" height="48"/>
                     <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="226" id="546-NQ-IlH"/>
                         <constraint firstAttribute="height" constant="48" id="fED-Rw-qq9"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Log in">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>

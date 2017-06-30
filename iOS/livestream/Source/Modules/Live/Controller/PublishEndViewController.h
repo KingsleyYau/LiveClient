@@ -13,7 +13,7 @@
 /**
  *  直播时长
  */
-@property (weak, nonatomic) IBOutlet UIButton *timeButton;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 /**
  *  钻石数
@@ -35,9 +35,21 @@
  */
 @property (weak, nonatomic) IBOutlet UILabel *shareNumLabel;
 
+/**
+ *  主播封面
+ */
+@property (weak, nonatomic) IBOutlet UIImageView *liverCoverImageView;
 
+/**
+ *  返回按钮
+ */
+@property (weak, nonatomic) IBOutlet UIButton *homeBtn;
+
+- (IBAction)twitterAction:(UIButton *)sender;
 
 - (IBAction)faceBookAction:(UIButton *)sender;
+
+- (IBAction)instagramAction:(UIButton *)sender;
 
 /**
  点击回到主页按钮

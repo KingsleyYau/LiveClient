@@ -87,7 +87,8 @@ bool GetRoomInfoTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnGetRoomInfo(GetSeq(), result, m_errType, m_errMsg, m_fansNum, m_contribute);
+        bool success = (m_errType == LCC_ERR_SUCCESS);
+        m_listener->OnGetRoomInfo(GetSeq(), success, m_errType, m_errMsg, m_fansNum, m_contribute);
 		FileLog("LiveChatClient", "GetRoomInfoTask::Handle() callback end, result:%d", result);
 	}
 	

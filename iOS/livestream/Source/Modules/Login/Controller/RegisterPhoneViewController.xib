@@ -60,14 +60,13 @@
                         <outlet property="delegate" destination="-1" id="WoG-sf-EwI"/>
                     </connections>
                 </textField>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbK-7w-LL8" userLabel="Next Button">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SbK-7w-LL8" userLabel="Next Button">
                     <rect key="frame" x="75" y="265" width="226" height="48"/>
                     <color key="backgroundColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.74901960784313726" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="0ba-c0-2Np"/>
                         <constraint firstAttribute="width" constant="226" id="WxZ-gv-2Qs"/>
                     </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <state key="normal" title="Next">
                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </state>

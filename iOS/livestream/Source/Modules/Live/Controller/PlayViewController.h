@@ -8,6 +8,7 @@
 
 #import "KKViewController.h"
 #import "GetLiveRoomHotListRequest.h"
+#import "PresentView.h"
 
 @interface PlayViewController : KKViewController
 
@@ -94,6 +95,11 @@
  *  单击收起输入控件手势
  */
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
+
+/**
+ 礼物列表view
+ */
+@property (weak, nonatomic) IBOutlet PresentView *presentView;
 
 /**
  点击聊天按钮

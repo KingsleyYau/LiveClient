@@ -15,6 +15,7 @@
 #import <VideoToolbox/VideoToolbox.h>
 
 #include <rtmpdump/RtmpPublisher.h>
+using namespace coollive;
 
 class RtmpDumpCallbackPublish;
 @interface RtmpPublisherOC ()
@@ -303,7 +304,7 @@ recordH264FilePath:(NSString *)recordH264FilePath
             CFRelease(ref);
             
             // 关键帧间隔
-            int frameInterval = KEY_FRAME_TIME;
+            int frameInterval = KEY_FRAME_INTERVAL;
             CFNumberRef frameIntervalRef = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &frameInterval);
             VTSessionSetProperty(_videoCompressionSession, kVTCompressionPropertyKey_MaxKeyFrameInterval, frameIntervalRef);
             CFRelease(frameIntervalRef);
@@ -343,7 +344,7 @@ static void videoCompressionOutputCallback(
     
     if( !sampleBuffer || status != noErr ) {
         // kVTVideoEncoderMalfunctionErr
-        NSLog(@"RtmpPublisherOC::videoCompressionOutputCallback( [sampleBuffer is NULL], status : %d )", status);
+        NSLog(@"RtmpPublisherOC::videoCompressionOutputCallback( [sampleBuffer is NULL], status : %ld )", (long)status);
         // 可以断开连接, 或者重建编码器
         return;
     }
@@ -558,6 +559,7 @@ static OSStatus inInputDataProc(AudioConverterRef inAudioConverter, UInt32 *ioNu
         _isBackGround = NO;
         // 重置视频编码器
         [self createVideoCompressionSession];
+//        self.publisher->ResetTimestamp();
     }
 }
 

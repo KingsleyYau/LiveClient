@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 #include <common/list_lock.h>
-
+namespace coollive {
 class FrameBuffer
 {
 public:
@@ -28,5 +28,5 @@ public:
 // list define
 typedef list_lock<FrameBuffer*> FrameBufferList;
 
-
+}
 #endif /* FrameBuffer_hpp */

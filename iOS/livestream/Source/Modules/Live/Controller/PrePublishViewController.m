@@ -9,12 +9,13 @@
 #import "PrePublishViewController.h"
 
 #import "PublishViewController.h"
+#import "ManageCoverController.h"
 
 #import "GPUImage.h"
 
-#import "CreateLiveRoomRequest.h"
-
 #import "ImageViewLoader.h"
+#import "CreateLiveRoomRequest.h"
+#import "GetLiveRoomPhotoListRequest.h"
 
 @interface PrePublishViewController ()
 
@@ -27,6 +28,11 @@
  *  接口管理器
  */
 @property (nonatomic, strong) SessionRequestManager* sessionManager;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnGoLiveWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *btnGoLiveHeight;
+
+@property (nonatomic, strong)NSMutableArray *coverArray;
 
 @end
 
@@ -45,7 +51,24 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+    
+    self.btnGoLiveWidth.constant = DESGIN_TRANSFORM_3X(170);
+    self.btnGoLiveHeight.constant = DESGIN_TRANSFORM_3X(40);
+    self.btnGoLive.layer.cornerRadius = DESGIN_TRANSFORM_3X(20);
+    self.btnGoLive.layer.masksToBounds = YES;
+    
+    UIBlurEffect *beffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    UIVisualEffectView *view = [[UIVisualEffectView alloc]initWithEffect:beffect];
+    [self.liverCoverImageView addSubview:view];
+    [view mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.liverCoverImageView);
+    }];
+    
+    [self.faceBookBtn addTarget:self action:@selector(faceBookBtnSelector) forControlEvents:UIControlEventTouchUpInside];
+    [self.twitterBtn addTarget:self action:@selector(twitterBtnSelector) forControlEvents:UIControlEventTouchUpInside];
+    [self.instrgramBtn addTarget:self action:@selector(instrgramBtnSelector) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.coverArray = [[NSMutableArray alloc]init];
     
 }
 
@@ -70,6 +93,36 @@
     [super viewWillDisappear:animated];
     
     [self closeAllInputView];
+}
+
+- (void)faceBookBtnSelector {
+    
+    if (self.faceBookBtn.isSelected) {
+        
+        self.faceBookBtn.selected = NO;
+    }else{
+        self.faceBookBtn.selected = YES;
+    }
+}
+
+- (void)twitterBtnSelector {
+
+    if (self.twitterBtn.isSelected) {
+        
+        self.twitterBtn.selected = NO;
+    }else{
+        self.twitterBtn.selected = YES;
+    }
+}
+
+- (void)instrgramBtnSelector {
+    
+    if (self.instrgramBtn.isSelected) {
+        
+        self.instrgramBtn.selected = NO;
+    }else{
+        self.instrgramBtn.selected = YES;
+    }
 }
 
 - (IBAction)cancelAction:(id)sender {
@@ -120,6 +173,37 @@
             }
         }];
     }
+}
+
+- (IBAction)chooseCoverAction:(id)sender {
+    
+    GetLiveRoomPhotoListRequest *request = [[GetLiveRoomPhotoListRequest alloc]init];
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<CoverPhotoItemObject *> * _Nullable array) {
+        
+        if (success) {
+            
+            if (array.count) {
+                
+                self.coverArray = [NSMutableArray arrayWithArray:array];
+                
+                ManageCoverController *coverController = [[ManageCoverController alloc]init];
+                coverController.coverList = self.coverArray;
+                [self.navigationController pushViewController:coverController animated:YES];
+                
+            }else{
+                
+                self.coverArray = nil;
+                ManageCoverController *coverController = [[ManageCoverController alloc]init];
+                coverController.coverList = self.coverArray;
+                [self.navigationController pushViewController:coverController animated:YES];
+            }
+            
+        }else{
+            
+            NSLog(@"GetLiveRoomPhotoListRequest : errnum%ld,errmsg%@",(long)errnum,errmsg);
+        }
+    };
+    [self.sessionManager sendRequest:request];
 }
 
 #pragma mark - 文本输入控件管理
@@ -183,7 +267,7 @@
                 if( success ) {
                     // 跳进主播界面
                     PublishViewController* vc = [[PublishViewController alloc] initWithNibName:nil bundle:nil];
-                    vc.url = @"rtmp://172.25.32.17/live/livestream";//roomurl;//
+                    //vc.url = @"rtmp://172.25.32.17/live/livestream";//roomurl;//
                     vc.roomId = roomId;
                     
                     [self.navigationController pushViewController:vc animated:YES];

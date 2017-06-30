@@ -52,6 +52,9 @@
     [manager setLogEnable:YES];
     [manager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
     [manager setWebSite:@"http://172.25.32.17:3007"];
+    [manager setWebSiteUpload:@"http://172.25.32.17:82"];
+//    [manager setWebSite:@"http://192.168.88.17:3007"];
+//    [manager setWebSiteUpload:@"http://192.168.88.17:82"];
     
     // 设置接口请求环境
     // 如果调试模式, 直接进入正式环境

@@ -12,6 +12,9 @@
 #import "ViewerFansItemObject.h"
 #import "LiveRoomInfoItemObject.h"
 #import "LiveRoomPersonalInfoItemObject.h"
+#import "CoverPhotoItemObject.h"
+#import "LiveRoomGiftItemObject.h"
+#import "LiveRoomConfigItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -46,7 +49,7 @@
  *  @param webSite 接口服务器域名
  */
 - (void)setWebSite:(NSString * _Nonnull)webSite;
-
+- (void)setWebSiteUpload:(NSString * _Nonnull)webSite;
 /**
  *  设置接口服务器用户认证
  *
@@ -388,6 +391,162 @@ typedef void (^GetLiveRoomHotListFinishHandler)(BOOL success, NSInteger errnum, 
                                step:(int)step
                       finishHandler:(GetLiveRoomHotListFinishHandler _Nullable)finishHandler;
 
+/**
+ *  3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   封面图列表
+ */
+typedef void (^GetLiveRoomAllGiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomGiftItemObject *>* _Nullable array);
+
+/**
+ *  3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveRoomAllGiftList:(NSString * _Nonnull)token
+                      finishHandler:(GetLiveRoomAllGiftListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   封面图列表
+ */
+typedef void (^GetLiveRoomGiftListByUserIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<NSString *>* _Nullable array);
+
+/**
+ *  3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表）接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param roomId           直播间ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveRoomGiftListByUserId:(NSString * _Nonnull)token
+                                  roomId:(NSString * _Nonnull)roomId
+                      finishHandler:(GetLiveRoomGiftListByUserIdFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示）
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param item    指定礼物详情
+ */
+typedef void (^GetLiveRoomGiftDetailFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomGiftItemObject* _Nullable item);
+
+/**
+ *  3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示）
+ *
+ *  @param token			用户身份唯一标识
+ *  @param giftId           礼物ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveRoomGiftDetail:(NSString * _Nonnull)token
+                                  giftId:(NSString * _Nonnull)giftId
+                           finishHandler:(GetLiveRoomGiftDetailFinishHandler _Nullable)finishHandler;
+
+
+/**
+ *  3.10.获取开播封面图列表（用于主播开播前，获取封面图列表）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   封面图列表
+ */
+typedef void (^GetLiveRoomPhotoListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<CoverPhotoItemObject *>* _Nullable array);
+
+/**
+ *  3.10.获取开播封面图列表（用于主播开播前，获取封面图列表）接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveRoomPhotoList:(NSString * _Nonnull)token
+                    finishHandler:(GetLiveRoomPhotoListFinishHandler _Nullable)finishHandler;
+
+
+/**
+ *  3.11.添加开播封面图（用于主播添加开播封面图）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^AddLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  3.11.添加开播封面图（用于主播添加开播封面图）接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param photoId          封面图ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)addLiveRoomPhoto:(NSString * _Nonnull)token
+                      photoId:(NSString * _Nonnull)photoId
+                finishHandler:(AddLiveRoomPhotoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.12.设置默认使用封面图（用于主播设置默认的封面图）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^SetUsingLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  3.12.设置默认使用封面图（用于主播设置默认的封面图）接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param photoId          封面图ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)setUsingLiveRoomPhoto:(NSString * _Nonnull)token
+                           photoId:(NSString * _Nonnull)photoId
+                     finishHandler:(SetUsingLiveRoomPhotoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.13.删除开播封面图（用于主播删除开播封面图）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^DelLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  3.13.删除开播封面图（用于主播删除开播封面图）接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param photoId          封面图ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)delLiveRoomPhoto:(NSString * _Nonnull)token
+                      photoId:(NSString * _Nonnull)photoId
+                finishHandler:(DelLiveRoomPhotoFinishHandler _Nullable)finishHandler;
+
 
 /**
  *  4.1.获取用户头像接口回调
@@ -449,7 +608,7 @@ typedef void (^SetLiveRoomModifyInfoFinishHandler)(BOOL success, NSInteger errnu
  *  4.3.提交本人资料接口
  *
  *  @param token			用户身份唯一标识
- *  @param photoUrl			头像文件数据
+ *  @param photoId			头像图片ID（可无，无则表示不修改）
  *  @param nickName			昵称
  *  @param gender			性别（0：男性 1:女性）
  *  @param birthday			出生日期（格式： 1980-01-01）
@@ -458,10 +617,56 @@ typedef void (^SetLiveRoomModifyInfoFinishHandler)(BOOL success, NSInteger errnu
  *  @return 成功请求Id
  */
 - (NSInteger)setLiveRoomModifyInfo:(NSString * _Nonnull)token
-                          photoUrl:(NSString * _Nonnull)photoUrl
+                          photoId:(NSString * _Nonnull)photoId
                           nickName:(NSString * _Nonnull)nickName
                             gender:(Gender)gender
                           birthday:(NSString * _Nonnull)birthday
                      finishHandler:(SetLiveRoomModifyInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  5.1.同步配置（用于客户端获取http接口服务器，IM服务器及上传图片服务器域名及端口等配置）接口回调
+ *
+ *  @param success    成功失败
+ *  @param errnum     错误码
+ *  @param errmsg     错误提示
+ *  @param item       同步配置
+ */
+typedef void (^GetLiveRoomConfigFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomConfigItemObject* _Nonnull item);
+
+/**
+ *  5.1.同步配置（用于客户端获取http接口服务器，IM服务器及上传图片服务器域名及端口等配置）接口回调
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLiveRoomConfig:(GetLiveRoomConfigFinishHandler _Nullable)finishHandler;
+
+
+/**
+ *  5.2.上传图片接口回调
+ *
+ *  @param success    成功失败
+ *  @param errnum     错误码
+ *  @param errmsg     错误提示
+ *  @param imageId    图片ID
+ *  @param imageUrl   图片url
+ */
+typedef void (^UploadLiveRoomImgFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull imageId, NSString * _Nonnull imageUrl);
+
+/**
+ *  5.2.上传图片接口
+ *
+ *  @param token			用户身份唯一标识
+ *  @param imageType	    图片类型（1：用户头像 2:直播间封面图）
+ *  @param imageFileName    图片文件二进制数据
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)uploadLiveRoomImg:(NSString * _Nonnull)token
+                     imageType:(ImageType)imageType
+                 imageFileName:(NSString * _Nonnull)imageFileName
+                 finishHandler:(UploadLiveRoomImgFinishHandler _Nullable)finishHandler;
 
 @end

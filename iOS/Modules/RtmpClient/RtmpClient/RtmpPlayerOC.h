@@ -14,20 +14,28 @@
 
 @class RtmpPlayerOC;
 @protocol RtmpPlayerOCDelegate <NSObject>
-@optional
-- (void)rtmpPlayerOCOnRecvVideoBuffer:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC buffer:(CVPixelBufferRef _Nonnull)buffer;
-- (void)rtmpPlayerOCOnDisconnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
+
+- (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC buffer:(CVPixelBufferRef _Nonnull)buffer;
+- (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
+
 @end
 
 @interface RtmpPlayerOC : NSObject
+
 /**
  委托
  */
 @property (weak) id<RtmpPlayerOCDelegate> _Nullable delegate;
+
 /**
  录制目录
  */
 @property (readonly) NSString* _Nullable recordFilePath;
+
+/**
+ 是否使用硬解码
+ */
+@property (assign) BOOL useHardDecoder;
 
 #pragma mark - 获取实例
 /**

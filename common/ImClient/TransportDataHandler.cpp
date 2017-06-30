@@ -396,7 +396,6 @@ void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen
     if (NULL != m_listener) {
         if (NULL != m_packetHandler) {
             TransportProtocol tp;
-            
             m_packetHandler->Unpacket(data, dataLen, tp);
             m_listener->OnRecv(tp);
         }

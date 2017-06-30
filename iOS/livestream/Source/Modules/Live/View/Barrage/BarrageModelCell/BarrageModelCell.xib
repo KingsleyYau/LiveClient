@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calvin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x7m-Gm-vmA" userLabel="Name Label">
-                    <rect key="frame" x="54" y="0.0" width="146" height="15"/>
+                    <rect key="frame" x="54" y="-5" width="146" height="15"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="pXX-6u-Ptd"/>
@@ -27,11 +27,11 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agt-Fn-vaO" userLabel="Message Background View">
-                    <rect key="frame" x="19" y="15" width="109.5" height="29"/>
+                    <rect key="frame" x="19" y="12" width="109.5" height="32"/>
                     <color key="backgroundColor" red="1" green="0.82352941176470584" blue="0.019607843137254902" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="453453" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XFi-u9-QOC" userLabel="Message Label">
-                    <rect key="frame" x="54" y="15" width="59.5" height="29"/>
+                    <rect key="frame" x="54" y="12" width="59.5" height="32"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -48,11 +48,11 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="XFi-u9-QOC" firstAttribute="top" secondItem="agt-Fn-vaO" secondAttribute="top" id="5qK-ei-2up"/>
-                <constraint firstItem="agt-Fn-vaO" firstAttribute="top" secondItem="x7m-Gm-vmA" secondAttribute="bottom" id="EhW-HC-QOY"/>
+                <constraint firstItem="agt-Fn-vaO" firstAttribute="top" secondItem="x7m-Gm-vmA" secondAttribute="bottom" constant="2" id="EhW-HC-QOY"/>
                 <constraint firstItem="XFi-u9-QOC" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="10" id="HWG-ax-lP5"/>
                 <constraint firstItem="LPv-ng-f9Q" firstAttribute="leading" secondItem="Khd-aR-nVk" secondAttribute="leading" id="HrT-0d-QM1"/>
                 <constraint firstItem="agt-Fn-vaO" firstAttribute="trailing" secondItem="XFi-u9-QOC" secondAttribute="trailing" constant="15" id="TSI-AL-1pR"/>
-                <constraint firstItem="x7m-Gm-vmA" firstAttribute="top" secondItem="Khd-aR-nVk" secondAttribute="top" id="b58-J9-3Ll"/>
+                <constraint firstItem="x7m-Gm-vmA" firstAttribute="top" secondItem="Khd-aR-nVk" secondAttribute="top" constant="-5" id="b58-J9-3Ll"/>
                 <constraint firstItem="LPv-ng-f9Q" firstAttribute="top" secondItem="Khd-aR-nVk" secondAttribute="top" id="edE-aE-YKH"/>
                 <constraint firstItem="agt-Fn-vaO" firstAttribute="bottom" secondItem="Khd-aR-nVk" secondAttribute="bottom" id="fbs-du-NMr"/>
                 <constraint firstItem="x7m-Gm-vmA" firstAttribute="trailing" secondItem="Khd-aR-nVk" secondAttribute="trailing" id="gPm-sr-jR6"/>

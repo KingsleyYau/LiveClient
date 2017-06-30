@@ -24,7 +24,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager setLiveRoomModifyInfo:self.token photoUrl:self.photoUrl nickName:self.nickName gender:self.gender birthday:self.birthday finishHandler:^(BOOL success, NSInteger errnum, NSString* errmsg) {
+        NSInteger request = [self.manager setLiveRoomModifyInfo:self.token photoId:self.photoId nickName:self.nickName gender:self.gender birthday:self.birthday finishHandler:^(BOOL success, NSInteger errnum, NSString* errmsg) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理

@@ -13,6 +13,7 @@
 
 #include <common/list_lock.h>
 
+namespace coollive {
 class CacheBufferQueue {
 public:
     CacheBufferQueue();
@@ -45,5 +46,5 @@ private:
     list_lock<void *> mBufferList;
     
 };
-
+}
 #endif /* CacheBufferQueue_h */

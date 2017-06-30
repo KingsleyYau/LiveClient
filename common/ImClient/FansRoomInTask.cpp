@@ -1,7 +1,7 @@
 /*
  * author: Alex
  *   date: 2017-05-27
- *   file: AudienceRoomInTask.cpp
+ *   file: FansRoomInTask.cpp
  *   desc: 3.1.观众进入直播间Task实现类
  */
 
@@ -160,7 +160,8 @@ bool FansRoomInTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnFansRoomIn(GetSeq(), result, m_errType, m_errMsg, m_userId, m_nickName, m_photoUrl, m_country, m_videoUrl, m_fansNum, m_contribute, list);
+        bool success = (m_errType == LCC_ERR_SUCCESS);
+        m_listener->OnFansRoomIn(GetSeq(), success, m_errType, m_errMsg, m_userId, m_nickName, m_photoUrl, m_country, m_videoUrl, m_fansNum, m_contribute, list);
 		FileLog("LiveChatClient", "AudienceRoomInTask::Handle() callback end, result:%d", result);
 	}
 	

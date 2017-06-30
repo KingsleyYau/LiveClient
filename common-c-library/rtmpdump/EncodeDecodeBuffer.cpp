@@ -7,7 +7,7 @@
 
 #include <common/KLog.h>
 #include "EncodeDecodeBuffer.h"
-
+namespace coollive {
 EncodeDecodeBuffer::EncodeDecodeBuffer()
 {
     mBuffer = NULL;
@@ -22,6 +22,20 @@ EncodeDecodeBuffer::~EncodeDecodeBuffer()
     ReleaseBuffer();
 }
 
+EncodeDecodeBuffer::EncodeDecodeBuffer(const EncodeDecodeBuffer& item) {
+    mTimestamp = item.mTimestamp;
+}
+    
+EncodeDecodeBuffer& EncodeDecodeBuffer::operator=(const EncodeDecodeBuffer& item) {
+    if (this == &item) {
+        return *this;
+    }
+    
+    mTimestamp = item.mTimestamp;
+    
+    return *this;
+}
+    
 // 获取buffer指针
 unsigned char* EncodeDecodeBuffer::GetBuffer() const
 {
@@ -118,4 +132,5 @@ void EncodeDecodeBuffer::ReleaseBuffer()
 
     mBufferSize = 0;
     mBufferLen = 0;
+}
 }

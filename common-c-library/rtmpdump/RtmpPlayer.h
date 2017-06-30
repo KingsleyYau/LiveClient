@@ -20,28 +20,29 @@
 #include "CacheBufferQueue.h"
 #include "VideoDecoderH264.h"
 
-// 音视频帧缓存队列
-typedef list_lock<FrameBuffer *> FrameBufferList;
+namespace coollive {
 
 class RtmpPlayer;
 class RtmpPlayerCallback {
 public:
     virtual ~RtmpPlayerCallback(){};
-    virtual void OnDisconnect(RtmpPlayer* player) = 0;
+    
     virtual void OnPlayVideoFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnDropVideoFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnPlayAudioFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnDropAudioFrame(RtmpPlayer* player, void* frame) = 0;
+    virtual void OnStartPlayStream(RtmpPlayer* player) = 0;
+    virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
+    virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
 };
 
 class PlayVideoRunnable;
 class PlayAudioRunnable;
-class RtmpPlayer : public RtmpDumpCallback {
+class RtmpPlayer {
 public:
     RtmpPlayer();
     RtmpPlayer(
-               VideoDecoder* pVideoDecoder,
-               AudioDecoder* pAudioDecoder,
+               RtmpDump *rtmpDump,
                RtmpPlayerCallback* callback
     );
     ~RtmpPlayer();
@@ -76,21 +77,7 @@ public:
      @param timestamp 时间戳
      */
     void PushAudioFrame(void* frame, u_int32_t timestamp);
-    
-    /**
-     获取视频编码器
-
-     @return 视频编码器
-     */
-    VideoDecoder* GetVideoDecoder();
-    
-    /**
-     获取音频编码器
-
-     @return 音频编码器
-     */
-    AudioDecoder* GetAudioDecoder();
-    
+        
     /**
      获取回调
 
@@ -98,39 +85,34 @@ public:
      */
     RtmpPlayerCallback* GetCallback();
 
+    /**
+     设置是否允许延迟丢帧
+
+     @param canDropFrame 是否允许延迟丢帧
+     */
+    void SetCanDropFrame(bool canDropFrame);
+    
+    /**
+     获取缓存视频数量
+
+     @return <#return value description#>
+     */
+    size_t GetVideBufferSize();
+    
 public:
+    void SetRtmpDump(RtmpDump* rtmpDump);
     void SetCallback(RtmpPlayerCallback* callback);
-    void SetVideoDecoder(VideoDecoder* decoder);
-    void SetAudioDecoder(AudioDecoder* decoder);
 
 public:
     void PlayVideoRunnableHandle();
     void PlayAudioRunnableHandle();
-
-private:
-    void OnDisconnect(RtmpDump* rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
-    void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
-    void OnChangeAudioFormat(RtmpDump* rtmpDump,
-                             AudioFrameFormat format,
-                             AudioFrameSoundRate sound_rate,
-                             AudioFrameSoundSize sound_size,
-                             AudioFrameSoundType sound_type
-                             );
-    void OnRecvAudioFrame(RtmpDump* rtmpDump,
-                          AudioFrameFormat format,
-                          AudioFrameSoundRate sound_rate,
-                          AudioFrameSoundSize sound_size,
-                          AudioFrameSoundType sound_type,
-                          char* data,
-                          int size,
-                          u_int32_t timestamp
-                          );
     
 private:
     void Init();
-    // 是否等待缓存
+    // 缓存时间是否足够
     bool IsCacheEnough();
+    // 是否重置播放流
+    bool IsRestStream(FrameBuffer* frame, unsigned int preTimestamp);
     // 是否开始播放
     bool IsPlay(bool isAudio);
     // 没有需要播放的Buffer
@@ -152,18 +134,14 @@ private:
     RtmpPlayerCallback* mpRtmpPlayerCallback;
     
     // Rtmp传输模块
-    RtmpDump mRtmpDump;
+    RtmpDump* mpRtmpDump;
     
     // 播放线程
     KThread mPlayVideoThread;
     PlayVideoRunnable* mpPlayVideoRunnable;
     KThread mPlayAudioThread;
     PlayAudioRunnable* mpPlayAudioRunnable;
-    
-    // 解码器
-    VideoDecoder* mpVideoDecoder;
-    AudioDecoder* mpAudioDecoder;
-    
+
     // 状态锁
     KMutex mClientMutex;
     bool mbRunning;
@@ -176,23 +154,23 @@ private:
     
     // 播放的缓存时间(毫秒)
     unsigned int mCacheMS;
-    unsigned int mCacheTotalMS;
 
     // 是否开启缓存
-    bool bCacheFrame;
+    bool mbCacheFrame;
+    // 是否开启音视频同步
+    bool mbSyncFrame;
     // 缓存锁
     KMutex mPlayThreadMutex;
     // 是否等待缓存
     bool mIsWaitCache;
 
-    // 是否重置本地播放时间
-    bool mResetAudioPlayTime;
-    bool mResetVideoPlayTime;
-
-    // 开始播放的时间
+    // 开始播放的时间, 用于音视频同步
     long long mStartPlayTime;
     // 音视频开始播放时间差
     int mPlayVideoAfterAudioDiff;
+    
+    // 是否第一次不够缓存
+    bool mbShowNoCacheLog;
 };
-
+}
 #endif /* RtmpPlayer_h */

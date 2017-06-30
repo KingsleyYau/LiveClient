@@ -143,8 +143,26 @@ int KLog::LogToFile(const char *fileNamePre, KLog::LogLevel level, const char *l
 
     strcat(pDataBuffer, "\n");
 
-    //OutputDebugString(pDataBuffer);
-	printf(pDataBuffer);
+	// set color
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(hStdOut, &csbi);
+	WORD color = csbi.wAttributes;
+	switch(level) {
+		case INFO_LOG:
+			color = FOREGROUND_GREEN;
+			break;
+		case WARN_LOG:
+			color = FOREGROUND_INTENSITY|BACKGROUND_BLUE;
+			break;
+		case ERR_LOG:
+			color = FOREGROUND_INTENSITY|BACKGROUND_RED;
+			break;
+	}
+	SetConsoleTextAttribute(hStdOut, color);
+
+	printf("%s %s", pTimeBuffer, pDataBuffer);
+	SetConsoleTextAttribute(hStdOut, csbi.wAttributes);
 
 	return 1;
 }

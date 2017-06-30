@@ -186,6 +186,8 @@
     CGRect rect = CGRectMake(0, -SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
     self.promptView = [[PromptView alloc]initWithFrame:rect];
     self.promptView.promptDelegate = self;
+    
+    [self.btnNext setTitleColor:Color(255, 255, 255, 0.7) forState:UIControlStateHighlighted];
 }
 
 - (void)selectCountryWithController{
@@ -200,10 +202,12 @@
         
         if (textField.text.length > 0) {
             
-            [self.btnNext setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnNext setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnNext setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnNext.userInteractionEnabled = YES;
         }else{
-            [self.btnNext setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnNext setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnNext.userInteractionEnabled = NO;
         }
     }
@@ -260,13 +264,30 @@
     if ( areCodeStr.length > 0 ) {
         if ( self.textFieldPhone.text.length > 0 ) {
             
-            [self.btnNext setBackgroundColor:COLOR_WITH_16BAND_RGB(0x5d0e86)];
+            [self.btnNext setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0x5d0e86)] forState:UIControlStateNormal];
+            [self.btnNext setBackgroundImage:[self imageWithColor:Color(80, 17, 121, 0.7)] forState:UIControlStateHighlighted];
+            
             self.btnNext.userInteractionEnabled = YES;
         }else{
-            [self.btnNext setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
+            [self.btnNext setBackgroundImage:[self imageWithColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)] forState:UIControlStateNormal];
             self.btnNext.userInteractionEnabled = NO;
         }
     }
+}
+
+//  颜色转换为背景图片
+- (UIImage *)imageWithColor:(UIColor *)color {
+    CGRect rect = CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
 }
 
 #pragma mark - PromptViewDelegate

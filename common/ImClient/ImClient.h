@@ -39,7 +39,7 @@ public:
     
     // --------- 登录/注销 ---------
 	// 登录
-	bool Login(const string& user, const string& password) override;
+	bool Login(const string& user, const string& password, ClientType clientType) override;
 	// 注销
 	bool Logout() override;
     // 获取login状态
@@ -52,11 +52,26 @@ public:
     bool FansRoomOut(SEQ_T reqId, const string& token, const string& roomId) override;
     // 获取直播间信息
     bool GetRoomInfo(SEQ_T reqId, const string& token, const string& roomId) override;
+    // 3.7.主播禁言观众（直播端把制定观众禁言）
+    bool FansShutUp(SEQ_T reqId, const string& roomId, const string& userId, int timeOut) override;
+    // 3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）
+    bool FansKickOffRoom(SEQ_T reqId, const string& roomId, const string& userId) override;
     
     // --------- 直播间文本消息 ---------
     // 发送直播间文本消息
     bool SendRoomMsg(SEQ_T reqId, const string& token, const string& roomId, const string& nickName, const string& msg) override;
     
+    // ------------- 直播间点赞 -------------
+    // 5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）
+    bool SendRoomFav(SEQ_T reqId, const string& roomId, const string& token, const string& nickName) override;
+    
+    // ------------- 直播间点赞 -------------
+    // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
+    bool SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
+
+    // ------------- 直播间弹幕消息 -------------
+    // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
+    bool SendRoomToast(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& msg) override;
     
 public:
 	// 获取用户账号
@@ -93,6 +108,7 @@ private:
 
 	string			m_user;			// 用户名
 	string			m_password;		// 密码
+    ClientType      m_clientType;   // 客户端类型
     
     IAutoLock*      m_loginStatusLock;  // 登录状态锁
     LoginStatus     m_loginStatus;  // 登录状态
@@ -113,6 +129,8 @@ private:
     // 客户端主动请求
     void OnLogin(LCC_ERR_TYPE err, const string& errmsg) override;
     void OnLogout(LCC_ERR_TYPE err, const string& errmsg) override;
+    // 2.4.用户被挤掉线
+    void OnKickOff(const string reason) override;
     // ------------- 直播间处理(非消息) -------------
     // 观众进入直播间回调
     void OnFansRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& userId, const string& nickName, const string& photoUrl, const string& country, const list<string>& videoUrls, int fansNum, int contribute, const RoomTopFanList& fans) override;
@@ -122,6 +140,16 @@ private:
     void OnSendRoomMsg(SEQ_T reqId, LCC_ERR_TYPE err, const string& errMsg) override;
     // 获取直播间信息
     void OnGetRoomInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, int fansNum, int contribute) override;
+    // 3.7.主播禁言观众（直播端把制定观众禁言）
+    void OnFansShutUp(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
+    // 3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）
+    void OnFansKickOffRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
+    // 5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）
+    void OnSendRoomFav(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
+    // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
+    void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) override;
+    // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
+    void OnSendRoomToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) override;
     
     // 服务端主动请求
     // 接收直播间关闭通知(观众)
@@ -130,7 +158,17 @@ private:
     void OnRecvRoomCloseBroad(const string& roomId, int fansNum, int inCome, int newFans, int shares, int duration) override;
     // 接收观众进入直播间通知
     void OnRecvFansRoomIn(const string& roomId, const string& userId, const string& nickName, const string& photoUrl) override;
+    // 3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）
+    void OnRecvShutUpNotice(const string& roomId, const string& userId, const string& nickName, int timeOut) override;
+    // 3.10.接收观众踢出直播间通知（观众端／主播端接收观众踢出直播间通知）
+    void OnRecvKickOffRoomNotice(const string& roomId, const string& userId, const string& nickName) override;
     // 接收直播间文本消息通知
     void OnRecvRoomMsg(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg) override;
+    // 5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）
+    void OnRecvPushRoomFav(const string& roomId, const string& fromId, const string& nickName, bool isFirst) override;
+    // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
+    void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
+    // 7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
+    void OnRecvRoomToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) override;
 
 };

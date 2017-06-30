@@ -9,7 +9,7 @@
 #import "SessionRequest.h"
 
 @interface SetLiveRoomModifyInfoRequest : SessionRequest
-@property (nonatomic, strong) NSString* _Nullable photoUrl;
+@property (nonatomic, strong) NSString* _Nullable photoId;
 @property (nonatomic, strong) NSString* _Nullable nickName;
 @property (nonatomic, assign) Gender gender;
 @property (nonatomic, strong) NSString* _Nullable birthday;

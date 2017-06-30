@@ -132,15 +132,15 @@
 }
 
 #pragma mark - 视频接收处理
-- (void)rtmpPlayerOCOnRecvVideoBuffer:(RtmpPlayerOC * _Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
+- (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC * _Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
     if( buffer ) {
         // 这里显示视频
         [self.pixelBufferInput processCVPixelBuffer:buffer];
     }
 }
 
-- (void)rtmpPlayerOCOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
-    NSLog(@"LiveStreamPlayer::rtmpPlayerOCOnDisconnect()");
+- (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect()");
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         @synchronized (self) {

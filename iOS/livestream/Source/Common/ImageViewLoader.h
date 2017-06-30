@@ -48,4 +48,6 @@
  */
 - (BOOL)loadImageWithOptions:(SDWebImageOptions)option placeholderImage:(UIImage *)image;
 
+- (BOOL)loadImage;
+
 @end

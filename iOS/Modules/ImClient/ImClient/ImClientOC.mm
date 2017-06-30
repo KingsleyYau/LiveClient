@@ -37,6 +37,13 @@ class ImClientCallback;
  */
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg;
 
+/**
+ *  2.4.用户被挤掉线回调
+ *
+ *  @param reason     被挤掉理由
+ */
+- (void)onKickOff:(const string&)reason;
+
 #pragma mark - 直播间主动操作回调
 /**
  *  观众进入直播间回调
@@ -79,6 +86,29 @@ class ImClientCallback;
  */
 - (void)onGetRoomInfo:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg fansNum:(int)fansNum contribute:(int)contribute;
 
+/**
+ *  3.7.主播禁言观众（直播端把制定观众禁言）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onFansShutUp:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg;
+
+/**
+ *  3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onFansKickOffRoom:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg;
+
+
 #pragma mark - 直播间接收操作回调
 /**
  *  接收直播间关闭通知(观众)回调
@@ -113,6 +143,26 @@ class ImClientCallback;
  */
 - (void)onRecvFansRoomIn:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName photoUrl:(const string&)photoUrl;
 
+/**
+ *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param userId      被禁言用户ID
+ *  @param nickName    被禁言用户昵称
+ *  @param timeOut     禁言时长
+ *
+ */
+- (void)onRecvShutUpNotice:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName timeOut:(int)timeOut;
+/**
+ *  3.10.接收观众踢出直播间通知（观众端／主播端接收观众踢出直播间通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param userId      被禁言用户ID
+ *  @param nickName    被禁言用户昵称
+ *
+ */
+- (void)onRecvKickOffRoomNotice:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName;
+
 #pragma mark - 直播间文本消息信息
 /**
  *  发送直播间文本消息回调
@@ -134,6 +184,79 @@ class ImClientCallback;
  *
  */
 - (void)onRecvRoomMsg:(const string&)roomId level:(int)level fromId:(const string&)fromId nickName:(const string&)nickName msg:(const string&)msg;
+
+#pragma mark - 直播间点赞操作回调
+/**
+ *  5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *
+ */
+- (void)onSendRoomFav:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg;
+/**
+ *  5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param fromId      发送方的用户ID
+ *  @param nickName    发送人昵称
+ *  @param isFirst     是否第一次点赞
+ *
+ */
+- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName isFirst:(bool)isFirst;
+
+#pragma mark - 直播间礼物消息操作回调
+/**
+ *  6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *  @param coins       剩余金币数
+ *
+ */
+- (void)onSendRoomGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg coins:(double)coins;
+/**
+ *  6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）回调
+ *
+ *  @param roomId               直播间ID
+ *  @param fromId               发送方的用户ID
+ *  @param nickName             发送方的昵称
+ *  @param giftId               礼物ID
+ *  @param giftNum              本次发送礼物的数量
+ *  @param multi_click          是否连击礼物
+ *  @param multi_click_start    连击起始数
+ *  @param multi_click_end      连击结束数
+ *  @param multi_click_id       连击ID相同则表示同一次连击
+ *
+ */
+- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+
+#pragma mark - 直播间弹幕消息操作回调
+/**
+ *  7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）回调
+ *
+ *  @param success     操作是否成功
+ *  @param reqId       请求序列号
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
+ *  @param coins       剩余金币数
+ *
+ */
+- (void)onSendRoomToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg coins:(double)coins;
+/**
+ *  7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
+ *
+ *  @param roomId               直播间ID
+ *  @param fromId               发送方的用户ID
+ *  @param nickName             发送方的昵称
+ *  @param msg                  消息内容
+ *
+ */
+- (void)onRecvRoomToastNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName msg:(const string&)msg;
 
 @end
 
@@ -160,6 +283,13 @@ public:
             [clientOC onLogout:err errMsg:errmsg];
         }
     }
+    virtual void OnKickOff(const string reason)  {
+        NSLog(@"OnKickOff() reason:%s"
+              , reason.c_str());
+        if (nil != clientOC) {
+            [clientOC onKickOff:reason];
+        }
+    }
     virtual void OnFansRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& userId, const string& nickName, const string& photoUrl, const string& country, const list<string>& videoUrls, int fansNum, int contribute, const RoomTopFanList& fans)
     {
         NSLog(@"OnFansRoomIn() err:%d, errmsg:%s"
@@ -182,6 +312,36 @@ public:
               , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onGetRoomInfo:success reqId:reqId errType:err errMsg:errMsg fansNum:fansNum contribute:contribute];
+        }
+    }
+    // 3.7.主播禁言观众（直播端把制定观众禁言）
+    virtual void OnFansShutUp(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+        NSLog(@"OnFansShutUp() err:%d, errmsg:%s"
+              , err, errMsg.c_str());
+        if (nil != clientOC) {
+            [clientOC onFansShutUp:success reqId:reqId errType:err errMsg:errMsg];
+        }
+    }
+    // 3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）
+    virtual void OnRecvShutUpNotice(const string& roomId, const string& userId, const string& nickName, int timeOut) {
+        NSLog(@"OnRecvShutUpNotice()");
+        if (nil != clientOC) {
+            [clientOC onRecvShutUpNotice:roomId userId:userId nickName:nickName timeOut:timeOut];
+        }
+    }
+    // 3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）
+    virtual void OnFansKickOffRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+        NSLog(@"OnFansKickOffRoom() err:%d, errmsg:%s"
+              , err, errMsg.c_str());
+        if (nil != clientOC) {
+            [clientOC onFansKickOffRoom:success reqId:reqId errType:err errMsg:errMsg];
+        }
+    }
+    // 3.10.接收观众踢出直播间通知（观众端／主播端接收观众踢出直播间通知）
+    virtual void OnRecvKickOffRoomNotice(const string& roomId, const string& userId, const string& nickName) {
+        NSLog(@"OnRecvKickOffNoticeRoom()");
+        if (nil != clientOC) {
+            [clientOC onRecvKickOffRoomNotice:roomId userId:userId nickName:nickName];
         }
     }
     virtual void OnSendRoomMsg(SEQ_T reqId, LCC_ERR_TYPE err, const string& errMsg)
@@ -222,6 +382,58 @@ public:
               , roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str());
         if (nil != clientOC) {
             [clientOC onRecvRoomMsg:roomId level:level fromId:fromId nickName:nickName msg:msg];
+        }
+    }
+    
+    // ------------- 直播间点赞 -------------
+    // 5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）
+    virtual void OnSendRoomFav(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+        NSLog(@"OnSendRoomFav() err:%d, errmsg:%s"
+              , err, errMsg.c_str());
+        if (nil != clientOC) {
+            [clientOC onSendRoomFav:success reqId:reqId errType:err errMsg:errMsg];
+        }
+    }
+    // 5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）
+    virtual void OnRecvPushRoomFav(const string& roomId, const string& fromId, const string& nickName, bool isFirst) {
+        NSLog(@"OnRecvPushRoomFav()");
+        if (nil != clientOC) {
+//            [clientOC onRecvPushRoomFav:roomId fromId:fromId nickName:nickName isFirst:isFirst];
+        }
+    }
+    
+    // ------------- 直播间点赞 -------------
+    // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
+    virtual void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) {
+        NSLog(@"OnSendRoomGift() err:%d, errmsg:%s"
+              , err, errMsg.c_str());
+        if (nil != clientOC) {
+            [clientOC onSendRoomGift:success reqId:reqId errType:err errMsg:errMsg coins:coins];
+        }
+    }
+    
+    // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
+    virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
+        NSLog(@"OnRecvRoomGiftNotice()");
+        if (nil != clientOC) {
+            [clientOC onRecvRoomGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+        }
+    }
+    
+    // ------------- 直播间弹幕消息 -------------
+    // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
+    virtual void OnSendRoomToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) {
+        NSLog(@"OnSendRoomToast() err:%d, errmsg:%s"
+              , err, errMsg.c_str());
+        if (nil != clientOC) {
+            [clientOC onSendRoomToast:success reqId:reqId errType:err errMsg:errMsg coins:coins];
+        }
+    }
+    // 7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
+    virtual void OnRecvRoomToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) {
+        NSLog(@"OnRecvRoomToastNotice()");
+        if (nil != clientOC) {
+            [clientOC onRecvRoomToastNotice:roomId fromId:fromId nickName:nickName msg:msg];
         }
     }
     
@@ -346,7 +558,7 @@ private:
             strToken = [token UTF8String];
         }
         
-        result = self.client->Login(strUserId, strToken);
+        result = self.client->Login(strUserId, strToken, CLIENTTYPE_IOS);
     }
     return result;
 }
@@ -417,6 +629,46 @@ private:
     return result;
 }
 
+- (BOOL)fansShutUp:(NSString *)roomId userId:(NSString *)userId timeOut:(int)timeOut
+{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        string strUserId;
+        if (nil != userId) {
+            strUserId = [userId UTF8String];
+        }
+        
+        result = self.client->FansShutUp(0, strRoomId, strUserId, timeOut);
+    }
+    return result;
+}
+
+- (BOOL)fansKickOffRoom:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId
+{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        string strUserId;
+        if (nil != userId) {
+            strUserId = [userId UTF8String];
+        }
+        
+        result = self.client->FansKickOffRoom(0, strRoomId, strUserId);
+    }
+    return result;
+}
+
 - (BOOL)sendRoomMsg:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg
 {
     BOOL result = NO;
@@ -444,6 +696,90 @@ private:
     return result;
 }
 
+- (BOOL)sendRoomFav:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString * _Nonnull)nickName
+{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        string strToken;
+        if (nil != token) {
+            strToken = [token UTF8String];
+        }
+        
+        string strNickName;
+        if (nil != nickName) {
+            strNickName = [nickName UTF8String];
+        }
+        
+        result = self.client->SendRoomFav(0, strRoomId, strToken, strNickName);
+    }
+    return result;
+}
+
+- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        string strToken;
+        if (nil != token) {
+            strToken = [token UTF8String];
+        }
+        
+        string strNickName;
+        if (nil != nickName) {
+            strNickName = [nickName UTF8String];
+        }
+        
+        string strGiftId;
+        if (nil != giftId) {
+            strGiftId = [giftId UTF8String];
+        }
+        
+        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+    }
+    return result;
+}
+
+- (BOOL)sendRoomToast:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg
+{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        string strToken;
+        if (nil != token) {
+            strToken = [token UTF8String];
+        }
+        
+        string strNickName;
+        if (nil != nickName) {
+            strNickName = [nickName UTF8String];
+        }
+        
+        string strMsg;
+        if (nil != msg) {
+            strMsg = [msg UTF8String];
+        }
+        
+        result = self.client->SendRoomToast(0, strRoomId, strToken, strNickName, strMsg);
+    }
+    return result;
+}
 
 #pragma mark - 登录/注销回调
 
@@ -470,6 +806,20 @@ private:
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if( [delegate respondsToSelector:@selector(onLogout:errMsg:)] ) {
                 [delegate onLogout:errType errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+- (void)onKickOff:(const string&)reason
+{
+    NSString* nsReason = [NSString stringWithUTF8String:reason.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onKickOff:)] ) {
+                [delegate onKickOff:nsReason];
             }
         }
     }
@@ -538,6 +888,34 @@ private:
     }
 }
 
+- (void)onFansShutUp:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg
+{
+    NSString* nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onFansShutUp:reqId:errType:errMsg:)] ) {
+                [delegate onFansShutUp:success reqId:reqId errType:errType errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+- (void)onFansKickOffRoom:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg
+{
+    NSString* nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onFansKickOffRoom:reqId:errType:errMsg:)] ) {
+                [delegate onFansKickOffRoom:success reqId:reqId errType:errType errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
 #pragma mark - 直播间接收操作回调
 
 - (void)onRecvRoomCloseFans:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName fansNum:(int)fansNum
@@ -555,6 +933,7 @@ private:
         }
     }
 }
+
 
 - (void)onRecvRoomCloseBroad:(const string&)roomId fansNum:(int)fansNum income:(int)income newFans:(int)newFans shares:(int)shares duration:(int)duration
 {
@@ -582,6 +961,38 @@ private:
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if( [delegate respondsToSelector:@selector(onRecvFansRoomIn:userId:nickName:photoUrl:)] ) {
                 [delegate onRecvFansRoomIn:nsRoomId userId:nsUserId nickName:nsNickName photoUrl:nsPhotoUrl];
+            }
+        }
+    }
+}
+
+- (void)onRecvShutUpNotice:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName timeOut:(int)timeOut
+{
+    NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* nsUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvShutUpNotice:userId:nickName:timeOut:)] ) {
+                [delegate onRecvShutUpNotice:nsRoomId userId:nsUserId nickName:nsNickName timeOut:timeOut];
+            }
+        }
+    }
+}
+
+- (void)onRecvKickOffRoomNotice:(const string&)roomId userId:(const string&)userId nickName:(const string&)nickName
+{
+    NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* nsUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvKickOffRoomNotice:userId:nickName:)] ) {
+                [delegate onRecvKickOffRoomNotice:nsRoomId userId:nsUserId nickName:nsNickName];
             }
         }
     }
@@ -619,8 +1030,101 @@ private:
     }
 }
 
+#pragma mark - 直播间点赞操作回调
 
+- (void)onSendRoomFav:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg
+{
+    NSString* nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onSendRoomFav:reqId:errType:errMsg:)] ) {
+                [delegate onSendRoomFav:success reqId:reqId errType:errType errMsg:nsErrMsg];
+            }
+        }
+    }
+}
 
+- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId
+{
+    NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvPushRoomFav:fromId:)] ) {
+                [delegate onRecvPushRoomFav:nsRoomId fromId:nsFromId];
+            }
+        }
+    }
+}
 
+#pragma mark - 直播间礼物消息操作回调
+
+- (void)onSendRoomGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg coins:(double)coins
+{
+    NSString* nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onSendRoomGift:reqId:errType:errMsg:coins:)] ) {
+                [delegate onSendRoomGift:success reqId:reqId errType:errType errMsg:nsErrMsg coins:coins];
+            }
+        }
+    }
+}
+
+- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+{
+    NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
+    NSString* nsGigtId = [NSString stringWithUTF8String:giftId.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvRoomGiftNotice:fromId:nickName:giftId:giftNum:multi_click:multi_click_start:multi_click_end:multi_click_id:)] ) {
+                [delegate onRecvRoomGiftNotice:nsRoomId fromId:nsFromId nickName:nsNickName giftId:nsGigtId giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            }
+        }
+    }
+}
+
+#pragma mark - 直播间弹幕消息操作回调
+
+- (void)onSendRoomToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string&)errmsg coins:(double)coins
+{
+    NSString* nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onSendRoomToast:reqId:errType:errMsg:coins:)] ) {
+                [delegate onSendRoomToast:success reqId:reqId errType:errType errMsg:nsErrMsg coins:coins];
+            }
+        }
+    }
+}
+
+- (void)onRecvRoomToastNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName msg:(const string&)msg
+{
+    NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
+    NSString* nsMsg = [NSString stringWithUTF8String:msg.c_str()];
+    @synchronized(self.delegates) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvRoomToastNotice:fromId:nickName:msg:)] ) {
+                [delegate onRecvRoomToastNotice:nsRoomId fromId:nsFromId nickName:nsNickName msg:nsMsg];
+            }
+        }
+    }
+}
 
 @end

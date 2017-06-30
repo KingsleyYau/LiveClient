@@ -28,6 +28,8 @@
 #define PlaceholderFontSize 16
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
 
+#define MaxInputCount 70
+
 @interface LiveViewController : KKViewController
 #pragma mark - 退出按钮
 @property (nonatomic, weak) IBOutlet UIButton* btnCancel;
@@ -68,6 +70,11 @@
 #pragma mark - 视频控件
 @property (nonatomic, weak) IBOutlet GPUImageView* videoView;
 
+/**
+ 未读消息数量
+ */
+@property (assign) NSInteger unReadMsgCount;
+
 #pragma mark - 按钮事件
 - (IBAction)fansAction:(id)sender;
 
@@ -87,5 +94,7 @@
  @param giftItem <#giftItem description#>
  */
 - (void)addCombo:(GiftItem *)giftItem;
+
+- (void)starBigAnimation;
 
 @end

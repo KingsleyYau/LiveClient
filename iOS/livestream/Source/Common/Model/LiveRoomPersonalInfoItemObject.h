@@ -10,6 +10,8 @@
 #import <httpcontroller/HttpRequestEnum.h>
 
 @interface LiveRoomPersonalInfoItemObject : NSObject
+// 头像图片Id
+@property (nonatomic, strong) NSString* photoId;
 // 头像url
 @property (nonatomic, strong) NSString* photoUrl;
 // 昵称

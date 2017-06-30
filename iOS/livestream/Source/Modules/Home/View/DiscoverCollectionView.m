@@ -70,10 +70,13 @@
     }
     // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    cell.imageViewLoader.sdWebImageView = cell.imageCoverView;
+    cell.imageViewLoader.view = cell.imageCoverView;
     cell.imageViewLoader.url = item.imageUrl;
-//    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
+    [cell.imageViewLoader loadImage];
+    
+//    cell.imageViewLoader.sdWebImageView = cell.imageCoverView;
+//    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
     
     cell.personName.text = item.firstName;
     cell.personDetail.text = @"1234 online";

@@ -17,6 +17,7 @@
 
 #include "IDecoder.h"
 
+namespace coollive {
 class VideoEncoder;
 class AudioEncoder;
 class RtmpPublisher;
@@ -76,6 +77,8 @@ public:
                         );
     void AddAudioTimestamp(u_int32_t timestamp);
 
+    void ResetTimestamp();
+    
     /**
      * 获取回调
      */
@@ -127,5 +130,5 @@ private:
     // 音频编码器
     AudioEncoder* mpAudioEncoder;
 };
-
+}
 #endif /* RtmpPublisher_h */

@@ -12,7 +12,6 @@
 
 @interface TestViewController : KKViewController
 @property (nonatomic, weak) IBOutlet GPUImageView* publishView;
-@property (nonatomic, weak) IBOutlet GPUImageView* playView;
 
 - (IBAction)publish:(id)sender;
 - (IBAction)play:(id)sender;
