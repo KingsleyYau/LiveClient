@@ -61,6 +61,17 @@
 		FA7501351EE527DA00DCFB3B /* RecvFansRoomInTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7501291EE527DA00DCFB3B /* RecvFansRoomInTask.cpp */; };
 		FA7501361EE527DA00DCFB3B /* RecvRoomMsgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA75012B1EE527DA00DCFB3B /* RecvRoomMsgTask.cpp */; };
 		FA7501371EE527DA00DCFB3B /* SendRoomMsgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA75012D1EE527DA00DCFB3B /* SendRoomMsgTask.cpp */; };
+		FA7AB6931EEE632300C5F24D /* KickOffTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AB6911EEE632300C5F24D /* KickOffTask.cpp */; };
+		FA7FB8CA1EEF734900B79F0A /* FansKickOffRoomTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8B61EEF734900B79F0A /* FansKickOffRoomTask.cpp */; };
+		FA7FB8CB1EEF734900B79F0A /* FansShutUpTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8B81EEF734900B79F0A /* FansShutUpTask.cpp */; };
+		FA7FB8CC1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8BA1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.cpp */; };
+		FA7FB8CD1EEF734900B79F0A /* RecvPushRoomFavTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8BC1EEF734900B79F0A /* RecvPushRoomFavTask.cpp */; };
+		FA7FB8CE1EEF734900B79F0A /* RecvRoomGiftNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8BE1EEF734900B79F0A /* RecvRoomGiftNoticeTask.cpp */; };
+		FA7FB8CF1EEF734900B79F0A /* RecvRoomToastNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8C01EEF734900B79F0A /* RecvRoomToastNoticeTask.cpp */; };
+		FA7FB8D01EEF734900B79F0A /* RecvShutUpNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8C21EEF734900B79F0A /* RecvShutUpNoticeTask.cpp */; };
+		FA7FB8D11EEF734900B79F0A /* SendRoomFavTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8C41EEF734900B79F0A /* SendRoomFavTask.cpp */; };
+		FA7FB8D21EEF734900B79F0A /* SendRoomGiftTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8C61EEF734900B79F0A /* SendRoomGiftTask.cpp */; };
+		FA7FB8D31EEF734900B79F0A /* SendRoomToastTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7FB8C81EEF734900B79F0A /* SendRoomToastTask.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -185,6 +196,28 @@
 		FA75012D1EE527DA00DCFB3B /* SendRoomMsgTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendRoomMsgTask.cpp; sourceTree = "<group>"; };
 		FA75012E1EE527DA00DCFB3B /* SendRoomMsgTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendRoomMsgTask.h; sourceTree = "<group>"; };
 		FA7501641EE5585500DCFB3B /* IMLiveRoomManagerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMLiveRoomManagerListener.h; sourceTree = "<group>"; };
+		FA7AB6911EEE632300C5F24D /* KickOffTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = KickOffTask.cpp; sourceTree = "<group>"; };
+		FA7AB6921EEE632300C5F24D /* KickOffTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KickOffTask.h; sourceTree = "<group>"; };
+		FA7FB8B61EEF734900B79F0A /* FansKickOffRoomTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FansKickOffRoomTask.cpp; sourceTree = "<group>"; };
+		FA7FB8B71EEF734900B79F0A /* FansKickOffRoomTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FansKickOffRoomTask.h; sourceTree = "<group>"; };
+		FA7FB8B81EEF734900B79F0A /* FansShutUpTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FansShutUpTask.cpp; sourceTree = "<group>"; };
+		FA7FB8B91EEF734900B79F0A /* FansShutUpTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FansShutUpTask.h; sourceTree = "<group>"; };
+		FA7FB8BA1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvKickOffRoomNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7FB8BB1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvKickOffRoomNoticeTask.h; sourceTree = "<group>"; };
+		FA7FB8BC1EEF734900B79F0A /* RecvPushRoomFavTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvPushRoomFavTask.cpp; sourceTree = "<group>"; };
+		FA7FB8BD1EEF734900B79F0A /* RecvPushRoomFavTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvPushRoomFavTask.h; sourceTree = "<group>"; };
+		FA7FB8BE1EEF734900B79F0A /* RecvRoomGiftNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvRoomGiftNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7FB8BF1EEF734900B79F0A /* RecvRoomGiftNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvRoomGiftNoticeTask.h; sourceTree = "<group>"; };
+		FA7FB8C01EEF734900B79F0A /* RecvRoomToastNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvRoomToastNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7FB8C11EEF734900B79F0A /* RecvRoomToastNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvRoomToastNoticeTask.h; sourceTree = "<group>"; };
+		FA7FB8C21EEF734900B79F0A /* RecvShutUpNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvShutUpNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7FB8C31EEF734900B79F0A /* RecvShutUpNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvShutUpNoticeTask.h; sourceTree = "<group>"; };
+		FA7FB8C41EEF734900B79F0A /* SendRoomFavTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendRoomFavTask.cpp; sourceTree = "<group>"; };
+		FA7FB8C51EEF734900B79F0A /* SendRoomFavTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendRoomFavTask.h; sourceTree = "<group>"; };
+		FA7FB8C61EEF734900B79F0A /* SendRoomGiftTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendRoomGiftTask.cpp; sourceTree = "<group>"; };
+		FA7FB8C71EEF734900B79F0A /* SendRoomGiftTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendRoomGiftTask.h; sourceTree = "<group>"; };
+		FA7FB8C81EEF734900B79F0A /* SendRoomToastTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendRoomToastTask.cpp; sourceTree = "<group>"; };
+		FA7FB8C91EEF734900B79F0A /* SendRoomToastTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendRoomToastTask.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -361,6 +394,28 @@
 		D17799921ED91A0E00835F3A /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA7FB8B61EEF734900B79F0A /* FansKickOffRoomTask.cpp */,
+				FA7FB8B71EEF734900B79F0A /* FansKickOffRoomTask.h */,
+				FA7FB8B81EEF734900B79F0A /* FansShutUpTask.cpp */,
+				FA7FB8B91EEF734900B79F0A /* FansShutUpTask.h */,
+				FA7FB8BA1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.cpp */,
+				FA7FB8BB1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.h */,
+				FA7FB8BC1EEF734900B79F0A /* RecvPushRoomFavTask.cpp */,
+				FA7FB8BD1EEF734900B79F0A /* RecvPushRoomFavTask.h */,
+				FA7FB8BE1EEF734900B79F0A /* RecvRoomGiftNoticeTask.cpp */,
+				FA7FB8BF1EEF734900B79F0A /* RecvRoomGiftNoticeTask.h */,
+				FA7FB8C01EEF734900B79F0A /* RecvRoomToastNoticeTask.cpp */,
+				FA7FB8C11EEF734900B79F0A /* RecvRoomToastNoticeTask.h */,
+				FA7FB8C21EEF734900B79F0A /* RecvShutUpNoticeTask.cpp */,
+				FA7FB8C31EEF734900B79F0A /* RecvShutUpNoticeTask.h */,
+				FA7FB8C41EEF734900B79F0A /* SendRoomFavTask.cpp */,
+				FA7FB8C51EEF734900B79F0A /* SendRoomFavTask.h */,
+				FA7FB8C61EEF734900B79F0A /* SendRoomGiftTask.cpp */,
+				FA7FB8C71EEF734900B79F0A /* SendRoomGiftTask.h */,
+				FA7FB8C81EEF734900B79F0A /* SendRoomToastTask.cpp */,
+				FA7FB8C91EEF734900B79F0A /* SendRoomToastTask.h */,
+				FA7AB6911EEE632300C5F24D /* KickOffTask.cpp */,
+				FA7AB6921EEE632300C5F24D /* KickOffTask.h */,
 				FA75011D1EE527DA00DCFB3B /* FansRoomInTask.cpp */,
 				FA75011E1EE527DA00DCFB3B /* FansRoomInTask.h */,
 				FA75011F1EE527DA00DCFB3B /* FansRoomOutTask.cpp */,
@@ -504,6 +559,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D17799C41ED91A0E00835F3A /* TransportClient.cpp in Sources */,
+				FA7FB8CF1EEF734900B79F0A /* RecvRoomToastNoticeTask.cpp in Sources */,
+				FA7FB8CD1EEF734900B79F0A /* RecvPushRoomFavTask.cpp in Sources */,
 				D17799901ED919FD00835F3A /* md5.c in Sources */,
 				D17799B91ED91A0E00835F3A /* HearbeatTask.cpp in Sources */,
 				FA7501311EE527DA00DCFB3B /* GetRoomInfoTask.cpp in Sources */,
@@ -513,6 +570,7 @@
 				D17799BA1ED91A0E00835F3A /* IImClient.cpp in Sources */,
 				D17799C31ED91A0E00835F3A /* TaskMapManager.cpp in Sources */,
 				D177998C1ED919FD00835F3A /* KTcpSocket.cpp in Sources */,
+				FA7FB8CC1EEF734900B79F0A /* RecvKickOffRoomNoticeTask.cpp in Sources */,
 				D17799851ED919FD00835F3A /* CheckMemoryList.cpp in Sources */,
 				D17799841ED919FD00835F3A /* CheckMemoryLeak.cpp in Sources */,
 				FA7501361EE527DA00DCFB3B /* RecvRoomMsgTask.cpp in Sources */,
@@ -523,8 +581,13 @@
 				D17799291ED9199A00835F3A /* ViewController.m in Sources */,
 				D177998A1ED919FD00835F3A /* KLog.cpp in Sources */,
 				D17799881ED919FD00835F3A /* IAutoLock.cpp in Sources */,
+				FA7AB6931EEE632300C5F24D /* KickOffTask.cpp in Sources */,
+				FA7FB8CA1EEF734900B79F0A /* FansKickOffRoomTask.cpp in Sources */,
+				FA7FB8D11EEF734900B79F0A /* SendRoomFavTask.cpp in Sources */,
 				D17799531ED919ED00835F3A /* json_value.cpp in Sources */,
 				D17799C11ED91A0E00835F3A /* LoginTask.cpp in Sources */,
+				FA7FB8D21EEF734900B79F0A /* SendRoomGiftTask.cpp in Sources */,
+				FA7FB8D01EEF734900B79F0A /* RecvShutUpNoticeTask.cpp in Sources */,
 				D17799831ED919FD00835F3A /* Arithmetic.cpp in Sources */,
 				D17799261ED9199A00835F3A /* AppDelegate.m in Sources */,
 				D17799861ED919FD00835F3A /* command.cpp in Sources */,
@@ -538,12 +601,15 @@
 				FA7501301EE527DA00DCFB3B /* FansRoomOutTask.cpp in Sources */,
 				D17799C01ED91A0E00835F3A /* ITransportPacketHandler.cpp in Sources */,
 				D17799B81ED91A0E00835F3A /* Counter.cpp in Sources */,
+				FA7FB8D31EEF734900B79F0A /* SendRoomToastTask.cpp in Sources */,
 				FA7501341EE527DA00DCFB3B /* RecvRoomCloseBroadTask.cpp in Sources */,
 				D17799B71ED91A0E00835F3A /* CommonParsing.cpp in Sources */,
+				FA7FB8CB1EEF734900B79F0A /* FansShutUpTask.cpp in Sources */,
 				D17799231ED9199A00835F3A /* main.m in Sources */,
 				D17799BD1ED91A0E00835F3A /* IThreadHandler.cpp in Sources */,
 				FA75012F1EE527DA00DCFB3B /* FansRoomInTask.cpp in Sources */,
 				D17799811ED919FD00835F3A /* aes.c in Sources */,
+				FA7FB8CE1EEF734900B79F0A /* RecvRoomGiftNoticeTask.cpp in Sources */,
 				D17799BC1ED91A0E00835F3A /* ITask.cpp in Sources */,
 				D17799C61ED91A0E00835F3A /* TransportPacketHandler.cpp in Sources */,
 				D17799C91ED9237300835F3A /* ImClientOC.mm in Sources */,

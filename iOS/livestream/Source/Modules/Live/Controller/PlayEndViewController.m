@@ -121,8 +121,8 @@
 
 #pragma mark - 界面事件
 - (IBAction)cancelAction:(id)sender {
-//    [self.navigationController popViewControllerAnimated:YES];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
+
 }
 
 // 关注主播
@@ -136,10 +136,16 @@
 - (IBAction)sharefaceBookAction:(id)sender {
 }
 
+- (IBAction)shareTwitterAction:(id)sender {
+
+}
+
+- (IBAction)shareInstagrmAction:(id)sender {
+    
+}
 #pragma mark - 主播信息控件管理
 - (void)setupRoomView {
     
 }
-- (IBAction)shareInstagrmAction:(id)sender {
-}
+
 @end

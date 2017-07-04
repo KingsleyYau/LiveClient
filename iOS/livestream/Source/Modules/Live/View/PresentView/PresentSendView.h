@@ -17,9 +17,10 @@ typedef enum : NSUInteger {
 @interface PresentSendView : UIView
 
 @property (nonatomic, copy) SelectBlock valueChangeBlock;
-@property (weak, nonatomic) IBOutlet UILabel *showTitle;
-@property (weak, nonatomic) IBOutlet UIButton *selectBtn;
+
+@property (weak, nonatomic) IBOutlet KKCheckButton *selectBtn;
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;
+@property (weak, nonatomic) IBOutlet UILabel *selectNumLabel;
 
 
 @property (nonatomic, strong) NSArray* data;
@@ -29,4 +30,5 @@ typedef enum : NSUInteger {
 
 //-(void)pullMenuShow;
 //-(void)pullMenuDismiss;
+
 @end

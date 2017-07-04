@@ -13,4 +13,12 @@
 
 "UnRead_Messages" = "unread messages";
 
-"Member_Join" = "joined";
+"Member_Join" = "Joined";
+
+"Member_Share" = "has shared the broadcast";
+
+"Member_ThumbUp" = "likes this stream";
+
+"Member_Gift" = "sent";
+
+"Member_Follow" = "is following the broadcaster";

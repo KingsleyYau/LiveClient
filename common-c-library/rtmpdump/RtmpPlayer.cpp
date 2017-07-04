@@ -59,6 +59,7 @@ RtmpPlayer::RtmpPlayer()
 :mClientMutex(KMutex::MutexType_Recursive),
 mPlayThreadMutex(KMutex::MutexType_Recursive)
 {
+    FileLog("rtmpdump", "RtmpPlayer::RtmpPlayer( player : %p )", this);
 	Init();
 }
 
@@ -69,6 +70,7 @@ RtmpPlayer::RtmpPlayer(
 :mClientMutex(KMutex::MutexType_Recursive),
 mPlayThreadMutex(KMutex::MutexType_Recursive)
 {
+    FileLog("rtmpdump", "RtmpPlayer::RtmpPlayer( player : %p )", this);
 	Init();
 
     mpRtmpDump = rtmpDump;
@@ -76,6 +78,10 @@ mPlayThreadMutex(KMutex::MutexType_Recursive)
 }
 
 RtmpPlayer::~RtmpPlayer() {
+    FileLog("rtmpdump", "RtmpPlayer::~RtmpPlayer( player : %p )", this);
+    
+    Stop();
+    
     FrameBuffer* buffer = NULL;
     while( (buffer = (FrameBuffer *)mCacheBufferQueue.PopBuffer()) ) {
         delete buffer;
@@ -117,6 +123,15 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath, const 
     }
     
     mClientMutex.unlock();
+    
+    FileLog("rtmpdump", "RtmpPlayer::PlayUrl( "
+            "[Finish], "
+            "url : %s, "
+            "bFlag : %s "
+            ")",
+            url.c_str(),
+            bFlag?"true":"false"
+            );
     
     return bFlag;
 }
@@ -609,10 +624,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         mPlayVideoAfterAudioDiff,
                         bufferList->size()
     					);
-                
-                if( mpRtmpPlayerCallback ) {
-                    mpRtmpPlayerCallback->OnStartPlayStream(this);
-                }
+
     		}
 
             mPlayThreadMutex.unlock();
@@ -840,24 +852,24 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                 // 播放用时大于帧时长, 发生延迟
                                 handleDelay = handleTime - diffms;
                                 
-                                FileLog("rtmpdump",
-                                        "RtmpPlayer::PlayFrame( "
-                                        "[Handle %s Frame Delay], "
-                                        "handleTime : %d, "
-                                        "diffTime : %d, "
-                                        "diffms : %d, "
-                                        "delay : %d, "
-                                        "frameDelay : %d "
-                                        "bufferList->size() : %d "
-                                        ")",
-                                        isAudio?"Audio":"Video",
-                                        handleTime,
-                                        diffTime,
-                                        diffms,
-                                        delay,
-                                        handleDelay,
-                                        bufferList->size()
-                                        );
+//                                FileLog("rtmpdump",
+//                                        "RtmpPlayer::PlayFrame( "
+//                                        "[Handle %s Frame Delay], "
+//                                        "handleTime : %d, "
+//                                        "diffTime : %d, "
+//                                        "diffms : %d, "
+//                                        "delay : %d, "
+//                                        "frameDelay : %d "
+//                                        "bufferList size() : %d "
+//                                        ")",
+//                                        isAudio?"Audio":"Video",
+//                                        handleTime,
+//                                        diffTime,
+//                                        diffms,
+//                                        delay,
+//                                        handleDelay,
+//                                        bufferList->size()
+//                                        );
                             }
                             
                             // 队列去除

@@ -20,11 +20,4 @@
 - (void)changeNumber:(NSInteger )numberStr;
 
 
-/**
- 获取显示的数字
- 
- @return 显示的数字
- */
-- (NSInteger)getLastNumber;
-
 @end

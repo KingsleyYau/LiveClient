@@ -127,6 +127,42 @@ static FileCacheManager* gManager = nil;
     
 }
 
+#pragma mark - 大礼物缓存目录
+- (NSString* )bigGiftCachePathWithGiftId:(NSString* )giftId {
+    NSString* filePath = nil;
+    
+    if( giftId && giftId.length > 0 ) {
+        NSString* fileName = [NSString stringWithFormat:@"%@.webp",giftId];
+        filePath = [[self bigGiftCacheDirectory] stringByAppendingPathComponent:fileName];
+    }
+    
+    return filePath;
+}
+
+#pragma mark - 发送礼物列表缓存目录
+- (NSString* )sendGiftListCachePathWithGiftId:(NSString* )giftId {
+    NSString* filePath = nil;
+    
+    if( giftId && giftId.length > 0 ) {
+        NSString* fileName = giftId;
+        filePath = [[self sendGiftListCacheDirectory] stringByAppendingPathComponent:fileName];
+    }
+    
+    return filePath;
+}
+
+#pragma mark - 聊天文本礼物缓存目录
+- (NSString* )chatGiftCachePathWithGiftId:(NSString* )giftId {
+    NSString* filePath = nil;
+    
+    if( giftId && giftId.length > 0 ) {
+        NSString* fileName = giftId;
+        filePath = [[self chatGiftCacheDirectory] stringByAppendingPathComponent:fileName];
+    }
+    
+    return filePath;
+}
+
 #pragma mark - 相册缓存目录
 - (NSString *)imageCacheFromPhoneAlbumnPath:(UIImage *)image fileName:(NSString *)fileName {
     NSString* path = nil;
@@ -155,6 +191,36 @@ static FileCacheManager* gManager = nil;
         return nil;
     }
 
+}
+
+- (NSString*)bigGiftCacheDirectory {
+    NSString* path = [[self cacheDirectory] stringByAppendingPathComponent:@"bigGift/"];
+    if( [self createDirectory:path] ) {
+        return path;
+    } else {
+        return nil;
+    }
+    
+}
+
+- (NSString*)sendGiftListCacheDirectory {
+    NSString* path = [[self cacheDirectory] stringByAppendingPathComponent:@"sendGiftList/"];
+    if( [self createDirectory:path] ) {
+        return path;
+    } else {
+        return nil;
+    }
+    
+}
+
+- (NSString*)chatGiftCacheDirectory {
+    NSString* path = [[self cacheDirectory] stringByAppendingPathComponent:@"chatGift/"];
+    if( [self createDirectory:path] ) {
+        return path;
+    } else {
+        return nil;
+    }
+    
 }
 
 - (BOOL)createDirectory:(NSString*)path {

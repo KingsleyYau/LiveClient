@@ -51,6 +51,8 @@
 - (instancetype)init
 {
     if(self = [super init] ) {
+        NSLog(@"LiveStreamPlayer::init()");
+        
         self.player = [RtmpPlayerOC instance];
         self.player.delegate = self;
         
@@ -61,6 +63,8 @@
 }
 
 - (void)dealloc {
+    NSLog(@"LiveStreamPlayer::dealloc()");
+    [self stop];
 }
 
 #pragma mark - 对外接口
@@ -74,11 +78,19 @@
 
     [self stop];
     
-    BOOL bFlag = NO;
+    BOOL bFlag = YES;
     @synchronized (self) {
         self.isStart = YES;
-        bFlag = [self start];
     }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        @synchronized (self) {
+            while (self.isStart && ![self start]) {
+                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Connect Fail] )");
+                usleep(1000 * 1000);
+            }
+        }
+    });
     
     return bFlag;
 }
@@ -86,15 +98,13 @@
 - (void)stop {
     @synchronized (self) {
         self.isStart = NO;
-        [self cancel];
+        [self.player stop];
     }
-
 }
 
 #pragma mark - 私有方法
 - (void)setPlayView:(GPUImageView *)playView {
     if( _playView != playView ) {
-        
         _playView = playView;
         
         [self.pixelBufferInput removeAllTargets];
@@ -104,31 +114,11 @@
 
 - (BOOL)start {
     NSLog(@"LiveStreamPlayer::start()");
-    
-    BOOL bFlag = YES;
+    BOOL bFlag = NO;
 
-    if( self.isRunning == NO ) {
-        self.isRunning = YES;
-        
-        bFlag = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
-        if( bFlag ) {
+    bFlag = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
 
-        }
-    }
-    
     return bFlag;
-}
-
-
-- (void)cancel {
-    NSLog(@"LiveStreamPlayer::cancel()");
-    
-    if( self.isRunning == YES ) {
-        self.isRunning = NO;
-
-        [self.player stop];
-    }
-    
 }
 
 #pragma mark - 视频接收处理
@@ -142,15 +132,12 @@
 - (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
     NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect()");
     
+    // 断线重连
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         @synchronized (self) {
-            // 先停止
-            [self cancel];
-            
-            // 断线重连
-            if( self.isStart ) {
-                // 重连
-                [self start];
+            while (self.isStart && ![self start]) {
+                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect Fail] )");
+                usleep(1000 * 1000);
             }
         }
     });

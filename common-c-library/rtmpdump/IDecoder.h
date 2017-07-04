@@ -69,7 +69,6 @@ public:
 			u_int32_t timestamp
 			) = 0;
     virtual void ReleaseAudioFrame(void* frame) = 0;
-    virtual void SetRecordPCMFile(const string& recordAACFilePath) = 0;
 };
 }
 #endif /* IDecoder_h */

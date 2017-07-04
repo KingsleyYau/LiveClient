@@ -31,9 +31,9 @@ public:
     virtual void OnDropVideoFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnPlayAudioFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnDropAudioFrame(RtmpPlayer* player, void* frame) = 0;
-    virtual void OnStartPlayStream(RtmpPlayer* player) = 0;
     virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
     virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
+
 };
 
 class PlayVideoRunnable;

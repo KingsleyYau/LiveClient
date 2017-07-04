@@ -71,7 +71,7 @@ bool SendRoomToastTask::Handle(const TransportProtocol& tp)
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[COINS_PARAM].isDouble()) {
+        if (tp.m_data[COINS_PARAM].isNumeric()) {
             m_coins = tp.m_data[COINS_PARAM].asDouble();
         }
         

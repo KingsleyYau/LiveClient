@@ -15,7 +15,7 @@
     
     LevelView* levelView = [[[NSBundle mainBundle] loadNibNamed:@"LevelView" owner:nil options:nil] firstObject];
     
-    levelView.layer.cornerRadius = 10;
+    levelView.layer.cornerRadius = 8;
     levelView.layer.masksToBounds = YES;
     
     return levelView;

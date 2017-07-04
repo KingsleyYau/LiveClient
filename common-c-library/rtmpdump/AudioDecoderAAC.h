@@ -48,9 +48,6 @@ public:
 			);
     void ReleaseAudioFrame(void* frame);
     
-public:
-    void SetRecordPCMFile(const string& recordAACFilePath);
-    
 private:
     bool CreateContext();
     void DestroyContext();

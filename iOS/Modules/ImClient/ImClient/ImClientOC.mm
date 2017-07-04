@@ -233,7 +233,7 @@ class ImClientCallback;
  *  @param multi_click_id       连击ID相同则表示同一次连击
  *
  */
-- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftName:(const string&)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**
@@ -362,7 +362,7 @@ public:
     }
     virtual void OnRecvRoomCloseBroad(const string& roomId, int fansNum, int inCome, int newFans, int shares, int duration)
     {
-        NSLog(@"OnRecvRoomCloseFans() roomId:%s, fansNum:%d, inCome:%d, newFans:%d shares:%d duration:%d"
+        NSLog(@"OnRecvRoomCloseBroad() roomId:%s, fansNum:%d, inCome:%d, newFans:%d shares:%d duration:%d"
               , roomId.c_str(), fansNum, inCome, newFans, shares, duration);
         if (nil != clientOC) {
             [clientOC onRecvRoomCloseBroad:roomId fansNum:fansNum income:inCome newFans:newFans shares:shares duration:duration];
@@ -370,7 +370,7 @@ public:
     }
     virtual void OnRecvFansRoomIn(const string& roomId, const string& userId, const string& nickName, const string& photoUrl)
     {
-        NSLog(@"OnRecvRoomCloseFans() roomId:%s, userId:%s, nickName:%s, photoUrl:%s"
+        NSLog(@"OnRecvFansRoomIn() roomId:%s, userId:%s, nickName:%s, photoUrl:%s"
               , roomId.c_str(), userId.c_str(), nickName.c_str(), photoUrl.c_str());
         if (nil != clientOC) {
             [clientOC onRecvFansRoomIn:roomId userId:userId nickName:nickName photoUrl:photoUrl];
@@ -378,7 +378,7 @@ public:
     }
     virtual void OnRecvRoomMsg(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg)
     {
-        NSLog(@"OnRecvRoomCloseFans() roomId:%s, level:%d ,fromId:%s, nickName:%s, msg:%s"
+        NSLog(@"OnRecvRoomMsg() roomId:%s, level:%d ,fromId:%s, nickName:%s, msg:%s"
               , roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str());
         if (nil != clientOC) {
             [clientOC onRecvRoomMsg:roomId level:level fromId:fromId nickName:nickName msg:msg];
@@ -398,7 +398,7 @@ public:
     virtual void OnRecvPushRoomFav(const string& roomId, const string& fromId, const string& nickName, bool isFirst) {
         NSLog(@"OnRecvPushRoomFav()");
         if (nil != clientOC) {
-//            [clientOC onRecvPushRoomFav:roomId fromId:fromId nickName:nickName isFirst:isFirst];
+            [clientOC onRecvPushRoomFav:roomId fromId:fromId nickName:nickName isFirst:isFirst];
         }
     }
     
@@ -413,10 +413,10 @@ public:
     }
     
     // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-    virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
+    virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
         NSLog(@"OnRecvRoomGiftNotice()");
         if (nil != clientOC) {
-            [clientOC onRecvRoomGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            [clientOC onRecvRoomGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftName:giftName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
         }
     }
     
@@ -721,7 +721,7 @@ private:
     return result;
 }
 
-- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -746,7 +746,12 @@ private:
             strGiftId = [giftId UTF8String];
         }
         
-        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        string strGiftName;
+        if (nil != giftName) {
+            strGiftName = [giftName UTF8String];
+        }
+        
+        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, strGiftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
     }
     return result;
 }
@@ -1046,16 +1051,17 @@ private:
     }
 }
 
-- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId
+- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName isFirst:(bool)isFirst
 {
     NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     @synchronized(self.delegates) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if( [delegate respondsToSelector:@selector(onRecvPushRoomFav:fromId:)] ) {
-                [delegate onRecvPushRoomFav:nsRoomId fromId:nsFromId];
+            if( [delegate respondsToSelector:@selector(onRecvPushRoomFav:fromId:nickName:isFirst:)] ) {
+                [delegate onRecvPushRoomFav:nsRoomId fromId:nsFromId nickName:nsNickName isFirst:isFirst];
             }
         }
     }
@@ -1077,18 +1083,19 @@ private:
     }
 }
 
-- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+- (void)onRecvRoomGiftNotice:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName giftId:(const string&)giftId giftName:(const string&)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
 {
     NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
     NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     NSString* nsGigtId = [NSString stringWithUTF8String:giftId.c_str()];
+    NSString* nsGigtName = [NSString stringWithUTF8String:giftName.c_str()];
     @synchronized(self.delegates) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if( [delegate respondsToSelector:@selector(onRecvRoomGiftNotice:fromId:nickName:giftId:giftNum:multi_click:multi_click_start:multi_click_end:multi_click_id:)] ) {
-                [delegate onRecvRoomGiftNotice:nsRoomId fromId:nsFromId nickName:nsNickName giftId:nsGigtId giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            if( [delegate respondsToSelector:@selector(onRecvRoomGiftNotice:fromId:nickName:giftId:giftName:giftNum:multi_click:multi_click_start:multi_click_end:multi_click_id:)] ) {
+                [delegate onRecvRoomGiftNotice:nsRoomId fromId:nsFromId nickName:nsNickName giftId:nsGigtId giftName:nsGigtName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
             }
         }
     }

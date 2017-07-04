@@ -49,14 +49,14 @@ VideoRendererImp::~VideoRendererImp() {
 void VideoRendererImp::RenderVideoFrame(void* frame) {
 	VideoFrame* videoFrame = (VideoFrame *)frame;
 
-	FileLog("rtmpdump",
-			"VideoRendererImp::RenderVideoFrame( "
-			"frame : %p, "
-			"timestamp : %u "
-			")",
-			frame,
-			videoFrame->mTimestamp
-			);
+//	FileLog("rtmpdump",
+//			"VideoRendererImp::RenderVideoFrame( "
+//			"frame : %p, "
+//			"timestamp : %u "
+//			")",
+//			frame,
+//			videoFrame->mTimestamp
+//			);
 
     // 播放视频
 	JNIEnv* env;
@@ -99,6 +99,8 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 			if( jMethodID ) {
 				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, videoFrame->mWidth, videoFrame->mHeight);
 			}
+
+			env->DeleteLocalRef(jniRendererCls);
 		}
 	}
 
@@ -106,15 +108,15 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 		ReleaseEnv(isAttachThread);
 	}
 
-	FileLog("rtmpdump",
-			"VideoRendererImp::RenderVideoFrame( "
-			"[Success], "
-			"frame : %p, "
-			"timestamp : %u "
-			")",
-			frame,
-			videoFrame->mTimestamp
-			);
+//	FileLog("rtmpdump",
+//			"VideoRendererImp::RenderVideoFrame( "
+//			"[Success], "
+//			"frame : %p, "
+//			"timestamp : %u "
+//			")",
+//			frame,
+//			videoFrame->mTimestamp
+//			);
 }
 
 }

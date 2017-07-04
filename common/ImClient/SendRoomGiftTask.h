@@ -41,7 +41,7 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(const string& roomId, const string token, const string nickName, const string giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id);
+	bool InitParam(const string& roomId, const string token, const string nickName, const string giftId, const string giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id);
 
 private:
 	IImClientListener*	m_listener;
@@ -52,6 +52,7 @@ private:
     string          m_token;   // 直播系统不同服务器的统一验证身份标识
     string          m_nickName;  // 发送人昵称
     string          m_giftId;  // 礼物ID
+    string   		m_giftName;	//礼物名称
     int             m_giftNum;  // 本次发送礼物的数量
     bool            m_multi_click;  // 是否连击礼物
     int             m_multi_click_start;  // 连击起始数

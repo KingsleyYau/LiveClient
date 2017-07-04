@@ -14,7 +14,7 @@
 #import "FileCacheManager.h"
 #import "LoginManager.h"
 #import "IMManager.h"
-
+#import "LiveGiftDownloadManager.h"
 #import "FirebaseCore/FIRApp.h"
 
 @implementation AppDelegate
@@ -65,6 +65,9 @@
     
     // 初始化IM
     IMManager* imManager = [IMManager manager];
+    
+    // 初始化礼物下载管理器
+    LiveGiftDownloadManager *downloadManager = [LiveGiftDownloadManager giftDownloadManager];
     
     // 初始化跟踪管理器(默认为真实环境)
 //    [[AnalyticsManager manager] initGoogleAnalytics:YES];

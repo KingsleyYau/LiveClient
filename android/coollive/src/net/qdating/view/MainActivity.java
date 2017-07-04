@@ -68,7 +68,7 @@ public class MainActivity extends Activity {
 					url = editText.getText().toString();
 				}
 				
-				boolean bFlag = player.PlayUrl(url, "", h264File, aacFile);
+				boolean bFlag = player.playUrl(url, "", h264File, aacFile);
 			}
 		});
 
@@ -94,7 +94,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				player.Stop();
+				player.stop();
 			}
 		});
 	}

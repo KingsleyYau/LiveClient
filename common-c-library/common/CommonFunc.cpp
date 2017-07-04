@@ -17,6 +17,7 @@
 #ifndef _WIN32
 #include <dirent.h>
 #include <unistd.h>
+#include <string.h>
 #else
 #include <windows.h>
 #endif

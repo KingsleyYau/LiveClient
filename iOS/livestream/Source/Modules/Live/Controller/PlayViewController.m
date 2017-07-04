@@ -15,9 +15,13 @@
 
 #import "FileCacheManager.h"
 
-#import "LikeView.h"
+#import "CountTimeButton.h"
 
-@interface PlayViewController () <UITextFieldDelegate, KKCheckButtonDelegate,IMLiveRoomManagerDelegate,UIGestureRecognizerDelegate>
+#import "GetLiveRoomGiftListByUserIdRequest.h"
+#import "LiveRoomGiftItemObject.h"
+
+@interface PlayViewController () <UITextFieldDelegate, KKCheckButtonDelegate,IMLiveRoomManagerDelegate,
+                                    UIGestureRecognizerDelegate,PresentViewDelegate,IMLiveRoomManagerDelegate>
 /**
  拉流地址
  */
@@ -38,26 +42,72 @@
  */
 @property (strong) PlayEndViewController* playEndVC;
 
+#pragma mark - IM管理器
+@property (nonatomic, strong) IMManager* imManager;
+
+#pragma mark - 登录管理器
+@property (nonatomic, strong) LoginManager* loginManager;
+
+#pragma mark - 首次点赞
+@property (nonatomic, assign) BOOL isFirstLike;
+
+#pragma mark - 键盘弹出
+@property (nonatomic, assign) BOOL isKeyboradShow;
+
+#pragma mark - 首次点击
+@property (nonatomic, assign) BOOL isFirstClick;
+
+#pragma mark - 点击Id
+@property (nonatomic, assign) int clickId;
+
+#pragma mark - 发送连击Button
+@property (nonatomic, strong) UIButton *comboBtn;
+
+@property (nonatomic, strong) LiveRoomGiftItemObject *selectCellItem;
+
+@property (nonatomic, assign) int countdownSender;
+/**
+ *  接口管理器
+ */
+@property (nonatomic, strong) SessionRequestManager* sessionManager;
+
 @end
+
+static int giftNum;
+static int totalGiftNum;
+static int starNum;
+static int endNum;
 
 @implementation PlayViewController
 #pragma mark - 界面初始化
 - (void)initCustomParam {
     [super initCustomParam];
     
-    self.url = @"rtmp://172.25.32.17/live/livestream";
+    NSLog(@"PlayViewController::initCustomParam()");
+    
+//    self.url = @"rtmp://172.25.32.17/live/livestream";
 //    self.url = @"rtmp://172.25.32.17/live/max";
     self.url = @"rtmp://172.25.32.17:1936/aac/max";
-//    self.url = @"rtmp://172.25.32.17:1935/live/fly";
     
     self.liveVC = [[LiveViewController alloc] initWithNibName:nil bundle:nil];
     [self addChildViewController:self.liveVC];
     
     // 添加直播间监听代理
     [[IMManager manager].client addDelegate:self];
+    
+    // 初始化管理器
+    self.imManager = [IMManager manager];
+    self.loginManager = [LoginManager manager];
+    self.sessionManager = [SessionRequestManager manager];
+    
+    // 初始化控制变量
+    self.isFirstLike = NO;
+    self.isKeyboradShow = NO;
 }
 
 - (void)dealloc {
+    NSLog(@"PlayViewController::dealloc()");
+    
     // 添加直播间监听代理
     [[IMManager manager].client removeDelegate:self];
 }
@@ -65,7 +115,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    // 禁止导航栏后退手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     [self.view addSubview:self.liveVC.view];
@@ -84,20 +134,25 @@
     // 初始化推流
     self.player = [LiveStreamPlayer instance];
     self.player.playView = self.liveVC.videoView;
-    
     [self.view sendSubviewToBack:self.liveVC.view];
     
-    self.presentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 44);
+    // 初始化礼物列表界面
+    self.presentView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 54);
+    self.presentView.presentDelegate = self;
     
+    // 初始化文本输入
     [self.inputTextField addTarget:self
                            action:@selector(textFieldDidChange:)
                  forControlEvents:UIControlEventEditingChanged];
-
+    
+    // 发送请求到服务器
+    [self sendEnterRequest];
+    [self sendGetGiftListRequest];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    // 隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
     
 }
@@ -115,15 +170,14 @@
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
     
     // 添加手势
     [self addSingleTap];
     
-    // 开始推流
+    // 开始播放
     [self play];
-    
-    // 发送IM进入命令
-    [self sendEnterRequest];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -132,6 +186,8 @@
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:UIKeyboardDidHideNotification object:nil];
     
     // 去除手势
     [self removeSingleTap];
@@ -152,18 +208,6 @@
     
     // 初始化退出
     [self.liveVC.btnCancel addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)textFieldDidChange:(UITextField *)textField {
-    
-    if (textField.text.length > 0) {
-        
-        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
-        self.btnSend.userInteractionEnabled = YES;
-    }else{
-        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
-        self.btnSend.userInteractionEnabled = NO;
-    }
 }
 
 #pragma mark - 直播间信息
@@ -195,27 +239,107 @@
 }
 
 - (void)stop {
+    // 停止推流
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.player stop];
     });
 }
 
 - (void)sendEnterRequest {
-    [self.liveVC.imManager.client fansRoomIn:self.liveVC.loginManager.loginItem.token roomId:self.liveVC.roomId];
+    NSLog(@"PlayViewController::sendEnterRequest( [发送粉丝进入直播间请求, roomId : %@ )", self.liveInfo.roomId);
+    [self.liveVC.imManager.client fansRoomIn:self.liveVC.loginManager.loginItem.token roomId:self.liveInfo.roomId];
 }
 
 - (void)sendExitRequest {
-    [self.liveVC.imManager.client fansRoomout:self.liveVC.loginManager.loginItem.token roomId:self.liveVC.roomId];
+    NSLog(@"PlayViewController::sendExitRequest( [发送粉丝退出直播间请求, roomId : %@ )", self.liveInfo.roomId);
+    [self.liveVC.imManager.client fansRoomout:self.liveVC.loginManager.loginItem.token roomId:self.liveInfo.roomId];
+}
+
+- (void)sendRoomGiftFormLiveItem:(LiveRoomGiftItemObject *)item andGiftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum {
+    NSLog(@"PlayViewController::sendRoomGiftFormLiveItem( "
+          "[发送连击礼物请求], "
+          "roomId : %@, giftId : %@, giftNum : %d, starNum : %d, endNum : %d "
+          ")",
+          self.liveInfo.roomId, item.giftId, giftNum, starNum, endNum);
+    
+    // 发送连击礼物请求
+    [self.imManager.client sendRoomGift:self.liveInfo.roomId token:self.loginManager.loginItem.token nickName:self.loginManager.loginItem.nickName giftId:item.giftId giftName:item.name giftNum:giftNum multi_click:item.multi_click multi_click_start:starNum multi_click_end:endNum multi_click_id:self.clickId];
+    
+    // 本地展示连击礼物
+    GiftItem *giftItem = [GiftItem item:self.liveInfo.roomId fromID:self.loginManager.loginItem.userId nickName:self.loginManager.loginItem.nickName giftID:item.giftId giftNum:giftNum multi_click:item.multi_click starNum:starNum endNum:endNum clickID:self.clickId];
+    [self.liveVC addCombo:giftItem];
+    
+}
+
+- (void)sendGetGiftListRequest {
+    NSLog(@"PlayViewController::sendGetGiftListRequest( "
+          "[发送获取礼物列表请求], "
+          "roomId : %@ "
+          ")",
+          self.liveInfo.roomId);
+    
+    GetLiveRoomGiftListByUserIdRequest *request = [[GetLiveRoomGiftListByUserIdRequest alloc] init];
+    request.roomId = _liveInfo.roomId;
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<NSString *> * _Nullable array) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"PlayViewController::sendGetGiftListRequest( "
+                  "[发送获取礼物列表请求结果], "
+                  "roomId : %@, "
+                  "success : %s, "
+                  "errnum : %d, "
+                  "errmsg : %@ "
+                  "array : %@ "
+                  ")",
+                  self.liveInfo.roomId,
+                  success?"true":"false",
+                  errnum,
+                  errmsg,
+                  array
+                  );
+            
+            if (success) {
+                if (array && array.count != 0) {
+                    self.presentView.giftIdArray = array;
+                }
+            }
+        });
+    };
+    [self.sessionManager sendRequest:request];
 }
 
 #pragma mark - IM回调
+- (void)onFansRoomIn:(BOOL)success reqId:(unsigned int)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl country:(NSString *)country videoUrls:(NSArray<NSString *> *)videoUrls fansNum:(int)fansNum contribute:(int)contribute fansList:(NSArray<RoomTopFanItemObject *> *)fansList {
+    NSLog(@"PlayViewController::onFansRoomIn( [接收粉丝进入直播间回调], success : %s, errType : %d, errmsg : %@ )", success?"true":"false", errType, errmsg);
+
+}
+
 - (void)onRecvRoomCloseFans:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName fansNum:(int)fansNum {
+    NSLog(@"PlayViewController::onRecvRoomCloseFans( [接收关闭直播间回调], roomId : %@, userId : %@, nickName : %@, fansNum : %d )", roomId, userId, nickName, fansNum);
     dispatch_async(dispatch_get_main_queue(), ^{
-        // 关闭输入
-        [self closeAllInputView];
-        
-        // 显示直播结束界面
-        [self showPlayEndViewWithLiverName:nickName andFansNum:fansNum];
+        if( [roomId isEqualToString:self.liveInfo.roomId] ) {
+            // 关闭输入
+            [self closeAllInputView];
+            
+            // 显示直播结束界面
+            [self showPlayEndViewWithLiverName:nickName andFansNum:fansNum];
+        }
+    });
+}
+
+- (void)onSendRoomFav:(BOOL)success reqId:(unsigned int)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
+    NSLog(@"PlayViewController::onSendRoomFav( [发送点赞消息回调], success : %s, reqId : %d, errType : %d, errmsg : %@ )", success?"true":"false", reqId, errType, errmsg);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if( success ) {
+            [self.liveVC showLike];
+        }
+    });
+}
+
+- (void)onSendRoomGift:(BOOL)success reqId:(unsigned int)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg coins:(double)coins {
+    NSLog(@"PlayViewController::onSendRoomGift( [发送连击礼物回调], success : %s, reqId : %d, errType : %d, errmsg : %@, coins : %f )", success?"true":"false", reqId, errType, errmsg, coins);
+    dispatch_sync(dispatch_get_main_queue(), ^{
+        if( success ) {
+        }
     });
 }
 
@@ -228,20 +352,18 @@
 
 - (IBAction)shareAction:(id)sender {
 
-    [self.liveVC starBigAnimation];
 }
 
 - (IBAction)giftAction:(id)sender {
-    
+    // 隐藏底部输入框
     [self hiddenBottomView];
     
+    // 显示礼物列表
     [UIView animateWithDuration:0.25 animations:^{
         self.presentView.transform = CGAffineTransformMakeTranslation(0, -self.presentView.frame.size.height);
     } completion:^(BOOL finished) {
-        
         self.liveVC.msgTableView.hidden = YES;
         self.liveVC.msgTipsView.hidden = YES;
-        
     }];
 }
 
@@ -250,7 +372,6 @@
         self.inputTextField.text = nil;
         
         if (self.inputTextField.text.length > 0) {
-            
             self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
             self.btnSend.userInteractionEnabled = YES;
         }else{
@@ -262,7 +383,6 @@
 
 - (IBAction)cancelAction:(id)sender {
     [self.navigationController popViewControllerAnimated:YES];
-    
     [self sendExitRequest];
 }
 
@@ -271,15 +391,14 @@
 }
 
 - (void)hiddenBottomView {
-    
+    // 隐藏底部输入框
     [UIView animateWithDuration:0.2 animations:^{
-        
-        self.inputMessageView.transform = CGAffineTransformMakeTranslation(0, 48);
+        self.inputMessageView.transform = CGAffineTransformMakeTranslation(0, 54);
     }];
 }
 
 - (void)showBottomView {
-    
+    // 显示底部输入框
     [UIView animateWithDuration:0.2 delay:0.25 options:0 animations:^{
         self.inputMessageView.transform = CGAffineTransformIdentity;
     } completion:nil];
@@ -295,33 +414,105 @@
     
 }
 
-#pragma mark - 点赞控件管理
-- (void)showLike {
-    NSInteger width = 36;
-    LikeView* heart = [[LikeView alloc]initWithFrame:CGRectMake(0, 0, width, width)];
-    [self.view insertSubview:heart belowSubview:self.presentView];
+#pragma mark - 大礼物界面回调(PresentViewDelegate)
+- (void)presentViewSendBtnClick:(PresentView *)presentView {
+    // 标记已经点击
+    _isFirstClick = YES;
     
-    // 起始位置
-    CGPoint fountainSource = CGPointMake(self.view.bounds.size.width - 20 - width/2.0, self.view.bounds.size.height - width /2.0 - 20);
-    heart.center = fountainSource;
-    
-    // 生成图片
-    int randomNum = arc4random_uniform(5);
-    NSString *imageName = [NSString stringWithFormat:@"like_%d", randomNum];
-    
-    // 礼物
-    UIImageView *likeImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
-    [heart setupImage:likeImageView];
-    
-    if ( randomNum != 4 ) {
-        // 心心
-        [heart setupShakeAnimation:likeImageView];
-        [heart setupHeatBeatAnim:likeImageView];
+    if ( presentView.isCellSelect ) {
+        if ( presentView.selectCellItem.multi_click ) {
+            self.presentView.sendView.hidden = YES;
+            presentView.comboBtn.hidden = NO;
+            [self.presentView hideButtonBar];
+            
+            NSDate* dat = [NSDate dateWithTimeIntervalSinceNow:0];
+            NSTimeInterval currentTime = [dat timeIntervalSince1970];
+            self.clickId = (int)currentTime % 10000;
+            
+            [self.presentView.presentDelegate presentViewComboBtnInside:presentView andSender:presentView.comboBtn];
+            
+        } else {
+            
+        }
+    }
+}
+
+- (void)presentViewComboBtnInside:(PresentView *)presentView andSender:(id)sender {
+    // 是否第一次点击
+    if (_isFirstClick) {
+        starNum = 0;
+        endNum = [presentView.sendView.selectNumLabel.text intValue];
+        giftNum = [presentView.sendView.selectNumLabel.text intValue];
+        totalGiftNum = [presentView.sendView.selectNumLabel.text intValue];
+        
+        _isFirstClick = NO;
+        
+    } else {
+        starNum = totalGiftNum;
+        endNum = starNum + 1;
+        giftNum = 1;
+        totalGiftNum = totalGiftNum + 1;
     }
     
-    // 显示
-    [heart addSubview:likeImageView];
-    [heart animateInView:self.view];
+    // 发送连击礼物请求
+    [self sendRoomGiftFormLiveItem:presentView.selectCellItem andGiftNum:giftNum starNum:starNum endNum:endNum];
+    _selectCellItem = presentView.selectCellItem;
+    
+    self.comboBtn = (UIButton *)sender;
+    [self.comboBtn setBackgroundImage:[UIImage imageNamed:@"Live_cambo_nomal"] forState:UIControlStateNormal];
+
+    [sender stopCountDown];
+    [sender startCountDownWithSecond:30];
+    
+    // 连击按钮倒计时改变回调
+    __weak typeof(self) weakSelf = self;
+    [sender countDownChanging:^NSString *(CountTimeButton *countDownButton,NSInteger second) {
+        countDownButton.titleLabel.numberOfLines = 0;
+        
+        weakSelf.countdownSender = 1;
+        
+        NSString *title = [NSString stringWithFormat:@"%zd \n combo", second];
+        return title;
+    }];
+    
+    // 连击按钮倒计时结束回调
+    [sender countDownFinished:^NSString *(CountTimeButton *countDownButton, NSInteger second) {
+        if (second <= 0.0) {
+            weakSelf.comboBtn.hidden = YES;
+            weakSelf.presentView.sendView.hidden = NO;
+            
+            weakSelf.countdownSender = 0;
+            weakSelf.isFirstClick = YES;
+            
+            starNum = 0;
+            endNum = 0;
+            giftNum = 0;
+            totalGiftNum = 0;
+        }
+        return @"30 \n combo";
+    }];
+}
+
+- (void)presentViewComboBtnDown:(PresentView *)presentView andSender:(id)sender {
+    self.comboBtn = (UIButton *)sender;
+    [self.comboBtn setBackgroundImage:[UIImage imageNamed:@"Live_cambo_hight"] forState:UIControlStateHighlighted];
+}
+
+
+- (void)presentViewdidSelectItemWithSelf:(PresentView *)presentView atIndexPath:(NSIndexPath *)indexPath {
+    if ([presentView.selectCellItem.giftId isEqualToString:_selectCellItem.giftId] && presentView.isCellSelect && _countdownSender) {
+        self.comboBtn.hidden = NO;
+        self.presentView.sendView.hidden = YES;
+    } else {
+    
+        self.comboBtn.hidden = YES;
+        self.presentView.sendView.hidden = NO;
+    }
+    
+}
+
+- (void)presentViewDidScroll:(PresentView *)PresentViewView currentPageNumber:(NSInteger)page{
+    
 }
 
 #pragma mark - 文本和表情输入控件管理
@@ -329,7 +520,6 @@
     self.inputBackgroundView.layer.cornerRadius = self.inputBackgroundView.frame.size.height / 2;
     [self.btnLouder setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder_Highlighted"] forState:UIControlStateSelected];
     
-//    [self.btnChat setImage:[UIImage imageNamed:@"Live_Publish_Btn_Chat_Highlighted"] forState:UIControlStateHighlighted];
     [self.btnShare setImage:[UIImage imageNamed:@"Live_Publish_Btn_Share_Highlighted"] forState:UIControlStateHighlighted];
     
     self.btnSend.layer.cornerRadius = self.btnSend.frame.size.height / 2;
@@ -346,6 +536,7 @@
 
 - (void)showInputMessageView {
     self.btnChat.hidden = NO;
+    self.saysomeLabel.hidden = NO;
 //    self.btnChatWidth.constant = 40;
     self.btnShare.hidden = NO;
     self.btnShareWidth.constant = 40;
@@ -359,6 +550,7 @@
 
 - (void)hideInputMessageView {
     self.btnChat.hidden = YES;
+    self.saysomeLabel.hidden = YES;
 //    self.btnChatWidth.constant = 0;
     self.btnShare.hidden = YES;
     self.btnShareWidth.constant = 0;
@@ -385,6 +577,7 @@
          ];
         self.inputTextField.attributedPlaceholder = attributeString;
         self.inputBackgroundColorView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFD205);
+        [self.btnLouder setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder_Selected"] forState:UIControlStateNormal];
         
     } else {
         // 切换成功普通
@@ -397,6 +590,7 @@
          ];
         self.inputTextField.attributedPlaceholder = attributeString;
         self.inputBackgroundColorView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFFFFF);
+        [self.btnLouder setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder"] forState:UIControlStateNormal];
     }
 }
 
@@ -418,12 +612,15 @@
 }
 
 - (void)singleTapAction {
-    [self showLike];
+    // 单击关闭输入
     [self closeAllInputView];
     
+    // 如果已经展开礼物列表
     if (self.presentView.frame.origin.y < SCREEN_HEIGHT) {
+        // 收起礼物列表
         [UIView animateWithDuration:0.25 animations:^{
             self.presentView.transform = CGAffineTransformIdentity;
+            
         } completion:^(BOOL finished) {
             [self showBottomView];
             self.liveVC.msgTableView.hidden = NO;
@@ -431,6 +628,28 @@
                 self.liveVC.msgTipsView.hidden = NO;
             }
         }];
+    } else {
+        // 如果没有打开键盘
+        if (!_isKeyboradShow) {
+            // 发送点赞请求
+            [self.imManager.client sendRoomFav:self.liveInfo.roomId token:self.loginManager.loginItem.token nickName:self.loginManager.loginItem.nickName];
+            
+            // 第一次点赞, 插入本地文本
+            if (!_isFirstLike) {
+                _isFirstLike = YES;
+                [self.liveVC addLikeMessage:self.loginManager.loginItem.nickName];
+            }
+        }
+    }
+}
+
+#pragma mark - 手势事件
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    CGPoint pt = [touch locationInView:self.view];
+    if (!CGRectContainsPoint([self.presentView frame], pt)) {
+        return YES;
+    } else {
+        return NO;
     }
 }
 
@@ -471,6 +690,16 @@
     }
     
     return bFlag;
+}
+
+- (void)textFieldDidChange:(UITextField *)textField {
+    if (textField.text.length > 0) {
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+        self.btnSend.userInteractionEnabled = YES;
+    } else {
+        self.btnSend.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+        self.btnSend.userInteractionEnabled = NO;
+    }
 }
 
 #pragma mark - 处理键盘回调
@@ -535,6 +764,14 @@
     [self showInputMessageView];
 }
 
+- (void)keyboardDidShow:(NSNotification *)notification{
+    _isKeyboradShow = YES;
+}
+
+- (void)keyboardDidHide:(NSNotification *)notification{
+    _isKeyboradShow = NO;
+}
+
 #pragma mark - 结束直播界面
 - (void)showPlayEndViewWithLiverName:(NSString *)nickName andFansNum:(int)fansNum {
     if( self.playEndVC == nil ) {
@@ -570,17 +807,6 @@
         } completion:^(BOOL finished) {
             
         }];
-    }
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    
-    CGPoint pt = [touch locationInView:self.view];
-    
-    if (!CGRectContainsPoint([self.presentView frame], pt)) {
-        return YES;
-    }else{
-        return NO;
     }
 }
 

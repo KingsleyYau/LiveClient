@@ -15,7 +15,6 @@
 
 @property (nonatomic, strong) UIView * xIV;
 @property (nonatomic, strong) UIView * bgView;
-@property (nonatomic, assign) NSInteger lastNumber;/**< 最后显示的数字 */
 @end
 
 @implementation GiftComboNumView
@@ -24,30 +23,12 @@
 
 - (void)initParam {
     self.startFrameX = 10;
+    self.number = 0;
 }
 
 - (void)awakeFromNib {
     [super awakeFromNib];
     [self initParam];
-}
-
-- (void)setNumber:(NSInteger)number {
-    self.lastNumber = number;
-}
-
-- (NSInteger)number {
-    _number = self.lastNumber ;
-    self.lastNumber += 1;
-    return _number;
-}
-
-/**
- 获取显示的数字
- 
- @return 显示的数字
- */
-- (NSInteger)getLastNumber {
-    return self.lastNumber - 1;
 }
 
 /**
@@ -112,6 +93,8 @@
     }
     
     self.frame = CGRectMake(orgFrame.origin.x, orgFrame.origin.y, width, orgFrame.size.height);
+    
+    self.number = numberStr;
 }
 
 - (UIView *)xIV {

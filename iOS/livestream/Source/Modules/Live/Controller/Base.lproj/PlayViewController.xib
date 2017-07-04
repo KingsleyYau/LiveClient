@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -27,6 +27,7 @@
                 <outlet property="inputMessageViewHeight" destination="1bZ-H5-9Cs" id="esz-cf-Hbv"/>
                 <outlet property="inputTextField" destination="tJJ-3L-dr9" id="XTz-hz-WYB"/>
                 <outlet property="presentView" destination="6Cv-cc-5Pn" id="VMV-FO-gAa"/>
+                <outlet property="saysomeLabel" destination="nsL-HW-iIe" id="69z-5P-lLj"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -36,15 +37,37 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Cv-cc-5Pn" customClass="PresentView">
-                    <rect key="frame" x="0.0" y="405" width="375" height="262"/>
+                    <rect key="frame" x="0.0" y="405" width="375" height="272"/>
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hef-sh-jU8" userLabel="Input Message View">
                     <rect key="frame" x="0.0" y="614" width="375" height="48"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cT-LG-4KU" userLabel="Chat Button">
-                            <rect key="frame" x="10" y="6" width="198" height="36"/>
-                            <state key="normal" backgroundImage="Live_say_something"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_inpuMessage_shaow" translatesAutoresizingMaskIntoConstraints="NO" id="CuT-nq-7OJ">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="53"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Say something..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nsL-HW-iIe">
+                            <rect key="frame" x="10" y="13" width="136" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                            <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
+                            <size key="shadowOffset" width="0.0" height="0.5"/>
+                        </label>
+                        <button opaque="NO" alpha="0.29999999999999999" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8cT-LG-4KU" userLabel="Chat Button">
+                            <rect key="frame" x="10" y="7" width="198" height="34"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <size key="titleShadowOffset" width="0.5" height="0.5"/>
+                            <state key="normal">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="titleShadowColor" red="0.51372549020000002" green="0.51372549020000002" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="17"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                            </userDefinedRuntimeAttributes>
                             <connections>
                                 <action selector="chatAction:" destination="-1" eventType="touchUpInside" id="7P3-8r-UpN"/>
                             </connections>
@@ -57,17 +80,18 @@
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="33u-Uy-QWi" userLabel="Louder Button" customClass="KKCheckButton">
-                                    <rect key="frame" x="0.0" y="3" width="46.5" height="32"/>
+                                    <rect key="frame" x="0.0" y="3" width="47" height="32"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="33u-Uy-QWi" secondAttribute="height" multiplier="52:36" id="yT6-JT-fzd"/>
                                     </constraints>
                                     <state key="normal" image="Live_Input_Btn_Louder"/>
+                                    <state key="selected" image="Live_Input_Btn_Louder_Selected"/>
                                     <connections>
                                         <outlet property="selectedChangeDelegate" destination="-1" id="xuO-7i-Z2s"/>
                                     </connections>
                                 </button>
                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="tJJ-3L-dr9" userLabel="Input Text Field" customClass="BLTextField">
-                                    <rect key="frame" x="41.5" y="3" width="156.5" height="32"/>
+                                    <rect key="frame" x="42" y="3" width="156" height="32"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
@@ -104,7 +128,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78D-5d-u6A" userLabel="Gift Button">
-                            <rect key="frame" x="259" y="6" width="36" height="36"/>
+                            <rect key="frame" x="259" y="5" width="36" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="78D-5d-u6A" secondAttribute="height" multiplier="1:1" id="Yrg-oO-eBi"/>
                                 <constraint firstAttribute="width" constant="36" id="uO1-1e-nbJ"/>
@@ -137,15 +161,21 @@
                         <constraint firstItem="msj-HT-Fvg" firstAttribute="trailing" secondItem="Hef-sh-jU8" secondAttribute="trailing" constant="-10" id="8m0-aC-v3f"/>
                         <constraint firstItem="78D-5d-u6A" firstAttribute="trailing" secondItem="msj-HT-Fvg" secondAttribute="leading" constant="-5" id="AGE-rr-cVi"/>
                         <constraint firstItem="5Sz-pp-rZm" firstAttribute="leading" secondItem="Hef-sh-jU8" secondAttribute="leading" constant="10" id="CUI-XA-eVL"/>
+                        <constraint firstItem="CuT-nq-7OJ" firstAttribute="top" secondItem="Hef-sh-jU8" secondAttribute="top" id="CbO-7U-An0"/>
+                        <constraint firstItem="nsL-HW-iIe" firstAttribute="leading" secondItem="8cT-LG-4KU" secondAttribute="leading" id="JJZ-2u-uMK"/>
+                        <constraint firstAttribute="bottom" secondItem="CuT-nq-7OJ" secondAttribute="bottom" constant="-5" id="MA3-lH-wpL"/>
                         <constraint firstItem="msj-HT-Fvg" firstAttribute="top" secondItem="5Sz-pp-rZm" secondAttribute="top" id="OTx-5k-BV6"/>
-                        <constraint firstItem="8cT-LG-4KU" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="ToU-zy-Maq"/>
+                        <constraint firstItem="CuT-nq-7OJ" firstAttribute="leading" secondItem="Hef-sh-jU8" secondAttribute="leading" id="Pb2-sr-oTw"/>
                         <constraint firstItem="5Sz-pp-rZm" firstAttribute="top" secondItem="Hef-sh-jU8" secondAttribute="top" constant="5" id="VYK-8w-29b"/>
+                        <constraint firstAttribute="trailing" secondItem="CuT-nq-7OJ" secondAttribute="trailing" id="aMC-Aa-F8q"/>
                         <constraint firstItem="msj-HT-Fvg" firstAttribute="bottom" secondItem="5Sz-pp-rZm" secondAttribute="bottom" id="axa-P6-wdN"/>
-                        <constraint firstItem="78D-5d-u6A" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="hsN-As-TGv"/>
+                        <constraint firstItem="nsL-HW-iIe" firstAttribute="centerY" secondItem="8cT-LG-4KU" secondAttribute="centerY" id="h68-mX-5Tl"/>
                         <constraint firstItem="qow-J2-WM6" firstAttribute="trailing" secondItem="78D-5d-u6A" secondAttribute="leading" constant="-5" id="i4N-Yv-iRg"/>
                         <constraint firstItem="5Sz-pp-rZm" firstAttribute="bottom" secondItem="Hef-sh-jU8" secondAttribute="bottom" constant="-5" id="jb7-NZ-NyH"/>
                         <constraint firstItem="qow-J2-WM6" firstAttribute="leading" secondItem="8cT-LG-4KU" secondAttribute="trailing" constant="10" id="mX0-O6-cAI"/>
+                        <constraint firstItem="78D-5d-u6A" firstAttribute="bottom" secondItem="8cT-LG-4KU" secondAttribute="bottom" id="tGC-Yh-bRF"/>
                         <constraint firstItem="8cT-LG-4KU" firstAttribute="leading" secondItem="Hef-sh-jU8" secondAttribute="leading" constant="10" id="vkV-hG-bXm"/>
+                        <constraint firstItem="8cT-LG-4KU" firstAttribute="centerY" secondItem="Hef-sh-jU8" secondAttribute="centerY" id="xPu-ej-HhE"/>
                     </constraints>
                 </view>
             </subviews>
@@ -160,8 +190,9 @@
     </objects>
     <resources>
         <image name="Live_Input_Btn_Louder" width="26" height="18"/>
+        <image name="Live_Input_Btn_Louder_Selected" width="26" height="18"/>
         <image name="Live_Publish_Btn_Gift" width="37" height="44"/>
         <image name="Live_Publish_Btn_Share" width="34" height="34"/>
-        <image name="Live_say_something" width="240" height="36"/>
+        <image name="Live_inpuMessage_shaow" width="360" height="83"/>
     </resources>
 </document>

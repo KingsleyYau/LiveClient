@@ -19,6 +19,7 @@
 #define TOKEN_PARAM                 "token"
 #define NICKNAME_PARAM              "nickname"
 #define GIFTID_PARAM                "giftid"
+#define GIFTNAME_PARAM               "giftname"
 #define GIFTNUM_PARAM               "giftnum"
 #define MULTI_CLICK_PARAM           "multi_click"
 #define MULTI_CLICK_START_PARAM     "multi_click_start"
@@ -41,6 +42,7 @@ SendRoomGiftTask::SendRoomGiftTask(void)
     m_token = "";
     m_nickName = "";
     m_giftId = "";
+    m_giftName = "";
     m_giftNum = 0;
     m_multi_click = false;
     m_multi_click_start = 0;
@@ -80,7 +82,7 @@ bool SendRoomGiftTask::Handle(const TransportProtocol& tp)
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[COINS_PARAM].isDouble()) {
+        if (tp.m_data[COINS_PARAM].isNumeric()) {
             m_coins = tp.m_data[COINS_PARAM].asDouble();
         }
         
@@ -119,6 +121,7 @@ bool SendRoomGiftTask::GetSendData(Json::Value& data)
         value[TOKEN_PARAM] = m_token;
         value[NICKNAME_PARAM] = m_nickName;
         value[GIFTID_PARAM] = m_giftId;
+        value[GIFTNAME_PARAM] = m_giftName;
         value[GIFTNUM_PARAM] = m_giftNum;
         int isClick = m_multi_click ? 1 : 0;
         value[MULTI_CLICK_PARAM] = isClick;
@@ -169,17 +172,19 @@ void SendRoomGiftTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool SendRoomGiftTask::InitParam(const string& roomId, const string token, const string nickName, const string giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id)
+bool SendRoomGiftTask::InitParam(const string& roomId, const string token, const string nickName, const string giftId, const string giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id)
 {
 	bool result = false;
     if (!roomId.empty()
         && !token.empty()
         && !nickName.empty()
-        && !giftId.empty()) {
+        && !giftId.empty()
+        && !giftName.empty()) {
         m_roomId = roomId;
         m_token = token;
         m_nickName = nickName;
         m_giftId = giftId;
+        m_giftName = giftName;
         m_giftNum = giftNum;
         m_multi_click = multi_click;
         m_multi_click_start = multi_click_start;

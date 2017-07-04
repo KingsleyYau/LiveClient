@@ -122,6 +122,8 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 
 				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, sampleRate, channelPerFrame, bitPerSample);
 			}
+
+			env->DeleteLocalRef(jniRendererCls);
 		}
 	}
 
@@ -154,6 +156,8 @@ void AudioRendererImp::Reset() {
 			if( jMethodID ) {
 				env->CallVoidMethod(mJniRenderer, jMethodID);
 			}
+
+			env->DeleteLocalRef(jniRendererCls);
 		}
 	}
 

@@ -64,6 +64,8 @@ VideoDecoderH264::VideoDecoderH264()
     mDropFrameMutex(KMutex::MutexType_Recursive)
     {
 	// TODO Auto-generated constructor stub
+    FileLog("rtmpdump", "VideoDecoderH264::VideoDecoderH264( decoder : %p )", this);
+        
 	mCodec = NULL;
 	mContext = NULL;
 
@@ -95,9 +97,9 @@ VideoDecoderH264::VideoDecoderH264()
 
 VideoDecoderH264::~VideoDecoderH264() {
 	// TODO Auto-generated destructor stub
-    Stop();
+    FileLog("rtmpdump", "VideoDecoderH264::~VideoDecoderH264( decoder : %p )", this);
     
-//	DestroyContext();
+    Stop();
     
     if( mpDecodeVideoRunnable ) {
         delete mpDecodeVideoRunnable;
@@ -219,7 +221,7 @@ void VideoDecoderH264::Stop() {
         
         // 释放转换Buffer
         mConvertBufferList.lock();
-        while( !mDecodeBufferList.empty() ) {
+        while( !mConvertBufferList.empty() ) {
             frame = (VideoFrame* )mConvertBufferList.front();
             mConvertBufferList.pop_front();
             if( frame != NULL ) {
@@ -360,16 +362,16 @@ void VideoDecoderH264::DestroyContext() {
 }
     
 void VideoDecoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::ReleaseBuffer( "
-            "this : %p, "
-            "frame : %p, "
-            "timestamp : %u "
-            ")",
-            this,
-            videoFrame,
-            videoFrame->mTimestamp
-            );
+//    FileLog("rtmpdump",
+//            "VideoDecoderH264::ReleaseBuffer( "
+//            "this : %p, "
+//            "frame : %p, "
+//            "timestamp : %u "
+//            ")",
+//            this,
+//            videoFrame,
+//            videoFrame->mTimestamp
+//            );
     
 	mFreeBufferList.lock();
 	mFreeBufferList.push_back(videoFrame);
@@ -485,15 +487,15 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame* videoFrame, VideoFrame* newV
 		packet.data = (uint8_t*)frame;
 		packet.size = frameSize;
 
-		FileLog("rtmpdump",
-				"VideoDecoderH264::DecodeVideoFrame( "
-				"[Decode Frame], "
-				"this : %p "
-                "timestamp : %u, "
-				")",
-				this,
-                newVideoFrame->mTimestamp
-				);
+//		FileLog("rtmpdump",
+//				"VideoDecoderH264::DecodeVideoFrame( "
+//				"[Decode Frame], "
+//				"this : %p, "
+//                "timestamp : %u, "
+//				")",
+//				this,
+//                newVideoFrame->mTimestamp
+//				);
 
         AVFrame* pictureFrame = newVideoFrame->mpAVFrame;
 		int useLen = avcodec_decode_video2(mContext, pictureFrame, &mGotPicture, &packet);
@@ -616,25 +618,25 @@ void VideoDecoderH264::DecodeVideoHandle() {
                     mDropFrameMutex.unlock();
                 }
                 
-                FileLog("rtmpdump",
-                        "VideoDecoderH264::DecodeVideoHandle( "
-                        "[Get Frame], "
-                        "this : %p, "
-                        "videoFrame : %p, "
-                        "timestamp : %u, "
-                        "mbDropFrame : %s, "
-                        "bWaitForInterFrame : %s, "
-                        "videoType : %d, "
-                        "mDecodeBufferList size : %d "
-                        ")",
-                        this,
-                        videoFrame,
-                        timestamp,
-                        mbDropFrame?"true":"false",
-                        mbWaitForInterFrame?"true":"false",
-                        videoFrame->mVideoType,
-                        mDecodeBufferList.size()
-                        );
+//                FileLog("rtmpdump",
+//                        "VideoDecoderH264::DecodeVideoHandle( "
+//                        "[Get Frame], "
+//                        "this : %p, "
+//                        "videoFrame : %p, "
+//                        "timestamp : %u, "
+//                        "mbDropFrame : %s, "
+//                        "bWaitForInterFrame : %s, "
+//                        "videoType : %d, "
+//                        "mDecodeBufferList size : %d "
+//                        ")",
+//                        this,
+//                        videoFrame,
+//                        timestamp,
+//                        mbDropFrame?"true":"false",
+//                        mbWaitForInterFrame?"true":"false",
+//                        videoFrame->mVideoType,
+//                        mDecodeBufferList.size()
+//                        );
                 
                 bool bStartDecode = false;
                 mDropFrameMutex.lock();
@@ -705,21 +707,21 @@ void VideoDecoderH264::DecodeVideoHandle() {
                 
                 if( bFlag ) {
                     // 解码成功
-                    FileLog("rtmpdump",
-                            "VideoDecoderH264::DecodeVideoHandle( "
-                            "[Decode Frame Finish], "
-                            "this : %p, "
-                            "timestamp : %u, "
-                            "decodeTime : %lld, "
-                            "decodeTotalTime : %lld, "
-                            "decodeTotalMS : %lld "
-                            ")",
-                            this,
-                            timestamp,
-                            decodeTime,
-                            decodeTotalTime,
-                            decodeTotalMS
-                            );
+//                    FileLog("rtmpdump",
+//                            "VideoDecoderH264::DecodeVideoHandle( "
+//                            "[Decode Frame Finish], "
+//                            "this : %p, "
+//                            "timestamp : %u, "
+//                            "decodeTime : %lld, "
+//                            "decodeTotalTime : %lld, "
+//                            "decodeTotalMS : %lld "
+//                            ")",
+//                            this,
+//                            timestamp,
+//                            decodeTime,
+//                            decodeTotalTime,
+//                            decodeTotalMS
+//                            );
                 } else {
                     // 直接丢帧
                     FileLog("rtmpdump",
@@ -762,31 +764,6 @@ void VideoDecoderH264::DecodeVideoHandle() {
                 decodedVideoFrame = NULL;
             }
         }
-        
-//        VideoFrame* displayFrame = NULL;
-//        if( bFlag && mpCallback && decodedVideoFrame ) {
-//            // 获取空闲Buffer
-//            mFreeBufferList.lock();
-//            if( !mFreeBufferList.empty() ) {
-//                displayFrame = (VideoFrame *)mFreeBufferList.front();
-//                mFreeBufferList.pop_front();
-//            } else {
-//                displayFrame = new VideoFrame();
-//            }
-//            mFreeBufferList.unlock();
-//            mVideoFormatConverter.ConvertVideoFrame(decodedVideoFrame, displayFrame);
-//            
-//            // 回调播放
-//            mpCallback->OnDecodeVideoFrame(this, displayFrame, displayFrame->mTimestamp);
-//
-//            
-//        } else {
-//            // 归还空闲Buffer
-//            if( displayFrame ) {
-//                ReleaseBuffer(displayFrame);
-//                displayFrame = NULL;
-//            }
-//        }
         
         if( bSleep ) {
             Sleep(1);
@@ -834,21 +811,21 @@ void VideoDecoderH264::ConvertVideoHandle() {
         if( videoFrame ) {
             timestamp = videoFrame->mTimestamp;
             
-            FileLog("rtmpdump",
-                    "VideoDecoderH264::ConvertVideoHandle( "
-                    "[Get Frame], "
-                    "this : %p, "
-                    "videoFrame : %p, "
-                    "timestamp : %u, "
-                    "videoType : %d, "
-                    "mConvertBufferList size : %d "
-                    ")",
-                    this,
-                    videoFrame,
-                    timestamp,
-                    videoFrame->mVideoType,
-                    mConvertBufferList.size()
-                    );
+//            FileLog("rtmpdump",
+//                    "VideoDecoderH264::ConvertVideoHandle( "
+//                    "[Get Frame], "
+//                    "this : %p, "
+//                    "videoFrame : %p, "
+//                    "timestamp : %u, "
+//                    "videoType : %d, "
+//                    "mConvertBufferList size : %d "
+//                    ")",
+//                    this,
+//                    videoFrame,
+//                    timestamp,
+//                    videoFrame->mVideoType,
+//                    mConvertBufferList.size()
+//                    );
             
             // 获取空闲Buffer
             mFreeBufferList.lock();

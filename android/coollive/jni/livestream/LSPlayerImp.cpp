@@ -35,6 +35,8 @@ LSPlayerImp::LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject 
 
 	mUseHardDecoder = false;
 
+	mPlayer.SetStatusCallback(this);
+
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
@@ -94,7 +96,7 @@ void LSPlayerImp::SetUseHardDecoder(bool useHardDecoder) {
 }
 
 void LSPlayerImp::CreateDecoders() {
-	FileLog("livestream",
+	FileLog("rtmpdump",
 			"LSPlayerImp::CreateDecoders( "
 			"player : %p, "
 			"mUseHardDecoder : %s "
@@ -130,7 +132,7 @@ void LSPlayerImp::CreateDecoders() {
 	mPlayer.SetVideoRenderer(mpVideoRenderer);
 	mPlayer.SetAudioRenderer(mpAudioRenderer);
 
-	FileLog("livestream",
+	FileLog("rtmpdump",
 			"LSPlayerImp::CreateDecoders( "
 			"[Success], "
 			"player : %p, "
@@ -150,7 +152,7 @@ void LSPlayerImp::CreateDecoders() {
 }
 
 void LSPlayerImp::DestroyDecoders() {
-	FileLog("livestream",
+	FileLog("rtmpdump",
 			"LSPlayerImp::DestroyDecoders( "
 			"player : %p, "
 			"mUseHardDecoder : %s "
@@ -175,7 +177,14 @@ void LSPlayerImp::DestroyDecoders() {
 	}
 }
 
-void LSPlayerImp::OnPlayerDisconnect() {
+void LSPlayerImp::OnPlayerDisconnect(PlayerController* pc) {
+	FileLog("rtmpdump",
+			"LSPlayerImp::OnPlayerDisconnect( "
+			"player : %p "
+			")",
+			this
+			);
+
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
@@ -189,7 +198,7 @@ void LSPlayerImp::OnPlayerDisconnect() {
 			string signure = "()V";
 			jmethodID jMethodID = env->GetMethodID(
 					jniCallbackCls,
-					"onPlayerDisconnect",
+					"onDisconnect",
 					signure.c_str()
 					);
 

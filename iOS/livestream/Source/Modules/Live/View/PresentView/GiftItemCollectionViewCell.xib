@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -18,60 +18,65 @@
                 <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="crown" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dY5-NJ-tG3">
-                        <rect key="frame" x="26.5" y="48" width="37" height="16"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <color key="textColor" red="0.47450980390000003" green="0.47450980390000003" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JfX-bG-a62">
-                        <rect key="frame" x="0.0" y="64" width="90" height="16"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                        <inset key="contentEdgeInsets" minX="0.0" minY="0.0" maxX="20" maxY="0.0"/>
-                        <inset key="titleEdgeInsets" minX="10" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        <inset key="imageEdgeInsets" minX="10" minY="0.0" maxX="8" maxY="0.0"/>
-                        <state key="normal" title="100" image="Live_Fans_Img_Tips"/>
-                    </button>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="like_0" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
-                        <rect key="frame" x="25" y="6" width="40" height="40"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_giftIcon_nomal" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
+                        <rect key="frame" x="25" y="0.0" width="40" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="55T-or-0d8"/>
                             <constraint firstAttribute="width" constant="40" id="MoY-f3-A8w"/>
                         </constraints>
                     </imageView>
-                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Fans_Img_Tips" translatesAutoresizingMaskIntoConstraints="NO" id="mVv-W8-TbS">
-                        <rect key="frame" x="79" y="0.0" width="11" height="11"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFP-NI-v5v">
+                        <rect key="frame" x="30" y="71" width="30" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <state key="normal" title="100" image="Live_GiftMoney_Icon">
+                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
+                        <rect key="frame" x="30" y="51" width="31" height="15"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.51372549020000002" green="0.51372549020000002" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_bigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-jj-DsS">
+                        <rect key="frame" x="78" y="2" width="10" height="10"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="11" id="7GK-Zi-snh"/>
-                            <constraint firstAttribute="height" constant="11" id="ooV-zu-GzG"/>
+                            <constraint firstAttribute="height" constant="10" id="Gn4-yE-gia"/>
+                            <constraint firstAttribute="width" constant="10" id="Uad-MG-Ivj"/>
                         </constraints>
                     </imageView>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="JfX-bG-a62" secondAttribute="bottom" constant="10" id="7eG-fh-QIJ"/>
-                <constraint firstAttribute="trailing" secondItem="JfX-bG-a62" secondAttribute="trailing" id="AdK-Vs-tgb"/>
-                <constraint firstItem="mVv-W8-TbS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="EiU-7e-vCL"/>
-                <constraint firstItem="dY5-NJ-tG3" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="2" id="KDS-gR-buH"/>
-                <constraint firstItem="dY5-NJ-tG3" firstAttribute="centerX" secondItem="iKm-b7-Qu8" secondAttribute="centerX" id="Ls0-QZ-fQH"/>
-                <constraint firstItem="JfX-bG-a62" firstAttribute="centerX" secondItem="iKm-b7-Qu8" secondAttribute="centerX" id="Sr3-oc-5Kf"/>
-                <constraint firstAttribute="trailing" secondItem="mVv-W8-TbS" secondAttribute="trailing" id="ccp-io-8ND"/>
-                <constraint firstItem="iKm-b7-Qu8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="6" id="hwS-LE-2Cu"/>
+                <constraint firstItem="47x-lT-YTl" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="11.5" id="7xX-nX-0Jx"/>
+                <constraint firstItem="DFP-NI-v5v" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="5" id="8YX-w7-ljn"/>
+                <constraint firstItem="47x-lT-YTl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LLx-qu-xju"/>
+                <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="2" id="Rw8-Hj-95u"/>
+                <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="VcZ-Lq-CNj"/>
+                <constraint firstAttribute="bottom" secondItem="DFP-NI-v5v" secondAttribute="bottom" constant="7" id="WP7-CC-fvv"/>
+                <constraint firstItem="DFP-NI-v5v" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="iZn-2D-DHo"/>
                 <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="m6L-PP-2bI"/>
-                <constraint firstItem="JfX-bG-a62" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="znn-nO-tmw"/>
             </constraints>
             <size key="customSize" width="167" height="169"/>
             <connections>
-                <outlet property="countImage" destination="mVv-W8-TbS" id="WFq-Vd-U6c"/>
-                <outlet property="giftCount" destination="JfX-bG-a62" id="udu-xW-6iP"/>
+                <outlet property="bigGiftLogo" destination="4cl-jj-DsS" id="xjX-Vq-Tbh"/>
+                <outlet property="bigGiftLogoHeight" destination="Gn4-yE-gia" id="OoM-mQ-sdf"/>
+                <outlet property="bigGiftLogoWidth" destination="Uad-MG-Ivj" id="QOq-ig-1GY"/>
+                <outlet property="giftCount" destination="DFP-NI-v5v" id="HOg-8O-MOX"/>
+                <outlet property="giftCountBottomOffset" destination="WP7-CC-fvv" id="8YF-ux-Qo5"/>
+                <outlet property="giftImageBottomOffset" destination="7xX-nX-0Jx" id="ZwR-jp-NkP"/>
+                <outlet property="giftImageHeight" destination="55T-or-0d8" id="qqT-B2-eJA"/>
                 <outlet property="giftImageView" destination="iKm-b7-Qu8" id="kqb-J3-061"/>
-                <outlet property="giftName" destination="dY5-NJ-tG3" id="JxK-jV-KSZ"/>
+                <outlet property="giftImageWidth" destination="MoY-f3-A8w" id="tVU-w9-XhY"/>
+                <outlet property="giftName" destination="47x-lT-YTl" id="bLm-hx-njN"/>
+                <outlet property="giftNameLableBottomOffset" destination="8YX-w7-ljn" id="MiJ-R6-ENE"/>
             </connections>
             <point key="canvasLocation" x="-121" y="56"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Live_Fans_Img_Tips" width="15" height="11"/>
-        <image name="like_0" width="31" height="29"/>
+        <image name="Live_GiftMoney_Icon" width="12" height="9"/>
+        <image name="Live_bigGift_Logo" width="13" height="13"/>
+        <image name="Live_giftIcon_nomal" width="25" height="25"/>
     </resources>
 </document>

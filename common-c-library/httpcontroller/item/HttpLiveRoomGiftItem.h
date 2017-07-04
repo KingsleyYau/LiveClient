@@ -47,8 +47,7 @@ public:
             }
             
             /* coins */
-            if( root[LIVEROOM_GIFTCOINS].isDouble()
-               ) {
+            if( root[LIVEROOM_GIFTCOINS].isNumeric()) {
                 coins = root[LIVEROOM_GIFTCOINS].asDouble();
             }
             

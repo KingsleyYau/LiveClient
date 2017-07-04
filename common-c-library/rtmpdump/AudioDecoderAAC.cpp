@@ -150,10 +150,6 @@ void AudioDecoderAAC::ReleaseAudioFrame(void* frame) {
     ReleaseBuffer(audioFrame);
 }
 
-void AudioDecoderAAC::SetRecordPCMFile(const string& recordAACFilePath) {
-    mFilePath = recordAACFilePath + ".pcm";
-}
-    
 void AudioDecoderAAC::ReleaseBuffer(AudioFrame* audioFrame) {
 	mFreeBufferList.lock();
 	mFreeBufferList.push_back(audioFrame);

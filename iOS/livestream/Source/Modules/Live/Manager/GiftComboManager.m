@@ -51,10 +51,11 @@
 - (void)pushGift:(GiftItem *_Nonnull)item {
     if( item.itemId.length > 0 ) {
         @synchronized (self) {
+            NSLog(@"item.itemid%@",item.itemId);
             GiftItem* findItem = [self.dictionary objectForKey:item.itemId];
             if( findItem ) {
-                if( item.end > findItem.end ) {
-                    findItem.end = item.end;
+                if( item.multi_click_end > findItem.multi_click_end ) {
+                    findItem.multi_click_end = item.multi_click_end;
                 }
             } else {
                 [self.dictionary setObject:item forKey:item.itemId];

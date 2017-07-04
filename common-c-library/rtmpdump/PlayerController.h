@@ -102,7 +102,10 @@ private:
     void OnDropVideoFrame(RtmpPlayer* player, void* frame);
     void OnPlayAudioFrame(RtmpPlayer* player, void* frame);
     void OnDropAudioFrame(RtmpPlayer* player, void* frame);
-    void OnStartPlayStream(RtmpPlayer* player);
+    void OnStartVideoStream(RtmpPlayer* player);
+    void OnEndVideoStream(RtmpPlayer* player);
+    void OnStartAudioStream(RtmpPlayer* player);
+    void OnEndAudioStream(RtmpPlayer* player);
     void OnResetVideoStream(RtmpPlayer* player);
     void OnResetAudioStream(RtmpPlayer* player);
     

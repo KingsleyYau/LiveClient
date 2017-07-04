@@ -719,18 +719,18 @@ void ImClient::OnSendRoomFav(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const 
 
 // ------------- 直播间点赞 -------------
 // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-bool ImClient::SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
+bool ImClient::SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
     bool result = false;
     m_loginStatusLock->Lock();
     LoginStatus loginStatus = m_loginStatus;
     m_loginStatusLock->Unlock();
-    FileLog("ImClient", "ImClient::SendRoomGift() begin, m_taskManager:%p token:%s roomId:%s nickName:%s giftId:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id;%d", m_taskManager, token.c_str(), roomId.c_str(), nickName.c_str(), giftId.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+    FileLog("ImClient", "ImClient::SendRoomGift() begin, m_taskManager:%p token:%s roomId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id;%d", m_taskManager, token.c_str(), roomId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
     // 若为已登录状态
     if (LOGINED == loginStatus) {
         SendRoomGiftTask* task = new SendRoomGiftTask();
         if (NULL != task) {
             task->Init(this);
-            task->InitParam(roomId, token, nickName, giftId, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+            task->InitParam(roomId, token, nickName, giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
 
             SEQ_T seq = m_seqCounter.GetAndIncrement();
             task->SetSeq(seq);
@@ -897,16 +897,16 @@ void ImClient::OnRecvPushRoomFav(const string& roomId, const string& fromId, con
 }
 
 // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-void ImClient::OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
-    FileLog("ImClient", "ImClient::OnRecvRoomGiftNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d , multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+void ImClient::OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
+    FileLog("ImClient", "ImClient::OnRecvRoomGiftNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d , multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvRoomGiftNotice(roomId, fromId, nickName, giftId, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        callback->OnRecvRoomGiftNotice(roomId, fromId, nickName, giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
     }
-    FileLog("ImClient", "ImClient::OnRecvRoomGiftNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+    FileLog("ImClient", "ImClient::OnRecvRoomGiftNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
     m_listenerListLock->Unlock();
 }
 

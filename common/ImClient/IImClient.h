@@ -64,7 +64,7 @@ public:
     // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
     virtual void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) {};
     // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-    virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {};
+    virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {};
 
     // ------------- 直播间弹幕消息 -------------
     // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
@@ -133,7 +133,7 @@ public:
     
     // ------------- 直播间点赞 -------------
     // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-    virtual bool SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) = 0;
+    virtual bool SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) = 0;
 
     // ------------- 直播间弹幕消息 -------------
     // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）

@@ -48,10 +48,10 @@
         [self addSubview:self.messageLabel];
         
         [self.lvView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(@45);
-            make.height.equalTo(@20);
+            make.width.equalTo(@37);
+            make.height.equalTo(@16);
             make.left.equalTo(@0);
-            make.bottom.equalTo(self.messageLabel.mas_top).offset(24);
+            make.bottom.equalTo(self.messageLabel.mas_top).offset(20);
         }];
         
         self.backgroundColor = [UIColor clearColor];
@@ -62,10 +62,11 @@
 
 - (void)updataChatMessage:(MsgItem *)item{
     
-    self.lvView.levelLabel.text = [NSString stringWithFormat:@"%lld", (long long)item.level, nil];
+//    self.lvView.levelLabel.text = [NSString stringWithFormat:@"%lld0", (long long)item.level, nil];
+    self.lvView.levelLabel.text = [NSString stringWithFormat:@"89"];
     
     YYTextLinePositionSimpleModifier *modifier = [YYTextLinePositionSimpleModifier new];
-    modifier.fixedLineHeight = 22;
+    modifier.fixedLineHeight = 20;
     
     // 创建文本容器
     YYTextContainer *container = [YYTextContainer new];
@@ -77,11 +78,13 @@
     YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:item.attText];
     self.messageLabel.size = layout.textBoundingSize;
     self.messageLabel.textLayout = layout;
-    
+    self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
+    self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);
+    self.messageLabel.shadowBlurRadius = 1.0f;
 }
 
 + (NSString *)textPreDetail {
-    return @"           ";
+    return @"          ";
 }
 
 - (CGSize)sizeThatFits:(CGSize)size{

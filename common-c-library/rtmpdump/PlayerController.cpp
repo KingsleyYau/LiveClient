@@ -79,12 +79,17 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
             url.c_str()
             );
     
-    if( mpAudioDecoder ) {
-        mpAudioDecoder->SetRecordPCMFile(recordAACFilePath);
-    }
-    
     // 开始播放
     bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
+    
+    FileLog("rtmpdump", "PlayerController::PlayUrl( "
+            "[Finish], "
+            "url : %s, "
+            "bFlag : %s "
+            ")",
+            url.c_str(),
+            bFlag?"true":"false"
+            );
     
     return bFlag;
 }
@@ -127,13 +132,13 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
 }
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
-//    FileLog("rtmpdump",
-//            "PlayerController::OnRecvVideoFrame( "
-//            "[Start], "
-//            "timestamp : %u "
-//            ")",
-//			timestamp
-//            );
+    FileLog("rtmpdump",
+            "PlayerController::OnRecvVideoFrame( "
+            "[Start], "
+            "timestamp : %u "
+            ")",
+			timestamp
+            );
     
     // 解码一帧
     if( mpVideoDecoder ) {
@@ -171,13 +176,13 @@ void PlayerController::OnRecvAudioFrame(
                                   int size,
                                   u_int32_t timestamp
                                   ) {
-//    FileLog("rtmpdump",
-//            "PlayerController::OnRecvAudioFrame( "
-//            "[Start], "
-//            "timestamp : %u "
-//            ")",
-//			timestamp
-//            );
+    FileLog("rtmpdump",
+            "PlayerController::OnRecvAudioFrame( "
+            "[Start], "
+            "timestamp : %u "
+            ")",
+			timestamp
+            );
 //    long long curTime = getCurrentTime();
     
     // 解码一帧
@@ -249,12 +254,6 @@ void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
     
     // 释放内存
     mpAudioDecoder->ReleaseAudioFrame(frame);
-}
-   
-void PlayerController::OnStartPlayStream(RtmpPlayer* player) {
-    if( mpVideoDecoder ) {
-        mpVideoDecoder->StartDropFrame();
-    }
 }
     
 void PlayerController::OnResetVideoStream(RtmpPlayer* player) {

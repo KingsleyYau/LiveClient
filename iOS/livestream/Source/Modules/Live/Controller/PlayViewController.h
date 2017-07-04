@@ -9,6 +9,7 @@
 #import "KKViewController.h"
 #import "GetLiveRoomHotListRequest.h"
 #import "PresentView.h"
+#import "IMManager.h"
 
 @interface PlayViewController : KKViewController
 
@@ -22,9 +23,9 @@
 @property (nonatomic, weak) IBOutlet UIButton* btnChat;
 
 /**
- *  喇叭按钮约束
+ *  saysome提示label
  */
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* btnChatWidth;
+@property (weak, nonatomic) IBOutlet UILabel *saysomeLabel;
 
 /**
  *  分享按钮
@@ -97,7 +98,7 @@
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
 /**
- 礼物列表view
+ 礼物列表界面
  */
 @property (weak, nonatomic) IBOutlet PresentView *presentView;
 

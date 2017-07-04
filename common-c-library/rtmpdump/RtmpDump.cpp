@@ -14,6 +14,8 @@
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 
+#include <srs/srs_librtmp.h>
+
 #define DEFAULT_VIDEO_FRAME_SIZE 65535
 #define DEFAULT_AUDIO_FRAME_SIZE DEFAULT_VIDEO_FRAME_SIZE
 
@@ -176,7 +178,7 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const st
         if( mpRecordH264File ) {
             fseek(mpRecordH264File, 0L, SEEK_END);
         }
-        string h264FullPath = recordH264FilePath + ".h264";
+        string h264FullPath = recordH264FilePath;
         mpRecordH264FullFile = fopen(h264FullPath.c_str(), "w+b");
         if( mpRecordH264FullFile ) {
             fseek(mpRecordH264FullFile, 0L, SEEK_END);

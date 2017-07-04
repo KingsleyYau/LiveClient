@@ -27,7 +27,6 @@ static NSString *cellID = @"cellID";
         containerView.layer.borderWidth = 1;
         containerView.layer.masksToBounds = YES;
         [self addSubview:containerView];
-        
 
     }
     return self;

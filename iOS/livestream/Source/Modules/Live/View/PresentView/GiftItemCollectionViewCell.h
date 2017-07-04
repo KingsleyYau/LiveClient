@@ -7,18 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LiveRoomGiftItemObject.h"
 
 @interface GiftItemCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *giftImageView;
 @property (weak, nonatomic) IBOutlet UILabel *giftName;
 @property (weak, nonatomic) IBOutlet UIButton *giftCount;
-@property (weak, nonatomic) IBOutlet UIImageView *countImage;
 
 @property (nonatomic, assign) BOOL selectCell;
 
 
 - (void)reloadStyle;
 
-
 + (NSString *)cellIdentifier;
+
+- (void)updataCellViewItem:(LiveRoomGiftItemObject *)item;
+
 @end

@@ -20,7 +20,7 @@
 #include <rtmpdump/AudioDecoderAAC.h>
 
 using namespace coollive;
-class LSPlayerImp {
+class LSPlayerImp : public PlayerStatusCallback {
 public:
 	LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject jniAudioRenderer, jobject jniVideoDecoder);
 	virtual ~LSPlayerImp();
@@ -31,10 +31,11 @@ public:
 	void SetUseHardDecoder(bool useHardDecoder);
 
 private:
+	void OnPlayerDisconnect(PlayerController* pc);
+
+private:
 	void CreateDecoders();
 	void DestroyDecoders();
-
-	void OnPlayerDisconnect();
 
 private:
 	PlayerController mPlayer;

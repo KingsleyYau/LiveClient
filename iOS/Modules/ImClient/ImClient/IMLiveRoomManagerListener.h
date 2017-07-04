@@ -195,7 +195,8 @@
  *  @param fromId      发送方的用户ID
  *
  */
-- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId;
+- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName isFirst:(BOOL)isFirst
+;
 
 #pragma mark - 直播间礼物消息操作回调
 /**
@@ -223,7 +224,7 @@
  *  @param multi_click_id       连击ID，相同则表示是同一次连击
  *
  */
-- (void)onRecvRoomGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvRoomGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**

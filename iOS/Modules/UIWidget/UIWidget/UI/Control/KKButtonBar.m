@@ -70,6 +70,8 @@
     }
     
     self.containView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    self.containView.layer.cornerRadius = 5;
+    self.containView.layer.masksToBounds = YES;
     
     CGFloat curIndex = self.blanking;
     if( !self.isVertical ) {

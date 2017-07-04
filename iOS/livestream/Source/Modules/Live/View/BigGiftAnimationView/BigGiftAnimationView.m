@@ -43,20 +43,20 @@ static dispatch_once_t onceToken;
     if (self) {
         
         self.carGiftView = [[YYAnimatedImageView alloc]init];
-        CGFloat lh = 453 / (360 / SCREEN_WIDTH);
-        CGFloat ly = (SCREEN_HEIGHT - lh) * 0.5;
-        self.carGiftView.frame = CGRectMake(0, ly, SCREEN_WIDTH, lh);
+        self.carGiftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         
     }
     return self;
 }
 
-- (void)starAnimation{
+- (void)starAnimationWithImageData:(NSData *)imageData {
     
     NSLog(@"Bool%d",YYImageWebPAvailable());
     
-    YYImage *image = [YYImage imageNamed:@"gift"];
+    YYImage *image = [YYImage imageWithData:imageData];
+    self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
     self.carGiftView.image = image;
+//    [self.carGiftView sizeToFit];
     [self addSubview:self.carGiftView];
 }
 

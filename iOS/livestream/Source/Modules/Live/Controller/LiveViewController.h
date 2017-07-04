@@ -19,11 +19,11 @@
 #import "BarrageModelCell.h"
 
 #import "GiftComboView.h"
-#import "GetLiveRoomHotListRequest.h"
 #import "GiftComboManager.h"
 
 #import "IMManager.h"
 #import "LoginManager.h"
+#import "MsgItem.h"
 
 #define PlaceholderFontSize 16
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
@@ -79,7 +79,6 @@
 - (IBAction)fansAction:(id)sender;
 
 #pragma mark - 逻辑事件
-
 /**
  发送消息/弹幕
 
@@ -95,6 +94,21 @@
  */
 - (void)addCombo:(GiftItem *)giftItem;
 
-- (void)starBigAnimation;
+/**
+ 显示大礼物
+ 
+ @param imageData 大礼物data
+ */
+- (void)starBigAnimationWithImageData:(NSData *)imageData;
+
+/**
+ 点赞动画
+ */
+- (void)showLike;
+
+/**
+ 直播间点赞消息
+ */
+- (void)addLikeMessage:(NSString *)nickName;
 
 @end

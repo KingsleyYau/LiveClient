@@ -9,6 +9,7 @@
 #define RTMPDUMP_EncodeDecodeBuffer_H_
 
 #include <stdio.h>
+#include <string.h>
 
 #include <common/list_lock.h>
 

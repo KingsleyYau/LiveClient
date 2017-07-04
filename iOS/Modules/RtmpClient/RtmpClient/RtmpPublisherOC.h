@@ -15,9 +15,9 @@
 // FPS
 #define FPS 20
 // 关键帧间隔(每KEY_FRAME_INTERVAL帧就有一个关键帧)
-#define KEY_FRAME_INTERVAL 5
+#define KEY_FRAME_INTERVAL 20
 // 视频码率
-#define BIT_RATE 800 * 1000
+#define BIT_RATE 1000 * 1000
 
 // 音频码率
 //#define BIT_RATE 600 * 1000

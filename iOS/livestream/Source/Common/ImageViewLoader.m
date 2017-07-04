@@ -46,6 +46,17 @@
 
 - (BOOL)loadImageWithOptions:(SDWebImageOptions)option placeholderImage:(UIImage *)image {
     
+//    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+//    
+//    [manager loadImageWithURL:nil options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+//        
+//        
+//    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+//       
+//        
+//    }];
+    
+    
     if ( self.sdWebImageView != nil ) {
         
         [self.sdWebImageView sd_setImageWithURL:[NSURL URLWithString:self.url] placeholderImage:image options:option completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {

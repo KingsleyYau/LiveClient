@@ -10,18 +10,27 @@
 #ifdef _WIN32  /* _WIN32 */
 	#include <windows.h>
 #else
+	#include <stdio.h>
+	#include <stdarg.h>
+    #include <unistd.h>
+	#include <string.h>
 	#include <dirent.h>
 	#include <sys/stat.h>
 	#include <sys/syscall.h>
-    #include <unistd.h>
 	#ifdef IOS  /* IOS */
 		#include <sys/time.h>
 		#define GET_TID SYS_gettid
 		#define Log(tag, format, ...) printf(format, ## __VA_ARGS__)
-	#else  /* Android */
-		#include <android/log.h>
-		#define Log(tag, format, ...) __android_log_print(ANDROID_LOG_DEBUG, tag, format, ## __VA_ARGS__)
- 		#define GET_TID __NR_gettid
+	#else
+		# ifdef LINUX /* Linux */
+			#include <sys/time.h>
+			#define GET_TID SYS_gettid
+			#define Log(tag, format, ...) printf(format, ## __VA_ARGS__)
+		#else /* Android */
+			#include <android/log.h>
+			#define Log(tag, format, ...) __android_log_print(ANDROID_LOG_DEBUG, tag, format, ## __VA_ARGS__)
+			#define GET_TID __NR_gettid
+		#endif
 	#endif  /* IOS */
 #endif  /* _WIN32 */
 

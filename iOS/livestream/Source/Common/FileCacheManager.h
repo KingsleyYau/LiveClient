@@ -54,6 +54,33 @@
 - (NSString *)imageUploadCachePath:(UIImage *)image fileName:(NSString *)fileName;
 
 /**
+ *  大礼物文件缓存目录
+ *
+ *  @param giftId 礼物ID
+ *
+ *  @return 图片缓存目录
+ */
+- (NSString* )bigGiftCachePathWithGiftId:(NSString* )giftId;
+
+/**
+ *  发送礼物列表缓存目录
+ *
+ *  @param giftId 礼物ID
+ *
+ *  @return 图片缓存目录
+ */
+- (NSString* )sendGiftListCachePathWithGiftId:(NSString* )giftId;
+
+/**
+ *  聊天礼物缓存目录
+ *
+ *  @param giftId 礼物ID
+ *
+ *  @return 图片缓存目录
+ */
+- (NSString* )chatGiftCachePathWithGiftId:(NSString* )giftId;
+
+/**
  *  获取相册图片缓存路径
  *
  *  @param image 图片

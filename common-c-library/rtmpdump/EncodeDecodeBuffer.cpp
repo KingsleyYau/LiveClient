@@ -5,8 +5,10 @@
  *      Author: max
  */
 
-#include <common/KLog.h>
 #include "EncodeDecodeBuffer.h"
+
+#include <common/KLog.h>
+
 namespace coollive {
 EncodeDecodeBuffer::EncodeDecodeBuffer()
 {
@@ -23,6 +25,10 @@ EncodeDecodeBuffer::~EncodeDecodeBuffer()
 }
 
 EncodeDecodeBuffer::EncodeDecodeBuffer(const EncodeDecodeBuffer& item) {
+    mBuffer = NULL;
+    mBufferLen = 0;
+    mBufferSize = 0;
+
     mTimestamp = item.mTimestamp;
 }
     

@@ -9,10 +9,9 @@
 #ifndef RtmpDump_hpp
 #define RtmpDump_hpp
 
-#include <srs/srs_librtmp.h>
-
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <common/KMutex.h>
 #include <common/KThread.h>
@@ -22,6 +21,7 @@
 using namespace std;
 
 #include "IDecoder.h"
+
 namespace coollive {
 class RtmpDump;
 class RtmpDumpCallback {
@@ -133,10 +133,12 @@ private:
     
     RtmpDumpCallback* mpRtmpDumpCallback;
     
-    srs_rtmp_t mpRtmp;
+    // srs_rtmp_t 句柄
+    void* mpRtmp;
+    // srs_flv_t 句柄
+    void* mpFlv;
     
     // 录制文件
-    srs_flv_t mpFlv;
     string mRecordFlvFilePath;
     
     string mRecordH264FilePath;

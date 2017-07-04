@@ -43,6 +43,7 @@
 
 + (instancetype)giftComboView:(id)owner;
 - (void)reset;
+- (void)start;
 - (void)playGiftCombo;
 - (void)stopGiftCombo;
 

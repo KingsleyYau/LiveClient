@@ -67,7 +67,7 @@ public:
     
     // ------------- 直播间点赞 -------------
     // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-    bool SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
+    bool SendRoomGift(SEQ_T reqId, const string& roomId, const string& token, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
 
     // ------------- 直播间弹幕消息 -------------
     // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
@@ -167,7 +167,7 @@ private:
     // 5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）
     void OnRecvPushRoomFav(const string& roomId, const string& fromId, const string& nickName, bool isFirst) override;
     // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-    void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
+    void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
     // 7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
     void OnRecvRoomToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) override;
 

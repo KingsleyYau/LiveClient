@@ -120,19 +120,19 @@ bool VideoFormatConverter::ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* d
     long long now = getCurrentTime();
     long long convertTime = now - curTime;
     
-    FileLog("rtmpdump",
-            "VideoFormatConverter::ConvertVideoFrame( "
-            "[Convert Video Frame], "
-            "this : %p, "
-            "videoFrame : %p, "
-            "timestamp: %u, "
-            "convertTime : %lld "
-            ")",
-            this,
-            srcFrame,
-            srcFrame->mTimestamp,
-            convertTime
-            );
+//    FileLog("rtmpdump",
+//            "VideoFormatConverter::ConvertVideoFrame( "
+//            "[Convert Video Frame], "
+//            "this : %p, "
+//            "videoFrame : %p, "
+//            "timestamp: %u, "
+//            "convertTime : %lld "
+//            ")",
+//            this,
+//            srcFrame,
+//            srcFrame->mTimestamp,
+//            convertTime
+//            );
     
     return bFlag;
 }

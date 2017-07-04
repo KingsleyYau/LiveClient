@@ -19,11 +19,12 @@
 #define FROMID_PARAM                "fromid"
 #define NICKNAME_PARAM              "nickname"
 #define GIFTID_PARAM                "giftid"
+#define GIFTNAME_PARAM              "giftname"
 #define GIFTNUM_PARAM               "giftnum"
 #define MULTI_CLICK_PARAM           "multi_click"
 #define MULTI_CLICK_START_PARAM     "multi_click_start"
 #define MULTI_CLICK_END_PARAM       "multi_click_end"
-#define MULTI_CLICK_ID_PARAM       "multi_click_id"
+#define MULTI_CLICK_ID_PARAM        "multi_click_id"
 
 
 RecvRoomGiftNoticeTask::RecvRoomGiftNoticeTask(void)
@@ -38,6 +39,7 @@ RecvRoomGiftNoticeTask::RecvRoomGiftNoticeTask(void)
     m_fromId = "";
     m_nickName = "";
     m_giftId = "";
+    m_giftName = "";
     m_giftNum = 0;
     m_multi_click = false;
     m_multi_click_start = 0;
@@ -88,6 +90,9 @@ bool RecvRoomGiftNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[GIFTID_PARAM].isString()) {
             m_giftId = tp.m_data[GIFTID_PARAM].asString();
         }
+        if (tp.m_data[GIFTNAME_PARAM].isString()) {
+        	m_giftName = tp.m_data[GIFTNAME_PARAM].asString();
+        }
         if (tp.m_data[GIFTNUM_PARAM].isInt()) {
             m_giftNum = tp.m_data[GIFTNUM_PARAM].asInt();
         }
@@ -116,7 +121,7 @@ bool RecvRoomGiftNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvRoomGiftNotice(m_roomId, m_fromId, m_nickName, m_giftId, m_giftNum, m_multi_click, m_multi_click_start, m_multi_click_end, m_multi_click_id);
+        m_listener->OnRecvRoomGiftNotice(m_roomId, m_fromId, m_nickName, m_giftId, m_giftName, m_giftNum, m_multi_click, m_multi_click_start, m_multi_click_end, m_multi_click_id);
 		FileLog("LiveChatClient", "RecvRoomGiftNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

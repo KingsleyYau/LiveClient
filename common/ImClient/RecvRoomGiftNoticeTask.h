@@ -55,6 +55,7 @@ private:
     string          m_fromId;   // 发送方的用户ID
     string          m_nickName;  // 发送人昵称
     string          m_giftId;  // 礼物ID
+    string 			m_giftName;	//礼物名称
     int             m_giftNum;  // 本次发送礼物的数量
     bool            m_multi_click;  // 是否连击礼物
     int             m_multi_click_start;  // 连击起始数

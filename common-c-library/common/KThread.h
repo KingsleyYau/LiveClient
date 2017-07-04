@@ -14,6 +14,7 @@
 
 #ifndef _WIN32
 #include <pthread.h>
+#include <string.h>
 #endif
 
 #include "KMutex.h"

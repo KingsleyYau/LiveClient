@@ -9,8 +9,11 @@ public class LSConfig {
 	/**
 	 * 日志TAG
 	 */
-	public static final String TAG = "livestream";
-
+	public static String TAG = "livestream";
+	/**
+	 * 重连时间
+	 */
+	public static Integer RECONNECT_SECOND = 1;
 	/**
 	 * 视频宽度
 	 */

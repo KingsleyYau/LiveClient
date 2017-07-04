@@ -26,6 +26,8 @@
 		5027D5B61EF9067200EE3B0E /* LxGridViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5B31EF9067200EE3B0E /* LxGridViewFlowLayout.m */; };
 		5027D5B71EF9067200EE3B0E /* SelectCoverViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5B51EF9067200EE3B0E /* SelectCoverViewCell.m */; };
 		5027D5B91EF906B900EE3B0E /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5027D5B81EF906B900EE3B0E /* Photos.framework */; };
+		502E07411F0A3EA600A4CFCD /* CountTimeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 502E07401F0A3EA600A4CFCD /* CountTimeButton.m */; };
+		502E07441F0A3EC000A4CFCD /* UserHeadUrlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 502E07431F0A3EC000A4CFCD /* UserHeadUrlManager.m */; };
 		503A705A1EEF6FBD00BA8FF8 /* LevelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A70581EEF6FBD00BA8FF8 /* LevelView.m */; };
 		503A705B1EEF6FBD00BA8FF8 /* LevelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 503A70591EEF6FBD00BA8FF8 /* LevelView.xib */; };
 		503A70621EEF700400BA8FF8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 503A70611EEF700400BA8FF8 /* CoreText.framework */; };
@@ -62,6 +64,7 @@
 		5063A3F81ECE99F200361942 /* HotTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063A3F51ECE99F200361942 /* HotTableView.m */; };
 		5063A4051ECECA3200361942 /* UIWidgetBundle.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D6DDB1EC979C1007FF4C6 /* UIWidgetBundle.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 506B52FC1EE1135700803BD2 /* GiftItem.m */; };
+		506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */; };
 		507315C21EE9346E005D1C0B /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C11EE9346E005D1C0B /* LikeView.m */; };
 		507315C61EE944F6005D1C0B /* GiftComboManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C51EE944F6005D1C0B /* GiftComboManager.m */; };
 		509198381EDEA32C00D26A7B /* BarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198351EDEA32C00D26A7B /* BarrageView.m */; };
@@ -317,6 +320,10 @@
 		5027D5B41EF9067200EE3B0E /* SelectCoverViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCoverViewCell.h; sourceTree = "<group>"; };
 		5027D5B51EF9067200EE3B0E /* SelectCoverViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCoverViewCell.m; sourceTree = "<group>"; };
 		5027D5B81EF906B900EE3B0E /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		502E073F1F0A3EA600A4CFCD /* CountTimeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountTimeButton.h; sourceTree = "<group>"; };
+		502E07401F0A3EA600A4CFCD /* CountTimeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountTimeButton.m; sourceTree = "<group>"; };
+		502E07421F0A3EC000A4CFCD /* UserHeadUrlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserHeadUrlManager.h; sourceTree = "<group>"; };
+		502E07431F0A3EC000A4CFCD /* UserHeadUrlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserHeadUrlManager.m; sourceTree = "<group>"; };
 		503A70571EEF6FBD00BA8FF8 /* LevelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LevelView.h; sourceTree = "<group>"; };
 		503A70581EEF6FBD00BA8FF8 /* LevelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LevelView.m; sourceTree = "<group>"; };
 		503A70591EEF6FBD00BA8FF8 /* LevelView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LevelView.xib; sourceTree = "<group>"; };
@@ -380,6 +387,8 @@
 		5063A3F51ECE99F200361942 /* HotTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotTableView.m; sourceTree = "<group>"; };
 		506B52FB1EE1135700803BD2 /* GiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftItem.h; sourceTree = "<group>"; };
 		506B52FC1EE1135700803BD2 /* GiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftItem.m; sourceTree = "<group>"; };
+		506E416E1F0B276E0041FBEE /* LiveGiftDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveGiftDownloadManager.h; sourceTree = "<group>"; };
+		506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveGiftDownloadManager.m; sourceTree = "<group>"; };
 		507315C01EE9346E005D1C0B /* LikeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeView.h; sourceTree = "<group>"; };
 		507315C11EE9346E005D1C0B /* LikeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeView.m; sourceTree = "<group>"; };
 		507315C41EE944F6005D1C0B /* GiftComboManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftComboManager.h; sourceTree = "<group>"; };
@@ -643,6 +652,8 @@
 		5055919A1EF3FD9E000AF03A /* PresentView */ = {
 			isa = PBXGroup;
 			children = (
+				502E073F1F0A3EA600A4CFCD /* CountTimeButton.h */,
+				502E07401F0A3EA600A4CFCD /* CountTimeButton.m */,
 				5055919B1EF3FD9E000AF03A /* GiftItemCollectionViewCell.h */,
 				5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */,
 				5055919D1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib */,
@@ -772,6 +783,10 @@
 		507315C31EE944F6005D1C0B /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				506E416E1F0B276E0041FBEE /* LiveGiftDownloadManager.h */,
+				506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */,
+				502E07421F0A3EC000A4CFCD /* UserHeadUrlManager.h */,
+				502E07431F0A3EC000A4CFCD /* UserHeadUrlManager.m */,
 				507315C41EE944F6005D1C0B /* GiftComboManager.h */,
 				507315C51EE944F6005D1C0B /* GiftComboManager.m */,
 				50F310111EEA5573008CA70D /* GiftDownloaderManager.h */,
@@ -1604,6 +1619,7 @@
 				505D6DED1EC979E3007FF4C6 /* FileCacheManager.m in Sources */,
 				505591AE1EF3FD9E000AF03A /* GiftItemLayout.m in Sources */,
 				5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */,
+				506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */,
 				50EB8C491ED3E869003145B7 /* ImageCVPixelBufferInput.m in Sources */,
 				506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */,
 				5027D5791EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m in Sources */,
@@ -1631,6 +1647,7 @@
 				5027D55D1EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m in Sources */,
 				509910F91EDF9F50003B6813 /* LiveViewController.m in Sources */,
 				509198481EDEA59300D26A7B /* BarrageModelCell.m in Sources */,
+				502E07411F0A3EA600A4CFCD /* CountTimeButton.m in Sources */,
 				5042C0F91ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m in Sources */,
 				5027D5761EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m in Sources */,
 				5099114C1EDFF6F1003B6813 /* DiscoverCollectionView.m in Sources */,
@@ -1653,6 +1670,7 @@
 				509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */,
 				509295A21ECD6CA500111128 /* ChatTextView.m in Sources */,
 				509295A51ECD6D3100111128 /* ChatEmotion.m in Sources */,
+				502E07441F0A3EC000A4CFCD /* UserHeadUrlManager.m in Sources */,
 				5095E3CC1ED6BDF8004FFA3B /* ViewerFansItemObject.m in Sources */,
 				5099112A1EDFA107003B6813 /* WelcomeViewController.m in Sources */,
 				509910FF1EDF9F50003B6813 /* PrePublishViewController.m in Sources */,

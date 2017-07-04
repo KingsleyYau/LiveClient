@@ -16,7 +16,7 @@ JNIEXPORT jlong JNICALL Java_net_qdating_LSPlayerJni_Create
 	// RTMP播放器
 	LSPlayerImp* player = new LSPlayerImp(callback, videoRenderer, audioRenderer, videoDecoder);
 
-	FileLog("livestream",
+	FileLog("rtmpdump",
 			"LSPlayer::Create( "
 			"player : %p, "
 			"callback : %p "
@@ -26,7 +26,7 @@ JNIEXPORT jlong JNICALL Java_net_qdating_LSPlayerJni_Create
 			);
 
 	if( bFlag ) {
-		FileLog("livestream",
+		FileLog("rtmpdump",
 				"LSPlayer::Create( "
 				"[Success], "
 				"player : %p "
@@ -34,7 +34,7 @@ JNIEXPORT jlong JNICALL Java_net_qdating_LSPlayerJni_Create
 				player
 				);
 	} else {
-		FileLog("livestream",
+		FileLog("rtmpdump",
 				"LSPlayer::Create( "
 				"[Fail], "
 				"player : %p "
@@ -52,7 +52,7 @@ JNIEXPORT void JNICALL Java_net_qdating_LSPlayerJni_Destroy
   (JNIEnv *env, jobject thiz, jlong jplayer) {
 	LSPlayerImp* player = (LSPlayerImp *)jplayer;
 
-	FileLog("livestream", "LSPlayer::Destroy( "
+	FileLog("rtmpdump", "LSPlayer::Destroy( "
 			"player : %p "
 			")",
 			player
@@ -71,7 +71,7 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_LSPlayerJni_PlayUrl
 	string recordH264FilePath = JString2String(env, jrecordH264FilePath);
 	string recordAACFilePath = JString2String(env, jrecordAACFilePath);
 
-	FileLog("livestream", "LSPlayer::PlayUrl( "
+	FileLog("rtmpdump", "LSPlayer::PlayUrl( "
 			"player : %p, "
 			"url : %s "
 			")",
@@ -86,7 +86,7 @@ JNIEXPORT void JNICALL Java_net_qdating_LSPlayerJni_Stop
   (JNIEnv *, jobject thiz, jlong jplayer) {
 	LSPlayerImp* player = (LSPlayerImp *)jplayer;
 
-	FileLog("livestream", "LSPlayer::Stop( "
+	FileLog("rtmpdump", "LSPlayer::Stop( "
 			"player : %p "
 			")",
 			player

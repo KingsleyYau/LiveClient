@@ -22,6 +22,8 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 @property (nonatomic ,assign) NSInteger liveTimerForSecond;
 @property (nonatomic ,assign) BOOL isSetNumber;
 @property (nonatomic ,strong) NSTimer * playTimer;
+
+@property (nonatomic, assign) BOOL isPlayTimerStop;
 @end
 
 @implementation GiftComboView
@@ -51,16 +53,29 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     
     self.backView.layer.cornerRadius = self.backView.frame.size.height / 2;
     self.backView.layer.masksToBounds = YES;
+    self.isPlayTimerStop = YES;
 }
 
 - (void)dealloc {
+    self.isPlayTimerStop = YES;
     [self stopGiftCombo];
+}
+
+- (void)setEndNum:(NSInteger)endNum{
+    _endNum = endNum;
+
+//    [self playGiftCombo];
+    
+    if ( endNum > 1 && self.isPlayTimerStop ) {
+        self.isPlayTimerStop = NO;
+        [self playGiftCombo];
+    }
 }
 
 /**
  礼物数量自增1使用该方法
  
- @param number 从多少开始计数
+ num  从多少开始计数
  */
 - (void)addGiftNumberFrom {
 //    if (!self.isSetNumber) {
@@ -68,15 +83,10 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 //        self.isSetNumber = YES;
 //    }
     //每调用一次self.numberView.number get方法 自增1
-    NSInteger num = self.numberView.number;
+    NSInteger num = self.numberView.number + 1;
     [self.numberView changeNumber:num];
     [self handleNumber:num];
- 
-    if (num >= self.endNum) {
-        [self.playTimer invalidate];
-        self.playTimer = nil;
-        return;
-    }
+
 }
 
 - (void)play {
@@ -89,14 +99,17 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     [self.numberView changeNumber:self.beginNum];
 }
 
+- (void)start {
+    _playing = YES;
+}
+
 - (void)playGiftCombo
 {
     if (!self.playTimer) {
         self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime target:self selector:@selector(play) userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
-        self.playTimer.fireDate = [NSDate dateWithTimeIntervalSinceNow:0.3];
+//        self.playTimer.fireDate = [NSDate dateWithTimeIntervalSinceNow:0.3];
         [self.playTimer fire];
-        _playing = YES;
     }
 
 }
@@ -144,6 +157,12 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
                    [UIView animateWithDuration:0.2 animations:^{
                        self.numberView.transform = CGAffineTransformIdentity;
                        self.numberView.alpha = 1.0;
+                   }completion:^(BOOL finished) {
+                       if (number >= self.endNum) {
+                           [self.playTimer invalidate];
+                           self.playTimer = nil;
+                           self.isPlayTimerStop = YES;
+                       }
                    }];
                }];
             }];

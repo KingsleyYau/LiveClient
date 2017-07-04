@@ -159,13 +159,14 @@
     // 初始化主播信息控件
     [self setupRoomView];
     
+    [self setupButtonBar];
+    
     // 初始化输入框
     [self setupInputMessageView];
 
     // 初始化退出
     [self.liveVC.btnCancel addTarget:self action:@selector(cancelAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self setupButtonBar];
+
 }
 
 - (void)textFieldDidChange:(UITextField *)textField {
@@ -283,6 +284,8 @@
     [self changePlaceholder:NO];
     
     [self showInputMessageView];
+    
+    [self.view bringSubviewToFront:self.inputMessageView];
 }
 
 - (void)showInputMessageView {
@@ -358,11 +361,11 @@
 - (void)setupButtonBar {
     self.buttonBar = [[KKButtonBar alloc] init];
     [self.view addSubview:self.buttonBar];
-    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@0);
         make.left.equalTo(self.btnConfig.mas_left);
         make.right.equalTo(self.btnConfig.mas_right);
-        make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(7);
+        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(-6);
     }];
     
     self.buttonBar.isVertical = YES;
@@ -391,15 +394,18 @@
 }
 
 - (void)showButtonBar {
-//    [self.buttonBarBottom uninstall];
+    [self.buttonBarBottom uninstall];
     
+    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@180);
+        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_top);
+    }];
     
     [UIView animateWithDuration:0.3 animations:^{
         // Make all constraint changes here, Called on parent view
-        [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.equalTo(@180);
-            make.bottom.equalTo(self.inputMessageView.mas_top);
-        }];
+        [self.view layoutIfNeeded];
+        
+        self.buttonBar.alpha = 1;
         
     } completion:^(BOOL finished) {
         
@@ -407,15 +413,18 @@
 }
 
 - (void)hideButtonBar {
-//    [self.buttonBarBottom uninstall];
+    [self.buttonBarBottom uninstall];
     
+    [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.equalTo(@0);
+        self.buttonBarBottom = make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(-6);
+    }];
     
     [UIView animateWithDuration:0.3 animations:^{
         // Make all constraint changes here, Called on parent view
-        [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.equalTo(@0);
-            make.bottom.equalTo(self.inputMessageView.mas_bottom).offset(7);
-        }];
+        [self.view layoutIfNeeded];
+        
+        self.buttonBar.alpha = 0;
         
     } completion:^(BOOL finished) {
         
