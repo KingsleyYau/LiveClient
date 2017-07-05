@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#8d000000"
+    android:layout_width="match_parent"
+    android:layout_height="212.5dp">
+
+    <com.qpidnetwork.view.ScrollLayout
+        android:id="@+id/sl_giftPagerContainer"
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="41.5dp"
+        android:layout_gravity="bottom"
+        android:layout_height="20dp">
+
+    </com.qpidnetwork.view.ScrollLayout>
+
+
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:id="@+id/ll_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="35.5dp"
+        android:gravity="center">
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_giftCount"
+        android:background="@drawable/bg_live_buttom_gift_count_list"
+        android:layout_width="50.5dp"
+        android:layout_marginRight="78.5dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="38dp"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:layout_gravity="bottom"
+        android:id="@+id/rl_giftConstrol"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:layout_height="27.5dp">
+        <RelativeLayout
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_userCoin"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/ic_live_buttom_gold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv_currGold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_userCoin"
+                android:text="123456"
+                android:textSize="12sp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="7dp"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/iv_userCoinRecharge"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/tv_currGold"
+                android:background="@drawable/ic_live_buttom_arrow_right_coins"
+                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="115dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_countChooser"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_gravity="right"
+                android:paddingLeft="12.5dp"
+                android:paddingRight="12.5dp"
+                android:layout_width="wrap_content"
+                android:background="@drawable/bg_live_buttom_gift_count_chooser"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_giftCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text=""
+                    android:background="@android:color/transparent"
+                    android:textSize="11.9dp"
+                    android:gravity="center_vertical|left"
+                    android:textColor="@android:color/white"/>
+
+                <ImageView
+                    android:id="@+id/iv_countIndicator"
+                    android:layout_marginLeft="13dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_live_buttom_gift_count_indicator"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_sendGift"
+                android:text="@string/txt_send_msg"
+                android:background="@drawable/bg_live_buttom_gift_send"
+                android:textColor="#383838"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_repeatSendAnim"
+        android:layout_width="81dp"
+        android:layout_height="78.5dp"
+        android:layout_gravity="bottom|right"
+        android:paddingLeft="2dp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:background="@drawable/ic_live_buttom_continue_send"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_timeCount"
+            android:text=""
+            android:gravity="center"
+            android:textSize="20sp"
+            android:layout_marginTop="8dp"
+            android:textColor="#383838"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="Combo"
+            android:textColor="#383838"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:layout_below="@id/tv_timeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</FrameLayout>

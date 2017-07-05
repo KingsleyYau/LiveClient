@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_tipCodeSent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16.5dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:textSize="12sp"
+        android:textColor="@color/txt_color_uninput"
+        android:text="@string/tip_verificationSentToPhone"/>
+    
+    <TextView
+        android:id="@+id/tv_tipSentNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11.5dp"
+        android:paddingLeft="13dp"
+        android:textSize="12sp"
+        android:text="+86 15202058640"
+        android:textColor="@color/txt_color_uninput"
+        android:layout_below="@id/tv_tipCodeSent" />
+
+    <FrameLayout
+        android:id="@+id/fl_verfCodeTimeCount"
+        android:layout_below="@id/tv_tipSentNumber"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/et_verifCode"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:textSize="16sp"
+            android:inputType="number"
+            android:hint="@string/txt_singUpHintPhoneNumber"
+            android:padding="10dp"
+            android:background="@drawable/selector_edittext_buttom_line"/>
+
+        <TextView
+            android:id="@+id/tv_tipTimeCount"
+            android:layout_width="80sp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            android:layout_gravity="right|center_vertical"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:clickable="true"
+            android:text="@string/txt_resend"
+            android:textSize="16sp"
+            android:textColor="#232323"
+            android:background="@drawable/bg_btn_send_verif_unusable"
+            />
+    </FrameLayout>
+
+    <EditText
+        android:id="@+id/et_editPassWord"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:textSize="16sp"
+        android:inputType="textPassword"
+        android:hint="@string/txt_createPassword"
+        android:layout_below="@id/fl_verfCodeTimeCount"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:background="@drawable/selector_edittext_buttom_line"/>
+    
+    <TextView
+        android:id="@+id/tv_passwordTip"
+        android:text="@string/tip_passwordFormat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_editPassWord"
+        android:paddingLeft="15dp"/>
+
+    <TextView
+        android:id="@+id/tv_nextOperate"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_passwordTip"
+        android:layout_marginTop="40dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        style="@style/CustomTheme.Btn.Next"
+        android:textColor="@android:color/white"
+        android:background="@drawable/selector_btn_next"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/txt_signup_next"/>
+</RelativeLayout>

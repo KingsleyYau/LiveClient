@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--自定义背景图案形状，参考https://developer.android.com/guide/topics/resources/drawable-resource.html-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--圆角-->
+    <corners android:radius="5.5dp" />
+    <solid android:color="#0cedf5" />
+
+</shape>

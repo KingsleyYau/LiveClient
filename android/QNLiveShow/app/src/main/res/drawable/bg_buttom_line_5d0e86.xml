@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--left/right/top/buttom分别标识对应于各边的偏移量-->
+    <item
+        android:left="-2dip"
+        android:right="-2dip"
+        android:top="-2dip">
+        <shape>
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="1dip"
+                android:color="@color/txt_color_oninput"
+                android:dashGap="0dp"
+                android:dashWidth="0dip" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:paddingTop="3dp">
+
+    <!--左上角主播信息块-->
+    <RelativeLayout
+        android:id="@+id/rl_host_header"
+        android:onClick="onClick"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circleimageview_hugh"
+            android:id="@+id/civ_hostHeader"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginBottom="1dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp" />
+
+        <LinearLayout
+            android:id="@+id/ll_host_info"
+            android:layout_toRightOf="@id/civ_hostHeader"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="4.5dp"
+            android:layout_marginRight="6.5dp"
+            android:layout_marginBottom="4.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_hostName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Marry Lee"
+                android:textSize="9sp"
+                android:textColor="#f4f4f4"/>
+            <TextView
+                android:id="@+id/tv_onLineNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11235"
+                android:layout_marginTop="3.5dp"
+                android:gravity="center_vertical"
+                android:textSize="9sp"
+                android:drawableLeft="@drawable/ic_live_online"
+                android:drawablePadding="4dp"
+                android:textColor="#f4f4f4"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/v_bankFocus"
+            android:layout_width="17.5dp"
+            android:layout_height="27dp"
+            android:visibility="gone"
+            android:onClick="onClick"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ll_host_info"
+            android:background="@android:color/transparent"/>
+        
+        <ImageView
+            android:layout_centerVertical="true"
+            android:visibility="visible"
+            android:src="@drawable/ic_live_focus_host"
+            android:id="@+id/civ_focus"
+            android:onClick="onClick"
+            android:layout_marginLeft="6.5dp"
+            android:layout_marginRight="4dp"
+            android:layout_toRightOf="@id/ll_host_info"
+            android:layout_width="26dp"
+            android:layout_height="26dp" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_topRank"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_host_header"
+        android:paddingLeft="4.5dp"
+        android:paddingRight="8dp"
+        android:background="@drawable/bg_live_top_rank"
+        android:gravity="center_vertical"
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:background="@drawable/ic_live_top_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_contribRank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="123456"
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="3.5dp"
+            android:gravity="center_vertical"
+            android:textSize="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:textColor="@android:color/white" />
+
+        <ImageView
+            android:background="@drawable/ic_live_top_rignt_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_closeLiveRoom"
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_live_close_room"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="12dp"/>
+</RelativeLayout>

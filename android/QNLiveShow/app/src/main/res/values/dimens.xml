@@ -1,0 +1,18 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="title_bar_height">35dp</dimen>
+    <dimen name="title_bar_margin_left">13dp</dimen>
+    <dimen name="title_bar_txt_size">12dp</dimen>
+    <dimen name="girdview_gift_padding">5dp</dimen>
+    <dimen name="girdview_gift_vertical_spacing">5dp</dimen>
+    <dimen name="girdview_gift_horizontal_spacing">5dp</dimen>
+    <dimen name="listmsgview_item_decoration">8dp</dimen>
+    <dimen name="coverphoto_min_width">640px</dimen>
+    <dimen name="coverphoto_min_height">640px</dimen>
+    <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
+    <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
+    <dimen name="coverphoto_corner_radiu">3dp</dimen>
+    <dimen name="liveroom_bullet_height">40dp</dimen>
+
+
+</resources>

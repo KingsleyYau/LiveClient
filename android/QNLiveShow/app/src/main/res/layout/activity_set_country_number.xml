@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/fl_selectcountry"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="36dp">
+        <TextView
+            android:id="@+id/tv_tipResetPassword"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/tip_resetPassword"/>
+    </LinearLayout>
+
+    <include layout="@layout/item_number_verif_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/tv_gotoRecVerfCode"
+        style="@style/CustomTheme.Btn.Next"
+        android:layout_gravity="center_horizontal"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:text="@string/txt_next"/>
+
+</LinearLayout>

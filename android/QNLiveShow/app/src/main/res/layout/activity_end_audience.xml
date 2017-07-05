@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/view_gaussian_blur"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_endAudienceTitle"
+                style="@style/CustomTheme.EndLive.Title"
+                android:layout_marginTop="63dp"
+                android:text="@string/txt_endLive_title"/>
+
+            <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/civ_endAudienceHeader"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:layout_marginTop="32dp"
+                android:src="@drawable/circleimageview_hugh"/>
+
+            <TextView
+                android:id="@+id/tv_endAudienceHostNick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="5.5dp"
+                android:text="Cherry Liu"/>
+
+            <TextView
+                android:id="@+id/tv_endAudienceViewers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="23sp"
+                android:textColor="#fff600"
+                android:layout_marginTop="37dp"
+                android:text="51370"/>
+
+            <include layout="@layout/view_end_live_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:layout_marginTop="42.5dp"/>
+
+            <include
+                layout="@layout/view_end_live_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#bebebe"/>
+
+                <TextView
+                    android:text="@string/txt_moreBroadcast"
+                    android:textColor="#bebebe"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#bebebe"/>
+                
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    style="@style/CustomTheme.EndLive.MoreBroadcast.Item">
+                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
+                        android:id="@+id/civ_moreHostHeader0"
+                        android:src="@drawable/circleimageview_hugh"/>
+
+                    <TextView
+                        android:id="@+id/tv_moreHostNick0"
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.NickName"
+                        android:text="Amy"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/CustomTheme.EndLive.MoreBroadcast.Item"
+                    android:layout_marginLeft="56dp"
+                    android:layout_marginRight="56dp">
+                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
+                        android:id="@+id/civ_moreHostHeader1"
+                        android:src="@drawable/circleimageview_hugh"/>
+
+                    <TextView
+                        android:id="@+id/tv_moreHostNick1"
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.NickName"
+                        android:text="Amy"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    style="@style/CustomTheme.EndLive.MoreBroadcast.Item">
+                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
+                        android:id="@+id/civ_moreHostHeader2"
+                        android:src="@drawable/circleimageview_hugh"/>
+
+                    <TextView
+                        android:id="@+id/tv_moreHostNick2"
+                        style="@style/CustomTheme.EndLive.MoreBroadcast.NickName"
+                        android:text="Amy"/>
+                </LinearLayout>
+                
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

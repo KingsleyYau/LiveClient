@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/view_gaussian_blur"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_endBroadcastTitle"
+                style="@style/CustomTheme.EndLive.Title"
+                android:layout_marginTop="78dp"
+                android:text="@string/txt_endLive_title"/>
+
+            <TextView
+                android:id="@+id/tv_liveTime"
+                android:layout_marginTop="25.5dp"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:10:33"/>
+
+            <LinearLayout
+                android:layout_marginTop="45.5dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="87dp"
+                    android:layout_marginRight="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_diamonds_value"
+                        android:text="0"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Value"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_diamonds_key"
+                        android:text="@string/txt_endlive_diamonds"
+                        android:layout_marginTop="13.5dp"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Key"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="87dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_viewers_value"
+                        android:text="10"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Value"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_viewers_key"
+                        android:text="@string/txt_endlive_viewers"
+                        android:layout_marginTop="13.5dp"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Key"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="87dp"
+                    android:layout_marginRight="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_fans_value"
+                        android:text="123"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Value"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tv_fans_key"
+                        android:text="@string/txt_endlive_newFans"
+                        android:layout_marginTop="13.5dp"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Key"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="87dp"
+                    android:layout_marginLeft="55dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_shares_value"
+                        android:text="3.9K"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Value"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_shares_key"
+                        android:text="@string/txt_endlive_shares"
+                        android:layout_marginTop="13.5dp"
+                        style="@style/CustomTheme.EndLive.LiveInfo.Key"
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/view_end_live_share"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="106.5dp"
+                />
+
+            <include layout="@layout/view_end_live_follow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="110dp"
+                />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fl_rootView"
+    android:onClick="onClick"
+    android:background="@drawable/ic_live_uibackground"
+    tools:context="com.qpidnetwork.liveshow.home.live.LivePanelFragmentActivity">
+
+    <include
+        layout="@layout/view_liveshow_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_inputBgColor"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_live_buttom_bg"
+        android:layout_gravity="bottom"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
+        android:orientation="vertical">
+
+        <!--豪华礼物的层级>小礼物层级>弹幕层级,所以豪华礼物应该在顶层播放，弹幕应该在相对的最底层播放-->
+        <!--弹幕层-->
+        <LinearLayout
+            android:id="@+id/ll_bulletScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:onClick="onClick"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/rl_bullet1"
+                layout="@layout/view_live_center_bullet_screen"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:visibility="invisible"/>
+
+            <include
+                android:id="@+id/rl_bullet2"
+                layout="@layout/view_live_center_bullet_screen"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginTop="10dp"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rl_msgContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            android:paddingBottom="4dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp">
+
+            <com.qpidnetwork.framework.livemsglist.LiveMessageListView
+                android:id="@+id/lvlv_roomMsgList"
+                android:layout_width="match_parent"
+                android:layout_height="113.5dp"
+                android:layout_marginBottom="20dp"
+                android:paddingRight="56dp"
+                android:background="@android:color/transparent" />
+
+            <!--主播端同用户端共用，切换到消息输入场景,样式一样-->
+            <include
+                android:id="@+id/rl_inputMsg"
+                layout="@layout/view_live_buttom_sendmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_unReadTip"
+        android:text="13 unread messages"
+        android:drawableRight="@drawable/ic_live_buttom_unreadmsg"
+        android:layout_gravity="bottom"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:onClick="onClick"
+        android:layout_marginLeft="13dp"
+        android:visibility="visible"
+        android:background="@drawable/bg_live_buttom_unreadmsg"
+        android:drawablePadding="6dp"
+        android:layout_marginBottom="48dp"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.qpidnetwork.framework.widget.magicfly.FlyLinearLayout
+        xmlns:app="http://schemas.android.com/tools"
+        android:id="@+id/fll_love"
+        app:flyDuration="3000"
+        android:onClick="onClick"
+        android:layout_width="137dp"
+        android:paddingRight="37dp"
+        android:layout_marginRight="-37dp"
+        android:layout_height="300dp"
+        android:layout_gravity="bottom|right"
+        android:orientation="vertical"
+        android:layout_marginBottom="44dp"
+        android:background="@android:color/transparent"
+        android:gravity="bottom|center_horizontal"/>
+
+    <!--主播端底部操作界面,包含发言，送礼，直播控制-->
+    <include layout="@layout/view_live_buttom_broadcast"
+        android:id="@+id/rl_buttom_broadcast"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        />
+
+    <!--用户端底部操作界面,包含发言，送礼，分享-->
+    <include layout="@layout/view_live_buttom_audience"
+        android:id="@+id/fl_buttom_audience"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="bottom"/>
+</FrameLayout>

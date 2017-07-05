@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rl_title_bar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/title_bar_height"
+    android:background="@color/bg_title_bar">
+
+    <TextView
+        android:id="@+id/tv_backTitle"
+        android:drawableLeft="@drawable/ic_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:layout_centerVertical="true"
+        android:onClick="onClick"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:layout_alignBaseline="@+id/tv_title"
+        android:paddingLeft="@dimen/title_bar_margin_left"
+        android:paddingRight="@dimen/title_bar_margin_left"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="@dimen/title_bar_txt_size"
+        android:gravity="center_vertical"
+        android:onClick="onClick"
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:textColor="@android:color/white"/>
+
+
+</RelativeLayout>

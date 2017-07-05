@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal|top"
+    android:layout_columnWeight="1"
+    android:id="@+id/ll_giftItem"
+    android:background="@android:color/transparent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_leftGiftFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:visibility="invisible"
+            android:background="@drawable/ic_live_buttom_gift_flag"/>
+
+        <ImageView
+            android:id="@+id/iv_giftIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitXY"
+            android:layout_centerHorizontal="true"/>
+
+        <ImageView
+            android:id="@+id/iv_rightGiftFlag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:visibility="visible"
+            android:background="@drawable/ic_live_buttom_gift_advance"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal|top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_giftName"
+            android:text=""
+            android:textSize="10dp"
+            android:textColor="#8cffffff"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_coinIcon"
+                android:layout_width="10dp"
+                android:layout_height="8dp"
+                android:background="@drawable/ic_live_buttom_gold"/>
+
+            <TextView
+                android:id="@+id/tv_giftCoins"
+                android:textSize="8sp"
+                android:layout_marginLeft="3dp"
+                android:textColor="@android:color/white"
+                android:singleLine="true"
+                android:gravity="center_vertical|fill"
+                android:ellipsize="end"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

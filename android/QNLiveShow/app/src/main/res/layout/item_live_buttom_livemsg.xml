@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:visibility="visible"
+            android:id="@+id/ll_userLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="11.5dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:background="@drawable/bg_live_buttom_livemsg_icon_0cedf5">
+
+            <ImageView
+                android:id="@+id/iv_levelIcon"
+                android:layout_width="8.5dp"
+                android:layout_height="8.5dp"
+                android:layout_marginLeft="3dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_live_buttom_livemsg_level_2"/>
+
+            <TextView
+                android:id="@+id/tv_levelNum"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="35"
+                android:textSize="8sp"
+                android:gravity="center"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="3dp"
+                android:layout_marginLeft="3dp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_senderName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="4.5dp"
+            android:textColor="#ffd205"
+            android:gravity="bottom"
+            android:text="JAHGgjhw"/>
+
+        <TextView
+            android:id="@+id/tv_colon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="12sp"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
+            android:textColor="#ffd205"
+            android:visibility="visible"
+            android:text="@string/txt_colon"/>
+
+        <TextView
+            android:id="@+id/tv_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="13sp"
+            android:visibility="visible"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="6dp"
+            android:textColor="@android:color/white"
+            android:text="@string/txt_sent"/>
+
+
+        <ImageView
+            android:id="@+id/iv_iconMsg"
+            android:layout_width="10.5dp"
+            android:layout_height="14dp"
+            android:visibility="visible"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_live_buttom_livemsg_love2"/>
+
+        <TextView
+            android:id="@+id/tv_liveMsgLine1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:visibility="visible"
+            android:gravity="bottom"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="5dp"
+            android:ellipsize="none"
+            android:textColor="@android:color/white"
+            android:text="dsa"
+            android:singleLine="true"/>
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_liveMsgLine2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:visibility="visible"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/white"
+        android:text=""/>
+
+</LinearLayout>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <Button
+        android:id="@+id/btn_endliveBroadcast"
+        android:layout_width="162dp"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_btn_next_usable"
+        android:textColor="#fffefe"
+        android:textSize="15sp"
+        android:onClick="onClick"
+        android:gravity="center"
+        android:visibility="gone"
+        android:layout_marginTop="28dp"
+        android:text="@string/txt_endlive_homepage"/>
+
+    <LinearLayout
+        android:id="@+id/ll_endLiveAudience"
+        android:orientation="vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_width="162.5dp"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/ll_follow"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            android:paddingLeft="45dp"
+            android:paddingRight="45dp"
+            android:onClick="onClick"
+            android:background="@drawable/bg_endlive_follow"
+            android:layout_width="162.5dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="19.5dp"
+            android:layout_height="35dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12.5dp"
+                android:background="@drawable/ic_endlive_follow"/>
+
+            <TextView
+                android:text="@string/txt_follow"
+                android:textColor="#5d0e86"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/v_followedTopBlank"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/ll_following"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="gone"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="19dp"
+            android:layout_marginTop="31dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="15.5dp"
+                android:layout_height="11dp"
+                android:layout_marginRight="10.5dp"
+                android:background="@drawable/ic_endlive_following"/>
+
+            <TextView
+                android:textSize="15sp"
+                android:textColor="#bfbfbf"
+                android:text="@string/txt_following"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_endLiveAudience"
+            android:layout_width="162.5dp"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:onClick="onClick"
+            android:textColor="@android:color/white"
+            android:text="@string/txt_endlive_homepage"
+            android:background="@drawable/bg_btn_next_usable"/>
+        
+        <View
+            android:id="@+id/v_unfollowButtomBlank"
+            android:layout_width="match_parent"
+            android:visibility="visible"
+            android:layout_height="19.5dp"/>
+
+        <View
+            android:id="@+id/v_followedButtomBlank"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="42dp"/>
+    </LinearLayout>
+
+</RelativeLayout>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--CanRefresh需要的ID定义-->
+    <item name="can_content_view" type="id" />
+    <item name="can_refresh_header" type="id" />
+    <item name="can_refresh_footer" type="id" />
+    <item name="can_scroll_view" type="id" />
+
+    <!--SwipeToLoadLayout需要的ID定义-->
+    <item name="swipe_target" type="id" />
+    <item name="swipe_refresh_header" type="id" />
+    <item name="swipe_load_more_footer" type="id" />
+
+    <!--连接动画控件自定义ID-->
+    <item type="id" name="livegift_rootview" />
+
+</resources>

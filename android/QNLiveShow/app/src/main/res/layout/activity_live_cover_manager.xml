@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/ll_coverManager"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/gv_coverPhotoList"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:horizontalSpacing="13dp"
+        android:columnWidth="103dp"
+        android:stretchMode="spacingWidth"
+        ></GridView>
+
+    <LinearLayout
+        android:id="@+id/ll_coverTips"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="26dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#838383"
+            android:text="@string/txt_coverTips1"/>
+        <TextView
+            android:layout_marginTop="8.5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#838383"
+            android:text="@string/txt_coverTips2"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_tipMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="12sp"
+        android:textColor="@android:color/white"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp"
+        android:paddingBottom="13dp"
+        android:paddingTop="13dp"
+        android:layout_marginTop="21dp"
+        android:background="@drawable/bg_toast_80000000"
+        />
+
+</LinearLayout>

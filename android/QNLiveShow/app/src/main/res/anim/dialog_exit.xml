@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--参考http://keeganlee.me/post/android/20151003
+和https://developer.android.com/guide/topics/graphics/view-animation.html-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillBefore="true"
+    android:fillAfter="false">
+
+    <translate
+        android:duration="100"
+        android:fromXDelta="0"
+        android:fromYDelta="0"
+        android:toXDelta="0"
+        android:toYDelta="100%"/>
+
+    <alpha android:duration="100"
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0"/>
+
+</set>

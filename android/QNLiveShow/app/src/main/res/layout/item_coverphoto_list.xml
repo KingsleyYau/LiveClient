@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_coverPhoto"
+    android:orientation="vertical"
+    android:layout_width="103dp"
+    android:gravity="center_horizontal"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:orientation="vertical"
+        android:layout_width="103dp"
+        android:layout_height="103dp">
+
+        <ImageView
+            android:id="@+id/iv_coverPhoto"
+            android:layout_width="103dp"
+            android:layout_height="103dp"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/tv_coverAuditeStatus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/txt_auditing"
+            android:textColor="#434343"
+            android:textSize="11sp"
+            android:visibility="visible"
+            android:gravity="center"
+            android:background="@drawable/bg_covermanager_auditing"/>
+
+        <ImageView
+            android:id="@+id/iv_delectCoverPhoto"
+            android:layout_width="14.5dp"
+            android:layout_height="14.5dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="3dp"
+            android:visibility="gone"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/ic_live_cover_manager_delete"/>
+
+        <ImageView
+            android:id="@+id/iv_addCoverPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:scaleType="center"
+            android:background="@drawable/bg_covermanager_border_stroke"
+            android:src="@drawable/ic_live_cover_manager_add"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_coverUseStatus"
+        android:layout_width="76dp"
+        android:layout_height="17dp"
+        android:textSize="12sp"
+        android:paddingBottom="1dp"
+        android:textColor="@android:color/white"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="9dp"
+        android:visibility="invisible"
+        android:background="@drawable/bg_covermanager_using"
+        android:text="@string/txt_using"/>
+
+</LinearLayout>

@@ -1,0 +1,106 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">Cool_Live</string>
+    <string name="txt_splash_dec">This is my sologan !</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="tip_mainTab">Hello MainTab fragment</string>
+    <string name="tip_startLive">Hello StartLive fragment</string>
+    <string name="tip_hotList">Hello HotList fragment</string>
+    <string name="tip_followingList">Hello FollowingList fragment</string>
+    <string name="tip_dicoverList">Hello DicoverList fragment</string>
+    <string name="tip_personInfoTip">Hello PersonInfo fragment</string>
+    <string name="tip_verificationSentToPhone">Verification code has been sent to your phone:</string>
+    <string name="tip_passwordFormat">6 - 20 numbers or characters</string>
+    <string name="tip_resetPassword">We will send the verification code to reset password</string>
+    <string name="tip_countryOrRegion">Contry/Region:</string>
+    <string name="tip_phoneNumber">Phone no</string>
+    <string name="tip_timecount">%ds</string>
+    <string name="tip_loginFailed">Wrong password, you have 5 chances</string>
+    <string name="tip_waitlogin">登陆中，请稍后</string>
+    <string name="tip_phoneRegisted">This account has already been registered.</string>
+    <string name="tip_verifPhoneNumber">正在验证手机号.</string>
+    <string name="tip_regAccount">注册中.</string>
+    <string name="tip_selectGiftFirst">请选择要发送的礼物</string>
+    <string name="tip_focused">已经关注</string>
+    <string name="tip_unFocused">已经取消关注</string>
+    <string name="tip_unReadLiveMsg">%d unread messages</string>
+    <string name="tip_sureToCloseRoom">Are you sure wish to end this live stream?</string>
+
+    <string name="tip_regSuccessed">注册成功!</string>
+    <string name="tip_passwordMinLenReq">please enter at least 6 characters.</string>
+
+    <string name="tip_createRoom">正在创建直播间</string>
+    <string name="tip_createRoomSuccessed">创建成功</string>
+    <string name="tip_uploading">Uploading...</string>
+    <string name="tip_loading">Loading...</string>
+    <string name="tip_deleting">Deleting...</string>
+    <string name="tip_complete">Complete</string>
+    <string name="tip_failed">Failed</string>
+    <string name="tip_failed4UnConnectServ">Failed\nConnot connect to server</string>
+
+    <string name="txt_tab_main">首页</string>
+    <string name="txt_tab_startLive">ֱ直播</string>
+    <string name="txt_tab_personInfo">个人</string>
+
+    <string name="txt_tab_followTab">关注</string>
+    <string name="txt_tab_hotTab">热门</string>
+    <string name="txt_tab_discoverTab">最新</string>
+
+    <string name="txt_searchTab">搜索</string>
+    <string name="txt_userAgreement">By logging in,you agree to you Terms of Use</string>
+    <string name="txt_singUpHintPhoneNumber">Verification code</string>
+    <string name="txt_createPassword">Create a password</string>
+    <string name="txt_signup_next">Sing Up</string>
+    <string name="txt_signup_title">Sign Up with Phone Number</string>
+    <string name="txt_login_title">Log in with Phone Number</string>
+    <string name="txt_next">Next</string>
+    <string name="txt_resend">Resend</string>
+    <string name="txt_password">Password</string>
+    <string name="txt_login">Log in</string>
+    <string name="txt_cancel">Cancel</string>
+    <string name="txt_ok">Ok</string>
+    <string name="txt_forgotPassword">Forgot password</string>
+    <string name="txt_roomstatus_online">LIVE</string>
+    <string name="txt_roomstatus_offline">OFFLINE</string>
+    <string name="txt_startlive_hinttitle">Add a title</string>
+    <string name="txt_startlive_golive">Go Live</string>
+
+    <string name="txt_hint_input_general">Say something...</string>
+    <string name="txt_hint_input_barrage">10 coins per flying comment</string>
+    <string name="txt_send_msg">Send</string>
+    <string name="txt_verification">Verification</string>
+    <string name="txt_sent">sent</string>
+    <string name="txt_colon">&#160;:</string>
+    <string name="txt_endLive_title">Live Stream Ended</string>
+    <string name="txt_endlive_diamonds">Diamonds</string>
+    <string name="txt_endlive_viewers">Viewers</string>
+    <string name="txt_endlive_newFans">New Fans</string>
+    <string name="txt_endlive_shares">Shares</string>
+    <string name="txt_endlive_shareTitle">Share your achievements</string>
+    <string name="txt_endlive_homepage">Homepage</string>
+    <string name="txt_follow">Follow</string>
+    <string name="txt_following">Following</string>
+    <string name="txt_moreBroadcast">More Broadcasts</string>
+    <string name="tip_updating">updating</string>
+    <string name="txt_using">using</string>
+    <string name="txt_use">use</string>
+    <string name="txt_manageCover">Manage Cover</string>
+    <string name="txt_auditing">Auditing</string>
+    <string name="txt_coverTips1">Broadcaster has at most 3 covers</string>
+    <string name="txt_coverTips2">Not through the cover will be removed directly</string>
+    <string name="txt_sureDeleteCover">Are you sure you wish to delete this cover?</string>
+    <string name="tip_needCoverPhoto">请选择房间封面图</string>
+    <string name="tip_needRoomTitle">请输入房间标题</string>
+
+
+    <!-- Live Room -->
+    <string name="liveroom_audience_enter_notify">Joined.</string>
+    <string name="liveroom_audience_roomin_processing">IM roomining…</string>
+    <string name="liveroom_audience_roomout_processing">Audience roomout…</string>
+    <string name="liveroom_anchor_roomout_processing">Anchor roomout…</string>
+    <string name="liveroom_message_template_normal"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g> : </font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+    <string name="liveroom_message_template_roomin"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FFFFFF\"> Joined</font>]]></string>
+    <string name="liveroom_message_template_favorite"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#B4A5FF\"> likes this stream</font>]]></string>
+    <string name="liveroom_message_template_gift"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#0CEDF5\"> sent Apple </font>]]></string>
+
+</resources>

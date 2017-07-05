@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--密码最小长度-->
+    <integer name="passwordMaxLength">20</integer>
+    <!--Peacock页登录校验超时时间-->
+    <integer name="verifLoginInfoTimeOut">3000</integer>
+    <integer name="peacockStayMinTime">300</integer>
+    <integer name="liveTitleMaxLength">40</integer>
+    <!--倒计时-->
+    <integer name="maxTimeCount">60</integer>
+    <integer name="minPasswordLength">6</integer>
+    <integer name="giftNumPerPage">8</integer>
+    <integer name="giftLineNumPerPage">4</integer>
+    <integer name="repeatSendStartCount">30</integer>
+    <integer name="repeatSendAnimTime">3000</integer>
+    <!--聊天栏最大的信息条目数-->
+    <integer name="liveMsgListMaxNum">200</integer>
+    <!--聊天栏单个条目数的最大停留时间-->
+    <integer name="liveMsgListItemHoldTime">5000</integer>
+    <!--Toast失败弹出时长-->
+    <integer name="toast_failed_max_show_time">2000</integer>
+    <!--连击动画播放速度-->
+    <integer name="multiAnimationDuration">600</integer>
+</resources>

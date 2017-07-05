@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.qpidnetwork.liveshow">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".LiveApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/CustomTheme.App">
+
+        <!-- 文件下载器进程 -->
+        <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
+        <service
+            android:name="com.liulishuo.filedownloader.services.FileDownloadService$SeparateProcessService"
+            android:process=":filedownloader" />
+
+        <activity
+            android:name=".welcome.PeacockActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".home.MainFragmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.SelecteCountryCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".welcome.LoginChooserActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.SignUpSendVerifCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.ModifyPasswrodSendVerifCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.LoginByMobileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.SignUpByMobileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".authorization.ModifyPasswordByMobileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".welcome.WelcomeActivity"
+            android:screenOrientation="portrait" />
+
+        <!--直播间-->
+        <activity
+            android:name=".home.live.CoverManagerActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".liveroom.AudienceLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".liveroom.AnchorLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <!--软键盘弹出后的高度后面通过自定义EditText细调节-->
+        <activity
+            android:name=".liveroom.AudienceEndActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".liveroom.AnchorEndActivity"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

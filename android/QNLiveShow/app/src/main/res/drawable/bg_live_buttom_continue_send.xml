@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--left/right/top/buttom分别标识对应于各边的偏移量-->
+    <item>
+        <shape
+            android:shape="rectangle"
+            android:useLevel="true">
+            <solid android:color="#aa00ebff" />
+            <corners android:bottomRightRadius="0dp"
+                android:bottomLeftRadius="90dp"
+                android:topLeftRadius="90dp"
+                android:topRightRadius="90dp"/>
+            <size
+
+                android:width="24dp"
+                android:height="24dp" />
+        </shape>
+    </item>
+</layer-list>

@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    defaultConfig {
+        applicationId "com.qpidnetwork.liveshow"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        //testInstrumentationRunner "android.support.test.runner.Android  JUnitRunner"
+        multiDexEnabled true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile(name: 'filedownloader-1.5.6', ext: 'aar')
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//    })
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:25.3.1'
+    compile(name: 'butterknife-8.5.1', ext: 'aar')
+//    testCompile 'junit:junit:4.12'
+
+    //Fresco引用aar
+    compile(name: 'animated-base-1.3.0', ext: 'aar')
+    compile(name: 'animated-base-support-1.3.0', ext: 'aar')
+    compile(name: 'animated-webp-1.3.0', ext: 'aar')
+    compile(name: 'drawee-1.3.0', ext: 'aar')
+    compile(name: 'fbcore-1.3.0', ext: 'aar')
+    compile(name: 'fresco-1.3.0', ext: 'aar')
+    compile(name: 'imagepipeline-1.3.0', ext: 'aar')
+    compile(name: 'imagepipeline-base-1.3.0', ext: 'aar')
+    compile(name: 'webpsupport-1.3.0', ext: 'aar')
+}
+
+//tasks.withType(JavaCompile) {
+//    compileTask -> compileTask.dependsOn ndkBuild
+//}
+//
+//task ndkBuild(type: Exec) {
+//    workingDir file('src/main')
+//    commandLine getNdkBuildCmd()
+//}
+//
+//task cleanNative(type: Exec){
+//    workingDir file('src/main/jni')
+//    commandLine getNdkBuildCmd(), 'clean'
+//}
+//
+//clean.dependsOn cleanNative
+//
+//def getNdkDir() {
+//    if (System.env.ANDROID_NDK_ROOT != null)
+//        return System.env.ANDROID_NDK_ROOT
+//    Properties properties = new Properties()
+//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//    def ndkdir = properties.getProperty('ndk.dir', null)
+//    if (ndkdir == null)
+//        throw new GradleException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
+//    return ndkdir
+//}
+//
+//def getNdkBuildCmd() {
+//    def ndkbuild = getNdkDir() + "/ndk-build"
+//    ndkbuild += ".cmd"
+//    return ndkbuild
+//}
