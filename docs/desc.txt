@@ -1,0 +1,5 @@
+docs		公共文档（如：接口文档）
+web		web代码及文档
+common		公共类库（如：C/C++公共类库）
+server		应用服务器代码及文档
+client		客户端代码及文档
