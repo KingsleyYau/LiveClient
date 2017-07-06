@@ -41,10 +41,7 @@
     [super viewDidLoad];
     
     self.imageViewHeaderLoader = [ImageViewLoader loader];
-    self.imageViewHeaderLoader.view = self.imageViewHeader;
-    self.imageViewHeaderLoader.url = @"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg";
-    self.imageViewHeaderLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:self.imageViewHeaderLoader.url];
-    [self.imageViewHeaderLoader loadImage];
+    [self.imageViewHeaderLoader loadImageWithImageView:self.imageViewHeader options:0 imageUrl:@"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg" placeholderImage:[UIImage imageNamed:@""]];
     
 //    self.bottomMoreView.hidden = YES;
     

@@ -22,10 +22,11 @@ typedef enum MsgType {
 @property (assign) MsgType type;
 @property (assign) NSInteger level;
 @property (strong) NSString* name;
-@property (strong) NSString *giftId;
+@property (strong) NSString *giftName;
 @property (strong) NSString* text;
 @property (strong) NSAttributedString* attText;
 @property (nonatomic, strong) YYTextLayout *layout;
 @property (strong) NSString *smallImgUrl;
+@property (nonatomic, assign) int giftNum;
 
 @end

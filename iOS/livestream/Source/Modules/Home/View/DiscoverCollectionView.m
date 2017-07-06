@@ -64,19 +64,10 @@
     DiscoverListItemObject *item = [self.items objectAtIndex:indexPath.item];
     
     [cell.imageCoverView setImage:nil];
-    // 停止旧的
-    if( cell.imageViewLoader ) {
-        [cell.imageViewLoader stop];
-    }
     // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    cell.imageViewLoader.view = cell.imageCoverView;
-    cell.imageViewLoader.url = item.imageUrl;
-    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-    [cell.imageViewLoader loadImage];
-    
-//    cell.imageViewLoader.sdWebImageView = cell.imageCoverView;
-//    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    [cell.imageViewLoader loadImageWithImageView:cell.imageCoverView options:0 imageUrl:item.imageUrl
+                                placeholderImage:[UIImage imageNamed:@""]];
     
     cell.personName.text = item.firstName;
     cell.personDetail.text = @"1234 online";

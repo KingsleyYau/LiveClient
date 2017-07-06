@@ -14,7 +14,6 @@
 @property (nonatomic, retain) UIImage* image;
 @property (nonatomic, retain) UIActivityIndicatorView* loadingView;
 @property (nonatomic, retain) NSURLSessionDownloadTask* downloadTask;
-@property (nonatomic ,weak) NSError *error;
 @end
 
 @implementation ImageViewLoader
@@ -31,7 +30,6 @@
         self.downloadTask = nil;
         self.view = nil;
         self.image = nil;
-        self.sdWebImageView = nil;
     }
     return self;
 }
@@ -44,39 +42,20 @@
     [self.downloadTask cancel];
 }
 
-- (BOOL)loadImageWithOptions:(SDWebImageOptions)option placeholderImage:(UIImage *)image {
+- (BOOL)loadImageWithImageView:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)image {
     
-//    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-//    
-//    [manager loadImageWithURL:nil options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-//        
-//        
-//    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-//       
-//        
-//    }];
+    __block BOOL isSuccess = NO;
     
-    
-    if ( self.sdWebImageView != nil ) {
+    [imageView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:image options:option completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
         
-        [self.sdWebImageView sd_setImageWithURL:[NSURL URLWithString:self.url] placeholderImage:image options:option completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-            
-            if (error) {
-                NSLog(@"loadImageError:%@",error);
-                self.error = error;
-            }else{
-                self.error = nil;
-            }
-        }];
-        
-        if (self.error) {
-            return NO;
+        if (error) {
+            isSuccess = NO;
         }else{
-            return YES;
+            isSuccess = YES;
         }
-    }
+    }];
     
-    return NO;
+    return isSuccess;
 }
 
 - (BOOL)loadImage {

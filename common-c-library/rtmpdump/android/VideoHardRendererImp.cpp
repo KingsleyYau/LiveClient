@@ -8,6 +8,8 @@
 
 #include "VideoHardRendererImp.h"
 
+#include <common/KLog.h>
+
 #include <rtmpdump/VideoFrame.h>
 
 extern "C" {

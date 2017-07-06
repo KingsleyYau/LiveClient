@@ -68,19 +68,19 @@ void CrashHandler::DumpTxtInfo() {
 	FileLog("crashhandler", "DumpTxtInfo( fileName : %s )", fileName.c_str());
 
 	if( fileName.length() > 0 ) {
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "CPU ABI : %s ", GetPhoneCpuAbi().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Model : %s ", GetPhoneModel().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Manufacturer : %s ", GetPhoneManufacturer().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Brand : %s ", GetPhoneBrand().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Build Version : %s ", GetPhoneBuildVersion().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Build SDK Version : %s ", GetPhoneBuildSDKVersion().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Density DPI : %s ", GetPhoneDensityDPI().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Local Language : %s ", GetPhoneLocalLanguage().c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Local Region : %s ", GetPhoneLocalRegion().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "CPU ABI : %s ", GetPhoneCpuAbi().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Model : %s ", GetPhoneModel().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Manufacturer : %s ", GetPhoneManufacturer().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Brand : %s ", GetPhoneBrand().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Build Version : %s ", GetPhoneBuildVersion().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Build SDK Version : %s ", GetPhoneBuildSDKVersion().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Density DPI : %s ", GetPhoneDensityDPI().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Local Language : %s ", GetPhoneLocalLanguage().c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Local Region : %s ", GetPhoneLocalRegion().c_str());
 
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "User : %s ", mUser.c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "Version : %s ", mVersion.c_str());
-		KLog::LogToFile(fileName.c_str(), KLog::NO_LOG, mCrashDirectory.c_str(), "DeviceId : %s ", mDeviceId.c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "User : %s ", mUser.c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "Version : %s ", mVersion.c_str());
+		KLog::LogToFile(fileName.c_str(), KLog::LOG_OFF, mCrashDirectory.c_str(), "DeviceId : %s ", mDeviceId.c_str());
 	}
 }
 

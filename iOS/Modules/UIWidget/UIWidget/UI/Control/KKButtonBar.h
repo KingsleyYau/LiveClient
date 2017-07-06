@@ -21,6 +21,7 @@
     
 }
 
+@property (nonatomic, strong) UIView* containView;
 @property (nonatomic, assign) IBOutlet id<KKButtonBarDelegete> delegate;
 @property (nonatomic, retain) NSArray* items;
 @property (nonatomic, assign) CGFloat blanking;

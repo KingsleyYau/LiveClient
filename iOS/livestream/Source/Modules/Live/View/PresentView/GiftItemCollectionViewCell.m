@@ -79,7 +79,7 @@
 
 - (void)updataCellViewItem:(LiveRoomGiftItemObject *)item{
     
-    if (item.multi_click) {
+    if (item.type == 1) {
         
         self.bigGiftLogo.hidden = YES;
     }else{
@@ -98,6 +98,6 @@
 
 
 + (NSString *)cellIdentifier {
-    return @"GiftItemCollectionViewCell";
+    return @"GiftItemCollectionViewIdentifier";
 }
 @end

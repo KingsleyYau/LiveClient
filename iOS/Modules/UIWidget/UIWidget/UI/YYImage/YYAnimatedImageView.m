@@ -534,7 +534,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
         [_requestQueue addOperation:operation];
     }
     
-    if (_totalFrameCount-1 == _curIndex) {
+    if (_curLoop == 1) {
         _curIndex = 0;
         _totalFrameCount = 0;
         self.image = nil;

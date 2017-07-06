@@ -178,6 +178,7 @@
 		50F3101C1EEA55D5008CA70D /* AFNetWorkHelpr.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F3101B1EEA55D5008CA70D /* AFNetWorkHelpr.m */; };
 		50F383A61EE68B96003D2765 /* IMManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F383A51EE68B96003D2765 /* IMManager.m */; };
 		50F383A71EE68EA3003D2765 /* libImClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F383431EE68825003D2765 /* libImClient.a */; };
+		50FCE0EE1F0E2588002CEF6A /* SelectNumButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */; };
 		712FE210FD67D53FC77270E2 /* libPods-livestream.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64E06011622A5CC2692A2AD0 /* libPods-livestream.a */; };
 /* End PBXBuildFile section */
 
@@ -583,6 +584,8 @@
 		50F3833E1EE68825003D2765 /* ImClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImClient.xcodeproj; path = ../../Modules/ImClient/ImClient.xcodeproj; sourceTree = "<group>"; };
 		50F383A41EE68B96003D2765 /* IMManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMManager.h; sourceTree = "<group>"; };
 		50F383A51EE68B96003D2765 /* IMManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMManager.m; sourceTree = "<group>"; };
+		50FCE0EC1F0E2588002CEF6A /* SelectNumButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectNumButton.h; sourceTree = "<group>"; };
+		50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectNumButton.m; sourceTree = "<group>"; };
 		64E06011622A5CC2692A2AD0 /* libPods-livestream.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-livestream.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -652,6 +655,8 @@
 		5055919A1EF3FD9E000AF03A /* PresentView */ = {
 			isa = PBXGroup;
 			children = (
+				50FCE0EC1F0E2588002CEF6A /* SelectNumButton.h */,
+				50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */,
 				502E073F1F0A3EA600A4CFCD /* CountTimeButton.h */,
 				502E07401F0A3EA600A4CFCD /* CountTimeButton.m */,
 				5055919B1EF3FD9E000AF03A /* GiftItemCollectionViewCell.h */,
@@ -1620,6 +1625,7 @@
 				505591AE1EF3FD9E000AF03A /* GiftItemLayout.m in Sources */,
 				5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */,
 				506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */,
+				50FCE0EE1F0E2588002CEF6A /* SelectNumButton.m in Sources */,
 				50EB8C491ED3E869003145B7 /* ImageCVPixelBufferInput.m in Sources */,
 				506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */,
 				5027D5791EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m in Sources */,

@@ -15,7 +15,7 @@ else
 CXXFLAGS = -O2 -g #-D_CHECK_MEMORY_LEAK
 endif
 
-CXXFLAGS += -DFILE_JNI_LOG
+CXXFLAGS += -DLINUX -DFILE_JNI_LOG
 CXXFLAGS +=	-Wall -fmessage-length=0 -Wno-unused-variable -Wno-unused-but-set-variable
 CXXFLAGS +=	-I. -Iinclude -I../../common-c-library/ -Ideps/build/include/
 

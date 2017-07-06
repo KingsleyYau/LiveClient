@@ -21,7 +21,8 @@ PlayerController::PlayerController() {
 
     mpPlayerStatusCallback = NULL;
     
-    mbSkipDelayFrame = false;
+    mUseHardDecoder = false;
+    mbSkipDelayFrame = true;
     
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
@@ -73,72 +74,90 @@ void PlayerController::SetStatusCallback(PlayerStatusCallback* pc) {
 bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath) {
     bool bFlag = false;
     
-    FileLog("rtmpdump", "PlayerController::PlayUrl( "
-            "url : %s "
-            ")",
-            url.c_str()
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::PlayUrl( "
+                "url : %s "
+                ")",
+                url.c_str()
+                );
     
     // 开始播放
     bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
     
-    FileLog("rtmpdump", "PlayerController::PlayUrl( "
-            "[Finish], "
-            "url : %s, "
-            "bFlag : %s "
-            ")",
-            url.c_str(),
-            bFlag?"true":"false"
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::PlayUrl( "
+                "[Finish], "
+                "url : %s, "
+                "bFlag : %s "
+                ")",
+                url.c_str(),
+                bFlag?"true":"false"
+                );
     
     return bFlag;
 }
     
 void PlayerController::Stop() {
-    FileLog("rtmpdump", "PlayerController::Stop( "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::Stop( "
+                "this : %p "
+                ")",
+                this
+                );
     
     // 停止播放
     mRtmpPlayer.Stop();
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::Stop( "
+                 "[Finish], "
+                 "this : %p "
+                 ")",
+                 this
+                 );
 }
 
 /*********************************************** 传输器回调处理 *****************************************************/
 void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
-    FileLog("rtmpdump",
-            "PlayerController::OnDisconnect()"
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::OnDisconnect()"
+                );
     if( mpPlayerStatusCallback ) {
         mpPlayerStatusCallback->OnPlayerDisconnect(this);
     }
 }
 
 void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
-    FileLog("rtmpdump",
-            "PlayerController::OnChangeVideoSpsPps( "
-            "sps_size : %d, "
-            "pps_size : %d, "
-            "nalUnitHeaderLength : %d "
-            ")",
-            sps_size,
-            pps_size,
-            nalUnitHeaderLength
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "PlayerController::OnChangeVideoSpsPps( "
+                "sps_size : %d, "
+                "pps_size : %d, "
+                "nalUnitHeaderLength : %d "
+                ")",
+                sps_size,
+                pps_size,
+                nalUnitHeaderLength
+                );
     if( mpVideoDecoder ) {
         mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, nalUnitHeaderLength);
     }
 }
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
-    FileLog("rtmpdump",
-            "PlayerController::OnRecvVideoFrame( "
-            "[Start], "
-            "timestamp : %u "
-            ")",
-			timestamp
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_MSG,
+                "PlayerController::OnRecvVideoFrame( "
+                "[Start], "
+                "timestamp : %u "
+                ")",
+                timestamp
+                );
     
     // 解码一帧
     if( mpVideoDecoder ) {
@@ -160,6 +179,20 @@ void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
                                      AudioFrameSoundSize sound_size,
                                      AudioFrameSoundType sound_type
                                      ) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnChangeAudioFormat( "
+                 "format : %d, "
+                 "sound_rate : %d, "
+                 "sound_size : %d, "
+                 "sound_type : %d "
+                 ")",
+                 format,
+                 sound_rate,
+                 sound_size,
+                 sound_type
+                 );
+    
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFormat(format, sound_rate, sound_size, sound_type);
     }
@@ -176,13 +209,14 @@ void PlayerController::OnRecvAudioFrame(
                                   int size,
                                   u_int32_t timestamp
                                   ) {
-    FileLog("rtmpdump",
-            "PlayerController::OnRecvAudioFrame( "
-            "[Start], "
-            "timestamp : %u "
-            ")",
-			timestamp
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_MSG,
+                "PlayerController::OnRecvAudioFrame( "
+                "[Start], "
+                "timestamp : %u "
+                ")",
+                timestamp
+                );
 //    long long curTime = getCurrentTime();
     
     // 解码一帧

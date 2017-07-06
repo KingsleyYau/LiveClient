@@ -234,7 +234,7 @@ string GetPhoneInfo(string param) {
 string GetPhoneModel() {
 //	string model = GetPhoneInfo(PRODUCT_MODEL);
 //	if(model.length() > 0) {
-//		DLog("JNI::GetPhoneModel()", "Model : %s", model.c_str());
+//		FileLog("JNI::GetPhoneModel()", "Model : %s", model.c_str());
 //	}
 //	return model;
 	return g_phoneInfo.model;
@@ -246,7 +246,7 @@ string GetPhoneModel() {
 string GetPhoneManufacturer() {
 //	string strManufacturer = GetPhoneInfo(PRODUCT_MANUFACT);
 //	if (!strManufacturer.empty()) {
-//		DLog("JNI::GetPhoneManufacturer()", "Manufacturer : %s", strManufacturer.c_str());
+//		FileLog("JNI::GetPhoneManufacturer()", "Manufacturer : %s", strManufacturer.c_str());
 //	}
 //	return strManufacturer;
 	return g_phoneInfo.manufacturer;
@@ -258,7 +258,7 @@ string GetPhoneManufacturer() {
 string GetPhoneBrand() {
 //	string model = GetPhoneInfo(PRODUCT_BRAND);
 //	if(model.length() > 0) {
-//		DLog("JNI::GetPhoneBrand()", "Brand : %s", model.c_str());
+//		FileLog("JNI::GetPhoneBrand()", "Brand : %s", model.c_str());
 //	}
 //	return model;
 	return g_phoneInfo.brand;
@@ -270,7 +270,7 @@ string GetPhoneBrand() {
 string GetPhoneBuildVersion() {
 //	string model = GetPhoneInfo(BUILD_VERSION);
 //	if(model.length() > 0) {
-//		DLog("JNI::GetPhoneBuildVersion()", "鎵惧埌鎵嬫満Android鐗堟湰:%s", model.c_str());
+//		FileLog("JNI::GetPhoneBuildVersion()", "鎵惧埌鎵嬫満Android鐗堟湰:%s", model.c_str());
 //	}
 //	return model;
 	return g_phoneInfo.buildVersion;
@@ -279,7 +279,7 @@ string GetPhoneBuildVersion() {
 string GetPhoneBuildSDKVersion() {
 //	string strSdkVersion = GetPhoneInfo(BUILD_SDK);
 //	if (!strSdkVersion.empty()) {
-//		DLog("JNI::GetPhoneBuildSDKVersion()", "SDK Version:%s", strSdkVersion.c_str());
+//		FileLog("JNI::GetPhoneBuildSDKVersion()", "SDK Version:%s", strSdkVersion.c_str());
 //	}
 //	return strSdkVersion;
 	return g_phoneInfo.buildSDKVersion;
@@ -288,7 +288,7 @@ string GetPhoneBuildSDKVersion() {
 string GetPhoneDensityDPI() {
 //	string strDensityDPI = GetPhoneInfo(SF_DENSITY);
 //	if (!strDensityDPI.empty()) {
-//		DLog("JNI::GetPhoneDensityDPI()", "Density DPI:%s", strDensityDPI.c_str());
+//		FileLog("JNI::GetPhoneDensityDPI()", "Density DPI:%s", strDensityDPI.c_str());
 //	}
 //	return strDensityDPI;
 	return g_phoneInfo.densityDpi;
@@ -300,7 +300,7 @@ string GetPhoneDensityDPI() {
 string GetPhoneCpuAbi() {
 //	string model = GetPhoneInfo(BUILD_CPUABI);
 //	if(model.length() > 0) {
-//		DLog("JNI::GetPhoneCpuAbi()", "Android CPU ABI : %s", model.c_str());
+//		FileLog("JNI::GetPhoneCpuAbi()", "Android CPU ABI : %s", model.c_str());
 //	}
 //	return model;
 	return g_phoneInfo.cpuAbi;
@@ -314,7 +314,7 @@ string GetPhoneCpuAbiList()
 string GetPhoneLocalLanguage() {
 //	string strLanguage = GetPhoneInfo(LOCAL_LANGUAGE);
 //	if (!strLanguage.empty()) {
-//		DLog("JNI::GetPhoneLocalLanguage()", "Language:%s", strLanguage.c_str());
+//		FileLog("JNI::GetPhoneLocalLanguage()", "Language:%s", strLanguage.c_str());
 //	}
 //	return strLanguage;
 	return g_phoneInfo.language;
@@ -323,7 +323,7 @@ string GetPhoneLocalLanguage() {
 string GetPhoneLocalRegion() {
 //	string strRegion = GetPhoneInfo(LOCAL_REGION);
 //	if (!strRegion.empty()) {
-//		DLog("JNI::GetPhoneLocalRegion()", "Region:%s", strRegion.c_str());
+//		FileLog("JNI::GetPhoneLocalRegion()", "Region:%s", strRegion.c_str());
 //	}
 //	return strRegion;
 	return g_phoneInfo.region;
@@ -383,7 +383,7 @@ string GetPhoneBuildDescription()
  * 获取进程名的Pid
  */
 int GetProcessPid(string name) {
-	DLog("JNI::GetProcessPid", "正在获取进程(%s)Pid...", name.c_str());
+	FileLog("JNI::GetProcessPid", "正在获取进程(%s)Pid...", name.c_str());
 	int iPid = -1;
 
 	string findName = " ";
@@ -420,7 +420,7 @@ int GetProcessPid(string name) {
 						if(i == iColumn) {
 							// 找到进程pid
 							iPid = atoi(p);
-							DLog("JNI::GetProcessPid", "找到进程Pid:%s", p);
+							FileLog("JNI::GetProcessPid", "找到进程Pid:%s", p);
 							break;
 						}
 						p = strtok(NULL, " ");
@@ -443,7 +443,7 @@ void SystemComandExecute(string command) {
 	string sCommand = command;
 	sCommand += " &>/dev/null";
 	system(sCommand.c_str());
-	DLog("JNI::SystemComandExecute", "command : %s", sCommand.c_str());
+	FileLog("JNI::SystemComandExecute", "command : %s", sCommand.c_str());
 }
 
 /*
@@ -463,7 +463,7 @@ string SystemComandExecuteWithResult(string command) {
 		pclose(ptr);
 		ptr = NULL;
 	}
-	DLog("JNI::SystemComandExecuteWithResult", "command : %s \ncommand result : %s", sCommand.c_str(), result.c_str());
+	FileLog("JNI::SystemComandExecuteWithResult", "command : %s \ncommand result : %s", sCommand.c_str(), result.c_str());
 	return result;
 }
 
@@ -509,7 +509,7 @@ bool MountSystem() {
 				// 找到/system挂载路径
 				char* dev = strtok(pBuffer, " ");
 				result = dev;
-				DLog("JNI::MountSystem", "找到/system挂载路径:%s", result.c_str());
+				FileLog("JNI::MountSystem", "找到/system挂载路径:%s", result.c_str());
 				break;
 			}
 		}
@@ -521,11 +521,11 @@ bool MountSystem() {
 	sprintf(pBuffer, "mount -o remount rw,%s /system", result.c_str());
 	result = SystemComandExecuteWithRootWithResult(pBuffer);
 	if(result.length() == 0) {
-		DLog("JNI::MountSystem", "挂载/system为可读写成功!");
+		FileLog("JNI::MountSystem", "挂载/system为可读写成功!");
 		bFlag = true;
 	}
 	else {
-		ELog("JNI::MountSystem", "挂载/system为可读写失败!");
+		FileLog("JNI::MountSystem", "挂载/system为可读写失败!");
 	}
 
 	return bFlag;
@@ -564,11 +564,11 @@ bool RootNonExecutableFile(string sourceFilePath, string destDirPath, string des
 		result = SystemComandExecuteWithRootWithResult(pBuffer);
 		if(result.length() == 0) {
 			// 拷贝成功
-			DLog("JNI::RootNonExecutableFile", "拷贝%s到%s成功!", sourceFilePath.c_str(), fileName.c_str());
+			FileLog("JNI::RootNonExecutableFile", "拷贝%s到%s成功!", sourceFilePath.c_str(), fileName.c_str());
 			bFlag = true;
 		}
 		else {
-			ELog("JNI::RootNonExecutableFile", "拷贝%s到%s失败!", sourceFilePath.c_str(), fileName.c_str());
+			FileLog("JNI::RootNonExecutableFile", "拷贝%s到%s失败!", sourceFilePath.c_str(), fileName.c_str());
 		}
 	}
 
@@ -605,7 +605,7 @@ bool RootExecutableFile(string sourceFilePath, string destDirPath, string destFi
 	// 如果在运行先关闭
 	int iPid = GetProcessPid(fileName);
 	if(iPid != -1) {
-		DLog("JNI::RootExecutableFile", "发现%s(PID:%d)正在运行, 先杀掉!", fileName.c_str(), iPid);
+		FileLog("JNI::RootExecutableFile", "发现%s(PID:%d)正在运行, 先杀掉!", fileName.c_str(), iPid);
 		sprintf(pBuffer, "kill -9 %d", iPid);
 		SystemComandExecuteWithRoot(pBuffer);
 	}
@@ -616,11 +616,11 @@ bool RootExecutableFile(string sourceFilePath, string destDirPath, string destFi
 		result = SystemComandExecuteWithRootWithResult(pBuffer);
 		if(result.length() == 0) {
 			// 更改权限成功
-			DLog("JNI::RootExecutableFile", "提升%s权限为4755成功!", fileName.c_str());
+			FileLog("JNI::RootExecutableFile", "提升%s权限为4755成功!", fileName.c_str());
 			bFlag = true;
 		}
 		else {
-			ELog("JNI::RootExecutableFile", "提升%s权限为4755失败!", fileName.c_str());
+			FileLog("JNI::RootExecutableFile", "提升%s权限为4755失败!", fileName.c_str());
 		}
 	}
 

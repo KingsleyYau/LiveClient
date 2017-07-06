@@ -63,20 +63,10 @@
     
     // 头像
     [cell.imageViewContent setImage:nil];
-    // 停止旧的
-    if( cell.imageViewLoader ) {
-        [cell.imageViewLoader stop];
-    }
     // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    cell.imageViewLoader.view = cell.imageViewContent;
-    cell.imageViewLoader.url = item.imageUrl;
-    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-    [cell.imageViewLoader loadImage];
-    
-//    cell.imageViewLoader.sdWebImageView = cell.imageViewContent;
-//    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
-    
+    [cell.imageViewLoader loadImageWithImageView:cell.imageViewContent options:0 imageUrl:item.imageUrl
+                                placeholderImage:[UIImage imageNamed:@""]];
     
     cell.nameLabel.text = item.firstName;
     

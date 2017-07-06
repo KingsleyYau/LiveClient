@@ -6,13 +6,11 @@
  *      Email: Kingsleyyau@gmail.com
  */
 
-#ifndef _INC_KMutex_
-#define _INC_KMutex_
+#ifndef _INC_KMUTEX_
+#define _INC_KMUTEX_
 
 #ifndef _WIN32
 #include <pthread.h>
-
-#include "KLog.h"
 
 class KMutex
 {

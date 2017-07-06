@@ -10,6 +10,7 @@
 #import "PresentSendView.h"
 #import "CountTimeButton.h"
 #import "LiveRoomGiftItemObject.h"
+#import "SelectNumButton.h"
 
 @class PresentView;
 @protocol PresentViewDelegate <NSObject>
@@ -36,7 +37,7 @@
 @property (nonatomic, strong) LiveRoomGiftItemObject *selectCellItem;
 
 // 多功能按钮
-@property (strong) KKButtonBar* buttonBar;
+@property (strong) SelectNumButton* buttonBar;
 
 /** 代理 */
 @property (nonatomic, weak) id<PresentViewDelegate> presentDelegate;

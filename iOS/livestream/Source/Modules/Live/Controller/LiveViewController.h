@@ -25,6 +25,8 @@
 #import "LoginManager.h"
 #import "MsgItem.h"
 
+#import "BigGiftAnimationView.h"
+
 #define PlaceholderFontSize 16
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
 
@@ -75,6 +77,12 @@
  */
 @property (assign) NSInteger unReadMsgCount;
 
+#pragma mark - 大礼物展现界面
+@property (nonatomic, strong) BigGiftAnimationView *giftAnimationView;
+
+#pragma mark - 大礼物播放队列
+@property (nonatomic, strong) NSMutableArray<NSString *> *bigGiftArray;
+
 #pragma mark - 按钮事件
 - (IBAction)fansAction:(id)sender;
 
@@ -82,8 +90,8 @@
 /**
  发送消息/弹幕
 
- @param text <#text description#>
- @return <#return value description#>
+ @param text 文本内容
+ @return 成功失败
  */
 - (BOOL)sendMsg:(NSString *)text isLounder:(BOOL)isLounder;
 
@@ -97,9 +105,9 @@
 /**
  显示大礼物
  
- @param imageData 大礼物data
+ @param giftID 大礼物ID
  */
-- (void)starBigAnimationWithImageData:(NSData *)imageData;
+- (void)starBigAnimationWithGiftID:(NSString *)giftID;
 
 /**
  点赞动画
@@ -107,8 +115,13 @@
 - (void)showLike;
 
 /**
- 直播间点赞消息
+ 插入直播间点赞消息
  */
 - (void)addLikeMessage:(NSString *)nickName;
+
+/**
+ 插入直播间送礼消息
+ */
+- (void)addGiftMessageNickName:(NSString *)nickName giftID:(NSString *)giftID giftNum:(int)giftNum;
 
 @end

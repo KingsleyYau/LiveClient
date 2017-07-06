@@ -15,11 +15,12 @@ else
 CXXFLAGS = -O2 -g
 endif
 
-CXXFLAGS += -DFILE_JNI_LOG
+CXXFLAGS += -DLINUX -DFILE_JNI_LOG
 CXXFLAGS +=	-Wall -fmessage-length=0 -Wno-unused-variable -Wno-unused-but-set-variable -DLINUX
 CXXFLAGS +=	-I. -I..
 
-OBJS 		=	md5.o aes.o KThread.o Arithmetic.o IAutoLock.o CommonFunc.o KLog.o
+OBJS 		=	md5.o aes.o KThread.o Arithmetic.o IAutoLock.o CommonFunc.o KLog.o \
+				filelog/LogFile.o filelog/LogManager.o
 		
 TARGET =	libcommon.a
 

@@ -93,19 +93,11 @@
     
     // 头像
     [cell.imageViewHeader setImage:nil];
-    // 停止旧的
-    if( cell.imageViewLoader ) {
-        [cell.imageViewLoader stop];
-    }
+    
     // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    cell.imageViewLoader.view = cell.imageViewHeader;
-    cell.imageViewLoader.url = item.photoUrl;
-    cell.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-    [cell.imageViewLoader loadImage];
-    
-//    cell.imageViewLoader.sdWebImageView = cell.imageViewHeader;
-//    [cell.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:item.photoUrl
+                                placeholderImage:[UIImage imageNamed:@""]];
     
     return tableViewCell;
 }

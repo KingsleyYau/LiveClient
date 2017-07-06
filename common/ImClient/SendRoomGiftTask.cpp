@@ -125,11 +125,11 @@ bool SendRoomGiftTask::GetSendData(Json::Value& data)
         value[GIFTNUM_PARAM] = m_giftNum;
         int isClick = m_multi_click ? 1 : 0;
         value[MULTI_CLICK_PARAM] = isClick;
-        if (isClick) {
-            value[MULTI_CLICK_START_PARAM] = m_multi_click_start;
-            value[MULTI_CLICK_END_PARAM] = m_multi_click_end;
-            value[MULTI_CLICK_ID_PARAM] = m_multi_click_id;
-        }
+//        if (isClick) {
+        value[MULTI_CLICK_START_PARAM] = m_multi_click_start;
+        value[MULTI_CLICK_END_PARAM] = m_multi_click_end;
+        value[MULTI_CLICK_ID_PARAM] = m_multi_click_id;
+//        }
         data = value;
     }
 

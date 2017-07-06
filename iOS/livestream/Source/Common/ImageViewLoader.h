@@ -25,8 +25,6 @@
 @property (nonatomic, weak) UIView *view;
 @property (nonatomic, assign) BOOL animated;
 @property (weak) id<ImageViewLoaderDelegate> delegate;
-
-@property (nonatomic, weak)UIImageView *sdWebImageView;
 /**
  *  创建实例
  *
@@ -42,11 +40,12 @@
 /**
  *  加载图片
  *
+ *  imageView 加载图片view
  *  option 枚举参数
- *
+ *  imageUrl 图片URL
  *  placeholderImage 占位图
  */
-- (BOOL)loadImageWithOptions:(SDWebImageOptions)option placeholderImage:(UIImage *)image;
+- (BOOL)loadImageWithImageView:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)image;
 
 - (BOOL)loadImage;
 

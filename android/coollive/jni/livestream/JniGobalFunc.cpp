@@ -8,6 +8,8 @@
 
 #include <JniGobalFunc.h>
 
+#include <common/KLog.h>
+
 JavaVM* gJavaVM;
 
 CallbackMap gCallbackMap;

@@ -111,7 +111,7 @@
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Money_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="aQZ-6h-Rhz" userLabel="Tips Image View">
-                            <rect key="frame" x="3" y="6" width="22" height="10"/>
+                            <rect key="frame" x="3" y="5" width="22" height="12"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="22" id="obk-J0-RdW"/>
                             </constraints>
@@ -134,7 +134,7 @@
                         <constraint firstItem="sPd-HP-hjb" firstAttribute="leading" secondItem="u6a-zE-hBx" secondAttribute="trailing" constant="1" id="5fe-vM-uQa"/>
                         <constraint firstItem="aQZ-6h-Rhz" firstAttribute="leading" secondItem="dAR-HE-Maf" secondAttribute="leading" constant="3" id="8Y4-cL-Sm6"/>
                         <constraint firstAttribute="height" constant="22" id="9Zf-mL-yvn"/>
-                        <constraint firstItem="aQZ-6h-Rhz" firstAttribute="top" secondItem="dAR-HE-Maf" secondAttribute="top" constant="6" id="CGR-S1-pc7"/>
+                        <constraint firstItem="aQZ-6h-Rhz" firstAttribute="top" secondItem="dAR-HE-Maf" secondAttribute="top" constant="5" id="CGR-S1-pc7"/>
                         <constraint firstItem="833-6a-ui3" firstAttribute="top" secondItem="dAR-HE-Maf" secondAttribute="top" id="FxJ-58-rj7"/>
                         <constraint firstItem="833-6a-ui3" firstAttribute="trailing" secondItem="dAR-HE-Maf" secondAttribute="trailing" id="Ifh-iq-Bvw"/>
                         <constraint firstItem="sPd-HP-hjb" firstAttribute="top" secondItem="u6a-zE-hBx" secondAttribute="top" constant="2.5" id="Iw5-j3-JTB"/>
@@ -143,7 +143,7 @@
                         <constraint firstItem="sPd-HP-hjb" firstAttribute="trailing" secondItem="dAR-HE-Maf" secondAttribute="trailing" constant="-5" id="jT2-sh-b6c"/>
                         <constraint firstItem="sPd-HP-hjb" firstAttribute="bottom" secondItem="u6a-zE-hBx" secondAttribute="bottom" constant="-2.5" id="kov-fi-z7K"/>
                         <constraint firstItem="u6a-zE-hBx" firstAttribute="leading" secondItem="aQZ-6h-Rhz" secondAttribute="trailing" id="m23-Pf-nNx"/>
-                        <constraint firstAttribute="bottom" secondItem="aQZ-6h-Rhz" secondAttribute="bottom" constant="6" id="qq2-We-lci"/>
+                        <constraint firstAttribute="bottom" secondItem="aQZ-6h-Rhz" secondAttribute="bottom" constant="5" id="qq2-We-lci"/>
                         <constraint firstItem="833-6a-ui3" firstAttribute="leading" secondItem="dAR-HE-Maf" secondAttribute="leading" id="s9e-CU-j4V"/>
                         <constraint firstItem="u6a-zE-hBx" firstAttribute="top" secondItem="dAR-HE-Maf" secondAttribute="top" constant="4" id="tNo-o3-miD"/>
                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="180" id="zb3-BY-KW9"/>
@@ -252,7 +252,7 @@
         <image name="Home_Hot_Viewers" width="13" height="8"/>
         <image name="Live_Btn_Cancel" width="17" height="17"/>
         <image name="Live_Fans_Img_Access" width="8" height="15"/>
-        <image name="Live_Money_Icon" width="15" height="11"/>
+        <image name="Live_Money_Icon" width="17" height="13"/>
         <image name="Live_Msg_UnRead" width="9" height="5"/>
         <image name="Live_Play_Btn_Favour" width="35" height="35"/>
     </resources>

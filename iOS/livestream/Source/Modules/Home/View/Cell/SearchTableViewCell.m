@@ -35,17 +35,9 @@
 
 - (void)setTheUserMessage:(SearchListObject *)lists{
     
-    if( self.imageViewLoader ) {
-        [self.imageViewLoader stop];
-    }
-    
     self.imageViewLoader = [ImageViewLoader loader];
-    self.imageViewLoader.url = lists.userHeadUrl;
-    self.imageViewLoader.view = self.userHeadImage;
-    self.imageViewLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:lists.userHeadUrl];
-    [self.imageViewLoader loadImage];
-//    self.imageViewLoader.sdWebImageView = self.userHeadImage;
-//    [self.imageViewLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    [self.imageViewLoader loadImageWithImageView:self.userHeadImage options:0 imageUrl:lists.userHeadUrl
+                                placeholderImage:[UIImage imageNamed:@""]];
     
     self.userNameLabel.text = lists.userNameStr;
     

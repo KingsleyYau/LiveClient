@@ -53,7 +53,6 @@
             make.left.equalTo(@0);
             make.bottom.equalTo(self.messageLabel.mas_top).offset(20);
         }];
-        
         self.backgroundColor = [UIColor clearColor];
         
     }
@@ -66,7 +65,7 @@
     self.lvView.levelLabel.text = [NSString stringWithFormat:@"89"];
     
     YYTextLinePositionSimpleModifier *modifier = [YYTextLinePositionSimpleModifier new];
-    modifier.fixedLineHeight = 20;
+    modifier.fixedLineHeight = 16;
     
     // 创建文本容器
     YYTextContainer *container = [YYTextContainer new];
@@ -89,7 +88,7 @@
 
 - (CGSize)sizeThatFits:(CGSize)size{
     
-    CGFloat giftLabelHight = 6;
+    CGFloat giftLabelHight = 1;
     giftLabelHight += self.messageLabel.frame.size.height;
     return CGSizeMake(SCREEN_WIDTH - 20 , giftLabelHight);
 }

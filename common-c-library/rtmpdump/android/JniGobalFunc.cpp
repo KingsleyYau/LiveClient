@@ -7,8 +7,9 @@
  */
 
 #include "JniGobalFunc.h"
-
 #include "JavaItem.h"
+
+#include <common/KLog.h>
 
 JavaVM* gJavaVM;
 

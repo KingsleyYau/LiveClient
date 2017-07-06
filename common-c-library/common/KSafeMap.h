@@ -8,9 +8,9 @@
 #ifndef KSafeMap_H_
 #define KSafeMap_H_
 
-#include "KMutex.h"
+#include <common/KMutex.h>
 
-#include<map>
+#include <map>
 using namespace std;
 
 template<typename Key, typename Value>

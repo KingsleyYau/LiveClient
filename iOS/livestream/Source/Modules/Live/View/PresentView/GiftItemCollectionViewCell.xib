@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GiftItemCollectionViewCell" id="gTV-IL-0wX" customClass="GiftItemCollectionViewCell">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GiftItemCollectionViewIdentifier" id="gTV-IL-0wX" customClass="GiftItemCollectionViewCell">
             <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -26,7 +26,7 @@
                         </constraints>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFP-NI-v5v">
-                        <rect key="frame" x="30" y="71" width="30" height="12"/>
+                        <rect key="frame" x="31" y="71" width="29" height="12"/>
                         <fontDescription key="fontDescription" type="system" pointSize="10"/>
                         <state key="normal" title="100" image="Live_GiftMoney_Icon">
                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -39,7 +39,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_bigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-jj-DsS">
-                        <rect key="frame" x="78" y="2" width="10" height="10"/>
+                        <rect key="frame" x="76" y="4" width="10" height="10"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="10" id="Gn4-yE-gia"/>
                             <constraint firstAttribute="width" constant="10" id="Uad-MG-Ivj"/>
@@ -51,8 +51,8 @@
                 <constraint firstItem="47x-lT-YTl" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="11.5" id="7xX-nX-0Jx"/>
                 <constraint firstItem="DFP-NI-v5v" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="5" id="8YX-w7-ljn"/>
                 <constraint firstItem="47x-lT-YTl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LLx-qu-xju"/>
-                <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="2" id="Rw8-Hj-95u"/>
-                <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="2" id="VcZ-Lq-CNj"/>
+                <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="4" id="Rw8-Hj-95u"/>
+                <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="VcZ-Lq-CNj"/>
                 <constraint firstAttribute="bottom" secondItem="DFP-NI-v5v" secondAttribute="bottom" constant="7" id="WP7-CC-fvv"/>
                 <constraint firstItem="DFP-NI-v5v" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="iZn-2D-DHo"/>
                 <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="m6L-PP-2bI"/>
@@ -75,7 +75,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Live_GiftMoney_Icon" width="12" height="9"/>
+        <image name="Live_GiftMoney_Icon" width="11" height="8"/>
         <image name="Live_bigGift_Logo" width="13" height="13"/>
         <image name="Live_giftIcon_nomal" width="25" height="25"/>
     </resources>

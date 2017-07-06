@@ -113,7 +113,7 @@ VideoDecoderH264::~VideoDecoderH264() {
 }
 
 bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
-	FileLog("rtmpdump", "VideoDecoderH264::Create( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::Create( this : %p )", this);
 
     mpCallback = callback;
 
@@ -151,33 +151,35 @@ bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
 }
 
 void VideoDecoderH264::Reset() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::Reset( "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::Reset( "
+                "this : %p "
+                ")",
+                this
+                );
 
 }
 
 void VideoDecoderH264::Pause() {
-	FileLog("rtmpdump",
-			"VideoDecoderH264::Pause( "
-			"this : %p "
-			")",
-			this
-			);
+	FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::Pause( "
+                "this : %p "
+                ")",
+                this
+                );
 
 }
 
 void VideoDecoderH264::ResetStream() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::ResetStream( "
-            "this : %p "
-            ")",
-            this
-            );
-    
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::ResetStream( "
+                "this : %p "
+                ")",
+                this
+                );
     
 }
     
@@ -187,12 +189,13 @@ void VideoDecoderH264::ReleaseVideoFrame(void* frame) {
 }
     
 void VideoDecoderH264::Stop() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::Stop( "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::Stop( "
+                "this : %p "
+                ")",
+                this
+                );
     
     mRuningMutex.lock();
     if( mbRunning ) {
@@ -255,17 +258,18 @@ void VideoDecoderH264::Stop() {
     }
     mRuningMutex.unlock();
     
-    FileLog("rtmpdump",
-            "VideoDecoderH264::Stop( "
-            "[Success], "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::Stop( "
+                "[Success], "
+                "this : %p "
+                ")",
+                this
+                );
 }
     
 bool VideoDecoderH264::CreateContext() {
-    FileLog("rtmpdump", "VideoDecoderH264::CreateContext( this : %p, avcodec_version : %d )", this, avcodec_version());
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoDecoderH264::CreateContext( this : %p, avcodec_version : %d )", this, avcodec_version());
     
     bool bFlag = true;
     avcodec_register_all();
@@ -318,25 +322,27 @@ bool VideoDecoderH264::CreateContext() {
     if( !bFlag ) {
         DestroyContext();
         
-        FileLog("rtmpdump",
-                "VideoDecoderH264::CreateContext( "
-                "[Fail], "
-                "this : %p "
-                ")",
-                this
-                );
+        FileLevelLog("rtmpdump",
+                    KLog::LOG_ERR_SYS,
+                    "VideoDecoderH264::CreateContext( "
+                    "[Fail], "
+                    "this : %p "
+                    ")",
+                    this
+                    );
     }
     
     return bFlag;
 }
     
 void VideoDecoderH264::DestroyContext() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::DestroyContext( "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_MSG,
+                "VideoDecoderH264::DestroyContext( "
+                "this : %p "
+                ")",
+                this
+                );
     
     if( mContext ) {
         avcodec_close(mContext);

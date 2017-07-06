@@ -7,11 +7,12 @@
 //
 
 #import "BigGiftAnimationView.h"
+#import "LiveGiftDownloadManager.h"
 
-@interface BigGiftAnimationView()
-
+@interface BigGiftAnimationView()<LiveGiftDownloadManagerDelegate>
 
 @property (nonatomic, strong)UIImage *carWebPImage;
+@property (nonatomic, strong) LiveGiftDownloadManager *downloadManager;
 
 @end
 
@@ -24,6 +25,8 @@ static dispatch_once_t onceToken;
         if (sharedInstance == nil) {
             sharedInstance = [[BigGiftAnimationView alloc] init];
             [sharedInstance carWebPImage];
+            sharedInstance.downloadManager = [LiveGiftDownloadManager giftDownloadManager];
+            sharedInstance.downloadManager.managerDelegate = self;
         }
         
     });
@@ -49,14 +52,32 @@ static dispatch_once_t onceToken;
     return self;
 }
 
-- (void)starAnimationWithImageData:(NSData *)imageData {
+- (void)starAnimationWithGiftID:(NSString *)giftID {
     
-    NSLog(@"Bool%d",YYImageWebPAvailable());
+    NSString *filePath = [[LiveGiftDownloadManager giftDownloadManager]doCheckLocalGiftWithGiftID:giftID];
+    NSData *imageData = [[NSFileManager defaultManager]contentsAtPath:filePath];
     
+    // 如果没文件再去下载
+    if (imageData == nil) {
+        LiveRoomGiftItemObject *item = [self.downloadManager backGiftItemWithGiftID:giftID];
+        [self.downloadManager  afnDownLoadFileWith:item.srcUrl giftId:giftID];
+        
+    }else{
+        
+        YYImage *image = [YYImage imageWithData:imageData];
+        self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
+        self.carGiftView.image = image;
+        [self addSubview:self.carGiftView];
+    }
+}
+
+- (void)downLoadWasCompleteWithGiftId:(NSString *)giftId{
+    
+    NSString *filePath = [[LiveGiftDownloadManager giftDownloadManager]doCheckLocalGiftWithGiftID:giftId];
+    NSData *imageData = [[NSFileManager defaultManager]contentsAtPath:filePath];
     YYImage *image = [YYImage imageWithData:imageData];
     self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
     self.carGiftView.image = image;
-//    [self.carGiftView sizeToFit];
     [self addSubview:self.carGiftView];
 }
 

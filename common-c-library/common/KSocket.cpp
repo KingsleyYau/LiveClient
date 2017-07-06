@@ -37,45 +37,37 @@ bool KSocket::setBlocking(bool bBlocking) {
 	int iFlag = 1;
 	if(m_Socket != -1) {
 		if ((iFlag = fcntl(m_Socket, F_GETFL, 0)) != -1) {
-			DLog("common", "KSocket::setBlocking( fcntl socket(%d) : 0x%x ) \n", m_Socket, iFlag);
 			if (!bBlocking) {
 				// set nonblocking
 				if (fcntl(m_Socket, F_SETFL, iFlag | O_NONBLOCK) != -1) {
-					DLog("common", "KSocket::setBlocking( fcntl set socket(%d) nonblocking ) \n", m_Socket);
 					m_bBlocking = bBlocking;
 					bFlag = true;
 				}
 				else {
-					ELog("common", "KSocket::setBlocking( fcntl set socket(%d) nonblocking fail ) \n", m_Socket);
 					bFlag = false;
 				}
 			}
 			else {
 				// set blocking
 				if (fcntl(m_Socket, F_SETFL, iFlag & ~O_NONBLOCK) != -1) {
-					DLog("common", "KSocket::setBlocking( fcntl set socket(%d) blocking ) \n", m_Socket);
 					m_bBlocking = bBlocking;
 					bFlag = true;
 				}
 				else {
-					ELog("common", "KSocket::setBlocking( fcntl set socket(%d) blocking ) \n", m_Socket);
 					bFlag = false;
 				}
 			}
 
 		}
 		else {
-			ELog("common", "KSocket::setBlocking( fcntl get socket(%d) fail ) \n", m_Socket);
 			bFlag = false;
 		}
 	}
 	else {
-		ELog("common", "KSocket::setBlocking( no socket create ) \n");
 		bFlag = false;
 	}
 
 	if ((iFlag = fcntl(m_Socket, F_GETFL, 0)) != -1) {
-		DLog("common", "KSocket::setBlocking( fcntl get socket(%d) : 0x%x ) \n", m_Socket, iFlag);
 	}
 
 	return bFlag;
@@ -85,7 +77,6 @@ bool KSocket::IsBlocking() {
 }
 void KSocket::Close() {
 	if (m_Socket != -1) {
-		DLog("common", "KSocket::Close( close socket:(%d) ) \n", m_Socket);
 		shutdown(m_Socket, SHUT_RDWR);
 		close(m_Socket);
 		m_Socket = -1;
@@ -123,7 +114,6 @@ unsigned int KSocket::GetTick()
 
 bool KSocket::IsTimeout(unsigned int uiStart, unsigned int uiTimeout)
 {
-	DLog("common", "KSocket::IsTimeout( uiStart : %d, uiTimeout:%d ) \n", uiStart, uiTimeout);
 	unsigned int uiCurr = GetTick();
 	unsigned int uiDiff;
 

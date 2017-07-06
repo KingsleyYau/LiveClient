@@ -10,13 +10,6 @@
 
 @interface CountTimeButton()
 
-/** 倒计时变化回调 */
-@property (nonatomic, copy) CountDownChanging countDownChanging;
-/** 倒计时结束回调  */
-@property (nonatomic, copy) CountDownFinished countDownFinished;
-
-@property (nonatomic, copy) TouchedCountDownButtonHandler touchedCountDownButtonHandler;
-
 /** 倒计时时间 */
 @property (nonatomic, assign) NSInteger second;
 /** 倒计时的总时间 */
@@ -39,7 +32,15 @@
     [self setTitleEdgeInsets:UIEdgeInsetsMake(10, 0, 0, 0)];
 }
 
-
+- (void)stop {
+    NSLog(@"CountTimeButton::stop()");
+    
+    self.countDownChanging = nil;
+    self.countDownFinished = nil;
+    self.touchedCountDownButtonHandler = nil;
+    [self stopCountDown];
+    
+}
 
 #pragma mark touche action
 - (void)countDownButtonHandler:(TouchedCountDownButtonHandler)touchedCountDownButtonHandler{
@@ -72,8 +73,8 @@
         if (self.countDownChanging){
             self.titleLabel.textAlignment = NSTextAlignmentCenter;
               self.titleLabel.numberOfLines = 0;
-            [self setTitle:self.countDownChanging(self,self.second) forState:UIControlStateNormal];
-            [self setTitle:self.countDownChanging(self,self.second) forState:UIControlStateDisabled];
+            [self setAttributedTitle:self.countDownChanging(self,self.second) forState:UIControlStateNormal];
+            [self setAttributedTitle:self.countDownChanging(self,self.second) forState:UIControlStateDisabled];
             
         }else{
             NSString *title = [NSString stringWithFormat:@"%zd\n combo",self.second];
@@ -94,8 +95,8 @@
 //                self.second = self.totalSecond;
                 if (self.countDownFinished) {
                     self.titleLabel.numberOfLines = 0;
-                    [self setTitle:self.countDownFinished(self,self.second)forState:UIControlStateNormal];
-                    [self setTitle:self.countDownFinished(self,self.second)forState:UIControlStateDisabled];
+                    [self setAttributedTitle:self.countDownFinished(self,self.second)forState:UIControlStateNormal];
+                    [self setAttributedTitle:self.countDownFinished(self,self.second)forState:UIControlStateDisabled];
                     
                 }else {
                     self.titleLabel.numberOfLines = 0;

@@ -6,8 +6,8 @@
  *      Email: Kingsleyyau@gmail.com
  */
 
-#ifndef _INC_KThread_
-#define _INC_KThread_
+#ifndef _INC_KTHREAD_
+#define _INC_KTHREAD_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +17,8 @@
 #include <string.h>
 #endif
 
-#include "KMutex.h"
-#include "KRunnable.h"
+#include <common/KMutex.h>
+#include <common/KRunnable.h>
 
 #ifndef _WIN32
 

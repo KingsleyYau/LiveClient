@@ -26,6 +26,7 @@ bool Parse(int argc, char *argv[]);
 void SignalFunc(int sign_no);
 
 char url[1024] = {"rtmp://192.168.88.17:1936/aac/max"};
+bool isRecord = false;
 char flv[1024] = {"record/play.flv"};
 char h264[1024] = {"record/play.h264"};
 char aac[1024] = {"record/play.aac"};
@@ -63,13 +64,19 @@ int main(int argc, char *argv[]) {
 
 	Parse(argc, argv);
 
+	printf("# url : %s \n", url);
+	printf("# flv : %s \n", flv);
+
 	bool bFlag = true;
 
-	MakeDir("./log");
+//	MakeDir("./log");
 	MakeDir("./record");
+//
+//	KLog::SetLogEnable(true);
+//	KLog::SetLogDirectory("./log");
 
-	KLog::SetLogEnable(true);
-	KLog::SetLogDirectory("./log");
+	LogManager::GetLogManager()->Start(KLog::LOG_WARNING, "log");
+	LogManager::GetLogManager()->SetDebugMode(true);
 
 	LSPlayerImp player;
 
@@ -85,6 +92,10 @@ int main(int argc, char *argv[]) {
 		}
 	}
 
+	LogManager::GetLogManager()->LogFlushMem2File();
+
+	printf("# All threads exit \n");
+
 	return EXIT_SUCCESS;
 }
 
@@ -94,15 +105,29 @@ bool Parse(int argc, char *argv[]) {
 		key = argv[i];
 		value = argv[i+1];
 
-//		if( key.compare("-f") == 0 ) {
-//			sConf = value;
-//		}
+		if( key.compare("-url") == 0 ) {
+			memset(url, 0, sizeof(url));
+			memcpy(url, value.c_str(), value.length());
+		} else if( key.compare("-record") == 0 ) {
+			if( value.compare("1") == 0 ) {
+				isRecord = true;
+
+			} else {
+				isRecord = false;
+				memset(flv, 0, sizeof(flv));
+				memset(h264, 0, sizeof(h264));
+				memset(aac, 0, sizeof(aac));
+			}
+		}
 	}
 
 	return true;
 }
 
 void SignalFunc(int sign_no) {
+	LogManager::GetLogManager()->Log(KLog::LOG_ERR_SYS, "SignalFunc( Get signal : %d )", sign_no);
+	LogManager::GetLogManager()->LogFlushMem2File();
+
 	switch(sign_no) {
 	default:{
 		signal(sign_no, SIG_DFL);

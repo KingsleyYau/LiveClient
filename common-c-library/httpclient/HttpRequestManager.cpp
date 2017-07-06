@@ -9,6 +9,7 @@
 #include "HttpRequestManager.h"
 
 #include <common/CommonFunc.h>
+#include <common/KLog.h>
 
 HttpRequestManager::HttpRequestManager()
 :mRequestMutex(KMutex::MutexType_Recursive)

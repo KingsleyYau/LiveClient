@@ -189,7 +189,7 @@ private:
         self.player->SetStatusCallback(self.statusCallback);
         
         // 默认使用软解码
-        _useHardDecoder = NO;
+        _useHardDecoder = YES;
         // 创建解码器和渲染器
         [self createDecoders];
         

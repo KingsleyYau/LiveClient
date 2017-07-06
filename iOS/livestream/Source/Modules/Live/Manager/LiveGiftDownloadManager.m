@@ -16,9 +16,6 @@
 
 @property (nonatomic, strong) LoginManager* loginManager;
 
-// 礼物对象数组
-@property (nonatomic, strong) NSMutableArray *giftMuArray;
-
 @property (nonatomic, strong) NSMutableDictionary *fileNameDictionary;
 
 @property (nonatomic, strong) NSMutableArray *pathMutableArray;
@@ -75,7 +72,7 @@
     });
 }
 
-// 请求礼物列表
+#pragma mark - 请求礼物列表
 - (void)GetLiveRoomAllGiftListRequest{
     
     GetLiveRoomAllGiftListRequest *request = [[GetLiveRoomAllGiftListRequest alloc]init];
@@ -106,53 +103,7 @@
     [self.sessionManager sendRequest:request];
 }
 
-// 下载聊天列表礼物图
-- (void)downLoadSmallImageWithUrl:(NSString *)url{
-
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    
-    [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        
-        
-    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-        
-        if (error) {
-            
-            NSLog(@"SDWebImageLoadError:%@",error);
-        }
-        
-        if (image) {
-            
-            
-        }
-        
-    }];
-}
-
-// 下载礼物列表展示图
-- (void)downLoadListImageWithUrl:(NSString *)url{
-    
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    
-    [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-       
-        
-    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-        
-        if (error) {
-            
-            NSLog(@"SDWebImageLoadError:%@",error);
-        }
-        
-        if (image) {
-            
-            
-        }
-        
-    }];
-}
-
-// 下载大礼物动画文件
+#pragma mark - 下载礼物详情
 - (void)downLoadSrcImage{
         
         for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
@@ -168,21 +119,20 @@
             item.type = giftItem.type;
             item.update_time = giftItem.update_time;
             
-            if (!giftItem.multi_click) {
-                
-                // 下载webp文件
-                self.path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:item.giftId];
-                [self afnDownLoadFileWith:item.srcUrl path:self.path];
+            if (giftItem.type == GIFTTYPE_Heigh) {
+                [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
             }
             
             [self downLoadListImageWithUrl:item.imgUrl];
-            
             [self downLoadSmallImageWithUrl:item.smallImgUrl];
         }
 }
 
-// 下载大礼物webp文件
-- (void)afnDownLoadFileWith:(NSString *)fileUrl path:(NSString *)path {
+#pragma mark - 下载大礼物webp文件
+- (void)afnDownLoadFileWith:(NSString *)fileUrl giftId:(NSString *)giftId {
+    // 下载webp文件
+    self.path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+    
     NSURL* url = [NSURL URLWithString:fileUrl];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     
@@ -191,8 +141,8 @@
     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         
         NSURL* documentsDirectoryURL = nil;
-        if( path ) {
-            documentsDirectoryURL = [NSURL fileURLWithPath:path];
+        if( self.path ) {
+            documentsDirectoryURL = [NSURL fileURLWithPath:self.path];
         }
         return documentsDirectoryURL;
         
@@ -200,6 +150,10 @@
         
         if( [response isKindOfClass:[NSHTTPURLResponse class]] ) {
             if( error == nil && ((NSHTTPURLResponse* )response).statusCode == 200 ) {
+                
+                if ([self.managerDelegate respondsToSelector:@selector(downLoadWasCompleteWithGiftId:)]) {
+                    [self.managerDelegate downLoadWasCompleteWithGiftId:giftId];
+                }
                 
                 NSString *fileName = [filePath lastPathComponent];
                 NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( WebP fileName : %@ )", fileName);
@@ -212,29 +166,70 @@
     [downloadTask resume];
 }
 
-
-// 根据礼物id拿到webP文件
-- (NSData *)doCheckLocalGiftWithGiftID:(NSString *)giftId{
+#pragma mark - 下载SmallImage
+- (void)downLoadSmallImageWithUrl:(NSString *)url{
     
-    NSData *fileData = nil;
-    NSString *filePath = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
     
-    NSFileManager* fileManager = [NSFileManager defaultManager];
-    
-    fileData = [self.fileNameDictionary objectForKey:giftId];
-    
-    if (!fileData) {
-        fileData = [fileManager contentsAtPath:filePath];
+    [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         
-        if (fileData) {
-            [self.fileNameDictionary setObject:fileData forKey:giftId];
+        
+    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+        
+        if (image) {
+            
+            NSLog(@"LiveGiftDownloadManager::sDWebImageLoadSmallImage( smallImage imageURL : %@ )", imageURL);
         }
-    }
-    
-    return fileData;
+        
+    }];
 }
 
-// 根据礼物id拿到礼物model
+#pragma mark - 下载ListImage
+- (void)downLoadListImageWithUrl:(NSString *)url{
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    
+    [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+        
+        
+    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+        
+        if (image) {
+            
+           NSLog(@"LiveGiftDownloadManager::sDWebImageLoadListImage( listImage imageURL : %@ )", imageURL);
+        }
+        
+    }];
+}
+
+#pragma mark - 添加新的礼物Item
+- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item {
+    
+    if (item.type == GIFTTYPE_Heigh) {
+        [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
+    }
+    [self downLoadListImageWithUrl:item.imgUrl];
+    [self downLoadSmallImageWithUrl:item.smallImgUrl];
+    
+    [self.giftMuArray addObject:item];
+}
+
+#pragma mark - 根据礼物ID判断是否有该礼物
+- (BOOL)judgeTheGiftidIsHere:(NSString *)giftId {
+    
+    BOOL isHere = NO;
+    
+    for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+        
+        if ([giftItem.giftId isEqualToString:giftId]) {
+            
+            isHere = YES;
+        }
+    }
+    return isHere;
+}
+
+#pragma mark - 根据礼物id拿到礼物model
 - (LiveRoomGiftItemObject *)backGiftItemWithGiftID:(NSString *)giftId{
     
     LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
@@ -255,17 +250,36 @@
                 item.type = giftItem.type;
                 item.update_time = giftItem.update_time;
                 
-                return item;
+                
             }
         }
     }
     
-    return nil;
+    return item;
 }
 
-// 根据礼物id拿到礼物model
+#pragma mark - 根据礼物id拿到webP文件路径
+- (NSString *)doCheckLocalGiftWithGiftID:(NSString *)giftId{
+    
+    NSString *filePath = nil;
+    NSString *webPPath = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+    
+    filePath = [self.fileNameDictionary objectForKey:giftId];
+    
+    if (!filePath) {
+        
+        filePath = webPPath;
+        
+        [self.fileNameDictionary setObject:filePath forKey:giftId];
+    }
+    return filePath;
+}
+
+#pragma mark - 根据礼物id拿到礼物SmallImgUrl
 - (NSString *)backSmallImgUrlWithGiftID:(NSString *)giftId{
     
+    NSString *samllImgUrl = nil;
+    
     LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
     
     if (self.giftMuArray != 0) {
@@ -284,16 +298,17 @@
                 item.type = giftItem.type;
                 item.update_time = giftItem.update_time;
                 
-                return item.smallImgUrl;
+                samllImgUrl = item.smallImgUrl;
             }
         }
     }
-    
-    return nil;
+    return samllImgUrl;
 }
 
-// 根据礼物id拿到礼物model
+#pragma mark - 根据礼物id拿到礼物ImgUrl
 - (NSString *)backImgUrlWithGiftID:(NSString *)giftId{
+    
+    NSString *imgUrl = nil;
     
     LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
     
@@ -313,12 +328,11 @@
                 item.type = giftItem.type;
                 item.update_time = giftItem.update_time;
                 
-                return item.imgUrl;
+                imgUrl = item.imgUrl;
             }
         }
     }
-    
-    return nil;
+    return imgUrl;
 }
 
 @end

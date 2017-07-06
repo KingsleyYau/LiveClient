@@ -59,7 +59,7 @@ bool LSPlayerImp::PlayUrl(const string& url, const string& recordFilePath, const
 
 void LSPlayerImp::Stop() {
 	FileLog("rtmpdump",
-			"LSPlayerImp::Stop( "
+			"LSPlayerImp::Stop("
 			")"
 			);
 

@@ -44,7 +44,7 @@ void KLog::SetLogDirectory(string directory) {
 	gLogDirectory = directory;
 }
 
-static KLog::LogLevel gLogLevel = KLog::DEBUG_LOG;
+static KLog::LogLevel gLogLevel = KLog::LOG_STAT;
 void KLog::SetLogLevel(KLog::LogLevel level)
 {
     gLogLevel = level;

@@ -18,8 +18,8 @@
 #import "FileCacheManager.h"
 
 #import "GetLiveRoomFansListRequest.h"
+#import "GetLiveRoomGiftDetailRequest.h"
 
-#import "BigGiftAnimationView.h"
 #import "LikeView.h"
 
 #import "LiveRoomGiftItemObject.h"
@@ -35,6 +35,9 @@
 #define MessageFontSize 16
 #define MessageFont [UIFont fontWithName:@"AvenirNext-DemiBold" size:MessageFontSize]
 
+#define NameFontSize 14
+#define NameFont [UIFont fontWithName:@"AvenirNext-DemiBold" size:NameFontSize]
+
 #define NameColor [UIColor colorWithIntRGB:255 green:210 blue:5 alpha:255]
 #define MessageTextColor [UIColor whiteColor]
 
@@ -46,7 +49,7 @@
 #define UnReadMsgTipsColor MessageTextColor
 #define UnReadMsgTipsFont [UIFont boldSystemFontOfSize:UnReadMsgCountFontSize]
 
-#define MessageCount 10
+#define MessageCount 500
 
 @interface LiveViewController () <UITextFieldDelegate, KKCheckButtonDelegate, BarrageViewDataSouce, BarrageViewDelegate, GiftComboViewDelegate, IMLiveRoomManagerDelegate>
 
@@ -82,9 +85,6 @@
 #pragma mark - 礼物连击界面
 @property (nonatomic, strong) NSMutableArray<GiftComboView*>* giftComboViews;
 @property (nonatomic, strong) NSMutableArray<MASConstraint*>* giftComboViewsLeadings;
-
-#pragma mark - 大礼物展现界面
-@property (nonatomic, strong) BigGiftAnimationView *giftAnimationView;
 
 #pragma mark - 礼物下载器
 @property (nonatomic, strong) LiveGiftDownloadManager *giftDownloadManager;
@@ -130,6 +130,9 @@
     // 初始化头像管理器
     self.photoManager = [UserHeadUrlManager manager];
     
+    // 初始化大礼物播放队列
+    self.bigGiftArray = [NSMutableArray array];
+    
     // 注册大礼物结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationWhatIs:) name:@"animationIsAnimaing" object:nil];
 }
@@ -141,6 +144,9 @@
     
     // 去除大礼物结束通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"animationIsAnimaing" object:nil];
+    
+    [self.giftAnimationView removeFromSuperview];
+    self.giftAnimationView = nil;
 }
 
 - (void)viewDidLoad {
@@ -177,6 +183,8 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -213,11 +221,7 @@
     self.imageViewHeader.layer.cornerRadius = self.imageViewHeader.frame.size.height / 2;
     
     self.imageViewHeaderLoader = [ImageViewLoader loader];
-    self.imageViewHeaderLoader.view = self.imageViewHeader;
-    self.imageViewHeaderLoader.url = @"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg";
-    self.imageViewHeaderLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:self.imageViewHeaderLoader.url];
-    [self.imageViewHeaderLoader loadImage];
-
+    [self.imageViewHeaderLoader loadImageWithImageView:self.imageViewHeader options:0 imageUrl:@"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg" placeholderImage:[UIImage imageNamed:@""]];
 }
 
 #pragma mark - 榜单信息管理
@@ -326,7 +330,7 @@
     
     // 名字标题
     giftComboView.nameLabel.text = giftItem.nickname;
-    giftComboView.sendLabel.text = [NSString stringWithFormat:@"%ld",(long)giftItem.giftnum];
+    giftComboView.sendLabel.text = [self.giftDownloadManager backGiftItemWithGiftID:giftItem.giftid].name;
     
     // 数量
     giftComboView.beginNum = giftItem.multi_click_start;
@@ -358,6 +362,7 @@
     } completion:^(BOOL finished) {
         // 开始连击
         [giftComboView playGiftCombo];
+        
     }];
     
     return bFlag;
@@ -399,16 +404,32 @@
     }
 }
 
-- (void)starBigAnimationWithImageData:(NSData *)imageData {
+#pragma mark - 播放大礼物
+- (void)starBigAnimationWithGiftID:(NSString *)giftID {
+    
     self.giftAnimationView = [BigGiftAnimationView sharedObject];
     self.giftAnimationView.userInteractionEnabled = NO;
-    
     [self.view addSubview:self.giftAnimationView];
+    [self.view bringSubviewToFront:self.giftAnimationView];
     
     [self.giftAnimationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.view);
+        make.right.left.top.equalTo(self.view);
+        make.bottom.equalTo(self.msgTableView.mas_bottom);
     }];
-    [self.giftAnimationView starAnimationWithImageData:imageData];
+    [self.giftAnimationView starAnimationWithGiftID:giftID];
+}
+
+#pragma mark - 通知大动画结束
+- (void)animationWhatIs:(NSNotification *)notification{
+    if (self.giftAnimationView) {
+        [self.giftAnimationView removeFromSuperview];
+        self.giftAnimationView = nil;
+        [self.bigGiftArray removeObjectAtIndex:0];
+        
+        if (self.bigGiftArray.count > 0) {
+            [self starBigAnimationWithGiftID:self.bigGiftArray[0]];
+        }
+    }
 }
 
 #pragma mark - 连击回调(GiftComboViewDelegate)
@@ -433,15 +454,6 @@
     }
 }
 
-#pragma mark - 通知大动画结束
-- (void)animationWhatIs:(NSNotification *)notification{
-    if (self.giftAnimationView) {
-        [self.giftAnimationView removeFromSuperview];
-        self.giftAnimationView = nil;
-    }
-    
-}
-
 #pragma mark - 弹幕管理
 - (void)setupBarrageView {
     self.barrageView.delegate = self;
@@ -458,13 +470,7 @@
     BarrageModel *item = (BarrageModel *)model;
     
     cell.imageViewHeaderLoader = [ImageViewLoader loader];
-    cell.imageViewHeaderLoader.view = cell.imageViewHeader;
-    cell.imageViewHeaderLoader.url = @"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg";
-    cell.imageViewHeaderLoader.path = [[FileCacheManager manager] imageCachePathWithUrl:self.imageViewHeaderLoader.url];
-    [cell.imageViewHeaderLoader loadImage];
-    
-//    cell.imageViewHeaderLoader.sdWebImageView = cell.imageViewHeader;
-//    [cell.imageViewHeaderLoader loadImageWithOptions:SDWebImageRefreshCached placeholderImage:[UIImage imageNamed:@""]];
+    [cell.imageViewHeaderLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:@"http://images3.charmdate.com/woman_photo/C841/174/C162683-d.jpg" placeholderImage:[UIImage imageNamed:@""]];
     
     cell.labelName.text = item.name;
     cell.labelMessage.text = item.message;
@@ -522,7 +528,7 @@
         }
 
         // 插入普通文本消息
-        [self addChatMessage:text];
+        [self addChatMessageNickName:self.loginManager.loginItem.nickName userLevel:self.loginManager.loginItem.level text:text];
         
         if (isLounder) {
             // 调用IM命令(发送弹幕)
@@ -538,16 +544,18 @@
     return bFlag;
 }
 
-- (void)addChatMessage:(NSString *)text {
+#pragma mark - 插入文本消息
+// 插入普通聊天消息
+- (void)addChatMessageNickName:(NSString *)name userLevel:(NSInteger)level text:(NSString *)text {
     NSLog(@"LiveViewController::addChatMessage( [插入文本消息], nickName : %@ )", text);
     
     // 发送普通消息
     MsgItem* item = [[MsgItem alloc] init];
-    item.level = self.loginManager.loginItem.level;
-    item.name = self.loginManager.loginItem.nickName;
+    item.level = level;
+    item.name = name;
     item.text = text;
     
-    NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor andTextFont:MessageFont];
+    NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor nameTextFont:NameFont andTextFont:MessageFont];
     item.attText = attributeString;
     
     // 插入到消息列表
@@ -563,10 +571,30 @@
     item.name = nickName;
     item.level = 0;
     
-    NSMutableAttributedString *attributeString = [self sendItem:item textColor:COLOR_WITH_16BAND_RGB(0xb4a5ff) nameColor:NameColor andTextFont:MessageFont];
+    NSMutableAttributedString *attributeString = [self sendItem:item textColor:COLOR_WITH_16BAND_RGB(0xb4a5ff) nameColor:NameColor nameTextFont:NameFont andTextFont:MessageFont];
     item.attText = attributeString;
     
     [self addMsg:item replace:NO scrollToEnd:YES animated:YES];
+}
+
+// 插入送礼消息
+- (void)addGiftMessageNickName:(NSString *)nickName giftID:(NSString *)giftID giftNum:(int)giftNum {
+    
+    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftID];
+    
+    MsgItem *msgItem = [[MsgItem alloc] init];
+    msgItem.name = nickName;
+    msgItem.level = 0;
+    msgItem.type = MsgType_Gift;
+    msgItem.giftName = item.name;
+    msgItem.smallImgUrl = [self.giftDownloadManager backSmallImgUrlWithGiftID:giftID];
+    msgItem.giftNum = giftNum;
+
+    // 增加文本消息
+    NSMutableAttributedString *attributeString = [self sendItem:msgItem textColor:COLOR_WITH_16BAND_RGB(0x0cedf5) nameColor:NameColor nameTextFont:NameFont andTextFont:MessageFont];
+    msgItem.attText = attributeString;
+    
+    [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
 }
 
 - (void)addMsg:(MsgItem *)item replace:(BOOL)replace scrollToEnd:(BOOL)scrollToEnd animated:(BOOL)animated {
@@ -723,26 +751,26 @@
  @param font      字体大小
  @return 富文本
  */
-- (NSMutableAttributedString *)sendItem:(MsgItem *)item textColor:(UIColor *)textcolor nameColor:(UIColor *)nameColor andTextFont:(UIFont *)font{
+- (NSMutableAttributedString *)sendItem:(MsgItem *)item textColor:(UIColor *)textcolor nameColor:(UIColor *)nameColor nameTextFont:(UIFont *)nameFont andTextFont:(UIFont *)font{
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     switch (item.type) {
         case MsgType_Chat:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:[NSString stringWithFormat:@"%@ : ", item.name, nil] ParseMessage:[NSString stringWithFormat:@"%@ ",item.text] msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:[NSString stringWithFormat:@"%@ : ", item.name, nil] ParseMessage:[NSString stringWithFormat:@"%@ ",item.text] msgItem:item];
         }break;
         case MsgType_Join:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Join") msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Join") msgItem:item];
         }break;
         case MsgType_Gift:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:item.name ParseMessage:[NSString stringWithFormat:@"%@ %@ ",NSLocalizedStringFromSelf(@"Member_Gift"),item.giftId] msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:item.name ParseMessage:[NSString stringWithFormat:@"%@ %@ ",NSLocalizedStringFromSelf(@"Member_Gift"),item.giftName] msgItem:item];
         }break;
         case MsgType_Share:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Share") msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Share") msgItem:item];
         }break;
         case MsgType_Follow:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Follow") msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_Follow") msgItem:item];
         }break;
         case MsgType_ThumbUp:{
-            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_ThumbUp") msgItem:item];
+            attributeString = [self appendAttributedStringWithFont:font nameColor:nameColor nameTextFont:nameFont textColor:textcolor andMessage:item.name ParseMessage:NSLocalizedStringFromSelf(@"Member_ThumbUp") msgItem:item];
         }break;
         default:
             break;
@@ -751,15 +779,15 @@
     return attributeString;
 }
 
-- (NSMutableAttributedString *)appendAttributedStringWithFont:(UIFont *)font nameColor:(UIColor *)nameColor textColor:(UIColor *)textColor andMessage:(NSString *)message ParseMessage:(NSString *)parseMessage msgItem:(MsgItem *)item{
+- (NSMutableAttributedString *)appendAttributedStringWithFont:(UIFont *)font nameColor:(UIColor *)nameColor nameTextFont:(UIFont *)nameFont textColor:(UIColor *)textColor andMessage:(NSString *)message ParseMessage:(NSString *)parseMessage msgItem:(MsgItem *)item{
     
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
     
     if (item.type != MsgType_Join) {
-        [attributeString appendAttributedString:[self parseMessage:[MsgTableViewCell textPreDetail] font:font color:nameColor]];
+        [attributeString appendAttributedString:[self parseMessage:@"" font:font color:nameColor]];
     }
     
-    [attributeString appendAttributedString:[self parseMessage:message font:font color:nameColor]];
+    [attributeString appendAttributedString:[self parseMessage:message font:nameFont color:nameColor]];
     
     if (item.type != MsgType_Chat) {
         
@@ -773,10 +801,14 @@
         
         UIImageView *imageView = [[UIImageView alloc]init];
         [imageView sd_setImageWithURL:[NSURL URLWithString:item.smallImgUrl] placeholderImage:[UIImage imageNamed:@""] options:0];
-        imageView.frame = CGRectMake(0, 0, 18, 18);
+        imageView.frame = CGRectMake(0, 0, 15, 15);
         NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
         [attributeString appendAttributedString:attachText];
         
+        if (item.giftNum > 1) {
+            [attributeString appendAttributedString:[self
+                                                     parseMessage:[NSString stringWithFormat:@" x%d",item.giftNum] font:font color:textColor]];
+        }
     }
     
     return attributeString;
@@ -805,17 +837,10 @@
     if( indexPath.row < self.msgShowArray.count ) {
         MsgItem* item = [self.msgShowArray objectAtIndex:indexPath.row];
         
-//        CGSize viewSize = CGSizeMake(self.msgTableView.frame.size.width,
-//                                     [MsgTableViewCell cellHeight:self.msgTableView.frame.size.width detailString:item.attText]
-//                                     );
-//        height = viewSize.height;
-        
         height = [tableView fd_heightForCellWithIdentifier:[MsgTableViewCell cellIdentifier] cacheByIndexPath:indexPath
                                     configuration:^(MsgTableViewCell *cell) {
                                         [cell updataChatMessage:item];
         }];
-
-        
         
     }
 
@@ -839,7 +864,7 @@
             case MsgType_Follow:
             case MsgType_Gift:
             case MsgType_Share:{
-                msgCell.lvView.hidden = NO;
+                msgCell.lvView.hidden = YES;
             }break;
             case MsgType_Join:{
                 msgCell.lvView.hidden = YES;
@@ -902,6 +927,25 @@
     [self.sessionManager sendRequest:request];
 }
 
+#pragma mark - 获取指定礼物详情
+- (void)getGiftDetailWithGiftid:(NSString *)giftId {
+
+    GetLiveRoomGiftDetailRequest *request = [[GetLiveRoomGiftDetailRequest alloc]init];
+    request.giftId = giftId;
+    
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomGiftItemObject * _Nullable item){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 添加新礼物到本地
+            if (success) {
+                
+                [self.giftDownloadManager.giftMuArray addObject:item];
+            }
+            
+        });
+    };
+    [self.sessionManager sendRequest:request];
+}
+
 #pragma mark - IM回调
 // 发送直播间消息回调
 - (void)onSendRoomMsg:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
@@ -921,17 +965,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if( [roomId isEqualToString:self.roomId] ) {
             // 插入聊天消息到列表
-            MsgItem* item = [[MsgItem alloc] init];
-            item.type = MsgType_Chat;
-            item.level = level;
-            item.name = nickName;
-            item.text = msg;
-            
-            NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor andTextFont:MessageFont];
-            item.attText = attributeString;
-            
-            // 插入到消息列表
-            [self addMsg:item replace:NO scrollToEnd:YES animated:YES];
+            [self addChatMessageNickName:nickName userLevel:level text:msg];
         }
     });
 }
@@ -950,7 +984,7 @@
             item.type = MsgType_Join;
             item.name = nickName;
             
-            NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor andTextFont:MessageFont];
+            NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor nameTextFont:NameFont andTextFont:MessageFont];
             item.attText = attributeString;
             
             // (插入/替换)到到消息列表
@@ -976,32 +1010,36 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         if( [roomId isEqualToString:self.roomId] ) {
-            // 创建礼物
-            GiftItem *giftItem = [GiftItem item:roomId fromID:fromId nickName:nickName giftID:giftId giftNum:giftNum multi_click:multi_click starNum:multi_click_start endNum:multi_click_end clickID:multi_click_id];
             
-            MsgItem *msgItem = [[MsgItem alloc] init];
-            msgItem.name = nickName;
-            msgItem.level = 0;
-            msgItem.type = MsgType_Gift;
-            msgItem.giftId = giftId;
-            msgItem.smallImgUrl = [self.giftDownloadManager backSmallImgUrlWithGiftID:giftItem.giftid];
-            
-            if ( multi_click ) {
-                // 连击礼物
-                [self addCombo:giftItem];
+            // 判断本地是否有该礼物
+            if ([self.giftDownloadManager judgeTheGiftidIsHere:giftId]) {
                 
-            } else {
-                // 大礼物
-                NSData *imageData = [self.giftDownloadManager doCheckLocalGiftWithGiftID:giftItem.giftid];
-                [self starBigAnimationWithImageData:imageData];
+                // 创建礼物
+                GiftItem *giftItem = [GiftItem item:roomId fromID:fromId nickName:nickName giftID:giftId giftNum:giftNum multi_click:multi_click starNum:multi_click_start endNum:multi_click_end clickID:multi_click_id];
+                
+                if ( multi_click ) {
+                    // 连击礼物
+                    [self addCombo:giftItem];
+                    
+                } else {
+                    
+                    for (int i = 0 ; i < giftNum; i++) {
+                        [self.bigGiftArray addObject:giftItem.giftid];
+                    }
+                    
+                    if (!self.giftAnimationView) {
+                        // 显示大礼物动画
+                        [self starBigAnimationWithGiftID:self.bigGiftArray[0]];
+                    }
+                }
+                // 插入送礼文本消息
+                [self addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum];
+                
+            }else{
+                // 获取礼物详情
+                [self getGiftDetailWithGiftid:giftId];
             }
             
-            // 增加文本消息
-            NSMutableAttributedString *attributeString = [self sendItem:msgItem textColor:COLOR_WITH_16BAND_RGB(0x0cedf5) nameColor:NameColor andTextFont:MessageFont];
-            msgItem.attText = attributeString;
-                
-            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
-
         }
     });
 }
@@ -1034,7 +1072,7 @@
     NSLog(@"LiveViewController::onRecvRoomToastNotice( [接收弹幕消息通知回调], roomId : %@, fromId : %@, nickName : %@, msg : %@ )", roomId, fromId, nickName, msg);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 插入普通文本消息
-        [self addChatMessage:msg];
+        [self addChatMessageNickName:nickName userLevel:self.loginManager.loginItem.level text:msg];
         
         // 插入到弹幕
         BarrageModel* item = [[BarrageModel alloc] init];

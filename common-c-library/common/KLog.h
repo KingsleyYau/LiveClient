@@ -1,26 +1,31 @@
 /*
- * DrLog.h
+ * KLog.h
  *
  *  Created on: 2014/10/27
  *      Author: Max.Chiu
  *      Email: Kingsleyyau@gmail.com
  */
 
-#ifndef _INC_DRLOG_
-#define _INC_DRLOG_
+#ifndef _INC_KLOG_
+#define _INC_KLOG_
 
 #include <string>
 using namespace std;
+
+#ifdef LINUX /* Linux */
+#include <common/filelog/LogManager.h>
+#endif
 
 class KLog
 {
 public:
 	typedef enum _tagLogLevel {
-		NO_LOG = 0,
-		ERR_LOG,
-		WARN_LOG,
-		INFO_LOG,
-		DEBUG_LOG
+		LOG_OFF = 0,
+		LOG_ERR_SYS,
+		LOG_ERR_USER,
+		LOG_WARNING,
+		LOG_MSG,
+		LOG_STAT
 	} LogLevel;
 
 public:
@@ -32,14 +37,17 @@ public:
 };
 
 #if	defined(FILE_JNI_LOG) || defined(PRINT_JNI_LOG) /* file */
-	#define FileLog(fileNamePre, format, ...) KLog::LogToFile(fileNamePre, KLog::DEBUG_LOG, NULL, format,  ## __VA_ARGS__)
+	#ifdef LINUX /* Linux */
+		#define FileLog(fileNamePre, format, ...) FileLevelLog(fileNamePre, KLog::LOG_STAT, format, ## __VA_ARGS__)
+		#define FileLevelLog(fileNamePre, level, format, ...) LogManager::GetLogManager()->Log(level, format, ## __VA_ARGS__)
 
-	#define ELog(tag, format, ...) KLog::LogToFile(tag, KLog::ERR_LOG, NULL, format,  ## __VA_ARGS__)
-	#define WLog(tag, format, ...) KLog::LogToFile(tag, KLog::WARN_LOG, NULL, format,  ## __VA_ARGS__)
-	#define ILog(tag, format, ...) KLog::LogToFile(tag, KLog::INFO_LOG, NULL, format,  ## __VA_ARGS__)
-	#define DLog(tag, format, ...) KLog::LogToFile(tag, KLog::DEBUG_LOG, NULL, format,  ## __VA_ARGS__)
+	#else
+		#define FileLog(fileNamePre, format, ...) FileLevelLog(fileNamePre, KLog::LOG_STAT, format,  ## __VA_ARGS__)
+		#define FileLevelLog(fileNamePre, level, format, ...) KLog::LogToFile(fileNamePre, level, NULL, format,  ## __VA_ARGS__)
+	#endif
 #else /* no log */
 	#define FileLog(fileNamePre, format, ...)
+	#define FileLevelLog(fileNamePre, level, format, ...)
 
 	#define ELog FileLog
 	#define WLog FileLog

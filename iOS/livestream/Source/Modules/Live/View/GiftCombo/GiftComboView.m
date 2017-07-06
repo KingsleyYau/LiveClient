@@ -63,10 +63,8 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 
 - (void)setEndNum:(NSInteger)endNum{
     _endNum = endNum;
-
-//    [self playGiftCombo];
     
-    if ( endNum > 1 && self.isPlayTimerStop ) {
+    if ( endNum > 1 && self.isPlayTimerStop && _playing ) {
         self.isPlayTimerStop = NO;
         [self playGiftCombo];
     }
@@ -86,7 +84,6 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     NSInteger num = self.numberView.number + 1;
     [self.numberView changeNumber:num];
     [self handleNumber:num];
-
 }
 
 - (void)play {
@@ -94,6 +91,11 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 }
 
 - (void)reset {
+    
+    if (self.playTimer.isValid) {
+        [self.playTimer invalidate];
+        self.playTimer = nil;
+    }
     self.alpha = 1.0;
     self.transform = CGAffineTransformIdentity;
     [self.numberView changeNumber:self.beginNum];

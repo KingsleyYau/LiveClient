@@ -46,11 +46,11 @@ pthread_t KThread::Start(KRunnable *runnable){
 
 	int ret = pthread_create(&mpThread, &attrs, &thread_proc_func, (void*)this);
 	if( 0 != ret ) {
-		ELog("common", "KThread::Start( [Create Thread Fail : %s] )", strerror(ret));
+		FileLog("common", "KThread::Start( [Create Thread Fail : %s] )", strerror(ret));
 		mpThread = INVALID_PTHREAD;
 	}
 	else {
-		DLog("common", "KThread::Start( [Create Thread Succees : %lld] )", mpThread);
+		FileLog("common", "KThread::Start( [Create Thread Succees : %lld] )", mpThread);
 	}
     
 	return mpThread;
@@ -58,12 +58,12 @@ pthread_t KThread::Start(KRunnable *runnable){
 
 void KThread::Stop() {
 	if( IsRunning() ) {
-		DLog("common", "KThread::Stop( [Wait For Thread Exit : %lld ) ", mpThread);
+		FileLog("common", "KThread::Stop( [Wait For Thread Exit : %lld ) ", mpThread);
 		if(0 != pthread_join(mpThread, NULL)){
-			DLog("common", "KThread::Stop( [Wait For Thread Exit Fail : %lld] )", mpThread);
+			FileLog("common", "KThread::Stop( [Wait For Thread Exit Fail : %lld] )", mpThread);
 		}
 		else{
-			DLog("common", "KThread::Stop( [Thread Exit Success : %lld] )", mpThread);
+			FileLog("common", "KThread::Stop( [Thread Exit Success : %lld] )", mpThread);
 		}
 	}
 	mpThread = INVALID_PTHREAD;
@@ -126,21 +126,21 @@ pthread_t KThread::start(KRunnable *runnable){
 
 	m_pthread_t = CreateThread(NULL, 0, KThread::thread_proc_func, this, 0, &m_threadId);
 	if(NULL == m_pthread_t) {
-		ELog("common", "KThread::start( create thread fail reson : (%x) )", GetLastError());
+		FileLog("common", "KThread::start( create thread fail reson : (%x) )", GetLastError());
 	}
 	else {
-		DLog("common", "KThread::start( create thread : (%lld) succeed )", m_pthread_t);
+		FileLog("common", "KThread::start( create thread : (%lld) succeed )", m_pthread_t);
 	}
 	return m_threadId;
 }
 void KThread::stop() {
 	if(isRunning()) {
-		DLog("common", "KThread::stop( wait for thread :(%ld) exit )", m_pthread_t);
+		FileLog("common", "KThread::stop( wait for thread :(%ld) exit )", m_pthread_t);
 		if(0 != WaitForSingleObject(m_pthread_t, INFINITE)){
-			DLog("common", "KThread::stop( wait for thread :(%lld) exit error fail )", m_pthread_t);
+			FileLog("common", "KThread::stop( wait for thread :(%lld) exit error fail )", m_pthread_t);
 		}
 		else{
-			DLog("common", "KThread::stop( thread : (%lld) exit succeed )", m_pthread_t);
+			FileLog("common", "KThread::stop( thread : (%lld) exit succeed )", m_pthread_t);
 		}
 	}
 

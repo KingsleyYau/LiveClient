@@ -71,6 +71,7 @@
   
 }
 
+
 - (void)setGiftIdArray:(NSArray *)giftIdArray{
     
     _giftIdArray = giftIdArray;
@@ -131,6 +132,7 @@
             
             cell.selectCell = YES;
             self.isCellSelect = YES;
+            [self selectOneNum:cell];
             
         }else {
             cell.selectCell = NO;
@@ -208,7 +210,7 @@
 
 #pragma mark - 多功能按钮管理
 - (void)setupButtonBar {
-    self.buttonBar = [[KKButtonBar alloc] init];
+    self.buttonBar = [[SelectNumButton alloc] init];
     [self addSubview:self.buttonBar];
     [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@0);

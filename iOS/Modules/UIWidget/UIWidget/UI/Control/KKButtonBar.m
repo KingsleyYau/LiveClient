@@ -10,7 +10,7 @@
 #import "CustomUIView.h"
 
 @interface KKButtonBar ()
-@property (nonatomic, strong) UIView* containView;
+
 @end
 
 @implementation KKButtonBar
@@ -68,10 +68,6 @@
         self.containView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
         [self addSubview:self.containView];
     }
-    
-    self.containView.frame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-    self.containView.layer.cornerRadius = 5;
-    self.containView.layer.masksToBounds = YES;
     
     CGFloat curIndex = self.blanking;
     if( !self.isVertical ) {
