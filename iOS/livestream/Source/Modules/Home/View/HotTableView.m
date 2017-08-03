@@ -88,17 +88,23 @@
     // 人数
     cell.labelViewers.text = item.roomId;
     
+    // 房间名
+    cell.labelRoomTitle.text = item.roomName;
+    
     // 国家
     cell.labelCountry.text = item.country;
     
     // 头像
-    [cell.imageViewHeader setImage:nil];
-    
-    // 创建新的
     cell.imageViewLoader = [ImageViewLoader loader];
-    [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:item.photoUrl
-                                placeholderImage:[UIImage imageNamed:@""]];
-    
+    if ( item.roomPhotoUrl && ![item.roomPhotoUrl isEqualToString:@""] ) {
+        
+        [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:item.roomPhotoUrl
+                                placeholderImage:[UIImage imageNamed:@"Login_Background"]];
+    }else{
+        [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:@"http://images3.charmdate.com/woman_photo/C1407/163/C946042-6007062e802e2a3c163be04210ccc0ca-1.jpg"
+                                    placeholderImage:[UIImage imageNamed:@"Login_Background"]];
+        
+    }
     return tableViewCell;
 }
 

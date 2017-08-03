@@ -2,14 +2,14 @@
 //  VideoHardDecoder.h
 //  RtmpClient
 //
-//  Created by  Samson on 05/06/2017.
+//  Created by  Max on 05/06/2017.
 //  Copyright © 2017 net.qdating. All rights reserved.
 //  视频硬解码实现类
 
 #ifndef VideoHardDecoder_h
 #define VideoHardDecoder_h
 
-#include <rtmpdump/android/JniGobalFunc.h>
+#include <AndroidCommon/JniCommonFunc.h>
 
 #include <rtmpdump/IDecoder.h>
 #include <rtmpdump/VideoFrame.h>

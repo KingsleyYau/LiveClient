@@ -9,6 +9,6 @@
 #ifndef JAVAITEM_H_
 #define JAVAITEM_H_
 
-#define LS_VIDEO_ITEM_CLASS 				"net/dating/LSVideoFrame"
+#define LS_VIDEO_ITEM_CLASS 				"net/qdating/LSVideoFrame"
 
 #endif /* JAVAITEM_H_ */

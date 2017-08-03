@@ -113,10 +113,8 @@ DWORD WINAPI KThread::thread_proc_func(void *args)
 {
 	KThread *pKThread = (KThread*)args;
 	if(pKThread){
-//		DLog("common", "KThread::thread_proc_func ( (%ld)->onRun )", pKThread->getThreadId());
 		pKThread->onRun();
 	}
-	//DLog("KThread", "thread_proc_func ( (%ld) exit ) \n", pKThread->getThreadId());
 	return NULL;
 }
 pthread_t KThread::start(KRunnable *runnable){

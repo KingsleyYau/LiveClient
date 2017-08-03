@@ -81,10 +81,16 @@ void LSPlayerImp::CreateDecoders() {
 			);
 
 	// 软解码
-	VideoDecoderH264* videoDecoder = new VideoDecoderH264();
-	videoDecoder->SetDecoderVideoFormat(VIDEO_FORMATE_RGB565);
+//	VideoDecoderH264* videoDecoder = new VideoDecoderH264();
+//	videoDecoder->SetDecoderVideoFormat(VIDEO_FORMATE_RGB565);
+//	AudioDecoderAAC* audioDecoder = new AudioDecoderAAC();
+
+	// 不解码
+	VideoDecoderImp* videoDecoder = new VideoDecoderImp();
+	AudioDecoderImp* audioDecoder = new AudioDecoderImp();
+
+	mpAudioDecoder = audioDecoder;
 	mpVideoDecoder = videoDecoder;
-	mpAudioDecoder = new AudioDecoderAAC();
 
 	mPlayer.SetVideoDecoder(mpVideoDecoder);
 	mPlayer.SetAudioDecoder(mpAudioDecoder);

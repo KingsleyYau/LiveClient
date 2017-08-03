@@ -19,6 +19,8 @@ extern "C" {
 
 namespace coollive {
 VideoFormatConverter::VideoFormatConverter() {
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoFormatConverter::VideoFormatConverter( this : %p )", this);
+    
     mDstFormat = AV_PIX_FMT_BGRA;
     mWidth = 0;
     mHeight = 0;
@@ -26,121 +28,18 @@ VideoFormatConverter::VideoFormatConverter() {
 }
 
 VideoFormatConverter::~VideoFormatConverter() {
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoFormatConverter::~VideoFormatConverter( this : %p )", this);
+    
     if (mImgConvertCtx) {
         sws_freeContext(mImgConvertCtx);
         mImgConvertCtx = NULL;
     }
 }
-   
-bool VideoFormatConverter::ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
-    bool bFlag = true;
-    
-    long long curTime = getCurrentTime();
-    
-    AVPixelFormat dstFormat = (AVPixelFormat)mDstFormat;
-    AVFrame *decodeFrame = srcFrame->mpAVFrame;
-    
-    // 创建转换器
-    if( mWidth != srcFrame->mWidth || mHeight != srcFrame->mHeight ) {
-        mWidth = srcFrame->mWidth;
-        mHeight = srcFrame->mHeight;
-        
-        mImgConvertCtx = sws_getContext(
-                                        decodeFrame->width,
-                                        decodeFrame->height,
-                                        (AVPixelFormat)decodeFrame->format,
-                                        decodeFrame->width,
-                                        decodeFrame->height,
-                                        dstFormat,
-                                        SWS_BICUBIC, NULL, NULL, NULL
-                                        );
-        
-        FileLog("rtmpdump",
-                "VideoFormatConverter::ConvertVideoFrame( "
-                "[Image Convert Context Change], "
-                "this : %p, "
-                "width : %d, "
-                "height : %d, "
-                "pixelFormat : %d "
-                ")",
-                this,
-                decodeFrame->width,
-                decodeFrame->height,
-                decodeFrame->format
-                );
-    }
-    
-    // 开始转换
-    int numBytes = avpicture_get_size(dstFormat, srcFrame->mWidth, srcFrame->mHeight);
-    mTransBuffer.RenewBufferSize(numBytes);
-    mTransBuffer.ResetFrame();
-    uint8_t* buffer = mTransBuffer.GetBuffer();
-    AVFrame *rgbFrame = mTransBuffer.mpAVFrame;
-    avpicture_fill((AVPicture *)rgbFrame,
-                   (uint8_t *)buffer,
-                   dstFormat,
-                   srcFrame->mWidth,
-                   srcFrame->mHeight
-                   );
-    
-    int height = sws_scale(mImgConvertCtx,
-                           decodeFrame->data,
-                           decodeFrame->linesize,
-                           0,
-                           decodeFrame->height,
-                           rgbFrame->data,
-                           rgbFrame->linesize
-                           );
-    
-    // 复制值
-    dstFrame->ResetFrame();
-    *dstFrame = *srcFrame;
-    
-    // 转换格式
-    if (mDstFormat == AV_PIX_FMT_YUV420P) {
-        // YUV
-        // copy Y Data
-        int rgbYLen = srcFrame->mWidth * srcFrame->mHeight;
-        dstFrame->SetBuffer(rgbFrame->data[0], rgbYLen);
-        
-        // copy U Data
-        int rgbULen = srcFrame->mWidth * srcFrame->mHeight * 1 / 4;
-        dstFrame->AddBuffer(rgbFrame->data[1], rgbULen);
-        
-        // copy V Data
-        int rgbVLen = srcFrame->mWidth * srcFrame->mHeight * 1 / 4;
-        dstFrame->AddBuffer(rgbFrame->data[2], rgbVLen);
-    }
-    else {
-        // RGB
-        dstFrame->SetBuffer(rgbFrame->data[0], numBytes);
-    }
-    
-    // 计算解码时间
-    long long now = getCurrentTime();
-    long long convertTime = now - curTime;
-    
-//    FileLog("rtmpdump",
-//            "VideoFormatConverter::ConvertVideoFrame( "
-//            "[Convert Video Frame], "
-//            "this : %p, "
-//            "videoFrame : %p, "
-//            "timestamp: %u, "
-//            "convertTime : %lld "
-//            ")",
-//            this,
-//            srcFrame,
-//            srcFrame->mTimestamp,
-//            convertTime
-//            );
-    
-    return bFlag;
-}
     
 bool VideoFormatConverter::SetDstFormat(VIDEO_FORMATE_TYPE type) {
     bool result = false;
     switch (type) {
-        case VIDEO_FORMATE_BGRA:{
+        case VIDEO_FORMATE_BGRA: {
             mDstFormat = AV_PIX_FMT_BGRA;
             result = true;
         }break;
@@ -161,5 +60,177 @@ bool VideoFormatConverter::SetDstFormat(VIDEO_FORMATE_TYPE type) {
     }
     return result;
 }
+    
+bool VideoFormatConverter::ConvertDecodeFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
+    bool bFlag = true;
+    
+//    long long curTime = getCurrentTime();
+    
+    AVFrame *decodeFrame = srcFrame->mpAVFrame;
+    AVPixelFormat dstFormat = (AVPixelFormat)mDstFormat;
+    
+    ChangeContext(decodeFrame);
+    
+    // 填充临时帧
+    int numBytes = avpicture_get_size(dstFormat, mWidth, mHeight);
+    mTransBuffer.RenewBufferSize(numBytes);
+    mTransBuffer.ResetFrame();
+    uint8_t* buffer = mTransBuffer.GetBuffer();
+    AVFrame *convertFrame = mTransBuffer.mpAVFrame;
+    avpicture_fill(
+                   (AVPicture *)convertFrame,
+                   (uint8_t *)buffer,
+                   dstFormat,
+                   mWidth,
+                   mHeight
+                   );
+    // 开始转换, 数据在临时帧中
+    int height = sws_scale(mImgConvertCtx,
+                           decodeFrame->data,
+                           decodeFrame->linesize,
+                           0,
+                           mHeight,
+                           convertFrame->data,
+                           convertFrame->linesize
+                           );
+    
+    // 复制帧参数
+    dstFrame->ResetFrame();
+    *dstFrame = *srcFrame;
+    
+    // 复制帧数据
+    if (dstFormat == AV_PIX_FMT_YUV420P) {
+        // YUV
+        // copy Y Data
+        int rgbYLen = mWidth * mHeight;
+        dstFrame->SetBuffer(convertFrame->data[0], rgbYLen);
+        
+        // copy U Data
+        int rgbULen = mWidth * mHeight * 1 / 4;
+        dstFrame->AddBuffer(convertFrame->data[1], rgbULen);
+        
+        // copy V Data
+        int rgbVLen = mWidth * mHeight * 1 / 4;
+        dstFrame->AddBuffer(convertFrame->data[2], rgbVLen);
+    }
+    else {
+        // RGB
+        dstFrame->SetBuffer(convertFrame->data[0], numBytes);
+    }
+    
+//    // 计算处理时间
+//    long long now = getCurrentTime();
+//    long long convertTime = now - curTime;
+//    FileLog("rtmpdump",
+//            "VideoFormatConverter::ConvertVideoFrame( "
+//            "[Convert Frame], "
+//            "this : %p, "
+//            "videoFrame : %p, "
+//            "timestamp: %u, "
+//            "convertTime : %lld "
+//            ")",
+//            this,
+//            srcFrame,
+//            srcFrame->mTimestamp,
+//            convertTime
+//            );
+    
+    return bFlag;
+}
 
+bool VideoFormatConverter::ConvertEncodeFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
+    bool bFlag = true;
+    
+    long long curTime = getCurrentTime();
+    
+    AVFrame *captureFrame = srcFrame->mpAVFrame;
+    AVPixelFormat dstFormat = (AVPixelFormat)mDstFormat;
+    
+    ChangeContext(captureFrame);
+    
+    // 填充dstFrame
+    int numBytes = avpicture_get_size(dstFormat, mWidth, mHeight);
+    dstFrame->RenewBufferSize(numBytes);
+    dstFrame->ResetFrame();
+    uint8_t* buffer = dstFrame->GetBuffer();
+    AVFrame *convertFrame = dstFrame->mpAVFrame;
+    avpicture_fill(
+                   (AVPicture *)convertFrame,
+                   (uint8_t *)buffer,
+                   dstFormat,
+                   mWidth,
+                   mHeight
+                   );
+    // 开始转换, 数据在dstFrame->mpAvFrame中
+    int height = sws_scale(mImgConvertCtx,
+                           captureFrame->data,
+                           captureFrame->linesize,
+                           0,
+                           mHeight,
+                           convertFrame->data,
+                           convertFrame->linesize
+                           );
+    // 复制帧参数
+    *dstFrame = *srcFrame;
+    
+    // 计算处理时间
+    long long now = getCurrentTime();
+    long long convertTime = now - curTime;
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                "VideoFormatConverter::ConvertEncodeFrame( "
+                "[Convert Frame], "
+                "this : %p, "
+                "srcFrame : %p, "
+                "dstFrame: %p, "
+                "convertTime : %lld "
+                ")",
+                this,
+                srcFrame,
+                dstFrame,
+                convertTime
+                );
+    
+    return bFlag;
+}
+    
+void VideoFormatConverter::ChangeContext(AVFrame *frame) {
+    AVPixelFormat srcFormat = (AVPixelFormat)frame->format;
+    AVPixelFormat dstFormat = (AVPixelFormat)mDstFormat;
+    
+    // 创建转换器
+    if( mWidth != frame->width || mHeight != frame->height ) {
+        mWidth = frame->width;
+        mHeight = frame->height;
+        
+        mImgConvertCtx = sws_getContext(
+                                        mWidth,
+                                        mHeight,
+                                        srcFormat,
+                                        mWidth,
+                                        mHeight,
+                                        dstFormat,
+                                        SWS_BICUBIC, NULL, NULL, NULL
+                                        );
+        
+        FileLevelLog(
+                     "rtmpdump",
+                     KLog::LOG_WARNING,
+                     "VideoFormatConverter::ChangeContext( "
+                     "[Image Convert Context Change], "
+                     "this : %p, "
+                     "width : %d, "
+                     "height : %d, "
+                     "srcFormat : %d, "
+                     "dstFormat : %d "
+                     ")",
+                     this,
+                     mWidth,
+                     mHeight,
+                     srcFormat,
+                     dstFormat
+                     );
+    }
+}
+    
 }

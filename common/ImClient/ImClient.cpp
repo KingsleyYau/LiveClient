@@ -222,6 +222,9 @@ bool ImClient::Login(const string& user, const string& password, ClientType clie
     m_loginStatusLock->Unlock();
 
     if (LOGOUT == loginStatus) {
+        // 先释放资源
+        Logout();
+        
         if (!user.empty()
             && !password.empty()
             && clientType >= CLIENTTYPE_BEGIN

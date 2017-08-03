@@ -18,8 +18,6 @@
 
 @property (nonatomic, strong) NSMutableDictionary *fileNameDictionary;
 
-@property (nonatomic, strong) NSMutableArray *pathMutableArray;
-
 /**
  *  接口管理器
  */
@@ -36,6 +34,9 @@
     dispatch_once(&onceToken, ^{
         
         giftDownloadManager = [[LiveGiftDownloadManager alloc]init];
+        giftDownloadManager.fileNameDictionary = [[NSMutableDictionary alloc]init];
+        giftDownloadManager.giftMuArray = [[NSMutableArray alloc]init];
+        
     });
     
     return giftDownloadManager;
@@ -51,8 +52,6 @@
         [self.loginManager addDelegate:self];
         
         self.sessionManager = [SessionRequestManager manager];
-        
-        self.pathMutableArray = [[NSMutableArray alloc]init];
     }
     return self;
 }
@@ -95,7 +94,6 @@
                 
                 NSLog(@"GetLiveRoomAllGiftListRequest ErrNum:%ld ErrMsg%@",(long)errnum,errmsg);
             }
-            
         });
         
     };
@@ -122,7 +120,6 @@
             if (giftItem.type == GIFTTYPE_Heigh) {
                 [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
             }
-            
             [self downLoadListImageWithUrl:item.imgUrl];
             [self downLoadSmallImageWithUrl:item.smallImgUrl];
         }
@@ -130,9 +127,9 @@
 
 #pragma mark - 下载大礼物webp文件
 - (void)afnDownLoadFileWith:(NSString *)fileUrl giftId:(NSString *)giftId {
-    // 下载webp文件
-    self.path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
     
+    NSLog(@"livedownloadmanager :: afnDownLoadFileWith fileUrl %@",fileUrl);
+    // 下载webp文件
     NSURL* url = [NSURL URLWithString:fileUrl];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:url];
     
@@ -140,9 +137,11 @@
         
     } destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         
+        NSString *path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+        
         NSURL* documentsDirectoryURL = nil;
-        if( self.path ) {
-            documentsDirectoryURL = [NSURL fileURLWithPath:self.path];
+        if( path ) {
+            documentsDirectoryURL = [NSURL fileURLWithPath:path];
         }
         return documentsDirectoryURL;
         
@@ -249,8 +248,6 @@
                 item.multi_click = giftItem.multi_click;
                 item.type = giftItem.type;
                 item.update_time = giftItem.update_time;
-                
-                
             }
         }
     }
@@ -333,6 +330,36 @@
         }
     }
     return imgUrl;
+}
+
+#pragma mark - 根据礼物id拿到礼物Type
+- (GiftType)backImgTypeWithGiftID:(NSString *)giftId{
+    
+    GiftType type;
+    
+    LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
+    
+    if (self.giftMuArray != 0) {
+        
+        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+            
+            if ([giftItem.giftId isEqualToString:giftId]) {
+                
+                item.giftId = giftItem.giftId;
+                item.name = giftItem.name;
+                item.smallImgUrl = giftItem.smallImgUrl;
+                item.imgUrl = giftItem.imgUrl;
+                item.srcUrl = giftItem.srcUrl;
+                item.coins = giftItem.coins;
+                item.multi_click = giftItem.multi_click;
+                item.type = giftItem.type;
+                item.update_time = giftItem.update_time;
+                
+                type = item.type;
+            }
+        }
+    }
+    return type;
 }
 
 @end

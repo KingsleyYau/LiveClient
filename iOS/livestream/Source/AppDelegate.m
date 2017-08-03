@@ -48,9 +48,10 @@
 //    [nvc.navigationBar setTintColor:[UIColor whiteColor]];
     
     // 设置接口管理类属性
+    [RequestManager setLogEnable:YES];
+    [RequestManager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
+    
     RequestManager* manager = [RequestManager manager];
-    [manager setLogEnable:YES];
-    [manager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
     [manager setWebSite:@"http://172.25.32.17:3007"];
     [manager setWebSiteUpload:@"http://172.25.32.17:82"];
 //    [manager setWebSite:@"http://192.168.88.17:3007"];
@@ -96,6 +97,8 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
+    NSLog(@"AppDelegate::applicationDidEnterBackground()");
+    
     // 标记为后台
     self.isBackground = YES;
 
@@ -111,7 +114,7 @@
         
         while(self.isBackground) {
             NSTimeInterval left = [application backgroundTimeRemaining];
-            NSLog(@"AppDelegate::applicationDidEnterBackground( left : %f )", left);
+            NSLog(@"AppDelegate::applicationDidEnterBackground( left : %f )", (double)left);
             sleep(5);
         }
         
@@ -122,6 +125,8 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSLog(@"AppDelegate::applicationWillEnterForeground()");
+    
     // 标记为前台
     self.isBackground = NO;
     

@@ -11,7 +11,7 @@
 
 #include <stdio.h>
 
-#include <rtmpdump/android/JniGobalFunc.h>
+#include <AndroidCommon/JniCommonFunc.h>
 
 #include <rtmpdump/AudioFrame.h>
 #include <rtmpdump/IAudioRenderer.h>

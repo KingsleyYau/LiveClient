@@ -52,7 +52,7 @@ class AudioDecoder {
 public:
     virtual ~AudioDecoder(){};
     virtual bool Create(AudioDecoderCallback* callback) = 0;
-    virtual void Destroy() = 0;
+    virtual void Pause() = 0;
     virtual void DecodeAudioFormat(
     		AudioFrameFormat format,
 			AudioFrameSoundRate sound_rate,

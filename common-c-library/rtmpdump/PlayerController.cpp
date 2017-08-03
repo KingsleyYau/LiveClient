@@ -22,7 +22,7 @@ PlayerController::PlayerController() {
     mpPlayerStatusCallback = NULL;
     
     mUseHardDecoder = false;
-    mbSkipDelayFrame = true;
+    mbSkipDelayFrame = false;
     
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
@@ -47,22 +47,20 @@ void PlayerController::SetAudioRenderer(AudioRenderer* audioRenderer) {
     
 void PlayerController::SetVideoDecoder(VideoDecoder* videDecoder) {
     if( mpVideoDecoder != videDecoder ) {
-        if( mpVideoDecoder ) {
-            mpVideoDecoder->Pause();
-        }
-        
         mpVideoDecoder = videDecoder;
+    }
+    
+    if( mpVideoDecoder ) {
         mpVideoDecoder->Create(this);
     }
 }
     
 void PlayerController::SetAudioDecoder(AudioDecoder* audioDecoder) {
     if( mpAudioDecoder != audioDecoder ) {
-        if( mpAudioDecoder ) {
-            mpAudioDecoder->Destroy();
-        }
-        
         mpAudioDecoder = audioDecoder;
+    }
+    
+    if( mpAudioDecoder ) {
         mpAudioDecoder->Create(this);
     }
 }
@@ -122,6 +120,13 @@ void PlayerController::Stop() {
 }
 
 /*********************************************** 传输器回调处理 *****************************************************/
+void PlayerController::OnConnect(RtmpDump* rtmpDump) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnConnect()"
+                 );
+}
+    
 void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
                 KLog::LOG_WARNING,
@@ -151,9 +156,8 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_MSG,
+                KLog::LOG_STAT,
                 "PlayerController::OnRecvVideoFrame( "
-                "[Start], "
                 "timestamp : %u "
                 ")",
                 timestamp
@@ -163,14 +167,6 @@ void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, in
     if( mpVideoDecoder ) {
         mpVideoDecoder->DecodeVideoFrame(data, size, timestamp, video_type);
     }
-
-//    FileLog("rtmpdump",
-//            "PlayerController::OnRecvVideoFrame( "
-//            "[End], "
-//            "timestamp : %u "
-//            ")",
-//            timestamp
-//            );
 }
 
 void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
@@ -196,7 +192,6 @@ void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFormat(format, sound_rate, sound_size, sound_type);
     }
-
 }
 
 void PlayerController::OnRecvAudioFrame(
@@ -210,30 +205,17 @@ void PlayerController::OnRecvAudioFrame(
                                   u_int32_t timestamp
                                   ) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_MSG,
+                KLog::LOG_STAT,
                 "PlayerController::OnRecvAudioFrame( "
-                "[Start], "
                 "timestamp : %u "
                 ")",
                 timestamp
                 );
-//    long long curTime = getCurrentTime();
     
     // 解码一帧
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
     }
-    
-//    long long diff = getCurrentTime() - curTime;
-//    FileLog("rtmpdump",
-//            "PlayerController::OnRecvAudioFrame( "
-//            "[End], "
-//            "time : %lld, "
-//            "timestamp : %u "
-//            ")",
-//            diff,
-//            timestamp
-//            );
 }
 /*********************************************** 传输器回调处理 End *****************************************************/
     
@@ -283,7 +265,7 @@ void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
     
 void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
     if( mpAudioRenderer ) {
-//        mpAudioRenderer->Reset();
+        mpAudioRenderer->Reset();
     }
     
     // 释放内存

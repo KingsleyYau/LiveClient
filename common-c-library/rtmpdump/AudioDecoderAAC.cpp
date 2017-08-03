@@ -5,10 +5,9 @@
  *      Author: max
  */
 
-#include "AudioDecoderAAC.h"
-
 #include <common/KLog.h>
 
+#include <rtmpdump/AudioDecoderAAC.h>
 #include <rtmpdump/RtmpPlayer.h>
 
 extern "C" {
@@ -20,6 +19,8 @@ extern "C" {
 namespace coollive {
 AudioDecoderAAC::AudioDecoderAAC() {
 	// TODO Auto-generated constructor stub
+    FileLog("rtmpdump", "AudioDecoderAAC::AudioDecoderAAC( decoder : %p )", this);
+    
 	mCodec = NULL;
 	mContext = NULL;
 	mDecodeFrame = NULL;
@@ -31,18 +32,21 @@ AudioDecoderAAC::AudioDecoderAAC() {
 
 AudioDecoderAAC::~AudioDecoderAAC() {
 	// TODO Auto-generated destructor stub
+    FileLog("rtmpdump", "AudioDecoderAAC::~AudioDecoderAAC( decoder : %p )", this);
+    
 	DestroyContext();
 }
 
 bool AudioDecoderAAC::Create(AudioDecoderCallback* callback) {
-	FileLog("rtmpdump", "AudioDecoderAAC::Create( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Create( this : %p )", this);
     
     mpCallback = callback;
     
     return CreateContext();
 }
 
-void AudioDecoderAAC::Destroy() {
+void AudioDecoderAAC::Pause() {
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Pause( this : %p )", this);
 }
     
 bool AudioDecoderAAC::CreateContext() {
@@ -119,13 +123,14 @@ bool AudioDecoderAAC::CreateContext() {
                 this
                 );
     } else {
-        FileLog("rtmpdump",
-                "AudioDecoderAAC::CreateContext( "
-                "[Fail], "
-                "this : %p "
-                ")",
-                this
-                );
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_ERR_USER,
+                     "AudioDecoderAAC::CreateContext( "
+                     "[Fail], "
+                     "this : %p "
+                     ")",
+                     this
+                     );
     }
     
     return bFlag;

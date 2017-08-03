@@ -62,7 +62,8 @@ static FileCacheManager* gManager = nil;
 
 #pragma mark - 接口日志目录
 - (NSString *)requestLogPath {
-    NSString* path = [[self cacheDirectory] stringByAppendingPathComponent:@"log/"];
+//    NSString* path = [[self cacheDirectory] stringByAppendingPathComponent:@"log/"];
+    NSString* path = [[self documentsDirectory] stringByAppendingPathComponent:@"log/"];
     if( [self createDirectory:path] ) {
         return path;
     } else {

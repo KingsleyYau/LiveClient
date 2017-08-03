@@ -54,7 +54,7 @@
     self.paddingX = 0;
     self.paddingY = 10;
     
-    self.itemSize = SCREEN_WIDTH * 0.25;
+    self.itemSize = SCREEN_WIDTH * 0.5 * 0.5;
     self.itemSpace = 0;
     self.lineSpace = 0;
     

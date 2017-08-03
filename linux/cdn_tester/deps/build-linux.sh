@@ -56,8 +56,6 @@ function build_ffmpeg {
 	FFMPEG="ffmpeg-$VERSION"
 	cd $FFMPEG
 
-	export CC="$(xcrun --sdk $PLATFORM -f clang)"
-
 	# build
 	./configure \
 						--prefix="$PREFIX" \

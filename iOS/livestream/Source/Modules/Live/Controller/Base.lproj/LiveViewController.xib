@@ -19,10 +19,12 @@
                 <outlet property="giftView" destination="fj7-Dt-UAT" id="dRK-MF-wX8"/>
                 <outlet property="imageViewHeader" destination="OxM-BN-l2t" id="yBD-FO-bJd"/>
                 <outlet property="msgTableView" destination="dKv-VQ-e8F" id="b3n-8P-5d5"/>
-                <outlet property="msgTableViewBottom" destination="9dz-6z-2KC" id="OQS-00-bi7"/>
+                <outlet property="msgTableViewBottom" destination="ima-7L-TRl" id="nZS-d5-IR1"/>
                 <outlet property="msgTipsLabel" destination="Loy-y3-J0X" id="jvr-Qc-wTg"/>
                 <outlet property="msgTipsView" destination="k0K-oG-W4B" id="hIQ-Is-b2x"/>
                 <outlet property="roomView" destination="Z4O-09-UhK" id="gps-1Q-BD0"/>
+                <outlet property="tableSuperView" destination="Oyo-bw-5eR" id="m9Y-Ai-pnW"/>
+                <outlet property="tableSuperViewHeight" destination="uTw-pP-k5q" id="tjd-2h-1ir"/>
                 <outlet property="videoView" destination="vTO-X9-DjF" id="Yux-oC-fRl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -150,32 +152,42 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fj7-Dt-UAT" userLabel="Gift View">
-                    <rect key="frame" x="0.0" y="372" width="414" height="115"/>
+                    <rect key="frame" x="0.0" y="362" width="414" height="115"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="115" id="3Bs-4p-hUT"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tKU-mh-VjR" customClass="BarrageView">
-                    <rect key="frame" x="10" y="497" width="394" height="104"/>
+                    <rect key="frame" x="10" y="487" width="394" height="104"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="104" id="WjH-sJ-cHV"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dKv-VQ-e8F" userLabel="Msg Table View">
-                    <rect key="frame" x="10" y="606" width="394" height="120"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oyo-bw-5eR" userLabel="tableSuperView" customClass="TableSuperView">
+                    <rect key="frame" x="10" y="704" width="394" height="22"/>
+                    <subviews>
+                        <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dKv-VQ-e8F" userLabel="Msg Table View">
+                            <rect key="frame" x="0.0" y="0.0" width="394" height="22"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <outlet property="dataSource" destination="-1" id="aVy-id-FRg"/>
+                                <outlet property="delegate" destination="-1" id="uhb-Hb-1ul"/>
+                            </connections>
+                        </tableView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="120" id="HxS-DJ-vvw"/>
+                        <constraint firstAttribute="trailing" secondItem="dKv-VQ-e8F" secondAttribute="trailing" id="8fv-UO-2x1"/>
+                        <constraint firstItem="dKv-VQ-e8F" firstAttribute="height" secondItem="Oyo-bw-5eR" secondAttribute="height" id="Edi-Ic-NIu"/>
+                        <constraint firstAttribute="bottom" secondItem="dKv-VQ-e8F" secondAttribute="bottom" id="fxl-9h-gFg"/>
+                        <constraint firstItem="dKv-VQ-e8F" firstAttribute="leading" secondItem="Oyo-bw-5eR" secondAttribute="leading" id="gKe-W5-UKz"/>
+                        <constraint firstAttribute="height" constant="22" id="uTw-pP-k5q"/>
                     </constraints>
-                    <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <connections>
-                        <outlet property="dataSource" destination="-1" id="aVy-id-FRg"/>
-                        <outlet property="delegate" destination="-1" id="uhb-Hb-1ul"/>
-                    </connections>
-                </tableView>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k0K-oG-W4B" userLabel="Msg Tips View">
                     <rect key="frame" x="10" y="696" width="187" height="30"/>
                     <subviews>
@@ -225,25 +237,26 @@
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0vh-vG-ypd"/>
-                <constraint firstItem="dKv-VQ-e8F" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="8Fp-zX-tXS"/>
-                <constraint firstItem="dKv-VQ-e8F" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-10" id="9dz-6z-2KC"/>
-                <constraint firstItem="dKv-VQ-e8F" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="EGk-3e-xf3"/>
+                <constraint firstItem="Oyo-bw-5eR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="4hJ-Mb-U7A"/>
+                <constraint firstItem="Oyo-bw-5eR" firstAttribute="top" relation="greaterThanOrEqual" secondItem="tKU-mh-VjR" secondAttribute="bottom" constant="15" id="8l5-bi-LZR"/>
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="Hb8-gR-Yaf"/>
+                <constraint firstAttribute="trailing" secondItem="Oyo-bw-5eR" secondAttribute="trailing" constant="10" id="M7L-Gb-pKV"/>
                 <constraint firstItem="Z4O-09-UhK" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="Q9J-ev-Qna"/>
-                <constraint firstItem="k0K-oG-W4B" firstAttribute="bottom" secondItem="dKv-VQ-e8F" secondAttribute="bottom" id="S6g-3i-CwR"/>
                 <constraint firstItem="dAR-HE-Maf" firstAttribute="leading" secondItem="vTO-X9-DjF" secondAttribute="leading" constant="10" id="T1a-bI-IUQ"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="VVB-nq-Fax"/>
                 <constraint firstItem="Z4O-09-UhK" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="YZb-Iw-f0z"/>
                 <constraint firstItem="fj7-Dt-UAT" firstAttribute="bottom" secondItem="tKU-mh-VjR" secondAttribute="top" constant="-10" id="bxx-9f-mhK"/>
-                <constraint firstItem="tKU-mh-VjR" firstAttribute="bottom" secondItem="dKv-VQ-e8F" secondAttribute="top" constant="-5" id="fVm-9Y-7YB"/>
+                <constraint firstItem="tKU-mh-VjR" firstAttribute="bottom" secondItem="Oyo-bw-5eR" secondAttribute="bottom" constant="-135" id="fB4-hF-aD0"/>
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fc9-Uc-nCx"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="iKr-KU-oxn"/>
                 <constraint firstItem="a9Y-he-2km" firstAttribute="centerY" secondItem="Z4O-09-UhK" secondAttribute="centerY" id="iU6-Z6-ppz"/>
+                <constraint firstAttribute="bottom" secondItem="Oyo-bw-5eR" secondAttribute="bottom" constant="10" id="ima-7L-TRl"/>
                 <constraint firstItem="a9Y-he-2km" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-2" id="kDS-7t-wJC"/>
                 <constraint firstItem="dAR-HE-Maf" firstAttribute="top" secondItem="Z4O-09-UhK" secondAttribute="bottom" constant="5" id="lWU-A6-9RD"/>
-                <constraint firstItem="k0K-oG-W4B" firstAttribute="leading" secondItem="dKv-VQ-e8F" secondAttribute="leading" id="mnv-9F-4tU"/>
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="mr6-az-apF"/>
                 <constraint firstItem="fj7-Dt-UAT" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="qfQ-K9-M8O"/>
+                <constraint firstItem="k0K-oG-W4B" firstAttribute="bottom" secondItem="Oyo-bw-5eR" secondAttribute="bottom" id="r3G-9U-omz"/>
+                <constraint firstItem="k0K-oG-W4B" firstAttribute="leading" secondItem="dKv-VQ-e8F" secondAttribute="leading" id="urp-I0-jGG"/>
                 <constraint firstItem="fj7-Dt-UAT" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="vFs-9P-1ob"/>
             </constraints>
         </view>

@@ -81,13 +81,17 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 //        self.isSetNumber = YES;
 //    }
     //每调用一次self.numberView.number get方法 自增1
+    
     NSInteger num = self.numberView.number + 1;
     [self.numberView changeNumber:num];
     [self handleNumber:num];
 }
 
 - (void)play {
-    [self addGiftNumberFrom];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self addGiftNumberFrom];
+    });
 }
 
 - (void)reset {
@@ -109,17 +113,21 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 {
     if (!self.playTimer) {
         self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime target:self selector:@selector(play) userInfo:nil repeats:YES];
-        [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
-//        self.playTimer.fireDate = [NSDate dateWithTimeIntervalSinceNow:0.3];
-        [self.playTimer fire];
+        NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(run) object:nil];
+        [thread start];
     }
-
 }
 
 - (void)stopGiftCombo
 {
     [self.playTimer invalidate];
     self.playTimer = nil;
+//    [self stopTimer];
+}
+
+- (void)run {
+    [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
+    [self.playTimer fire];
 }
 
 #pragma mark - Private
@@ -135,6 +143,7 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     [self.numberView.layer removeAllAnimations];
     self.numberView.transform = CGAffineTransformIdentity;
     self.numberView.alpha = 0.0;
+    [self.numberView layoutIfNeeded];
     
     [UIView animateWithDuration:0.01 animations:^{
         self.numberView.transform = CGAffineTransformMakeScale(2.2, 2.2);

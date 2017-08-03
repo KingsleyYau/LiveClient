@@ -196,8 +196,14 @@ void CTaskManager::OnSend(bool success, ITask* task)
 // 收到数据callback
 void CTaskManager::OnRecv(const TransportProtocol& tp)
 {
-	WLog("LiveChatClient", "CTaskManager::OnRecv() cmd:%s, seq:%d, data.empty:%d"
-			, tp.m_cmd.c_str(), tp.m_reqId, tp.m_data.empty());
+	FileLevelLog(
+                 "LiveChatClient",
+                 KLog::LOG_WARNING,
+                 "CTaskManager::OnRecv() cmd:%s, seq:%d, data.empty:%d",
+                 tp.m_cmd.c_str(),
+                 tp.m_reqId,
+                 tp.m_data.empty()
+                 );
 
 	ITask* task = NULL;
 	if (IsRequestCmd(tp.m_cmd)) {
@@ -220,8 +226,10 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
             // 命令是客户端主动请求，但协议解析不是返回命令（没有res_data）
             Json::FastWriter writer;
             string data = writer.write(tp.m_data);
-            ELog("LiveChatClient", "CTaskManager::OnRecv() tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s, data:%s"
-                    , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str(), data.c_str());
+            FileLevelLog("LiveChatClient",
+                         KLog::LOG_ERR_USER,
+                         "CTaskManager::OnRecv() tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s, data:%s"
+                         , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str(), data.c_str());
         }
 	}
 	else {

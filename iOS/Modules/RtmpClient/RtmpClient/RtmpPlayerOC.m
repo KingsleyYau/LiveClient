@@ -25,6 +25,7 @@
 #pragma mark - 硬渲染器
 #include <rtmpdump/iOS/VideoHardRendererImp.h>
 
+#pragma mark - 播放控制器
 #include <rtmpdump/PlayerController.h>
 using namespace coollive;
 
@@ -188,7 +189,7 @@ private:
         self.statusCallback = new PlayerStatusCallbackImp(self);
         self.player->SetStatusCallback(self.statusCallback);
         
-        // 默认使用软解码
+        // 默认使用硬解码
         _useHardDecoder = YES;
         // 创建解码器和渲染器
         [self createDecoders];
@@ -249,7 +250,6 @@ private:
     if( !self.isBackGround ) {
         [self.delegate rtmpPlayerRenderVideoFrame:self buffer:buffer];
     }
-
 }
 
 - (void)createDecoders {
@@ -258,11 +258,12 @@ private:
         
         // 创建硬渲染器
         self.videoRenderer = new VideoHardRendererImp(self);
+        self.audioRenderer = new AudioRendererImp();
         
         // 创建硬解码器
         self.videoDecoder = new VideoHardDecoder();
-
-
+        self.audioDecoder = new AudioDecoderAAC();
+        
     } else {
         // 软解码
         
@@ -287,18 +288,22 @@ private:
 - (void)destroyDecoders {
     if( self.videoRenderer ) {
         delete self.videoRenderer;
+        self.videoRenderer = nil;
     }
     
     if( self.audioRenderer ) {
         delete self.audioRenderer;
+        self.audioRenderer = nil;
     }
     
     if( self.videoDecoder ) {
         delete self.videoDecoder;
+        self.videoDecoder = nil;
     }
     
     if( self.audioDecoder ) {
         delete self.audioDecoder;
+        self.audioDecoder = nil;
     }
 }
 
@@ -309,7 +314,9 @@ private:
             _isBackGround = YES;
             
             // 销毁硬解码器
-            self.videoDecoder->Pause();
+            if( self.videoDecoder ) {
+                self.videoDecoder->Pause();
+            }
         }
     }
 }
@@ -320,7 +327,9 @@ private:
             _isBackGround = NO;
             
             // 重置硬视频解码器
-            self.videoDecoder->Reset();
+            if( self.videoDecoder ) {
+                self.videoDecoder->Reset();
+            }
         }
     }
 }

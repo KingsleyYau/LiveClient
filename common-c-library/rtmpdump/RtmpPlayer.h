@@ -15,10 +15,10 @@
 
 #include <rtmpdump/RtmpDump.h>
 
-#include "IDecoder.h"
-#include "FrameBuffer.h"
-#include "CacheBufferQueue.h"
-#include "VideoDecoderH264.h"
+#include <rtmpdump/IDecoder.h>
+#include <rtmpdump/FrameBuffer.h>
+#include <rtmpdump/CacheBufferQueue.h>
+#include <rtmpdump/VideoDecoderH264.h>
 
 namespace coollive {
 

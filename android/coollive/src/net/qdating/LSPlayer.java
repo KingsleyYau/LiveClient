@@ -1,9 +1,18 @@
 package net.qdating;
 
+import java.io.File;
+
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.SurfaceView;
+import net.qdating.player.ILSPlayerCallback;
+import net.qdating.player.ILSPlayerStatusCallback;
+import net.qdating.player.LSAudioPlayer;
+import net.qdating.player.LSPlayerJni;
+import net.qdating.player.LSVideoDecoder;
+import net.qdating.player.LSVideoPlayer;
+import net.qdating.utils.Log;
 
 /**
  * RTMP流播放器
@@ -18,16 +27,15 @@ public class LSPlayer implements ILSPlayerCallback {
 	/**
 	 * 视频播放器
 	 */
-	private LSVideoPlayer videoPlayer;
-//	private LSVideoGLPlayer videoGLPlayer;
+	private LSVideoPlayer videoPlayer = new LSVideoPlayer();
 	/**
 	 * 音频播放器
 	 */
-	private LSAudioPlayer audioPlayer;
+	private LSAudioPlayer audioPlayer = new LSAudioPlayer();
 	/**
 	 * 视频解码器
 	 */
-	private LSVideoDecoder videoDecoder;
+	private LSVideoDecoder videoDecoder = new LSVideoDecoder();
 	/**
 	 * 状态回调接口
 	 */
@@ -36,10 +44,6 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * 主线程消息处理
 	 */
 	private Handler handler = new Handler();
-	/**
-	 * 是否正在播放
-	 */
-	private boolean running = false;
 	/**
 	 * 是否已经启动
 	 */
@@ -70,23 +74,20 @@ public class LSPlayer implements ILSPlayerCallback {
 	public boolean init(SurfaceView surfaceView, ILSPlayerStatusCallback statusCallback) {
 		boolean bFlag = false;
 		
+		File path = Environment.getExternalStorageDirectory();
+		String filePath = path.getAbsolutePath() + "/" + LSConfig.TAG + "/";
+		Log.initFileLog(filePath);
+		Log.setWriteFileLog(true);
+		
 		this.statusCallback = statusCallback;
 		
-		// 初始化视频播放器
-		videoPlayer = new LSVideoPlayer();
-		videoPlayer.init(surfaceView.getHolder(), LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
-		// GL渲染
-//		videoGLPlayer = new LSVideoGLPlayer();
-//		videoGLPlayer.init((GLSurfaceView)surfaceView);
-		
-		// 初始化音频播放器
-		audioPlayer = new LSAudioPlayer();
-		
 		// 初始化硬解码器
-		videoDecoder = new LSVideoDecoder();
+		videoDecoder.init();
+		
+		// 初始化视频播放器
+		videoPlayer.init(surfaceView.getHolder(), LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
 		
 		// 初始化播放器
-//		player.Create(this, videoPlayer, audioPlayer, videoDecoder);
 		player.Create(this, videoPlayer, audioPlayer, videoDecoder);
 		
 		handler = new Handler() {
@@ -120,6 +121,15 @@ public class LSPlayer implements ILSPlayerCallback {
 		return bFlag;
 	}
 	
+	public void uninit() {
+		// 销毁播放器
+		player.Destroy();
+		// 销毁解码器
+		videoDecoder.uninit();
+		// 销毁视频播放器
+		videoPlayer.uninit();
+	}
+	
 	/**
 	 * 开始流播放
 	 * @see	主线程调用
@@ -130,7 +140,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @return
 	 */
 	public boolean playUrl(String url, String recordFilePath, String recordH264FilePath, String recordAACFilePath) {
-		boolean bFlag = true;
+		boolean bFlag = false;
 		
 		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
 				+ "url : %s "
@@ -138,26 +148,26 @@ public class LSPlayer implements ILSPlayerCallback {
 				url
 				)
 				);
-		
-	    this.url = url;
-	    this.recordFilePath = recordFilePath;
-	    this.recordH264FilePath = recordH264FilePath;
-	    this.recordAACFilePath = recordAACFilePath;
 
-	    stop();
-	    
 	    synchronized (this) {
-	    	start = true;
+	    	if( !start ) {
+	    		start = true;
+	    		
+	    	    this.url = url;
+	    	    this.recordFilePath = recordFilePath;
+	    	    this.recordH264FilePath = recordH264FilePath;
+	    	    this.recordAACFilePath = recordAACFilePath;
+	    	    
+	    	    // 开始消息队列
+	    		handler.post(new Runnable() {
+	    			@Override
+	    			public void run() {
+	    				// TODO Auto-generated method stub
+	    				handler.sendEmptyMessage(0);
+	    			}
+	    		});
+	    	}
 	    }
-	    
-	    // 开始消息队列
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				handler.sendEmptyMessage(0);
-			}
-		});
 	    
 		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
 				+ "[Finish], "
@@ -177,18 +187,20 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @see	主线程调用
 	 */
 	public void stop() {
-		Log.i("livestream", String.format("LSPlayer::stop()"));
+		Log.i(LSConfig.TAG, String.format("LSPlayer::stop()"));
 		
 		synchronized(this) {
 			start = false;
 		}
 		
+		// 取消事件
+		handler.removeMessages(0);
     	// 停止流播放器
     	player.Stop();
 		// 停止音频播放
 		audioPlayer.stop();
 		
-		Log.i("livestream", String.format("LSPlayer::stop( [Finish] )"));
+		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( [Finish] )"));
 	}
 
 	/**
@@ -237,9 +249,11 @@ public class LSPlayer implements ILSPlayerCallback {
 		synchronized (this) {
 			if( start ) {
 				// 非手动断开, 发送重连消息
-				handler.sendEmptyMessage(0);
+				handler.sendEmptyMessageDelayed(0, LSConfig.RECONNECT_SECOND);
 			}
 		}
+		
+		Log.i(LSConfig.TAG, String.format("LSPlayer::onDisconnect( [Finish] )"));
 
 	}
 }

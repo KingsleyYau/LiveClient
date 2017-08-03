@@ -34,19 +34,29 @@ public:
     ~PlayerController();
         
     /**
-     设置渲染器
+     设置视频渲染器
 
-     @param videoRenderer 渲染器
+     @param videoRenderer 视频渲染器
      */
     void SetVideoRenderer(VideoRenderer* videoRenderer);
+    /**
+     设置音频渲染器
+     
+     @param audioRenderer 音频渲染器
+     */
     void SetAudioRenderer(AudioRenderer* audioRenderer);
     
     /**
-     设置解码器
+     设置视频解码器
 
-     @param videDecoder 解码器
+     @param videoDecoder 视频解码器
      */
-    void SetVideoDecoder(VideoDecoder* videDecoder);
+    void SetVideoDecoder(VideoDecoder* videoDecoder);
+    /**
+     设置音频解码器
+
+     @param audioDecoder 音频解码器
+     */
     void SetAudioDecoder(AudioDecoder* audioDecoder);
     
     /**
@@ -73,6 +83,7 @@ public:
         
 private:
     // 传输器回调
+    void OnConnect(RtmpDump* rtmpDump);
     void OnDisconnect(RtmpDump* rtmpDump);
     void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
     void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);

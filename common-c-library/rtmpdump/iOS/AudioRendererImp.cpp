@@ -8,16 +8,33 @@
 
 #include "AudioRendererImp.h"
 
+#include <common/KLog.h>
+
 // 音频播放Buffer的大小(Bytes)
 const size_t kAQBufSize = 65536;
 
 AudioRendererImp::AudioRendererImp() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::AudioRendererImp( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
     mAudioQueue = NULL;
     
     Create();
 }
 
 AudioRendererImp::~AudioRendererImp() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::~AudioRendererImp( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
     mAudioBufferList.lock();
     while( !mAudioBufferList.empty() ) {
         AudioQueueBufferRef audioBuffer = mAudioBufferList.front();
@@ -73,6 +90,14 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 }
 
 void AudioRendererImp::Reset() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Reset( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
     if( mAudioQueue ) {
         AudioQueueReset(mAudioQueue);
         AudioQueueFlush(mAudioQueue);
@@ -80,8 +105,16 @@ void AudioRendererImp::Reset() {
 }
 
 bool AudioRendererImp::Create() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Create( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
     bool bFlag = true;
-
+    
     AudioStreamBasicDescription asbd;
     
     asbd.mSampleRate = 44100;

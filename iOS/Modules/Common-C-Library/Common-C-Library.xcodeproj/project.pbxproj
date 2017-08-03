@@ -906,6 +906,7 @@
 					"-fpermissive",
 					"-D_HTTPS_SUPPORT",
 					"-DPRINT_JNI_LOG",
+					"-DFILE_JNI_LOG",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

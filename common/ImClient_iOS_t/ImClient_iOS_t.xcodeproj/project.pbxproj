@@ -745,7 +745,10 @@
 				INFOPLIST_FILE = ImClient_iOS_t/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CFLAGS = "-DIOS";
+				OTHER_CFLAGS = (
+					"-DIOS",
+					"-DPRINT_JNI_LOG",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yespo.ImClient-iOS-t";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				THIRD_PARTY_PATH = "${COMMON_C_LIBRARY_PATH}/third_party";
@@ -766,7 +769,10 @@
 				INFOPLIST_FILE = ImClient_iOS_t/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_CFLAGS = "-DIOS";
+				OTHER_CFLAGS = (
+					"-DIOS",
+					"-DPRINT_JNI_LOG",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.yespo.ImClient-iOS-t";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				THIRD_PARTY_PATH = "${COMMON_C_LIBRARY_PATH}/third_party";

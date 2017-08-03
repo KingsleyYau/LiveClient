@@ -17,6 +17,8 @@
 
 @property (nonatomic, weak) IBOutlet UILabel *labelViewers;
 @property (nonatomic, weak) IBOutlet UILabel *labelCountry;
+@property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
+
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

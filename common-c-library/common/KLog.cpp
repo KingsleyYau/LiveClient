@@ -39,6 +39,11 @@ void KLog::SetLogEnable(bool enable) {
 	gLogEnable = enable;
 }
 
+static bool gLogFileEnable = true;
+void KLog::SetLogFileEnable(bool enable) {
+    gLogFileEnable = enable;
+}
+
 static string gLogDirectory = "/";
 void KLog::SetLogDirectory(string directory) {
 	gLogDirectory = directory;
@@ -82,8 +87,12 @@ int KLog::LogToFile(const char *fileNamePre, KLog::LogLevel level, const char *l
 #ifdef PRINT_JNI_LOG
 	Log(fileNamePre, "%s%s", pTimeBuffer, pDataBuffer);
 #endif  /* PRINT_JNI_LOG */
-
+    
 #ifdef FILE_JNI_LOG
+    if( !gLogFileEnable ) {
+        return 1;
+    }
+    
     string sLogFileDir = gLogDirectory;
     if( logDir != NULL ) {
         sLogFileDir = logDir;

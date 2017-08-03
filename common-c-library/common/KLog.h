@@ -34,6 +34,7 @@ public:
 	static void SetLogLevel(LogLevel level);
 	static void SetLogDirectory(string directory);
 	static void SetLogEnable(bool enable);
+    static void SetLogFileEnable(bool enable);
 };
 
 #if	defined(FILE_JNI_LOG) || defined(PRINT_JNI_LOG) /* file */
@@ -49,10 +50,6 @@ public:
 	#define FileLog(fileNamePre, format, ...)
 	#define FileLevelLog(fileNamePre, level, format, ...)
 
-	#define ELog FileLog
-	#define WLog FileLog
-	#define ILog FileLog
-	#define DLog FileLog
 #endif /* PRINT_JNI_LOG */
 
 // add by samson，把定义放到头文件，给外部知道

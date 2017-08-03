@@ -52,7 +52,6 @@
     
     [self updataMasonry];
 
-//    self.selectCell = NO;
 }
 
 - (void)updataMasonry{
@@ -78,6 +77,8 @@
 }
 
 - (void)updataCellViewItem:(LiveRoomGiftItemObject *)item{
+    
+    self.selectCell = NO;
     
     if (item.type == 1) {
         

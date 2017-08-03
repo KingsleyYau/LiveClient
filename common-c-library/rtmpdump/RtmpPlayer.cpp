@@ -9,7 +9,7 @@
 #include "RtmpPlayer.h"
 
 // 默认视频数据播放缓存(毫秒)
-#define PLAY_CACHE_DEFAULT_MS   500
+#define PLAY_CACHE_DEFAULT_MS   1000
 #define PLAY_CACHE_MAX_MS  1500
 
 // 最大视频数据缓存数量(帧个数)
@@ -252,7 +252,7 @@ void RtmpPlayer::Stop() {
     FileLevelLog("rtmpdump",
                 KLog::LOG_WARNING,
                 "RtmpPlayer::Stop( "
-                "[Success], "
+                "[Finish], "
                 "this : %p "
                 ")",
                 this
@@ -377,7 +377,7 @@ void RtmpPlayer::Init() {
 
     mCacheMS = PLAY_CACHE_DEFAULT_MS;
     mbCacheFrame = true;
-    mbSyncFrame = true;
+    mbSyncFrame = false;
     
     mStartPlayTime = 0;
     mPlayVideoAfterAudioDiff = 0;
@@ -412,7 +412,34 @@ bool RtmpPlayer::IsCacheEnough() {
 
 	mVideoBufferList.lock();
 	if( !mVideoBufferList.empty() ) {
-		videoFrame = mVideoBufferList.front();
+        // 清空旧的Buffer
+        while( true ) {
+            videoFrame = mVideoBufferList.front();
+            if( videoFrame->mTimestamp > mVideoBufferList.back()->mTimestamp ) {
+                FileLevelLog(
+                             "rtmpdump",
+                             KLog::LOG_WARNING,
+                             "RtmpPlayer::IsCacheEnough( "
+                             "[Pop Extra Video Frame], "
+                             "videoFrameFront->mTimestamp : %u, "
+                             "videoFrameBack->mTimestamp : %u "
+                             ")",
+                             videoFrame->mTimestamp,
+                             mVideoBufferList.back()->mTimestamp
+                             );
+                
+                // 回收资源
+                if( !mCacheBufferQueue.PushBuffer(videoFrame) ) {
+                    delete videoFrame;
+                }
+                mVideoBufferList.pop_front();
+            } else {
+                break;
+            }
+        }
+        
+        // 计算新的Timestamp
+        videoFrame = mVideoBufferList.front();
 		startVideoTimestamp = videoFrame->mTimestamp;
 		if( (startTimestamp == 0) || startTimestamp > startVideoTimestamp ) {
 			startTimestamp = videoFrame->mTimestamp;
@@ -428,6 +455,32 @@ bool RtmpPlayer::IsCacheEnough() {
 
 	mAudioBufferList.lock();
 	if( !mAudioBufferList.empty() ) {
+        // 清空旧的Buffer
+        while( true ) {
+            audioFrame = mAudioBufferList.front();
+            if( audioFrame->mTimestamp > mAudioBufferList.back()->mTimestamp ) {
+                FileLevelLog(
+                             "rtmpdump",
+                             KLog::LOG_WARNING,
+                             "RtmpPlayer::IsCacheEnough( "
+                             "[Pop Extra Audio Frame], "
+                             "audioFrameFront->mTimestamp : %u, "
+                             "audioFrameBack->mTimestamp : %u "
+                             ")",
+                             audioFrame->mTimestamp,
+                             mAudioBufferList.back()->mTimestamp
+                             );
+                
+                // 回收资源
+                if( !mCacheBufferQueue.PushBuffer(audioFrame) ) {
+                    delete audioFrame;
+                }
+                mAudioBufferList.pop_front();
+            } else {
+                break;
+            }
+        }
+        
 		audioFrame = mAudioBufferList.front();
 		startAudioTimestamp = audioFrame->mTimestamp;
 		if( (startTimestamp == 0) || startTimestamp > startAudioTimestamp ) {
@@ -443,7 +496,7 @@ bool RtmpPlayer::IsCacheEnough() {
 	mAudioBufferList.unlock();
 
 	mPlayThreadMutex.lock();
-	if( endTimestamp - startTimestamp >= mCacheMS ) {
+	if( endTimestamp - startTimestamp >= mCacheMS || mAudioBufferList.size() > 50 || mVideoBufferList.size() > 30 ) {
 		// 缓存足够, 判断音频先开始还是视频先开始
         if( startVideoTimestamp > 0 && startAudioTimestamp > 0 ) {
             mPlayVideoAfterAudioDiff = startVideoTimestamp - startAudioTimestamp;
@@ -454,28 +507,30 @@ bool RtmpPlayer::IsCacheEnough() {
             }
         }
 
-//		FileLog("rtmpdump",
-//				"RtmpPlayer::IsCacheEnough( "
-//				"startVideoTimestamp : %d, "
-//				"endVideoTimestamp : %d, "
-//				"startAudioTimestamp : %d, "
-//				"endAudioTimestamp : %d, "
-//				"startTimestamp : %d, "
-//				"endTimestamp : %d, "
-//				"mPlayVideoAfterAudioDiff : %d, "
-//				"mVideoBufferList.size() : %d, "
-//				"mAudioBufferList.size() : %d "
-//				")",
-//				startVideoTimestamp,
-//				endVideoTimestamp,
-//				startAudioTimestamp,
-//				endAudioTimestamp,
-//				startTimestamp,
-//				endTimestamp,
-//				mPlayVideoAfterAudioDiff,
-//				mVideoBufferList.size(),
-//				mAudioBufferList.size()
-//				);
+		FileLevelLog(
+                    "rtmpdump",
+                    KLog::LOG_WARNING,
+                    "RtmpPlayer::IsCacheEnough( "
+                    "startVideoTimestamp : %d, "
+                    "endVideoTimestamp : %d, "
+                    "startAudioTimestamp : %d, "
+                    "endAudioTimestamp : %d, "
+                    "startTimestamp : %d, "
+                    "endTimestamp : %d, "
+                    "mPlayVideoAfterAudioDiff : %d, "
+                    "mVideoBufferList.size() : %d, "
+                    "mAudioBufferList.size() : %d "
+                    ")",
+                    startVideoTimestamp,
+                    endVideoTimestamp,
+                    startAudioTimestamp,
+                    endAudioTimestamp,
+                    startTimestamp,
+                    endTimestamp,
+                    mPlayVideoAfterAudioDiff,
+                    mVideoBufferList.size(),
+                    mAudioBufferList.size()
+                    );
 
 		bFlag = true;
 	}
@@ -560,9 +615,9 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
 
 void RtmpPlayer::NoCacheFrame() {
 	// 已经没有缓存数据，等待缓存
-	mPlayThreadMutex.lock();
+	mVideoBufferList.lock();
+    mAudioBufferList.lock();
 	if( mVideoBufferList.size() == 0 && mAudioBufferList.size() == 0 ) {
-        
         if( !mbShowNoCacheLog ) {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
@@ -575,7 +630,8 @@ void RtmpPlayer::NoCacheFrame() {
         }
 
 	}
-	mPlayThreadMutex.unlock();
+    mAudioBufferList.unlock();
+	mVideoBufferList.unlock();
 }
 
 void RtmpPlayer::PlayFrame(bool isAudio) {
@@ -643,6 +699,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
             mPlayThreadMutex.unlock();
             
     		// 不用等待缓存
+            bool bNoCache = false;
     		bufferList->lock();
     		if( !bufferList->empty() ) {
     			frame = bufferList->front();
@@ -911,9 +968,13 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                 }
     		} else {
     			// 已经没有缓存数据
-    			NoCacheFrame();
+                bNoCache = true;
     		}
     		bufferList->unlock();
+            
+            if( bNoCache ) {
+                NoCacheFrame();
+            }
     	}
 
         if( bSleep ) {

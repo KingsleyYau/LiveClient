@@ -463,7 +463,7 @@
 - (void)addOwnViews
 {
     //初始值
-    self.speedBaseVlaue = 30.0;
+    self.speedBaseVlaue = 15.0;
 }
 
 - (void)configOwnView

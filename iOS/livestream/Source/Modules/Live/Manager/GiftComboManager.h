@@ -15,4 +15,6 @@
 - (GiftItem *_Nullable)popGift:(NSString * _Nullable)itemId;
 - (void)pushGift:(GiftItem *_Nonnull)item;
 
+- (void)removeManager;
+
 @end

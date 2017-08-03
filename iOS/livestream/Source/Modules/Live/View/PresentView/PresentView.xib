@@ -12,6 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PresentView">
             <connections>
+                <outlet property="coinsNumLabel" destination="3Km-IY-YAV" id="fHI-hM-CL8"/>
                 <outlet property="collectionView" destination="zNC-XJ-LUg" id="ya9-GQ-VrH"/>
                 <outlet property="collectionViewHeight" destination="gDP-cS-mYr" id="37X-KY-jFe"/>
                 <outlet property="comboBtn" destination="ZdS-1a-wL9" id="ThL-Xn-Amf"/>
@@ -98,7 +99,8 @@
                         <constraint firstAttribute="height" constant="100" id="WaV-sV-Jrv"/>
                         <constraint firstAttribute="width" constant="100" id="oxX-TB-9nz"/>
                     </constraints>
-                    <state key="normal" title="30 combo" backgroundImage="Live_cambo_nomal">
+                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                    <state key="normal" backgroundImage="Live_cambo_nomal">
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                 </button>
@@ -133,7 +135,7 @@
     </objects>
     <resources>
         <image name="Live_Fans_Img_Access" width="8" height="15"/>
-        <image name="Live_Money_Icon" width="15" height="11"/>
+        <image name="Live_Money_Icon" width="17" height="13"/>
         <image name="Live_cambo_nomal" width="81" height="78"/>
     </resources>
 </document>

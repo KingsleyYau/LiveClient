@@ -23,6 +23,5 @@ void VideoHardRendererImp::RenderVideoFrame(void* _Nonnull frame) {
         [mpVideoHardRendererImp renderVideoFrame:buffer];
 
     }
-
 }
 }

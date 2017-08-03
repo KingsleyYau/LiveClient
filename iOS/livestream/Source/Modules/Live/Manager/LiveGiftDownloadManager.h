@@ -17,6 +17,12 @@
 
 @end
 
+typedef enum {
+    DOWNLOADNONE = 0,
+    DOWNLOADING,
+    DOWNLOADEND
+} DownLoadState;
+
 @interface LiveGiftDownloadManager : NSObject
 
 @property (nonatomic, weak)id<LiveGiftDownloadManagerDelegate> managerDelegate;
@@ -49,5 +55,8 @@
 
 // 添加新的礼物Item
 - (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item;
+
+// 根据礼物id拿到礼物Type
+- (GiftType)backImgTypeWithGiftID:(NSString *)giftId;
 
 @end

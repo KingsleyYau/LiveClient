@@ -15,9 +15,9 @@
 /**
  改变数字显示
  
- @param numberStr 显示的数字
+ @param number 显示的数字
  */
-- (void)changeNumber:(NSInteger )numberStr;
+- (void)changeNumber:(NSInteger )number;
 
 
 @end

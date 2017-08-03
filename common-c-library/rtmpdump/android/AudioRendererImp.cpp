@@ -133,12 +133,12 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 }
 
 void AudioRendererImp::Reset() {
-    // 播放视频
+    // 播放音频
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
-	// 回调图像
+	// 回调PCM帧
 	if( mJniRenderer != NULL ) {
 		// 反射类
 		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);

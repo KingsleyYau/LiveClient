@@ -120,7 +120,7 @@
 
 - (IBAction)sendRoomGift:(id)sender {
     if (nil != self.client) {
-        [self.client sendRoomGift:self.roomid token:self.token nickName:@"alex" giftId:@"123456" giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1];
+        [self.client sendRoomGift:self.roomid token:self.token nickName:@"alex" giftId:@"123456" giftName:@"testGift" giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1];
     }
 }
 

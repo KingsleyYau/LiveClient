@@ -24,6 +24,8 @@ OBJS 		=	AudioDecoderAAC.o AudioFrame.o CacheBufferQueue.o EncodeDecodeBuffer.o 
 				VideoDecoderH264.o VideoFormatConverter.o VideoFrame.o \
 				../third_party/srs/srs_librtmp.o
 				
+OBJS += linux/VideoDecoderImp.o linux/AudioDecoderImp.o
+				
 TARGET =	librtmpdump.a
 
 .PHONY: all clean $(TARGET)

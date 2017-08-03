@@ -14,20 +14,13 @@
 #include <common/CommonFunc.h>
 
 #include <rtmpdump/RtmpDump.h>
-
-#include "IDecoder.h"
+#include <rtmpdump/AudioFrame.h>
+#include <rtmpdump/VideoFrame.h>
+#include <rtmpdump/CacheBufferQueue.h>
 
 namespace coollive {
-class VideoEncoder;
-class AudioEncoder;
-class RtmpPublisher;
-class RtmpPublisherCallback {
-public:
-    virtual ~RtmpPublisherCallback(){};
-    virtual void OnDisconnect(RtmpPublisher* publisher) = 0;
-};
-
-class RtmpPublisher : public RtmpDumpCallback {
+class PublishRunnable;
+class RtmpPublisher {
 public:
 	RtmpPublisher();
     ~RtmpPublisher();
@@ -50,12 +43,10 @@ public:
     /**
      发送原始h264视频帧
      
-     @param frame <#frame description#>
-     @param frame_size <#frame_size description#>
-     @return <#return value description#>
+     @param data <#frame description#>
+     @param size <#frame_size description#>
      */
-    bool SendVideoFrame(char* frame, int frame_size);
-    void AddVideoTimestamp(u_int32_t timestamp);
+    void SendVideoFrame(char* data, int size, u_int32_t timestamp);
   
     /**
      发送原始音频帧
@@ -64,71 +55,47 @@ public:
      @param sound_rate <#sound_rate description#>
      @param sound_size <#sound_size description#>
      @param sound_type <#sound_type description#>
-     @param frame <#frame description#>
-     @param frame_size <#frame_size description#>
-     @return <#return value description#>
+     @param data <#frame description#>
+     @param size <#frame_size description#>
      */
-    bool SendAudioFrame(AudioFrameFormat sound_format,
+    void SendAudioFrame(AudioFrameFormat sound_format,
                         AudioFrameSoundRate sound_rate,
                         AudioFrameSoundSize sound_size,
                         AudioFrameSoundType sound_type,
-                        char* frame,
-                        int frame_size
+                        char* data,
+                        int size,
+                        u_int32_t timestamp
                         );
-    void AddAudioTimestamp(u_int32_t timestamp);
-
-    void ResetTimestamp();
     
-    /**
-     * 获取回调
-     */
-    RtmpPublisherCallback* GetCallback();
-
-    /**
-     * 获取视频编码器
-     */
-    VideoEncoder* GetVideoEncoder();
-
-    /*
-     * 获取音频编码器
-     */
-    AudioEncoder* GetAudioEncoder();
-
 public:
-    void SetCallback(RtmpPublisherCallback* callback);
-    void SetVideoEncoder(VideoEncoder* encoder);
-    void SetAudioEncoder(AudioEncoder* encoder);
-
-private:
-    void OnDisconnect(RtmpDump* rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int NALUnitHeaderLength);
-    void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
-    void OnChangeAudioFormat(RtmpDump* rtmpDump,
-                             AudioFrameFormat format,
-                             AudioFrameSoundRate sound_rate,
-                             AudioFrameSoundSize sound_size,
-                             AudioFrameSoundType sound_type
-                             );
-    void OnRecvAudioFrame(RtmpDump* rtmpDump,
-                          AudioFrameFormat format,
-                          AudioFrameSoundRate sound_rate,
-                          AudioFrameSoundSize sound_size,
-                          AudioFrameSoundType sound_type,
-                          char* data,
-                          int size,
-                          u_int32_t timestamp
-                          );
+    void SetRtmpDump(RtmpDump* rtmpDump);
     
 private:
-    RtmpPublisherCallback* mpRtmpPublisherCallback;
+    friend class PublishRunnable;
+    void PublishHandle();
     
+private:
+    void Init();
+    
+private:
     // Rtmp传输模块
-    RtmpDump mRtmpDump;
-
-    // 视频编码器
-    VideoEncoder* mpVideoEncoder;
-    // 音频编码器
-    AudioEncoder* mpAudioEncoder;
+    RtmpDump* mpRtmpDump;
+    
+    // 状态锁
+    KMutex mClientMutex;
+    bool mbRunning;
+    
+    // 发送线程
+    KThread mPublishThread;
+    PublishRunnable* mpPublishRunnable;
+    
+    // 缓存Buffer列表
+    EncodeDecodeBufferList mVideoBufferList;
+    EncodeDecodeBufferList mAudioBufferList;
+    // 空闲的Buffer列表
+    CacheBufferQueue mCacheVideoBufferQueue;
+    // 空闲的Buffer列表
+    CacheBufferQueue mCacheAudioBufferQueue;
 };
 }
 #endif /* RtmpPublisher_h */

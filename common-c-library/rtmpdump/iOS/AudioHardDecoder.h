@@ -22,8 +22,7 @@ public:
     
 public:
     bool Create(AudioDecoderCallback* callback);
-    void Destroy();
-    void Reset();
+    void Pause();
     void CreateAudioDecoder(
                             AudioFrameFormat format,
                             AudioFrameSoundRate sound_rate,

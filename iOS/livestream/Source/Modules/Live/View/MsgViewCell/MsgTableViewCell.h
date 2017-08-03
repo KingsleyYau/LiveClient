@@ -16,6 +16,8 @@
 
 @property (nonatomic, strong) LevelView *lvView;
 
+@property (nonatomic, assign) CGFloat messageLabelWidth;
+
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;
 + (NSString *)textPreDetail;

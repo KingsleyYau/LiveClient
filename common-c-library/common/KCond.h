@@ -22,12 +22,9 @@ public:
 		desrtoylock();
 	}
 	int signal() {
-		DLog("common", "signal()");
 		return pthread_cond_signal(&m_Cond);
 	}
 	int timedwait(int second) {
-		DLog("common", "timedwait( wait for %d second )", second);
-
 		struct timeval now;
 		gettimeofday(&now, NULL);
 
@@ -38,11 +35,9 @@ public:
 		return pthread_cond_timedwait(&m_Cond, &m_Mutex, &outtime);
 	}
 	int wait() {
-		DLog("common", "wait()");
 		return pthread_cond_wait(&m_Cond, &m_Mutex);
 	}
 	int broadcast() {
-		DLog("common", "broadcast()");
 		return pthread_cond_broadcast(&m_Cond);
 	}
 

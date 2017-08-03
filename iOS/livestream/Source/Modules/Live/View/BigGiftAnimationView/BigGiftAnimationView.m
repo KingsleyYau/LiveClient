@@ -46,7 +46,7 @@ static dispatch_once_t onceToken;
     if (self) {
         
         self.carGiftView = [[YYAnimatedImageView alloc]init];
-        self.carGiftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+//        self.carGiftView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
         
     }
     return self;
@@ -68,6 +68,10 @@ static dispatch_once_t onceToken;
         self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
         self.carGiftView.image = image;
         [self addSubview:self.carGiftView];
+        [self.carGiftView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.bottom.equalTo(self);
+            make.height.equalTo(@SCREEN_HEIGHT);
+        }];
     }
 }
 
@@ -79,6 +83,10 @@ static dispatch_once_t onceToken;
     self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
     self.carGiftView.image = image;
     [self addSubview:self.carGiftView];
+    [self.carGiftView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.bottom.equalTo(self);
+        make.width.equalTo(@SCREEN_WIDTH);
+    }];
 }
 
 - (UIImage *)carWebPImage{

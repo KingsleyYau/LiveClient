@@ -8,12 +8,11 @@
 
 #import "RequestManager.h"
 
+#include <common/CommonFunc.h>
 #include <common/KZip.h>
 
 #include <httpclient/HttpRequestManager.h>
-
 #include <httpcontroller/HttpRequestController.h>
-
 #include <httpcontroller/HttpRequestDefine.h>
 
 static RequestManager* gManager = nil;
@@ -42,7 +41,7 @@ static RequestManager* gManager = nil;
         self.delegateDictionary = [NSMutableDictionary dictionary];
         self.versionCode = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"Version"];
         
-        HttpClient::Init();
+//        HttpClient::Init();
         
         mHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
         mHttpRequestManagerUpload.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
@@ -52,12 +51,15 @@ static RequestManager* gManager = nil;
 }
 
 #pragma mark - 公共模块
-- (void)setLogEnable:(BOOL)enable {
++ (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
+    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogFileEnable(NO);
 }
 
-- (void)setLogDirectory:(NSString *)directory {
++ (void)setLogDirectory:(NSString *)directory {
     KLog::SetLogDirectory([directory UTF8String]);
+    CleanDir([directory UTF8String]);
 }
 
 - (void)setWebSite:(NSString * _Nonnull)webSite {

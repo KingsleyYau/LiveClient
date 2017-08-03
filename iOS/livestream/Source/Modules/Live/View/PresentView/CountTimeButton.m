@@ -33,13 +33,10 @@
 }
 
 - (void)stop {
-    NSLog(@"CountTimeButton::stop()");
-    
     self.countDownChanging = nil;
     self.countDownFinished = nil;
     self.touchedCountDownButtonHandler = nil;
     [self stopCountDown];
-    
 }
 
 #pragma mark touche action
@@ -120,7 +117,6 @@
 
 - (void)setHighlighted:(BOOL)highlighted {
     [super setHighlighted:highlighted];
-  
-    
 }
+
 @end

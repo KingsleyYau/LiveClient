@@ -27,6 +27,7 @@ class RtmpDump;
 class RtmpDumpCallback {
 public:
     virtual ~RtmpDumpCallback(){};
+    virtual void OnConnect(RtmpDump* rtmpDump) = 0;
     virtual void OnDisconnect(RtmpDump* rtmpDump) = 0;
     virtual void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) = 0;
     virtual void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
@@ -90,7 +91,7 @@ public:
      @param frame_size <#frame_size description#>
      @return <#return value description#>
      */
-    bool SendVideoFrame(char* frame, int frame_size);
+    bool SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp);
     void AddVideoTimestamp(u_int32_t timestamp);
     
     /**
@@ -109,14 +110,10 @@ public:
                         AudioFrameSoundSize sound_size,
                         AudioFrameSoundType sound_type,
                         char* frame,
-                        int frame_size
+                        int frame_size,
+                        u_int32_t timestamp
                         );
     void AddAudioTimestamp(u_int32_t timestamp);
-    
-    /**
-     重置音视频时间
-     */
-    void ResetTimestamp();
     
     /**
      断开连接
@@ -164,12 +161,10 @@ private:
     int mNaluHeaderSize;
     
     // 发包参数
+    u_int32_t mEncodeVideoTimestamp;
+    u_int32_t mEncodeAudioTimestamp;
     u_int32_t mSendVideoFrameTimestamp;
     u_int32_t mSendAudioFrameTimestamp;
-    
-    // 临时发送视频帧
-//    char* mpTempVideoBuffer;
-//    int mTempVideoBufferSize;
     
     // 临时发送音频帧
     char* mpTempAudioBuffer;
@@ -178,6 +173,12 @@ private:
     // 临时接收音频帧
     char* mpTempAudioRecvBuffer;
     int mTempAudioRecvBufferSize;
+    
+    // 是否播放流
+    bool mIsPlay;
+    // 是否已经连接
+    KMutex mConnectedMutex;
+    bool mIsConnected;
 };
 
 }

@@ -12,8 +12,10 @@
 
 #include <rtmpdump/PlayerController.h>
 
-#include <rtmpdump/VideoDecoderH264.h>
-#include <rtmpdump/AudioDecoderAAC.h>
+#include <rtmpdump/linux/VideoDecoderImp.h>
+#include <rtmpdump/linux/AudioDecoderImp.h>
+//#include <rtmpdump/VideoDecoderH264.h>
+//#include <rtmpdump/AudioDecoderAAC.h>
 
 using namespace coollive;
 class LSPlayerImp : public PlayerStatusCallback {

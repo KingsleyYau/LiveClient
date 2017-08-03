@@ -20,12 +20,15 @@ AudioHardDecoder::AudioHardDecoder()
 
 AudioHardDecoder::~AudioHardDecoder()
 {
-    Destroy();
+    Pause();
 }
 
 bool AudioHardDecoder::Create(AudioDecoderCallback* callback)
 {
     bool result = false;
+    
+    Pause();
+    
     if ( NULL != callback ) {
         mpCallback = callback;
         
@@ -41,7 +44,7 @@ bool AudioHardDecoder::Create(AudioDecoderCallback* callback)
     return result;
 }
 
-void AudioHardDecoder::Destroy() {   
+void AudioHardDecoder::Pause() {
     if( audioFileStream ) {
         AudioFileStreamClose(audioFileStream);
         audioFileStream = NULL;

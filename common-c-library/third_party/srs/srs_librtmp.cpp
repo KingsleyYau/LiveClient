@@ -35596,6 +35596,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         int64_t send_timeout;
         int64_t recv_bytes;
         int64_t send_bytes;
+        // Add by Max
+        bool connected;
         
         SrsBlockSyncSocket() {
             send_timeout = recv_timeout = ST_UTIME_NO_TIMEOUT;
@@ -35603,6 +35605,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             
             SOCKET_RESET(fd);
             SOCKET_SETUP();
+            
+            // Add by Max
+            connected = false;
         }
         
         virtual ~SrsBlockSyncSocket() {
@@ -35624,7 +35629,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     void srs_hijack_io_shutdown(srs_hijack_io_t ctx)
     {
         SrsBlockSyncSocket* skt = (SrsBlockSyncSocket*)ctx;
-        shutdown(skt->fd, SHUT_RDWR);
+        if( skt->connected ) {
+            shutdown(skt->fd, SHUT_RDWR);
+        } else {
+            SOCKET_CLOSE(skt->fd);
+        }
     }
     int srs_hijack_io_create_socket(srs_hijack_io_t ctx)
     {
@@ -35648,6 +35657,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         
         if(::connect(skt->fd, (const struct sockaddr*)&addr, sizeof(sockaddr_in)) < 0){
             return ERROR_SOCKET_CONNECT;
+        } else {
+            skt->connected = true;
         }
         
         return ERROR_SUCCESS;

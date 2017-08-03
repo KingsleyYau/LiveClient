@@ -4,7 +4,7 @@
 //
 //  Created on: 2017-03-27
 //      Author: Samson
-// Description: 用于存放H264解码后的1帧数据
+// Description: 用于存放音频解码后的1帧数据
 //
 
 #ifndef AudioFrame_h

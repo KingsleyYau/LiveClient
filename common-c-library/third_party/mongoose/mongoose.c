@@ -2743,6 +2743,16 @@ struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
   }
 }
 
+/*
+ * add by Samson 2017-07-18
+ * for shutdown conntion's socket
+ */
+void mg_shutdown(struct mg_connection *nc) {
+  if (NULL != nc) {
+    nc->iface->vtable->shutdown_conn(nc);
+  }
+}
+
 struct mg_connection *mg_bind(struct mg_mgr *srv, const char *address,
                               mg_event_handler_t event_handler) {
   struct mg_bind_opts opts;
@@ -3137,6 +3147,14 @@ void mg_socket_if_connect_udp(struct mg_connection *nc) {
                sizeof(optval));
   }
   nc->err = 0;
+}
+
+/*
+ * add by Samson 2017-07-18
+ * for shutdown conntion's socket
+ */
+void mg_socket_if_shutdown(struct mg_connection *nc) {
+  shutdown(nc->sock, 2);
 }
 
 int mg_socket_if_listen_tcp(struct mg_connection *nc,
@@ -3786,6 +3804,7 @@ void mg_socket_if_get_conn_addr(struct mg_connection *nc, int remote,
     mg_socket_if_destroy_conn,                                          \
     mg_socket_if_sock_set,                                              \
     mg_socket_if_get_conn_addr,                                         \
+    mg_socket_if_shutdown,                                              \
   }
 /* clang-format on */
 
@@ -9173,6 +9192,14 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
   MG_FREE(user);
   MG_FREE(pass);
   return nc;
+}
+
+// add by Samson 2017-07-18
+// for shutdown connection's socket
+void mg_connect_ws_shutdown(struct mg_connection *nc) {
+  if (nc != NULL) {
+    mg_shutdown(nc);
+  }
 }
 
 struct mg_connection *mg_connect_ws(struct mg_mgr *mgr,

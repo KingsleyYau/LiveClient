@@ -34,8 +34,10 @@
 @property (strong) NSString * _Nullable recordAACFilePath;
 
 @property (assign) BOOL isStart;
+@property (assign) BOOL isConnected;
 
-@property (assign) BOOL isRunning;
+#pragma mark - 重连线程
+@property (strong) dispatch_queue_t reconnect_queue;
 
 @end
 
@@ -53,6 +55,11 @@
     if(self = [super init] ) {
         NSLog(@"LiveStreamPlayer::init()");
         
+        self.reconnect_queue = dispatch_queue_create("_reconnect_queue", NULL);
+        
+        _isConnected = NO;
+        _isStart = NO;
+        
         self.player = [RtmpPlayerOC instance];
         self.player.delegate = self;
         
@@ -64,6 +71,7 @@
 
 - (void)dealloc {
     NSLog(@"LiveStreamPlayer::dealloc()");
+    
     [self stop];
 }
 
@@ -71,35 +79,23 @@
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
     NSLog(@"LiveStreamPlayer::playUrl( url : %@, recordFilePath : %@, recordH264FilePath : %@ )", url, recordFilePath, recordH264FilePath);
     
+    BOOL bFlag = YES;
+    
     self.url = url;
     self.recordFilePath = recordFilePath;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
 
-    [self stop];
-    
-    BOOL bFlag = YES;
-    @synchronized (self) {
-        self.isStart = YES;
-    }
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @synchronized (self) {
-            while (self.isStart && ![self start]) {
-                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Connect Fail] )");
-                usleep(1000 * 1000);
-            }
-        }
-    });
+    [self cancel];
+    [self run];
     
     return bFlag;
 }
 
 - (void)stop {
-    @synchronized (self) {
-        self.isStart = NO;
-        [self.player stop];
-    }
+    NSLog(@"LiveStreamPlayer::stop( url : %@ )", self.url);
+    
+    [self cancel];
 }
 
 #pragma mark - 私有方法
@@ -112,13 +108,26 @@
     }
 }
 
-- (BOOL)start {
-    NSLog(@"LiveStreamPlayer::start()");
-    BOOL bFlag = NO;
+- (void)run {
+    NSLog(@"LiveStreamPlayer::run()");
+    
+    @synchronized (self) {
+        self.isStart = YES;
+    }
+    
+    // 开始拉流
+    [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+}
 
-    bFlag = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
-
-    return bFlag;
+- (void)cancel {
+    NSLog(@"LiveStreamPlayer::cancel()");
+    
+    @synchronized (self) {
+        self.isStart = NO;
+    }
+    
+    // 停止推流
+    [self.player stop];
 }
 
 #pragma mark - 视频接收处理
@@ -132,15 +141,24 @@
 - (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
     NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect()");
     
-    // 断线重连
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @synchronized (self) {
-            while (self.isStart && ![self start]) {
-                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect Fail] )");
-                usleep(1000 * 1000);
-            }
+    @synchronized (self) {
+        self.isConnected = NO;
+        
+        if( self.isStart ) {
+            // 断线重新拉流
+            dispatch_async(self.reconnect_queue, ^{
+                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
+                [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            });
+            
+        } else {
+            // 停止推流
+            dispatch_async(self.reconnect_queue, ^{
+                NSLog(@"LiveStreamPlayer::rtmpPublisherOCOnDisconnect( [Disconnect] )");
+                [self.player stop];
+            });
         }
-    });
+    }
 }
 
 @end

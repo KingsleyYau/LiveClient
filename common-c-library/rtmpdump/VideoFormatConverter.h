@@ -24,7 +24,11 @@ public:
     ~VideoFormatConverter();
     
     bool SetDstFormat(VIDEO_FORMATE_TYPE type);
-    bool ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFrame);
+    bool ConvertDecodeFrame(VideoFrame* srcFrame, VideoFrame* dstFrame);
+    bool ConvertEncodeFrame(VideoFrame* srcFrame, VideoFrame* dstFrame);
+    
+private:
+    void ChangeContext(AVFrame *frame);
     
 private:
     // 格式转换Buffer

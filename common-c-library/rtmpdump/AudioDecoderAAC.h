@@ -9,13 +9,13 @@
 #ifndef RTMPDUMP_AUDIODECODERAAC_H_
 #define RTMPDUMP_AUDIODECODERAAC_H_
 
-#include "IDecoder.h"
 #include <sys/types.h>
 
 #include <string>
-
-#include "AudioFrame.h"
 using namespace std;
+
+#include <rtmpdump/IDecoder.h>
+#include <rtmpdump/AudioFrame.h>
 
 struct AVCodec;
 struct AVCodecContext;
@@ -29,8 +29,7 @@ public:
 	virtual ~AudioDecoderAAC();
 
 	bool Create(AudioDecoderCallback* callback);
-	void Destroy();
-    void Reset();
+	void Pause();
     void DecodeAudioFormat(
     		AudioFrameFormat format,
 			AudioFrameSoundRate sound_rate,

@@ -721,7 +721,7 @@ private:
     return result;
 }
 
-- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -746,7 +746,13 @@ private:
             strGiftId = [giftId UTF8String];
         }
         
-        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        string strGiftName;
+        if (nil != giftName) {
+            strGiftName = [giftName UTF8String];
+        }
+        
+        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, strGiftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        
     }
     return result;
 }

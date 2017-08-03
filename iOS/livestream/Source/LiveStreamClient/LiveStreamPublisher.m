@@ -13,16 +13,18 @@
 #import "GPUImageBeautifyFilter.h"
 #import "LFGPUImageBeautyFilter.h"
 
-#define VIDEO_CAPTURE_WIDTH 640
-#define VIDEO_CAPTURE_HEIGHT 480
+#pragma mark - 摄像头采集分辨率
+#define VIDEO_CAPTURE_WIDTH 480
+#define VIDEO_CAPTURE_HEIGHT 640
 
 @interface LiveStreamPublisher() <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate>
 
-@property (assign) BOOL isStart;
-@property (assign) BOOL isRunning;
 @property (strong) NSString * _Nonnull url;
 @property (strong) NSString * _Nullable recordH264FilePath;
 @property (strong) NSString * _Nullable recordAACFilePath;
+
+@property (assign) BOOL isStart;
+@property (assign) BOOL isConnected;
 
 #pragma mark - 传输处理
 /**
@@ -47,7 +49,7 @@
 /**
  视频输出处理
  */
-@property (nonatomic , strong) GPUImageRawDataOutput *output;
+@property (nonatomic, strong) GPUImageRawDataOutput *output;
 
 @property(nonatomic, strong) AVCaptureSession * flashSession;
 
@@ -73,6 +75,9 @@
  */
 @property (strong) dispatch_queue_t audio_capture_queue;
 
+#pragma mark - 重连线程
+@property (strong) dispatch_queue_t reconnect_queue;
+
 @end
 
 @implementation LiveStreamPublisher
@@ -86,10 +91,14 @@
 - (instancetype)init
 {
     if(self = [super init] ) {
-        self.publisher = [RtmpPublisherOC instance];
+        NSLog(@"LiveStreamPublisher::init()");
+        
+        self.reconnect_queue = dispatch_queue_create("_reconnect_queue", NULL);
+        
+        self.publisher = [RtmpPublisherOC instance:VIDEO_CAPTURE_WIDTH height:VIDEO_CAPTURE_HEIGHT];
         self.publisher.delegate = self;
         
-        _isRunning = NO;
+        _isConnected = NO;
         _isStart = NO;
         _beauty = YES;
         
@@ -104,37 +113,38 @@
 }
 
 - (void)dealloc {
+    NSLog(@"LiveStreamPublisher::dealloc()");
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [self stop];
 }
 
 #pragma mark - 对外接口
 - (BOOL)pushlishUrl:(NSString * _Nonnull)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath {
-    NSLog(@"LiveStreamPublisher::pushlishUrl( url : %@, recordH264FilePath : %@, recordAACFilePath : %@ )", url, recordH264FilePath, recordAACFilePath);
+    NSLog(@"LiveStreamPublisher::pushlishUrl( url : %@ )", url);
+    
+    BOOL bFlag = YES;
     
     self.url = url;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
 
-    [self stop];
-    
-    BOOL bFlag = NO;
-    @synchronized (self) {
-        self.isStart = YES;
-        bFlag = [self start];
-    }
+    [self cancel];
+    [self run];
     
     return bFlag;
 }
 
 - (void)stop {
-    @synchronized (self) {
-        self.isStart = NO;
-        [self cancel];
-    }
+    NSLog(@"LiveStreamPublisher::stop( url : %@ )", self.url);
+    
+    [self cancel];
 }
 
 - (void)rotateCamera {
+    // 切至前后摄像头
     [self.videoCaptureSession rotateCamera];
     // 设置后置摄像头不水平反转
     self.videoCaptureSession.horizontallyMirrorRearFacingCamera = NO;
@@ -226,52 +236,49 @@
     }
 }
 
-- (void)cancel {
-    NSLog(@"LiveStreamPublisher::cancel()");
-
-    if( self.isRunning == YES ) {
-        self.isRunning = NO;
-        
-        // 先停止采集
-        [self stopCapture];
-        
-        // 销毁编码器
-        [self.publisher stop];
+- (void)run {
+    NSLog(@"LiveStreamPublisher::run()");
+    
+    @synchronized (self) {
+        self.isStart = YES;
     }
-
+    
+    // 开始采集音视频
+    [self startCapture];
+    
+    // 开始推流
+    [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
 }
 
-- (BOOL)start {
-    NSLog(@"LiveStreamPublisher::start()");
+- (void)cancel {
+    NSLog(@"LiveStreamPublisher::cancel()");
     
-    BOOL bFlag = YES;
-
-    if( self.isRunning == NO ) {
-        self.isRunning = YES;
-        
-        bFlag = [self.publisher publishUrl:self.url width:VIDEO_CAPTURE_WIDTH height:VIDEO_CAPTURE_HEIGHT recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
-        if( bFlag ) {
-            // 开始采集音视频
-            [self startCapture];
-        }
-    }    
+    @synchronized (self) {
+        self.isStart = NO;
+    }
     
-    return bFlag;
+    // 停止采集音视频
+    [self stopCapture];
+    
+    // 停止推流
+    [self.publisher stop];
 }
 
 #pragma mark - 音视频采集
 - (void)initVideoCapture {
     // 创建视频采集器
+    // TODO:1.设置前置摄像头
     self.videoCaptureSession = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionFront];
+    // TODO:2.设置摄像头图像输出顺时针旋转90度
     self.videoCaptureSession.outputImageOrientation = UIInterfaceOrientationPortrait;
-    // 设置后置摄像头不水平反转
+    // TODO:3.设置后置摄像头不水平反转
     self.videoCaptureSession.horizontallyMirrorRearFacingCamera = NO;
-    // 设置前置摄像头水平反转
+    // TODO:4.设置前置摄像头水平反转
     self.videoCaptureSession.horizontallyMirrorFrontFacingCamera = YES;
-    // 设置帧数
+    // TODO:5.设置帧数
     self.videoCaptureSession.frameRate = FPS;
     
-    // 创建输出处理
+    // TODO:6.创建输出处理
     self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) resultsInBGRAFormat:YES];
     
     __weak typeof(self) weakSelf = self;
@@ -287,8 +294,12 @@
         
         ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
         if( ret == kCVReturnSuccess ) {
-            // 编码并发送视频帧
-            [weakSelf.publisher sendVideoFrame:pixelBuffer];
+//            @synchronized(weakSelf) {
+//                if( weakSelf.isConnected ) {
+                    // 编码并发送视频帧
+                    [weakSelf.publisher pushVideoFrame:pixelBuffer];
+//                }
+//            }
             CVPixelBufferRelease(pixelBuffer);
             
         } else {
@@ -298,10 +309,10 @@
         [weakOutput unlockFramebufferAfterReading];
     }];
     
-    // 创建美颜滤镜
+    // TODO:7.创建美颜滤镜
     self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
     self.beautyFilter.beautyLevel = 0.5;
-    //    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
+//    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
     
     if( _beauty ) {
         [self.videoCaptureSession addTarget:self.beautyFilter];
@@ -312,22 +323,22 @@
 }
 
 - (void)initAudioCapture {
-    // 创建音频采集队列
+    // TODO:1.创建音频采集队列
     self.audio_capture_queue = dispatch_queue_create("_audio_capture_queue", NULL);
     self.audioCaptureSession = [[AVCaptureSession alloc] init];
     
-    // 获取音频设备
+    // TODO:2.获取音频设备
     NSArray* audioDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio];
     if( audioDevices.count > 0 ) {
         self.audioCaptureDevice = [audioDevices lastObject];
         
-        // 增加音频采集处理
+        // TODO:3.创建音频采集处理
         self.audioCaptureInput = [[AVCaptureDeviceInput alloc] initWithDevice:self.audioCaptureDevice error:nil];
         if( [self.audioCaptureSession canAddInput:self.audioCaptureInput] ) {
             [self.audioCaptureSession addInput:self.audioCaptureInput];
         }
         
-        // 增加音频输出处理
+        // TODO:4.创建音频输出处理
         self.audioCaptureOutput = [[AVCaptureAudioDataOutput alloc] init];
         if ([self.audioCaptureSession canAddOutput:self.audioCaptureOutput]) {
             [self.audioCaptureSession addOutput:self.audioCaptureOutput];
@@ -360,27 +371,41 @@
     if( self.audioCaptureOutput == captureOutput ) {
         if( sampleBuffer ) {
             // 获取到音频PCM
-            [self.publisher sendAudioFrame:sampleBuffer];
+//            @synchronized(self) {
+//                if( self.isConnected ) {
+                    [self.publisher pushAudioFrame:sampleBuffer];
+//                }
+//            }
         }
     }
 }
 
 #pragma mark - 视频接收处理
+- (void)rtmpPublisherOCOnConnect:(RtmpPublisherOC * _Nonnull)rtmpClient {
+    @synchronized (self) {
+        self.isConnected = YES;
+    }
+}
+
 - (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)publisher {
-    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect()");
-//    dispatch_async(dispatch_get_main_queue(), ^{
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        @synchronized (self) {
-            // 先停止
-            [self cancel];
+    @synchronized (self) {
+        self.isConnected = NO;
+        
+        if( self.isStart ) {
+            // 断线重新推流
+            dispatch_async(self.reconnect_queue, ^{
+                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
+                [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            });
             
-            // 断线重连
-            if( self.isStart ) {
-                // 重连
-                [self start];
-            }
+        } else {
+            // 停止推流
+            dispatch_async(self.reconnect_queue, ^{
+                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Disconnect] )");
+                [self.publisher stop];
+            });
         }
-    });
+    }
 }
 
 #pragma mark - 视频采集后台
@@ -390,8 +415,8 @@
 }
 
 - (void)willEnterForeground:(NSNotification *)notification {
-    [self.videoCaptureSession resumeCameraCapture];
     [UIApplication sharedApplication].idleTimerDisabled = YES;
+    [self.videoCaptureSession resumeCameraCapture];
 }
 
 @end

@@ -47,6 +47,12 @@ static IMManager* gManager = nil;
 #pragma mark - IM回调
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
     NSLog(@"IMManager::onLogin( errType : %d, errmsg : %@ )", errType, errmsg);
+    
+    if( errType == LCC_ERR_CONNECTFAIL ) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self.client login:self.loginManager.loginItem.userId token:self.loginManager.loginItem.token];
+        });
+    }
 }
 
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
@@ -54,7 +60,7 @@ static IMManager* gManager = nil;
     
     if( errType != LCC_ERR_SVRBREAK ) {
         // 不是被服务器踢下线, 需要重新登录
-        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             [self.client login:self.loginManager.loginItem.userId token:self.loginManager.loginItem.token];
         });
     }

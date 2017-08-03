@@ -64,6 +64,7 @@
 		5063A3F81ECE99F200361942 /* HotTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063A3F51ECE99F200361942 /* HotTableView.m */; };
 		5063A4051ECECA3200361942 /* UIWidgetBundle.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D6DDB1EC979C1007FF4C6 /* UIWidgetBundle.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 506B52FC1EE1135700803BD2 /* GiftItem.m */; };
+		506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 506D60651F0F14AD002CAD3C /* InfoPlist.strings */; };
 		506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */; };
 		507315C21EE9346E005D1C0B /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C11EE9346E005D1C0B /* LikeView.m */; };
 		507315C61EE944F6005D1C0B /* GiftComboManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C51EE944F6005D1C0B /* GiftComboManager.m */; };
@@ -151,6 +152,7 @@
 		50BF29031E98976E00B8ED5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50BF29021E98976E00B8ED5D /* Assets.xcassets */; };
 		50BF29061E98976E00B8ED5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50BF29041E98976E00B8ED5D /* LaunchScreen.storyboard */; };
 		50BF29121E9897C600B8ED5D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BF290F1E9897C600B8ED5D /* AppDelegate.m */; };
+		50CD622D1F17282F0083E0FF /* TableSuperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CD622C1F17282F0083E0FF /* TableSuperView.m */; };
 		50D1BAC91E98D67400088B9D /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BAC81E98D67400088B9D /* VideoToolbox.framework */; };
 		50D1BACB1E98D67E00088B9D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BACA1E98D67E00088B9D /* AVFoundation.framework */; };
 		50D1BACF1E98D6A300088B9D /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BACE1E98D6A300088B9D /* libz.tbd */; };
@@ -388,6 +390,8 @@
 		5063A3F51ECE99F200361942 /* HotTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotTableView.m; sourceTree = "<group>"; };
 		506B52FB1EE1135700803BD2 /* GiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftItem.h; sourceTree = "<group>"; };
 		506B52FC1EE1135700803BD2 /* GiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftItem.m; sourceTree = "<group>"; };
+		506D60661F0F14AD002CAD3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		506D606C1F0F160B002CAD3C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		506E416E1F0B276E0041FBEE /* LiveGiftDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveGiftDownloadManager.h; sourceTree = "<group>"; };
 		506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveGiftDownloadManager.m; sourceTree = "<group>"; };
 		507315C01EE9346E005D1C0B /* LikeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LikeView.h; sourceTree = "<group>"; };
@@ -541,6 +545,8 @@
 		50BF290F1E9897C600B8ED5D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		50BF29141E9897E000B8ED5D /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Modules/Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
 		50BF29241E9897ED00B8ED5D /* RtmpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RtmpClient.xcodeproj; path = ../../Modules/RtmpClient/RtmpClient.xcodeproj; sourceTree = "<group>"; };
+		50CD622B1F17282F0083E0FF /* TableSuperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableSuperView.h; sourceTree = "<group>"; };
+		50CD622C1F17282F0083E0FF /* TableSuperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableSuperView.m; sourceTree = "<group>"; };
 		50D1BAC81E98D67400088B9D /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		50D1BACA1E98D67E00088B9D /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		50D1BACC1E98D69000088B9D /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
@@ -852,6 +858,7 @@
 			children = (
 				509198321EDEA32C00D26A7B /* Barrage */,
 				505591961EF3FD9E000AF03A /* BigGiftAnimationView */,
+				50CD622A1F17282F0083E0FF /* ChatTableShadowView */,
 				5092959C1ECD6CA500111128 /* ChatTextView */,
 				5027D5AD1EF9060F00EE3B0E /* DeleteTipView */,
 				509911311EDFB8FA003B6813 /* GiftCombo */,
@@ -1233,6 +1240,7 @@
 		50BF28F61E98976E00B8ED5D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				506D60651F0F14AD002CAD3C /* InfoPlist.strings */,
 				50F2A9E31ED9811400F7EA6D /* Localizable.strings */,
 				50BF29021E98976E00B8ED5D /* Assets.xcassets */,
 				50BF29071E98976E00B8ED5D /* Info.plist */,
@@ -1275,6 +1283,15 @@
 				50BF29291E9897ED00B8ED5D /* libRtmpClient.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		50CD622A1F17282F0083E0FF /* ChatTableShadowView */ = {
+			isa = PBXGroup;
+			children = (
+				50CD622B1F17282F0083E0FF /* TableSuperView.h */,
+				50CD622C1F17282F0083E0FF /* TableSuperView.m */,
+			);
+			path = ChatTableShadowView;
 			sourceTree = "<group>";
 		};
 		50D1BADA1E98EA0300088B9D /* LiveStreamClient */ = {
@@ -1481,6 +1498,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5099112C1EDFA3B5003B6813 /* PrePublishViewController.xib in Resources */,
+				506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */,
 				5099115F1EE01563003B6813 /* PublishEndViewController.xib in Resources */,
 				5095E4141ED6DD04004FFA3B /* CountryTableViewCell.xib in Resources */,
 				5027D57E1EF9054A00EE3B0E /* ManageCoverController.xib in Resources */,
@@ -1606,6 +1624,7 @@
 				509198471EDEA59300D26A7B /* BarrageModel.m in Sources */,
 				509A8DF01ECC4F13004720CF /* RegisterItemObject.m in Sources */,
 				50D649961EE4F04C00D71AAF /* SearchTableViewCell.m in Sources */,
+				50CD622D1F17282F0083E0FF /* TableSuperView.m in Sources */,
 				5042C1051ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m in Sources */,
 				50A833901E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m in Sources */,
 				5027D55C1EF8FC0300EE3B0E /* CoverPhotoItemObject.m in Sources */,
@@ -1735,6 +1754,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		506D60651F0F14AD002CAD3C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				506D60661F0F14AD002CAD3C /* Base */,
+				506D606C1F0F160B002CAD3C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		509911041EDFA107003B6813 /* LoginViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

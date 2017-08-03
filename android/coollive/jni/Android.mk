@@ -1,5 +1,5 @@
-# Copyright (C) 2014 The LiveStream Project
-# LiveStream Project Main Makefile
+# Copyright (C) 2014 The CoolLive Project
+# CoolLive Project Main Makefile
 #
 # Created on: 2014/10/27
 # Author: Max.Chiu

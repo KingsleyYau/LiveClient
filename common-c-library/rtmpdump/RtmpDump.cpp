@@ -69,14 +69,15 @@ RtmpDump::RtmpDump()
     
     mNaluHeaderSize = 0;
     
+    mEncodeVideoTimestamp = 0;
+    mEncodeAudioTimestamp = 0;
     mSendVideoFrameTimestamp = 0;
     mSendAudioFrameTimestamp = 0;
     
-    mpRecvRunnable = new RecvRunnable(this);
+    mIsPlay = true;
+    mIsConnected = false;
     
-//    mTempVideoBufferSize = DEFAULT_VIDEO_FRAME_SIZE;
-//    mpTempVideoBuffer = NULL;
-//    mpTempVideoBuffer = new char[mTempVideoBufferSize];
+    mpRecvRunnable = new RecvRunnable(this);
     
     mTempAudioBufferSize = DEFAULT_AUDIO_FRAME_SIZE;
     mpTempAudioBuffer = new char[mTempAudioBufferSize];
@@ -110,7 +111,7 @@ void RtmpDump::SetCallback(RtmpDumpCallback* callback) {
 }
 
 bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath) {
-    bool bFlag = false;
+    bool bFlag = true;
     
 //    FileLog("rtmpdump", "RtmpDump::PlayUrl( "
 //    		"this : %p, "
@@ -125,24 +126,10 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const st
         Stop();
     }
     
+    mIsPlay = true;
     mpRtmp = srs_rtmp_create(url.c_str());
     
-    bFlag = (0 == srs_rtmp_handshake(mpRtmp));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PlayUrl( [srs_rtmp_handshake fail] )");
-    }
-    
-    bFlag = (bFlag && (0 == srs_rtmp_connect_app(mpRtmp)));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PlayUrl( [srs_rtmp_connect_app fail] )");
-    }
-    
-    bFlag = (bFlag && (0 == srs_rtmp_play_stream(mpRtmp)));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PlayUrl( [srs_rtmp_play_stream fail] )");
-    }
-    
-    if( bFlag ) {
+    if( bFlag && mpRtmp ) {
         // 创建FLV文件
         mRecordFlvFilePath = recordFilePath;
         if( mRecordFlvFilePath.length() > 0 ) {
@@ -215,7 +202,7 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const st
 }
 
 bool RtmpDump::PublishUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath) {
-    bool bFlag = false;
+    bool bFlag = true;
     
 //    FileLog("rtmpdump", "RtmpDump::PublishUrl( "
 //    		"this : %p, "
@@ -230,24 +217,10 @@ bool RtmpDump::PublishUrl(const string& url, const string& recordFilePath, const
         Stop();
     }
     
+    mIsPlay = false;
     mpRtmp = srs_rtmp_create(url.c_str());
     
-    bFlag = (0 == srs_rtmp_handshake(mpRtmp));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PublishUrl( [srs_rtmp_handshake fail] )");
-    }
-    
-    bFlag = (bFlag && (0 == srs_rtmp_connect_app(mpRtmp)));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PublishUrl( [srs_rtmp_connect_app fail] )");
-    }
-    
-    bFlag = (bFlag && (0 == srs_rtmp_publish_stream(mpRtmp)));
-    if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::PublishUrl( [srs_rtmp_publish_stream fail] )");
-    }
-    
-    if( bFlag ) {
+    if( bFlag && mpRtmp ) {
         mRecordH264FilePath = recordFilePath;
         if( mRecordH264FilePath.length() > 0 ) {
             mpRecordH264File = fopen(mRecordH264FilePath.c_str(), "w+b");
@@ -263,9 +236,6 @@ bool RtmpDump::PublishUrl(const string& url, const string& recordFilePath, const
                 fseek(mpRecordAACFile, 0L, SEEK_END);
             }
         }
-    
-        mSendVideoFrameTimestamp = 0;
-        mSendAudioFrameTimestamp = 0;
         
         mbRunning = true;
         mRecvThread.Start(mpRecvRunnable);
@@ -301,14 +271,58 @@ void RtmpDump::ReadPackage() {
     char* frame = NULL;
     int frame_size = 0;
     
-    FileLog("rtmpdump", "RtmpDump::ReadPackage( "
-    		"[Start], "
-    		"this : %p "
-    		")",
-			this
-			);
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::ReadPackage( "
+                 "[Start], "
+                 "this : %p "
+                 ")",
+                 this
+                 );
     
-    while( mbRunning && 0 == srs_rtmp_read_packet(mpRtmp, &type, &timestamp, &frame, &frame_size) ) {
+    bool bFlag = (0 == srs_rtmp_handshake(mpRtmp));
+    if( bFlag ) {
+        bFlag = (0 == srs_rtmp_connect_app(mpRtmp));
+        if( bFlag ) {
+            if( mIsPlay ) {
+                bFlag = (0 == srs_rtmp_play_stream(mpRtmp));
+                if( !bFlag ) {
+                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_play_stream fail] )");
+                }
+            } else {
+                bFlag = (0 == srs_rtmp_publish_stream(mpRtmp));
+                if( !bFlag ) {
+                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_publish_stream fail] )");
+                }
+            }
+        } else {
+            FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_connect_app fail] )");
+        }
+    } else {
+        FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_handshake fail] )");
+    }
+    
+    // 标记为已经连接上服务器
+    if( bFlag ) {
+        mConnectedMutex.lock();
+        mIsConnected = true;
+        mEncodeVideoTimestamp = 0;
+        mEncodeAudioTimestamp = 0;
+        mSendVideoFrameTimestamp = 0;
+        mSendAudioFrameTimestamp = 0;
+        mConnectedMutex.unlock();
+        
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_WARNING,
+                     "RtmpDump::ReadPackage( [Connected] )"
+                     );
+        
+        if( mpRtmpDumpCallback ) {
+            mpRtmpDumpCallback->OnConnect(this);
+        }
+    }
+    
+    while( bFlag && mbRunning && 0 == srs_rtmp_read_packet(mpRtmp, &type, &timestamp, &frame, &frame_size) ) {
         if( pre_now == -1 ) {
             pre_now = srs_utils_time_ms();
         }
@@ -320,7 +334,6 @@ void RtmpDump::ReadPackage() {
 //            break;
 //        }
         
-        
         pre_timestamp = timestamp;
         pre_now = srs_utils_time_ms();
         
@@ -328,7 +341,6 @@ void RtmpDump::ReadPackage() {
             Flv2Audio(frame, frame_size, timestamp);
             
         } else if( type == SRS_RTMP_TYPE_VIDEO ) {
-//            FileLog("RtmpDump", "RtmpDump::OnRecvVideoFrame(\t\ttimestamp : %d, size : %d )", timestamp, frame_size);
             Flv2Video(frame, frame_size, timestamp);
         }
         
@@ -349,29 +361,35 @@ void RtmpDump::ReadPackage() {
         if( mpFlv ) {
             if( is_flv_msg ) {
                 if( srs_flv_write_tag(mpFlv, type, timestamp, frame, frame_size) != 0 ) {
-//                    FileLog("RtmpDump", "RtmpDump::ReadPackage( dump rtmp packet failed )");
+//                    FileLog("RtmpDump", "RtmpDump::ReadPackage( [srs_flv_write_tag fail] )");
                 }
             } else {
-//                FileLog("RtmpDump", "RtmpDump::ReadPackage( drop message type=%#x, size=%dB )", type, frame_size);
+//                FileLog("RtmpDump", "RtmpDump::ReadPackage( [drop message type=%#x, size=%dB] )", type, frame_size);
             }
         }
         
         free(frame);
     }
     
-    FileLog("rtmpdump", "RtmpDump::ReadPackage( "
-    		"[Exit], "
-    		"this : %p "
-    		")",
-			this
-			);
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::ReadPackage( "
+                 "[Exit], "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
+    mConnectedMutex.lock();
+    mIsConnected = false;
+    mConnectedMutex.unlock();
     
     if( mpRtmpDumpCallback ) {
         mpRtmpDumpCallback->OnDisconnect(this);
     }
 }
 
-bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
+bool RtmpDump::SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp) {
     bool bFlag = false;
     int ret = 0;
 //    int nb_start_code = 0;
@@ -390,7 +408,8 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
 //    }
     
     mClientMutex.lock();
-    if( mbRunning && mpRtmp ) {
+    mConnectedMutex.lock();
+    if( mbRunning && mpRtmp && mIsConnected ) {
 //        // 判断是否{0x00, 0x00, 0x00, 0x01}开头
 //        if( !srs_h264_startswith_annexb(frame, frame_size, &nb_start_code) ) {
 //            // Add NALU start code
@@ -401,15 +420,32 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
 //            sendFrame = mpTempVideoBuffer;
 //            sendSize = sizeof(nalu) + frame_size;
 //        }
+
+        // 计算RTMP时间戳
+        int sendTimestamp = 0;
+        
+        // 第一帧
+        if( mEncodeVideoTimestamp == 0 ) {
+            mEncodeVideoTimestamp = timestamp;
+        }
+        
+        // 当前帧比上一帧时间戳大, 计算时间差
+        if( timestamp > mEncodeVideoTimestamp ) {
+            sendTimestamp = timestamp - mEncodeVideoTimestamp;
+        }
+        
+        // 生成RTMP相对时间戳
+        mSendVideoFrameTimestamp += sendTimestamp;
+        mEncodeVideoTimestamp = timestamp;
         
         // 因为没有B帧, 所以dts和pts一样就可以
-//        FileLog("rtmpdump", "RtmpDump::SendVideoFrame( mSendVideoFrameTimestamp : %d )", mSendVideoFrameTimestamp);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( timestamp : %u, frameType : 0x%x )", mSendVideoFrameTimestamp, sendFrame[0]);
         ret = srs_h264_write_raw_frame_without_startcode(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
         if (ret != 0) {
             bFlag = true;
             
             if (srs_h264_is_dvbsp_error(ret)) {
-                FileLog("rtmpdump", "RtmpDump::SendVideoFrame( ignore drop video error, code=%d )", ret);
+//                FileLog("rtmpdump", "RtmpDump::SendVideoFrame( ignore drop video error, code=%d )", ret);
                 
             } else if (srs_h264_is_duplicated_sps_error(ret)) {
 //                FileLog("rtmpdump", "ignore duplicated sps, code=%d", ret);
@@ -426,13 +462,18 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
         }
         
     }
+    mConnectedMutex.unlock();
     mClientMutex.unlock();
     
     if( !bFlag ) {
-        FileLog("rtmpdump", "RtmpDump::SendVideoFrame( send h264 raw data failed. ret=%d )", ret);
-        
-        srs_rtmp_shutdown(mpRtmp);
-        
+        mConnectedMutex.lock();
+        if( mIsConnected ) {
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendVideoFrame( send h264 raw data failed. ret=%d )", ret);
+            
+            srs_rtmp_shutdown(mpRtmp);
+        }
+        mConnectedMutex.unlock();
+    
     } else {
         // 5bits, 7.3.1 NAL unit syntax,
         // H.264-AVC-ISO_IEC_14496-10.pdf, page 44.
@@ -444,6 +485,10 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
         
         // Write to H264 file
         if( mpRecordH264File ) {
+            // Write NALU start code
+            fwrite(NaluStartCode, 1, sizeof(NaluStartCode), mpRecordH264File);
+            
+            // Write playload
             fwrite(sendFrame, 1, sendSize, mpRecordH264File);
             
             fflush(mpRecordH264File);
@@ -455,18 +500,21 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size) {
 }
 
 void RtmpDump::AddVideoTimestamp(u_int32_t timestamp) {
-    mClientMutex.lock();
-    mSendVideoFrameTimestamp += timestamp;
-    mClientMutex.unlock();
+    mConnectedMutex.lock();
+    if( mIsConnected ) {
+        mSendVideoFrameTimestamp += timestamp;
+    }
+    mConnectedMutex.unlock();
 }
-
+    
 bool RtmpDump::SendAudioFrame(
                               AudioFrameFormat sound_format,
                               AudioFrameSoundRate sound_rate,
                               AudioFrameSoundSize sound_size,
                               AudioFrameSoundType sound_type,
                               char* frame,
-                              int frame_size
+                              int frame_size,
+                              u_int32_t timestamp
                               ) {
     bool bFlag = false;
     int ret = 0;
@@ -487,20 +535,44 @@ bool RtmpDump::SendAudioFrame(
         memcpy(mpTempAudioBuffer + ADTS_HEADER_SIZE, frame, frame_size);
         
         mClientMutex.lock();
-        if( mbRunning && mpRtmp ) {
-//            FileLog("rtmpdump", "RtmpDump::SendAudioFrame( mSendAudioFrameTimestamp : %d )", mSendAudioFrameTimestamp);
+        mConnectedMutex.lock();
+        if( mbRunning && mpRtmp && mIsConnected ) {
+            // 计算RTMP时间戳
+            int sendTimestamp = 0;
+            
+            // 第一帧
+            if( mEncodeAudioTimestamp == 0 ) {
+                mEncodeAudioTimestamp = timestamp;
+            }
+            
+            // 当前帧比上一帧时间戳大, 计算时间差
+            if( timestamp > mEncodeAudioTimestamp ) {
+                sendTimestamp = timestamp - mEncodeAudioTimestamp;
+            }
+            
+            // 生成RTMP相对时间戳
+            mSendAudioFrameTimestamp += sendTimestamp;
+            mEncodeAudioTimestamp = timestamp;
+            
+            FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( timestamp : %u )", mSendAudioFrameTimestamp);
             if( (ret = srs_audio_write_raw_frame(mpRtmp, sound_format, sound_rate, sound_size, sound_type, mpTempAudioBuffer, ADTS_HEADER_SIZE + frame_size, mSendAudioFrameTimestamp)) == 0 ) {
                 bFlag = true;
                 
             }
         }
+        mConnectedMutex.unlock();
         mClientMutex.unlock();
         
         if( !bFlag ) {
-            FileLog("rtmpdump", "RtmpDump::SendAudioFrame( send audio raw data failed. ret=%d )", ret);
+            mConnectedMutex.lock();
+            if( mIsConnected ) {
+                FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( [send audio raw data failed. ret=%d], timestamp : %u )", ret, mSendAudioFrameTimestamp);
+                
+                srs_rtmp_shutdown(mpRtmp);
+            }
+            mConnectedMutex.unlock();
             
         } else {
-            
             // Write to AAC file
             if( mpRecordAACFile ) {
                 fwrite(mpTempAudioBuffer, 1, ADTS_HEADER_SIZE + frame_size, mpRecordAACFile);
@@ -514,18 +586,13 @@ bool RtmpDump::SendAudioFrame(
 }
 
 void RtmpDump::AddAudioTimestamp(u_int32_t timestamp) {
-    mClientMutex.lock();
-    mSendAudioFrameTimestamp += timestamp;
-    mClientMutex.unlock();
+    mConnectedMutex.lock();
+    if( mIsConnected ) {
+        mSendAudioFrameTimestamp += timestamp;
+    }
+    mConnectedMutex.unlock();
 }
 
-void RtmpDump::ResetTimestamp() {
-    mClientMutex.lock();
-    mSendVideoFrameTimestamp = 0;
-    mSendAudioFrameTimestamp = 0;
-    mClientMutex.unlock();
-}
-    
 void RtmpDump::Stop() {
 //    FileLog("rtmpdump", "RtmpDump::Stop( "
 //    		"this : %p, "
@@ -715,7 +782,25 @@ bool RtmpDump::FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp) {
                     break;
                 }
                 
-                if (mpSps == NULL) {
+                bool bSpsChange = true;
+                if( mpSps != NULL ) {
+                    if( mSpsSize == spsLen ) {
+                        if( 0 != memcmp(mpSps, pStart, spsLen) ) {
+                            bSpsChange = true;
+                            
+                        } else {
+                            bSpsChange = false;
+                            
+                        }
+                    }
+                }
+                
+                if ( bSpsChange ) {
+                    if( mpSps ) {
+                        delete[] mpSps;
+                        mpSps = NULL;
+                    }
+                    
                     mSpsSize = spsLen;
                     mpSps = new char[mSpsSize];
                     memcpy(mpSps, pStart, mSpsSize);
@@ -730,16 +815,6 @@ bool RtmpDump::FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp) {
                         
                         fflush(mpRecordH264File);
                     }
-                    
-//                    if (mpRecordH264FullFile) {
-//                        // Write NALU start code
-//                        fwrite(NaluStartCode, 1, sizeof(NaluStartCode), mpRecordH264FullFile);
-//                        
-//                        // Write playload
-//                        fwrite(mpSps, 1, mSpsSize, mpRecordH264FullFile);
-//                        
-//                        fflush(mpRecordH264FullFile);
-//                    }
                 }
                 
                 pStart += spsLen;
@@ -755,7 +830,25 @@ bool RtmpDump::FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp) {
                     break;
                 }
                 
-                if (mpPps == NULL) {
+                bool bPpsChange = true;
+                if( mpPps != NULL ) {
+                    if( mPpsSize == ppsLen ) {
+                        if( 0 != memcmp(mpPps, pStart, spsLen) ) {
+                            bPpsChange = true;
+                            
+                        } else {
+                            bPpsChange = false;
+                            
+                        }
+                    }
+                }
+                
+                if ( bPpsChange ) {
+                    if( mpPps ) {
+                        delete[] mpPps;
+                        mpPps = NULL;
+                    }
+                    
                     mPpsSize = ppsLen;
                     mpPps = new char[mPpsSize];
                     memcpy(mpPps, pStart, mPpsSize);
@@ -770,16 +863,6 @@ bool RtmpDump::FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp) {
                         
                         fflush(mpRecordH264File);
                     }
-                    
-//                    if (mpRecordH264FullFile) {
-//                        // Write NALU start code
-//                        fwrite(NaluStartCode, 1, sizeof(NaluStartCode), mpRecordH264FullFile);
-//                        
-//                        // Write playload
-//                        fwrite(mpSps, 1, mSpsSize, mpRecordH264FullFile);
-//                        
-//                        fflush(mpRecordH264FullFile);
-//                    }
                 }
                 
                 pStart += ppsLen;
@@ -864,16 +947,6 @@ bool RtmpDump::FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp) {
                             
                             fflush(mpRecordH264File);
                         }
-                        
-//                        if (mpRecordH264FullFile) {
-//                            // Write NALU start code
-//                            fwrite(NaluStartCode, 1, sizeof(NaluStartCode), mpRecordH264FullFile);
-//                            
-//                            // Write playload
-//                            fwrite(NaluHeader, 1, mNaluHeaderSize + NaluSize, mpRecordH264File);
-//                            
-//                            fflush(mpRecordH264FullFile);
-//                        }
                     }
                     
                     // 寻找下一帧开头

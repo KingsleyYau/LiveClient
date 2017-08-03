@@ -25,6 +25,7 @@
 @class RtmpPublisherOC;
 @protocol RtmpPublisherOCDelegate <NSObject>
 @optional
+- (void)rtmpPublisherOCOnConnect:(RtmpPublisherOC * _Nonnull)rtmpClient;
 - (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)rtmpClient;
 @end
 
@@ -36,25 +37,22 @@
 
 #pragma mark - 获取实例
 /**
- *  获取实例
- *
- *  @return 实例
+ 获取实例
+ @param width 视频宽
+ @param height 视频高
+ @return 实例
  */
-+ (instancetype _Nonnull)instance;
++ (instancetype _Nonnull)instance:(NSInteger)width height:(NSInteger)height;
 
 /**
  发布流连接
  
  @param url 连接
- @param width 视频宽
- @param height 视频高
  @param recordH264FilePath H264录制路径
  @param recordAACFilePath AAC录制路径
  @return 成功失败
  */
 - (BOOL)publishUrl:(NSString * _Nonnull)url
-             width:(NSInteger)width
-            height:(NSInteger)height
 recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
 
@@ -63,13 +61,13 @@ recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  
  @param pixelBuffer 视频数据
  */
-- (void)sendVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer;
+- (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer;
 
 /**
  发送音频帧
  @param sampleBuffer 音频数据
  */
-- (void)sendAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer;
+- (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer;
 
 /**
  停止

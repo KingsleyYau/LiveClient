@@ -22,6 +22,8 @@
 
 @property (nonatomic, weak) UIButton *btnFifty;
 
+@property (nonatomic, assign) NSInteger indextPathRow;
+
 /**
  *  多功能按钮约束
  */
@@ -62,6 +64,8 @@
         [self bringSubviewToFront:self.sendView];
         
         self.pageViewTopOffset.constant = DESGIN_TRANSFORM_3X(8);
+        
+        self.indextPathRow = -1;
     }
     return self;
 }
@@ -100,12 +104,30 @@
     
     [cell updataCellViewItem:item];
     
+    BOOL isIndexPath = NO;
+    
+    if (self.indextPathRow == indexPath.row) {
+        isIndexPath = YES;
+        
+    }else if (self.indextPathRow == -1 && indexPath.row == 0){
+        self.indextPathRow = 0;
+        isIndexPath = YES;
+    }
+    
+    if (isIndexPath) {
+        cell.selectCell = YES;
+        self.isCellSelect = YES;
+        [self selectOneNum:cell];
+        self.selectCellItem = item;
+    }
+    
+    [cell reloadStyle];
+    
     // 刷新页数 小高表布局
     GiftItemLayout *layout = (GiftItemLayout *)self.collectionView.collectionViewLayout;
     if( self.pageView.numberOfPages != layout.pageCount ) {
         self.pageView.numberOfPages = layout.pageCount;
     }
-
     return cell;
 }
 
@@ -117,28 +139,15 @@
         
     }else{
         
-        for (GiftItemCollectionViewCell *cell in collectionView.visibleCells) {
-            
-            if ([cell isEqual:(GiftItemCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath]]) {
-                continue;
-            }
-            cell.selectCell = NO;
-            self.isCellSelect = NO;
-            [cell reloadStyle];
-        }
+        self.indextPathRow = indexPath.row;
+        [self.collectionView reloadData];
         
-        GiftItemCollectionViewCell* cell = (GiftItemCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-        if (cell.selectCell == NO) {
-            
-            cell.selectCell = YES;
-            self.isCellSelect = YES;
-            [self selectOneNum:cell];
-            
-        }else {
-            cell.selectCell = NO;
-            self.isCellSelect = NO;
-        }
-        [cell reloadStyle];
+        [UIView setAnimationsEnabled: NO ];
+        [collectionView performBatchUpdates:^{
+            [collectionView reloadData];
+        } completion:^( BOOL  finished) {
+            [UIView setAnimationsEnabled: YES ];
+        }];
     }
     
     
@@ -148,15 +157,6 @@
     if (self.presentDelegate && [self.presentDelegate respondsToSelector:@selector(presentViewdidSelectItemWithSelf:atIndexPath:)]) {
         [self.presentDelegate presentViewdidSelectItemWithSelf:self atIndexPath:indexPath];
     }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
-    
-    for (GiftItemCollectionViewCell *cell in collectionView.visibleCells) {
-        cell.selectCell = NO;
-        [cell reloadStyle];
-    }
-    
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
@@ -178,7 +178,6 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
     
     if (self.buttonBar.height) {
-    
         [self hideButtonBar];
     }
 }

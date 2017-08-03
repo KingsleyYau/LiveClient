@@ -3039,6 +3039,10 @@ struct mg_iface_vtable {
   /* Put connection's address into *sa, local (remote = 0) or remote. */
   void (*get_conn_addr)(struct mg_connection *nc, int remote,
                         union socket_address *sa);
+    
+  // add by Samson 2017-07-18
+  /* Perform interface-related shutdown connection. */
+  void (*shutdown_conn)(struct mg_connection *nc);
 };
 
 extern struct mg_iface_vtable *mg_ifaces[];
@@ -3622,6 +3626,12 @@ struct mg_connection *mg_connect(struct mg_mgr *mgr, const char *address,
 struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
                                      mg_event_handler_t handler,
                                      struct mg_connect_opts opts);
+    
+/*
+ * add by Samson 2017-07-18
+ * for shutdown connection's socket
+ */
+void mg_shutdown(struct mg_connection *nc);
 
 #if MG_ENABLE_SSL && MG_NET_IF != MG_NET_IF_SIMPLELINK
 /*
@@ -4274,6 +4284,12 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
                                         struct mg_connect_opts opts,
                                         const char *url, const char *protocol,
                                         const char *extra_headers);
+    
+/*
+ * add by Samson 2017-07-18
+ * for shutdown connection's socket
+ */
+void mg_connect_ws_shutdown(struct mg_connection *nc);
 
 /*
  * Send WebSocket frame to the remote end.

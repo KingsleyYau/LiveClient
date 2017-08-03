@@ -10,6 +10,7 @@
 #define VideoHardDecoder_h
 
 #include <rtmpdump/IDecoder.h>
+
 #include <VideoToolbox/VideoToolbox.h>
 
 namespace coollive {
@@ -43,6 +44,10 @@ private:
                                      );
     // 硬解码回调
     void DecodeCallbackProc(void* frame, u_int32_t timestamp);
+    
+private:
+    bool CreateContext();
+    void DestroyContext();
     
 private:
     VideoDecoderCallback* mpCallback;

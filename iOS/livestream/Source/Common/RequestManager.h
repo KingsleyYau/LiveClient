@@ -34,21 +34,24 @@
  *
  *  @param enable <#enable description#>
  */
-- (void)setLogEnable:(BOOL)enable;
-
++ (void)setLogEnable:(BOOL)enable;
 /**
  *  设置接口目录
  *
  *  @param directory 可写入目录
  */
-- (void)setLogDirectory:(NSString * _Nonnull)directory;
-
++ (void)setLogDirectory:(NSString * _Nonnull)directory;
 /**
  *  设置接口服务器域名
  *
- *  @param webSite 接口服务器域名
+ *  @param webSite 服务器域名
  */
 - (void)setWebSite:(NSString * _Nonnull)webSite;
+/**
+ 设置文件服务器域名
+
+ @param webSite 服务器域名
+ */
 - (void)setWebSiteUpload:(NSString * _Nonnull)webSite;
 /**
  *  设置接口服务器用户认证

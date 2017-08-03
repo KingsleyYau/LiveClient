@@ -82,7 +82,7 @@ void TransportClient::Disconnect()
 void TransportClient::DisconnectProc()
 {
     if (NULL != m_conn) {
-        mg_mqtt_disconnect(m_conn);
+        mg_shutdown(m_conn);
         m_conn = NULL;
     }
 }
@@ -93,7 +93,6 @@ void TransportClient::ReleaseMgrProc()
     if (m_isInitMgr) {
         mg_mgr_free(&m_mgr);
         m_isInitMgr = false;
-        m_conn = NULL;
     }
 }
 
@@ -175,6 +174,11 @@ void TransportClient::OnConnect(bool success)
 
 void TransportClient::OnDisconnect()
 {
+    // 重置连接
+    m_connStateLock->Lock();
+    m_conn = NULL;
+    m_connStateLock->Unlock();
+    
     if (CONNECTED == m_connState) {
         // 状态为已连接(返回断开连接)
         if (NULL != m_callback) {

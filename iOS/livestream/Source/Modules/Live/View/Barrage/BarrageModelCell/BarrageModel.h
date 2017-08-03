@@ -16,4 +16,5 @@
 @property (copy, nonatomic) NSString *url;
 @property (copy, nonatomic) NSString *message;
 @property (copy, nonatomic) NSString *name;
+
 @end

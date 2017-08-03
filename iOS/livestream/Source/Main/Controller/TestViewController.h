@@ -11,7 +11,9 @@
 #import "GPUImage.h"
 
 @interface TestViewController : KKViewController
-@property (nonatomic, weak) IBOutlet GPUImageView* publishView;
+
+@property (nonatomic, weak) IBOutlet GPUImageView* previewView;
+@property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;
 
 - (IBAction)publish:(id)sender;
 - (IBAction)play:(id)sender;

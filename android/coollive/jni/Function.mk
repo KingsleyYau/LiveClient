@@ -1,4 +1,4 @@
-# Copyright (C) 2014 The LiveStream Project
+# Copyright (C) 2014 The CoolLive Project
 # Makefile Common Function
 #
 # Created on: 2014/10/27

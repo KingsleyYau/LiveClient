@@ -14,22 +14,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 namespace coollive {
+class VideoEncoder;
+class VideoEncoderCallback {
+public:
+    virtual ~VideoEncoderCallback(){};
+    virtual void OnEncodeVideoFrame(VideoEncoder* encoder, char* data, int size, u_int32_t timestamp) = 0;
+};
+    
 class VideoEncoder {
 public:
     virtual ~VideoEncoder(){};
-    virtual bool Create(int width, int height, int frameInterval, int bitRate, int keyFrameInterval) = 0;
-    virtual void Destroy() = 0;
-    virtual void EncodeVideoFrame(const char* data, int size, u_int32_t timestamp) = 0;
-    virtual void ReleaseVideoFrame(void* frame) = 0;
+    virtual bool Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps) = 0;
+    virtual bool Reset() = 0;
+    virtual void Pause() = 0;
+    virtual void EncodeVideoFrame(void* data, int size, void* frame) = 0;
 };
 
+class AudioEncoder;
+class AudioEncoderCallback {
+public:
+    virtual ~AudioEncoderCallback(){};
+    virtual void OnEncodeAudioFrame(AudioEncoder* encoder,
+                                    AudioFrameFormat format,
+                                    AudioFrameSoundRate sound_rate,
+                                    AudioFrameSoundSize sound_size,
+                                    AudioFrameSoundType sound_type,
+                                    char* frame,
+                                    int size,
+                                    u_int32_t timestamp
+                                    ) = 0;
+};
+    
 class AudioEncoder {
 public:
 	virtual ~AudioEncoder(){};
-    virtual bool Create(int sampleRate, int channelsPerFrame, int bitPerSample) = 0;
-    virtual void Destroy() = 0;
-    virtual void EncodeAudioFrame(const char* data, int size, u_int32_t timestamp) = 0;
-    virtual void ReleaseAudioFrame(void* frame) = 0;
+    virtual bool Create(AudioEncoderCallback* callback, int sampleRate, int channelsPerFrame, int bitPerSample) = 0;
+    virtual void Pause() = 0;
+    virtual void EncodeAudioFrame(void* frame) = 0;
 };
 }
 #endif /* RTMPDUMP_IENCODER_H_ */

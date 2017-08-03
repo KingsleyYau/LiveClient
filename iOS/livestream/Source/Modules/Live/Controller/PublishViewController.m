@@ -90,7 +90,7 @@
     }];
     
     [self.liveVC.view removeConstraint:self.liveVC.msgTableViewBottom];
-    [self.liveVC.msgTableView mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.liveVC.tableSuperView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.bottom.equalTo(self.inputMessageView.mas_top);
     }];
 
@@ -102,6 +102,9 @@
     [self.inputTextField addTarget:self
                             action:@selector(textFieldDidChange:)
                   forControlEvents:UIControlEventEditingChanged];
+    
+    // 加载主播头像
+    [self.liveVC reloadLiverUserHeader:[LoginManager manager].loginItem.photoUrl];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

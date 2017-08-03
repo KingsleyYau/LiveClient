@@ -5,7 +5,7 @@
  *      Author: max
  */
 
-#include "VideoDecoderH264.h"
+#include <rtmpdump/VideoDecoderH264.h>
 
 #include <rtmpdump/RtmpPlayer.h>
 
@@ -59,12 +59,13 @@ private:
     VideoDecoderH264 *mContainer;
 };
     
+    
 VideoDecoderH264::VideoDecoderH264()
 :mRuningMutex(KMutex::MutexType_Recursive),
-    mDropFrameMutex(KMutex::MutexType_Recursive)
-    {
+mDropFrameMutex(KMutex::MutexType_Recursive)
+{
 	// TODO Auto-generated constructor stub
-    FileLog("rtmpdump", "VideoDecoderH264::VideoDecoderH264( decoder : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::VideoDecoderH264( this : %p )", this);
         
 	mCodec = NULL;
 	mContext = NULL;
@@ -86,10 +87,6 @@ VideoDecoderH264::VideoDecoderH264()
     mbDropFrame = false;
     mbWaitForInterFrame = true;
     mbCanDropFrame = false;
-    
-    mWidth = 0;
-    mHeight = 0;
-    mImgConvertCtx = NULL;
         
     mpDecodeVideoRunnable = new DecodeVideoRunnable(this);
     mpConvertVideoRunnable = new ConvertVideoRunnable(this);
@@ -97,7 +94,7 @@ VideoDecoderH264::VideoDecoderH264()
 
 VideoDecoderH264::~VideoDecoderH264() {
 	// TODO Auto-generated destructor stub
-    FileLog("rtmpdump", "VideoDecoderH264::~VideoDecoderH264( decoder : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::~VideoDecoderH264( this : %p )", this);
     
     Stop();
     
@@ -146,6 +143,15 @@ bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
     }
     
     mRuningMutex.unlock();
+    
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::Create( "
+                 "[Finish], "
+                 "this : %p, "
+                 "bFlag : %s "
+                 ")",
+                 this,
+                 bFlag?"true":"false"
+                 );
     
 	return bFlag;
 }
@@ -361,10 +367,6 @@ void VideoDecoderH264::DestroyContext() {
         mCorpBuffer = NULL;
     }
     
-    if (mImgConvertCtx) {
-        sws_freeContext(mImgConvertCtx);
-        mImgConvertCtx = NULL;
-    }
 }
     
 void VideoDecoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
@@ -545,13 +547,14 @@ bool VideoDecoderH264::SetDecoderVideoFormat(VIDEO_FORMATE_TYPE type) {
 }
     
 void VideoDecoderH264::DecodeVideoHandle() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::DecodeVideoHandle( "
-            "[Start], "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                KLog::LOG_MSG,
+                "VideoDecoderH264::DecodeVideoHandle( "
+                "[Start], "
+                "this : %p "
+                ")",
+                this
+                );
     
     VideoFrame* videoFrame = NULL;
     VideoFrame* decodedVideoFrame = NULL;
@@ -626,7 +629,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
                 
 //                FileLog("rtmpdump",
 //                        "VideoDecoderH264::DecodeVideoHandle( "
-//                        "[Get Frame], "
+//                        "[Get Decode Frame], "
 //                        "this : %p, "
 //                        "videoFrame : %p, "
 //                        "timestamp : %u, "
@@ -776,23 +779,25 @@ void VideoDecoderH264::DecodeVideoHandle() {
         }
     }
     
-    FileLog("rtmpdump",
-            "VideoDecoderH264::DecodeVideoHandle( "
-            "[Exit], "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                "VideoDecoderH264::DecodeVideoHandle( "
+                "[Exit], "
+                "this : %p "
+                ")",
+                this
+                );
 }
     
 void VideoDecoderH264::ConvertVideoHandle() {
-    FileLog("rtmpdump",
-            "VideoDecoderH264::ConvertVideoHandle( "
-            "[Start], "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                "VideoDecoderH264::ConvertVideoHandle( "
+                "[Start], "
+                "this : %p "
+                ")",
+                this
+                );
     
     VideoFrame* videoFrame = NULL;
     VideoFrame* displayFrame = NULL;
@@ -844,7 +849,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
             mFreeBufferList.unlock();
             
             // 格式转换
-            mVideoFormatConverter.ConvertVideoFrame(videoFrame, displayFrame);
+            mVideoFormatConverter.ConvertDecodeFrame(videoFrame, displayFrame);
             
             // 回调播放
             if( mpCallback && displayFrame ) {
@@ -867,13 +872,14 @@ void VideoDecoderH264::ConvertVideoHandle() {
 
     }
     
-    FileLog("rtmpdump",
-            "VideoDecoderH264::ConvertVideoHandle( "
-            "[Exit], "
-            "this : %p "
-            ")",
-            this
-            );
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoDecoderH264::ConvertVideoHandle( "
+                "[Exit], "
+                "this : %p "
+                ")",
+                this
+                );
 }
 
 }

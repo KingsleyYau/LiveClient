@@ -27,10 +27,17 @@
 
 #import "BigGiftAnimationView.h"
 
-#define PlaceholderFontSize 16
+#define PlaceholderFontSize DESGIN_TRANSFORM_3X(14)
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
 
 #define MaxInputCount 70
+
+@class LiveViewController;
+@protocol LiveViewControllerDelegate <NSObject>
+
+- (void)sendRoomToastBackCoinsToPlay:(double)coins;
+
+@end
 
 @interface LiveViewController : KKViewController
 #pragma mark - 退出按钮
@@ -72,6 +79,9 @@
 #pragma mark - 视频控件
 @property (nonatomic, weak) IBOutlet GPUImageView* videoView;
 
+
+@property (weak, nonatomic) IBOutlet UIView *tableSuperView;
+
 /**
  未读消息数量
  */
@@ -82,6 +92,9 @@
 
 #pragma mark - 大礼物播放队列
 @property (nonatomic, strong) NSMutableArray<NSString *> *bigGiftArray;
+
+#pragma mark - 代理
+@property (nonatomic, weak) id<LiveViewControllerDelegate> liveDelegate;
 
 #pragma mark - 按钮事件
 - (IBAction)fansAction:(id)sender;
@@ -94,6 +107,13 @@
  @return 成功失败
  */
 - (BOOL)sendMsg:(NSString *)text isLounder:(BOOL)isLounder;
+
+/**
+ 发送消息/弹幕
+ 
+ @param headerUrl 头像URL
+ */
+- (void)reloadLiverUserHeader:(NSString *)headerUrl;
 
 /**
  增加连击

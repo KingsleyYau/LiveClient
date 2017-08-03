@@ -10,8 +10,8 @@
 #ifndef VideoFrame_h
 #define VideoFrame_h
 
-#include "EncodeDecodeBuffer.h"
-#include "ICodec.h"
+#include <rtmpdump/EncodeDecodeBuffer.h>
+#include <rtmpdump/ICodec.h>
 
 struct AVFrame;
 

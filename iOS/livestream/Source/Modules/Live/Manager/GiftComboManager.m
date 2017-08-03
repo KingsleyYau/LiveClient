@@ -24,6 +24,12 @@
     [self.dictionary removeAllObjects];
 }
 
+- (void)removeManager{
+    
+    [self.dictionary removeAllObjects];
+    self.dictionary = nil;
+}
+
 - (GiftItem *)popGift:(NSString * _Nullable)itemId {
     GiftItem* findItem = nil;
     

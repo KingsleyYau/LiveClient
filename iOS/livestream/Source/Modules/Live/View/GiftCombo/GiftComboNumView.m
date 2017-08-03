@@ -34,11 +34,11 @@
 /**
  改变数字显示
  
- @param numberStr 显示的数字
+ @param number 显示的数字
  */
-- (void)changeNumber:(NSInteger)numberStr {
-    if (numberStr <= 0) {
-//        [self removeFromSuperview];
+- (void)changeNumber:(NSInteger)number {
+    if (number <= 0) {
+
         self.hidden = YES;
         return;
     }
@@ -52,15 +52,15 @@
     
     CGRect orgFrame = self.frame;
     
-    NSInteger width = 0;
-    NSInteger itemWidth = 20;
+    float width = 0;
+    float itemWidth = 20;
     
     self.xIV.frame = CGRectMake(0, 0, itemWidth, self.frame.size.height * 2.0 / 3.0);
-    self.xIV.center = CGPointMake(0, self.frame.size.height / 2);
+    self.xIV.center = CGPointMake(itemWidth / 2, self.frame.size.height / 2);
     [self addSubview:self.xIV];
-    width += itemWidth;
+    width = itemWidth;
 
-    NSString * count = [NSString stringWithFormat:@"%ld", (long)numberStr];
+    NSString * count = [NSString stringWithFormat:@"%ld", (long)number];
     for (int i = 1; i <= count.length; i++) {
         NSString * num = [[count substringToIndex:i] substringFromIndex:i-1<0?0:i-1];
         UIView* view = nil;
@@ -84,17 +84,16 @@
 //        label.layer.shadowOffset = CGSizeMake(0, 1);
 //        label.text = num;
 //        view = label;
-        
-        view.frame = CGRectMake(0, 0, width, self.frame.size.height);
-        view.center = CGPointMake(i * itemWidth, self.frame.size.height / 2);
-        
+
+        view.frame = CGRectMake(0, 0, itemWidth, self.frame.size.height);
+        view.center = CGPointMake(i * itemWidth + itemWidth / 2, self.frame.size.height / 2);
         [self addSubview:view];
         width += itemWidth;
     }
     
     self.frame = CGRectMake(orgFrame.origin.x, orgFrame.origin.y, width, orgFrame.size.height);
     
-    self.number = numberStr;
+    self.number = number;
 }
 
 - (UIView *)xIV {

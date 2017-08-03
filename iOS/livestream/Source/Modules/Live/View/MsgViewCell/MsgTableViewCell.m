@@ -80,6 +80,8 @@
     self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
     self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);
     self.messageLabel.shadowBlurRadius = 1.0f;
+    
+    self.messageLabelWidth = self.messageLabel.frame.size.width;
 }
 
 + (NSString *)textPreDetail {
@@ -96,5 +98,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
 }
+
+
 
 @end

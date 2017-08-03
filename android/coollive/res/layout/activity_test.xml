@@ -1,0 +1,24 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_floating_material_dark"
+    tools:context="${relativePackage}.${activityClass}" >
+
+ 	<FrameLayout
+ 	    android:id="@+id/layoutVideos"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="match_parent" 
+ 	    android:layout_above="@+id/editText"
+ 	    android:layout_centerVertical="true"
+ 	    >
+ 	    <SurfaceView
+   	    android:id="@+id/surfaceView"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_alignParentTop="true"
+	    />
+
+ 	</FrameLayout>  
+ 	  
+</RelativeLayout>

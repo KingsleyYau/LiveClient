@@ -29,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet CountTimeButton *comboBtn;
 @property (weak, nonatomic) IBOutlet PresentSendView *sendView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewHeight;
+@property (weak, nonatomic) IBOutlet UILabel *coinsNumLabel;
 
 @property (nonatomic, strong) NSArray *giftIdArray;
 

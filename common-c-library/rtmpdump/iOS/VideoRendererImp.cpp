@@ -10,19 +10,13 @@
 namespace coollive {
 VideoRendererImp::VideoRendererImp(id<VideoRendererDelegate> _Nullable videoRendererImp) {
     mpVideoRendererImp = videoRendererImp;
-    mVideoFormatConverter.SetDstFormat(VIDEO_FORMATE_BGRA);
 }
 
 VideoRendererImp::~VideoRendererImp() {
     
 }
 
-void VideoRendererImp::RenderVideoFrame(void* _Nonnull frame) {
-//    // 转换格式
-//    VideoFrame* videoFrame = (VideoFrame *)frame;
-//    VideoFrame* displayFrame = &mRendererVideoFrame;
-//    mVideoFormatConverter.ConvertVideoFrame(videoFrame, displayFrame);
-    
+void VideoRendererImp::RenderVideoFrame(void* _Nonnull frame) {   
     VideoFrame* displayFrame = (VideoFrame *)frame;
     
     // 播放视频
@@ -38,7 +32,6 @@ void VideoRendererImp::RenderVideoFrame(void* _Nonnull frame) {
 
         CFRelease(buffer);
     }
-
 }
 
 CVPixelBufferRef VideoRendererImp::CreatePixelBufferByRGBData(const unsigned char* data, int size, int width, int height) {

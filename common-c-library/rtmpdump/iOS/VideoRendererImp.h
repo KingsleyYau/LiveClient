@@ -13,7 +13,6 @@
 
 #include <rtmpdump/VideoFrame.h>
 #include <rtmpdump/IVideoRenderer.h>
-#include <rtmpdump/VideoFormatConverter.h>
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>
@@ -35,7 +34,6 @@ public:
     void RenderVideoFrame(void* _Nonnull frame);
    
 private:
-    VideoFormatConverter mVideoFormatConverter;
     VideoFrame mRendererVideoFrame;
     
 private:
