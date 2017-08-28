@@ -19,7 +19,7 @@
 using namespace std;
 
 namespace coollive {
-
+    
 class VideoDecoder;
 class VideoDecoderCallback {
 public:
@@ -32,7 +32,7 @@ public:
     VideoDecoder() {};
     virtual ~VideoDecoder(){};
     virtual bool Create(VideoDecoderCallback* callback) = 0;
-    virtual void Reset() = 0;
+    virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void ResetStream() = 0;
     virtual void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) = 0;
@@ -52,6 +52,7 @@ class AudioDecoder {
 public:
     virtual ~AudioDecoder(){};
     virtual bool Create(AudioDecoderCallback* callback) = 0;
+    virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void DecodeAudioFormat(
     		AudioFrameFormat format,

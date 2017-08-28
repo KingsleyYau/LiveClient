@@ -34299,6 +34299,11 @@ int srs_write_h264_sps_pps(Context* context, u_int32_t dts, u_int32_t pts)
         return ret;
     }
     
+    // Add by Max for crash cause no sps
+    if( context->h264_sps.length() == 0 || context->h264_pps.length() == 0 ) {
+        return ret;
+    }
+    
     // h264 raw to h264 packet.
     std::string sh;
     if ((ret = context->avc_raw.mux_sequence_header(context->h264_sps, context->h264_pps, dts, pts, sh)) != ERROR_SUCCESS) {

@@ -103,8 +103,8 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	}
 
 	//data object cls save
-	InsertJObjectClassToMap(env, IM_ROOM_FANS_ITEM_CLASS);
-	InsertJObjectClassToMap(env, IM_ROOM_INFO_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_ROOMIN_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_REBATE_ITEM_CLASS);
 
 	return JNI_VERSION_1_4;
 }

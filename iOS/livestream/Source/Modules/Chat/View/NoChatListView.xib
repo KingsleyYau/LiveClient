@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="d3B-6M-kM1" customClass="NoChatListView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Hhu-1Q-Pju">
+                    <rect key="frame" x="30" y="269" width="315" height="129"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RZC-77-frL">
+                    <rect key="frame" x="137" y="289" width="102" height="39"/>
+                    <string key="text">Failed to load.
+Please reload.</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bkw-nm-fyt">
+                    <rect key="frame" x="147" y="348" width="80" height="32"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="32" id="dkW-0Z-cdc"/>
+                        <constraint firstAttribute="width" constant="80" id="qVx-VI-rwg"/>
+                    </constraints>
+                    <state key="normal" title="Reload">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="RZC-77-frL" firstAttribute="centerX" secondItem="Hhu-1Q-Pju" secondAttribute="centerX" id="1se-IZ-AhG"/>
+                <constraint firstItem="Hhu-1Q-Pju" firstAttribute="centerY" secondItem="d3B-6M-kM1" secondAttribute="centerY" id="51j-4g-sl7"/>
+                <constraint firstItem="RZC-77-frL" firstAttribute="top" secondItem="Hhu-1Q-Pju" secondAttribute="top" constant="20" id="LQG-9Z-nJH"/>
+                <constraint firstItem="Hhu-1Q-Pju" firstAttribute="leading" secondItem="d3B-6M-kM1" secondAttribute="leading" constant="30" id="SZW-vE-3ne"/>
+                <constraint firstItem="bkw-nm-fyt" firstAttribute="top" secondItem="RZC-77-frL" secondAttribute="bottom" constant="20" id="Vz8-jN-0kx"/>
+                <constraint firstItem="RZC-77-frL" firstAttribute="bottom" secondItem="Hhu-1Q-Pju" secondAttribute="bottom" constant="-70" id="iAi-uB-Osj"/>
+                <constraint firstAttribute="trailing" secondItem="Hhu-1Q-Pju" secondAttribute="trailing" constant="30" id="wgW-ip-glC"/>
+                <constraint firstItem="bkw-nm-fyt" firstAttribute="centerX" secondItem="Hhu-1Q-Pju" secondAttribute="centerX" id="zMj-ZB-cfK"/>
+            </constraints>
+            <connections>
+                <outlet property="reloadNewBtn" destination="bkw-nm-fyt" id="0Wg-t9-ACm"/>
+                <outlet property="tipLabel" destination="RZC-77-frL" id="3H7-zn-sLY"/>
+                <outlet property="tipLabelBootomDistance" destination="iAi-uB-Osj" id="ghb-HS-3WU"/>
+            </connections>
+            <point key="canvasLocation" x="62" y="193"/>
+        </view>
+    </objects>
+</document>

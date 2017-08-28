@@ -21,7 +21,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	}
 
 	KLog::SetLogDirectory("/sdcard/coollive");
-	KLog::SetLogLevel(KLog::LOG_STAT);
+	KLog::SetLogLevel(KLog::LOG_WARNING);
 
 	jobject jLSVideoFrameItem;
 	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);
@@ -30,9 +30,9 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
-  (JNIEnv *env, jobject thiz, jobject callback, jobject videoEncoder, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {
+  (JNIEnv *env, jobject thiz, jobject callback, jobject videoEncoder, jobject videoRenderer, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {
 	// RTMP推送器
-	LSPublisherImp* publisher = new LSPublisherImp(callback, videoEncoder, width, height, bitRate, keyFrameInterval, fps);
+	LSPublisherImp* publisher = new LSPublisherImp(callback, videoEncoder, videoRenderer, width, height, bitRate, keyFrameInterval, fps);
 
 	FileLevelLog(
 			"rtmpdump",
@@ -119,16 +119,44 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_publisher_LSPublisherJni_PublishUrl
 }
 
 JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushVideoFrame
-  (JNIEnv *env, jobject thiz, jlong jpublisher, jbyteArray data) {
+  (JNIEnv *env, jobject thiz, jlong jpublisher, jbyteArray data, jint size, jint width, jint height) {
 	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
 
 	jbyte* frame = env->GetByteArrayElements(data, 0);
-	int size = env->GetArrayLength(data);
+//	int size = env->GetArrayLength(data);
 
-	publisher->PushVideoFrame((char *)frame, size);
+	publisher->PushVideoFrame((char *)frame, size, width, height);
 
 	env->ReleaseByteArrayElements(data, frame, 0);
+}
 
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushAudioFrame
+  (JNIEnv *env, jobject thiz, jlong jpublisher, jbyteArray data, jint size) {
+	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
+
+	jbyte* frame = env->GetByteArrayElements(data, 0);
+
+	publisher->PushAudioFrame((char *)frame, size);
+
+	env->ReleaseByteArrayElements(data, frame, 0);
+}
+
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_ChangeVideoRotate
+  (JNIEnv *env, jobject thiz, jlong jpublisher, jint rotate) {
+	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
+
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_WARNING,
+			"LSPublisherJni::ChangeVideoRotate( "
+			"publisher : %p, "
+			"rotate : %d "
+			")",
+			publisher,
+			rotate
+			);
+
+	publisher->ChangeVideoRotate(rotate);
 }
 
 JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_Stop

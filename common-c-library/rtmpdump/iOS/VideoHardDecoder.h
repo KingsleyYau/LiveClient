@@ -11,6 +11,11 @@
 
 #include <rtmpdump/IDecoder.h>
 
+#include <rtmpdump/video/VideoFrame.h>
+#include <rtmpdump/video/VideoMuxer.h>
+
+#include <common/KMutex.h>
+
 #include <VideoToolbox/VideoToolbox.h>
 
 namespace coollive {
@@ -23,7 +28,7 @@ public:
 // VideoDecoder
 public:
     bool Create(VideoDecoderCallback* callback);
-    void Reset();
+    bool Reset();
     void Pause();
     void ResetStream();
     void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
@@ -46,12 +51,15 @@ private:
     void DecodeCallbackProc(void* frame, u_int32_t timestamp);
     
 private:
+    void ResetParam();
     bool CreateContext();
     void DestroyContext();
+    char* FindSlice(char* start, int size, int& sliceSize);
     
 private:
     VideoDecoderCallback* mpCallback;
     
+    dispatch_queue_t mVideoDecodeQueue;
     VTDecompressionSessionRef   mSession;
     CMFormatDescriptionRef      mFormatDesc;
     
@@ -60,7 +68,15 @@ private:
     int mSpSize;
     char* mpPps;
     int mPpsSize;
-    int mNalUnitHeaderLength;
+    int mNaluHeaderSize;
+    
+    // 状态锁
+    KMutex mRuningMutex;
+    int mInputIndex;
+    
+    VideoFrame mVideoDecodeFrame;
+    
+    VideoMuxer mVideoMuxer;
 };
 }
 

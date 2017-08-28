@@ -48,13 +48,14 @@
                     </state>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_selectNum_up" translatesAutoresizingMaskIntoConstraints="NO" id="YAz-EM-lfg">
-                    <rect key="frame" x="39" y="12" width="12" height="7"/>
+                    <rect key="frame" x="41" y="12" width="12" height="7"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="12" id="YVS-Vu-KIa"/>
+                        <constraint firstAttribute="height" constant="7" id="heN-I1-wh0"/>
+                    </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cl-Tm-Pkq">
-                    <rect key="frame" x="9" y="5.5" width="25" height="20.5"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="25" id="mWv-pm-kav"/>
-                    </constraints>
+                    <rect key="frame" x="5" y="5.5" width="31" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
@@ -64,12 +65,13 @@
                 <constraint firstItem="YAz-EM-lfg" firstAttribute="centerY" secondItem="i1k-ho-qxp" secondAttribute="centerY" id="72f-qV-z7b"/>
                 <constraint firstItem="PNw-bT-4vz" firstAttribute="leading" secondItem="i1k-ho-qxp" secondAttribute="leading" id="8ma-fu-pzt"/>
                 <constraint firstAttribute="bottom" secondItem="rD3-kJ-Tk2" secondAttribute="bottom" id="Hi9-yz-Zdh"/>
+                <constraint firstItem="1Cl-Tm-Pkq" firstAttribute="leading" secondItem="i1k-ho-qxp" secondAttribute="leading" constant="5" id="Krm-zb-X5F"/>
                 <constraint firstAttribute="bottom" secondItem="PNw-bT-4vz" secondAttribute="bottom" id="L3z-Dt-T0q"/>
                 <constraint firstItem="1Cl-Tm-Pkq" firstAttribute="centerY" secondItem="i1k-ho-qxp" secondAttribute="centerY" id="Lkq-l2-h4F"/>
-                <constraint firstItem="rD3-kJ-Tk2" firstAttribute="leading" secondItem="YAz-EM-lfg" secondAttribute="trailing" constant="12" id="ceS-E8-mkU"/>
+                <constraint firstItem="rD3-kJ-Tk2" firstAttribute="leading" secondItem="YAz-EM-lfg" secondAttribute="trailing" constant="10" id="ceS-E8-mkU"/>
                 <constraint firstItem="rD3-kJ-Tk2" firstAttribute="leading" secondItem="PNw-bT-4vz" secondAttribute="trailing" id="jaS-ER-tTl"/>
                 <constraint firstAttribute="trailing" secondItem="rD3-kJ-Tk2" secondAttribute="trailing" id="lDP-Z2-glO"/>
-                <constraint firstItem="YAz-EM-lfg" firstAttribute="leading" secondItem="1Cl-Tm-Pkq" secondAttribute="trailing" constant="5" id="nkU-lK-n6G"/>
+                <constraint firstItem="YAz-EM-lfg" firstAttribute="leading" relation="lessThanOrEqual" secondItem="1Cl-Tm-Pkq" secondAttribute="trailing" constant="5" id="nkU-lK-n6G"/>
                 <constraint firstItem="rD3-kJ-Tk2" firstAttribute="top" secondItem="i1k-ho-qxp" secondAttribute="top" id="odw-2z-jo7"/>
                 <constraint firstItem="PNw-bT-4vz" firstAttribute="top" secondItem="i1k-ho-qxp" secondAttribute="top" id="t21-lG-vkN"/>
             </constraints>

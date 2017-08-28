@@ -9,12 +9,18 @@
 #ifndef PlayerController_h
 #define PlayerController_h
 
-#include <stdio.h>
-
 #include <rtmpdump/RtmpDump.h>
 #include <rtmpdump/RtmpPlayer.h>
+
 #include <rtmpdump/IVideoRenderer.h>
 #include <rtmpdump/IAudioRenderer.h>
+
+#include <rtmpdump/video/VideoRecorderH264.h>
+#include <rtmpdump/audio/AudioRecorderAAC.h>
+
+#include <rtmpdump/Statistics.h>
+
+#include <stdio.h>
 
 #include <string>
 using namespace std;
@@ -137,6 +143,11 @@ private:
     bool mUseHardDecoder;
     // 是否跳过延迟的帧
     bool mbSkipDelayFrame;
+    // 录制模块
+    VideoRecorderH264 mVideoRecorderH264;
+    AudioRecorderAAC mAudioRecorderAAC;
+    // 分析模块
+    Statistics mStatistics;
 };
 }
 

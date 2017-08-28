@@ -205,7 +205,7 @@ class ImClientCallback;
  *  @param isFirst     是否第一次点赞
  *
  */
-- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName isFirst:(bool)isFirst;
+- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName isFirst:(BOOL)isFirst;
 
 #pragma mark - 直播间礼物消息操作回调
 /**
@@ -529,6 +529,14 @@ private:
     return result;
 }
 
+- (SEQ_T)getReqId {
+    SEQ_T reqId = 0;
+    if (NULL != self.client) {
+        reqId = self.client->GetReqId();
+    }
+    return reqId;
+}
+
 - (BOOL)initClient:(NSArray<NSString*>* _Nonnull)urls
 {
     BOOL result = NO;
@@ -572,7 +580,7 @@ private:
     return result;
 }
 
-- (BOOL)fansRoomIn:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId
+- (BOOL)fansRoomIn:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -586,12 +594,12 @@ private:
             strRoomId = [roomId UTF8String];
         }
         
-        result = self.client->FansRoomIn(0, strToken, strRoomId);
+        result = self.client->FansRoomIn(reqId, strToken, strRoomId);
     }
     return result;
 }
 
-- (BOOL)fansRoomout:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId
+- (BOOL)fansRoomout:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -605,12 +613,12 @@ private:
             strRoomId = [roomId UTF8String];
         }
         
-        result = self.client->FansRoomOut(0, strToken, strRoomId);
+        result = self.client->FansRoomOut(reqId, strToken, strRoomId);
     }
     return result;
 }
 
-- (BOOL)getRoomInfo:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId
+- (BOOL)getRoomInfo:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -624,12 +632,12 @@ private:
             strRoomId = [roomId UTF8String];
         }
         
-        result = self.client->GetRoomInfo(0, strToken, strRoomId);
+        result = self.client->GetRoomInfo(reqId, strToken, strRoomId);
     }
     return result;
 }
 
-- (BOOL)fansShutUp:(NSString *)roomId userId:(NSString *)userId timeOut:(int)timeOut
+- (BOOL)fansShutUp:(NSString *)roomId userId:(NSString *)userId timeOut:(int)timeOut reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -644,12 +652,12 @@ private:
             strUserId = [userId UTF8String];
         }
         
-        result = self.client->FansShutUp(0, strRoomId, strUserId, timeOut);
+        result = self.client->FansShutUp(reqId, strRoomId, strUserId, timeOut);
     }
     return result;
 }
 
-- (BOOL)fansKickOffRoom:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId
+- (BOOL)fansKickOffRoom:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -664,12 +672,12 @@ private:
             strUserId = [userId UTF8String];
         }
         
-        result = self.client->FansKickOffRoom(0, strRoomId, strUserId);
+        result = self.client->FansKickOffRoom(reqId, strRoomId, strUserId);
     }
     return result;
 }
 
-- (BOOL)sendRoomMsg:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg
+- (BOOL)sendRoomMsg:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg  reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -691,12 +699,12 @@ private:
             strMsg = [msg UTF8String];
         }
         
-        result = self.client->SendRoomMsg(0, strToken, strRoomId, strName, strMsg);
+        result = self.client->SendRoomMsg(reqId, strToken, strRoomId, strName, strMsg);
     }
     return result;
 }
 
-- (BOOL)sendRoomFav:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString * _Nonnull)nickName
+- (BOOL)sendRoomFav:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString * _Nonnull)nickName reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -716,12 +724,12 @@ private:
             strNickName = [nickName UTF8String];
         }
         
-        result = self.client->SendRoomFav(0, strRoomId, strToken, strNickName);
+        result = self.client->SendRoomFav(reqId, strRoomId, strToken, strNickName);
     }
     return result;
 }
 
-- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id
+- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -751,13 +759,13 @@ private:
             strGiftName = [giftName UTF8String];
         }
         
-        result = self.client->SendRoomGift(0, strRoomId, strToken, strNickName, strGiftId, strGiftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        result = self.client->SendRoomGift(reqId, strRoomId, strToken, strNickName, strGiftId, strGiftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
         
     }
     return result;
 }
 
-- (BOOL)sendRoomToast:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg
+- (BOOL)sendRoomToast:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg  reqId:(SEQ_T)reqId
 {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -782,7 +790,7 @@ private:
             strMsg = [msg UTF8String];
         }
         
-        result = self.client->SendRoomToast(0, strRoomId, strToken, strNickName, strMsg);
+        result = self.client->SendRoomToast(reqId, strRoomId, strToken, strNickName, strMsg);
     }
     return result;
 }
@@ -1052,16 +1060,18 @@ private:
     }
 }
 
-- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId
+- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId nickName:(const string&)nickName isFirst:(BOOL)isFirst;
+//- (void)onRecvPushRoomFav:(const string&)roomId fromId:(const string&)fromId isFirst:(BOOL)isFirst
 {
     NSString* nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString* nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
+    NSString* nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     @synchronized(self.delegates) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if( [delegate respondsToSelector:@selector(onRecvPushRoomFav:fromId:)] ) {
-                [delegate onRecvPushRoomFav:nsRoomId fromId:nsFromId];
+            if( [delegate respondsToSelector:@selector(onRecvPushRoomFav:fromId:nickName:isFirst:)] ) {
+                [delegate onRecvPushRoomFav:nsRoomId fromId:nsFromId nickName:nsNickName isFirst:isFirst];
             }
         }
     }

@@ -9,10 +9,13 @@
 #ifndef VideoHardEncoder_h
 #define VideoHardEncoder_h
 
-#include <stdio.h>
-
 #include <rtmpdump/IEncoder.h>
-#include <rtmpdump/VideoFrame.h>
+
+#include <rtmpdump/video/VideoFrame.h>
+
+#include <common/KMutex.h>
+
+#include <stdio.h>
 
 #include <VideoToolbox/VideoToolbox.h>
 #include <CoreFoundation/CoreFoundation.h>
@@ -24,7 +27,8 @@ public:
     virtual ~VideoHardEncoder();
     
 public:
-    bool Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps);
+    bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type);
+    void SetCallback(VideoEncoderCallback* callback);
     bool Reset();
     void Pause();
     void EncodeVideoFrame(void* data, int size, void* frame);
@@ -58,6 +62,9 @@ private:
     int mEncodeFrameCount;
     double mLastPresentationTime;
     UInt32 mEncodeStartTimestamp;
+    
+    // 状态锁
+    KMutex mRuningMutex;
     
 };
 }

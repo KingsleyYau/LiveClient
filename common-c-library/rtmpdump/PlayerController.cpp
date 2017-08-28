@@ -8,8 +8,8 @@
 
 #include "PlayerController.h"
 
-#include "VideoDecoderH264.h"
-#include "AudioDecoderAAC.h"
+#include "video/VideoDecoderH264.h"
+#include "audio/AudioDecoderAAC.h"
 
 namespace coollive {
 PlayerController::PlayerController() {
@@ -22,7 +22,7 @@ PlayerController::PlayerController() {
     mpPlayerStatusCallback = NULL;
     
     mUseHardDecoder = false;
-    mbSkipDelayFrame = false;
+    mbSkipDelayFrame = true;
     
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
@@ -30,7 +30,6 @@ PlayerController::PlayerController() {
 }
 
 PlayerController::~PlayerController() {
-    Stop();
 }
  
 void PlayerController::SetVideoRenderer(VideoRenderer* videoRenderer) {
@@ -70,44 +69,72 @@ void PlayerController::SetStatusCallback(PlayerStatusCallback* pc) {
 }
     
 bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath) {
-    bool bFlag = false;
+    bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
-                "PlayerController::PlayUrl( "
-                "url : %s "
-                ")",
-                url.c_str()
-                );
+                 KLog::LOG_WARNING,
+                 "PlayerController::PlayUrl( "
+                 "url : %s "
+                 ")",
+                 url.c_str()
+                 );
     
+    // 重置分析器
+    mStatistics.Start();
+    // 开始解码
+    if( bFlag ) {
+        bFlag = mpVideoDecoder->Reset();
+    }
+    if( bFlag ) {
+        bFlag = mpAudioDecoder->Reset();
+    }
     // 开始播放
-    bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
+    if( bFlag ) {
+        bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath, recordAACFilePath);
+    }
+    // 开始录制
+    if( bFlag ) {
+        mVideoRecorderH264.Start(recordH264FilePath);
+        mAudioRecorderAAC.Start(recordAACFilePath);
+    }
     
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
-                "PlayerController::PlayUrl( "
-                "[Finish], "
-                "url : %s, "
-                "bFlag : %s "
-                ")",
-                url.c_str(),
-                bFlag?"true":"false"
-                );
+                 KLog::LOG_WARNING,
+                 "PlayerController::PlayUrl( "
+                 "[Finish], "
+                 "url : %s, "
+                 "bFlag : %s "
+                 ")",
+                 url.c_str(),
+                 bFlag?"true":"false"
+                 );
     
     return bFlag;
 }
     
 void PlayerController::Stop() {
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
-                "PlayerController::Stop( "
-                "this : %p "
-                ")",
-                this
-                );
+                 KLog::LOG_WARNING,
+                 "PlayerController::Stop( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
     
+    // 停止分析
+    mStatistics.Stop();
     // 停止播放
     mRtmpPlayer.Stop();
+    // 停止解码
+    if( mpVideoDecoder ) {
+        mpVideoDecoder->Pause();
+    }
+    if( mpAudioDecoder ) {
+        mpAudioDecoder->Pause();
+    }
+    // 停止录制
+    mVideoRecorderH264.Stop();
+    mAudioRecorderAAC.Stop();
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -129,9 +156,9 @@ void PlayerController::OnConnect(RtmpDump* rtmpDump) {
     
 void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
-                "PlayerController::OnDisconnect()"
-                );
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnDisconnect()"
+                 );
     if( mpPlayerStatusCallback ) {
         mpPlayerStatusCallback->OnPlayerDisconnect(this);
     }
@@ -139,16 +166,20 @@ void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
 
 void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
-                "PlayerController::OnChangeVideoSpsPps( "
-                "sps_size : %d, "
-                "pps_size : %d, "
-                "nalUnitHeaderLength : %d "
-                ")",
-                sps_size,
-                pps_size,
-                nalUnitHeaderLength
-                );
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnChangeVideoSpsPps( "
+                 "sps_size : %d, "
+                 "pps_size : %d, "
+                 "nalUnitHeaderLength : %d "
+                 ")",
+                 sps_size,
+                 pps_size,
+                 nalUnitHeaderLength
+                 );
+    // 录制视频帧
+    mVideoRecorderH264.RecordVideoKeyFrame(sps, sps_size, pps, pps_size, nalUnitHeaderLength);
+    
+    // 解码视频帧
     if( mpVideoDecoder ) {
         mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, nalUnitHeaderLength);
     }
@@ -156,27 +187,36 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_STAT,
-                "PlayerController::OnRecvVideoFrame( "
-                "timestamp : %u "
-                ")",
-                timestamp
-                );
+                 KLog::LOG_MSG,
+                 "PlayerController::OnRecvVideoFrame( "
+                 "timestamp : %u, "
+                 "size : %d, "
+                 "video_type : %d "
+                 ")",
+                 timestamp,
+                 size,
+                 video_type
+                 );
+    // 增加分析处理
+    mStatistics.AddVideoRecvFrame();
     
-    // 解码一帧
+    // 录制视频帧
+    mVideoRecorderH264.RecordVideoFrame(data, size);
+    
+    // 解码视频帧
     if( mpVideoDecoder ) {
         mpVideoDecoder->DecodeVideoFrame(data, size, timestamp, video_type);
     }
 }
 
 void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
-                                     AudioFrameFormat format,
-                                     AudioFrameSoundRate sound_rate,
-                                     AudioFrameSoundSize sound_size,
-                                     AudioFrameSoundType sound_type
-                                     ) {
+                                           AudioFrameFormat format,
+                                           AudioFrameSoundRate sound_rate,
+                                           AudioFrameSoundSize sound_size,
+                                           AudioFrameSoundType sound_type
+                                           ) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "PlayerController::OnChangeAudioFormat( "
                  "format : %d, "
                  "sound_rate : %d, "
@@ -188,7 +228,10 @@ void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
                  sound_size,
                  sound_type
                  );
+    // 录制音频帧
+    mAudioRecorderAAC.ChangeAudioFormat(format, sound_rate, sound_size, sound_type);
     
+    // 解码音频帧
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFormat(format, sound_rate, sound_size, sound_type);
     }
@@ -205,14 +248,21 @@ void PlayerController::OnRecvAudioFrame(
                                   u_int32_t timestamp
                                   ) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_STAT,
+                KLog::LOG_MSG,
                 "PlayerController::OnRecvAudioFrame( "
-                "timestamp : %u "
+                "timestamp : %u, "
+                "size : %d "
                 ")",
-                timestamp
+                timestamp,
+                size
                 );
+    // 增加分析处理
+    mStatistics.AddAudioRecvFrame();
     
-    // 解码一帧
+    // 录制音频帧
+    mAudioRecorderAAC.RecordAudioFrame(data, size);
+    
+    // 解码音频帧
     if( mpAudioDecoder ) {
         mpAudioDecoder->DecodeAudioFrame(format, sound_rate, sound_size, sound_type, data, size, timestamp);
     }
@@ -221,22 +271,27 @@ void PlayerController::OnRecvAudioFrame(
     
 /*********************************************** 解码器回调处理 *****************************************************/
 void PlayerController::OnDecodeVideoFrame(VideoDecoder* decoder, void* frame, u_int32_t timestamp) {
+    // 播放视频帧
     mRtmpPlayer.PushVideoFrame(frame, timestamp);
 }
     
 void PlayerController::OnDecodeAudioFrame(AudioDecoder* decoder, void* frame, u_int32_t timestamp) {
+    // 播放音频帧
     mRtmpPlayer.PushAudioFrame(frame, timestamp);
 }
 /*********************************************** 解码器回调处理 End *****************************************************/
     
 /*********************************************** 播放器回调处理 *****************************************************/
-void PlayerController::OnPlayVideoFrame(RtmpPlayer* player, void* frame) {   
+void PlayerController::OnPlayVideoFrame(RtmpPlayer* player, void* frame) {
     if( mpVideoRenderer ) {
         mpVideoRenderer->RenderVideoFrame(frame);
     }
 
     // 释放内存
     mpVideoDecoder->ReleaseVideoFrame(frame);
+    
+    // 增加分析处理
+    mStatistics.AddVideoPlayFrame();
 }
     
 void PlayerController::OnDropVideoFrame(RtmpPlayer* player, void* frame) {
@@ -252,6 +307,9 @@ void PlayerController::OnDropVideoFrame(RtmpPlayer* player, void* frame) {
     
     // 释放内存
     mpVideoDecoder->ReleaseVideoFrame(frame);
+    
+    // 增加分析处理
+    mStatistics.AddVideoPlayFrame();
 }
     
 void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
@@ -261,6 +319,9 @@ void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
     
     // 释放内存
     mpAudioDecoder->ReleaseAudioFrame(frame);
+    
+    // 增加分析处理
+    mStatistics.AddAudioPlayFrame();
 }
     
 void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
@@ -270,6 +331,9 @@ void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
     
     // 释放内存
     mpAudioDecoder->ReleaseAudioFrame(frame);
+    
+    // 增加分析处理
+    mStatistics.AddAudioPlayFrame();
 }
     
 void PlayerController::OnResetVideoStream(RtmpPlayer* player) {

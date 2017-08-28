@@ -11,7 +11,12 @@
 
 #include <stdio.h>
 
+#include <common/KMutex.h>
+
 #include <rtmpdump/IEncoder.h>
+
+#include <rtmpdump/audio/AudioFrame.h>
+#include <rtmpdump/audio/AudioMuxer.h>
 
 #include <CoreFoundation/CoreFoundation.h>
 #include <AVFoundation/AVFoundation.h>
@@ -23,9 +28,11 @@ public:
     virtual ~AudioHardEncoder();
     
 public:
-    bool Create(AudioEncoderCallback* callback, int sampleRate, int channelsPerFrame, int bitPerSample);
+    bool Create(int sampleRate, int channelsPerFrame, int bitPerSample);
+    void SetCallback(AudioEncoderCallback* callback);
+    bool Reset();
     void Pause();
-    void EncodeAudioFrame(void* frame);
+    void EncodeAudioFrame(void* data, int size, void* frame);
     
 private:
     static OSStatus inInputDataProc(AudioConverterRef inAudioConverter,
@@ -36,7 +43,8 @@ private:
                                     );
         
 private:
-    bool Reset(CMSampleBufferRef sampleBuffer);
+    bool CreateContext(CMSampleBufferRef sampleBuffer);
+    void DestroyContext();
     
 private:
     AudioEncoderCallback* mpCallback;
@@ -54,6 +62,12 @@ private:
     double mLastPresentationTime;
     double mTotalPresentationTime;
     UInt32 mEncodeStartTimestamp;
+    
+    AudioMuxer mAudioMuxer;
+    AudioFrame mAudioEncodedFrame;
+    
+    // 状态锁
+    KMutex mRuningMutex;
 };
 }
 

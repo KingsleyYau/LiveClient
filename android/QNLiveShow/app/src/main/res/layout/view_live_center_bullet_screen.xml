@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@android:color/transparent"
+    android:layout_gravity="right"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/liveroom_bullet_height">
 
@@ -15,7 +16,7 @@
         android:background="@drawable/bg_live_center_bullet_screen"
         />
 
-    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
         android:src="@drawable/circleimageview_hugh"
         android:id="@+id/civ_bullletIcon"
         android:layout_width="36dp"

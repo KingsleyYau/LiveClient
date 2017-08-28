@@ -6,13 +6,16 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TestViewController">
             <connections>
+                <outlet property="previewPublishView" destination="i4D-ha-MOA" id="swf-p4-FLT"/>
                 <outlet property="previewView" destination="4cW-Ak-190" id="ocy-0w-n9l"/>
                 <outlet property="textFieldAddress" destination="bL4-KM-t8R" id="iqZ-bD-DGh"/>
+                <outlet property="textFieldPublishAddress" destination="VDo-Gw-kAu" id="3OG-ea-fQZ"/>
                 <outlet property="view" destination="ZWE-DN-YWb" id="UEa-zx-vng"/>
             </connections>
         </placeholder>
@@ -22,11 +25,49 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cW-Ak-190" userLabel="Preview View" customClass="GPUImageView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="459"/>
+                    <rect key="frame" x="0.0" y="22" width="375" height="281.5"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="4cW-Ak-190" secondAttribute="height" multiplier="4:3" id="yFR-i9-pRh"/>
+                    </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="i4D-ha-MOA" userLabel="Preview Publish View" customClass="GPUImageView">
+                    <rect key="frame" x="220" y="244" width="135" height="180"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="180" id="fSd-Rz-NX1"/>
+                        <constraint firstAttribute="width" secondItem="i4D-ha-MOA" secondAttribute="height" multiplier="3:4" id="tMf-nv-u5c"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iur-EY-slm" userLabel=" Pubilsh Label">
+                    <rect key="frame" x="10" y="442" width="50" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="HB9-tB-A6V"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VDo-Gw-kAu" userLabel="Publish AddressText Field">
+                    <rect key="frame" x="65" y="429" width="290" height="30"/>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="bDS-AV-yRs"/>
+                    </connections>
+                </textField>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Play" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IhK-BJ-a65" userLabel="Play Label">
+                    <rect key="frame" x="10" y="477" width="50" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="50" id="WTV-aG-Qck"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bL4-KM-t8R" userLabel="Address Text Field">
-                    <rect key="frame" x="20" y="464" width="335" height="30"/>
+                    <rect key="frame" x="65" y="464" width="290" height="30"/>
                     <nil key="textColor"/>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
@@ -43,7 +84,7 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iyu-Qy-hLl" userLabel="Publisher">
                     <rect key="frame" x="275" y="494" width="100" height="30"/>
-                    <state key="normal" title="Publisher"/>
+                    <state key="normal" title="Publish"/>
                     <connections>
                         <action selector="publish:" destination="-1" eventType="touchUpInside" id="xnD-a3-RYY"/>
                     </connections>
@@ -70,22 +111,31 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="4cW-Ak-190" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="23p-Sw-e8r" userLabel="PreviewView.trailing = trailing"/>
+                <constraint firstItem="VDo-Gw-kAu" firstAttribute="bottom" secondItem="bL4-KM-t8R" secondAttribute="top" constant="-5" id="3SL-th-dlA"/>
                 <constraint firstItem="bL4-KM-t8R" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-20" id="4Fh-oO-XhQ"/>
-                <constraint firstItem="4cW-Ak-190" firstAttribute="top" secondItem="ZWE-DN-YWb" secondAttribute="top" id="B4Q-wc-Pm9"/>
-                <constraint firstItem="bL4-KM-t8R" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" constant="20" id="BgO-6D-0Lx"/>
+                <constraint firstItem="VDo-Gw-kAu" firstAttribute="leading" secondItem="iur-EY-slm" secondAttribute="trailing" constant="5" id="9kz-y5-Sss"/>
+                <constraint firstItem="4cW-Ak-190" firstAttribute="top" secondItem="ZWE-DN-YWb" secondAttribute="top" constant="22" id="B4Q-wc-Pm9"/>
                 <constraint firstItem="rLf-oZ-TFx" firstAttribute="leading" secondItem="drI-3V-bPu" secondAttribute="leading" id="BgV-IP-EgI"/>
                 <constraint firstItem="rLf-oZ-TFx" firstAttribute="bottom" secondItem="ZWE-DN-YWb" secondAttribute="bottom" id="D3c-6S-8fD"/>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="GcI-fZ-58v"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="trailing" secondItem="Iyu-Qy-hLl" secondAttribute="trailing" id="Gmc-j3-XMW"/>
+                <constraint firstItem="i4D-ha-MOA" firstAttribute="bottom" secondItem="VDo-Gw-kAu" secondAttribute="top" constant="-5" id="P6q-Vq-5DG"/>
+                <constraint firstItem="VDo-Gw-kAu" firstAttribute="height" secondItem="bL4-KM-t8R" secondAttribute="height" id="QIv-w6-gT0"/>
+                <constraint firstItem="bL4-KM-t8R" firstAttribute="leading" secondItem="IhK-BJ-a65" secondAttribute="trailing" constant="5" id="SdH-d7-Voy"/>
                 <constraint firstItem="bL4-KM-t8R" firstAttribute="bottom" secondItem="drI-3V-bPu" secondAttribute="top" id="TNp-uM-MGz"/>
+                <constraint firstItem="iur-EY-slm" firstAttribute="bottom" secondItem="VDo-Gw-kAu" secondAttribute="bottom" id="Ugx-HC-JVn"/>
+                <constraint firstItem="iur-EY-slm" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" constant="10" id="Ulk-eF-WCo"/>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="width" secondItem="RM2-Fk-mCo" secondAttribute="width" id="V2l-wT-hX7"/>
                 <constraint firstItem="drI-3V-bPu" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="XOs-Jt-rXt"/>
                 <constraint firstItem="4cW-Ak-190" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="YFc-no-mMD"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="height" secondItem="rLf-oZ-TFx" secondAttribute="height" id="YPE-GO-0H8"/>
+                <constraint firstItem="VDo-Gw-kAu" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-20" id="dI4-co-xwk"/>
+                <constraint firstItem="IhK-BJ-a65" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" constant="10" id="jYM-PU-HbV"/>
                 <constraint firstItem="drI-3V-bPu" firstAttribute="width" secondItem="RM2-Fk-mCo" secondAttribute="width" id="kJy-FF-3yf"/>
+                <constraint firstItem="IhK-BJ-a65" firstAttribute="bottom" secondItem="bL4-KM-t8R" secondAttribute="bottom" id="lqw-gs-FVg"/>
                 <constraint firstItem="drI-3V-bPu" firstAttribute="top" secondItem="Iyu-Qy-hLl" secondAttribute="top" id="n7p-Mi-n8r"/>
+                <constraint firstItem="i4D-ha-MOA" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-20" id="nsd-zf-Dy2"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="bottom" secondItem="ZWE-DN-YWb" secondAttribute="bottom" id="trz-Bn-nNL"/>
-                <constraint firstItem="4cW-Ak-190" firstAttribute="bottom" secondItem="bL4-KM-t8R" secondAttribute="top" constant="-5" id="xWo-Iw-yLe"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="width" secondItem="rLf-oZ-TFx" secondAttribute="width" id="z6G-eg-yqC"/>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="bottom" secondItem="RM2-Fk-mCo" secondAttribute="top" id="zJi-cg-jaE"/>
             </constraints>

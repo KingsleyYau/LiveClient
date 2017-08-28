@@ -9,11 +9,9 @@
 #ifndef Statistics_h
 #define Statistics_h
 
-#include <stdio.h>
+#include <common/KMutex.h>
 
-#include <rtmpdump/IVideoRenderer.h>
-#include <rtmpdump/RtmpPlayer.h>
-#include <rtmpdump/FrameBuffer.h>
+#include <stdio.h>
 
 namespace coollive {
     
@@ -22,22 +20,51 @@ public:
     Statistics();
     ~Statistics();
     
-    void SetVideoDecoder(VideoDecoder* decoder);
-    void SetRtmpPlayer(RtmpPlayer* player);
+    void Start();
+    void Stop();
+    
+    /**
+     增加视频帧
+     */
+    void AddVideoRecvFrame();
+    void AddVideoPlayFrame();
+    
+    /**
+     增加音频帧
+     */
+    void AddAudioRecvFrame();
+    void AddAudioPlayFrame();
     
     /**
      是否需要丢弃视频帧
 
-     @return <#return value description#>
+     @return 是否
      */
     bool IsDropVideoFrame();
     
 private:
-    unsigned int mLastVideoCacheMS;
-    bool mDecrease;
+    /**
+     是否接收视频帧
+     
+     @return 是否
+     */
+    bool CanRecvVideo();
+    /**
+     是否接收视频帧
+     
+     @return 是否
+     */
+    bool CanRecvAudio();
     
-    VideoDecoder* mpDecoder;
-    RtmpPlayer* mpPlayer;
+private:
+    // 状态锁
+    KMutex mStatusMutex;
+    bool mbRunning;
+    
+    int mVideoRecvFrameCount;
+    int mVideoPlayFrameCount;
+    int mAudioRecvFrameCount;
+    int mAudioPlayFrameCount;
 };
     
 }

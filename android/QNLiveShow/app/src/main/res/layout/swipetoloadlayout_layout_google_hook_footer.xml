@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qpidnetwork.framework.widget.swipetoloadlayout.view.footer.GoogleCircleHookLoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.view.footer.GoogleCircleHookLoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/load_more_footer_height_google"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,4 +15,4 @@
         android:layout_width="@dimen/refresh_drawable_size_google"
         android:layout_height="@dimen/refresh_drawable_size_google"
         android:layout_gravity="center" />
-</com.qpidnetwork.framework.widget.swipetoloadlayout.view.footer.GoogleCircleHookLoadMoreFooterView>
+</com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.view.footer.GoogleCircleHookLoadMoreFooterView>

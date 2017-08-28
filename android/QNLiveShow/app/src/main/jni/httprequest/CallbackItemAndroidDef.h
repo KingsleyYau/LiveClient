@@ -8,19 +8,27 @@
 #ifndef CALLBACKITEMANDROIDDEF_H_
 #define CALLBACKITEMANDROIDDEF_H_
 
-/* 1.认证模块 */
-#define LOGIN_ITEM_CLASS 				"com/qpidnetwork/httprequest/item/LoginItem"
+/* 2.认证模块 */
+#define LOGIN_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/LoginItem"
 
-/* 2.直播间模块   */
-#define AUDIENCE_ITEM_CLASS 			"com/qpidnetwork/httprequest/item/AudienceInfoItem"
-#define LIVE_ROOMINFO_CLASS 			"com/qpidnetwork/httprequest/item/LiveRoomInfoItem"
-#define LIVE_ROOM_GIFT_ITEM_CLASS 		"com/qpidnetwork/httprequest/item/GiftItem"
-#define LIVE_ROOM_COVERPHOTO_ITEM_CLASS "com/qpidnetwork/httprequest/item/CoverPhotoItem"
+/* 3.直播间模块   */
+#define HOTLIST_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/HotListItem"
+#define FOLLOWINGLIST_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/FollowingListItem"
+#define VALID_LIVEROOM_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ValidLiveRoomItem"
+#define IMMEDIATE_INVITE_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/ImmediateInviteItem"
+#define AUDIENCE_INFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/AudienceInfoItem"
+#define NORMAL_GIFT_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/NormalGiftItem"
+#define GIFT_DETAIL_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/GiftItem"
+#define EMOTION_CATEGORY_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/EmotionCategory"
+#define EMOTION_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/EmotionItem"
 
-/* 3.个人信息模块    */
-#define USERINFO_ITEM_CLASS 			"com/qpidnetwork/httprequest/item/UserInfoItem"
+/* 4.预约私密     */
+#define BOOK_INVITE_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/BookInviteItem"
 
-/* 4.其他    */
-#define OTHER_CONFIG_ITEM_CLASS 		"com/qpidnetwork/httprequest/item/ConfigItem"
+/* 5.背包    */
+#define PACKAGE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"
+
+/* 6.其他    */
+#define OTHER_CONFIG_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ConfigItem"
 
 #endif /* CALLBACKITEMANDROIDDEF_H_ */

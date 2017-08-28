@@ -24,7 +24,7 @@ function configure_toolchain {
 }
 
 function configure_prefix {
-	export PREFIX=$(pwd)/out/$ARCH_ABI
+	export PREFIX=$(pwd)/out.android/$ARCH_ABI
 
 	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
 	export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
@@ -213,7 +213,6 @@ function build_ffmpeg {
     				--enable-libfdk-aac \
 				    --disable-doc \
 				    --enable-version3 \
-    				--enable-small \
     				--disable-vda \
    					--disable-iconv \
     				--disable-outdevs \
@@ -223,16 +222,17 @@ function build_ffmpeg {
     				--disable-asm \
 						--disable-encoders \
 				    --enable-encoder=libx264 \
-				    --enable-encoder=aac \
+				    --enable-encoder=libfdk_aac \
 				    --disable-decoders \
-				    --enable-decoder=h264 \
+				    --enable-decoder=libx264 \
 				    --enable-decoder=libfdk_aac \
     				--disable-demuxers \
     				--enable-demuxer=h264 \
     				--disable-parsers \
-    				--enable-parser=h264
+    				--enable-parser=h264 \
     				$CONFIG_PARAM \
     				|| exit 1
+    				#--enable-small \
     				#--disable-ffmpeg \
     				#--disable-debug \
 						#--enable-runtime-cpudetect \

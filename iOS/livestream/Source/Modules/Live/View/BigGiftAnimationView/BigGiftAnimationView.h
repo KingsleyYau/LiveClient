@@ -18,6 +18,6 @@
 
 +(void)attemptDealloc;
 
-- (void)starAnimationWithGiftID:(NSString *)giftID;
+- (BOOL)starAnimationWithGiftID:(NSString *)giftID;
 
 @end

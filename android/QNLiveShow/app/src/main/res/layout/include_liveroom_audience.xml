@@ -8,8 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#BFBFBF" />
+
     <SurfaceView
         android:id="@+id/sv_player"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
 </RelativeLayout>

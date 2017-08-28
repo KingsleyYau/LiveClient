@@ -9,12 +9,11 @@
 #ifndef VideoHardRendererImp_h
 #define VideoHardRendererImp_h
 
-#include <stdio.h>
+#include <rtmpdump/IVideoRenderer.h>
 
 #include <AndroidCommon/JniCommonFunc.h>
 
-#include <rtmpdump/VideoFrame.h>
-#include <rtmpdump/IVideoRenderer.h>
+#include <stdio.h>
 
 namespace coollive {
 class VideoHardRendererImp : public VideoRenderer {

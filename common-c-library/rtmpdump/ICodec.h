@@ -34,6 +34,8 @@ namespace coollive {
         VFT_UNKNOWN = 0,
         VFT_NOTIDR = 1,
         VFT_IDR = 5,
+        VFT_SPS = 7,
+        VFT_PPS = 8,
     } VideoFrameType;
     
     typedef enum AudioFrameFormat {

@@ -7,9 +7,10 @@
 //  视频硬解码实现类
 
 #include "VideoHardEncoder.h"
-#include "JavaItem.h"
 
-#include <rtmpdump/VideoFrame.h>
+#include <rtmpdump/video/VideoFrame.h>
+
+#include "JavaItem.h"
 
 #include <common/CommonFunc.h>
 #include <common/KThread.h>
@@ -150,7 +151,7 @@ void VideoHardEncoder::Stop() {
             );
 }
 
-bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps) {
+bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
     bool bFlag = true;
 
     FileLevelLog(
@@ -172,7 +173,6 @@ bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int hei
 			this
 			);
 
-    mpCallback = callback;
     mWidth = width;
     mHeight = height;
     mKeyFrameInterval = keyFrameInterval;
@@ -195,6 +195,10 @@ bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int hei
 			);
 
     return bFlag;
+}
+
+void VideoHardEncoder::SetCallback(VideoEncoderCallback* callback) {
+	mpCallback = callback;
 }
 
 bool VideoHardEncoder::Reset() {

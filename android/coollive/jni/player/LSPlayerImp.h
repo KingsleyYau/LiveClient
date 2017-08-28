@@ -16,8 +16,8 @@
 #include <rtmpdump/android/VideoRendererImp.h>
 #include <rtmpdump/android/AudioRendererImp.h>
 
-#include <rtmpdump/VideoDecoderH264.h>
-#include <rtmpdump/AudioDecoderAAC.h>
+#include <rtmpdump/video/VideoDecoderH264.h>
+#include <rtmpdump/audio/AudioDecoderAAC.h>
 
 using namespace coollive;
 class LSPlayerImp : public PlayerStatusCallback {

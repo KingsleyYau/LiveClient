@@ -9,6 +9,6 @@
 #import "SessionRequest.h"
 
 @interface GetLiveRoomGiftDetailRequest : SessionRequest
-@property (nonatomic, strong) NSString* giftId;
+@property (nonatomic, strong) NSString * _Nullable giftId;
 @property (nonatomic, strong) GetLiveRoomGiftDetailFinishHandler _Nullable finishHandler;
 @end

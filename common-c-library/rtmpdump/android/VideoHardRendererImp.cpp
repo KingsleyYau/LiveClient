@@ -8,9 +8,9 @@
 
 #include "VideoHardRendererImp.h"
 
-#include <common/KLog.h>
+#include <rtmpdump/video/VideoFrame.h>
 
-#include <rtmpdump/VideoFrame.h>
+#include <common/KLog.h>
 
 extern "C" {
 #include <libavcodec/avcodec.h>

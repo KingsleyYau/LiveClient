@@ -29,6 +29,7 @@
 #define DESGIN_TRANSFORM_3X(V) (V*SCREEN_HEIGHT*1.0/640)
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
 #define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
+#define ViewBoundsSize self.view.bounds.size
 
 #define deviceTokenStringKEY @"deviceTokenString"
 

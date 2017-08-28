@@ -17,4 +17,6 @@
 @property (copy, nonatomic) NSString *message;
 @property (copy, nonatomic) NSString *name;
 
++ (instancetype)barrageModelForName:(NSString *)name message:(NSString *)message urlWihtUserID:(NSString *)userId;
+
 @end

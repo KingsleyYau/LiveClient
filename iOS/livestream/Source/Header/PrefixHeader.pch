@@ -32,4 +32,7 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
+///屏幕大小
+#define screenSize              [UIScreen mainScreen].bounds.size
+
 #endif /* PrefixHeader_pch */

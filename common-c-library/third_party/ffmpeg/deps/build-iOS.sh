@@ -13,7 +13,7 @@ export IPHONEOS_DEPLOYMENT_TARGET="8.0"
 DEVELOPER="/Applications/Xcode.app/Contents/Developer"
 
 function configure_prefix {
-	export PREFIX=$(pwd)/out/$ARCH
+	export PREFIX=$(pwd)/out.iOS/$ARCH
 
 	export PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig
 	export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig
@@ -176,7 +176,6 @@ function build_ffmpeg {
     				--enable-libfdk-aac \
 				    --disable-doc \
 				    --enable-version3 \
-    				--enable-small \
     				--disable-vda \
    					--disable-iconv \
     				--disable-outdevs \
@@ -186,9 +185,9 @@ function build_ffmpeg {
     				--disable-asm \
 						--disable-encoders \
 				    --enable-encoder=libx264 \
-				    --enable-encoder=aac \
+				    --enable-encoder=libfdk_aac \
 				    --disable-decoders \
-				    --enable-decoder=h264 \
+				    --enable-decoder=libx264 \
 				    --enable-decoder=libfdk_aac \
     				--disable-demuxers \
     				--enable-demuxer=h264 \
@@ -196,6 +195,7 @@ function build_ffmpeg {
     				--enable-parser=h264
     				$CONFIG_PARAM \
     				|| exit 1
+    				#--enable-small \
     				#--disable-ffmpeg \
     				#--disable-debug \
 						#--enable-runtime-cpudetect \
@@ -210,7 +210,8 @@ function build_ffmpeg {
 }
 
 function combine {
-	cd "out"
+	echo "# Starting combining..."
+	cd "out.iOS"
 	
 	lipo armv7/lib/libfdk-aac.a arm64/lib/libfdk-aac.a i386/lib/libfdk-aac.a x86_64/lib/libfdk-aac.a -create -output universal/libfdk-aac.a
 	lipo armv7/lib/libx264.a arm64/lib/libx264.a i386/lib/libx264.a x86_64/lib/libx264.a -create -output universal/libx264.a
@@ -224,6 +225,7 @@ function combine {
 	lipo armv7/lib/libswscale.a arm64/lib/libswscale.a i386/lib/libswscale.a x86_64/lib/libswscale.a -create -output universal/libswscale.a
 	
 	cd ..
+	echo "# Combine finish"
 }
 
 # Start Build
@@ -239,7 +241,7 @@ for var in ${BUILD_ARCH[@]};do
 	#build_fdk_aac || exit 1
 	#build_x264 || exit 1
 	build_ffmpeg || exit 1
-	echo "# Starting building for $ARCH finish..."
+	echo "# Build for $ARCH finish"
 done
 
 combine

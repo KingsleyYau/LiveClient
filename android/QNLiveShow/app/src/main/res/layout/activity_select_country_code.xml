@@ -11,7 +11,7 @@
         android:layout_height="wrap_content" />
 
 
-    <com.qpidnetwork.view.SlideBar
+    <com.qpidnetwork.livemodule.view.SlideBar
         android:id="@+id/sb_codeIndex"
         android:layout_width="55dp"
         android:layout_marginTop="15dp"

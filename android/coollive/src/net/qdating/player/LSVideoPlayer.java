@@ -12,12 +12,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.ImageFormat;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -36,7 +34,7 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
     private int videoStreamHeight = 0;
     private int byteBufferSize = 0;
     
-    private boolean isStartRender = false;
+    private Matrix matrix = new Matrix();
     
 	/**
 	 * 日志路径
@@ -53,27 +51,35 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
 	 * @param viewWidth
 	 * @param viewHeight
 	 */
-	public void init(SurfaceHolder holder, int viewWidth, int viewHeight){
-		surfaceHolder = holder;
+	public void init(SurfaceHolder holder, int viewWidth, int viewHeight) {
+		this.surfaceHolder = holder;
         this.viewWidth = viewWidth;
         this.viewHeight = viewHeight;
-        if(surfaceHolder == null)
-            return;
-        surfaceHolder.addCallback(this);
-        isStartRender = true;
-        
-//        surfaceHolder.setFormat(PixelFormat.TRANSLUCENT);
+        if( surfaceHolder != null ) {
+            surfaceHolder.addCallback(this);
+        }
+        changeVideoFrameSize(640, 480);
 	}
 	
 	/**
 	 * 解除界面绑定，停止渲染
 	 */
 	public void uninit() {
-		this.viewWidth = 0;
-		this.viewHeight = 0;
-		isStartRender = false;
-		if(surfaceHolder != null) {
+		viewWidth = 0;
+		viewHeight = 0;
+		
+		if( surfaceHolder != null ) {
 			surfaceHolder.removeCallback(this);
+			surfaceHolder = null;
+		}
+		
+		if( byteBuffer != null ) {
+			byteBuffer.clear();
+			byteBuffer = null;
+		}
+		if( bitmap != null ) {
+			bitmap.recycle();
+			bitmap = null;
 		}
 	}
 	
@@ -88,7 +94,7 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
 	/**
 	 * 清除缓存
 	 */
-	public void clean(){
+	public void clean() {
 		videoStreamWidth = 0;
 		videoStreamHeight = 0;
 		byteBuffer = null;
@@ -110,13 +116,12 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.i(LSConfig.TAG, String.format("LSVideoPlayer::surfaceChanged( width : %d, height : %d )", width, height));
+        Log.d(LSConfig.TAG, String.format("LSVideoPlayer::surfaceChanged( width : %d, height : %d )", width, height));
         changeDestRect(width, height);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
-    	Log.i(LSConfig.TAG, String.format("LSVideoPlayer::surfaceCreated()"));
-    	isStartRender = true;
+    	Log.d(LSConfig.TAG, String.format("LSVideoPlayer::surfaceCreated()"));
         Canvas canvas = surfaceHolder.lockCanvas();
         if(canvas != null) {
             Rect dst = surfaceHolder.getSurfaceFrame();
@@ -128,37 +133,27 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
-    	isStartRender = false;
     }
     
     private ByteBuffer createOrResetBuffer(int width, int height) {
-    	Log.i(LSConfig.TAG, String.format("LSVideoPlayer::createOrResetBuffer( width : %d, height : %d )", width, height));
-    	if(byteBuffer != null) {
-    		byteBuffer.clear();
-    	}
-    	byteBufferSize = width * height * 4;
-    	byteBuffer = ByteBuffer.allocateDirect(byteBufferSize);
-    	bitmap = createBitmap(width, height);
+    	int newByteBufferSize = width * height * 4;
     	
-    	Log.i(LSConfig.TAG, String.format("LSVideoPlayer::createOrResetBuffer( width : %d, height : %d, byteBufferSize : %d )", width, height, byteBufferSize));
+    	Log.d(LSConfig.TAG, String.format("LSVideoPlayer::createOrResetBuffer( width : %d, height : %d, newByteBufferSize : %d )", width, height, newByteBufferSize));
+		
+    	if( byteBufferSize < newByteBufferSize ) {
+    		byteBufferSize = newByteBufferSize;
+        	if(byteBuffer != null) {
+        		byteBuffer.clear();
+        	}
+        	byteBuffer = ByteBuffer.allocateDirect(byteBufferSize);
+    	}
+    	
+    	bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+    	
+    	Log.d(LSConfig.TAG, String.format("LSVideoPlayer::createOrResetBuffer( width : %d, height : %d, byteBufferSize : %d )", width, height, byteBufferSize));
     	
     	return byteBuffer;
     	
-    }
-    
-    private Bitmap createBitmap(int width, int height) {
-        Log.i(LSConfig.TAG, String.format("LSVideoPlayer::createBitmap( width : %d, height : %d )", width, height));
-        if (bitmap == null) {
-            try {
-                android.os.Process.setThreadPriority(
-                    android.os.Process.THREAD_PRIORITY_DISPLAY);
-            }
-            catch (Exception e) {
-            }
-        }
-        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-//        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        return bitmap;
     }
 
     // It saves bitmap data to a JPEG picture, this function is for debug only.
@@ -179,10 +174,12 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
         }
     }
 
-    public void DrawBitmap() {
-        if(bitmap == null)
+    public void DrawBitmap(ByteBuffer buffer) {
+        if( bitmap == null )
             return;
 
+        bitmap.copyPixelsFromBuffer(buffer);
+        
         if( debug ) {
         	// The follow line is for debug only
         	saveBitmapToJPEG(videoStreamWidth, videoStreamHeight);
@@ -192,15 +189,19 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
         if(canvas != null) {
         	if( viewHeight > 0 && viewWidth > 0 && 
         			videoStreamHeight > 0 && videoStreamWidth > 0 ) {
-            	Matrix matrix = new Matrix();
+//            	Matrix matrix = new Matrix();
             	float scale = 0.0f;
-            	float widthScale = ((float)viewWidth)/videoStreamWidth;
-            	float heightScale = ((float)viewHeight)/videoStreamHeight;
+            	float widthScale = ((float)viewWidth) / videoStreamWidth;
+            	float heightScale = ((float)viewHeight) / videoStreamHeight;
             	scale = widthScale > heightScale?widthScale:heightScale;
-            	float dx = -(videoStreamWidth*scale - viewWidth)/2;
-            	float dy = -(videoStreamHeight*scale - viewHeight)/2;
+            	float dx = -(float)(videoStreamWidth * scale - viewWidth) / 2;
+            	float dy = -(float)(videoStreamHeight * scale - viewHeight) / 2;
+        		
+            	matrix.reset();
             	matrix.postScale(scale, scale);
             	matrix.postTranslate(dx, dy);
+            	
+            	canvas.drawColor(Color.BLACK);
                 canvas.drawBitmap(bitmap, matrix, null);
         	}
         	surfaceHolder.unlockCanvasAndPost(canvas);
@@ -211,7 +212,7 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
 		// TODO Auto-generated method stub
 		if(videoStreamWidth != width
 				|| videoStreamHeight != height) {
-			Log.i(LSConfig.TAG, String.format("LSVideoPlayer::changeVideoFrameSize( "
+			Log.d(LSConfig.TAG, String.format("LSVideoPlayer::changeVideoFrameSize( "
 					+ "width : %d, "
 					+ "height : %d, "
 					+ "videoStreamWidth : %d, "
@@ -226,33 +227,22 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
 			
 			videoStreamWidth = width;
 			videoStreamHeight = height;
+			
 			createOrResetBuffer(width, height);
 		}
 	}
 	
 	public void playVideoFrame(byte[] data) {
 		// TODO Auto-generated method stub
-//		Log.i(LSConfig.TAG, String.format("LSVideoPlayer::playVideoFrame( size : %d, byteBufferSize : %d )", data.length, byteBufferSize));
-		if(isStartRender) {
-			if(byteBuffer != null &&
-					data.length <= byteBufferSize){
-				byteBuffer.put(data, 0, data.length);
-				
-		        if(byteBuffer == null)
-		            return;
-		        byteBuffer.rewind();
-		        bitmap.copyPixelsFromBuffer(byteBuffer);
-		        DrawBitmap();
-		        byteBuffer.clear();
-		        
-			} else {
-				Log.i(LSConfig.TAG, String.format("LSVideoPlayer::playVideoFrame( [DrawFrame Error], size : %d, byteBufferSize : %d ", data.length, byteBufferSize));
-			}
-			
-//			bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-//			DrawBitmap();
-			
-//			Log.i(LSConfig.TAG, String.format("LSVideoPlayer::playVideoFrame( bitmap.getConfig() : %s ", bitmap.getConfig().toString()));
+//		Log.d(LSConfig.TAG, String.format("LSVideoPlayer::playVideoFrame( size : %d, byteBufferSize : %d )", data.length, byteBufferSize));
+		if ( byteBuffer != null && data.length <= byteBufferSize ) {
+			byteBuffer.put(data, 0, data.length);
+	        byteBuffer.rewind();
+	        DrawBitmap(byteBuffer);
+	        byteBuffer.clear();
+	        
+		} else {
+			Log.d(LSConfig.TAG, String.format("LSVideoPlayer::playVideoFrame( [DrawFrame Error], size : %d, byteBufferSize : %d ", data.length, byteBufferSize));
 		}
 	}
 
@@ -260,15 +250,6 @@ public class LSVideoPlayer implements Callback, ILSVideoRendererJni {
 	public void renderVideoFrame(byte[] data, int width, int height) {
 		// TODO Auto-generated method stub
 		changeVideoFrameSize(width, height);
-//		byte[] rgbData = chageYUV2RGB(data, width, height);
 		playVideoFrame(data);
-	}
-
-	byte[] chageYUV2RGB(byte[] data, int width, int height) {
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
-		yuvImage.compressToJpeg(new Rect(0, 0, width, height), 50, out);
-		byte[] imageBytes = out.toByteArray();
-		return imageBytes;
 	}
 }

@@ -25,6 +25,10 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *bigGiftLogo;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *haveNumViewWidth;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *haveNumViewHeight;
+
 
 @end
 
@@ -49,6 +53,7 @@
     self.selectCell = NO;
     
     self.bigGiftLogo.hidden = NO;
+    self.haveNumView.hidden = YES;
     
     [self updataMasonry];
 
@@ -56,13 +61,18 @@
 
 - (void)updataMasonry{
     
-    self.giftName.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(12)];
+    self.giftName.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
     self.giftCount.titleLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(10)];
     self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
     self.giftNameLableBottomOffset.constant = 0;
     self.giftImageBottomOffset.constant = DESGIN_TRANSFORM_3X(3);
     self.giftImageWidth.constant = self.giftImageHeight.constant = DESGIN_TRANSFORM_3X(50);
     self.bigGiftLogoWidth.constant = self.bigGiftLogoHeight.constant = DESGIN_TRANSFORM_3X(12);
+    self.haveNumViewWidth.constant = DESGIN_TRANSFORM_3X(26);
+    self.haveNumViewHeight.constant = DESGIN_TRANSFORM_3X(26);
+    self.haveNumView.layer.cornerRadius = DESGIN_TRANSFORM_3X(13);
+    self.haveNumView.layer.masksToBounds = YES;
+    self.haveNumLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(14)];
 }
 
 - (void)reloadStyle {
@@ -73,7 +83,14 @@
         self.layer.borderWidth = 0;
         self.layer.borderColor = [UIColor yellowColor].CGColor;
     }
+}
+
+/** 背包隐藏view */
+- (void)backpackHiddenView {
     
+    self.giftCount.hidden = YES;
+    self.bigGiftLogo.hidden = YES;
+    self.haveNumView.hidden = NO;
 }
 
 - (void)updataCellViewItem:(LiveRoomGiftItemObject *)item{
@@ -97,6 +114,19 @@
     
 }
 
+- (void)updataBackpackCellViewItem:(BackpackGiftItem *)backItem{
+    
+    self.selectCell = NO;
+    
+    self.bigGiftLogo.hidden = YES;
+    
+    self.giftName.text = backItem.item.name;
+    
+    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:backItem.item.imgUrl]
+                          placeholderImage:[UIImage imageNamed:@"Live_giftIcon_nomal"] options:0];
+    
+    self.haveNumLabel.text = [NSString stringWithFormat:@"%d",backItem.giftNum];
+}
 
 + (NSString *)cellIdentifier {
     return @"GiftItemCollectionViewIdentifier";

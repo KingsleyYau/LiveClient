@@ -91,6 +91,7 @@
     <string name="txt_sureDeleteCover">Are you sure you wish to delete this cover?</string>
     <string name="tip_needCoverPhoto">请选择房间封面图</string>
     <string name="tip_needRoomTitle">请输入房间标题</string>
+    <string name="tip_emoji_unusable">Sorry. To use advanced emoticion, you need to upgrade the intimacy to 10</string>
 
 
     <!-- Live Room -->
@@ -101,6 +102,7 @@
     <string name="liveroom_message_template_normal"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g> : </font><font color=\"#FFFFFF\">%2$s</font>]]></string>
     <string name="liveroom_message_template_roomin"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FFFFFF\"> Joined</font>]]></string>
     <string name="liveroom_message_template_favorite"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#B4A5FF\"> likes this stream</font>]]></string>
-    <string name="liveroom_message_template_gift"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#0CEDF5\"> sent Apple </font>]]></string>
+    <string name="liveroom_message_template_gift"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#0CEDF5\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#0CEDF5\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+    <string name="liveroom_message_gift_x">x</string>
 
 </resources>

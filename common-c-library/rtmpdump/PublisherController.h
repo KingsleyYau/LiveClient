@@ -9,11 +9,14 @@
 #ifndef PublisherController_h
 #define PublisherController_h
 
-#include <stdio.h>
-
 #include <rtmpdump/RtmpDump.h>
 #include <rtmpdump/RtmpPublisher.h>
 #include <rtmpdump/IEncoder.h>
+
+#include <rtmpdump/video/VideoRecorderH264.h>
+#include <rtmpdump/audio/AudioRecorderAAC.h>
+
+#include <stdio.h>
 
 #include <string>
 using namespace std;
@@ -31,26 +34,6 @@ class PublisherController : public RtmpDumpCallback, VideoEncoderCallback, Audio
 public:
     PublisherController();
     ~PublisherController();
-    
-    /**
-     设置视频属性
-     
-     @param width <#width description#>
-     @param height <#height description#>
-     @param bitRate <#bitRate description#>
-     @param keyFrameInterval <#keyFrameInterval description#>
-     @param fps <#fps description#>
-     */
-    void SetVideoParam(int width, int height, int bitRate, int keyFrameInterval, int fps);
-    
-    /**
-     设置音频属性
-
-     @param sampleRate <#sampleRate description#>
-     @param channelsPerFrame <#channelsPerFrame description#>
-     @param bitPerSample <#bitPerSample description#>
-     */
-    void SetAudioParam(int sampleRate, int channelsPerFrame, int bitPerSample);
     
     /**
      设置视频编码器
@@ -92,14 +75,14 @@ public:
      
      @param frame 视频帧数据
      */
-    void PushVideoFrame(void* data, int size, void* frame);
+    void PushVideoFrame(void* data, int size, void* frame = NULL);
     
     /**
      发送原始音频帧
      
      @param frame 音频帧数据
      */
-    void PushAudioFrame(void* frame);
+    void PushAudioFrame(void* data, int size, void* frame = NULL);
     
     /**
      增加切换到后台时间造成的timesatmp
@@ -153,20 +136,9 @@ private:
     AudioEncoder* mpAudioEncoder;
     // 状态回调
     PublisherStatusCallback* mpPublisherStatusCallback;
-    // 是否使用硬编码码
-    bool mUseHardEncoder;
-    
-    // 视频参数
-    int mWidth;
-    int mHeight;
-    int mBitRate;
-    int mKeyFrameInterval;
-    int mFPS;
-    
-    // 音频参数
-    int mSampleRate;
-    int mChannelsPerFrame;
-    int mBitPerSample;
+    // 录制模块
+    VideoRecorderH264 mVideoRecorderH264;
+    AudioRecorderAAC mAudioRecorderAAC;
 };
 }
 #endif /* PublisherController_h */

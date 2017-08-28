@@ -12,7 +12,8 @@
 #import "HotViewController.h"
 #import "DiscoverViewController.h"
 #import "SearchViewController.h"
-#import "Masonry.h"
+#import "ChatViewController.h"
+#import "ChatListViewController.h"
 
 @interface HomePageViewController () <JTSegmentControlDelegate>
 
@@ -69,6 +70,9 @@
 - (void)initCustomParam {
     [super initCustomParam];
     
+    // 设置导航栏返回按钮
+    [self setBackleftBarButtonItemOffset:15];
+    
 //    self.title = @"Home";
     self.tabBarItem.image = [UIImage imageNamed:@"TabBarHome"];
     
@@ -123,8 +127,12 @@
 #pragma mark - 界面事件
 - (IBAction)searchAction:(id)sender {
     
-    SearchViewController *searchController = [[SearchViewController alloc]init];
-    [self.navigationController pushViewController:searchController animated:YES];
+//    SearchViewController *searchController = [[SearchViewController alloc]init];
+//    [self.navigationController pushViewController:searchController animated:YES];
+    
+    ChatListViewController *listViewController = [[ChatListViewController alloc]init];
+    [self.navigationController pushViewController:listViewController animated:YES];
+    
 }
 
 #pragma mark - 数据逻辑

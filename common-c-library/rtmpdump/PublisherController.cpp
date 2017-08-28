@@ -15,16 +15,6 @@ PublisherController::PublisherController() {
     mpAudioEncoder = NULL;
     mpPublisherStatusCallback = NULL;
     
-    mWidth = 0;
-    mHeight = 0;
-    mKeyFrameInterval = 0;
-    mBitRate = 0;
-    mFPS = 0;
-    
-    mSampleRate = 0;
-    mChannelsPerFrame = 0;
-    mBitPerSample = 0;
-    
     mRtmpDump.SetCallback(this);
     mRtmpPublisher.SetRtmpDump(&mRtmpDump);
 }
@@ -33,27 +23,13 @@ PublisherController::~PublisherController() {
     
 }
 
-void PublisherController::SetVideoParam(int width, int height, int bitRate, int keyFrameInterval, int fps) {
-    mWidth = width;
-    mHeight = height;
-    mKeyFrameInterval = keyFrameInterval;
-    mBitRate = bitRate;
-    mFPS = fps;
-}
-    
-void PublisherController::SetAudioParam(int sampleRate, int channelsPerFrame, int bitPerSample) {
-    mSampleRate = sampleRate;
-    mChannelsPerFrame = channelsPerFrame;
-    mBitPerSample = bitPerSample;
-}
-    
 void PublisherController::SetVideoEncoder(VideoEncoder* videoEncoder) {
     if( mpVideoEncoder != videoEncoder ) {
         mpVideoEncoder = videoEncoder;
     }
     
     if( mpVideoEncoder ) {
-        mpVideoEncoder->Create(this, mWidth, mHeight, mBitRate, mKeyFrameInterval, mFPS);
+        mpVideoEncoder->SetCallback(this);
     }
 }
 
@@ -63,7 +39,7 @@ void PublisherController::SetAudioEncoder(AudioEncoder* audioEncoder) {
     }
     
     if( mpAudioEncoder ) {
-        mpAudioEncoder->Create(this, mSampleRate, mChannelsPerFrame, mBitPerSample);
+        mpAudioEncoder->SetCallback(this);
     }
 }
 
@@ -83,17 +59,27 @@ bool PublisherController::PublishUrl(const string& url, const string& recordH264
                  );
     
     // 开始发布
-    bFlag = mRtmpPublisher.PublishUrl(url, recordH264FilePath, recordAACFilePath);
+    bFlag = mRtmpPublisher.PublishUrl(url, recordAACFilePath);
+    // 开始编码
+    if( bFlag ) {
+        bFlag = mpVideoEncoder->Reset();
+    }
+    if( bFlag ) {
+        bFlag = mpAudioEncoder->Reset();
+    }
+    
+    // 开始录制
+    mVideoRecorderH264.Start(recordH264FilePath);
+    mAudioRecorderAAC.Start(recordAACFilePath);
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::PublishUrl( "
-                 "[Finish], "
-                 "url : %s, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "url : %s "
                  ")",
-                 url.c_str(),
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 url.c_str()
                  );
     
     return bFlag;
@@ -110,11 +96,19 @@ void PublisherController::Stop() {
     
     // 停止发布
     mRtmpPublisher.Stop();
+    if( mpVideoEncoder ) {
+        mpVideoEncoder->Pause();
+    }
+    if( mpAudioEncoder ) {
+        mpAudioEncoder->Pause();
+    }
+    mVideoRecorderH264.Stop();
+    mAudioRecorderAAC.Stop();
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::Stop( "
-                 "[Finish], "
+                 "[Success], "
                  "this : %p "
                  ")",
                  this
@@ -139,17 +133,19 @@ void PublisherController::PushVideoFrame(void* data, int size, void* frame) {
     }
 }
 
-void PublisherController::PushAudioFrame(void* frame) {
+void PublisherController::PushAudioFrame(void* data, int size, void* frame) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::PushAudioFrame( "
+                 "data : %p, "
+                 "size : %d, "
                  "frame : %p "
                  ")",
                  frame
                  );
     
     if( mpAudioEncoder ) {
-        mpAudioEncoder->EncodeAudioFrame(frame);
+        mpAudioEncoder->EncodeAudioFrame(data, size, frame);
     }
 }
 
@@ -179,9 +175,12 @@ void PublisherController::OnEncodeVideoFrame(VideoEncoder* encoder, char* data, 
                  data[0]
                  );
     
+    // 录制视频帧
+    mVideoRecorderH264.RecordVideoNaluFrame(data, size);
+    
+    // 发送视频帧
     mRtmpPublisher.SendVideoFrame(data, size, timestamp);
 }
-    
     
 void PublisherController::OnEncodeAudioFrame(
                                              AudioEncoder* encoder,
@@ -202,7 +201,11 @@ void PublisherController::OnEncodeAudioFrame(
                  timestamp,
                  size
                  );
+    // 录制音频帧
+    mAudioRecorderAAC.ChangeAudioFormat(format, sound_rate, sound_size, sound_type);
+    mAudioRecorderAAC.RecordAudioFrame(frame, size);
     
+    // 发送音频帧
     mRtmpPublisher.SendAudioFrame(format, sound_rate, sound_size, sound_type, frame, size, timestamp);
 }
 

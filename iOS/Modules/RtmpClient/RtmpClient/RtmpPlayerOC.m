@@ -16,8 +16,8 @@
 #include <rtmpdump/iOS/AudioRendererImp.h>
 
 #pragma mark - 软解码器
-#include <rtmpdump/VideoDecoderH264.h>
-#include <rtmpdump/AudioDecoderAAC.h>
+#include <rtmpdump/video/VideoDecoderH264.h>
+#include <rtmpdump/audio/AudioDecoderAAC.h>
 
 #pragma mark - 硬解码器
 #include <rtmpdump/iOS/VideoHardDecoder.h>
@@ -205,6 +205,12 @@ private:
 - (void)dealloc {
     if( self.statusCallback ) {
         delete self.statusCallback;
+        self.statusCallback = NULL;
+    }
+    
+    if( self.player ) {
+        delete self.player;
+        self.player = NULL;
     }
     
     [self destroyDecoders];
@@ -280,6 +286,7 @@ private:
     // 替换解码器
     self.player->SetVideoRenderer(self.videoRenderer);
     self.player->SetAudioRenderer(self.audioRenderer);
+    
     // 替换渲染器
     self.player->SetVideoDecoder(self.videoDecoder);
     self.player->SetAudioDecoder(self.audioDecoder);

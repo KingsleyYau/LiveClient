@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:minHeight="58dp"> <!-- 图片为40Dp + padding8dp  -->
+    android:minHeight="45dp">
     <!-- 外部填充 -->
     <LinearLayout
         android:id="@+id/childView"
+        android:layout_marginLeft="13dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -14,39 +15,57 @@
     </LinearLayout>
 
     <!-- 显示连击数 -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/llayout_num"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="26dp"
         android:layout_centerVertical="true"
-        android:padding = "8dp"
+        android:paddingRight="7dp"
         android:layout_toRightOf="@id/childView">
 
         <ImageView
             android:id="@+id/img_x"
-            android:layout_width="20dp"
-            android:layout_height="40dp" />
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:scaleType="fitCenter"/>
 
         <ImageView
             android:id="@+id/img_0"
-            android:layout_width="1dp"
-            android:layout_height="40dp" />
+            android:layout_toRightOf="@id/img_x"
+            android:layout_centerVertical="true"
+            android:layout_width="16dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="2dp"
+            android:scaleType="fitCenter"/>
 
         <ImageView
             android:id="@+id/img_1"
-            android:layout_width="1dp"
-            android:layout_height="40dp" />
+            android:layout_toRightOf="@id/img_0"
+            android:layout_centerVertical="true"
+            android:layout_width="16dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="2dp"
+            android:scaleType="fitCenter"/>
 
         <ImageView
             android:id="@+id/img_2"
-            android:layout_width="1dp"
-            android:layout_height="40dp" />
+            android:layout_toRightOf="@id/img_1"
+            android:layout_centerVertical="true"
+            android:layout_width="16dp"
+            android:layout_height="23dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="2dp"/>
 
         <ImageView
             android:id="@+id/img_3"
-            android:layout_width="1dp"
-            android:layout_height="40dp"/>
-
-    </LinearLayout>
-
+            android:layout_toRightOf="@id/img_2"
+            android:layout_centerVertical="true"
+            android:layout_width="16dp"
+            android:layout_height="23dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="2dp"/>
+    </RelativeLayout>
 </RelativeLayout>

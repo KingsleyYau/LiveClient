@@ -12,7 +12,6 @@
 #include <common/KLog.h>
 
 namespace coollive {
-#define DEFAULT_VIDEO_BUFFER_SIZE 480 * 640 * 4
 VideoDecoderImp::VideoDecoderImp() {
 	// TODO Auto-generated constructor stub
     FileLog("rtmpdump", "VideoDecoderImp::VideoDecoderImp( decoder : %p )", this);

@@ -147,7 +147,7 @@ private:
     // 5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）
     void OnSendRoomFav(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
     // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-    void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) override;
+    void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins, int multi_click_id) override;
     // 7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
     void OnSendRoomToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) override;
     

@@ -148,6 +148,7 @@
             // 断线重新拉流
             dispatch_async(self.reconnect_queue, ^{
                 NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
+                [self.player stop];
                 [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
             });
             

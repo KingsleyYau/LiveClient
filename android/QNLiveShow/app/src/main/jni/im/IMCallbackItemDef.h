@@ -8,7 +8,7 @@
 #ifndef IMCALLBACKITEMDEF_H
 #define IMCALLBACKITEMDEF_H
 
-#define IM_ROOM_FANS_ITEM_CLASS 				"com/qpidnetwork/im/listener/IMUserBaseInfoItem"
-#define IM_ROOM_INFO_ITEM_CLASS 				"com/qpidnetwork/im/listener/IMRoomInfoItem"
+#define IM_ROOMIN_ITEM_CLASS 				"com/qpidnetwork/livemodule/im/listener/IMRoomInItem"
+#define IM_REBATE_ITEM_CLASS 				"com/qpidnetwork/livemodule/im/listener/IMRebateItem"
 
 #endif

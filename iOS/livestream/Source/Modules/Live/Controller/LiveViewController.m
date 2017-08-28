@@ -25,6 +25,7 @@
 #import "LiveRoomGiftItemObject.h"
 #import "LiveGiftDownloadManager.h"
 #import "UserHeadUrlManager.h"
+#import "ChatEmotionManager.h"
 
 #define INPUTMESSAGEVIEW_MAX_HEIGHT 44.0 * 2
 
@@ -51,7 +52,7 @@
 
 #define MessageCount 500
 
-#define TableSuperViewHeight 120
+#define MsgTableViewHeight 250
 
 @interface LiveViewController () <UITextFieldDelegate, KKCheckButtonDelegate, BarrageViewDataSouce, BarrageViewDelegate, GiftComboViewDelegate, IMLiveRoomManagerDelegate>
 
@@ -94,6 +95,8 @@
 #pragma mark - 用户头像管理器
 @property (nonatomic, strong) UserHeadUrlManager *photoManager;
 
+@property (nonatomic, strong) ChatEmotionManager *emotionManager;
+
 #pragma mark - 测试
 @property (nonatomic, weak) NSTimer* testTimer;
 @property (nonatomic, assign) NSInteger giftItemId;
@@ -101,7 +104,7 @@
 @property (nonatomic, weak) NSTimer* testTimer3;
 @property (nonatomic, assign) NSInteger msgId;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tableSuperViewHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *msgTableViewHeight;
 
 
 @end
@@ -131,6 +134,7 @@
     
     // 初始化礼物管理器
     self.giftDownloadManager = [LiveGiftDownloadManager giftDownloadManager];
+    self.emotionManager = [ChatEmotionManager emotionManager];
     
     // 初始化头像管理器
     self.photoManager = [UserHeadUrlManager manager];
@@ -141,6 +145,13 @@
     // 注册大礼物结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationWhatIs:) name:@"animationIsAnimaing" object:nil];
     
+//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+//    [dateFormatter setDateFormat:@"YYYY-MM-d HH:mm ZZ"];
+//    [dateFormatter setTimeZone:[NSTimeZone timeZoneWithName:[[NSTimeZone localTimeZone] name]]];
+//    NSDate *date = [dateFormatter dateFromString:@"2017-07-16 19:20 +4"];
+//    NSString *dStr = [dateFormatter stringFromDate:date];
+//    NSLog(@"当前时区 %@ 所在地时间 %@",[[NSTimeZone localTimeZone] name],dStr);
+//    NSLog(@"GTM 时间：%@",date);
 }
 
 - (void)dealloc {
@@ -150,6 +161,9 @@
     
     // 去除大礼物结束通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"animationIsAnimaing" object:nil];
+    
+    
+    [self.giftComboManager removeManager];
     
     [self.giftAnimationView removeFromSuperview];
     self.giftAnimationView = nil;
@@ -170,6 +184,11 @@
     // 初始化视频界面
     self.videoView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
     self.view.clipsToBounds = YES;
+    
+    // 初始化消息列表
+    [self setupTableView];
+    
+//    [self test];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -183,7 +202,7 @@
     [super viewWillDisappear:animated];
 
     // 停止测试
-    [self stopTest];
+//    [self stopTest];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -219,9 +238,6 @@
     
     // 初始化弹幕
     [self setupBarrageView];
-    
-    // 初始化消息列表
-    [self setupTableView];
 }
 
 #pragma mark - 主播信息管理
@@ -355,10 +371,12 @@
     giftComboView.beginNum = giftItem.multi_click_start;
     giftComboView.endNum = giftItem.multi_click_end;
     
+    NSLog(@"LiveViewController : showCombo beginNum:%ld endNum:%ld clickID:%ld",(long)giftComboView.beginNum,(long)giftComboView.endNum,(long)giftItem.multi_click_id);
+    
     // 连击礼物
     NSString *imgUrl = [self.giftDownloadManager backImgUrlWithGiftID:giftItem.giftid];
     [giftComboView.giftImageView sd_setImageWithURL:[NSURL URLWithString:imgUrl]
-                                   placeholderImage:[UIImage imageNamed:@""] options:0];
+                                   placeholderImage:[UIImage imageNamed:@"Live_Publish_Btn_Gift"] options:0];
     
     giftComboView.item = giftItem;
     
@@ -381,7 +399,6 @@
     } completion:^(BOOL finished) {
         // 开始连击
         [giftComboView playGiftCombo];
-        
     }];
     
     return bFlag;
@@ -396,30 +413,31 @@
             // 寻找空闲的界面
             giftComboView = view;
             
-        } else if( [view.item.itemId isEqualToString:giftItem.itemId] ) {
+        } else {
             
-            // 寻找正在播放同一个连击礼物的界面
-            giftComboView = view;
-            // 更新最后连击数字
-            giftComboView.endNum = giftItem.multi_click_end;
-            break;
+            if( [view.item.itemId isEqualToString:giftItem.itemId] ) {
+                
+                // 寻找正在播放同一个连击礼物的界面
+                giftComboView = view;
+                // 更新最后连击数字
+                giftComboView.endNum = giftItem.multi_click_end;
+                break;
+            }
         }
     }
     
     if( giftComboView ) {
         // 有空闲的界面
         if( !giftComboView.playing ) {
-            
             // 开始播放新的礼物连击
             [self showCombo:giftItem giftComboView:giftComboView withUserID:giftItem.fromid];
-            
-            NSLog(@"LiveViewController::addCombo( Playing Gift : %@ )", giftItem);
+            NSLog(@"LiveViewController : addCombo( Playing Gift starNum:%ld endNum:%ld clickID:%ld )", (long)giftItem.multi_click_start,(long)giftItem.multi_click_end,(long)giftItem.multi_click_id);
         }
 
     } else {
         // 没有空闲的界面, 放到缓存
         [self.giftComboManager pushGift:giftItem];
-        NSLog(@"LiveViewController::addCombo( Push Cache : %@ )", giftItem);
+        NSLog(@"LiveViewController : addCombo( Push Cache starNum:%ld endNum:%ld clickID:%ld )", (long)giftItem.multi_click_start,(long)giftItem.multi_click_end,(long)giftItem.multi_click_id);
     }
 }
 
@@ -449,14 +467,17 @@
     
     self.giftAnimationView = [BigGiftAnimationView sharedObject];
     self.giftAnimationView.userInteractionEnabled = NO;
-    [self.view addSubview:self.giftAnimationView];
-    [self.view bringSubviewToFront:self.giftAnimationView];
     
-    [self.giftAnimationView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.left.top.equalTo(self.view);
-        make.bottom.equalTo(self.tableSuperView.mas_bottom);
-    }];
-    [self.giftAnimationView starAnimationWithGiftID:giftID];
+    if ( [self.giftAnimationView starAnimationWithGiftID:giftID] ) {
+        
+        [self.view addSubview:self.giftAnimationView];
+        [self.view bringSubviewToFront:self.giftAnimationView];
+        
+        [self.giftAnimationView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.left.top.equalTo(self.view);
+            make.bottom.equalTo(self.tableSuperView.mas_bottom);
+        }];
+    }
 }
 
 #pragma mark - 通知大动画结束
@@ -480,7 +501,7 @@
 
 #pragma mark - 弹幕回调(BarrageView)
 - (NSUInteger)numberOfRowsInTableView:(BarrageView *)barrageView {
-    return 2;
+    return 1;
 }
 
 - (BarrageViewCell *)barrageView:(BarrageView *)barrageView cellForModel:(id<BarrageModelAble>)model {
@@ -494,8 +515,9 @@
                                 placeholderImage:[UIImage imageNamed:@"Login_Main_Logo"] options:0];
     }];
     cell.labelName.text = item.name;
-    cell.labelMessage.text = item.message;
     
+    cell.labelMessage.attributedText = [self.emotionManager parseMessageTextEmotion:item.message font:[UIFont boldSystemFontOfSize:15]];
+
     return cell;
 }
 
@@ -527,6 +549,8 @@
     
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapMsgTipsView:)];
     [self.msgTipsView addGestureRecognizer:singleTap];
+    
+    [self.view insertSubview:self.barrageView aboveSubview:self.tableSuperView];
 }
 
 - (BOOL)sendMsg:(NSString *)text isLounder:(BOOL)isLounder {
@@ -539,18 +563,13 @@
         
         if ( isLounder ) {
             // 发送弹幕
-            BarrageModel* item = [[BarrageModel alloc] init];
-            item.name = self.loginManager.loginItem.nickName;
-            item.message = text;
-            item.level = PriorityLevelHigh;
-            // 传用户ID获取图片url
-            item.url = self.loginManager.loginItem.userId;
+            BarrageModel* item = [BarrageModel barrageModelForName:self.loginManager.loginItem.nickName message:text
+                                                     urlWihtUserID:self.loginManager.loginItem.userId];
             
             // 插入到弹幕
             NSArray* items = [NSArray arrayWithObjects:item, nil];
             [self.barrageView insertBarrages:items immediatelyShow:YES];
         }
-
         // 插入普通文本消息
         [self addChatMessageNickName:self.loginManager.loginItem.nickName userLevel:self.loginManager.loginItem.level text:text];
         
@@ -579,7 +598,7 @@
     
     NSMutableAttributedString *attributeString = [self sendItem:item textColor:MessageTextColor nameColor:NameColor
                                                                         nameTextFont:NameFont andTextFont:MessageFont];
-    item.attText = attributeString;
+    item.attText = [self.emotionManager parseMessageAttributedTextEmotion:attributeString font:MessageFont];
     
     // 插入到消息列表
     [self addMsg:item replace:NO scrollToEnd:YES animated:YES];
@@ -649,8 +668,10 @@
         
         // 增加新消息
         [self.msgArray addObject:item];
-
-        if( lastVisibleRow >= lastRow ) {
+        
+        long subCount = self.msgArray.count - self.msgShowArray.count;
+        
+        if( lastVisibleRow >= lastRow || subCount == 1 ) {
             // 如果消息列表当前能显示最新的消息
             
             // 直接刷新
@@ -668,9 +689,10 @@
             
             // 替换显示的消息列表
             self.msgShowArray = [NSMutableArray arrayWithArray:self.msgArray];
-            
+        
             // 增加列表一条新消息
             [self.msgTableView insertRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:self.msgShowArray.count - 1 inSection:0]] withRowAnimation:(deleteOldMsg && replace)?UITableViewRowAnimationNone:UITableViewRowAnimationBottom];
+            
             [self.msgTableView endUpdates];
             
             // 增加tableSuperView高度
@@ -693,25 +715,25 @@
 
 - (void)addNewMessageCellHeigh{
     
-    CGFloat tableSuperViewHeight = self.tableSuperViewHeight.constant;
+    CGFloat msgTableViewHeight = self.msgTableViewHeight.constant;
     CGFloat tableContentSizeHeight = self.msgTableView.contentSize.height;
     
-    if (tableContentSizeHeight >= tableSuperViewHeight) {
+    if (tableContentSizeHeight >= msgTableViewHeight) {
         
-        tableSuperViewHeight = tableSuperViewHeight + tableContentSizeHeight;
+        msgTableViewHeight = msgTableViewHeight + tableContentSizeHeight;
         
-        if (tableSuperViewHeight <= TableSuperViewHeight) {
+        if (msgTableViewHeight <= MsgTableViewHeight) {
             
-            self.tableSuperViewHeight.constant = tableSuperViewHeight;
+            self.msgTableViewHeight.constant = msgTableViewHeight;
         }else{
             
-            self.tableSuperViewHeight.constant = TableSuperViewHeight;
+            self.msgTableViewHeight.constant = MsgTableViewHeight;
         }
     }
     [self.tableSuperView layoutIfNeeded];
 }
 
-- (void)scrollToEnd:(BOOL)animated {
+- (void)scrollToEnd:(BOOL)animated{
     NSInteger count = [self.msgTableView numberOfRowsInSection:0];
     if( count > 0 ) {
         NSIndexPath* indexPath = [NSIndexPath indexPathForRow:count - 1 inSection:0];
@@ -750,7 +772,9 @@
 }
 
 - (void)tapMsgTipsView:(id)sender {
-    [self scrollToEnd:YES];
+//    [self scrollToEnd:YES];
+    
+    [self scrollViewDidScroll:self.msgTableView];
 }
 
 /**
@@ -847,14 +871,14 @@
     if (item.type == MsgType_Gift) {
         
         UIImageView *imageView = [[UIImageView alloc]init];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:item.smallImgUrl] placeholderImage:[UIImage imageNamed:@""] options:0];
+        [imageView sd_setImageWithURL:[NSURL URLWithString:item.smallImgUrl] placeholderImage:[UIImage imageNamed:@"Live_Publish_Btn_Gift"] options:0];
         imageView.frame = CGRectMake(0, 0, 15, 15);
         NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
         [attributeString appendAttributedString:attachText];
         
         if (item.giftNum > 1) {
-            [attributeString appendAttributedString:[self
-                                                     parseMessage:[NSString stringWithFormat:@" x%d",item.giftNum] font:font color:textColor]];
+            [attributeString appendAttributedString:[self parseMessage:
+                                                     [NSString stringWithFormat:@" x%d",item.giftNum] font:font color:textColor]];
         }
     }
     
@@ -885,9 +909,9 @@
         MsgItem* item = [self.msgShowArray objectAtIndex:indexPath.row];
         
         height = [tableView fd_heightForCellWithIdentifier:[MsgTableViewCell cellIdentifier] cacheByIndexPath:indexPath
-                                    configuration:^(MsgTableViewCell *cell) {
-                                        [cell updataChatMessage:item];
-        }];
+                                             configuration:^(MsgTableViewCell *cell) {
+                                                 [cell updataChatMessage:item];
+                                             }];
     }
     return height;
 }
@@ -939,7 +963,7 @@
     }
     NSInteger lastRow = self.msgShowArray.count - 1;
     
-    if( self.msgShowArray.count > 0 && lastVisibleRow == lastRow ) {
+    if( self.msgShowArray.count > 0 && lastVisibleRow <= lastRow ) {
         // 已经拖动到最底, 刷新界面
         if( self.needToReload ) {
             self.needToReload = NO;
@@ -950,11 +974,10 @@
             // 刷新消息列表
             self.msgShowArray = [NSMutableArray arrayWithArray:self.msgArray];
             [self.msgTableView reloadData];
-
+            
             // 同步位置
             [self scrollToEnd:NO];
         }
-
     }
 }
 
@@ -968,23 +991,19 @@
             // 刷新粉丝头像列表
         });
     };
-    
     [self.sessionManager sendRequest:request];
 }
 
 #pragma mark - 获取指定礼物详情
 - (void)getGiftDetailWithGiftid:(NSString *)giftId {
-
     GetLiveRoomGiftDetailRequest *request = [[GetLiveRoomGiftDetailRequest alloc]init];
     request.giftId = giftId;
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomGiftItemObject * _Nullable item){
         dispatch_async(dispatch_get_main_queue(), ^{
             // 添加新礼物到本地
             if (success) {
-                
                 [self.giftDownloadManager.giftMuArray addObject:item];
             }
-            
         });
     };
     [self.sessionManager sendRequest:request];
@@ -995,15 +1014,13 @@
 // 发送弹幕
 - (void)sendRoomToastRequestFromText:(NSString *)text {
     
-    [self.imManager.client sendRoomToast:self.roomId token:self.loginManager.loginItem.token
-                                nickName:self.loginManager.loginItem.nickName msg:text];
+    [self.imManager sendRoomToastWithRoomID:self.roomId message:text];
 }
 
 // 发送直播间消息
 - (void)sendRoomMsgRequestFromText:(NSString *)text {
     
-    [self.imManager.client sendRoomMsg:self.loginManager.loginItem.token roomId:self.roomId
-                              nickName:self.loginManager.loginItem.nickName msg:text];
+    [self.imManager sendRoomMsgWithRoomID:self.roomId message:text];
 }
 
 
@@ -1142,12 +1159,7 @@
         [self addChatMessageNickName:nickName userLevel:self.loginManager.loginItem.level text:msg];
         
         // 插入到弹幕
-        BarrageModel* item = [[BarrageModel alloc] init];
-        item.name = nickName;
-        item.message = msg;
-        item.level = PriorityLevelHigh;
-        // 传用户ID获取图片url
-        item.url = fromId;
+        BarrageModel* item = [BarrageModel barrageModelForName:nickName message:msg urlWihtUserID:fromId];
         
         NSArray* items = [NSArray arrayWithObjects:item, nil];
         [self.barrageView insertBarrages:items immediatelyShow:YES];
@@ -1198,6 +1210,7 @@
 }
 
 - (void)testMethod3 {
+    
     NSString* msg = [NSString stringWithFormat:@"msg%ld", (long)self.msgId++];
     [self sendMsg:msg isLounder:NO];
 }

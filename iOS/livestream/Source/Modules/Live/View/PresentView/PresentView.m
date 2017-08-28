@@ -12,15 +12,15 @@
 #import "LiveGiftDownloadManager.h"
 #import "UIImage+SolidColor.h"
 
-@interface PresentView()<UIScrollViewDelegate,KKCheckButtonDelegate>
+@interface PresentView() < UIScrollViewDelegate,KKCheckButtonDelegate >
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *pageViewTopOffset;
 
-@property (nonatomic, weak) UIButton *btnOne;
+@property (nonatomic, weak) UIButton *firstNumBtn;
 
-@property (nonatomic, weak) UIButton *btnTwenty;
+@property (nonatomic, weak) UIButton *secondNumBtn;
 
-@property (nonatomic, weak) UIButton *btnFifty;
+@property (nonatomic, weak) UIButton *thirdNumBtn;
 
 @property (nonatomic, assign) NSInteger indextPathRow;
 
@@ -66,13 +66,53 @@
         self.pageViewTopOffset.constant = DESGIN_TRANSFORM_3X(8);
         
         self.indextPathRow = -1;
+        
+    }
+    return self;
+}
+
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    
+    if ( self = [super initWithFrame:frame] ) {
+        
+        UIView *containerView = [[UINib nibWithNibName:NSStringFromClass([self class]) bundle:nil] instantiateWithOwner:self options:nil].firstObject;
+        [self addSubview:containerView];
+        
+        [self setupButtonBar];
+        
+        UINib *nib = [UINib nibWithNibName:@"GiftItemCollectionViewCell" bundle:nil];
+        [self.collectionView registerNib:nib forCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier]];
+        self.collectionView.delegate = self;
+        
+        self.pageView.numberOfPages = 0;
+        self.pageView.currentPage = 0;
+        [self.pageView addTarget:self action:@selector(scrollPageControlAction:)forControlEvents:UIControlEventValueChanged]; // 设置监听事件
+        
+        self.comboBtn.titleLabel.numberOfLines = 0;
+        self.comboBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
+        self.comboBtn.titleName = @"30 \n combo";
+        [self.comboBtn addTarget:self action:@selector(comboGiftInSide:) forControlEvents:UIControlEventTouchUpInside];
+        [self.comboBtn addTarget:self action:@selector(comboGiftInSide:) forControlEvents:UIControlEventTouchUpOutside];
+        [self.comboBtn addTarget:self action:@selector(comboGiftDow:) forControlEvents:UIControlEventTouchDown];
+        
+        self.collectionViewHeight.constant = SCREEN_WIDTH * 0.5;
+        
+        self.sendView.selectBtn.selectedChangeDelegate = self;
+        [self.sendView.sendBtn addTarget:self action:@selector(sendTheGift:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self bringSubviewToFront:self.sendView];
+        
+        self.pageViewTopOffset.constant = DESGIN_TRANSFORM_3X(8);
+        
+        self.indextPathRow = -1;
     }
     return self;
 }
 
 - (void)reloadData {
     
-  
+    [self.collectionView reloadData];
 }
 
 
@@ -80,6 +120,14 @@
     
     _giftIdArray = giftIdArray;
     [self.collectionView reloadData];
+    
+    // 防止cell有加载滑动动画
+    [UIView setAnimationsEnabled: NO ];
+    [self.collectionView performBatchUpdates:^{
+        [self.collectionView reloadData];
+    } completion:^( BOOL  finished) {
+        [UIView setAnimationsEnabled: YES ];
+    }];
 }
 
 - (void)scrollPageControlAction:(UIPageControl *)sender {
@@ -100,7 +148,7 @@
     GiftItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     
     NSString *giftId = self.giftIdArray[indexPath.row];
-    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
+    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
     
     [cell updataCellViewItem:item];
     
@@ -117,7 +165,7 @@
     if (isIndexPath) {
         cell.selectCell = YES;
         self.isCellSelect = YES;
-        [self selectOneNum:cell];
+        [self selectFirstNum:cell];
         self.selectCellItem = item;
     }
     
@@ -150,9 +198,8 @@
         }];
     }
     
-    
     NSString *giftId = self.giftIdArray[indexPath.row];
-    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
+    [self didSelectItemWithGiftId:giftId];
     
     if (self.presentDelegate && [self.presentDelegate respondsToSelector:@selector(presentViewdidSelectItemWithSelf:atIndexPath:)]) {
         [self.presentDelegate presentViewdidSelectItemWithSelf:self atIndexPath:indexPath];
@@ -180,6 +227,15 @@
     if (self.buttonBar.height) {
         [self hideButtonBar];
     }
+}
+
+- (void)didSelectItemWithGiftId:(NSString *)giftId {
+    
+    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
+    
+//    [self.firstNumBtn setTitle:@"" forState:UIControlStateNormal];
+//    [self.secondNumBtn setTitle:@"" forState:UIControlStateNormal];
+//    [self.firstNumBtn setTitle:@"" forState:UIControlStateNormal];
 }
 
 #pragma mark - 发送按钮
@@ -226,71 +282,71 @@
     
     NSMutableArray* items = [NSMutableArray array];
     
-    UIButton* btnFifty = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnFifty setTitle:@"50" forState:UIControlStateNormal];
-    [btnFifty setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btnFifty setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [btnFifty setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [btnFifty addTarget:self action:@selector(selectFiftyNum:) forControlEvents:UIControlEventTouchUpInside];
-    [self.btnFifty setSelected:NO];
-    self.btnFifty = btnFifty;
-    [items addObject:self.btnFifty];
+    UIButton* thirdNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [thirdNumBtn setTitle:@"50" forState:UIControlStateNormal];
+    [thirdNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [thirdNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
+    [thirdNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
+    [thirdNumBtn addTarget:self action:@selector(selectThirdNum:) forControlEvents:UIControlEventTouchUpInside];
+    [thirdNumBtn setSelected:NO];
+    self.thirdNumBtn = thirdNumBtn;
+    [items addObject:self.thirdNumBtn];
     
     
-    UIButton* btnTwenty = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnTwenty setTitle:@"20" forState:UIControlStateNormal];
-    [btnTwenty setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btnTwenty setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [btnTwenty setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [btnTwenty addTarget:self action:@selector(selectTwentyNum:) forControlEvents:UIControlEventTouchUpInside];
-    [btnTwenty setSelected:NO];
-    self.btnTwenty = btnTwenty;
-    [items addObject:self.btnTwenty];
+    UIButton* secondNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [secondNumBtn setTitle:@"20" forState:UIControlStateNormal];
+    [secondNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [secondNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
+    [secondNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
+    [secondNumBtn addTarget:self action:@selector(selectSecondNum:) forControlEvents:UIControlEventTouchUpInside];
+    [secondNumBtn setSelected:NO];
+    self.secondNumBtn = secondNumBtn;
+    [items addObject:self.secondNumBtn];
     
-    UIButton* btnOne = [UIButton buttonWithType:UIButtonTypeCustom];
-    [btnOne setTitle:@"1" forState:UIControlStateNormal];
-    [btnOne setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [btnOne setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [btnOne setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [btnOne addTarget:self action:@selector(selectOneNum:) forControlEvents:UIControlEventTouchUpInside];
-    [btnOne setSelected:YES];
-    self.btnOne = btnOne;
-    [items addObject:self.btnOne];
+    UIButton* firstNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [firstNumBtn setTitle:@"1" forState:UIControlStateNormal];
+    [firstNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [firstNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
+    [firstNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
+    [firstNumBtn addTarget:self action:@selector(selectFirstNum:) forControlEvents:UIControlEventTouchUpInside];
+    [firstNumBtn setSelected:YES];
+    self.firstNumBtn = firstNumBtn;
+    [items addObject:self.firstNumBtn];
     
     self.buttonBar.items = items;
     [self.buttonBar reloadData:YES];
 }
 
 
-- (void)selectOneNum:(id)sender{
+- (void)selectFirstNum:(id)sender{
     
-    [self.btnOne setSelected:YES];
-    [self.btnTwenty setSelected:NO];
-    [self.btnFifty setSelected:NO];
+    [self.firstNumBtn setSelected:YES];
+    [self.secondNumBtn setSelected:NO];
+    [self.thirdNumBtn setSelected:NO];
     
-    self.sendView.selectNumLabel.text = self.btnOne.titleLabel.text;
+    self.sendView.selectNumLabel.text = self.firstNumBtn.titleLabel.text;
     
     [self hideButtonBar];
 }
 
-- (void)selectTwentyNum:(id)sender{
+- (void)selectSecondNum:(id)sender{
  
-    [self.btnTwenty setSelected:YES];
-    [self.btnOne setSelected:NO];
-    [self.btnFifty setSelected:NO];
+    [self.secondNumBtn setSelected:YES];
+    [self.firstNumBtn setSelected:NO];
+    [self.thirdNumBtn setSelected:NO];
     
-    self.sendView.selectNumLabel.text = self.btnTwenty.titleLabel.text;
+    self.sendView.selectNumLabel.text = self.secondNumBtn.titleLabel.text;
     
     [self hideButtonBar];
 }
 
-- (void)selectFiftyNum:(id)sender{
+- (void)selectThirdNum:(id)sender{
     
-    [self.btnFifty setSelected:YES];
-    [self.btnTwenty setSelected:NO];
-    [self.btnOne setSelected:NO];
+    [self.thirdNumBtn setSelected:YES];
+    [self.secondNumBtn setSelected:NO];
+    [self.firstNumBtn setSelected:NO];
     
-    self.sendView.selectNumLabel.text = self.btnFifty.titleLabel.text;
+    self.sendView.selectNumLabel.text = self.thirdNumBtn.titleLabel.text;
     
     [self hideButtonBar];
 }

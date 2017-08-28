@@ -8,6 +8,9 @@
 
 #include "RtmpPublisher.h"
 
+#include "video/VideoFrame.h"
+#include "audio/AudioFrame.h"
+
 // 发布休眠
 #define PUBLISH_SLEEP_TIME 1
 
@@ -32,18 +35,18 @@ private:
 RtmpPublisher::RtmpPublisher()
     :mClientMutex(KMutex::MutexType_Recursive)
     {
-    FileLog("rtmpdump", "RtmpPublisher::RtmpPublisher( publisher : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::RtmpPublisher( publisher : %p )", this);
     
     Init();
 }
 
 RtmpPublisher::~RtmpPublisher() {
-    FileLog("rtmpdump", "RtmpPublisher::~RtmpPublisher( publisher : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::~RtmpPublisher( publisher : %p )", this);
     
     Stop();
 }
 
-bool RtmpPublisher::PublishUrl(const string& url, const string& recordH264FilePath, const string& recordAACFilePath) {
+bool RtmpPublisher::PublishUrl(const string& url, const string& recordAACFilePath) {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
@@ -59,7 +62,7 @@ bool RtmpPublisher::PublishUrl(const string& url, const string& recordH264FilePa
         Stop();
     }
     
-    bFlag = mpRtmpDump->PublishUrl(url, recordH264FilePath, recordAACFilePath);
+    bFlag = mpRtmpDump->PublishUrl(url, recordAACFilePath);
     if( bFlag ) {
         // 开始播放
         mbRunning = true;
@@ -75,12 +78,11 @@ bool RtmpPublisher::PublishUrl(const string& url, const string& recordH264FilePa
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::PublishUrl( "
-                 "[Finish], "
-                 "url : %s, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "url : %s "
                  ")",
-                 url.c_str(),
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 url.c_str()
                  );
     
     return bFlag;
@@ -99,9 +101,6 @@ void RtmpPublisher::Stop() {
     
     if( mbRunning ) {
         mbRunning = false;
-        
-        // 停止接收
-        mpRtmpDump->Stop();
         
         // 停止发布
         mPublishThread.Stop();
@@ -133,6 +132,9 @@ void RtmpPublisher::Stop() {
         while( (audioFrame = (AudioFrame *)mCacheAudioBufferQueue.PopBuffer()) != NULL ) {
             delete audioFrame;
         }
+        
+        // 停止接收
+        mpRtmpDump->Stop();
     }
     
     mClientMutex.unlock();
@@ -140,7 +142,7 @@ void RtmpPublisher::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::Stop( "
-                 "[Finish], "
+                 "[Success], "
                  "this : %p "
                  ")",
                  this
@@ -212,11 +214,7 @@ void RtmpPublisher::SendAudioFrame(
         }
         
         if( audioFrame ) {
-            audioFrame->mFormat = sound_format;
-            audioFrame->mSoundRate = sound_rate;
-            audioFrame->mSoundSize = sound_size;
-            audioFrame->mSoundType = sound_type;
-            
+            audioFrame->InitFrame(sound_format, sound_rate, sound_size, sound_type);
             audioFrame->SetBuffer((const unsigned char *)data, size);
             audioFrame->mTimestamp = timestamp;
         }
@@ -253,7 +251,7 @@ void RtmpPublisher::PublishHandle() {
         // 发送视频帧
         if( videoFrame ) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "RtmpPublisher::PublishHandle( "
                          "[Send Video Frame], "
                          "frame : %p, "
@@ -293,7 +291,7 @@ void RtmpPublisher::PublishHandle() {
         // 发送音频帧
         if( audioFrame ) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
+                         KLog::LOG_MSG,
                          "RtmpPublisher::PublishHandle( "
                          "[Send Audio Frame], "
                          "frame : %p, "
@@ -303,7 +301,7 @@ void RtmpPublisher::PublishHandle() {
                          audioFrame->mTimestamp
                          );
             
-            mpRtmpDump->SendAudioFrame(audioFrame->mFormat,
+            mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
                                        audioFrame->mSoundRate,
                                        audioFrame->mSoundSize,
                                        audioFrame->mSoundType,
@@ -316,7 +314,7 @@ void RtmpPublisher::PublishHandle() {
             if( !mCacheAudioBufferQueue.PushBuffer(audioFrame) ) {
                 // 归还失败，释放Buffer
                 FileLevelLog("rtmpdump",
-                             KLog::LOG_MSG,
+                             KLog::LOG_WARNING,
                              "RtmpPublisher::PublishHandle( "
                             "[Delete Audio frame], "
                             "audioFrame : %p "

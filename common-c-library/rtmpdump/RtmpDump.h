@@ -9,18 +9,18 @@
 #ifndef RtmpDump_hpp
 #define RtmpDump_hpp
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include <common/KMutex.h>
 #include <common/KThread.h>
 #include <common/KLog.h>
 
+#include <rtmpdump/IDecoder.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include <string>
 using namespace std;
-
-#include "IDecoder.h"
 
 namespace coollive {
 class RtmpDump;
@@ -64,20 +64,18 @@ public:
 
      @param url 连接
      @param recordFilePath flv录制路径
-     @param recordH264FilePath H264录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath);
+    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath);
     
     /**
      发布流连接
 
      @param url 连接
-     @param recordH264FilePath H264录制路径
      @param recordAACFilePath AAC录制路径
      @return 成功／失败
      */
-    bool PublishUrl(const string& url, const string& recordH264FilePath, const string& recordAACFilePath);
+    bool PublishUrl(const string& url, const string& recordAACFilePath);
     
     /**
      读取接收流数据
@@ -138,12 +136,6 @@ private:
     // 录制文件
     string mRecordFlvFilePath;
     
-    string mRecordH264FilePath;
-    FILE* mpRecordH264File;
-    FILE* mpRecordH264FullFile;
-    string mRecordAACFilePath;
-    FILE* mpRecordAACFile;
-    
     // 状态锁
     KMutex mClientMutex;
     bool mbRunning;
@@ -165,14 +157,6 @@ private:
     u_int32_t mEncodeAudioTimestamp;
     u_int32_t mSendVideoFrameTimestamp;
     u_int32_t mSendAudioFrameTimestamp;
-    
-    // 临时发送音频帧
-    char* mpTempAudioBuffer;
-    int mTempAudioBufferSize;
-    
-    // 临时接收音频帧
-    char* mpTempAudioRecvBuffer;
-    int mTempAudioRecvBufferSize;
     
     // 是否播放流
     bool mIsPlay;

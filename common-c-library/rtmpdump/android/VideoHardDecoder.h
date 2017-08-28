@@ -9,10 +9,11 @@
 #ifndef VideoHardDecoder_h
 #define VideoHardDecoder_h
 
-#include <AndroidCommon/JniCommonFunc.h>
-
 #include <rtmpdump/IDecoder.h>
-#include <rtmpdump/VideoFrame.h>
+#include <rtmpdump/video/VideoFrame.h>
+#include <rtmpdump/util/EncodeDecodeBuffer.h>
+
+#include <AndroidCommon/JniCommonFunc.h>
 
 #include <common/KThread.h>
 
@@ -27,13 +28,14 @@ public:
 
 public:
     bool Create(VideoDecoderCallback* callback);
-    void Reset();
+    bool Reset();
     void Pause();
     void ResetStream();
     void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
+    void SetRecordFilePath(const string& recordH264FilePath);
     
 protected:
     void Init();

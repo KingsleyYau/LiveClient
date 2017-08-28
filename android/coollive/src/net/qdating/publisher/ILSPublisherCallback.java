@@ -11,4 +11,5 @@ public interface ILSPublisherCallback {
 	 * @param publisher 推流器
 	 */
 	public void onDisconnect(LSPublisherJni publisher);
+	
 }

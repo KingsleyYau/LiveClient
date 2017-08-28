@@ -13,7 +13,9 @@
 @interface TestViewController : KKViewController
 
 @property (nonatomic, weak) IBOutlet GPUImageView* previewView;
+@property (nonatomic, weak) IBOutlet GPUImageView* previewPublishView;
 @property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;
+@property (nonatomic, weak) IBOutlet UITextField* textFieldPublishAddress;
 
 - (IBAction)publish:(id)sender;
 - (IBAction)play:(id)sender;

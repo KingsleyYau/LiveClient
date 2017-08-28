@@ -88,15 +88,16 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 			videoCodec.configure(videoMediaFormat, null, null, 0);
 			videoCodec.start();
 			
-			Log.i(LSConfig.TAG, String.format("LSVideoDecoder::start( [Success] )"));
 			bFlag = true;
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			Log.i(LSConfig.TAG, String.format("LSVideoDecoder::start( [Fail] )"));
 			bFlag = false;
 		}
+        
+        Log.d(LSConfig.TAG, String.format("LSVideoDecoder::start( [%s] )", bFlag?"Success":"Fail"));
+        
         return bFlag;
 	}
 	
@@ -109,7 +110,8 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 	
 	@Override
 	public boolean decodeVideoKeyFrame(byte[] sps, int sps_size, byte[] pps, int pps_size, int naluHeaderSize) {
-		Log.i(LSConfig.TAG, String.format("LSVideoDecoder::decodeVideoKeyFrame( "
+		Log.d(LSConfig.TAG, 
+				String.format("LSVideoDecoder::decodeVideoKeyFrame( "
 				+ "sps_size : %d, "
 				+ "pps_size : %d, "
 				+ "naluHeaderSize : %d "
@@ -170,7 +172,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
         bFlag = decodeFrame(sps, 0, sps_size, 0);
         bFlag = bFlag && decodeFrame(pps, 0, pps_size, 0);
         
-		Log.i(LSConfig.TAG, String.format("LSVideoDecoder::decodeVideoKeyFrame( "
+		Log.d(LSConfig.TAG, String.format("LSVideoDecoder::decodeVideoKeyFrame( "
 				+ "sps_size : %d, "
 				+ "pps_size : %d, "
 				+ "naluHeaderSize : %d, "
@@ -189,7 +191,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 	@Override
 	public boolean decodeVideoFrame(byte[] data, int size, int timestamp) {
 		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, 
+		Log.d(LSConfig.TAG, 
 				String.format("LSVideoDecoder::decodeVideoFrame( "
 				+ "size : %d, "
 				+ "timestamp : %d "
@@ -211,7 +213,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 		int inIndex = -1;
         inIndex = videoCodec.dequeueInputBuffer(-1);
         
-		Log.i(LSConfig.TAG, 
+		Log.d(LSConfig.TAG, 
 				String.format("LSVideoDecoder::decodeFrame( "
 				+ "inIndex : %d "
 				+ ")", 
@@ -242,7 +244,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 
             bFlag = true;
             
-    		Log.i(LSConfig.TAG, 
+    		Log.d(LSConfig.TAG, 
     				String.format("LSVideoDecoder::decodeFrame( [Success], "
     				+ "inIndex : %d "
     				+ ")", 
@@ -258,7 +260,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 	public void releaseVideoFrame(int byteBufferIndex) {
 		// TODO Auto-generated method stub
 		// 释放帧
-		Log.i(LSConfig.TAG, 
+		Log.d(LSConfig.TAG, 
 				String.format("LSVideoDecoder::releaseVideoFrame( "
 						+ "byteBufferIndex : %d "
 						+ ")",
@@ -315,7 +317,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 //	            Image image = videoCodec.getOutputImage(outIndex);
 //	            int format = image.getFormat();
 	            
-	            Log.i(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
+	            Log.d(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
 	            		+ "outIndex : %d, "
 	            		+ "timestamp : %d "
 	            		+ ")", 
@@ -340,7 +342,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 	            byteBuffer.get(videoFrame.data, 0, byteBuffer.remaining());
 	            
 	        } else {
-	    		Log.i(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
+	    		Log.d(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
 	    				+ "[Unknow], "
 	    				+ "outIndex : %d "
 	    				+ ")", 
@@ -349,7 +351,7 @@ public class LSVideoDecoder implements ILSVideoDecoderJni {
 	        }
 	        
 		} catch(Exception e) {
-			Log.i(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
+			Log.d(LSConfig.TAG, String.format("LSVideoDecoder::getDecodeVideoFrame( "
 					+ "[Exception], "
 					+ "outIndex : %d, "
 					+ "e : %s "

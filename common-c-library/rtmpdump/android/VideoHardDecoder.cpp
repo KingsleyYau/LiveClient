@@ -9,8 +9,6 @@
 #include "VideoHardDecoder.h"
 #include "JavaItem.h"
 
-#include <rtmpdump/IDecoder.h>
-
 #include <common/CommonFunc.h>
 #include <common/KThread.h>
 #include <common/KLog.h>
@@ -191,13 +189,15 @@ void VideoHardDecoder::Stop() {
             );
 }
 
-void VideoHardDecoder::Reset() {
+bool VideoHardDecoder::Reset() {
     FileLog("rtmpdump",
             "VideoHardDecoder::Reset( "
             "this : %p "
             ")",
             this
             );
+	bool bFlag = true;
+	return bFlag;
 }
 
 void VideoHardDecoder::Pause() {
@@ -413,6 +413,10 @@ void VideoHardDecoder::StartDropFrame() {
 
 }
 
+void VideoHardDecoder::SetRecordFilePath(const string& recordH264FilePath) {
+
+
+}
 void VideoHardDecoder::DecodeVideoHandle() {
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoHandle( "

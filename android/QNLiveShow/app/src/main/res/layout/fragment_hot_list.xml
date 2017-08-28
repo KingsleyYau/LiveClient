@@ -1,4 +1,4 @@
-<com.qpidnetwork.framework.widget.swipetoloadlayout.SwipeToLoadLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.SwipeToLoadLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeToLoadLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -19,4 +19,4 @@
         android:id="@id/swipe_load_more_footer"
         layout="@layout/swipetoloadlayout_layout_classic_footer" />
 
-</com.qpidnetwork.framework.widget.swipetoloadlayout.SwipeToLoadLayout>
+</com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.SwipeToLoadLayout>

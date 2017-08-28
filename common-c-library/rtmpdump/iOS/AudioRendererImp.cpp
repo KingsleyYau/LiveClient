@@ -15,7 +15,7 @@ const size_t kAQBufSize = 65536;
 
 AudioRendererImp::AudioRendererImp() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioRendererImp::AudioRendererImp( "
                  "this : %p "
                  ")",
@@ -28,7 +28,7 @@ AudioRendererImp::AudioRendererImp() {
 
 AudioRendererImp::~AudioRendererImp() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioRendererImp::~AudioRendererImp( "
                  "this : %p "
                  ")",
@@ -62,11 +62,11 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         mAudioBufferList.lock();
         if( mAudioBufferList.empty() ) {
             status = AudioQueueAllocateBuffer(mAudioQueue, kAQBufSize, &audioBuffer);
-            NSLog(@"AudioRendererImp::RenderAudioFrame( [No More Cache AudioBuffer] )");
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [No More Cache AudioBuffer], this : %p )", this);
             
         } else {
             audioBuffer = mAudioBufferList.front();
-            mAudioBufferList.pop_back();
+            mAudioBufferList.pop_front();
         }
         mAudioBufferList.unlock();
     
@@ -76,15 +76,19 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
             memcpy(audioBuffer->mAudioData, (const char *)audioFrame->GetBuffer(), audioFrame->mBufferLen);
             
             // 放入音频包
-            status = AudioQueueEnqueueBuffer(mAudioQueue, audioBuffer, 0, NULL);
+            // https://developer.apple.com/library/content/qa/qa1718/_index.html#//apple_ref/doc/uid/DTS40010356
+//            status = AudioQueueEnqueueBuffer(mAudioQueue, audioBuffer, 0, NULL);
+            AudioTimeStamp outActualStartTime;
+            status = AudioQueueEnqueueBufferWithParameters(mAudioQueue, audioBuffer, 0, NULL, 0, 0, 0, NULL, NULL, &outActualStartTime);
             if( status == noErr ) {
-                
+                FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::RenderAudioFrame( this : %p, audioBuffer : %p, mSampleTime : %f )", this,
+                             audioBuffer, outActualStartTime.mSampleTime);
             } else {
-                NSLog(@"AudioRendererImp::RenderAudioFrame( [AudioQueueEnqueueBuffer Fail], status : %d )", (int)status);
+                FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [AudioQueueEnqueueBuffer Fail], this : %p, status : %d )", this, (int)status);
             }
             
         } else {
-            NSLog(@"AudioRendererImp::RenderAudioFrame( [AudioQueueAllocateBuffer Fail], status : %d )", (int)status);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [AudioQueueAllocateBuffer Fail], this : %p, status : %d )", this, (int)status);
         }
 //    }
 }
@@ -116,16 +120,24 @@ bool AudioRendererImp::Create() {
     bool bFlag = true;
     
     AudioStreamBasicDescription asbd;
+    FillOutASBDForLPCM(asbd,
+                       44100,   // Sample Rate
+                       1,       // Channels Per Frame
+                       16,      // Valid Bits Per Channel
+                       16,      // Total Bits Per Channel
+                       false,
+                       false
+                       );
     
-    asbd.mSampleRate = 44100;
-    asbd.mFormatID = kAudioFormatLinearPCM;
-    asbd.mFormatFlags = kAudioFormatFlagIsSignedInteger;
-    asbd.mFramesPerPacket = 1;
-    asbd.mBitsPerChannel = 16;
-    asbd.mChannelsPerFrame = 1;
-    asbd.mBytesPerFrame = (asbd.mBitsPerChannel / 8) * asbd.mChannelsPerFrame;
-    asbd.mBytesPerPacket = asbd.mBytesPerFrame * asbd.mFramesPerPacket;
-    asbd.mReserved = 0;
+//    asbd.mSampleRate = 44100;
+//    asbd.mFormatID = kAudioFormatLinearPCM;
+//    asbd.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kLinearPCMFormatFlagIsPacked;
+//    asbd.mFramesPerPacket = 1;
+//    asbd.mBitsPerChannel = 16;
+//    asbd.mChannelsPerFrame = 1;
+//    asbd.mBytesPerFrame = (asbd.mBitsPerChannel / 8) * asbd.mChannelsPerFrame;
+//    asbd.mBytesPerPacket = asbd.mBytesPerFrame * asbd.mFramesPerPacket;
+//    asbd.mReserved = 0;
     
     // Create the audio queue
     if( !mAudioQueue ) {
@@ -140,7 +152,7 @@ bool AudioRendererImp::Create() {
             
             // 申请音频包内存
             AudioQueueBufferRef audioBuffer;
-            for(int i = 0; i < 100; i++) {
+            for(int i = 0; i < 50; i++) {
                 status = AudioQueueAllocateBuffer(mAudioQueue, kAQBufSize, &audioBuffer);
                 if( status == noErr ) {
                     mAudioBufferList.lock();
@@ -169,6 +181,8 @@ void AudioRendererImp::AudioQueueOutputCallback(
     AudioRendererImp* renderer = (AudioRendererImp *)inUserData;
     
     if( renderer ) {
+        FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::AudioQueueOutputCallback( this : %p, audioBuffer : %p )", renderer, inBuffer);
+        
         // 归还缓存
         renderer->mAudioBufferList.lock();
         renderer->mAudioBufferList.push_back(inBuffer);

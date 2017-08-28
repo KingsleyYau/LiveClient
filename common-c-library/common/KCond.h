@@ -11,19 +11,28 @@
 
 #include "KMutex.h"
 
+#include <sys/time.h>
+
 class KCond {
 public:
 	KCond() {
 		initlock();
 		initcond();
 	}
+    
+    KCond(KMutex::MutexType type) {
+        initlock(type);
+    }
+    
 	virtual ~KCond() {
 		desrtoycond();
 		desrtoylock();
 	}
+    
 	int signal() {
 		return pthread_cond_signal(&m_Cond);
 	}
+    
 	int timedwait(int second) {
 		struct timeval now;
 		gettimeofday(&now, NULL);
@@ -34,35 +43,48 @@ public:
 
 		return pthread_cond_timedwait(&m_Cond, &m_Mutex, &outtime);
 	}
+    
 	int wait() {
 		return pthread_cond_wait(&m_Cond, &m_Mutex);
 	}
+    
 	int broadcast() {
 		return pthread_cond_broadcast(&m_Cond);
 	}
 
-	int trylock(){
+	int trylock() {
 		return pthread_mutex_trylock(&m_Mutex);
 	}
-	int lock(){
+    
+	int lock() {
 		return pthread_mutex_lock(&m_Mutex);
 	}
-	int unlock(){
+    
+	int unlock() {
 		return pthread_mutex_unlock(&m_Mutex);
 	}
+    
 protected:
-	int initlock(){
-		return pthread_mutex_init(&m_Mutex, NULL);
-	}
-	int desrtoylock(){
+    void initlock(KMutex::MutexType type = KMutex::MutexType_Default) {
+        pthread_mutexattr_t mattr;
+        pthread_mutexattr_init(&mattr);
+        pthread_mutexattr_settype(&mattr, (int)type);
+        pthread_mutex_init(&m_Mutex, &mattr);
+        pthread_mutexattr_destroy(&mattr);
+    }
+    
+	int desrtoylock() {
 		return pthread_mutex_destroy(&m_Mutex);
 	}
+    
 	int initcond() {
 		return pthread_cond_init(&m_Cond, NULL);
 	}
+    
 	int desrtoycond() {
 		return pthread_cond_destroy(&m_Cond);
 	}
+    
 private:
 	pthread_cond_t m_Cond;
 	pthread_condattr_t m_Condattr;

@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/fl_rootView"
     android:onClick="onClick"
-    android:background="@drawable/ic_live_uibackground"
-    tools:context="com.qpidnetwork.liveshow.home.live.LivePanelFragmentActivity">
+    android:background="@drawable/ic_live_uibackground">
 
     <include
         layout="@layout/view_liveshow_header"
@@ -53,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_marginTop="10dp"
-                android:visibility="invisible"/>
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -67,7 +66,7 @@
             android:paddingLeft="13dp"
             android:paddingRight="13dp">
 
-            <com.qpidnetwork.framework.livemsglist.LiveMessageListView
+            <com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView
                 android:id="@+id/lvlv_roomMsgList"
                 android:layout_width="match_parent"
                 android:layout_height="113.5dp"
@@ -103,7 +102,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <com.qpidnetwork.framework.widget.magicfly.FlyLinearLayout
+    <com.qpidnetwork.livemodule.framework.widget.magicfly.FlyLinearLayout
         xmlns:app="http://schemas.android.com/tools"
         android:id="@+id/fll_love"
         app:flyDuration="3000"

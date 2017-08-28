@@ -9,14 +9,14 @@
 #ifndef RtmpPublisher_h
 #define RtmpPublisher_h
 
-#include <stdio.h>
-
 #include <common/CommonFunc.h>
 
 #include <rtmpdump/RtmpDump.h>
-#include <rtmpdump/AudioFrame.h>
-#include <rtmpdump/VideoFrame.h>
-#include <rtmpdump/CacheBufferQueue.h>
+
+#include <rtmpdump/util/CacheBufferQueue.h>
+#include <rtmpdump/util/EncodeDecodeBuffer.h>
+
+#include <stdio.h>
 
 namespace coollive {
 class PublishRunnable;
@@ -29,11 +29,10 @@ public:
      发布流连接
      
      @param url 连接
-     @param recordH264FilePath H264录制路径
      @param recordAACFilePath AAC录制路径
      @return 成功／失败
      */
-    bool PublishUrl(const string& url, const string& recordH264FilePath, const string& recordAACFilePath);
+    bool PublishUrl(const string& url, const string& recordAACFilePath);
     
     /**
      停止

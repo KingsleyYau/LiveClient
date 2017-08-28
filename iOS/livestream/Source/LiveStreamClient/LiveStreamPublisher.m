@@ -14,8 +14,8 @@
 #import "LFGPUImageBeautyFilter.h"
 
 #pragma mark - 摄像头采集分辨率
-#define VIDEO_CAPTURE_WIDTH 480
-#define VIDEO_CAPTURE_HEIGHT 640
+#define VIDEO_CAPTURE_WIDTH 240
+#define VIDEO_CAPTURE_HEIGHT 320
 
 @interface LiveStreamPublisher() <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate>
 
@@ -395,6 +395,7 @@
             // 断线重新推流
             dispatch_async(self.reconnect_queue, ^{
                 NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
+                [self.publisher stop];
                 [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
             });
             

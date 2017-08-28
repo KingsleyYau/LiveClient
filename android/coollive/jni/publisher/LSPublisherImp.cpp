@@ -7,8 +7,32 @@
 
 #include "LSPublisherImp.h"
 
-LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, int width, int height, int bitRate, int keyFrameInterval, int fps) {
+#include <common/CommonFunc.h>
+
+#include <rtmpdump/video/VideoEncoderH264.h>
+#include <rtmpdump/audio/AudioEncoderAAC.h>
+
+#include <rtmpdump/android/VideoHardEncoder.h>
+#include <rtmpdump/android/VideoRendererImp.h>
+
+LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, jobject jniVideoRenderer, int width, int height, int bitRate, int keyFrameInterval, int fps)
+:mVideoRotateFilter(fps)
+{
 	// TODO Auto-generated constructor stub
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPublisherImp::LSPublisherImp( this : %p )", this);
+
+    // 视频参数
+    mWidth = width;
+    mHeight = height;
+    mBitRate = bitRate;
+    mKeyFrameInterval = keyFrameInterval;
+    mFPS = fps;
+
+    // 音频参数
+    mSampleRate = 44100;
+    mChannelsPerFrame = 1;
+    mBitPerSample = 16;
+
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
@@ -23,12 +47,31 @@ LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, int
 		mJniVideoEncoder = env->NewGlobalRef(jniVideoEncoder);
 	}
 
+	mJniVideoRenderer = NULL;
+	if( jniVideoRenderer ) {
+		mJniVideoRenderer = env->NewGlobalRef(jniVideoRenderer);
+	}
+
 	mUseHardEncoder = false;
 	mpVideoEncoder = NULL;
 	mpAudioEncoder = NULL;
 
+	mFrameStartTime = 0;
+	mFrameIndex = 0;
+	mFrameInterval = 8;
+	if( fps > 0 ) {
+		mFrameInterval = 1000.0 / fps;
+	}
+
 	mPublisher.SetStatusCallback(this);
-	mPublisher.SetVideoParam(width, height, bitRate, keyFrameInterval, fps);
+//	mPublisher.SetVideoParam(width, height, bitRate, keyFrameInterval, fps);
+//	mPublisher.SetAudioParam(44100, 1, 16);
+
+	mVideoFilters.SetFiltersCallback(this);
+	mVideoFilters.AddFilter(&mVideoRotateFilter);
+
+	// 预览格式
+	mVideoFormatConverter.SetDstFormat(VIDEO_FORMATE_RGB565);
 
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
@@ -39,6 +82,8 @@ LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, int
 
 LSPublisherImp::~LSPublisherImp() {
 	// TODO Auto-generated destructor stub
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPublisherImp::~LSPublisherImp( this : %p )", this);
+
 	DestroyEncoders();
 
 	JNIEnv* env;
@@ -55,6 +100,11 @@ LSPublisherImp::~LSPublisherImp() {
 		mJniVideoEncoder = NULL;
 	}
 
+	if( mJniVideoRenderer ) {
+		env->DeleteGlobalRef(mJniVideoRenderer);
+		mJniVideoRenderer = NULL;
+	}
+
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
@@ -66,6 +116,9 @@ bool LSPublisherImp::PublishUrl(const string& url, const string& recordH264FileP
 
 void LSPublisherImp::Stop() {
 	mPublisher.Stop();
+
+	mFrameStartTime = 0;
+	mFrameIndex = 0;
 }
 
 void LSPublisherImp::SetUseHardEncoder(bool useHardEncoder) {
@@ -78,14 +131,53 @@ void LSPublisherImp::SetUseHardEncoder(bool useHardEncoder) {
 	}
 }
 
-void LSPublisherImp::PushVideoFrame(void* data, int size) {
-	FileLog("rtmpdump",
-			"LSPublisherImp::PushVideoFrame( "
-			"this : %p "
+void LSPublisherImp::PushVideoFrame(void* data, int size, int width, int height) {
+	long long now = getCurrentTime();
+	if( mFrameStartTime == 0 ) {
+		mFrameStartTime = now;
+	}
+    long long diffTime = now - mFrameStartTime;
+
+    // 控制帧率
+    if( diffTime >= (mFrameIndex * mFrameInterval) ) {
+    	FileLevelLog(
+    			"rtmpdump",
+    			KLog::LOG_MSG,
+    			"LSPublisherImp::PushVideoFrame( "
+    			"this : %p, "
+    			"diffTime : %lld, "
+    			"mFrameIndex : %d "
+    			")",
+    			this,
+    			diffTime,
+    			mFrameIndex
+    			);
+
+    	mVideoFilters.FilterFrame(data, size, width, height, VIDEO_FORMATE_NV21);
+    //	mPublisher.PushVideoFrame(data, size, NULL);
+    	// 更新最后处理帧时间
+    	mFrameIndex++;
+    }
+}
+
+void LSPublisherImp::PushAudioFrame(void* data, int size) {
+	// 放到推流器
+	mPublisher.PushAudioFrame(data, size, NULL);
+}
+
+void LSPublisherImp::ChangeVideoRotate(int rotate) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_STAT,
+			"LSPublisherImp::ChangeVideoRotate( "
+			"this : %p, "
+			"rotate : %d "
 			")",
-			this
+			this,
+			rotate
 			);
-	mPublisher.PushVideoFrame(data, size, NULL);
+
+	mVideoRotateFilter.ChangeRotate(rotate);
 }
 
 void LSPublisherImp::CreateEncoders() {
@@ -100,20 +192,23 @@ void LSPublisherImp::CreateEncoders() {
 
 	if( mUseHardEncoder ) {
 		// 硬编码
-		VideoHardEncoder* videoEncoder = new VideoHardEncoder(mJniVideoEncoder);
-		mpVideoEncoder = videoEncoder;
-//		mpAudioEncoder = new AudioEncoderAAC();
+		mpVideoEncoder = new VideoHardEncoder(mJniVideoEncoder);;
+		mpAudioEncoder = new AudioEncoderAAC();
 
 	} else {
 		// 软解码
-		VideoEncoderH264* videoEncoder = new VideoEncoderH264();
-		videoEncoder->SetSrcFormat(VIDEO_FORMATE_NV21);
-		mpVideoEncoder = videoEncoder;
-//		mpAudioEncoder = new AudioEncoderAAC();
+		mpVideoEncoder = new VideoEncoderH264();
+		mpAudioEncoder = new AudioEncoderAAC();
 	}
 
+	// 渲染
+	mpVideoRenderer = new VideoRendererImp(mJniVideoRenderer);
+
     // 替换编码器
+	mpVideoEncoder->Create(mWidth, mHeight, mBitRate, mKeyFrameInterval, mFPS, VIDEO_FORMATE_NV21);
 	mPublisher.SetVideoEncoder(mpVideoEncoder);
+
+	mpAudioEncoder->Create(mSampleRate, mChannelsPerFrame, mBitPerSample);
 	mPublisher.SetAudioEncoder(mpAudioEncoder);
 
 	FileLog("rtmpdump",
@@ -150,10 +245,17 @@ void LSPublisherImp::DestroyEncoders() {
 		delete mpAudioEncoder;
 		mpAudioEncoder = NULL;
 	}
+
+	if( mpVideoRenderer ) {
+		delete mpVideoRenderer;
+		mpVideoRenderer = NULL;
+	}
 }
 
 void LSPublisherImp::OnPublisherConnect(PublisherController* pc) {
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_STAT,
 			"LSPublisherImp::OnPublisherConnect( "
 			"this : %p "
 			")",
@@ -190,7 +292,9 @@ void LSPublisherImp::OnPublisherConnect(PublisherController* pc) {
 }
 
 void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_STAT,
 			"LSPublisherImp::OnPublisherConnect( "
 			"this : %p "
 			")",
@@ -224,4 +328,26 @@ void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
+}
+
+void LSPublisherImp::OnFilterVideoFrame(VideoFilters* filters, VideoFrame* videoFrame) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_STAT,
+			"LSPublisherImp::OnFilterVideoFrame( "
+			"this : %p, "
+			"width : %d, "
+			"height : %d "
+			")",
+			this,
+			videoFrame->mWidth,
+			videoFrame->mHeight
+			);
+
+//	// 回调预览, 非常耗时, 需要另外处理
+//	mVideoFormatConverter.ConvertFrame(videoFrame, &mPreViewFrame);
+//	mpVideoRenderer->RenderVideoFrame(&mPreViewFrame);
+
+	// 放到推流器
+	mPublisher.PushVideoFrame(videoFrame->GetBuffer(), videoFrame->mBufferLen, NULL);
 }

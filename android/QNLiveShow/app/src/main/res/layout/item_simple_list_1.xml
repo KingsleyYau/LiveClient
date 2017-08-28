@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2006 The Android Open Source Project
+<?xml version="1.0" encoding="utf-8"?><!-- Copyright (C) 2006 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -18,10 +17,10 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
     android:gravity="center"
-    android:text="123"
-    android:textColor="@android:color/black"
-    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:text="123"
+    android:textAppearance="?android:attr/textAppearanceListItemSmall"
+    android:textColor="@android:color/black" />

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
+import net.qdating.LSPublisher;
 import net.qdating.R;
 
 public class TestActivity extends Activity {
@@ -15,6 +16,7 @@ public class TestActivity extends Activity {
 	String filePath = "/sdcard";
 	
 	private LSPlayer player = new LSPlayer();
+	private LSPublisher publisher = new LSPublisher();
 	private Handler handler = new Handler();
 	
 	@Override
@@ -25,17 +27,27 @@ public class TestActivity extends Activity {
 		Log.i(LSConfig.TAG, String.format("TestActivity::onCreate()"));
 		
 		SurfaceView surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
+		surfaceView.setKeepScreenOn(true);
+		SurfaceView surfaceViewPublish = (SurfaceView) this.findViewById(R.id.surfaceViewPublish);
+		surfaceViewPublish.setKeepScreenOn(true);
+		
+		// 播放相关
 		player.init(surfaceView, null);
-		player.playUrl(url, "", "", "");
+		player.playUrl(String.format("%s_i", url), "", "", "");
+		
+		// 推送相关
+		int rotation = getWindowManager().getDefaultDisplay()
+	             .getRotation();
+		publisher.init(surfaceViewPublish, rotation, null);
+		publisher.publisherUrl(String.format("%s_a2", url), "", "");
 		
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Log.i(LSConfig.TAG, String.format("TestActivity::onCreate( finish() )"));
 				finish();
 			}
-		}, 5000);
+		}, 10000);
 	}
 	
 	@Override
@@ -47,6 +59,9 @@ public class TestActivity extends Activity {
 		
 		player.stop();
 		player.uninit();
+		
+		publisher.stop();
+		publisher.uninit();
 	}
 	
     @Override

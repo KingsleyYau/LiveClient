@@ -9,16 +9,15 @@
 #ifndef RtmpPlayer_hpp
 #define RtmpPlayer_hpp
 
-#include <stdio.h>
-
 #include <common/CommonFunc.h>
 
 #include <rtmpdump/RtmpDump.h>
-
 #include <rtmpdump/IDecoder.h>
-#include <rtmpdump/FrameBuffer.h>
-#include <rtmpdump/CacheBufferQueue.h>
-#include <rtmpdump/VideoDecoderH264.h>
+
+#include <rtmpdump/util/FrameBuffer.h>
+#include <rtmpdump/util/CacheBufferQueue.h>
+
+#include <stdio.h>
 
 namespace coollive {
 
@@ -33,7 +32,7 @@ public:
     virtual void OnDropAudioFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
     virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
-
+    virtual void OnDelayStream(RtmpPlayer* player) {};
 };
 
 class PlayVideoRunnable;
@@ -52,10 +51,9 @@ public:
      
      @param url 连接
      @param recordFilePath flv录制路径
-     @param recordH264FilePath H264录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath);
+    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath);
     
     /**
      停止

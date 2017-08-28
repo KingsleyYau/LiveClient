@@ -19,6 +19,7 @@
 
 typedef enum {
     DOWNLOADNONE = 0,
+    DOWNLOADSTART,
     DOWNLOADING,
     DOWNLOADEND
 } DownLoadState;
@@ -27,6 +28,7 @@ typedef enum {
 
 @property (nonatomic, weak)id<LiveGiftDownloadManagerDelegate> managerDelegate;
 
+@property (nonatomic, assign) DownLoadState status;
 
 @property (nonatomic, retain) NSString *path;
 

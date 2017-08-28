@@ -18,7 +18,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:scaleType="fitXY"
-        android:src="@drawable/circleimageview_hugh"/>
+        android:src="@drawable/ic_live_start_default"/>
     
     <EditText
         android:id="@+id/et_liveTitle"

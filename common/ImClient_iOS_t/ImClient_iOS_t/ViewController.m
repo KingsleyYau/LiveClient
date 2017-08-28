@@ -78,55 +78,64 @@
 
 - (IBAction)vRoomIn:(id)sender {
     if (nil != self.client) {
-        [self.client fansRoomIn:self.token roomId:self.roomid];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client fansRoomIn:self.token roomId:self.roomid reqId:reqId];
     }
 }
 
 - (IBAction)vRoomOut:(id)sender {
     if (nil != self.client) {
-        [self.client fansRoomout:self.token roomId:self.roomid];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client fansRoomout:self.token roomId:self.roomid reqId:reqId];
     }
 }
 
 - (IBAction)getRoomInfo:(id)sender {
     if (nil != self.client) {
-        [self.client getRoomInfo:self.token roomId:self.roomid];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client getRoomInfo:self.token roomId:self.roomid reqId:reqId];
     }
 }
 
 - (IBAction)fansShutUp:(id)sender {
     if (nil != self.client) {
-        [self.client fansShutUp:self.roomid userId:self.userId timeOut:10];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client fansShutUp:self.roomid userId:self.userId timeOut:10 reqId:reqId];
     }
 }
 
 - (IBAction)FansKickOff:(id)sender {
     if (nil != self.client) {
-        [self.client fansKickOffRoom:self.roomid userId:self.userId];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client fansKickOffRoom:self.roomid userId:self.userId reqId:reqId];
     }
 }
 
 - (IBAction)sendRoomMsg:(id)sender {
     if (nil != self.client) {
-        [self.client sendRoomMsg:self.token roomId:self.roomid nickName:@"alex" msg:@"123456"];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client sendRoomMsg:self.token roomId:self.roomid nickName:@"alex" msg:@"123456" reqId:reqId];
     }
 }
 
 - (IBAction)sendRoomFav:(id)sender {
     if (nil != self.client) {
-        [self.client sendRoomFav:self.roomid token:self.token nickName:@"alex"];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client sendRoomFav:self.roomid token:self.token nickName:@"alex" reqId:reqId];
     }
 }
 
 - (IBAction)sendRoomGift:(id)sender {
     if (nil != self.client) {
-        [self.client sendRoomGift:self.roomid token:self.token nickName:@"alex" giftId:@"123456" giftName:@"testGift" giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client sendRoomGift:self.roomid token:self.token nickName:@"alex" giftId:@"123456" giftName:@"testGift" giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1 reqId:reqId];
     }
 }
 
 - (IBAction)sendRoomToast:(id)sender {
     if (nil != self.client) {
-        [self.client sendRoomToast:self.roomid token:self.token nickName:@"alex" msg:@"852147"];
+        SEQ_T reqId = [self.client getReqId];
+        [self.client sendRoomToast:self.roomid token:self.token nickName:@"alex" msg:@"852147" reqId:reqId];
     }
 }
 
@@ -195,7 +204,7 @@
     NSLog(@"ViewController::onSendRoomFav()");
 }
 
-- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId {
+- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName isFirst:(BOOL)isFirst{
     NSLog(@"ViewController::onRecvPushRoomFav()");
 }
 

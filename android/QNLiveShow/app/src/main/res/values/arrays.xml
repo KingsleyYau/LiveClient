@@ -7,15 +7,8 @@
     </string-array>
 
     <string-array name="topTabs">
-        <item>关注</item>
         <item>热门</item>
-        <item>排行</item>
-    </string-array>
-
-    <string-array name="giftCountListData">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
+        <item>关注</item>
     </string-array>
 
     <string-array name="mobilePopupItems">

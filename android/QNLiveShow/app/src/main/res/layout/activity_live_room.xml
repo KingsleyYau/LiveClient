@@ -1,146 +1,183 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qpidnetwork.view.SoftKeyboradListenFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/flContentBody"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- 背景不随软键盘切换部分-->
-    <!--
+    <!-- 背景不随软键盘切换部分：视频播放view-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    -->
+
         <LinearLayout
             android:id="@+id/llBackBody"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <FrameLayout
                 android:id="@+id/fl_bgContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <include
                     android:id="@+id/include_audience_area"
                     layout="@layout/include_liveroom_audience"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
+
                 <include
                     android:id="@+id/include_anchor_area"
                     layout="@layout/include_liveroom_anchor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
-
-                <!--点赞区域-->
-                <com.qpidnetwork.framework.widget.magicfly.FlyLinearLayout
-                    xmlns:app="http://schemas.android.com/tools"
-                    android:id="@+id/fll_love"
-                    app:flyDuration="3000"
-                    android:clickable="false"
-                    android:layout_width="60dp"
-                    android:layout_height="600dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="44dp"
-                    android:background="@android:color/transparent"
-                    android:layout_gravity="right|bottom"/>
-
+                    android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
-    <!--
     </ScrollView>
-    -->
 
-    <!--底部背景，防止背景颜色过于一致导致无区分-->
-    <ImageView
-        android:id="@+id/ivEditContentBg"
-        android:layout_width="match_parent"
-        android:layout_height="84dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/ic_live_buttom_bg"
-        android:visibility="invisible"
-        android:layout_gravity="bottom"/>
-
-    <!--用户端底部操作界面,包含发言，送礼，分享-->
-    <include layout="@layout/view_live_buttom_audience"
-        android:id="@+id/fl_buttom_audience"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="bottom"/>
-
-    <!--主播端底部操作界面,包含发言，送礼，直播控制-->
-    <RelativeLayout
-        android:id="@+id/rl_anchorOperate"
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible">
-        <include
-            layout="@layout/view_live_buttom_broadcast"
-            android:id="@+id/rl_buttom_broadcast"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!--底部背景，防止背景颜色过于一致导致无区分-->
+            <ImageView
+                android:id="@+id/ivEditContentBg"
+                android:layout_width="match_parent"
+                android:layout_height="84dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/ic_live_buttom_bg"
+                android:visibility="visible" />
+
+            <!--用户端底部操作界面,包含发言，送礼，分享-->
+            <include
+                android:id="@+id/fl_buttom_audience"
+                layout="@layout/view_live_buttom_audience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:visibility="invisible" />
+
+            <!--主播端底部操作界面,包含发言，送礼，直播控制-->
+            <RelativeLayout
+                android:id="@+id/rl_anchorOperate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <include
+                    android:id="@+id/rl_buttom_broadcast"
+                    layout="@layout/view_live_buttom_broadcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:visibility="visible" />
+
+                <!--按钮展开区域-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/rl_buttom_broadcast"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_switchCamera"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/ic_live_buttom_camera_switch"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/btn_switchFlash"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/selector_live_buttom_flash"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/btn_switchBeauty"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/selector_live_buttom_beauty"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--最上层消息控制等-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="56dp">
+                <!--房间头部-->
+                <include
+                    android:id="@+id/include_im_body"
+                    layout="@layout/include_liveroom_im"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:visibility="visible" />
+
+                <include
+                    layout="@layout/view_liveshow_header"
+                    android:id="@+id/view_roomHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </FrameLayout>
+
+            <!--主播端同用户端共用，切换到消息输入场景,样式一样-->
+            <include
+                android:id="@+id/rl_inputMsg"
+                layout="@layout/view_live_buttom_sendmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:visibility="invisible"
+                android:layout_marginRight="12dp"
+                android:layout_marginLeft="12dp" />
+            <!--大礼物-->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/advanceGift"
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <!--最底部为表情选择器-->
+        <com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout
+            android:id="@+id/etsl_emojiContainer"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:visibility="visible"
-            android:layout_marginRight="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginBottom="10dp"/>
-
-        <!--按钮展开区域-->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/rl_buttom_broadcast"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="13dp"
-            android:orientation="vertical">
-            <Button
-                android:id="@+id/btn_switchCamera"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginBottom="16dp"
-                android:visibility="visible"
-                android:onClick="onClick"
-                android:background="@drawable/ic_live_buttom_camera_switch"/>
-
-            <Button
-                android:id="@+id/btn_switchFlash"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginBottom="16dp"
-                android:visibility="visible"
-                android:onClick="onClick"
-                android:background="@drawable/selector_live_buttom_flash"/>
-
-            <Button
-                android:id="@+id/btn_switchBeauty"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:visibility="visible"
-                android:onClick="onClick"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/selector_live_buttom_beauty"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <!--最上层消息控制等-->
-    <include
-        layout="@layout/include_liveroom_im"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/advanceGift"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
-
-</com.qpidnetwork.view.SoftKeyboradListenFrameLayout>
+            android:background="@android:color/white"
+            xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+            custom:gridViewBgColor="@android:color/transparent"
+            custom:columnNumbPerPage="5"
+            custom:lineNumbPerPage="3">
+        </com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout>
+    </LinearLayout>
+</com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout>

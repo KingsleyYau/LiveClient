@@ -8,6 +8,15 @@
 
 #import "MsgTableViewCell.h"
 
+@interface MsgTableViewCell ()
+
+@property (nonatomic, strong) YYTextLinePositionSimpleModifier *modifier;
+@property (nonatomic, strong) YYTextContainer *container;
+@property (nonatomic, strong) YYTextLayout *layout;
+
+@end
+
+
 @implementation MsgTableViewCell
 + (NSString *)cellIdentifier {
     return @"MsgTableViewCell";
@@ -55,6 +64,14 @@
         }];
         self.backgroundColor = [UIColor clearColor];
         
+        self.modifier = [[YYTextLinePositionSimpleModifier alloc] init];
+        self.modifier.fixedLineHeight = 16;
+        
+        // 创建文本容器
+        self.container = [[YYTextContainer alloc] init];
+        self.container.linePositionModifier = self.modifier;
+        self.container.size = CGSizeMake(SCREEN_WIDTH - 20, CGFLOAT_MAX);
+        self.container.maximumNumberOfRows = 0;
     }
     return self;
 }
@@ -64,24 +81,15 @@
 //    self.lvView.levelLabel.text = [NSString stringWithFormat:@"%lld0", (long long)item.level, nil];
     self.lvView.levelLabel.text = [NSString stringWithFormat:@"89"];
     
-    YYTextLinePositionSimpleModifier *modifier = [YYTextLinePositionSimpleModifier new];
-    modifier.fixedLineHeight = 16;
-    
-    // 创建文本容器
-    YYTextContainer *container = [YYTextContainer new];
-    container.linePositionModifier = modifier;
-    container.size = CGSizeMake(SCREEN_WIDTH - 20, CGFLOAT_MAX);
-    container.maximumNumberOfRows = 0;
-    
     // 生成排版结果
-    YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:item.attText];
+    YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
     self.messageLabel.size = layout.textBoundingSize;
     self.messageLabel.textLayout = layout;
     self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
     self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);
     self.messageLabel.shadowBlurRadius = 1.0f;
-    
     self.messageLabelWidth = self.messageLabel.frame.size.width;
+    self.messageLabelHeight = self.messageLabel.frame.size.height;
 }
 
 + (NSString *)textPreDetail {

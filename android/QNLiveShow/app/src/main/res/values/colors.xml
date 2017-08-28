@@ -24,6 +24,8 @@
     <color name="cover_state_use">#5d0e86</color>
 
     <color name="dialog_background">#8d000000</color>
+    <color name="color_giftcount_item">#6b6b6b</color>
 
     <color name="text_shadow_color">#B2000000</color>
+    <color name="messagelist_shadow_color">#000000</color>
 </resources>

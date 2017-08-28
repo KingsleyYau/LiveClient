@@ -20,7 +20,6 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-
     }
     return self;
 }
@@ -45,57 +44,58 @@
     CVPixelBufferLockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
     CFRetain(pixelBuffer);
     
-//    runAsynchronouslyOnVideoProcessingQueue(^{
-        [GPUImageContext useImageProcessingContext];
+    runAsynchronouslyOnVideoProcessingQueue(^{
+    GPUImageContext* context = [GPUImageContext sharedImageProcessingContext];
+    [GPUImageContext useImageProcessingContext];
     
-        CVOpenGLESTextureRef textureRef = NULL;
-        CVReturn result = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
-                                                                       [[GPUImageContext sharedImageProcessingContext] coreVideoTextureCache],
-                                                                       pixelBuffer,
-                                                                       NULL,
-                                                                       GL_TEXTURE_2D,
-                                                                       GL_RGBA,
-                                                                       (GLsizei)bufferWidth,
-                                                                       (GLsizei)bufferHeight,
-                                                                       GL_BGRA,
-                                                                       GL_UNSIGNED_BYTE,
-                                                                       0,
-                                                                       &textureRef);
-        
-        NSAssert(result == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage error: %@",@(result));
+    CVOpenGLESTextureRef textureRef = NULL;
+    CVReturn result = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,
+                                                                   [context coreVideoTextureCache],
+                                                                   pixelBuffer,
+                                                                   NULL,
+                                                                   GL_TEXTURE_2D,
+                                                                   GL_RGBA,
+                                                                   (GLsizei)bufferWidth,
+                                                                   (GLsizei)bufferHeight,
+                                                                   GL_BGRA,
+                                                                   GL_UNSIGNED_BYTE,
+                                                                   0,
+                                                                   &textureRef);
+    
+    NSAssert(result == kCVReturnSuccess, @"CVOpenGLESTextureCacheCreateTextureFromImage error: %@",@(result));
 
-        if (result == kCVReturnSuccess && textureRef) {
-            
-            glActiveTexture(GL_TEXTURE4);
-            glBindTexture(CVOpenGLESTextureGetTarget(textureRef), CVOpenGLESTextureGetName(textureRef));
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            
-            outputFramebuffer = [[GPUImageFramebuffer alloc] initWithSize:CGSizeMake(bufferWidth, bufferHeight) overriddenTexture:CVOpenGLESTextureGetName(textureRef)];
-            
-            for (id<GPUImageInput> currentTarget in targets) {
-                if ([currentTarget enabled]) {
-                    NSInteger indexOfObject = [targets indexOfObject:currentTarget];
-                    NSInteger targetTextureIndex = [[targetTextureIndices objectAtIndex:indexOfObject] integerValue];
-                    if (currentTarget != self.targetToIgnoreForUpdates) {
-                        [currentTarget setInputSize:CGSizeMake(bufferWidth, bufferHeight) atIndex:targetTextureIndex];
-                        [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
-                        [currentTarget newFrameReadyAtTime:frameTime atIndex:targetTextureIndex];
-                    } else {
-                        [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
-                    }
+    if (result == kCVReturnSuccess && textureRef) {
+        
+        glActiveTexture(GL_TEXTURE4);
+        glBindTexture(CVOpenGLESTextureGetTarget(textureRef), CVOpenGLESTextureGetName(textureRef));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        
+        outputFramebuffer = [[GPUImageFramebuffer alloc] initWithSize:CGSizeMake(bufferWidth, bufferHeight) overriddenTexture:CVOpenGLESTextureGetName(textureRef)];
+        
+        for (id<GPUImageInput> currentTarget in targets) {
+            if ([currentTarget enabled]) {
+                NSInteger indexOfObject = [targets indexOfObject:currentTarget];
+                NSInteger targetTextureIndex = [[targetTextureIndices objectAtIndex:indexOfObject] integerValue];
+                if (currentTarget != self.targetToIgnoreForUpdates) {
+                    [currentTarget setInputSize:CGSizeMake(bufferWidth, bufferHeight) atIndex:targetTextureIndex];
+                    [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
+                    [currentTarget newFrameReadyAtTime:frameTime atIndex:targetTextureIndex];
+                } else {
+                    [currentTarget setInputFramebuffer:outputFramebuffer atIndex:targetTextureIndex];
                 }
             }
-            
-            CFRelease(textureRef);
         }
-    
-        CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
-        CFRelease(pixelBuffer);
         
-//    });
+        CFRelease(textureRef);
+    }
+
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
+    CFRelease(pixelBuffer);
+        
+    });
     
     return YES;
 }

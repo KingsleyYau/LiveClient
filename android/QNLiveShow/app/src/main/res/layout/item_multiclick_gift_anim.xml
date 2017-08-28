@@ -1,47 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="48dp"
+    android:layout_width="181dp"
+    android:layout_height="45dp"
+    android:id="@+id/rl_giftAnimContainer"
     android:orientation="horizontal"
     android:background="@drawable/bg_multiclick_item"
-    android:gravity="center_vertical"
-    android:paddingRight="20dp">
+    android:gravity="center_vertical">
 
-    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
         android:layout_centerVertical="true"
         android:src="@drawable/circleimageview_hugh"
         android:id="@+id/civ_photo"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        />
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentLeft="true"/>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginLeft="16dp">
+        android:layout_toRightOf="@id/civ_photo"
+        android:layout_toLeftOf="@+id/ivGift"
+        android:layout_centerVertical="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="4dp">
         <TextView
             android:id="@+id/tvNickName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:textSize="15sp"
-            android:text="Johney"/>
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="bbbb"/>
         <TextView
             android:id="@+id/tvGiftName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:text="Apple"
+            android:text="aaaa"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:textSize="13sp"/>
     </LinearLayout>
-    
+
     <ImageView
         android:id="@+id/ivGift"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:scaleType="fitCenter"
         android:src="@drawable/gift_apple"
-        android:layout_marginLeft="16dp"/>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="19dp"/>
 
 </LinearLayout>

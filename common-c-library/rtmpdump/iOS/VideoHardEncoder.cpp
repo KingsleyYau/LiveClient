@@ -12,24 +12,23 @@
 
 namespace coollive {
 VideoHardEncoder::VideoHardEncoder() {
-    FileLog("rtmpdump", "VideoHardEncoder::VideoHardEncoder( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoHardEncoder::VideoHardEncoder( this : %p )", this);
     
     mVideoEncodeQueue = dispatch_queue_create("_mVideoEncodeQueue", NULL);
     mVideoCompressionSession = NULL;
 }
     
 VideoHardEncoder::~VideoHardEncoder() {
-    FileLog("rtmpdump", "VideoHardEncoder::~VideoHardEncoder( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoHardEncoder::~VideoHardEncoder( this : %p )", this);
     
-    Pause();
+    DestroyContext();
 }
     
-bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps) {
+bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Create( this : %p )", this);
     
-    mpCallback = callback;
     mWidth = width;
     mHeight = height;
     mKeyFrameInterval = keyFrameInterval;
@@ -39,7 +38,9 @@ bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int hei
     DestroyContext();
     bFlag = CreateContext();
     
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Create( "
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "VideoHardEncoder::Create( "
                  "[Finish], "
                  "this : %p, "
                  "bFlag : %s "
@@ -51,6 +52,10 @@ bool VideoHardEncoder::Create(VideoEncoderCallback* callback, int width, int hei
     return bFlag;
 }
 
+void VideoHardEncoder::SetCallback(VideoEncoderCallback* callback) {
+    mpCallback = callback;
+}
+    
 bool VideoHardEncoder::Reset() {
     bool bFlag = true;
     
@@ -73,7 +78,6 @@ void VideoHardEncoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p )", this);
     
     DestroyContext();
-    
 }
 
 void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
@@ -83,6 +87,8 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
     CVPixelBufferRetain(pixelBuffer);
 
     dispatch_async(mVideoEncodeQueue, ^{
+        mRuningMutex.lock();
+        
         VTEncodeInfoFlags flags;
         
         // 设置每帧的Timestamp
@@ -101,6 +107,8 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
         }
         
         CVPixelBufferRelease(pixelBuffer);
+        
+        mRuningMutex.unlock();
     });
 }
 
@@ -153,7 +161,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
         statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 0, &sparameterSet, &sparameterSetSize, &sparameterSetCount, 0 );
         if (statusCode == noErr) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded SPS], "
                          "timestamp : %u, "
@@ -173,7 +181,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
         statusCode = CMVideoFormatDescriptionGetH264ParameterSetAtIndex(format, 1, &pparameterSet, &pparameterSetSize, &pparameterSetCount, 0 );
         if (statusCode == noErr) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded PSP], "
                          "timestamp : %u, "
@@ -186,7 +194,6 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
                          );
             encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)pparameterSet, (int)pparameterSetSize, timestamp);
         }
-        
     }
     
     // 获取编码帧
@@ -207,6 +214,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
         // 循环获取NALU数据
         while (bufferOffset < totalLength - avccHeaderLength) {
             uint32_t nalUnitLength = 0;
+            
             // Read NALU length
             memcpy(&nalUnitLength, h264Buffer + bufferOffset, avccHeaderLength);
             
@@ -221,6 +229,19 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
             }
             // 填充帧数据
             encoder->mVideoEncodeFrame.AddBuffer((unsigned char *)data, nalUnitLength);
+//            FileLevelLog("rtmpdump",
+//                         KLog::LOG_MSG,
+//                         "VideoHardEncoder::VideoCompressionOutputCallback( "
+//                         "[Encoded Data], "
+//                         "timestamp : %u, "
+//                         "frameType : 0x%x, "
+//                         "size : %d "
+//                         ")",
+//                         timestamp,
+//                         data[0],
+//                         nalUnitLength
+//                         );
+//            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)data, nalUnitLength, timestamp);
             
             // Move to the next NALU in the block buffer
             bufferOffset += avccHeaderLength + nalUnitLength;
@@ -228,7 +249,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
         
         if (NULL != encoder->mpCallback) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "VideoHardEncoder::VideoCompressionOutputCallback( "
                          "[Encoded Data], "
                          "timestamp : %u, "
@@ -247,6 +268,7 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
 bool VideoHardEncoder::CreateContext() {
     bool bFlag = true;
     
+    mRuningMutex.lock();
     if( !mVideoCompressionSession ) {
         bFlag = false;
         
@@ -298,12 +320,15 @@ bool VideoHardEncoder::CreateContext() {
         bFlag = (status == noErr);
     }
     
+    mRuningMutex.unlock();
+    
     return bFlag;
 }
 
 void VideoHardEncoder::DestroyContext() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::DestroyContext( this : %p )", this);
 
+    mRuningMutex.lock();
     if( mVideoCompressionSession ) {
         VTCompressionSessionCompleteFrames(mVideoCompressionSession, kCMTimeInvalid);
         
@@ -311,5 +336,6 @@ void VideoHardEncoder::DestroyContext() {
         CFRelease(mVideoCompressionSession);
         mVideoCompressionSession = NULL;
     }
+    mRuningMutex.unlock();
 }
 }

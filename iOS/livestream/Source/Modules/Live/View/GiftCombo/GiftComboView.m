@@ -22,8 +22,15 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 @property (nonatomic ,assign) NSInteger liveTimerForSecond;
 @property (nonatomic ,assign) BOOL isSetNumber;
 @property (nonatomic ,strong) NSTimer * playTimer;
+@property (nonatomic, strong) NSThread *thread;
+
+@property (nonatomic, strong) dispatch_queue_t serialQueue;
+@property (nonatomic, strong) NSRunLoop* playLoop;
 
 @property (nonatomic, assign) BOOL isPlayTimerStop;
+
+@property (atomic, assign) BOOL isPlayGiftCombo;
+
 @end
 
 @implementation GiftComboView
@@ -54,11 +61,28 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     self.backView.layer.cornerRadius = self.backView.frame.size.height / 2;
     self.backView.layer.masksToBounds = YES;
     self.isPlayTimerStop = YES;
+    self.isPlayGiftCombo = NO;
+    
+    self.serialQueue = dispatch_queue_create("serial_queue",
+                                                         DISPATCH_QUEUE_SERIAL);
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(self.serialQueue, ^{
+        
+        if (!weakSelf.playTimer) {
+            weakSelf.playLoop = [NSRunLoop currentRunLoop];
+            weakSelf.playTimer = [NSTimer scheduledTimerWithTimeInterval:weakSelf.playTime target:weakSelf
+                                                            selector:@selector(play) userInfo:nil repeats:YES];
+            [[NSRunLoop currentRunLoop] addTimer:weakSelf.playTimer forMode:NSDefaultRunLoopMode];
+            [[NSRunLoop currentRunLoop] run];
+//            [weakSelf.playTimer fire];
+        }
+    });
 }
 
 - (void)dealloc {
     self.isPlayTimerStop = YES;
-    [self stopGiftCombo];
+    
+    NSLog(@"GiftComboView::dealloc!");
 }
 
 - (void)setEndNum:(NSInteger)endNum{
@@ -88,18 +112,18 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 }
 
 - (void)play {
-    
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self addGiftNumberFrom];
+        if (self.isPlayGiftCombo) {
+            [self addGiftNumberFrom];
+        }
     });
 }
 
 - (void)reset {
-    
-    if (self.playTimer.isValid) {
-        [self.playTimer invalidate];
-        self.playTimer = nil;
-    }
+//    if (self.playTimer.isValid) {
+//        [self.playTimer invalidate];
+//        self.playTimer = nil;
+//    }
     self.alpha = 1.0;
     self.transform = CGAffineTransformIdentity;
     [self.numberView changeNumber:self.beginNum];
@@ -111,23 +135,16 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 
 - (void)playGiftCombo
 {
-    if (!self.playTimer) {
-        self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime target:self selector:@selector(play) userInfo:nil repeats:YES];
-        NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(run) object:nil];
-        [thread start];
-    }
+    self.isPlayGiftCombo = YES;
 }
 
 - (void)stopGiftCombo
 {
+    self.serialQueue = nil;
     [self.playTimer invalidate];
     self.playTimer = nil;
-//    [self stopTimer];
-}
-
-- (void)run {
-    [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSRunLoopCommonModes];
-    [self.playTimer fire];
+    
+    CFRunLoopStop([self.playLoop getCFRunLoop]);
 }
 
 #pragma mark - Private
@@ -170,8 +187,7 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
                        self.numberView.alpha = 1.0;
                    }completion:^(BOOL finished) {
                        if (number >= self.endNum) {
-                           [self.playTimer invalidate];
-                           self.playTimer = nil;
+                           self.isPlayGiftCombo = NO;
                            self.isPlayTimerStop = YES;
                        }
                    }];
@@ -230,11 +246,14 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 }
 
 - (void)liveTimerRunning {
+    
     self.liveTimerForSecond += 1;
+
     if (self.liveTimerForSecond > kTimeOut) {
         if (self.isAnimation == YES) {
             self.isAnimation = NO;
             return;
+            
         }
         self.isAnimation = YES;
         self.isLeavingAnimation = YES;
@@ -262,7 +281,8 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
 
 - (NSTimer *)liveTimer {
     if (!_liveTimer) {
-        _liveTimer =  [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(liveTimerRunning) userInfo:nil repeats:YES];
+        _liveTimer =  [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(liveTimerRunning)
+                                                     userInfo:nil repeats:YES];
         [[NSRunLoop currentRunLoop] addTimer:_liveTimer forMode:NSRunLoopCommonModes];
     }
     return _liveTimer;

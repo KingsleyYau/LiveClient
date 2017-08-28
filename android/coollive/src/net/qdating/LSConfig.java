@@ -15,25 +15,29 @@ public class LSConfig {
 	 */
 	public static Integer RECONNECT_SECOND = 3000;
 	/**
-	 * 视频宽度
+	 * 视频宽度(推流参数)
 	 */
-	public static int VIDEO_WIDTH = 640;
+	public static int VIDEO_WIDTH = 240;
 	/**
-	 * 视频高度
+	 * 视频高度(推流参数)
 	 */
-	public static int VIDEO_HEIGHT = 480;
+	public static int VIDEO_HEIGHT = 320;
 	/**
-	 * 码率
+	 * 码率(推流参数)
 	 */
 	public static int VIDEO_BITRATE = 1000 * 1000;
 	/**
-	 * 视频帧率
+	 * 视频帧率(推流参数)
 	 */
-	public static int VIDEO_FPS = 15;
+	public static int VIDEO_FPS = 10;
 	/**
-	 * 视频关键帧间隔
+	 * 视频关键帧间隔(推流参数)
 	 */
 	public static int VIDEO_KEYFRAMEINTERVAL = VIDEO_FPS;
+	/**
+	 * 视频采集临时Buffer, 数值越大, 效率越高, 占用内存越大(推流参数)
+	 */
+	public static int VIDEO_CAPTURE_BUFFER_COUNT = 3 * VIDEO_FPS;
 	
 	/**
 	 * 音频PCM采样率

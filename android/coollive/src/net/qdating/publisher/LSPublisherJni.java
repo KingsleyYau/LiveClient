@@ -2,6 +2,7 @@ package net.qdating.publisher;
 
 import android.util.Log;
 import net.qdating.LSConfig;
+import net.qdating.player.ILSVideoRendererJni;
 
 /**
  * 音视频播放器JNI
@@ -35,11 +36,11 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	 * @param videoEncoder		视频编码器
 	 * @return 成功失败
 	 */
-	public boolean Create(ILSPublisherCallback publisherCallback, ILSVideoEncoderJni videoEncoder) {
+	public boolean Create(ILSPublisherCallback publisherCallback, ILSVideoEncoderJni videoEncoder, ILSVideoRendererJni videoRenderer) {
 		// 状态回调
 		this.publisherCallback = publisherCallback;
 		
-		client = Create(this, videoEncoder, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT, LSConfig.VIDEO_BITRATE, LSConfig.VIDEO_KEYFRAMEINTERVAL, LSConfig.VIDEO_FPS);	
+		client = Create(this, videoEncoder, videoRenderer, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT, LSConfig.VIDEO_BITRATE, LSConfig.VIDEO_KEYFRAMEINTERVAL, LSConfig.VIDEO_FPS);	
 		return client != INVALID_CLIENT;
 	}
 	
@@ -51,6 +52,7 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	private native long Create(
 			ILSPublisherCallbackJni publisherCallback, 
 			ILSVideoEncoderJni videoEncoder, 
+			ILSVideoRendererJni videoRenderer,
 			int width,
 			int height,
 			int bitRate,
@@ -92,12 +94,34 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	 * 发送视频帧
 	 * @param data
 	 */
-	public void PushVideoFrame(byte[] data) {
+	public void PushVideoFrame(byte[] data, int size, int width, int height) {
 		if( client != INVALID_CLIENT ) {
-			PushVideoFrame(client, data);
+			PushVideoFrame(client, data, size, width, height);
 		}
 	}
-	private native void PushVideoFrame(long client, byte[] data);
+	private native void PushVideoFrame(long client, byte[] data, int size, int width, int height);
+	
+	/**
+	 * 发送音频帧
+	 * @param data
+	 */
+	public void PushAudioFrame(byte[] data, int size) {
+		if( client != INVALID_CLIENT ) {
+			PushAudioFrame(client, data, size);
+		}
+	}
+	private native void PushAudioFrame(long client, byte[] data, int size);
+	
+	/***
+	 * 改变视频输入角度
+	 * @param rotation
+	 */
+	public void ChangeVideoRotate(int rotation) {
+		if( client != INVALID_CLIENT ) {
+			ChangeVideoRotate(client, rotation);
+		}
+	}
+	private native void ChangeVideoRotate(long client, int rotation);
 	
 	/**
 	 * 停止播放
@@ -112,6 +136,8 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	@Override
 	public void onDisconnect() {
 		// TODO Auto-generated method stub
-		
+		if( publisherCallback != null ) {
+			publisherCallback.onDisconnect(this);
+		}
 	}
 }

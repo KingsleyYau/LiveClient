@@ -74,6 +74,8 @@
 #pragma mark - 请求礼物列表
 - (void)GetLiveRoomAllGiftListRequest{
     
+    _status = DOWNLOADSTART;
+    
     GetLiveRoomAllGiftListRequest *request = [[GetLiveRoomAllGiftListRequest alloc]init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomGiftItemObject *> * _Nullable array) {
         
@@ -81,7 +83,12 @@
             
             if (success) {
                 
-                [self.giftMuArray removeAllObjects];
+                _status = DOWNLOADING;
+                
+                if ( self.giftMuArray.count > 0 && self.giftMuArray ) {
+                    
+                    [self.giftMuArray removeAllObjects];
+                }
                 
                 if (array != nil && array.count ) {
                     self.giftMuArray = [array copy];
@@ -92,6 +99,7 @@
                 
             }else{
                 
+                _status = DOWNLOADEND;
                 NSLog(@"GetLiveRoomAllGiftListRequest ErrNum:%ld ErrMsg%@",(long)errnum,errmsg);
             }
         });
@@ -156,6 +164,7 @@
                 
                 NSString *fileName = [filePath lastPathComponent];
                 NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( WebP fileName : %@ )", fileName);
+                _status = DOWNLOADEND;
             }
         }
         

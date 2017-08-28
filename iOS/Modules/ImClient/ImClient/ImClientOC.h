@@ -36,17 +36,26 @@
  */
 - (BOOL)removeDelegate:(id<IMLiveRoomManagerDelegate> _Nonnull)delegate;
 
+/**
+ *  获取一个请求seq
+ *
+ *
+ *  @return 请求序列号
+ */
+- (SEQ_T)getReqId;
+
 - (BOOL)initClient:(NSArray<NSString*>* _Nonnull)urls;
 - (BOOL)login:(NSString* _Nonnull)userId token:(NSString* _Nonnull)token;
 - (BOOL)logout;
-- (BOOL)fansRoomIn:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId;
-- (BOOL)fansRoomout:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId;
-- (BOOL)getRoomInfo:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId;
-- (BOOL)fansShutUp:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId timeOut:(int)timeOut;
-- (BOOL)fansKickOffRoom:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId;
-- (BOOL)sendRoomMsg:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
-- (BOOL)sendRoomFav:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName;
-- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
-- (BOOL)sendRoomToast:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+- (BOOL)fansRoomIn:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId;
+- (BOOL)fansRoomout:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId;
+- (BOOL)getRoomInfo:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId reqId:(SEQ_T)reqId;
+- (BOOL)fansShutUp:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId timeOut:(int)timeOut reqId:(SEQ_T)reqId;
+- (BOOL)fansKickOffRoom:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId reqId:(SEQ_T)reqId;
+- (BOOL)sendRoomMsg:(NSString* _Nonnull)token roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg reqId:(SEQ_T)reqId;
+
+- (BOOL)sendRoomFav:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName reqId:(SEQ_T)reqId;
+- (BOOL)sendRoomGift:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id reqId:(SEQ_T)reqId;
+- (BOOL)sendRoomToast:(NSString* _Nonnull)roomId token:(NSString* _Nonnull)token nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg reqId:(SEQ_T)reqId;
 
 @end

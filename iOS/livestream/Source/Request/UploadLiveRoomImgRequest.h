@@ -10,6 +10,6 @@
 
 @interface UploadLiveRoomImgRequest : SessionRequest
 @property (nonatomic, assign) ImageType type;
-@property (nonatomic, strong) NSString* imageFileName;
+@property (nonatomic, strong) NSString * _Nullable imageFileName;
 @property (nonatomic, strong) UploadLiveRoomImgFinishHandler _Nullable finishHandler;
 @end

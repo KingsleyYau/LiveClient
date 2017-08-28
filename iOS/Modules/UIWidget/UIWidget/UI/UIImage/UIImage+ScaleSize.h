@@ -15,7 +15,6 @@
 /**
  *  缩放到指定大小
  *
- *  @param img  图片大小
  *  @param size 目标大小
  *
  *  @return 修改完成图片

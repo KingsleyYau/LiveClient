@@ -9,10 +9,11 @@
 #ifndef VideoHardEncoder_h
 #define VideoHardEncoder_h
 
-#include <AndroidCommon/JniCommonFunc.h>
-
 #include <rtmpdump/IEncoder.h>
-#include <rtmpdump/VideoFrame.h>
+
+#include <rtmpdump/util/EncodeDecodeBuffer.h>
+
+#include <AndroidCommon/JniCommonFunc.h>
 
 #include <common/KThread.h>
 
@@ -26,7 +27,8 @@ public:
     virtual ~VideoHardEncoder();
 
 public:
-    bool Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps);
+    bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type);
+    void SetCallback(VideoEncoderCallback* callback);
     bool Reset();
     void Pause();
     void EncodeVideoFrame(void* data, int size, void* frame);

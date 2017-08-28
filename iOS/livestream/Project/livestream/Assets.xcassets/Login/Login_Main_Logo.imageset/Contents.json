@@ -2,12 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Contents.jpg",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "Contents.png",
+      "filename" : "Login_Main_Logo.png",
       "scale" : "2x"
     },
     {

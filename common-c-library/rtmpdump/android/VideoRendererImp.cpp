@@ -7,6 +7,9 @@
 //
 
 #include "VideoRendererImp.h"
+
+#include <rtmpdump/video/VideoFrame.h>
+
 namespace coollive {
 VideoRendererImp::VideoRendererImp(jobject jniRenderer) {
 	JNIEnv* env;

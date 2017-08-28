@@ -1,99 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="bottom"
     android:orientation="vertical">
 
-    <!--主播端同用户端共用，切换到消息输入场景,样式一样-->
-    <include
-        android:id="@+id/rl_inputMsg"
-        layout="@layout/view_live_buttom_sendmsg"
+    <FrameLayout
+        android:id="@+id/flMultiGift"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:visibility="invisible"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp" />
+        android:layout_height="98dp">
 
-    <RelativeLayout
-        android:id="@+id/rlViewBodyExcludeEdit"
-        android:clickable="true"
-        android:onClick="onClick"
+    </FrameLayout>
+    <!--豪华礼物的层级>小礼物层级>弹幕层级,所以豪华礼物应该在顶层播放，弹幕应该在相对的最底层播放-->
+    <!--弹幕层-->
+    <LinearLayout
+        android:id="@+id/ll_bulletScreen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_inputMsg">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:clickable="false"
+        android:orientation="vertical">
 
-        <!--点赞区域-->
-        <!--
-        <com.qpidnetwork.framework.widget.magicfly.FlyLinearLayout
-            xmlns:app="http://schemas.android.com/tools"
-            android:id="@+id/fll_love"
-            app:flyDuration="3000"
-            android:clickable="false"
-            android:layout_width="137dp"
-            android:paddingRight="37dp"
-            android:layout_marginRight="16dp"
-            android:layout_height="300dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="44dp"
-            android:background="@android:color/transparent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"/>
-        -->
-        <!--房间头部-->
         <include
-            layout="@layout/view_liveshow_header"
+            android:id="@+id/rl_bullet1"
+            layout="@layout/view_live_center_bullet_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/liveroom_bullet_height"
+            android:visibility="invisible"/>
+
+        <include
+            android:id="@+id/rl_bullet2"
+            layout="@layout/view_live_center_bullet_screen"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/liveroom_bullet_height"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--消息列表-->
+        <com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView
+            android:id="@+id/lvlv_roomMsgList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentBottom="true">
-            <FrameLayout
-                android:id="@+id/flMultiGift"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </FrameLayout>
-            <!--豪华礼物的层级>小礼物层级>弹幕层级,所以豪华礼物应该在顶层播放，弹幕应该在相对的最底层播放-->
-            <!--弹幕层-->
-            <LinearLayout
-                android:id="@+id/ll_bulletScreen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:clickable="false"
-                android:orientation="vertical">
-
-                <include
-                    android:id="@+id/rl_bullet1"
-                    layout="@layout/view_live_center_bullet_screen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/liveroom_bullet_height"
-                    android:visibility="invisible"/>
-
-                <include
-                    android:id="@+id/rl_bullet2"
-                    layout="@layout/view_live_center_bullet_screen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/liveroom_bullet_height"
-                    android:layout_marginTop="10dp"
-                    android:visibility="invisible"/>
-
-            </LinearLayout>
-
-            <!--消息列表-->
-            <com.qpidnetwork.framework.livemsglist.LiveMessageListView
-                android:id="@+id/lvlv_roomMsgList"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:paddingRight="56dp"
-                android:background="@android:color/transparent" />
-
-        </LinearLayout>
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:paddingRight="56dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent" />
 
         <!--未读条数-->
         <TextView
@@ -105,12 +65,14 @@
             android:clickable="true"
             android:onClick="onClick"
             android:layout_marginLeft="13dp"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:background="@drawable/bg_live_buttom_unreadmsg"
             android:drawablePadding="6dp"
             android:textColor="@android:color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"/>
-    </RelativeLayout>
-</RelativeLayout>
+            android:layout_gravity="bottom"/>
+
+    </FrameLayout>
+
+</LinearLayout>

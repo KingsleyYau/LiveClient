@@ -10,7 +10,34 @@
 
 #include "IImClientDef.h"
 
-#define SEQ_T unsigned int
+#include <common/CommonFunc.h>
+
+#include <string>
+#include <list>
+#include <vector>
+
+using namespace std;
+
+// 直播间观众结构体
+typedef struct _tRoomTopFan {
+    _tRoomTopFan() {
+        userId = "";
+        nickName = "";
+        photoUrl = "";
+    };
+    
+    _tRoomTopFan(const _tRoomTopFan& item) {
+        userId = item.userId;
+        nickName = item.nickName;
+        photoUrl = item.photoUrl;
+    }
+    
+    string userId;
+    string nickName;
+    string photoUrl;
+} RoomTopFan;
+// 直播间观众列表
+typedef list<RoomTopFan> RoomTopFanList;
 
 // IM客户端监听接口类
 class IImClientListener
@@ -62,7 +89,7 @@ public:
     
     // ------------- 直播间礼物消息 -------------
     // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-    virtual void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) {};
+    virtual void OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins, int multi_click_id) {};
     // 6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
     virtual void OnRecvRoomGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {};
 

@@ -14,5 +14,8 @@
     <dimen name="coverphoto_corner_radiu">3dp</dimen>
     <dimen name="liveroom_bullet_height">40dp</dimen>
 
+    <!--消息列表礼物大小处理-->
+    <dimen name="liveroom_messagelist_gift_width">16dp</dimen>
+    <dimen name="liveroom_messagelist_gift_height">16dp</dimen>
 
 </resources>

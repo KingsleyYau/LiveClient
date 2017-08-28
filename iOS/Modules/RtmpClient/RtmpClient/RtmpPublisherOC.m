@@ -19,7 +19,8 @@
 #include <rtmpdump/iOS/AudioHardEncoder.h>
 
 #pragma mark - 软编码器
-#include <rtmpdump/VideoEncoderH264.h>
+#include <rtmpdump/video/VideoEncoderH264.h>
+#include <rtmpdump/audio/AudioEncoderAAC.h>
 
 #pragma mark - 发布控制器
 #include <rtmpdump/PublisherController.h>
@@ -30,6 +31,7 @@ class PublisherStatusCallbackImp;
 
 @interface RtmpPublisherOC () {
     BOOL _useHardEncoder;
+
 }
 
 #pragma mark - 传输模块
@@ -47,8 +49,9 @@ class PublisherStatusCallbackImp;
 @property (nonatomic, strong) NSDate* enterBackgroundTime;
 @property (nonatomic, strong) NSDate* startTime;
 
-#pragma mark - 测试
-@property (assign) BOOL bRunning;
+#pragma mark - 视频参数
+@property (assign) int width;
+@property (assign) int height;
 
 @end
 
@@ -84,21 +87,21 @@ private:
     return obj;
 }
 
-- (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height  {
-    NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %d, height : %d )", (int)width, (int)height);
+- (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height {
+    NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld )", (long)width, (long)height);
     
     if(self = [super init] ) {
         _isBackGround = NO;
-        _bRunning = NO;
+        self.width = (int)width;
+        self.height = (int)height;
         
         self.startTime = [NSDate date];
         
         self.publisher = new PublisherController();
         self.statusCallback = new PublisherStatusCallbackImp(self);
         self.publisher->SetStatusCallback(self.statusCallback);
-        self.publisher->SetVideoParam((int)width, (int)height, BIT_RATE, KEY_FRAME_INTERVAL, FPS);
         
-        // 默认使用硬解码
+        // 默认使用硬编码
         _useHardEncoder = YES;
         // 创建解码器和渲染器
         [self createEncoders];
@@ -158,7 +161,14 @@ recordH264FilePath:(NSString *)recordH264FilePath
 }
 
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer {
-    self.publisher->PushAudioFrame((void *)sampleBuffer);
+    CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+    
+    char* data = NULL;
+    size_t size = 0;
+    OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &size, &data);
+    if( status == kCMBlockBufferNoErr ) {
+        self.publisher->PushAudioFrame(data, (int)size, (void *)sampleBuffer);
+    }
 }
 
 #pragma mark - 后台处理
@@ -204,11 +214,14 @@ recordH264FilePath:(NSString *)recordH264FilePath
     } else {
         // 软解码
         self.videoEncoder = new VideoEncoderH264();
-        self.audioEncoder = new AudioHardEncoder();
+        self.audioEncoder = new AudioEncoderAAC();
     }
     
     // 替换编码器
+    self.videoEncoder->Create(self.width, self.height, BIT_RATE, KEY_FRAME_INTERVAL, FPS, VIDEO_FORMATE_BGRA);
     self.publisher->SetVideoEncoder(self.videoEncoder);
+    
+    self.audioEncoder->Create(44100, 1, 16);
     self.publisher->SetAudioEncoder(self.audioEncoder);
 }
 

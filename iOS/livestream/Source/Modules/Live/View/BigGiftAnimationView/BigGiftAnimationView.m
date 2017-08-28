@@ -26,7 +26,7 @@ static dispatch_once_t onceToken;
             sharedInstance = [[BigGiftAnimationView alloc] init];
             [sharedInstance carWebPImage];
             sharedInstance.downloadManager = [LiveGiftDownloadManager giftDownloadManager];
-            sharedInstance.downloadManager.managerDelegate = self;
+            sharedInstance.downloadManager.managerDelegate = sharedInstance;
         }
         
     });
@@ -52,7 +52,9 @@ static dispatch_once_t onceToken;
     return self;
 }
 
-- (void)starAnimationWithGiftID:(NSString *)giftID {
+- (BOOL)starAnimationWithGiftID:(NSString *)giftID {
+    
+    BOOL isHaveImage = NO;
     
     NSString *filePath = [[LiveGiftDownloadManager giftDownloadManager]doCheckLocalGiftWithGiftID:giftID];
     NSData *imageData = [[NSFileManager defaultManager]contentsAtPath:filePath];
@@ -61,6 +63,8 @@ static dispatch_once_t onceToken;
     if (imageData == nil) {
         LiveRoomGiftItemObject *item = [self.downloadManager backGiftItemWithGiftID:giftID];
         [self.downloadManager  afnDownLoadFileWith:item.srcUrl giftId:giftID];
+        
+        isHaveImage = NO;
         
     }else{
         
@@ -72,7 +76,11 @@ static dispatch_once_t onceToken;
             make.left.right.bottom.equalTo(self);
             make.height.equalTo(@SCREEN_HEIGHT);
         }];
+        
+        isHaveImage = YES;
     }
+    
+    return isHaveImage;
 }
 
 - (void)downLoadWasCompleteWithGiftId:(NSString *)giftId{

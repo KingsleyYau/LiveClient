@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.qpidnetwork.liveshow.MainActivity">
+    tools:context="com.qpidnetwork.livemodule.liveshow.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
         android:layout_height="60dp"
         android:id="@+id/btnClick"/>
 
-    <com.qpidnetwork.framework.widget.magicfly.PeriscopeLayout
+    <com.qpidnetwork.livemodule.framework.widget.magicfly.PeriscopeLayout
         android:id="@+id/periscopLayout"
         android:layout_width="60dp"
         android:layout_height="match_parent"

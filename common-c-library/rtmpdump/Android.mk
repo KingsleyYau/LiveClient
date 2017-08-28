@@ -26,9 +26,24 @@ REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))
 LOCAL_SRC_FILES += $(call all-c-files-under, $(REAL_PATH))
 
+AUDIO_PATH := util
+AUDIO_SRC := $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.cpp))
+AUDIO_SRC += $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.c))
+LOCAL_SRC_FILES += $(AUDIO_SRC)
+
+AUDIO_PATH := audio
+AUDIO_SRC := $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.cpp))
+AUDIO_SRC += $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.c))
+LOCAL_SRC_FILES += $(AUDIO_SRC)
+
+AUDIO_PATH := video
+AUDIO_SRC := $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.cpp))
+AUDIO_SRC += $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(AUDIO_PATH)/*.c))
+LOCAL_SRC_FILES += $(AUDIO_SRC)
+
 ANDROID_IMP_PATH := android
-ANDROID_IMP_SRC := $(subst $(MODULE_PATH)/,, $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.cpp))
-ANDROID_IMP_SRC += $(subst $(MODULE_PATH)/,, $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.c))
+ANDROID_IMP_SRC := $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.cpp))
+ANDROID_IMP_SRC += $(subst $(MODULE_PATH)/, , $(wildcard $(MODULE_PATH)/$(ANDROID_IMP_PATH)/*.c))
 LOCAL_SRC_FILES += $(ANDROID_IMP_SRC)
 
 include $(BUILD_STATIC_LIBRARY)

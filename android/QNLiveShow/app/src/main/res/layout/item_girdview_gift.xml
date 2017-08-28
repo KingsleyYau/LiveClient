@@ -25,17 +25,22 @@
             android:id="@+id/iv_giftIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:scaleType="fitXY"
+            android:layout_marginTop="8dp"
+            android:scaleType="fitCenter"
             android:layout_centerHorizontal="true"/>
 
-        <ImageView
-            android:id="@+id/iv_rightGiftFlag"
+        <TextView
+            android:id="@+id/tv_rightGiftFlag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:visibility="visible"
-            android:background="@drawable/ic_live_buttom_gift_advance"/>
+            android:textSize="12sp"
+            android:text="123"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:background="@drawable/ic_live_buttom_gift_advance"
+            />
 
     </RelativeLayout>
 
@@ -58,7 +63,7 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="1dp"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

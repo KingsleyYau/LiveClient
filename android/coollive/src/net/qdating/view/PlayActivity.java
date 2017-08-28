@@ -26,13 +26,17 @@ public class PlayActivity extends Activity {
 //	private String url = "rtmp://172.25.32.17:1936/aac/max";
 	
 	String filePath = "/sdcard";
-	private String h264File = "";//"/sdcard/coollive/play.h264";
-	private String aacFile = "";//"/sdcard/coollive/play.aac";
+	private String playH264File = "";//"/sdcard/coollive/play.h264";
+	private String playAACFile = "";//"/sdcard/coollive/play.aac";
+	
+	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
+	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
 	
 	// 播放相关
 	private LSPlayer player = new LSPlayer();
 	private SurfaceView surfaceView = null;
 	private EditText editText = null;
+	private EditText editTextPublish = null;
 	
 	// 推送相关
 	private LSPublisher publisher = new LSPublisher();
@@ -54,28 +58,30 @@ public class PlayActivity extends Activity {
 		CrashHandlerJni.SetCrashLogDirectory(filePath);
 		
 		editText = (EditText) this.findViewById(R.id.editText);
-		editText.setText(url);
+		editText.setText(String.format("%s_mv", url));
+		
+		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
+		editTextPublish.setText(String.format("%s_a", url));
 		
 		surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
+		surfaceView.setKeepScreenOn(true);
 		surfaceViewPublish = (SurfaceView) this.findViewById(R.id.surfaceViewPublish);
+		surfaceViewPublish.setKeepScreenOn(true);
 		
 		// 播放相关
 		player.init(surfaceView, null);
 		// 推送相关
-		publisher.init(surfaceViewPublish, null);
+		int rotation = getWindowManager().getDefaultDisplay()
+	             .getRotation();
+		publisher.init(surfaceViewPublish, rotation, null);
 		
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( editText.length() > 0 ) {
-					url = editText.getText().toString();
-				}
-				
-				surfaceView.setVisibility(View.VISIBLE);
-				surfaceViewPublish.setVisibility(View.GONE);
-				player.playUrl(url, "", h264File, aacFile);
+				String playUrl = editText.getText().toString();
+				player.playUrl(playUrl, "", playH264File, playAACFile);
 			}
 		});
 
@@ -84,9 +90,8 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				surfaceView.setVisibility(View.GONE);
-				surfaceViewPublish.setVisibility(View.VISIBLE);
-				publisher.publisherUrl(url, h264File, aacFile);
+				String publishUrl = editTextPublish.getText().toString();
+				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 			}
 		});
 
@@ -131,6 +136,22 @@ public class PlayActivity extends Activity {
             }  
     } 
 	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		
+		if( player != null ) {
+			player.stop();
+			player.uninit();
+		}
+
+		if( publisher != null ) {
+			publisher.stop();
+			publisher.uninit();
+		}
+	}
+	
     @Override
     protected void onPause() {
         super.onPause();
@@ -148,6 +169,6 @@ public class PlayActivity extends Activity {
 //		        intent.setClass(PlayActivity.this, TestActivity.class); 
 //		        startActivity(intent);
 //			}
-//		}, 5000);    
+//		}, 10000);    
     }
 }

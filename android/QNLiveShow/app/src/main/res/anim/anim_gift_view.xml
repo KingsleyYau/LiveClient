@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--参考http://keeganlee.me/post/android/20151003
+和https://developer.android.com/guide/topics/graphics/view-animation.html-->
+
+    <!--[self.numberView.layer removeAllAnimations];-->
+    <!--self.numberView.transform = CGAffineTransformIdentity;-->
+    <!--self.numberView.alpha = 0.0;-->
+
+    <!--[UIView animateWithDuration:0.01 animations:^{-->
+    <!--self.numberView.transform = CGAffineTransformMakeScale(2.2, 2.2);-->
+    <!--self.numberView.alpha = 0.1;-->
+
+    <!--} completion:^(BOOL finished) {-->
+    <!--[UIView animateWithDuration:0.03 animations:^{-->
+    <!--self.numberView.transform = CGAffineTransformMakeScale(0.8, 0.8);-->
+    <!--self.numberView.alpha = 0.3;-->
+
+    <!--} completion:^(BOOL finished) {-->
+    <!--[UIView animateWithDuration:0.05 animations:^{-->
+    <!--self.numberView.transform = CGAffineTransformMakeScale(1.5, 1.5);-->
+    <!--self.numberView.alpha = 0.5;-->
+
+    <!--} completion:^(BOOL finished) {-->
+    <!--[UIView animateWithDuration:0.1 animations:^{-->
+    <!--self.numberView.transform = CGAffineTransformMakeScale(0.6, 0.6);-->
+    <!--self.numbulletulleterView.alpha = 0.7;-->
+
+    <!--} completion:^(BOOL finished) {-->
+    <!--[UIView animateWithDuration:0.2 animations:^{-->
+    <!--self.numberView.transform = CGAffineTransformIdentity;-->
+    <!--self.numberView.alpha = 1.0;-->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:fillEnabled="true"
+    >
+    <!--<set-->
+        <!--android:duration="50">-->
+        <!--<alpha-->
+            <!--android:fromAlpha="0.8"-->
+            <!--android:toAlpha="0.5"/>-->
+        <!--<scale-->
+            <!--android:fromXScale="0.0"-->
+            <!--android:toXScale="2.0"-->
+            <!--android:fromYScale="0.0"-->
+            <!--android:toYScale="2.0"/>-->
+    <!--</set>-->
+
+    <set
+        android:duration="1500">
+        <alpha
+            android:fromAlpha="0.8"
+            android:toAlpha="1.0"/>
+        <scale
+            android:fromXScale="2.0"
+            android:toXScale="0.6"
+            android:fromYScale="2.0"
+            android:toYScale="0.6"/>
+    </set>
+
+    <set
+        android:duration="150">
+        <alpha
+            android:fromAlpha="1.0"
+            android:toAlpha="1.0"/>
+        <scale
+            android:fromXScale="0.6"
+            android:toXScale="1.0"
+            android:fromYScale="0.6"
+            android:toYScale="1.0"/>
+    </set>
+
+    <set
+        android:duration="600">
+        <alpha
+            android:fromAlpha="1.0"
+            android:toAlpha="1.0"/>
+        <scale
+            android:fromXScale="1.0"
+            android:toXScale="1.0"
+            android:fromYScale="1.0"
+            android:toYScale="1.0"/>
+    </set>
+
+    <!--<set-->
+        <!--android:duration="200">-->
+        <!--<alpha-->
+            <!--android:fromAlpha="0.7"-->
+            <!--android:toAlpha="1.0"/>-->
+        <!--<scale-->
+            <!--android:fromXScale="0.6"-->
+            <!--android:toXScale="1.0"-->
+            <!--android:fromYScale="0.6"-->
+            <!--android:toYScale="1.0"/>-->
+    <!--</set>-->
+</set>

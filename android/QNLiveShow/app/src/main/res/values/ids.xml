@@ -13,5 +13,6 @@
 
     <!--连接动画控件自定义ID-->
     <item type="id" name="livegift_rootview" />
+    <item type="id" name="btn_giftCount" />
 
 </resources>

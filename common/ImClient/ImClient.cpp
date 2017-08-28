@@ -448,8 +448,7 @@ bool ImClient::FansRoomIn(SEQ_T reqId, const string& token, const string& roomId
             task->Init(this);
             task->InitParam(token, roomId);
             
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -490,8 +489,7 @@ bool ImClient::FansRoomOut(SEQ_T reqId, const string& token, const string& roomI
             task->Init(this);
             task->InitParam(token, roomId);
             
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -531,8 +529,7 @@ bool ImClient::GetRoomInfo(SEQ_T reqId, const string& token, const string& roomI
             task->Init(this);
             task->InitParam(token, roomId);
             
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -573,8 +570,7 @@ bool ImClient::FansShutUp(SEQ_T reqId, const string& roomId, const string& userI
             task->Init(this);
             task->InitParam(roomId, userId, timeOut);
 
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -614,8 +610,7 @@ bool ImClient::FansKickOffRoom(SEQ_T reqId, const string& roomId, const string& 
             task->Init(this);
             task->InitParam(roomId, userId);
 
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -655,8 +650,7 @@ bool ImClient::SendRoomMsg(SEQ_T reqId, const string& token, const string& roomI
             task->Init(this);
             task->InitParam(roomId, token, nickName, msg);
             
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -695,8 +689,7 @@ bool ImClient::SendRoomFav(SEQ_T reqId, const string& roomId, const string& toke
         task->Init(this);
         task->InitParam(roomId, token, nickName);
         
-        SEQ_T seq = m_seqCounter.GetAndIncrement();
-        task->SetSeq(seq);
+        task->SetSeq(reqId);
         result = m_taskManager->HandleRequestTask(task);
     }
     }
@@ -735,8 +728,7 @@ bool ImClient::SendRoomGift(SEQ_T reqId, const string& roomId, const string& tok
             task->Init(this);
             task->InitParam(roomId, token, nickName, giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
 
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }
@@ -749,15 +741,15 @@ bool ImClient::SendRoomGift(SEQ_T reqId, const string& roomId, const string& tok
 }
 
 // 6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-void ImClient::OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins) {
-    FileLog("ImClient", "ImClient::OnSendRoomGift() begin, ImClient:%p reqId:%d err:%d errMsg:%s coins:%f", this, reqId, err, errMsg.c_str(), coins);
+void ImClient::OnSendRoomGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double coins, int multi_click_id) {
+    FileLog("ImClient", "ImClient::OnSendRoomGift() begin, ImClient:%p reqId:%d err:%d errMsg:%s coins:%f, multi_click_id:%d", this, reqId, err, errMsg.c_str(), coins, multi_click_id);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end(); itr++) {
         IImClientListener* callback = *itr;
-        callback->OnSendRoomGift(reqId, success, err, errMsg, coins);
+        callback->OnSendRoomGift(reqId, success, err, errMsg, coins, multi_click_id);
     }
-    FileLog("ImClient", "ImClient::OnSendRoomGift() end, ImClient:%p reqId:%d err:%d errMsg:%s coins:%f", this, reqId, err, errMsg.c_str(), coins);
+    FileLog("ImClient", "ImClient::OnSendRoomGift() end, ImClient:%p reqId:%d err:%d errMsg:%s coins:%f, multi_click_id:%d", this, reqId, err, errMsg.c_str(), coins, multi_click_id);
    
     m_listenerListLock->Unlock();
 }
@@ -777,8 +769,7 @@ bool ImClient::SendRoomToast(SEQ_T reqId, const string& roomId, const string& to
             task->Init(this);
             task->InitParam(roomId, token, nickName, msg);
             
-            SEQ_T seq = m_seqCounter.GetAndIncrement();
-            task->SetSeq(seq);
+            task->SetSeq(reqId);
             result = m_taskManager->HandleRequestTask(task);
         }
     }

@@ -9,6 +9,8 @@
 
 LSPlayerImp::LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject jniAudioRenderer, jobject jniVideoDecoder) {
 	// TODO Auto-generated constructor stub
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPlayerImp::LSPlayerImp( this : %p )", this);
+
 	JNIEnv* env;
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
@@ -46,6 +48,8 @@ LSPlayerImp::LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject 
 
 LSPlayerImp::~LSPlayerImp() {
 	// TODO Auto-generated destructor stub
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPlayerImp::~LSPlayerImp( this : %p )", this);
+
 	DestroyDecoders();
 
 	JNIEnv* env;
@@ -174,6 +178,11 @@ void LSPlayerImp::DestroyDecoders() {
 	if( mpVideoRenderer ) {
 		delete mpVideoRenderer;
 		mpVideoRenderer = NULL;
+	}
+
+	if( mpAudioRenderer ) {
+		delete mpAudioRenderer;
+		mpAudioRenderer = NULL;
 	}
 }
 

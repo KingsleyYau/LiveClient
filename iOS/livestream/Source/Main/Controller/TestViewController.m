@@ -33,16 +33,15 @@
     self.previewView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
     
     self.publisher = [LiveStreamPublisher instance];
-    self.publisher.publishView = self.previewView;
+    self.publisher.publishView = self.previewPublishView;
     
     self.palyer = [LiveStreamPlayer instance];
     self.palyer.playView = self.previewView;
     
-//    self.url = @"rtmp://103.235.46.39:80/live/livestream";
     self.url = @"rtmp://172.25.32.17/live/max";
-//    self.url = @"rtmp://172.25.32.17:1936/aac/max";
 
-    self.textFieldAddress.text = self.url;
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@_mv", self.url, nil];
+    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@_i", self.url, nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -82,13 +81,18 @@
 }
 
 - (IBAction)publish:(id)sender {
-    [self stop:self];
+//    [self stop:self];
     
     NSString* cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString* recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", cacheDir, @"publish.h264"];
-    NSString* recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", cacheDir, @"publish.aac"];
+    NSString* recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     
-    BOOL bFlag = [self.publisher pushlishUrl:self.textFieldAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    NSString* recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
+    NSString* recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
+    
+    BOOL bFlag = [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
     if( bFlag ) {
         // 发布成功
 
@@ -98,12 +102,16 @@
 }
 
 - (IBAction)play:(id)sender {
-    [self stop:self];
+//    [self stop:self];
     
     NSString* cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    NSString* recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@", cacheDir, @"play.flv"];
-    NSString* recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", cacheDir, @"play.h264"];
-    NSString* recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", cacheDir, @"play.aac"];
+    NSString* recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    NSString* recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
+    NSString* recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
+    NSString* recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
     
     // 开始转菊花
     BOOL bFlag = [self.palyer playUrl:self.textFieldAddress.text recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
@@ -142,7 +150,7 @@
 
 - (void)singleTapAction {
     [self.textFieldAddress resignFirstResponder];
-    
+    [self.textFieldPublishAddress resignFirstResponder];
 }
 
 @end

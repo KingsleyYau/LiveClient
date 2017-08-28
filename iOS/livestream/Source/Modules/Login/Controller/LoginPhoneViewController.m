@@ -318,12 +318,10 @@
         KKNavigationController *nvc = (KKNavigationController* )self.navigationController;
         [nvc dismissViewControllerAnimated:YES completion:nil];
     }
-
 }
 
 - (void)popUpPromptWithString:(NSString*)tipStr {
     
-    [MBProgressHUD showMessageWithTitle:nil message:tipStr toView:self.view];
 }
 
 - (void)closeAllInputView {

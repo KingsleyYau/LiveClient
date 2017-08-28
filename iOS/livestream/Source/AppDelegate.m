@@ -23,6 +23,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
+    [self didFinishLaunchWithApplication:application];
+    
+    return YES;
+}
+
+- (void)didFinishLaunchWithApplication:(UIApplication *)application{
+    
     self.window.backgroundColor = [UIColor whiteColor];
     
     // 设置公共属性
@@ -70,6 +77,8 @@
     // 初始化礼物下载管理器
     LiveGiftDownloadManager *downloadManager = [LiveGiftDownloadManager giftDownloadManager];
     
+    NSLog(@"AppDelegate::didFinishLaunchingWithOptions: loginManager->%@, imManager->%@, downloadManager->%@ ",loginManager,imManager,downloadManager);
+    
     // 初始化跟踪管理器(默认为真实环境)
 //    [[AnalyticsManager manager] initGoogleAnalytics:YES];
     
@@ -87,8 +96,6 @@
     
     // 延长启动画面时间
     // usleep(1000 * 1000);
-    
-    return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -148,11 +155,15 @@
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSLog(@"application::didRegisterForRemoteNotificationsWithDeviceToken( deviceToken : %@ )", deviceToken);
 
+    [self didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
+}
+
+- (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    
     NSString *deviceTokenStr = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     NSString *deviceTokenSave = [deviceTokenStr stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     [userDefaults setObject:deviceTokenSave forKey:deviceTokenStringKEY];
-    
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {

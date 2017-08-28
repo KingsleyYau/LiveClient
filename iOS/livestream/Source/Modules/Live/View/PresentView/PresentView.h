@@ -43,6 +43,8 @@
 /** 代理 */
 @property (nonatomic, weak) id<PresentViewDelegate> presentDelegate;
 
+- (void)reloadData;
+
 // 显示多功能按钮
 - (void)showButtonBar;
 

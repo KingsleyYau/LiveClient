@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/ll_emojiContainer"
+    android:orientation="vertical">
+    <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
+        xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+        android:id="@+id/tpi_tabIndicator"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        custom:titleTextColorUnselected="@android:color/black"
+        custom:titleTextColorSelected="@android:color/white"
+        custom:titleTextSize="16sp"
+        custom:hasDigitalHint="false"
+        custom:tabSelectedBgColor="#868686"
+        custom:tabUnselectedBgColor="#D7D7D7"
+        custom:underlineColor="@android:color/holo_blue_bright"
+        custom:underlineHeight="0dp"
+        custom:indicatorColor="@android:color/holo_orange_dark"
+        custom:indicatorHeight="0dp">
+
+    </com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.qpidnetwork.livemodule.view.ScrollLayout
+                android:id="@+id/sl_pagerContainer"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_height="140dp">
+
+            </com.qpidnetwork.livemodule.view.ScrollLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_pageIndicator"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_itemUnusableTip"
+            android:text="@string/tip_emoji_unusable"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:gravity="center|left"
+            android:background="#805C5C5C"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+
+</LinearLayout>

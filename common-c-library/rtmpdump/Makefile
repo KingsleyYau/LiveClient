@@ -19,13 +19,21 @@ CXXFLAGS += -DLINUX -DFILE_JNI_LOG
 CXXFLAGS +=	-Wall -fmessage-length=0 -Wno-unused-variable -Wno-unused-but-set-variable -D__STDC_CONSTANT_MACROS
 CXXFLAGS +=	-I. -I.. -I../third_party
 
-OBJS 		=	AudioDecoderAAC.o AudioFrame.o CacheBufferQueue.o EncodeDecodeBuffer.o FrameBuffer.o \
-				PlayerController.o RtmpDump.o RtmpPlayer.o RtmpPublisher.o Statistics.o \
-				VideoDecoderH264.o VideoFormatConverter.o VideoFrame.o \
-				../third_party/srs/srs_librtmp.o
+THIRD_PARTY	= ../third_party/srs/srs_librtmp.o
+OBJS 		=	EncodeDecodeBuffer.o
+PLAYER		=	RtmpPlayer.o PlayerController.o FrameBuffer.o CacheBufferQueue.o
+PUSHER		=	RtmpPublisher.o PublisherController.o
+ENCODER		=	AudioEncoderAAC.o VideoEncoderH264.o 
+DECODER 	=	AudioFrame.o AudioDecoderAAC.o \
+				VideoFrame.o VideoDecoderH264.o VideoFormatConverter.o VideoMuxer.o VideoRotateFilter.o VideoFilters.o\
+				linux/VideoDecoderImp.o linux/AudioDecoderImp.o
 				
-OBJS += linux/VideoDecoderImp.o linux/AudioDecoderImp.o
-				
+OBJS		+= $(THIRD_PARTY)
+OBJS		+= $(PLAYER)
+OBJS		+= $(PUSHER)
+OBJS		+= $(ENCODER)
+OBJS		+= $(DECODER)
+		
 TARGET =	librtmpdump.a
 
 .PHONY: all clean $(TARGET)

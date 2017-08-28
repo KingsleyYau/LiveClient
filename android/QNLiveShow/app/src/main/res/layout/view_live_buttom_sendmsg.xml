@@ -5,7 +5,16 @@
     android:background="@android:color/transparent"
     android:gravity="bottom"
     android:paddingBottom="4dp"
-    android:orientation="horizontal">
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/ll_input_edit_body"
@@ -18,43 +27,55 @@
         android:onClick="onClick"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/iv_msgType"
-            android:background="@drawable/selector_btn_live_msgtype"
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"/>
+            <ImageView
+                android:id="@+id/iv_msgType"
+                android:background="@drawable/selector_btn_live_msgtype"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"/>
 
-        <EditText
-            android:id="@+id/et_liveMsg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:layout_marginLeft="8dp"
-            android:layout_centerVertical="true"
-            android:hint="@string/txt_hint_input_general"
-            android:textColorHint="@android:color/white"
+            <EditText
+                android:id="@+id/et_liveMsg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:layout_marginLeft="8dp"
+                android:layout_centerVertical="true"
+                android:hint="@string/txt_hint_input_general"
+                android:textColorHint="@android:color/white"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:layout_marginRight="16dp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_emojiSwitch"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_live_chat_emoji_0"
+            android:layout_marginLeft="14dp"
+            android:onClick="onClick"
+            />
+
+        <Button
+            android:id="@+id/btn_sendMsg"
+            android:layout_width="63dp"
+            android:layout_height="36dp"
+            android:background="@drawable/selector_live_buttom_sendmsg"
+            android:layout_marginLeft="14dp"
+            android:gravity="center"
+            android:textSize="16sp"
             android:textColor="@android:color/white"
-            android:textSize="14sp"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:layout_marginRight="16dp"/>
+            android:onClick="onClick"
+            android:text="@string/txt_send_msg"
+            android:textStyle="bold"
+            android:includeFontPadding="false"/>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_sendMsg"
-        android:layout_width="63dp"
-        android:layout_height="36dp"
-        android:background="@drawable/selector_live_buttom_sendmsg"
-        android:layout_marginLeft="14dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textColor="@android:color/white"
-        android:onClick="onClick"
-        android:text="@string/txt_send_msg"
-        android:textStyle="bold"
-        android:includeFontPadding="false"/>
 
 </LinearLayout>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.qpidnetwork.framework.widget.swipetoloadlayout.view.footer.ClassicLoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.view.footer.ClassicLoadMoreFooterView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -34,4 +34,4 @@
             android:text="LoadMore"
             android:textColor="@android:color/black" />
     </RelativeLayout>
-</com.qpidnetwork.framework.widget.swipetoloadlayout.view.footer.ClassicLoadMoreFooterView>
+</com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.view.footer.ClassicLoadMoreFooterView>

@@ -12,7 +12,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PresentView">
             <connections>
-                <outlet property="coinsNumLabel" destination="3Km-IY-YAV" id="fHI-hM-CL8"/>
+                <outlet property="coinsNumLabel" destination="3Km-IY-YAV" id="6Xh-DK-5om"/>
                 <outlet property="collectionView" destination="zNC-XJ-LUg" id="ya9-GQ-VrH"/>
                 <outlet property="collectionViewHeight" destination="gDP-cS-mYr" id="37X-KY-jFe"/>
                 <outlet property="comboBtn" destination="ZdS-1a-wL9" id="ThL-Xn-Amf"/>

@@ -1,109 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal">
-
-    <ImageView
-        android:visibility="invisible"
-        android:layout_gravity="center"
-        android:layout_width="30dip"
-        android:layout_height="wrap_content"/>
-
-    <com.qpidnetwork.framework.widget.viewpagerindicator.TabPageIndicator
-        android:id="@+id/tpi_fragmentIndicator"
-        android:layout_width="0dip"
-        android:layout_weight="1"
-        android:layout_height="40dp"/>
-
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/ll_followTab"
-        android:layout_width="0dip"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_followTab"
-            android:gravity="center"
-            android:layout_margin="10dip"
-            android:singleLine="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_tab_followTab"/>
-        <View
-            android:id="@+id/v_followIndic"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:visibility="visible"
-            android:layout_height="5dip"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/ll_hotTab"
-        android:layout_width="0dip"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_hotTab"
-            android:gravity="center"
-            android:layout_margin="10dip"
-            android:singleLine="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_tab_hotTab"/>
-        <View
-            android:id="@+id/v_hotIndic"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:visibility="invisible"
-            android:layout_height="5dip"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/ll_dicoverTab"
-        android:layout_width="0dip"
-        android:layout_weight="1"
-        android:gravity="center_horizontal"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tv_dicoverTab"
-            android:gravity="center"
-            android:layout_margin="10dip"
-            android:singleLine="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/txt_tab_discoverTab"/>
-        <View
-            android:id="@+id/v_dicoverIndic"
-            android:layout_gravity="center_horizontal"
-            android:background="@android:color/black"
-            android:layout_width="match_parent"
-            android:layout_marginLeft="10dip"
-            android:layout_marginRight="10dip"
-            android:visibility="invisible"
-            android:layout_height="5dip"/>
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_searchContent"
@@ -112,6 +13,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:drawable/ic_menu_search"/>
+
+    <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
+        android:id="@+id/tpi_fragmentIndicator"
+        android:layout_width="0dip"
+        android:layout_weight="1"
+        android:layout_height="45dp"
+        xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+        custom:titleTextColorUnselected="@android:color/black"
+        custom:titleTextColorSelected="@android:color/holo_blue_bright"
+        custom:tabSelectedBgColor="#b71c1c"
+        custom:tabUnselectedBgColor="#FFCDD2"
+        custom:titleTextSize="16sp"
+        custom:digitalHintTextColor="@android:color/darker_gray"
+        custom:digitalHintTextBgColor="@android:color/holo_red_light"
+        custom:digitalHintTextSize="12sp"
+        custom:hasDigitalHint="true"
+        custom:underlineColor="@android:color/holo_blue_bright"
+        custom:underlineHeight="2dp"
+        custom:indicatorColor="@android:color/holo_orange_dark"
+        custom:indicatorHeight="2dp"
+        />
+
+    <ImageView
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:layout_width="30dip"
+        android:layout_height="40dp"
+        android:background="@drawable/circleimageview_hugh"/>
 
 
 </LinearLayout>

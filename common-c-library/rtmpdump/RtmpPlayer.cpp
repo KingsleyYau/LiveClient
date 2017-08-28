@@ -17,8 +17,10 @@
 
 // 播放休眠
 #define PLAY_SLEEP_TIME 1
-// 帧延迟丢置值(MS)
+// 帧延迟丢弃值(MS)
 #define PLAY_DELAY_DROP_TIME 500
+// 帧延迟断开值(MS)
+#define PLAY_DELAY_DISCONNECT_TIME 5000
 
 namespace coollive {
 class PlayVideoRunnable : public KRunnable {
@@ -59,7 +61,7 @@ RtmpPlayer::RtmpPlayer()
 :mClientMutex(KMutex::MutexType_Recursive),
 mPlayThreadMutex(KMutex::MutexType_Recursive)
 {
-    FileLog("rtmpdump", "RtmpPlayer::RtmpPlayer( player : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPlayer::RtmpPlayer( this : %p )", this);
 	Init();
 }
 
@@ -70,7 +72,7 @@ RtmpPlayer::RtmpPlayer(
 :mClientMutex(KMutex::MutexType_Recursive),
 mPlayThreadMutex(KMutex::MutexType_Recursive)
 {
-    FileLog("rtmpdump", "RtmpPlayer::RtmpPlayer( player : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPlayer::RtmpPlayer( this : %p )", this);
 	Init();
 
     mpRtmpDump = rtmpDump;
@@ -78,7 +80,7 @@ mPlayThreadMutex(KMutex::MutexType_Recursive)
 }
 
 RtmpPlayer::~RtmpPlayer() {
-    FileLog("rtmpdump", "RtmpPlayer::~RtmpPlayer( player : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPlayer::~RtmpPlayer( this : %p )", this);
     
     Stop();
     
@@ -96,7 +98,7 @@ RtmpPlayer::~RtmpPlayer() {
     }
 }
 
-bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath) {
+bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath) {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
@@ -112,7 +114,7 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath, const 
         Stop();
     }
     
-    bFlag = mpRtmpDump->PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
+    bFlag = mpRtmpDump->PlayUrl(url, recordFilePath, recordAACFilePath);
     if( bFlag ) {
         // 开始播放
         mbRunning = true;
@@ -129,12 +131,11 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath, const 
     FileLevelLog("rtmpdump",
             KLog::LOG_WARNING,
             "RtmpPlayer::PlayUrl( "
-            "[Finish], "
-            "url : %s, "
-            "bFlag : %s "
+            "[%s], "
+            "url : %s "
             ")",
-            url.c_str(),
-            bFlag?"true":"false"
+            bFlag?"Success":"Fail",
+            url.c_str()
             );
     
     return bFlag;
@@ -332,15 +333,15 @@ void RtmpPlayer::PushAudioFrame(void* frame, u_int32_t timestamp) {
         FrameBuffer* frameBuffer = (FrameBuffer *)mCacheBufferQueue.PopBuffer();
         if( !frameBuffer ) {
             frameBuffer = new FrameBuffer();
-            //            FileLog("rtmpdump",
-            //                    "RtmpPlayer::PushAudioFrame( "
-            //                    "[New Frame Buffer], "
-            //                    "frame : %p, "
-            //                    "timestamp : %u "
-            //                    ")",
-            //                    frame,
-            //                    timestamp
-            //                    );
+//            FileLog("rtmpdump",
+//                    "RtmpPlayer::PushAudioFrame( "
+//                    "[New Frame Buffer], "
+//                    "frame : %p, "
+//                    "timestamp : %u "
+//                    ")",
+//                    frame,
+//                    timestamp
+//                    );
             
         }
         
@@ -682,7 +683,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             "mCacheMS : %u, "
                             "mStartPlayTime : %lld, "
                             "mPlayVideoAfterAudioDiff : %d, "
-                            "bufferList size : %u "
+                            "bufferListSize : %u "
                             ")",
                             isAudio?"Audio":"Video",
                             mCacheMS,
@@ -718,7 +719,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                  "startTime : %lld, "
                                  "frame->mTimestamp : %u, "
                                  "preTimestamp : %u, "
-                                 "bufferList size : %u "
+                                 "bufferListSize : %u "
                                  ")",
                                  isAudio?"Audio":"Video",
                                  startTime,
@@ -756,11 +757,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             
                             FileLevelLog("rtmpdump",
                                         KLog::LOG_WARNING,
-                                         "RtmpPlayer::PlayFrame( "
+                                        "RtmpPlayer::PlayFrame( "
                                         "[Start Play %s], "
                                         "startTime : %lld, "
                                         "startTimestamp : %u, "
-                                        "bufferList->size() : %u "
+                                        "bufferListSize : %u "
                                         ")",
                                         isAudio?"Audio":"Video",
                                         startTime,
@@ -779,6 +780,8 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         int diffTotalms = frame->mTimestamp - startTimestamp;
                         // 是否丢帧
                         bool bDropFrame = false;
+                        // 是否断开
+                        bool bDisconnect = false;
                         
                         // 帧延迟(总播放时间 - 总帧时间差)
                         int delay = diffTotalTime - diffTotalms;
@@ -793,26 +796,31 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                         bDropFrame = true;
                                     }
                                     
+                                    // 播放延迟太大, 断开连接
+                                    if( delay > PLAY_DELAY_DISCONNECT_TIME ) {
+                                        bDisconnect = true;
+                                    }
                                 }
                             }
 //                        }
-                        
-//                        FileLog("rtmpdump",
-//                                "RtmpPlayer::PlayFrame( "
-//                                "[Get %s Frame], "
-//                                "diffTime : %d, "
-//                                "diffms : %d, "
-//                                "delay : %d, "
-//                                "frame->mTimestamp : %u, "
-//                                "buffer size : %d "
-//                                ")",
-//                                isAudio?"Audio":"Video",
-//                                diffTime,
-//                                diffms,
-//                                delay,
-//                                frame->mTimestamp,
-//                                bufferList->size()
-//                                );
+//                        
+//                        FileLevelLog("rtmpdump",
+//                                     KLog::LOG_MSG,
+//                                     "RtmpPlayer::PlayFrame( "
+//                                     "[Get %s Frame], "
+//                                     "diffTime : %d, "
+//                                     "diffms : %d, "
+//                                     "delay : %d, "
+//                                     "timestamp : %u, "
+//                                     "bufferListSize : %d "
+//                                     ")",
+//                                     isAudio?"Audio":"Video",
+//                                     diffTime,
+//                                     diffms,
+//                                     delay,
+//                                     frame->mTimestamp,
+//                                     bufferList->size()
+//                                     );
                         
                         bool bHandleFrame = false;
                         if( !bDropFrame ) {
@@ -876,10 +884,10 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                             "diffTime : %d, "
                                             "diffms : %d, "
                                             "delay : %d, "
-                                            "frame->mTimestamp : %u, "
+                                            "timestamp : %u, "
                                             "diffTotalTime : %d, "
                                             "diffTotalms : %d, "
-                                            "buffer size : %d "
+                                            "bufferListSize : %d "
                                             ")",
                                             isAudio?"Audio":"Video",
                                             handleTime,
@@ -894,7 +902,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             } else {
                                 // 丢帧不需要休眠，直接处理下一帧数据
                                 FileLevelLog("rtmpdump",
-                                            KLog::LOG_MSG,
+                                            KLog::LOG_WARNING,
                                             "RtmpPlayer::PlayFrame( "
                                             "[Drop %s Frame], "
                                             "handleTime : %d, "
@@ -904,7 +912,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                             "frame->mTimestamp : %u, "
                                             "diffTotalTime : %d, "
                                             "diffTotalms : %d, "
-                                            "bufferList size() : %d "
+                                            "bufferListSize : %d "
                                             ")",
                                             isAudio?"Audio":"Video",
                                             handleTime,

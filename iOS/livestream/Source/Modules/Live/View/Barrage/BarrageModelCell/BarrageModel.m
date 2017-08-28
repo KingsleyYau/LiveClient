@@ -24,4 +24,16 @@
     return width + 80;
 }
 
++ (instancetype)barrageModelForName:(NSString *)name message:(NSString *)message urlWihtUserID:(NSString *)userId {
+    
+    BarrageModel *item = [[BarrageModel alloc] init];
+    item.name = name;
+    item.message = message;
+    item.level = PriorityLevelHigh;
+    // 传用户ID获取图片url
+    item.url = userId;
+    
+    return item;
+}
+
 @end

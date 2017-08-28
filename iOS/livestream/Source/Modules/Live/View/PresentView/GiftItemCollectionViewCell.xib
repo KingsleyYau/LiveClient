@@ -45,12 +45,32 @@
                             <constraint firstAttribute="width" constant="10" id="Uad-MG-Ivj"/>
                         </constraints>
                     </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mhF-jb-LH1">
+                        <rect key="frame" x="62" y="3" width="25" height="25"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh">
+                                <rect key="frame" x="0.5" y="3.5" width="25.5" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.21396970648241465" blue="0.085879382296033091" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="l41-v9-vBh" firstAttribute="centerY" secondItem="mhF-jb-LH1" secondAttribute="centerY" id="JyI-h1-5h3"/>
+                            <constraint firstItem="l41-v9-vBh" firstAttribute="centerX" secondItem="mhF-jb-LH1" secondAttribute="centerX" id="Mfo-Zt-H8P"/>
+                            <constraint firstAttribute="width" constant="25" id="gSR-EE-uwn"/>
+                            <constraint firstAttribute="height" constant="25" id="xox-AM-JoU"/>
+                        </constraints>
+                    </view>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstItem="mhF-jb-LH1" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="3" id="4lA-59-sSa"/>
                 <constraint firstItem="47x-lT-YTl" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="11.5" id="7xX-nX-0Jx"/>
                 <constraint firstItem="DFP-NI-v5v" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="5" id="8YX-w7-ljn"/>
                 <constraint firstItem="47x-lT-YTl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LLx-qu-xju"/>
+                <constraint firstAttribute="trailing" secondItem="mhF-jb-LH1" secondAttribute="trailing" constant="3" id="Q9f-kb-hcn"/>
                 <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="4" id="Rw8-Hj-95u"/>
                 <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="VcZ-Lq-CNj"/>
                 <constraint firstAttribute="bottom" secondItem="DFP-NI-v5v" secondAttribute="bottom" constant="7" id="WP7-CC-fvv"/>
@@ -70,6 +90,10 @@
                 <outlet property="giftImageWidth" destination="MoY-f3-A8w" id="tVU-w9-XhY"/>
                 <outlet property="giftName" destination="47x-lT-YTl" id="bLm-hx-njN"/>
                 <outlet property="giftNameLableBottomOffset" destination="8YX-w7-ljn" id="MiJ-R6-ENE"/>
+                <outlet property="haveNumLabel" destination="l41-v9-vBh" id="Wkn-ng-v0u"/>
+                <outlet property="haveNumView" destination="mhF-jb-LH1" id="Bet-Zk-rVT"/>
+                <outlet property="haveNumViewHeight" destination="xox-AM-JoU" id="Omc-aL-7Ns"/>
+                <outlet property="haveNumViewWidth" destination="gSR-EE-uwn" id="V7C-KT-HWg"/>
             </connections>
             <point key="canvasLocation" x="-121" y="56"/>
         </collectionViewCell>

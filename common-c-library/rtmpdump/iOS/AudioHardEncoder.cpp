@@ -12,7 +12,9 @@
 #include <common/CommonFunc.h>
 
 namespace coollive {
-AudioHardEncoder::AudioHardEncoder() {
+AudioHardEncoder::AudioHardEncoder()
+    :mRuningMutex(KMutex::MutexType_Recursive)
+    {
     FileLog("rtmpdump", "AudioHardEncoder::AudioHardEncoder( this : %p )", this);
     
     // 默认格式
@@ -28,20 +30,21 @@ AudioHardEncoder::AudioHardEncoder() {
     // 临时Buffer
     mAudioPCMBuffer.mData = NULL;
     mAudioAACBuffer.mData = NULL;
+    
+    mAudioEncodedFrame.RenewBufferSize(1024);
 }
 
 AudioHardEncoder::~AudioHardEncoder() {
     FileLog("rtmpdump", "AudioHardEncoder::~AudioHardEncoder( this : %p )", this);
     
-    Pause();
+    DestroyContext();
 }
     
-bool AudioHardEncoder::Create(AudioEncoderCallback* callback, int sampleRate, int channelsPerFrame, int bitPerSample) {
+bool AudioHardEncoder::Create(int sampleRate, int channelsPerFrame, int bitPerSample) {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Create( this : %p )", this);
     
-    mpCallback = callback;
     mSoundRate = (sampleRate == 44100)?AFSR_KHZ_44:AFSR_UNKNOWN;
     mSoundSize = (bitPerSample == 16)?AFSS_BIT_16:AFSS_BIT_8;
     mSoundType = (channelsPerFrame == 2)?AFST_STEREO:AFST_MONO;
@@ -62,25 +65,37 @@ bool AudioHardEncoder::Create(AudioEncoderCallback* callback, int sampleRate, in
     return bFlag;
 }
 
+void AudioHardEncoder::SetCallback(AudioEncoderCallback* callback) {
+    mpCallback = callback;
+}
+    
+bool AudioHardEncoder::Reset() {
+    bool bFlag = true;
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioHardEncoder::Reset( "
+                 "this : %p, "
+                 "bFlag : %s "
+                 ")",
+                 this,
+                 bFlag?"true":"false"
+                 );
+    
+    return bFlag;
+}
+    
 void AudioHardEncoder::Pause() {
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Pause( this : %p )", this);
     
-    if( mAudioConverter ) {
-        AudioConverterDispose(mAudioConverter);
-        mAudioConverter = NULL;
-    }
-    
-    if( mAudioAACBuffer.mData ) {
-        free(mAudioAACBuffer.mData);
-        mAudioAACBuffer.mData = NULL;
-    }
+    DestroyContext();
 }
 
-void AudioHardEncoder::EncodeAudioFrame(void* frame) {
+void AudioHardEncoder::EncodeAudioFrame(void* data, int size, void* frame) {
     CMSampleBufferRef sampleBuffer = (CMSampleBufferRef)frame;
     
     // 创建转码器
-    Reset(sampleBuffer);
+    CreateContext(sampleBuffer);
     
     CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
     CFRetain(blockBuffer);
@@ -113,6 +128,8 @@ void AudioHardEncoder::EncodeAudioFrame(void* frame) {
     mLastPresentationTime = value;
     
     dispatch_async(mAudioEncodeQueue, ^{
+        mRuningMutex.lock();
+        
         // 获取PCM数据
         OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, (size_t *)&(mAudioPCMBuffer.mDataByteSize), (char **)&(mAudioPCMBuffer.mData));
         NSError *error = nil;
@@ -136,61 +153,93 @@ void AudioHardEncoder::EncodeAudioFrame(void* frame) {
         }
         
         // 初始化AAC Buffer
-        memset(mAudioAACBuffer.mData, 0, mAudioAACBuffer.mDataByteSize);
-        
-        // 编码后AAC帧Buffer
-        AudioBufferList outAudioBufferList = {0};
-        outAudioBufferList.mNumberBuffers = 1;
-        outAudioBufferList.mBuffers[0].mNumberChannels = 1;
-        outAudioBufferList.mBuffers[0].mDataByteSize = mAudioAACBuffer.mDataByteSize;
-        outAudioBufferList.mBuffers[0].mData = mAudioAACBuffer.mData;
-        // 编码后AAC帧描述
-        AudioStreamPacketDescription outPacketDescription;
-        
-        // 每编码一帧就回调
-        UInt32 ioOutputDataPacketSize = 1;
-        status = AudioConverterFillComplexBuffer(mAudioConverter, inInputDataProc, this, &ioOutputDataPacketSize, &outAudioBufferList, &outPacketDescription);
-        if( status == noErr ) {
-            // 获取AAC编码数据
-            char* data = (char *)outAudioBufferList.mBuffers[0].mData;
-            UInt32 size = outAudioBufferList.mBuffers[0].mDataByteSize;
+        if( mAudioAACBuffer.mData && mAudioAACBuffer.mDataByteSize > 0 ) {
+            memset(mAudioAACBuffer.mData, 0, mAudioAACBuffer.mDataByteSize);
             
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
-                         "AudioHardEncoder::EncodeAudioFrame( "
-                         "[Encoded AAC Frame], "
-                         "timestamp : %u, "
-                         "size : %d "
-                         ")",
-                         timestamp,
-                         size
-                         );
+            // 编码后AAC帧Buffer
+            AudioBufferList outAudioBufferList = {0};
+            outAudioBufferList.mNumberBuffers = 1;
+            outAudioBufferList.mBuffers[0].mNumberChannels = 1;
+            outAudioBufferList.mBuffers[0].mDataByteSize = mAudioAACBuffer.mDataByteSize;
+            outAudioBufferList.mBuffers[0].mData = mAudioAACBuffer.mData;
+            // 编码后AAC帧描述
+            AudioStreamPacketDescription outPacketDescription;
             
-            // 发送音频数据
-            if( mpCallback ) {
-                mpCallback->OnEncodeAudioFrame(this, AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, AFST_MONO, data, size, timestamp);
+            // 每编码一帧就回调
+            UInt32 ioOutputDataPacketSize = 1;
+            status = AudioConverterFillComplexBuffer(mAudioConverter, inInputDataProc, this, &ioOutputDataPacketSize, &outAudioBufferList, &outPacketDescription);
+            if( status == noErr ) {
+                // 获取AAC编码数据
+                char* data = (char *)outAudioBufferList.mBuffers[0].mData;
+                UInt32 size = outAudioBufferList.mBuffers[0].mDataByteSize;
+                
+                mAudioEncodedFrame.EncodeDecodeBuffer::ResetFrame();
+                
+                // 增加ADTS头部
+                char* frame = (char *)mAudioEncodedFrame.GetBuffer();
+                int headerCapacity = mAudioEncodedFrame.GetBufferCapacity();
+                int frameHeaderSize = 0;
+                bool bFlag = mAudioMuxer.GetADTS(size, AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, AFST_MONO, frame, headerCapacity, frameHeaderSize);
+                if( bFlag ) {
+                    // 计算已用的ADTS
+                    mAudioEncodedFrame.mBufferLen = frameHeaderSize;
+                    // 计算帧大小是否足够
+                    if( frameHeaderSize + size > headerCapacity ) {
+                        mAudioEncodedFrame.RenewBufferSize(frameHeaderSize + size);
+                    }
+                    // 增加帧内容
+                    mAudioEncodedFrame.AddBuffer((unsigned char *)data, size);
+                    
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_STAT,
+                                 "AudioHardEncoder::EncodeAudioFrame( "
+                                 "[Encoded AAC Frame], "
+                                 "timestamp : %u, "
+                                 "size : %d "
+                                 ")",
+                                 timestamp,
+                                 mAudioEncodedFrame.mBufferLen
+                                 );
+                    
+                    // 发送音频数据
+                    if( mpCallback ) {
+                        mpCallback->OnEncodeAudioFrame(this, AFF_AAC, AFSR_KHZ_44, AFSS_BIT_16, AFST_MONO, frame, mAudioEncodedFrame.mBufferLen, timestamp);
+                    }
+                    
+                } else {
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_WARNING,
+                                 "AudioHardEncoder::EncodeAudioFrame( "
+                                 "[Encoded ADTS Error], "
+                                 "timestamp : %u "
+                                 ")",
+                                 timestamp
+                                 );
+                }
+                
+            } else {
+                error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
+                
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_WARNING,
+                             "AudioHardEncoder::EncodeAudioFrame( "
+                             "[Encoded AAC Error], "
+                             "timestamp : %u, "
+                             "status : %d, "
+                             "error : %@ "
+                             ")",
+                             timestamp,
+                             status,
+                             error
+                             );
             }
-            
-        } else {
-            error = [NSError errorWithDomain:NSOSStatusErrorDomain code:status userInfo:nil];
-            
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_WARNING,
-                         "AudioHardEncoder::EncodeAudioFrame( "
-                         "[Encoded Error], "
-                         "timestamp : %u, "
-                         "status : %d, "
-                         "error : %@ "
-                         ")",
-                         timestamp,
-                         status,
-                         error
-                         );
         }
         
         CFRelease(blockBuffer);
-    });
+        
+        mRuningMutex.unlock();
 
+    });
 }
 
 OSStatus AudioHardEncoder::inInputDataProc(AudioConverterRef inAudioConverter,
@@ -217,11 +266,13 @@ OSStatus AudioHardEncoder::inInputDataProc(AudioConverterRef inAudioConverter,
     return noErr;
 }
     
-bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
+bool AudioHardEncoder::CreateContext(CMSampleBufferRef sampleBuffer) {
     bool bFlag = true;
     
+    mRuningMutex.lock();
+
     if( !mAudioConverter ) {
-        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Reset( this : %p )", this);
+        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::CreateContext( this : %p )", this);
         
         OSStatus status = noErr;
         
@@ -230,9 +281,9 @@ bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
         
         // 音频输出格式
         AudioStreamBasicDescription outAudioStreamBasicDescription = {0};                           // 初始化输出流的结构体描述为0
-        outAudioStreamBasicDescription.mSampleRate = inAudioStreamBasicDescription.mSampleRate;     // 音频流，在正常播放情况下的帧率, 如果是压缩的格式，这个属性表示解压缩后的帧率。帧率不能为0。
+        outAudioStreamBasicDescription.mSampleRate = inAudioStreamBasicDescription.mSampleRate;     
         outAudioStreamBasicDescription.mFormatID = kAudioFormatMPEG4AAC;                            // 设置编码格式
-        outAudioStreamBasicDescription.mFormatFlags = kMPEG4Object_AAC_LC;                          // 无损编码 ，0表示没有
+//        outAudioStreamBasicDescription.mFormatFlags = kMPEG4Object_AAC_LC;                          
         outAudioStreamBasicDescription.mChannelsPerFrame = 1;                                       // 声道数
         
         AudioClassDescription* desc = nil;
@@ -271,7 +322,7 @@ bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
             } else {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_WARNING,
-                             "AudioHardEncoder::Reset( "
+                             "AudioHardEncoder::CreateContext( "
                              "[AudioFormatGetProperty error encodeType : %u], "
                              "this : %p, "
                              "status : %d "
@@ -285,7 +336,7 @@ bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
         } else {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
-                         "AudioHardEncoder::Reset( "
+                         "AudioHardEncoder::CreateContext( "
                          "[AudioFormatGetPropertyInfo error encodeType : %u], "
                          "this : %p, "
                          "status : %d "
@@ -313,7 +364,7 @@ bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
             } else {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_WARNING,
-                             "AudioHardEncoder::Reset( "
+                             "AudioHardEncoder::CreateContext( "
                              "[AudioConverterNewSpecific error encodeType : %u], "
                              "this : %p, "
                              "status : %d "
@@ -330,7 +381,24 @@ bool AudioHardEncoder::Reset(CMSampleBufferRef sampleBuffer) {
         }
     }
     
+    mRuningMutex.unlock();
+    
     return bFlag;
 }
+
+void AudioHardEncoder::DestroyContext() {
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::DestroyContext( this : %p )", this);
     
+    mRuningMutex.lock();
+    if( mAudioConverter ) {
+        AudioConverterDispose(mAudioConverter);
+        mAudioConverter = NULL;
+    }
+    
+    if( mAudioAACBuffer.mData ) {
+        free(mAudioAACBuffer.mData);
+        mAudioAACBuffer.mData = NULL;
+    }
+    mRuningMutex.unlock();
+}
 }

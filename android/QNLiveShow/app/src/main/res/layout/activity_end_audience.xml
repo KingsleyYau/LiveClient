@@ -22,7 +22,7 @@
                 android:layout_marginTop="63dp"
                 android:text="@string/txt_endLive_title"/>
 
-            <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
                 android:id="@+id/civ_endAudienceHeader"
                 android:layout_width="85dp"
                 android:layout_height="85dp"
@@ -95,7 +95,7 @@
 
                 <LinearLayout
                     style="@style/CustomTheme.EndLive.MoreBroadcast.Item">
-                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
                         style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
                         android:id="@+id/civ_moreHostHeader0"
                         android:src="@drawable/circleimageview_hugh"/>
@@ -110,7 +110,7 @@
                     style="@style/CustomTheme.EndLive.MoreBroadcast.Item"
                     android:layout_marginLeft="56dp"
                     android:layout_marginRight="56dp">
-                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
                         style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
                         android:id="@+id/civ_moreHostHeader1"
                         android:src="@drawable/circleimageview_hugh"/>
@@ -123,7 +123,7 @@
 
                 <LinearLayout
                     style="@style/CustomTheme.EndLive.MoreBroadcast.Item">
-                    <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+                    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
                         style="@style/CustomTheme.EndLive.MoreBroadcast.Header"
                         android:id="@+id/civ_moreHostHeader2"
                         android:src="@drawable/circleimageview_hugh"/>

@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 namespace coollive {
 class VideoEncoder;
 class VideoEncoderCallback {
@@ -24,7 +25,8 @@ public:
 class VideoEncoder {
 public:
     virtual ~VideoEncoder(){};
-    virtual bool Create(VideoEncoderCallback* callback, int width, int height, int bitRate, int keyFrameInterval, int fps) = 0;
+    virtual bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) = 0;
+    virtual void SetCallback(VideoEncoderCallback* callback) = 0;
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void EncodeVideoFrame(void* data, int size, void* frame) = 0;
@@ -48,9 +50,11 @@ public:
 class AudioEncoder {
 public:
 	virtual ~AudioEncoder(){};
-    virtual bool Create(AudioEncoderCallback* callback, int sampleRate, int channelsPerFrame, int bitPerSample) = 0;
+    virtual bool Create(int sampleRate, int channelsPerFrame, int bitPerSample) = 0;
+    virtual void SetCallback(AudioEncoderCallback* callback) = 0;
+    virtual bool Reset() = 0;
     virtual void Pause() = 0;
-    virtual void EncodeAudioFrame(void* frame) = 0;
+    virtual void EncodeAudioFrame(void* data, int size, void* frame) = 0;
 };
 }
 #endif /* RTMPDUMP_IENCODER_H_ */

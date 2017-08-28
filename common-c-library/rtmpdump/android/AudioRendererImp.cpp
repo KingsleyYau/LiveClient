@@ -7,6 +7,9 @@
 //
 
 #include "AudioRendererImp.h"
+
+#include <rtmpdump/audio/AudioFrame.h>
+
 namespace coollive {
 AudioRendererImp::AudioRendererImp(jobject jniRenderer) {
 	JNIEnv* env;

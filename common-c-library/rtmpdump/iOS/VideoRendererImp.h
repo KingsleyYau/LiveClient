@@ -9,10 +9,11 @@
 #ifndef VideoRenderImp_h
 #define VideoRenderImp_h
 
-#include <stdio.h>
-
-#include <rtmpdump/VideoFrame.h>
 #include <rtmpdump/IVideoRenderer.h>
+
+#include <rtmpdump/video/VideoFrame.h>
+
+#include <stdio.h>
 
 #import <Foundation/Foundation.h>
 #import <CoreMedia/CoreMedia.h>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <integer name="defaultTabIndex">0</integer>
+    <integer name="autoLoginMaxTime">3000</integer>
     <!--密码最小长度-->
     <integer name="passwordMaxLength">20</integer>
     <!--Peacock页登录校验超时时间-->
@@ -10,7 +12,9 @@
     <integer name="maxTimeCount">60</integer>
     <integer name="minPasswordLength">6</integer>
     <integer name="giftNumPerPage">8</integer>
-    <integer name="giftLineNumPerPage">4</integer>
+    <integer name="giftColumnNumPerPage">4</integer>
+    <integer name="emojiColumnNumPerPage">5</integer>
+    <integer name="emojiLineNumPerPage">3</integer>
     <integer name="repeatSendStartCount">30</integer>
     <integer name="repeatSendAnimTime">3000</integer>
     <!--聊天栏最大的信息条目数-->

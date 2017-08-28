@@ -92,32 +92,57 @@ string gToken;
 
  	//	InitEnumHelper(env, COUNTRY_ITEM_CLASS, &gCountryItem);
 
- 	/* 1.认证模块 */
+ 	/* 2.认证模块 */
  	jobject jLoginItem;
  	InitClassHelper(env, LOGIN_ITEM_CLASS, &jLoginItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(LOGIN_ITEM_CLASS, jLoginItem));
 
- 	/* 2.直播间模块  */
- 	jobject jAudienceItem;
- 	InitClassHelper(env, AUDIENCE_ITEM_CLASS, &jAudienceItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(AUDIENCE_ITEM_CLASS, jAudienceItem));
+ 	/* 3.直播间模块  */
+ 	jobject jHotListItem;
+ 	InitClassHelper(env, HOTLIST_ITEM_CLASS, &jHotListItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(HOTLIST_ITEM_CLASS, jHotListItem));
 
- 	jobject jRoomInfoItem;
- 	InitClassHelper(env, LIVE_ROOMINFO_CLASS, &jRoomInfoItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(LIVE_ROOMINFO_CLASS, jRoomInfoItem));
+ 	jobject jFollowingListItem;
+ 	InitClassHelper(env, FOLLOWINGLIST_ITEM_CLASS, &jFollowingListItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(FOLLOWINGLIST_ITEM_CLASS, jFollowingListItem));
 
- 	jobject jGiftItem;
- 	InitClassHelper(env, LIVE_ROOM_GIFT_ITEM_CLASS, &jGiftItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(LIVE_ROOM_GIFT_ITEM_CLASS, jGiftItem));
+ 	jobject jValidRoomItem;
+ 	InitClassHelper(env, VALID_LIVEROOM_ITEM_CLASS, &jValidRoomItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(VALID_LIVEROOM_ITEM_CLASS, jValidRoomItem));
 
- 	jobject jCoverPhotoItem;
- 	InitClassHelper(env, LIVE_ROOM_COVERPHOTO_ITEM_CLASS, &jCoverPhotoItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(LIVE_ROOM_COVERPHOTO_ITEM_CLASS, jCoverPhotoItem));
+ 	jobject jImmediateInviteItem;
+ 	InitClassHelper(env, IMMEDIATE_INVITE_ITEM_CLASS, &jImmediateInviteItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(IMMEDIATE_INVITE_ITEM_CLASS, jImmediateInviteItem));
 
- 	/* 3.个人信息模块    */
- 	jobject jUserInfoItem;
- 	InitClassHelper(env, USERINFO_ITEM_CLASS, &jUserInfoItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(USERINFO_ITEM_CLASS, jUserInfoItem));
+ 	jobject jAudienceInfoItem;
+ 	InitClassHelper(env, AUDIENCE_INFO_ITEM_CLASS, &jAudienceInfoItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(AUDIENCE_INFO_ITEM_CLASS, jAudienceInfoItem));
+
+ 	jobject jNormalGiftItem;
+ 	InitClassHelper(env, NORMAL_GIFT_ITEM_CLASS, &jNormalGiftItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(NORMAL_GIFT_ITEM_CLASS, jNormalGiftItem));
+
+ 	jobject jGiftDetailItem;
+ 	InitClassHelper(env, GIFT_DETAIL_ITEM_CLASS, &jGiftDetailItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(GIFT_DETAIL_ITEM_CLASS, jGiftDetailItem));
+
+ 	jobject jEmotionCategoryItem;
+ 	InitClassHelper(env, EMOTION_CATEGORY_ITEM_CLASS, &jEmotionCategoryItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(EMOTION_CATEGORY_ITEM_CLASS, jEmotionCategoryItem));
+
+ 	jobject jEmotionItem;
+ 	InitClassHelper(env, EMOTION_ITEM_CLASS, &jEmotionItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(EMOTION_ITEM_CLASS, jEmotionItem));
+
+ 	/* 4.个人信息模块    */
+ 	jobject jBookInviteItem;
+ 	InitClassHelper(env, BOOK_INVITE_ITEM_CLASS, &jBookInviteItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_INVITE_ITEM_CLASS, jBookInviteItem));
+
+ 	/* 5.背包    */
+ 	jobject jPackageGiftItem;
+ 	InitClassHelper(env, PACKAGE_GIFT_ITEM_CLASS, &jPackageGiftItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_GIFT_ITEM_CLASS, jPackageGiftItem));
 
  	/* 4.其他    */
  	jobject jConfigItem;

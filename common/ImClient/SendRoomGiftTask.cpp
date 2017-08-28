@@ -99,7 +99,7 @@ bool SendRoomGiftTask::Handle(const TransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnSendRoomGift(GetSeq(), success, m_errType, m_errMsg, m_coins);
+        m_listener->OnSendRoomGift(GetSeq(), success, m_errType, m_errMsg, m_coins, m_multi_click_id);
 		FileLog("LiveChatClient", "SendRoomGiftTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -202,6 +202,6 @@ bool SendRoomGiftTask::InitParam(const string& roomId, const string token, const
 void SendRoomGiftTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendRoomGift(GetSeq(), false, LCC_ERR_CONNECTFAIL, "", 0.0);
+        m_listener->OnSendRoomGift(GetSeq(), false, LCC_ERR_CONNECTFAIL, "", 0.0, m_multi_click_id);
     }
 }

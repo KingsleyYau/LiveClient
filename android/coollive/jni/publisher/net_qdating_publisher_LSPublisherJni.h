@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
  * Method:    Create
- * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;Lnet/qdating/publisher/ILSVideoEncoderJni;IIIII)J
+ * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;Lnet/qdating/publisher/ILSVideoEncoderJni;Lnet/qdating/player/ILSVideoRendererJni;IIIII)J
  */
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
-  (JNIEnv *, jobject, jobject, jobject, jint, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jobject, jobject, jobject, jint, jint, jint, jint, jint);
 
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
@@ -34,10 +34,26 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_publisher_LSPublisherJni_PublishUrl
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
  * Method:    PushVideoFrame
- * Signature: (J[B)V
+ * Signature: (J[BIII)V
  */
 JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushVideoFrame
-  (JNIEnv *, jobject, jlong, jbyteArray);
+  (JNIEnv *, jobject, jlong, jbyteArray, jint, jint, jint);
+
+/*
+ * Class:     net_qdating_publisher_LSPublisherJni
+ * Method:    PushAudioFrame
+ * Signature: (J[BI)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushAudioFrame
+  (JNIEnv *, jobject, jlong, jbyteArray, jint);
+
+/*
+ * Class:     net_qdating_publisher_LSPublisherJni
+ * Method:    ChangeVideoRotate
+ * Signature: (JI)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_ChangeVideoRotate
+  (JNIEnv *, jobject, jlong, jint);
 
 /*
  * Class:     net_qdating_publisher_LSPublisherJni

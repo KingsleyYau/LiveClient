@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.qpidnetwork.framework.widget.circleimageview.CircleImageView
+        <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@drawable/circleimageview_hugh"
@@ -133,4 +133,31 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:padding="12dp"/>
+
+    <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
+        android:id="@+id/cihsv_online"
+        android:layout_toLeftOf="@id/iv_closeLiveRoom"
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scrollbars="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+        custom:horizontSpace = "2dp"
+        custom:itemWidth="45dp"
+        custom:showItemNumb="3"/>
+
+
+    <!--<com.qpidnetwork.livemodule.framework.widget.HorizontalGridView.HorizontalGridView-->
+        <!--xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"-->
+        <!--android:id="@+id/hgv_online"-->
+        <!--android:layout_toLeftOf="@id/iv_closeLiveRoom"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_width="180dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--custom:rowHeight="wrap_content"-->
+        <!--custom:numberOfRows="1"-->
+        <!--custom:horizontalMargin="2dip"-->
+        <!--custom:verticalMargin="1dip"/>-->
 </RelativeLayout>

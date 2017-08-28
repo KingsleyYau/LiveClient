@@ -13,7 +13,6 @@
 
 #include <AndroidCommon/JniCommonFunc.h>
 
-#include <rtmpdump/AudioFrame.h>
 #include <rtmpdump/IAudioRenderer.h>
 
 namespace coollive {

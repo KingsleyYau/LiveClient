@@ -94,7 +94,7 @@
 
 - (void)setCellCoverImage:(CoverPhotoItemObject *)object{
     
-    NSString *imageId = object.photoId;
+//    NSString *imageId = object.photoId;
     NSString *imageUrl = object.photoUrl;
     NSInteger statu = object.status;
     BOOL isUse = object.in_use;

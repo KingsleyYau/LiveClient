@@ -12,7 +12,7 @@
 #import "GPUImageView.h"
 #import "UITextFieldAlign.h"
 
-#import "ImageViewLoader.h"
+//#import "ImageViewLoader.h"
 
 #import "BarrageView.h"
 #import "BarrageModel.h"

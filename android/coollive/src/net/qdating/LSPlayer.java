@@ -47,7 +47,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	/**
 	 * 是否已经启动
 	 */
-	private boolean start = false;
+	private boolean isRuning = false;
 	/**
 	 * 流播放地址
 	 */
@@ -81,27 +81,27 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		this.statusCallback = statusCallback;
 		
-		// 初始化硬解码器
-		videoDecoder.init();
+//		// 初始化硬解码器
+//		videoDecoder.init();
 		
 		// 初始化视频播放器
 		videoPlayer.init(surfaceView.getHolder(), LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
 		
 		// 初始化播放器
-		player.Create(this, videoPlayer, audioPlayer, videoDecoder);
+		bFlag = player.Create(this, videoPlayer, audioPlayer, videoDecoder);
 		
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {      
 				Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
 						+ "[Connect], "
-						+ "start : %s "
+						+ "isRuning : %s "
 						+ ")", 
-						start?"true":"false"
+						isRuning?"true":"false"
 						)
 						);
 				synchronized (this) {
-					if( start ) {
+					if( isRuning ) {
 						// 非手动停止, 准备重连
 						boolean bFlag = start();
 						if( !bFlag ) {
@@ -118,14 +118,25 @@ public class LSPlayer implements ILSPlayerCallback {
 			}
 		};
 		
+		Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
+				+ "[%s] "
+				+ ")", 
+				bFlag?"Suucess":"Fail"
+				)
+				);
+		
 		return bFlag;
 	}
 	
 	public void uninit() {
+		Log.i(LSConfig.TAG, String.format("LSPlayer::uninit( "
+				+ ")"
+				)
+				);
 		// 销毁播放器
 		player.Destroy();
-		// 销毁解码器
-		videoDecoder.uninit();
+//		// 销毁解码器
+//		videoDecoder.uninit();
 		// 销毁视频播放器
 		videoPlayer.uninit();
 	}
@@ -142,7 +153,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	public boolean playUrl(String url, String recordFilePath, String recordH264FilePath, String recordAACFilePath) {
 		boolean bFlag = false;
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
+		Log.d(LSConfig.TAG, String.format("LSPlayer::playUrl( "
 				+ "url : %s "
 				+ ")",
 				url
@@ -150,13 +161,15 @@ public class LSPlayer implements ILSPlayerCallback {
 				);
 
 	    synchronized (this) {
-	    	if( !start ) {
-	    		start = true;
+	    	if( !isRuning ) {
+	    		isRuning = true;
 	    		
 	    	    this.url = url;
 	    	    this.recordFilePath = recordFilePath;
 	    	    this.recordH264FilePath = recordH264FilePath;
 	    	    this.recordAACFilePath = recordAACFilePath;
+	    	    
+	    	    bFlag = true;
 	    	    
 	    	    // 开始消息队列
 	    		handler.post(new Runnable() {
@@ -170,12 +183,11 @@ public class LSPlayer implements ILSPlayerCallback {
 	    }
 	    
 		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
-				+ "[Finish], "
-				+ "url : %s, "
-				+ "bFlag : %s "
+				+ "[%s], "
+				+ "url : %s "
 				+ ")",
-				url,
-				bFlag?"true":"false"
+				bFlag?"Success":"Fail",
+				url
 				)
 				);
 		
@@ -187,10 +199,10 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @see	主线程调用
 	 */
 	public void stop() {
-		Log.i(LSConfig.TAG, String.format("LSPlayer::stop()"));
+		Log.d(LSConfig.TAG, String.format("LSPlayer::stop()"));
 		
 		synchronized(this) {
-			start = false;
+			isRuning = false;
 		}
 		
 		// 取消事件
@@ -200,7 +212,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		// 停止音频播放
 		audioPlayer.stop();
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( [Finish] )"));
+		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( [Success] )"));
 	}
 
 	/**
@@ -211,7 +223,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	private boolean start() {
 		boolean bFlag = true;
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::start( "
+		Log.d(LSConfig.TAG, String.format("LSPlayer::start( "
 				+ "url : %s "
 				+ ")",
 				url
@@ -224,12 +236,11 @@ public class LSPlayer implements ILSPlayerCallback {
 		}
 		
 		Log.i(LSConfig.TAG, String.format("LSPlayer::start( "
-				+ "[Finish], "
-				+ "url : %s, "
-				+ "bFlag : %s "
+				+ "[%s], "
+				+ "url : %s "
 				+ ")",
-				url,
-				bFlag?"true":"false"
+				bFlag?"Success":"Fail",
+				url
 				)
 				);
 		
@@ -247,13 +258,10 @@ public class LSPlayer implements ILSPlayerCallback {
 		}
 
 		synchronized (this) {
-			if( start ) {
+			if( isRuning ) {
 				// 非手动断开, 发送重连消息
 				handler.sendEmptyMessageDelayed(0, LSConfig.RECONNECT_SECOND);
 			}
 		}
-		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::onDisconnect( [Finish] )"));
-
 	}
 }

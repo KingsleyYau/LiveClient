@@ -5,20 +5,20 @@
     android:background="@color/background_floating_material_dark"
     tools:context="${relativePackage}.${activityClass}" >
 
- 	<FrameLayout
- 	    android:id="@+id/layoutVideos"
- 	    android:layout_width="match_parent"
- 	    android:layout_height="match_parent" 
- 	    android:layout_above="@+id/editText"
- 	    android:layout_centerVertical="true"
- 	    >
- 	    <SurfaceView
-   	    android:id="@+id/surfaceView"
+    <SurfaceView
+   	    android:id="@+id/surfaceViewPublish"
+	    android:layout_width="120dp"
+	    android:layout_height="160dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignParentBottom="true"
+	    android:layout_marginRight="10dp"
+	    android:layout_marginBottom="10dp"
+	    /> 
+ 	<SurfaceView
+		android:id="@+id/surfaceView"
 	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="320dp"
 	    android:layout_alignParentTop="true"
 	    />
-
- 	</FrameLayout>  
  	  
 </RelativeLayout>

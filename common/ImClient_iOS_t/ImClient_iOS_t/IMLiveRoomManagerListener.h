@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#include "IImClient.h"
+
+#include "IImClientDef.h"
+
 #import "RoomTopFanItemObject.h"
 
 @protocol IMLiveRoomManagerDelegate <NSObject>
@@ -195,7 +197,7 @@
  *  @param fromId      发送方的用户ID
  *
  */
-- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId;
+- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName isFirst:(BOOL)isFirst;
 
 #pragma mark - 直播间礼物消息操作回调
 /**

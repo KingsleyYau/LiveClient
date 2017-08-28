@@ -1,5 +1,5 @@
 /*
- * GobalFunc.h
+ * GlobalFunc.h
  *
  *  Created on: 2017-5-17
  *      Author: Hunter Mun
