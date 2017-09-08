@@ -13,6 +13,8 @@
 #import "GPUImageBeautifyFilter.h"
 #import "LFGPUImageBeautyFilter.h"
 
+#import "LiveStreamSession.h"
+
 #pragma mark - 摄像头采集分辨率
 #define VIDEO_CAPTURE_WIDTH 240
 #define VIDEO_CAPTURE_HEIGHT 320
@@ -130,7 +132,7 @@
     self.url = url;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
-
+    
     [self cancel];
     [self run];
     
@@ -138,19 +140,19 @@
 }
 
 - (void)stop {
-    NSLog(@"LiveStreamPublisher::stop( url : %@ )", self.url);
+    NSLog(@"LiveStreamPublisher::stop()");
     
     [self cancel];
 }
 
 - (void)rotateCamera {
-    // 切至前后摄像头
+    // TODO:1.切换前后摄像头
     [self.videoCaptureSession rotateCamera];
-    // 设置后置摄像头不水平反转
+    // TODO:2.设置后置摄像头不水平反转
     self.videoCaptureSession.horizontallyMirrorRearFacingCamera = NO;
-    // 设置前置摄像头水平反转
+    // TODO:3.设置前置摄像头水平反转
     self.videoCaptureSession.horizontallyMirrorFrontFacingCamera = YES;
-    // 设置帧数
+    // TODO:4.设置帧数
     self.videoCaptureSession.frameRate = FPS;
 }
 
@@ -215,6 +217,7 @@
 }
 
 - (void)setBeauty:(BOOL)beauty {
+    // TODO:切换美颜
     if( _beauty != beauty ) {
         _beauty = beauty;
         
@@ -236,11 +239,25 @@
     }
 }
 
+- (BOOL)mute {
+    return self.publisher.mute;
+}
+
+- (void)setMute:(BOOL)mute {
+    // TODO:切换静音
+    if( self.publisher.mute != mute ) {
+        self.publisher.mute = mute;
+    }
+}
+
 - (void)run {
     NSLog(@"LiveStreamPublisher::run()");
     
     @synchronized (self) {
-        self.isStart = YES;
+        if( !self.isStart ) {
+            self.isStart = YES;
+            [[LiveStreamSession session] startCapture];
+        }
     }
     
     // 开始采集音视频
@@ -254,7 +271,10 @@
     NSLog(@"LiveStreamPublisher::cancel()");
     
     @synchronized (self) {
-        self.isStart = NO;
+        if( self.isStart ) {
+            self.isStart = NO;
+            [[LiveStreamSession session] stopCapture];
+        }
     }
     
     // 停止采集音视频
@@ -281,8 +301,8 @@
     // TODO:6.创建输出处理
     self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) resultsInBGRAFormat:YES];
     
-    __weak typeof(self) weakSelf = self;
-    __weak typeof(self.output) weakOutput = self.output;
+    WeakObject(self, weakSelf);
+    WeakObject(self.output, weakOutput);
     [self.output setNewFrameAvailableBlock:^{
         [weakOutput lockFramebufferForReading];
         
@@ -326,6 +346,7 @@
     // TODO:1.创建音频采集队列
     self.audio_capture_queue = dispatch_queue_create("_audio_capture_queue", NULL);
     self.audioCaptureSession = [[AVCaptureSession alloc] init];
+    self.audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO;
     
     // TODO:2.获取音频设备
     NSArray* audioDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio];
@@ -359,7 +380,7 @@
         if( self.audioCaptureSession.running ) {
             [self.audioCaptureSession stopRunning];
         }
-        
+    
         if( self.videoCaptureSession ) {
             [self.videoCaptureSession stopCameraCapture];
         }

@@ -29,20 +29,45 @@ public class RequstJniSchedule {
 	
 	/**
 	 * 4.2.观众处理预约邀请
-	 * @param inviteId
+	 * @param invitationId
 	 * @param isConfirmed
 	 * @param callback
 	 * @return
 	 */
-	static public native long HandleScheduledInvite(String inviteId, boolean isConfirmed, OnRequestCallback callback);
+	static public native long HandleScheduledInvite(String invitationId, boolean isConfirmed, OnRequestCallback callback);
 	
 	/**
 	 * 4.3.取消预约邀请
-	 * @param inviteId
+	 * @param invitationId
 	 * @param callback
 	 * @return
 	 */
-	static public native long CancelScheduledInvite(String inviteId, OnRequestCallback callback);
+	static public native long CancelScheduledInvite(String invitationId, OnRequestCallback callback);
 	
+	/**
+	 * 4.4.获取预约邀请未读或待处理数量
+	 * @param callback
+	 * @return
+	 */
 	static public native long GetCountOfUnreadAndPendingInvite(OnGetCountOfUnreadAndPendingInviteCallback callback);
+	
+	/**
+	 * 4.5.获取新建预约邀请信息
+	 * @param userId
+	 * @return
+	 */
+	static public native long GetScheduleInviteCreateConfig(String anchorId, OnGetScheduleInviteCreateConfigCallback callback);
+	
+	/**
+	 * 4.6.新建预约邀请
+	 * @param userId
+	 * @param timeId
+	 * @param bookTime
+	 * @param giftId
+	 * @param giftNum
+	 * @param callback
+	 * @return
+	 */
+	static public native long CreateScheduleInvite(String userId, String timeId, int bookTime, String giftId, int giftNum, OnRequestCallback callback);
+	
 }

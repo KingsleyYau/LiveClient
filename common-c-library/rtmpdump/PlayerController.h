@@ -31,6 +31,7 @@ class PlayerStatusCallback {
 public:
     virtual ~PlayerStatusCallback() {};
     virtual void OnPlayerDisconnect(PlayerController* pc) = 0;
+    virtual void OnPlayerOnDelayMaxTime(PlayerController* pc) = 0;
 };
     
 class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDecoderCallback, RtmpPlayerCallback {
@@ -38,7 +39,13 @@ class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDec
 public:
     PlayerController();
     ~PlayerController();
-        
+    
+    /**
+     设置缓存时间
+
+     @param cacheMS 缓存时间
+     */
+    void SetCacheMS(int cacheMS);
     /**
      设置视频渲染器
 
@@ -125,6 +132,7 @@ private:
     void OnEndAudioStream(RtmpPlayer* player);
     void OnResetVideoStream(RtmpPlayer* player);
     void OnResetAudioStream(RtmpPlayer* player);
+    void OnDelayMaxTime(RtmpPlayer* player);
     
 private:
     // 传输器

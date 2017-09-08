@@ -30,14 +30,8 @@
 #define LOGIN_BY_OTHER_DEVICE 10004
 
 /**
- *  验证码不正确
+ 其他设备登录
  */
-#define CHECKCODE_EMPTY @"MBCE1012"
-#define CHECKCODE_ERROR @"MBCE1013"
-
-/**
- *  Livechat消费余额不足
- */
-#define LIVECHAT_NO_MONEY @"ERROR00003"
+#define SESSION_REQUEST_WITHOUT_LOGIN 10005
 
 #endif /* RequestErrorCode_h */

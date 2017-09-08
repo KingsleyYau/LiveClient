@@ -10,7 +10,6 @@
 
 #import "LoginItemObject.h"
 #import "RegisterItemObject.h"
-#import "LoginViewController.h"
 
 @class LoginManager;
 @protocol LoginManagerDelegate <NSObject>
@@ -50,29 +49,9 @@ typedef enum {
 @property (nonatomic, assign, readonly) LoginStatus status;
 
 /**
- *  用户名
+ 身份
  */
-@property (nonatomic, strong, readonly) NSString* _Nullable email;
-
-/**
- *  密码
- */
-@property (nonatomic, strong, readonly) NSString* _Nullable password;
-
-/**
- *  区号
- */
-@property (nonatomic, strong, readonly) NSString* _Nullable areano;
-
-/**
- *  上一次输入用户名
- */
-@property (nonatomic, strong, readonly) NSString* _Nullable lastInputEmail;
-
-/**
- *  上一次输入密码
- */
-@property (nonatomic, strong, readonly) NSString* _Nullable lastInputPassword;
+@property (nonatomic, strong, readonly) NSString* _Nullable token;
 
 /**
  *  用户信息
@@ -113,13 +92,11 @@ typedef enum {
 /**
  *  登陆接口
  *
- *  @param user          用户
- *  @param password      密码
- *  @param areano        验证码
+ *  @param token 身份验证码
  *
  *  @return 是否进入登陆中状态
  */
-- (LoginStatus)login:(NSString * _Nonnull)user password:(NSString * _Nonnull)password areano:(NSString * _Nonnull)areano;
+- (LoginStatus)login:(NSString * _Nonnull)token;
 
 /**
  *  注销接口
@@ -136,10 +113,4 @@ typedef enum {
  */
 - (BOOL)autoLogin;
 
-/**
- 曾经登录成功
-
- @return <#return value description#>
- */
-- (BOOL)everLoginSuccess;
 @end

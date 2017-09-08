@@ -82,12 +82,18 @@ bool EncodeDecodeBuffer::AddBuffer(const unsigned char* buffer, int bufferLen)
     return result;
 }
 
-void EncodeDecodeBuffer::ResetFrame()
+void EncodeDecodeBuffer::ResetBuffer()
 {
     mBufferLen = 0;
     mTimestamp = 0;
 }
 
+void EncodeDecodeBuffer::FillBufferWithChar(char c) {
+    if( mBuffer && mBufferSize > 0 ) {
+        memset(mBuffer, c, mBufferSize);
+    }
+}
+    
 int EncodeDecodeBuffer::GetBufferCapacity() {
     return mBufferSize;
 }

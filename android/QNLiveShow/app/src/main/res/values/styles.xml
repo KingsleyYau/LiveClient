@@ -114,14 +114,25 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">#bebebe</item>
-        <item name="android:textSize">12sp</item>
+       <item name="android:textSize">12sp</item>
         <item name="android:layout_marginTop">3dp</item>
     </style>
 
     <!--公用UI元素-->
     <style name="Text_Shadow">
-        <item name="android:shadowColor">@color/text_shadow_color</item>
+        <item name="android:shadowColor">@color/messagelist_shadow_color</item>
         <item name="android:shadowRadius">1</item>
         <item name="android:shadowDy">1</item>
+    </style>
+
+    <!--Diaglog Theme-->
+    <style name="themeDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!-- 边框 -->
+        <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.6</item>
     </style>
 </resources>

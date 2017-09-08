@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LiveRoomGiftItemObject.h"
+//#import "LiveRoomGiftItemObject.h"
 
 @interface BackpackGiftItem : NSObject
 
-@property (nonatomic, strong) LiveRoomGiftItemObject *item;
+//@property (nonatomic, strong) LiveRoomGiftItemObject *item;
 
 @property (nonatomic, assign) int giftNum;
 

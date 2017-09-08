@@ -95,11 +95,12 @@ public class PlayActivity extends Activity {
 			}
 		});
 
-		Button beautyButton = (Button) this.findViewById(R.id.button3);
-		beautyButton.setOnClickListener(new OnClickListener() {
+		Button muteButton = (Button) this.findViewById(R.id.button3);
+		muteButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				publisher.setMute(!publisher.getMute());
 			}
 		});
 

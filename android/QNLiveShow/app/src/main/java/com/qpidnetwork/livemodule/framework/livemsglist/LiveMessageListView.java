@@ -2,19 +2,16 @@ package com.qpidnetwork.livemodule.framework.livemsglist;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;
 
 /**
  * 可扩展的列表控件
@@ -53,6 +50,10 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         }
     };
 
+    public void loadMore(){
+        mMessageRecyclerView.loadMore();
+    }
+
     /**
      * 设置未读消息监听
      * @param onMsgUnreadListener
@@ -89,7 +90,7 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         //列表
         mMessageRecyclerView = new MessageRecyclerView(context);
         LayoutParams listLP = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
-        listLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        listLP.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         mMessageRecyclerView.setLayoutParams(listLP);
         mMessageRecyclerView.setOnMsgUnreadListener(onMsgUnreadListener);
 

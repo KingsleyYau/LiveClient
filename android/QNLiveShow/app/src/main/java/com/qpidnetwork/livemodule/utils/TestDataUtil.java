@@ -1,9 +1,19 @@
 package com.qpidnetwork.livemodule.utils;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.app.Activity;
+import android.view.View;
+
 import com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.model.Character;
+import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
+import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
+import com.qpidnetwork.livemodule.liveshow.liveroom.car.CarInfo;
+import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
+import com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,12 +34,12 @@ public class TestDataUtil {
             "http://i.annihil.us/u/prod/marvel/i/mg/f/40/54adba8b35f8b.png"
     };
     public static final String[] names = {
-            "Ant-Man",
-            "Black Panther",
-            "Captain Marvel",
-            "Doctor Strange",
-            "Inhumans"
-
+            "Hunter",
+            "Randy",
+            "Harry",
+            "Fly",
+            "Martin",
+            "Dannk Soydy"
     };
 
     public static final String[] roomBgs = {
@@ -58,20 +68,20 @@ public class TestDataUtil {
     public static final String[] roomTitles = {
             "Spider-Man",
             "Captain Marvel",
-            "Hulk",
-            "Thor",
-            "Iron Man",
+//            "Hulk",
+//            "Thor",
+//            "Iron Man",
             "Luke Cage",
             "Black Widow",
             "Daredevil",
             "Captain America",
             "Wolverine",
             "Ultron",
-            "Loki",
+//            "Loki",
             "Red Skull",
             "Mystique",
             "Thanos",
-            "Ronan",
+//            "Ronan",
             "Magneto",
             "Dr. Doom",
             "Green Goblin",
@@ -111,4 +121,205 @@ public class TestDataUtil {
     }
 
     public static double localCoins = 99.99;
+
+    public static boolean isContinueTestTask = false;
+
+
+
+    public static void testMulitGift(final OnIMMessageItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(2000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int randomStart = random.nextInt(20);
+                    int randomEnd = randomStart+random.nextInt(10);
+                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                            "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.Gift,
+                            null,new IMGiftMessageContent("1","kiss",random.nextInt(100),
+                            false,randomStart,randomEnd,random.nextInt(Integer.MAX_VALUE)));
+                    if(null != listener){
+                        listener.onIMMessageItemProduced(imMessageItem);
+                    }
+                }
+            }
+        }.start();
+
+    }
+
+    public static void testBarrage(final OnIMMessageItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while (isContinueTestTask){
+                    try {
+                        Thread.sleep(5000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                            "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.Barrage,
+                            new IMTextMessageContent("Harry said that he love you! [勾引]"),null);
+                    if(null != listener){
+                        listener.onIMMessageItemProduced(imMessageItem);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public static void testRoomIn(final OnIMMessageItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(4000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                            "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.RoomIn,
+                            null,null);
+                    if(null != listener){
+                        listener.onIMMessageItemProduced(imMessageItem);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public static void testTariffPrompt(final Activity activity, final TariffPromptManager.OnGetRoomTariffInfoListener listener){
+        final Random random = new Random();
+        new Thread(){
+            @Override
+            public void run() {
+                if(isContinueTestTask){
+                    try {
+                        Thread.sleep(2000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    String nickName = roomTitles[random.nextInt(roomTitles.length)];
+                    IMRoomInItem imRoomInItem = new IMRoomInItem(null,nickName,null,null,random.nextInt(4)+1 ,
+                            0d,false,0,null,0,null,false,0,false,null,0,0.2d,0d,0);
+                    Log.d(TAG,"testTariffPrompt-nickName:"+nickName+" roomType:"+imRoomInItem.roomType.toString());
+                    TariffPromptManager.getInstance().init(activity,imRoomInItem).getRoomTariffInfo(listener);
+                }
+            }
+        }.start();
+    }
+
+    private static boolean addOrDelete = false;
+    public static void testOnLineHeader(final Activity activity,final CircleImageHorizontScrollView childView){
+        childView.setList(Arrays.asList(roomBgs));
+        new Thread(){
+            @Override
+            public void run() {
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(1000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    if(0 == childView.getListNum()){
+                        addOrDelete = true;
+                    }
+                    if(roomBgs.length == childView.getListNum()){
+                        addOrDelete = false;
+                    }
+                    activity.runOnUiThread(
+                            new Runnable() {
+                               @Override
+                               public void run() {
+                                   if(addOrDelete){
+                                       childView.addOnLinePerson(roomBgs[childView.getListNum()]);
+                                   }else{
+                                       childView.deleteOnLinePerson();
+                                   }
+                               }
+                           });
+                }
+            }
+        }.start();
+    }
+
+    public static void testFollow(final OnIMMessageItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(1500l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                            "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.FollowHost,
+                            new IMTextMessageContent(""),null);
+                    if(null != listener){
+                        listener.onIMMessageItemProduced(imMessageItem);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public interface OnIMMessageItemProducedListener {
+        void onIMMessageItemProduced(IMMessageItem imMessageItem);
+    }
+
+    public static void testLiveRoomCarAnim(final OnAudienceInfoItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(500l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    CarInfo audienceInfoItem = new CarInfo();
+                    audienceInfoItem.nickName = roomTitles[random.nextInt(roomTitles.length)];
+                    if(null != listener){
+                        listener.onAudienceInfoItemProduced(audienceInfoItem);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public interface OnAudienceInfoItemProducedListener{
+        void onAudienceInfoItemProduced(CarInfo item);
+    }
+
+    public static void changeViewVisityStatus(final View view , final Activity activity, final int visity){
+        new Thread(){
+            @Override
+            public void run() {
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(1000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.setVisibility(visity);
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
 }

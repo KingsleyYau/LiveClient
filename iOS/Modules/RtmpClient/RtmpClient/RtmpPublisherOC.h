@@ -35,6 +35,11 @@
  */
 @property (weak) id<RtmpPublisherOCDelegate> _Nullable delegate;
 
+/**
+ 是否静音
+ */
+@property (nonatomic, assign) BOOL mute;
+
 #pragma mark - 获取实例
 /**
  获取实例
@@ -57,6 +62,11 @@ recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  recordAACFilePath:(NSString * _Nullable)recordAACFilePath;
 
 /**
+ 停止
+ */
+- (void)stop;
+
+/**
  发送视频帧
  
  @param pixelBuffer 视频数据
@@ -68,10 +78,5 @@ recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  @param sampleBuffer 音频数据
  */
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer;
-
-/**
- 停止
- */
-- (void)stop;
 
 @end

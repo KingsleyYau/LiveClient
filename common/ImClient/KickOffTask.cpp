@@ -14,9 +14,6 @@
 #include <common/CheckMemoryLeak.h>
 
 
-// 接收参数定义
-#define REASON_PARAM           "reason"
-
 
 KickOffTask::KickOffTask(void)
 {
@@ -26,7 +23,6 @@ KickOffTask::KickOffTask(void)
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
     
-    m_reason = "";
 }
 
 KickOffTask::~KickOffTask(void)
@@ -53,16 +49,12 @@ bool KickOffTask::Handle(const TransportProtocol& tp)
 	FileLog("LiveChatClient", "KickOffTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
-    RoomTopFanList list;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         
-        if (tp.m_data[REASON_PARAM].isString()) {
-            m_reason = tp.m_data[REASON_PARAM].asString();
-        }
 
     }
     
@@ -76,7 +68,7 @@ bool KickOffTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnKickOff(m_reason);
+        m_listener->OnKickOff(m_errType, m_errMsg);
 		FileLog("LiveChatClient", "KickOffTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -137,16 +129,12 @@ void KickOffTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool KickOffTask::InitParam(const string& reason)
+bool KickOffTask::InitParam()
 {
 	bool result = false;
-    if (!reason.empty()) {
-        m_reason = reason;
-        
-        result = true;
-        
-    }
 
+    result = true;
+        
 	return result;
 }
 

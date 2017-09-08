@@ -1,9 +1,9 @@
 package net.qdating;
 
 /**
- * 流播放器初始化配置
+ * RTMP模块初始化配置
  * @author max
- *
+ * @version 1.0.0
  */
 public class LSConfig {
 	/**

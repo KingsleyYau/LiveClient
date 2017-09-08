@@ -146,12 +146,9 @@
     GiftItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: [GiftItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     
     NSString *giftId = self.giftIdArray[indexPath.row];
-    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
-    
-    [cell updataCellViewItem:item];
-    
-//    BackpackGiftItem *backItem = self.giftItemArray[indexPath.row];
-//    [cell updataBackpackCellViewItem:backItem];
+//    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
+//    
+//    [cell updataCellViewItem:item];
     
     BOOL isIndexPath = NO;
     
@@ -167,7 +164,7 @@
         cell.selectCell = YES;
         self.isCellSelect = YES;
         [self selectFirstNum:cell];
-        self.selectCellItem = item;
+//        self.selectCellItem = item;
     }
     
     [cell reloadStyle];
@@ -211,12 +208,7 @@
 
 
 - (void)didSelectItemWithGiftId:(NSString *)giftId {
-    
-    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
-    
-    //    [self.firstNumBtn setTitle:@"" forState:UIControlStateNormal];
-    //    [self.secondNumBtn setTitle:@"" forState:UIControlStateNormal];
-    //    [self.firstNumBtn setTitle:@"" forState:UIControlStateNormal];
+//    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
 }
 
 #pragma mark UIScrollViewDelegate

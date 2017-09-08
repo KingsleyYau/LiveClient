@@ -34,10 +34,10 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetAudienceListInRoom
- * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetAudienceListCallback;)J
+ * Signature: (Ljava/lang/String;IILcom/qpidnetwork/livemodule/httprequest/OnGetAudienceListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetAudienceListInRoom
-  (JNIEnv *, jclass, jstring, jobject);
+  (JNIEnv *, jclass, jstring, jint, jint, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
@@ -78,6 +78,46 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetImediateInviteInfo
   (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetTalentList
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetTalentListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetTalentList
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetTalentInviteStatus
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetTalentInviteStatusCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetTalentInviteStatus
+  (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetAudienceDetailInfo
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetAudienceDetailInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetAudienceDetailInfo
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    StartOrStopVideoInteractive
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnStartOrStopVideoInteractiveCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_StartOrStopVideoInteractive
+  (JNIEnv *, jclass, jstring, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetPromoAnchorList
+ * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPromoAnchorList
+  (JNIEnv *, jclass, jint, jobject);
 
 #ifdef __cplusplus
 }

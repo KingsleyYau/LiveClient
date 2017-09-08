@@ -48,27 +48,33 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <!--底部背景，防止背景颜色过于一致导致无区分-->
             <ImageView
-                android:id="@+id/ivEditContentBg"
+                android:id="@+id/iv_freePublicBg1"
                 android:layout_width="match_parent"
-                android:layout_height="84dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@drawable/ic_live_buttom_bg"
-                android:visibility="visible" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_live_buttom_freepublic_inputbg_1"/>
+
+            <ImageView
+                android:id="@+id/iv_freePublicBg2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="45dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_live_buttom_freepublic_inputbg_2"/>
+
 
             <!--用户端底部操作界面,包含发言，送礼，分享-->
             <include
-                android:id="@+id/fl_buttom_audience"
-                layout="@layout/view_live_buttom_audience"
+                android:id="@+id/ll_buttom_audience_freepublic"
+                layout="@layout/view_live_buttom_audience_freepublic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginRight="12dp"
-                android:visibility="invisible" />
+                android:visibility="visible" />
 
             <!--主播端底部操作界面,包含发言，送礼，直播控制-->
             <RelativeLayout
@@ -130,7 +136,15 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="56dp">
+                android:background="@android:color/transparent"
+                android:paddingBottom="@dimen/imButtomMargin">
+
+                <include
+                    layout="@layout/view_liveshow_header"
+                    android:id="@+id/view_roomHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <!--房间头部-->
                 <include
                     android:id="@+id/include_im_body"
@@ -141,10 +155,14 @@
                     android:visibility="visible" />
 
                 <include
-                    layout="@layout/view_liveshow_header"
-                    android:id="@+id/view_roomHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:id="@+id/view_tariff_prompt"
+                    layout="@layout/view_tariff_prompt"
+                    android:layout_marginLeft="13dp"
+                    android:visibility="gone"
+                    android:layout_marginTop="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
             </FrameLayout>
 
             <!--主播端同用户端共用，切换到消息输入场景,样式一样-->

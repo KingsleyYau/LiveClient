@@ -32,7 +32,7 @@ public:
     virtual void OnDropAudioFrame(RtmpPlayer* player, void* frame) = 0;
     virtual void OnResetVideoStream(RtmpPlayer* player) = 0;
     virtual void OnResetAudioStream(RtmpPlayer* player) = 0;
-    virtual void OnDelayStream(RtmpPlayer* player) {};
+    virtual void OnDelayMaxTime(RtmpPlayer* player) = 0;
 };
 
 class PlayVideoRunnable;
@@ -100,7 +100,8 @@ public:
 public:
     void SetRtmpDump(RtmpDump* rtmpDump);
     void SetCallback(RtmpPlayerCallback* callback);
-
+    void SetCacheMS(int cacheMS);
+    
 public:
     void PlayVideoRunnableHandle();
     void PlayAudioRunnableHandle();

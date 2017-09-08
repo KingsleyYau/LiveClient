@@ -12,16 +12,16 @@ public class SendableGiftItem {
 	}
 	
 	/**
-	 * @param giftId	礼物Id
-	 * @param isShow	是否可见
+	 * @param giftId
+	 * @param isVisible
 	 */
 	public SendableGiftItem(String giftId,
-							boolean isShow){
+							boolean isVisible){
 		this.giftId = giftId;
-		this.isShow = isShow;
+		this.isVisible = isVisible;
 	}
 	
 	public String giftId;
-	public boolean isShow;
+	public boolean isVisible;
 
 }

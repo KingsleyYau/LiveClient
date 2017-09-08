@@ -115,11 +115,11 @@ RequestHandleBookingCallback gRequestHandleBookingCallback;
  * Signature: (Ljava/lang/String;ZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_HandleScheduledInvite
-  (JNIEnv *env, jclass cls, jstring inviteId, jboolean isHandled, jobject callback){
+  (JNIEnv *env, jclass cls, jstring invitationId, jboolean isHandled, jobject callback){
 
     jlong taskId = -1;
     taskId = gHttpRequestController.HandleBooking(&gHttpRequestManager,
-    									JString2String(env, inviteId),
+    									JString2String(env, invitationId),
     									isHandled,
                                         &gRequestHandleBookingCallback);
 
@@ -132,8 +132,8 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
 
 /*********************************** 4.3.取消预约邀请  ****************************************/
 
-class RequestCancelPrivateRequestCallback : public IRequestCancelPrivateRequestCallback{
-	void OnCancelPrivateRequest(HttpCancelPrivateRequestTask* task, bool success, int errnum, const string& errmsg){
+class RequestSendCancelPrivateLiveInviteCallback : public IRequestSendCancelPrivateLiveInviteCallback{
+	void OnSendCancelPrivateLiveInvite(HttpSendCancelPrivateLiveInviteTask* task, bool success, int errnum, const string& errmsg){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -162,7 +162,7 @@ class RequestCancelPrivateRequestCallback : public IRequestCancelPrivateRequestC
 	}
 };
 
-RequestCancelPrivateRequestCallback gRequestCancelPrivateRequestCallback;
+RequestSendCancelPrivateLiveInviteCallback gRequestSendCancelPrivateLiveInviteCallback;
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
@@ -170,12 +170,12 @@ RequestCancelPrivateRequestCallback gRequestCancelPrivateRequestCallback;
  * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_CancelScheduledInvite
-  (JNIEnv *env, jclass cls, jstring inviteId, jobject callback){
+  (JNIEnv *env, jclass cls, jstring invitationId, jobject callback){
 
     jlong taskId = -1;
-    taskId = gHttpRequestController.CancelPrivateRequest(&gHttpRequestManager,
-    									JString2String(env, inviteId),
-                                        &gRequestCancelPrivateRequestCallback);
+    taskId = gHttpRequestController.SendCancelPrivateLiveInvite(&gHttpRequestManager,
+    									JString2String(env, invitationId),
+                                        &gRequestSendCancelPrivateLiveInviteCallback);
 
     jobject obj = env->NewGlobalRef(callback);
     putCallbackIntoMap(taskId, obj);
@@ -229,6 +229,127 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
     jlong taskId = -1;
     taskId = gHttpRequestController.ManBookingUnreadUnhandleNum(&gHttpRequestManager,
     									&gRequestManBookingUnreadUnhandleNumCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+/*********************************** 4.5.获取新建预约邀请信息  ****************************************/
+
+class RequestGetCreateBookingInfoCallback : public IRequestGetCreateBookingInfoCallback{
+	void OnGetCreateBookingInfo(HttpGetCreateBookingInfoTask* task, bool success, int errnum, const string& errmsg,
+			const HttpGetCreateBookingInfoItem& item){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnGetCreateBookingInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        jobject jItem = getBookInviteConfigItem(env, item);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += BOOK_INVITE_CONFIG_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetScheduleInviteCreateConfig", signature.c_str());
+			FileLog("httprequest", "JNI::OnGetCreateBookingInfo( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+		if(NULL != jItem){
+			env->DeleteGlobalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetCreateBookingInfoCallback gRequestGetCreateBookingInfoCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
+ * Method:    GetScheduleInviteCreateConfig
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetScheduleInviteCreateConfigCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_GetScheduleInviteCreateConfig
+  (JNIEnv *env, jclass cls, jstring anchorId, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetCreateBookingInfo(&gHttpRequestManager,
+    									JString2String(env, anchorId),
+    									&gRequestGetCreateBookingInfoCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+/*********************************** 4.6.新建预约邀请  ****************************************/
+
+class RequestSendBookingRequestCallback : public IRequestSendBookingRequestCallback{
+	void OnSendBookingRequest(HttpSendBookingRequestTask* task, bool success, int errnum, const string& errmsg){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnSendBookingRequest( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;)V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog("httprequest", "JNI::OnSendBookingRequest( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestSendBookingRequestCallback gRequestSendBookingRequestCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
+ * Method:    CreateScheduleInvite
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_CreateScheduleInvite
+  (JNIEnv *env, jclass cls, jstring userId, jstring timeId, jint bookTime, jstring giftId, jint giftNum, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.SendBookingRequest(&gHttpRequestManager,
+    									JString2String(env, userId),
+    									JString2String(env, timeId),
+    									bookTime,
+    									JString2String(env, giftId),
+    									giftNum,
+    									&gRequestSendBookingRequestCallback);
 
     jobject obj = env->NewGlobalRef(callback);
     putCallbackIntoMap(taskId, obj);

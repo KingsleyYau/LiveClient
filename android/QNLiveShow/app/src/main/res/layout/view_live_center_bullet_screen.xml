@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@android:color/transparent"
-    android:layout_gravity="right"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/liveroom_bullet_height">
+    android:gravity="center_vertical|right"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
     <View
         android:id="@+id/v_bulletTxtBgColor"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_marginLeft="5dp"
         android:layout_alignRight="@+id/tv_bulletContent"
         android:layout_alignTop="@+id/tv_bulletContent"
@@ -19,28 +20,25 @@
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
         android:src="@drawable/circleimageview_hugh"
         android:id="@+id/civ_bullletIcon"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_alignParentBottom="true"/>
 
     <TextView
         android:id="@+id/tv_bulletContent"
         android:layout_width="wrap_content"
-        android:layout_height="24dp"
+        android:layout_height="20dp"
         android:background="@android:color/transparent"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="36dp"
-        android:paddingLeft="8dp"
+        android:layout_toRightOf="@id/civ_bullletIcon"
+        android:paddingLeft="7dp"
         android:paddingRight="12dp"
         android:gravity="center_vertical"
-        android:textColor="#fefefe"
+        android:textColor="#ffffff"
         android:singleLine="true"
-        android:textStyle="bold"
-        android:textSize="13sp"
-        android:paddingBottom="1dp"
+        android:textSize="12sp"
         android:text="Nice to meet you!"
         />
-
 
     <TextView
         android:id="@+id/tv_bulletName"
@@ -49,7 +47,8 @@
         android:textSize="11sp"
         android:text="QHJyjitp"
         style="@style/Text_Shadow"
-        android:layout_marginLeft="8dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="7dp"
         android:layout_marginBottom="3dp"
         android:layout_above="@id/tv_bulletContent"
         android:textColor="#ffd205"

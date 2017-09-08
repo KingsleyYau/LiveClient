@@ -160,7 +160,7 @@ void PublisherController::AddVideoBackgroundTime(u_int32_t timestamp) {
     
     mRtmpDump.AddVideoTimestamp(timestamp);
 }
-   
+
 /*********************************************** 编码器回调处理 *****************************************************/
 void PublisherController::OnEncodeVideoFrame(VideoEncoder* encoder, char* data, int size, u_int32_t timestamp) {
     FileLevelLog("rtmpdump",

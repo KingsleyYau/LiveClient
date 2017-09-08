@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import com.qpidnetwork.livemodule.R;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 /**
  * Created by Jagger on 2017/6/8.
@@ -105,7 +104,10 @@ public class LiveGiftItemView extends LinearLayout{
     }
 
     public void setChildView(View view){
-        mLinearLayoutChildView.addView(view);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_width),
+                mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_height));
+        mLinearLayoutChildView.addView(view,lp);
     }
 
     /**
@@ -266,24 +268,6 @@ public class LiveGiftItemView extends LinearLayout{
         //先加速后减速
         mAnimatorSet.setInterpolator(new DecelerateInterpolator());
         mAnimatorSet.start();
-
-//        //对接时的方式
-//        PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat("alpha", 1f, 0.3f, 0.5f , 0.7f, 1f);
-//        PropertyValuesHolder pvhY = PropertyValuesHolder.ofFloat("scaleX", 2.2f, 0.8f, 1.5f , 0.6f, 1f);
-//        PropertyValuesHolder pvhZ = PropertyValuesHolder.ofFloat("scaleY", 2.2f, 0.8f, 1.5f , 0.6f, 1f);
-//        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, pvhX, pvhY,pvhZ);
-//        anim.setDuration(mDuration4NumShow).start();
-//        anim.addListener(new AnimatorListenerAdapter(){
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                //播放下一个数字
-//                if(!playRangeNext()){
-//                    //如果没下一个数字
-//                    starHolingTimer();
-//                }
-//            }
-//
-//        });
     }
 
     private Runnable mAnimationEndRunnable = new Runnable() {

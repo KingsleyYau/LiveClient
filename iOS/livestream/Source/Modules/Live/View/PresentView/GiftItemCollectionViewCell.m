@@ -93,11 +93,11 @@
     self.haveNumView.hidden = NO;
 }
 
-- (void)updataCellViewItem:(LiveRoomGiftItemObject *)item{
+- (void)updataCellViewItem:(AllGiftItem *)item{
     
     self.selectCell = NO;
     
-    if (item.type == 1) {
+    if (item.infoItem.type == GIFTTYPE_COMMON) {
         
         self.bigGiftLogo.hidden = YES;
     }else{
@@ -105,12 +105,12 @@
         self.bigGiftLogo.hidden = NO;
     }
     
-    self.giftName.text = item.name;
+    self.giftName.text = item.infoItem.name;
     
-    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:item.imgUrl]
+    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:item.infoItem.middleImgUrl]
                           placeholderImage:[UIImage imageNamed:@"Live_giftIcon_nomal"] options:0];
     
-    [self.giftCount setTitle:[NSString stringWithFormat:@" %0.2f",item.coins] forState:UIControlStateNormal];
+    [self.giftCount setTitle:[NSString stringWithFormat:@" %0.2f",item.infoItem.credit] forState:UIControlStateNormal];
     
 }
 
@@ -120,10 +120,10 @@
     
     self.bigGiftLogo.hidden = YES;
     
-    self.giftName.text = backItem.item.name;
+//    self.giftName.text = backItem.item.name;
     
-    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:backItem.item.imgUrl]
-                          placeholderImage:[UIImage imageNamed:@"Live_giftIcon_nomal"] options:0];
+//    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:backItem.item.imgUrl]
+//                          placeholderImage:[UIImage imageNamed:@"Live_giftIcon_nomal"] options:0];
     
     self.haveNumLabel.text = [NSString stringWithFormat:@"%d",backItem.giftNum];
 }

@@ -13,6 +13,7 @@ LSPlayerImp::LSPlayerImp()
 	mIsRunning = false;
 
 	mPlayer.SetStatusCallback(this);
+	mPlayer.SetCacheMS(5000);
 
 	CreateDecoders();
 }
@@ -32,17 +33,14 @@ bool LSPlayerImp::PlayUrl(const string& url, const string& recordFilePath, const
 			url.c_str()
 			);
 
-	mKmutex.lock();
-	if( !mIsRunning ) {
-		bFlag = mPlayer.PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
-
-		if( bFlag ) {
-			mIsRunning = true;
-		} else {
-			Stop();
-		}
+	bFlag = mPlayer.PlayUrl(url, recordFilePath, recordH264FilePath, recordAACFilePath);
+	if( bFlag ) {
+		mKmutex.lock();
+		mIsRunning = true;
+		mKmutex.unlock();
+	} else {
+		Stop();
 	}
-	mKmutex.unlock();
 
 	FileLog("rtmpdump",
 			"LSPlayerImp::PlayUrl( "
@@ -63,9 +61,7 @@ void LSPlayerImp::Stop() {
 			")"
 			);
 
-	mKmutex.lock();
 	mPlayer.Stop();
-	mKmutex.unlock();
 }
 
 bool LSPlayerImp::IsRuning() {

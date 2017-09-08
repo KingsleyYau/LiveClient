@@ -7,7 +7,7 @@
         <attr name="horizontSpace" format="dimension"/>
         <!--每个item的宽度-高度-->
         <attr name="itemWidth" format="dimension"/>
-        <!--展示的item数量-->
+        <!--展示的item数量,如果不为零，则parentWidth将重新计算-->
         <attr name="showItemNumb" format="integer"/>
     </declare-styleable>
 
@@ -55,5 +55,48 @@
         <attr name="columnNumbPerPage" format="integer"/>
         <attr name="lineNumbPerPage" format="integer"/>
 
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomHeaderBezierView">
+        <!--背景色-->
+        <attr name="roomHeaderBgColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomHostHeaderBgView">
+        <!--背景色-->
+        <attr name="hostHeaderBgColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomFollowBtnView">
+        <attr name="followBgColor" format="color"/>
+        <attr name="followColor" format="color"/>
+        <attr name="circleR" format="dimension"/>
+        <attr name="followPlusHeight" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="RespDrawClickEventAutoSplitTextView">
+        <attr name="autoSpliteTextEnable" format="boolean"/>
+    </declare-styleable>
+    <!--Material attributes-->
+    <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean" />
+        <attr name="matProg_barColor" format="color" />
+        <attr name="matProg_rimColor" format="color" />
+        <attr name="matProg_rimWidth" format="dimension" />
+        <attr name="matProg_spinSpeed" format="float" />
+        <attr name="matProg_barSpinCycleTime" format="integer" />
+        <attr name="matProg_circleRadius" format="dimension" />
+        <attr name="matProg_fillRadius" format="boolean" />
+        <attr name="matProg_barWidth" format="dimension" />
+        <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="RaisedButton">
+        <attr name="icon"/>
+        <attr name="title" />
+        <attr name="title_color" format="color"/>
+        <attr name="background" />
+        <attr name="touch_feedback" format="reference"/>
+        <attr name="elevation"/>
+        <attr name="raisebutton_radius" format="dimension"/>
     </declare-styleable>
 </resources>

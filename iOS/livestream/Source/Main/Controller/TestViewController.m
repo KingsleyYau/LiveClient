@@ -8,6 +8,7 @@
 
 #import "TestViewController.h"
 
+#import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
 #import "LiveStreamPublisher.h"
 
@@ -30,7 +31,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
-    self.previewView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
+    self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
     
     self.publisher = [LiveStreamPublisher instance];
     self.publisher.publishView = self.previewPublishView;
@@ -92,7 +93,25 @@
     NSString* recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
     NSString* recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
     
-    BOOL bFlag = [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    BOOL bFlag = NO;
+    
+    bFlag = [[LiveStreamSession session] canCapture];
+    if( bFlag ) {
+        
+    } else {
+        // 无权限
+        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头和录音权限" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        [alertVC addAction:actionOK];
+        [self presentViewController:alertVC animated:NO completion:nil];
+    }
+    
+    if( bFlag ) {
+        bFlag = [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    }
+
     if( bFlag ) {
         // 发布成功
 
@@ -130,6 +149,10 @@
 
 - (IBAction)beauty:(id)sender {
     self.publisher.beauty = !self.publisher.beauty;
+}
+
+- (IBAction)mute:(id)sender {
+    self.publisher.mute = !self.publisher.mute;
 }
 
 #pragma mark - 单击屏幕

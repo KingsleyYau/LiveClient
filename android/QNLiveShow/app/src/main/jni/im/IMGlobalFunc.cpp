@@ -103,8 +103,17 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	}
 
 	//data object cls save
+	InsertJObjectClassToMap(env, IM_LOGIN_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_LOGIN_INVITE_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_LOGIN_SCHEDULE_ITEM_CLASS);
+
 	InsertJObjectClassToMap(env, IM_ROOMIN_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_REBATE_ITEM_CLASS);
+
+	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_GIFT_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_VOUCHER_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_RIDE_ITEM_CLASS);
 
 	return JNI_VERSION_1_4;
 }

@@ -1,9 +1,9 @@
 /*
  * HttpLoginTask.h
  *
- *  Created on: 2017-5-19
+ *  Created on: 2017-8-16
  *      Author: Alex
- *        desc: 2.4.登录 
+ *        desc: 2.1.登录
  */
 
 #ifndef HttpLoginTask_H_
@@ -33,43 +33,22 @@ public:
     
     /**
      * 登录
-     * @param type				登录类型（0: 手机登录 1:邮箱登录）
-     * @param phoneno           手机号码（仅当type ＝ 0 时使用）
-     * @param areno				手机区号（仅当type ＝ 0 时使用）
-     * @param password			登录密码
+     * @param qnsid			    QN系统登录验证返回的标识
      * @param deviceid		    设备唯一标识
      * @param model				设备型号（格式：设备型号－系统版本号）
      * @param manufacturer		制造厂商
      */
     void SetParam(
-                  LoginType    type,
-                  string phoneno,
-                  string areno,
-                  string password,
+                  string qnsid,
                   string deviceid,
                   string model,
-                  string manufacturer,
-                  bool   autoLogin
+                  string manufacturer
                   );
-    
+
     /**
-     * 获取登录类型（0: 手机登录 1:邮箱登录）
+     * 获取QN系统登录验证返回的标识
      */
-    int GetType();
-    
-    /**
-     * 获取手机号码（仅当type ＝ 0 时使用）
-     */
-    const string& GetPhoneNo();
-    /**
-     * 获取手机区号（仅当type ＝ 0 时使用）
-     */
-    const string& GetAreNo();
-    
-    /**
-     * 获取登录密码
-     */
-    const string& GetPassword();
+    const string& GetQnsid();
     
     /**
      * 获取设备唯一标识
@@ -82,30 +61,19 @@ public:
     const string& GetModel();
     
     /**
-     * 获取设备型号（格式：设备型号－系统版本号）
+     * 获取制造厂商
      */
     const string& GetManufacturer();
     
-    /**
-     * 是否自动登录
-     */
-    bool GetAutoLogin();
-    
-    /**
-     * 获取制造厂商
-     */
     bool ParseData(const string& url, bool bFlag, const char* buf, int size);
     
 protected:
     IRequestLoginCallback* mpCallback;
-    LoginType    mType;
-    string mPhoneNo;
-    string mAreNo;
-    string mPassword;
-    string mDeviceId;
-    string mModel;
-    string mManufacturer;
-    bool   mAutoLogin;
+    string mQnsid;           // QN系统登录验证返回的标识
+    string mDeviceId;        // 设备唯一标识
+    string mModel;           // 设备型号
+    string mManufacturer;    // 制造厂商
+    
 };
 
 #endif /* HttpLoginTask_H_ */

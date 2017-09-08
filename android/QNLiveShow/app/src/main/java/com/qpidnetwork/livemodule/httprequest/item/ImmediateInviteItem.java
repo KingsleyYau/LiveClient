@@ -10,10 +10,14 @@ public class ImmediateInviteItem {
 	
 	public enum ImediateInviteStatus{
 		Unknown,
-		Defined,		//拒绝
-		Confirmed,		//同意
-		UnReplied,		//未回复
-		OverTime		//已超时
+		Pending,		//待确定
+		Accepted,		//同意
+		Rejected,		//已拒绝
+		OverTime,		//已超时
+		Canceled,		//观众/主播取消
+		AnchorAbsent,	//主播缺席
+		AudienceAbsent,	//观众缺席
+		Confirmed		//已完成
 	}
 	
 	public ImmediateInviteItem(){

@@ -10,11 +10,8 @@
 
 #import "TestViewController.h"
 #import "HomePageViewController.h"
-#import "PrePublishViewController.h"
 
 #import "LoginManager.h"
-#import "LoginViewController.h"
-#import "WelcomeViewController.h"
 
 #import "Masonry.h"
 
@@ -39,21 +36,6 @@
  *  Login管理器
  */
 @property (nonatomic, strong) LoginManager *loginManager;
-
-/**
- 欢迎界面
- */
-@property (nonatomic, weak) WelcomeViewController* welcomeVC;
-
-/**
- 登录界面
- */
-@property (nonatomic, weak) LoginViewController* loginVC;
-
-/**
- 发布界面
- */
-@property (nonatomic, weak) PrePublishViewController *prePublishVC;
 
 @end
 
@@ -111,10 +93,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if( !self.viewDidAppearEver ) {
-        // 第一次进入, 判断是否已经登录
-        [self checkLogin:NO];
-    }
+//    if( !self.viewDidAppearEver ) {
+//        // 第一次进入, 判断是否已经登录
+//        [self checkLogin:NO];
+//    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -143,93 +125,92 @@
 
 #pragma mark - 数据逻辑
 - (void)checkLogin:(BOOL)animated {
-    // 如果曾经登录成功
-    if( [self.loginManager everLoginSuccess] ) {
-        // 跳进广告界面
-        WelcomeViewController* vc = [[WelcomeViewController alloc] initWithNibName:nil bundle:nil];
-        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-        self.welcomeVC = vc;
-        
-        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
-        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
-        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-        
-        [self presentViewController:nvc animated:animated completion:nil];
-        
-    } else {
-        // 从来没登录, 跳进登录界面
-        LoginViewController *vc = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
-        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-        self.loginVC = vc;
-        
-        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
-        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
-        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-        
-        [self presentViewController:nvc animated:animated completion:nil];
-
-    }
+//    // 如果曾经登录成功
+//    if( [self.loginManager everLoginSuccess] ) {
+//        // 跳进广告界面
+//        WelcomeViewController* vc = [[WelcomeViewController alloc] initWithNibName:nil bundle:nil];
+//        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+//        self.welcomeVC = vc;
+//        
+//        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
+//        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
+//        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
+//        
+//        [self presentViewController:nvc animated:animated completion:nil];
+//        
+//    } else {
+//        // 从来没登录, 跳进登录界面
+//        LoginViewController *vc = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
+//        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+//        self.loginVC = vc;
+//        
+//        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
+//        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
+//        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
+//        
+//        [self presentViewController:nvc animated:animated completion:nil];
+//
+//    }
 }
 
 - (void)showAlert4Relogin:(NSString *)errmsg {
-    // 收起欢迎界面
-    [self.welcomeVC dismissViewControllerAnimated:NO completion:nil];
-    // 收起发布界面
-    [self.prePublishVC dismissViewControllerAnimated:NO completion:nil];
-    
-    // 弹出错误提示
-    UIAlertController* alertView = [UIAlertController alertControllerWithTitle:nil
-                                                                       message:errmsg
-                                                                preferredStyle:UIAlertControllerStyleAlert];
-    
-    UIAlertAction *action = nil;
-    action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        // 跳进登录界面
-        [self.navigationController popToRootViewControllerAnimated:NO];
-        
-        LoginViewController *vc = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
-        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-        self.loginVC = vc;
-        
-        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
-        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
-        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-        
-        [self presentViewController:nvc animated:YES completion:nil];
-    }];
-    [alertView addAction:action];
-
-    // 弹出到主界面
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    
-    // 弹出提示
-    [self presentViewController:alertView animated:YES completion:nil];
-
+//    // 收起欢迎界面
+//    [self.welcomeVC dismissViewControllerAnimated:NO completion:nil];
+////    // 收起发布界面
+////    [self.prePublishVC dismissViewControllerAnimated:NO completion:nil];
+//    
+//    // 弹出错误提示
+//    UIAlertController* alertView = [UIAlertController alertControllerWithTitle:nil
+//                                                                       message:errmsg
+//                                                                preferredStyle:UIAlertControllerStyleAlert];
+//    
+//    UIAlertAction *action = nil;
+//    action = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+//        // 跳进登录界面
+//        [self.navigationController popToRootViewControllerAnimated:NO];
+//        
+//        LoginViewController *vc = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
+//        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+//        self.loginVC = vc;
+//        
+//        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
+//        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
+//        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
+//        
+//        [self presentViewController:nvc animated:YES completion:nil];
+//    }];
+//    [alertView addAction:action];
+//
+//    // 弹出到主界面
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+//    
+//    // 弹出提示
+//    [self presentViewController:alertView animated:YES completion:nil];
 }
 
 #pragma mark - LoginManager回调
 - (void)manager:(LoginManager * _Nonnull)manager onLogin:(BOOL)success loginItem:(LoginItemObject * _Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString * _Nonnull)errmsg {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"MainViewController::onLogin( [%@], errnum : %ld )", success?@"Success":@"Fail", (long)errnum);
-        if( !success ) {
-            if( errnum == LOGIN_BY_OTHER_DEVICE ) {
-                // 账号已经在其他设备登录
-                
-                [self showAlert4Relogin:errmsg];
-            }
-        }
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"MainViewController::onLogin( [%@], errnum : %ld )", success?@"Success":@"Fail", (long)errnum);
+//        if( !success ) {
+//            if( errnum == LOGIN_BY_OTHER_DEVICE ) {
+//                // 账号已经在其他设备登录
+//                
+//                [self showAlert4Relogin:errmsg];
+//            }
+//        }
+//    });
 }
 
 - (void)manager:(LoginManager * _Nonnull)manager onLogout:(BOOL)kick {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"MainViewController::onLogout( [%@] )", kick?@"手动注销/被踢":@"Session超时");
-        if( kick ) {
-            // 被踢
-        
-            [self showAlert4Relogin:@"You have been kick"];
-        }
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        NSLog(@"MainViewController::onLogout( [%@] )", kick?@"手动注销/被踢":@"Session超时");
+//        if( kick ) {
+//            // 被踢
+//        
+//            [self showAlert4Relogin:@"You have been kick"];
+//        }
+//    });
 }
 
 #pragma mark - 内容界面切换逻辑
@@ -255,16 +236,6 @@
     if( item == self.tabBarItemPublish ) {
         // 点击开播按钮, 弹出预备开播界面
         tabBar.selectedItem = self.tabBarItemSelected;
-        
-        PrePublishViewController *vc = [[PrePublishViewController alloc] initWithNibName:nil bundle:nil];
-        KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-        self.prePublishVC = vc;
-        
-        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
-        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
-        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-        
-        [self presentViewController:nvc animated:YES completion:nil];
         
     } else {
         // 切换内容界面

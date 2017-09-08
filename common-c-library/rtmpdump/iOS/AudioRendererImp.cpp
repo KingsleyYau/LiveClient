@@ -95,7 +95,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 
 void AudioRendererImp::Reset() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioRendererImp::Reset( "
                  "this : %p "
                  ")",

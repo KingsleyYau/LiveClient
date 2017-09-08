@@ -56,23 +56,23 @@ public class GiftSender {
 
     /**
      * 发送商店礼物,校验本地金币数量是否满足发送下一批量礼物的金币要求
-     * @param gift
+     * @param giftItem
      * @param isRepeat
      * @param sendNum
      * @param listener
      */
-    public void sendStoreGift(Gift gift, boolean isRepeat, int sendNum,
+    public void sendStoreGift(GiftItem giftItem, boolean isRepeat, int sendNum,
                               GiftSendResultListener listener){
         Log.d(TAG,"sendStoreGift-isRepeat:"+isRepeat
-                +" giftId:"+gift.giftItem.id+" sendNum:"+sendNum);
+                +" giftId:"+giftItem.id+" sendNum:"+sendNum);
 
         //判断本地金币数量是否充足
-        double reqCoins = gift.giftItem.credit*sendNum;
+        double reqCoins = giftItem.credit*sendNum;
         Log.d(TAG,"sendStoreGift-reqCoins:"+reqCoins+" localCoins:"+localCoins);
         //礼物首次发送，需要本地校验下金币数量是否充足
         if(!isRepeat && localCoins < reqCoins){
             if(null != listener){
-                listener.onGiftReqSent(gift,ErrorCode.FAILED_COINS_NOTENOUGHT,
+                listener.onGiftReqSent(giftItem,ErrorCode.FAILED_COINS_NOTENOUGHT,
                         "本地金币数量不够了！",localCoins,isRepeat);
             }
             return;
@@ -80,37 +80,38 @@ public class GiftSender {
 
         if(!imReconnecting){
             Log.d(TAG,"sendStoreGift-未处于断网重连过程，真发送");
-            sendGift(gift.giftItem,isRepeat,sendNum);
+            sendGift(giftItem,isRepeat,sendNum);
             if(!isRepeat){
                 localCoins-=reqCoins;
                 localCoins = (double)(Math.round(localCoins*100)/100.0);
             }
         }
         if(null != listener){
-            listener.onGiftReqSent(gift,ErrorCode.SUCCESS,"",localCoins,isRepeat);
+            listener.onGiftReqSent(giftItem,ErrorCode.SUCCESS,"",localCoins,isRepeat);
         }
     }
 
     /**
      * 发送背包礼物,校验本地背包数量是否够发送下一批量的背包礼物的数量要求
-     * @param pack
+     * @param giftItem
      * @param isRepeat
      * @param sendNum
      * @param listener
      */
-    public void sendBackpackGift(Pack pack, boolean isRepeat, int sendNum,
+    public void sendBackpackGift(GiftItem giftItem, boolean isRepeat, int sendNum,
                                  GiftSendResultListener listener){
         //每次判断剩余数量是否充足
-        if(pack.num>=sendNum){
+        int totalNum = PackageGiftManager.getInstance().getPackageGiftNumById(giftItem.id);
+        if(totalNum>=sendNum){
             if(!imReconnecting) {
                 Log.d(TAG,"sendBackpackGift-未处于断网重连过程，真发送");
-                sendGift(pack.giftItem, isRepeat, sendNum);
-                pack.num -= sendNum;
+                sendGift(giftItem, isRepeat, sendNum);
+                PackageGiftManager.getInstance().subPackageGiftNumById(giftItem.id,sendNum);
             }
-            listener.onPackReqSend(pack,ErrorCode.SUCCESS,"",isRepeat);
+            listener.onPackReqSend(giftItem,ErrorCode.SUCCESS,"",isRepeat);
         }else{
             if(null != listener){
-                listener.onPackReqSend(pack,ErrorCode.FAILED_NUMBS_NOTENOUGHT,
+                listener.onPackReqSend(giftItem,ErrorCode.FAILED_NUMBS_NOTENOUGHT,
                         "剩余数量不足!",isRepeat);
             }
         }
@@ -138,7 +139,7 @@ public class GiftSender {
         //大礼物不排队，直接发送
         if(giftItem.giftType == GiftItem.GiftType.Advanced){
             Log.d(TAG,"sendGift-大礼物不排队，直接发送");
-            IMManager.getInstance().sendGift(currRoomId, giftItem,
+            IMManager.getInstance().sendGift(currRoomId, giftItem, false,
                     lastSentGiftSelectedNumb, giftItem.canMultiClick,
                     multi_click_start, multi_click_end, mMultiClickId);
         }else{
@@ -155,23 +156,23 @@ public class GiftSender {
     public interface GiftSendResultListener{
         /**
          * 礼物发送请求插入队列回调
-         * @param gift
+         * @param normalGiftItem
          * @param errorCode
          * @param message
          * @param localCoins
          * @param isRepeat
          */
-        void onGiftReqSent(Gift gift, ErrorCode errorCode, String message,
+        void onGiftReqSent(GiftItem normalGiftItem, ErrorCode errorCode, String message,
                            double localCoins, boolean isRepeat);
 
         /**
          * 背包礼物发送请求插入队列回调
-         * @param pack
+         * @param giftItem
          * @param errorCode
          * @param message
          * @param isRepeat
          */
-        void onPackReqSend(Pack pack, ErrorCode errorCode,
+        void onPackReqSend(GiftItem giftItem, ErrorCode errorCode,
                            String message, boolean isRepeat);
     }
 

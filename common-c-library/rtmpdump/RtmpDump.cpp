@@ -264,7 +264,7 @@ void RtmpDump::ReadPackage() {
         mConnectedMutex.unlock();
         
         FileLevelLog("rtmpdump",
-                     KLog::LOG_WARNING,
+                     KLog::LOG_MSG,
                      "RtmpDump::ReadPackage( [Connected] )"
                      );
         

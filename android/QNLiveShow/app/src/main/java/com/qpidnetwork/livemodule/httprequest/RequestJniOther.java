@@ -22,4 +22,13 @@ public class RequestJniOther {
 	 * @return
 	 */
 	static public native long GetAccountBalance(OnGetAccountBalanceCallback callback);
+	
+	/**
+	 * 6.3.添加/取消收藏
+	 * @param anchorId
+	 * @param isFav
+	 * @param callback
+	 * @return
+	 */
+	static public native long AddOrCancelFavorite(String anchorId, boolean isFav, OnRequestCallback callback);
 }

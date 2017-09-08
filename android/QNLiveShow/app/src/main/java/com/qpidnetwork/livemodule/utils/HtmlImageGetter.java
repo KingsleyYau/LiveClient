@@ -8,7 +8,7 @@ import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.im.IMGiftManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 
 import java.io.FileInputStream;
@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
  */
 
 public class HtmlImageGetter implements Html.ImageGetter {
+
+    private final String TAG = HtmlImageGetter.class.getSimpleName();
 
     public enum HtmlImageType{
         Normal,
@@ -50,7 +52,7 @@ public class HtmlImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         // String key = source;
-        Log.i("hunter", "HtmlImageGetter getDrawable source: " + source);
+        Log.i(TAG, "HtmlImageGetter getDrawable source: " + source);
         Drawable drawable = null;
 
         HtmlImageType imageType = getImageType(source);
@@ -62,22 +64,22 @@ public class HtmlImageGetter implements Html.ImageGetter {
                     drawable = getGiftDrawable(giftId);
                     if(drawable == null){
                         //使用礼物默认图片
-                        drawable = context.getResources().getDrawable(R.drawable.gift_apple);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
                     }
                 }break;
                 case Level:{
                     String level = source.substring(1, source.length());
-                    drawable = context.getResources().getDrawable(R.drawable.gift_apple);
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
                 }break;
                 case Normal:{
-                    drawable = context.getResources().getDrawable(R.drawable.gift_apple);
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
                 }break;
                 default:{
-                    drawable = context.getResources().getDrawable(R.drawable.gift_apple);
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
                 }break;
             }
-            drawable.setBounds(0, 0, (imgWidth == 0 ? drawable.getIntrinsicWidth() : imgWidth), (imgHeight == 0 ? drawable.getIntrinsicHeight()
-                        : imgHeight));
+            drawable.setBounds(0, 0, (imgWidth == 0 ? drawable.getIntrinsicWidth() : imgWidth),
+                    (imgHeight == 0 ? drawable.getIntrinsicHeight() : imgHeight));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,14 +93,15 @@ public class HtmlImageGetter implements Html.ImageGetter {
      */
     private Drawable getGiftDrawable(String giftId){
         Drawable drawable = null;
-        GiftItem giftItem = IMGiftManager.getInstance().queryLocalGiftDetailById(giftId);
+        GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(giftId);
         if(giftItem != null && !TextUtils.isEmpty(giftItem.smallImgUrl)){
             String smallImageLocalPath = FileCacheManager.getInstance().getGiftLocalPath(giftId, giftItem.smallImgUrl);
             if(SystemUtils.fileExists(smallImageLocalPath)){
                 FileInputStream is = null;
                 try {
                     is = new FileInputStream(smallImageLocalPath);
-                    drawable = Drawable.createFromStream(is, "");
+//                    drawable = Drawable.createFromStream(is, "");
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }finally {
@@ -128,9 +131,11 @@ public class HtmlImageGetter implements Html.ImageGetter {
         int height = context.getResources().getDimensionPixelSize(heightID);
         if (drawable != null) {
             if (type == HtmlImageType.Normal) {
-                drawable.setBounds(20, 0, (width == 0 ? drawable.getIntrinsicWidth() : width), (height == 0 ? drawable.getIntrinsicHeight() : height));
+                drawable.setBounds(20, 0, (width == 0 ? drawable.getIntrinsicWidth() : width),
+                        (height == 0 ? drawable.getIntrinsicHeight() : height));
             } else {
-                drawable.setBounds(0, 0, (width == 0 ? drawable.getIntrinsicWidth() : width), (height == 0 ? drawable.getIntrinsicHeight() : height));
+                drawable.setBounds(0, 0, (width == 0 ? drawable.getIntrinsicWidth() : width),
+                        (height == 0 ? drawable.getIntrinsicHeight() : height));
             }
         }
     }

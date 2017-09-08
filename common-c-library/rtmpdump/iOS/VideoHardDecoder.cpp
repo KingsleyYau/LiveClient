@@ -62,7 +62,7 @@ bool VideoHardDecoder::Create(VideoDecoderCallback* callback)
     
     ResetParam();
     
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( [Finish], this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::Create( [Success], this : %p )", this);
     
     return result;
 }
@@ -92,23 +92,23 @@ bool VideoHardDecoder::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardDecoder::Reset( "
-                 "this : %p, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "this : %p "
                  ")",
-                 this,
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 this
                  );
     
     return bFlag;
 }
 
 void VideoHardDecoder::ResetStream() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::ResetStream( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::ResetStream( this : %p )", this);
 }
     
 void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoHardDecoder::DecodeVideoKeyFrame( "
                  "this : %p, "
                  "sps : %p, "
@@ -431,7 +431,7 @@ bool VideoHardDecoder::CreateContext() {
         }
     }
 
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::CreateContext( [%s], this : %p, mSession : %p, status : %d )", bFlag?"Success":"Fail", this, mSession, status);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::CreateContext( [%s], this : %p, mSession : %p, status : %d )", bFlag?"Success":"Fail", this, mSession, status);
     
     mRuningMutex.unlock();
     
@@ -439,7 +439,7 @@ bool VideoHardDecoder::CreateContext() {
 }
 
 void VideoHardDecoder::DestroyContext() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardDecoder::DestroyContext( this : %p, mSession : %p )", this, mSession);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::DestroyContext( this : %p, mSession : %p )", this, mSession);
     
     mRuningMutex.lock();
     

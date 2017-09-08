@@ -67,7 +67,6 @@ function build_ffmpeg {
     				--enable-libfdk-aac \
 				    --disable-doc \
 				    --enable-version3 \
-    				--enable-small \
     				--disable-vda \
    					--disable-iconv \
     				--disable-outdevs \
@@ -77,9 +76,9 @@ function build_ffmpeg {
     				--disable-asm \
 						--disable-encoders \
 				    --enable-encoder=libx264 \
-				    --enable-encoder=aac \
+				    --enable-encoder=libfdk_aac \
 				    --disable-decoders \
-				    --enable-decoder=h264 \
+				    --enable-decoder=libx264 \
 				    --enable-decoder=libfdk_aac \
     				--disable-demuxers \
     				--enable-demuxer=h264 \

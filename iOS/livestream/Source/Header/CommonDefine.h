@@ -9,9 +9,16 @@
 #ifndef CommonDefine_h
 #define CommonDefine_h
 
+#import "AppDelegate.h"
+
+#define BOOL2YES(flag) flag?@"YES":@"NO"
+#define BOOL2SUCCESS(flag) flag?@"Success":@"Fail"
+
+#define WeakObject(Obj, weakObj) __weak typeof(Obj) weakObj = Obj
+
 // 仅Debug模式输出consle log
 #ifndef __OPTIMIZE__
-#define NSLog(...) NSLog(__VA_ARGS__)
+#define NSLog(...) @synchronized(AppDelegate()){NSLog(__VA_ARGS__);}
 #define printf(...) printf{__VA_ARGS__}
 #else
 #define NSLog(...) {}

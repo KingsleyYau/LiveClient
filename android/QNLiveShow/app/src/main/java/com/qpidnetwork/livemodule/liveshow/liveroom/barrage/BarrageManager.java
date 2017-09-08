@@ -24,12 +24,15 @@ public class BarrageManager<T> {
     private List<T> mBarrageDataList;                          //存储带播放的弹幕队列
     private HashMap<Animation, View> mAnimationViewMap;      //存储动画和View列表，用于会话结束时找回可使用View
     private IBarrageViewFiller<T> mBarrageFiller;               //弹幕view填充器
+    private View ll_bulletScreen;
 
-    public BarrageManager(Context context, List<View> listViews){
+
+    public BarrageManager(Context context, List<View> listViews, View ll_bulletScreen){
         this.mContext = context;
         this.mViewsList = listViews;
         mBarrageDataList = new ArrayList<T>();
         mAnimationViewMap = new HashMap<Animation, View>();
+        this.ll_bulletScreen = ll_bulletScreen;
     }
 
     /**
@@ -101,6 +104,8 @@ public class BarrageManager<T> {
                 synchronized (mBarrageDataList){
                     if(mBarrageDataList.size() > 0 ){
                         barrageItem = mBarrageDataList.remove(0);
+                    }else{
+                        playBarrageViewOutAnim();
                     }
                 }
                 if(barrageItem != null) {
@@ -114,6 +119,47 @@ public class BarrageManager<T> {
             }
         });
         view.startAnimation(animationSet);
+        playBarrageViewEnterAnim();
+    }
+
+    private void playBarrageViewEnterAnim(){
+        if(View.INVISIBLE == ll_bulletScreen.getVisibility()){
+            AnimationSet animationSet1 = (AnimationSet) AnimationUtils.loadAnimation(mContext, R.anim.barrage_view_enter);
+            animationSet1.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    ll_bulletScreen.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {}
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            ll_bulletScreen.startAnimation(animationSet1);
+        }
+    }
+
+    private void playBarrageViewOutAnim(){
+        if(View.VISIBLE == ll_bulletScreen.getVisibility()){
+            AnimationSet animationSet1 = (AnimationSet) AnimationUtils.loadAnimation(mContext, R.anim.barrage_view_exit);
+            animationSet1.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    ll_bulletScreen.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            ll_bulletScreen.startAnimation(animationSet1);
+        }
     }
 
     /**

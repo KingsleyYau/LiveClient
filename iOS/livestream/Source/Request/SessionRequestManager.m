@@ -72,10 +72,26 @@ static SessionRequestManager* gManager = nil;
                 [self.array addObject:request];
             }
             
-            // 主线程登陆
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.loginManager logout:NO];
-                [self.loginManager autoLogin];
+                if( self.loginManager.status == LOGINED ) {
+                    // 已经登陆状态, 注销
+                    NSLog(@"SessionRequestManager::handleRespond( [已经登陆状态, 注销] )");
+                    [self.loginManager logout:NO];
+                } else if ( self.loginManager.status == LOGINING ) {
+                    // 正在登陆, 等待
+                    NSLog(@"SessionRequestManager::handleRespond( [正在登陆状态, 等待] )");
+                } else if( self.loginManager.status == NONE ) {
+                    // 注销状态, 返回失败
+                    NSLog(@"SessionRequestManager::handleRespond( [注销状态, 返回失败] )");
+                    @synchronized (self) {
+                        // 回调失败
+                        for(SessionRequest* request in self.array) {
+                            if( request ) {
+                                [request callRespond:success errnum:SESSION_REQUEST_WITHOUT_LOGIN errmsg:@"Send session request without login"];
+                            }
+                        }
+                    }
+                }
             });
             
             bFlag = YES;

@@ -50,14 +50,6 @@ public:
         }
     }
 
-	/**
-	 * 获取编辑本人资料成功结构体
-     * @param photoId           头像图片ID
-	 * @param photoUrl		    头像url
-	 * @param nickName          昵称
-     * @param gender            性别（0:男性， 1:女性 ）
-     * @param birthday		    出生日期（格式： 1980-01-01）
-     */
 	HttpLiveRoomPersonalInfoItem() {
         photoId = "";
 		photoUrl = "";
@@ -69,7 +61,14 @@ public:
 	virtual ~HttpLiveRoomPersonalInfoItem() {
 
 	}
-
+    /**
+     * 获取编辑本人资料成功结构体
+     * photoId           头像图片ID
+     * photoUrl		    头像url
+     * nickName          昵称
+     * gender            性别（0:男性， 1:女性 ）
+     * birthday		    出生日期（格式： 1980-01-01）
+     */
     string photoId;
 	string photoUrl;
     string nickName;

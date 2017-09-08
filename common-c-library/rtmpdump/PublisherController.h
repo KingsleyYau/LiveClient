@@ -129,13 +129,17 @@ private:
 private:
     // 传输器
     RtmpDump mRtmpDump;
+    
     // 发布器
     RtmpPublisher mRtmpPublisher;
+    
     // 编码器
     VideoEncoder* mpVideoEncoder;
     AudioEncoder* mpAudioEncoder;
+    
     // 状态回调
     PublisherStatusCallback* mpPublisherStatusCallback;
+    
     // 录制模块
     VideoRecorderH264 mVideoRecorderH264;
     AudioRecorderAAC mAudioRecorderAAC;

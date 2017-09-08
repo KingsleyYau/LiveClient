@@ -1,6 +1,7 @@
 package net.qdating;
 
 import java.io.File;
+import java.util.Arrays;
 
 import android.os.Environment;
 import android.os.Handler;
@@ -56,6 +57,10 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	 */
 	private boolean isRuning = false;
 	/**
+	 * 是否静音
+	 */
+	private boolean isMute = false;
+	/**
 	 * 流推送地址
 	 */
 	private String url;
@@ -72,7 +77,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	 * 初始化流推送器
 	 * @param surfaceView	显示界面
 	 * @param statusCallback 状态回调接口
-	 * @return
+	 * @return true:成功/false:失败
 	 */
 	public boolean init(SurfaceView surfaceView, int rotation, ILSPublisherStatusCallback statusCallback) {
 		boolean bFlag = true;
@@ -144,6 +149,9 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		return bFlag;
 	}
 	
+	/***
+	 * 反初始化流推送器
+	 */
 	public void uninit() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::uninit( "
 				+ ")"
@@ -166,7 +174,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	 * @param url					流推送地址
 	 * @param recordH264FilePath	H264录制绝对路径
 	 * @param recordAACFilePath		AAC录制绝对路径
-	 * @return
+	 * @return true:成功/false:失败
 	 */
 	public boolean publisherUrl(String url, String recordH264FilePath, String recordAACFilePath) {
 		boolean bFlag = false;
@@ -247,6 +255,14 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		Log.i(LSConfig.TAG, String.format("LSPublisher::stop( [Success] )"));
 	}
 
+	public boolean getMute() {
+		return isMute;
+	}
+	
+	public void setMute(boolean isMute) {
+		this.isMute = isMute;
+	}
+	
 	/**
 	 * 开始推送
 	 * @see	主线程调用
@@ -306,6 +322,9 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	@Override
 	public void onAudioRecord(byte[] data, int size) {
 		// TODO Auto-generated method stub
+		if( isMute ) {
+			Arrays.fill(data, (byte)0);
+		}
 		publisher.PushAudioFrame(data, size);
 	}
 

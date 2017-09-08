@@ -20,7 +20,6 @@
 - (IBAction)logoutAction:(id)sender;
 - (IBAction)vRoomIn:(id)sender;
 - (IBAction)vRoomOut:(id)sender;
-- (IBAction)getRoomInfo:(id)sender;
 - (IBAction)sendRoomMsg:(id)sender;
 @end
 
@@ -57,8 +56,8 @@
 - (IBAction)initAction:(id)sender {
     if (nil != self.client) {
         NSMutableArray<NSString*>* urls = [NSMutableArray array];
-        [urls addObject:@"ws://192.168.88.17:3006"];
-        //[urls addObject:@"ws://172.25.32.17:3006"];
+        //[urls addObject:@"ws://192.168.88.17:3006"];
+        [urls addObject:@"ws://172.25.32.17:3006"];
         [self.client initClient:urls];
     }
 }
@@ -66,7 +65,7 @@
 - (IBAction)loginAction:(id)sender {
     if (nil != self.client) {
         //[self.client login:@"17" token:@"L4T9W75Q"];
-         [self.client login:@"25" token:self.token];
+         [self.client login:self.token pageName:PAGENAMETYPE_HOMEPAGE];
     }
 }
 
@@ -79,63 +78,36 @@
 - (IBAction)vRoomIn:(id)sender {
     if (nil != self.client) {
         SEQ_T reqId = [self.client getReqId];
-        [self.client fansRoomIn:self.token roomId:self.roomid reqId:reqId];
+        [self.client roomIn:reqId roomId:self.roomid];
     }
 }
 
 - (IBAction)vRoomOut:(id)sender {
     if (nil != self.client) {
         SEQ_T reqId = [self.client getReqId];
-        [self.client fansRoomout:self.token roomId:self.roomid reqId:reqId];
+        [self.client roomOut:reqId roomId:self.roomid];
     }
 }
 
-- (IBAction)getRoomInfo:(id)sender {
-    if (nil != self.client) {
-        SEQ_T reqId = [self.client getReqId];
-        [self.client getRoomInfo:self.token roomId:self.roomid reqId:reqId];
-    }
-}
-
-- (IBAction)fansShutUp:(id)sender {
-    if (nil != self.client) {
-        SEQ_T reqId = [self.client getReqId];
-        [self.client fansShutUp:self.roomid userId:self.userId timeOut:10 reqId:reqId];
-    }
-}
-
-- (IBAction)FansKickOff:(id)sender {
-    if (nil != self.client) {
-        SEQ_T reqId = [self.client getReqId];
-        [self.client fansKickOffRoom:self.roomid userId:self.userId reqId:reqId];
-    }
-}
 
 - (IBAction)sendRoomMsg:(id)sender {
     if (nil != self.client) {
         SEQ_T reqId = [self.client getReqId];
-        [self.client sendRoomMsg:self.token roomId:self.roomid nickName:@"alex" msg:@"123456" reqId:reqId];
+        [self.client sendLiveChat:reqId roomId:self.roomid nickName:@"alex" msg:@"123456" at:nil];
     }
 }
 
-- (IBAction)sendRoomFav:(id)sender {
+- (IBAction)sendGift:(id)sender {
     if (nil != self.client) {
         SEQ_T reqId = [self.client getReqId];
-        [self.client sendRoomFav:self.roomid token:self.token nickName:@"alex" reqId:reqId];
+        [self.client sendGift:reqId roomId:self.roomid nickName:@"alex" giftId:@"123456" giftName:@"testGift" isBackPack:NO giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1];
     }
 }
 
-- (IBAction)sendRoomGift:(id)sender {
+- (IBAction)sendToast:(id)sender {
     if (nil != self.client) {
         SEQ_T reqId = [self.client getReqId];
-        [self.client sendRoomGift:self.roomid token:self.token nickName:@"alex" giftId:@"123456" giftName:@"testGift" giftNum:2 multi_click:YES multi_click_start:2 multi_click_end:4 multi_click_id:1 reqId:reqId];
-    }
-}
-
-- (IBAction)sendRoomToast:(id)sender {
-    if (nil != self.client) {
-        SEQ_T reqId = [self.client getReqId];
-        [self.client sendRoomToast:self.roomid token:self.token nickName:@"alex" msg:@"852147" reqId:reqId];
+        [self.client sendToast:reqId roomId:self.roomid nickName:@"alex" msg:@"852147"];
     }
 }
 
@@ -147,81 +119,132 @@
     NSLog(@"ViewController::onLogout()");
 }
 
-- (void)onKickOff:(NSString* _Nonnull)reason
+- (void)onKickOff:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg
 {
     NSLog(@"ViewController::onKickOff()");
 }
 
-- (void)onFansRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl country:(NSString* _Nonnull)country videoUrls:(NSArray<NSString*>* _Nonnull)videoUrls fansNum:(int)fansNum contribute:(int)contribute fansList:(NSArray<RoomTopFanItemObject*>* _Nonnull)fansList {
-    NSLog(@"ViewController::onFansRoomIn()");
+
+
+- (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl videoUrls:(NSArray<NSString*>* _Nonnull)videoUrls roomType:(RoomType)roomType credit:(double)credit usedVoucher:(BOOL)usedVoucher fansNum:(int)fansNum emoTypeList:(NSArray<NSNumber *>* _Nonnull)emoTypeList loveLevel:(int)loveLevel rebateInfo:(RebateInfoObject* _Nonnull)rebateInfo favorite:(BOOL)favorite leftSeconds:(int)leftSeconds waitStart:(BOOL)waitStart manPushUrl:(NSArray<NSString*>* _Nonnull)manPushUrl manLevel:(int)manLevel roomPrice:(double)roomPrice manPushPrice:(double)manPushPrice manFansiNum:(int)manFansiNum {
+    NSLog(@"ViewController::onRoomIn()");
 }
 
-- (void)onFansRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onFansRoomOut()");
+- (void)onRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
+    NSLog(@"ViewController::onRoomOut()");
 }
 
-- (void)onGetRoomInfo:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg fansNum:(int)fansNum contribute:(int)contribute {
-    NSLog(@"ViewController::onGetRoomInfo()");
+
+- (void)onRecvRoomCloseNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
+    NSLog(@"ViewController::onRecvRoomCloseNotice()");
 }
 
-- (void)onFansShutUp:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onFansShutUp()");
+- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString * _Nonnull)riderId riderName:(NSString * _Nonnull)riderName riderUrl:(NSString * _Nonnull)riderUrl fansNum:(int)fansNum{
+    NSLog(@"ViewController::onRecvEnterRoomNotice()");
 }
 
-- (void)onFansKickOffRoom:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onFansKickOffRoom()");
+- (void)onRecvLeaveRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl fansNum:(int)fansNum {
+    NSLog(@"ViewController::onRecvLeaveRoomNotice()");
 }
 
-- (void)onRecvRoomCloseFans:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName fansNum:(int)fansNum {
-    NSLog(@"ViewController::onRecvRoomCloseFans()");
+- (void)onRecvRebateInfoNotice:(NSString* _Nonnull)roomId rebateInfo:(RebateInfoObject* _Nonnull) rebateInfo {
+    NSLog(@"ViewController::onRecvRebateInfoNotice()");
 }
 
-- (void)onRecvRoomCloseBroad:(NSString* _Nonnull)roomId fansNum:(int)fansNum income:(int)income newFans:(int)newFans shares:(int)shares duration:(int)duration {
-    NSLog(@"ViewController::onRecvRoomCloseBroad()");
+- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId reason:(NSString* _Nonnull)reason {
+    NSLog(@"ViewController::onRecvLeavingPublicRoomNotice()");
 }
 
-- (void)onRecvFansRoomIn:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl {
-    NSLog(@"ViewController::onRecvFansRoomIn()");
+- (void)onRecvRoomKickoffNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString* _Nonnull)errmsg credit:(double)credit {
+  NSLog(@"ViewController::onRecvRoomKickoffNotice()");
 }
 
-- (void)onRecvShutUpNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName timeOut:(int)timeOut {
-    NSLog(@"ViewController::onRecvShutUpNotice()");
+- (void)onRecvLackOfCreditNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg credit:(double)credit {
+  NSLog(@"ViewController::onRecvLackOfCreditNotice()");
 }
 
-- (void)onRecvKickOffRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName {
-    NSLog(@"ViewController::onRecvKickOffRoomNotice()");
+- (void)onRecvCreditNotice:(NSString* _Nonnull)roomId credit:(double)credit {
+  NSLog(@"ViewController::onRecvCreditNotice()");
 }
 
-- (void)onSendRoomMsg:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onSendRoomMsg()");
+- (void) onRecvWaitStartOverNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds {
+    NSLog(@"ViewController::onRecvWaitStartOverNotice()");
 }
 
-- (void)onRecvRoomMsg:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg {
-    NSLog(@"ViewController::onRecvRoomMsg()");
+- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSString* _Nonnull)playUrl {
+    NSLog(@"ViewController::onRecvChangeVideoUrl()");
 }
 
-- (void)onSendRoomFav:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onSendRoomFav()");
+- (void)onSendLiveChat:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
+    NSLog(@"ViewController::onSendLiveChat()");
 }
 
-- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName isFirst:(BOOL)isFirst{
-    NSLog(@"ViewController::onRecvPushRoomFav()");
+- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg {
+    NSLog(@"ViewController::OnRecvSendChatNotice()");
 }
 
-- (void)onSendRoomGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins {
-    NSLog(@"ViewController::onSendRoomGift()");
+- (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
+    NSLog(@"ViewController::onSendGift()");
 }
 
-- (void)onRecvRoomGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id {
-    NSLog(@"ViewController::onRecvRoomGiftNotice()");
+- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id {
+    NSLog(@"ViewController::onRecvSendGiftNotice()");
 }
 
-- (void)onSendRoomToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins {
-    NSLog(@"ViewController::onSendRoomToast()");
+- (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
+    NSLog(@"ViewController::onSendToast()");
 }
 
-- (void)onRecvRoomToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg {
-    NSLog(@"ViewController::onRecvRoomToastNotice()");
+- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg {
+    NSLog(@"ViewController::onRecvSendToastNotice()");
+}
+
+- (void) onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId {
+    NSLog(@"ViewController::onSendPrivateLiveInvite()");
+}
+
+- (void)onSendCancelPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg roomId:(NSString* _Nonnull)roomId {
+    NSLog(@"ViewController::onSendCancelPrivateLiveInvite()");
+}
+
+- (void)onRecvInstantInviteReplyNotice:(NSString* _Nonnull)inviteId replyType:(ReplyType)replyType roomId:(NSString* _Nonnull)roomId roomType:(RoomType)roomType anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg {
+    NSLog(@"ViewController::onRecvInstantInviteReplyNotice()");
+}
+
+- (void)onRecvInstantInviteUserNotice:(NSString* _Nonnull)logId anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg {
+     NSLog(@"ViewController::onRecvInstantInviteUserNotice()");
+}
+
+- (void)onRecvScheduledInviteUserNotice:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl bookTime:(NSInteger)bookTime inviteId:(NSString* _Nonnull)inviteId {
+     NSLog(@"ViewController::OnRecvScheduledInviteUserNotice()");
+}
+
+- (void)onRecvSendBookingReplyNotice:(NSString* _Nonnull)inviteId replyType:(AnchorReplyType)replyType {
+    NSLog(@"ViewController::onRecvSendBookingReplyNotice()");
+}
+
+- (void)onRecvBookingNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl  leftSeconds:(int)leftSeconds {
+    NSLog(@"ViewController::onRecvBookingNotice()");
+}
+
+- (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg {
+    NSLog(@"ViewController::onSendTalent()");
+}
+
+- (void)onRecvSendTalentNotice:(NSString* _Nonnull)roomId talentInviteId:(NSString* _Nonnull)talentInviteId talentId:(NSString* _Nonnull)talentId name:(NSString* _Nonnull)name credit:(double) credit status:(TalentStatus)status {
+    NSLog(@"ViewController::onRecvSendTalentNotice()");
+}
+
+- (void)onRecvLevelUpNotice:(int)level {
+    NSLog(@"ViewController::onRecvLevelUpNotice()");
+}
+
+- (void)onRecvLoveLevelUpNotice:(int)loveLevel {
+    NSLog(@"ViewController::onRecvLoveLevelUpNotice()");
+}
+
+- (void)onRecvBackpackUpdateNotice:(BackpackInfoObject * _Nonnull)item {
+    NSLog(@"ViewController::onRecvBackpackUpdateNotice()");
 }
 
 @end

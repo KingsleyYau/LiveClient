@@ -13,8 +13,6 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 
 import java.util.List;
 
-import static com.qpidnetwork.livemodule.utils.DisplayUtil.getResources;
-
 /**
  * Description:
  * <p>
@@ -27,6 +25,7 @@ public class GiftCountSelectorAdapter extends CanAdapter<Integer> {
     private ColorDrawable selectedColorDrawable;
     private ColorDrawable whiteColorDrawable;
     private ColorDrawable grayColorDrawable;
+    private Context mContext;
 
     public void setSelectedPosition(int selectedPosition){
         this.selectedPosition = selectedPosition;
@@ -34,9 +33,10 @@ public class GiftCountSelectorAdapter extends CanAdapter<Integer> {
 
     public GiftCountSelectorAdapter(Context context, int itemLayoutId) {
         super(context, itemLayoutId);
-        selectedColorDrawable = new ColorDrawable(getResources().getColor(R.color.list_gift_count_selected));
+        mContext = context.getApplicationContext();
+        selectedColorDrawable = new ColorDrawable(context.getResources().getColor(R.color.list_gift_count_selected));
         whiteColorDrawable = new ColorDrawable(Color.WHITE);
-        grayColorDrawable = new ColorDrawable(getResources().getColor(R.color.color_giftcount_item));
+        grayColorDrawable = new ColorDrawable(context.getResources().getColor(R.color.color_giftcount_item));
     }
 
     @Override
@@ -49,15 +49,15 @@ public class GiftCountSelectorAdapter extends CanAdapter<Integer> {
         if(1 == numList.size()){
             //如何只有一个，那么默认选中
             btn_giftCount.setBackgroundDrawable(
-                    getResources().getDrawable(R.drawable.bg_live_buttom_gift_count_list_single_green));
+                    mContext.getResources().getDrawable(R.drawable.bg_live_buttom_gift_count_list_single_green));
         }else if(position == 0){//是第一个,选中则高亮，否则白色
             btn_giftCount.setBackgroundDrawable(
-                    getResources().getDrawable(
+                    mContext.getResources().getDrawable(
                             isSelected ? R.drawable.bg_live_buttom_gift_count_list_top_green :
                                     R.drawable.bg_live_buttom_gift_count_list_top_white));
         }else if(position == (numList.size()-1)){//是最后一个,选中则高亮，否则白色
             btn_giftCount.setBackgroundDrawable(
-                    getResources().getDrawable(
+                    mContext.getResources().getDrawable(
                             isSelected ? R.drawable.bg_live_buttom_gift_count_list_buttom_green :
                                     R.drawable.bg_live_buttom_gift_count_list_buttom_white));
         }else if(position>0 && position<(numList.size()-1)){//中间的
@@ -82,12 +82,12 @@ public class GiftCountSelectorAdapter extends CanAdapter<Integer> {
                 }
                 if(position == 0){//是第一个,选中则高亮，否则白色
                     btn_giftCount.setBackgroundDrawable(
-                            getResources().getDrawable(
+                            mContext.getResources().getDrawable(
                                     isPressed ? R.drawable.bg_live_buttom_gift_count_list_top_grary :
                                             R.drawable.bg_live_buttom_gift_count_list_top_white));
                 }else if(position == (numList.size()-1)){//是最后一个,选中则高亮，否则白色
                     btn_giftCount.setBackgroundDrawable(
-                            getResources().getDrawable(
+                            mContext.getResources().getDrawable(
                                     isPressed ? R.drawable.bg_live_buttom_gift_count_list_buttom_grary :
                                             R.drawable.bg_live_buttom_gift_count_list_buttom_white));
                 }else if(position>0 && position<(numList.size()-1)){//中间的

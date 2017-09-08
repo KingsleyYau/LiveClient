@@ -3,9 +3,12 @@ package com.qpidnetwork.livemodule.im;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
+import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.utils.Log;
@@ -219,11 +222,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnKickOff() {
+	public void OnKickOff(LCC_ERR_TYPE errType, String errMsg) {
 		synchronized(mIMOtherListener){
 			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
 				IMOtherEventListener listener = iter.next();
-				listener.OnKickOff();
+				listener.OnKickOff(errType, errMsg);
 			}
 		}		
 	}
@@ -250,24 +253,165 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType,
-			String errMsg) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRoomOut(reqId, success, errType, errMsg);
+	public void OnRecvAnchoeInviteNotify(String logId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvAnchoeInviteNotify(logId, anchorId, anchorName, anchorPhotoUrl, message);
 			}
-		}			
+		}
 	}
 
 	@Override
-	public void OnSendRoomMsg(LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
+	public void OnRecvScheduledInviteNotify(String inviteId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvScheduledInviteNotify(inviteId, anchorId, anchorName, anchorPhotoUrl, message);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvSendBookingReplyNotice(String inviteId, IMClientListener.BookInviteReplyType replyType) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvSendBookingReplyNotice(inviteId, replyType);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvBookingNotice(String roomId, String userId, String nickName, String photoUrl, int leftSeconds) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvBookingNotice(roomId, userId, nickName, photoUrl, leftSeconds);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLevelUpNotice(int level) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvLevelUpNotice(level);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLoveLevelUpNotice(int lovelevel) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvLoveLevelUpNotice(lovelevel);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item) {
+		synchronized(mIMOtherListener){
+			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
+				IMOtherEventListener listener = iter.next();
+				listener.OnRecvBackpackUpdateNotice(item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, LCC_ERR_TYPE errType, String errMsg) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnSendRoomMsg(errType, errMsg, msgItem);
+				listener.OnRecvRoomCloseNotice(roomId, userId, nickName, errType, errMsg);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLeaveRoomNotice(String roomId, String userId,
+									  String nickName, String photoUrl, int fansNum) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvLeaveRoomNotice(roomId, userId, nickName, photoUrl, fansNum);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvRebateInfoNotice(String roomId, IMRebateItem item) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvRebateInfoNotice(roomId, item);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvLeavingPublicRoomNotice(String roomId, LCC_ERR_TYPE err, String errMsg) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvLeavingPublicRoomNotice(roomId, err, errMsg);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err,
+										String errMsg, double credit) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvRoomKickoffNotice(roomId, err, errMsg, credit);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String playUrl) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
+			}
+		}
+	}
+
+	@Override
+	public void OnSendRoomMsg(boolean success, LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnSendRoomMsg(success, errType, errMsg, msgItem);
 			}
 		}		
+	}
+
+	@Override
+	public void OnRecvRoomMsg(IMMessageItem msgItem) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvRoomMsg(msgItem);
+			}
+		}
 	}
 
 	@Override
@@ -282,94 +426,22 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnRecvRoomGiftNotice(IMMessageItem msgItem) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvRoomGiftNotice(msgItem);
+			}
+		}
+	}
+
+	@Override
 	public void OnSendBarrage(boolean success, LCC_ERR_TYPE errType,
 			String errMsg, IMMessageItem msgItem, double credit, double rebateCredit) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
 				listener.OnSendBarrage(success, errType, errMsg, msgItem, credit, rebateCredit);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomCloseNotice(roomId, userId, nickName);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
-			}
-		}			
-	}
-
-	@Override
-	public void OnRecvLeaveRoomNotice(String roomId, String userId,
-			String nickName, String photoUrl, int fansNum) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvLeaveRoomNotice(roomId, userId, nickName, photoUrl, fansNum);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvRebateInfoNotice(String roomId, IMRebateItem item) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRebateInfoNotice(roomId, item);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvLeavingPublicRoomNotice(String roomId, LCC_ERR_TYPE err, String errMsg) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvLeavingPublicRoomNotice(roomId, err, errMsg);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err,
-			String errMsg, double credit) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomKickoffNotice(roomId, err, errMsg, credit);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvRoomMsg(IMMessageItem msgItem) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomMsg(msgItem);
-			}
-		}			
-	}
-
-	@Override
-	public void OnRecvRoomGiftNotice(IMMessageItem msgItem) {
-		synchronized(mIMLiveRoomListeners){
-			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
-				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomGiftNotice(msgItem);
 			}
 		}		
 	}
@@ -385,6 +457,27 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnSendTalent(reqId, success, errType, errMsg);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit,
+									   IMClientListener.TalentInviteStatus status) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status);
+			}
+		}
+	}
+
+	@Override
 	public void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType,
 			String errMsg, IMRoomInItem roomInfo) {
 		synchronized(mIMInviteLaunchListeners){
@@ -393,6 +486,16 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 				listener.OnRoomIn(reqId, success, errType, errMsg, roomInfo);
 			}
 		}		
+	}
+
+	@Override
+	public void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+		synchronized(mIMInviteLaunchListeners){
+			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
+				IMInviteLaunchEventListener listener = iter.next();
+				listener.OnRoomOut(reqId, success, errType, errMsg);
+			}
+		}
 	}
 
 	@Override
@@ -406,12 +509,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success,
-			LCC_ERR_TYPE errType, String errMsg, String inviteId) {
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, inviteId);
+				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, invitationId, timeout, roomId);
 			}
 		}		
 	}
@@ -428,36 +530,13 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType,
-			String roomId) {
+	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
+								  String nickName, String avatarImg, String message) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnRecvInviteReply(inviteId, replyType, roomId);
+				listener.OnRecvInviteReply(inviteId, replyType, roomId, roomType, anchorId, nickName, avatarImg, message);
 			}
 		}
 	}
-
-	@Override
-	public void OnRecvAnchoeInviteNotify(String anchorId, String anchorName,
-			String anchorPhotoUrl) {
-		synchronized(mIMInviteLaunchListeners){
-			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
-				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnRecvAnchoeInviteNotify(anchorId, anchorName, anchorPhotoUrl);
-			}
-		}		
-	}
-
-	@Override
-	public void OnRecvScheduledInviteNotify(String anchorId, String anchorName,
-			String anchorPhotoUrl, int bookTime, String inviteId) {
-		synchronized(mIMInviteLaunchListeners){
-			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
-				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnRecvScheduledInviteNotify(anchorId, anchorName, anchorPhotoUrl, bookTime, inviteId);
-			}
-		}		
-	}
-
 }

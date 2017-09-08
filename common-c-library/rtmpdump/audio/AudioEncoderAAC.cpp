@@ -122,7 +122,7 @@ void AudioEncoderAAC::SetCallback(AudioEncoderCallback* callback) {
 
 bool AudioEncoderAAC::Reset() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Reset( "
                  "this : %p "
                  ")",
@@ -199,7 +199,7 @@ bool AudioEncoderAAC::Start() {
 	bool bFlag = true;
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Start( "
                  "this : %p "
                  ")",
@@ -231,7 +231,7 @@ bool AudioEncoderAAC::Start() {
     mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Start( "
                  "[%s], "
                  "this : %p "
@@ -245,7 +245,7 @@ bool AudioEncoderAAC::Start() {
 
 void AudioEncoderAAC::Stop() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Stop( "
                  "this : %p "
                  ")",
@@ -289,7 +289,7 @@ void AudioEncoderAAC::Stop() {
     mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Stop( "
                  "[Success], "
                  "this : %p "

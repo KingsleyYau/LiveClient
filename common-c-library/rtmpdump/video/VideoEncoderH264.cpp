@@ -172,7 +172,7 @@ void VideoEncoderH264::SetCallback(VideoEncoderCallback* callback) {
     
 bool VideoEncoderH264::Reset() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Reset( "
                  "this : %p "
                  ")",
@@ -241,7 +241,7 @@ bool VideoEncoderH264::Start() {
 	bool bFlag = false;
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
                  "this : %p "
                  ")",
@@ -276,7 +276,7 @@ bool VideoEncoderH264::Start() {
 	mRuningMutex.unlock();
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
                  "[%s], "
                  "this : %p "
@@ -290,7 +290,7 @@ bool VideoEncoderH264::Start() {
 
 void VideoEncoderH264::Stop() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Stop( "
                  "this : %p "
                  ")",
@@ -350,7 +350,7 @@ void VideoEncoderH264::Stop() {
     mRuningMutex.unlock();
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Stop( "
                  "[Success], "
                  "this : %p "

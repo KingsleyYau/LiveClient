@@ -1,30 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="181dp"
-    android:layout_height="45dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/liveroom_mulitgift_width"
+    android:layout_height="@dimen/liveroom_mulitgift_height"
     android:id="@+id/rl_giftAnimContainer"
-    android:orientation="horizontal"
-    android:background="@drawable/bg_multiclick_item"
-    android:gravity="center_vertical">
+    android:background="@drawable/bg_multiclick_item">
 
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-        android:layout_centerVertical="true"
         android:src="@drawable/circleimageview_hugh"
         android:id="@+id/civ_photo"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_alignParentLeft="true"/>
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:id="@+id/ivGift"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_live_buttom_gift_qiqiu"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="13dp"/>
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_toRightOf="@id/civ_photo"
-        android:layout_toLeftOf="@+id/ivGift"
+        android:layout_toLeftOf="@id/ivGift"
         android:layout_centerVertical="true"
-        android:paddingLeft="8dp"
-        android:paddingRight="4dp">
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
         <TextView
             android:id="@+id/tvNickName"
             android:layout_width="match_parent"
@@ -34,7 +42,7 @@
             android:textSize="13sp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="bbbb"/>
+            android:text="bbddddddbb"/>
         <TextView
             android:id="@+id/tvGiftName"
             android:layout_width="match_parent"
@@ -43,16 +51,7 @@
             android:text="aaaa"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textSize="13sp"/>
+            android:textSize="11sp"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivGift"
-        android:layout_width="37dp"
-        android:layout_height="37dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/gift_apple"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="19dp"/>
-
-</LinearLayout>
+</RelativeLayout>

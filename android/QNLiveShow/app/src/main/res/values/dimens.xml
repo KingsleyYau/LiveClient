@@ -12,10 +12,27 @@
     <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
     <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
     <dimen name="coverphoto_corner_radiu">3dp</dimen>
-    <dimen name="liveroom_bullet_height">40dp</dimen>
+    <dimen name="liveroom_bullet_height">46dp</dimen>
 
     <!--消息列表礼物大小处理-->
     <dimen name="liveroom_messagelist_gift_width">16dp</dimen>
     <dimen name="liveroom_messagelist_gift_height">16dp</dimen>
+    <dimen name="defaultVedioPlayerHeight">270dp</dimen>
+    <dimen name="imButtomMargin">56dp</dimen>
+    <dimen name="liveroom_mulitgift_width">142dp</dimen>
+    <dimen name="liveroom_mulitgift_height">40dp</dimen>
+
+    <dimen name="liveroom_car_default_topmargin">8dp</dimen>
+    <dimen name="liveroom_car_default_rightmargin">42dp</dimen>
+
+    <!--actionBar 设置-->
+    <dimen name="actionbar_height">56dp</dimen>
+    <dimen name="actionbar_icon_width">56dp</dimen>
+    <dimen name="actionbar_shadow_height">4dp</dimen>
+    <dimen name="actionbar_indicator_height">3dp</dimen>
+    <dimen name="actionbar_backicon_height">48dp</dimen>
+
+    <dimen name="liveroom_messagelist_barrage_width">14dp</dimen>
+    <dimen name="liveroom_messagelist_barrage_height">14dp</dimen>
 
 </resources>

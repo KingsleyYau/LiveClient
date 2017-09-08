@@ -69,7 +69,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * 初始化流播放器
 	 * @param surfaceView	显示界面
 	 * @param statusCallback 状态回调接口
-	 * @return
+	 * @return true:成功/false:失败
 	 */
 	public boolean init(SurfaceView surfaceView, ILSPlayerStatusCallback statusCallback) {
 		boolean bFlag = false;
@@ -128,6 +128,9 @@ public class LSPlayer implements ILSPlayerCallback {
 		return bFlag;
 	}
 	
+	/**
+	 * 反初始化流播放器
+	 */
 	public void uninit() {
 		Log.i(LSConfig.TAG, String.format("LSPlayer::uninit( "
 				+ ")"
@@ -148,7 +151,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @param recordFilePath		FLV文件录制绝对路径
 	 * @param recordH264FilePath	H264录制绝对路径
 	 * @param recordAACFilePath		AAC录制绝对路径
-	 * @return
+	 * @return true:成功/false:失败
 	 */
 	public boolean playUrl(String url, String recordFilePath, String recordH264FilePath, String recordAACFilePath) {
 		boolean bFlag = false;

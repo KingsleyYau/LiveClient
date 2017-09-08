@@ -1,0 +1,1148 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FAA50FF41F5CFE46006A24E0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA50FF31F5CFE46006A24E0 /* main.m */; };
+		FAA50FF71F5CFE46006A24E0 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA50FF61F5CFE46006A24E0 /* AppDelegate.m */; };
+		FAA50FFA1F5CFE46006A24E0 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA50FF91F5CFE46006A24E0 /* ViewController.m */; };
+		FAA50FFD1F5CFE46006A24E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA50FFB1F5CFE46006A24E0 /* Main.storyboard */; };
+		FAA50FFF1F5CFE46006A24E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAA50FFE1F5CFE46006A24E0 /* Assets.xcassets */; };
+		FAA510021F5CFE46006A24E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAA510001F5CFE46006A24E0 /* LaunchScreen.storyboard */; };
+		FAA5100D1F5CFE46006A24E0 /* TestLiveInterfaceTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5100C1F5CFE46006A24E0 /* TestLiveInterfaceTests.m */; };
+		FAA510181F5CFE46006A24E0 /* TestLiveInterfaceUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510171F5CFE46006A24E0 /* TestLiveInterfaceUITests.m */; };
+		FAA5103A1F5CFFC3006A24E0 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510391F5CFFC3006A24E0 /* Photos.framework */; };
+		FAA5103C1F5CFFCF006A24E0 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5103B1F5CFFCF006A24E0 /* Accelerate.framework */; };
+		FAA5103E1F5CFFD9006A24E0 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5103D1F5CFFD9006A24E0 /* CoreText.framework */; };
+		FAA510401F5CFFE4006A24E0 /* libImClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5103F1F5CFFE4006A24E0 /* libImClient.a */; };
+		FAA510421F5CFFEC006A24E0 /* libUIWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510411F5CFFEC006A24E0 /* libUIWidget.a */; };
+		FAA510441F5CFFFA006A24E0 /* libCommonWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510431F5CFFFA006A24E0 /* libCommonWidget.a */; };
+		FAA510461F5D0007006A24E0 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510451F5D0007006A24E0 /* libCommon-C-Library.a */; };
+		FAA510481F5D0015006A24E0 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510471F5D0015006A24E0 /* libRtmpClient.a */; };
+		FAA5104A1F5D0027006A24E0 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510491F5D0027006A24E0 /* libstdc++.tbd */; };
+		FAA5104C1F5D0037006A24E0 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5104B1F5D0037006A24E0 /* libz.tbd */; };
+		FAA5104E1F5D0046006A24E0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5104D1F5D0046006A24E0 /* AVFoundation.framework */; };
+		FAA510501F5D004E006A24E0 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA5104F1F5D004E006A24E0 /* VideoToolbox.framework */; };
+		FAA510521F5D005A006A24E0 /* libPods-livestream.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FAA510511F5D005A006A24E0 /* libPods-livestream.a */; };
+		FAA510561F5D0144006A24E0 /* RequestManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAA510551F5D0144006A24E0 /* RequestManager.mm */; };
+		FAA510951F5D0192006A24E0 /* CancelPrivateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510591F5D0192006A24E0 /* CancelPrivateRequest.m */; };
+		FAA510961F5D0192006A24E0 /* ControlManPushRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5105B1F5D0192006A24E0 /* ControlManPushRequest.m */; };
+		FAA510971F5D0192006A24E0 /* GetAllGiftListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5105D1F5D0192006A24E0 /* GetAllGiftListRequest.m */; };
+		FAA510981F5D0192006A24E0 /* GetAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5105F1F5D0192006A24E0 /* GetAnchorListRequest.m */; };
+		FAA510991F5D0192006A24E0 /* GetBackpackUnreadNumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510611F5D0192006A24E0 /* GetBackpackUnreadNumRequest.m */; };
+		FAA5109A1F5D0192006A24E0 /* GetConfigRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510631F5D0192006A24E0 /* GetConfigRequest.m */; };
+		FAA5109B1F5D0192006A24E0 /* GetCreateBookingInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510651F5D0192006A24E0 /* GetCreateBookingInfoRequest.m */; };
+		FAA5109C1F5D0192006A24E0 /* GetEmoticonListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510671F5D0192006A24E0 /* GetEmoticonListRequest.m */; };
+		FAA5109D1F5D0192006A24E0 /* GetFollowListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510691F5D0192006A24E0 /* GetFollowListRequest.m */; };
+		FAA5109E1F5D0192006A24E0 /* GetGiftDetailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5106B1F5D0192006A24E0 /* GetGiftDetailRequest.m */; };
+		FAA5109F1F5D0192006A24E0 /* GetGiftListByUserIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5106D1F5D0192006A24E0 /* GetGiftListByUserIdRequest.m */; };
+		FAA510A01F5D0192006A24E0 /* GetInviteInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5106F1F5D0192006A24E0 /* GetInviteInfoRequest.m */; };
+		FAA510A11F5D0192006A24E0 /* GetLeftCreditRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510711F5D0192006A24E0 /* GetLeftCreditRequest.m */; };
+		FAA510A21F5D0192006A24E0 /* GetNewFansBaseInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510731F5D0192006A24E0 /* GetNewFansBaseInfoRequest.m */; };
+		FAA510A31F5D0192006A24E0 /* GetRoomInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510751F5D0192006A24E0 /* GetRoomInfoRequest.m */; };
+		FAA510A41F5D0192006A24E0 /* GetTalentListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510771F5D0192006A24E0 /* GetTalentListRequest.m */; };
+		FAA510A51F5D0192006A24E0 /* GetTalentStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510791F5D0192006A24E0 /* GetTalentStatusRequest.m */; };
+		FAA510A61F5D0192006A24E0 /* GiftListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5107B1F5D0192006A24E0 /* GiftListRequest.m */; };
+		FAA510A71F5D0192006A24E0 /* HandleBookingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5107D1F5D0192006A24E0 /* HandleBookingRequest.m */; };
+		FAA510A81F5D0192006A24E0 /* LiveFansListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5107F1F5D0192006A24E0 /* LiveFansListRequest.m */; };
+		FAA510A91F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510811F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.m */; };
+		FAA510AA1F5D0192006A24E0 /* ManHandleBookingListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510831F5D0192006A24E0 /* ManHandleBookingListRequest.m */; };
+		FAA510AB1F5D0192006A24E0 /* RideListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510861F5D0192006A24E0 /* RideListRequest.m */; };
+		FAA510AC1F5D0192006A24E0 /* SendBookingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510881F5D0192006A24E0 /* SendBookingRequest.m */; };
+		FAA510AD1F5D0192006A24E0 /* SessionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5108A1F5D0192006A24E0 /* SessionRequest.m */; };
+		FAA510AE1F5D0192006A24E0 /* SessionRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5108C1F5D0192006A24E0 /* SessionRequestManager.m */; };
+		FAA510AF1F5D0192006A24E0 /* SetFavoriteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA5108E1F5D0192006A24E0 /* SetFavoriteRequest.m */; };
+		FAA510B01F5D0192006A24E0 /* SetRideRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510901F5D0192006A24E0 /* SetRideRequest.m */; };
+		FAA510B11F5D0192006A24E0 /* UpdateTokenIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510921F5D0192006A24E0 /* UpdateTokenIdRequest.m */; };
+		FAA510B21F5D0192006A24E0 /* VoucherListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510941F5D0192006A24E0 /* VoucherListRequest.m */; };
+		FAA510F01F5D01C2006A24E0 /* BackGiftItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510B51F5D01C2006A24E0 /* BackGiftItemObject.m */; };
+		FAA510F11F5D01C2006A24E0 /* BookingPrivateInviteItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510B71F5D01C2006A24E0 /* BookingPrivateInviteItemObject.m */; };
+		FAA510F21F5D01C2006A24E0 /* BookingPrivateInviteListObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510B91F5D01C2006A24E0 /* BookingPrivateInviteListObject.m */; };
+		FAA510F31F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510BB1F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.m */; };
+		FAA510F41F5D01C2006A24E0 /* BookTimeItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510BD1F5D01C2006A24E0 /* BookTimeItemObject.m */; };
+		FAA510F51F5D01C2006A24E0 /* ConfigItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510BF1F5D01C2006A24E0 /* ConfigItemObject.m */; };
+		FAA510F61F5D01C2006A24E0 /* CoverPhotoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510C11F5D01C2006A24E0 /* CoverPhotoItemObject.m */; };
+		FAA510F71F5D01C2006A24E0 /* EmoticonInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510C31F5D01C2006A24E0 /* EmoticonInfoItemObject.m */; };
+		FAA510F81F5D01C2006A24E0 /* EmoticonItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510C51F5D01C2006A24E0 /* EmoticonItemObject.m */; };
+		FAA510F91F5D01C2006A24E0 /* FollowItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510C71F5D01C2006A24E0 /* FollowItemObject.m */; };
+		FAA510FA1F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510C91F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.m */; };
+		FAA510FB1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510CB1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.m */; };
+		FAA510FC1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510CD1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.m */; };
+		FAA510FD1F5D01C2006A24E0 /* GetTalentItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510CF1F5D01C2006A24E0 /* GetTalentItemObject.m */; };
+		FAA510FE1F5D01C2006A24E0 /* GetTalentStatusItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510D11F5D01C2006A24E0 /* GetTalentStatusItemObject.m */; };
+		FAA510FF1F5D01C2006A24E0 /* GiftInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510D31F5D01C2006A24E0 /* GiftInfoItemObject.m */; };
+		FAA511001F5D01C2006A24E0 /* GiftItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510D51F5D01C2006A24E0 /* GiftItemObject.m */; };
+		FAA511011F5D01C2006A24E0 /* GiftNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510D71F5D01C2006A24E0 /* GiftNumItemObject.m */; };
+		FAA511021F5D01C2006A24E0 /* GiftWithIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510D91F5D01C2006A24E0 /* GiftWithIdItemObject.m */; };
+		FAA511031F5D01C2006A24E0 /* InviteIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510DB1F5D01C2006A24E0 /* InviteIdItemObject.m */; };
+		FAA511041F5D01C2006A24E0 /* LiveRoomConfigItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510DD1F5D01C2006A24E0 /* LiveRoomConfigItemObject.m */; };
+		FAA511051F5D01C2006A24E0 /* LiveRoomInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510DF1F5D01C2006A24E0 /* LiveRoomInfoItemObject.m */; };
+		FAA511061F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510E11F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.m */; };
+		FAA511071F5D01C2006A24E0 /* LoginItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510E31F5D01C2006A24E0 /* LoginItemObject.m */; };
+		FAA511081F5D01C2006A24E0 /* RegisterItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510E51F5D01C2006A24E0 /* RegisterItemObject.m */; };
+		FAA511091F5D01C2006A24E0 /* RideItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510E71F5D01C2006A24E0 /* RideItemObject.m */; };
+		FAA5110A1F5D01C2006A24E0 /* RoomInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510E91F5D01C2006A24E0 /* RoomInfoItemObject.m */; };
+		FAA5110B1F5D01C2006A24E0 /* RoomItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510EB1F5D01C2006A24E0 /* RoomItemObject.m */; };
+		FAA5110C1F5D01C2006A24E0 /* ViewerFansItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510ED1F5D01C2006A24E0 /* ViewerFansItemObject.m */; };
+		FAA5110D1F5D01C2006A24E0 /* VoucherItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA510EF1F5D01C2006A24E0 /* VoucherItemObject.m */; };
+		FAA511131F5D0761006A24E0 /* LoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA511121F5D0761006A24E0 /* LoginManager.m */; };
+		FAA511171F5D0799006A24E0 /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA511161F5D0799006A24E0 /* Country.m */; };
+		FAA511261F5D2ED2006A24E0 /* IMManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAA511251F5D2ED2006A24E0 /* IMManager.mm */; };
+		FAB694031F5E3BF5008A64B6 /* ConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB694021F5E3BF5008A64B6 /* ConfigManager.m */; };
+		FAB694081F5E3D2D008A64B6 /* ImLiveRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB694071F5E3D2D008A64B6 /* ImLiveRoom.m */; };
+		FAB6940F1F5E9726008A64B6 /* GetPromoAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB6940E1F5E9726008A64B6 /* GetPromoAnchorListRequest.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FAA510091F5CFE46006A24E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAA50FE71F5CFE46006A24E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAA50FEE1F5CFE46006A24E0;
+			remoteInfo = TestLiveInterface;
+		};
+		FAA510141F5CFE46006A24E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FAA50FE71F5CFE46006A24E0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAA50FEE1F5CFE46006A24E0;
+			remoteInfo = TestLiveInterface;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FAA50FEF1F5CFE46006A24E0 /* TestLiveInterface.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestLiveInterface.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAA50FF31F5CFE46006A24E0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FAA50FF51F5CFE46006A24E0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		FAA50FF61F5CFE46006A24E0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		FAA50FF81F5CFE46006A24E0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		FAA50FF91F5CFE46006A24E0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		FAA50FFC1F5CFE46006A24E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		FAA50FFE1F5CFE46006A24E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FAA510011F5CFE46006A24E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FAA510031F5CFE46006A24E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAA510081F5CFE46006A24E0 /* TestLiveInterfaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestLiveInterfaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAA5100C1F5CFE46006A24E0 /* TestLiveInterfaceTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLiveInterfaceTests.m; sourceTree = "<group>"; };
+		FAA5100E1F5CFE46006A24E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAA510131F5CFE46006A24E0 /* TestLiveInterfaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestLiveInterfaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAA510171F5CFE46006A24E0 /* TestLiveInterfaceUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestLiveInterfaceUITests.m; sourceTree = "<group>"; };
+		FAA510191F5CFE46006A24E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAA510391F5CFFC3006A24E0 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		FAA5103B1F5CFFCF006A24E0 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		FAA5103D1F5CFFD9006A24E0 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		FAA5103F1F5CFFE4006A24E0 /* libImClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libImClient.a; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libImClient.a"; sourceTree = "<group>"; };
+		FAA510411F5CFFEC006A24E0 /* libUIWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libUIWidget.a; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libUIWidget.a"; sourceTree = "<group>"; };
+		FAA510431F5CFFFA006A24E0 /* libCommonWidget.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCommonWidget.a; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libCommonWidget.a"; sourceTree = "<group>"; };
+		FAA510451F5D0007006A24E0 /* libCommon-C-Library.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCommon-C-Library.a"; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libCommon-C-Library.a"; sourceTree = "<group>"; };
+		FAA510471F5D0015006A24E0 /* libRtmpClient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libRtmpClient.a; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libRtmpClient.a"; sourceTree = "<group>"; };
+		FAA510491F5D0027006A24E0 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		FAA5104B1F5D0037006A24E0 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		FAA5104D1F5D0046006A24E0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		FAA5104F1F5D004E006A24E0 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		FAA510511F5D005A006A24E0 /* libPods-livestream.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libPods-livestream.a"; path = "../../../../../Library/Developer/Xcode/DerivedData/livestream-cxokjmgorbenvmfqbkfxdmjslsap/Build/Products/Debug-iphonesimulator/libPods-livestream.a"; sourceTree = "<group>"; };
+		FAA510541F5D0144006A24E0 /* RequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestManager.h; path = ../../../livestream/Source/Common/RequestManager.h; sourceTree = "<group>"; };
+		FAA510551F5D0144006A24E0 /* RequestManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = RequestManager.mm; path = ../../../livestream/Source/Common/RequestManager.mm; sourceTree = "<group>"; };
+		FAA510581F5D0192006A24E0 /* CancelPrivateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CancelPrivateRequest.h; path = ../../../livestream/Source/Request/CancelPrivateRequest.h; sourceTree = "<group>"; };
+		FAA510591F5D0192006A24E0 /* CancelPrivateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CancelPrivateRequest.m; path = ../../../livestream/Source/Request/CancelPrivateRequest.m; sourceTree = "<group>"; };
+		FAA5105A1F5D0192006A24E0 /* ControlManPushRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ControlManPushRequest.h; path = ../../../livestream/Source/Request/ControlManPushRequest.h; sourceTree = "<group>"; };
+		FAA5105B1F5D0192006A24E0 /* ControlManPushRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ControlManPushRequest.m; path = ../../../livestream/Source/Request/ControlManPushRequest.m; sourceTree = "<group>"; };
+		FAA5105C1F5D0192006A24E0 /* GetAllGiftListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetAllGiftListRequest.h; path = ../../../livestream/Source/Request/GetAllGiftListRequest.h; sourceTree = "<group>"; };
+		FAA5105D1F5D0192006A24E0 /* GetAllGiftListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetAllGiftListRequest.m; path = ../../../livestream/Source/Request/GetAllGiftListRequest.m; sourceTree = "<group>"; };
+		FAA5105E1F5D0192006A24E0 /* GetAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetAnchorListRequest.h; path = ../../../livestream/Source/Request/GetAnchorListRequest.h; sourceTree = "<group>"; };
+		FAA5105F1F5D0192006A24E0 /* GetAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetAnchorListRequest.m; path = ../../../livestream/Source/Request/GetAnchorListRequest.m; sourceTree = "<group>"; };
+		FAA510601F5D0192006A24E0 /* GetBackpackUnreadNumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetBackpackUnreadNumRequest.h; path = ../../../livestream/Source/Request/GetBackpackUnreadNumRequest.h; sourceTree = "<group>"; };
+		FAA510611F5D0192006A24E0 /* GetBackpackUnreadNumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetBackpackUnreadNumRequest.m; path = ../../../livestream/Source/Request/GetBackpackUnreadNumRequest.m; sourceTree = "<group>"; };
+		FAA510621F5D0192006A24E0 /* GetConfigRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetConfigRequest.h; path = ../../../livestream/Source/Request/GetConfigRequest.h; sourceTree = "<group>"; };
+		FAA510631F5D0192006A24E0 /* GetConfigRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetConfigRequest.m; path = ../../../livestream/Source/Request/GetConfigRequest.m; sourceTree = "<group>"; };
+		FAA510641F5D0192006A24E0 /* GetCreateBookingInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetCreateBookingInfoRequest.h; path = ../../../livestream/Source/Request/GetCreateBookingInfoRequest.h; sourceTree = "<group>"; };
+		FAA510651F5D0192006A24E0 /* GetCreateBookingInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetCreateBookingInfoRequest.m; path = ../../../livestream/Source/Request/GetCreateBookingInfoRequest.m; sourceTree = "<group>"; };
+		FAA510661F5D0192006A24E0 /* GetEmoticonListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetEmoticonListRequest.h; path = ../../../livestream/Source/Request/GetEmoticonListRequest.h; sourceTree = "<group>"; };
+		FAA510671F5D0192006A24E0 /* GetEmoticonListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetEmoticonListRequest.m; path = ../../../livestream/Source/Request/GetEmoticonListRequest.m; sourceTree = "<group>"; };
+		FAA510681F5D0192006A24E0 /* GetFollowListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetFollowListRequest.h; path = ../../../livestream/Source/Request/GetFollowListRequest.h; sourceTree = "<group>"; };
+		FAA510691F5D0192006A24E0 /* GetFollowListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetFollowListRequest.m; path = ../../../livestream/Source/Request/GetFollowListRequest.m; sourceTree = "<group>"; };
+		FAA5106A1F5D0192006A24E0 /* GetGiftDetailRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGiftDetailRequest.h; path = ../../../livestream/Source/Request/GetGiftDetailRequest.h; sourceTree = "<group>"; };
+		FAA5106B1F5D0192006A24E0 /* GetGiftDetailRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGiftDetailRequest.m; path = ../../../livestream/Source/Request/GetGiftDetailRequest.m; sourceTree = "<group>"; };
+		FAA5106C1F5D0192006A24E0 /* GetGiftListByUserIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetGiftListByUserIdRequest.h; path = ../../../livestream/Source/Request/GetGiftListByUserIdRequest.h; sourceTree = "<group>"; };
+		FAA5106D1F5D0192006A24E0 /* GetGiftListByUserIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetGiftListByUserIdRequest.m; path = ../../../livestream/Source/Request/GetGiftListByUserIdRequest.m; sourceTree = "<group>"; };
+		FAA5106E1F5D0192006A24E0 /* GetInviteInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetInviteInfoRequest.h; path = ../../../livestream/Source/Request/GetInviteInfoRequest.h; sourceTree = "<group>"; };
+		FAA5106F1F5D0192006A24E0 /* GetInviteInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetInviteInfoRequest.m; path = ../../../livestream/Source/Request/GetInviteInfoRequest.m; sourceTree = "<group>"; };
+		FAA510701F5D0192006A24E0 /* GetLeftCreditRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetLeftCreditRequest.h; path = ../../../livestream/Source/Request/GetLeftCreditRequest.h; sourceTree = "<group>"; };
+		FAA510711F5D0192006A24E0 /* GetLeftCreditRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetLeftCreditRequest.m; path = ../../../livestream/Source/Request/GetLeftCreditRequest.m; sourceTree = "<group>"; };
+		FAA510721F5D0192006A24E0 /* GetNewFansBaseInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetNewFansBaseInfoRequest.h; path = ../../../livestream/Source/Request/GetNewFansBaseInfoRequest.h; sourceTree = "<group>"; };
+		FAA510731F5D0192006A24E0 /* GetNewFansBaseInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetNewFansBaseInfoRequest.m; path = ../../../livestream/Source/Request/GetNewFansBaseInfoRequest.m; sourceTree = "<group>"; };
+		FAA510741F5D0192006A24E0 /* GetRoomInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetRoomInfoRequest.h; path = ../../../livestream/Source/Request/GetRoomInfoRequest.h; sourceTree = "<group>"; };
+		FAA510751F5D0192006A24E0 /* GetRoomInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetRoomInfoRequest.m; path = ../../../livestream/Source/Request/GetRoomInfoRequest.m; sourceTree = "<group>"; };
+		FAA510761F5D0192006A24E0 /* GetTalentListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetTalentListRequest.h; path = ../../../livestream/Source/Request/GetTalentListRequest.h; sourceTree = "<group>"; };
+		FAA510771F5D0192006A24E0 /* GetTalentListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetTalentListRequest.m; path = ../../../livestream/Source/Request/GetTalentListRequest.m; sourceTree = "<group>"; };
+		FAA510781F5D0192006A24E0 /* GetTalentStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetTalentStatusRequest.h; path = ../../../livestream/Source/Request/GetTalentStatusRequest.h; sourceTree = "<group>"; };
+		FAA510791F5D0192006A24E0 /* GetTalentStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetTalentStatusRequest.m; path = ../../../livestream/Source/Request/GetTalentStatusRequest.m; sourceTree = "<group>"; };
+		FAA5107A1F5D0192006A24E0 /* GiftListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GiftListRequest.h; path = ../../../livestream/Source/Request/GiftListRequest.h; sourceTree = "<group>"; };
+		FAA5107B1F5D0192006A24E0 /* GiftListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GiftListRequest.m; path = ../../../livestream/Source/Request/GiftListRequest.m; sourceTree = "<group>"; };
+		FAA5107C1F5D0192006A24E0 /* HandleBookingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HandleBookingRequest.h; path = ../../../livestream/Source/Request/HandleBookingRequest.h; sourceTree = "<group>"; };
+		FAA5107D1F5D0192006A24E0 /* HandleBookingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HandleBookingRequest.m; path = ../../../livestream/Source/Request/HandleBookingRequest.m; sourceTree = "<group>"; };
+		FAA5107E1F5D0192006A24E0 /* LiveFansListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveFansListRequest.h; path = ../../../livestream/Source/Request/LiveFansListRequest.h; sourceTree = "<group>"; };
+		FAA5107F1F5D0192006A24E0 /* LiveFansListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveFansListRequest.m; path = ../../../livestream/Source/Request/LiveFansListRequest.m; sourceTree = "<group>"; };
+		FAA510801F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManBookingUnreadUnhandleNumRequest.h; path = ../../../livestream/Source/Request/ManBookingUnreadUnhandleNumRequest.h; sourceTree = "<group>"; };
+		FAA510811F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManBookingUnreadUnhandleNumRequest.m; path = ../../../livestream/Source/Request/ManBookingUnreadUnhandleNumRequest.m; sourceTree = "<group>"; };
+		FAA510821F5D0192006A24E0 /* ManHandleBookingListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManHandleBookingListRequest.h; path = ../../../livestream/Source/Request/ManHandleBookingListRequest.h; sourceTree = "<group>"; };
+		FAA510831F5D0192006A24E0 /* ManHandleBookingListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManHandleBookingListRequest.m; path = ../../../livestream/Source/Request/ManHandleBookingListRequest.m; sourceTree = "<group>"; };
+		FAA510841F5D0192006A24E0 /* RequestErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestErrorCode.h; path = ../../../livestream/Source/Request/RequestErrorCode.h; sourceTree = "<group>"; };
+		FAA510851F5D0192006A24E0 /* RideListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RideListRequest.h; path = ../../../livestream/Source/Request/RideListRequest.h; sourceTree = "<group>"; };
+		FAA510861F5D0192006A24E0 /* RideListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RideListRequest.m; path = ../../../livestream/Source/Request/RideListRequest.m; sourceTree = "<group>"; };
+		FAA510871F5D0192006A24E0 /* SendBookingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SendBookingRequest.h; path = ../../../livestream/Source/Request/SendBookingRequest.h; sourceTree = "<group>"; };
+		FAA510881F5D0192006A24E0 /* SendBookingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SendBookingRequest.m; path = ../../../livestream/Source/Request/SendBookingRequest.m; sourceTree = "<group>"; };
+		FAA510891F5D0192006A24E0 /* SessionRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionRequest.h; path = ../../../livestream/Source/Request/SessionRequest.h; sourceTree = "<group>"; };
+		FAA5108A1F5D0192006A24E0 /* SessionRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionRequest.m; path = ../../../livestream/Source/Request/SessionRequest.m; sourceTree = "<group>"; };
+		FAA5108B1F5D0192006A24E0 /* SessionRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SessionRequestManager.h; path = ../../../livestream/Source/Request/SessionRequestManager.h; sourceTree = "<group>"; };
+		FAA5108C1F5D0192006A24E0 /* SessionRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SessionRequestManager.m; path = ../../../livestream/Source/Request/SessionRequestManager.m; sourceTree = "<group>"; };
+		FAA5108D1F5D0192006A24E0 /* SetFavoriteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetFavoriteRequest.h; path = ../../../livestream/Source/Request/SetFavoriteRequest.h; sourceTree = "<group>"; };
+		FAA5108E1F5D0192006A24E0 /* SetFavoriteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetFavoriteRequest.m; path = ../../../livestream/Source/Request/SetFavoriteRequest.m; sourceTree = "<group>"; };
+		FAA5108F1F5D0192006A24E0 /* SetRideRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SetRideRequest.h; path = ../../../livestream/Source/Request/SetRideRequest.h; sourceTree = "<group>"; };
+		FAA510901F5D0192006A24E0 /* SetRideRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SetRideRequest.m; path = ../../../livestream/Source/Request/SetRideRequest.m; sourceTree = "<group>"; };
+		FAA510911F5D0192006A24E0 /* UpdateTokenIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UpdateTokenIdRequest.h; path = ../../../livestream/Source/Request/UpdateTokenIdRequest.h; sourceTree = "<group>"; };
+		FAA510921F5D0192006A24E0 /* UpdateTokenIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UpdateTokenIdRequest.m; path = ../../../livestream/Source/Request/UpdateTokenIdRequest.m; sourceTree = "<group>"; };
+		FAA510931F5D0192006A24E0 /* VoucherListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoucherListRequest.h; path = ../../../livestream/Source/Request/VoucherListRequest.h; sourceTree = "<group>"; };
+		FAA510941F5D0192006A24E0 /* VoucherListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoucherListRequest.m; path = ../../../livestream/Source/Request/VoucherListRequest.m; sourceTree = "<group>"; };
+		FAA510B41F5D01C2006A24E0 /* BackGiftItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BackGiftItemObject.h; path = ../../../livestream/Source/Request/Model/BackGiftItemObject.h; sourceTree = "<group>"; };
+		FAA510B51F5D01C2006A24E0 /* BackGiftItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BackGiftItemObject.m; path = ../../../livestream/Source/Request/Model/BackGiftItemObject.m; sourceTree = "<group>"; };
+		FAA510B61F5D01C2006A24E0 /* BookingPrivateInviteItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookingPrivateInviteItemObject.h; path = ../../../livestream/Source/Request/Model/BookingPrivateInviteItemObject.h; sourceTree = "<group>"; };
+		FAA510B71F5D01C2006A24E0 /* BookingPrivateInviteItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BookingPrivateInviteItemObject.m; path = ../../../livestream/Source/Request/Model/BookingPrivateInviteItemObject.m; sourceTree = "<group>"; };
+		FAA510B81F5D01C2006A24E0 /* BookingPrivateInviteListObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookingPrivateInviteListObject.h; path = ../../../livestream/Source/Request/Model/BookingPrivateInviteListObject.h; sourceTree = "<group>"; };
+		FAA510B91F5D01C2006A24E0 /* BookingPrivateInviteListObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BookingPrivateInviteListObject.m; path = ../../../livestream/Source/Request/Model/BookingPrivateInviteListObject.m; sourceTree = "<group>"; };
+		FAA510BA1F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookingUnreadUnhandleNumItemObject.h; path = ../../../livestream/Source/Request/Model/BookingUnreadUnhandleNumItemObject.h; sourceTree = "<group>"; };
+		FAA510BB1F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BookingUnreadUnhandleNumItemObject.m; path = ../../../livestream/Source/Request/Model/BookingUnreadUnhandleNumItemObject.m; sourceTree = "<group>"; };
+		FAA510BC1F5D01C2006A24E0 /* BookTimeItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookTimeItemObject.h; path = ../../../livestream/Source/Request/Model/BookTimeItemObject.h; sourceTree = "<group>"; };
+		FAA510BD1F5D01C2006A24E0 /* BookTimeItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BookTimeItemObject.m; path = ../../../livestream/Source/Request/Model/BookTimeItemObject.m; sourceTree = "<group>"; };
+		FAA510BE1F5D01C2006A24E0 /* ConfigItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigItemObject.h; path = ../../../livestream/Source/Request/Model/ConfigItemObject.h; sourceTree = "<group>"; };
+		FAA510BF1F5D01C2006A24E0 /* ConfigItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfigItemObject.m; path = ../../../livestream/Source/Request/Model/ConfigItemObject.m; sourceTree = "<group>"; };
+		FAA510C01F5D01C2006A24E0 /* CoverPhotoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoverPhotoItemObject.h; path = ../../../livestream/Source/Request/Model/CoverPhotoItemObject.h; sourceTree = "<group>"; };
+		FAA510C11F5D01C2006A24E0 /* CoverPhotoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CoverPhotoItemObject.m; path = ../../../livestream/Source/Request/Model/CoverPhotoItemObject.m; sourceTree = "<group>"; };
+		FAA510C21F5D01C2006A24E0 /* EmoticonInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmoticonInfoItemObject.h; path = ../../../livestream/Source/Request/Model/EmoticonInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510C31F5D01C2006A24E0 /* EmoticonInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmoticonInfoItemObject.m; path = ../../../livestream/Source/Request/Model/EmoticonInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510C41F5D01C2006A24E0 /* EmoticonItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EmoticonItemObject.h; path = ../../../livestream/Source/Request/Model/EmoticonItemObject.h; sourceTree = "<group>"; };
+		FAA510C51F5D01C2006A24E0 /* EmoticonItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EmoticonItemObject.m; path = ../../../livestream/Source/Request/Model/EmoticonItemObject.m; sourceTree = "<group>"; };
+		FAA510C61F5D01C2006A24E0 /* FollowItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FollowItemObject.h; path = ../../../livestream/Source/Request/Model/FollowItemObject.h; sourceTree = "<group>"; };
+		FAA510C71F5D01C2006A24E0 /* FollowItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FollowItemObject.m; path = ../../../livestream/Source/Request/Model/FollowItemObject.m; sourceTree = "<group>"; };
+		FAA510C81F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetBackPackUnreadNumItemObject.h; path = ../../../livestream/Source/Request/Model/GetBackPackUnreadNumItemObject.h; sourceTree = "<group>"; };
+		FAA510C91F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetBackPackUnreadNumItemObject.m; path = ../../../livestream/Source/Request/Model/GetBackPackUnreadNumItemObject.m; sourceTree = "<group>"; };
+		FAA510CA1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetCreateBookingInfoItemObject.h; path = ../../../livestream/Source/Request/Model/GetCreateBookingInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510CB1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetCreateBookingInfoItemObject.m; path = ../../../livestream/Source/Request/Model/GetCreateBookingInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510CC1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetNewFansBaseInfoItemObject.h; path = ../../../livestream/Source/Request/Model/GetNewFansBaseInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510CD1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetNewFansBaseInfoItemObject.m; path = ../../../livestream/Source/Request/Model/GetNewFansBaseInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510CE1F5D01C2006A24E0 /* GetTalentItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetTalentItemObject.h; path = ../../../livestream/Source/Request/Model/GetTalentItemObject.h; sourceTree = "<group>"; };
+		FAA510CF1F5D01C2006A24E0 /* GetTalentItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetTalentItemObject.m; path = ../../../livestream/Source/Request/Model/GetTalentItemObject.m; sourceTree = "<group>"; };
+		FAA510D01F5D01C2006A24E0 /* GetTalentStatusItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetTalentStatusItemObject.h; path = ../../../livestream/Source/Request/Model/GetTalentStatusItemObject.h; sourceTree = "<group>"; };
+		FAA510D11F5D01C2006A24E0 /* GetTalentStatusItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetTalentStatusItemObject.m; path = ../../../livestream/Source/Request/Model/GetTalentStatusItemObject.m; sourceTree = "<group>"; };
+		FAA510D21F5D01C2006A24E0 /* GiftInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GiftInfoItemObject.h; path = ../../../livestream/Source/Request/Model/GiftInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510D31F5D01C2006A24E0 /* GiftInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GiftInfoItemObject.m; path = ../../../livestream/Source/Request/Model/GiftInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510D41F5D01C2006A24E0 /* GiftItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GiftItemObject.h; path = ../../../livestream/Source/Request/Model/GiftItemObject.h; sourceTree = "<group>"; };
+		FAA510D51F5D01C2006A24E0 /* GiftItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GiftItemObject.m; path = ../../../livestream/Source/Request/Model/GiftItemObject.m; sourceTree = "<group>"; };
+		FAA510D61F5D01C2006A24E0 /* GiftNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GiftNumItemObject.h; path = ../../../livestream/Source/Request/Model/GiftNumItemObject.h; sourceTree = "<group>"; };
+		FAA510D71F5D01C2006A24E0 /* GiftNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GiftNumItemObject.m; path = ../../../livestream/Source/Request/Model/GiftNumItemObject.m; sourceTree = "<group>"; };
+		FAA510D81F5D01C2006A24E0 /* GiftWithIdItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GiftWithIdItemObject.h; path = ../../../livestream/Source/Request/Model/GiftWithIdItemObject.h; sourceTree = "<group>"; };
+		FAA510D91F5D01C2006A24E0 /* GiftWithIdItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GiftWithIdItemObject.m; path = ../../../livestream/Source/Request/Model/GiftWithIdItemObject.m; sourceTree = "<group>"; };
+		FAA510DA1F5D01C2006A24E0 /* InviteIdItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InviteIdItemObject.h; path = ../../../livestream/Source/Request/Model/InviteIdItemObject.h; sourceTree = "<group>"; };
+		FAA510DB1F5D01C2006A24E0 /* InviteIdItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = InviteIdItemObject.m; path = ../../../livestream/Source/Request/Model/InviteIdItemObject.m; sourceTree = "<group>"; };
+		FAA510DC1F5D01C2006A24E0 /* LiveRoomConfigItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveRoomConfigItemObject.h; path = ../../../livestream/Source/Request/Model/LiveRoomConfigItemObject.h; sourceTree = "<group>"; };
+		FAA510DD1F5D01C2006A24E0 /* LiveRoomConfigItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveRoomConfigItemObject.m; path = ../../../livestream/Source/Request/Model/LiveRoomConfigItemObject.m; sourceTree = "<group>"; };
+		FAA510DE1F5D01C2006A24E0 /* LiveRoomInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveRoomInfoItemObject.h; path = ../../../livestream/Source/Request/Model/LiveRoomInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510DF1F5D01C2006A24E0 /* LiveRoomInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveRoomInfoItemObject.m; path = ../../../livestream/Source/Request/Model/LiveRoomInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510E01F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveRoomPersonalInfoItemObject.h; path = ../../../livestream/Source/Request/Model/LiveRoomPersonalInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510E11F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LiveRoomPersonalInfoItemObject.m; path = ../../../livestream/Source/Request/Model/LiveRoomPersonalInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510E21F5D01C2006A24E0 /* LoginItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginItemObject.h; path = ../../../livestream/Source/Request/Model/LoginItemObject.h; sourceTree = "<group>"; };
+		FAA510E31F5D01C2006A24E0 /* LoginItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginItemObject.m; path = ../../../livestream/Source/Request/Model/LoginItemObject.m; sourceTree = "<group>"; };
+		FAA510E41F5D01C2006A24E0 /* RegisterItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterItemObject.h; path = ../../../livestream/Source/Request/Model/RegisterItemObject.h; sourceTree = "<group>"; };
+		FAA510E51F5D01C2006A24E0 /* RegisterItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegisterItemObject.m; path = ../../../livestream/Source/Request/Model/RegisterItemObject.m; sourceTree = "<group>"; };
+		FAA510E61F5D01C2006A24E0 /* RideItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RideItemObject.h; path = ../../../livestream/Source/Request/Model/RideItemObject.h; sourceTree = "<group>"; };
+		FAA510E71F5D01C2006A24E0 /* RideItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RideItemObject.m; path = ../../../livestream/Source/Request/Model/RideItemObject.m; sourceTree = "<group>"; };
+		FAA510E81F5D01C2006A24E0 /* RoomInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomInfoItemObject.h; path = ../../../livestream/Source/Request/Model/RoomInfoItemObject.h; sourceTree = "<group>"; };
+		FAA510E91F5D01C2006A24E0 /* RoomInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RoomInfoItemObject.m; path = ../../../livestream/Source/Request/Model/RoomInfoItemObject.m; sourceTree = "<group>"; };
+		FAA510EA1F5D01C2006A24E0 /* RoomItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomItemObject.h; path = ../../../livestream/Source/Request/Model/RoomItemObject.h; sourceTree = "<group>"; };
+		FAA510EB1F5D01C2006A24E0 /* RoomItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RoomItemObject.m; path = ../../../livestream/Source/Request/Model/RoomItemObject.m; sourceTree = "<group>"; };
+		FAA510EC1F5D01C2006A24E0 /* ViewerFansItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ViewerFansItemObject.h; path = ../../../livestream/Source/Request/Model/ViewerFansItemObject.h; sourceTree = "<group>"; };
+		FAA510ED1F5D01C2006A24E0 /* ViewerFansItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ViewerFansItemObject.m; path = ../../../livestream/Source/Request/Model/ViewerFansItemObject.m; sourceTree = "<group>"; };
+		FAA510EE1F5D01C2006A24E0 /* VoucherItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VoucherItemObject.h; path = ../../../livestream/Source/Request/Model/VoucherItemObject.h; sourceTree = "<group>"; };
+		FAA510EF1F5D01C2006A24E0 /* VoucherItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VoucherItemObject.m; path = ../../../livestream/Source/Request/Model/VoucherItemObject.m; sourceTree = "<group>"; };
+		FAA511111F5D0761006A24E0 /* LoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginManager.h; path = ../../../livestream/Source/Modules/Login/Controller/LoginManager.h; sourceTree = "<group>"; };
+		FAA511121F5D0761006A24E0 /* LoginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginManager.m; path = ../../../livestream/Source/Modules/Login/Controller/LoginManager.m; sourceTree = "<group>"; };
+		FAA511151F5D0799006A24E0 /* Country.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Country.h; path = ../../../livestream/Source/Modules/Login/Model/Country.h; sourceTree = "<group>"; };
+		FAA511161F5D0799006A24E0 /* Country.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Country.m; path = ../../../livestream/Source/Modules/Login/Model/Country.m; sourceTree = "<group>"; };
+		FAA511241F5D2ED2006A24E0 /* IMManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMManager.h; path = ../../../livestream/Source/IM/IMManager.h; sourceTree = "<group>"; };
+		FAA511251F5D2ED2006A24E0 /* IMManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = IMManager.mm; path = ../../../livestream/Source/IM/IMManager.mm; sourceTree = "<group>"; };
+		FAB694011F5E3BF5008A64B6 /* ConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigManager.h; path = ../../../livestream/Source/Common/ConfigManager.h; sourceTree = "<group>"; };
+		FAB694021F5E3BF5008A64B6 /* ConfigManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfigManager.m; path = ../../../livestream/Source/Common/ConfigManager.m; sourceTree = "<group>"; };
+		FAB694061F5E3D2D008A64B6 /* ImLiveRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImLiveRoom.h; path = ../../../livestream/Source/IM/Model/ImLiveRoom.h; sourceTree = "<group>"; };
+		FAB694071F5E3D2D008A64B6 /* ImLiveRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImLiveRoom.m; path = ../../../livestream/Source/IM/Model/ImLiveRoom.m; sourceTree = "<group>"; };
+		FAB6940D1F5E9726008A64B6 /* GetPromoAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GetPromoAnchorListRequest.h; path = ../../../livestream/Source/Request/GetPromoAnchorListRequest.h; sourceTree = "<group>"; };
+		FAB6940E1F5E9726008A64B6 /* GetPromoAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GetPromoAnchorListRequest.m; path = ../../../livestream/Source/Request/GetPromoAnchorListRequest.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FAA50FEC1F5CFE46006A24E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA510521F5D005A006A24E0 /* libPods-livestream.a in Frameworks */,
+				FAA510501F5D004E006A24E0 /* VideoToolbox.framework in Frameworks */,
+				FAA5104E1F5D0046006A24E0 /* AVFoundation.framework in Frameworks */,
+				FAA5104C1F5D0037006A24E0 /* libz.tbd in Frameworks */,
+				FAA5104A1F5D0027006A24E0 /* libstdc++.tbd in Frameworks */,
+				FAA510481F5D0015006A24E0 /* libRtmpClient.a in Frameworks */,
+				FAA510461F5D0007006A24E0 /* libCommon-C-Library.a in Frameworks */,
+				FAA510441F5CFFFA006A24E0 /* libCommonWidget.a in Frameworks */,
+				FAA510421F5CFFEC006A24E0 /* libUIWidget.a in Frameworks */,
+				FAA510401F5CFFE4006A24E0 /* libImClient.a in Frameworks */,
+				FAA5103E1F5CFFD9006A24E0 /* CoreText.framework in Frameworks */,
+				FAA5103C1F5CFFCF006A24E0 /* Accelerate.framework in Frameworks */,
+				FAA5103A1F5CFFC3006A24E0 /* Photos.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA510051F5CFE46006A24E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA510101F5CFE46006A24E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FAA50FE61F5CFE46006A24E0 = {
+			isa = PBXGroup;
+			children = (
+				FAA50FF11F5CFE46006A24E0 /* TestLiveInterface */,
+				FAA5100B1F5CFE46006A24E0 /* TestLiveInterfaceTests */,
+				FAA510161F5CFE46006A24E0 /* TestLiveInterfaceUITests */,
+				FAA50FF01F5CFE46006A24E0 /* Products */,
+				FAA510381F5CFFC3006A24E0 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		FAA50FF01F5CFE46006A24E0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FAA50FEF1F5CFE46006A24E0 /* TestLiveInterface.app */,
+				FAA510081F5CFE46006A24E0 /* TestLiveInterfaceTests.xctest */,
+				FAA510131F5CFE46006A24E0 /* TestLiveInterfaceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAA50FF11F5CFE46006A24E0 /* TestLiveInterface */ = {
+			isa = PBXGroup;
+			children = (
+				FAA511231F5D2EB7006A24E0 /* IM */,
+				FAA5110E1F5D0739006A24E0 /* Modules */,
+				FAA510571F5D0156006A24E0 /* Request */,
+				FAA510531F5D0108006A24E0 /* Common */,
+				FAA50FF51F5CFE46006A24E0 /* AppDelegate.h */,
+				FAA50FF61F5CFE46006A24E0 /* AppDelegate.m */,
+				FAA50FF81F5CFE46006A24E0 /* ViewController.h */,
+				FAA50FF91F5CFE46006A24E0 /* ViewController.m */,
+				FAA50FFB1F5CFE46006A24E0 /* Main.storyboard */,
+				FAA50FFE1F5CFE46006A24E0 /* Assets.xcassets */,
+				FAA510001F5CFE46006A24E0 /* LaunchScreen.storyboard */,
+				FAA510031F5CFE46006A24E0 /* Info.plist */,
+				FAA50FF21F5CFE46006A24E0 /* Supporting Files */,
+			);
+			path = TestLiveInterface;
+			sourceTree = "<group>";
+		};
+		FAA50FF21F5CFE46006A24E0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FAA50FF31F5CFE46006A24E0 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FAA5100B1F5CFE46006A24E0 /* TestLiveInterfaceTests */ = {
+			isa = PBXGroup;
+			children = (
+				FAA5100C1F5CFE46006A24E0 /* TestLiveInterfaceTests.m */,
+				FAA5100E1F5CFE46006A24E0 /* Info.plist */,
+			);
+			path = TestLiveInterfaceTests;
+			sourceTree = "<group>";
+		};
+		FAA510161F5CFE46006A24E0 /* TestLiveInterfaceUITests */ = {
+			isa = PBXGroup;
+			children = (
+				FAA510171F5CFE46006A24E0 /* TestLiveInterfaceUITests.m */,
+				FAA510191F5CFE46006A24E0 /* Info.plist */,
+			);
+			path = TestLiveInterfaceUITests;
+			sourceTree = "<group>";
+		};
+		FAA510381F5CFFC3006A24E0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FAA510511F5D005A006A24E0 /* libPods-livestream.a */,
+				FAA5104F1F5D004E006A24E0 /* VideoToolbox.framework */,
+				FAA5104D1F5D0046006A24E0 /* AVFoundation.framework */,
+				FAA5104B1F5D0037006A24E0 /* libz.tbd */,
+				FAA510491F5D0027006A24E0 /* libstdc++.tbd */,
+				FAA510471F5D0015006A24E0 /* libRtmpClient.a */,
+				FAA510451F5D0007006A24E0 /* libCommon-C-Library.a */,
+				FAA510431F5CFFFA006A24E0 /* libCommonWidget.a */,
+				FAA510411F5CFFEC006A24E0 /* libUIWidget.a */,
+				FAA5103F1F5CFFE4006A24E0 /* libImClient.a */,
+				FAA5103D1F5CFFD9006A24E0 /* CoreText.framework */,
+				FAA5103B1F5CFFCF006A24E0 /* Accelerate.framework */,
+				FAA510391F5CFFC3006A24E0 /* Photos.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FAA510531F5D0108006A24E0 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				FAB694011F5E3BF5008A64B6 /* ConfigManager.h */,
+				FAB694021F5E3BF5008A64B6 /* ConfigManager.m */,
+				FAA510541F5D0144006A24E0 /* RequestManager.h */,
+				FAA510551F5D0144006A24E0 /* RequestManager.mm */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		FAA510571F5D0156006A24E0 /* Request */ = {
+			isa = PBXGroup;
+			children = (
+				FAA510B31F5D019F006A24E0 /* Model */,
+				FAA510581F5D0192006A24E0 /* CancelPrivateRequest.h */,
+				FAA510591F5D0192006A24E0 /* CancelPrivateRequest.m */,
+				FAA5105A1F5D0192006A24E0 /* ControlManPushRequest.h */,
+				FAA5105B1F5D0192006A24E0 /* ControlManPushRequest.m */,
+				FAA5105C1F5D0192006A24E0 /* GetAllGiftListRequest.h */,
+				FAA5105D1F5D0192006A24E0 /* GetAllGiftListRequest.m */,
+				FAA5105E1F5D0192006A24E0 /* GetAnchorListRequest.h */,
+				FAA5105F1F5D0192006A24E0 /* GetAnchorListRequest.m */,
+				FAA510601F5D0192006A24E0 /* GetBackpackUnreadNumRequest.h */,
+				FAA510611F5D0192006A24E0 /* GetBackpackUnreadNumRequest.m */,
+				FAA510621F5D0192006A24E0 /* GetConfigRequest.h */,
+				FAA510631F5D0192006A24E0 /* GetConfigRequest.m */,
+				FAA510641F5D0192006A24E0 /* GetCreateBookingInfoRequest.h */,
+				FAA510651F5D0192006A24E0 /* GetCreateBookingInfoRequest.m */,
+				FAA510661F5D0192006A24E0 /* GetEmoticonListRequest.h */,
+				FAA510671F5D0192006A24E0 /* GetEmoticonListRequest.m */,
+				FAA510681F5D0192006A24E0 /* GetFollowListRequest.h */,
+				FAA510691F5D0192006A24E0 /* GetFollowListRequest.m */,
+				FAA5106A1F5D0192006A24E0 /* GetGiftDetailRequest.h */,
+				FAA5106B1F5D0192006A24E0 /* GetGiftDetailRequest.m */,
+				FAA5106C1F5D0192006A24E0 /* GetGiftListByUserIdRequest.h */,
+				FAA5106D1F5D0192006A24E0 /* GetGiftListByUserIdRequest.m */,
+				FAA5106E1F5D0192006A24E0 /* GetInviteInfoRequest.h */,
+				FAA5106F1F5D0192006A24E0 /* GetInviteInfoRequest.m */,
+				FAA510701F5D0192006A24E0 /* GetLeftCreditRequest.h */,
+				FAA510711F5D0192006A24E0 /* GetLeftCreditRequest.m */,
+				FAA510721F5D0192006A24E0 /* GetNewFansBaseInfoRequest.h */,
+				FAA510731F5D0192006A24E0 /* GetNewFansBaseInfoRequest.m */,
+				FAA510741F5D0192006A24E0 /* GetRoomInfoRequest.h */,
+				FAA510751F5D0192006A24E0 /* GetRoomInfoRequest.m */,
+				FAA510761F5D0192006A24E0 /* GetTalentListRequest.h */,
+				FAA510771F5D0192006A24E0 /* GetTalentListRequest.m */,
+				FAA510781F5D0192006A24E0 /* GetTalentStatusRequest.h */,
+				FAA510791F5D0192006A24E0 /* GetTalentStatusRequest.m */,
+				FAA5107A1F5D0192006A24E0 /* GiftListRequest.h */,
+				FAA5107B1F5D0192006A24E0 /* GiftListRequest.m */,
+				FAA5107C1F5D0192006A24E0 /* HandleBookingRequest.h */,
+				FAA5107D1F5D0192006A24E0 /* HandleBookingRequest.m */,
+				FAA5107E1F5D0192006A24E0 /* LiveFansListRequest.h */,
+				FAA5107F1F5D0192006A24E0 /* LiveFansListRequest.m */,
+				FAA510801F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.h */,
+				FAA510811F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.m */,
+				FAA510821F5D0192006A24E0 /* ManHandleBookingListRequest.h */,
+				FAA510831F5D0192006A24E0 /* ManHandleBookingListRequest.m */,
+				FAA510841F5D0192006A24E0 /* RequestErrorCode.h */,
+				FAA510851F5D0192006A24E0 /* RideListRequest.h */,
+				FAA510861F5D0192006A24E0 /* RideListRequest.m */,
+				FAA510871F5D0192006A24E0 /* SendBookingRequest.h */,
+				FAA510881F5D0192006A24E0 /* SendBookingRequest.m */,
+				FAA510891F5D0192006A24E0 /* SessionRequest.h */,
+				FAA5108A1F5D0192006A24E0 /* SessionRequest.m */,
+				FAA5108B1F5D0192006A24E0 /* SessionRequestManager.h */,
+				FAA5108C1F5D0192006A24E0 /* SessionRequestManager.m */,
+				FAA5108D1F5D0192006A24E0 /* SetFavoriteRequest.h */,
+				FAA5108E1F5D0192006A24E0 /* SetFavoriteRequest.m */,
+				FAA5108F1F5D0192006A24E0 /* SetRideRequest.h */,
+				FAA510901F5D0192006A24E0 /* SetRideRequest.m */,
+				FAA510911F5D0192006A24E0 /* UpdateTokenIdRequest.h */,
+				FAA510921F5D0192006A24E0 /* UpdateTokenIdRequest.m */,
+				FAA510931F5D0192006A24E0 /* VoucherListRequest.h */,
+				FAA510941F5D0192006A24E0 /* VoucherListRequest.m */,
+			);
+			name = Request;
+			sourceTree = "<group>";
+		};
+		FAA510B31F5D019F006A24E0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FAB6940D1F5E9726008A64B6 /* GetPromoAnchorListRequest.h */,
+				FAB6940E1F5E9726008A64B6 /* GetPromoAnchorListRequest.m */,
+				FAA510B41F5D01C2006A24E0 /* BackGiftItemObject.h */,
+				FAA510B51F5D01C2006A24E0 /* BackGiftItemObject.m */,
+				FAA510B61F5D01C2006A24E0 /* BookingPrivateInviteItemObject.h */,
+				FAA510B71F5D01C2006A24E0 /* BookingPrivateInviteItemObject.m */,
+				FAA510B81F5D01C2006A24E0 /* BookingPrivateInviteListObject.h */,
+				FAA510B91F5D01C2006A24E0 /* BookingPrivateInviteListObject.m */,
+				FAA510BA1F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.h */,
+				FAA510BB1F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.m */,
+				FAA510BC1F5D01C2006A24E0 /* BookTimeItemObject.h */,
+				FAA510BD1F5D01C2006A24E0 /* BookTimeItemObject.m */,
+				FAA510BE1F5D01C2006A24E0 /* ConfigItemObject.h */,
+				FAA510BF1F5D01C2006A24E0 /* ConfigItemObject.m */,
+				FAA510C01F5D01C2006A24E0 /* CoverPhotoItemObject.h */,
+				FAA510C11F5D01C2006A24E0 /* CoverPhotoItemObject.m */,
+				FAA510C21F5D01C2006A24E0 /* EmoticonInfoItemObject.h */,
+				FAA510C31F5D01C2006A24E0 /* EmoticonInfoItemObject.m */,
+				FAA510C41F5D01C2006A24E0 /* EmoticonItemObject.h */,
+				FAA510C51F5D01C2006A24E0 /* EmoticonItemObject.m */,
+				FAA510C61F5D01C2006A24E0 /* FollowItemObject.h */,
+				FAA510C71F5D01C2006A24E0 /* FollowItemObject.m */,
+				FAA510C81F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.h */,
+				FAA510C91F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.m */,
+				FAA510CA1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.h */,
+				FAA510CB1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.m */,
+				FAA510CC1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.h */,
+				FAA510CD1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.m */,
+				FAA510CE1F5D01C2006A24E0 /* GetTalentItemObject.h */,
+				FAA510CF1F5D01C2006A24E0 /* GetTalentItemObject.m */,
+				FAA510D01F5D01C2006A24E0 /* GetTalentStatusItemObject.h */,
+				FAA510D11F5D01C2006A24E0 /* GetTalentStatusItemObject.m */,
+				FAA510D21F5D01C2006A24E0 /* GiftInfoItemObject.h */,
+				FAA510D31F5D01C2006A24E0 /* GiftInfoItemObject.m */,
+				FAA510D41F5D01C2006A24E0 /* GiftItemObject.h */,
+				FAA510D51F5D01C2006A24E0 /* GiftItemObject.m */,
+				FAA510D61F5D01C2006A24E0 /* GiftNumItemObject.h */,
+				FAA510D71F5D01C2006A24E0 /* GiftNumItemObject.m */,
+				FAA510D81F5D01C2006A24E0 /* GiftWithIdItemObject.h */,
+				FAA510D91F5D01C2006A24E0 /* GiftWithIdItemObject.m */,
+				FAA510DA1F5D01C2006A24E0 /* InviteIdItemObject.h */,
+				FAA510DB1F5D01C2006A24E0 /* InviteIdItemObject.m */,
+				FAA510DC1F5D01C2006A24E0 /* LiveRoomConfigItemObject.h */,
+				FAA510DD1F5D01C2006A24E0 /* LiveRoomConfigItemObject.m */,
+				FAA510DE1F5D01C2006A24E0 /* LiveRoomInfoItemObject.h */,
+				FAA510DF1F5D01C2006A24E0 /* LiveRoomInfoItemObject.m */,
+				FAA510E01F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.h */,
+				FAA510E11F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.m */,
+				FAA510E21F5D01C2006A24E0 /* LoginItemObject.h */,
+				FAA510E31F5D01C2006A24E0 /* LoginItemObject.m */,
+				FAA510E41F5D01C2006A24E0 /* RegisterItemObject.h */,
+				FAA510E51F5D01C2006A24E0 /* RegisterItemObject.m */,
+				FAA510E61F5D01C2006A24E0 /* RideItemObject.h */,
+				FAA510E71F5D01C2006A24E0 /* RideItemObject.m */,
+				FAA510E81F5D01C2006A24E0 /* RoomInfoItemObject.h */,
+				FAA510E91F5D01C2006A24E0 /* RoomInfoItemObject.m */,
+				FAA510EA1F5D01C2006A24E0 /* RoomItemObject.h */,
+				FAA510EB1F5D01C2006A24E0 /* RoomItemObject.m */,
+				FAA510EC1F5D01C2006A24E0 /* ViewerFansItemObject.h */,
+				FAA510ED1F5D01C2006A24E0 /* ViewerFansItemObject.m */,
+				FAA510EE1F5D01C2006A24E0 /* VoucherItemObject.h */,
+				FAA510EF1F5D01C2006A24E0 /* VoucherItemObject.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		FAA5110E1F5D0739006A24E0 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				FAA5110F1F5D0745006A24E0 /* Login */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
+		FAA5110F1F5D0745006A24E0 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				FAA511141F5D077A006A24E0 /* Model */,
+				FAA511101F5D074C006A24E0 /* Controller */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		FAA511101F5D074C006A24E0 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				FAA511111F5D0761006A24E0 /* LoginManager.h */,
+				FAA511121F5D0761006A24E0 /* LoginManager.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		FAA511141F5D077A006A24E0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FAA511151F5D0799006A24E0 /* Country.h */,
+				FAA511161F5D0799006A24E0 /* Country.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		FAA511231F5D2EB7006A24E0 /* IM */ = {
+			isa = PBXGroup;
+			children = (
+				FAB694041F5E3C2F008A64B6 /* Model */,
+				FAA511241F5D2ED2006A24E0 /* IMManager.h */,
+				FAA511251F5D2ED2006A24E0 /* IMManager.mm */,
+			);
+			name = IM;
+			sourceTree = "<group>";
+		};
+		FAB694041F5E3C2F008A64B6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FAB694051F5E3D15008A64B6 /* Model */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		FAB694051F5E3D15008A64B6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FAB694061F5E3D2D008A64B6 /* ImLiveRoom.h */,
+				FAB694071F5E3D2D008A64B6 /* ImLiveRoom.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FAA50FEE1F5CFE46006A24E0 /* TestLiveInterface */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAA5101C1F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterface" */;
+			buildPhases = (
+				FAA50FEB1F5CFE46006A24E0 /* Sources */,
+				FAA50FEC1F5CFE46006A24E0 /* Frameworks */,
+				FAA50FED1F5CFE46006A24E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestLiveInterface;
+			productName = TestLiveInterface;
+			productReference = FAA50FEF1F5CFE46006A24E0 /* TestLiveInterface.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FAA510071F5CFE46006A24E0 /* TestLiveInterfaceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAA5101F1F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterfaceTests" */;
+			buildPhases = (
+				FAA510041F5CFE46006A24E0 /* Sources */,
+				FAA510051F5CFE46006A24E0 /* Frameworks */,
+				FAA510061F5CFE46006A24E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FAA5100A1F5CFE46006A24E0 /* PBXTargetDependency */,
+			);
+			name = TestLiveInterfaceTests;
+			productName = TestLiveInterfaceTests;
+			productReference = FAA510081F5CFE46006A24E0 /* TestLiveInterfaceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FAA510121F5CFE46006A24E0 /* TestLiveInterfaceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAA510221F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterfaceUITests" */;
+			buildPhases = (
+				FAA5100F1F5CFE46006A24E0 /* Sources */,
+				FAA510101F5CFE46006A24E0 /* Frameworks */,
+				FAA510111F5CFE46006A24E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FAA510151F5CFE46006A24E0 /* PBXTargetDependency */,
+			);
+			name = TestLiveInterfaceUITests;
+			productName = TestLiveInterfaceUITests;
+			productReference = FAA510131F5CFE46006A24E0 /* TestLiveInterfaceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FAA50FE71F5CFE46006A24E0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = "alex shum";
+				TargetAttributes = {
+					FAA50FEE1F5CFE46006A24E0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+					};
+					FAA510071F5CFE46006A24E0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = FAA50FEE1F5CFE46006A24E0;
+					};
+					FAA510121F5CFE46006A24E0 = {
+						CreatedOnToolsVersion = 8.2.1;
+						ProvisioningStyle = Automatic;
+						TestTargetID = FAA50FEE1F5CFE46006A24E0;
+					};
+				};
+			};
+			buildConfigurationList = FAA50FEA1F5CFE46006A24E0 /* Build configuration list for PBXProject "TestLiveInterface" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FAA50FE61F5CFE46006A24E0;
+			productRefGroup = FAA50FF01F5CFE46006A24E0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FAA50FEE1F5CFE46006A24E0 /* TestLiveInterface */,
+				FAA510071F5CFE46006A24E0 /* TestLiveInterfaceTests */,
+				FAA510121F5CFE46006A24E0 /* TestLiveInterfaceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAA50FED1F5CFE46006A24E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA510021F5CFE46006A24E0 /* LaunchScreen.storyboard in Resources */,
+				FAA50FFF1F5CFE46006A24E0 /* Assets.xcassets in Resources */,
+				FAA50FFD1F5CFE46006A24E0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA510061F5CFE46006A24E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA510111F5CFE46006A24E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FAA50FEB1F5CFE46006A24E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA5109B1F5D0192006A24E0 /* GetCreateBookingInfoRequest.m in Sources */,
+				FAA510F71F5D01C2006A24E0 /* EmoticonInfoItemObject.m in Sources */,
+				FAA510F51F5D01C2006A24E0 /* ConfigItemObject.m in Sources */,
+				FAA510961F5D0192006A24E0 /* ControlManPushRequest.m in Sources */,
+				FAA5109D1F5D0192006A24E0 /* GetFollowListRequest.m in Sources */,
+				FAA511041F5D01C2006A24E0 /* LiveRoomConfigItemObject.m in Sources */,
+				FAA511131F5D0761006A24E0 /* LoginManager.m in Sources */,
+				FAA510B11F5D0192006A24E0 /* UpdateTokenIdRequest.m in Sources */,
+				FAA5109C1F5D0192006A24E0 /* GetEmoticonListRequest.m in Sources */,
+				FAA510B01F5D0192006A24E0 /* SetRideRequest.m in Sources */,
+				FAA510F31F5D01C2006A24E0 /* BookingUnreadUnhandleNumItemObject.m in Sources */,
+				FAA510AA1F5D0192006A24E0 /* ManHandleBookingListRequest.m in Sources */,
+				FAA510FA1F5D01C2006A24E0 /* GetBackPackUnreadNumItemObject.m in Sources */,
+				FAA510F91F5D01C2006A24E0 /* FollowItemObject.m in Sources */,
+				FAA510F21F5D01C2006A24E0 /* BookingPrivateInviteListObject.m in Sources */,
+				FAA510AD1F5D0192006A24E0 /* SessionRequest.m in Sources */,
+				FAA510AE1F5D0192006A24E0 /* SessionRequestManager.m in Sources */,
+				FAA5110C1F5D01C2006A24E0 /* ViewerFansItemObject.m in Sources */,
+				FAA511031F5D01C2006A24E0 /* InviteIdItemObject.m in Sources */,
+				FAA510A21F5D0192006A24E0 /* GetNewFansBaseInfoRequest.m in Sources */,
+				FAA510AB1F5D0192006A24E0 /* RideListRequest.m in Sources */,
+				FAA510991F5D0192006A24E0 /* GetBackpackUnreadNumRequest.m in Sources */,
+				FAA5110B1F5D01C2006A24E0 /* RoomItemObject.m in Sources */,
+				FAA510B21F5D0192006A24E0 /* VoucherListRequest.m in Sources */,
+				FAA510AF1F5D0192006A24E0 /* SetFavoriteRequest.m in Sources */,
+				FAA510A01F5D0192006A24E0 /* GetInviteInfoRequest.m in Sources */,
+				FAA510FF1F5D01C2006A24E0 /* GiftInfoItemObject.m in Sources */,
+				FAA510F81F5D01C2006A24E0 /* EmoticonItemObject.m in Sources */,
+				FAA510F01F5D01C2006A24E0 /* BackGiftItemObject.m in Sources */,
+				FAA510A61F5D0192006A24E0 /* GiftListRequest.m in Sources */,
+				FAA5109F1F5D0192006A24E0 /* GetGiftListByUserIdRequest.m in Sources */,
+				FAA511011F5D01C2006A24E0 /* GiftNumItemObject.m in Sources */,
+				FAA511261F5D2ED2006A24E0 /* IMManager.mm in Sources */,
+				FAA511081F5D01C2006A24E0 /* RegisterItemObject.m in Sources */,
+				FAA510981F5D0192006A24E0 /* GetAnchorListRequest.m in Sources */,
+				FAA510951F5D0192006A24E0 /* CancelPrivateRequest.m in Sources */,
+				FAA510A91F5D0192006A24E0 /* ManBookingUnreadUnhandleNumRequest.m in Sources */,
+				FAA511091F5D01C2006A24E0 /* RideItemObject.m in Sources */,
+				FAA5109E1F5D0192006A24E0 /* GetGiftDetailRequest.m in Sources */,
+				FAA511061F5D01C2006A24E0 /* LiveRoomPersonalInfoItemObject.m in Sources */,
+				FAA510AC1F5D0192006A24E0 /* SendBookingRequest.m in Sources */,
+				FAB6940F1F5E9726008A64B6 /* GetPromoAnchorListRequest.m in Sources */,
+				FAA511051F5D01C2006A24E0 /* LiveRoomInfoItemObject.m in Sources */,
+				FAA5109A1F5D0192006A24E0 /* GetConfigRequest.m in Sources */,
+				FAA510FE1F5D01C2006A24E0 /* GetTalentStatusItemObject.m in Sources */,
+				FAA50FFA1F5CFE46006A24E0 /* ViewController.m in Sources */,
+				FAA511021F5D01C2006A24E0 /* GiftWithIdItemObject.m in Sources */,
+				FAA510A51F5D0192006A24E0 /* GetTalentStatusRequest.m in Sources */,
+				FAA510A71F5D0192006A24E0 /* HandleBookingRequest.m in Sources */,
+				FAA510561F5D0144006A24E0 /* RequestManager.mm in Sources */,
+				FAA511001F5D01C2006A24E0 /* GiftItemObject.m in Sources */,
+				FAA5110D1F5D01C2006A24E0 /* VoucherItemObject.m in Sources */,
+				FAA510F61F5D01C2006A24E0 /* CoverPhotoItemObject.m in Sources */,
+				FAA510A41F5D0192006A24E0 /* GetTalentListRequest.m in Sources */,
+				FAA511171F5D0799006A24E0 /* Country.m in Sources */,
+				FAA510A31F5D0192006A24E0 /* GetRoomInfoRequest.m in Sources */,
+				FAA510FB1F5D01C2006A24E0 /* GetCreateBookingInfoItemObject.m in Sources */,
+				FAB694081F5E3D2D008A64B6 /* ImLiveRoom.m in Sources */,
+				FAA50FF71F5CFE46006A24E0 /* AppDelegate.m in Sources */,
+				FAA511071F5D01C2006A24E0 /* LoginItemObject.m in Sources */,
+				FAA510FC1F5D01C2006A24E0 /* GetNewFansBaseInfoItemObject.m in Sources */,
+				FAA510A11F5D0192006A24E0 /* GetLeftCreditRequest.m in Sources */,
+				FAA510F41F5D01C2006A24E0 /* BookTimeItemObject.m in Sources */,
+				FAA510F11F5D01C2006A24E0 /* BookingPrivateInviteItemObject.m in Sources */,
+				FAA510A81F5D0192006A24E0 /* LiveFansListRequest.m in Sources */,
+				FAA50FF41F5CFE46006A24E0 /* main.m in Sources */,
+				FAA510FD1F5D01C2006A24E0 /* GetTalentItemObject.m in Sources */,
+				FAA5110A1F5D01C2006A24E0 /* RoomInfoItemObject.m in Sources */,
+				FAA510971F5D0192006A24E0 /* GetAllGiftListRequest.m in Sources */,
+				FAB694031F5E3BF5008A64B6 /* ConfigManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA510041F5CFE46006A24E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA5100D1F5CFE46006A24E0 /* TestLiveInterfaceTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAA5100F1F5CFE46006A24E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAA510181F5CFE46006A24E0 /* TestLiveInterfaceUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FAA5100A1F5CFE46006A24E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAA50FEE1F5CFE46006A24E0 /* TestLiveInterface */;
+			targetProxy = FAA510091F5CFE46006A24E0 /* PBXContainerItemProxy */;
+		};
+		FAA510151F5CFE46006A24E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAA50FEE1F5CFE46006A24E0 /* TestLiveInterface */;
+			targetProxy = FAA510141F5CFE46006A24E0 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		FAA50FFB1F5CFE46006A24E0 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FAA50FFC1F5CFE46006A24E0 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		FAA510001F5CFE46006A24E0 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FAA510011F5CFE46006A24E0 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FAA5101A1F5CFE46006A24E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FAA5101B1F5CFE46006A24E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FAA5101D1F5CFE46006A24E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMMON_C_LBRARY_CURL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/curl/${PLATFORM_NAME}/";
+				COMMON_C_LBRARY_ROOT = "${MODULES_ROOT}/Common-C-Library/Common-C-Library";
+				COMMON_C_LIBRARY_OPENSSL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/openssl/${PLATFORM_NAME}/";
+				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
+				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
+				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TestLiveInterface/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${RTMPCLIENT_ROOT}",
+					"${IMPCLIENT_SRC_ROOT}",
+					"${IMPCLIENT_ROOT}",
+					"${COMMON_C_SRC_ROOT}",
+					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
+					"${COMMON_C_LBRARY_ROOT}",
+					"${COMMON_C_LBRARY_CURL_ROOT}/include",
+					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/include",
+				);
+				IMPCLIENT_ROOT = "${MODULES_ROOT}/ImClient/ImClient";
+				IMPCLIENT_SRC_ROOT = "${SRCROOT}/../../../common/ImClient";
+				INFOPLIST_FILE = TestLiveInterface/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"${COMMON_C_LBRARY_CURL_ROOT}/lib",
+					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/lib",
+					"${THIRD_PARTY_FFMPEG_ROOT}/lib",
+				);
+				MODULES_ROOT = "${SRCROOT}/../../Modules";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+					"-lcurl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterface;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RTMPCLIENT_ROOT = "${MODULES_ROOT}/RtmpClient/RtmpClient";
+				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+			};
+			name = Debug;
+		};
+		FAA5101E1F5CFE46006A24E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMMON_C_LBRARY_CURL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/curl/${PLATFORM_NAME}/";
+				COMMON_C_LBRARY_ROOT = "${MODULES_ROOT}/Common-C-Library/Common-C-Library";
+				COMMON_C_LIBRARY_OPENSSL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/openssl/${PLATFORM_NAME}/";
+				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
+				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
+				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
+				GCC_PREFIX_HEADER = "$(SRCROOT)/TestLiveInterface/PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${RTMPCLIENT_ROOT}",
+					"${IMPCLIENT_SRC_ROOT}",
+					"${IMPCLIENT_ROOT}",
+					"${COMMON_C_SRC_ROOT}",
+					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
+					"${COMMON_C_LBRARY_ROOT}",
+					"${COMMON_C_LBRARY_CURL_ROOT}/include",
+					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/include",
+				);
+				IMPCLIENT_ROOT = "${MODULES_ROOT}/ImClient/ImClient";
+				IMPCLIENT_SRC_ROOT = "${SRCROOT}/../../../common/ImClient";
+				INFOPLIST_FILE = TestLiveInterface/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"${COMMON_C_LBRARY_CURL_ROOT}/lib",
+					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/lib",
+				);
+				MODULES_ROOT = "${SRCROOT}/../../Modules";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+					"-lcurl",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterface;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				RTMPCLIENT_ROOT = "${MODULES_ROOT}/RtmpClient/RtmpClient";
+				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+			};
+			name = Release;
+		};
+		FAA510201F5CFE46006A24E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = TestLiveInterfaceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterfaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestLiveInterface.app/TestLiveInterface";
+			};
+			name = Debug;
+		};
+		FAA510211F5CFE46006A24E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = TestLiveInterfaceTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterfaceTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestLiveInterface.app/TestLiveInterface";
+			};
+			name = Release;
+		};
+		FAA510231F5CFE46006A24E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TestLiveInterfaceUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterfaceUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TestLiveInterface;
+			};
+			name = Debug;
+		};
+		FAA510241F5CFE46006A24E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = TestLiveInterfaceUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = test.TestLiveInterfaceUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = TestLiveInterface;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FAA50FEA1F5CFE46006A24E0 /* Build configuration list for PBXProject "TestLiveInterface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAA5101A1F5CFE46006A24E0 /* Debug */,
+				FAA5101B1F5CFE46006A24E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAA5101C1F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterface" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAA5101D1F5CFE46006A24E0 /* Debug */,
+				FAA5101E1F5CFE46006A24E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAA5101F1F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterfaceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAA510201F5CFE46006A24E0 /* Debug */,
+				FAA510211F5CFE46006A24E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAA510221F5CFE46006A24E0 /* Build configuration list for PBXNativeTarget "TestLiveInterfaceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAA510231F5CFE46006A24E0 /* Debug */,
+				FAA510241F5CFE46006A24E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FAA50FE71F5CFE46006A24E0 /* Project object */;
+}

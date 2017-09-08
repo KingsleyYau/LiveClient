@@ -153,7 +153,7 @@ void RtmpPublisher::Init() {
     mbRunning = false;
     
     mCacheVideoBufferQueue.SetCacheQueueSize(30);
-    mCacheAudioBufferQueue.SetCacheQueueSize(50);
+    mCacheAudioBufferQueue.SetCacheQueueSize(100);
     
     mpPublishRunnable = new PublishRunnable(this);
 }

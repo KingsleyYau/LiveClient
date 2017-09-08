@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "PresentSendView.h"
 #import "CountTimeButton.h"
-#import "LiveRoomGiftItemObject.h"
 #import "SelectNumButton.h"
 
 @class BackpackPresentView;
@@ -39,7 +38,7 @@
 
 @property (nonatomic, assign) BOOL isCellSelect;
 
-@property (nonatomic, strong) LiveRoomGiftItemObject *selectCellItem;
+//@property (nonatomic, strong) LiveRoomGiftItemObject *selectCellItem;
 
 // 多功能按钮
 @property (strong) SelectNumButton* buttonBar;

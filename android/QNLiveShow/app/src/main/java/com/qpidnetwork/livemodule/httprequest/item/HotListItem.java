@@ -19,18 +19,17 @@ public class HotListItem {
 	 * @param photoUrl		主播头像url
 	 * @param onlienStatus	主播在线状态
 	 * @param roomId		直播间ID
-	 * @param roomName		直播间名称
 	 * @param roomPhotoUrl	直播间封面图url
 	 * @param roomType 		直播间类型
+	 * @param interests		爱好列表
 	 */
 	public HotListItem(String userId,
 					String nickName,
 					String photoUrl,
 					int onlienStatus,
-					String roomId,
-					String roomName,
 					String roomPhotoUrl,
-					int roomType){
+					int roomType,
+					String[] interests){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -41,8 +40,6 @@ public class HotListItem {
 			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
 		}
 		
-		this.roomId = roomId;
-		this.roomName = roomName;
 		this.roomPhotoUrl = roomPhotoUrl;
 		
 		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
@@ -50,14 +47,15 @@ public class HotListItem {
 		} else {
 			this.roomType = LiveRoomType.values()[roomType];
 		}
+		
+		this.interests = interests;
 	}
 	
 	public String userId;
 	public String nickName;
 	public String photoUrl;
 	public AnchorOnlineStatus onlineStatus;
-	public String roomId;
-	public String roomName;
 	public String roomPhotoUrl;
 	public LiveRoomType roomType;
+	public String[] interests;
 }

@@ -64,30 +64,24 @@ public class NormalGiftManager {
      * @param callback
      */
     public void getAllGiftItems(final OnGetGiftListCallback callback){
-        boolean isLocalExisted = isLocalAllGiftItemsExisted();
-        Log.d(TAG,"getAllGiftItems-isLocalExisted:"+isLocalExisted);
-        if(!isLocalExisted){
-            RequestJniLiveShow.GetAllGiftList(new OnGetGiftListCallback() {
-                @Override
-                public void onGetGiftList(boolean isSuccess, int errCode, String errMsg, GiftItem[] giftList) {
-                    Log.d(TAG,"onGetAllGift-isSuccess:"+isSuccess+" errCode:"+errCode
-                            +" errMsg:"+errMsg+" giftList:"+giftList);
-                    GiftItem[] giftItems = null;
-                    if(isSuccess && giftList != null){
-                        giftItems = new GiftItem[giftList.length];
-                        int index = 0;
-                        for(;index<giftList.length; index++){
-                            GiftItem giftItem = giftItems[index];
-                            allGiftItems.put(giftItem.id,giftItem);
-                        }
-                        //下载礼物大图,放到获取sendable
+        RequestJniLiveShow.GetAllGiftList(new OnGetGiftListCallback() {
+            @Override
+            public void onGetGiftList(boolean isSuccess, int errCode, String errMsg, GiftItem[] giftList) {
+                Log.d(TAG,"onGetAllGift-isSuccess:"+isSuccess+" errCode:"+errCode
+                        +" errMsg:"+errMsg+" giftList:"+giftList);
+                if(isSuccess && giftList != null){
+                    int index = 0;
+                    for(;index<giftList.length; index++){
+                        GiftItem giftItem = giftList[index];
+                        allGiftItems.put(giftItem.id,giftItem);
                     }
-                    if(null!=callback){
-                        callback.onGetGiftList(isSuccess, errCode, errMsg, giftList);
-                    }
+                    //下载礼物大图,放到获取sendable
                 }
-            });
-        }
+                if(null!=callback){
+                    callback.onGetGiftList(isSuccess, errCode, errMsg, giftList);
+                }
+            }
+        });
     }
 
     /**
@@ -97,6 +91,9 @@ public class NormalGiftManager {
     public boolean isLocalAllGiftItemsExisted(){
         return null != allGiftItems && allGiftItems.size()>0;
     }
+
+    private boolean isGetDetailWhenSendableInited = false;
+
 
     /**
      * 获取当前用户房间内可以发送的礼物列表
@@ -109,42 +106,63 @@ public class NormalGiftManager {
 
         RequestJniLiveShow.GetSendableGiftList(roomid, new OnGetSendableGiftListCallback() {
             @Override
-            public void onGetSendableGiftList(boolean isSuccess, int errCode, String errMsg, SendableGiftItem[] sendableGiftItems) {
+            public void onGetSendableGiftList(boolean isSuccess, int errCode,
+                                              String errMsg, SendableGiftItem[] sendableGiftItems) {
                 Log.d(TAG,"onGetAllGift-isSuccess:"+isSuccess+" errCode:"+errCode
                         +" errMsg:"+errMsg+" sendableGiftItems:"+sendableGiftItems);
                 final List<GiftItem> canShowSendableGiftList = new ArrayList<GiftItem>();
                 if(isSuccess && null != sendableGiftItems){
                     for (final SendableGiftItem sendableGiftItem : sendableGiftItems){
-                        //isShow
-                        if(!sendableGiftItem.isShow){
+                        while(isGetDetailWhenSendableInited){
+                            try {
+                                Thread.sleep(200l);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        if(!sendableGiftItem.isVisible){
                             continue;
                         }
                         if(allGiftItems.containsKey(sendableGiftItem.giftId)){
                             canShowSendableGiftList.add(allGiftItems.get(sendableGiftItem.giftId));
                         }else{
+                            isGetDetailWhenSendableInited = true;
                             getGiftDetail(sendableGiftItem.giftId, new OnGetGiftDetailCallback() {
                                 @Override
                                 public void onGetGiftDetail(boolean isSuccess, int errCode, String errMsg, GiftItem giftDetail) {
                                     if(isSuccess){
-                                        List<GiftItem> giftItems = new ArrayList<GiftItem>();
-                                        if(allRoomShowSendableGiftItems.containsKey(roomid)){
-                                            giftItems = allRoomShowSendableGiftItems.get(roomid);
-                                        }
-                                        giftItems.add(giftDetail);
-                                        allRoomShowSendableGiftItems.put(roomid,giftItems);
+                                        canShowSendableGiftList.add(giftDetail);
+                                        isGetDetailWhenSendableInited = false;
                                     }
                                 }
                             });
                         }
                     }
+
                     //直接put刷新
                     allRoomShowSendableGiftItems.put(roomid,canShowSendableGiftList);
+                    //预下载
+                    preDownGiftImage(canShowSendableGiftList);
                 }
+
                 if(null != callback){
                     callback.onGetRoomShowSendableGiftList(isSuccess,errCode,errMsg,canShowSendableGiftList);
                 }
             }
         });
+    }
+
+    /**
+     * 预下载大礼物文件-store
+     */
+    private void preDownGiftImage(List<GiftItem> sendableShowGiftItems){
+        for(GiftItem giftItem : sendableShowGiftItems){
+            if(giftItem.giftType == GiftItem.GiftType.Advanced){
+                Log.d(TAG, "preDownGiftImage-giftItem.srcUrl:"+giftItem.srcWebpUrl);
+                NormalGiftManager.getInstance().getGiftImage(giftItem.id, GiftImageType.Source, null);
+            }
+        }
     }
 
     /**
@@ -223,9 +241,8 @@ public class NormalGiftManager {
             if(!TextUtils.isEmpty(url)){
                 String localPath = FileCacheManager.getInstance().getGiftLocalPath(giftId, url);
                 if(!TextUtils.isEmpty(localPath) && SystemUtils.fileExists(localPath)){
-                    if(null != listener){
-                        listener.onCompleted(true, localPath, url);
-                    }
+                    //本地有礼物小图片，那么adapter就能够正常刷新，无需notif
+                    //TODO:如果在进入直播间的瞬间刷新聊天栏，且这里立即通过回调onCompleted来notify Adapter，就会抛出异常，抽时间找出原因
                 }else{
                     FileDownloadManager.getInstance().start(url, localPath, new IFileDownloadedListener(){
                         public void onCompleted(boolean isSuccess, String localFilePath, String fileUrl){

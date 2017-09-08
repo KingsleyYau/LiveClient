@@ -14,10 +14,10 @@ import android.os.HandlerThread;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
-import android.view.SurfaceView;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;
 
+@SuppressWarnings("deprecation")
 public class LSVideoCapture implements PreviewCallback, Callback {
 	private final int INVALID_FRAMERATE = -1;
 	
@@ -173,7 +173,7 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 					Camera.Parameters parameters = mCamera.getParameters();
 					
 					// 设置采集的格式
-					int[] formats = getCameraPreviewFormats(mCamera);
+//					int[] formats = getCameraPreviewFormats(mCamera);
 //					parameters.setPreviewFormat(formats[0]);
 					parameters.setPreviewFormat(ImageFormat.NV21);
 					
@@ -344,6 +344,7 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 	 * @param camera
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private int[] getCameraPreviewFormats(Camera camera){
 		List<Integer> previewForamts = camera.getParameters().getSupportedPreviewFormats();
 		int[] previewFormatArray = new int[previewForamts.size()];

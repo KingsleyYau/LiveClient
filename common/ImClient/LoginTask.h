@@ -2,13 +2,14 @@
  * author: Samson.Fan
  *   date: 2015-03-25
  *   file: LoginTask.h
- *   desc: 登录Task实现类
+ *   desc: 2.1.登录Task实现类
  */
 
 #pragma once
 
 #include "ITask.h"
 #include <string>
+
 
 using namespace std;
 
@@ -41,17 +42,15 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(int version, const string& user, const string& token, ClientType clientType);
+	bool InitParam(const string& token, PageNameType pageName);
 
 private:
 	IImClientListener*	m_listener;
 
 	SEQ_T           m_seq;		// seq
 
-    int             m_ver;      // 客户端内部版本号
-	string			m_user;		// 用户名
 	string			m_token;	// 统一验证身份标识
-    ClientType      m_type;     // 客户端类型
+    PageNameType    m_pageName; // socket所在的页面
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmoji;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout;
@@ -24,7 +24,7 @@ import com.qpidnetwork.livemodule.utils.Log;
  * Created by Harry on 2017/8/2.
  */
 
-public class TestChatEmojiActivity extends BaseFragmentActivity {
+public class TestChatEmojiActivity extends BaseActionBarFragmentActivity {
 
     private ChatEmoji choosedChatEmoji = null;
     private TextView tv_showEmojiContent;
@@ -38,6 +38,7 @@ public class TestChatEmojiActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         TAG = TestChatEmojiActivity.class.getSimpleName();
         super.onCreate(savedInstanceState);
+        setCustomContentView(R.layout.activity_personal_chat);
         initView();
     }
 
@@ -111,8 +112,8 @@ public class TestChatEmojiActivity extends BaseFragmentActivity {
                 tapisl_content.setVisibility(View.GONE);
                 final String str =et_chat.getText().toString();
                 Log.d(TAG,"onClick-et_chat.getText:"+str);
-                tv_showEmojiContent.setText(ChatEmojiManager.getInstance().parseEmoji(TestChatEmojiActivity.this,
-                        str,ChatEmojiManager.CHATEMOJI_MODEL_EMOJIIMG));
+                tv_showEmojiContent.setText(ChatEmojiManager.getInstance().parseEmoji(
+                        str,ChatEmojiManager.CHATEMOJI_MODEL_EMOJIIMG,0,0));
                 et_chat.setText("");
                 break;
             default:
@@ -121,11 +122,4 @@ public class TestChatEmojiActivity extends BaseFragmentActivity {
         }
 
     }
-
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_personal_chat;
-    }
-
-
 }

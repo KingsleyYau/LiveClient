@@ -13,32 +13,45 @@
 
 @property (nonatomic, strong) NSMutableDictionary *sendGiftDictionary;
 
-@property (nonatomic, strong) NSMutableArray *clickIdArray;
+@property (nonatomic, strong) NSMutableArray *sendGiftArray;
 
 /** 实例单例 */
 + (instancetype)sendManager;
 
 //-------------- 礼物列表送礼逻辑 -----------------//
 
-/** 增加/替换对象 */
+
+/**
+ 字典增加/替换对象
+
+ @param key 对象key
+ @param array 对象数组
+ */
 - (void)setSendGiftWithKey:(int)key forArray:(NSArray *)array;
 
-/** 移除对象 */
+/**
+ 移除指定对象
+ */
 - (void)removeSendGiftWithKey:(int)key;
 
-/** 添加连击ID */
-- (void)addItemWithClickID:(int)clickId giftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum andGiftItem:(LiveRoomGiftItemObject *)item;
-
-/** 移除所有对象 */
+/**
+ 移除所有对象
+ */
 - (void)removeAllSendGift;
 
-/** 根据key取对象 */
+/**
+ 根据key取对象
+ */
 - (NSMutableArray *)objectForKey:(int)key;
 
-/** 取第一个key */
+/**
+ 取第一个key
+ */
 - (NSString *)getTheFirstKey;
 
-/** 发送礼物请求 */
-- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)item roomID:(NSString *)roomId  multiClickID:(int)multi_click_id;
+/**
+ 发送礼物请求
+ */
+- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)giftItem;
 
 @end

@@ -1,18 +1,18 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.text.Editable;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -22,70 +22,77 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
-import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListAdapter;
-import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView;
-import com.qpidnetwork.livemodule.framework.livemsglist.MessageRecyclerView;
-import com.qpidnetwork.livemodule.framework.livemsglist.ViewHolder;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.im.IMGiftManager;
-import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
-import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
-import com.qpidnetwork.livemodule.im.IMManager;
-import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
-import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.barrage.BarrageManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.barrage.IBarrageViewFiller;
+import com.qpidnetwork.livemodule.liveshow.liveroom.car.CarInfo;
+import com.qpidnetwork.livemodule.liveshow.liveroom.car.CarManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSendReqManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.ModuleGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.downloader.IFileDownloadedListener;
+import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmoji;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.HtmlImageGetter;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.TestDataUtil;
 import com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView;
+import com.qpidnetwork.livemodule.view.LiveRoomHeaderBezierView;
 import com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 直播间公共处理界面类
  * Created by Hunter Mun on 2017/6/16.
  */
 
-public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements View.OnClickListener,
-        SoftKeyboradListenFrameLayout.InputWindowListener, IFileDownloadedListener, IMInviteLaunchEventListener,
-        IMLiveRoomEventListener, IMOtherEventListener{
+public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity{
 
     protected final String TAG = BaseCommonLiveRoomActivity.class.getName();
-
+    /**
+     * 房间ID
+     */
     public static final String LIVEROOM_ROOM_ID = "liveRoomId";
+    /**
+     * 主播ID
+     */
+    public static final String LIVEROOM_HOST_ID="liveRoomHostId";
 
     private final int EVENT_MESSAGE_UPDATE = 1001;
-    private final int EVENT_LIKE_UPDATE = 1002;
-    private final int EVENT_MESSAGE_IMAGE_UPDATE = 1003;
+    private final int EVENT_MESSAGE_HIDE_TARIFFPROMPT = 1004;
 
     //整个view的父，用于解决软键盘等监听
     private SoftKeyboradListenFrameLayout flContentBody;
 
     //顶部主播个人信息模块
     protected View view_roomHeader;
+    private View ll_liveRoomHeader;
+    private ImageView iv_roomHeaderBg;
     protected CircleImageHorizontScrollView cihsv_online;
+    private ImageView iv_follow;
+    private LiveRoomHeaderBezierView lrhbv_flag;
+    //资费提示
+    private View view_tariff_prompt;
+    private ImageView iv_roomFlag;
+    private Button btn_OK;
+    private TextView tv_triffMsg;
+    protected TariffPromptManager tpManager;
+    //返点
+    private TextView tv_creditTips;
 
     //消息编辑区域
     private View rl_inputMsg;
@@ -98,9 +105,11 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
     public boolean isEmojiOpera = false;//标识表情列表状态切换
 
     //聊天展示区域
-    private LiveMessageListView lvlv_roomMsgList;
-    private LiveMessageListAdapter lmlAdapter;
-    private TextView tv_unReadTip;
+    private LiveRoomChatManager liveRoomChatManager;
+
+    //弹幕
+    private boolean isBarrage = false;
+    private View ll_bulletScreen;
 
     //礼物模块
     protected ModuleGiftManager mModuleGiftManager;
@@ -109,55 +118,28 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
 
     //数据及管理
     protected String mRoomId;
-    protected IMManager mIMManager;
+    protected String hostId;
+
+    //视频播放
+    protected ImageView iv_vedioBg;
+    public SurfaceView sv_player;
+    private View rl_media;
+    private View imBody;
+
+    //座驾
+    protected LinearLayout ll_entranceCar;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitleBarVisibility(View.GONE);
-        initIMListener();
-        initData();
+        setContentView(R.layout.activity_live_room);
+//        initData();
         initViews();
-        initModules();
     }
 
     /**
-     * 初始化IM底层相关
-     */
-    private void initIMListener(){
-        mIMManager = IMManager.getInstance();
-        mIMManager.registerIMInviteLaunchEventListener(this);
-        mIMManager.registerIMLiveRoomEventListener(this);
-        mIMManager.registerIMOtherEventListener(this);
-    }
-
-    /**
-     * 初始化模块
-     */
-    private void initModules(){
-
-        FrameLayout viewContent = (FrameLayout)findViewById(R.id.flMultiGift);
-        /*礼物模块*/
-        mModuleGiftManager = new ModuleGiftManager(this);
-        mModuleGiftManager.initMultiGift(viewContent);
-        mModuleGiftManager.showMultiGiftAs(findViewById(R.id.ll_bulletScreen));
-
-        /*大礼物*/
-        mModuleGiftManager.initAdvanceGift(advanceGift);
-    }
-
-    /**
-     * 清除IM底层类相关监听事件
-     */
-    private void clearIMListener(){
-        mIMManager.unregisterIMInviteLaunchEventListener(this);
-        mIMManager.unregisterIMLiveRoomEventListener(this);
-        mIMManager.unregisterIMOtherEventListener(this);
-    }
-
-    /**
-     * 出事化数据相关
+     * 数据初始化
      */
     private void initData(){
         Bundle bundle = getIntent().getExtras();
@@ -165,73 +147,40 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
             if(bundle.containsKey(LIVEROOM_ROOM_ID)){
                 mRoomId = bundle.getString(LIVEROOM_ROOM_ID);
             }
+            if(bundle.containsKey(LIVEROOM_HOST_ID)){
+                hostId = bundle.getString(LIVEROOM_HOST_ID);
+            }
         }
         if(TextUtils.isEmpty(mRoomId)){
             Log.e(TAG, "roomId cannot null");
             finish();
         }
-
     }
 
     private void initViews(){
         Log.d(TAG,"initViews");
-        initRoomHeader();
-
-        //大礼物
-        advanceGift = (SimpleDraweeView)findViewById(R.id.advanceGift);
-
-        //调整背景高度, 解决背景在AdjustSize时会被推上去问题
-        int statusBarHeight = new LocalPreferenceManager(mContext).getStatusBarHeight();
-        if(statusBarHeight > 0){
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)findViewById(R.id.fl_bgContent).getLayoutParams();
-            params.height = DisplayUtil.getScreenHeight(mContext) - statusBarHeight;
-
-            //设置固定宽高，解决键盘弹出挤压问题
-            FrameLayout.LayoutParams advanceGiftParams = (FrameLayout.LayoutParams)advanceGift.getLayoutParams();
-            advanceGiftParams.height = DisplayUtil.getScreenHeight(mContext) - statusBarHeight;
-            //设置IM区域高度，处理弹出效果
-            FrameLayout.LayoutParams imParams = (FrameLayout.LayoutParams)findViewById(R.id.include_im_body).getLayoutParams();
-            imParams.height = DisplayUtil.getScreenHeight(mContext) - statusBarHeight;
-        }else{
-            postUiRunnableDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Rect outRect = new Rect();
-                    getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)findViewById(R.id.fl_bgContent).getLayoutParams();
-                    params.height = outRect.bottom - outRect.top;
-                    //设置固定宽高，解决键盘弹出挤压问题
-                    FrameLayout.LayoutParams advanceGiftParams = (FrameLayout.LayoutParams)advanceGift.getLayoutParams();
-                    advanceGiftParams.height = outRect.bottom - outRect.top;
-                    //设置IM区域高度，处理弹出效果
-                    FrameLayout.LayoutParams imParams = (FrameLayout.LayoutParams)findViewById(R.id.include_im_body).getLayoutParams();
-                    imParams.height = outRect.bottom - outRect.top;
-
-                    new LocalPreferenceManager(mContext).saveStatusBarHeight(outRect.bottom - outRect.top);
-                }
-            }, 200);
-
-        }
-
         //解决软键盘关闭的监听问题
         flContentBody = (SoftKeyboradListenFrameLayout)findViewById(R.id.flContentBody);
         flContentBody.setInputWindowListener(this);
-
-        initEditAreaView();
+        initRoomHeader();
+        imBody = findViewById(R.id.include_im_body);
+        initVedioPlayer();
+        initLiveRoomCar();
+        initMultiGift();
         initMessageList();
         initBarrage();
-    }
-
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_live_room;
+        initEditAreaView();
+        setSizeUnChanageViewParams();
     }
 
     @Override
     public void onClick(View v) {
         super.onClick(v);
         switch (v.getId()){
-            case R.id.btn_inputMsg:
+            case R.id.tv_hostName:
+                visitHostInfo();
+                break;
+            case R.id.iv_inputMsg:
             case R.id.btn_showInputView:{
                 rl_inputMsg.setVisibility(View.VISIBLE);
                 showSoftInput(et_liveMsg);
@@ -252,8 +201,6 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
                     etsl_emojiContainer.setVisibility(View.GONE);
                     showSoftInput(et_liveMsg);
                 }
-
-
                 break;
             case R.id.btn_sendMsg:{
                 //点击发送消息
@@ -262,29 +209,26 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
                     et_liveMsg.setText("");
                 }
             }break;
-            case R.id.tv_unReadTip:{
-                //点击消息列表未读条数，滚动到底部刷新列表
-
-            }break;
-            case R.id.include_im_body:{
+            case R.id.view_roomHeader:
+            case R.id.rl_media:
+            case R.id.fl_imMsgContainer:
                 //点击界面区域关闭键盘或者点赞处理
                 if(isSoftInputOpen){
                     hideSoftInput(et_liveMsg,true);
                 }else if(etsl_emojiContainer.getVisibility() == View.VISIBLE){
                     etsl_emojiContainer.setVisibility(View.GONE);
                     hideSoftInput(et_liveMsg,true);
-                    //由于在iv_emojiSwitch点击事件触发表情列表显示时，已经hideSoftInput了et_liveMsg,
-                    // 因此这里并未有软键盘状态切换的产生，也就不会自动回调
-                    // com.qpidnetwork.view.SoftKeyboradListenFrameLayout.onSizeChanged()
-                    //需要手动触发
                     onSoftKeyboardHide();
                 }
                 playRoomHeaderInAnim();
-            }break;
+                break;
             case R.id.et_liveMsg:
                 if(etsl_emojiContainer.getVisibility() == View.VISIBLE){
                     etsl_emojiContainer.setVisibility(View.GONE);
                 }
+                break;
+            case R.id.iv_follow:
+                sendFollowHostReq();
                 break;
             default:
                 break;
@@ -295,26 +239,285 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch(msg.what){
+            case EVENT_MESSAGE_HIDE_TARIFFPROMPT:
+                if(view_tariff_prompt.getVisibility() == View.VISIBLE){
+                    showRoomTariffPrompt(null,false,null);
+                }
+                break;
             case EVENT_MESSAGE_UPDATE:
                 IMMessageItem msgItem = (IMMessageItem)msg.obj;
                 if(msgItem != null && msgItem.msgId > 0){
                     //更新消息列表
-                    updateMsgList(msgItem);
+                    if(null != liveRoomChatManager){
+                        liveRoomChatManager.addMessageToList(msgItem);
+                    }
+
                     //启动消息特殊处理
                     launchAnimationByMessage(msgItem);
                 }
                 break;
-            case EVENT_LIKE_UPDATE:
-                break;
-            case EVENT_MESSAGE_IMAGE_UPDATE:{
-                //图片下载更新列表
-                if(lmlAdapter != null) {
-                    lmlAdapter.notifyDataSetChanged();
-                }
-            }break;
             default:
                 break;
         }
+    }
+
+    /**
+     * 消息切换主线程
+     * @param msgItem
+     */
+    public void sendMessageUpdateEvent(IMMessageItem msgItem){
+        Message msg = Message.obtain();
+        msg.what = EVENT_MESSAGE_UPDATE;
+        msg.obj = msgItem;
+        sendUiMessage(msg);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tpManager.clear();
+        carManager.shutDownAnimQueueServNow();
+        carManager = null;
+        mModuleGiftManager.onMultiGiftDetroy();
+        //清除资源及动画
+        if(mBarrageManager != null) {
+            mBarrageManager.onDestroy();
+        }
+    }
+
+    //******************************** 顶部房间信息模块 ****************************************************************
+
+    @Override
+    public void onGetRoomTariffInfo(final String tariffPrompt,final boolean isNeedUserConfirm,final String regex) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(isNeedUserConfirm || isUserWantSeeTariffPrompt){
+                    showRoomTariffPrompt(tariffPrompt,isNeedUserConfirm,regex);
+                    isUserWantSeeTariffPrompt = false;
+                }
+            }
+        });
+
+    }
+
+    protected boolean isUserWantSeeTariffPrompt = false;
+
+    private void initRoomHeader(){
+        view_roomHeader = findViewById(R.id.view_roomHeader);
+        view_roomHeader.setOnClickListener(this);
+        ll_liveRoomHeader = findViewById(R.id.ll_liveRoomHeader);
+        iv_roomHeaderBg = (ImageView) findViewById(R.id.iv_roomHeaderBg);
+        ll_liveRoomHeader.measure(0,0);
+        //TODO:头部可以公用一个xml，抽取一个方法来设置image src和image height
+        FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)iv_roomHeaderBg.getLayoutParams();
+        lp1.height = ll_liveRoomHeader.getMeasuredHeight();
+        iv_roomHeaderBg.setLayoutParams(lp1);
+        cihsv_online = (CircleImageHorizontScrollView) findViewById(R.id.cihsv_online);
+        iv_follow = (ImageView) findViewById(R.id.iv_follow);
+        iv_follow.setOnClickListener(this);
+        lrhbv_flag = (LiveRoomHeaderBezierView) findViewById(R.id.lrhbv_flag);
+        findViewById(R.id.tv_hostName).setOnClickListener(this);
+        iv_roomFlag = (ImageView) findViewById(R.id.iv_roomFlag);
+        iv_roomFlag.measure(0,0);
+        RelativeLayout.LayoutParams roomFlagLp = (RelativeLayout.LayoutParams) iv_roomFlag.getLayoutParams();
+        view_tariff_prompt = findViewById(R.id.view_tariff_prompt);
+        FrameLayout.LayoutParams tpLp = (FrameLayout.LayoutParams) view_tariff_prompt.getLayoutParams();
+        tpLp.topMargin = iv_roomFlag.getMeasuredHeight()+roomFlagLp.topMargin+tpLp.topMargin;
+        tpLp.width = iv_roomFlag.getMeasuredWidth();
+        view_tariff_prompt.setLayoutParams(tpLp);
+        btn_OK = (Button) findViewById(R.id.btn_OK);
+        btn_OK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRoomTariffPrompt(null,false,null);
+                if(null != tpManager){
+                    tpManager.update();
+                }
+            }
+        });
+        iv_roomFlag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(view_tariff_prompt.getVisibility() == View.GONE){
+                    isUserWantSeeTariffPrompt = true;
+                    tpManager.getRoomTariffInfo(BaseCommonLiveRoomActivity.this);
+                    Message msg = Message.obtain();
+                    msg.what =EVENT_MESSAGE_HIDE_TARIFFPROMPT;
+                    sendUiMessageDelayed(msg,3000l);
+                }
+            }
+        });
+        tv_triffMsg = (TextView) findViewById(R.id.tv_triffMsg);
+        tpManager = TariffPromptManager.getInstance();
+    }
+
+    protected void setLiveRoomHeaderRightFlagBgColor(int color){
+        lrhbv_flag.setRoomHeaderBgColor(color);
+    }
+
+    protected void setLiveRoomBaseBgColor(int color){
+        if(null != flContentBody){
+            flContentBody.setBackgroundColor(color);
+        }
+    }
+
+    protected void showRoomTariffPrompt(String tariffprompt, boolean isShowOkBtn, String regex){
+        if(!TextUtils.isEmpty(tariffprompt)){
+            SpannableString spannableString = new SpannableString(tariffprompt);
+            int startIndex = tariffprompt.indexOf(regex);
+            if(!TextUtils.isEmpty(regex) && startIndex>=0 && startIndex<tariffprompt.length()){
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ffd205")),
+                        startIndex, startIndex+regex.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(this,9f)),
+                        0, startIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(this,10f)),
+                        startIndex, startIndex+regex.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(this,9f)),
+                        startIndex+regex.length(), tariffprompt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }else{
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(this,9f)),
+                        0, tariffprompt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+            tv_triffMsg.setText(spannableString);
+            //http://a.codekk.com/blogs/detail/54cfab086c4761e5001b253f
+            tv_triffMsg.requestLayout();
+            view_tariff_prompt.setVisibility(View.VISIBLE);
+            btn_OK.setVisibility(isShowOkBtn ? View.VISIBLE : View.GONE);
+        }else{
+            view_tariff_prompt.setVisibility(View.GONE);
+        }
+    }
+
+    protected void visitHostInfo(){
+        showToast("主播个人信息页");
+    }
+
+    /**
+     * 关注主播，用户端的实现类，
+     * 需要在调用关注接口成功后，通过super.sendFollowHotRseq()实现界面的交互响应
+     */
+    protected void sendFollowHostReq(){}
+
+    /**
+     * 已经关注
+     */
+    protected void onRecvFollowHostResp(boolean isSuccess, String errMsg){
+        if(isSuccess){
+            showToast(getResources().getString(R.string.tip_focused));
+            iv_follow.setVisibility(View.GONE);
+            //TODO:DELETE
+            TestDataUtil.changeViewVisityStatus(iv_follow,this,View.VISIBLE);
+            //以下关注消息应由后台推送给客户端
+            Random random = new Random();
+            IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                    "1","Shana", random.nextInt(100), IMMessageItem.MessageType.FollowHost,
+                    null,null);
+            sendMessageUpdateEvent(imMessageItem);
+        }else{
+            showToast(errMsg);
+        }
+    }
+
+
+    public void setOnLineList(List<String> datas){
+        cihsv_online.setList(datas);
+    }
+
+    /**
+     * 播放房间header的淡出动画
+     */
+    private void playRoomHeaderInAnim(){
+        if(view_roomHeader.getVisibility() == View.GONE){
+            AnimationSet animationSet = (AnimationSet) AnimationUtils.
+                    loadAnimation(mContext, R.anim.liveroom_header_in);
+            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    view_roomHeader.setVisibility(View.VISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            view_roomHeader.startAnimation(animationSet);
+        }
+
+    }
+
+    /**
+     * 播放房间header的淡入动画
+     */
+    private void playRoomHeaderOutAnim(){
+        if(view_roomHeader.getVisibility() == View.VISIBLE){
+            AnimationSet animationSet = (AnimationSet) AnimationUtils.
+                    loadAnimation(mContext, R.anim.liveroom_header_out);
+            animationSet.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    view_roomHeader.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+            view_roomHeader.startAnimation(animationSet);
+        }
+    }
+
+    @Override
+    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, final IMRoomInItem roomInfo) {
+        Log.d(TAG,"OnRoomIn-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+roomInfo+" roomInfo:"+roomInfo);
+        //1.进入直播间，判断是否首次进入，
+        tpManager.init(this,roomInfo).getRoomTariffInfo(this);
+    }
+
+    //******************************** 视频播放组件 ****************************************************************
+    private void initVedioPlayer(){
+        iv_vedioBg = (ImageView) findViewById(R.id.iv_vedioBg);
+        //视频播放组件
+        sv_player = (SurfaceView)findViewById(R.id.sv_player);
+        rl_media = findViewById(R.id.rl_media);
+        view_roomHeader.measure(0,0);
+        int screenWidth = DisplayUtil.getScreenWidth(BaseCommonLiveRoomActivity.this);
+        int scaleHeight= screenWidth*3/4;
+        //具体的宽高比例，其实也可以根据服务器动态返回来控制
+        RelativeLayout.LayoutParams svPlayerLp = (RelativeLayout.LayoutParams)sv_player.getLayoutParams();
+        RelativeLayout.LayoutParams ivVedioBgLp = (RelativeLayout.LayoutParams)iv_vedioBg.getLayoutParams();
+        LinearLayout.LayoutParams rlMediaLp = (LinearLayout.LayoutParams)rl_media.getLayoutParams();
+        int roomHeaderMeasuredHeight = view_roomHeader.getMeasuredHeight();
+        svPlayerLp.topMargin = roomHeaderMeasuredHeight;
+        ivVedioBgLp.topMargin = roomHeaderMeasuredHeight;
+        rlMediaLp.topMargin = roomHeaderMeasuredHeight;
+        svPlayerLp.height = scaleHeight;
+        ivVedioBgLp.height = scaleHeight;
+        rlMediaLp.height = scaleHeight;
+        sv_player.setLayoutParams(svPlayerLp);
+        iv_vedioBg.setLayoutParams(ivVedioBgLp);
+        rl_media.setLayoutParams(rlMediaLp);
+        rl_media.setOnClickListener(this);
+    }
+
+    //******************************** 礼物模块 ****************************************************************
+    /**
+     * 初始化模块
+     */
+    private void initMultiGift(){
+        FrameLayout viewContent = (FrameLayout)findViewById(R.id.flMultiGift);
+        /*礼物模块*/
+        mModuleGiftManager = new ModuleGiftManager(this);
+        mModuleGiftManager.initMultiGift(viewContent);
+        ll_bulletScreen = findViewById(R.id.ll_bulletScreen);
+        mModuleGiftManager.showMultiGiftAs(ll_bulletScreen);
+        //大礼物
+        advanceGift = (SimpleDraweeView)findViewById(R.id.advanceGift);
+        mModuleGiftManager.initAdvanceGift(advanceGift);
     }
 
     /**
@@ -337,116 +540,53 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        clearIMListener();
-        mModuleGiftManager.onMultiGiftDetroy();
-        //清除资源及动画
-        if(mBarrageManager != null) {
-            mBarrageManager.onDestroy();
-        }
-    }
-
-    /********************************  软键盘打开关闭的监听  ***********************************/
-    private boolean isSoftInputOpen = false;
-
-    @Override
-    public void onSoftKeyboardShow() {
-        Log.d(TAG, "onSoftKeyboardShow");
-        isSoftInputOpen = true;
-        playRoomHeaderOutAnim();
+    public void OnSendGift(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg,
+                           IMMessageItem msgItem, double credit, double rebateCredit) {
+        onSendMessage(errType, errMsg, msgItem);
     }
 
     @Override
-    public void onSoftKeyboardHide() {
-        android.util.Log.i(TAG, "onSoftKeyboardHide");
-        isSoftInputOpen = false;
-        //如果onSoftKeyboardHide回调是由表情控件触发
-        if(isEmojiOpera){
-            isEmojiOpera = false;
-            return;
-        }
-        if(rl_inputMsg != null){
-            rl_inputMsg.setVisibility(View.INVISIBLE);
-        }
+    public void OnRecvRoomGiftNotice(IMMessageItem msgItem) {
+        sendMessageUpdateEvent(msgItem);
     }
 
-    //----------------------------------顶部房间信息模块-----------------------------------------
-    private void initRoomHeader(){
-        view_roomHeader = findViewById(R.id.view_roomHeader);
-        cihsv_online = (CircleImageHorizontScrollView) findViewById(R.id.cihsv_online);
+    //******************************** 入场座驾 ******************************************************
+    protected CarManager carManager = new CarManager();
+
+    private void initLiveRoomCar(){
+        tv_creditTips = (TextView) findViewById(R.id.tv_creditTips);
+        ll_entranceCar = (LinearLayout) findViewById(R.id.ll_entranceCar);
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) tv_creditTips.getLayoutParams();
+        tv_creditTips.measure(0,0);
+        int mH = tv_creditTips.getMeasuredHeight();
+        carManager.init(this,ll_entranceCar,mH+lp.topMargin);
     }
 
-    /**
-     * 播放房间header的淡出动画
-     */
-    private void playRoomHeaderInAnim(){
-        if(view_roomHeader.getVisibility() == View.GONE){
-            AnimationSet animationSet = (AnimationSet) AnimationUtils.
-                    loadAnimation(mContext, R.anim.liveroom_header_in);
-            animationSet.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    view_roomHeader.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            view_roomHeader.startAnimation(animationSet);
+    @Override
+    public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName,
+                                      String photoUrl, String riderId, String riderName,
+                                      String riderUrl, int fansNum) {
+        Log.d(TAG,"OnRecvEnterRoomNotice-roomId:"+roomId+" userId:"+userId
+                +" nickName:"+nickName+" photoUrl:"+photoUrl+" riderId:"+riderId
+                +" riderName:"+riderName+" riderUrl:"+riderUrl+" fansNum:"+fansNum);
+        CarInfo carInfo = new CarInfo(nickName,userId,riderId,riderName,riderUrl);
+        if(null != carManager){
+            carManager.putLiveRoomCarInfo(carInfo);
         }
 
     }
 
-    /**
-     * 播放房间header的淡入动画
-     */
-    private void playRoomHeaderOutAnim(){
-        if(view_roomHeader.getVisibility() == View.VISIBLE){
-            AnimationSet animationSet = (AnimationSet) AnimationUtils.
-                    loadAnimation(mContext, R.anim.liveroom_header_out);
-            animationSet.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    view_roomHeader.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-            view_roomHeader.startAnimation(animationSet);
-        }
-    }
-
-    /********************************  弹出编辑区域处理  *****************************************/
-    private boolean isBarrage = false;
-
+    //******************************** 弹幕消息编辑区域处理 ********************************************
     /**
      * 处理编辑框区域view初始化
      */
     private void initEditAreaView(){
-        //消息及弹幕编辑区
         rl_inputMsg = findViewById(R.id.rl_inputMsg);
         ll_input_edit_body = (LinearLayout)findViewById(R.id.ll_input_edit_body);
         iv_msgType = (ImageView)findViewById(R.id.iv_msgType);
         et_liveMsg = (EditText)findViewById(R.id.et_liveMsg);
         et_liveMsg.setOnClickListener(this);
         btn_sendMsg = (Button)findViewById(R.id.btn_sendMsg);
-
         et_liveMsg.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -462,7 +602,6 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
             }
         });
         //Emoji
-
         etsl_emojiContainer = (EmojiTabScrollLayout) findViewById(R.id.etsl_emojiContainer);
         etsl_emojiContainer.setTabTitles(ChatEmojiManager.getInstance().getEmojiTypes());
         etsl_emojiContainer.setItemMap(ChatEmojiManager.getInstance().getAllChatEmojies());
@@ -515,7 +654,7 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
             }
         }
         if(msgItem != null){
-            updateMsgList(msgItem);
+            liveRoomChatManager.addMessageToList(msgItem);
             //添加弹幕动画
             if(msgItem.msgType == IMMessageItem.MessageType.Barrage){
                 addBarrageItem(msgItem);
@@ -528,210 +667,14 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
      * 发送文本或弹幕前消息预处理逻辑
      * @param isBarrage
      */
-    public void sendTextMessagePreProcess(boolean isBarrage){
-
-    }
-
-    /********************************  公共消息管理模块   ***************************************/
-
-    private int[] levelBgDrawableIds = {
-            R.drawable.bg_live_buttom_livemsg_icon_0cedf5,
-            R.drawable.bg_live_buttom_livemsg_icon_f5e20c,
-            R.drawable.bg_live_buttom_livemsg_icon_ec8f26,
-            R.drawable.bg_live_buttom_livemsg_icon_fb5a34,
-    };
-
-    private int[] levelIconDrawableIds = {
-            R.drawable.ic_live_buttom_livemsg_level_2,
-            R.drawable.ic_live_buttom_livemsg_level_3,
-            R.drawable.ic_live_buttom_livemsg_level_1,
-            R.drawable.ic_live_buttom_livemsg_level_4
-    };
-
-    private HtmlImageGetter mImageGetter;
-
-    /**
-     * 初始化消息展示列表
-     */
-    private void initMessageList(){
-        //初始化Html图片解析器
-        mImageGetter = new HtmlImageGetter(this, (int)getResources().getDimension(R.dimen.liveroom_messagelist_gift_width),
-                (int)getResources().getDimension(R.dimen.liveroom_messagelist_gift_height));
-
-        lvlv_roomMsgList = (LiveMessageListView) findViewById(R.id.lvlv_roomMsgList);
-        tv_unReadTip = (TextView) findViewById(R.id.tv_unReadTip);
-        lvlv_roomMsgList.setOnMsgUnreadListener(new MessageRecyclerView.onMsgUnreadListener() {
-            @Override
-            public void onMsgUnreadSum(int unreadSum) {
-                updateUnreadLiveMsgTipVew(unreadSum);
-            }
-
-            @Override
-            public void onReadAll() {
-                updateUnreadLiveMsgTipVew(0);
-            }
-        });
-
-        lmlAdapter = new LiveMessageListAdapter<IMMessageItem>(this,R.layout.item_live_room_msglist) {
-            @Override
-            public void convert(ViewHolder holder, IMMessageItem liveMsgItem) {
-                refreshViewByMessageItem(holder, liveMsgItem);
-            }
-        };
-
-        lvlv_roomMsgList.setAdapter(lmlAdapter);
-        lvlv_roomMsgList.setMaxMsgSum(getResources().getInteger(R.integer.liveMsgListMaxNum));
-        lvlv_roomMsgList.setHoldingTime(getResources().getInteger(R.integer.liveMsgListItemHoldTime));
-        lvlv_roomMsgList.setVerticalSpace(Float.valueOf(getResources().getDimension(R.dimen.listmsgview_item_decoration)).intValue());
-        //incliude view id 必须通过setOnClickListener方式设置onclick监听,
-        // xml中include标签下没有onclick和clickable属性
-        findViewById(R.id.include_im_body).setOnClickListener(this);
-    }
-
-    /**
-     * 更新显示MessageList指定行
-     * @param holder
-     * @param liveMsgItem
-     */
-    private void refreshViewByMessageItem(ViewHolder holder,
-                                          IMMessageItem liveMsgItem){
-
-        TextView ll_userLevel = holder.getView(R.id.tvMsgDescription);
-        Spanned span = null;
-        switch (liveMsgItem.msgType){
-            case Normal:
-            case Barrage:{
-                //弹幕或者普通文本消息
-                span = ChatEmojiManager.getInstance().parseEmoji(
-                        BaseCommonLiveRoomActivity.this,
-                        getResources().getString(
-                                R.string.liveroom_message_template_normal,
-                                liveMsgItem.nickName,
-                                liveMsgItem.textMsgContent.message),
-                        ChatEmojiManager.CHATEMOJI_MODEL_EMOJIDES);
-            }break;
-            case Gift:{
-                //检测礼物小图片存在与否，不存在自动下载，更新列表
-                if(!IMGiftManager.getInstance()
-                        .isGiftLocalPictureExist(liveMsgItem.giftMsgContent.giftId,
-                            IMGiftManager.GiftImageType.Thumb)){
-                    IMGiftManager.getInstance()
-                            .getGiftImage(liveMsgItem.giftMsgContent.giftId,
-                            IMGiftManager.GiftImageType.Thumb, this);
-                }
-
-                //礼物消息列表展示
-                String giftNum = "";
-                if(liveMsgItem.giftMsgContent.giftNum > 1){
-                    giftNum += getResources().getString(R.string.liveroom_message_gift_x)
-                            + String.valueOf(liveMsgItem.giftMsgContent.giftNum);
-                }
-                span = mImageGetter.getExpressMsgHTML(getResources().getString(
-                        R.string.liveroom_message_template_gift, liveMsgItem.nickName,
-                        liveMsgItem.giftMsgContent.giftName,
-                        liveMsgItem.giftMsgContent.giftId, giftNum));
-            }break;
-            case Like:{
-                span = Html.fromHtml(getResources().getString(
-                        R.string.liveroom_message_template_favorite, liveMsgItem.nickName));
-            }break;
-            case RoomIn:{
-                span = Html.fromHtml(getResources().getString(
-                        R.string.liveroom_message_template_roomin, liveMsgItem.nickName));
-            }break;
-            default:
-                break;
-        }
-        ll_userLevel.setText(span);
-    }
-
-    /**
-     * 自动换行(messsage被拆成两段显示，第一段在tv_line1，剩下在tv_line2)
-     * @param message
-     * @param tv_line1
-     * @param tv_line2
-     */
-    private void calculateTextViewAutoWrap(String message, View rootView, TextView tv_line1, TextView tv_line2){
-        tv_line1.setVisibility(View.INVISIBLE);
-        tv_line2.setVisibility(View.GONE);
-        tv_line1.setText(message);
-        rootView.measure(0,0);
-        int rootViewMeasuredWidth = rootView.getMeasuredWidth();
-        tv_line1.measure(0,0);
-        int line1MeasuredWidth = tv_line1.getMeasuredWidth();
-        android.util.Log.d(TAG,"initLiveMsgView-line1MeasuredWidth:"+line1MeasuredWidth+" rootViewMeasuredWidth:"+rootViewMeasuredWidth);
-        Paint paint = new Paint();
-        paint.setTextSize(tv_line1.getTextSize());
-        int txtWidth = 0;
-        int index = 0;
-        for(; index < message.length(); index++){
-            char indexChar = message.charAt(index);
-            int charWidth = Float.valueOf(paint.measureText(String.valueOf(indexChar))).intValue();
-//                        Log.d(TAG,"initLiveMsgView-charWidth:"+charWidth);
-            txtWidth+=charWidth;
-            if(txtWidth>line1MeasuredWidth){
-                tv_line1.setText(message.substring(0, index));
-                tv_line2.setText(message.substring(index, message.length()));
-                tv_line2.setVisibility(View.VISIBLE);
-                break;
-            }
-        }
-        tv_line1.setVisibility(View.VISIBLE);
-        //下面可以开个for循环计算line2的宽度，避免每行char个数参差不齐，但是考虑到字数有限制，可以不做
-        //String line2Txt = liveMsgItem.liveMsg.substring(index,liveMsgItem.liveMsg.length());
-    }
-
-    protected void updateMsgList(IMMessageItem msgItem){
-        boolean isUpdate = false;
-
-        //最后一条消息是RoomIn时，更新
-        if(msgItem.msgType == IMMessageItem.MessageType.RoomIn){
-            Object dataItem = lvlv_roomMsgList.getLastData();
-            if(dataItem != null && dataItem instanceof IMMessageItem){
-                IMMessageItem lastMsgitem = (IMMessageItem)dataItem;
-                if(lastMsgitem.msgType == IMMessageItem.MessageType.RoomIn){
-                    isUpdate = true;
-                    lastMsgitem.copy(msgItem);
-                }
-            }
-        }
-
-        if(lvlv_roomMsgList != null && !isUpdate){
-            lvlv_roomMsgList.addNewLiveMsg(msgItem);
-        }else{
-            lmlAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * 更新未读消息提示界面
-     * @param unReadNum
-     */
-    private void updateUnreadLiveMsgTipVew(int unReadNum){
-        tv_unReadTip.setVisibility(0 == unReadNum ? View.INVISIBLE : View.VISIBLE);
-        String unReadTip = getString(R.string.tip_unReadLiveMsg,unReadNum);
-        SpannableString styledText = new SpannableString(unReadTip);
-        styledText.setSpan(new ForegroundColorSpan(Color.parseColor("#ffd205")), 0, unReadTip.indexOf(" "), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_unReadTip.setText(styledText);
-    }
-
-    /**
-     * 消息切换主线程
-     * @param msgItem
-     */
-    private void sendMessageUpdateEvent(IMMessageItem msgItem){
-        Message msg = Message.obtain();
-        msg.what = EVENT_MESSAGE_UPDATE;
-        msg.obj = msgItem;
-        sendUiMessage(msg);
-    }
+    public void sendTextMessagePreProcess(boolean isBarrage){}
 
     /**
      * 接收多种消息同一处理
      * @param msgItem
      */
     private void onSendMessage(IMClientListener.LCC_ERR_TYPE errType, String errMsg,IMMessageItem msgItem){
-        Log.d(TAG,"OnSendMsg-errType:"+ errType+" errMsg:"+errMsg+" msgItem:"+msgItem);
+        Log.d(TAG,"onSendMessage-errType:"+ errType+" errMsg:"+errMsg+" msgItem:"+msgItem);
         if(null != msgItem && IMMessageItem.MessageType.Gift == msgItem.msgType){
             if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_SUCCESS){
                 Log.d(TAG,"OnSendMsg-一次送礼请求发送成功，执行下一个送礼请求");
@@ -751,22 +694,83 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
         }
     }
 
-    /********************************* 弹幕动画  *******************************************/
+    @Override
+    public void OnSendRoomMsg(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
+        onSendMessage(errType, errMsg, msgItem);
+    }
+
+    @Override
+    public void OnRecvRoomMsg(IMMessageItem msgItem) {
+        sendMessageUpdateEvent(msgItem);
+    }
+
+    //******************************** 软键盘打开关闭的监听****************************************************************
+    private boolean isSoftInputOpen = false;
+
+    /**
+     * 调整view高度, 解决背景在AdjustSize时会被推上去问题
+     */
+    private void setSizeUnChanageViewParams(){
+        int statusBarHeight = DisplayUtil.getStatusBarHeight(mContext);
+        if(statusBarHeight > 0){
+            int activityHeight = DisplayUtil.getScreenHeight(mContext) - statusBarHeight;
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)findViewById(R.id.fl_bgContent).getLayoutParams();
+            params.height = activityHeight;
+            //设置固定宽高，解决键盘弹出挤压问题
+            FrameLayout.LayoutParams advanceGiftParams = (FrameLayout.LayoutParams)advanceGift.getLayoutParams();
+            advanceGiftParams.height = activityHeight;
+            //设置IM区域高度，处理弹出效果
+            FrameLayout.LayoutParams imParams = (FrameLayout.LayoutParams)imBody.getLayoutParams();
+            imParams.height = activityHeight-(int)getResources().getDimension(R.dimen.imButtomMargin);
+        }
+    }
+
+    @Override
+    public void onSoftKeyboardShow() {
+        Log.d(TAG, "onSoftKeyboardShow");
+        isSoftInputOpen = true;
+//        playRoomHeaderOutAnim();
+    }
+
+    @Override
+    public void onSoftKeyboardHide() {
+        android.util.Log.i(TAG, "onSoftKeyboardHide");
+        isSoftInputOpen = false;
+        //如果onSoftKeyboardHide回调是由表情控件触发
+        if(isEmojiOpera){
+            isEmojiOpera = false;
+            return;
+        }
+        if(rl_inputMsg != null){
+            rl_inputMsg.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    //******************************** 消息展示列表 ****************************************************************
+    /**
+     * 初始化消息展示列表
+     */
+    private void initMessageList(){
+        liveRoomChatManager = new LiveRoomChatManager();
+        liveRoomChatManager.init(this,findViewById(R.id.fl_msglist));
+
+        //incliude view id 必须通过setOnClickListener方式设置onclick监听,
+        // xml中include标签下没有onclick和clickable属性
+        findViewById(R.id.fl_imMsgContainer).setOnClickListener(this);
+    }
+
+    //******************************** 弹幕动画 ****************************************************************
     private BarrageManager<IMMessageItem> mBarrageManager;
 
     /**
      * 初始化弹幕
      */
     private void initBarrage(){
+
+        ViewCompat.setElevation(ll_bulletScreen,DisplayUtil.dip2px(this,3f));
         List<View> mViews = new ArrayList<View>();
         mViews.add(findViewById(R.id.rl_bullet1));
-        View rl_bullet2 = findViewById(R.id.rl_bullet2);
-        //如果rl_bullet2初始配置的可见状态为GONE则代表弹幕只有一个通道
-        if(View.GONE != rl_bullet2.getVisibility()){
-            mViews.add(rl_bullet2);
-        }
-
-        mBarrageManager = new BarrageManager<IMMessageItem>(this, mViews);
+        mBarrageManager = new BarrageManager<IMMessageItem>(this, mViews,ll_bulletScreen);
         mBarrageManager.setBarrageFiller(new IBarrageViewFiller<IMMessageItem>() {
             @Override
             public void onBarrageViewFill(View view, IMMessageItem item) {
@@ -775,15 +779,17 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
                 TextView tv_bulletContent = (TextView) view.findViewById(R.id.tv_bulletContent);
                 if(item != null){
                     tv_bulletName.setText(item.nickName);
-                    tv_bulletContent.setText(ChatEmojiManager.getInstance()
-                            .parseEmoji(BaseCommonLiveRoomActivity.this,
-                                    item.textMsgContent.message,ChatEmojiManager.CHATEMOJI_MODEL_EMOJIDES));
-
-                    String photoUrl = "";
-                    IMUserBaseInfoItem baseInfo = mIMManager.getUserInfo(item.userId);
-                    if(baseInfo != null){
-                        photoUrl = baseInfo.photoUrl;
-                    }
+                    tv_bulletContent.setText(ChatEmojiManager.getInstance().parseEmoji(
+                            item.textMsgContent.message, ChatEmojiManager.CHATEMOJI_MODEL_EMOJIDES,
+                            (int)getResources().getDimension(R.dimen.liveroom_messagelist_barrage_width),
+                            (int)getResources().getDimension(R.dimen.liveroom_messagelist_barrage_height)));
+                    //TODO:DELETE测试demo
+                    String photoUrl = TestDataUtil.roomBgs[new Random().nextInt(TestDataUtil.roomBgs.length)];
+//                    String photoUrl = null;
+//                    IMUserBaseInfoItem baseInfo = mIMManager.getUserInfo(item.userId);
+//                    if(baseInfo != null){
+//                        photoUrl = baseInfo.photoUrl;
+//                    }
                     if(!TextUtils.isEmpty(photoUrl)){
                         Picasso.with(BaseCommonLiveRoomActivity.this.getApplicationContext())
                                 .load(photoUrl)
@@ -804,54 +810,23 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
     private void addBarrageItem(IMMessageItem msgItem){
         if(msgItem != null){
             LoginItem item = LoginManager.getInstance().getmLoginItem();
-//            if(item != null && !TextUtils.isEmpty(item.userId)
-//                    && item.userId.equals(msgItem.userId)){
-//                //本人发送，优先显示
-//                mBarrageManager.addBarrageItemFirst(msgItem);
-//            }else{
-                mBarrageManager.addBarrageItem(msgItem);
-//            }
+            mBarrageManager.addBarrageItem(msgItem);
         }
     }
 
-    /***************************  礼物/level等图片下载回调  ********************************/
     @Override
-    public void onCompleted(boolean isSuccess, String localFilePath, String fileUrl) {
-        Log.i("hunter", "BaseCommonLiveRoomActivity onCompleted isSuccess：" + isSuccess);
-        if(isSuccess){
-            sendEmptyUiMessage(EVENT_MESSAGE_IMAGE_UPDATE);
-        }
+    public void OnSendBarrage(boolean success, IMClientListener.LCC_ERR_TYPE errType,
+                              String errMsg, IMMessageItem msgItem, double credit,
+                              double rebateCredit) {
+        onSendMessage(errType, errMsg, msgItem);
     }
+
 
     /********************************* IMManager事件监听回调  *******************************************/
-    @Override
-    public void OnLogin(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
-
-    }
-
-    @Override
-    public void OnLogout(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
-
-    }
-
-    @Override
-    public void OnKickOff() {
-
-    }
-
-    @Override
-    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
-
-    }
-
-    @Override
-    public void OnRecvCreditNotice(String roomId, double credit) {
-
-    }
 
     @Override
     public void OnRoomOut(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
-        Log.d(TAG,"OnFansRoomOut-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg;");
+        Log.d(TAG,"OnFansRoomOut-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+errMsg);
         if(success){
             //退出房间成功，就清空送礼队列，并停止服务
             GiftSendReqManager.getInstance().shutDownReqQueueServNow();
@@ -859,98 +834,7 @@ public class BaseCommonLiveRoomActivity extends BaseFragmentActivity implements 
     }
 
     @Override
-    public void OnSendRoomMsg(IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
-        onSendMessage(errType, errMsg, msgItem);
-    }
-
-    @Override
-    public void OnSendGift(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem, double credit, double rebateCredit) {
-        onSendMessage(errType, errMsg, msgItem);
-    }
-
-    @Override
-    public void OnSendBarrage(boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem, double credit, double rebateCredit) {
-        onSendMessage(errType, errMsg, msgItem);
-    }
-
-    @Override
-    public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName) {
-
-    }
-
-    @Override
-    public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum) {
-
-    }
-
-    @Override
-    public void OnRecvLeaveRoomNotice(String roomId, String userId, String nickName, String photoUrl, int fansNum) {
-
-    }
-
-    @Override
-    public void OnRecvRebateInfoNotice(String roomId, IMRebateItem item) {
-
-    }
-
-    @Override
-    public void OnRecvLeavingPublicRoomNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg) {
-
-    }
-
-    @Override
-    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg, double credit) {
-
-    }
-
-    @Override
-    public void OnRecvRoomMsg(IMMessageItem msgItem) {
-        sendMessageUpdateEvent(msgItem);
-    }
-
-    @Override
-    public void OnRecvRoomGiftNotice(IMMessageItem msgItem) {
-        sendMessageUpdateEvent(msgItem);
-    }
-
-    @Override
     public void OnRecvRoomToastNotice(IMMessageItem msgItem) {
         sendMessageUpdateEvent(msgItem);
     }
-
-    @Override
-    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo) {
-
-    }
-
-    @Override
-    public void OnRecvLiveStart(String roomId, int leftSeconds) {
-
-    }
-
-    @Override
-    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String inviteId) {
-
-    }
-
-    @Override
-    public void OnCancelImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String roomId) {
-
-    }
-
-    @Override
-    public void OnRecvInviteReply(String inviteId, IMClientListener.InviteReplyType replyType, String roomId) {
-
-    }
-
-    @Override
-    public void OnRecvAnchoeInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl) {
-
-    }
-
-    @Override
-    public void OnRecvScheduledInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl, int bookTime, String inviteId) {
-
-    }
-
 }

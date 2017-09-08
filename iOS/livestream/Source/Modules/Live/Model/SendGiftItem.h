@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "LiveRoomGiftItemObject.h"
+#import "AllGiftItem.h"
 
 @interface SendGiftItem : NSObject
 
-@property (nonatomic, strong) LiveRoomGiftItemObject *giftItem;
+@property (nonatomic, strong) AllGiftItem *giftItem;
 
 @property (nonatomic, assign) int giftNum;
 
@@ -21,6 +21,12 @@
 
 @property (nonatomic, assign) int clickID;
 
-- (instancetype)initWithGiftItem:(LiveRoomGiftItemObject *)item andGiftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum clickID:(int)clickID;
+@property (nonatomic, copy) NSString* roomID;
+
+@property (nonatomic, copy) NSString* nickName;
+
+@property (nonatomic, assign) BOOL isBackPack;
+
+- (instancetype)initWithGiftItem:(AllGiftItem *)item andGiftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum clickID:(int)clickID roomID:(NSString *)roomID isBackPack:(BOOL)isBackPack;
 
 @end

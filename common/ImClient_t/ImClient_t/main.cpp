@@ -35,7 +35,7 @@ int main(int argc, const char * argv[]) {
         urls.push_back("ws://192.168.88.17:3006");
         client->Init(urls);
         client->AddListener(&callback);
-        client->Login("Samson", "12s3adf4564sdf89");
+        client->Login("Samson", "12s3adf4564sdf89", CLIENTTYPE_IOS);
     }
     
     while (true) {

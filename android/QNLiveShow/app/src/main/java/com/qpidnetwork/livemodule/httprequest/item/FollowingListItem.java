@@ -17,23 +17,23 @@ public class FollowingListItem {
 	 * @param nickName			主播昵称
 	 * @param photoUrl			主播头像url
 	 * @param onlienStatus		主播在线状态
-	 * @param roomId			直播间ID
 	 * @param roomName			直播间名称
 	 * @param roomPhotoUrl		直播间封面图url
 	 * @param loveLevel			亲密度等级
 	 * @param roomType			直播间类型
 	 * @param addDate			添加收藏时间
+	 * @param interests			兴趣爱好列表
 	 */
 	public FollowingListItem(String userId,
 							String nickName,
 							String photoUrl,
 							int onlienStatus,
-							String roomId,
 							String roomName,
 							String roomPhotoUrl,
 							int loveLevel,
 							int roomType,
-							int addDate){
+							int addDate,
+							String[] interests){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -44,7 +44,6 @@ public class FollowingListItem {
 			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
 		}
 		
-		this.roomId = roomId;
 		this.roomName = roomName;
 		this.roomPhotoUrl = roomPhotoUrl;
 		this.loveLevel = loveLevel;
@@ -56,6 +55,7 @@ public class FollowingListItem {
 		}
 		
 		this.addDate = addDate;
+		this.interests = interests;
 	}
 	
 	
@@ -63,10 +63,10 @@ public class FollowingListItem {
 	public String nickName;
 	public String photoUrl;
 	public AnchorOnlineStatus onlineStatus;
-	public String roomId;
 	public String roomName;
 	public String roomPhotoUrl;
 	public LiveRoomType roomType;
 	public int loveLevel;
 	public int addDate;
+	public String[] interests;
 }

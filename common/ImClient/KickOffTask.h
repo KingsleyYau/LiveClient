@@ -41,7 +41,7 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(const string& reason);
+	bool InitParam();
 
 private:
 	IImClientListener*	m_listener;
@@ -51,6 +51,5 @@ private:
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述
     
-    string          m_reason;   // 被挤掉的理由
     
 };

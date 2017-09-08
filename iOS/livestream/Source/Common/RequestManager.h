@@ -13,13 +13,38 @@
 #import "LiveRoomInfoItemObject.h"
 #import "LiveRoomPersonalInfoItemObject.h"
 #import "CoverPhotoItemObject.h"
-#import "LiveRoomGiftItemObject.h"
+#import "GiftInfoItemObject.h"
 #import "LiveRoomConfigItemObject.h"
+#import "FollowItemObject.h"
+#import "RoomInfoItemObject.h"
+#import "EmoticonItemObject.h"
+#import "BookingPrivateInviteListObject.h"
+#import "BookingUnreadUnhandleNumItemObject.h"
+#import "BackGiftItemObject.h"
+#import "ConfigItemObject.h"
+#import "GiftWithIdItemObject.h"
+#import "GetTalentItemObject.h"
+#import "GetTalentStatusItemObject.h"
+#import "GetNewFansBaseInfoItemObject.h"
+#import "GetCreateBookingInfoItemObject.h"
+#import "VoucherItemObject.h"
+#import "RideItemObject.h"
+#import "GetBackPackUnreadNumItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
 @interface RequestManager : NSObject
+
+/**
+ 版本号
+ */
 @property (nonatomic, strong) NSString* _Nonnull versionCode;
+
+/**
+ 无效的请求号
+ */
+@property (nonatomic, readonly) NSInteger invalidRequestId;
+
 #pragma mark - 获取实例
 /**
  *  获取实例
@@ -47,12 +72,6 @@
  *  @param webSite 服务器域名
  */
 - (void)setWebSite:(NSString * _Nonnull)webSite;
-/**
- 设置文件服务器域名
-
- @param webSite 服务器域名
- */
-- (void)setWebSiteUpload:(NSString * _Nonnull)webSite;
 /**
  *  设置接口服务器用户认证
  *
@@ -105,74 +124,10 @@
  */
 typedef void (^RegisterCheckPhoneFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, int isRegistered);
 
-/**
- *  2.1.验证手机是否已注册接口
- *
- * @param phoneno           手机号码
- * @param areno				手机区号
- * @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)registerCheckPhone:(NSString * _Nullable)phoneno
-                          areno:(NSString * _Nullable)areno
-                  finishHandler:(RegisterCheckPhoneFinishHandler _Nullable)finishHandler;
-/**
- *  2.2.获取手机注册短信验证码接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- */
-typedef void (^RegisterGetSMSCodeFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
 
 /**
- *  2.2.获取手机注册短信验证码接口
- *
- * @param phoneno           手机号码
- * @param areno				手机区号
- * @param finishHandler     接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)registerGetSMSCode:(NSString * _Nullable)phoneno
-                   areno:(NSString * _Nullable)areno
-           finishHandler:(RegisterGetSMSCodeFinishHandler _Nullable)finishHandler;
-
-/**
- *  2.3.手机注册接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- */
-typedef void (^RegisterPhoneFinishHandler)(BOOL success, int errnum, NSString * _Nonnull errmsg);
-
-/**
- *  2.3.手机注册接口
- *
- * @param phoneno           手机号码（仅当type ＝ 0 时使用）
- * @param areno				手机区号（仅当type ＝ 0 时使用）
- * @param checkcode			验证码
- * @param password			登录密码
- * @param deviceid		    设备唯一标识
- * @param model				设备型号（格式：设备型号－系统版本号）
- * @param manufacturer		制造厂商
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)registerPhone:(NSString * _Nullable)phoneno
-                     areno:(NSString * _Nullable)areno
-                 checkcode:(NSString * _Nonnull)checkcode
-                  password:(NSString * _Nonnull)password
-                  deviceid:(NSString * _Nonnull)deviceid
-                     model:(NSString * _Nonnull)model
-              manufacturer:(NSString * _Nonnull)manufacturer
-             finishHandler:(RegisterPhoneFinishHandler _Nullable)finishHandler;
-
-/**
- *  2.4.登陆接口回调
+ *  2.1.登陆接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
@@ -181,32 +136,24 @@ typedef void (^RegisterPhoneFinishHandler)(BOOL success, int errnum, NSString * 
 typedef void (^LoginFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LoginItemObject * _Nonnull item);
 
 /**
- *  2.4.登陆接口
+ *  2.1.登陆接口
  *
- * @param type				登录类型（0: 手机登录 1:邮箱登录）
- * @param phoneno           手机号码（仅当type ＝ 0 时使用）
- * @param areno				手机区号（仅当type ＝ 0 时使用）
- * @param password			登录密码
+ * @param qnsid			    QN系统登录验证返回的标识
  * @param deviceid		    设备唯一标识
  * @param model				设备型号（格式：设备型号－系统版本号）
  * @param manufacturer		制造厂商
- * @param autoLogin         是否自动登录
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)login:(LoginType)type
-        phoneno:(NSString * _Nullable)phoneno
-        areno:(NSString * _Nullable)areno
-        password:(NSString * _Nonnull)password
-        deviceid:(NSString * _Nonnull)deviceid
-        model:(NSString * _Nonnull)model
-    manufacturer:(NSString * _Nonnull)manufacturer
-        autoLogin:(BOOL)autoLogin
-    finishHandler:(LoginFinishHandler _Nullable)finishHandler;
+- (NSInteger)login:(NSString * _Nonnull)qnsid
+          deviceid:(NSString * _Nonnull)deviceid
+             model:(NSString * _Nonnull)model
+      manufacturer:(NSString * _Nonnull)manufacturer
+     finishHandler:(LoginFinishHandler _Nullable)finishHandler;
 
 /**
- *  2.5.注销接口回调
+ *  2.2.注销接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
@@ -215,461 +162,619 @@ typedef void (^LoginFinishHandler)(BOOL success, NSInteger errnum, NSString * _N
 typedef void (^LogoutFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
 
 /**
- *  2.5.注销接口
+ *  2.2.注销接口
  *
- *  @param token           用户身份唯一标识
  *  @param finishHandler  接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)logout:(NSString * _Nonnull)token finishHandler:(LogoutFinishHandler _Nullable)finishHandler;
+- (NSInteger)logout:(LogoutFinishHandler _Nullable)finishHandler;
 
-#pragma mark - 直播间模块
 /**
- *  2.6.上传tokenid接口回调
+ *  2.3.上传tokenid接口回调
  *
  *  @param success    成功失败
  *  @param errnum     错误码
  *  @param errmsg     错误提示
  */
-typedef void (^UpdateLiveRoomTokenIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^UpdateTokenIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
 
 /**
- *  2.6.上传tokenid接口
+ *  2.3.上传tokenid接口
  *
- *  @param token			用户身份唯一标识
  *  @param tokenId			用于Push Notification的ID
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)updateLiveRoomTokenId:(NSString * _Nonnull)token
-                           tokenId:(NSString * _Nonnull)tokenId
-                     finishHandler:(UpdateLiveRoomTokenIdFinishHandler _Nullable)finishHandler;
+- (NSInteger)updateTokenId:(NSString * _Nonnull)tokenId
+                     finishHandler:(UpdateTokenIdFinishHandler _Nullable)finishHandler;
 
+#pragma mark - 直播间模块
 /**
- *  3.1.新建直播间接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- *  @param roomId  直播间ID
- *  @param roomurl  直播间流媒体服务url（如 rtmp://192.168.88.17/live/samson_1）
- */
-typedef void (^CreateLiveRoomFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString * _Nonnull roomurl);
-
-/**
- *  3.1.新建直播间接口
- *
- * @param token				用户身份唯一标识
- * @param roomName          直播间名称
- * @param roomPhotoId		封面图ID
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)createLiveRoom:(NSString * _Nonnull)token
-                   roomName:(NSString * _Nonnull)roomName
-                roomPhotoId:(NSString * _Nonnull)roomPhotoId
-              finishHandler:(CreateLiveRoomFinishHandler _Nullable)finishHandler;
-
-/**
- *  3.2.获取本人正在直播的直播间信息接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- *  @param roomId  直播间ID
- *  @param roomurl  直播间流媒体服务url（如 rtmp://192.168.88.17/live/samson_1）
- */
-typedef void (^CheckLiveRoomFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString * _Nonnull roomurl);
-
-/**
- *  3.2.获取本人正在直播的直播间信息接口
- *
- * @param token				用户身份唯一标识
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)checkLiveRoom:(NSString * _Nonnull)token
-              finishHandler:(CheckLiveRoomFinishHandler _Nullable)finishHandler;
-
-/**
- *  3.3.关闭直播间息接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- */
-typedef void (^CloseLiveRoomFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
-
-/**
- *  3.3.关闭直播间息接口
- *
- *  @param token			用户身份唯一标识
- *  @param roomId			直播间ID
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)closeLiveRoom:(NSString * _Nonnull)token
-                    roomId:(NSString * _Nonnull)roomId
-             finishHandler:(CloseLiveRoomFinishHandler _Nullable)finishHandler;
-
-/**
- *  3.4.获取直播间观众头像列表（限定数量）接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- *  @param array   观众列表
- */
-typedef void (^GetLiveRoomFansListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *>* _Nullable array);
-
-/**
- *  3.4.获取直播间观众头像列表（限定数量）接口
- *
- *  @param token			用户身份唯一标识
- *  @param roomId			直播间ID
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)getLiveRoomFansList:(NSString * _Nonnull)token
-                              roomId:(NSString * _Nonnull)roomId
-                       finishHandler:(GetLiveRoomFansListFinishHandler _Nullable)finishHandler;
-
-
-/**
- *  3.5.获取直播间所有观众头像列表接口回调
- *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
- *  @param array   观众列表
- */
-typedef void (^GetLiveRoomAllFansListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *>* _Nullable array);
-
-/**
- *  3.5.获取直播间所有观众头像列表接口
- *
- *  @param token			用户身份唯一标识
- *  @param roomId			直播间ID
- *  @param start			起始，用于分页，表示从第几个元素开始获取
- *  @param step             步长，用于分页，表示本次请求获取多少个元素
- *  @param finishHandler    接口回调
- *
- *  @return 成功请求Id
- */
-- (NSInteger)getLiveRoomAllFansList:(NSString * _Nonnull)token
-                             roomId:(NSString * _Nonnull)roomId
-                              start:(int)start
-                               step:(int)step
-                      finishHandler:(GetLiveRoomAllFansListFinishHandler _Nullable)finishHandler;
-
-#pragma mark - 主播属性模块
-/**
- *  3.6.获取Hot列表接口回调
+ *  3.1.获取Hot列表接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  *  @param array   热门列表
  */
-typedef void (^GetLiveRoomHotListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
+typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
 
 /**
- *  3.6.获取Hot列表接口
+ *  3.1.获取Hot列表接口
  *
- *  @param token			用户身份唯一标识
  *  @param start			起始，用于分页，表示从第几个元素开始获取
  *  @param step             步长，用于分页，表示本次请求获取多少个元素
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomHotList:(NSString * _Nonnull)token
-                              start:(int)start
-                               step:(int)step
-                      finishHandler:(GetLiveRoomHotListFinishHandler _Nullable)finishHandler;
+- (NSInteger)getAnchorList:(int)start
+                      step:(int)step
+             finishHandler:(GetAnchorListFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口回调
+ *  3.2.获取Hot列表接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
- *  @param array   封面图列表
+ *  @param array   热门列表
  */
-typedef void (^GetLiveRoomAllGiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomGiftItemObject *>* _Nullable array);
+typedef void (^GetFollowListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<FollowItemObject *>* _Nullable array);
 
 /**
- *  3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口
+ *  3.2.获取Following列表接口
  *
- *  @param token			用户身份唯一标识
+ *  @param start			起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomAllGiftList:(NSString * _Nonnull)token
-                      finishHandler:(GetLiveRoomAllGiftListFinishHandler _Nullable)finishHandler;
+- (NSInteger)getFollowList:(int)start
+                      step:(int)step
+             finishHandler:(GetFollowListFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表）接口回调
+ *  3.3.获取本人有效直播间或邀请信息接口回调(已废弃)
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   热门列表
+ */
+typedef void (^GetRoomInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, RoomInfoItemObject* _Nullable array);
+
+/**
+ *  3.3.获取本人有效直播间或邀请信息接口(已废弃)
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getRoomInfo:(GetRoomInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.4.获取直播间观众头像列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   观众列表
+ */
+typedef void (^LiveFansListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *>* _Nullable array);
+
+/**
+ *  3.4.获取直播间观众头像列表接口
+ *
+ *  @param roomId			直播间ID
+ *  @param finishHandler    接口回调
+ * @param page                          页数（可0， 0则表示获取所有， ）
+ * @param number                        每页的元素数量（可0， 0则表示获取所有）
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)liveFansList:(NSString * _Nonnull)roomId
+                     page:(int)page
+                   number:(int)number
+            finishHandler:(LiveFansListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  *  @param array   封面图列表
  */
-typedef void (^GetLiveRoomGiftListByUserIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<NSString *>* _Nullable array);
+typedef void (^GetAllGiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftInfoItemObject *>* _Nullable array);
 
 /**
- *  3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表）接口
+ *  3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口
  *
- *  @param token			用户身份唯一标识
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getAllGiftList:(GetAllGiftListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.6.获取直播间可发送的礼物列表（观众端/主播端获取直播间的可发送的礼物列表, 包括背包礼物）接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   封面图列表
+ */
+typedef void (^GetGiftListByUserIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftWithIdItemObject *>* _Nullable array);
+
+/**
+ *  3.6.获取直播间可发送的礼物列表（观众端/主播端获取直播间的可发送的礼物列表, 包括背包礼物）接口
+ *
  *  @param roomId           直播间ID
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomGiftListByUserId:(NSString * _Nonnull)token
-                                  roomId:(NSString * _Nonnull)roomId
-                      finishHandler:(GetLiveRoomGiftListByUserIdFinishHandler _Nullable)finishHandler;
+- (NSInteger)getGiftListByUserId:(NSString * _Nonnull)roomId
+                   finishHandler:(GetGiftListByUserIdFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示）
+ *  3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示）接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  *  @param item    指定礼物详情
  */
-typedef void (^GetLiveRoomGiftDetailFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomGiftItemObject* _Nullable item);
+typedef void (^GetGiftDetailFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GiftInfoItemObject * _Nullable item);
 
 /**
- *  3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示）
+ *  3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示）接口
  *
- *  @param token			用户身份唯一标识
  *  @param giftId           礼物ID
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomGiftDetail:(NSString * _Nonnull)token
-                                  giftId:(NSString * _Nonnull)giftId
-                           finishHandler:(GetLiveRoomGiftDetailFinishHandler _Nullable)finishHandler;
-
+- (NSInteger)getGiftDetail:(NSString * _Nonnull)giftId
+                           finishHandler:(GetGiftDetailFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.10.获取开播封面图列表（用于主播开播前，获取封面图列表）接口回调
+ *  3.8.获取文本表情列表（用于观众端/主播端获取文本聊天礼物列表）接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
- *  @param array   封面图列表
+ *  @param item    指定礼物详情
  */
-typedef void (^GetLiveRoomPhotoListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<CoverPhotoItemObject *>* _Nullable array);
+typedef void (^GetEmoticonListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<EmoticonItemObject*>* _Nullable item);
 
 /**
- *  3.10.获取开播封面图列表（用于主播开播前，获取封面图列表）接口
+ *  3.8.获取文本表情列表（用于观众端/主播端获取文本聊天礼物列表）接口
  *
- *  @param token			用户身份唯一标识
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomPhotoList:(NSString * _Nonnull)token
-                    finishHandler:(GetLiveRoomPhotoListFinishHandler _Nullable)finishHandler;
-
+- (NSInteger)getEmoticonList:(GetEmoticonListFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.11.添加开播封面图（用于主播添加开播封面图）接口回调
+ *  3.9.获取指定立即私密邀请信息接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param item    邀请信息
+ */
+typedef void (^GetInviteInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, InviteIdItemObject * _Nonnull item);
+
+/**
+ *  3.9.获取指定立即私密邀请信息接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getInviteInfo:(NSString * _Nonnull)inviteId
+             finishHandler:(GetInviteInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.10.获取才艺点播列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param array   邀请信息
+ */
+typedef void (^GetTalentListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GetTalentItemObject*> * _Nonnull array);
+
+/**
+ *  3.10.获取才艺点播列表接口
+ *
+ *  @param roomId           直播间ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getTalentList:(NSString * _Nonnull)roomId
+             finishHandler:(GetTalentListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.11.获取才艺点播邀请状态接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param item   邀请信息
+ */
+typedef void (^GetTalentStatusFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject* _Nonnull item);
+
+/**
+ *  3.11.获取才艺点播邀请状态接口
+ *
+ *  @param roomId           直播间ID
+ *  @param talentInviteId   才艺点播邀请ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getTalentStatus:(NSString * _Nonnull)roomId
+              talentInviteId:(NSString * _Nonnull)talentInviteId
+               finishHandler:(GetTalentStatusFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.12.获取指定观众信息接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param item   邀请信息
+ */
+typedef void (^GetNewFansBaseInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetNewFansBaseInfoItemObject* _Nonnull item);
+
+/**
+ *  3.12.获取指定观众信息接口
+ *
+ *  @param userId           观众ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getNewFansBaseInfo:(NSString * _Nonnull)userId
+                  finishHandler:(GetNewFansBaseInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  3.13.观众开始／结束视频互动（废弃）接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^AddLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^ControlManPushFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSMutableArray<NSString*>* _Nonnull manPushUrl);
 
 /**
- *  3.11.添加开播封面图（用于主播添加开播封面图）接口
+ *  3.13.观众开始／结束视频互动接口（废弃）
  *
- *  @param token			用户身份唯一标识
- *  @param photoId          封面图ID
+ *  @param roomId           观众ID
+ *  @param control           观众ID
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)addLiveRoomPhoto:(NSString * _Nonnull)token
-                      photoId:(NSString * _Nonnull)photoId
-                finishHandler:(AddLiveRoomPhotoFinishHandler _Nullable)finishHandler;
+- (NSInteger)controlManPush:(NSString * _Nonnull)roomId
+                    control:(ControlType)control
+                  finishHandler:(ControlManPushFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.12.设置默认使用封面图（用于主播设置默认的封面图）接口回调
+ *  3.14.获取推荐主播列表接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^SetUsingLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
 
 /**
- *  3.12.设置默认使用封面图（用于主播设置默认的封面图）接口
+ *  3.14.获取推荐主播列表接口
  *
- *  @param token			用户身份唯一标识
- *  @param photoId          封面图ID
+ *  @param number           获取推荐个数
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)setUsingLiveRoomPhoto:(NSString * _Nonnull)token
-                           photoId:(NSString * _Nonnull)photoId
-                     finishHandler:(SetUsingLiveRoomPhotoFinishHandler _Nullable)finishHandler;
+- (NSInteger)getPromoAnchorList:(int)number
+                  finishHandler:(GetPromoAnchorListFinishHandler _Nullable)finishHandler;
+
+#pragma mark - 预约私密
 
 /**
- *  3.13.删除开播封面图（用于主播删除开播封面图）接口回调
+ *  4.1.观众待处理的预约邀请列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ *  @param item    邀请信息
+ */
+typedef void (^ManHandleBookingListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, BookingPrivateInviteListObject * _Nonnull item);
+
+/**
+ *  4.1.观众待处理的预约邀请列表接口
+ *
+ *  @param type            列表类型（0:等待观众处理 1:等待主播处理 2:已确认 3：历史）
+ *  @param start           起始，用于分页，表示从第几个元素开始获取
+ *  @param step            步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler   接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)manHandleBookingList:(BookingListType)type
+                            start:(int)start
+                             step:(int)step
+                    finishHandler:(ManHandleBookingListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  4.2.观众处理预约邀请接口回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^DelLiveRoomPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^HandleBookingFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
 
 /**
- *  3.13.删除开播封面图（用于主播删除开播封面图）接口
+ *  4.2.观众处理预约邀请接口
  *
- *  @param token			用户身份唯一标识
- *  @param photoId          封面图ID
- *  @param finishHandler    接口回调
+ *  @param inviteId            邀请ID
+ *  @param isConfirm           是否同意（0:否 1:是）
+ *  @param finishHandler       接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)delLiveRoomPhoto:(NSString * _Nonnull)token
-                      photoId:(NSString * _Nonnull)photoId
-                finishHandler:(DelLiveRoomPhotoFinishHandler _Nullable)finishHandler;
-
+- (NSInteger)handleBooking:(NSString * _Nonnull)inviteId
+                 isConfirm:(BOOL)isConfirm
+             finishHandler:(HandleBookingFinishHandler _Nullable)finishHandler;
 
 /**
- *  4.1.获取用户头像接口回调
+ *  4.3.取消预约邀请接口回调
  *
- *  @param success    成功失败
- *  @param errnum     错误码
- *  @param errmsg     错误提示
- *  @param photoUrl   头像url
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
  */
-typedef void (^GetLiveRoomUserPhotoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull photoUrl);
+typedef void (^SendCancelPrivateLiveInviteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
 
 /**
- *  4.1.获取用户头像接口
+ *  4.3.取消预约邀请接口
  *
- *  @param token			用户身份唯一标识
- *  @param userId			用户ID
- *  @param photoType		头像类型（0：小图（用于直播间显示头像） 1:大图（用于个人信息界面等显示头像））
- *  @param finishHandler    接口回调
+ *  @param invitationId            邀请ID
+ *  @param finishHandler       接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomUserPhoto:(NSString * _Nonnull)token
-                               userId:(NSString * _Nonnull)userId
-                            photoType:(PhotoType)photoType
-                        finishHandler:(GetLiveRoomUserPhotoFinishHandler _Nullable)finishHandler;
-
+- (NSInteger)sendCancelPrivateLiveInvite:(NSString * _Nonnull)invitationId
+                    finishHandler:(SendCancelPrivateLiveInviteFinishHandler _Nullable)finishHandler;
 
 /**
- *  4.2.获取可编辑的本人资料接口回调
+ *  4.4.获取预约邀请未读或待处理数量接口回调
  *
- *  @param success    成功失败
- *  @param errnum     错误码
- *  @param errmsg     错误提示
- *  @param item   头像url
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
  */
-typedef void (^GetLiveRoomModifyInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomPersonalInfoItemObject* _Nonnull item);
+typedef void (^ManBookingUnreadUnhandleNumFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, BookingUnreadUnhandleNumItemObject * _Nonnull item);
 
 /**
- *  4.2.获取可编辑的本人资料接口
+ *  4.4.获取预约邀请未读或待处理数量接口
  *
- *  @param token			用户身份唯一标识
- *  @param finishHandler    接口回调
+ *  @param finishHandler       接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomModifyInfo:(NSString * _Nonnull)token
-                    finishHandler:(GetLiveRoomModifyInfoFinishHandler _Nullable)finishHandler;
+- (NSInteger)manBookingUnreadUnhandleNum:(ManBookingUnreadUnhandleNumFinishHandler _Nullable)finishHandler;
 
 /**
- *  4.3.提交本人资料接口回调
+ *  4.5.获取新建预约邀请信息接口回调
  *
- *  @param success    成功失败
- *  @param errnum     错误码
- *  @param errmsg     错误提示
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
  */
-typedef void (^SetLiveRoomModifyInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^GetCreateBookingInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetCreateBookingInfoItemObject * _Nonnull item);
 
 /**
- *  4.3.提交本人资料接口
+ *  4.5.获取新建预约邀请信息接口
  *
- *  @param token			用户身份唯一标识
- *  @param photoId			头像图片ID（可无，无则表示不修改）
- *  @param nickName			昵称
- *  @param gender			性别（0：男性 1:女性）
- *  @param birthday			出生日期（格式： 1980-01-01）
- *  @param finishHandler    接口回调
+ *  @param userId               主播ID
+ *  @param finishHandler        接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)setLiveRoomModifyInfo:(NSString * _Nonnull)token
-                          photoId:(NSString * _Nonnull)photoId
-                          nickName:(NSString * _Nonnull)nickName
-                            gender:(Gender)gender
-                          birthday:(NSString * _Nonnull)birthday
-                     finishHandler:(SetLiveRoomModifyInfoFinishHandler _Nullable)finishHandler;
+- (NSInteger)getCreateBookingInfo:(NSString* _Nullable)userId
+                    finishHandler:(GetCreateBookingInfoFinishHandler _Nullable)finishHandler;
 
 /**
- *  5.1.同步配置（用于客户端获取http接口服务器，IM服务器及上传图片服务器域名及端口等配置）接口回调
+ *  4.6.新建预约邀请接口回调
  *
- *  @param success    成功失败
- *  @param errnum     错误码
- *  @param errmsg     错误提示
- *  @param item       同步配置
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
  */
-typedef void (^GetLiveRoomConfigFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LiveRoomConfigItemObject* _Nonnull item);
+typedef void (^SendBookingRequestFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
 
 /**
- *  5.1.同步配置（用于客户端获取http接口服务器，IM服务器及上传图片服务器域名及端口等配置）接口回调
+ *  4.6.新建预约邀请接口
  *
- *  @param finishHandler    接口回调
+ *  @param userId               主播ID
+ *  @param timeId               预约时间ID
+ *  @param bookTime             预约时间
+ *  @param giftId               礼物ID
+ *  @param giftNum              礼物数量
+ *  @param finishHandler        接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)getLiveRoomConfig:(GetLiveRoomConfigFinishHandler _Nullable)finishHandler;
+- (NSInteger)sendBookingRequest:(NSString* _Nullable)userId
+                         timeId:(NSString* _Nullable)timeId
+                       bookTime:(NSInteger)bookTime
+                         giftId:(NSString* _Nullable)giftId
+                        giftNum:(int)giftNum
+                    finishHandler:(SendBookingRequestFinishHandler _Nullable)finishHandler;
 
+#pragma mark - 背包
 
 /**
- *  5.2.上传图片接口回调
+ *  5.1.获取背包礼物列表接口回调
  *
- *  @param success    成功失败
- *  @param errnum     错误码
- *  @param errmsg     错误提示
- *  @param imageId    图片ID
- *  @param imageUrl   图片url
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
  */
-typedef void (^UploadLiveRoomImgFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull imageId, NSString * _Nonnull imageUrl);
+typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *>* _Nullable array);
 
 /**
- *  5.2.上传图片接口
+ *  5.1.获取背包礼物列表接口
  *
- *  @param token			用户身份唯一标识
- *  @param imageType	    图片类型（1：用户头像 2:直播间封面图）
- *  @param imageFileName    图片文件二进制数据
- *  @param finishHandler    接口回调
+ *  @param finishHandler       接口回调
  *
  *  @return 成功请求Id
  */
-- (NSInteger)uploadLiveRoomImg:(NSString * _Nonnull)token
-                     imageType:(ImageType)imageType
-                 imageFileName:(NSString * _Nonnull)imageFileName
-                 finishHandler:(UploadLiveRoomImgFinishHandler _Nullable)finishHandler;
+- (NSInteger)giftList:(GiftListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  5.2.获取使用劵列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *>* _Nullable array);
+
+/**
+ *  5.2.获取使用劵列表接口
+ *
+ *  @param finishHandler       接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)voucherList:(VoucherListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  5.3.获取座驾列表接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^RideListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *>* _Nullable array);
+
+/**
+ *  5.3.获取座驾列表接口
+ *
+ *  @param finishHandler       接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)rideList:(RideListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  5.4.使用／取消座驾接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^SetRideFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  5.4.使用／取消座驾接口
+ *
+ *  @param finishHandler       接口回调
+ *  @param rideId  座驾ID
+ *  @return 成功请求Id
+ */
+- (NSInteger)setRide:(NSString* _Nonnull)rideId
+       finishHandler:(SetRideFinishHandler _Nullable)finishHandler;
+
+/**
+ *  5.5.获取背包未读数量接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^GetBackpackUnreadNumFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetBackPackUnreadNumItemObject * _Nonnull item);
+
+/**
+ *  5.5.获取背包未读数量接口
+ *
+ *  @param finishHandler       接口回调
+ *  @return 成功请求Id
+ */
+- (NSInteger)getBackpackUnreadNum:(GetBackpackUnreadNumFinishHandler _Nullable)finishHandler;
+
+#pragma mark - 其它
+/**
+ *  6.1.同步配置接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^GetConfigFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item);
+
+/**
+ *  6.1.同步配置接口
+ *
+ *  @param finishHandler       接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getConfig:(GetConfigFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.2.获取账号余额接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^GetLeftCreditFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, double credit);
+
+/**
+ *  6.2.获取账号余额接口
+ *
+ *  @param finishHandler       接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getLeftCredit:(GetLeftCreditFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.3.添加／取消收藏接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^SetFavoriteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  6.3.添加／取消收藏接口
+ *
+ *  @param finishHandler        接口回调
+ *  @param roomId               直播间ID（可无，无则表示不在直播间操作）
+ *  @param userId               主播ID
+ *  @param isFav                是否收藏（0:否 1:是）
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)setFavorite:(NSString* _Nonnull)userId
+                  roomId:(NSString* _Nonnull)roomId
+                   isFav:(BOOL)isFav
+           finishHandler:(SetFavoriteFinishHandler _Nullable)finishHandler;
 
 @end

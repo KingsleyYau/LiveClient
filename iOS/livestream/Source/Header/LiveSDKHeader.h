@@ -9,6 +9,6 @@
 #ifndef LiveSDKHeader_h
 #define LiveSDKHeader_h
 
-#import "LiveModuleManager.h"
+#import "LiveModule.h"
 
 #endif /* LiveSDKHeader_h */

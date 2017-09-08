@@ -393,6 +393,7 @@ void CTransportDataHandler::OnConnect(bool success)
 
 void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen)
 {
+    // 虽然报警告，但是没有加这些，Unpacket的数据有时被改变，暂时不知道原因
     size_t strLen = dataLen;
     if (NULL != m_listener) {
         if (NULL != m_packetHandler) {

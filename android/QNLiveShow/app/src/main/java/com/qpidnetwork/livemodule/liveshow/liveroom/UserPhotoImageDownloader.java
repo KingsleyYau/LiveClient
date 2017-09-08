@@ -6,7 +6,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
-import com.qpidnetwork.livemodule.httprequest.OnGetUserPhotoCallback;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;

@@ -1,7 +1,9 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
+import com.qpidnetwork.livemodule.httprequest.OnGetGiftDetailCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetPackageGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniPackage;
+import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
 import com.qpidnetwork.livemodule.utils.Log;
 
@@ -38,8 +40,12 @@ public class PackageGiftManager {
 
     //用户我的背包-礼物展示
     private Map<String, List<PackageGiftItem>> allPackageGiftItemList = new HashMap<>();
+    //用于直播间-背包礼物-界面刷新
+    private List<GiftItem> allPackageGiftItems = new ArrayList<>();
     //用于直播间-背包礼物数量展示
     private Map<String, Integer> allPackageGiftNumList = new HashMap<>();
+    private  GiftItem giftItem;
+    private boolean isWaitingForGetGiftDetail = false;
     //-----------------------------私有方法定义-------------------
 
     /**
@@ -47,45 +53,80 @@ public class PackageGiftManager {
      * @param callback
      */
     public void getAllPackageGiftItems(final OnGetPackageGiftListCallback callback){
-        boolean isLocalExisted = isLocalPackageGiftListExist();
-        if(!isLocalExisted){
-            Log.d(TAG,"getAllPackageGiftItems-isLocalExisted:"+isLocalExisted);
-            RequestJniPackage.GetPackageGiftList(new OnGetPackageGiftListCallback() {
-                @Override
-                public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList) {
-                    Log.d(TAG,"onGetPackageGiftList-isSuccess:"+isSuccess+" errCode:"
-                            +" errMsg:"+errMsg+" packageGiftList:"+packageGiftList);
+        RequestJniPackage.GetPackageGiftList(new OnGetPackageGiftListCallback() {
+            @Override
+            public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList) {
+                Log.d(TAG,"onGetPackageGiftList-isSuccess:"+isSuccess+" errCode:"
+                        +" errMsg:"+errMsg+" packageGiftList:"+packageGiftList);
 
-                    if(isSuccess && null != packageGiftList){
-                        allPackageGiftNumList.clear();
-                        allPackageGiftItemList.clear();
-                        for (PackageGiftItem packageGiftItem : packageGiftList){
-                            List<PackageGiftItem> packageGiftItemList = new ArrayList<PackageGiftItem>();
-                            if(allPackageGiftItemList.containsKey(packageGiftItem.giftId)){
-                                packageGiftItemList = allPackageGiftItemList.get(packageGiftItem.giftId);
+                if(isSuccess && null != packageGiftList){
+                    allPackageGiftNumList.clear();
+                    allPackageGiftItemList.clear();
+                    allPackageGiftItems.clear();
+                    for (PackageGiftItem packageGiftItem : packageGiftList){
+                        while(isWaitingForGetGiftDetail){
+                            try {
+                                Thread.sleep(200l);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            packageGiftItemList.add(packageGiftItem);
-                            allPackageGiftItemList.put(packageGiftItem.giftId,packageGiftItemList);
+                        }
+                        List<PackageGiftItem> packageGiftItemList = new ArrayList<PackageGiftItem>();
+                        if(allPackageGiftItemList.containsKey(packageGiftItem.giftId)){
+                            packageGiftItemList = allPackageGiftItemList.get(packageGiftItem.giftId);
+                        }
+                        packageGiftItemList.add(packageGiftItem);
+                        allPackageGiftItemList.put(packageGiftItem.giftId,packageGiftItemList);
 
-                            int totalNum = allPackageGiftNumList.containsKey(packageGiftItem.giftId) ?
-                                    allPackageGiftNumList.get(packageGiftItem.giftId) : 0;
-                            totalNum+=packageGiftItem.num;
-                            allPackageGiftNumList.put(packageGiftItem.giftId,totalNum);
+                        int totalNum = allPackageGiftNumList.containsKey(packageGiftItem.giftId) ?
+                                allPackageGiftNumList.get(packageGiftItem.giftId) : 0;
+                        totalNum+=packageGiftItem.num;
+                        allPackageGiftNumList.put(packageGiftItem.giftId,totalNum);
+
+                        giftItem = NormalGiftManager.getInstance().
+                                queryLocalGiftDetailById(packageGiftItem.giftId);
+                        if(null == giftItem){
+                            isWaitingForGetGiftDetail = true;
+                            NormalGiftManager.getInstance().getGiftDetail(packageGiftItem.giftId, new OnGetGiftDetailCallback() {
+                                @Override
+                                public void onGetGiftDetail(boolean isSuccess, int errCode, String errMsg, GiftItem giftDetail) {
+                                    if(isSuccess){
+                                        giftItem = giftDetail;
+                                        if(!allPackageGiftItems.contains(giftItem)){
+                                            allPackageGiftItems.add(giftItem);
+                                        }
+
+                                        isWaitingForGetGiftDetail = false;
+                                    }
+                                }
+                            });
+                        }else{
+                            //TODO:需要排序
+                            if(!allPackageGiftItems.contains(giftItem)){
+                                allPackageGiftItems.add(giftItem);
+                            }
                         }
                     }
-                    if(null != callback){
-                        callback.onGetPackageGiftList(isSuccess,errCode,errMsg,packageGiftList);
-                    }
-
                 }
-            });
-        }
+                if(null != callback){
+                    callback.onGetPackageGiftList(isSuccess,errCode,errMsg,packageGiftList);
+                }
+
+            }
+        });
     }
+
+
 
     public boolean isLocalPackageGiftListExist(){
         return null != allPackageGiftItemList && null != allPackageGiftNumList
                 && allPackageGiftItemList.size() ==  allPackageGiftNumList.size();
     }
+
+    public List<GiftItem> getLocalRoomPackageGiftItems(){
+        return allPackageGiftItems;
+    }
+
 
     /**
      *

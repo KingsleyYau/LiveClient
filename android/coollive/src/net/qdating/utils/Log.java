@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Calendar;
 
-import android.content.Context;
-
 public class Log {
 
 	/**

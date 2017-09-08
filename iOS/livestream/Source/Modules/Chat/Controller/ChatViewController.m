@@ -1821,5 +1821,4 @@ typedef enum AlertPayType {
     });
 }
 
-
 @end

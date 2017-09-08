@@ -16,11 +16,10 @@ using namespace std;
 #include <common/KThread.h>
 
 #include <rtmpdump/IDecoder.h>
-#include <rtmpdump/VideoFrame.h>
+#include <rtmpdump/util/EncodeDecodeBuffer.h>
 
 namespace coollive {
 class VideoFrame;
-class RtmpPlayer;
 class VideoDecoderImp : public VideoDecoder {
 public:
 	VideoDecoderImp();
@@ -28,7 +27,7 @@ public:
 
 public:
 	bool Create(VideoDecoderCallback* callback);
-    void Reset();
+    bool Reset();
 	void Pause();
     void ResetStream();
     void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
@@ -40,6 +39,7 @@ protected:
     void ReleaseBuffer(VideoFrame* decoderBuffer);
 
 private:
+    bool Start();
     void Stop();
     
     // 空闲Buffer
@@ -48,6 +48,9 @@ private:
     // 解码完成回调
     VideoDecoderCallback* mpCallback;
     
+    // 状态锁
+    KMutex mRuningMutex;
+    bool mbRunning;
 };
 }
 #endif /* RTMPDUMP_VIDEODECODERIMP_H_ */

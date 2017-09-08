@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveSendBarView">
+            <connections>
+                <outlet property="emotionBtn" destination="Tq4-gN-uXn" id="ALb-yB-hKj"/>
+                <outlet property="inputBackGroundColorView" destination="NFX-Xf-Mh5" id="Rk0-XY-H8A"/>
+                <outlet property="inputBackGroundView" destination="Rqs-uz-zId" id="UOI-hO-Eyb"/>
+                <outlet property="inputTextField" destination="Evr-UX-9TI" id="boH-Dk-dHu"/>
+                <outlet property="louderBtn" destination="zfb-hm-0eC" id="H0v-VH-IR1"/>
+                <outlet property="sendBtn" destination="56b-b1-RFS" id="atY-rY-L6i"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="48"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rqs-uz-zId" userLabel="Input Background View">
+                    <rect key="frame" x="10" y="5" width="225" height="38"/>
+                    <subviews>
+                        <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NFX-Xf-Mh5">
+                            <rect key="frame" x="0.0" y="0.0" width="225" height="38"/>
+                            <color key="backgroundColor" red="0.40784313725490196" green="0.40784313725490196" blue="0.40784313725490196" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfb-hm-0eC" userLabel="Louder Button" customClass="KKCheckButton">
+                            <rect key="frame" x="0.0" y="3" width="47" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="zfb-hm-0eC" secondAttribute="height" multiplier="52:36" id="k67-8n-6uC"/>
+                            </constraints>
+                            <state key="normal" image="Live_Input_Btn_Louder"/>
+                            <state key="selected" image="Live_Input_Btn_Louder_Selected"/>
+                        </button>
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="Evr-UX-9TI" userLabel="Input Text Field" customClass="LiveRoomTextField">
+                            <rect key="frame" x="42" y="3" width="178" height="32"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <textInputTraits key="textInputTraits" returnKeyType="send"/>
+                        </textField>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="NFX-Xf-Mh5" firstAttribute="leading" secondItem="Rqs-uz-zId" secondAttribute="leading" id="6VM-i0-ez4"/>
+                        <constraint firstItem="zfb-hm-0eC" firstAttribute="leading" secondItem="Rqs-uz-zId" secondAttribute="leading" id="BAs-1R-jQT"/>
+                        <constraint firstItem="Evr-UX-9TI" firstAttribute="leading" secondItem="zfb-hm-0eC" secondAttribute="trailing" constant="-5" id="Dvp-Z9-UEv"/>
+                        <constraint firstItem="NFX-Xf-Mh5" firstAttribute="trailing" secondItem="Rqs-uz-zId" secondAttribute="trailing" id="Eww-F3-p9q"/>
+                        <constraint firstAttribute="bottom" secondItem="Evr-UX-9TI" secondAttribute="bottom" constant="3" id="MJU-ce-cEr"/>
+                        <constraint firstAttribute="trailing" secondItem="Evr-UX-9TI" secondAttribute="trailing" constant="5" id="Ojy-By-tmE"/>
+                        <constraint firstItem="NFX-Xf-Mh5" firstAttribute="bottom" secondItem="Rqs-uz-zId" secondAttribute="bottom" id="Sn9-tw-nih"/>
+                        <constraint firstItem="NFX-Xf-Mh5" firstAttribute="top" secondItem="Rqs-uz-zId" secondAttribute="top" id="Z0B-Kc-FbH"/>
+                        <constraint firstItem="zfb-hm-0eC" firstAttribute="bottom" secondItem="Rqs-uz-zId" secondAttribute="bottom" constant="-3" id="kdq-Sc-egQ"/>
+                        <constraint firstItem="Evr-UX-9TI" firstAttribute="top" secondItem="Rqs-uz-zId" secondAttribute="top" constant="3" id="tfp-Jy-EPp"/>
+                        <constraint firstItem="zfb-hm-0eC" firstAttribute="top" secondItem="Rqs-uz-zId" secondAttribute="top" constant="3" id="zMr-uD-PAc"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="56b-b1-RFS" userLabel="Send Button">
+                    <rect key="frame" x="300" y="5" width="65" height="38"/>
+                    <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="65" id="sN6-EY-otE"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                    <state key="normal" title="Send">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="sendAction:" destination="-1" eventType="touchUpInside" id="LWZ-ix-xav"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-gN-uXn" userLabel="Emotion Button" customClass="KKCheckButton">
+                    <rect key="frame" x="245" y="2" width="45" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="45" id="OET-yy-4GF"/>
+                        <constraint firstAttribute="width" secondItem="Tq4-gN-uXn" secondAttribute="height" multiplier="1:1" id="Q2S-2i-bId"/>
+                    </constraints>
+                    <state key="normal" image="Chat-EmotionGray">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="56b-b1-RFS" firstAttribute="top" secondItem="Rqs-uz-zId" secondAttribute="top" id="B7U-In-zH2"/>
+                <constraint firstAttribute="trailing" secondItem="56b-b1-RFS" secondAttribute="trailing" constant="10" id="D4a-bT-j33"/>
+                <constraint firstItem="Rqs-uz-zId" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="DCR-a9-yVj"/>
+                <constraint firstItem="Tq4-gN-uXn" firstAttribute="leading" secondItem="Rqs-uz-zId" secondAttribute="trailing" constant="10" id="Gew-Ci-KVX"/>
+                <constraint firstItem="Rqs-uz-zId" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="5" id="JGU-FM-wRE"/>
+                <constraint firstItem="56b-b1-RFS" firstAttribute="leading" secondItem="Tq4-gN-uXn" secondAttribute="trailing" constant="10" id="UAA-bK-fZa"/>
+                <constraint firstItem="Tq4-gN-uXn" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="czQ-oW-t61"/>
+                <constraint firstAttribute="bottom" secondItem="Rqs-uz-zId" secondAttribute="bottom" constant="5" id="ieB-kF-yhy"/>
+                <constraint firstItem="56b-b1-RFS" firstAttribute="bottom" secondItem="Rqs-uz-zId" secondAttribute="bottom" id="r5h-V4-WM6"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Chat-EmotionGray" width="24" height="24"/>
+        <image name="Live_Input_Btn_Louder" width="26" height="18"/>
+        <image name="Live_Input_Btn_Louder_Selected" width="26" height="18"/>
+    </resources>
+</document>

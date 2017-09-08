@@ -6,16 +6,20 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMLoginItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.Log;
 
@@ -55,7 +59,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
     /**
      * 礼物本地配置列表
      */
-    private IMGiftManager mIMGiftManager;
+    private NormalGiftManager mNormalGiftManager;
 	/**
 	 * 消息ID生成器
 	 */
@@ -92,14 +96,14 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	private IMManager(Context context){
 		this.mContext = context;
 		mUrlList = new ArrayList<String>();
-		mUrlList.add("ws://172.25.32.17:3006");
+		mUrlList.add("ws://172.25.32.17:3106");
 		mIsLogin = false;
 		mIsAutoRelogin = false;
 		mListenerManager = new IMEventListenerManager();
 		mMsgIdIndex = new AtomicInteger(MsgIdIndexBegin);
 		mSendingMsgMap = new HashMap<Integer, IMMessageItem>();
 		mIMUserBaseInfoManager = new IMUserBaseInfoManager();
-        mIMGiftManager = IMGiftManager.getInstance();
+        mNormalGiftManager = NormalGiftManager.getInstance();
 		mHandler = new Handler(){
 			@Override
 			public void handleMessage(Message msg) {
@@ -249,7 +253,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 				ResetParam();
 			}
 			// LiveChat登录
-			result = IMClient.Login(loginItem.userId, loginItem.token);
+			result = IMClient.Login(loginItem.token);
 			if (result){
 				mIsAutoRelogin = true;
 				if(GiftSender.getInstance().imReconnecting){
@@ -400,12 +404,13 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	 * @param multiClickId
 	 * @return
 	 */
-	public IMMessageItem sendGift(String roomId, GiftItem giftItem, int count, boolean isMultiClick, int multiStart, int multiEnd, int multiClickId){
+	public IMMessageItem sendGift(String roomId, GiftItem giftItem, boolean isPackage, int count, boolean isMultiClick, int multiStart, int multiEnd, int multiClickId){
 		int reqId = IMClient.GetReqId();
 		IMGiftMessageContent msgContent = new IMGiftMessageContent(giftItem.id, giftItem.name, count, isMultiClick, multiStart, multiEnd, multiClickId);
 		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), mLoginItem.userId, mLoginItem.nickName,
 				mLoginItem.level, IMMessageItem.MessageType.Gift, null, msgContent);
-		if(!mIsLogin || !IMClient.SendGift(reqId, roomId, mLoginItem.nickName, giftItem.id, giftItem.name, count, isMultiClick, multiStart, multiEnd, multiClickId)){
+
+		if(!mIsLogin || !IMClient.SendGift(reqId, roomId, mLoginItem.nickName, giftItem.id, giftItem.name, isPackage, count, isMultiClick, multiStart, multiEnd, multiClickId)){
 			return null;
 		}else{
 			//存储发送中消息
@@ -436,14 +441,15 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	/**
 	 * 7.1.观众立即私密邀请
 	 * @param userId
-	 * @param isInitiative	主动发起/收到主播端通知后发起
+	 * @param logId			用于区分是否主播发起
+	 * @param force
 	 * @return
 	 */
-	public int sendImmediatePrivateInvite(String userId, boolean isInitiative){
+	public int sendImmediatePrivateInvite(String userId, String logId, boolean force){
 		int reqId = IM_INVALID_REQID;
 		if(mIsLogin){
 			reqId = IMClient.GetReqId();
-			if(!IMClient.SendImmediatePrivateInvite(reqId, userId, isInitiative)){
+			if(!IMClient.SendImmediatePrivateInvite(reqId, userId, logId, force)){
 				reqId = IM_INVALID_REQID;
 			}
 		}
@@ -485,7 +491,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 	/**************************** IM Client Listener  **************************************/
 	@Override
-	public void OnLogin(LCC_ERR_TYPE errType, String errMsg) {
+	public void OnLogin(LCC_ERR_TYPE errType, String errMsg, IMLoginItem loginItem) {
 		Message msg = Message.obtain();
 		msg.what = IMNotifyOptType.IMLoginEvent.ordinal();
 		msg.arg1 = errType.ordinal();
@@ -520,9 +526,14 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnSendRoomMsg(int reqId, LCC_ERR_TYPE errType, String errMsg) {
+	public void OnPublicRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo) {
+		mListenerManager.OnRoomIn(reqId, success, errType, errMsg, roomInfo);
+	}
+
+	@Override
+	public void OnSendRoomMsg(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
 		IMMessageItem msgItem = mSendingMsgMap.remove(Integer.valueOf(reqId));
-		mListenerManager.OnSendRoomMsg(errType, errMsg, msgItem);
+		mListenerManager.OnSendRoomMsg(success, errType, errMsg, msgItem);
 	}
 
 	@Override
@@ -538,8 +549,8 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String inviteId) {
-		mListenerManager.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, inviteId);
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
+		mListenerManager.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, invitationId, timeout, roomId);
 	}
 
 	@Override
@@ -548,13 +559,18 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnKickOff() {
-		mListenerManager.OnKickOff();
+	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String talentInviteId) {
+
 	}
 
 	@Override
-	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName) {
-		mListenerManager.OnRecvRoomCloseNotice(roomId, userId, nickName);
+	public void OnKickOff(LCC_ERR_TYPE errType, String errMsg) {
+		mListenerManager.OnKickOff(errType, errMsg);
+	}
+
+	@Override
+	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, LCC_ERR_TYPE errType, String errMsg) {
+		mListenerManager.OnRecvRoomCloseNotice(roomId, userId, nickName, errType, errMsg);
 	}
 
 	@Override
@@ -598,12 +614,22 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
+	public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String playUrl) {
+
+	}
+
+	@Override
 	public void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, String msg) {
 		//收到普通文本消息
 		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), fromId, nickName,
 				level, IMMessageItem.MessageType.Normal, new IMTextMessageContent(msg), null);
 		mListenerManager.OnRecvRoomMsg(msgItem);
 		Log.i(TAG, "OnRecvRoomMsg msgId:%d, roomId:%s, userId:%s", msgItem.msgId, msgItem.roomId, msgItem.userId);
+	}
+
+	@Override
+	public void OnRecvSendSystemNotice(String roomId, String message, String link){
+
 	}
 
 	@Override
@@ -623,18 +649,49 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId) {
-		mListenerManager.OnRecvInviteReply(inviteId, replyType, roomId);
+	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
+								  String nickName, String avatarImg, String message) {
+		mListenerManager.OnRecvInviteReply(inviteId, replyType, roomId, roomType, anchorId, nickName, avatarImg, message);
 	}
 
 	@Override
-	public void OnRecvAnchoeInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl) {
-		mListenerManager.OnRecvAnchoeInviteNotify(anchorId, anchorName, anchorPhotoUrl);
+	public void OnRecvAnchoeInviteNotify(String logId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+		mListenerManager.OnRecvAnchoeInviteNotify(logId, anchorId, anchorName, anchorPhotoUrl, message);
 	}
 
 	@Override
-	public void OnRecvScheduledInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl, int bookTime, String inviteId) {
-		mListenerManager.OnRecvScheduledInviteNotify(anchorId, anchorName, anchorPhotoUrl, bookTime, inviteId);
+	public void OnRecvScheduledInviteNotify(String inviteId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+		mListenerManager.OnRecvScheduledInviteNotify(inviteId, anchorId, anchorName, anchorPhotoUrl, message);
+	}
+
+	@Override
+	public void OnRecvSendBookingReplyNotice(String inviteId, BookInviteReplyType replyType) {
+		mListenerManager.OnRecvSendBookingReplyNotice(inviteId, replyType);
+	}
+
+	@Override
+	public void OnRecvBookingNotice(String roomId, String userId, String nickName, String photoUrl, int leftSeconds) {
+		mListenerManager.OnRecvBookingNotice(roomId, userId, nickName, photoUrl, leftSeconds);
+	}
+
+	@Override
+	public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit, TalentInviteStatus status) {
+		mListenerManager.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status);
+	}
+
+	@Override
+	public void OnRecvLevelUpNotice(int level) {
+		mListenerManager.OnRecvLevelUpNotice(level);
+	}
+
+	@Override
+	public void OnRecvLoveLevelUpNotice(int lovelevel) {
+		mListenerManager.OnRecvLoveLevelUpNotice(lovelevel);
+	}
+
+	@Override
+	public void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item) {
+		mListenerManager.OnRecvBackpackUpdateNotice(item);
 	}
 
 

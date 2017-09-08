@@ -167,6 +167,12 @@ public:
         }
     }
     
+    void OnPlayerOnDelayMaxTime(PlayerController* pc) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnPlayerOnDelayMaxTime:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnPlayerOnDelayMaxTime:mpRtmpPlayerOC];
+        }
+    }
+    
 private:
     __weak typeof(RtmpPlayerOC) *mpRtmpPlayerOC;
 };
@@ -188,6 +194,7 @@ private:
         self.player = new PlayerController();
         self.statusCallback = new PlayerStatusCallbackImp(self);
         self.player->SetStatusCallback(self.statusCallback);
+        self.player->SetCacheMS(1000);
         
         // 默认使用硬解码
         _useHardDecoder = YES;

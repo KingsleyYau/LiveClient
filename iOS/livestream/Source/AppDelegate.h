@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 #define AppDelegate() ((AppDelegate *)[UIApplication sharedApplication].delegate)
-
 @interface AppDelegate : UIResponder <UIApplicationDelegate> {
     NSUncaughtExceptionHandler *_handler;
 }

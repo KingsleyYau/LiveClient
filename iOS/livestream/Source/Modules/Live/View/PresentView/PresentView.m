@@ -147,9 +147,8 @@
 
     GiftItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     
-    NSString *giftId = self.giftIdArray[indexPath.row];
-    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
-    
+    NSString* giftId = self.giftIdArray[indexPath.row];
+    AllGiftItem* item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
     [cell updataCellViewItem:item];
     
     BOOL isIndexPath = NO;
@@ -196,13 +195,14 @@
         } completion:^( BOOL  finished) {
             [UIView setAnimationsEnabled: YES ];
         }];
-    }
-    
-    NSString *giftId = self.giftIdArray[indexPath.row];
-    [self didSelectItemWithGiftId:giftId];
-    
-    if (self.presentDelegate && [self.presentDelegate respondsToSelector:@selector(presentViewdidSelectItemWithSelf:atIndexPath:)]) {
-        [self.presentDelegate presentViewdidSelectItemWithSelf:self atIndexPath:indexPath];
+        
+        NSString *giftId = self.giftIdArray[indexPath.row];
+        [self didSelectItemWithGiftId:giftId];
+        
+        if (self.presentDelegate && [self.presentDelegate respondsToSelector:@selector(presentViewdidSelectItemWithSelf:atIndexPath:)]) {
+            [self.presentDelegate presentViewdidSelectItemWithSelf:self atIndexPath:indexPath];
+        }
+        
     }
 }
 
@@ -231,7 +231,7 @@
 
 - (void)didSelectItemWithGiftId:(NSString *)giftId {
     
-    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
+//    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
     
 //    [self.firstNumBtn setTitle:@"" forState:UIControlStateNormal];
 //    [self.secondNumBtn setTitle:@"" forState:UIControlStateNormal];

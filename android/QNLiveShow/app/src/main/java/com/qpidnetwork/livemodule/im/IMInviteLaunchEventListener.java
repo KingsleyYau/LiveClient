@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.im;
 
+import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
@@ -19,24 +20,35 @@ public interface IMInviteLaunchEventListener {
 	 * @param roomInfo
 	 */
 	public void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
-	
+
+	/**
+	 * 3.2.观众退出直播间回调
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 */
+	public void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
+
 	/**
 	 * 3.11.直播间开播通知
 	 * @param roomId
 	 * @param leftSeconds		开播前的倒数秒数
 	 */
 	public void OnRecvLiveStart(String roomId, int leftSeconds);
-	
+
 	/**
 	 * 7.1.观众立即私密邀请
 	 * @param reqId
 	 * @param success
 	 * @param errType
 	 * @param errMsg
-	 * @param inviteId
+	 * @param invitationId
+	 * @param timeout
+	 * @param roomId
 	 */
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String inviteId);
-	
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
+
 	/**
 	 * 7.2.观众取消立即私密邀请
 	 * @param reqId
@@ -46,31 +58,18 @@ public interface IMInviteLaunchEventListener {
 	 * @param roomId
 	 */
 	public void OnCancelImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String roomId);
-	
+
 	/**
 	 * 7.3.接收立即私密邀请回复通知
 	 * @param inviteId
 	 * @param replyType
 	 * @param roomId
-	 */
-	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId);
-	
-	
-	/**
-	 * 7.4.接收主播立即私密邀请通知
+	 * @param roomType
 	 * @param anchorId
-	 * @param anchorName
-	 * @param anchorPhotoUrl
+	 * @param nickName
+	 * @param avatarImg
+	 * @param message
 	 */
-	public void OnRecvAnchoeInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl);
-	
-	/**
-	 * 7.5.接收主播预约私密邀请通知
-	 * @param anchorId
-	 * @param anchorName
-	 * @param anchorPhotoUrl
-	 * @param bookTime
-	 * @param inviteId
-	 */
-	public void OnRecvScheduledInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl, int bookTime, String inviteId);
+	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
+										   String nickName, String avatarImg, String message);
 }

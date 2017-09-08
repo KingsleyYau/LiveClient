@@ -33,7 +33,9 @@ public:
     bool RenewBufferSize(int bufferLen);
 
     // 重置参数
-    void ResetFrame();
+    void ResetBuffer();
+    // 填充Buffer
+    void FillBufferWithChar(char c);
     // 获取当前容量
     int GetBufferCapacity();
     

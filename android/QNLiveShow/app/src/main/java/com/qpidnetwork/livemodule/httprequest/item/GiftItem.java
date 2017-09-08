@@ -7,7 +7,7 @@ package com.qpidnetwork.livemodule.httprequest.item;
  */
 public class GiftItem {
 	
-	public enum GiftType {
+	public enum GiftType{
 		Unknown,
 		Normal,
 		Advanced
@@ -19,31 +19,35 @@ public class GiftItem {
 	
 	/**
 	 * 礼物基础信息Item
-	 * @param id			礼物ID
-	 * @param name			礼物名称
-	 * @param smallImgUrl	礼物小图标（用于文本聊天窗显示）
-	 * @param middleImgUrl	发送列表显示的图片url
-	 * @param bigImageUrl	礼物在直播间显示的资源url(大礼物播放使用)
-	 * @param credit		发送礼物所需的信用点
-	 * @param canMultiClick	是否可连击
-	 * @param giftType		礼物类型
-	 * @param updateTime	礼物最后更新时间戳
-	 * @param giftChooser   礼物可选发送数目
+	 * @param id				礼物ID
+	 * @param name				礼物名称
+	 * @param smallImgUrl		礼物小图url（一般用于文本聊天窗显示）
+	 * @param middleImgUrl		礼物中图url（一般用于发送列表显示）
+	 * @param bigImageUrl		礼物大图url（一般用于播放连击显示）
+	 * @param srcFlashUrl		礼物在直播间显示/播放的flash资源url
+	 * @param srcWebpUrl		礼物在直播间显示/播放的webp资源url
+	 * @param credit			发送礼物所需的信用点
+	 * @param canMultiClick		是否可连击
+	 * @param giftType			礼物类型
+	 * @param levelLimit		发送礼物的用户限制等级，发送者等级>=礼物等级才能发送
+	 * @param lovelevelLimit 	发送礼物的亲密度限制，发送者亲密度>=礼物亲密度才能发送
+	 * @param giftChooser   	礼物可选发送数目列表
+	 * @param updateTime		礼物最后更新时间戳
 	 */
 	public GiftItem(String id,
-						String name,
-						String smallImgUrl,
-						String middleImgUrl,
-						String bigImageUrl,
-						String srcFlashUrl,
-						String srcWebpUrl,
-						double credit,
-						boolean canMultiClick,
-						int giftType,
-						int levelLimit,
-						int lovelevelLimit,
-						int updateTime,
-						int[] giftChooser){
+					String name,
+					String smallImgUrl,
+					String middleImgUrl,
+					String bigImageUrl,
+					String srcFlashUrl,
+					String srcWebpUrl,
+					double credit,
+					boolean canMultiClick,
+					int giftType,
+					int levelLimit,
+					int lovelevelLimit,
+					int[] giftChooser,
+					int updateTime){
 		this.id = id;
 		this.name = name;
 		this.smallImgUrl = smallImgUrl;
@@ -62,8 +66,8 @@ public class GiftItem {
 		
 		this.levelLimit = levelLimit;
 		this.lovelevelLimit = lovelevelLimit;
-		this.updateTime = updateTime;
 		this.giftChooser = giftChooser;
+		this.updateTime = updateTime;
 	}
 	
 	public String id;
@@ -78,6 +82,6 @@ public class GiftItem {
 	public GiftType giftType;
 	public int levelLimit;
 	public int lovelevelLimit;
-	public int updateTime;
 	public int[] giftChooser;
+	public int updateTime;
 }

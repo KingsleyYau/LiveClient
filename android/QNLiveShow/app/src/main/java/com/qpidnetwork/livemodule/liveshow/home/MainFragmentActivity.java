@@ -1,122 +1,64 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
+import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TabHost;
+import android.widget.FrameLayout;
 
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.im.IMGiftManager;
-import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
-import com.qpidnetwork.livemodule.liveshow.home.hometab.MainTabFragment;
+import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
+import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
+import com.qpidnetwork.livemodule.liveshow.LiveApplication;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 
-/**
- * FragmentTabHost+Fragment+TabPageIndecator+Fragment方式实现双导航
- */
-public class MainFragmentActivity extends BaseFragmentActivity implements TabHost.OnTabChangeListener {
+public class MainFragmentActivity extends BaseFragmentActivity {
 
-    private FragmentTabHost fragTabHost =null;
-    private static final Class[] fragmentClassz = new Class[]{MainTabFragment.class,
-            PersonInfoFragment.class};
-    private static String[] tabStrs = null;
-    private ImageView iv_mainTab,iv_mobileLive,iv_personCenter;
-    private View view_mainButtomTabs;
-    public int lastSelectedPosition = 0;
+    //头部
+    private FrameLayout btnBack;
+    private TabPageIndicator tabPageIndicator;
+
+    //内容
+    private ViewPager viewPagerContent;
+    private MainFragmentPagerAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setTitleBarVisibility(View.GONE);
-        initData();
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
+        setContentView(R.layout.activity_main);
         initView();
-        updateButtomTabStyle(lastSelectedPosition);
-    }
-
-    private void initData(){
-        postUiRunnableDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //获取状态栏高度, 用于全局使用
-                int statusHeight = DisplayUtil.getStatusBarHeight(mContext);
-                if(statusHeight > 0){
-                    new LocalPreferenceManager(mContext).saveStatusBarHeight(statusHeight);
-                }
-            }
-        }, 200);
-        IMGiftManager.getInstance().getAllStoreGifts(null);
-    }
-
-    /**
-     * 返回当前activity的视图布局ID
-     *
-     * @return
-     */
-    @Override
-    public int getActivityViewId() {
-        return R.layout.fragment_activity_main;
     }
 
     private void initView(){
-        iv_mainTab = (ImageView) findViewById(R.id.iv_mainTab);
-        iv_mobileLive = (ImageView) findViewById(R.id.iv_mobileLive);
-        iv_personCenter = (ImageView) findViewById(R.id.iv_personCenter);
-        view_mainButtomTabs = findViewById(R.id.view_mainButtomTabs);
-        fragTabHost = (FragmentTabHost) super.findViewById(android.R.id.tabhost);
-        fragTabHost.setup(MainFragmentActivity.this, getSupportFragmentManager(),android.R.id.tabcontent);
-        fragTabHost.getTabWidget().setDividerDrawable(null);
-        fragTabHost.setOnTabChangedListener(this);
-        tabStrs = getResources().getStringArray(R.array.buttomTabs);
-        TabHost.TabSpec tabSpec = null;
-        String tabStr = null;
-        Bundle bundle = null;
-        for (int index = 0; index < fragmentClassz.length; index++) {
-            tabStr = tabStrs[index];
-            tabSpec = fragTabHost.newTabSpec(tabStr).setIndicator(tabStr);
-            fragTabHost.addTab(tabSpec, fragmentClassz[index], null);
-            fragTabHost.setTag(index);
-        }
+        btnBack = (FrameLayout) findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(this);
+        tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabPageIndicator);
+
+        viewPagerContent = (ViewPager) findViewById(R.id.viewPagerContent);
+
+        //初始化viewpager
+        mAdapter = new MainFragmentPagerAdapter(this);
+        viewPagerContent.setAdapter(mAdapter);
+        tabPageIndicator.setViewPager(viewPagerContent);
+
+        // 设置控件的模式，一定要先设置模式
+        tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_SAME);
+        // 设置两个标题之间的竖直分割线的颜色，如果不需要显示这个，设置颜色为透明即可
+        tabPageIndicator.setDividerColor(Color.TRANSPARENT);
+        //无未读条数
+        tabPageIndicator.setHasDigitalHint(false);
+        //设置中间竖线上下的padding值
+        tabPageIndicator.setDividerPadding(DisplayUtil.dip2px(LiveApplication.getContext(), 10));
 
     }
 
     @Override
-    public void onClick(View view){
-        super.onClick(view);
-        int i = view.getId();
-        if (i == R.id.ll_mainTab) {
-            updateButtomTabStyle(0);
-
-        } else if (i == R.id.ll_mobileLive) {
-            updateButtomTabStyle(1);
-
-        } else if (i == R.id.ll_personCenter) {
-            updateButtomTabStyle(2);
-
+    public void onClick(View v) {
+        super.onClick(v);
+        switch (v.getId()){
+            case R.id.btnBack:{
+                finish();
+            }break;
         }
-    }
-
-    public void updateButtomTabStyle(int position){
-        if(null != fragTabHost){
-            fragTabHost.setCurrentTab(position);
-        }
-        if(1 == position){
-            view_mainButtomTabs.setVisibility(View.GONE);
-        }else{
-            view_mainButtomTabs.setVisibility(View.VISIBLE);
-            lastSelectedPosition = position;
-        }
-
-        iv_mainTab.setSelected(0 == position);
-        iv_mobileLive.setSelected(1 == position);
-        iv_personCenter.setSelected(2 == position);
-
-    }
-
-    @Override
-    public void onTabChanged(String tabId) {
-        Log.d(TAG,"onTabChanged-tabId:"+tabId);
     }
 }

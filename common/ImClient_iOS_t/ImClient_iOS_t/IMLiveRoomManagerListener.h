@@ -8,9 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#include "IImClientDef.h"
-
-#import "RoomTopFanItemObject.h"
+#include "ImHeader.h"
 
 @protocol IMLiveRoomManagerDelegate <NSObject>
 @optional
@@ -21,8 +19,9 @@
  *
  *  @param errType     结果类型
  *  @param errmsg      结果描述
+ *  @param item        登录返回结构体
  */
-- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ImLoginReturnObject* _Nonnull)item;
 
 /**
  *  注销回调
@@ -35,31 +34,25 @@
 /**
  *  2.4.用户被挤掉线回调
  *
- *  @param reason     被挤掉理由
+ *  @param errType     结果类型
+ *  @param errmsg      结果描述
  */
-- (void)onKickOff:(NSString* _Nonnull)reason;
+- (void)onKickOff:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
 
 #pragma mark - 直播间主动操作回调
 /**
- *  观众进入直播间回调
+ *  3.1.观众进入直播间回调
  *
  *  @param success     操作是否成功
  *  @param reqId       请求序列号
  *  @param errType     结果类型
  *  @param errmsg      结果描述
- *  @param userId      主播ID
- *  @param nickName    主播昵称
- *  @param photoUrl    主播头像url
- *  @param country     主播国家/地区
- *  @param videoUrls   视频流url（字符串数组）
- *  @param fansNum     观众人数
- *  @param contribute  贡献值
- *  @param fansList    前n个观众信息（用于显示用户头像列表数组）
+ *  @param item         直播间信息
  *
  */
-- (void)onFansRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl country:(NSString* _Nonnull)country videoUrls:(NSArray<NSString*>* _Nonnull)videoUrls fansNum:(int)fansNum contribute:(int)contribute fansList:(NSArray<RoomTopFanItemObject*>* _Nonnull)fansList;
+- (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ImLiveRoomObject* _Nonnull)item;
 /**
- *  观众退出直播间回调
+ *  3.2.观众退出直播间回调
  *
  *  @param success     操作是否成功
  *  @param reqId       请求序列号
@@ -67,107 +60,137 @@
  *  @param errmsg      结果描述
  *
  */
-- (void)onFansRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
-/**
- *  获取直播间信息回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *  @param fansNum     观众人数
- *  @param contribute  贡献值
- *
- */
-- (void)onGetRoomInfo:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg fansNum:(int)fansNum contribute:(int)contribute;
+- (void)onRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
 
 /**
- *  3.7.主播禁言观众（直播端把制定观众禁言）回调
+ *  3.13.观众进入公开直播间接口 回调
  *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *
- */
-- (void)onFansShutUp:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
-
-/**
- *  3.9.主播踢观众出直播间（主播端把指定观众踢出直播间）回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param item         直播间信息
  *
  */
-- (void)onFansKickOffRoom:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+- (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImLiveRoomObject* _Nonnull)item;
 
 #pragma mark - 直播间接收操作回调
 /**
- *  接收直播间关闭通知(观众)回调
+ *  3.3.接收直播间关闭通知(观众)回调
  *
  *  @param roomId      直播间ID
  *  @param userId      直播ID
  *  @param nickName    直播昵称
- *  @param fansNum     观众人数
  *
  */
-- (void)onRecvRoomCloseFans:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName fansNum:(int)fansNum;
+- (void)onRecvRoomCloseNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+
 /**
- *  接收直播间关闭通知(直播)回调
- *
- *  @param roomId      直播间ID
- *  @param fansNum     观众人数
- *  @param income      收入
- *  @param newFans     新收藏人数
- *  @param shares      分享数
- *  @param duration    直播时长
- *
- */
-- (void)onRecvRoomCloseBroad:(NSString* _Nonnull)roomId fansNum:(int)fansNum income:(int)income newFans:(int)newFans shares:(int)shares duration:(int)duration;
-/**
- *  接收观众进入直播间通知回调
+ *  3.4.接收观众进入直播间通知回调
  *
  *  @param roomId      直播间ID
  *  @param userId      观众ID
  *  @param nickName    观众昵称
  *  @param photoUrl    观众头像url
+ *  @param riderId     座驾ID
+ *  @param riderName   座驾名称
+ *  @param riderUrl    座驾图片url
+ *  @param fansNum     观众人数
  *
  */
-- (void)onRecvFansRoomIn:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl;
+- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum;
+
+/**
+ *  3.5.接收观众退出直播间通知回调
+ *
+ *  @param roomId      直播间ID
+ *  @param userId      观众ID
+ *  @param nickName    观众昵称
+ *  @param photoUrl    观众头像url
+ *  @param fansNum     观众人数
+ *
+ */
+- (void)onRecvLeaveRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl fansNum:(int)fansNum;
+
+/**
+ *  3.6.接收返点通知回调
+ *
+ *  @param roomId      直播间ID
+ *  @param rebateInfo  返点信息
+ *
+ */
+- (void)onRecvRebateInfoNotice:(NSString* _Nonnull)roomId rebateInfo:(RebateInfoObject* _Nonnull) rebateInfo;
+
+/**
+ *  3.7.接收关闭直播间倒数通知回调
+ *
+ *  @param roomId      直播间ID
+ *  @param err         错误码
+ *  @param errMsg      错误描述
+ *
+ */
+- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+
 /**
  *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
  *
  *  @param roomId      直播间ID
- *  @param userId      被禁言用户ID
- *  @param nickName    被禁言用户昵称
- *  @param timeOut     禁言时长
+ *  @param errType     踢出原因错误码
+ *  @param errmsg      踢出原因描述
+ *  @param credit      信用点
  *
  */
-- (void)onRecvShutUpNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName timeOut:(int)timeOut;
+- (void)onRecvRoomKickoffNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString* _Nonnull)errmsg credit:(double)credit;
+
 /**
- *  3.10.接收观众踢出直播间通知（观众端／主播端接收观众踢出直播间通知）回调
+ *  3.9.接收充值通知回调
  *
  *  @param roomId      直播间ID
- *  @param userId      被禁言用户ID
- *  @param nickName    被禁言用户昵称
+ *  @param msg         充值提示
+ *  @param credit      信用点
  *
  */
-- (void)onRecvKickOffRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName;
+- (void)onRecvLackOfCreditNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg credit:(double)credit;
+
+/**
+ *  3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）回调
+ *
+ *  @param roomId      直播间ID
+ *  @param credit      信用点
+ *
+ */
+- (void)onRecvCreditNotice:(NSString* _Nonnull)roomId credit:(double)credit;
+
+/**
+ *  3.11.直播间开播通知 回调
+ *
+ *  @param roomId       直播间ID
+ *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
+ *
+ */
+- (void) onRecvWaitStartOverNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds;
+
+/**
+ *  3.12.接收观众／主播切换视频流通知接口 回调
+ *
+ *  @param roomId       房间ID
+ *  @param isAnchor     是否是主播推流（1:是 0:否）
+ *  @param playUrl      播放url
+ *
+ */
+- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSString* _Nonnull)playUrl;
 
 #pragma mark - 直播间文本消息信息
 /**
- *  发送直播间文本消息回调
+ *  4.1.发送直播间文本消息回调
  *
  *  @param reqId       请求序列号
  *  @param errType     结果类型
  *  @param errmsg      结果描述
  *
  */
-- (void)onSendRoomMsg:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+- (void)onSendLiveChat:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
 /**
- *  接收直播间文本消息通知回调
+ *  4.2.接收直播间文本消息通知回调
  *
  *  @param roomId      直播间ID
  *  @param level       发送方级别
@@ -176,43 +199,33 @@
  *  @param msg         文本消息内容
  *
  */
-- (void)onRecvRoomMsg:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
 
-
-#pragma mark - 直播间点赞操作回调
 /**
- *  5.1.发送直播间点赞消息（观众端向直播间发送点赞消息）回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *
- */
-- (void)onSendRoomFav:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
-/**
- *  5.2.接收直播间点赞通知（观众端／主播端接收服务器的直播间点赞通知）回调
+ *  4.3.接收直播间公告消息回调
  *
  *  @param roomId      直播间ID
- *  @param fromId      发送方的用户ID
+ *  @param msg         公告消息内容
+ *  @param link        公告链接（可无，无则表示不是带链接的公告消息）
  *
  */
-- (void)onRecvPushRoomFav:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName isFirst:(BOOL)isFirst;
+- (void)onRecvSendSystemNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg link:(NSString* _Nonnull)link;
 
 #pragma mark - 直播间礼物消息操作回调
 /**
- *  6.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）回调
+ *  5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）回调
  *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *  @param coins       剩余金币数
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param errType       结果类型
+ *  @param errmsg        结果描述
+ *  @param credit        信用点
+ *  @param rebateCredit  返点
  *
  */
-- (void)onSendRoomGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins;
+- (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit;
 /**
- *  6.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）回调
+ * 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）回调
  *
  *  @param roomId               直播间ID
  *  @param fromId               发送方的用户ID
@@ -225,22 +238,23 @@
  *  @param multi_click_id       连击ID，相同则表示是同一次连击
  *
  */
-- (void)onRecvRoomGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**
- *  7.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）回调
+ *  6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）回调
  *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *  @param coins       剩余金币数
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param errType       结果类型
+ *  @param errmsg        结果描述
+ *  @param credit        信用点
+ *  @param rebateCredit  返点
  *
  */
-- (void)onSendRoomToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg coins:(double)coins;
+- (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit;
 /**
- *  7.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
+ *  6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
  *
  *  @param roomId               直播间ID
  *  @param fromId               发送方的用户ID
@@ -248,6 +262,144 @@
  *  @param msg                  消息内容
  *
  */
-- (void)onRecvRoomToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+
+#pragma mark - 邀请私密直播
+/**
+ *  7.1.观众立即私密邀请 回调
+ *
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param err           结果类型
+ *  @param errMsg        结果描述
+ *  @param invitationId      邀请ID
+ *  @param timeOut           邀请的剩余有效时间
+ *  @param roomId            直播间ID
+ *
+ */
+- (void) onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId;
+
+/**
+ *  7.2.观众取消立即私密邀请 回调
+ *
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param err           结果类型
+ *  @param errMsg        结果描述
+ *  @param roomId        直播间ID
+ *
+ */
+- (void)onSendCancelPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg roomId:(NSString* _Nonnull)roomId;
+
+/**
+ *  7.3.接收立即私密邀请回复通知 回调
+ *
+ *  @param inviteId      邀请ID
+ *  @param replyType     主播回复 （0:拒绝 1:同意）
+ *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
+ *  @param roomType      直播间类型
+ *  @param anchorId      主播ID
+ *  @param nickName      主播昵称
+ *  @param avatarImg     主播头像
+ *  @param msg           提示文字
+ *
+ */
+- (void)onRecvInstantInviteReplyNotice:(NSString* _Nonnull)inviteId replyType:(ReplyType)replyType roomId:(NSString* _Nonnull)roomId roomType:(RoomType)roomType anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg;
+
+/**
+ *  7.4.接收主播立即私密邀请通知 回调
+ *
+ *  @param logId     记录ID
+ *  @param anchorId   主播ID
+ *  @param nickName   主播昵称
+ *  @param avatarImg   主播头像url
+ *  @param msg   提示文字
+ *
+ */
+- (void)onRecvInstantInviteUserNotice:(NSString* _Nonnull)logId anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg;
+
+/**
+ *  7.5.接收主播预约私密邀请通知 回调
+ *
+ *  @param inviteId     邀请ID
+ *  @param anchorId     主播ID
+ *  @param nickName     主播昵称
+ *  @param avatarImg    主播头像url
+ *  @param msg          提示文字
+ *
+ */
+- (void)onRecvScheduledInviteUserNotice:(NSString* _Nonnull)inviteId anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg;;
+
+/**
+ *  7.6.接收预约私密邀请回复通知 回调
+ *
+ *  @param inviteId     邀请ID
+ *  @param replyType    主播回复（0:拒绝 1:同意 2:超时）
+ *
+ */
+- (void)onRecvSendBookingReplyNotice:(NSString* _Nonnull)inviteId replyType:(AnchorReplyType)replyType;
+
+/**
+ *  7.7.接收预约开始倒数通知 回调
+ *
+ *  @param roomId       直播间ID
+ *  @param userId       对端ID
+ *  @param nickName     对端昵称
+ *  @param photoUrl     对端头像url
+ *  @param leftSeconds  倒数时间（秒）
+ *
+ */
+- (void)onRecvBookingNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl  leftSeconds:(int)leftSeconds;
+
+// ------------- 直播间才艺点播邀请 -------------
+/**
+ *  8.1.发送直播间才艺点播邀请 回调
+ *
+ *  @param success           操作是否成功
+ *  @param reqId             请求序列号
+ *  @param err               结果类型
+ *  @param errMsg            结果描述
+ *  @param talentInviteId    才艺邀请ID
+ *
+ */
+- (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg talentInviteId:(NSString* _Nonnull)talentInviteId;
+
+/**
+ *  8.2.接收直播间才艺点播回复通知 回调
+ *
+ *  @param roomId           直播间ID
+ *  @param talentInviteId   才艺邀请ID
+ *  @param talentId         才艺ID
+ *  @param name             才艺名称
+ *  @param credit           观众当前的信用点余额
+ *  @param status           状态（1:已接受 2:拒绝）
+ *
+ */
+- (void)onRecvSendTalentNotice:(NSString* _Nonnull)roomId talentInviteId:(NSString* _Nonnull)talentInviteId talentId:(NSString* _Nonnull)talentId name:(NSString* _Nonnull)name credit:(double) credit status:(TalentStatus)status;
+
+#pragma mark - 公共
+/**
+ *  9.1.观众等级升级通知 回调
+ *
+ *  @param level           当前等级
+ *
+ */
+- (void)onRecvLevelUpNotice:(int)level;
+
+/**
+ *  9.2.观众亲密度升级通知
+ *
+ *  @param loveLevel           当前等级
+ *
+ */
+- (void)onRecvLoveLevelUpNotice:(int)loveLevel;
+
+/**
+ *  9.3.背包更新通知
+ *
+ *  @param item          新增的背包礼物
+ *
+ */
+- (void)onRecvBackpackUpdateNotice:(BackpackInfoObject * _Nonnull)item;
 
 @end

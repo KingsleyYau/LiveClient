@@ -33,11 +33,11 @@
     
     for ( BackpackGiftItem *giftItem in self.backGiftArray ) {
         
-        if ( [giftItem.item.giftId isEqualToString:giftID] ) {
-            
-            index = [self.backGiftArray indexOfObject:giftItem];
-            backpackItem = giftItem;
-        }
+//        if ( [giftItem.item.giftId isEqualToString:giftID] ) {
+//            
+//            index = [self.backGiftArray indexOfObject:giftItem];
+//            backpackItem = giftItem;
+//        }
     }
     
     /** 判断背包礼物数量是否够送 */

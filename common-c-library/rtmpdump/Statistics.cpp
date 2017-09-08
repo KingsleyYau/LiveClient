@@ -26,10 +26,10 @@ Statistics::~Statistics() {
 }
     
 void Statistics::Start() {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
-                 "Statistics::Start()"
-                 );
+//    FileLevelLog("rtmpdump",
+//                 KLog::LOG_WARNING,
+//                 "Statistics::Start()"
+//                 );
     
     mStatusMutex.lock();
     mbRunning = true;
@@ -41,10 +41,10 @@ void Statistics::Start() {
 }
     
 void Statistics::Stop() {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
-                 "Statistics::Stop()"
-                 );
+//    FileLevelLog("rtmpdump",
+//                 KLog::LOG_WARNING,
+//                 "Statistics::Stop()"
+//                 );
     
     mStatusMutex.lock();
     mbRunning = false;
@@ -60,11 +60,12 @@ void Statistics::AddVideoRecvFrame() {
     mVideoRecvFrameCount++;
     mStatusMutex.unlock();
     
-    // 不需要准确
-    while( mbRunning && !CanRecvVideo() ) {
-        // 等待帧播放
-        Sleep(100);
-    }
+    CanRecvVideo();
+//    // 不需要准确
+//    while( mbRunning && !CanRecvVideo() ) {
+//        // 等待帧播放
+//        Sleep(100);
+//    }
 }
 
 void Statistics::AddVideoPlayFrame() {
@@ -78,11 +79,12 @@ void Statistics::AddAudioRecvFrame() {
     mAudioRecvFrameCount++;
     mStatusMutex.unlock();
     
-    // 不需要准确
-    while( mbRunning && !CanRecvAudio() ) {
-        // 等待帧播放
-        Sleep(100);
-    }
+    CanRecvAudio();
+//    // 不需要准确
+//    while( mbRunning && !CanRecvAudio() ) {
+//        // 等待帧播放
+//        Sleep(100);
+//    }
 }
 
 void Statistics::AddAudioPlayFrame() {
@@ -95,12 +97,26 @@ bool Statistics::IsDropVideoFrame() {
     bool bFlag = false;
     return bFlag;
 }
+
+int Statistics::IsDisconnect() {
+    bool bFlag = false;
+    
+    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 300 ) {
+        bFlag = true;
+    }
+    
+    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 500 ) {
+        bFlag = true;
+    }
+    
+    return bFlag;
+}
     
 bool Statistics::CanRecvVideo() {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
+                 KLog::LOG_MSG,
                  "Statistics::CanRecvVideo( "
                  "videoFrameCount : %d "
                  ")",
@@ -118,7 +134,7 @@ bool Statistics::CanRecvAudio() {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
+                 KLog::LOG_MSG,
                  "Statistics::CanRecvAudio( "
                  "audioFrameCount : %d "
                  ")",

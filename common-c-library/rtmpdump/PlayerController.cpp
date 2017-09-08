@@ -32,6 +32,10 @@ PlayerController::PlayerController() {
 PlayerController::~PlayerController() {
 }
  
+void PlayerController::SetCacheMS(int cacheMS) {
+    mRtmpPlayer.SetCacheMS(cacheMS);
+}
+    
 void PlayerController::SetVideoRenderer(VideoRenderer* videoRenderer) {
     mpVideoRenderer = videoRenderer;
     if( mpVideoRenderer != videoRenderer ) {
@@ -101,12 +105,11 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::PlayUrl( "
-                 "[Finish], "
-                 "url : %s, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "url : %s "
                  ")",
-                 url.c_str(),
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 url.c_str()
                  );
     
     return bFlag;
@@ -139,7 +142,7 @@ void PlayerController::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::Stop( "
-                 "[Finish], "
+                 "[Success], "
                  "this : %p "
                  ")",
                  this
@@ -346,6 +349,18 @@ void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
     }
 }
 
+void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnDelayMaxTime( "
+                 ")"
+                 );
+    
+    // 可以断开连接
+    if( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
+    }
+}
 /*********************************************** 播放器回调处理 End *****************************************************/
 
 }

@@ -11,8 +11,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 
 /**
  * Description:用户协议页
@@ -20,7 +20,7 @@ import com.qpidnetwork.livemodule.R;
  * Created by Harry on 2017/5/22.
  */
 
-public class UserTermsActivity extends BaseFragmentActivity {
+public class UserTermsActivity extends BaseActionBarFragmentActivity {
 
     private WebView wv_user_item;
     private final String defaultUserItemUrl = "file:///android_asset/use_item.html";
@@ -33,6 +33,7 @@ public class UserTermsActivity extends BaseFragmentActivity {
     }
 
     private void initView(){
+        setCustomContentView(R.layout.activity_user_items);
         wv_user_item = (WebView)findViewById(R.id.wv_user_item);
         WebSettings webSettings = wv_user_item.getSettings();
         //The default is "UTF-8".
@@ -69,16 +70,6 @@ public class UserTermsActivity extends BaseFragmentActivity {
         });
         String url = getIntent().getStringExtra("url");
         wv_user_item.loadUrl(null == url ? defaultUserItemUrl : url);
-    }
-
-    /**
-     * 返回当前activity的视图布局ID
-     *
-     * @return
-     */
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_user_items;
     }
 
     @Override

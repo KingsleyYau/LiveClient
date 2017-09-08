@@ -41,11 +41,10 @@ public class IMClient {
 	
 	/**
 	 * 登录
-	 * @param userId
 	 * @param token
 	 * @return
 	 */
-	static public native boolean Login(String userId, String token);
+	static public native boolean Login(String token);
 	
 	/**
 	 * 注销断开连接
@@ -70,6 +69,14 @@ public class IMClient {
 	static public native boolean RoomOut(int reqId, String roomId);
 	
 	/**
+	 * 3.13.观众进入公开直播间
+	 * @param reqId
+	 * @param anchorId
+	 * @return
+	 */
+	static public native boolean PublicRoomIn(int reqId, String anchorId);
+	
+	/**
 	 * 4.1. 发送聊天消息
 	 * @param reqId
 	 * @param roomId
@@ -87,6 +94,7 @@ public class IMClient {
 	 * @param nickName
 	 * @param giftId
 	 * @param giftName
+	 * @param isPackage
 	 * @param count
 	 * @param isMultiClick
 	 * @param multiStart
@@ -94,7 +102,7 @@ public class IMClient {
 	 * @param multiClickId
 	 * @return
 	 */
-	static public native boolean SendGift(int reqId, String roomId, String nickName, String giftId, String giftName, int count, 
+	static public native boolean SendGift(int reqId, String roomId, String nickName, String giftId, String giftName, boolean isPackage, int count, 
 			boolean isMultiClick, int multiStart, int multiEnd, int multiClickId);
 	
 	/**
@@ -111,10 +119,11 @@ public class IMClient {
 	 * 7.1.观众立即私密邀请
 	 * @param reqId
 	 * @param userId
-	 * @param isInitiative	主动发起/收到主播端通知后发起
+	 * @param logId	主播邀请的记录ID(用于区分主播发起/用户发起)
+	 * @param force
 	 * @return
 	 */
-	static public native boolean SendImmediatePrivateInvite(int reqId, String userId, boolean isInitiative);
+	static public native boolean SendImmediatePrivateInvite(int reqId, String userId, String logId, boolean force);
 	
 	/**
 	 * 7.2.观众取消立即私密邀请
@@ -123,4 +132,15 @@ public class IMClient {
 	 * @return
 	 */
 	static public native boolean CancelImmediatePrivateInvite(int reqId, String inviteId);
+	
+	/**
+	 * 8.1.发送直播间才艺点播邀请
+	 * @param reqId
+	 * @param roomId
+	 * @param talentId
+	 * @return
+	 */
+	static public native boolean SendTalentInvite(int reqId, String roomId, String talentId);
+	
+	
 }

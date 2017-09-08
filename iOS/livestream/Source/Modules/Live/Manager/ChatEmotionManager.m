@@ -216,7 +216,7 @@
             [text replaceCharactersInRange:strRange withAttributedString:imageString];
         }
     }
-    [text addAttributes:@{NSFontAttributeName : font} range:NSMakeRange(0, text.length)];
+//    [text addAttributes:@{NSFontAttributeName : font} range:NSMakeRange(0, text.length)];
     
     return text;
 }

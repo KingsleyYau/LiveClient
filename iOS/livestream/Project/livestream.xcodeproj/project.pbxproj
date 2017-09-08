@@ -7,30 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2508F16D1F5E7A7800CA2143 /* DriveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2508F16C1F5E7A7800CA2143 /* DriveView.m */; };
+		2508F16F1F5E7A8000CA2143 /* DriveView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2508F16E1F5E7A8000CA2143 /* DriveView.xib */; };
+		2508F1721F5ED2A600CA2143 /* AudienceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2508F1711F5ED2A600CA2143 /* AudienceModel.m */; };
+		252563011F61282B00A2AAD3 /* VIPPublicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 252562FF1F61282B00A2AAD3 /* VIPPublicViewController.m */; };
+		252563021F61282B00A2AAD3 /* VIPPublicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 252563001F61282B00A2AAD3 /* VIPPublicViewController.xib */; };
 		25295CC11F4D64D300313C07 /* LiveGiftListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25295CC01F4D64D300313C07 /* LiveGiftListManager.m */; };
 		25295CC41F4D653700313C07 /* LiveGiftObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 25295CC31F4D653700313C07 /* LiveGiftObject.m */; };
+		255974A21F55475100B9D667 /* LiveSendBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255974A41F55475100B9D667 /* LiveSendBarView.xib */; };
+		255974B91F5571FE00B9D667 /* YMAudienceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 255974B61F5571FE00B9D667 /* YMAudienceCell.m */; };
+		255974BA1F5571FE00B9D667 /* YMAudienceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 255974B81F5571FE00B9D667 /* YMAudienceView.m */; };
+		255974BD1F55910000B9D667 /* LiveRoomMsgManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 255974BC1F55910000B9D667 /* LiveRoomMsgManager.m */; };
+		255D1AC81F5FA3F600DCB9F8 /* PublicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 255D1ACA1F5FA3F600DCB9F8 /* PublicViewController.xib */; };
+		255D1ACF1F5FC83D00DCB9F8 /* RemberLiveRoomModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 255D1ACE1F5FC83D00DCB9F8 /* RemberLiveRoomModel.m */; };
 		255D9DA71F43E52600B954DD /* ChatEmotionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 255D9DA61F43E52600B954DD /* ChatEmotionItem.m */; };
 		255D9DAA1F43E5C300B954DD /* ChatEmotionListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 255D9DA91F43E5C300B954DD /* ChatEmotionListItem.m */; };
+		256939DC1F56414F000CCE9E /* AudienceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 256939DA1F56414F000CCE9E /* AudienceCell.m */; };
+		256939DD1F56414F000CCE9E /* AudienceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256939DB1F56414F000CCE9E /* AudienceCell.xib */; };
+		256CE1E41F5E2E920008D390 /* ChardTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 256CE1E31F5E2E920008D390 /* ChardTipView.m */; };
+		25856B6C1F5CE62100DC47D9 /* PublicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25856B6A1F5CE62100DC47D9 /* PublicViewController.m */; };
+		25856B751F5CECBA00DC47D9 /* AllGiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25856B741F5CECBA00DC47D9 /* AllGiftItem.m */; };
 		25890A551F4299D60067CC29 /* BackpackPresentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25890A531F4299D60067CC29 /* BackpackPresentView.m */; };
 		25890A561F4299D60067CC29 /* BackpackPresentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25890A541F4299D60067CC29 /* BackpackPresentView.xib */; };
 		25890A591F429A600067CC29 /* ChatEmotionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25890A581F429A600067CC29 /* ChatEmotionManager.m */; };
 		25890A701F42FF3F0067CC29 /* BackpackGiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25890A6F1F42FF3F0067CC29 /* BackpackGiftItem.m */; };
 		25890A731F430CDA0067CC29 /* BackpackSendGiftManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 25890A721F430CDA0067CC29 /* BackpackSendGiftManager.m */; };
+		25A34B261F540B6900A86378 /* LiveSendBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A34B251F540B6900A86378 /* LiveSendBarView.m */; };
+		25E887311F57DA6E006E4639 /* SetStringItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E887301F57DA6E006E4639 /* SetStringItem.m */; };
 		5007B1D21ECAA72E00C2C17F /* RequestManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5007B1D11ECAA72E00C2C17F /* RequestManager.mm */; };
-		5027D55C1EF8FC0300EE3B0E /* CoverPhotoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5571EF8FC0300EE3B0E /* CoverPhotoItemObject.m */; };
-		5027D55D1EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5591EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m */; };
-		5027D55E1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D55B1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.m */; };
-		5027D5711EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5601EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.m */; };
-		5027D5721EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5621EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.m */; };
-		5027D5731EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5641EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.m */; };
-		5027D5741EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5661EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.m */; };
-		5027D5751EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5681EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.m */; };
-		5027D5761EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D56A1EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m */; };
-		5027D5771EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D56C1EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.m */; };
-		5027D5781EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D56E1EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.m */; };
-		5027D5791EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5701EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m */; };
-		5027D57D1EF9054A00EE3B0E /* ManageCoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D57B1EF9054A00EE3B0E /* ManageCoverController.m */; };
-		5027D57E1EF9054A00EE3B0E /* ManageCoverController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5027D57C1EF9054A00EE3B0E /* ManageCoverController.xib */; };
 		5027D5B01EF9060F00EE3B0E /* DeleteTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5AF1EF9060F00EE3B0E /* DeleteTipView.m */; };
 		5027D5B61EF9067200EE3B0E /* LxGridViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5B31EF9067200EE3B0E /* LxGridViewFlowLayout.m */; };
 		5027D5B71EF9067200EE3B0E /* SelectCoverViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5B51EF9067200EE3B0E /* SelectCoverViewCell.m */; };
@@ -41,16 +45,6 @@
 		503A705B1EEF6FBD00BA8FF8 /* LevelView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 503A70591EEF6FBD00BA8FF8 /* LevelView.xib */; };
 		503A70621EEF700400BA8FF8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 503A70611EEF700400BA8FF8 /* CoreText.framework */; };
 		503A70641EEF701700BA8FF8 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 503A70631EEF701700BA8FF8 /* Accelerate.framework */; };
-		5042C0EF1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0EC1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.m */; };
-		5042C0F01ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0EE1ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.m */; };
-		5042C0F31ED91C7000AFEBB8 /* CreateLiveRoomRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0F21ED91C7000AFEBB8 /* CreateLiveRoomRequest.m */; };
-		5042C0F61ED91D8C00AFEBB8 /* CheckLiveRoomRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0F51ED91D8C00AFEBB8 /* CheckLiveRoomRequest.m */; };
-		5042C0F91ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0F81ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m */; };
-		5042C0FC1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0FB1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.m */; };
-		5042C0FF1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C0FE1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.m */; };
-		5042C1021ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C1011ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.m */; };
-		5042C1051ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C1041ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m */; };
-		5042C1081ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5042C1071ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.m */; };
 		505591AA1EF3FD9E000AF03A /* BigGiftAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 505591981EF3FD9E000AF03A /* BigGiftAnimationView.m */; };
 		505591AB1EF3FD9E000AF03A /* gift.webp in Resources */ = {isa = PBXBuildFile; fileRef = 505591991EF3FD9E000AF03A /* gift.webp */; };
 		505591AC1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */; };
@@ -73,10 +67,71 @@
 		5063A3F81ECE99F200361942 /* HotTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063A3F51ECE99F200361942 /* HotTableView.m */; };
 		5063A4051ECECA3200361942 /* UIWidgetBundle.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D6DDB1EC979C1007FF4C6 /* UIWidgetBundle.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 506B52FC1EE1135700803BD2 /* GiftItem.m */; };
+		506BC32B1F59027F001C2962 /* CancelPrivateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2F41F59027E001C2962 /* CancelPrivateRequest.m */; };
+		506BC32C1F59027F001C2962 /* ControlManPushRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2F61F59027E001C2962 /* ControlManPushRequest.m */; };
+		506BC32D1F59027F001C2962 /* GetAllGiftListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2F81F59027E001C2962 /* GetAllGiftListRequest.m */; };
+		506BC32E1F59027F001C2962 /* GetAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2FA1F59027E001C2962 /* GetAnchorListRequest.m */; };
+		506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2FC1F59027E001C2962 /* GetBackpackUnreadNumRequest.m */; };
+		506BC3301F59027F001C2962 /* GetConfigRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2FE1F59027E001C2962 /* GetConfigRequest.m */; };
+		506BC3311F59027F001C2962 /* GetCreateBookingInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3001F59027E001C2962 /* GetCreateBookingInfoRequest.m */; };
+		506BC3321F59027F001C2962 /* GetEmoticonListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3021F59027E001C2962 /* GetEmoticonListRequest.m */; };
+		506BC3331F59027F001C2962 /* GetFollowListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3041F59027E001C2962 /* GetFollowListRequest.m */; };
+		506BC3341F59027F001C2962 /* GetGiftDetailRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3061F59027E001C2962 /* GetGiftDetailRequest.m */; };
+		506BC3351F59027F001C2962 /* GetGiftListByUserIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3081F59027E001C2962 /* GetGiftListByUserIdRequest.m */; };
+		506BC3361F59027F001C2962 /* GetInviteInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC30A1F59027E001C2962 /* GetInviteInfoRequest.m */; };
+		506BC3371F59027F001C2962 /* GetLeftCreditRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC30C1F59027E001C2962 /* GetLeftCreditRequest.m */; };
+		506BC3381F59027F001C2962 /* GetNewFansBaseInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC30E1F59027E001C2962 /* GetNewFansBaseInfoRequest.m */; };
+		506BC3391F59027F001C2962 /* GetRoomInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3101F59027E001C2962 /* GetRoomInfoRequest.m */; };
+		506BC33A1F59027F001C2962 /* GetTalentListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3121F59027E001C2962 /* GetTalentListRequest.m */; };
+		506BC33B1F59027F001C2962 /* GetTalentStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3141F59027E001C2962 /* GetTalentStatusRequest.m */; };
+		506BC33C1F59027F001C2962 /* GiftListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3161F59027E001C2962 /* GiftListRequest.m */; };
+		506BC33D1F59027F001C2962 /* HandleBookingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3181F59027E001C2962 /* HandleBookingRequest.m */; };
+		506BC33E1F59027F001C2962 /* LiveFansListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC31A1F59027E001C2962 /* LiveFansListRequest.m */; };
+		506BC33F1F59027F001C2962 /* ManBookingUnreadUnhandleNumRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC31C1F59027E001C2962 /* ManBookingUnreadUnhandleNumRequest.m */; };
+		506BC3401F59027F001C2962 /* ManHandleBookingListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC31E1F59027E001C2962 /* ManHandleBookingListRequest.m */; };
+		506BC3411F59027F001C2962 /* RideListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3201F59027F001C2962 /* RideListRequest.m */; };
+		506BC3421F59027F001C2962 /* SendBookingRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3221F59027F001C2962 /* SendBookingRequest.m */; };
+		506BC3431F59027F001C2962 /* SetFavoriteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3241F59027F001C2962 /* SetFavoriteRequest.m */; };
+		506BC3441F59027F001C2962 /* SetRideRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3261F59027F001C2962 /* SetRideRequest.m */; };
+		506BC3451F59027F001C2962 /* UpdateTokenIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3281F59027F001C2962 /* UpdateTokenIdRequest.m */; };
+		506BC3461F59027F001C2962 /* VoucherListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC32A1F59027F001C2962 /* VoucherListRequest.m */; };
+		506BC3C91F590AC5001C2962 /* BackGiftItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC38E1F590AC5001C2962 /* BackGiftItemObject.m */; };
+		506BC3CA1F590AC5001C2962 /* BookingPrivateInviteItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3901F590AC5001C2962 /* BookingPrivateInviteItemObject.m */; };
+		506BC3CB1F590AC5001C2962 /* BookingPrivateInviteListObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3921F590AC5001C2962 /* BookingPrivateInviteListObject.m */; };
+		506BC3CC1F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3941F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.m */; };
+		506BC3CD1F590AC6001C2962 /* BookTimeItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3961F590AC5001C2962 /* BookTimeItemObject.m */; };
+		506BC3CE1F590AC6001C2962 /* ConfigItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3981F590AC5001C2962 /* ConfigItemObject.m */; };
+		506BC3CF1F590AC6001C2962 /* CoverPhotoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC39A1F590AC5001C2962 /* CoverPhotoItemObject.m */; };
+		506BC3D01F590AC6001C2962 /* EmoticonInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC39C1F590AC5001C2962 /* EmoticonInfoItemObject.m */; };
+		506BC3D11F590AC6001C2962 /* EmoticonItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC39E1F590AC5001C2962 /* EmoticonItemObject.m */; };
+		506BC3D21F590AC6001C2962 /* FollowItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3A01F590AC5001C2962 /* FollowItemObject.m */; };
+		506BC3D31F590AC6001C2962 /* GetBackPackUnreadNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3A21F590AC5001C2962 /* GetBackPackUnreadNumItemObject.m */; };
+		506BC3D41F590AC6001C2962 /* GetCreateBookingInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3A41F590AC5001C2962 /* GetCreateBookingInfoItemObject.m */; };
+		506BC3D51F590AC6001C2962 /* GetNewFansBaseInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3A61F590AC5001C2962 /* GetNewFansBaseInfoItemObject.m */; };
+		506BC3D61F590AC6001C2962 /* GetTalentItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3A81F590AC5001C2962 /* GetTalentItemObject.m */; };
+		506BC3D71F590AC6001C2962 /* GetTalentStatusItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3AA1F590AC5001C2962 /* GetTalentStatusItemObject.m */; };
+		506BC3D81F590AC6001C2962 /* GiftInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3AC1F590AC5001C2962 /* GiftInfoItemObject.m */; };
+		506BC3D91F590AC6001C2962 /* GiftItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3AE1F590AC5001C2962 /* GiftItemObject.m */; };
+		506BC3DA1F590AC6001C2962 /* GiftNumItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3B01F590AC5001C2962 /* GiftNumItemObject.m */; };
+		506BC3DB1F590AC6001C2962 /* GiftWithIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3B21F590AC5001C2962 /* GiftWithIdItemObject.m */; };
+		506BC3DC1F590AC6001C2962 /* InviteIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3B41F590AC5001C2962 /* InviteIdItemObject.m */; };
+		506BC3DD1F590AC6001C2962 /* LiveRoomConfigItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3B61F590AC5001C2962 /* LiveRoomConfigItemObject.m */; };
+		506BC3DE1F590AC6001C2962 /* LiveRoomInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3B81F590AC5001C2962 /* LiveRoomInfoItemObject.m */; };
+		506BC3DF1F590AC6001C2962 /* LiveRoomPersonalInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3BA1F590AC5001C2962 /* LiveRoomPersonalInfoItemObject.m */; };
+		506BC3E01F590AC6001C2962 /* LoginItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3BC1F590AC5001C2962 /* LoginItemObject.m */; };
+		506BC3E11F590AC6001C2962 /* RegisterItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3BE1F590AC5001C2962 /* RegisterItemObject.m */; };
+		506BC3E21F590AC6001C2962 /* RideItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3C01F590AC5001C2962 /* RideItemObject.m */; };
+		506BC3E31F590AC6001C2962 /* RoomInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3C21F590AC5001C2962 /* RoomInfoItemObject.m */; };
+		506BC3E41F590AC6001C2962 /* RoomItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3C41F590AC5001C2962 /* RoomItemObject.m */; };
+		506BC3E51F590AC6001C2962 /* ViewerFansItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3C61F590AC5001C2962 /* ViewerFansItemObject.m */; };
+		506BC3E61F590AC6001C2962 /* VoucherItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3C81F590AC5001C2962 /* VoucherItemObject.m */; };
 		506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 506D60651F0F14AD002CAD3C /* InfoPlist.strings */; };
 		506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 506E416F1F0B276E0041FBEE /* LiveGiftDownloadManager.m */; };
 		507315C21EE9346E005D1C0B /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C11EE9346E005D1C0B /* LikeView.m */; };
 		507315C61EE944F6005D1C0B /* GiftComboManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C51EE944F6005D1C0B /* GiftComboManager.m */; };
+		508550941F5D2C1000BE4A9C /* PreLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 508550921F5D2C1000BE4A9C /* PreLiveViewController.m */; };
+		508550951F5D2C1000BE4A9C /* PreLiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 508550931F5D2C1000BE4A9C /* PreLiveViewController.xib */; };
+		5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 5085509C1F5D32D800BE4A9C /* LiveRoom.m */; };
 		509198381EDEA32C00D26A7B /* BarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198351EDEA32C00D26A7B /* BarrageView.m */; };
 		509198391EDEA32C00D26A7B /* BarrageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198371EDEA32C00D26A7B /* BarrageViewCell.m */; };
 		5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5091983C1EDEA37B00D26A7B /* MsgTableViewCell.m */; };
@@ -85,9 +140,6 @@
 		509198481EDEA59300D26A7B /* BarrageModelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198451EDEA59300D26A7B /* BarrageModelCell.m */; };
 		509198491EDEA59300D26A7B /* BarrageModelCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509198461EDEA59300D26A7B /* BarrageModelCell.xib */; };
 		509295AF1ECD992200111128 /* MsgItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 509295AE1ECD992200111128 /* MsgItem.m */; };
-		5095E3CB1ED6BDF8004FFA3B /* LiveRoomPersonalInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3C71ED6BDF8004FFA3B /* LiveRoomPersonalInfoItemObject.m */; };
-		5095E3CC1ED6BDF8004FFA3B /* ViewerFansItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3C91ED6BDF8004FFA3B /* ViewerFansItemObject.m */; };
-		5095E3CF1ED6BEE1004FFA3B /* LiveRoomInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3CD1ED6BEE1004FFA3B /* LiveRoomInfoItemObject.m */; };
 		5095E4091ED6DCFC004FFA3B /* Country.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E4081ED6DCFC004FFA3B /* Country.m */; };
 		5095E4131ED6DD04004FFA3B /* CountryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E40E1ED6DD04004FFA3B /* CountryTableViewCell.m */; };
 		5095E4141ED6DD04004FFA3B /* CountryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5095E40F1ED6DD04004FFA3B /* CountryTableViewCell.xib */; };
@@ -95,6 +147,7 @@
 		5095E4181ED6DDF0004FFA3B /* CountryTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E4171ED6DDF0004FFA3B /* CountryTableView.m */; };
 		5095E41E1ED6DE9B004FFA3B /* SessionRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E41B1ED6DE9B004FFA3B /* SessionRequest.m */; };
 		5095E41F1ED6DE9B004FFA3B /* SessionRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5095E41D1ED6DE9B004FFA3B /* SessionRequestManager.m */; };
+		509781681F580F0300659204 /* ConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 509781671F580F0300659204 /* ConfigManager.m */; };
 		509910D31EDF9F09003B6813 /* HomePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910CB1EDF9F09003B6813 /* HomePageViewController.m */; };
 		509910D41EDF9F09003B6813 /* HomePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910CC1EDF9F09003B6813 /* HomePageViewController.xib */; };
 		509910D51EDF9F09003B6813 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910CE1EDF9F09003B6813 /* MainViewController.m */; };
@@ -108,26 +161,8 @@
 		509910E71EDF9F25003B6813 /* HotViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910E11EDF9F25003B6813 /* HotViewController.m */; };
 		509910E81EDF9F25003B6813 /* HotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910E21EDF9F25003B6813 /* HotViewController.xib */; };
 		509910F91EDF9F50003B6813 /* LiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910EB1EDF9F50003B6813 /* LiveViewController.m */; };
-		509910FB1EDF9F50003B6813 /* PlayEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910EE1EDF9F50003B6813 /* PlayEndViewController.m */; };
-		509910FC1EDF9F50003B6813 /* PlayEndViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910EF1EDF9F50003B6813 /* PlayEndViewController.xib */; };
 		509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910F11EDF9F50003B6813 /* PlayViewController.m */; };
-		509910FF1EDF9F50003B6813 /* PrePublishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910F41EDF9F50003B6813 /* PrePublishViewController.m */; };
-		509911011EDF9F50003B6813 /* PublishViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509910F71EDF9F50003B6813 /* PublishViewController.m */; };
-		5099111D1EDFA107003B6813 /* LoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509911041EDFA107003B6813 /* LoginViewController.xib */; };
-		5099111F1EDFA107003B6813 /* ForgotPasswordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911091EDFA107003B6813 /* ForgotPasswordController.m */; };
-		509911201EDFA107003B6813 /* ForgotPasswordController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5099110A1EDFA107003B6813 /* ForgotPasswordController.xib */; };
 		509911211EDFA107003B6813 /* LoginManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099110C1EDFA107003B6813 /* LoginManager.m */; };
-		509911221EDFA107003B6813 /* LoginPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099110E1EDFA107003B6813 /* LoginPhoneViewController.m */; };
-		509911231EDFA107003B6813 /* LoginPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5099110F1EDFA107003B6813 /* LoginPhoneViewController.xib */; };
-		509911241EDFA107003B6813 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911111EDFA107003B6813 /* LoginViewController.m */; };
-		509911251EDFA107003B6813 /* RegisterPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911131EDFA107003B6813 /* RegisterPhoneViewController.m */; };
-		509911261EDFA107003B6813 /* RegisterPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509911141EDFA107003B6813 /* RegisterPhoneViewController.xib */; };
-		509911271EDFA107003B6813 /* SelectCountryController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911161EDFA107003B6813 /* SelectCountryController.m */; };
-		509911281EDFA107003B6813 /* VerifyPhoneViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911181EDFA107003B6813 /* VerifyPhoneViewController.m */; };
-		509911291EDFA107003B6813 /* VerifyPhoneViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509911191EDFA107003B6813 /* VerifyPhoneViewController.xib */; };
-		5099112A1EDFA107003B6813 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099111B1EDFA107003B6813 /* WelcomeViewController.m */; };
-		5099112B1EDFA107003B6813 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5099111C1EDFA107003B6813 /* WelcomeViewController.xib */; };
-		5099112C1EDFA3B5003B6813 /* PrePublishViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5099112E1EDFA3B5003B6813 /* PrePublishViewController.xib */; };
 		509911371EDFB8FA003B6813 /* GiftComboNumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911331EDFB8FA003B6813 /* GiftComboNumView.m */; };
 		509911381EDFB8FA003B6813 /* GiftComboView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911351EDFB8FA003B6813 /* GiftComboView.m */; };
 		509911391EDFB8FA003B6813 /* GiftComboView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509911361EDFB8FA003B6813 /* GiftComboView.xib */; };
@@ -141,14 +176,8 @@
 		5099114F1EDFF6F1003B6813 /* FollowCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099114B1EDFF6F1003B6813 /* FollowCollectionView.m */; };
 		509911551EDFF724003B6813 /* DiscoverListItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911521EDFF724003B6813 /* DiscoverListItemObject.m */; };
 		509911561EDFF724003B6813 /* FollowListItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911541EDFF724003B6813 /* FollowListItemObject.m */; };
-		5099115E1EE01563003B6813 /* PublishEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5099115C1EE01563003B6813 /* PublishEndViewController.m */; };
-		5099115F1EE01563003B6813 /* PublishEndViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5099115D1EE01563003B6813 /* PublishEndViewController.xib */; };
-		509911631EE0197A003B6813 /* TopFansViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911611EE0197A003B6813 /* TopFansViewController.m */; };
-		509911641EE0197A003B6813 /* TopFansViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509911621EE0197A003B6813 /* TopFansViewController.xib */; };
 		509A8DDF1ECC350C004720CF /* JTSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DDD1ECC350C004720CF /* JTSegmentControl.swift */; };
 		509A8DE01ECC350C004720CF /* JTSegmentPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DDE1ECC350C004720CF /* JTSegmentPattern.swift */; };
-		509A8DEF1ECC4F13004720CF /* LoginItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DEC1ECC4F13004720CF /* LoginItemObject.m */; };
-		509A8DF01ECC4F13004720CF /* RegisterItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DEE1ECC4F13004720CF /* RegisterItemObject.m */; };
 		50A833901E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A8338D1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m */; };
 		50B23CD31EC9A65B007A7262 /* GoogleAnalyticsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B23CCD1EC9A65B007A7262 /* GoogleAnalyticsViewController.m */; };
 		50B23CD41EC9A65B007A7262 /* ScreenItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B23CCF1EC9A65B007A7262 /* ScreenItem.m */; };
@@ -158,6 +187,7 @@
 		50BF29031E98976E00B8ED5D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50BF29021E98976E00B8ED5D /* Assets.xcassets */; };
 		50BF29061E98976E00B8ED5D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50BF29041E98976E00B8ED5D /* LaunchScreen.storyboard */; };
 		50BF29121E9897C600B8ED5D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50BF290F1E9897C600B8ED5D /* AppDelegate.m */; };
+		50C5AA441F565567002EDCAA /* LiveStreamSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C5AA431F565567002EDCAA /* LiveStreamSession.m */; };
 		50CD622D1F17282F0083E0FF /* TableSuperView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50CD622C1F17282F0083E0FF /* TableSuperView.m */; };
 		50D1BAC91E98D67400088B9D /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BAC81E98D67400088B9D /* VideoToolbox.framework */; };
 		50D1BACB1E98D67E00088B9D /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BACA1E98D67E00088B9D /* AVFoundation.framework */; };
@@ -172,11 +202,8 @@
 		50D649921EE4F04700D71AAF /* SearchTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D649911EE4F04700D71AAF /* SearchTableView.m */; };
 		50D649961EE4F04C00D71AAF /* SearchTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D649941EE4F04C00D71AAF /* SearchTableViewCell.m */; };
 		50D649971EE4F04C00D71AAF /* SearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D649951EE4F04C00D71AAF /* SearchTableViewCell.xib */; };
-		50D649981EE53DE800D71AAF /* PublishViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D6499A1EE53DE800D71AAF /* PublishViewController.xib */; };
 		50D649A21EE5482C00D71AAF /* PromptView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D649A11EE5482C00D71AAF /* PromptView.m */; };
 		50D649A31EE54BEB00D71AAF /* PlayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D649A51EE54BEB00D71AAF /* PlayViewController.xib */; };
-		50D656F91F42881E00FF49F6 /* SelcetCoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D656F71F42881E00FF49F6 /* SelcetCoverViewController.m */; };
-		50D656FA1F42881E00FF49F6 /* SelcetCoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D656F81F42881E00FF49F6 /* SelcetCoverViewController.xib */; };
 		50D657381F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D656FF1F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.m */; };
 		50D657391F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D657001F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.xib */; };
 		50D6573A1F42882A00FF49F6 /* ChatEmotionChooseCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657021F42882A00FF49F6 /* ChatEmotionChooseCollectionViewLayout.m */; };
@@ -210,7 +237,7 @@
 		50D657561F42882A00FF49F6 /* ChatVoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657341F42882A00FF49F6 /* ChatVoiceView.m */; };
 		50D657571F42882A00FF49F6 /* NoChatListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657361F42882A00FF49F6 /* NoChatListView.m */; };
 		50D657581F42882A00FF49F6 /* NoChatListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50D657371F42882A00FF49F6 /* NoChatListView.xib */; };
-		50D6575B1F42885300FF49F6 /* LiveModuleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D6575A1F42885300FF49F6 /* LiveModuleManager.m */; };
+		50D6575B1F42885300FF49F6 /* LiveModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D6575A1F42885300FF49F6 /* LiveModule.m */; };
 		50D657611F42886900FF49F6 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D6575E1F42886900FF49F6 /* libmp3lame.a */; };
 		50D657621F42886900FF49F6 /* Mp3Recorder.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657601F42886900FF49F6 /* Mp3Recorder.m */; };
 		50D657711F4289E000FF49F6 /* ChatEmotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D6576A1F4289E000FF49F6 /* ChatEmotion.m */; };
@@ -231,8 +258,11 @@
 		50F3101C1EEA55D5008CA70D /* AFNetWorkHelpr.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F3101B1EEA55D5008CA70D /* AFNetWorkHelpr.m */; };
 		50F383A61EE68B96003D2765 /* IMManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50F383A51EE68B96003D2765 /* IMManager.mm */; };
 		50F383A71EE68EA3003D2765 /* libImClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F383431EE68825003D2765 /* libImClient.a */; };
+		50F978DE1F61332D009B22D1 /* RecommandCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F978DC1F61332D009B22D1 /* RecommandCollectionViewCell.m */; };
+		50F978DF1F61332D009B22D1 /* RecommandCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50F978DD1F61332D009B22D1 /* RecommandCollectionViewCell.xib */; };
 		50FCE0EE1F0E2588002CEF6A /* SelectNumButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */; };
 		712FE210FD67D53FC77270E2 /* libPods-livestream.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64E06011622A5CC2692A2AD0 /* libPods-livestream.a */; };
+		FAB694121F5E9748008A64B6 /* GetPromoAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -338,14 +368,43 @@
 /* Begin PBXFileReference section */
 		15ADCCF2A5B6C1A9F67FD35A /* Pods-livestream.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-livestream.debug.xcconfig"; path = "Pods/Target Support Files/Pods-livestream/Pods-livestream.debug.xcconfig"; sourceTree = "<group>"; };
 		16F3A11DB57A4E45F0657C0A /* Pods-livestream.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-livestream.release.xcconfig"; path = "Pods/Target Support Files/Pods-livestream/Pods-livestream.release.xcconfig"; sourceTree = "<group>"; };
+		2508F16B1F5E7A7800CA2143 /* DriveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveView.h; sourceTree = "<group>"; };
+		2508F16C1F5E7A7800CA2143 /* DriveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveView.m; sourceTree = "<group>"; };
+		2508F16E1F5E7A8000CA2143 /* DriveView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriveView.xib; sourceTree = "<group>"; };
+		2508F1701F5ED2A600CA2143 /* AudienceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudienceModel.h; sourceTree = "<group>"; };
+		2508F1711F5ED2A600CA2143 /* AudienceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudienceModel.m; sourceTree = "<group>"; };
+		252562FE1F61282B00A2AAD3 /* VIPPublicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VIPPublicViewController.h; sourceTree = "<group>"; };
+		252562FF1F61282B00A2AAD3 /* VIPPublicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VIPPublicViewController.m; sourceTree = "<group>"; };
+		252563001F61282B00A2AAD3 /* VIPPublicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VIPPublicViewController.xib; sourceTree = "<group>"; };
 		25295CBF1F4D64D300313C07 /* LiveGiftListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveGiftListManager.h; sourceTree = "<group>"; };
 		25295CC01F4D64D300313C07 /* LiveGiftListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveGiftListManager.m; sourceTree = "<group>"; };
 		25295CC21F4D653700313C07 /* LiveGiftObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveGiftObject.h; sourceTree = "<group>"; };
 		25295CC31F4D653700313C07 /* LiveGiftObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveGiftObject.m; sourceTree = "<group>"; };
+		255974A51F55476200B9D667 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LiveSendBarView.xib; sourceTree = "<group>"; };
+		255974A71F55477200B9D667 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LiveSendBarView.strings; sourceTree = "<group>"; };
+		255974B51F5571FE00B9D667 /* YMAudienceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMAudienceCell.h; sourceTree = "<group>"; };
+		255974B61F5571FE00B9D667 /* YMAudienceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YMAudienceCell.m; sourceTree = "<group>"; };
+		255974B71F5571FE00B9D667 /* YMAudienceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YMAudienceView.h; sourceTree = "<group>"; };
+		255974B81F5571FE00B9D667 /* YMAudienceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YMAudienceView.m; sourceTree = "<group>"; };
+		255974BB1F55910000B9D667 /* LiveRoomMsgManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomMsgManager.h; sourceTree = "<group>"; };
+		255974BC1F55910000B9D667 /* LiveRoomMsgManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomMsgManager.m; sourceTree = "<group>"; };
+		255D1AC91F5FA3F600DCB9F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PublicViewController.xib; sourceTree = "<group>"; };
+		255D1ACC1F5FA3FB00DCB9F8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PublicViewController.strings; sourceTree = "<group>"; };
+		255D1ACD1F5FC83D00DCB9F8 /* RemberLiveRoomModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RemberLiveRoomModel.h; sourceTree = "<group>"; };
+		255D1ACE1F5FC83D00DCB9F8 /* RemberLiveRoomModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RemberLiveRoomModel.m; sourceTree = "<group>"; };
 		255D9DA51F43E52600B954DD /* ChatEmotionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatEmotionItem.h; sourceTree = "<group>"; };
 		255D9DA61F43E52600B954DD /* ChatEmotionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatEmotionItem.m; sourceTree = "<group>"; };
 		255D9DA81F43E5C300B954DD /* ChatEmotionListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatEmotionListItem.h; sourceTree = "<group>"; };
 		255D9DA91F43E5C300B954DD /* ChatEmotionListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatEmotionListItem.m; sourceTree = "<group>"; };
+		256939D91F56414F000CCE9E /* AudienceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudienceCell.h; sourceTree = "<group>"; };
+		256939DA1F56414F000CCE9E /* AudienceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudienceCell.m; sourceTree = "<group>"; };
+		256939DB1F56414F000CCE9E /* AudienceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudienceCell.xib; sourceTree = "<group>"; };
+		256CE1E21F5E2E920008D390 /* ChardTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChardTipView.h; sourceTree = "<group>"; };
+		256CE1E31F5E2E920008D390 /* ChardTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChardTipView.m; sourceTree = "<group>"; };
+		25856B691F5CE62100DC47D9 /* PublicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicViewController.h; sourceTree = "<group>"; };
+		25856B6A1F5CE62100DC47D9 /* PublicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublicViewController.m; sourceTree = "<group>"; };
+		25856B731F5CECBA00DC47D9 /* AllGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllGiftItem.h; sourceTree = "<group>"; };
+		25856B741F5CECBA00DC47D9 /* AllGiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllGiftItem.m; sourceTree = "<group>"; };
 		25890A521F4299D60067CC29 /* BackpackPresentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackpackPresentView.h; sourceTree = "<group>"; };
 		25890A531F4299D60067CC29 /* BackpackPresentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackpackPresentView.m; sourceTree = "<group>"; };
 		25890A541F4299D60067CC29 /* BackpackPresentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BackpackPresentView.xib; sourceTree = "<group>"; };
@@ -355,35 +414,12 @@
 		25890A6F1F42FF3F0067CC29 /* BackpackGiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackpackGiftItem.m; sourceTree = "<group>"; };
 		25890A711F430CDA0067CC29 /* BackpackSendGiftManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackpackSendGiftManager.h; sourceTree = "<group>"; };
 		25890A721F430CDA0067CC29 /* BackpackSendGiftManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackpackSendGiftManager.m; sourceTree = "<group>"; };
+		25A34B241F540B6900A86378 /* LiveSendBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveSendBarView.h; sourceTree = "<group>"; };
+		25A34B251F540B6900A86378 /* LiveSendBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveSendBarView.m; sourceTree = "<group>"; };
+		25E8872F1F57DA6E006E4639 /* SetStringItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetStringItem.h; sourceTree = "<group>"; };
+		25E887301F57DA6E006E4639 /* SetStringItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetStringItem.m; sourceTree = "<group>"; };
 		5007B1D01ECAA72E00C2C17F /* RequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestManager.h; sourceTree = "<group>"; };
 		5007B1D11ECAA72E00C2C17F /* RequestManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RequestManager.mm; sourceTree = "<group>"; };
-		5027D5561EF8FC0300EE3B0E /* CoverPhotoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverPhotoItemObject.h; sourceTree = "<group>"; };
-		5027D5571EF8FC0300EE3B0E /* CoverPhotoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverPhotoItemObject.m; sourceTree = "<group>"; };
-		5027D5581EF8FC0300EE3B0E /* LiveRoomConfigItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomConfigItemObject.h; sourceTree = "<group>"; };
-		5027D5591EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomConfigItemObject.m; sourceTree = "<group>"; };
-		5027D55A1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomGiftItemObject.h; sourceTree = "<group>"; };
-		5027D55B1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomGiftItemObject.m; sourceTree = "<group>"; };
-		5027D55F1EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLiveRoomPhotoRequest.h; sourceTree = "<group>"; };
-		5027D5601EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLiveRoomPhotoRequest.m; sourceTree = "<group>"; };
-		5027D5611EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DelLiveRoomPhotoRequest.h; sourceTree = "<group>"; };
-		5027D5621EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DelLiveRoomPhotoRequest.m; sourceTree = "<group>"; };
-		5027D5631EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomAllGiftListRequest.h; sourceTree = "<group>"; };
-		5027D5641EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomAllGiftListRequest.m; sourceTree = "<group>"; };
-		5027D5651EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomConfigRequest.h; sourceTree = "<group>"; };
-		5027D5661EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomConfigRequest.m; sourceTree = "<group>"; };
-		5027D5671EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomGiftDetailRequest.h; sourceTree = "<group>"; };
-		5027D5681EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomGiftDetailRequest.m; sourceTree = "<group>"; };
-		5027D5691EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomGiftListByUserIdRequest.h; sourceTree = "<group>"; };
-		5027D56A1EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomGiftListByUserIdRequest.m; sourceTree = "<group>"; };
-		5027D56B1EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomPhotoListRequest.h; sourceTree = "<group>"; };
-		5027D56C1EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomPhotoListRequest.m; sourceTree = "<group>"; };
-		5027D56D1EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetUsingLiveRoomPhotoRequest.h; sourceTree = "<group>"; };
-		5027D56E1EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetUsingLiveRoomPhotoRequest.m; sourceTree = "<group>"; };
-		5027D56F1EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UploadLiveRoomImgRequest.h; sourceTree = "<group>"; };
-		5027D5701EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UploadLiveRoomImgRequest.m; sourceTree = "<group>"; };
-		5027D57A1EF9054A00EE3B0E /* ManageCoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManageCoverController.h; sourceTree = "<group>"; };
-		5027D57B1EF9054A00EE3B0E /* ManageCoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManageCoverController.m; sourceTree = "<group>"; };
-		5027D57C1EF9054A00EE3B0E /* ManageCoverController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ManageCoverController.xib; sourceTree = "<group>"; };
 		5027D5AE1EF9060F00EE3B0E /* DeleteTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeleteTipView.h; sourceTree = "<group>"; };
 		5027D5AF1EF9060F00EE3B0E /* DeleteTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeleteTipView.m; sourceTree = "<group>"; };
 		5027D5B21EF9067200EE3B0E /* LxGridViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LxGridViewFlowLayout.h; sourceTree = "<group>"; };
@@ -401,26 +437,6 @@
 		503A70611EEF700400BA8FF8 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		503A70631EEF701700BA8FF8 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		503A707B1EEF81F800BA8FF8 /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
-		5042C0EB1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomFansListRequest.h; sourceTree = "<group>"; };
-		5042C0EC1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomFansListRequest.m; sourceTree = "<group>"; };
-		5042C0ED1ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateLiveRoomTokenIdRequest.h; sourceTree = "<group>"; };
-		5042C0EE1ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateLiveRoomTokenIdRequest.m; sourceTree = "<group>"; };
-		5042C0F11ED91C7000AFEBB8 /* CreateLiveRoomRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreateLiveRoomRequest.h; sourceTree = "<group>"; };
-		5042C0F21ED91C7000AFEBB8 /* CreateLiveRoomRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreateLiveRoomRequest.m; sourceTree = "<group>"; };
-		5042C0F41ED91D8C00AFEBB8 /* CheckLiveRoomRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckLiveRoomRequest.h; sourceTree = "<group>"; };
-		5042C0F51ED91D8C00AFEBB8 /* CheckLiveRoomRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckLiveRoomRequest.m; sourceTree = "<group>"; };
-		5042C0F71ED91E0C00AFEBB8 /* CloseLiveRoomRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloseLiveRoomRequest.h; sourceTree = "<group>"; };
-		5042C0F81ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CloseLiveRoomRequest.m; sourceTree = "<group>"; };
-		5042C0FA1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomAllFansListRequest.h; sourceTree = "<group>"; };
-		5042C0FB1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomAllFansListRequest.m; sourceTree = "<group>"; };
-		5042C0FD1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomHotListRequest.h; sourceTree = "<group>"; };
-		5042C0FE1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomHotListRequest.m; sourceTree = "<group>"; };
-		5042C1001ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomUserPhotoRequest.h; sourceTree = "<group>"; };
-		5042C1011ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomUserPhotoRequest.m; sourceTree = "<group>"; };
-		5042C1031ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLiveRoomModifyInfoRequest.h; sourceTree = "<group>"; };
-		5042C1041ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLiveRoomModifyInfoRequest.m; sourceTree = "<group>"; };
-		5042C1061ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLiveRoomModifyInfoRequest.h; sourceTree = "<group>"; };
-		5042C1071ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLiveRoomModifyInfoRequest.m; sourceTree = "<group>"; };
 		505591941EF3F12E000AF03A /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = ../../Modules/UIWidget/Extern/WebP.framework; sourceTree = "<group>"; };
 		505591971EF3FD9E000AF03A /* BigGiftAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigGiftAnimationView.h; sourceTree = "<group>"; };
 		505591981EF3FD9E000AF03A /* BigGiftAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigGiftAnimationView.m; sourceTree = "<group>"; };
@@ -458,6 +474,122 @@
 		5063A3F51ECE99F200361942 /* HotTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HotTableView.m; sourceTree = "<group>"; };
 		506B52FB1EE1135700803BD2 /* GiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftItem.h; sourceTree = "<group>"; };
 		506B52FC1EE1135700803BD2 /* GiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftItem.m; sourceTree = "<group>"; };
+		506BC2F31F59027E001C2962 /* CancelPrivateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CancelPrivateRequest.h; sourceTree = "<group>"; };
+		506BC2F41F59027E001C2962 /* CancelPrivateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CancelPrivateRequest.m; sourceTree = "<group>"; };
+		506BC2F51F59027E001C2962 /* ControlManPushRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlManPushRequest.h; sourceTree = "<group>"; };
+		506BC2F61F59027E001C2962 /* ControlManPushRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ControlManPushRequest.m; sourceTree = "<group>"; };
+		506BC2F71F59027E001C2962 /* GetAllGiftListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAllGiftListRequest.h; sourceTree = "<group>"; };
+		506BC2F81F59027E001C2962 /* GetAllGiftListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAllGiftListRequest.m; sourceTree = "<group>"; };
+		506BC2F91F59027E001C2962 /* GetAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAnchorListRequest.h; sourceTree = "<group>"; };
+		506BC2FA1F59027E001C2962 /* GetAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAnchorListRequest.m; sourceTree = "<group>"; };
+		506BC2FB1F59027E001C2962 /* GetBackpackUnreadNumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetBackpackUnreadNumRequest.h; sourceTree = "<group>"; };
+		506BC2FC1F59027E001C2962 /* GetBackpackUnreadNumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetBackpackUnreadNumRequest.m; sourceTree = "<group>"; };
+		506BC2FD1F59027E001C2962 /* GetConfigRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetConfigRequest.h; sourceTree = "<group>"; };
+		506BC2FE1F59027E001C2962 /* GetConfigRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetConfigRequest.m; sourceTree = "<group>"; };
+		506BC2FF1F59027E001C2962 /* GetCreateBookingInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCreateBookingInfoRequest.h; sourceTree = "<group>"; };
+		506BC3001F59027E001C2962 /* GetCreateBookingInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCreateBookingInfoRequest.m; sourceTree = "<group>"; };
+		506BC3011F59027E001C2962 /* GetEmoticonListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetEmoticonListRequest.h; sourceTree = "<group>"; };
+		506BC3021F59027E001C2962 /* GetEmoticonListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetEmoticonListRequest.m; sourceTree = "<group>"; };
+		506BC3031F59027E001C2962 /* GetFollowListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetFollowListRequest.h; sourceTree = "<group>"; };
+		506BC3041F59027E001C2962 /* GetFollowListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetFollowListRequest.m; sourceTree = "<group>"; };
+		506BC3051F59027E001C2962 /* GetGiftDetailRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetGiftDetailRequest.h; sourceTree = "<group>"; };
+		506BC3061F59027E001C2962 /* GetGiftDetailRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetGiftDetailRequest.m; sourceTree = "<group>"; };
+		506BC3071F59027E001C2962 /* GetGiftListByUserIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetGiftListByUserIdRequest.h; sourceTree = "<group>"; };
+		506BC3081F59027E001C2962 /* GetGiftListByUserIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetGiftListByUserIdRequest.m; sourceTree = "<group>"; };
+		506BC3091F59027E001C2962 /* GetInviteInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInviteInfoRequest.h; sourceTree = "<group>"; };
+		506BC30A1F59027E001C2962 /* GetInviteInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetInviteInfoRequest.m; sourceTree = "<group>"; };
+		506BC30B1F59027E001C2962 /* GetLeftCreditRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLeftCreditRequest.h; sourceTree = "<group>"; };
+		506BC30C1F59027E001C2962 /* GetLeftCreditRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLeftCreditRequest.m; sourceTree = "<group>"; };
+		506BC30D1F59027E001C2962 /* GetNewFansBaseInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetNewFansBaseInfoRequest.h; sourceTree = "<group>"; };
+		506BC30E1F59027E001C2962 /* GetNewFansBaseInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetNewFansBaseInfoRequest.m; sourceTree = "<group>"; };
+		506BC30F1F59027E001C2962 /* GetRoomInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetRoomInfoRequest.h; sourceTree = "<group>"; };
+		506BC3101F59027E001C2962 /* GetRoomInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetRoomInfoRequest.m; sourceTree = "<group>"; };
+		506BC3111F59027E001C2962 /* GetTalentListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTalentListRequest.h; sourceTree = "<group>"; };
+		506BC3121F59027E001C2962 /* GetTalentListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTalentListRequest.m; sourceTree = "<group>"; };
+		506BC3131F59027E001C2962 /* GetTalentStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTalentStatusRequest.h; sourceTree = "<group>"; };
+		506BC3141F59027E001C2962 /* GetTalentStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTalentStatusRequest.m; sourceTree = "<group>"; };
+		506BC3151F59027E001C2962 /* GiftListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftListRequest.h; sourceTree = "<group>"; };
+		506BC3161F59027E001C2962 /* GiftListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftListRequest.m; sourceTree = "<group>"; };
+		506BC3171F59027E001C2962 /* HandleBookingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HandleBookingRequest.h; sourceTree = "<group>"; };
+		506BC3181F59027E001C2962 /* HandleBookingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HandleBookingRequest.m; sourceTree = "<group>"; };
+		506BC3191F59027E001C2962 /* LiveFansListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveFansListRequest.h; sourceTree = "<group>"; };
+		506BC31A1F59027E001C2962 /* LiveFansListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveFansListRequest.m; sourceTree = "<group>"; };
+		506BC31B1F59027E001C2962 /* ManBookingUnreadUnhandleNumRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManBookingUnreadUnhandleNumRequest.h; sourceTree = "<group>"; };
+		506BC31C1F59027E001C2962 /* ManBookingUnreadUnhandleNumRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManBookingUnreadUnhandleNumRequest.m; sourceTree = "<group>"; };
+		506BC31D1F59027E001C2962 /* ManHandleBookingListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ManHandleBookingListRequest.h; sourceTree = "<group>"; };
+		506BC31E1F59027E001C2962 /* ManHandleBookingListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ManHandleBookingListRequest.m; sourceTree = "<group>"; };
+		506BC31F1F59027F001C2962 /* RideListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RideListRequest.h; sourceTree = "<group>"; };
+		506BC3201F59027F001C2962 /* RideListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideListRequest.m; sourceTree = "<group>"; };
+		506BC3211F59027F001C2962 /* SendBookingRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendBookingRequest.h; sourceTree = "<group>"; };
+		506BC3221F59027F001C2962 /* SendBookingRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendBookingRequest.m; sourceTree = "<group>"; };
+		506BC3231F59027F001C2962 /* SetFavoriteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetFavoriteRequest.h; sourceTree = "<group>"; };
+		506BC3241F59027F001C2962 /* SetFavoriteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetFavoriteRequest.m; sourceTree = "<group>"; };
+		506BC3251F59027F001C2962 /* SetRideRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetRideRequest.h; sourceTree = "<group>"; };
+		506BC3261F59027F001C2962 /* SetRideRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetRideRequest.m; sourceTree = "<group>"; };
+		506BC3271F59027F001C2962 /* UpdateTokenIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateTokenIdRequest.h; sourceTree = "<group>"; };
+		506BC3281F59027F001C2962 /* UpdateTokenIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateTokenIdRequest.m; sourceTree = "<group>"; };
+		506BC3291F59027F001C2962 /* VoucherListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoucherListRequest.h; sourceTree = "<group>"; };
+		506BC32A1F59027F001C2962 /* VoucherListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoucherListRequest.m; sourceTree = "<group>"; };
+		506BC38D1F590AC5001C2962 /* BackGiftItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackGiftItemObject.h; sourceTree = "<group>"; };
+		506BC38E1F590AC5001C2962 /* BackGiftItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackGiftItemObject.m; sourceTree = "<group>"; };
+		506BC38F1F590AC5001C2962 /* BookingPrivateInviteItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookingPrivateInviteItemObject.h; sourceTree = "<group>"; };
+		506BC3901F590AC5001C2962 /* BookingPrivateInviteItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookingPrivateInviteItemObject.m; sourceTree = "<group>"; };
+		506BC3911F590AC5001C2962 /* BookingPrivateInviteListObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookingPrivateInviteListObject.h; sourceTree = "<group>"; };
+		506BC3921F590AC5001C2962 /* BookingPrivateInviteListObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookingPrivateInviteListObject.m; sourceTree = "<group>"; };
+		506BC3931F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookingUnreadUnhandleNumItemObject.h; sourceTree = "<group>"; };
+		506BC3941F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookingUnreadUnhandleNumItemObject.m; sourceTree = "<group>"; };
+		506BC3951F590AC5001C2962 /* BookTimeItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookTimeItemObject.h; sourceTree = "<group>"; };
+		506BC3961F590AC5001C2962 /* BookTimeItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookTimeItemObject.m; sourceTree = "<group>"; };
+		506BC3971F590AC5001C2962 /* ConfigItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigItemObject.h; sourceTree = "<group>"; };
+		506BC3981F590AC5001C2962 /* ConfigItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigItemObject.m; sourceTree = "<group>"; };
+		506BC3991F590AC5001C2962 /* CoverPhotoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoverPhotoItemObject.h; sourceTree = "<group>"; };
+		506BC39A1F590AC5001C2962 /* CoverPhotoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoverPhotoItemObject.m; sourceTree = "<group>"; };
+		506BC39B1F590AC5001C2962 /* EmoticonInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmoticonInfoItemObject.h; sourceTree = "<group>"; };
+		506BC39C1F590AC5001C2962 /* EmoticonInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmoticonInfoItemObject.m; sourceTree = "<group>"; };
+		506BC39D1F590AC5001C2962 /* EmoticonItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmoticonItemObject.h; sourceTree = "<group>"; };
+		506BC39E1F590AC5001C2962 /* EmoticonItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EmoticonItemObject.m; sourceTree = "<group>"; };
+		506BC39F1F590AC5001C2962 /* FollowItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowItemObject.h; sourceTree = "<group>"; };
+		506BC3A01F590AC5001C2962 /* FollowItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowItemObject.m; sourceTree = "<group>"; };
+		506BC3A11F590AC5001C2962 /* GetBackPackUnreadNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetBackPackUnreadNumItemObject.h; sourceTree = "<group>"; };
+		506BC3A21F590AC5001C2962 /* GetBackPackUnreadNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetBackPackUnreadNumItemObject.m; sourceTree = "<group>"; };
+		506BC3A31F590AC5001C2962 /* GetCreateBookingInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetCreateBookingInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3A41F590AC5001C2962 /* GetCreateBookingInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetCreateBookingInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3A51F590AC5001C2962 /* GetNewFansBaseInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetNewFansBaseInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3A61F590AC5001C2962 /* GetNewFansBaseInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetNewFansBaseInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3A71F590AC5001C2962 /* GetTalentItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTalentItemObject.h; sourceTree = "<group>"; };
+		506BC3A81F590AC5001C2962 /* GetTalentItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTalentItemObject.m; sourceTree = "<group>"; };
+		506BC3A91F590AC5001C2962 /* GetTalentStatusItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetTalentStatusItemObject.h; sourceTree = "<group>"; };
+		506BC3AA1F590AC5001C2962 /* GetTalentStatusItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetTalentStatusItemObject.m; sourceTree = "<group>"; };
+		506BC3AB1F590AC5001C2962 /* GiftInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3AC1F590AC5001C2962 /* GiftInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3AD1F590AC5001C2962 /* GiftItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftItemObject.h; sourceTree = "<group>"; };
+		506BC3AE1F590AC5001C2962 /* GiftItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftItemObject.m; sourceTree = "<group>"; };
+		506BC3AF1F590AC5001C2962 /* GiftNumItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftNumItemObject.h; sourceTree = "<group>"; };
+		506BC3B01F590AC5001C2962 /* GiftNumItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftNumItemObject.m; sourceTree = "<group>"; };
+		506BC3B11F590AC5001C2962 /* GiftWithIdItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftWithIdItemObject.h; sourceTree = "<group>"; };
+		506BC3B21F590AC5001C2962 /* GiftWithIdItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftWithIdItemObject.m; sourceTree = "<group>"; };
+		506BC3B31F590AC5001C2962 /* InviteIdItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteIdItemObject.h; sourceTree = "<group>"; };
+		506BC3B41F590AC5001C2962 /* InviteIdItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteIdItemObject.m; sourceTree = "<group>"; };
+		506BC3B51F590AC5001C2962 /* LiveRoomConfigItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomConfigItemObject.h; sourceTree = "<group>"; };
+		506BC3B61F590AC5001C2962 /* LiveRoomConfigItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomConfigItemObject.m; sourceTree = "<group>"; };
+		506BC3B71F590AC5001C2962 /* LiveRoomInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3B81F590AC5001C2962 /* LiveRoomInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3B91F590AC5001C2962 /* LiveRoomPersonalInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomPersonalInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3BA1F590AC5001C2962 /* LiveRoomPersonalInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomPersonalInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3BB1F590AC5001C2962 /* LoginItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginItemObject.h; sourceTree = "<group>"; };
+		506BC3BC1F590AC5001C2962 /* LoginItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginItemObject.m; sourceTree = "<group>"; };
+		506BC3BD1F590AC5001C2962 /* RegisterItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterItemObject.h; sourceTree = "<group>"; };
+		506BC3BE1F590AC5001C2962 /* RegisterItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterItemObject.m; sourceTree = "<group>"; };
+		506BC3BF1F590AC5001C2962 /* RideItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RideItemObject.h; sourceTree = "<group>"; };
+		506BC3C01F590AC5001C2962 /* RideItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RideItemObject.m; sourceTree = "<group>"; };
+		506BC3C11F590AC5001C2962 /* RoomInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomInfoItemObject.h; sourceTree = "<group>"; };
+		506BC3C21F590AC5001C2962 /* RoomInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomInfoItemObject.m; sourceTree = "<group>"; };
+		506BC3C31F590AC5001C2962 /* RoomItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RoomItemObject.h; sourceTree = "<group>"; };
+		506BC3C41F590AC5001C2962 /* RoomItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomItemObject.m; sourceTree = "<group>"; };
+		506BC3C51F590AC5001C2962 /* ViewerFansItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewerFansItemObject.h; sourceTree = "<group>"; };
+		506BC3C61F590AC5001C2962 /* ViewerFansItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewerFansItemObject.m; sourceTree = "<group>"; };
+		506BC3C71F590AC5001C2962 /* VoucherItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoucherItemObject.h; sourceTree = "<group>"; };
+		506BC3C81F590AC5001C2962 /* VoucherItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoucherItemObject.m; sourceTree = "<group>"; };
 		506D60661F0F14AD002CAD3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		506D606C1F0F160B002CAD3C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		506E416E1F0B276E0041FBEE /* LiveGiftDownloadManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveGiftDownloadManager.h; sourceTree = "<group>"; };
@@ -466,6 +598,11 @@
 		507315C11EE9346E005D1C0B /* LikeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LikeView.m; sourceTree = "<group>"; };
 		507315C41EE944F6005D1C0B /* GiftComboManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftComboManager.h; sourceTree = "<group>"; };
 		507315C51EE944F6005D1C0B /* GiftComboManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftComboManager.m; sourceTree = "<group>"; };
+		508550911F5D2C1000BE4A9C /* PreLiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PreLiveViewController.h; sourceTree = "<group>"; };
+		508550921F5D2C1000BE4A9C /* PreLiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PreLiveViewController.m; sourceTree = "<group>"; };
+		508550931F5D2C1000BE4A9C /* PreLiveViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreLiveViewController.xib; sourceTree = "<group>"; };
+		5085509B1F5D32D800BE4A9C /* LiveRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoom.h; sourceTree = "<group>"; };
+		5085509C1F5D32D800BE4A9C /* LiveRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoom.m; sourceTree = "<group>"; };
 		509198331EDEA32C00D26A7B /* BarrageModelAble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarrageModelAble.h; sourceTree = "<group>"; };
 		509198341EDEA32C00D26A7B /* BarrageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BarrageView.h; sourceTree = "<group>"; };
 		509198351EDEA32C00D26A7B /* BarrageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BarrageView.m; sourceTree = "<group>"; };
@@ -481,12 +618,6 @@
 		509198461EDEA59300D26A7B /* BarrageModelCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BarrageModelCell.xib; sourceTree = "<group>"; };
 		509295AD1ECD992200111128 /* MsgItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgItem.h; sourceTree = "<group>"; };
 		509295AE1ECD992200111128 /* MsgItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MsgItem.m; sourceTree = "<group>"; };
-		5095E3C41ED6BDF8004FFA3B /* LiveRoomInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomInfoItemObject.h; sourceTree = "<group>"; };
-		5095E3C71ED6BDF8004FFA3B /* LiveRoomPersonalInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomPersonalInfoItemObject.m; sourceTree = "<group>"; };
-		5095E3C81ED6BDF8004FFA3B /* ViewerFansItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewerFansItemObject.h; sourceTree = "<group>"; };
-		5095E3C91ED6BDF8004FFA3B /* ViewerFansItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewerFansItemObject.m; sourceTree = "<group>"; };
-		5095E3CD1ED6BEE1004FFA3B /* LiveRoomInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomInfoItemObject.m; sourceTree = "<group>"; };
-		5095E3CE1ED6BEE1004FFA3B /* LiveRoomPersonalInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomPersonalInfoItemObject.h; sourceTree = "<group>"; };
 		5095E4071ED6DCFC004FFA3B /* Country.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Country.h; sourceTree = "<group>"; };
 		5095E4081ED6DCFC004FFA3B /* Country.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Country.m; sourceTree = "<group>"; };
 		5095E40D1ED6DD04004FFA3B /* CountryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountryTableViewCell.h; sourceTree = "<group>"; };
@@ -500,6 +631,8 @@
 		5095E41C1ED6DE9B004FFA3B /* SessionRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SessionRequestManager.h; sourceTree = "<group>"; };
 		5095E41D1ED6DE9B004FFA3B /* SessionRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SessionRequestManager.m; sourceTree = "<group>"; };
 		5095E4241ED6DEE0004FFA3B /* RequestErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequestErrorCode.h; sourceTree = "<group>"; };
+		509781661F580F0300659204 /* ConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigManager.h; sourceTree = "<group>"; };
+		509781671F580F0300659204 /* ConfigManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConfigManager.m; sourceTree = "<group>"; };
 		509910CA1EDF9F09003B6813 /* HomePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomePageViewController.h; sourceTree = "<group>"; };
 		509910CB1EDF9F09003B6813 /* HomePageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomePageViewController.m; sourceTree = "<group>"; };
 		509910CC1EDF9F09003B6813 /* HomePageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomePageViewController.xib; sourceTree = "<group>"; };
@@ -520,45 +653,15 @@
 		509910E21EDF9F25003B6813 /* HotViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HotViewController.xib; sourceTree = "<group>"; };
 		509910EA1EDF9F50003B6813 /* LiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveViewController.h; sourceTree = "<group>"; };
 		509910EB1EDF9F50003B6813 /* LiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveViewController.m; sourceTree = "<group>"; };
-		509910ED1EDF9F50003B6813 /* PlayEndViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayEndViewController.h; sourceTree = "<group>"; };
-		509910EE1EDF9F50003B6813 /* PlayEndViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayEndViewController.m; sourceTree = "<group>"; };
-		509910EF1EDF9F50003B6813 /* PlayEndViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayEndViewController.xib; sourceTree = "<group>"; };
 		509910F01EDF9F50003B6813 /* PlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayViewController.h; sourceTree = "<group>"; };
 		509910F11EDF9F50003B6813 /* PlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PlayViewController.m; sourceTree = "<group>"; };
-		509910F31EDF9F50003B6813 /* PrePublishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrePublishViewController.h; sourceTree = "<group>"; };
-		509910F41EDF9F50003B6813 /* PrePublishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrePublishViewController.m; sourceTree = "<group>"; };
-		509910F61EDF9F50003B6813 /* PublishViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublishViewController.h; sourceTree = "<group>"; };
-		509910F71EDF9F50003B6813 /* PublishViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublishViewController.m; sourceTree = "<group>"; };
-		509911051EDFA107003B6813 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LoginViewController.xib; sourceTree = "<group>"; };
-		509911081EDFA107003B6813 /* ForgotPasswordController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ForgotPasswordController.h; sourceTree = "<group>"; };
-		509911091EDFA107003B6813 /* ForgotPasswordController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ForgotPasswordController.m; sourceTree = "<group>"; };
-		5099110A1EDFA107003B6813 /* ForgotPasswordController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForgotPasswordController.xib; sourceTree = "<group>"; };
 		5099110B1EDFA107003B6813 /* LoginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginManager.h; sourceTree = "<group>"; };
 		5099110C1EDFA107003B6813 /* LoginManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginManager.m; sourceTree = "<group>"; };
-		5099110D1EDFA107003B6813 /* LoginPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginPhoneViewController.h; sourceTree = "<group>"; };
-		5099110E1EDFA107003B6813 /* LoginPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginPhoneViewController.m; sourceTree = "<group>"; };
-		5099110F1EDFA107003B6813 /* LoginPhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginPhoneViewController.xib; sourceTree = "<group>"; };
-		509911101EDFA107003B6813 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
-		509911111EDFA107003B6813 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
-		509911121EDFA107003B6813 /* RegisterPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterPhoneViewController.h; sourceTree = "<group>"; };
-		509911131EDFA107003B6813 /* RegisterPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterPhoneViewController.m; sourceTree = "<group>"; };
-		509911141EDFA107003B6813 /* RegisterPhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RegisterPhoneViewController.xib; sourceTree = "<group>"; };
-		509911151EDFA107003B6813 /* SelectCountryController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectCountryController.h; sourceTree = "<group>"; };
-		509911161EDFA107003B6813 /* SelectCountryController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectCountryController.m; sourceTree = "<group>"; };
-		509911171EDFA107003B6813 /* VerifyPhoneViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyPhoneViewController.h; sourceTree = "<group>"; };
-		509911181EDFA107003B6813 /* VerifyPhoneViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyPhoneViewController.m; sourceTree = "<group>"; };
-		509911191EDFA107003B6813 /* VerifyPhoneViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VerifyPhoneViewController.xib; sourceTree = "<group>"; };
-		5099111A1EDFA107003B6813 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
-		5099111B1EDFA107003B6813 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
-		5099111C1EDFA107003B6813 /* WelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WelcomeViewController.xib; sourceTree = "<group>"; };
-		5099112D1EDFA3B5003B6813 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PrePublishViewController.xib; sourceTree = "<group>"; };
-		509911301EDFA3B6003B6813 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PrePublishViewController.strings; sourceTree = "<group>"; };
 		509911321EDFB8FA003B6813 /* GiftComboNumView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftComboNumView.h; sourceTree = "<group>"; };
 		509911331EDFB8FA003B6813 /* GiftComboNumView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftComboNumView.m; sourceTree = "<group>"; };
 		509911341EDFB8FA003B6813 /* GiftComboView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftComboView.h; sourceTree = "<group>"; };
 		509911351EDFB8FA003B6813 /* GiftComboView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftComboView.m; sourceTree = "<group>"; };
 		509911361EDFB8FA003B6813 /* GiftComboView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GiftComboView.xib; sourceTree = "<group>"; };
-		5099113A1EDFC8B8003B6813 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LoginViewController.strings; sourceTree = "<group>"; };
 		5099113B1EDFF6E8003B6813 /* DiscoverCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiscoverCollectionViewCell.h; sourceTree = "<group>"; };
 		5099113C1EDFF6E8003B6813 /* DiscoverCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverCollectionViewCell.m; sourceTree = "<group>"; };
 		5099113D1EDFF6E8003B6813 /* DiscoverCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DiscoverCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -576,19 +679,9 @@
 		509911521EDFF724003B6813 /* DiscoverListItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiscoverListItemObject.m; sourceTree = "<group>"; };
 		509911531EDFF724003B6813 /* FollowListItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FollowListItemObject.h; sourceTree = "<group>"; };
 		509911541EDFF724003B6813 /* FollowListItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FollowListItemObject.m; sourceTree = "<group>"; };
-		5099115B1EE01563003B6813 /* PublishEndViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublishEndViewController.h; sourceTree = "<group>"; };
-		5099115C1EE01563003B6813 /* PublishEndViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PublishEndViewController.m; sourceTree = "<group>"; };
-		5099115D1EE01563003B6813 /* PublishEndViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PublishEndViewController.xib; sourceTree = "<group>"; };
-		509911601EE0197A003B6813 /* TopFansViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopFansViewController.h; sourceTree = "<group>"; };
-		509911611EE0197A003B6813 /* TopFansViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopFansViewController.m; sourceTree = "<group>"; };
-		509911621EE0197A003B6813 /* TopFansViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopFansViewController.xib; sourceTree = "<group>"; };
 		509A8DDD1ECC350C004720CF /* JTSegmentControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTSegmentControl.swift; sourceTree = "<group>"; };
 		509A8DDE1ECC350C004720CF /* JTSegmentPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTSegmentPattern.swift; sourceTree = "<group>"; };
 		509A8DE11ECC352E004720CF /* BridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridgeHeader.h; sourceTree = "<group>"; };
-		509A8DEB1ECC4F13004720CF /* LoginItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginItemObject.h; sourceTree = "<group>"; };
-		509A8DEC1ECC4F13004720CF /* LoginItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginItemObject.m; sourceTree = "<group>"; };
-		509A8DED1ECC4F13004720CF /* RegisterItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegisterItemObject.h; sourceTree = "<group>"; };
-		509A8DEE1ECC4F13004720CF /* RegisterItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterItemObject.m; sourceTree = "<group>"; };
 		50A8338C1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGPUImageBeautyFilter.h; sourceTree = "<group>"; };
 		50A8338D1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGPUImageBeautyFilter.m; sourceTree = "<group>"; };
 		50B23CCC1EC9A65B007A7262 /* GoogleAnalyticsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GoogleAnalyticsViewController.h; sourceTree = "<group>"; };
@@ -607,6 +700,8 @@
 		50BF290F1E9897C600B8ED5D /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		50BF29141E9897E000B8ED5D /* Common-C-Library.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "Common-C-Library.xcodeproj"; path = "../../Modules/Common-C-Library/Common-C-Library.xcodeproj"; sourceTree = "<group>"; };
 		50BF29241E9897ED00B8ED5D /* RtmpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RtmpClient.xcodeproj; path = ../../Modules/RtmpClient/RtmpClient.xcodeproj; sourceTree = "<group>"; };
+		50C5AA421F565567002EDCAA /* LiveStreamSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveStreamSession.h; sourceTree = "<group>"; };
+		50C5AA431F565567002EDCAA /* LiveStreamSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveStreamSession.m; sourceTree = "<group>"; };
 		50CD622B1F17282F0083E0FF /* TableSuperView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableSuperView.h; sourceTree = "<group>"; };
 		50CD622C1F17282F0083E0FF /* TableSuperView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableSuperView.m; sourceTree = "<group>"; };
 		50D1BAC81E98D67400088B9D /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
@@ -626,15 +721,10 @@
 		50D649931EE4F04C00D71AAF /* SearchTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchTableViewCell.h; sourceTree = "<group>"; };
 		50D649941EE4F04C00D71AAF /* SearchTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchTableViewCell.m; sourceTree = "<group>"; };
 		50D649951EE4F04C00D71AAF /* SearchTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchTableViewCell.xib; sourceTree = "<group>"; };
-		50D649991EE53DE800D71AAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PublishViewController.xib; sourceTree = "<group>"; };
-		50D6499F1EE53E1800D71AAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PublishViewController.strings; sourceTree = "<group>"; };
 		50D649A01EE5482C00D71AAF /* PromptView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PromptView.h; sourceTree = "<group>"; };
 		50D649A11EE5482C00D71AAF /* PromptView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PromptView.m; sourceTree = "<group>"; };
 		50D649A41EE54BEB00D71AAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PlayViewController.xib; sourceTree = "<group>"; };
 		50D649A71EE54BEC00D71AAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PlayViewController.strings; sourceTree = "<group>"; };
-		50D656F61F42881E00FF49F6 /* SelcetCoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelcetCoverViewController.h; sourceTree = "<group>"; };
-		50D656F71F42881E00FF49F6 /* SelcetCoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelcetCoverViewController.m; sourceTree = "<group>"; };
-		50D656F81F42881E00FF49F6 /* SelcetCoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelcetCoverViewController.xib; sourceTree = "<group>"; };
 		50D656FE1F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatEmotionChooseCollectionViewCell.h; sourceTree = "<group>"; };
 		50D656FF1F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatEmotionChooseCollectionViewCell.m; sourceTree = "<group>"; };
 		50D657001F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatEmotionChooseCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -686,8 +776,8 @@
 		50D657351F42882A00FF49F6 /* NoChatListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NoChatListView.h; sourceTree = "<group>"; };
 		50D657361F42882A00FF49F6 /* NoChatListView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NoChatListView.m; sourceTree = "<group>"; };
 		50D657371F42882A00FF49F6 /* NoChatListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NoChatListView.xib; sourceTree = "<group>"; };
-		50D657591F42885300FF49F6 /* LiveModuleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveModuleManager.h; sourceTree = "<group>"; };
-		50D6575A1F42885300FF49F6 /* LiveModuleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveModuleManager.m; sourceTree = "<group>"; };
+		50D657591F42885300FF49F6 /* LiveModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveModule.h; sourceTree = "<group>"; };
+		50D6575A1F42885300FF49F6 /* LiveModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveModule.m; sourceTree = "<group>"; };
 		50D6575D1F42886900FF49F6 /* lame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lame.h; sourceTree = "<group>"; };
 		50D6575E1F42886900FF49F6 /* libmp3lame.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libmp3lame.a; sourceTree = "<group>"; };
 		50D6575F1F42886900FF49F6 /* Mp3Recorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp3Recorder.h; sourceTree = "<group>"; };
@@ -725,9 +815,14 @@
 		50F3833E1EE68825003D2765 /* ImClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImClient.xcodeproj; path = ../../Modules/ImClient/ImClient.xcodeproj; sourceTree = "<group>"; };
 		50F383A41EE68B96003D2765 /* IMManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMManager.h; sourceTree = "<group>"; };
 		50F383A51EE68B96003D2765 /* IMManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IMManager.mm; sourceTree = "<group>"; };
+		50F978DB1F61332D009B22D1 /* RecommandCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommandCollectionViewCell.h; sourceTree = "<group>"; };
+		50F978DC1F61332D009B22D1 /* RecommandCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommandCollectionViewCell.m; sourceTree = "<group>"; };
+		50F978DD1F61332D009B22D1 /* RecommandCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RecommandCollectionViewCell.xib; sourceTree = "<group>"; };
 		50FCE0EC1F0E2588002CEF6A /* SelectNumButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectNumButton.h; sourceTree = "<group>"; };
 		50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectNumButton.m; sourceTree = "<group>"; };
 		64E06011622A5CC2692A2AD0 /* libPods-livestream.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-livestream.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAB694101F5E9748008A64B6 /* GetPromoAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPromoAnchorListRequest.h; sourceTree = "<group>"; };
+		FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPromoAnchorListRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -756,6 +851,50 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2539B50A1F5E76100035CFFD /* DriveView */ = {
+			isa = PBXGroup;
+			children = (
+				2508F16B1F5E7A7800CA2143 /* DriveView.h */,
+				2508F16C1F5E7A7800CA2143 /* DriveView.m */,
+				2508F16E1F5E7A8000CA2143 /* DriveView.xib */,
+			);
+			name = DriveView;
+			path = AutoView;
+			sourceTree = "<group>";
+		};
+		255974B41F5571FE00B9D667 /* AudienceView */ = {
+			isa = PBXGroup;
+			children = (
+				255974B51F5571FE00B9D667 /* YMAudienceCell.h */,
+				255974B61F5571FE00B9D667 /* YMAudienceCell.m */,
+				255974B71F5571FE00B9D667 /* YMAudienceView.h */,
+				255974B81F5571FE00B9D667 /* YMAudienceView.m */,
+				256939D91F56414F000CCE9E /* AudienceCell.h */,
+				256939DA1F56414F000CCE9E /* AudienceCell.m */,
+				256939DB1F56414F000CCE9E /* AudienceCell.xib */,
+			);
+			path = AudienceView;
+			sourceTree = "<group>";
+		};
+		256CE1E11F5E2E7C0008D390 /* ChardTipView */ = {
+			isa = PBXGroup;
+			children = (
+				256CE1E21F5E2E920008D390 /* ChardTipView.h */,
+				256CE1E31F5E2E920008D390 /* ChardTipView.m */,
+			);
+			path = ChardTipView;
+			sourceTree = "<group>";
+		};
+		25A34B231F540B4D00A86378 /* LiveSendBarView */ = {
+			isa = PBXGroup;
+			children = (
+				25A34B241F540B6900A86378 /* LiveSendBarView.h */,
+				25A34B251F540B6900A86378 /* LiveSendBarView.m */,
+				255974A41F55475100B9D667 /* LiveSendBarView.xib */,
+			);
+			path = LiveSendBarView;
+			sourceTree = "<group>";
+		};
 		5027D5AD1EF9060F00EE3B0E /* DeleteTipView */ = {
 			isa = PBXGroup;
 			children = (
@@ -861,13 +1000,14 @@
 			children = (
 				50F3101A1EEA55D5008CA70D /* AFNetWorkHelpr.h */,
 				50F3101B1EEA55D5008CA70D /* AFNetWorkHelpr.m */,
+				509781661F580F0300659204 /* ConfigManager.h */,
+				509781671F580F0300659204 /* ConfigManager.m */,
 				505D6DE51EC979E3007FF4C6 /* FileCacheManager.h */,
 				505D6DE61EC979E3007FF4C6 /* FileCacheManager.m */,
 				505D6DE71EC979E3007FF4C6 /* ImageViewLoader.h */,
 				505D6DE81EC979E3007FF4C6 /* ImageViewLoader.m */,
-				50D657591F42885300FF49F6 /* LiveModuleManager.h */,
-				50D6575A1F42885300FF49F6 /* LiveModuleManager.m */,
-				509A8DEA1ECC4F13004720CF /* Model */,
+				50D657591F42885300FF49F6 /* LiveModule.h */,
+				50D6575A1F42885300FF49F6 /* LiveModule.m */,
 				505D6DE91EC979E3007FF4C6 /* Reachability.h */,
 				505D6DEA1EC979E3007FF4C6 /* Reachability.m */,
 				5007B1D01ECAA72E00C2C17F /* RequestManager.h */,
@@ -922,6 +1062,73 @@
 				50D649951EE4F04C00D71AAF /* SearchTableViewCell.xib */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		506BC38C1F590AC5001C2962 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				506BC38D1F590AC5001C2962 /* BackGiftItemObject.h */,
+				506BC38E1F590AC5001C2962 /* BackGiftItemObject.m */,
+				506BC38F1F590AC5001C2962 /* BookingPrivateInviteItemObject.h */,
+				506BC3901F590AC5001C2962 /* BookingPrivateInviteItemObject.m */,
+				506BC3911F590AC5001C2962 /* BookingPrivateInviteListObject.h */,
+				506BC3921F590AC5001C2962 /* BookingPrivateInviteListObject.m */,
+				506BC3931F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.h */,
+				506BC3941F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.m */,
+				506BC3951F590AC5001C2962 /* BookTimeItemObject.h */,
+				506BC3961F590AC5001C2962 /* BookTimeItemObject.m */,
+				506BC3971F590AC5001C2962 /* ConfigItemObject.h */,
+				506BC3981F590AC5001C2962 /* ConfigItemObject.m */,
+				506BC3991F590AC5001C2962 /* CoverPhotoItemObject.h */,
+				506BC39A1F590AC5001C2962 /* CoverPhotoItemObject.m */,
+				506BC39B1F590AC5001C2962 /* EmoticonInfoItemObject.h */,
+				506BC39C1F590AC5001C2962 /* EmoticonInfoItemObject.m */,
+				506BC39D1F590AC5001C2962 /* EmoticonItemObject.h */,
+				506BC39E1F590AC5001C2962 /* EmoticonItemObject.m */,
+				506BC39F1F590AC5001C2962 /* FollowItemObject.h */,
+				506BC3A01F590AC5001C2962 /* FollowItemObject.m */,
+				506BC3A11F590AC5001C2962 /* GetBackPackUnreadNumItemObject.h */,
+				506BC3A21F590AC5001C2962 /* GetBackPackUnreadNumItemObject.m */,
+				506BC3A31F590AC5001C2962 /* GetCreateBookingInfoItemObject.h */,
+				506BC3A41F590AC5001C2962 /* GetCreateBookingInfoItemObject.m */,
+				506BC3A51F590AC5001C2962 /* GetNewFansBaseInfoItemObject.h */,
+				506BC3A61F590AC5001C2962 /* GetNewFansBaseInfoItemObject.m */,
+				506BC3A71F590AC5001C2962 /* GetTalentItemObject.h */,
+				506BC3A81F590AC5001C2962 /* GetTalentItemObject.m */,
+				506BC3A91F590AC5001C2962 /* GetTalentStatusItemObject.h */,
+				506BC3AA1F590AC5001C2962 /* GetTalentStatusItemObject.m */,
+				506BC3AB1F590AC5001C2962 /* GiftInfoItemObject.h */,
+				506BC3AC1F590AC5001C2962 /* GiftInfoItemObject.m */,
+				506BC3AD1F590AC5001C2962 /* GiftItemObject.h */,
+				506BC3AE1F590AC5001C2962 /* GiftItemObject.m */,
+				506BC3AF1F590AC5001C2962 /* GiftNumItemObject.h */,
+				506BC3B01F590AC5001C2962 /* GiftNumItemObject.m */,
+				506BC3B11F590AC5001C2962 /* GiftWithIdItemObject.h */,
+				506BC3B21F590AC5001C2962 /* GiftWithIdItemObject.m */,
+				506BC3B31F590AC5001C2962 /* InviteIdItemObject.h */,
+				506BC3B41F590AC5001C2962 /* InviteIdItemObject.m */,
+				506BC3B51F590AC5001C2962 /* LiveRoomConfigItemObject.h */,
+				506BC3B61F590AC5001C2962 /* LiveRoomConfigItemObject.m */,
+				506BC3B71F590AC5001C2962 /* LiveRoomInfoItemObject.h */,
+				506BC3B81F590AC5001C2962 /* LiveRoomInfoItemObject.m */,
+				506BC3B91F590AC5001C2962 /* LiveRoomPersonalInfoItemObject.h */,
+				506BC3BA1F590AC5001C2962 /* LiveRoomPersonalInfoItemObject.m */,
+				506BC3BB1F590AC5001C2962 /* LoginItemObject.h */,
+				506BC3BC1F590AC5001C2962 /* LoginItemObject.m */,
+				506BC3BD1F590AC5001C2962 /* RegisterItemObject.h */,
+				506BC3BE1F590AC5001C2962 /* RegisterItemObject.m */,
+				506BC3BF1F590AC5001C2962 /* RideItemObject.h */,
+				506BC3C01F590AC5001C2962 /* RideItemObject.m */,
+				506BC3C11F590AC5001C2962 /* RoomInfoItemObject.h */,
+				506BC3C21F590AC5001C2962 /* RoomInfoItemObject.m */,
+				506BC3C31F590AC5001C2962 /* RoomItemObject.h */,
+				506BC3C41F590AC5001C2962 /* RoomItemObject.m */,
+				506BC3C51F590AC5001C2962 /* ViewerFansItemObject.h */,
+				506BC3C61F590AC5001C2962 /* ViewerFansItemObject.m */,
+				506BC3C71F590AC5001C2962 /* VoucherItemObject.h */,
+				506BC3C81F590AC5001C2962 /* VoucherItemObject.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		507315BF1EE9346E005D1C0B /* LikeView */ = {
@@ -1002,6 +1209,11 @@
 		5092959B1ECD6CA500111128 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				50F978DA1F61332D009B22D1 /* RecommandView */,
+				2539B50A1F5E76100035CFFD /* DriveView */,
+				256CE1E11F5E2E7C0008D390 /* ChardTipView */,
+				255974B41F5571FE00B9D667 /* AudienceView */,
+				25A34B231F540B4D00A86378 /* LiveSendBarView */,
 				50D6577D1F428A2200FF49F6 /* GiftPresentView */,
 				509198321EDEA32C00D26A7B /* Barrage */,
 				505591961EF3FD9E000AF03A /* BigGiftAnimationView */,
@@ -1023,20 +1235,32 @@
 		509295AC1ECD991100111128 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				50D657831F428A3B00FF49F6 /* SendGiftItem.h */,
-				50D657841F428A3B00FF49F6 /* SendGiftItem.m */,
-				506B52FB1EE1135700803BD2 /* GiftItem.h */,
-				506B52FC1EE1135700803BD2 /* GiftItem.m */,
-				509295AD1ECD992200111128 /* MsgItem.h */,
-				509295AE1ECD992200111128 /* MsgItem.m */,
+				25856B731F5CECBA00DC47D9 /* AllGiftItem.h */,
+				25856B741F5CECBA00DC47D9 /* AllGiftItem.m */,
 				25890A6E1F42FF3F0067CC29 /* BackpackGiftItem.h */,
 				25890A6F1F42FF3F0067CC29 /* BackpackGiftItem.m */,
 				255D9DA51F43E52600B954DD /* ChatEmotionItem.h */,
 				255D9DA61F43E52600B954DD /* ChatEmotionItem.m */,
 				255D9DA81F43E5C300B954DD /* ChatEmotionListItem.h */,
 				255D9DA91F43E5C300B954DD /* ChatEmotionListItem.m */,
+				506B52FB1EE1135700803BD2 /* GiftItem.h */,
+				506B52FC1EE1135700803BD2 /* GiftItem.m */,
 				25295CC21F4D653700313C07 /* LiveGiftObject.h */,
 				25295CC31F4D653700313C07 /* LiveGiftObject.m */,
+				5085509B1F5D32D800BE4A9C /* LiveRoom.h */,
+				5085509C1F5D32D800BE4A9C /* LiveRoom.m */,
+				255974BB1F55910000B9D667 /* LiveRoomMsgManager.h */,
+				255974BC1F55910000B9D667 /* LiveRoomMsgManager.m */,
+				509295AD1ECD992200111128 /* MsgItem.h */,
+				509295AE1ECD992200111128 /* MsgItem.m */,
+				50D657831F428A3B00FF49F6 /* SendGiftItem.h */,
+				50D657841F428A3B00FF49F6 /* SendGiftItem.m */,
+				25E8872F1F57DA6E006E4639 /* SetStringItem.h */,
+				25E887301F57DA6E006E4639 /* SetStringItem.m */,
+				2508F1701F5ED2A600CA2143 /* AudienceModel.h */,
+				2508F1711F5ED2A600CA2143 /* AudienceModel.m */,
+				255D1ACD1F5FC83D00DCB9F8 /* RemberLiveRoomModel.h */,
+				255D1ACE1F5FC83D00DCB9F8 /* RemberLiveRoomModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1076,49 +1300,70 @@
 		5095E4191ED6DE9B004FFA3B /* Request */ = {
 			isa = PBXGroup;
 			children = (
-				5027D55F1EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.h */,
-				5027D5601EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.m */,
-				5042C0F41ED91D8C00AFEBB8 /* CheckLiveRoomRequest.h */,
-				5042C0F51ED91D8C00AFEBB8 /* CheckLiveRoomRequest.m */,
-				5042C0F71ED91E0C00AFEBB8 /* CloseLiveRoomRequest.h */,
-				5042C0F81ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m */,
-				5042C0F11ED91C7000AFEBB8 /* CreateLiveRoomRequest.h */,
-				5042C0F21ED91C7000AFEBB8 /* CreateLiveRoomRequest.m */,
-				5027D5611EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.h */,
-				5027D5621EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.m */,
-				5042C0FA1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.h */,
-				5042C0FB1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.m */,
-				5027D5631EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.h */,
-				5027D5641EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.m */,
-				5027D5651EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.h */,
-				5027D5661EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.m */,
-				5042C0EB1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.h */,
-				5042C0EC1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.m */,
-				5027D5671EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.h */,
-				5027D5681EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.m */,
-				5027D5691EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.h */,
-				5027D56A1EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m */,
-				5042C0FD1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.h */,
-				5042C0FE1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.m */,
-				5042C1031ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.h */,
-				5042C1041ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m */,
-				5027D56B1EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.h */,
-				5027D56C1EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.m */,
-				5042C1001ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.h */,
-				5042C1011ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.m */,
+				FAB694101F5E9748008A64B6 /* GetPromoAnchorListRequest.h */,
+				FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */,
+				506BC2F31F59027E001C2962 /* CancelPrivateRequest.h */,
+				506BC2F41F59027E001C2962 /* CancelPrivateRequest.m */,
+				506BC2F51F59027E001C2962 /* ControlManPushRequest.h */,
+				506BC2F61F59027E001C2962 /* ControlManPushRequest.m */,
+				506BC2F71F59027E001C2962 /* GetAllGiftListRequest.h */,
+				506BC2F81F59027E001C2962 /* GetAllGiftListRequest.m */,
+				506BC2F91F59027E001C2962 /* GetAnchorListRequest.h */,
+				506BC2FA1F59027E001C2962 /* GetAnchorListRequest.m */,
+				506BC2FB1F59027E001C2962 /* GetBackpackUnreadNumRequest.h */,
+				506BC2FC1F59027E001C2962 /* GetBackpackUnreadNumRequest.m */,
+				506BC2FD1F59027E001C2962 /* GetConfigRequest.h */,
+				506BC2FE1F59027E001C2962 /* GetConfigRequest.m */,
+				506BC2FF1F59027E001C2962 /* GetCreateBookingInfoRequest.h */,
+				506BC3001F59027E001C2962 /* GetCreateBookingInfoRequest.m */,
+				506BC3011F59027E001C2962 /* GetEmoticonListRequest.h */,
+				506BC3021F59027E001C2962 /* GetEmoticonListRequest.m */,
+				506BC3031F59027E001C2962 /* GetFollowListRequest.h */,
+				506BC3041F59027E001C2962 /* GetFollowListRequest.m */,
+				506BC3051F59027E001C2962 /* GetGiftDetailRequest.h */,
+				506BC3061F59027E001C2962 /* GetGiftDetailRequest.m */,
+				506BC3071F59027E001C2962 /* GetGiftListByUserIdRequest.h */,
+				506BC3081F59027E001C2962 /* GetGiftListByUserIdRequest.m */,
+				506BC3091F59027E001C2962 /* GetInviteInfoRequest.h */,
+				506BC30A1F59027E001C2962 /* GetInviteInfoRequest.m */,
+				506BC30B1F59027E001C2962 /* GetLeftCreditRequest.h */,
+				506BC30C1F59027E001C2962 /* GetLeftCreditRequest.m */,
+				506BC30D1F59027E001C2962 /* GetNewFansBaseInfoRequest.h */,
+				506BC30E1F59027E001C2962 /* GetNewFansBaseInfoRequest.m */,
+				506BC30F1F59027E001C2962 /* GetRoomInfoRequest.h */,
+				506BC3101F59027E001C2962 /* GetRoomInfoRequest.m */,
+				506BC3111F59027E001C2962 /* GetTalentListRequest.h */,
+				506BC3121F59027E001C2962 /* GetTalentListRequest.m */,
+				506BC3131F59027E001C2962 /* GetTalentStatusRequest.h */,
+				506BC3141F59027E001C2962 /* GetTalentStatusRequest.m */,
+				506BC3151F59027E001C2962 /* GiftListRequest.h */,
+				506BC3161F59027E001C2962 /* GiftListRequest.m */,
+				506BC3171F59027E001C2962 /* HandleBookingRequest.h */,
+				506BC3181F59027E001C2962 /* HandleBookingRequest.m */,
+				506BC3191F59027E001C2962 /* LiveFansListRequest.h */,
+				506BC31A1F59027E001C2962 /* LiveFansListRequest.m */,
+				506BC31B1F59027E001C2962 /* ManBookingUnreadUnhandleNumRequest.h */,
+				506BC31C1F59027E001C2962 /* ManBookingUnreadUnhandleNumRequest.m */,
+				506BC31D1F59027E001C2962 /* ManHandleBookingListRequest.h */,
+				506BC31E1F59027E001C2962 /* ManHandleBookingListRequest.m */,
+				506BC38C1F590AC5001C2962 /* Model */,
 				5095E4241ED6DEE0004FFA3B /* RequestErrorCode.h */,
+				506BC31F1F59027F001C2962 /* RideListRequest.h */,
+				506BC3201F59027F001C2962 /* RideListRequest.m */,
+				506BC3211F59027F001C2962 /* SendBookingRequest.h */,
+				506BC3221F59027F001C2962 /* SendBookingRequest.m */,
 				5095E41A1ED6DE9B004FFA3B /* SessionRequest.h */,
 				5095E41B1ED6DE9B004FFA3B /* SessionRequest.m */,
 				5095E41C1ED6DE9B004FFA3B /* SessionRequestManager.h */,
 				5095E41D1ED6DE9B004FFA3B /* SessionRequestManager.m */,
-				5042C1061ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.h */,
-				5042C1071ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.m */,
-				5027D56D1EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.h */,
-				5027D56E1EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.m */,
-				5042C0ED1ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.h */,
-				5042C0EE1ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.m */,
-				5027D56F1EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.h */,
-				5027D5701EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m */,
+				506BC3231F59027F001C2962 /* SetFavoriteRequest.h */,
+				506BC3241F59027F001C2962 /* SetFavoriteRequest.m */,
+				506BC3251F59027F001C2962 /* SetRideRequest.h */,
+				506BC3261F59027F001C2962 /* SetRideRequest.m */,
+				506BC3271F59027F001C2962 /* UpdateTokenIdRequest.h */,
+				506BC3281F59027F001C2962 /* UpdateTokenIdRequest.m */,
+				506BC3291F59027F001C2962 /* VoucherListRequest.h */,
+				506BC32A1F59027F001C2962 /* VoucherListRequest.m */,
 			);
 			path = Request;
 			sourceTree = "<group>";
@@ -1164,30 +1409,18 @@
 				509910EA1EDF9F50003B6813 /* LiveViewController.h */,
 				509910EB1EDF9F50003B6813 /* LiveViewController.m */,
 				50F3100E1EEA3D6C008CA70D /* LiveViewController.xib */,
-				5027D57A1EF9054A00EE3B0E /* ManageCoverController.h */,
-				5027D57B1EF9054A00EE3B0E /* ManageCoverController.m */,
-				5027D57C1EF9054A00EE3B0E /* ManageCoverController.xib */,
-				509910ED1EDF9F50003B6813 /* PlayEndViewController.h */,
-				509910EE1EDF9F50003B6813 /* PlayEndViewController.m */,
-				509910EF1EDF9F50003B6813 /* PlayEndViewController.xib */,
 				509910F01EDF9F50003B6813 /* PlayViewController.h */,
 				509910F11EDF9F50003B6813 /* PlayViewController.m */,
 				50D649A51EE54BEB00D71AAF /* PlayViewController.xib */,
-				509910F31EDF9F50003B6813 /* PrePublishViewController.h */,
-				509910F41EDF9F50003B6813 /* PrePublishViewController.m */,
-				5099112E1EDFA3B5003B6813 /* PrePublishViewController.xib */,
-				5099115B1EE01563003B6813 /* PublishEndViewController.h */,
-				5099115C1EE01563003B6813 /* PublishEndViewController.m */,
-				5099115D1EE01563003B6813 /* PublishEndViewController.xib */,
-				509910F61EDF9F50003B6813 /* PublishViewController.h */,
-				509910F71EDF9F50003B6813 /* PublishViewController.m */,
-				50D6499A1EE53DE800D71AAF /* PublishViewController.xib */,
-				50D656F61F42881E00FF49F6 /* SelcetCoverViewController.h */,
-				50D656F71F42881E00FF49F6 /* SelcetCoverViewController.m */,
-				50D656F81F42881E00FF49F6 /* SelcetCoverViewController.xib */,
-				509911601EE0197A003B6813 /* TopFansViewController.h */,
-				509911611EE0197A003B6813 /* TopFansViewController.m */,
-				509911621EE0197A003B6813 /* TopFansViewController.xib */,
+				508550911F5D2C1000BE4A9C /* PreLiveViewController.h */,
+				508550921F5D2C1000BE4A9C /* PreLiveViewController.m */,
+				508550931F5D2C1000BE4A9C /* PreLiveViewController.xib */,
+				25856B691F5CE62100DC47D9 /* PublicViewController.h */,
+				25856B6A1F5CE62100DC47D9 /* PublicViewController.m */,
+				255D1ACA1F5FA3F600DCB9F8 /* PublicViewController.xib */,
+				252562FE1F61282B00A2AAD3 /* VIPPublicViewController.h */,
+				252562FF1F61282B00A2AAD3 /* VIPPublicViewController.m */,
+				252563001F61282B00A2AAD3 /* VIPPublicViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1195,28 +1428,8 @@
 		509911031EDFA107003B6813 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				509911081EDFA107003B6813 /* ForgotPasswordController.h */,
-				509911091EDFA107003B6813 /* ForgotPasswordController.m */,
-				5099110A1EDFA107003B6813 /* ForgotPasswordController.xib */,
 				5099110B1EDFA107003B6813 /* LoginManager.h */,
 				5099110C1EDFA107003B6813 /* LoginManager.m */,
-				5099110D1EDFA107003B6813 /* LoginPhoneViewController.h */,
-				5099110E1EDFA107003B6813 /* LoginPhoneViewController.m */,
-				5099110F1EDFA107003B6813 /* LoginPhoneViewController.xib */,
-				509911101EDFA107003B6813 /* LoginViewController.h */,
-				509911111EDFA107003B6813 /* LoginViewController.m */,
-				509911041EDFA107003B6813 /* LoginViewController.xib */,
-				509911121EDFA107003B6813 /* RegisterPhoneViewController.h */,
-				509911131EDFA107003B6813 /* RegisterPhoneViewController.m */,
-				509911141EDFA107003B6813 /* RegisterPhoneViewController.xib */,
-				509911151EDFA107003B6813 /* SelectCountryController.h */,
-				509911161EDFA107003B6813 /* SelectCountryController.m */,
-				509911171EDFA107003B6813 /* VerifyPhoneViewController.h */,
-				509911181EDFA107003B6813 /* VerifyPhoneViewController.m */,
-				509911191EDFA107003B6813 /* VerifyPhoneViewController.xib */,
-				5099111A1EDFA107003B6813 /* WelcomeViewController.h */,
-				5099111B1EDFA107003B6813 /* WelcomeViewController.m */,
-				5099111C1EDFA107003B6813 /* WelcomeViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1305,29 +1518,6 @@
 			path = JTSegmentControl;
 			sourceTree = "<group>";
 		};
-		509A8DEA1ECC4F13004720CF /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				5027D5561EF8FC0300EE3B0E /* CoverPhotoItemObject.h */,
-				5027D5571EF8FC0300EE3B0E /* CoverPhotoItemObject.m */,
-				5027D5581EF8FC0300EE3B0E /* LiveRoomConfigItemObject.h */,
-				5027D5591EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m */,
-				5027D55A1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.h */,
-				5027D55B1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.m */,
-				5095E3C41ED6BDF8004FFA3B /* LiveRoomInfoItemObject.h */,
-				5095E3CD1ED6BEE1004FFA3B /* LiveRoomInfoItemObject.m */,
-				5095E3CE1ED6BEE1004FFA3B /* LiveRoomPersonalInfoItemObject.h */,
-				5095E3C71ED6BDF8004FFA3B /* LiveRoomPersonalInfoItemObject.m */,
-				509A8DEB1ECC4F13004720CF /* LoginItemObject.h */,
-				509A8DEC1ECC4F13004720CF /* LoginItemObject.m */,
-				509A8DED1ECC4F13004720CF /* RegisterItemObject.h */,
-				509A8DEE1ECC4F13004720CF /* RegisterItemObject.m */,
-				5095E3C81ED6BDF8004FFA3B /* ViewerFansItemObject.h */,
-				5095E3C91ED6BDF8004FFA3B /* ViewerFansItemObject.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		509A8DF11ECC4F56004720CF /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -1402,6 +1592,7 @@
 		50BF290D1E9897C600B8ED5D /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				50F978D01F60E487009B22D1 /* PublicHeader */,
 				50B23CC91EC9A65B007A7262 /* Analytics */,
 				50BF290E1E9897C600B8ED5D /* AppDelegate.h */,
 				50BF290F1E9897C600B8ED5D /* AppDelegate.m */,
@@ -1447,14 +1638,16 @@
 			children = (
 				50D1BADB1E98EA0300088B9D /* GPUImageBeautifyFilter.h */,
 				50D1BADC1E98EA0300088B9D /* GPUImageBeautifyFilter.m */,
+				50EB8C471ED3E869003145B7 /* ImageCVPixelBufferInput.h */,
+				50EB8C481ED3E869003145B7 /* ImageCVPixelBufferInput.m */,
 				50A8338C1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.h */,
 				50A8338D1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m */,
 				50E88B961EA0A1D700696279 /* LiveStreamPlayer.h */,
 				50E88B971EA0A1D700696279 /* LiveStreamPlayer.m */,
 				50E88B991EA0A40000696279 /* LiveStreamPublisher.h */,
 				50E88B9A1EA0A40000696279 /* LiveStreamPublisher.m */,
-				50EB8C471ED3E869003145B7 /* ImageCVPixelBufferInput.h */,
-				50EB8C481ED3E869003145B7 /* ImageCVPixelBufferInput.m */,
+				50C5AA421F565567002EDCAA /* LiveStreamSession.h */,
+				50C5AA431F565567002EDCAA /* LiveStreamSession.m */,
 			);
 			path = LiveStreamClient;
 			sourceTree = "<group>";
@@ -1660,6 +1853,23 @@
 			path = IM;
 			sourceTree = "<group>";
 		};
+		50F978D01F60E487009B22D1 /* PublicHeader */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PublicHeader;
+			sourceTree = "<group>";
+		};
+		50F978DA1F61332D009B22D1 /* RecommandView */ = {
+			isa = PBXGroup;
+			children = (
+				50F978DB1F61332D009B22D1 /* RecommandCollectionViewCell.h */,
+				50F978DC1F61332D009B22D1 /* RecommandCollectionViewCell.m */,
+				50F978DD1F61332D009B22D1 /* RecommandCollectionViewCell.xib */,
+			);
+			path = RecommandView;
+			sourceTree = "<group>";
+		};
 		52232763592F4163B43FCB63 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1829,23 +2039,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5099112C1EDFA3B5003B6813 /* PrePublishViewController.xib in Resources */,
 				506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */,
-				5099115F1EE01563003B6813 /* PublishEndViewController.xib in Resources */,
 				50D6574E1F42882A00FF49F6 /* ChatEmotionKeyboardView.xib in Resources */,
 				5095E4141ED6DD04004FFA3B /* CountryTableViewCell.xib in Resources */,
-				5027D57E1EF9054A00EE3B0E /* ManageCoverController.xib in Resources */,
-				509910FC1EDF9F50003B6813 /* PlayEndViewController.xib in Resources */,
-				509911641EE0197A003B6813 /* TopFansViewController.xib in Resources */,
-				509911231EDFA107003B6813 /* LoginPhoneViewController.xib in Resources */,
 				50D657481F42882A00FF49F6 /* ChatViewController.xib in Resources */,
 				505591B41EF3FD9E000AF03A /* SelectCoverView.xib in Resources */,
-				509911261EDFA107003B6813 /* RegisterPhoneViewController.xib in Resources */,
 				50D649971EE4F04C00D71AAF /* SearchTableViewCell.xib in Resources */,
-				5099112B1EDFA107003B6813 /* WelcomeViewController.xib in Resources */,
 				5099114E1EDFF6F1003B6813 /* DiscoverHeaderView.xib in Resources */,
 				50D657401F42882A00FF49F6 /* ChatListTableViewCell.xib in Resources */,
-				509911201EDFA107003B6813 /* ForgotPasswordController.xib in Resources */,
 				509910D81EDF9F09003B6813 /* TestViewController.xib in Resources */,
 				50D657391F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.xib in Resources */,
 				50D657821F428A2200FF49F6 /* GiftPresentView.xib in Resources */,
@@ -1858,6 +2059,8 @@
 				509910D41EDF9F09003B6813 /* HomePageViewController.xib in Resources */,
 				50BF29011E98976E00B8ED5D /* Main.storyboard in Resources */,
 				50D657501F42882A00FF49F6 /* ChatFriendlyEmotionView.xib in Resources */,
+				252563021F61282B00A2AAD3 /* VIPPublicViewController.xib in Resources */,
+				508550951F5D2C1000BE4A9C /* PreLiveViewController.xib in Resources */,
 				509911421EDFF6E8003B6813 /* DiscoverCollectionViewCell.xib in Resources */,
 				50D6574A1F42882A00FF49F6 /* EmotionList.plist in Resources */,
 				50D657541F42882A00FF49F6 /* ChatTitleView.xib in Resources */,
@@ -1865,29 +2068,30 @@
 				505591AB1EF3FD9E000AF03A /* gift.webp in Resources */,
 				5095E4151ED6DD04004FFA3B /* Country.plist in Resources */,
 				505591AD1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib in Resources */,
+				255D1AC81F5FA3F600DCB9F8 /* PublicViewController.xib in Resources */,
 				509910E61EDF9F25003B6813 /* DiscoverViewController.xib in Resources */,
 				509910D61EDF9F09003B6813 /* MainViewController.xib in Resources */,
 				50F3100C1EEA3D6C008CA70D /* LiveViewController.xib in Resources */,
-				5099111D1EDFA107003B6813 /* LoginViewController.xib in Resources */,
+				256939DD1F56414F000CCE9E /* AudienceCell.xib in Resources */,
 				50D6573C1F42882A00FF49F6 /* ChatTextLadyTableViewCell.xib in Resources */,
 				505591B01EF3FD9E000AF03A /* PresentSendView.xib in Resources */,
+				2508F16F1F5E7A8000CA2143 /* DriveView.xib in Resources */,
 				509910E81EDF9F25003B6813 /* HotViewController.xib in Resources */,
+				50F978DF1F61332D009B22D1 /* RecommandCollectionViewCell.xib in Resources */,
 				5091983F1EDEA37B00D26A7B /* MsgTableViewCell.xib in Resources */,
 				50D6573E1F42882A00FF49F6 /* ChatTextSelfTableViewCell.xib in Resources */,
 				50D657461F42882A00FF49F6 /* ChatListViewController.xib in Resources */,
 				50D657521F42882A00FF49F6 /* ChatNomalSmallEmotionView.xib in Resources */,
 				505591B21EF3FD9E000AF03A /* PresentView.xib in Resources */,
 				5063A3F71ECE99F200361942 /* HotTableViewCell.xib in Resources */,
-				50D649981EE53DE800D71AAF /* PublishViewController.xib in Resources */,
 				50D657581F42882A00FF49F6 /* NoChatListView.xib in Resources */,
 				509911441EDFF6E8003B6813 /* FollowCollectionViewCell.xib in Resources */,
 				509198491EDEA59300D26A7B /* BarrageModelCell.xib in Resources */,
+				255974A21F55475100B9D667 /* LiveSendBarView.xib in Resources */,
 				509911391EDFB8FA003B6813 /* GiftComboView.xib in Resources */,
 				50D6498C1EE4F03600D71AAF /* SearchViewController.xib in Resources */,
-				509911291EDFA107003B6813 /* VerifyPhoneViewController.xib in Resources */,
 				25890A561F4299D60067CC29 /* BackpackPresentView.xib in Resources */,
 				50D649A31EE54BEB00D71AAF /* PlayViewController.xib in Resources */,
-				50D656FA1F42881E00FF49F6 /* SelcetCoverViewController.xib in Resources */,
 				509910E41EDF9F25003B6813 /* FollowingViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1947,65 +2151,81 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5042C0F31ED91C7000AFEBB8 /* CreateLiveRoomRequest.m in Sources */,
 				50F383A61EE68B96003D2765 /* IMManager.mm in Sources */,
-				509911251EDFA107003B6813 /* RegisterPhoneViewController.m in Sources */,
 				50D657381F42882A00FF49F6 /* ChatEmotionChooseCollectionViewCell.m in Sources */,
+				50F978DE1F61332D009B22D1 /* RecommandCollectionViewCell.m in Sources */,
 				50D6573A1F42882A00FF49F6 /* ChatEmotionChooseCollectionViewLayout.m in Sources */,
 				50D657511F42882A00FF49F6 /* ChatNomalSmallEmotionView.m in Sources */,
 				5099114D1EDFF6F1003B6813 /* DiscoverHeaderView.m in Sources */,
 				505591B11EF3FD9E000AF03A /* PresentView.m in Sources */,
-				5042C0F61ED91D8C00AFEBB8 /* CheckLiveRoomRequest.m in Sources */,
 				509910D31EDF9F09003B6813 /* HomePageViewController.m in Sources */,
+				506BC3431F59027F001C2962 /* SetFavoriteRequest.m in Sources */,
 				50D6573F1F42882A00FF49F6 /* ChatListTableViewCell.m in Sources */,
+				506BC33D1F59027F001C2962 /* HandleBookingRequest.m in Sources */,
+				506BC3331F59027F001C2962 /* GetFollowListRequest.m in Sources */,
+				255D1ACF1F5FC83D00DCB9F8 /* RemberLiveRoomModel.m in Sources */,
+				25856B751F5CECBA00DC47D9 /* AllGiftItem.m in Sources */,
+				509781681F580F0300659204 /* ConfigManager.m in Sources */,
+				FAB694121F5E9748008A64B6 /* GetPromoAnchorListRequest.m in Sources */,
 				50D6577B1F428A0400FF49F6 /* LiveChatTextView.m in Sources */,
-				5027D5781EF8FC5600EE3B0E /* SetUsingLiveRoomPhotoRequest.m in Sources */,
 				50D657411F42882A00FF49F6 /* ChatVoiceSelfTableViewCell.m in Sources */,
 				50D657621F42886900FF49F6 /* Mp3Recorder.m in Sources */,
-				509911241EDFA107003B6813 /* LoginViewController.m in Sources */,
+				506BC3361F59027F001C2962 /* GetInviteInfoRequest.m in Sources */,
+				508550941F5D2C1000BE4A9C /* PreLiveViewController.m in Sources */,
 				50D657711F4289E000FF49F6 /* ChatEmotion.m in Sources */,
 				5063A3F61ECE99F200361942 /* HotTableViewCell.m in Sources */,
+				506BC3E41F590AC6001C2962 /* RoomItemObject.m in Sources */,
 				507315C61EE944F6005D1C0B /* GiftComboManager.m in Sources */,
 				50D657851F428A3B00FF49F6 /* SendGiftItem.m in Sources */,
-				5027D5711EF8FC5600EE3B0E /* AddLiveRoomPhotoRequest.m in Sources */,
 				5007B1D21ECAA72E00C2C17F /* RequestManager.mm in Sources */,
 				509910D51EDF9F09003B6813 /* MainViewController.m in Sources */,
+				506BC3311F59027F001C2962 /* GetCreateBookingInfoRequest.m in Sources */,
 				509198391EDEA32C00D26A7B /* BarrageViewCell.m in Sources */,
 				509911431EDFF6E8003B6813 /* FollowCollectionViewCell.m in Sources */,
 				50B23CD41EC9A65B007A7262 /* ScreenItem.m in Sources */,
 				5095E4091ED6DCFC004FFA3B /* Country.m in Sources */,
+				506BC3E21F590AC6001C2962 /* RideItemObject.m in Sources */,
 				50E88B981EA0A1D700696279 /* LiveStreamPlayer.m in Sources */,
 				50D6574D1F42882A00FF49F6 /* ChatEmotionKeyboardView.m in Sources */,
 				509A8DE01ECC350C004720CF /* JTSegmentPattern.swift in Sources */,
-				509911221EDFA107003B6813 /* LoginPhoneViewController.m in Sources */,
+				506BC3D51F590AC6001C2962 /* GetNewFansBaseInfoItemObject.m in Sources */,
 				5027D5B01EF9060F00EE3B0E /* DeleteTipView.m in Sources */,
+				506BC3411F59027F001C2962 /* RideListRequest.m in Sources */,
 				509910E51EDF9F25003B6813 /* DiscoverViewController.m in Sources */,
 				505591B31EF3FD9E000AF03A /* SelectCoverView.m in Sources */,
 				509198471EDEA59300D26A7B /* BarrageModel.m in Sources */,
-				509A8DF01ECC4F13004720CF /* RegisterItemObject.m in Sources */,
 				50D649961EE4F04C00D71AAF /* SearchTableViewCell.m in Sources */,
 				50CD622D1F17282F0083E0FF /* TableSuperView.m in Sources */,
-				5042C1051ED9214600AFEBB8 /* GetLiveRoomModifyInfoRequest.m in Sources */,
 				50D657741F4289E000FF49F6 /* ChatTextView.m in Sources */,
 				50A833901E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m in Sources */,
+				25856B6C1F5CE62100DC47D9 /* PublicViewController.m in Sources */,
+				506BC3381F59027F001C2962 /* GetNewFansBaseInfoRequest.m in Sources */,
 				50D6574F1F42882A00FF49F6 /* ChatFriendlyEmotionView.m in Sources */,
-				5027D55C1EF8FC0300EE3B0E /* CoverPhotoItemObject.m in Sources */,
-				509911631EE0197A003B6813 /* TopFansViewController.m in Sources */,
+				506BC3E01F590AC6001C2962 /* LoginItemObject.m in Sources */,
+				506BC3DA1F590AC6001C2962 /* GiftNumItemObject.m in Sources */,
 				50D6498B1EE4F03600D71AAF /* SearchViewController.m in Sources */,
 				50D657491F42882A00FF49F6 /* ChatListModel.m in Sources */,
 				5063A3F81ECE99F200361942 /* HotTableView.m in Sources */,
 				50D6573B1F42882A00FF49F6 /* ChatTextLadyTableViewCell.m in Sources */,
 				50F3101C1EEA55D5008CA70D /* AFNetWorkHelpr.m in Sources */,
+				506BC3D81F590AC6001C2962 /* GiftInfoItemObject.m in Sources */,
 				509911411EDFF6E8003B6813 /* DiscoverCollectionViewCell.m in Sources */,
+				506BC33E1F59027F001C2962 /* LiveFansListRequest.m in Sources */,
 				50D649921EE4F04700D71AAF /* SearchTableView.m in Sources */,
-				5099111F1EDFA107003B6813 /* ForgotPasswordController.m in Sources */,
+				506BC3D71F590AC6001C2962 /* GetTalentStatusItemObject.m in Sources */,
+				25E887311F57DA6E006E4639 /* SetStringItem.m in Sources */,
+				506BC3321F59027F001C2962 /* GetEmoticonListRequest.m in Sources */,
+				506BC3DB1F590AC6001C2962 /* GiftWithIdItemObject.m in Sources */,
 				50E88B9B1EA0A40000696279 /* LiveStreamPublisher.m in Sources */,
+				506BC3D61F590AC6001C2962 /* GetTalentItemObject.m in Sources */,
+				506BC3441F59027F001C2962 /* SetRideRequest.m in Sources */,
 				50B23CD51EC9A65B007A7262 /* ScreenManager.m in Sources */,
-				5027D57D1EF9054A00EE3B0E /* ManageCoverController.m in Sources */,
+				506BC3371F59027F001C2962 /* GetLeftCreditRequest.m in Sources */,
 				505D6DED1EC979E3007FF4C6 /* FileCacheManager.m in Sources */,
 				505591AE1EF3FD9E000AF03A /* GiftItemLayout.m in Sources */,
 				50D657451F42882A00FF49F6 /* ChatListViewController.m in Sources */,
 				5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */,
+				506BC3E51F590AC6001C2962 /* ViewerFansItemObject.m in Sources */,
 				506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */,
 				50FCE0EE1F0E2588002CEF6A /* SelectNumButton.m in Sources */,
 				50D6577C1F428A0400FF49F6 /* LiveRoomTextField.m in Sources */,
@@ -2013,90 +2233,110 @@
 				506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */,
 				50D657881F428A5700FF49F6 /* SendGiftTheQueueManager.m in Sources */,
 				25890A591F429A600067CC29 /* ChatEmotionManager.m in Sources */,
-				5027D5791EF8FC5600EE3B0E /* UploadLiveRoomImgRequest.m in Sources */,
-				5095E3CB1ED6BDF8004FFA3B /* LiveRoomPersonalInfoItemObject.m in Sources */,
+				506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */,
+				506BC3CA1F590AC5001C2962 /* BookingPrivateInviteItemObject.m in Sources */,
+				506BC3CE1F590AC6001C2962 /* ConfigItemObject.m in Sources */,
 				509911381EDFB8FA003B6813 /* GiftComboView.m in Sources */,
 				5099114F1EDFF6F1003B6813 /* FollowCollectionView.m in Sources */,
+				50C5AA441F565567002EDCAA /* LiveStreamSession.m in Sources */,
 				509911371EDFB8FA003B6813 /* GiftComboNumView.m in Sources */,
+				506BC3CB1F590AC5001C2962 /* BookingPrivateInviteListObject.m in Sources */,
 				50D1BADF1E98EA0300088B9D /* GPUImageBeautifyFilter.m in Sources */,
-				5099115E1EE01563003B6813 /* PublishEndViewController.m in Sources */,
+				506BC33B1F59027F001C2962 /* GetTalentStatusRequest.m in Sources */,
 				50D649A21EE5482C00D71AAF /* PromptView.m in Sources */,
-				509A8DEF1ECC4F13004720CF /* LoginItemObject.m in Sources */,
+				506BC3D01F590AC6001C2962 /* EmoticonInfoItemObject.m in Sources */,
+				506BC3E31F590AC6001C2962 /* RoomInfoItemObject.m in Sources */,
+				506BC3DE1F590AC6001C2962 /* LiveRoomInfoItemObject.m in Sources */,
+				506BC32C1F59027F001C2962 /* ControlManPushRequest.m in Sources */,
 				505591AC1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m in Sources */,
-				509911011EDF9F50003B6813 /* PublishViewController.m in Sources */,
+				506BC3D21F590AC6001C2962 /* FollowItemObject.m in Sources */,
+				506BC3461F59027F001C2962 /* VoucherListRequest.m in Sources */,
+				506BC3D91F590AC6001C2962 /* GiftItemObject.m in Sources */,
 				5027D5B71EF9067200EE3B0E /* SelectCoverViewCell.m in Sources */,
-				5027D5751EF8FC5600EE3B0E /* GetLiveRoomGiftDetailRequest.m in Sources */,
+				25A34B261F540B6900A86378 /* LiveSendBarView.m in Sources */,
 				50B23CD31EC9A65B007A7262 /* GoogleAnalyticsViewController.m in Sources */,
-				5027D5721EF8FC5600EE3B0E /* DelLiveRoomPhotoRequest.m in Sources */,
 				50D657431F42882A00FF49F6 /* ChatVoiceTableViewCell.m in Sources */,
 				5095E4181ED6DDF0004FFA3B /* CountryTableView.m in Sources */,
-				5027D5741EF8FC5600EE3B0E /* GetLiveRoomConfigRequest.m in Sources */,
-				5042C1081ED921D200AFEBB8 /* SetLiveRoomModifyInfoRequest.m in Sources */,
 				509A8DDF1ECC350C004720CF /* JTSegmentControl.swift in Sources */,
-				5042C1021ED9209D00AFEBB8 /* GetLiveRoomUserPhotoRequest.m in Sources */,
+				506BC33F1F59027F001C2962 /* ManBookingUnreadUnhandleNumRequest.m in Sources */,
 				507315C21EE9346E005D1C0B /* LikeView.m in Sources */,
 				50D657561F42882A00FF49F6 /* ChatVoiceView.m in Sources */,
-				5027D55D1EF8FC0300EE3B0E /* LiveRoomConfigItemObject.m in Sources */,
 				509910F91EDF9F50003B6813 /* LiveViewController.m in Sources */,
+				506BC3E61F590AC6001C2962 /* VoucherItemObject.m in Sources */,
+				506BC3DD1F590AC6001C2962 /* LiveRoomConfigItemObject.m in Sources */,
+				506BC3E11F590AC6001C2962 /* RegisterItemObject.m in Sources */,
 				509198481EDEA59300D26A7B /* BarrageModelCell.m in Sources */,
+				255974BA1F5571FE00B9D667 /* YMAudienceView.m in Sources */,
 				502E07411F0A3EA600A4CFCD /* CountTimeButton.m in Sources */,
 				50D657531F42882A00FF49F6 /* ChatTitleView.m in Sources */,
-				5042C0F91ED91E0C00AFEBB8 /* CloseLiveRoomRequest.m in Sources */,
 				50D657811F428A2200FF49F6 /* GiftPresentView.m in Sources */,
-				5027D5761EF8FC5600EE3B0E /* GetLiveRoomGiftListByUserIdRequest.m in Sources */,
 				50D657731F4289E000FF49F6 /* ChatTextAttachment.m in Sources */,
+				506BC3351F59027F001C2962 /* GetGiftListByUserIdRequest.m in Sources */,
 				5099114C1EDFF6F1003B6813 /* DiscoverCollectionView.m in Sources */,
-				509911271EDFA107003B6813 /* SelectCountryController.m in Sources */,
 				505591AF1EF3FD9E000AF03A /* PresentSendView.m in Sources */,
+				506BC3D11F590AC6001C2962 /* EmoticonItemObject.m in Sources */,
 				5027D5B61EF9067200EE3B0E /* LxGridViewFlowLayout.m in Sources */,
+				506BC3D31F590AC6001C2962 /* GetBackPackUnreadNumItemObject.m in Sources */,
+				506BC3DF1F590AC6001C2962 /* LiveRoomPersonalInfoItemObject.m in Sources */,
 				509911211EDFA107003B6813 /* LoginManager.m in Sources */,
+				506BC33A1F59027F001C2962 /* GetTalentListRequest.m in Sources */,
 				25890A731F430CDA0067CC29 /* BackpackSendGiftManager.m in Sources */,
 				5095E41E1ED6DE9B004FFA3B /* SessionRequest.m in Sources */,
 				50BF29121E9897C600B8ED5D /* AppDelegate.m in Sources */,
 				50BF28F81E98976E00B8ED5D /* main.m in Sources */,
 				509910D71EDF9F09003B6813 /* TestViewController.m in Sources */,
+				506BC3401F59027F001C2962 /* ManHandleBookingListRequest.m in Sources */,
+				506BC3D41F590AC6001C2962 /* GetCreateBookingInfoItemObject.m in Sources */,
 				5095E4131ED6DD04004FFA3B /* CountryTableViewCell.m in Sources */,
-				5027D5731EF8FC5600EE3B0E /* GetLiveRoomAllGiftListRequest.m in Sources */,
 				255D9DAA1F43E5C300B954DD /* ChatEmotionListItem.m in Sources */,
 				50D657721F4289E000FF49F6 /* ChatMessageObject.m in Sources */,
 				509911551EDFF724003B6813 /* DiscoverListItemObject.m in Sources */,
+				2508F1721F5ED2A600CA2143 /* AudienceModel.m in Sources */,
 				509910E71EDF9F25003B6813 /* HotViewController.m in Sources */,
-				5042C0FF1ED91FBF00AFEBB8 /* GetLiveRoomHotListRequest.m in Sources */,
 				50D657551F42882A00FF49F6 /* ChatVoiceManager.m in Sources */,
-				50D6575B1F42885300FF49F6 /* LiveModuleManager.m in Sources */,
-				509910FB1EDF9F50003B6813 /* PlayEndViewController.m in Sources */,
+				50D6575B1F42885300FF49F6 /* LiveModule.m in Sources */,
 				509198381EDEA32C00D26A7B /* BarrageView.m in Sources */,
+				506BC32D1F59027F001C2962 /* GetAllGiftListRequest.m in Sources */,
+				506BC3CD1F590AC6001C2962 /* BookTimeItemObject.m in Sources */,
+				506BC32E1F59027F001C2962 /* GetAnchorListRequest.m in Sources */,
 				509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */,
 				50D6573D1F42882A00FF49F6 /* ChatTextselfTableViewCell.m in Sources */,
 				50D6574B1F42882A00FF49F6 /* ChatEmotionChooseView.m in Sources */,
 				502E07441F0A3EC000A4CFCD /* UserHeadUrlManager.m in Sources */,
-				5095E3CC1ED6BDF8004FFA3B /* ViewerFansItemObject.m in Sources */,
-				5099112A1EDFA107003B6813 /* WelcomeViewController.m in Sources */,
-				509910FF1EDF9F50003B6813 /* PrePublishViewController.m in Sources */,
+				506BC3421F59027F001C2962 /* SendBookingRequest.m in Sources */,
+				506BC3391F59027F001C2962 /* GetRoomInfoRequest.m in Sources */,
 				25295CC41F4D653700313C07 /* LiveGiftObject.m in Sources */,
 				50D657471F42882A00FF49F6 /* ChatViewController.m in Sources */,
 				509910E31EDF9F25003B6813 /* FollowingViewController.m in Sources */,
+				506BC3DC1F590AC6001C2962 /* InviteIdItemObject.m in Sources */,
 				255D9DA71F43E52600B954DD /* ChatEmotionItem.m in Sources */,
 				509295AF1ECD992200111128 /* MsgItem.m in Sources */,
 				505591AA1EF3FD9E000AF03A /* BigGiftAnimationView.m in Sources */,
-				5027D55E1EF8FC0300EE3B0E /* LiveRoomGiftItemObject.m in Sources */,
+				252563011F61282B00A2AAD3 /* VIPPublicViewController.m in Sources */,
+				5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */,
 				509911561EDFF724003B6813 /* FollowListItemObject.m in Sources */,
 				50D6498F1EE4F03E00D71AAF /* SearchListObject.m in Sources */,
-				509911281EDFA107003B6813 /* VerifyPhoneViewController.m in Sources */,
+				256939DC1F56414F000CCE9E /* AudienceCell.m in Sources */,
 				50D657571F42882A00FF49F6 /* NoChatListView.m in Sources */,
-				5095E3CF1ED6BEE1004FFA3B /* LiveRoomInfoItemObject.m in Sources */,
+				255974BD1F55910000B9D667 /* LiveRoomMsgManager.m in Sources */,
+				506BC3301F59027F001C2962 /* GetConfigRequest.m in Sources */,
 				25890A551F4299D60067CC29 /* BackpackPresentView.m in Sources */,
-				5042C0F01ED91BCD00AFEBB8 /* UpdateLiveRoomTokenIdRequest.m in Sources */,
 				505D6DEF1EC979E3007FF4C6 /* Reachability.m in Sources */,
+				2508F16D1F5E7A7800CA2143 /* DriveView.m in Sources */,
+				506BC3C91F590AC5001C2962 /* BackGiftItemObject.m in Sources */,
+				506BC3341F59027F001C2962 /* GetGiftDetailRequest.m in Sources */,
 				25295CC11F4D64D300313C07 /* LiveGiftListManager.m in Sources */,
+				506BC3CC1F590AC5001C2962 /* BookingUnreadUnhandleNumItemObject.m in Sources */,
 				5095E41F1ED6DE9B004FFA3B /* SessionRequestManager.m in Sources */,
 				503A705A1EEF6FBD00BA8FF8 /* LevelView.m in Sources */,
-				5042C0FC1ED91F1600AFEBB8 /* GetLiveRoomAllFansListRequest.m in Sources */,
-				50D656F91F42881E00FF49F6 /* SelcetCoverViewController.m in Sources */,
+				506BC3CF1F590AC6001C2962 /* CoverPhotoItemObject.m in Sources */,
+				506BC32B1F59027F001C2962 /* CancelPrivateRequest.m in Sources */,
+				506BC33C1F59027F001C2962 /* GiftListRequest.m in Sources */,
 				25890A701F42FF3F0067CC29 /* BackpackGiftItem.m in Sources */,
-				5027D5771EF8FC5600EE3B0E /* GetLiveRoomPhotoListRequest.m in Sources */,
 				505D6DEE1EC979E3007FF4C6 /* ImageViewLoader.m in Sources */,
-				5042C0EF1ED91BCD00AFEBB8 /* GetLiveRoomFansListRequest.m in Sources */,
+				255974B91F5571FE00B9D667 /* YMAudienceCell.m in Sources */,
+				506BC3451F59027F001C2962 /* UpdateTokenIdRequest.m in Sources */,
+				256CE1E41F5E2E920008D390 /* ChardTipView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2136,6 +2376,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		255974A41F55475100B9D667 /* LiveSendBarView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				255974A51F55476200B9D667 /* Base */,
+				255974A71F55477200B9D667 /* en */,
+			);
+			name = LiveSendBarView.xib;
+			sourceTree = "<group>";
+		};
+		255D1ACA1F5FA3F600DCB9F8 /* PublicViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				255D1AC91F5FA3F600DCB9F8 /* Base */,
+				255D1ACC1F5FA3FB00DCB9F8 /* en */,
+			);
+			name = PublicViewController.xib;
+			sourceTree = "<group>";
+		};
 		506D60651F0F14AD002CAD3C /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2143,24 +2401,6 @@
 				506D606C1F0F160B002CAD3C /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		509911041EDFA107003B6813 /* LoginViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				509911051EDFA107003B6813 /* Base */,
-				5099113A1EDFC8B8003B6813 /* en */,
-			);
-			name = LoginViewController.xib;
-			sourceTree = "<group>";
-		};
-		5099112E1EDFA3B5003B6813 /* PrePublishViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5099112D1EDFA3B5003B6813 /* Base */,
-				509911301EDFA3B6003B6813 /* en */,
-			);
-			name = PrePublishViewController.xib;
 			sourceTree = "<group>";
 		};
 		50BF28FF1E98976E00B8ED5D /* Main.storyboard */ = {
@@ -2177,15 +2417,6 @@
 				50BF29051E98976E00B8ED5D /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		50D6499A1EE53DE800D71AAF /* PublishViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				50D649991EE53DE800D71AAF /* Base */,
-				50D6499F1EE53E1800D71AAF /* en */,
-			);
-			name = PublishViewController.xib;
 			sourceTree = "<group>";
 		};
 		50D649A51EE54BEB00D71AAF /* PlayViewController.xib */ = {
@@ -2446,6 +2677,7 @@
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
 				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+				WARNING_CFLAGS = "";
 			};
 			name = Debug;
 		};
@@ -2587,6 +2819,7 @@
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
 				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
 				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+				WARNING_CFLAGS = "";
 			};
 			name = Release;
 		};

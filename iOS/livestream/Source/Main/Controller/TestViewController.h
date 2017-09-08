@@ -21,5 +21,7 @@
 - (IBAction)play:(id)sender;
 - (IBAction)stop:(id)sender;
 - (IBAction)beauty:(id)sender;
+- (IBAction)mute:(id)sender;
+
 @end
 

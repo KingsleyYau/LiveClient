@@ -2,13 +2,14 @@ package com.qpidnetwork.livemodule.liveshow.datacache.preference;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Base64;
 
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -82,18 +83,25 @@ public class LocalPreferenceManager {
      * 将序列化的对象存储到本地
      * @param object
      */
-    private void save(String key,Object object) throws Exception {
+    public void save(String key,Object object) throws Exception {
         if(object instanceof Serializable && mSharedPreferences != null) {
             SharedPreferences.Editor editor = mSharedPreferences.edit();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
             try {
-                ObjectOutputStream oos = new ObjectOutputStream(baos);
                 oos.writeObject(object);//把对象写到流里
                 String temp = new String(Base64.encode(baos.toByteArray(), Base64.DEFAULT));
                 editor.putString(key, temp);
                 editor.commit();
             } catch (IOException e) {
                 e.printStackTrace();
+            }finally {
+                if(baos != null){
+                    baos.close();
+                }
+                if(oos != null){
+                    oos.close();
+                }
             }
         }else {
             throw new Exception("User must implements Serializable");
@@ -105,19 +113,35 @@ public class LocalPreferenceManager {
      * @param key
      * @return
      */
-    private Object getObject(String key) {
+    public Object getObject(String key) {
         Object obj = null;
         if(mSharedPreferences != null) {
             String temp = mSharedPreferences.getString(key, "");
+            if(TextUtils.isEmpty(temp)){
+                return obj;
+            }
             ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decode(temp.getBytes(), Base64.DEFAULT));
-
+            ObjectInputStream ois = null;
             try {
-                ObjectInputStream ois = new ObjectInputStream(bais);
+                ois = new ObjectInputStream(bais);
                 obj = ois.readObject();
+            } catch (EOFException eofex){
+                eofex.printStackTrace();
             } catch (IOException ioex) {
                 ioex.printStackTrace();
             } catch (ClassNotFoundException cnfex) {
                 cnfex.printStackTrace();
+            }finally {
+                try {
+                    if (bais != null) {
+                        bais.close();
+                    }
+                    if (ois != null) {
+                        ois.close();
+                    }
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
             }
         }
         return obj;
@@ -191,7 +215,9 @@ public class LocalPreferenceManager {
         if(object != null && (object instanceof LoginParam)){
             return (LoginParam)object;
         }
-        return null;
+        //TODO:DELETE测试数据
+        return new LoginParam("Harry_HHeEoKeotNFp");
+//        return null;
     }
 
 }

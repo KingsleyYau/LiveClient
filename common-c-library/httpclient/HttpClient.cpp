@@ -20,8 +20,8 @@
 #include <common/KMutex.h>
 #include <common/CheckMemoryLeak.h>
 
-#define DEVICE_ANDROID_TYPE "dev_type: 10"
-#define DEVICE_IPHONE_TYPE "dev_type: 20"
+#define DEVICE_ANDROID_TYPE "dev-type: 10"
+#define DEVICE_IPHONE_TYPE "dev-type: 20"
 #ifdef IOS  /* IOS */
 #define DEVICE_TYPE DEVICE_IPHONE_TYPE
 #else

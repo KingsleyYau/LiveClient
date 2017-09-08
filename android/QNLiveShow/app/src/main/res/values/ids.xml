@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- actionBar -->
+    <item name="common_button_send" type="id"/>
+    <item name="common_button_search" type="id"/>
+    <item name="common_button_back" type="id"/>
+    <item name="common_button_overflow" type="id"/>
+
     <!--CanRefresh需要的ID定义-->
     <item name="can_content_view" type="id" />
     <item name="can_refresh_header" type="id" />
@@ -15,4 +22,7 @@
     <item type="id" name="livegift_rootview" />
     <item type="id" name="btn_giftCount" />
 
+    <!--StatusBar-->
+    <item type="id" name="statusbarutil_fake_status_bar_view" />
+    <item type="id" name="statusbarutil_translucent_view" />
 </resources>

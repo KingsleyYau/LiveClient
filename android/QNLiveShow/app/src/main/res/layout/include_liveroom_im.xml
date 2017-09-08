@@ -2,77 +2,98 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
+
+    <!--右上角返点信息显示、中间的视频加载loading动画、左下角的连送动画、右下角的立即私密按钮、入场动画-->
     <FrameLayout
-        android:id="@+id/flMultiGift"
+        android:id="@+id/rl_media"
         android:layout_width="match_parent"
-        android:layout_height="98dp">
+        android:layout_height="@dimen/defaultVedioPlayerHeight">
 
-    </FrameLayout>
-    <!--豪华礼物的层级>小礼物层级>弹幕层级,所以豪华礼物应该在顶层播放，弹幕应该在相对的最底层播放-->
-    <!--弹幕层-->
-    <LinearLayout
-        android:id="@+id/ll_bulletScreen"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:clickable="false"
-        android:orientation="vertical">
-
-        <include
-            android:id="@+id/rl_bullet1"
-            layout="@layout/view_live_center_bullet_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/liveroom_bullet_height"
-            android:visibility="invisible"/>
-
-        <include
-            android:id="@+id/rl_bullet2"
-            layout="@layout/view_live_center_bullet_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/liveroom_bullet_height"
-            android:layout_marginTop="10dp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
-
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <!--消息列表-->
-        <com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView
-            android:id="@+id/lvlv_roomMsgList"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:paddingRight="56dp"
-            android:layout_gravity="bottom"
-            android:background="@android:color/transparent" />
-
-        <!--未读条数-->
         <TextView
-            android:id="@+id/tv_unReadTip"
-            android:text="13 unread messages"
-            android:drawableRight="@drawable/ic_live_buttom_unreadmsg"
-            android:gravity="center_vertical"
-            android:padding="6dp"
-            android:clickable="true"
-            android:onClick="onClick"
-            android:layout_marginLeft="13dp"
-            android:visibility="invisible"
-            android:background="@drawable/bg_live_buttom_unreadmsg"
-            android:drawablePadding="6dp"
-            android:textColor="@android:color/white"
+            android:id="@+id/tv_creditTips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:visibility="invisible"
+            android:background="@drawable/test"
+            android:layout_gravity="right"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/tip_roomGiftCredit"/>
+
+        <ImageView
+            android:id="@+id/iv_privateLiveNow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_live_privatelive_now"
+            android:scaleType="centerCrop"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="13dp"
+            android:layout_marginBottom="13dp"/>
+
+        <!--TODO:入场动画-->
+        <LinearLayout
+            android:id="@+id/ll_entranceCar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:orientation="horizontal"
+            android:layout_gravity="right">
+
+            <include
+                layout="@layout/view_liveroom_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/flMultiGift"
+            android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_gravity="bottom|left"
+            android:layout_marginBottom="37dp"
+            android:layout_marginRight="80dp">
+        </FrameLayout>
 
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/fl_imMsgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+
+        <include layout="@layout/view_liveroom_msglist"
+            android:id="@+id/fl_msglist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="69dp"
+            android:layout_marginTop="11dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_bulletScreen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/liveroom_bullet_height"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:gravity="center_vertical"
+            android:paddingBottom="3dp"
+            android:background="#deffffff"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/rl_bullet1"
+                layout="@layout/view_live_center_bullet_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

@@ -11,6 +11,8 @@
 #import "AFNetWorkHelpr.h"
 #import "FileCacheManager.h"
 #import "ImageViewLoader.h"
+#import "SessionRequestManager.h"
+#import "GetGiftDetailRequest.h"
 
 @interface LiveGiftDownloadManager ()<LoginManagerDelegate>
 
@@ -33,10 +35,7 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        giftDownloadManager = [[LiveGiftDownloadManager alloc]init];
-        giftDownloadManager.fileNameDictionary = [[NSMutableDictionary alloc]init];
-        giftDownloadManager.giftMuArray = [[NSMutableArray alloc]init];
-        
+        giftDownloadManager = [[LiveGiftDownloadManager alloc] init];
     });
     
     return giftDownloadManager;
@@ -50,8 +49,9 @@
      
         self.loginManager = [LoginManager manager];
         [self.loginManager addDelegate:self];
-        
         self.sessionManager = [SessionRequestManager manager];
+        self.fileNameDictionary = [[NSMutableDictionary alloc] init];
+        self.giftMuArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -73,64 +73,51 @@
 
 #pragma mark - 请求礼物列表
 - (void)GetLiveRoomAllGiftListRequest{
-    
+
     _status = DOWNLOADSTART;
     
-    GetLiveRoomAllGiftListRequest *request = [[GetLiveRoomAllGiftListRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomGiftItemObject *> * _Nullable array) {
-        
+    GetAllGiftListRequest *request = [[GetAllGiftListRequest alloc] init];
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftInfoItemObject *> * _Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            
             if (success) {
-                
+
                 _status = DOWNLOADING;
-                
-                if ( self.giftMuArray.count > 0 && self.giftMuArray ) {
-                    
-                    [self.giftMuArray removeAllObjects];
-                }
-                
                 if (array != nil && array.count ) {
-                    self.giftMuArray = [array copy];
                     
-                    // 下载大礼物动画
-                    [self downLoadSrcImage];
+                    for (GiftInfoItemObject *object in array) {
+                        
+                        AllGiftItem *item = [[AllGiftItem alloc] init];
+                        item.infoItem = object;
+                        [self.giftMuArray addObject:item];
+                        
+                        if ( self.giftMuArray.count == array.count ) {
+                            // 下载大礼物动画
+                            [self downLoadSrcImage];
+                        }
+                    }
                 }
-                
+
             }else{
-                
                 _status = DOWNLOADEND;
                 NSLog(@"GetLiveRoomAllGiftListRequest ErrNum:%ld ErrMsg%@",(long)errnum,errmsg);
             }
         });
-        
     };
-    
     [self.sessionManager sendRequest:request];
 }
 
 #pragma mark - 下载礼物详情
 - (void)downLoadSrcImage{
+    
+    for (AllGiftItem *giftItem in self.giftMuArray) {
         
-        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
-            
-            LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
-            item.giftId = giftItem.giftId;
-            item.name = giftItem.name;
-            item.smallImgUrl = giftItem.smallImgUrl;
-            item.imgUrl = giftItem.imgUrl;
-            item.srcUrl = giftItem.srcUrl;
-            item.coins = giftItem.coins;
-            item.multi_click = giftItem.multi_click;
-            item.type = giftItem.type;
-            item.update_time = giftItem.update_time;
-            
-            if (giftItem.type == GIFTTYPE_Heigh) {
-                [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
-            }
-            [self downLoadListImageWithUrl:item.imgUrl];
-            [self downLoadSmallImageWithUrl:item.smallImgUrl];
+        if (giftItem.infoItem.type == GIFTTYPE_Heigh) {
+            [self afnDownLoadFileWith:giftItem.infoItem.srcwebpUrl giftId:giftItem.infoItem.giftId];
         }
+        [self downLoadSmallImageWithUrl:giftItem.infoItem.smallImgUrl];
+        [self downLoadMiddleImageWithUrl:giftItem.infoItem.middleImgUrl];
+        [self downLoadBigImageWithUrl:giftItem.infoItem.bigImgUrl];
+    }
 }
 
 #pragma mark - 下载大礼物webp文件
@@ -174,52 +161,64 @@
     [downloadTask resume];
 }
 
-#pragma mark - 下载SmallImage
+#pragma mark - 下载礼物小图标(文本聊天框显示)
 - (void)downLoadSmallImageWithUrl:(NSString *)url{
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    
     [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        
         
     } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
         
         if (image) {
-            
             NSLog(@"LiveGiftDownloadManager::sDWebImageLoadSmallImage( smallImage imageURL : %@ )", imageURL);
         }
-        
     }];
 }
 
-#pragma mark - 下载ListImage
-- (void)downLoadListImageWithUrl:(NSString *)url{
+#pragma mark - 下载礼物中图标(礼物列表显示)
+- (void)downLoadMiddleImageWithUrl:(NSString *)url{
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    
     [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        
         
     } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
         
         if (image) {
-            
-           NSLog(@"LiveGiftDownloadManager::sDWebImageLoadListImage( listImage imageURL : %@ )", imageURL);
+           NSLog(@"LiveGiftDownloadManager::sDWebImageLoadMiddleImage( MiddleImage imageURL : %@ )", imageURL);
         }
+    }];
+}
+
+#pragma mark - 下载礼物大图标(连击播放显示)
+- (void)downLoadBigImageWithUrl:(NSString *)url{
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         
+    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+        
+        if (image) {
+            NSLog(@"LiveGiftDownloadManager::sDWebImageLoadBigImage( BigImage imageURL : %@ )", imageURL);
+        }
     }];
 }
 
 #pragma mark - 添加新的礼物Item
-- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item {
+//- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item {
+//    
+//    if (item.type == GIFTTYPE_Heigh) {
+//        [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
+//    }
+//    [self downLoadListImageWithUrl:item.imgUrl];
+//    [self downLoadSmallImageWithUrl:item.smallImgUrl];
+//    
+//    [self.giftMuArray addObject:item];
+//}
+- (void)haveListNotGift:(NSString *)giftId{
     
-    if (item.type == GIFTTYPE_Heigh) {
-        [self afnDownLoadFileWith:item.srcUrl giftId:item.giftId];
-    }
-    [self downLoadListImageWithUrl:item.imgUrl];
-    [self downLoadSmallImageWithUrl:item.smallImgUrl];
     
-    [self.giftMuArray addObject:item];
+    
+    
 }
 
 #pragma mark - 根据礼物ID判断是否有该礼物
@@ -227,40 +226,44 @@
     
     BOOL isHere = NO;
     
-    for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
-        
-        if ([giftItem.giftId isEqualToString:giftId]) {
-            
-            isHere = YES;
-        }
-    }
+//    for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+//        
+//        if ([giftItem.giftId isEqualToString:giftId]) {
+//            
+//            isHere = YES;
+//        }
+//    }
     return isHere;
 }
 
 #pragma mark - 根据礼物id拿到礼物model
-- (LiveRoomGiftItemObject *)backGiftItemWithGiftID:(NSString *)giftId{
+- (AllGiftItem *)backGiftItemWithGiftID:(NSString *)giftId{
     
-    LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
+    AllGiftItem *item = [[AllGiftItem alloc]init];
     
-    if (self.giftMuArray != 0) {
+    if (self.giftMuArray.count != 0) {
         
-        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+        for (AllGiftItem *giftItem in self.giftMuArray) {
             
-            if ([giftItem.giftId isEqualToString:giftId]) {
+            if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
                 
-                item.giftId = giftItem.giftId;
-                item.name = giftItem.name;
-                item.smallImgUrl = giftItem.smallImgUrl;
-                item.imgUrl = giftItem.imgUrl;
-                item.srcUrl = giftItem.srcUrl;
-                item.coins = giftItem.coins;
-                item.multi_click = giftItem.multi_click;
-                item.type = giftItem.type;
-                item.update_time = giftItem.update_time;
+                item.infoItem.giftId = giftItem.infoItem.giftId;
+                item.infoItem.name = giftItem.infoItem.name;
+                item.infoItem.smallImgUrl = giftItem.infoItem.smallImgUrl;
+                item.infoItem.middleImgUrl = giftItem.infoItem.middleImgUrl;
+                item.infoItem.bigImgUrl = giftItem.infoItem.bigImgUrl;
+                item.infoItem.srcFlashUrl = giftItem.infoItem.srcFlashUrl;
+                item.infoItem.srcwebpUrl = giftItem.infoItem.srcwebpUrl;
+                item.infoItem.credit = giftItem.infoItem.credit;
+                item.infoItem.multiClick = giftItem.infoItem.multiClick;
+                item.infoItem.type = giftItem.infoItem.type;
+                item.infoItem.level = giftItem.infoItem.level;
+                item.infoItem.loveLevel = giftItem.infoItem.loveLevel;
+                item.infoItem.sendNumList = giftItem.infoItem.sendNumList;
+                item.infoItem.updateTime = giftItem.infoItem.updateTime;
             }
         }
     }
-    
     return item;
 }
 
@@ -286,59 +289,53 @@
     
     NSString *samllImgUrl = nil;
     
-    LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
-    
-    if (self.giftMuArray != 0) {
+    if (self.giftMuArray.count != 0) {
         
-        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+        for (AllGiftItem *giftItem in self.giftMuArray) {
             
-            if ([giftItem.giftId isEqualToString:giftId]) {
+            if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
                 
-                item.giftId = giftItem.giftId;
-                item.name = giftItem.name;
-                item.smallImgUrl = giftItem.smallImgUrl;
-                item.imgUrl = giftItem.imgUrl;
-                item.srcUrl = giftItem.srcUrl;
-                item.coins = giftItem.coins;
-                item.multi_click = giftItem.multi_click;
-                item.type = giftItem.type;
-                item.update_time = giftItem.update_time;
-                
-                samllImgUrl = item.smallImgUrl;
+                samllImgUrl = giftItem.infoItem.smallImgUrl;
             }
         }
     }
     return samllImgUrl;
 }
 
-#pragma mark - 根据礼物id拿到礼物ImgUrl
-- (NSString *)backImgUrlWithGiftID:(NSString *)giftId{
+#pragma mark - 根据礼物id拿到礼物MiddleImgUrl
+- (NSString *)backMiddleImgUrlWithGiftID:(NSString *)giftId{
     
-    NSString *imgUrl = nil;
+    NSString *middleImgUrl = nil;
     
-    LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
-    
-    if (self.giftMuArray != 0) {
+    if (self.giftMuArray.count != 0) {
         
-        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+        for (AllGiftItem *giftItem in self.giftMuArray) {
             
-            if ([giftItem.giftId isEqualToString:giftId]) {
+            if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
                 
-                item.giftId = giftItem.giftId;
-                item.name = giftItem.name;
-                item.smallImgUrl = giftItem.smallImgUrl;
-                item.imgUrl = giftItem.imgUrl;
-                item.srcUrl = giftItem.srcUrl;
-                item.coins = giftItem.coins;
-                item.multi_click = giftItem.multi_click;
-                item.type = giftItem.type;
-                item.update_time = giftItem.update_time;
-                
-                imgUrl = item.imgUrl;
+                middleImgUrl = giftItem.infoItem.middleImgUrl;
             }
         }
     }
-    return imgUrl;
+    return middleImgUrl;
+}
+
+#pragma mark - 根据礼物id拿到礼物BigImgUrl
+- (NSString *)backBigImgUrlWithGiftID:(NSString *)giftId{
+    
+    NSString *bigImgUrl = nil;
+    
+    if (self.giftMuArray.count != 0) {
+        
+        for (AllGiftItem *giftItem in self.giftMuArray) {
+            
+            if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
+                
+                bigImgUrl = giftItem.infoItem.bigImgUrl;
+            }
+        }
+    }
+    return bigImgUrl;
 }
 
 #pragma mark - 根据礼物id拿到礼物Type
@@ -346,29 +343,22 @@
     
     GiftType type;
     
-    LiveRoomGiftItemObject *item = [[LiveRoomGiftItemObject alloc]init];
-    
-    if (self.giftMuArray != 0) {
+    if (self.giftMuArray.count != 0) {
         
-        for (LiveRoomGiftItemObject *giftItem in self.giftMuArray) {
+        for (AllGiftItem *giftItem in self.giftMuArray) {
             
-            if ([giftItem.giftId isEqualToString:giftId]) {
-                
-                item.giftId = giftItem.giftId;
-                item.name = giftItem.name;
-                item.smallImgUrl = giftItem.smallImgUrl;
-                item.imgUrl = giftItem.imgUrl;
-                item.srcUrl = giftItem.srcUrl;
-                item.coins = giftItem.coins;
-                item.multi_click = giftItem.multi_click;
-                item.type = giftItem.type;
-                item.update_time = giftItem.update_time;
-                
-                type = item.type;
+            if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
+                type = giftItem.infoItem.type;
             }
         }
     }
     return type;
+}
+
+#pragma mark - 获取指定礼物详情
+- (void)requestListnotGift{
+    
+    
 }
 
 @end

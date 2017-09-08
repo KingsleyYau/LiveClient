@@ -17,16 +17,23 @@
 #define VALID_LIVEROOM_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ValidLiveRoomItem"
 #define IMMEDIATE_INVITE_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/ImmediateInviteItem"
 #define AUDIENCE_INFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/AudienceInfoItem"
-#define NORMAL_GIFT_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/NormalGiftItem"
+#define SENDABLE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/SendableGiftItem"
 #define GIFT_DETAIL_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/GiftItem"
 #define EMOTION_CATEGORY_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/EmotionCategory"
 #define EMOTION_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/EmotionItem"
+#define TALENT_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/TalentInfoItem"
+#define TALENT_INVITE_ITEM_CLASS        "com/qpidnetwork/livemodule/httprequest/item/TalentInviteItem"
 
 /* 4.预约私密     */
 #define BOOK_INVITE_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/BookInviteItem"
+#define BOOK_INVITE_CONFIG_ITEM_CLASS   "com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteConfig"
+#define BOOK_TIME_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookTimeItem"
+#define BOOK_GIFT_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteGiftItem"
 
 /* 5.背包    */
 #define PACKAGE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"
+#define PACKAGE_VOUCHER_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/VoucherItem"
+#define PACKAGE_RIDE_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/RideItem"
 
 /* 6.其他    */
 #define OTHER_CONFIG_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ConfigItem"

@@ -74,8 +74,8 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 
 /*********************************** 6.2. 获取账号余额    ****************************************/
 
-class RequestGetCreditCallback : public IRequestGetCreditCallback{
-	void OnGetCredit(HttpGetCreditTask* task, bool success, int errnum, const string& errmsg, double credit){
+class RequestGetLeftCreditCallback : public IRequestGetLeftCreditCallback{
+	void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, double credit){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -105,7 +105,7 @@ class RequestGetCreditCallback : public IRequestGetCreditCallback{
 	}
 };
 
-RequestGetCreditCallback gRequestGetCreditCallback;
+RequestGetLeftCreditCallback gRequestGetLeftCreditCallback;
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
@@ -116,8 +116,64 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
   (JNIEnv *env, jclass cls, jobject callback){
 
     jlong taskId = -1;
-    taskId = gHttpRequestController.GetCredit(&gPhotoUploadRequestManager,
-    									&gRequestGetCreditCallback);
+    taskId = gHttpRequestController.GetLeftCredit(&gPhotoUploadRequestManager,
+    									&gRequestGetLeftCreditCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+
+/*********************************** 6.2. 获取账号余额    ****************************************/
+
+class RequestSetFavoriteCallback : public IRequestSetFavoriteCallback{
+	void OnSetFavorite(HttpSetFavoriteTask* task, bool success, int errnum, const string& errmsg){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnSetFavorite( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;)V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog("httprequest", "JNI::OnSetFavorite( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestSetFavoriteCallback gRequestSetFavoriteCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    AddOrCancelFavorite
+ * Signature: (Ljava/lang/String;ZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_AddOrCancelFavorite
+  (JNIEnv *env, jclass cls, jstring anchorId, jboolean isFav, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.SetFavorite(&gPhotoUploadRequestManager,
+    									JString2String(env, anchorId),
+    									isFav,
+    									&gRequestSetFavoriteCallback);
 
     jobject obj = env->NewGlobalRef(callback);
     putCallbackIntoMap(taskId, obj);

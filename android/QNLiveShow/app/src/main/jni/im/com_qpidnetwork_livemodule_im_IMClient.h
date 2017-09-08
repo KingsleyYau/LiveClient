@@ -34,10 +34,10 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_IsInvalid
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    Login
- * Signature: (Ljava/lang/String;Ljava/lang/String;)Z
+ * Signature: (Ljava/lang/String;)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_Login
-  (JNIEnv *, jclass, jstring, jstring);
+  (JNIEnv *, jclass, jstring);
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
@@ -65,6 +65,14 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_RoomOut
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    PublicRoomIn
+ * Signature: (ILjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_PublicRoomIn
+  (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    SendRoomMsg
  * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
  */
@@ -74,10 +82,10 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendRoomM
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    SendGift
- * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZIII)Z
+ * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIZIII)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendGift
-  (JNIEnv *, jclass, jint, jstring, jstring, jstring, jstring, jint, jboolean, jint, jint, jint);
+  (JNIEnv *, jclass, jint, jstring, jstring, jstring, jstring, jboolean, jint, jboolean, jint, jint, jint);
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
@@ -90,10 +98,10 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendBarra
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    SendImmediatePrivateInvite
- * Signature: (ILjava/lang/String;D)Z
+ * Signature: (ILjava/lang/String;Ljava/lang/String;Z)Z
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendImmediatePrivateInvite
-  (JNIEnv *, jclass, jint, jstring, jboolean);
+  (JNIEnv *, jclass, jint, jstring, jstring, jboolean);
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
@@ -102,6 +110,14 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendImmed
  */
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_CancelImmediatePrivateInvite
   (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    SendTalentInvite
+ * Signature: (ILjava/lang/String;Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendTalentInvite
+  (JNIEnv *, jclass, jint, jstring, jstring);
 
 #ifdef __cplusplus
 }

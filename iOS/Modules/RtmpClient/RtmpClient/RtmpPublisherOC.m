@@ -53,6 +53,9 @@ class PublisherStatusCallbackImp;
 @property (assign) int width;
 @property (assign) int height;
 
+#pragma mark - 音频控制
+@property (assign) EncodeDecodeBuffer* mpMuteBuffer;
+
 @end
 
 #pragma mark - RrmpPublisher回调
@@ -91,21 +94,28 @@ private:
     NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld )", (long)width, (long)height);
     
     if(self = [super init] ) {
-        _isBackGround = NO;
-        self.width = (int)width;
-        self.height = (int)height;
+        // 初始化参数
+        _width = (int)width;
+        _height = (int)height;
+        _mute = NO;
         
         self.startTime = [NSDate date];
         
+        // 创建流推送器
         self.publisher = new PublisherController();
         self.statusCallback = new PublisherStatusCallbackImp(self);
         self.publisher->SetStatusCallback(self.statusCallback);
+        
+        // 创建静音Buffer
+        self.mpMuteBuffer = new EncodeDecodeBuffer();
         
         // 默认使用硬编码
         _useHardEncoder = YES;
         // 创建解码器和渲染器
         [self createEncoders];
         
+        // 注册前后台切换通知
+        _isBackGround = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
@@ -116,14 +126,27 @@ private:
 
 - (void)dealloc {
     NSLog(@"RtmpPublisherOC::dealloc()");
-    
+    // 销毁编码器
     [self destroyEncoders];
     
+    // 销毁流推送器
     if( self.publisher ) {
         delete self.publisher;
         self.publisher = NULL;
     }
     
+    if( self.statusCallback ) {
+        delete self.statusCallback;
+        self.statusCallback = NULL;
+    }
+    
+    // 销毁影音Buffer
+    if( self.mpMuteBuffer ) {
+        delete self.mpMuteBuffer;
+        self.mpMuteBuffer = NULL;
+    }
+    
+    // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
@@ -161,13 +184,31 @@ recordH264FilePath:(NSString *)recordH264FilePath
 }
 
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer {
-    CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
-    
     char* data = NULL;
     size_t size = 0;
-    OSStatus status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &size, &data);
+    OSStatus status = noErr;
+    
+    CMBlockBufferRef blockBuffer = CMSampleBufferGetDataBuffer(sampleBuffer);
+    status = CMBlockBufferGetDataPointer(blockBuffer, 0, NULL, &size, &data);
     if( status == kCMBlockBufferNoErr ) {
-        self.publisher->PushAudioFrame(data, (int)size, (void *)sampleBuffer);
+        void* buffer = data;
+        
+        if( _mute ) {
+            // 静音
+            self.mpMuteBuffer->RenewBufferSize((int)size);
+            self.mpMuteBuffer->FillBufferWithChar(0);
+            buffer = (void *)self.mpMuteBuffer->GetBuffer();
+            
+            CMBlockBufferReplaceDataBytes((const void *)buffer, blockBuffer, 0, size);
+        }
+        
+        self.publisher->PushAudioFrame(buffer, (int)size, (void *)sampleBuffer);
+    }
+}
+
+- (void)setMute:(BOOL)mute {
+    if( _mute != mute ) {
+        _mute = mute;
     }
 }
 

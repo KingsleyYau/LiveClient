@@ -19,6 +19,7 @@
 		254D0DF21EF27DAF00DDBC0B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF11EF27DAF00DDBC0B /* Accelerate.framework */; };
 		254D0DF41EF27DBD00DDBC0B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */; };
 		254D0DFC1EF2837900DDBC0B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DFB1EF2837900DDBC0B /* WebP.framework */; };
+		25E8873D1F582EE2006E4639 /* UITapImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8873C1F582EE2006E4639 /* UITapImageView.m */; };
 		500689871D3CF97A00CF5D10 /* UIImageViewFill.m in Sources */ = {isa = PBXBuildFile; fileRef = 500689861D3CF97A00CF5D10 /* UIImageViewFill.m */; };
 		5027D59D1EF9056800EE3B0E /* NSBundle+TZImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5811EF9056800EE3B0E /* NSBundle+TZImagePicker.m */; };
 		5027D59E1EF9056800EE3B0E /* TZAssetCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5831EF9056800EE3B0E /* TZAssetCell.m */; };
@@ -146,6 +147,8 @@
 		254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		254D0DF51EF27E8800DDBC0B /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		254D0DFB1EF2837900DDBC0B /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
+		25E8873B1F582EE2006E4639 /* UITapImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UITapImageView.h; sourceTree = "<group>"; };
+		25E8873C1F582EE2006E4639 /* UITapImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UITapImageView.m; sourceTree = "<group>"; };
 		500689851D3CF97A00CF5D10 /* UIImageViewFill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageViewFill.h; sourceTree = "<group>"; };
 		500689861D3CF97A00CF5D10 /* UIImageViewFill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageViewFill.m; sourceTree = "<group>"; };
 		5027D5801EF9056800EE3B0E /* NSBundle+TZImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+TZImagePicker.h"; sourceTree = "<group>"; };
@@ -591,6 +594,8 @@
 		525081931CBCF03F006CF6D3 /* UIImage */ = {
 			isa = PBXGroup;
 			children = (
+				25E8873B1F582EE2006E4639 /* UITapImageView.h */,
+				25E8873C1F582EE2006E4639 /* UITapImageView.m */,
 				525081971CBCF17F006CF6D3 /* UIImage+Circle.h */,
 				525081981CBCF17F006CF6D3 /* UIImage+Circle.m */,
 				503F01FC1D29FC6C00F2F17E /* UIImage+SolidColor.h */,
@@ -954,6 +959,7 @@
 				CAF53835171FDB71005DCB49 /* PZPagingScrollView.m in Sources */,
 				503A70471EEF6F9100BA8FF8 /* YYTextWeakProxy.m in Sources */,
 				503A70311EEF6F9100BA8FF8 /* YYTextContainerView.m in Sources */,
+				25E8873D1F582EE2006E4639 /* UITapImageView.m in Sources */,
 				525081991CBCF17F006CF6D3 /* UIImage+Circle.m in Sources */,
 				5027D5A11EF9056800EE3B0E /* TZImageCropManager.m in Sources */,
 				503A70541EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m in Sources */,

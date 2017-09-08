@@ -1,0 +1,46 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical" 
+    xmlns:wheel="http://schemas.android.com/apk/res-auto" >
+
+    <com.qpidnetwork.livemodule.view.MartinListView
+        android:id="@+id/refreshListview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" 
+        android:id="@+id/llInitContainer"
+        android:background="#F2F2F2"
+        android:gravity="center">
+
+        <com.qpidnetwork.livemodule.view.MaterialProgressBar
+            android:id="@+id/pbLoading11"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center" 
+            wheel:matProg_barColor="@color/blue_color"
+            wheel:matProg_progressIndeterminate="true"/>
+
+        <include
+            android:id="@+id/includeError"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            layout="@layout/layout_error_page"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+    </LinearLayout>
+
+</FrameLayout>

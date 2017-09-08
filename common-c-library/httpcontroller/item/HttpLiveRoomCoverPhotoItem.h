@@ -44,13 +44,6 @@ public:
         }
     }
 
-	/**
-	 * 封面图结构体
-	 * @param photoId			封面图ID
-	 * @param photoUrl          封面图url
-	 * @param status		    审核状态（1.待审核， 2.通过 3.否决）
-     * @param isIn_use			是否正在使用
-     */
 	HttpLiveRoomCoverPhotoItem() {
 		photoId = "";
 		photoUrl = "";
@@ -62,8 +55,15 @@ public:
 	virtual ~HttpLiveRoomCoverPhotoItem() {
 
 	}
-
-	string photoId;
+    
+    /**
+     * 封面图结构体
+     * photoId			封面图ID
+     * photoUrl          封面图url
+     * status		    审核状态（1.待审核， 2.通过 3.否决）
+     * isIn_use			是否正在使用
+     */
+    string photoId;
 	string photoUrl;
     ExamineStatus status;
     bool isIn_use;

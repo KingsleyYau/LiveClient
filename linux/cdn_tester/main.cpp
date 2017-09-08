@@ -25,7 +25,7 @@ using namespace std;
 bool Parse(int argc, char *argv[]);
 void SignalFunc(int sign_no);
 
-char url[1024] = {"rtmp://192.168.88.17:1936/aac/max"};
+char url[1024] = {"rtmp://192.168.88.17:1935/live/max_mv"};
 bool isRecord = false;
 char flv[1024] = {"record/play.flv"};
 char h264[1024] = {"record/play.h264"};
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
 //	KLog::SetLogDirectory("./log");
 
 	LogManager::GetLogManager()->Start(KLog::LOG_WARNING, "log");
-	LogManager::GetLogManager()->SetDebugMode(true);
+	LogManager::GetLogManager()->SetDebugMode(false);
 
 	LSPlayerImp player;
 
@@ -87,9 +87,11 @@ int main(int argc, char *argv[]) {
 
 		} else {
 			// 断线重连
-			player.Stop();
+			LogManager::GetLogManager()->Log(KLog::LOG_ERR_SYS, "main::( #################################################### )");
 			player.PlayUrl(url, flv, h264, aac);
 		}
+
+		Sleep(5 * 1000);
 	}
 
 	LogManager::GetLogManager()->LogFlushMem2File();
@@ -125,7 +127,7 @@ bool Parse(int argc, char *argv[]) {
 }
 
 void SignalFunc(int sign_no) {
-	LogManager::GetLogManager()->Log(KLog::LOG_ERR_SYS, "SignalFunc( Get signal : %d )", sign_no);
+	LogManager::GetLogManager()->Log(KLog::LOG_ERR_SYS, "main::SignalFunc( Get signal : %d )", sign_no);
 	LogManager::GetLogManager()->LogFlushMem2File();
 
 	switch(sign_no) {

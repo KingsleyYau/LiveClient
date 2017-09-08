@@ -32,16 +32,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
-    FollowingViewController* vc1 = [[FollowingViewController alloc] initWithNibName:nil bundle:nil];
-    [self addChildViewController:vc1];
+    HotViewController* hotVc = [[HotViewController alloc] initWithNibName:nil bundle:nil];
+    [self addChildViewController:hotVc];
     
-    HotViewController* vc2 = [[HotViewController alloc] initWithNibName:nil bundle:nil];
-    [self addChildViewController:vc2];
+    FollowingViewController* flVc = [[FollowingViewController alloc] initWithNibName:nil bundle:nil];
+    [self addChildViewController:flVc];
     
-    DiscoverViewController* vc3 = [[DiscoverViewController alloc] initWithNibName:nil bundle:nil];
-    [self addChildViewController:vc3];
+//    DiscoverViewController* vc3 = [[DiscoverViewController alloc] initWithNibName:nil bundle:nil];
+//    [self addChildViewController:vc3];
     
-    self.viewControllers = [NSArray arrayWithObjects:vc1, vc2, vc3, nil];
+    self.viewControllers = [NSArray arrayWithObjects:hotVc, flVc, nil];
 
 }
 
@@ -79,12 +79,12 @@
     self.curIndex = 0;
     
     // 设置标题
-    CGFloat width = [UIScreen mainScreen].bounds.size.width - (44 * 2);
+    CGFloat width = [UIScreen mainScreen].bounds.size.width - (44 * 3);
     CGRect frame = CGRectMake(0, 0, width, 44);
     JTSegmentControl* categoryControl = [[JTSegmentControl alloc] initWithFrame:frame];
     categoryControl.delegate = self;
     categoryControl.autoScrollWhenIndexChange = YES;
-    categoryControl.items = [NSArray arrayWithObjects:@"Following", @"Hot", @"Discover", nil];
+    categoryControl.items = [NSArray arrayWithObjects:@"Hot", @"Following", nil];
     categoryControl.font = [UIFont systemFontOfSize:16];
     categoryControl.selectedFont = [UIFont systemFontOfSize:16];
     categoryControl.itemBackgroundColor = [UIColor clearColor];

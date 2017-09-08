@@ -49,7 +49,7 @@ int GiftTypeToInt(GiftType giftType){
 	return value;
 }
 
-int ImmediateInviteReplyTypeToInt(ReplyType replyType){
+int ImmediateInviteReplyTypeToInt(HttpReplyType replyType){
 	int value = 0;
 	int i = 0;
 	for (i = 0; i < _countof(ImmediateInviteReplyTypeArray); i++)
@@ -78,6 +78,63 @@ int BookInviteStatusToInt(BookingReplyType replyType){
 BookingListType IntToBookInviteListType(int value)
 {
 	return (BookingListType)(value < _countof(BookInviteListTypeArray) ? BookInviteListTypeArray[value] : BookInviteListTypeArray[0]);
+}
+
+int TalentInviteStatusToInt(HTTPTalentStatus talentStatus){
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(TalentInviteStatusArray); i++)
+	{
+		if (talentStatus == TalentInviteStatusArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
+int  BookInviteTimeStatusToInt(BookTimeStatus bookTimeStatus){
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(BookInviteTimeStatusArray); i++)
+	{
+		if (bookTimeStatus == BookInviteTimeStatusArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
+int  VoucherUseRoomTypeToInt(UseRoomType useRoomType){
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(VoucherUseRoomTypeArray); i++)
+	{
+		if (useRoomType == VoucherUseRoomTypeArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
+int  VoucherAnchorTypeToInt(AnchorType voucherAnchorType){
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(VoucherAnchorTypeArray); i++)
+	{
+		if (voucherAnchorType == VoucherAnchorTypeArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
+ControlType IntToInteractiveOperateType(int value)
+{
+	return (ControlType)(value < _countof(InteractiveOperateTypeArray) ? InteractiveOperateTypeArray[value] : InteractiveOperateTypeArray[0]);
 }
 
 /**************************** c++转Java对象    ****************************************/
@@ -154,31 +211,30 @@ jobject getHotListItem(JNIEnv *env, const HttpLiveRoomInfoItem& item){
 	jclass jItemCls = GetJClass(env, HOTLIST_ITEM_CLASS);
 	if (NULL != jItemCls){
 		jmethodID init = env->GetMethodID(jItemCls, "<init>",
-				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V");
+				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I[Ljava/lang/String;)V");
 		jstring juserId = env->NewStringUTF(item.userId.c_str());
 		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
-		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
-		jstring jroomName = env->NewStringUTF(item.roomName.c_str());
 		jstring jroomPhotoUrl = env->NewStringUTF(item.roomPhotoUrl.c_str());
 		int jonlineStatus = AnchorOnlineStatusToInt(item.onlineStatus);
 		int jroomType = LiveRoomTypeToInt(item.roomType);
+		jobjectArray jinterestArray = getJavaStringArray(env, item.interest);
 		jItem = env->NewObject(jItemCls, init,
 					juserId,
 					jnickName,
 					jphotoUrl,
 					jonlineStatus,
-					jroomId,
-					jroomName,
 					jroomPhotoUrl,
-					jroomType
+					jroomType,
+					jinterestArray
 					);
         env->DeleteLocalRef(juserId);
         env->DeleteLocalRef(jnickName);
         env->DeleteLocalRef(jphotoUrl);
-        env->DeleteLocalRef(jroomId);
-        env->DeleteLocalRef(jroomName);
         env->DeleteLocalRef(jroomPhotoUrl);
+        if(NULL != jinterestArray){
+        	env->DeleteLocalRef(jinterestArray);
+        }
 	}
 	return jItem;
 }
@@ -188,33 +244,35 @@ jobject getFollowingListItem(JNIEnv *env, const HttpFollowItem& item){
 	jclass jItemCls = GetJClass(env, FOLLOWINGLIST_ITEM_CLASS);
 	if (NULL != jItemCls){
 		jmethodID init = env->GetMethodID(jItemCls, "<init>",
-				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;III)V");
+				"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;III[Ljava/lang/String;)V");
 		jstring juserId = env->NewStringUTF(item.userId.c_str());
 		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
-		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
 		jstring jroomName = env->NewStringUTF(item.roomName.c_str());
 		jstring jroomPhotoUrl = env->NewStringUTF(item.roomPhotoUrl.c_str());
 		int jonlineStatus = AnchorOnlineStatusToInt(item.onlineStatus);
 		int jroomType = LiveRoomTypeToInt(item.roomType);
+		jobjectArray jinterestArray = getJavaStringArray(env, item.interest);
 		jItem = env->NewObject(jItemCls, init,
 					juserId,
 					jnickName,
 					jphotoUrl,
 					jonlineStatus,
-					jroomId,
 					jroomName,
 					jroomPhotoUrl,
 					item.loveLevel,
 					jroomType,
-					(int)item.addDate
+					(int)item.addDate,
+					jinterestArray
 					);
         env->DeleteLocalRef(juserId);
         env->DeleteLocalRef(jnickName);
         env->DeleteLocalRef(jphotoUrl);
-        env->DeleteLocalRef(jroomId);
         env->DeleteLocalRef(jroomName);
         env->DeleteLocalRef(jroomPhotoUrl);
+        if(NULL != jinterestArray){
+        	env->DeleteLocalRef(jinterestArray);
+        }
 	}
 	return jItem;
 }
@@ -242,7 +300,7 @@ jobject getImmediateInviteItem(JNIEnv *env, const HttpInviteInfoItem& item){
 	if (NULL != jItemCls){
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
 				"Ljava/lang/String;IILjava/lang/String;ZIIILjava/lang/String;)V");
-		jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+		jstring jinviteId = env->NewStringUTF(item.invitationId.c_str());
 		jstring jtoId = env->NewStringUTF(item.oppositeId.c_str());
 		jstring joppositeNickname = env->NewStringUTF(item.oppositeNickName.c_str());
 		jstring joppositePhotoUrl = env->NewStringUTF(item.oppositePhotoUrl.c_str());
@@ -305,7 +363,7 @@ jobject getGiftDetailItem(JNIEnv *env, const HttpGiftInfoItem& item){
 	jclass jItemCls = GetJClass(env, GIFT_DETAIL_ITEM_CLASS);
 	if (NULL != jItemCls){
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;"
-				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DZIIII)V");
+				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DZIII[II)V");
 		jstring jid = env->NewStringUTF(item.giftId.c_str());
 		jstring jname = env->NewStringUTF(item.name.c_str());
 		jstring jsmallImgUrl = env->NewStringUTF(item.smallImgUrl.c_str());
@@ -314,6 +372,7 @@ jobject getGiftDetailItem(JNIEnv *env, const HttpGiftInfoItem& item){
 		jstring jsrcFlashUrl = env->NewStringUTF(item.srcFlashUrl.c_str());
 		jstring jsrcWebpUrl = env->NewStringUTF(item.srcwebpUrl.c_str());
 		int jgiftType = GiftTypeToInt(item.type);
+		jintArray jgiftChooser = getJavaIntArray(env, item.sendNumList);
 		jItem = env->NewObject(jItemCls, init,
 					jid,
 					jname,
@@ -327,6 +386,7 @@ jobject getGiftDetailItem(JNIEnv *env, const HttpGiftInfoItem& item){
 					jgiftType,
 					item.level,
 					item.loveLevel,
+					jgiftChooser,
 					(int)item.updateTime
 					);
         env->DeleteLocalRef(jid);
@@ -336,30 +396,25 @@ jobject getGiftDetailItem(JNIEnv *env, const HttpGiftInfoItem& item){
         env->DeleteLocalRef(jbigImageUrl);
         env->DeleteLocalRef(jsrcFlashUrl);
         env->DeleteLocalRef(jsrcWebpUrl);
+        if(NULL != jgiftChooser){
+        	env->DeleteLocalRef(jgiftChooser);
+        }
 	}
 	return jItem;
 }
 
-jobject getNormalGiftItem(JNIEnv *env, const HttpGiftItem& item){
+jobject getSendableGiftItem(JNIEnv *env, const HttpGiftWithIdItem& item){
 	jobject jItem = NULL;
-	jclass jItemCls = GetJClass(env, NORMAL_GIFT_ITEM_CLASS);
+	jclass jItemCls = GetJClass(env, SENDABLE_GIFT_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(L";
-		signature += GIFT_DETAIL_ITEM_CLASS;
-		signature += ";[I)V";
+		string signature = "(Ljava/lang/String;Z)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
-		jobject jgiftDetail = getGiftDetailItem(env, item.gift);
-		jintArray jchooserArray = getJavaIntArray(env, item.sendNumList);
+		jstring jsgiftId = env->NewStringUTF(item.giftId.c_str());
 		jItem = env->NewObject(jItemCls, init,
-					jgiftDetail,
-					jchooserArray
+					jsgiftId,
+					item.isShow
 					);
-		if(NULL != jgiftDetail){
-			env->DeleteLocalRef(jgiftDetail);
-		}
-		if(NULL != jchooserArray){
-			env->DeleteLocalRef(jchooserArray);
-		}
+		env->DeleteLocalRef(jsgiftId);
 	}
 	return jItem;
 }
@@ -368,15 +423,59 @@ jobject getEmotionItem(JNIEnv *env, const HttpEmoticonInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, EMOTION_ITEM_CLASS);
 	if (NULL != jItemCls){
-		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		jstring jemoId = env->NewStringUTF(item.emoId.c_str());
 		jstring jemoSign = env->NewStringUTF(item.emoSign.c_str());
 		jstring jemoUrl = env->NewStringUTF(item.emoUrl.c_str());
 		jItem = env->NewObject(jItemCls, init,
+					jemoId,
 					jemoSign,
 					jemoUrl
 					);
+		env->DeleteLocalRef(jemoId);
         env->DeleteLocalRef(jemoSign);
         env->DeleteLocalRef(jemoUrl);
+	}
+	return jItem;
+}
+
+jobject getTalentItem(JNIEnv *env, const HttpGetTalentItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, TALENT_ITEM_CLASS);
+	if (NULL != jItemCls){
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;D)V");
+		jstring jtalentId = env->NewStringUTF(item.talentId.c_str());
+		jstring jname = env->NewStringUTF(item.name.c_str());
+		jItem = env->NewObject(jItemCls, init,
+					jtalentId,
+					jname,
+					item.credit
+					);
+		env->DeleteLocalRef(jtalentId);
+        env->DeleteLocalRef(jname);
+	}
+	return jItem;
+}
+
+jobject getTalentInviteItem(JNIEnv *env, const HttpGetTalentStatusItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, TALENT_INVITE_ITEM_CLASS);
+	if (NULL != jItemCls){
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DI)V");
+		jstring jtalentInviteId = env->NewStringUTF(item.talentInviteId.c_str());
+		jstring jtalentId = env->NewStringUTF(item.talentId.c_str());
+		jstring jname = env->NewStringUTF(item.name.c_str());
+		int jstatus = TalentInviteStatusToInt(item.status);
+		jItem = env->NewObject(jItemCls, init,
+					jtalentInviteId,
+					jtalentId,
+					jname,
+					item.credit,
+					jstatus
+					);
+		env->DeleteLocalRef(jtalentInviteId);
+        env->DeleteLocalRef(jtalentId);
+        env->DeleteLocalRef(jname);
 	}
 	return jItem;
 }
@@ -400,18 +499,24 @@ jobject getEmotionCategoryItem(JNIEnv *env, const HttpEmoticonItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, EMOTION_CATEGORY_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(ILjava/lang/String;[L";
+		string signature = "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[L";
 		signature += EMOTION_ITEM_CLASS;
 		signature += ";)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
-		jstring jemotionErrorMsg = env->NewStringUTF(item.emoErrMsg.c_str());
+		jstring jemotionTagName = env->NewStringUTF(item.name.c_str());
+		jstring jemotionErrorMsg = env->NewStringUTF(item.errMsg.c_str());
+		jstring jemotionTagUrl = env->NewStringUTF(item.emoUrl.c_str());
 		jobjectArray jemotionArray = getEmotionArray(env, item.emoList);
 		jItem = env->NewObject(jItemCls, init,
-					(int)item.emoType,
+					(int)item.type,
+					jemotionTagName,
 					jemotionErrorMsg,
+					jemotionTagUrl,
 					jemotionArray
 					);
+		env->DeleteLocalRef(jemotionTagName);
         env->DeleteLocalRef(jemotionErrorMsg);
+        env->DeleteLocalRef(jemotionTagUrl);
         if(NULL != jemotionArray){
         	env->DeleteLocalRef(jemotionArray);
         }
@@ -426,7 +531,7 @@ jobject getBookInviteItem(JNIEnv *env, const HttpBookingPrivateInviteItem& item)
 		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZIIILjava/lang/String;"
 				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
-		jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+		jstring jinviteId = env->NewStringUTF(item.invitationId.c_str());
 		jstring jtoId = env->NewStringUTF(item.toId.c_str());
 		jstring jfromId = env->NewStringUTF(item.fromId.c_str());
 		jstring joppositePhotoUrl = env->NewStringUTF(item.oppositePhotoUrl.c_str());
@@ -469,29 +574,140 @@ jobject getBookInviteItem(JNIEnv *env, const HttpBookingPrivateInviteItem& item)
 	return jItem;
 }
 
+jobject getBookTimeItem(JNIEnv *env, const HttpGetCreateBookingInfoItem::BookTimeItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, BOOK_INVITE_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;II)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring jtimeId = env->NewStringUTF(item.timeId.c_str());
+		int jbookTimeStatus = BookInviteTimeStatusToInt(item.status);
+		jItem = env->NewObject(jItemCls, init,
+					jtimeId,
+					(int)item.time,
+					jbookTimeStatus
+					);
+        env->DeleteLocalRef(jtimeId);
+	}
+	return jItem;
+}
+
+jobject getBookGiftItem(JNIEnv *env, const HttpGetCreateBookingInfoItem::GiftItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, BOOK_GIFT_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;[II)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring jgiftId = env->NewStringUTF(item.giftId.c_str());
+
+		int jDefaultNum = -1;
+		int length = item.giftNumList.size();
+		jintArray jchooserArray = env->NewIntArray(length);
+		int i = 0;
+		int *pArray = new int[length+1];
+		for(HttpGetCreateBookingInfoItem::GiftNumList::const_iterator itr = item.giftNumList.begin(); itr != item.giftNumList.end(); itr++, i++) {
+			*(pArray+i) = itr->num;
+			if(itr->isDefault){
+				jDefaultNum = itr->num;
+			}
+		}
+		env->SetIntArrayRegion(jchooserArray, 0, length, pArray);
+		delete [] pArray;
+
+		jItem = env->NewObject(jItemCls, init,
+					jgiftId,
+					jchooserArray,
+					jDefaultNum
+					);
+        env->DeleteLocalRef(jgiftId);
+
+        if(NULL != jchooserArray){
+        	env->DeleteLocalRef(jchooserArray);
+        }
+	}
+	return jItem;
+}
+
+
+
 jobject getPackageGiftItem(JNIEnv *env, const HttpBackGiftItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, PACKAGE_GIFT_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(L";
-		signature += GIFT_DETAIL_ITEM_CLASS;
-		signature += ";III[I)V";
+		string signature = "(Ljava/lang/String;IIIZ)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
-		jobject jgiftItem = getGiftDetailItem(env, item.gift);
-		jintArray jchooser = getJavaIntArray(env, item.sendNumList);
+		jstring jgiftId = env->NewStringUTF(item.giftId.c_str());
 		jItem = env->NewObject(jItemCls, init,
-					jgiftItem,
+					jgiftId,
 					item.num,
-					item.grantedDate,
-					item.expDate,
-					jchooser
+					(int)item.grantedDate,
+					(int)item.expDate,
+					item.read
 					);
-        if(NULL != jgiftItem){
-        	env->DeleteLocalRef(jgiftItem);
-        }
-        if(NULL != jchooser){
-        	env->DeleteLocalRef(jchooser);
-        }
+		env->DeleteLocalRef(jgiftId);
+	}
+	return jItem;
+}
+
+jobject getPackageVoucherItem(JNIEnv *env, const HttpVoucherItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, PACKAGE_VOUCHER_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II"
+				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIZ)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring jvoucherId = env->NewStringUTF(item.voucherId.c_str());
+		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+		jstring jdesc = env->NewStringUTF(item.desc.c_str());
+		jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+		jstring janchorNcikName = env->NewStringUTF(item.anchorNcikName.c_str());
+		jstring janchorPhotoUrl = env->NewStringUTF(item.anchorPhotoUrl.c_str());
+		int juseRoomType = VoucherUseRoomTypeToInt(item.useRoomType);
+		int janchorType = VoucherAnchorTypeToInt(item.anchorType);
+		jItem = env->NewObject(jItemCls, init,
+					janchorPhotoUrl,
+					jphotoUrl,
+					jdesc,
+					juseRoomType,
+					janchorType,
+					janchorId,
+					janchorNcikName,
+					janchorPhotoUrl,
+					(int)item.grantedDate,
+					(int)item.expDate,
+					item.read
+					);
+		env->DeleteLocalRef(jvoucherId);
+		env->DeleteLocalRef(jphotoUrl);
+		env->DeleteLocalRef(jdesc);
+		env->DeleteLocalRef(janchorId);
+		env->DeleteLocalRef(janchorNcikName);
+		env->DeleteLocalRef(janchorPhotoUrl);
+	}
+	return jItem;
+}
+
+jobject getPackageRideItem(JNIEnv *env, const HttpRideItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, PACKAGE_RIDE_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIZZ)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring jrideId = env->NewStringUTF(item.rideId.c_str());
+		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+		jstring jname = env->NewStringUTF(item.name.c_str());
+		jItem = env->NewObject(jItemCls, init,
+					jrideId,
+					jphotoUrl,
+					jname,
+					(int)item.grantedDate,
+					(int)item.expDate,
+					item.read,
+					item.isUse
+					);
+		env->DeleteLocalRef(jrideId);
+		env->DeleteLocalRef(jphotoUrl);
+		env->DeleteLocalRef(jname);
 	}
 	return jItem;
 }
@@ -596,14 +812,29 @@ jobjectArray getAudienceArray(JNIEnv *env, const HttpLiveFansList& listItem){
 	return jItemArray;
 }
 
-jobjectArray getNormalGiftArray(JNIEnv *env, const GiftItemList& listItem){
+jobjectArray getGiftArray(JNIEnv *env, const GiftItemList& listItem){
 	jobjectArray jItemArray = NULL;
-	jclass jItemCls = GetJClass(env, NORMAL_GIFT_ITEM_CLASS);
+	jclass jItemCls = GetJClass(env, GIFT_DETAIL_ITEM_CLASS);
 	if(NULL != jItemCls &&  listItem.size() > 0 ){
 		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
 		int i = 0;
 		for(GiftItemList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
-			jobject item = getNormalGiftItem(env, (*itr));
+			jobject item = getGiftDetailItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
+jobjectArray getSendableGiftArray(JNIEnv *env, const GiftWithIdItemList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, SENDABLE_GIFT_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(GiftWithIdItemList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getSendableGiftItem(env, (*itr));
 			env->SetObjectArrayElement(jItemArray, i, item);
 			env->DeleteLocalRef(item);
 		}
@@ -626,6 +857,21 @@ jobjectArray getEmotionCategoryArray(JNIEnv *env, const EmoticonItemList& listIt
 	return jItemArray;
 }
 
+jobjectArray getTalentArray(JNIEnv *env, const TalentItemList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, TALENT_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(TalentItemList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getTalentItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
 jobjectArray getBookInviteArray(JNIEnv *env, const BookingPrivateInviteItemList& listItem){
 	jobjectArray jItemArray = NULL;
 	jclass jItemCls = GetJClass(env, BOOK_INVITE_ITEM_CLASS);
@@ -641,6 +887,65 @@ jobjectArray getBookInviteArray(JNIEnv *env, const BookingPrivateInviteItemList&
 	return jItemArray;
 }
 
+jobjectArray getBookTimeArray(JNIEnv *env, const HttpGetCreateBookingInfoItem::BookTimeList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, BOOK_TIME_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(HttpGetCreateBookingInfoItem::BookTimeList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getBookTimeItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
+jobjectArray getBookGiftArray(JNIEnv *env, const HttpGetCreateBookingInfoItem::GiftList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, BOOK_GIFT_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(HttpGetCreateBookingInfoItem::GiftList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getBookGiftItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
+jobject getBookInviteConfigItem(JNIEnv *env, const HttpGetCreateBookingInfoItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, BOOK_INVITE_CONFIG_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(D[L";
+		signature += BOOK_TIME_ITEM_CLASS;
+		signature += ";";
+		signature += "[L";
+		signature += BOOK_GIFT_ITEM_CLASS;
+		signature += ";";
+		signature += ")V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jobjectArray jtimeArray = getBookTimeArray(env, item.bookTime);
+		jobjectArray jbookGiftArray = getBookGiftArray(env, item.bookGift.giftList);
+		jItem = env->NewObject(jItemCls, init,
+					item.bookDeposit,
+					jtimeArray,
+					jbookGiftArray
+					);
+		if(NULL != jtimeArray){
+			env->DeleteLocalRef(jtimeArray);
+		}
+		if(NULL != jbookGiftArray){
+			env->DeleteLocalRef(jbookGiftArray);
+		}
+	}
+	return jItem;
+}
+
 jobjectArray getPackgetGiftArray(JNIEnv *env, const BackGiftItemList& listItem){
 	jobjectArray jItemArray = NULL;
 	jclass jItemCls = GetJClass(env, PACKAGE_GIFT_ITEM_CLASS);
@@ -649,6 +954,36 @@ jobjectArray getPackgetGiftArray(JNIEnv *env, const BackGiftItemList& listItem){
 		int i = 0;
 		for(BackGiftItemList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
 			jobject item = getPackageGiftItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
+jobjectArray getPackgetVoucherArray(JNIEnv *env, const VoucherList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, PACKAGE_VOUCHER_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(VoucherList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getPackageVoucherItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
+
+jobjectArray getPackgetRideArray(JNIEnv *env, const RideList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, PACKAGE_RIDE_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(RideList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getPackageRideItem(env, (*itr));
 			env->SetObjectArrayElement(jItemArray, i, item);
 			env->DeleteLocalRef(item);
 		}

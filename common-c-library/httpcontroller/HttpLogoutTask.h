@@ -1,9 +1,9 @@
 /*
  * HttpLogoutTask.h
  *
- *  Created on: 2017-5-18
+ *  Created on: 2017-8-16
  *      Author: Alex
- *        desc: 2.5.注销
+ *        desc: 2.2.注销
  */
 
 #ifndef HttpLogoutTask_H_
@@ -33,16 +33,9 @@ public:
 
     /**
      * 注销
-     * @param token			   用户身份唯一标识
      */
 	void SetParam(
-			string token
 			);
-
-	/**
-	 * 获取用户身份唯一标识
-	 */
-	const string& GetToken();
 
 
 protected:
@@ -52,7 +45,6 @@ protected:
 protected:
 	IRequestLogoutCallback* mpCallback;
     
-	string mToken;
 };
 
 #endif /* HttpLogoutTask_H_ */

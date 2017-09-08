@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--common-->
+    <color name="listview_divider_grey">#16000000</color>
+    <color name="blue_color">#0099FF</color>
+    <color name="text_color_dark">#333333</color>
+    <color name="text_color_grey">#666666</color>
+    
+    <color name="online_normal_green">#8EDB2B</color>
+    <color name="offline_normal_grey">#B5B5B5</color>
+
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -28,4 +39,7 @@
 
     <color name="text_shadow_color">#B2000000</color>
     <color name="messagelist_shadow_color">#000000</color>
+
+
+    <color name="room_base_color_free_public">#f8f8f8</color>
 </resources>

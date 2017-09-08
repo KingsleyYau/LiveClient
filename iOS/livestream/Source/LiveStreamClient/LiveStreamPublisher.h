@@ -21,6 +21,11 @@
  */
 @property (nonatomic, assign) BOOL beauty;
 
+/**
+ 是否静音
+ */
+@property (nonatomic, assign) BOOL mute;
+
 #pragma mark - 获取实例
 /**
  *  获取实例

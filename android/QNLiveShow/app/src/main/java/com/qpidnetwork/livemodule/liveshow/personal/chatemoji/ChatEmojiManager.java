@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.text.style.ImageSpan;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.liveshow.LiveApplication;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class ChatEmojiManager {
     private final String TAG = ChatEmojiManager.class.getSimpleName();
     private Map<String,List<ChatEmoji>> allChatEmojies;
     private List<String> emojiTypes;
+    public List<Integer> allChatEmojisResId = new ArrayList<>();
     private Map<String,Integer> patternResIdMap = new HashMap<>();
     private Map<String,Integer> descResIdMap = new HashMap<>();
     private static ChatEmojiManager instance = null;
@@ -88,7 +90,13 @@ public class ChatEmojiManager {
         standardEmojies.add(new ChatEmoji("/kb","[恐怖]",null,16,R.drawable.live_chat_emoji_16,"standard"));
         standardEmojies.add(new ChatEmoji("/jy","[惊讶]",null,17,R.drawable.live_chat_emoji_17,"standard"));
         standardEmojies.add(new ChatEmoji("/tsht","[吐舌头]",null,18,R.drawable.live_chat_emoji_18,"standard"));
+
         allChatEmojies.put("standard",standardEmojies);
+
+        for(ChatEmoji chatEmoji : standardEmojies){
+           allChatEmojisResId.add(chatEmoji.resId);
+        }
+
         emojiTypes.add("standard");
         List<ChatEmoji> advancedEmojies = new ArrayList<>();
         advancedEmojies.add(new ChatEmoji("/gzh1","[鼓掌1]",null,19,R.drawable.live_chat_emoji_19,"advanced"));
@@ -112,7 +120,9 @@ public class ChatEmojiManager {
         advancedEmojies.add(new ChatEmoji("/wsh","[无视]",null,37,R.drawable.live_chat_emoji_37,"advanced"));
         allChatEmojies.put("advanced",advancedEmojies);
         emojiTypes.add("advanced");
-
+        for(ChatEmoji chatEmoji : advancedEmojies){
+            allChatEmojisResId.add(chatEmoji.resId);
+        }
         emojiRegularPattern = buildRegularPattern();
         emojiDescPattern = buildDescPattern();
     }
@@ -189,12 +199,11 @@ public class ChatEmojiManager {
 //------------------------------用于TextView的显示---------------------
     /**
      * 解析表情富文本
-     * @param context
      * @param str
      * @param model
      * @return
      */
-    public Spanned parseEmoji(final Context context, String str, int model){
+    public Spanned parseEmoji(String str, int model,final int width,final int height){
         Spanned spanned = null;
         try {
             Pattern pattern = null;
@@ -205,15 +214,13 @@ public class ChatEmojiManager {
             }
             String result = ChatEmojiManager.getInstance().
                     parseEmojiToImage(str, pattern,0,model);
-            spanned = Html.fromHtml(result,
-                    new Html.ImageGetter() {
+            spanned = Html.fromHtml(result, new Html.ImageGetter() {
                         @Override
                         public Drawable getDrawable(String source) {
-                            Drawable drawable = context.getResources().getDrawable(
-                                    Integer.parseInt(source));
-                            drawable.setBounds(0, 0,
-                                    drawable.getIntrinsicWidth(),
-                                    drawable.getIntrinsicHeight());
+                            Drawable drawable = LiveApplication.getContext().getResources()
+                                    .getDrawable(Integer.parseInt(source));
+                            drawable.setBounds(0, 0, (width == 0 ? drawable.getIntrinsicWidth() : width),
+                                    (height == 0 ? drawable.getIntrinsicHeight() : height));
                             return drawable;
                         }
                     }, null);

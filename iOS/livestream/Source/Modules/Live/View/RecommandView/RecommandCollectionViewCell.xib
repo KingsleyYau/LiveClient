@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="RecommandCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="80" height="100"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vcx-kk-Mgf">
+                        <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="Vcx-kk-Mgf" secondAttribute="height" multiplier="1:1" id="eN7-Hh-jWF"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Linda" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKg-3R-VX5">
+                        <rect key="frame" x="0.0" y="80" width="80" height="20"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="Vcx-kk-Mgf" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="FGZ-GV-krx"/>
+                <constraint firstItem="Vcx-kk-Mgf" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" id="RZe-iN-SRv"/>
+                <constraint firstItem="FKg-3R-VX5" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Uv1-i7-wZx"/>
+                <constraint firstItem="FKg-3R-VX5" firstAttribute="top" secondItem="Vcx-kk-Mgf" secondAttribute="bottom" id="Zja-qc-Q8w"/>
+                <constraint firstItem="FKg-3R-VX5" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" id="g0P-ee-mYp"/>
+                <constraint firstItem="FKg-3R-VX5" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" id="lSq-jO-ZWa"/>
+                <constraint firstItem="Vcx-kk-Mgf" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="veB-En-kcu"/>
+            </constraints>
+            <connections>
+                <outlet property="imageView" destination="Vcx-kk-Mgf" id="p0M-xQ-Yo3"/>
+                <outlet property="nameLabel" destination="FKg-3R-VX5" id="h8n-ap-vR7"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+</document>

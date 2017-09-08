@@ -29,15 +29,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
 //                }
 //            }
 //        });
-        mPeriscopeLayout = (PeriscopeLayout)findViewById(R.id.periscopLayout);
     }
 
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.btnClick) {
-            mPeriscopeLayout.addHeart();
-        }
     }
 }

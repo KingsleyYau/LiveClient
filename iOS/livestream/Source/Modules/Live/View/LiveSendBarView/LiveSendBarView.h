@@ -1,0 +1,45 @@
+//
+//  LiveSendBarView.h
+//  livestream
+//
+//  Created by randy on 2017/8/28.
+//  Copyright © 2017年 net.qdating. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "LiveRoomTextField.h"
+
+@class LiveSendBarView;
+@protocol LiveSendBarViewDelegate <NSObject>
+
+- (void)sendBarLouserAction:(LiveSendBarView *)sendBarView isSelected:(BOOL)isSelected;
+- (void)sendBarEmotionAction:(LiveSendBarView *)sendBarView isSelected:(BOOL)isSelected;
+- (void)sendBarSendAction:(LiveSendBarView *)sendBarView;
+
+@end
+
+@interface LiveSendBarView : UIView <KKCheckButtonDelegate, UITextFieldDelegate>
+
+@property (nonatomic, weak) IBOutlet id<LiveSendBarViewDelegate> delagate;
+
+@property (weak, nonatomic) IBOutlet UIView *inputBackGroundView;
+
+@property (weak, nonatomic) IBOutlet UIView *inputBackGroundColorView;
+
+@property (weak, nonatomic) IBOutlet KKCheckButton *louderBtn;
+
+@property (weak, nonatomic) IBOutlet LiveRoomTextField *inputTextField;
+
+@property (weak, nonatomic) IBOutlet UIButton *sendBtn;
+
+@property (weak, nonatomic) IBOutlet KKCheckButton *emotionBtn;
+
+- (IBAction)sendAction:(id)sender;
+
+/** 发送按钮可用 */
+- (void)sendButtonNotUser;
+
+/** 发送按钮不可用 */
+- (void)sendButtonCanUser;
+
+@end

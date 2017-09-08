@@ -15,13 +15,15 @@
 @property (nonatomic, strong) YYLabel *messageLabel;
 
 @property (nonatomic, strong) LevelView *lvView;
-
+@property (nonatomic, assign) CGFloat tableViewWidth;
 @property (nonatomic, assign) CGFloat messageLabelWidth;
 @property (nonatomic, assign) CGFloat messageLabelHeight;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;
 + (NSString *)textPreDetail;
+
+- (void)changeMessageLabelWidth:(CGFloat)width;
 
 - (void)updataChatMessage:(MsgItem *)item;
 

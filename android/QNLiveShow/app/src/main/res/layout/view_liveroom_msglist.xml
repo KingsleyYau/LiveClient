@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--消息列表-->
+    <com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView
+        android:id="@+id/lvlv_roomMsgList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/transparent" />
+
+    <!--未读条数-->
+    <TextView
+        android:id="@+id/tv_unReadTip"
+        android:text="13 unread messages"
+        android:drawableRight="@drawable/ic_live_buttom_unreadmsg"
+        android:gravity="center_vertical"
+        android:padding="6dp"
+        android:clickable="true"
+        android:visibility="visible"
+        android:background="@drawable/bg_live_buttom_unreadmsg"
+        android:drawablePadding="6dp"
+        android:textColor="@android:color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        />
+
+</FrameLayout>

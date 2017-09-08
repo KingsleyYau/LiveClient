@@ -40,7 +40,7 @@ public class AudienceEndActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitleBarVisibility(View.GONE);
+        setContentView(R.layout.activity_end_audience);
         initData();
         initView();
     }
@@ -75,13 +75,6 @@ public class AudienceEndActivity extends BaseFragmentActivity {
         Intent intent = getIntent();
         isFocusHost = intent.getBooleanExtra("isFocusHost",false);
         fansNum = intent.getIntExtra("fansNum",0);
-    }
-
-
-
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_end_audience;
     }
 
     @Override

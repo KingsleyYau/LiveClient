@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LiveRoomGiftItemObject.h"
+#import "AllGiftItem.h"
 #import "BackpackGiftItem.h"
 
 @interface GiftItemCollectionViewCell : UICollectionViewCell
@@ -28,7 +28,7 @@
 
 + (NSString *)cellIdentifier;
 
-- (void)updataCellViewItem:(LiveRoomGiftItemObject *)item;
+- (void)updataCellViewItem:(AllGiftItem *)item;
 
 - (void)updataBackpackCellViewItem:(BackpackGiftItem *)backItem;
 

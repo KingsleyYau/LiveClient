@@ -81,14 +81,38 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
         circleImageContainer.setOrientation(LinearLayout.HORIZONTAL);
         HorizontalScrollView.LayoutParams layoutParams =
                 new HorizontalScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        layoutParams.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
         circleImageContainer.setLayoutParams(layoutParams);
         addView(circleImageContainer);
     }
 
-    public void setList(List<String> datas){
+    public synchronized void addOnLinePerson(String imgUrl){
+        if(null == imageUrlList){
+            imageUrlList = new ArrayList<>();
+        }
+        imageUrlList.add(imgUrl);
+        notifyDataSetChanged();
+    }
+
+    public synchronized void deleteOnLinePerson(){
+        if(null != imageUrlList && imageUrlList.size()>0){
+            imageUrlList.remove(imageUrlList.size()-1);
+        }
+        notifyDataSetChanged();
+    }
+
+    public synchronized void setList(List<String> datas){
+        if(null == imageUrlList){
+            imageUrlList = new ArrayList<>();
+        }
         this.imageUrlList.clear();
         imageUrlList.addAll(datas);
         notifyDataSetChanged();
+    }
+
+    //TODO:DELETE
+    public int getListNum(){
+        return null == imageUrlList ? 0 : imageUrlList.size();
     }
 
     private void notifyDataSetChanged(){
@@ -103,7 +127,7 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
         LinearLayout.LayoutParams gridViewLp = new LinearLayout.LayoutParams(
                 containerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
         gridViewLp.width =containerWidth;
-        gridViewLp.gravity = Gravity.CENTER_VERTICAL;
+        gridViewLp.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
         gridView.setLayoutParams(gridViewLp);
         circleImageContainer.addView(gridView);
         //itemLayoutId布局

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:background="@drawable/bg_entrance_car_master">
+
+        <TextView
+            android:id="@+id/tv_carMaster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AbJjHhZz01dc"
+            android:textSize="8sp"
+            android:gravity="center"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textColor="#ffd205"
+            />
+        <TextView
+            android:id="@+id/tv_joined"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/liveroom_entrancecar_joined"
+            android:textSize="8sp"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_carImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_liveroom_car"/>
+</LinearLayout>

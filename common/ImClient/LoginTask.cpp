@@ -2,7 +2,7 @@
  * author: Samson.Fan
  *   date: 2015-03-25
  *   file: LoginTask.cpp
- *   desc: 登录Task实现类
+ *   desc: 2.1.登录Task实现类
  */
 
 #include "LoginTask.h"
@@ -14,10 +14,8 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define USERID_PARAM		"userid"	// 帐号ID
-#define TYPE_PARAM          "type"      // 客户端类型（0:ios 1:Android 2:web）
-#define VERSION_PARAM		"ver"       // 客户端内部版本号
 #define TOKEN_PARAM         "token"     // 统一身份验证标识
+#define PAGENAME_PARAM      "page_name"  // socket所在的页面
 
 LoginTask::LoginTask(void)
 {
@@ -27,10 +25,8 @@ LoginTask::LoginTask(void)
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
 
-    m_ver = 0;
-	m_user = "";
 	m_token = "";
-    m_type = CLIENTTYPE_UNKNOW;
+    m_pageName = PAGENAMETYPE_UNKNOW;
 }
 
 LoginTask::~LoginTask(void)
@@ -56,12 +52,16 @@ bool LoginTask::Handle(const TransportProtocol& tp)
 
 	FileLog("LiveChatClient", "LoginTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
+    
+    LoginReturnItem item;
 		
     // 协议解析
     if (tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
+        
+        item.Parse(tp.m_data);
     }
 
 	// 协议解析失败
@@ -74,7 +74,7 @@ bool LoginTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-		m_listener->OnLogin(m_errType, m_errMsg);
+		m_listener->OnLogin(m_errType, m_errMsg, item);
 		FileLog("LiveChatClient", "LoginTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -93,10 +93,8 @@ bool LoginTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-        value[VERSION_PARAM] = m_ver;
-        value[USERID_PARAM] = m_user;
         value[TOKEN_PARAM] = m_token;
-       value[TYPE_PARAM] = m_type;
+        value[PAGENAME_PARAM] = m_pageName;
         data = value;
     }
     result = true;
@@ -138,17 +136,14 @@ void LoginTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool LoginTask::InitParam(int version, const string& user, const string& token, ClientType clientType)
+bool LoginTask::InitParam(const string& token, PageNameType pageName)
 {
 	bool result = false;
-	if (!user.empty() 
-		&& !token.empty()
-        && clientType != CLIENTTYPE_UNKNOW)
+	if (!token.empty()
+        && pageName != PAGENAMETYPE_UNKNOW)
 	{
-        m_ver = version;
-		m_user = user;
         m_token = token;
-        m_type = clientType;
+        m_pageName = pageName;
 
 		result = true;
 	}
@@ -160,6 +155,7 @@ bool LoginTask::InitParam(int version, const string& user, const string& token, 
 void LoginTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
-		m_listener->OnLogin(LCC_ERR_CONNECTFAIL, "");
+        LoginReturnItem item;
+		m_listener->OnLogin(LCC_ERR_CONNECTFAIL, "", item);
 	}
 }

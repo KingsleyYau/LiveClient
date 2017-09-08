@@ -19,9 +19,9 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fLN-w4-HmG">
                     <rect key="frame" x="0.0" y="0.0" width="180" height="48"/>
                     <subviews>
-                        <imageView userInteractionEnabled="NO" alpha="0.40000000000000002" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9FX-dS-BHe">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9FX-dS-BHe">
                             <rect key="frame" x="0.0" y="0.0" width="180" height="48"/>
-                            <color key="backgroundColor" red="0.36470588235294116" green="0.054901960784313725" blue="0.52549019607843139" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View" customClass="UIImageViewTopFit">
                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
@@ -72,7 +72,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bkk-Uu-XQQ" customClass="GiftComboNumView">
-                    <rect key="frame" x="190" y="11.5" width="180" height="25"/>
+                    <rect key="frame" x="190" y="12" width="180" height="25"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="25" id="LhP-oc-Dq1"/>

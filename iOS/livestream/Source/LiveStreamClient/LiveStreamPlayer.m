@@ -17,6 +17,8 @@
 
 #import "ImageCVPixelBufferInput.h"
 
+#import "LiveStreamSession.h"
+
 @interface LiveStreamPlayer() <RtmpPlayerOCDelegate>
 #pragma mark - 传输处理
 @property (strong) RtmpPlayerOC* player;
@@ -44,14 +46,12 @@
 @implementation LiveStreamPlayer
 
 #pragma mark - 获取实例
-+ (instancetype)instance
-{
++ (instancetype)instance {
     LiveStreamPlayer *obj = [[[self class] alloc] init];
     return obj;
 }
 
-- (instancetype)init
-{
+- (instancetype)init {
     if(self = [super init] ) {
         NSLog(@"LiveStreamPlayer::init()");
         
@@ -93,7 +93,7 @@
 }
 
 - (void)stop {
-    NSLog(@"LiveStreamPlayer::stop( url : %@ )", self.url);
+    NSLog(@"LiveStreamPlayer::stop()");
     
     [self cancel];
 }
@@ -112,7 +112,10 @@
     NSLog(@"LiveStreamPlayer::run()");
     
     @synchronized (self) {
-        self.isStart = YES;
+        if( !self.isStart ) {
+            self.isStart = YES;
+            [[LiveStreamSession session] startPlay];
+        }
     }
     
     // 开始拉流
@@ -123,7 +126,11 @@
     NSLog(@"LiveStreamPlayer::cancel()");
     
     @synchronized (self) {
-        self.isStart = NO;
+        if( self.isStart ) {
+            self.isStart = NO;
+            
+            [[LiveStreamSession session] stopPlay];
+        }
     }
     
     // 停止推流
@@ -159,6 +166,18 @@
                 [self.player stop];
             });
         }
+    }
+}
+
+- (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime()");
+    
+    @synchronized (self) {
+        // 断线重新拉流
+        dispatch_async(self.reconnect_queue, ^{
+            NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime( [Disconnect] )");
+            [self.player stop];
+        });
     }
 }
 

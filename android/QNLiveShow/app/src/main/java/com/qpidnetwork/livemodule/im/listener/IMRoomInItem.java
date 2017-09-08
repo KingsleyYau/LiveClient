@@ -25,10 +25,11 @@ public class IMRoomInItem implements Serializable{
 	 * @param loveLevel			亲密度等级
 	 * @param rebateItem		返点信息（Object）
 	 * @param isFavorite		是否已收藏
-	 * @param leftSeconds		开播前的倒数秒数
+	 * @param showTime			开播前的倒数秒数
 	 * @param needWait			是否要等开播通知
-	 * @param manUploadRtmpUrls 男士Rtmp上传Url
-	 * @param manLevel			男士等级
+	 * @param roomPrice			直播间资费
+	 * @param videoPrice		视频资费
+	 * @param audienceLimitNum	最大人数限制
 	 */	
 	public IMRoomInItem(String userId,
 						String nickName,
@@ -45,7 +46,10 @@ public class IMRoomInItem implements Serializable{
 						int leftSeconds,
 						boolean needWait,
 						String[] manUploadRtmpUrls,
-						int manLevel){
+						int manLevel,
+						double roomPrice,
+						double videoPrice,
+						int audienceLimitNum){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -68,6 +72,9 @@ public class IMRoomInItem implements Serializable{
 		this.needWait = needWait;
 		this.manUploadRtmpUrls = manUploadRtmpUrls;
 		this.manLevel = manLevel;
+		this.roomPrice = roomPrice;
+		this.videoPrice = videoPrice;
+		this.audienceLimitNum = audienceLimitNum;
 	}
 	
 	public String userId; 
@@ -86,4 +93,7 @@ public class IMRoomInItem implements Serializable{
 	public boolean needWait;
 	public String [] manUploadRtmpUrls;
 	public int manLevel;
+	public double roomPrice;
+	public double videoPrice;
+	public int audienceLimitNum;
 }

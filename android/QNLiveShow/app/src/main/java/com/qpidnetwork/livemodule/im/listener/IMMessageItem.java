@@ -20,7 +20,7 @@ public class IMMessageItem implements Serializable{
 		Normal,			//普通文本聊天
 		Gift,			//礼物或大礼物
 		Barrage,		//弹幕
-		Like,			//点赞
+		FollowHost,			//关注
 		RoomIn			//fans进入房间
 	}
 

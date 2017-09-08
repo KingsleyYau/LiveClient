@@ -41,12 +41,11 @@ bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameIn
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardEncoder::Create( "
-                 "[Finish], "
-                 "this : %p, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "this : %p "
                  ")",
-                 this,
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 this
                  );
     
     return bFlag;
@@ -64,18 +63,18 @@ bool VideoHardEncoder::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardEncoder::Reset( "
-                 "this : %p, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "this : %p "
                  ")",
-                 this,
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 this
                  );
     
     return bFlag;
 }
 
 void VideoHardEncoder::Pause() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::Pause( this : %p )", this);
     
     DestroyContext();
 }
@@ -314,7 +313,7 @@ bool VideoHardEncoder::CreateContext() {
             mEncodeStartTimestamp = 0;
             
         } else {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::CreateContext( this : %p, status : %d )", this, (int)status);
+            FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::CreateContext( this : %p, status : %d )", this, (int)status);
         }
         
         bFlag = (status == noErr);
@@ -326,7 +325,7 @@ bool VideoHardEncoder::CreateContext() {
 }
 
 void VideoHardEncoder::DestroyContext() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::DestroyContext( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::DestroyContext( this : %p )", this);
 
     mRuningMutex.lock();
     if( mVideoCompressionSession ) {

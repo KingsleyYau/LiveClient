@@ -4,14 +4,16 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/ivBg"
+        android:id="@+id/iv_vedioBg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#BFBFBF" />
+        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:background="#BFBFBF"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_live_room_vediobg"/>
 
     <SurfaceView
         android:id="@+id/sv_player"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:visibility="gone"/>
 </RelativeLayout>

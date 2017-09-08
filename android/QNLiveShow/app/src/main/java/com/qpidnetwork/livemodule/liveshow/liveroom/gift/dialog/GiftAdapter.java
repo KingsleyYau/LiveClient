@@ -15,17 +15,14 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.im.IMGiftManager;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.Gift;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.Pack;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import static com.qpidnetwork.livemodule.utils.DisplayUtil.getResources;
 
 /**
  * Description:礼物选择页,GridView的Adapter
@@ -41,32 +38,24 @@ public class GiftAdapter extends CanAdapter {
     private int itemWidth=0;
     private int giftIconWidth=0;
     private int giftFlagWidth = 0;
-    private IMGiftManager.GiftTab giftTab;
+    private Context mContext;
+    private GiftTab.GiftTabFlag giftTab;
 
-    public GiftAdapter(Context context, int itemLayoutId, List mList,IMGiftManager.GiftTab giftTab) {
+    public GiftAdapter(Context context, int itemLayoutId, List<GiftItem> mList,GiftTab.GiftTabFlag giftTab) {
         super(context, itemLayoutId, mList);
+        mContext = context.getApplicationContext();
         itemWidth = DisplayUtil.getScreenWidth(context)/4;
         giftIconWidth = itemWidth/9*5;
         giftFlagWidth = itemWidth/9*2;
-        tranColorDrawable = new ColorDrawable(getResources().getColor(android.R.color.transparent));
-        selectedYellowDrawable = getResources().getDrawable(R.drawable.selector_live_buttom_gift_item);
+        tranColorDrawable = new ColorDrawable(mContext.getResources().getColor(android.R.color.transparent));
+        selectedYellowDrawable = mContext.getResources().getDrawable(R.drawable.selector_live_buttom_gift_item);
         this.giftTab = giftTab;
     }
 
     @Override
     protected void setView(CanHolderHelper helper, int position, Object bean) {
         Log.d(TAG,"setView-position:"+position);
-        GiftItem item;
-        Gift gift = null;
-        Pack pack = null;
-        if(giftTab == IMGiftManager.GiftTab.STORE){
-            gift = (Gift)bean;
-            item = gift.giftItem;
-        }else {
-            pack = (Pack)bean;
-            item = pack.giftItem;
-        }
-
+        GiftItem item = (GiftItem) bean;
         View ll_giftItem = helper.getView(R.id.ll_giftItem);
         ViewGroup.LayoutParams itemLp = ll_giftItem.getLayoutParams();
         itemLp.width = itemWidth;
@@ -97,12 +86,16 @@ public class GiftAdapter extends CanAdapter {
         iv_leftGiftFlag.setVisibility(View.INVISIBLE);
 
         TextView tv_rightGiftFlag = helper.getTextView(R.id.tv_rightGiftFlag);
-        if(giftTab == IMGiftManager.GiftTab.BACKPACK){
-            iv_coinIcon.setVisibility(View.INVISIBLE);
-            tv_giftName.setVisibility(View.INVISIBLE);
-            tv_giftCoins.setVisibility(View.INVISIBLE);
-            tv_rightGiftFlag.setVisibility(0 == pack.num ? View.INVISIBLE : View.VISIBLE);
-            tv_rightGiftFlag.setText(String.valueOf(pack.num));
+
+        tv_giftName.setText(item.name);
+        tv_giftName.setVisibility(View.VISIBLE);
+        iv_coinIcon.setVisibility(giftTab == GiftTab.GiftTabFlag.BACKPACK ? View.INVISIBLE : View.VISIBLE);
+        tv_giftCoins.setText(String.valueOf(item.credit));
+        tv_giftCoins.setVisibility(giftTab == GiftTab.GiftTabFlag.BACKPACK ? View.INVISIBLE : View.VISIBLE);
+        if(giftTab == GiftTab.GiftTabFlag.BACKPACK){
+            int totalNum = PackageGiftManager.getInstance().getPackageGiftNumById(item.id);
+            tv_rightGiftFlag.setVisibility(0 == totalNum ? View.INVISIBLE : View.VISIBLE);
+            tv_rightGiftFlag.setText(String.valueOf(totalNum));
             tv_rightGiftFlag.measure(0,0);
             //可动态修改属性值的shape
             GradientDrawable digitalHintGD = new GradientDrawable();
@@ -112,13 +105,8 @@ public class GiftAdapter extends CanAdapter {
             tv_rightGiftFlag.setBackgroundDrawable(digitalHintGD);
 
         }else{
-            tv_giftName.setText(item.name);
-            tv_giftName.setVisibility(View.VISIBLE);
-            tv_giftCoins.setText(String.valueOf(item.credit));
-            tv_giftCoins.setVisibility(View.VISIBLE);
-            iv_coinIcon.setVisibility(View.VISIBLE);
             tv_rightGiftFlag.setVisibility(item.giftType == GiftItem.GiftType.Advanced ? View.VISIBLE : View.INVISIBLE);
-            tv_rightGiftFlag.setBackgroundDrawable(getResources().getDrawable(R.drawable.ic_live_buttom_gift_advance));
+            tv_rightGiftFlag.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.ic_live_buttom_gift_advance));
             tv_rightGiftFlag.setText("");
         }
     }

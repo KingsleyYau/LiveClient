@@ -516,6 +516,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
+				WARNING_CFLAGS = (
+					"-Wno-documentation",
+					"-Wno-unused-variable",
+				);
 			};
 			name = Debug;
 		};
@@ -548,6 +552,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
+				WARNING_CFLAGS = (
+					"-Wno-documentation",
+					"-Wno-unused-variable",
+				);
 			};
 			name = Release;
 		};

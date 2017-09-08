@@ -35,9 +35,6 @@
     gradientLayer.endPoint = CGPointMake(0.5, 0.2);
     [gradientLayer setFrame:self.bounds];
     self.layer.mask = gradientLayer;
-    
-    NSLog(@"TableSuperView::frame  %@",NSStringFromCGRect(self.frame));
-    
 }
 
 @end

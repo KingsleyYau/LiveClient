@@ -1,9 +1,9 @@
 /*
  * HttpLoginTask.cpp
  *
- *  Created on: 2017-5-19
+ *  Created on: 2017-8-16
  *      Author: Alex
- *        desc: 2.4.登录
+ *        desc: 2.1.登录
  */
 
 #include "HttpLoginTask.h"
@@ -13,14 +13,10 @@
 HttpLoginTask::HttpLoginTask() {
     // TODO Auto-generated constructor stub
     mPath = STREAMLOGIN_PATH;
-    mType = LoginType_Unknow;
-    mPhoneNo = "";
-    mAreNo = "";
-    mPassword = "";
+    mQnsid = "";
     mDeviceId = "";
     mModel = "";
     mManufacturer = "";
-    mAutoLogin = false;
 }
 
 HttpLoginTask::~HttpLoginTask() {
@@ -32,52 +28,19 @@ void HttpLoginTask::SetCallback(IRequestLoginCallback* callback) {
 }
 
 void HttpLoginTask::SetParam(
-                                   LoginType    type,
-                                   string phoneno,
-                                   string areno,
-                                   string password,
+                                   string qnsid,
                                    string deviceid,
                                    string model,
-                                   string manufacturer,
-                                   bool autoLogin
+                                   string manufacturer
                                    ) {
     
     //	char temp[16];
     mHttpEntiy.Reset();
     mHttpEntiy.SetSaveCookie(true);
     
-    string strType("");
-    if( type < _countof(OTHER_LOGIN_TYPE)) {
-        strType = OTHER_LOGIN_TYPE[type];
-        mHttpEntiy.AddContent(LOGIN_TYPE, strType.c_str());
-        mType = type;
-    }
-    
-    // 手机登录
-    if( type == 0 ) {
-        if( phoneno.length() > 0 ) {
-            mHttpEntiy.AddContent(LOGIN_PHONENO, phoneno.c_str());
-            mPhoneNo = phoneno;
-        }
-        
-        if( areno.length() > 0 ) {
-            mHttpEntiy.AddContent(LOGIN_ARENO, areno.c_str());
-            mAreNo = areno;
-        }
-    }
-    
-    if( password.length() > 0 ) {
-        
-        // 大写转小写
-        for (int i = 0; i < password.length(); i++) {
-            if (password[i] >= 'A' && password[i] <= 'Z') {
-                password[i] =  password[i] + 'a' - 'A';
-            }
-        }
-        char md5[128] = {0};
-        GetMD5String(password.c_str(), md5);
-        mHttpEntiy.AddContent(LOGIN_PASSWORD, md5);
-        mPassword = password;
+    if (qnsid.length() > 0) {
+        mHttpEntiy.AddContent(LOGIN_QNSID, qnsid.c_str());
+        mQnsid = qnsid;
     }
     
     if( deviceid.length() > 0 ) {
@@ -95,62 +58,30 @@ void HttpLoginTask::SetParam(
         mHttpEntiy.AddContent(LOGIN_MANUFACTURER, manufacturer.c_str());
         mManufacturer = manufacturer;
     }
-    
-    char temp[16];
-    snprintf(temp, sizeof(temp), "%d", autoLogin ? 1 : 0);
-    mHttpEntiy.AddContent(LOGIN_AUTOLOGIN, temp);
-    mAutoLogin = autoLogin;
-    
-    FileLog("httpcontroller",
+
+	FileLog("httpcontroller",
             "HttpStreamLoginTask::SetParam( "
             "task : %p, "
-            "type : %d, "
-            "phoneno : %s "
-            "areno : %s "
-            "password : %s "
+            "qnsid : %s "
             "deviceid : %s "
             "model : %s "
             "manufacturer : %s "
-            "autoLogin :%d"
             ")",
             this,
-            type,
-            phoneno.c_str(),
-            areno.c_str(),
-            password.c_str(),
+            qnsid.c_str(),
             deviceid.c_str(),
             model.c_str(),
-            manufacturer.c_str(),
-            autoLogin
+            manufacturer.c_str()
             );
 }
 
 
-/**
- * 获取登录类型（0: 手机登录 1:邮箱登录）
- */
-int HttpLoginTask::GetType() {
-    return mType;
-}
 
 /**
- * 获取手机号码（仅当type ＝ 0 时使用）
+ * 获取QN系统登录验证返回的标识
  */
-const string& HttpLoginTask::GetPhoneNo() {
-    return mPhoneNo;
-}
-/**
- * 获取手机区号（仅当type ＝ 0 时使用）
- */
-const string& HttpLoginTask::GetAreNo() {
-    return mAreNo;
-}
-
-/**
- * 获取登录密码
- */
-const string& HttpLoginTask::GetPassword() {
-    return mPassword;
+const string& HttpLoginTask::GetQnsid() {
+    return mQnsid;
 }
 
 /**
@@ -174,9 +105,6 @@ const string& HttpLoginTask::GetManufacturer() {
     return mManufacturer;
 }
 
-bool HttpLoginTask::GetAutoLogin() {
-    return mAutoLogin;
-}
 
 bool HttpLoginTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
     FileLog("httpcontroller",

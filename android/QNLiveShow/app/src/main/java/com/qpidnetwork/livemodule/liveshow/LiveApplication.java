@@ -67,8 +67,8 @@ public class LiveApplication extends MultiDexApplication {
             if (pi != null) {
                 //本地文件Log存放地址
                 RequestJni.SetLogDirectory(FileCacheManager.getInstance().getLogPath());
-                RequestJni.SetWebSite("http://172.25.32.17:3007");
-                RequestJni.SetPhotoUploadSite("http://172.25.32.17:82");
+                RequestJni.SetWebSite("http://172.25.32.17:3107");
+//                RequestJni.SetPhotoUploadSite("http://172.25.32.17:82");
 //                RequestJni.SetWebSite("http://192.168.88.90:8881");
                 // 版本号
                 RequestJni.SetVersionCode(String.valueOf(pi.versionCode));

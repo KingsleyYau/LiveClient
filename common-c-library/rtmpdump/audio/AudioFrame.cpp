@@ -59,7 +59,7 @@ AudioFrame& AudioFrame::operator=(const AudioFrame& item) {
 }
 
 void AudioFrame::ResetFrame() {
-	EncodeDecodeBuffer::ResetFrame();
+	EncodeDecodeBuffer::ResetBuffer();
 
 	mSoundFormat = AFF_UNKNOWN;
     mSoundRate = AFSR_UNKNOWN;

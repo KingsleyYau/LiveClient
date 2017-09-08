@@ -65,7 +65,7 @@ void VideoFrame::InitFrame(int width, int height, VIDEO_FORMATE_TYPE format) {
 }
 
 void VideoFrame::ResetFrame() {
-	EncodeDecodeBuffer::ResetFrame();
+	EncodeDecodeBuffer::ResetBuffer();
 
     mWidth = 0;
     mHeight = 0;

@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.im.listener;
 
-import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem.BookInviteStatus;
+import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
+
 
 /**
  * IM Client事件监听器
@@ -11,22 +12,16 @@ public abstract class IMClientListener {
 	
 	// 处理结果
 	public enum LCC_ERR_TYPE{
-		LCC_ERR_SUCCESS,					// 成功
-		LCC_ERR_FAIL,						// 服务器返回失败结果
+		LCC_ERR_SUCCESS,   				// 成功
+		LCC_ERR_FAIL, 					// 服务器返回失败结果
 		
-		// 服务器返回错误
-
-	    
-		// 客户端定义的错误
-		LCC_ERR_PROTOCOLFAIL,				// 协议解析失败（服务器返回的格式不正确）
-		LCC_ERR_CONNECTFAIL,				// 连接服务器失败/断开连接
-		LCC_ERR_CHECKVERFAIL,				// 检测版本号失败（可能由于版本过低导致）
-		LCC_ERR_LOGINFAIL,					// 登录失败
-		LCC_ERR_SVRBREAK,					// 服务器踢下线
-		LCC_ERR_SETOFFLINE,					// 不能把在线状态设为"离线"，"离线"请使用Logout()
-	    LCC_ERR_INVITETIMEOUT,   			// Camshare邀请已经取消
-	    LCC_ERR_NOVIDEOTIMEOUT,   			// Camshare没有收到视频流超时
-	    LCC_ERR_BACKGROUNDTIMEOUT    		// Camshare后台超时  
+		LCC_ERR_PROTOCOLFAIL,   		// 协议解析失败（服务器返回的格式不正确）
+		LCC_ERR_CONNECTFAIL,    		// 连接服务器失败/断开连接
+		LCC_ERR_CHECKVERFAIL,   		// 检测版本号失败（可能由于版本过低导致）
+		LCC_ERR_SVRBREAK,       		// 服务器踢下线
+		LCC_ERR_INVITE_TIMEOUT, 		// 邀请超时
+		LCC_ERR_NO_CREDIT,       		// 信用点不足
+		LCC_ERR_PRI_LIVING     			// 主播正在私密直播中
 	};
 	
 	//邀请答复类型
@@ -34,6 +29,20 @@ public abstract class IMClientListener {
 		Unknown,
 		Defined,
 		Accepted
+	}
+	
+	//预约邀请答复类型
+	public enum BookInviteReplyType{
+		Unknown,
+		Rejested,		//拒绝
+		Accepted,		//同意
+		OverTime		//超时
+	}
+	
+	public enum TalentInviteStatus{
+		Unknown,
+		Accepted,
+		Rejested
 	}
 	
 	/**
@@ -52,6 +61,51 @@ public abstract class IMClientListener {
 	}
 	
 	/**
+	 * 直播房间类型
+	 * @param roomType
+	 * @return
+	 */
+	private LiveRoomType intToLiveRoomType(int roomType){
+		LiveRoomType type = LiveRoomType.Unknown;
+		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
+			type = LiveRoomType.Unknown;
+		} else {
+			type = LiveRoomType.values()[roomType];
+		}
+		return type;
+	}
+	
+	/**
+	 * 预约私密邀请回复类型
+	 * @param replyType
+	 * @return
+	 */
+	private BookInviteReplyType intToBookInviteReplyType(int replyType){
+		BookInviteReplyType type = BookInviteReplyType.Unknown;
+		if( replyType < 0 || replyType >= BookInviteReplyType.values().length ) {
+			type = BookInviteReplyType.Unknown;
+		} else {
+			type = BookInviteReplyType.values()[replyType];
+		}
+		return type;
+	}
+	
+	/**
+	 * 才艺邀请处理状态
+	 * @param talentInviteStatus
+	 * @return
+	 */
+	private TalentInviteStatus intToTalentInviteStatus(int talentInviteStatus){
+		TalentInviteStatus status = TalentInviteStatus.Unknown;
+		if( talentInviteStatus < 0 || talentInviteStatus >= TalentInviteStatus.values().length ) {
+			status = TalentInviteStatus.Unknown;
+		} else {
+			status = TalentInviteStatus.values()[talentInviteStatus];
+		}
+		return status;
+	}
+	
+	/**
 	 * Jni层返回转Java层错误码
 	 * @param errIndex
 	 * @return
@@ -65,9 +119,9 @@ public abstract class IMClientListener {
 	 * @param errType
 	 * @param errMsg
 	 */
-	public abstract void OnLogin(LCC_ERR_TYPE errType, String errMsg);
-	public void OnLogin(int errType, String errMsg){
-		OnLogin(intToErrType(errType), errMsg);
+	public abstract void OnLogin(LCC_ERR_TYPE errType, String errMsg, IMLoginItem loginItem);
+	public void OnLogin(int errType, String errMsg, IMLoginItem loginItem){
+		OnLogin(intToErrType(errType), errMsg, loginItem);
 	}
 	
 	/**
@@ -106,16 +160,29 @@ public abstract class IMClientListener {
 	}
 	
 	/**
+	 * 3.13.观众进入公开直播间回调
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 * @param roomInfo
+	 */
+	public abstract void OnPublicRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
+	public void OnPublicRoomIn(int reqId, boolean success, int errType, String errMsg, IMRoomInItem roomInfo){
+		OnPublicRoomIn(reqId, success, intToErrType(errType), errMsg, roomInfo);
+	}
+	
+	/**
 	 * 4.1.发送消息回调
 	 * @param reqId
 	 * @param errType
 	 * @param errMsg
 	 */
-	public abstract void OnSendRoomMsg(int reqId, LCC_ERR_TYPE errType, String errMsg);
-	public void OnSendRoomMsg(int reqId, int errType, String errMsg){
-		OnSendRoomMsg(reqId, intToErrType(errType), errMsg);
+	public abstract void OnSendRoomMsg(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
+	public void OnSendRoomMsg(int reqId, boolean success, int errType, String errMsg){
+		OnSendRoomMsg(reqId, success, intToErrType(errType), errMsg);
 	}
-
+	
 	/**
 	 * 5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
 	 * @param reqId
@@ -129,7 +196,7 @@ public abstract class IMClientListener {
 	public void OnSendGift(int reqId, boolean success, int errType, String errMsg, double credit, double rebateCredit){
 		OnSendGift(reqId, success, intToErrType(errType), errMsg, credit, rebateCredit);
 	}
-
+	
 	/**
 	 * 6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
 	 * @param reqId
@@ -143,18 +210,20 @@ public abstract class IMClientListener {
 	public void OnSendBarrage(int reqId, boolean success, int errType, String errMsg, double credit, double rebateCredit){
 		OnSendBarrage(reqId, success, intToErrType(errType), errMsg, credit, rebateCredit);
 	}
-	
+
 	/**
 	 * 7.1.观众立即私密邀请
 	 * @param reqId
 	 * @param success
 	 * @param errType
 	 * @param errMsg
-	 * @param inviteId
+	 * @param invitationId
+	 * @param timeout
+	 * @param roomId
 	 */
-	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String inviteId);
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String inviteId){
-		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, inviteId);
+	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String invitationId, int timeout, String roomId){
+		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, invitationId, timeout, roomId);
 	}
 	
 	/**
@@ -170,12 +239,30 @@ public abstract class IMClientListener {
 		OnCancelImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, roomId);
 	}
 	
+	/**
+	 * 8.1.发送直播间才艺点播邀请回调
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 * @param talentInviteId
+	 */
+	public abstract void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String talentInviteId);
+	public void OnSendTalent(int reqId, boolean success, int errType, String errMsg, String talentInviteId){
+		OnSendTalent(reqId, success, intToErrType(errType), errMsg, talentInviteId);
+	}
+	
 	/************************************   服务器推送相关        **********************************************/
 
 	/**
 	 * 2.4.用户被挤掉线通知
+	 * @param errType
+	 * @param errMsg
 	 */
-	public abstract void OnKickOff();
+	public abstract void OnKickOff(LCC_ERR_TYPE errType, String errMsg);
+	public void OnKickOff(int errType, String errMsg){
+		OnKickOff(intToErrType(errType), errMsg);
+	}
 	
 	/**
 	 * 3.3.直播间关闭通知（用户）
@@ -183,7 +270,10 @@ public abstract class IMClientListener {
 	 * @param userId
 	 * @param nickName
 	 */
-	public abstract void OnRecvRoomCloseNotice(String roomId, String userId, String nickName);
+	public abstract void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, LCC_ERR_TYPE errType, String errMsg);
+	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, int errType, String errMsg){
+		OnRecvRoomCloseNotice(roomId, userId, nickName, intToErrType(errType), errMsg);
+	}
 	
 	
 	/**
@@ -259,6 +349,14 @@ public abstract class IMClientListener {
 	public abstract void OnRecvLiveStart(String roomId, int leftSeconds);
 	
 	/**
+	 * 3.12.接收观众/主播切换视频流通知接口
+	 * @param roomId
+	 * @param isAnchor
+	 * @param playUrl
+	 */
+	public abstract void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String playUrl);
+	
+	/**
 	 * 4.2.观众端/主播端向直播间发送文本消息
 	 * @param roomId
 	 * @param level
@@ -267,6 +365,14 @@ public abstract class IMClientListener {
 	 * @param msg
 	 */
 	public abstract void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, String msg);
+	
+	/**
+	 * 4.3.接收直播间公告消息
+	 * @param roomId
+	 * @param message
+	 * @param link
+	 */
+	public abstract void OnRecvSendSystemNotice(String roomId, String message, String link);
 	
 	/**
 	 * 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
@@ -298,27 +404,88 @@ public abstract class IMClientListener {
 	 * @param inviteId
 	 * @param replyType
 	 * @param roomId
+	 * @param roomType
+	 * @param anchorId
+	 * @param nickName
+	 * @param avatarImg
+	 * @param message
 	 */
-	public abstract void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId);
-	public void OnRecvInviteReply(String inviteId, int replyType, String roomId){
-		OnRecvInviteReply(inviteId, intToInviteReplyType(replyType), roomId);
+	public abstract void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId, 
+			String nickName, String avatarImg, String message);
+	public void OnRecvInviteReply(String inviteId, int replyType, String roomId, int roomType, String anchorId, 
+			String nickName, String avatarImg, String message){
+		OnRecvInviteReply(inviteId, intToInviteReplyType(replyType), roomId, intToLiveRoomType(roomType), anchorId, nickName, avatarImg, message);
 	}
 	
 	/**
 	 * 7.4.接收主播立即私密邀请通知
+	 * @param logId
 	 * @param anchorId
 	 * @param anchorName
 	 * @param anchorPhotoUrl
+	 * @param message
 	 */
-	public abstract void OnRecvAnchoeInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl);
+	public abstract void OnRecvAnchoeInviteNotify(String logId, String anchorId, String anchorName, String anchorPhotoUrl, String message);
 	
 	/**
 	 * 7.5.接收主播预约私密邀请通知
+	 * @param inviteId
 	 * @param anchorId
 	 * @param anchorName
 	 * @param anchorPhotoUrl
-	 * @param bookTime
-	 * @param inviteId
+	 * @param message
 	 */
-	public abstract void OnRecvScheduledInviteNotify(String anchorId, String anchorName, String anchorPhotoUrl, int bookTime, String inviteId);
+	public abstract void OnRecvScheduledInviteNotify(String inviteId, String anchorId, String anchorName, String anchorPhotoUrl, String message);
+	
+	/**
+	 * 7.6.接收预约私密邀请回复通知
+	 * @param inviteId
+	 * @param replyType
+	 */
+	public abstract void OnRecvSendBookingReplyNotice(String inviteId, BookInviteReplyType replyType);
+	public void OnRecvSendBookingReplyNotice(String inviteId, int replyType){
+		OnRecvSendBookingReplyNotice(inviteId, intToBookInviteReplyType(replyType));
+	}
+	
+	/**
+	 * 7.7.接收预约开始倒数通知
+	 * @param roomId
+	 * @param userId
+	 * @param nickName
+	 * @param photoUrl
+	 * @param leftSeconds
+	 */
+	public abstract void OnRecvBookingNotice(String roomId, String userId, String nickName, String photoUrl, int leftSeconds);
+
+	/**
+	 * 8.2.接收直播间才艺点播回复通知
+	 * @param roomId
+	 * @param talentInviteId
+	 * @param talentId
+	 * @param name
+	 * @param credit
+	 * @param status
+	 */
+	public abstract void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit, TalentInviteStatus status);
+	public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit, int status){
+		OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, intToTalentInviteStatus(status));
+	}
+	
+	/**
+	 * 9.1.观众等级升级通知
+	 * @param level
+	 */
+	public abstract void OnRecvLevelUpNotice(int level);
+	
+	/**
+	 * 9.2.观众亲密度升级通知
+	 * @param lovelevel
+	 */
+	public abstract void OnRecvLoveLevelUpNotice(int lovelevel);
+	
+	/**
+	 * 9.3.背包更新通知
+	 * @param item
+	 */
+	public abstract void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item);
 }

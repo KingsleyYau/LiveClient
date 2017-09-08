@@ -22,22 +22,20 @@ import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
+import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.im.IMGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.Gift;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.Pack;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static com.qpidnetwork.livemodule.im.IMGiftManager.giftTabs;
+import static com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab.giftTabs;
 
 public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftSender.GiftSendResultListener{
 
@@ -55,18 +53,15 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private LinearLayout ll_repeatSendAnim;
     private LinearLayout ll_giftPageContainer;
 
-    private List<Gift> gifts = new ArrayList<>();
-    private List<Pack> packs = new ArrayList<>();
+    private List<GiftItem> gifts = new ArrayList<>();
     private GiftItem lastSelectedGiftItem = null;
     private GiftItem lastRepeatSentGiftItem = null;
-    private Gift lastSelectedGift = null;
-    private Pack lastSelectedPack = null;
-    private IMGiftManager.GiftTab lastClickedGiftTab = null;
+    private GiftTab.GiftTabFlag lastClickedGiftTab = null;
 
     private int giftNumPerPage = 0, giftColumnNumPerPage = 0;
     private double userCoins = 0f;//float
 
-    private List<GiftAdapter> giftAdapters = new ArrayList<>();
+    private List<CanAdapter> giftAdapters = new ArrayList<>();
     private GiftRepeatSendTimerManager timerManager;
 
     private GiftCountSelectorAdapter giftCountSelectorAdapter;
@@ -89,14 +84,9 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         this.periodTime = repeatSendAnimTime/repeatSendStartCount;
     }
 
-    public void setStoreGifts(Gift[] storeGifts){
+    public void setData(List<GiftItem> giftItems){
         this.gifts.clear();
-        this.gifts.addAll(Arrays.asList(storeGifts));
-    }
-
-    public void setBackpackGifts(Pack[] packs){
-        this.packs.clear();
-        this.packs.addAll(Arrays.asList(packs));
+        this.gifts.addAll(giftItems);
     }
 
     public void setUserCoins(double userCoins){
@@ -263,7 +253,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         tpi_giftTypeConstainer = (TabPageIndicator) rootView.findViewById(R.id.tpi_giftTypeConstainer);
         ll_giftPageContainer = (LinearLayout) rootView.findViewById(R.id.ll_giftPageContainer);
         updateGiftTypeTab(giftTabs);
-        updateGiftView(IMGiftManager.GiftTab.STORE);
+        updateGiftView(GiftTab.GiftTabFlag.STORE);
     }
 
     /**
@@ -278,7 +268,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
             public void onTabClicked(int position, String tit) {
                 Log.d(TAG,"onTabClicked-position:"+position);
                 updateRepeatAnimStatus(null, GiftSender.ErrorCode.FAILED_OTHER);
-                IMGiftManager.GiftTab giftTab = IMGiftManager.GiftTab.values()[position];
+                GiftTab.GiftTabFlag giftTab = GiftTab.GiftTabFlag.values()[position];
                 if(lastClickedGiftTab != giftTab){
                     updateGiftView(giftTab);
                 }
@@ -290,14 +280,13 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
      * 更新礼物展示界面
      */
     @SuppressLint("NewApi")
-    private void updateGiftView(final IMGiftManager.GiftTab giftTab){
+    private void updateGiftView(final GiftTab.GiftTabFlag giftTab){
         lastClickedGiftTab = giftTab;
         sl_giftPagerContainer.removeAllViews();
-        giftAdapters = null == giftAdapters ? new ArrayList<GiftAdapter>() : giftAdapters;
+        giftAdapters = null == giftAdapters ? new ArrayList<CanAdapter>() : giftAdapters;
         giftAdapters.clear();
-        List items = giftTab == IMGiftManager.GiftTab.STORE ? gifts : packs;
-        int pageCount = (items.size()/giftNumPerPage)+ (0 == items.size()%giftNumPerPage ? 0 : 1);
-        Log.d(TAG,"updateGiftView-items.size:"+items.size()+" pageCount:"+pageCount
+        int pageCount = (gifts.size()/giftNumPerPage)+ (0 == gifts.size()%giftNumPerPage ? 0 : 1);
+        Log.d(TAG,"updateGiftView-gifts.size:"+gifts.size()+" pageCount:"+pageCount
                 +" giftNumPerPage:"+giftNumPerPage);
         int lineCount = giftNumPerPage/ giftColumnNumPerPage;
         int gridViewHeight = DisplayUtil.getScreenWidth(mActivity.get())/lineCount;
@@ -305,9 +294,9 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         for(int index=0 ; index<pageCount; index++){
             gridView = (GridView) View.inflate(mActivity.get(),R.layout.item_simple_gridview_1,null);
             int maxPagePosition = giftNumPerPage*(index+1);
-            final GiftAdapter girdAdapter = new GiftAdapter(mActivity.get(),
-                    R.layout.item_girdview_gift, items.subList(giftNumPerPage*index,
-                            maxPagePosition<items.size() ? maxPagePosition : items.size()),giftTab);
+            final CanAdapter<GiftItem> girdAdapter = new GiftAdapter(mActivity.get(),
+                    R.layout.item_girdview_gift, gifts.subList(giftNumPerPage*index,
+                            maxPagePosition<gifts.size() ? maxPagePosition : gifts.size()),giftTab);
             girdAdapter.setOnItemListener(new CanOnItemListener(){
                 @Override
                 public void onItemChildClick(View view, int position) {
@@ -340,29 +329,18 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         fl_giftDialogContainer.setLayoutParams(fl_lp);
         updateIndicatorStatus(0);
         //更新礼物页的选中状态，默认选中第一个
-        if(items.size()>0){
+        if(gifts.size()>0){
             final List<Integer> numList = getGiftNumList(giftAdapters.get(0).getList(),giftTab,0);
             updateGiftCountSelected(numList,numList.size()-1);
             updateItemViewSelectedStatus(lastSelectedGiftItem.id);
         }
     }
 
-    private List<Integer> getGiftNumList(List subList,IMGiftManager.GiftTab giftTab,int position){
+    private List<Integer> getGiftNumList(List<GiftItem> subList, GiftTab.GiftTabFlag giftTab, int position){
         final List<Integer> numList = new ArrayList<Integer>();
-        if(giftTab == IMGiftManager.GiftTab.STORE){
-            lastSelectedGift = (Gift) subList.get(position);
-            lastSelectedPack = null;
-            for(Integer num : lastSelectedGift.send_num_list){
-                numList.add(num);
-            }
-            lastSelectedGiftItem = lastSelectedGift.giftItem;
-        }else {
-            lastSelectedPack = (Pack) subList.get(position);
-            lastSelectedGift = null;
-            for(Integer num : lastSelectedPack.send_num_list){
-                numList.add(num);
-            }
-            lastSelectedGiftItem = lastSelectedPack.giftItem;
+        lastSelectedGiftItem = subList.get(position);
+        for(Integer num : lastSelectedGiftItem.giftChooser){
+            numList.add(num);
         }
         return numList;
     }
@@ -372,7 +350,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
      */
     private void updateItemViewSelectedStatus(String selectedGiftId){
         GiftAdapter.selectedGiftId = selectedGiftId;
-        for(GiftAdapter giftAdapter : giftAdapters){
+        for(CanAdapter giftAdapter : giftAdapters){
             giftAdapter.notifyDataSetChanged();
         }
     }
@@ -451,37 +429,37 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
      * @param isRepeat 连送标识
      */
     private void sendGift(boolean isRepeat){
-        if(lastClickedGiftTab == IMGiftManager.GiftTab.STORE){
-            GiftSender.getInstance().sendStoreGift(lastSelectedGift, isRepeat,
+        if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
+            GiftSender.getInstance().sendStoreGift(lastSelectedGiftItem, isRepeat,
                     Integer.valueOf(tv_giftCount.getText().toString()), this);
         }else{
-            GiftSender.getInstance().sendBackpackGift(lastSelectedPack, isRepeat,
+            GiftSender.getInstance().sendBackpackGift(lastSelectedGiftItem, isRepeat,
                     Integer.valueOf(tv_giftCount.getText().toString()), this);
         }
     }
 
     @Override
-    public void onGiftReqSent(Gift gift, GiftSender.ErrorCode errorCode,
+    public void onGiftReqSent(GiftItem giftItem, GiftSender.ErrorCode errorCode,
                               String message, double localCoins, boolean isRepeat) {
         //1.如果是首次发送，那么因为有本地金币数量的判断，所以也该有本地金币数量更新的逻辑
         if(!isRepeat){
             setUserCoins(localCoins);
         }
-        updateRepeatAnimStatus(gift.giftItem,errorCode);
+        updateRepeatAnimStatus(giftItem,errorCode);
         if(!GiftSender.ErrorCode.SUCCESS.equals(errorCode) && null != message){
             Toast.makeText(mActivity.get(),message,Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onPackReqSend(Pack pack, GiftSender.ErrorCode errorCode,
+    public void onPackReqSend(GiftItem giftItem, GiftSender.ErrorCode errorCode,
                               String message, boolean isRepeat) {
-        updateRepeatAnimStatus(pack.giftItem,errorCode);
+        updateRepeatAnimStatus(giftItem,errorCode);
         if(!GiftSender.ErrorCode.SUCCESS.equals(errorCode) && null != message){
             Toast.makeText(mActivity.get(),message,Toast.LENGTH_SHORT).show();
         }
         //更新数量
-        for(GiftAdapter adapter : giftAdapters){
+        for(CanAdapter adapter : giftAdapters){
             adapter.notifyDataSetChanged();
         }
     }

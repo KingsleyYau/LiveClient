@@ -39,6 +39,22 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_GetCountOfUnreadAndPendingInvite
   (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
+ * Method:    GetScheduleInviteCreateConfig
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetScheduleInviteCreateConfigCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_GetScheduleInviteCreateConfig
+  (JNIEnv *, jclass, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
+ * Method:    CreateScheduleInvite
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_CreateScheduleInvite
+  (JNIEnv *, jclass, jstring, jstring, jint, jstring, jint, jobject);
+
 #ifdef __cplusplus
 }
 #endif

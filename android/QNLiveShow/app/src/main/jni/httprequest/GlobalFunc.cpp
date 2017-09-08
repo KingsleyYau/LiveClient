@@ -118,9 +118,9 @@ string gToken;
  	InitClassHelper(env, AUDIENCE_INFO_ITEM_CLASS, &jAudienceInfoItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(AUDIENCE_INFO_ITEM_CLASS, jAudienceInfoItem));
 
- 	jobject jNormalGiftItem;
- 	InitClassHelper(env, NORMAL_GIFT_ITEM_CLASS, &jNormalGiftItem);
- 	gJavaItemMap.insert(JavaItemMap::value_type(NORMAL_GIFT_ITEM_CLASS, jNormalGiftItem));
+ 	jobject jSendableGiftItem;
+ 	InitClassHelper(env, SENDABLE_GIFT_ITEM_CLASS, &jSendableGiftItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(SENDABLE_GIFT_ITEM_CLASS, jSendableGiftItem));
 
  	jobject jGiftDetailItem;
  	InitClassHelper(env, GIFT_DETAIL_ITEM_CLASS, &jGiftDetailItem);
@@ -134,15 +134,43 @@ string gToken;
  	InitClassHelper(env, EMOTION_ITEM_CLASS, &jEmotionItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(EMOTION_ITEM_CLASS, jEmotionItem));
 
+ 	jobject jTalentItem;
+ 	InitClassHelper(env, TALENT_ITEM_CLASS, &jTalentItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(TALENT_ITEM_CLASS, jTalentItem));
+
+ 	jobject jTalentInviteItem;
+ 	InitClassHelper(env, TALENT_INVITE_ITEM_CLASS, &jTalentInviteItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(TALENT_INVITE_ITEM_CLASS, jTalentInviteItem));
+
  	/* 4.个人信息模块    */
  	jobject jBookInviteItem;
  	InitClassHelper(env, BOOK_INVITE_ITEM_CLASS, &jBookInviteItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_INVITE_ITEM_CLASS, jBookInviteItem));
 
+ 	jobject jBookInviteConfigItem;
+ 	InitClassHelper(env, BOOK_INVITE_CONFIG_ITEM_CLASS, &jBookInviteConfigItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_INVITE_CONFIG_ITEM_CLASS, jBookInviteConfigItem));
+
+ 	jobject jBookTimeItem;
+ 	InitClassHelper(env, BOOK_TIME_ITEM_CLASS, &jBookTimeItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_TIME_ITEM_CLASS, jBookTimeItem));
+
+ 	jobject jBookGiftItem;
+ 	InitClassHelper(env, BOOK_GIFT_ITEM_CLASS, &jBookGiftItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_GIFT_ITEM_CLASS, jBookGiftItem));
+
  	/* 5.背包    */
  	jobject jPackageGiftItem;
  	InitClassHelper(env, PACKAGE_GIFT_ITEM_CLASS, &jPackageGiftItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_GIFT_ITEM_CLASS, jPackageGiftItem));
+
+ 	jobject jPackageVoucherItem;
+ 	InitClassHelper(env, PACKAGE_VOUCHER_ITEM_CLASS, &jPackageVoucherItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_VOUCHER_ITEM_CLASS, jPackageVoucherItem));
+
+ 	jobject jPackageRideItem;
+ 	InitClassHelper(env, PACKAGE_RIDE_ITEM_CLASS, &jPackageRideItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_RIDE_ITEM_CLASS, jPackageRideItem));
 
  	/* 4.其他    */
  	jobject jConfigItem;

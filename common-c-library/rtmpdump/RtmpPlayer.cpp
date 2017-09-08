@@ -9,11 +9,10 @@
 #include "RtmpPlayer.h"
 
 // 默认视频数据播放缓存(毫秒)
-#define PLAY_CACHE_DEFAULT_MS   1000
-#define PLAY_CACHE_MAX_MS  1500
+#define PLAY_CACHE_DEFAULT_MS 1000
 
 // 最大视频数据缓存数量(帧个数)
-#define PLAYVIDEO_CACHE_MAX_NUM     60
+#define PLAYVIDEO_CACHE_MAX_NUM 60
 
 // 播放休眠
 #define PLAY_SLEEP_TIME 1
@@ -21,6 +20,8 @@
 #define PLAY_DELAY_DROP_TIME 500
 // 帧延迟断开值(MS)
 #define PLAY_DELAY_DISCONNECT_TIME 5000
+
+#define INVALID_TIMESTAMP 0xFFFFFFFF
 
 namespace coollive {
 class PlayVideoRunnable : public KRunnable {
@@ -240,8 +241,6 @@ void RtmpPlayer::Stop() {
         }
         
         // 还原参数
-        mCacheMS = PLAY_CACHE_DEFAULT_MS;
-        
         mIsWaitCache = true;
 
         mStartPlayTime = 0;
@@ -268,6 +267,10 @@ void RtmpPlayer::SetCallback(RtmpPlayerCallback* callback) {
     mpRtmpPlayerCallback = callback;
 }
 
+void RtmpPlayer::SetCacheMS(int cacheMS) {
+    mCacheMS = cacheMS;
+}
+    
 void RtmpPlayer::PlayVideoRunnableHandle() {
 	PlayFrame(false);
 }
@@ -462,7 +465,7 @@ bool RtmpPlayer::IsCacheEnough() {
             if( audioFrame->mTimestamp > mAudioBufferList.back()->mTimestamp ) {
                 FileLevelLog(
                              "rtmpdump",
-                             KLog::LOG_WARNING,
+                             KLog::LOG_MSG,
                              "RtmpPlayer::IsCacheEnough( "
                              "[Pop Extra Audio Frame], "
                              "audioFrameFront->mTimestamp : %u, "
@@ -510,7 +513,7 @@ bool RtmpPlayer::IsCacheEnough() {
 
 		FileLevelLog(
                     "rtmpdump",
-                    KLog::LOG_WARNING,
+                    KLog::LOG_MSG,
                     "RtmpPlayer::IsCacheEnough( "
                     "startVideoTimestamp : %d, "
                     "endVideoTimestamp : %d, "
@@ -548,7 +551,7 @@ bool RtmpPlayer::IsRestStream(FrameBuffer* frame, unsigned int preTimestamp) {
          * 需要同步播放时间
          * 1.本地timestamp比服务器要大
          */
-        if( preTimestamp > frame->mTimestamp ) {
+        if( preTimestamp != INVALID_TIMESTAMP && preTimestamp > frame->mTimestamp ) {
             bFlag = true;
     //        // 重置开始播放时间
     //        startTime = curTime;
@@ -654,9 +657,9 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
     // 上一帧视频播放时间
     long long preTime = 0;
     // 开始播放帧时间戳
-    unsigned int startTimestamp = 0;
+    unsigned int startTimestamp = INVALID_TIMESTAMP;
     // 上一帧视频播放时间戳
-    unsigned int preTimestamp = 0;
+    unsigned int preTimestamp = INVALID_TIMESTAMP;
 
     // 由于播放操作导致的时间差
     int handleDelay = 0;
@@ -729,7 +732,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                  );
                     
                     // 重置上帧时间戳
-                    preTimestamp = 0;
+                    preTimestamp = INVALID_TIMESTAMP;
                     
                     if( mpRtmpPlayerCallback ) {
                         if( isAudio ) {
@@ -745,7 +748,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                         // 当前时间
                         long long curTime = (long long)getCurrentTime();
                         
-                        if( preTimestamp == 0 ) {
+                        if( preTimestamp == INVALID_TIMESTAMP ) {
                             // 重置开始播放时间
                             startTime = curTime;
                             preTime = startTime;
@@ -930,25 +933,6 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             if( diffms > 0 && handleTime >= diffms ) {
                                 // 播放用时大于帧时长, 发生延迟
                                 handleDelay = handleTime - diffms;
-                                
-//                                FileLog("rtmpdump",
-//                                        "RtmpPlayer::PlayFrame( "
-//                                        "[Handle %s Frame Delay], "
-//                                        "handleTime : %d, "
-//                                        "diffTime : %d, "
-//                                        "diffms : %d, "
-//                                        "delay : %d, "
-//                                        "frameDelay : %d "
-//                                        "bufferList size() : %d "
-//                                        ")",
-//                                        isAudio?"Audio":"Video",
-//                                        handleTime,
-//                                        diffTime,
-//                                        diffms,
-//                                        delay,
-//                                        handleDelay,
-//                                        bufferList->size()
-//                                        );
                             }
                             
                             // 队列去除
@@ -971,6 +955,12 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             // 更新最后一帧播放开始时间
                             preTime = curTime;// - frameDelay;
                             preTimestamp = frame->mTimestamp;
+                        }
+                        
+                        if( bDisconnect ) {
+                            if( mpRtmpPlayerCallback ) {
+                                mpRtmpPlayerCallback->OnDelayMaxTime(this);
+                            }
                         }
                     }
                 }

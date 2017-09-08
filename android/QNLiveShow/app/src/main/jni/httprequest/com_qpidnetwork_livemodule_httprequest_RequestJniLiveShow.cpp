@@ -258,14 +258,16 @@ RequestLiveFansListCallback gRequestLiveFansListCallback;
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetAudienceListInRoom
- * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetAudienceListCallback;)J
+ * Signature: (Ljava/lang/String;IILcom/qpidnetwork/livemodule/httprequest/OnGetAudienceListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetAudienceListInRoom
-  (JNIEnv *env, jclass cls, jstring roomId, jobject callback){
+  (JNIEnv *env, jclass cls, jstring roomId, jint page, jint number, jobject callback){
 
     jlong taskId = -1;
     taskId = gHttpRequestController.LiveFansList(&gHttpRequestManager,
     									JString2String(env, roomId),
+    									page,
+    									number,
                                         &gRequestLiveFansListCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -284,7 +286,7 @@ class RequestGetAllGiftListCallback : public IRequestGetAllGiftListCallback{
 
         FileLog("httprequest", "JNI::onGetGiftList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
-		jobjectArray jItemArray = getNormalGiftArray(env, itemList);
+		jobjectArray jItemArray = getGiftArray(env, itemList);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -292,7 +294,7 @@ class RequestGetAllGiftListCallback : public IRequestGetAllGiftListCallback{
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;";
 			signature += "[L";
-			signature += NORMAL_GIFT_ITEM_CLASS;
+			signature += GIFT_DETAIL_ITEM_CLASS;
 			signature += ";";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetGiftList", signature.c_str());
@@ -347,13 +349,15 @@ class RequestGetGiftListByUserIdCallback : public IRequestGetGiftListByUserIdCal
 
         FileLog("httprequest", "JNI::onGetSendableGiftList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
-		jobjectArray jItemArray = getJavaStringArray(env, itemList);
+		jobjectArray jItemArray = getSendableGiftArray(env, itemList);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
-			string signature = "(ZILjava/lang/String;[Ljava/lang/String;)V";
+			string signature = "(ZILjava/lang/String;[L";
+			signature += SENDABLE_GIFT_ITEM_CLASS;
+			signature += ";)V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetSendableGiftList", signature.c_str());
 			FileLog("httprequest", "JNI::onGetSendableGiftList( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
@@ -575,12 +579,330 @@ RequestGetInviteInfoCallback gRequestGetInviteInfoCallback;
  * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetImediateInviteInfoCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetImediateInviteInfo
-  (JNIEnv *env, jclass cls, jstring inviteId, jobject callback){
+  (JNIEnv *env, jclass cls, jstring invitationId, jobject callback){
 
     jlong taskId = -1;
     taskId = gHttpRequestController.GetInviteInfo(&gHttpRequestManager,
-    									JString2String(env, inviteId),
+    									JString2String(env, invitationId),
                                         &gRequestGetInviteInfoCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+/*********************************** 3.10.获取才艺点播列表  ****************************************/
+
+class RequestGetTalentListCallback : public IRequestGetTalentListCallback{
+	void OnGetTalentList(HttpGetTalentListTask* task, bool success, int errnum, const string& errmsg, const TalentItemList& list){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnGetTalentList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        jobjectArray jtalentArray = getTalentArray(env, list);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += TALENT_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetTalentList", signature.c_str());
+			FileLog("httprequest", "JNI::OnGetTalentList( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jtalentArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jtalentArray != NULL){
+			env->DeleteLocalRef(jtalentArray);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetTalentListCallback gRequestGetTalentListCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetTalentList
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetTalentListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetTalentList
+  (JNIEnv *env, jclass cls, jstring roomId, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetTalentList(&gHttpRequestManager,
+    									JString2String(env, roomId),
+                                        &gRequestGetTalentListCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+/*********************************** 3.11.获取才艺点播邀请状态  ****************************************/
+
+class RequestGetTalentStatusCallback : public IRequestGetTalentStatusCallback{
+	void OnGetTalentStatus(HttpGetTalentStatusTask* task, bool success, int errnum, const string& errmsg, const HttpGetTalentStatusItem& item){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnGetTalentStatus( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        jobject jItem = getTalentInviteItem(env, item);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += TALENT_INVITE_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetTalentInviteStatus", signature.c_str());
+			FileLog("httprequest", "JNI::OnGetTalentStatus( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetTalentStatusCallback gRequestGetTalentStatusCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetTalentInviteStatus
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetTalentInviteStatusCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetTalentInviteStatus
+  (JNIEnv *env, jclass cls, jstring roomId, jstring talentInviteId, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetTalentStatus(&gHttpRequestManager,
+    									JString2String(env, roomId),
+    									JString2String(env, talentInviteId),
+                                        &gRequestGetTalentStatusCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+/*********************************** 3.12.获取指定观众信息  ****************************************/
+
+class RequestGetNewFansBaseInfoCallback : public IRequestGetNewFansBaseInfoCallback{
+	void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansItem& item){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::onGetAudienceDetailInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        jobject jItem = getAudienceInfoItem(env, item);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += AUDIENCE_INFO_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetAudienceDetailInfo", signature.c_str());
+			FileLog("httprequest", "JNI::onGetAudienceDetailInfo( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetNewFansBaseInfoCallback gRequestGetNewFansBaseInfoCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetAudienceDetailInfo
+ * Signature: (Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetAudienceDetailInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetAudienceDetailInfo
+  (JNIEnv *env, jclass cls, jstring userId, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetNewFansBaseInfo(&gHttpRequestManager,
+    									JString2String(env, userId),
+                                        &gRequestGetNewFansBaseInfoCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+
+/*********************************** 3.13.观众开始/结束视频互动  ****************************************/
+
+class RequestControlManPushCallback : public IRequestControlManPushCallback{
+	void OnControlManPush(HttpControlManPushTask* task, bool success, int errnum, const string& errmsg, const list<string>& uploadUrls){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnControlManPush( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+        jobjectArray juploadUlrs = getJavaStringArray(env, uploadUrls);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;[Ljava/lang/String;)V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog("httprequest", "JNI::OnControlManPush( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, juploadUlrs);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+		if(juploadUlrs != NULL){
+			env->DeleteGlobalRef(juploadUlrs);
+		}
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestControlManPushCallback gRequestControlManPushCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    StartOrStopVideoInteractive
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnStartOrStopVideoInteractiveCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_StartOrStopVideoInteractive
+  (JNIEnv *env, jclass cls, jstring roomId, jint operateType, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.ControlManPush(&gHttpRequestManager,
+    									JString2String(env, roomId),
+    									IntToInteractiveOperateType(operateType),
+                                        &gRequestControlManPushCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+}
+
+
+/*********************************** 3.14.获取推荐主播列表  ****************************************/
+
+class RequestGetPromoAnchorListCallback : public IRequestGetPromoAnchorListCallback{
+	void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& listItem){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnGetPromoAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		jobjectArray jItemArray = getHotListArray(env, listItem);
+
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "[L";
+			signature += HOTLIST_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetPromoAnchorList", signature.c_str());
+			FileLog("httprequest", "JNI::OnGetPromoAnchorList( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItemArray != NULL){
+			env->DeleteLocalRef(jItemArray);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetPromoAnchorListCallback gRequestGetPromoAnchorListCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
+ * Method:    GetPromoAnchorList
+ * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPromoAnchorList
+  (JNIEnv *env, jclass cls, jint number, jobject callback){
+
+    jlong taskId = -1;
+    taskId = gHttpRequestController.GetPromoAnchorList(&gHttpRequestManager,
+    									number,
+                                        &gRequestGetPromoAnchorListCallback);
 
     jobject obj = env->NewGlobalRef(callback);
     putCallbackIntoMap(taskId, obj);

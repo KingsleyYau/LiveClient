@@ -9,13 +9,18 @@
 #import "AppDelegate.h"
 
 #import <UserNotifications/UserNotifications.h>
+#import <AVFoundation/AVFoundation.h>
+
+#import <FirebaseCore/FirebaseCore.h>
 
 #import "RequestManager.h"
 #import "FileCacheManager.h"
 #import "LoginManager.h"
 #import "IMManager.h"
 #import "LiveGiftDownloadManager.h"
-#import "FirebaseCore/FIRApp.h"
+#import "LiveStreamSession.h"
+
+#import "LiveModule.h"
 
 @implementation AppDelegate
 @synthesize demo = _demo;
@@ -28,8 +33,7 @@
     return YES;
 }
 
-- (void)didFinishLaunchWithApplication:(UIApplication *)application{
-    
+- (void)didFinishLaunchWithApplication:(UIApplication *)application {
     self.window.backgroundColor = [UIColor whiteColor];
     
     // 设置公共属性
@@ -38,10 +42,8 @@
     // 初始化Crash Log捕捉
 //    [CrashLogManager manager];
     
-//    [FIRApp configure];
-    
     // 状态栏白色
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
     // 注册推送
 //    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
@@ -59,10 +61,7 @@
     [RequestManager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
     
     RequestManager* manager = [RequestManager manager];
-    [manager setWebSite:@"http://172.25.32.17:3007"];
-    [manager setWebSiteUpload:@"http://172.25.32.17:82"];
-//    [manager setWebSite:@"http://192.168.88.17:3007"];
-//    [manager setWebSiteUpload:@"http://192.168.88.17:82"];
+    [manager setWebSite:@"http://172.25.32.17:3107"];
     
     // 设置接口请求环境
     // 如果调试模式, 直接进入正式环境
@@ -77,10 +76,11 @@
     // 初始化礼物下载管理器
     LiveGiftDownloadManager *downloadManager = [LiveGiftDownloadManager giftDownloadManager];
     
-    NSLog(@"AppDelegate::didFinishLaunchingWithOptions: loginManager->%@, imManager->%@, downloadManager->%@ ",loginManager,imManager,downloadManager);
-    
     // 初始化跟踪管理器(默认为真实环境)
 //    [[AnalyticsManager manager] initGoogleAnalytics:YES];
+    [[FIRAnalyticsConfiguration sharedInstance] setAnalyticsCollectionEnabled:NO];
+    [[FIRConfiguration sharedInstance] setLoggerLevel:FIRLoggerLevelMin];
+//    [FIRApp configure];
     
     // 初始化支付管理器
 //    [PaymentManager manager];
@@ -93,7 +93,17 @@
     
     // 注册推送
     [self registerRemoteNotifications:application];
+
+    // 开启后台播放
+    [[LiveStreamSession session] activeSession];
     
+    // 设置模块主界面
+    KKNavigationController *nvc = (KKNavigationController *)self.window.rootViewController;
+    UIViewController* vc = nvc.topViewController;
+    [[LiveModule module] setModuleViewController:vc];
+    
+    // 开始登陆
+    [[LiveModule module] start:MAX_TOKEN];
     // 延长启动画面时间
     // usleep(1000 * 1000);
 }
@@ -153,7 +163,7 @@
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    NSLog(@"application::didRegisterForRemoteNotificationsWithDeviceToken( deviceToken : %@ )", deviceToken);
+    NSLog(@"AppDelegate::didRegisterForRemoteNotificationsWithDeviceToken( deviceToken : %@ )", deviceToken);
 
     [self didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
@@ -167,7 +177,7 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-    NSLog(@"application::didReceiveRemoteNotification( userInfo : %@ )", userInfo);
+    NSLog(@"AppDelegate::didReceiveRemoteNotification( userInfo : %@ )", userInfo);
     
     NSString* urlString = [userInfo objectForKey:@"jumpurl"];
     if( urlString.length > 0 ) {

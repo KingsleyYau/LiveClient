@@ -40,70 +40,46 @@ public:
                 level = root[LOGIN_LEVEL].asInt();
             }
             
-            /* country */
-            if( root[LOGIN_COUNTRY].isString() ) {
-                country = root[LOGIN_COUNTRY].asString();
+            /* experience */
+            if( root[LOGIN_EXPERIENCE].isInt() ) {
+                experience = root[LOGIN_EXPERIENCE].asInt();
             }
             
             /* photourl */
             if( root[LOGIN_PHOTOURL].isString() ) {
                 photoUrl = root[LOGIN_PHOTOURL].asString();
             }
-            
-            /* sign */
-            if( root[LOGIN_SIGN].isString() ) {
-                sign = root[LOGIN_SIGN].asString();
-            }
-            
-            /* anchor */
-            if( root[LOGIN_ANCHOR].isInt() ) {
-                anchor = root[LOGIN_ANCHOR].asInt();
-            }
-            
-            /* modifyinfo */
-            if( root[LOGIN_MODIFYINFO].isInt() ) {
-                modifyinfo = root[LOGIN_MODIFYINFO].asInt();
-            }
         }
+        
     }
     
-    /**
-     * 登录成功结构体
-     * @param userId			用户ID
-     * @param token				直播系统不同服务器的统一验证身份标识
-     * @param nickName          昵称
-     * @param levenl			级别
-     * @param country			国家／地区
-     * @param photoUrl		    头像url
-     * @param sign				个人签名
-     * @param anchor			是否主播（0:不是 1:是）
-     * @param modifyinfo		是否需要修改个人资料（0:不是 1:是）
-     */
     HttpLoginItem() {
         userId = "";
         token = "";
         nickName = "";
         level = 0;
-        country = "";
+        experience = 0;
         photoUrl = "";
-        sign = "";
-        anchor = false;
-        modifyinfo = false;
     }
     
     virtual ~HttpLoginItem() {
         
     }
-    
+    /**
+     * 登录成功结构体
+     * userId			用户ID
+     * token				直播系统不同服务器的统一验证身份标识
+     * nickName          昵称
+     * levenl			级别
+     * experience		经验值
+     * photoUrl		    头像url
+     */
     string userId;
     string token;
     string nickName;
     int level;
-    string country;
+    int experience;
     string photoUrl;
-    string sign;
-    bool anchor;
-    bool modifyinfo;
 };
 
 #endif /* LOGINITEM_H_ */

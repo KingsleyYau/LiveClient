@@ -217,7 +217,7 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
     /**
      * 加载更多，会自动滑动底
      */
-    private void loadMore(){
+    public void loadMore(){
         if(mLiveMsgManager.getFromCache(mLiveMsgItems)){
             mRecyclerViewAdapter.notifyDataSetChanged();
         }

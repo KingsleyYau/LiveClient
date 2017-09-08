@@ -61,11 +61,10 @@ static dispatch_once_t onceToken;
     
     // 如果没文件再去下载
     if (imageData == nil) {
-        LiveRoomGiftItemObject *item = [self.downloadManager backGiftItemWithGiftID:giftID];
-        [self.downloadManager  afnDownLoadFileWith:item.srcUrl giftId:giftID];
+//        LiveRoomGiftItemObject *item = [self.downloadManager backGiftItemWithGiftID:giftID];
+//        [self.downloadManager afnDownLoadFileWith:item.srcUrl giftId:giftID];
         
         isHaveImage = NO;
-        
     }else{
         
         YYImage *image = [YYImage imageWithData:imageData];

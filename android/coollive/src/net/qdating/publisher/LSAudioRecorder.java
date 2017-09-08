@@ -2,7 +2,6 @@ package net.qdating.publisher;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import net.qdating.LSConfig;
 import net.qdating.utils.Log;

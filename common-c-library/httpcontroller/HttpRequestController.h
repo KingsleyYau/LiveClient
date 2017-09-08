@@ -11,30 +11,36 @@
 
 #include "HttpLoginTask.h"
 #include "HttpLogoutTask.h"
-#include "HttpRegisterPhoneTask.h"
-#include "HttpRegisterCheckPhoneTask.h"
-#include "HttpRegisterGetSMSCodeTask.h"
-#include "HttpLiveRoomCreateTask.h"
-#include "HttpCheckLiveRoomTask.h"
-#include "HttpCloseLiveRoomTask.h"
-#include "HttpGetLiveRoomFansListTask.h"
-#include "HttpGetLiveRoomHotTask.h"
-#include "HttpGetLiveRoomAllFansListTask.h"
-#include "HttpGetLiveRoomUserPhotoTask.h"
-#include "HttpGetLiveRoomModifyInfoTask.h"
-#include "HttpSetLiveRoomModifyInfoTask.h"
-#include "HttpUpdateLiveRoomTokenIdTask.h"
-#include "HttpUploadLiveRoomImgTask.h"
-#include "HttpGetLiveRoomPhotoListTask.h"
-#include "HttpAddLiveRoomPhotoTask.h"
-#include "HttpSetUsingLiveRoomPhotoTask.h"
-#include "HttpDelLiveRoomPhotoTast.h"
-#include "HttpGetLiveRoomAllGiftListTask.h"
-#include "HttpGetLiveRoomGiftListByUserIdTask.h"
-#include "HttpGetLiveRoomGiftDetailTask.h"
-#include "HttpGetLiveRoomConfigTask.h"
+#include "HttpUpdateTokenIdTask.h"
+#include "HttpGetAnchorListTask.h"
+#include "HttpGetFollowListTask.h"
+#include "HttpGetRoomInfoTask.h"
+#include "HttpLiveFansListTask.h"
+#include "HttpGetAllGiftListTask.h"
+#include "HttpGetGiftListByUserIdTask.h"
+#include "HttpGetGiftDetailTask.h"
+#include "HttpGetEmoticonListTask.h"
+#include "HttpGetInviteInfoTask.h"
+#include "HttpGiftListTask.h"
+#include "HttpGetConfigTask.h"
+#include "HttpGetLeftCreditTask.h"
+#include "HttpManHandleBookingListTask.h"
+#include "HttpHandleBookingTask.h"
+#include "HttpSendCancelPrivateLiveInviteTask.h"
+#include "HttpManBookingUnreadUnhandleNumTask.h"
+#include "HttpGetTalentListTask.h"
+#include "HttpGetTalentStatusTask.h"
+#include "HttpGetCreateBookingInfoTask.h"
+#include "HttpSendBookingRequestTask.h"
+#include "HttpVoucherListTask.h"
+#include "HttpRideListTask.h"
+#include "HttpSetRideTask.h"
+#include "HttpGetBackpackUnreadNumTask.h"
+#include "HttpSetFavoriteTask.h"
+#include "HttpGetNewFansBaseInfoTask.h"
+#include "HttpControlManPushTask.h"
+#include "HttpGetPromoAnchorListTask.h"
 #include <common/KSafeMap.h>
-#include "HttpRequestEnum.h"
 
 #include <stdio.h>
 
@@ -52,443 +58,487 @@ public:
     ~HttpRequestController();
     
     void Stop(long long requestId);
-    
+
     /**
-     *  2.1.验证手机是否已注册接口
+     *  2.1.登陆接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param phoneno                       手机号码
-     * @param areno                         手机区号
-     * @param callback                      接口回调
-     *
-     *  @return                             成功请求Id
-     */
-    long long RegisterCheckPhone(
-                          HttpRequestManager *pHttpRequestManager,
-                          const string& phoneno,
-                          const string& areno,
-                          IRequestRegisterCheckPhoneCallback* callback = NULL
-                          );
-    
-    /**
-     *  2.2.获取手机注册短信验证码接口
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param phoneno                       手机号码
-     * @param areno                         手机区号
-     * @param callback                      接口回调
-     *
-     *  @return                             成功请求Id
-     */
-    long long RegisterGetSMSCode(
-                          HttpRequestManager *pHttpRequestManager,
-                          const string& phoneno,
-                          const string& areno,
-                          IRequestRegisterGetSMSCodeCallback* callback = NULL
-                          );
-    
-    
-    /**
-     *  2.3.手机注册接口
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param phoneno                       手机号码（仅当type ＝ 0 时使用）
-     * @param areno                         手机区号（仅当type ＝ 0 时使用）
-     * @param checkCode                     验证码
-     * @param password                      登录密码
-     * @param deviceId                      设备唯一标识
-     * @param model                         设备型号（格式：设备型号－系统版本号）
-     * @param manufacturer                  制造厂商
-     * @param callback                      接口回调
-     *
-     *  @return                             成功请求Id
-     */
-    long long RegisterPhone(
-                          HttpRequestManager *pHttpRequestManager,
-                          const string& phoneno,
-                          const string& areno,
-                          const string& checkCode,
-                          const string& password,
-                          const string& deviceId,
-                          const string& model,
-                          const string& manufacturer,
-                          IRequestRegisterPhoneCallback* callback = NULL
-    );
-    
-    /**
-     *  2.4.登陆接口
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param type                          登录类型（0: 手机登录 1:邮箱登录）
-     * @param phoneno                       手机号码（仅当type ＝ 0 时使用）
-     * @param areno                         手机区号（仅当type ＝ 0 时使用）
-     * @param password                      登录密码
+     * @param qnsid                         QN系统登录验证返回的标识
      * @param deviceid                      设备唯一标识
      * @param model                         设备型号（格式：设备型号－系统版本号）
      * @param manufacturer                  制造厂商
-     * @param autoLogin                     是否自动登录
      *  @param callback                     接口回调
      *
      *  @return                             成功请求Id
      */
     long long     Login(
                         HttpRequestManager *pHttpRequestManager,
-                        LoginType type,
-                        const string& phoneno,
-                        const string& areno,
-                        const string& password,
+                        const string& qnsid,
                         const string& deviceid,
                         const string& model,
                         const string& manufacturer,
-                        bool autoLogin,
                         IRequestLoginCallback* callback = NULL
                         );
     
     
     /**
-     *  2.5.注销接口
+     *  2.2.注销接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
     long long Logout(
                      HttpRequestManager *pHttpRequestManager,
-                     const string& token,
                      IRequestLogoutCallback* callback = NULL
                      );
     
     /**
-     *  2.6.上传tokenid接口
+     *  2.3.上传tokenid接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
      * @param tokenId                       用于Push Notification的ID
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long UpdateLiveRoomTokenId(
-                                    HttpRequestManager *pHttpRequestManager,
-                                    const string& token,
-                                    const string& tokenId,
-                                    IRequestUpdateLiveRoomTokenIdCallback* callback = NULL
-                                    );
+    long long UpdateTokenId(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& tokenId,
+                            IRequestUpdateTokenIdCallback* callback = NULL
+                            );
+    
+
     
     /**
-     *  3.1.新建直播间接口
+     *  3.1.获取Hot列表接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param roomName                      直播间名称
-     * @param roomPhotoId                   封面图ID
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long CreateLiveRoom(
-                     HttpRequestManager *pHttpRequestManager,
-                     const string& token,
-                     const string& roomName,
-                     const string& roomPhotoId,
-                     IRequestLiveRoomCreateCallback* callback = NULL
-                     );
+    long long GetAnchorList(
+                            HttpRequestManager *pHttpRequestManager,
+                            int start,
+                            int step,
+                            IRequestGetAnchorListCallback* callback = NULL
+                            );
     
     /**
-     *  3.2.获取本人正在直播的直播间信息接口
+     *  3.2.获取Following列表接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long CheckLiveRoom(
+    long long GetFollowList(
                              HttpRequestManager *pHttpRequestManager,
-                             const string& token,
-                             IRequestCheckLiveRoomCallback* callback = NULL
-                             );
-    
-    /**
-     *  3.3.关闭直播间息接口
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param roomId                        直播间ID
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long CloseLiveRoom(
-                            HttpRequestManager *pHttpRequestManager,
-                            const string& token,
-                            const string& roomId,
-                            IRequestCloseLiveRoomCallback* callback = NULL
-                            );
-    /**
-     *  3.4.获取直播间观众头像列表（限定数量）接口
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param roomId                        直播间ID
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long GetLiveRoomFansList(
-                            HttpRequestManager *pHttpRequestManager,
-                            const string& token,
-                            const string& roomId,
-                            IRequestGetLiveRoomFansListCallback* callback = NULL
+                             int start,
+                             int step,
+                             IRequestGetFollowListCallback* callback = NULL
                             );
     
     /**
-     *  3.5.获取直播间所有观众头像列表接口
+     *  3.3.获取本人有效直播间或邀请信息接口(已废弃)
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param roomId                        直播间ID
-     * @param start                         起始，用于分页，表示从第几个元素开始获取
-     * @param step                          步长，用于分页，表示本次请求获取多少个元素
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomAllFansList(
-                                     HttpRequestManager *pHttpRequestManager,
-                                     const string& token,
-                                     const string& roomId,
-                                     int start,
-                                     int step,
-                                     IRequestGetLiveRoomAllFansListCallback* callback = NULL
-                                     );
+    long long GetRoomInfo(
+                        HttpRequestManager *pHttpRequestManager,
+                        IRequestGetRoomInfoCallback* callback = NULL
+                        );
     
     /**
-     *  3.6.获取Hot列表接口
+     *  3.4.获取直播间观众头像列表接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param start                         起始，用于分页，表示从第几个元素开始获取
-     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param roomId                        直播间ID
+     * @param page                          页数（可0， 0则表示获取所有， ）
+     * @param number                        每页的元素数量（可0， 0则表示获取所有）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomHotList(
-                                  HttpRequestManager *pHttpRequestManager,
-                                  const string& token,
-                                  int start,
-                                  int step,
-                                  IRequestGetLiveRoomHotCallback* callback = NULL
-                                  );
+    long long LiveFansList(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& roomId,
+                           int page,
+                           int number,
+                           IRequestLiveFansListCallback* callback = NULL
+                          );
 
     /**
-     *  3.7.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)
+     *  3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomAllGiftList(
-                                   HttpRequestManager *pHttpRequestManager,
-                                   const string& token,
-                                   IRequestGetLiveRoomAllGiftListCallback* callback = NULL
-                                   );
+    long long GetAllGiftList(
+                            HttpRequestManager *pHttpRequestManager,
+                            IRequestGetAllGiftListCallback* callback = NULL
+                            );
     
     /**
-     *  3.8.获取直播间可发送的礼物列表（观众端获取已进入的直播间可发送的礼物列表）
+     *  3.6.获取直播间可发送的礼物列表（观众端/主播端获取直播间的可发送的礼物列表, 包括背包礼物）
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
      * @param roomId                        直播间ID
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomGiftListByUserId(
-                                     HttpRequestManager *pHttpRequestManager,
-                                     const string& token,
-                                     const string& roomId,
-                                     IRequestGetLiveRoomGiftListByUserIdCallback* callback = NULL
-                                     );
+    long long GetGiftListByUserId(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  const string& roomId,
+                                  IRequestGetGiftListByUserIdCallback* callback = NULL
+                                 );
     
     /**
-     *  3.9.获取指定礼物详情（用于观众端／主播端在直播间收到《3.7.》没有礼物时，获取指定礼物详情来显示）
+     *  3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示）
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
      * @param giftId                        礼物ID
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomGiftDetail(
-                                    HttpRequestManager *pHttpRequestManager,
-                                    const string& token,
-                                    const string& giftId,
-                                    IRequestGetLiveRoomGiftDetailCallback* callback = NULL
-                                    );
-    
-    
-    /**
-     *  3.10.获取开播封面图列表（用于主播开播前，获取封面图列表）
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long GetLiveRoomPhotoList(
-                                 HttpRequestManager *pHttpRequestManager,
-                                 const string& token,
-                                 IRequestGetLiveRoomPhotoListCallback* callback = NULL
-                                 );
-    
-    /**
-     *  3.11.添加开播封面图（用于主播添加开播封面图）
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param photoId                       封面图ID    
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long AddLiveRoomPhoto(
-                             HttpRequestManager *pHttpRequestManager,
-                             const string& token,
-                             const string& photoId,
-                             IRequestAddLiveRoomPhotoCallback* callback = NULL
-                            );
-    
-    /**
-     *  3.12.设置默认使用封面图（用于主播设置默认的封面图）
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param photoId                       封面图ID
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long SetUsingLiveRoomPhoto(
-                               HttpRequestManager *pHttpRequestManager,
-                               const string& token,
-                               const string& photoId,
-                               IRequestSetUsingLiveRoomPhotoCallback* callback = NULL
-                               );
-    
-    /**
-     *  3.13.删除开播封面图（用于主播删除开播封面图）
-     *
-     * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param photoId                       封面图ID
-     * @param callback                      接口回调
-     *
-     * @return                              成功请求Id
-     */
-    long long DelLiveRoomPhoto(
+    long long GetGiftDetail(
                             HttpRequestManager *pHttpRequestManager,
-                            const string& token,
-                            const string& photoId,
-                            IRequestDelLiveRoomPhotoCallback* callback = NULL
+                            const string& giftId,
+                            IRequestGetGiftDetailCallback* callback = NULL
                             );
     
-    
     /**
-     *  4.1.获取用户头像接口
+     *  3.8.获取文本表情列表（用于观众端/主播端获取文本聊天礼物列表）
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param userId                        用户ID
-     * @param photoType                     头像类型（0：小图（用于直播间显示头像） 1:大图（用于个人信息界面等显示头像））
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomUserPhoto(
+    long long GetEmoticonList(
+                            HttpRequestManager *pHttpRequestManager,
+                            IRequestGetEmoticonListCallback* callback = NULL
+                            );
+    
+    /**
+     *  3.9.获取指定立即私密邀请信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param inviteId                      邀请ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetInviteInfo(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& inviteId,
+                            IRequestGetInviteInfoCallback* callback = NULL
+                            );
+    
+    /**
+     *  3.10.获取才艺点播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomId                        直播间ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetTalentList(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& roomId,
+                            IRequestGetTalentListCallback* callback = NULL
+                            );
+    
+    /**
+     *  3.11.获取才艺点播邀请状态
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomId                        直播间ID
+     * @param talentInviteId                才艺点播邀请ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetTalentStatus(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& roomId,
+                            const string& talentInviteId,
+                            IRequestGetTalentStatusCallback* callback = NULL
+                            );
+    
+    /**
+     *   3.12.获取指定观众信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param userId                        观众ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetNewFansBaseInfo(
                                  HttpRequestManager *pHttpRequestManager,
-                                 const string& token,
                                  const string& userId,
-                                 PhotoType photoType,
-                                 IRequestGetLiveRoomUserPhotoCallback* callback = NULL
+                                 IRequestGetNewFansBaseInfoCallback* callback = NULL
                                  );
     
     /**
-     *  4.2.获取可编辑的本人资料接口
+     *  3.13.获取指定观众信息
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
+     * @param roomId                        直播间ID
+     * @param type                          视频操作（1:开始 2:关闭）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomModifyInfo(
+    long long ControlManPush(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& roomId,
+                                 ControlType type,
+                                 IRequestControlManPushCallback* callback = NULL
+                                 );
+    
+    /**
+     *  3.14.获取推荐主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param number                        获取推荐个数
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPromoAnchorList(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 int number,
+                                 IRequestGetPromoAnchorListCallback* callback = NULL
+                             );
+    
+    /**
+     *  4.1.观众待处理的预约邀请列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param type                          列表类型（0:等待观众处理 1:等待主播处理 2:已确认 3：历史
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ManHandleBookingList(
                                    HttpRequestManager *pHttpRequestManager,
-                                   const string& token,
-                                   IRequestGetLiveRoomModifyInfoCallback* callback = NULL
+                                   BookingListType type,
+                                   int start,
+                                   int step,
+                                   IRequestManHandleBookingListCallback* callback = NULL
                                    );
     
     /**
-     *  4.3.提交本人资料接口
+     *  4.2.观众处理预约邀请
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param photoId                       头像图片ID（可无，无则表示不修改）
-     * @param nickName                      昵称
-     * @param gender                        性别（0：男性 1:女性）
-     * @param birthday                      出生日期（格式： 1980-01-01）
+     * @param inviteId                      邀请ID
+     * @param isConfirm                     是否同意（0:否 1:是）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long SetLiveRoomModifyInfo(
+    long long HandleBooking(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& inviteId,
+                            bool isConfirm,
+                            IRequestHandleBookingCallback* callback = NULL
+                            );
+    
+    /**
+     *  4.3.取消预约邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param invitationId                  邀请ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendCancelPrivateLiveInvite(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          const string& invitationId,
+                                          IRequestSendCancelPrivateLiveInviteCallback* callback = NULL
+                                          );
+    
+    /**
+     *  4.4.获取预约邀请未读或待处理数量
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ManBookingUnreadUnhandleNum(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          IRequestManBookingUnreadUnhandleNumCallback* callback = NULL
+                                          );
+    
+    /**
+     *  4.5.获取新建预约邀请信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param userId                        主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetCreateBookingInfo(
+                                    HttpRequestManager *pHttpRequestManager,
+                                    const string& userId,
+                                    IRequestGetCreateBookingInfoCallback* callback = NULL
+                                );
+    /**
+     *  4.6.新建预约邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param userId                        主播ID
+     * @param timeId                        预约时间ID
+     * @param bookTime                      预约时间
+     * @param giftId                        礼物ID
+     * @param giftNum                       礼物数量
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendBookingRequest(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& userId,
+                                 const string& timeId,
+                                 long bookTime,
+                                 const string& giftId,
+                                 int giftNum,
+                                 IRequestSendBookingRequestCallback* callback = NULL
+                                );
+    
+    /**
+     *  5.1.获取背包礼物列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GiftList(
+                       HttpRequestManager *pHttpRequestManager,
+                       IRequestGiftListCallback* callback = NULL
+                       );
+    
+    /**
+     *  5.2.获取使用劵列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long VoucherList(
+                          HttpRequestManager *pHttpRequestManager,
+                          IRequestVoucherListCallback* callback = NULL
+                          );
+    /**
+     *  5.3.获取座驾列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long RideList(
+                       HttpRequestManager *pHttpRequestManager,
+                       IRequestRideListCallback* callback = NULL
+                       );
+    
+    /**
+     *  5.4.使用／取消座驾
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param rideId                        座驾ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SetRide(
+                       HttpRequestManager *pHttpRequestManager,
+                       const string& rideId,
+                       IRequestSetRideCallback* callback = NULL
+                       );
+    
+    /**
+     *  5.5.获取背包未读数量
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetBackpackUnreadNum(
                                    HttpRequestManager *pHttpRequestManager,
-                                   const string& token,
-                                   const string& photoId,
-                                   const string& nickName,
-                                   Gender gender,
-                                   const string& birthday,
-                                   IRequestSetLiveRoomModifyInfoCallback* callback = NULL
+                                   IRequestGetBackpackUnreadNumCallback* callback = NULL
                                    );
     
     /**
-     *  5.1.同步配置（用于客户端获取http接口服务器，IM服务器及上传图片服务器域名及端口等配置）
+     *  6.1.同步配置
      *
      * @param pHttpRequestManager           http管理器
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long GetLiveRoomConfig(
-                                HttpRequestManager *pHttpRequestManager,
-                                IRequestGetLiveRoomConfigCallback* callback = NULL
-                                );
+    long long GetConfig(
+                       HttpRequestManager *pHttpRequestManager,
+                       IRequestGetConfigCallback* callback = NULL
+                       );
+
+    /**
+     *  6.2.获取账号余额
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetLeftCredit(
+                        HttpRequestManager *pHttpRequestManager,
+                        IRequestGetLeftCreditCallback* callback = NULL
+                        );
     
     /**
-     *  5.2.上传图片接口
+     *  6.3.添加／取消收藏
      *
      * @param pHttpRequestManager           http管理器
-     * @param token                         用户身份唯一标识
-     * @param imageType                     图片类型（1：用户头像， 2:直播间封面图）
-     * @param imageFileName                 图片文件二进制数据
+     * @param userId                        主播ID
+     * @param roomId                        直播间ID（可无，无则表示不在直播间操作）
+     * @param isFav                         是否收藏（0:否 1:是）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
      */
-    long long UploadLiveRoomImg(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                const ImageType imageType,
-                                const string& imageFileName,
-                                IRequestUploadLiveRoomImgCallback* callback = NULL
-                                );
+    long long SetFavorite(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& userId,
+                            const string& roomId,
+                            bool isFav,
+                            IRequestSetFavoriteCallback* callback = NULL
+                            );
+    
     
 private:
     void OnTaskFinish(IHttpTask* task);

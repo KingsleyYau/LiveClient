@@ -63,33 +63,40 @@
 		504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504CDA511C7FDD7F00DBB429 /* PngWriter.cpp */; };
 		505D86901C7EF748006FDAC7 /* Common_C_Library.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D868F1C7EF748006FDAC7 /* Common_C_Library.h */; };
 		505D86921C7EF748006FDAC7 /* Common_C_Library.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505D86911C7EF748006FDAC7 /* Common_C_Library.mm */; };
+		506BC2C41F590201001C2962 /* HttpControlManPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC28C1F590200001C2962 /* HttpControlManPushTask.cpp */; };
+		506BC2C51F590201001C2962 /* HttpGetAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC28E1F590200001C2962 /* HttpGetAllGiftListTask.cpp */; };
+		506BC2C61F590201001C2962 /* HttpGetAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2901F590200001C2962 /* HttpGetAnchorListTask.cpp */; };
+		506BC2C71F590201001C2962 /* HttpGetBackpackUnreadNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2921F590200001C2962 /* HttpGetBackpackUnreadNumTask.cpp */; };
+		506BC2C81F590201001C2962 /* HttpGetConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2941F590200001C2962 /* HttpGetConfigTask.cpp */; };
+		506BC2C91F590201001C2962 /* HttpGetCreateBookingInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2961F590200001C2962 /* HttpGetCreateBookingInfoTask.cpp */; };
+		506BC2CA1F590201001C2962 /* HttpGetEmoticonListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2981F590200001C2962 /* HttpGetEmoticonListTask.cpp */; };
+		506BC2CB1F590201001C2962 /* HttpGetFollowListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC29A1F590200001C2962 /* HttpGetFollowListTask.cpp */; };
+		506BC2CC1F590201001C2962 /* HttpGetGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC29C1F590200001C2962 /* HttpGetGiftDetailTask.cpp */; };
+		506BC2CD1F590201001C2962 /* HttpGetGiftListByUserIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC29E1F590200001C2962 /* HttpGetGiftListByUserIdTask.cpp */; };
+		506BC2CE1F590201001C2962 /* HttpGetInviteInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2A01F590200001C2962 /* HttpGetInviteInfoTask.cpp */; };
+		506BC2CF1F590201001C2962 /* HttpGetLeftCreditTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2A21F590200001C2962 /* HttpGetLeftCreditTask.cpp */; };
+		506BC2D01F590201001C2962 /* HttpGetNewFansBaseInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2A41F590200001C2962 /* HttpGetNewFansBaseInfoTask.cpp */; };
+		506BC2D11F590201001C2962 /* HttpGetRoomInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2A61F590200001C2962 /* HttpGetRoomInfoTask.cpp */; };
+		506BC2D21F590201001C2962 /* HttpGetTalentListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2A81F590200001C2962 /* HttpGetTalentListTask.cpp */; };
+		506BC2D31F590201001C2962 /* HttpGetTalentStatusTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2AA1F590200001C2962 /* HttpGetTalentStatusTask.cpp */; };
+		506BC2D41F590201001C2962 /* HttpGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2AC1F590200001C2962 /* HttpGiftListTask.cpp */; };
+		506BC2D51F590201001C2962 /* HttpHandleBookingTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2AE1F590200001C2962 /* HttpHandleBookingTask.cpp */; };
+		506BC2D61F590201001C2962 /* HttpLiveFansListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2B01F590200001C2962 /* HttpLiveFansListTask.cpp */; };
+		506BC2D71F590201001C2962 /* HttpManBookingUnreadUnhandleNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2B21F590200001C2962 /* HttpManBookingUnreadUnhandleNumTask.cpp */; };
+		506BC2D81F590201001C2962 /* HttpManHandleBookingListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2B41F590200001C2962 /* HttpManHandleBookingListTask.cpp */; };
+		506BC2D91F590201001C2962 /* HttpRideListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2B61F590200001C2962 /* HttpRideListTask.cpp */; };
+		506BC2DA1F590201001C2962 /* HttpSendBookingRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2B81F590200001C2962 /* HttpSendBookingRequestTask.cpp */; };
+		506BC2DB1F590201001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2BA1F590200001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp */; };
+		506BC2DC1F590201001C2962 /* HttpSetFavoriteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2BC1F590200001C2962 /* HttpSetFavoriteTask.cpp */; };
+		506BC2DD1F590201001C2962 /* HttpSetRideTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2BE1F590201001C2962 /* HttpSetRideTask.cpp */; };
+		506BC2DE1F590201001C2962 /* HttpUpdateTokenIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2C01F590201001C2962 /* HttpUpdateTokenIdTask.cpp */; };
+		506BC2DF1F590201001C2962 /* HttpVoucherListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2C21F590201001C2962 /* HttpVoucherListTask.cpp */; };
 		507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507FFA261C9FD76D0083EC06 /* CheckMemoryLeak.cpp */; };
 		507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507FFA281C9FD76D0083EC06 /* CheckMemoryList.cpp */; };
-		5095E3F11ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3D41ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp */; };
-		5095E3F21ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3D61ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp */; };
-		5095E3F31ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3D81ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp */; };
-		5095E3F41ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3DA1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp */; };
-		5095E3F51ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3DC1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp */; };
-		5095E3F61ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3DE1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp */; };
-		5095E3F71ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E01ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp */; };
-		5095E3F81ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E21ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp */; };
 		5095E3F91ED6C02E004FFA3B /* HttpLogoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E41ED6C02E004FFA3B /* HttpLogoutTask.cpp */; };
-		5095E3FA1ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E61ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp */; };
-		5095E3FB1ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E81ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp */; };
-		5095E3FC1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3EA1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp */; };
-		5095E3FD1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3ED1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp */; };
-		5095E3FE1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3EF1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp */; };
 		509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */; };
-		50A9B9081EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */; };
-		50A9B9091EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */; };
-		50A9B90A1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */; };
-		50A9B90B1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */; };
-		50A9B90C1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */; };
-		50A9B90D1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */; };
-		50A9B90E1EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */; };
-		50A9B90F1EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */; };
-		50A9B9101EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */; };
 		50F383991EE688AC003D2765 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 50F383971EE688AC003D2765 /* mongoose.c */; };
+		FAB6940B1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB694091F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -231,68 +238,99 @@
 		505D868C1C7EF748006FDAC7 /* libCommon-C-Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCommon-C-Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		505D868F1C7EF748006FDAC7 /* Common_C_Library.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common_C_Library.h; sourceTree = "<group>"; };
 		505D86911C7EF748006FDAC7 /* Common_C_Library.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Common_C_Library.mm; sourceTree = "<group>"; };
+		506BC28C1F590200001C2962 /* HttpControlManPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpControlManPushTask.cpp; sourceTree = "<group>"; };
+		506BC28D1F590200001C2962 /* HttpControlManPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpControlManPushTask.h; sourceTree = "<group>"; };
+		506BC28E1F590200001C2962 /* HttpGetAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetAllGiftListTask.cpp; sourceTree = "<group>"; };
+		506BC28F1F590200001C2962 /* HttpGetAllGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetAllGiftListTask.h; sourceTree = "<group>"; };
+		506BC2901F590200001C2962 /* HttpGetAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetAnchorListTask.cpp; sourceTree = "<group>"; };
+		506BC2911F590200001C2962 /* HttpGetAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetAnchorListTask.h; sourceTree = "<group>"; };
+		506BC2921F590200001C2962 /* HttpGetBackpackUnreadNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetBackpackUnreadNumTask.cpp; sourceTree = "<group>"; };
+		506BC2931F590200001C2962 /* HttpGetBackpackUnreadNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetBackpackUnreadNumTask.h; sourceTree = "<group>"; };
+		506BC2941F590200001C2962 /* HttpGetConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetConfigTask.cpp; sourceTree = "<group>"; };
+		506BC2951F590200001C2962 /* HttpGetConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetConfigTask.h; sourceTree = "<group>"; };
+		506BC2961F590200001C2962 /* HttpGetCreateBookingInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetCreateBookingInfoTask.cpp; sourceTree = "<group>"; };
+		506BC2971F590200001C2962 /* HttpGetCreateBookingInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCreateBookingInfoTask.h; sourceTree = "<group>"; };
+		506BC2981F590200001C2962 /* HttpGetEmoticonListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetEmoticonListTask.cpp; sourceTree = "<group>"; };
+		506BC2991F590200001C2962 /* HttpGetEmoticonListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetEmoticonListTask.h; sourceTree = "<group>"; };
+		506BC29A1F590200001C2962 /* HttpGetFollowListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetFollowListTask.cpp; sourceTree = "<group>"; };
+		506BC29B1F590200001C2962 /* HttpGetFollowListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetFollowListTask.h; sourceTree = "<group>"; };
+		506BC29C1F590200001C2962 /* HttpGetGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetGiftDetailTask.cpp; sourceTree = "<group>"; };
+		506BC29D1F590200001C2962 /* HttpGetGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetGiftDetailTask.h; sourceTree = "<group>"; };
+		506BC29E1F590200001C2962 /* HttpGetGiftListByUserIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetGiftListByUserIdTask.cpp; sourceTree = "<group>"; };
+		506BC29F1F590200001C2962 /* HttpGetGiftListByUserIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetGiftListByUserIdTask.h; sourceTree = "<group>"; };
+		506BC2A01F590200001C2962 /* HttpGetInviteInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetInviteInfoTask.cpp; sourceTree = "<group>"; };
+		506BC2A11F590200001C2962 /* HttpGetInviteInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetInviteInfoTask.h; sourceTree = "<group>"; };
+		506BC2A21F590200001C2962 /* HttpGetLeftCreditTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLeftCreditTask.cpp; sourceTree = "<group>"; };
+		506BC2A31F590200001C2962 /* HttpGetLeftCreditTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLeftCreditTask.h; sourceTree = "<group>"; };
+		506BC2A41F590200001C2962 /* HttpGetNewFansBaseInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetNewFansBaseInfoTask.cpp; sourceTree = "<group>"; };
+		506BC2A51F590200001C2962 /* HttpGetNewFansBaseInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetNewFansBaseInfoTask.h; sourceTree = "<group>"; };
+		506BC2A61F590200001C2962 /* HttpGetRoomInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetRoomInfoTask.cpp; sourceTree = "<group>"; };
+		506BC2A71F590200001C2962 /* HttpGetRoomInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetRoomInfoTask.h; sourceTree = "<group>"; };
+		506BC2A81F590200001C2962 /* HttpGetTalentListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetTalentListTask.cpp; sourceTree = "<group>"; };
+		506BC2A91F590200001C2962 /* HttpGetTalentListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetTalentListTask.h; sourceTree = "<group>"; };
+		506BC2AA1F590200001C2962 /* HttpGetTalentStatusTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetTalentStatusTask.cpp; sourceTree = "<group>"; };
+		506BC2AB1F590200001C2962 /* HttpGetTalentStatusTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetTalentStatusTask.h; sourceTree = "<group>"; };
+		506BC2AC1F590200001C2962 /* HttpGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGiftListTask.cpp; sourceTree = "<group>"; };
+		506BC2AD1F590200001C2962 /* HttpGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGiftListTask.h; sourceTree = "<group>"; };
+		506BC2AE1F590200001C2962 /* HttpHandleBookingTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpHandleBookingTask.cpp; sourceTree = "<group>"; };
+		506BC2AF1F590200001C2962 /* HttpHandleBookingTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpHandleBookingTask.h; sourceTree = "<group>"; };
+		506BC2B01F590200001C2962 /* HttpLiveFansListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpLiveFansListTask.cpp; sourceTree = "<group>"; };
+		506BC2B11F590200001C2962 /* HttpLiveFansListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveFansListTask.h; sourceTree = "<group>"; };
+		506BC2B21F590200001C2962 /* HttpManBookingUnreadUnhandleNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpManBookingUnreadUnhandleNumTask.cpp; sourceTree = "<group>"; };
+		506BC2B31F590200001C2962 /* HttpManBookingUnreadUnhandleNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpManBookingUnreadUnhandleNumTask.h; sourceTree = "<group>"; };
+		506BC2B41F590200001C2962 /* HttpManHandleBookingListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpManHandleBookingListTask.cpp; sourceTree = "<group>"; };
+		506BC2B51F590200001C2962 /* HttpManHandleBookingListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpManHandleBookingListTask.h; sourceTree = "<group>"; };
+		506BC2B61F590200001C2962 /* HttpRideListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRideListTask.cpp; sourceTree = "<group>"; };
+		506BC2B71F590200001C2962 /* HttpRideListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRideListTask.h; sourceTree = "<group>"; };
+		506BC2B81F590200001C2962 /* HttpSendBookingRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSendBookingRequestTask.cpp; sourceTree = "<group>"; };
+		506BC2B91F590200001C2962 /* HttpSendBookingRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSendBookingRequestTask.h; sourceTree = "<group>"; };
+		506BC2BA1F590200001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSendCancelPrivateLiveInviteTask.cpp; sourceTree = "<group>"; };
+		506BC2BB1F590200001C2962 /* HttpSendCancelPrivateLiveInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSendCancelPrivateLiveInviteTask.h; sourceTree = "<group>"; };
+		506BC2BC1F590200001C2962 /* HttpSetFavoriteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetFavoriteTask.cpp; sourceTree = "<group>"; };
+		506BC2BD1F590201001C2962 /* HttpSetFavoriteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetFavoriteTask.h; sourceTree = "<group>"; };
+		506BC2BE1F590201001C2962 /* HttpSetRideTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetRideTask.cpp; sourceTree = "<group>"; };
+		506BC2BF1F590201001C2962 /* HttpSetRideTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetRideTask.h; sourceTree = "<group>"; };
+		506BC2C01F590201001C2962 /* HttpUpdateTokenIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUpdateTokenIdTask.cpp; sourceTree = "<group>"; };
+		506BC2C11F590201001C2962 /* HttpUpdateTokenIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUpdateTokenIdTask.h; sourceTree = "<group>"; };
+		506BC2C21F590201001C2962 /* HttpVoucherListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpVoucherListTask.cpp; sourceTree = "<group>"; };
+		506BC2C31F590201001C2962 /* HttpVoucherListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpVoucherListTask.h; sourceTree = "<group>"; };
+		506BC2E01F59020F001C2962 /* HttpBackGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBackGiftItem.h; sourceTree = "<group>"; };
+		506BC2E11F59020F001C2962 /* HttpBookingInviteListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBookingInviteListItem.h; sourceTree = "<group>"; };
+		506BC2E21F59020F001C2962 /* HttpBookingPrivateInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBookingPrivateInviteItem.h; sourceTree = "<group>"; };
+		506BC2E31F59020F001C2962 /* HttpBookingUnreadUnhandleNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBookingUnreadUnhandleNumItem.h; sourceTree = "<group>"; };
+		506BC2E41F59020F001C2962 /* HttpConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpConfigItem.h; sourceTree = "<group>"; };
+		506BC2E51F59020F001C2962 /* HttpEmoticonInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpEmoticonInfoItem.h; sourceTree = "<group>"; };
+		506BC2E61F59020F001C2962 /* HttpEmoticonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpEmoticonItem.h; sourceTree = "<group>"; };
+		506BC2E71F59020F001C2962 /* HttpFollowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpFollowItem.h; sourceTree = "<group>"; };
+		506BC2E81F59020F001C2962 /* HttpGetBackPackUnreadNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetBackPackUnreadNumItem.h; sourceTree = "<group>"; };
+		506BC2E91F59020F001C2962 /* HttpGetCreateBookingInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCreateBookingInfoItem.h; sourceTree = "<group>"; };
+		506BC2EA1F59020F001C2962 /* HttpGetRoomInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetRoomInfoItem.h; sourceTree = "<group>"; };
+		506BC2EB1F59020F001C2962 /* HttpGetTalentItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetTalentItem.h; sourceTree = "<group>"; };
+		506BC2EC1F59020F001C2962 /* HttpGetTalentStatusItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetTalentStatusItem.h; sourceTree = "<group>"; };
+		506BC2ED1F59020F001C2962 /* HttpGiftInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGiftInfoItem.h; sourceTree = "<group>"; };
+		506BC2EE1F59020F001C2962 /* HttpGiftWithIdItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGiftWithIdItem.h; sourceTree = "<group>"; };
+		506BC2EF1F59020F001C2962 /* HttpInviteInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpInviteInfoItem.h; sourceTree = "<group>"; };
+		506BC2F01F59020F001C2962 /* HttpLiveFansItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveFansItem.h; sourceTree = "<group>"; };
+		506BC2F11F59020F001C2962 /* HttpRideItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRideItem.h; sourceTree = "<group>"; };
+		506BC2F21F59020F001C2962 /* HttpVoucherItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpVoucherItem.h; sourceTree = "<group>"; };
 		507FFA261C9FD76D0083EC06 /* CheckMemoryLeak.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CheckMemoryLeak.cpp; sourceTree = "<group>"; };
 		507FFA271C9FD76D0083EC06 /* CheckMemoryLeak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckMemoryLeak.h; sourceTree = "<group>"; };
 		507FFA281C9FD76D0083EC06 /* CheckMemoryList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CheckMemoryList.cpp; sourceTree = "<group>"; };
 		507FFA291C9FD76D0083EC06 /* CheckMemoryList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckMemoryList.h; sourceTree = "<group>"; };
-		5095E3D41ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCheckLiveRoomTask.cpp; sourceTree = "<group>"; };
-		5095E3D51ED6C02E004FFA3B /* HttpCheckLiveRoomTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCheckLiveRoomTask.h; sourceTree = "<group>"; };
-		5095E3D61ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseLiveRoomTask.cpp; sourceTree = "<group>"; };
-		5095E3D71ED6C02E004FFA3B /* HttpCloseLiveRoomTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCloseLiveRoomTask.h; sourceTree = "<group>"; };
-		5095E3D81ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomAllFansListTask.cpp; sourceTree = "<group>"; };
-		5095E3D91ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomAllFansListTask.h; sourceTree = "<group>"; };
-		5095E3DA1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomFansListTask.cpp; sourceTree = "<group>"; };
-		5095E3DB1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomFansListTask.h; sourceTree = "<group>"; };
-		5095E3DC1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomHotTask.cpp; sourceTree = "<group>"; };
-		5095E3DD1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomHotTask.h; sourceTree = "<group>"; };
-		5095E3DE1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomModifyInfoTask.cpp; sourceTree = "<group>"; };
-		5095E3DF1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomModifyInfoTask.h; sourceTree = "<group>"; };
-		5095E3E01ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomUserPhotoTask.cpp; sourceTree = "<group>"; };
-		5095E3E11ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomUserPhotoTask.h; sourceTree = "<group>"; };
-		5095E3E21ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpLiveRoomCreateTask.cpp; sourceTree = "<group>"; };
-		5095E3E31ED6C02E004FFA3B /* HttpLiveRoomCreateTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomCreateTask.h; sourceTree = "<group>"; };
 		5095E3E41ED6C02E004FFA3B /* HttpLogoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpLogoutTask.cpp; sourceTree = "<group>"; };
 		5095E3E51ED6C02E004FFA3B /* HttpLogoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLogoutTask.h; sourceTree = "<group>"; };
-		5095E3E61ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRegisterCheckPhoneTask.cpp; sourceTree = "<group>"; };
-		5095E3E71ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRegisterCheckPhoneTask.h; sourceTree = "<group>"; };
-		5095E3E81ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRegisterGetSMSCodeTask.cpp; sourceTree = "<group>"; };
-		5095E3E91ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRegisterGetSMSCodeTask.h; sourceTree = "<group>"; };
-		5095E3EA1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRegisterPhoneTask.cpp; sourceTree = "<group>"; };
-		5095E3EB1ED6C02E004FFA3B /* HttpRegisterPhoneTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRegisterPhoneTask.h; sourceTree = "<group>"; };
 		5095E3EC1ED6C02E004FFA3B /* HttpRequestEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequestEnum.h; sourceTree = "<group>"; };
-		5095E3ED1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetLiveRoomModifyInfoTask.cpp; sourceTree = "<group>"; };
-		5095E3EE1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetLiveRoomModifyInfoTask.h; sourceTree = "<group>"; };
-		5095E3EF1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUpdateLiveRoomTokenIdTask.cpp; sourceTree = "<group>"; };
-		5095E3F01ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUpdateLiveRoomTokenIdTask.h; sourceTree = "<group>"; };
 		5095E3FF1ED6C037004FFA3B /* HttpLiveRoomInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomInfoItem.h; sourceTree = "<group>"; };
 		5095E4001ED6C037004FFA3B /* HttpLiveRoomPersonalInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomPersonalInfoItem.h; sourceTree = "<group>"; };
-		5095E4011ED6C037004FFA3B /* HttpLiveRoomViewerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomViewerItem.h; sourceTree = "<group>"; };
 		509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequestController.cpp; sourceTree = "<group>"; };
 		509A8DA81ECBE6C1004720CF /* HttpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequestController.h; sourceTree = "<group>"; };
-		50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAddLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
-		50A9B8F71EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAddLiveRoomPhotoTask.h; sourceTree = "<group>"; };
-		50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpDelLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
-		50A9B8F91EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpDelLiveRoomPhotoTast.h; sourceTree = "<group>"; };
-		50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomAllGiftListTask.cpp; sourceTree = "<group>"; };
-		50A9B8FB1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomAllGiftListTask.h; sourceTree = "<group>"; };
-		50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomConfigTask.cpp; sourceTree = "<group>"; };
-		50A9B8FD1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomConfigTask.h; sourceTree = "<group>"; };
-		50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomGiftDetailTask.cpp; sourceTree = "<group>"; };
-		50A9B8FF1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomGiftDetailTask.h; sourceTree = "<group>"; };
-		50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomGiftListByUserIdTask.cpp; sourceTree = "<group>"; };
-		50A9B9011EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomGiftListByUserIdTask.h; sourceTree = "<group>"; };
-		50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetLiveRoomPhotoListTask.cpp; sourceTree = "<group>"; };
-		50A9B9031EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetLiveRoomPhotoListTask.h; sourceTree = "<group>"; };
-		50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSetUsingLiveRoomPhotoTask.cpp; sourceTree = "<group>"; };
-		50A9B9051EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSetUsingLiveRoomPhotoTask.h; sourceTree = "<group>"; };
-		50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpUploadLiveRoomImgTask.cpp; sourceTree = "<group>"; };
-		50A9B9071EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUploadLiveRoomImgTask.h; sourceTree = "<group>"; };
-		50A9B9111EEFDECB00A4CE50 /* HttpLiveRoomConfigItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomConfigItem.h; sourceTree = "<group>"; };
 		50A9B9121EEFDECB00A4CE50 /* HttpLiveRoomCoverPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomCoverPhotoItem.h; sourceTree = "<group>"; };
-		50A9B9131EEFDECB00A4CE50 /* HttpLiveRoomGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomGiftItem.h; sourceTree = "<group>"; };
 		50F383971EE688AC003D2765 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
 		50F383981EE688AC003D2765 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		D180B77A1D3CD25D00DCFBA5 /* DeviceTypeDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTypeDef.h; sourceTree = "<group>"; };
+		FAB694091F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetPromoAnchorListTask.cpp; sourceTree = "<group>"; };
+		FAB6940A1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorListTask.h; sourceTree = "<group>"; };
+		FAB6940C1F5E90B0008A64B6 /* HttpGetPromoAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorItem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -309,63 +347,77 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
-				50A9B8F61EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp */,
-				50A9B8F71EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.h */,
+				FAB694091F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp */,
+				FAB6940A1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.h */,
 				5007B1DD1ECAAA5900C2C17F /* HttpBaseTask.cpp */,
 				5007B1DE1ECAAA5900C2C17F /* HttpBaseTask.h */,
-				5095E3D41ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp */,
-				5095E3D51ED6C02E004FFA3B /* HttpCheckLiveRoomTask.h */,
-				5095E3D61ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp */,
-				5095E3D71ED6C02E004FFA3B /* HttpCloseLiveRoomTask.h */,
-				50A9B8F81EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp */,
-				50A9B8F91EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTast.h */,
-				5095E3D81ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp */,
-				5095E3D91ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.h */,
-				50A9B8FA1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp */,
-				50A9B8FB1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.h */,
-				50A9B8FC1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp */,
-				50A9B8FD1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.h */,
-				5095E3DA1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp */,
-				5095E3DB1ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.h */,
-				50A9B8FE1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp */,
-				50A9B8FF1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.h */,
-				50A9B9001EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp */,
-				50A9B9011EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.h */,
-				5095E3DC1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp */,
-				5095E3DD1ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.h */,
-				5095E3DE1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp */,
-				5095E3DF1ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.h */,
-				50A9B9021EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp */,
-				50A9B9031EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.h */,
-				5095E3E01ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp */,
-				5095E3E11ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.h */,
-				5095E3E21ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp */,
-				5095E3E31ED6C02E004FFA3B /* HttpLiveRoomCreateTask.h */,
+				506BC28C1F590200001C2962 /* HttpControlManPushTask.cpp */,
+				506BC28D1F590200001C2962 /* HttpControlManPushTask.h */,
+				506BC28E1F590200001C2962 /* HttpGetAllGiftListTask.cpp */,
+				506BC28F1F590200001C2962 /* HttpGetAllGiftListTask.h */,
+				506BC2901F590200001C2962 /* HttpGetAnchorListTask.cpp */,
+				506BC2911F590200001C2962 /* HttpGetAnchorListTask.h */,
+				506BC2921F590200001C2962 /* HttpGetBackpackUnreadNumTask.cpp */,
+				506BC2931F590200001C2962 /* HttpGetBackpackUnreadNumTask.h */,
+				506BC2941F590200001C2962 /* HttpGetConfigTask.cpp */,
+				506BC2951F590200001C2962 /* HttpGetConfigTask.h */,
+				506BC2961F590200001C2962 /* HttpGetCreateBookingInfoTask.cpp */,
+				506BC2971F590200001C2962 /* HttpGetCreateBookingInfoTask.h */,
+				506BC2981F590200001C2962 /* HttpGetEmoticonListTask.cpp */,
+				506BC2991F590200001C2962 /* HttpGetEmoticonListTask.h */,
+				506BC29A1F590200001C2962 /* HttpGetFollowListTask.cpp */,
+				506BC29B1F590200001C2962 /* HttpGetFollowListTask.h */,
+				506BC29C1F590200001C2962 /* HttpGetGiftDetailTask.cpp */,
+				506BC29D1F590200001C2962 /* HttpGetGiftDetailTask.h */,
+				506BC29E1F590200001C2962 /* HttpGetGiftListByUserIdTask.cpp */,
+				506BC29F1F590200001C2962 /* HttpGetGiftListByUserIdTask.h */,
+				506BC2A01F590200001C2962 /* HttpGetInviteInfoTask.cpp */,
+				506BC2A11F590200001C2962 /* HttpGetInviteInfoTask.h */,
+				506BC2A21F590200001C2962 /* HttpGetLeftCreditTask.cpp */,
+				506BC2A31F590200001C2962 /* HttpGetLeftCreditTask.h */,
+				506BC2A41F590200001C2962 /* HttpGetNewFansBaseInfoTask.cpp */,
+				506BC2A51F590200001C2962 /* HttpGetNewFansBaseInfoTask.h */,
+				506BC2A61F590200001C2962 /* HttpGetRoomInfoTask.cpp */,
+				506BC2A71F590200001C2962 /* HttpGetRoomInfoTask.h */,
+				506BC2A81F590200001C2962 /* HttpGetTalentListTask.cpp */,
+				506BC2A91F590200001C2962 /* HttpGetTalentListTask.h */,
+				506BC2AA1F590200001C2962 /* HttpGetTalentStatusTask.cpp */,
+				506BC2AB1F590200001C2962 /* HttpGetTalentStatusTask.h */,
+				506BC2AC1F590200001C2962 /* HttpGiftListTask.cpp */,
+				506BC2AD1F590200001C2962 /* HttpGiftListTask.h */,
+				506BC2AE1F590200001C2962 /* HttpHandleBookingTask.cpp */,
+				506BC2AF1F590200001C2962 /* HttpHandleBookingTask.h */,
+				506BC2B01F590200001C2962 /* HttpLiveFansListTask.cpp */,
+				506BC2B11F590200001C2962 /* HttpLiveFansListTask.h */,
 				5007B1E61ECAB07C00C2C17F /* HttpLoginProtocol.h */,
 				5007B1E11ECAB02800C2C17F /* HttpLoginTask.cpp */,
 				5007B1E21ECAB02800C2C17F /* HttpLoginTask.h */,
 				5095E3E41ED6C02E004FFA3B /* HttpLogoutTask.cpp */,
 				5095E3E51ED6C02E004FFA3B /* HttpLogoutTask.h */,
-				5095E3E61ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp */,
-				5095E3E71ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.h */,
-				5095E3E81ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp */,
-				5095E3E91ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.h */,
-				5095E3EA1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp */,
-				5095E3EB1ED6C02E004FFA3B /* HttpRegisterPhoneTask.h */,
+				506BC2B21F590200001C2962 /* HttpManBookingUnreadUnhandleNumTask.cpp */,
+				506BC2B31F590200001C2962 /* HttpManBookingUnreadUnhandleNumTask.h */,
+				506BC2B41F590200001C2962 /* HttpManHandleBookingListTask.cpp */,
+				506BC2B51F590200001C2962 /* HttpManHandleBookingListTask.h */,
 				509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */,
 				509A8DA81ECBE6C1004720CF /* HttpRequestController.h */,
 				5007B1DC1ECAAA4A00C2C17F /* HttpRequestDefine.h */,
 				5095E3EC1ED6C02E004FFA3B /* HttpRequestEnum.h */,
 				5007B1D91ECAAA3500C2C17F /* HttpRequestTask.cpp */,
 				5007B1DA1ECAAA3500C2C17F /* HttpRequestTask.h */,
-				5095E3ED1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp */,
-				5095E3EE1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.h */,
-				50A9B9041EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp */,
-				50A9B9051EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.h */,
-				5095E3EF1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp */,
-				5095E3F01ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.h */,
-				50A9B9061EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp */,
-				50A9B9071EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.h */,
+				506BC2B61F590200001C2962 /* HttpRideListTask.cpp */,
+				506BC2B71F590200001C2962 /* HttpRideListTask.h */,
+				506BC2B81F590200001C2962 /* HttpSendBookingRequestTask.cpp */,
+				506BC2B91F590200001C2962 /* HttpSendBookingRequestTask.h */,
+				506BC2BA1F590200001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp */,
+				506BC2BB1F590200001C2962 /* HttpSendCancelPrivateLiveInviteTask.h */,
+				506BC2BC1F590200001C2962 /* HttpSetFavoriteTask.cpp */,
+				506BC2BD1F590201001C2962 /* HttpSetFavoriteTask.h */,
+				506BC2BE1F590201001C2962 /* HttpSetRideTask.cpp */,
+				506BC2BF1F590201001C2962 /* HttpSetRideTask.h */,
+				506BC2C01F590201001C2962 /* HttpUpdateTokenIdTask.cpp */,
+				506BC2C11F590201001C2962 /* HttpUpdateTokenIdTask.h */,
+				506BC2C21F590201001C2962 /* HttpVoucherListTask.cpp */,
+				506BC2C31F590201001C2962 /* HttpVoucherListTask.h */,
 				5007B1E01ECAAA8200C2C17F /* IHttpTask.h */,
 				5007B1E41ECAB05700C2C17F /* item */,
 			);
@@ -376,12 +428,29 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
-				50A9B9111EEFDECB00A4CE50 /* HttpLiveRoomConfigItem.h */,
+				FAB6940C1F5E90B0008A64B6 /* HttpGetPromoAnchorItem.h */,
+				506BC2E01F59020F001C2962 /* HttpBackGiftItem.h */,
+				506BC2E11F59020F001C2962 /* HttpBookingInviteListItem.h */,
+				506BC2E21F59020F001C2962 /* HttpBookingPrivateInviteItem.h */,
+				506BC2E31F59020F001C2962 /* HttpBookingUnreadUnhandleNumItem.h */,
+				506BC2E41F59020F001C2962 /* HttpConfigItem.h */,
+				506BC2E51F59020F001C2962 /* HttpEmoticonInfoItem.h */,
+				506BC2E61F59020F001C2962 /* HttpEmoticonItem.h */,
+				506BC2E71F59020F001C2962 /* HttpFollowItem.h */,
+				506BC2E81F59020F001C2962 /* HttpGetBackPackUnreadNumItem.h */,
+				506BC2E91F59020F001C2962 /* HttpGetCreateBookingInfoItem.h */,
+				506BC2EA1F59020F001C2962 /* HttpGetRoomInfoItem.h */,
+				506BC2EB1F59020F001C2962 /* HttpGetTalentItem.h */,
+				506BC2EC1F59020F001C2962 /* HttpGetTalentStatusItem.h */,
+				506BC2ED1F59020F001C2962 /* HttpGiftInfoItem.h */,
+				506BC2EE1F59020F001C2962 /* HttpGiftWithIdItem.h */,
+				506BC2EF1F59020F001C2962 /* HttpInviteInfoItem.h */,
+				506BC2F01F59020F001C2962 /* HttpLiveFansItem.h */,
+				506BC2F11F59020F001C2962 /* HttpRideItem.h */,
+				506BC2F21F59020F001C2962 /* HttpVoucherItem.h */,
 				50A9B9121EEFDECB00A4CE50 /* HttpLiveRoomCoverPhotoItem.h */,
-				50A9B9131EEFDECB00A4CE50 /* HttpLiveRoomGiftItem.h */,
 				5095E3FF1ED6C037004FFA3B /* HttpLiveRoomInfoItem.h */,
 				5095E4001ED6C037004FFA3B /* HttpLiveRoomPersonalInfoItem.h */,
-				5095E4011ED6C037004FFA3B /* HttpLiveRoomViewerItem.h */,
 				5007B1E51ECAB05700C2C17F /* HttpLoginItem.h */,
 			);
 			path = item;
@@ -707,87 +776,94 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50A9B9091EEFDEBF00A4CE50 /* HttpDelLiveRoomPhotoTask.cpp in Sources */,
 				507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */,
-				5095E3FE1ED6C02E004FFA3B /* HttpUpdateLiveRoomTokenIdTask.cpp in Sources */,
+				506BC2DB1F590201001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp in Sources */,
 				504CDA451C7FDB0500DBB429 /* HttpClient.cpp in Sources */,
 				504CDA291C7FDA2D00DBB429 /* tinystr.cpp in Sources */,
 				501BF3B41C7EFF460052C59F /* KSocket.cpp in Sources */,
 				504CD9FD1C7FD6AF00DBB429 /* pngerror.c in Sources */,
 				504CDA081C7FD6AF00DBB429 /* pngwrite.c in Sources */,
+				506BC2DC1F590201001C2962 /* HttpSetFavoriteTask.cpp in Sources */,
+				506BC2C71F590201001C2962 /* HttpGetBackpackUnreadNumTask.cpp in Sources */,
+				506BC2DD1F590201001C2962 /* HttpSetRideTask.cpp in Sources */,
+				506BC2CA1F590201001C2962 /* HttpGetEmoticonListTask.cpp in Sources */,
+				506BC2CB1F590201001C2962 /* HttpGetFollowListTask.cpp in Sources */,
 				504CDA541C7FDD7F00DBB429 /* PngReader.cpp in Sources */,
 				5095E3F91ED6C02E004FFA3B /* HttpLogoutTask.cpp in Sources */,
 				501BF3C81C7F00400052C59F /* miniunz.c in Sources */,
 				501BF3C91C7F00400052C59F /* minizip.c in Sources */,
+				506BC2D41F590201001C2962 /* HttpGiftListTask.cpp in Sources */,
 				501BF3B51C7EFF460052C59F /* KTcpSocket.cpp in Sources */,
 				504CDA1F1C7FD6EE00DBB429 /* json_writer.cpp in Sources */,
 				504CDA341C7FDA4100DBB429 /* AMF3.cpp in Sources */,
 				504CDA2D1C7FDA2D00DBB429 /* xmltest.cpp in Sources */,
+				506BC2C81F590201001C2962 /* HttpGetConfigTask.cpp in Sources */,
 				509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */,
-				50A9B90C1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftDetailTask.cpp in Sources */,
-				5095E3FA1ED6C02E004FFA3B /* HttpRegisterCheckPhoneTask.cpp in Sources */,
-				5095E3F71ED6C02E004FFA3B /* HttpGetLiveRoomUserPhotoTask.cpp in Sources */,
+				506BC2D31F590201001C2962 /* HttpGetTalentStatusTask.cpp in Sources */,
 				507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */,
-				50A9B90F1EEFDEBF00A4CE50 /* HttpSetUsingLiveRoomPhotoTask.cpp in Sources */,
+				506BC2D51F590201001C2962 /* HttpHandleBookingTask.cpp in Sources */,
 				501BF3B11C7EFF460052C59F /* IAutoLock.cpp in Sources */,
-				5095E3F81ED6C02E004FFA3B /* HttpLiveRoomCreateTask.cpp in Sources */,
-				5095E3F31ED6C02E004FFA3B /* HttpGetLiveRoomAllFansListTask.cpp in Sources */,
-				50A9B90D1EEFDEBF00A4CE50 /* HttpGetLiveRoomGiftListByUserIdTask.cpp in Sources */,
 				501BF3B01C7EFF460052C59F /* CommonFunc.cpp in Sources */,
-				5095E3F61ED6C02E004FFA3B /* HttpGetLiveRoomModifyInfoTask.cpp in Sources */,
 				504CDA071C7FD6AF00DBB429 /* pngwio.c in Sources */,
-				5095E3FD1ED6C02E004FFA3B /* HttpSetLiveRoomModifyInfoTask.cpp in Sources */,
-				5095E3F11ED6C02E004FFA3B /* HttpCheckLiveRoomTask.cpp in Sources */,
 				5007B1CB1ECA8EC800C2C17F /* HttpRequestManager.cpp in Sources */,
+				506BC2D81F590201001C2962 /* HttpManHandleBookingListTask.cpp in Sources */,
 				504CDA2B1C7FDA2D00DBB429 /* tinyxmlerror.cpp in Sources */,
+				506BC2CC1F590201001C2962 /* HttpGetGiftDetailTask.cpp in Sources */,
 				504CDA061C7FD6AF00DBB429 /* pngtrans.c in Sources */,
 				501BF3AF1C7EFF460052C59F /* command.cpp in Sources */,
 				504CDA051C7FD6AF00DBB429 /* pngset.c in Sources */,
 				504CDA1E1C7FD6EE00DBB429 /* json_value.cpp in Sources */,
 				504CDA351C7FDA4100DBB429 /* AmfParser.cpp in Sources */,
 				501BF3B31C7EFF460052C59F /* KLog.cpp in Sources */,
-				5095E3FB1ED6C02E004FFA3B /* HttpRegisterGetSMSCodeTask.cpp in Sources */,
 				501BF3AC1C7EFF460052C59F /* Arithmetic.cpp in Sources */,
 				505D86921C7EF748006FDAC7 /* Common_C_Library.mm in Sources */,
-				50A9B9081EEFDEBF00A4CE50 /* HttpAddLiveRoomPhotoTask.cpp in Sources */,
 				5007B1DF1ECAAA5900C2C17F /* HttpBaseTask.cpp in Sources */,
 				504CD9FC1C7FD6AF00DBB429 /* png.c in Sources */,
-				5095E3F41ED6C02E004FFA3B /* HttpGetLiveRoomFansListTask.cpp in Sources */,
 				504CDA481C7FDB0500DBB429 /* HttpRequest.cpp in Sources */,
-				5095E3F21ED6C02E004FFA3B /* HttpCloseLiveRoomTask.cpp in Sources */,
 				504CD9FF1C7FD6AF00DBB429 /* pngmem.c in Sources */,
 				501BF3CC1C7F00400052C59F /* zip.c in Sources */,
+				506BC2D01F590201001C2962 /* HttpGetNewFansBaseInfoTask.cpp in Sources */,
 				504CD9FE1C7FD6AF00DBB429 /* pngget.c in Sources */,
 				5007B1DB1ECAAA3500C2C17F /* HttpRequestTask.cpp in Sources */,
 				504CDA021C7FD6AF00DBB429 /* pngrio.c in Sources */,
+				506BC2C61F590201001C2962 /* HttpGetAnchorListTask.cpp in Sources */,
+				506BC2CF1F590201001C2962 /* HttpGetLeftCreditTask.cpp in Sources */,
 				5007B1E31ECAB02800C2C17F /* HttpLoginTask.cpp in Sources */,
+				506BC2C41F590201001C2962 /* HttpControlManPushTask.cpp in Sources */,
 				504CDA001C7FD6AF00DBB429 /* pngpread.c in Sources */,
+				506BC2DE1F590201001C2962 /* HttpUpdateTokenIdTask.cpp in Sources */,
 				50F383991EE688AC003D2765 /* mongoose.c in Sources */,
 				501BF3B81C7EFF460052C59F /* KZip.cpp in Sources */,
 				504CDA091C7FD6AF00DBB429 /* pngwtran.c in Sources */,
+				506BC2C51F590201001C2962 /* HttpGetAllGiftListTask.cpp in Sources */,
+				506BC2D91F590201001C2962 /* HttpRideListTask.cpp in Sources */,
 				501BF3B61C7EFF460052C59F /* KThread.cpp in Sources */,
 				504CDA0A1C7FD6AF00DBB429 /* pngwutil.c in Sources */,
+				506BC2D11F590201001C2962 /* HttpGetRoomInfoTask.cpp in Sources */,
 				504CDA461C7FDB0500DBB429 /* HttpDownloader.cpp in Sources */,
 				504CDA2C1C7FDA2D00DBB429 /* tinyxmlparser.cpp in Sources */,
 				501BF3B21C7EFF460052C59F /* IPAddress.cpp in Sources */,
+				506BC2C91F590201001C2962 /* HttpGetCreateBookingInfoTask.cpp in Sources */,
 				501BF3CA1C7F00400052C59F /* mztools.c in Sources */,
 				501BF3CB1C7F00400052C59F /* unzip.c in Sources */,
-				50A9B90B1EEFDEBF00A4CE50 /* HttpGetLiveRoomConfigTask.cpp in Sources */,
-				50A9B90A1EEFDEBF00A4CE50 /* HttpGetLiveRoomAllGiftListTask.cpp in Sources */,
+				506BC2D21F590201001C2962 /* HttpGetTalentListTask.cpp in Sources */,
 				501BF3B91C7EFF460052C59F /* md5.c in Sources */,
+				506BC2DA1F590201001C2962 /* HttpSendBookingRequestTask.cpp in Sources */,
+				FAB6940B1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp in Sources */,
 				504CDA031C7FD6AF00DBB429 /* pngrtran.c in Sources */,
 				504CDA011C7FD6AF00DBB429 /* pngread.c in Sources */,
-				50A9B9101EEFDEBF00A4CE50 /* HttpUploadLiveRoomImgTask.cpp in Sources */,
-				5095E3FC1ED6C02E004FFA3B /* HttpRegisterPhoneTask.cpp in Sources */,
 				501BF3C71C7F00400052C59F /* ioapi.c in Sources */,
-				5095E3F51ED6C02E004FFA3B /* HttpGetLiveRoomHotTask.cpp in Sources */,
+				506BC2CE1F590201001C2962 /* HttpGetInviteInfoTask.cpp in Sources */,
 				504CDA2A1C7FDA2D00DBB429 /* tinyxml.cpp in Sources */,
 				504CDA041C7FD6AF00DBB429 /* pngrutil.c in Sources */,
+				506BC2CD1F590201001C2962 /* HttpGetGiftListByUserIdTask.cpp in Sources */,
+				506BC2D61F590201001C2962 /* HttpLiveFansListTask.cpp in Sources */,
 				504CDA531C7FDD7F00DBB429 /* PngHandler.cpp in Sources */,
 				504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */,
+				506BC2DF1F590201001C2962 /* HttpVoucherListTask.cpp in Sources */,
 				504CDA471C7FDB0500DBB429 /* HttpEntiy.cpp in Sources */,
 				504CDA1D1C7FD6EE00DBB429 /* json_reader.cpp in Sources */,
-				50A9B90E1EEFDEBF00A4CE50 /* HttpGetLiveRoomPhotoListTask.cpp in Sources */,
+				506BC2D71F590201001C2962 /* HttpManBookingUnreadUnhandleNumTask.cpp in Sources */,
 				501BF3AB1C7EFF460052C59F /* aes.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

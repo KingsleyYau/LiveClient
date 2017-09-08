@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GetLiveRoomUserPhotoRequest.h"
 
 typedef enum {
     REQUESTNONE = 0,
@@ -45,6 +44,6 @@ typedef void (^RequestUserPhotoEnd)(NSString *userId,UserInfoItem *item);
 + (instancetype)manager;
 
 // 请求用户图片
-- (void)getLiveRoomUserPhotoRequestWithUserId:(NSString *)userId andType:(PhotoType)type requestEnd:(RequestUserPhotoEnd)requestEnd;
+//- (void)getLiveRoomUserPhotoRequestWithUserId:(NSString *)userId andType:(PhotoType)type requestEnd:(RequestUserPhotoEnd)requestEnd;
 
 @end

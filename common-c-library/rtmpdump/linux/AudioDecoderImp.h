@@ -14,19 +14,21 @@
 #include <string>
 using namespace std;
 
+#include <common/KThread.h>
+
 #include <rtmpdump/IDecoder.h>
-#include <rtmpdump/AudioFrame.h>
+#include <rtmpdump/util/EncodeDecodeBuffer.h>
 
 namespace coollive {
-class RtmpPlayer;
+class AudioFrame;
 class AudioDecoderImp : public AudioDecoder {
 public:
 	AudioDecoderImp();
 	virtual ~AudioDecoderImp();
 
 	bool Create(AudioDecoderCallback* callback);
-	void Destroy();
-    void Reset();
+	bool Reset();
+	void Pause();
     void DecodeAudioFormat(
     		AudioFrameFormat format,
 			AudioFrameSoundRate sound_rate,
@@ -45,11 +47,18 @@ public:
     void ReleaseAudioFrame(void* frame);
     
 private:
+    bool Start();
+    void Stop();
+
     void ReleaseBuffer(AudioFrame* audioFrame);
     
     EncodeDecodeBufferList mFreeBufferList;
     
     AudioDecoderCallback* mpCallback;
+
+    // 状态锁
+    KMutex mRuningMutex;
+    bool mbRunning;
 };
 }
 #endif /* RTMPDUMP_AUDIODECODERIMP_H_ */

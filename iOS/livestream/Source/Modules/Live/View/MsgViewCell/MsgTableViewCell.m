@@ -52,7 +52,7 @@
         [self addSubview:self.lvView];
         
         self.messageLabel = [YYLabel new];
-        self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 20, 0);
+        self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 165, 0);
         self.messageLabel.displaysAsynchronously = YES;
         [self addSubview:self.messageLabel];
         
@@ -70,10 +70,19 @@
         // 创建文本容器
         self.container = [[YYTextContainer alloc] init];
         self.container.linePositionModifier = self.modifier;
-        self.container.size = CGSizeMake(SCREEN_WIDTH - 20, CGFLOAT_MAX);
+        self.container.size = CGSizeMake(SCREEN_WIDTH - 165, CGFLOAT_MAX);
         self.container.maximumNumberOfRows = 0;
     }
     return self;
+}
+
+- (void)changeMessageLabelWidth:(CGFloat)width {
+    
+    self.tableViewWidth = width;
+        
+    self.messageLabel.width = width;
+    self.messageLabel.height = 0;
+    self.container.size = CGSizeMake(width, CGFLOAT_MAX);
 }
 
 - (void)updataChatMessage:(MsgItem *)item{
@@ -96,11 +105,16 @@
     return @"          ";
 }
 
+- (void)setMessageLabelHeight:(CGFloat)messageLabelHeight {
+    
+    
+}
+
 - (CGSize)sizeThatFits:(CGSize)size{
     
     CGFloat giftLabelHight = 1;
     giftLabelHight += self.messageLabel.frame.size.height;
-    return CGSizeMake(SCREEN_WIDTH - 20 , giftLabelHight);
+    return CGSizeMake(self.tableViewWidth , giftLabelHight);
 }
 
 - (void)layoutSubviews {

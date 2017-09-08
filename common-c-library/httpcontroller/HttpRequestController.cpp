@@ -38,158 +38,20 @@ void HttpRequestController::Stop(long long requestId) {
     mRequestMap.Unlock();
 }
 
-//long long HttpRequestController::Login(
-//                                       HttpRequestManager *pHttpRequestManager,
-//                                       const string& user,
-//                                       const string& password,
-//                                       IRequestLoginCallback* callback
-//                                       ) {
-//    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-//    
-//    HttpLoginTask* task = new HttpLoginTask();
-//    task->Init(pHttpRequestManager);
-//    task->SetParam(user, password);
-//    task->SetCallback(callback);
-//    task->SetHttpTaskCallback(this);
-//    
-//    requestId = (long long)task;
-//    
-//    mRequestMap.Lock();
-//    mRequestMap.Insert(task, task);
-//    mRequestMap.Unlock();
-//    
-//    if( !task->Start() ) {
-//        mRequestMap.Lock();
-//        mRequestMap.Erase(task);
-//        mRequestMap.Unlock();
-//        
-//        delete task;
-//        requestId = HTTPREQUEST_INVALIDREQUESTID;
-//    }
-//    
-//    return requestId;
-//}
-
-long long HttpRequestController::RegisterCheckPhone(
-                             HttpRequestManager *pHttpRequestManager,
-                             const string& phoneno,
-                             const string& areno,
-                             IRequestRegisterCheckPhoneCallback* callback
-                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpRegisterCheckPhoneTask* task = new HttpRegisterCheckPhoneTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(phoneno, areno);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::RegisterGetSMSCode(
-                             HttpRequestManager *pHttpRequestManager,
-                             const string& phoneno,
-                             const string& areno,
-                             IRequestRegisterGetSMSCodeCallback* callback
-                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpRegisterGetSMSCodeTask* task = new HttpRegisterGetSMSCodeTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(phoneno, areno);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-
-long long HttpRequestController::RegisterPhone(
-                        HttpRequestManager *pHttpRequestManager,
-                        const string& phoneno,
-                        const string& areno,
-                        const string& checkCode,
-                        const string& password,
-                        const string& deviceId,
-                        const string& model,
-                        const string& manufacturer,
-                        IRequestRegisterPhoneCallback* callback
-                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpRegisterPhoneTask* task = new HttpRegisterPhoneTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(phoneno, areno, checkCode, password, deviceId, model, manufacturer);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
 
 long long HttpRequestController::Login(
-                      HttpRequestManager *pHttpRequestManager,
-                      LoginType type,
-                      const string& phoneno,
-                      const string& areno,
-                      const string& password,
-                      const string& deviceid,
-                      const string& model,
-                      const string& manufacturer,
-                      bool autoLogin,
-                      IRequestLoginCallback* callback
-                      ) {
+                                       HttpRequestManager *pHttpRequestManager,
+                                       const string& qnsid,
+                                       const string& deviceid,
+                                       const string& model,
+                                       const string& manufacturer,
+                                       IRequestLoginCallback* callback
+                                       ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLoginTask* task = new HttpLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(type, phoneno, areno, password, deviceid, model, manufacturer, autoLogin);
+    task->SetParam(qnsid, deviceid, model, manufacturer);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -213,594 +75,11 @@ long long HttpRequestController::Login(
 
 long long HttpRequestController::Logout(
                                         HttpRequestManager *pHttpRequestManager,
-                                        const string& token,
                                         IRequestLogoutCallback* callback
                                         ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLogoutTask* task = new HttpLogoutTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-
-long long HttpRequestController::UpdateLiveRoomTokenId(
-                                                       HttpRequestManager *pHttpRequestManager,
-                                                       const string& token,
-                                                       const string& tokenId,
-                                                       IRequestUpdateLiveRoomTokenIdCallback* callback
-                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpUpdateLiveRoomTokenIdTask* task = new HttpUpdateLiveRoomTokenIdTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, tokenId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::CreateLiveRoom(
-                         HttpRequestManager *pHttpRequestManager,
-                         const string& token,
-                         const string& roomName,
-                         const string& roomPhotoId,
-                         IRequestLiveRoomCreateCallback* callback
-                                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpLiveRoomCreateTask* task = new HttpLiveRoomCreateTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, roomName, roomPhotoId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::CheckLiveRoom(
-                        HttpRequestManager *pHttpRequestManager,
-                        const string& token,
-                        IRequestCheckLiveRoomCallback* callback
-                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpCheckLiveRoomTask* task = new HttpCheckLiveRoomTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::CloseLiveRoom(
-                        HttpRequestManager *pHttpRequestManager,
-                        const string& token,
-                        const string& roomId,
-                        IRequestCloseLiveRoomCallback* callback
-                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpCloseLiveRoomTask* task = new HttpCloseLiveRoomTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, roomId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-
-long long HttpRequestController::GetLiveRoomFansList(
-                              HttpRequestManager *pHttpRequestManager,
-                              const string& token,
-                              const string& roomId,
-                              IRequestGetLiveRoomFansListCallback* callback
-                                                     ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomFansListTask* task = new HttpGetLiveRoomFansListTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, roomId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-
-long long HttpRequestController::GetLiveRoomAllFansList(
-                                                        HttpRequestManager *pHttpRequestManager,
-                                                        const string& token,
-                                                        const string& roomId,
-                                                        int start,
-                                                        int step,
-                                                        IRequestGetLiveRoomAllFansListCallback* callback
-                                                        ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomAllFansListTask* task = new HttpGetLiveRoomAllFansListTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, roomId, start, step);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomHotList(
-                             HttpRequestManager *pHttpRequestManager,
-                             const string& token,
-                             int start,
-                             int step,
-                             IRequestGetLiveRoomHotCallback* callback
-                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomHotTask* task = new HttpGetLiveRoomHotTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, start, step);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomAllGiftList(
-                             HttpRequestManager *pHttpRequestManager,
-                             const string& token,
-                             IRequestGetLiveRoomAllGiftListCallback* callback
-                             ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomAllGiftListTask* task = new HttpGetLiveRoomAllGiftListTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomGiftListByUserId(
-                                      HttpRequestManager *pHttpRequestManager,
-                                      const string& token,
-                                      const string& roomId,
-                                      IRequestGetLiveRoomGiftListByUserIdCallback* callback
-                                      ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomGiftListByUserIdTask* task = new HttpGetLiveRoomGiftListByUserIdTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, roomId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomGiftDetail(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                const string& giftId,
-                                IRequestGetLiveRoomGiftDetailCallback* callback
-                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-
-    HttpGetLiveRoomGiftDetailTask* task = new HttpGetLiveRoomGiftDetailTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, giftId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-
-    requestId = (long long)task;
-
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomPhotoList(
-                               HttpRequestManager *pHttpRequestManager,
-                               const string& token,
-                               IRequestGetLiveRoomPhotoListCallback* callback
-                               ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomPhotoListTask* task = new HttpGetLiveRoomPhotoListTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::AddLiveRoomPhoto(
-                           HttpRequestManager *pHttpRequestManager,
-                           const string& token,
-                           const string& photoId,
-                           IRequestAddLiveRoomPhotoCallback* callback
-                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpAddLiveRoomPhotoTask* task = new HttpAddLiveRoomPhotoTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, photoId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::SetUsingLiveRoomPhoto(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                const string& photoId,
-                                IRequestSetUsingLiveRoomPhotoCallback* callback
-                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpSetUsingLiveRoomPhotoTask* task = new HttpSetUsingLiveRoomPhotoTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, photoId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::DelLiveRoomPhoto(
-                           HttpRequestManager *pHttpRequestManager,
-                           const string& token,
-                           const string& photoId,
-                           IRequestDelLiveRoomPhotoCallback* callback
-                                                  ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpDelLiveRoomPhotoTast* task = new HttpDelLiveRoomPhotoTast();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, photoId);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-
-long long HttpRequestController::GetLiveRoomUserPhoto(
-                               HttpRequestManager *pHttpRequestManager,
-                               const string& token,
-                               const string& userId,
-                               PhotoType photoType,
-                               IRequestGetLiveRoomUserPhotoCallback* callback
-                                                      ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomUserPhotoTask* task = new HttpGetLiveRoomUserPhotoTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, userId, photoType);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomModifyInfo(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                IRequestGetLiveRoomModifyInfoCallback* callback
-                                ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomModifyInfoTask* task = new HttpGetLiveRoomModifyInfoTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::SetLiveRoomModifyInfo(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                const string& photoId,
-                                const string& nickName,
-                                Gender gender,
-                                const string& birthday,
-                                IRequestSetLiveRoomModifyInfoCallback* callback
-                                                       ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpSetLiveRoomModifyInfoTask* task = new HttpSetLiveRoomModifyInfoTask();
-    task->Init(pHttpRequestManager);
-    task->SetParam(token, photoId, nickName, gender, birthday);
-    task->SetCallback(callback);
-    task->SetHttpTaskCallback(this);
-    
-    requestId = (long long)task;
-    
-    mRequestMap.Lock();
-    mRequestMap.Insert(task, task);
-    mRequestMap.Unlock();
-    
-    if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
-        requestId = HTTPREQUEST_INVALIDREQUESTID;
-    }
-    
-    return requestId;
-}
-
-long long HttpRequestController::GetLiveRoomConfig(
-                            HttpRequestManager *pHttpRequestManager,
-                            IRequestGetLiveRoomConfigCallback* callback
-                                                   ) {
-    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
-    
-    HttpGetLiveRoomConfigTask* task = new HttpGetLiveRoomConfigTask();
     task->Init(pHttpRequestManager);
     task->SetParam();
     task->SetCallback(callback);
@@ -824,18 +103,17 @@ long long HttpRequestController::GetLiveRoomConfig(
     return requestId;
 }
 
-long long HttpRequestController::UploadLiveRoomImg(
-                                HttpRequestManager *pHttpRequestManager,
-                                const string& token,
-                                const ImageType imageType,
-                                const string& imageFileName,
-                                IRequestUploadLiveRoomImgCallback* callback
-                                                       ) {
+
+long long HttpRequestController::UpdateTokenId(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& tokenId,
+                                                IRequestUpdateTokenIdCallback* callback
+                                                ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
-    HttpUploadLiveRoomImgTask* task = new HttpUploadLiveRoomImgTask();
+    HttpUpdateTokenIdTask* task = new HttpUpdateTokenIdTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(token, imageType, imageFileName);
+    task->SetParam(tokenId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -857,3 +135,879 @@ long long HttpRequestController::UploadLiveRoomImg(
     return requestId;
 }
 
+long long HttpRequestController::GetAnchorList(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               int start,
+                                               int step,
+                                               IRequestGetAnchorListCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAnchorListTask* task = new HttpGetAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetFollowList(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                int start,
+                                                int step,
+                                                IRequestGetFollowListCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetFollowListTask* task = new HttpGetFollowListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetRoomInfo(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             IRequestGetRoomInfoCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetRoomInfoTask* task = new HttpGetRoomInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::LiveFansList(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string& roomId,
+                                              int page,
+                                              int number,
+                                              IRequestLiveFansListCallback* callback
+                                              ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpLiveFansListTask* task = new HttpLiveFansListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId, page, number);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+
+long long HttpRequestController::GetAllGiftList(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                IRequestGetAllGiftListCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAllGiftListTask* task = new HttpGetAllGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetGiftListByUserId(
+                                                     HttpRequestManager *pHttpRequestManager,
+                                                     const string& roomId,
+                                                     IRequestGetGiftListByUserIdCallback* callback
+                                                     ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetGiftListByUserIdTask* task = new HttpGetGiftListByUserIdTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetGiftDetail(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               const string& giftId,
+                                               IRequestGetGiftDetailCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+
+    HttpGetGiftDetailTask* task = new HttpGetGiftDetailTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(giftId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+
+    requestId = (long long)task;
+
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+
+    return requestId;
+}
+
+long long HttpRequestController::GetEmoticonList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 IRequestGetEmoticonListCallback* callback
+                                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetEmoticonListTask* task = new HttpGetEmoticonListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetInviteInfo(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& inviteId,
+                        IRequestGetInviteInfoCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetInviteInfoTask* task = new HttpGetInviteInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetTalentList(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               const string& roomId,
+                                               IRequestGetTalentListCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetTalentListTask* task = new HttpGetTalentListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetTalentStatus(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& roomId,
+                          const string& talentInviteId,
+                          IRequestGetTalentStatusCallback* callback
+                                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetTalentStatusTask* task = new HttpGetTalentStatusTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId, talentInviteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::GetNewFansBaseInfo(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    const string& userId,
+                                                    IRequestGetNewFansBaseInfoCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetNewFansBaseInfoTask* task = new HttpGetNewFansBaseInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(userId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ControlManPush(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& roomId,
+                                                ControlType type,
+                                                IRequestControlManPushCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpControlManPushTask* task = new HttpControlManPushTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId, type);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPromoAnchorList(
+                             HttpRequestManager *pHttpRequestManager,
+                             int number,
+                             IRequestGetPromoAnchorListCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPromoAnchorListTask* task = new HttpGetPromoAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(number);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ManHandleBookingList(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      BookingListType type,
+                                                      int start,
+                                                      int step,
+                                                      IRequestManHandleBookingListCallback* callback
+                                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpManHandleBookingListTask* task = new HttpManHandleBookingListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(type, start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::HandleBooking(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               const string& inviteId,
+                                               bool isConfirm,
+                                               IRequestHandleBookingCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpHandleBookingTask* task = new HttpHandleBookingTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId, isConfirm);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SendCancelPrivateLiveInvite(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      const string& invitationId,
+                                                      IRequestSendCancelPrivateLiveInviteCallback* callback
+                                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSendCancelPrivateLiveInviteTask* task = new HttpSendCancelPrivateLiveInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(invitationId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ManBookingUnreadUnhandleNum(
+                                                             HttpRequestManager *pHttpRequestManager,
+                                                             IRequestManBookingUnreadUnhandleNumCallback* callback
+                                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpManBookingUnreadUnhandleNumTask* task = new HttpManBookingUnreadUnhandleNumTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetCreateBookingInfo(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& userId,
+                                 IRequestGetCreateBookingInfoCallback* callback
+                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetCreateBookingInfoTask* task = new HttpGetCreateBookingInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(userId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SendBookingRequest(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& userId,
+                             const string& timeId,
+                             long bookTime,
+                             const string& giftId,
+                             int giftNum,
+                             IRequestSendBookingRequestCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSendBookingRequestTask* task = new HttpSendBookingRequestTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(userId, timeId, bookTime, giftId, giftNum);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GiftList(
+                   HttpRequestManager *pHttpRequestManager,
+                   IRequestGiftListCallback* callback
+                                          ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGiftListTask* task = new HttpGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::VoucherList(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             IRequestVoucherListCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpVoucherListTask* task = new HttpVoucherListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::RideList(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          IRequestRideListCallback* callback
+                                          ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpRideListTask* task = new HttpRideListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetRide(
+                                         HttpRequestManager *pHttpRequestManager,
+                                         const string& rideId,
+                                         IRequestSetRideCallback* callback
+                                         ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetRideTask* task = new HttpSetRideTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(rideId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetBackpackUnreadNum(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      IRequestGetBackpackUnreadNumCallback* callback
+                                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetBackpackUnreadNumTask* task = new HttpGetBackpackUnreadNumTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetConfig(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           IRequestGetConfigCallback* callback
+                                           ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetConfigTask* task = new HttpGetConfigTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetLeftCredit(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           IRequestGetLeftCreditCallback* callback
+                                           ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetLeftCreditTask* task = new HttpGetLeftCreditTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetFavorite(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string& userId,
+                                             const string& roomId,
+                                             bool isFav,
+                                             IRequestSetFavoriteCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetFavoriteTask* task = new HttpSetFavoriteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(userId, roomId, isFav);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}

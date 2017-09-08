@@ -161,7 +161,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
     /**
      * 提示数字组件的背景色
      */
-    private int digitalHintTextBgColor = Color.RED;
+    private int digitalHintTextBgColor = Color.TRANSPARENT;
     /**
      * 提示数字的字体大小
      */
@@ -321,6 +321,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
     }
 
     public void notifyDataSetChanged() {
+        Log.i("hunter", "notifyDataSetChanged");
         if(null != pager){
             tabsContainer.removeAllViews();
             tabCount = pager.getAdapter().getCount();
@@ -368,6 +369,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
      * @param title tab标题
      */
     private void addDigitalHintTextTab(final int position, final String title){
+        Log.i("hunter", "addDigtalHintTextTab");
         View tabItemView = View.inflate(getContext(),R.layout.tabpageindicator_view_custom_tab,null);
         tabItemView.setOnClickListener(new OnClickListener() {
             @Override
@@ -481,7 +483,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
         int childWidth = 0;
         for (int i = 0; i < tabCount; i++) {
             View tabItemView = tabsContainer.getChildAt(i);
-
+            Log.i("hunter", "before tabItemView i width: " + tabItemView.getMeasuredWidth());
             TextView tv_digitalHint = (TextView)tabItemView.findViewById(R.id.tv_digitalHint);
             tv_digitalHint.measure(0,0);
             int digitalHintMeasuredWidth = tv_digitalHint.getMeasuredWidth();
@@ -495,10 +497,13 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
             }
 
             childWidth += tabItemView.getMeasuredWidth();
-            if (widths[i] == 0) {
+            Log.i("hunter", "tabItemView i:" + i + " width: " + tabItemView.getMeasuredWidth());
+            if(widths[i] == 0) {
+                //已经重新布局，需要重新获取文本大小
                 widths[i] = tabItemView.getMeasuredWidth();
             }
         }
+        Log.i("hunter", "onMeasure myWidth: " + myWidth + " ~~~childWidth: " + childWidth + "   checkedTabWidths:" + checkedTabWidths);
         int bottomMargin = underlineHeight>indicatorHeight ? underlineHeight : indicatorHeight;
         if (currentIndicatorMode == IndicatorMode.MODE_NOWEIGHT_NOEXPAND_SAME) {
             setIndicatorPaddingRight(myWidth - childWidth - tabPadding * 2 * tabCount);
@@ -509,6 +514,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
             tabsContainer.setPadding(indicatorPaddingLeft, 0, indicatorPaddingRight, bottomMargin);
         }
         if (!checkedTabWidths && childWidth > 0 && myWidth > 0) {
+            Log.i("hunter", "checkedTabWidths");
             // tab标题的长度为超过屏幕的宽度
             if (childWidth <= myWidth) {
                 for (int i = 0; i < tabCount; i++) {
@@ -553,7 +559,9 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
 
         float lineLeft = currentTab.getLeft() + currentOffWid;
         float lineRight = currentTab.getRight() - currentOffWid;
-
+        Log.i("hunter", "currentTa left: " + currentTab.getLeft() + " right: " + currentTab.getRight() +
+            " width: " + currentTab.getWidth() + " widths array: " + widths[currentPosition] + " currentPosition: " + currentPosition);
+        Log.i("hunter", "onDraw line left: " + lineLeft + " ~~~lineRight: "  + lineRight);
         if (currentPositionOffset > 0f && currentPosition < tabCount - 1) {
             View nextTab = tabsContainer.getChildAt(currentPosition + 1);
             float nextOffWid;
@@ -568,6 +576,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
             lineLeft = (currentPositionOffset * nextTabLeft + (1f - currentPositionOffset) * lineLeft);
             lineRight = (currentPositionOffset * nextTabRight + (1f - currentPositionOffset) * lineRight);
         }
+        Log.i("hunter", "onDraw after line left: " + lineLeft + " ~~~lineRight: "  + lineRight);
         if (currentIndicatorMode == IndicatorMode.MODE_NOWEIGHT_NOEXPAND_NOSAME){
             canvas.drawRect(lineLeft-tabPadding, height - indicatorHeight, lineRight+tabPadding, height, rectPaint);
         }else{
@@ -643,12 +652,14 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
             delegatePageListener.onPageSelected(position);
         }
 
-        // 如果直接在此处修改currentPosition则下标将显示异常
         //可能跟onPage*的回调顺序有关
-        updateTabStyles(position);
         for (int i = 0; i < tabCount; i++) {
-            updateTabDiginalHintNumb(i,i==position ? 0 : i+1);
+            View tabItemView = tabsContainer.getChildAt(i);
+            tabItemView.setBackgroundDrawable(new ColorDrawable(i == position ? tabSelectedBgColor : tabUnselectedBgColor));
+            TextView tv_tabTitle = (TextView)tabItemView.findViewById(R.id.tv_tabTitle);
+            tv_tabTitle.setTextColor(i == position ? titleTextColorSelected : titleTextColorUnselected);
         }
+
         invalidate();
     }
 

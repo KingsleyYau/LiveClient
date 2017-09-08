@@ -65,7 +65,7 @@ static CGFloat const kNumberChangeTime = 1.0;/**< 计时器时长 */
     
     self.serialQueue = dispatch_queue_create("serial_queue",
                                                          DISPATCH_QUEUE_SERIAL);
-    __weak typeof(self) weakSelf = self;
+    WeakObject(self, weakSelf);
     dispatch_async(self.serialQueue, ^{
         
         if (!weakSelf.playTimer) {

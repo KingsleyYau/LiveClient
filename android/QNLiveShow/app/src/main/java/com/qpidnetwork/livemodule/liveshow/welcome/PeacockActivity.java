@@ -11,7 +11,6 @@ import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
@@ -30,18 +29,8 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = getClass().getSimpleName();
         super.onCreate(savedInstanceState);
-        setTitleBarVisibility(View.GONE);
+        setContentView(R.layout.activity_peacock);
         initData();
-    }
-
-    /**
-     * 返回当前activity的视图布局ID
-     *
-     * @return
-     */
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_peacock;
     }
 
     private void initData(){
@@ -50,8 +39,9 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
             //上次成功登录未注销，自动登录
             sendUiMessageDelayed(MESSAGE_AUTOLOGIN_OVERTIME, getResources().getInteger(R.integer.autoLoginMaxTime));
         }else{
-//            startActivity(new Intent(PeacockActivity.this, LoginChooserActivity.class));
-            finish();
+            String token = "Hunter_fZUUNpjlEO9o";
+            showProgressDialog(getResources().getString(R.string.tip_waitlogin));
+            LoginManager.getInstance().login(token);
         }
     }
 
@@ -66,17 +56,17 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
             }break;
 
             case MESSAGE_LOGIN_CALLBACK: {
+                hideProgressDialog();
                 removeUiMessages(MESSAGE_AUTOLOGIN_OVERTIME);
                 HttpRespObject responseObj = (HttpRespObject)msg.obj;
                 if(responseObj.isSuccess){
-                    boolean hasFinishedWelcome = new LocalPreferenceManager(mContext).getFirstLaunchFlags();
-                    Class clazz = hasFinishedWelcome ? MainFragmentActivity.class : WelcomeActivity.class;
-                    startActivity(new Intent(PeacockActivity.this, clazz));
+                    startActivity(new Intent(PeacockActivity.this, MainFragmentActivity.class));
                     finish();
                 }else{
                     //跳转登录页面
 //                    startActivity(new Intent(PeacockActivity.this, LoginChooserActivity.class));
 //                    finish();
+                    showToast("登录失败！");
                 }
             }break;
 

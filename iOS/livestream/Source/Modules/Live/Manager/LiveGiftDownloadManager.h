@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GetLiveRoomAllGiftListRequest.h"
+#import "GetAllGiftListRequest.h"
+#import "AllGiftItem.h"
 
 @class LiveGiftDownloadManagerDelegate;
 @protocol LiveGiftDownloadManagerDelegate <NSObject>
@@ -33,7 +34,7 @@ typedef enum {
 @property (nonatomic, retain) NSString *path;
 
 // 礼物对象数组
-@property (nonatomic, strong) NSMutableArray<LiveRoomGiftItemObject *> *giftMuArray;
+@property (nonatomic, strong) NSMutableArray<AllGiftItem *> *giftMuArray;
 
 + (instancetype)giftDownloadManager;
 
@@ -44,7 +45,7 @@ typedef enum {
 - (BOOL)judgeTheGiftidIsHere:(NSString *)giftId;
 
 // 根据礼物id拿到礼物model
-- (LiveRoomGiftItemObject *)backGiftItemWithGiftID:(NSString *)giftId;
+- (AllGiftItem *)backGiftItemWithGiftID:(NSString *)giftId;
 
 // 根据礼物id拿到webP文件路径
 - (NSString *)doCheckLocalGiftWithGiftID:(NSString *)giftId;
@@ -52,13 +53,21 @@ typedef enum {
 // 根据礼物id拿到礼物SmallImgUrl
 - (NSString *)backSmallImgUrlWithGiftID:(NSString *)giftId;
 
-// 根据礼物id拿到礼物ImgUrl
-- (NSString *)backImgUrlWithGiftID:(NSString *)giftId;
+// 根据礼物id拿到礼物MiddleImgUrl
+- (NSString *)backMiddleImgUrlWithGiftID:(NSString *)giftId;
 
-// 添加新的礼物Item
-- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item;
+// 根据礼物id拿到礼物BigImgUrl
+- (NSString *)backBigImgUrlWithGiftID:(NSString *)giftId;
 
 // 根据礼物id拿到礼物Type
 - (GiftType)backImgTypeWithGiftID:(NSString *)giftId;
+
+// 获取指定礼物详情
+- (void)requestListnotGift;
+
+// 添加新的礼物Item
+//- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item;
+
+
 
 @end

@@ -20,6 +20,7 @@
 @property (nonatomic, weak) GPUImageView* _Nullable playView;
 
 #pragma mark - 获取实例
+
 /**
  *  获取实例
  *

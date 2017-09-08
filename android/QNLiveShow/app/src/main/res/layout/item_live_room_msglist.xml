@@ -8,9 +8,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:gravity="bottom"
+        android:gravity="center_vertical"
         android:textSize="14sp"
         android:text="JAHGgjhw"
         style="@style/Text_Shadow"
-        android:textStyle="bold"/>
+        android:textStyle="normal"/>
 </LinearLayout>

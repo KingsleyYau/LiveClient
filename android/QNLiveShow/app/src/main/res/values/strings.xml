@@ -92,17 +92,32 @@
     <string name="tip_needCoverPhoto">请选择房间封面图</string>
     <string name="tip_needRoomTitle">请输入房间标题</string>
     <string name="tip_emoji_unusable">Sorry. To use advanced emoticion, you need to upgrade the intimacy to 10</string>
-
+    <string name="tip_roomGiftCredit">Rewarded Credits: %1$s</string>
 
     <!-- Live Room -->
     <string name="liveroom_audience_enter_notify">Joined.</string>
     <string name="liveroom_audience_roomin_processing">IM roomining…</string>
     <string name="liveroom_audience_roomout_processing">Audience roomout…</string>
     <string name="liveroom_anchor_roomout_processing">Anchor roomout…</string>
-    <string name="liveroom_message_template_normal"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g> : </font><font color=\"#FFFFFF\">%2$s</font>]]></string>
-    <string name="liveroom_message_template_roomin"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FFFFFF\"> Joined</font>]]></string>
-    <string name="liveroom_message_template_favorite"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#B4A5FF\"> likes this stream</font>]]></string>
-    <string name="liveroom_message_template_gift"><![CDATA[<font color=\"#FFD205\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#0CEDF5\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#0CEDF5\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
-    <string name="liveroom_message_gift_x">x</string>
+    <!--font标签只实现了两个属性 color和face，如要控制字体大小，可以通过small和big来粗略区分，
+    具体参考源码android.text.HtmlToSpannedConverter#startFont/android.text.HtmlToSpannedConverter#handleEndTag-->
+    <string name="liveroom_message_template_normal"><![CDATA[<b><font color=\"#EC0102\"><xliff:g id="message_username">%1$s</xliff:g> : </font></b><font color=\"#3C3C3C\">%2$s</font>]]></string>
+    <string name="liveroom_message_template_roomin"><![CDATA[<b><font color=\"#EC0102\"><xliff:g id="message_username">%1$s</xliff:g></font></b><font color=\"#3C3C3C\"> Joined</font>]]></string>
+    <string name="liveroom_message_template_follow"><![CDATA[<b><font color=\"#EC0102\"><xliff:g id="message_username">%1$s</xliff:g></font></b><font color=\"#0CD7DE\"> is following the broadcaster</font>]]></string>
+    <string name="liveroom_message_template_gift"><![CDATA[<b><font color=\"#EC0102\"><xliff:g id="message_username">%1$s</xliff:g></font></b><font color=\"#DF3CE9\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#DF3CE9\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+    <string name="liveroom_message_gift_x">x %1$d</string>
+
+    <string name="liveroom_tariff_prompt_free_public">Free public performance is free to watch.</string>
+    <string name="liveroom_tariff_prompt_pre_public">Premium public performance is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_silver_private">Silver private performance is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_golden_private">Golden private performance is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_ok">Got it</string>
+    <string name="liveroom_favorite_sending">Favoriting...</string>
+    <string name="liveroom_entrancecar_master">%1$s Joined</string>
+    <string name="liveroom_entrancecar_joined">%1$s Joined</string>
+
+    <!--ListView-->
+    <string name="common_empty_text">No content yet.</string>
+    <string name="common_btn_tap_to_retry">Top to retry</string>
 
 </resources>

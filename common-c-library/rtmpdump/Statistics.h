@@ -42,6 +42,13 @@ public:
      */
     bool IsDropVideoFrame();
     
+    /**
+     是否需要断开
+
+     @return <#return value description#>
+     */
+    int IsDisconnect();
+    
 private:
     /**
      是否接收视频帧

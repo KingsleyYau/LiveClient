@@ -54,12 +54,11 @@ bool AudioHardEncoder::Create(int sampleRate, int channelsPerFrame, int bitPerSa
     mTotalPresentationTime = 0;
     
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::Create( "
-                 "[Finish], "
-                 "this : %p, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "this : %p "
                  ")",
-                 this,
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 this
                  );
     
     return bFlag;
@@ -75,11 +74,11 @@ bool AudioHardEncoder::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioHardEncoder::Reset( "
-                 "this : %p, "
-                 "bFlag : %s "
+                 "[%s], "
+                 "this : %p "
                  ")",
-                 this,
-                 bFlag?"true":"false"
+                 bFlag?"Success":"Fail",
+                 this
                  );
     
     return bFlag;
@@ -111,7 +110,7 @@ void AudioHardEncoder::EncodeAudioFrame(void* data, int size, void* frame) {
         mTotalPresentationTime = 0;
         
         FileLevelLog("rtmpdump",
-                     KLog::LOG_WARNING,
+                     KLog::LOG_MSG,
                      "AudioHardEncoder::EncodeAudioFrame( "
                      "[Reset Timestamp], "
                      "mLastPresentationTime : %f, "
@@ -173,7 +172,7 @@ void AudioHardEncoder::EncodeAudioFrame(void* data, int size, void* frame) {
                 char* data = (char *)outAudioBufferList.mBuffers[0].mData;
                 UInt32 size = outAudioBufferList.mBuffers[0].mDataByteSize;
                 
-                mAudioEncodedFrame.EncodeDecodeBuffer::ResetFrame();
+                mAudioEncodedFrame.EncodeDecodeBuffer::ResetBuffer();
                 
                 // 增加ADTS头部
                 char* frame = (char *)mAudioEncodedFrame.GetBuffer();
@@ -272,7 +271,7 @@ bool AudioHardEncoder::CreateContext(CMSampleBufferRef sampleBuffer) {
     mRuningMutex.lock();
 
     if( !mAudioConverter ) {
-        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::CreateContext( this : %p )", this);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioHardEncoder::CreateContext( this : %p )", this);
         
         OSStatus status = noErr;
         
@@ -387,7 +386,7 @@ bool AudioHardEncoder::CreateContext(CMSampleBufferRef sampleBuffer) {
 }
 
 void AudioHardEncoder::DestroyContext() {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioHardEncoder::DestroyContext( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioHardEncoder::DestroyContext( this : %p )", this);
     
     mRuningMutex.lock();
     if( mAudioConverter ) {

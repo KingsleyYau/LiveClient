@@ -1,9 +1,9 @@
 /*
  * HttpLogoutTask.cpp
  *
- *  Created on: 2017-5-18
+ *  Created on: 2017-8-16
  *      Author: Alex
- *        desc: 2.5.注销 
+ *        desc: 2.2.注销
  */
 
 #include "HttpLogoutTask.h"
@@ -11,7 +11,6 @@
 HttpLogoutTask::HttpLogoutTask() {
 	// TODO Auto-generated constructor stub
 	mPath = LOGOUT_PATH;
-	mToken = "";
 }
 
 HttpLogoutTask::~HttpLogoutTask() {
@@ -23,31 +22,18 @@ void HttpLogoutTask::SetCallback(IRequestLogoutCallback* callback) {
 }
 
 void HttpLogoutTask::SetParam(
-		string token
 		) {
 
 //	char temp[16];
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-	if( token.length() > 0 ) {
-		mHttpEntiy.AddContent(LOGOUT_TOKEN, token.c_str());
-		mToken = token;
-	}
-
-
 	FileLog("httpcontroller",
             "HttpLogoutTask::SetParam( "
             "task : %p, "
-			"tokenId : %s, "
 			")",
-            this,
-			token.c_str()
+            this
             );
-}
-
-const string& HttpLogoutTask::GetToken() {
-	return mToken;
 }
 
 bool HttpLogoutTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {

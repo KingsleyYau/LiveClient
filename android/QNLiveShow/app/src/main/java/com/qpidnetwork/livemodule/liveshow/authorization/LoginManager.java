@@ -4,11 +4,15 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.qpidnetwork.livemodule.httprequest.OnGetGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestLoginCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
+import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 
@@ -81,13 +85,15 @@ public class LoginManager {
 
                 if (!isExist) {
                     result = mListenerList.add(listener);
-                }
-                else {
-                    Log.d(TAG, String.format("%s::%s() fail, listener:%s is exist", "OnLoginManagerListener", "register", listener.getClass().getSimpleName()));
+                }else {
+                    Log.d(TAG, String.format("%s::%s() fail, listener:%s is exist",
+                            "OnLoginManagerListener", "register",
+                            listener.getClass().getSimpleName()));
                 }
             }
             else {
-                Log.e(TAG, String.format("%s::%s() fail, listener is null", "OnLoginManagerListener", "register"));
+                Log.e(TAG, String.format("%s::%s() fail, listener is null",
+                        "OnLoginManagerListener", "register"));
             }
         }
         return result;
@@ -105,7 +111,9 @@ public class LoginManager {
         }
 
         if (!result) {
-            Log.e(TAG, String.format("%s::%s() fail, listener:%s", "OnLoginManagerListener", "unRegister", listener.getClass().getSimpleName()));
+            Log.e(TAG, String.format("%s::%s() fail, listener:%s",
+                    "OnLoginManagerListener", "unRegister",
+                    listener.getClass().getSimpleName()));
         }
         return result;
     }
@@ -125,8 +133,11 @@ public class LoginManager {
             mLoginStatus = LoginStatus.Logining;
             String deviceId = SystemUtils.getDeviceId(mContext);
             RequestJniAuthorization.Login(qnToken, deviceId, new OnRequestLoginCallback() {
-                public void onRequestLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+                public void onRequestLogin(boolean isSuccess,
+                                           int errCode, String errMsg, LoginItem item) {
                     synchronized (mListenerList) {
+                        Log.d(TAG,"onRequestLogin-isSuccess:"+isSuccess+" errCode:"+errCode
+                            +" errMsg:"+errMsg+" item:"+item);
                         mLoginStatus = isSuccess ? LoginStatus.Logined : LoginStatus.Default;
                         if(isSuccess){
                             try {
@@ -134,11 +145,25 @@ public class LoginManager {
                                 LoginParam param = new LoginParam(qnToken);
                                 saveAccountInfo(param);
                                 mLoginItem = item;
+                                //更新礼物配置信息
+                                if(!NormalGiftManager.getInstance().isLocalAllGiftItemsExisted()){
+                                    NormalGiftManager.getInstance().getAllGiftItems(
+                                            new OnGetGiftListCallback() {
+                                                @Override
+                                                public void onGetGiftList(boolean isSuccess, int errCode,
+                                                                          String errMsg, GiftItem[] giftList) {
+                                                    if(isSuccess && null != giftList){
+                                                        //更新背包礼物配置信息
+                                                        PackageGiftManager.getInstance().getAllPackageGiftItems(null);
+                                                    }
+                                                }
+                                            });
+                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-
                         for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
                             IAuthorizationListener listener = iter.next();
                             listener.onLogin(isSuccess, errCode, errMsg, item);

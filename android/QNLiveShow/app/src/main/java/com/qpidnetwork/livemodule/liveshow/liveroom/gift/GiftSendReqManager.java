@@ -106,7 +106,7 @@ public class GiftSendReqManager {
             GiftSendReq req = takeGiftSendReq();
             if(null != req && req.giftItem!=null){
                 Log.d(TAG,"GiftSendReqExecThread::run-req:"+req);
-                IMManager.getInstance().sendGift(req.mRoomId, req.giftItem
+                IMManager.getInstance().sendGift(req.mRoomId, req.giftItem, false
                         ,req.count,req.isMultiClick
                         , req.multiStart,req.multiEnd
                         , req.multiClickId);

@@ -9,6 +9,12 @@
 #import "SendGiftTheQueueManager.h"
 #import "IMManager.h"
 
+@interface SendGiftTheQueueManager ()
+
+@property (nonatomic, assign) BOOL isFirstSend;
+
+@end
+
 @implementation SendGiftTheQueueManager
 
 + (instancetype)sendManager {
@@ -20,7 +26,8 @@
         
         sendManager = [[SendGiftTheQueueManager alloc] init];
         sendManager.sendGiftDictionary = [[NSMutableDictionary alloc] init];
-        sendManager.clickIdArray = [[NSMutableArray alloc] init];
+        sendManager.sendGiftArray = [[NSMutableArray alloc] init];
+        sendManager.isFirstSend = YES;
     });
     return sendManager;
 }
@@ -29,12 +36,6 @@
     
     NSString *objectKey = [NSString stringWithFormat:@"%d",key];
     [self.sendGiftDictionary setObject:array forKey:objectKey];
-}
-
-- (void)addItemWithClickID:(int)clickId giftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum andGiftItem:(LiveRoomGiftItemObject *)item{
-
-    SendGiftItem *sendItem = [[SendGiftItem alloc] initWithGiftItem:item andGiftNum:giftNum starNum:starNum endNum:endNum clickID:clickId];
-    [self.clickIdArray addObject:sendItem];
 }
 
 - (void)removeSendGiftWithKey:(int)key {
@@ -62,21 +63,42 @@
 }
 
 
-- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)item roomID:(NSString *)roomId  multiClickID:(int)multi_click_id {
+- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)giftItem{
+    
+    [self.sendGiftArray addObject:giftItem];
+    
+    if (self.isFirstSend) {
+        [self sendGiftQurest];
+        self.isFirstSend = NO;
+    }
+}
+
+- (void)sendGiftQurest{
     
     IMManager *manager = [IMManager manager];
     
-    [manager sendRoomGiftWithRoomId:roomId giftId:item.giftItem.giftId giftName:item.giftItem.name giftNum:item.giftNum multi_click:item.giftItem.multi_click multi_click_start:item.starNum multi_click_end:item.endNum multi_click_id:multi_click_id];
+    SendGiftItem *item = self.sendGiftArray[0];
+    // 送礼
+    [manager sendGift:item.roomID nickName:@"" giftId:item.giftItem.infoItem.giftId giftName:item.giftItem.infoItem.name isBackPack:item.isBackPack giftNum:item.giftNum multi_click:item.giftItem.infoItem.multiClick multi_click_start:item.starNum multi_click_end:item.endNum multi_click_id:item.clickID];
 }
 
-- (void)sendLiveRoomGiftRequestWithEoomID:(NSString *)roomId {
+// 送礼是否成功通知
+- (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     
-    if ( self.clickIdArray.count ) {
+    if (success) {
         
-        SendGiftItem *item = [self.clickIdArray firstObject];
-        IMManager *manager = [IMManager manager];
+        [self.sendGiftArray removeObjectAtIndex:0];
         
-        [manager sendRoomGiftWithRoomId:roomId giftId:item.giftItem.giftId giftName:item.giftItem.name giftNum:item.giftNum multi_click:item.giftItem.multi_click multi_click_start:item.starNum multi_click_end:item.endNum multi_click_id:item.clickID];
+        if (self.sendGiftArray.count) {
+            [self sendGiftQurest];
+        } else {
+            self.isFirstSend = YES;
+        }
+        
+    } else {
+        
+        [self.sendGiftArray removeAllObjects];
+        self.isFirstSend = YES;
     }
 }
 

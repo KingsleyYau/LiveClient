@@ -2,15 +2,22 @@ package com.qpidnetwork.livemodule.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+
+import com.qpidnetwork.livemodule.R;
 
 /**
  * Description:可响应Drawable点击事件,且可控制文本是否宽度自适应的TextView
@@ -88,19 +95,17 @@ public class RespDrawClickEventAutoSplitTextView extends TextView {
         this.onDrawableButtomClickListener = onDrawableButtomClickListener;
     }
 
-    @SuppressLint("NewApi")
-    public RespDrawClickEventAutoSplitTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
     public RespDrawClickEventAutoSplitTextView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RespDrawClickEventAutoSplitTextView);
+        autoSpliteTextEnable = a.getBoolean(R.styleable.RespDrawClickEventAutoSplitTextView_autoSpliteTextEnable, autoSpliteTextEnable);
     }
     public RespDrawClickEventAutoSplitTextView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
-    public RespDrawClickEventAutoSplitTextView(Context context) {
-        super(context);
+    public RespDrawClickEventAutoSplitTextView(Context context){
+        this(context,null);
     }
 
     @Override
@@ -192,17 +197,46 @@ public class RespDrawClickEventAutoSplitTextView extends TextView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if(MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY
-                && MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY
+        if((MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY
+                || MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.EXACTLY)
                 && autoSpliteTextEnable
                 && getWidth() > 0
                 && getHeight() > 0){
             String newText = autoSplitText();
             if (!TextUtils.isEmpty(newText)) {
-                setText(newText);
+                if(!TextUtils.isEmpty(changeColorKey)){
+                    changeTxtColor(newText);
+                }else{
+                    setText(newText);
+                }
+
             }
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    private void changeTxtColor(String text){
+        SpannableString spannableString = new SpannableString(text);
+        int startIndex = text.indexOf(changeColorKey);
+        spannableString.setSpan(new ForegroundColorSpan(changeColor),
+                startIndex, startIndex+changeColorKey.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        setText(spannableString);
+    }
+
+    public void setChangeColor(int colorRes){
+        this.changeColor = colorRes;
+    }
+
+    public void setChangeColor(String colorStr){
+        changeColor = Color.parseColor(colorStr);//#ffd205
+    }
+
+    private int changeColor = Color.parseColor("#ffd205");
+
+    private String changeColorKey = "";
+
+    public void setChangeColorKey(String changeColorKey){
+        this.changeColorKey = changeColorKey;
     }
 
     /**

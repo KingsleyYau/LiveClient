@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class AnchorEndActivity extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitleBarVisibility(View.GONE);
+        setContentView(R.layout.activity_end_broadcast);
         initView();
         initData();
     }
@@ -79,11 +79,6 @@ public class AnchorEndActivity extends BaseFragmentActivity {
         format.format(new Date(liveTimes));
         String liveTimeStr = format.format(new Date(liveTimes)).toString();
         tv_liveTime.setText(liveTimeStr);
-    }
-
-    @Override
-    public int getActivityViewId() {
-        return R.layout.activity_end_broadcast;
     }
 
     @Override

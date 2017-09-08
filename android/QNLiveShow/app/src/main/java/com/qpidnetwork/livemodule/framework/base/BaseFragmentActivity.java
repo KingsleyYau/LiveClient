@@ -2,270 +2,152 @@ package com.qpidnetwork.livemodule.framework.base;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
+import com.qpidnetwork.livemodule.framework.widget.barlibrary.ImmersionBar;
+import com.qpidnetwork.livemodule.view.MaterialProgressDialog;
 
 import java.lang.ref.WeakReference;
 
 /**
- * Created by Harry on 2017/5/19.
+ * Created by Hunter Mun on 2017/9/4.
  */
 
-public abstract class BaseFragmentActivity extends FragmentActivity implements View.OnClickListener {
+public class BaseFragmentActivity extends FragmentActivity implements View.OnClickListener{
 
-    public String TAG = BaseFragmentActivity.class.getSimpleName();
+    protected String TAG = BaseFragmentActivity.class.getName();
 
-    public TextView tv_backTitle;
-    public TextView tv_title;
-    public View rl_title_bar;
-    public FrameLayout fl_baseContainer;
-    public SimpleDoubleBtnTipsDialog dialog;
-    public boolean isDebug = true;
+    protected Activity mContext;
+    protected MaterialProgressDialog progressDialog;
+    protected MaterialProgressDialog progressDialogTranslucent;
+    protected int mProgressDialogCount = 0;
 
-    public Activity mContext;
+    private boolean isActivityVisible = false;//判断activity是否可见，用于处理异步Dialog显示 windowToken异常
 
-    /**
-     * 隐藏输入法界面，并使et失去焦点
-     * @param et
-     * @param clearFocus 是否使控件et失去焦点
-     */
-    public void hideSoftInput(EditText et, boolean clearFocus){
-        if(et == null){
-            return;
-        }
-        InputMethodManager imm_etLiveMsg = (InputMethodManager) et.getContext().getApplicationContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm_etLiveMsg.hideSoftInputFromWindow(et.getWindowToken(),
-                InputMethodManager.HIDE_NOT_ALWAYS);
-        if(clearFocus){
-            et.clearFocus();
-        }
-    }
-
-
-
-    /**
-     * 自动弹出输入法界面，并使et获取焦点
-     * @param et
-     */
-    public void showSoftInput(EditText et){
-        if(et == null){
-            return;
-        }
-        et.requestFocus();
-        //自动弹出软键盘
-        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(et, 0);
-    }
-
-    /**
-     * 隐藏自定义对话框
-     */
-    public void dismissCustomDialog(){
-        if(null != dialog && dialog.isShowing()){
-            dialog.dismiss();
-        }
-    }
-
-    /**
-     * 弹出自定义对话框
-     * @param canStrId
-     * @param confirmStrId
-     * @param contentStrId
-     * @param cancelOnTouchOut
-     * @param cancelable
-     * @param listener
-     */
-    public void showCustomDialog(int canStrId, int confirmStrId, int contentStrId,
-                                 boolean cancelOnTouchOut, boolean cancelable,
-                                 SimpleDoubleBtnTipsDialog.OnTipsDialogBtnClickListener listener){
-        dismissCustomDialog();
-        dialog = new SimpleDoubleBtnTipsDialog(this, canStrId, confirmStrId, contentStrId, listener);
-        dialog.setCanceledOnTouchOutside(cancelOnTouchOut);
-        dialog.setCancelable(cancelable);
-        dialog.show();
-    }
-
-    /**
-     *
-     * @param canStrId
-     * @param confirmStrId
-     * @param contentStrId
-     * @param cancelOnTouchOut
-     * @param cancelable
-     * @param cancelTxtColor
-     * @param confirmTxtColor
-     * @param cancelBgDrawableId
-     * @param confirmBgDrawableId
-     * @param listener
-     */
-    public void showCustomDialog(int canStrId, int confirmStrId, int contentStrId,
-                                 boolean cancelOnTouchOut, boolean cancelable,int cancelTxtColor,
-                                 int confirmTxtColor,int cancelBgDrawableId,int confirmBgDrawableId,
-                                 SimpleDoubleBtnTipsDialog.OnTipsDialogBtnClickListener listener){
-        dismissCustomDialog();
-        dialog = new SimpleDoubleBtnTipsDialog(this, canStrId, confirmStrId, contentStrId, listener);
-        dialog.setCanceledOnTouchOutside(cancelOnTouchOut);
-        dialog.setCancelable(cancelable);
-        dialog.setCancelBtnStyle(cancelTxtColor,cancelBgDrawableId);
-        dialog.setConfirmBtnStyle(confirmTxtColor,confirmBgDrawableId);
-        dialog.show();
-    }
-
-    public void showToast(int strId){
-        Toast.makeText(this, getString(strId), Toast.LENGTH_SHORT).show();
-    }
-
-    public void showToast(String tip){
-        Toast.makeText(this, tip, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG,"onCreate");
-        setContentView(R.layout.fragment_activity_base_container);
+    protected void onCreate(Bundle arg0) {
+        // TODO Auto-generated method stub
+        super.onCreate(arg0);
+
         mContext = this;
 
-        tv_backTitle = (TextView) findViewById(R.id.tv_backTitle);
-        rl_title_bar = findViewById(R.id.rl_title_bar);
-        tv_title = (TextView) findViewById(R.id.tv_title);
-        fl_baseContainer = ((FrameLayout)findViewById(R.id.fl_baseContainer));
-        fl_baseContainer.addView(View.inflate(this,getActivityViewId(),null));
-        DisplayUtil.modifyStatusBar(this,false,getResources().getColor(R.color.txt_color_oninput));
+        mProgressDialogCount = 0;
+        progressDialog = new MaterialProgressDialog(this);
+        progressDialog.setCanceledOnTouchOutside(false);
+
+        progressDialogTranslucent = new MaterialProgressDialog(this , R.style.themeDialog);
+        progressDialogTranslucent.setCanceledOnTouchOutside(false);
+
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.d(TAG,"onNewIntent");
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
     }
-
-    @Override
-    public void onClick(View v) {
-        Log.d(TAG,"onClick");
-        int i = v.getId();
-        if (i == R.id.tv_backTitle) {
-            onBackTitleClicked();
-
-        }
-    }
-
-
-
-    /**
-     * 设置标题
-     * @param strId
-     */
-    public void setTitle(int strId){
-        Log.d(TAG,"setTitle-strId:"+strId);
-        setTitleVisibility(0 == strId ? View.INVISIBLE : View.VISIBLE);
-        if(0 != strId){
-            tv_title.setText(getString(strId));
-        }
-    }
-
-    public void setTitleVisibility(int visibility){
-        Log.d(TAG,"setTitleVisibility-visibility:"+visibility);
-        tv_title.setVisibility(visibility);
-    }
-
-
-
-    /**
-     * 设置TitleBar是否可见
-     * @param visibility
-     */
-    public void setTitleBarVisibility(int visibility){
-        Log.d(TAG,"setTitleBarVisibility-visibility:"+visibility);
-        rl_title_bar.setVisibility(visibility);
-    }
-
-    /**
-     * 设置TitleBar的背景色
-     * @param color 透明或者指定的主题色
-     */
-    public void setTitleBarBackGroundColor(int color){
-        Log.d(TAG,"setTitleBarBackGroundColor-color:"+color);
-        rl_title_bar.setBackgroundColor(getResources().getColor(color));
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-    /**
-     * 返回标题的单击事件
-     */
-    public void onBackTitleClicked(){
-        Log.d(TAG,"onBackTitleClicked");
-        BaseFragmentActivity.this.finish();
-    }
-
-    /**
-     * 返回按钮是否可见
-     * @param visibility
-     */
-    public void setBackTitleVisibility(int visibility){
-        Log.d(TAG,"setBackTitleVisibility-visibility:"+visibility);
-        tv_backTitle.setVisibility(visibility);
-    }
-
-    /**
-     * 返回当前activity的视图布局ID
-     * @return
-     */
-    public abstract int getActivityViewId();
 
     @Override
     protected void onResume() {
+        // TODO Auto-generated method stub
         super.onResume();
-        Log.d(TAG,"onResume");
+        isActivityVisible = true;
     }
 
     @Override
     protected void onPause() {
+        // TODO Auto-generated method stub
         super.onPause();
-        Log.d(TAG,"onPause");
+        isActivityVisible = false;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d(TAG,"onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
+    protected void onDestroy(){
         super.onDestroy();
-        Log.d(TAG,"onDestroy");
+		/*防止异常杀死界面重启后，dialog 失去windowDecor导致调用Dismiss IllegalArgumentException*/
+        hideProgressDialog();
     }
 
-    /*********************  解决Handler内存泄漏问题  **************************/
+    public void showToast(String tips){
+        Toast.makeText(this, tips, Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * 显示progressDialog
+     * @param tips 提示文字
+     */
+    public void showProgressDialog(String tips){
+        mProgressDialogCount++;
+        if( !progressDialog.isShowing() && isActivityVisible) {
+            progressDialog.setMessage(tips);
+            progressDialog.show();
+        }
+    }
+
+    /**
+     * 显示progressDialog
+     * @param tips 提示文字
+     */
+    public void showProgressDialogBgTranslucent(String tips){
+        if(progressDialogTranslucent != null && !progressDialogTranslucent.isShowing()){
+            progressDialogTranslucent.setMessage(tips);
+            progressDialogTranslucent.show();
+        }
+    }
+
+    /**
+     * 隐藏progressDialog
+     */
+    public void hideProgressDialog(){
+        try {
+            if( mProgressDialogCount > 0 ) {
+                mProgressDialogCount--;
+                if( mProgressDialogCount == 0 && progressDialog != null ) {
+                    progressDialog.dismiss();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(progressDialogTranslucent != null){
+            progressDialogTranslucent.dismiss();
+        }
+    }
+
+    public void setImmersionBarArtts(int barColorResId){
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarColorTransform(barColorResId)   //状态栏变色后的颜色
+                .transparentNavigationBar()               //透明导航栏
+                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
+                .init();                                  //必须调用方可沉浸式
+    }
+
+    public void setImmersionBarArtts(String barColorStr){
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarColorTransform(barColorStr)   //状态栏变色后的颜色
+                .transparentNavigationBar()               //透明导航栏
+                .statusBarDarkFont(true,0f)                  //状态栏字体是深色
+                .init();                                  //必须调用方可沉浸式
+    }
+
     protected Handler mHandler = new UiHandler(this) {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (getActivityReference() != null && getActivityReference().get() != null) {
                 handleUiMessage(msg);
             }
-        }
+        };
     };
 
     private static class UiHandler extends Handler {
@@ -278,6 +160,14 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements V
         public WeakReference<BaseFragmentActivity> getActivityReference() {
             return mActivityReference;
         }
+    }
+
+    /**
+     * 判断当前activity是否可见，用于Dialog显示判断Token使用
+     * @return
+     */
+    public boolean isActivityVisible(){
+        return isActivityVisible;
     }
 
     /**
@@ -322,8 +212,45 @@ public abstract class BaseFragmentActivity extends FragmentActivity implements V
         mHandler.sendEmptyMessageDelayed(what, delayMillis);
     }
 
-    protected  void postUiRunnableDelayed(Runnable runnable, long delayMillis){
-        mHandler.postDelayed(runnable, delayMillis);
+    protected void postUiRunnableDelayed(Runnable runnable, long delay){
+        mHandler.postDelayed(runnable, delay);
     }
 
+    /**
+     * 隐藏输入法界面，并使et失去焦点
+     * @param et
+     * @param clearFocus 是否使控件et失去焦点
+     */
+    public void hideSoftInput(EditText et, boolean clearFocus){
+        if(et == null){
+            return;
+        }
+        InputMethodManager imm_etLiveMsg = (InputMethodManager) et.getContext().getApplicationContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm_etLiveMsg.hideSoftInputFromWindow(et.getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        if(clearFocus){
+            et.clearFocus();
+        }
+    }
+
+    /**
+     * 自动弹出输入法界面，并使et获取焦点
+     * @param et
+     */
+    public void showSoftInput(EditText et){
+        if(et == null){
+            return;
+        }
+        et.requestFocus();
+        //自动弹出软键盘
+        final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(et, 0);
+    }
+
+    @Override
+    public void onClick(View v) {
+        // TODO Auto-generated method stub
+
+    }
 }

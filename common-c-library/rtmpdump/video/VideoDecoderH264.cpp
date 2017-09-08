@@ -125,7 +125,7 @@ bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
 
 bool VideoDecoderH264::Reset() {
     FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
+                KLog::LOG_MSG,
                 "VideoDecoderH264::Reset( "
                 "this : %p "
                 ")",
@@ -214,7 +214,7 @@ bool VideoDecoderH264::Start() {
     mRuningMutex.unlock();
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
                  "[%s], "
                  "this : %p "
@@ -228,7 +228,7 @@ bool VideoDecoderH264::Start() {
     
 void VideoDecoderH264::Stop() {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoDecoderH264::Stop( "
                  "this : %p "
                  ")",
@@ -297,7 +297,7 @@ void VideoDecoderH264::Stop() {
     mRuningMutex.unlock();
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoDecoderH264::Stop( "
                  "[Success], "
                  "this : %p "
