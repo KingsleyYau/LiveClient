@@ -215,9 +215,7 @@ public class LocalPreferenceManager {
         if(object != null && (object instanceof LoginParam)){
             return (LoginParam)object;
         }
-        //TODO:DELETE测试数据
-        return new LoginParam("Harry_HHeEoKeotNFp");
-//        return null;
+        return null;
     }
 
 }

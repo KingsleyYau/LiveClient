@@ -38,7 +38,8 @@ public:
                   const string timeId,
                   long bookTime,
                   const string giftId,
-                  int giftNum
+                  int giftNum,
+                  bool needSms
                   );
     
     /**
@@ -53,6 +54,8 @@ public:
     const string& GetGiftId();
     
     int GetGiftNum();
+    
+    bool GetNeedSms();
     
 protected:
     // Implement HttpRequestTask
@@ -71,6 +74,8 @@ protected:
     string mGiftId;
     // 礼物数量
     int mGiftNum;
+    // 是否需要短信通知（0:否 1:是 ）
+    bool mNeedSms;
 
 };
 

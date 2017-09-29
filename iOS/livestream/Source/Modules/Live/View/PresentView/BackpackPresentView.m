@@ -11,24 +11,26 @@
 #import "GiftItemLayout.h"
 #import "LiveGiftDownloadManager.h"
 #import "UIImage+SolidColor.h"
-#import "BackpackGiftItem.h"
+#import "DialogTip.h"
+
+#define NotenoughLove @"This gift is only available for user level 5 or higher."
+#define NotenoughLevel @"This gift is only available for intimacy 5 or higher."
+#define NoListTip @"Your backpack is empty."
+#define RequestFailTip @"Failed to load"
 
 @interface BackpackPresentView() < UIScrollViewDelegate,KKCheckButtonDelegate >
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *pageViewTopOffset;
 
-@property (nonatomic, weak) UIButton *firstNumBtn;
-
-@property (nonatomic, weak) UIButton *secondNumBtn;
-
-@property (nonatomic, weak) UIButton *thirdNumBtn;
-
 @property (nonatomic, assign) NSInteger indextPathRow;
 
+@property (nonatomic, assign) int buttonBarHeight;
 /**
  *  多功能按钮约束
  */
 @property (strong) MASConstraint* buttonBarBottom;
+
+@property (nonatomic, assign) BOOL isFirstCreate;
 
 @end
 
@@ -39,11 +41,13 @@
         UIView *containerView = [[UINib nibWithNibName:NSStringFromClass([self class]) bundle:nil] instantiateWithOwner:self options:nil].firstObject;
         [self addSubview:containerView];
         
-        [self setupButtonBar];
+//        [self setupButtonBar];
         
         UINib *nib = [UINib nibWithNibName:@"GiftItemCollectionViewCell" bundle:nil];
         [self.collectionView registerNib:nib forCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier]];
         self.collectionView.delegate = self;
+        
+        self.requestFailView.hidden = YES;
         
         self.pageView.numberOfPages = 0;
         self.pageView.currentPage = 0;
@@ -56,17 +60,34 @@
         [self.comboBtn addTarget:self action:@selector(comboGiftInSide:) forControlEvents:UIControlEventTouchUpOutside];
         [self.comboBtn addTarget:self action:@selector(comboGiftDow:) forControlEvents:UIControlEventTouchDown];
         
-        self.collectionViewHeight.constant = SCREEN_WIDTH * 0.5;
+        self.buttonBar = [[SelectNumButton alloc] init];
+        [self addSubview:self.buttonBar];
+        [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@0);
+            make.left.equalTo(self.sendView.selectBtn.mas_left);
+            make.right.equalTo(self.sendView.selectBtn.mas_right);
+            self.buttonBarBottom = make.bottom.equalTo(self.sendView.mas_bottom);
+        }];
+        
+        self.buttonBar.isVertical = YES;
+        self.buttonBar.clipsToBounds = YES;
         
         self.sendView.selectBtn.selectedChangeDelegate = self;
         [self.sendView.sendBtn addTarget:self action:@selector(sendTheGift:) forControlEvents:UIControlEventTouchUpInside];
-        
+        self.buttonBar.hidden = YES;
+        self.sendView.selectNumLabel.hidden = YES;
+        self.sendView.arrowImageView.hidden = YES;
         [self bringSubviewToFront:self.sendView];
         
         self.pageViewTopOffset.constant = DESGIN_TRANSFORM_3X(8);
         
-        self.indextPathRow = -1;
+        self.reloadBtn.layer.cornerRadius = 6;
+        self.reloadBtn.layer.masksToBounds = YES;
         
+        self.indextPathRow = -1;
+        self.buttonBarHeight = 1;
+        
+        self.isFirstCreate = YES;
     }
     return self;
 }
@@ -79,11 +100,13 @@
         UIView *containerView = [[UINib nibWithNibName:NSStringFromClass([self class]) bundle:nil] instantiateWithOwner:self options:nil].firstObject;
         [self addSubview:containerView];
         
-        [self setupButtonBar];
+//        [self setupButtonBar];
         
         UINib *nib = [UINib nibWithNibName:@"GiftItemCollectionViewCell" bundle:nil];
         [self.collectionView registerNib:nib forCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier]];
         self.collectionView.delegate = self;
+        
+        self.requestFailView.hidden = YES;
         
         self.pageView.numberOfPages = 0;
         self.pageView.currentPage = 0;
@@ -96,18 +119,64 @@
         [self.comboBtn addTarget:self action:@selector(comboGiftInSide:) forControlEvents:UIControlEventTouchUpOutside];
         [self.comboBtn addTarget:self action:@selector(comboGiftDow:) forControlEvents:UIControlEventTouchDown];
         
-        self.collectionViewHeight.constant = SCREEN_WIDTH * 0.5;
+        self.buttonBar = [[SelectNumButton alloc] init];
+        [self addSubview:self.buttonBar];
+        [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.equalTo(@0);
+            make.left.equalTo(self.sendView.selectBtn.mas_left);
+            make.right.equalTo(self.sendView.selectBtn.mas_right);
+            self.buttonBarBottom = make.bottom.equalTo(self.sendView.mas_bottom);
+        }];
+        
+        self.buttonBar.isVertical = YES;
+        self.buttonBar.clipsToBounds = YES;
         
         self.sendView.selectBtn.selectedChangeDelegate = self;
         [self.sendView.sendBtn addTarget:self action:@selector(sendTheGift:) forControlEvents:UIControlEventTouchUpInside];
-        
+        self.buttonBar.hidden = YES;
+        self.sendView.selectNumLabel.hidden = YES;
+        self.sendView.arrowImageView.hidden = YES;
         [self bringSubviewToFront:self.sendView];
         
         self.pageViewTopOffset.constant = DESGIN_TRANSFORM_3X(8);
         
+        self.reloadBtn.layer.cornerRadius = 6;
+        self.reloadBtn.layer.masksToBounds = YES;
+        
         self.indextPathRow = -1;
+        self.buttonBarHeight = 1;
+        
+        self.isFirstCreate = YES;
     }
     return self;
+}
+
+#pragma mark - 按钮事件
+- (IBAction)showMyBalance:(id)sender {
+    if (self.backpackDelegate && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewShowBalance:)]) {
+        [self.backpackDelegate backpackPresentViewShowBalance:self];
+    }
+}
+
+- (IBAction)reloadGiftList:(id)sender {
+    
+    if (self.backpackDelegate && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewReloadList:)]) {
+        [self.backpackDelegate backpackPresentViewReloadList:self];
+    }
+}
+
+- (void)showNoListView {
+    self.requestFailView.hidden = NO;
+    self.reloadBtn.hidden = YES;
+    self.tipImageViewTop.constant = 80;
+    self.failTipLabel.text = NoListTip;
+}
+
+- (void)showRequestFailView {
+    self.requestFailView.hidden = NO;
+    self.reloadBtn.hidden = NO;
+    self.tipImageViewTop.constant = 60;
+    self.failTipLabel.text = RequestFailTip;
 }
 
 - (void)reloadData {
@@ -129,47 +198,54 @@
     [self.collectionView reloadData];
 }
 
-- (void)setGiftItemArray:(NSMutableArray *)giftItemArray{
-    
-    _giftItemArray = giftItemArray;
-    [self.collectionView reloadData];
-}
-
 #pragma mark UICollectionViewDelegate / UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.giftIdArray.count;
 }
 
-// The cell that is returned must be retrieved from a call to -dequeueReusableCellWithReuseIdentifier:forIndexPath:
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     GiftItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier: [GiftItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     
-    NSString *giftId = self.giftIdArray[indexPath.row];
-//    LiveRoomGiftItemObject *item = [[LiveGiftDownloadManager giftDownloadManager] backGiftItemWithGiftID:giftId];
-//    
-//    [cell updataCellViewItem:item];
+    // 更新cell数据
+    RoomBackGiftItem *model = self.giftIdArray[indexPath.row];
+    [cell backpackHiddenView];
+    // 是否可发送
+    BOOL canSend = [[LiveGiftListManager manager] giftCanSendInLiveRoom:model.allItem];
     
+    [cell updataBackpackCellViewItem:model manLV:self.manLevel loveLV:self.loveLevel canSend:canSend];
+    
+    // 默认选中第一个
     BOOL isIndexPath = NO;
-    
     if (self.indextPathRow == indexPath.row) {
         isIndexPath = YES;
         
-    }else if (self.indextPathRow == -1 && indexPath.row == 0){
+    }else if ((self.indextPathRow == -1 && indexPath.row == 0) || self.indextPathRow == self.giftIdArray.count ){
         self.indextPathRow = 0;
         isIndexPath = YES;
     }
     
+    // 默认第一个等级不够 发送按钮不可用
     if (isIndexPath) {
         cell.selectCell = YES;
         self.isCellSelect = YES;
-        [self selectFirstNum:cell];
-//        self.selectCellItem = item;
+        self.selectCellItem = model.allItem;
+        
+        if (self.isFirstCreate) {
+            [self setupButtonBar:model.allItem.infoItem.sendNumList];
+            self.isFirstCreate = NO;
+        }
+        
+        if ( model.allItem.infoItem.loveLevel > self.loveLevel || model.allItem.infoItem.level > self.manLevel || !canSend ) {
+            [self.sendView.sendBtn setBackgroundColor:[UIColor grayColor]];
+            self.sendView.sendBtn.userInteractionEnabled = NO;
+        } else {
+            [self.sendView.sendBtn setBackgroundColor:COLOR_WITH_16BAND_RGB(0xf7cd3a)];
+            self.sendView.sendBtn.userInteractionEnabled = YES;
+        }
     }
     
     [cell reloadStyle];
-    
-    [cell backpackHiddenView];
     
     // 刷新页数 小高表布局
     GiftItemLayout *layout = (GiftItemLayout *)self.collectionView.collectionViewLayout;
@@ -182,9 +258,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.buttonBar.height) {
-        
         [self hideButtonBar];
-        
     }else{
         
         self.indextPathRow = indexPath.row;
@@ -196,19 +270,23 @@
         } completion:^( BOOL  finished) {
             [UIView setAnimationsEnabled: YES ];
         }];
+        
+        
+        RoomBackGiftItem *model = self.giftIdArray[indexPath.row];
+        
+        if (self.backpackDelegate && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewDidSelectItemWithSelf:numberList:atIndexPath:)]) {
+            [self.backpackDelegate backpackPresentViewDidSelectItemWithSelf:self numberList:model.allItem.infoItem.sendNumList atIndexPath:indexPath];
+        }
+        
+        if ( model.allItem.infoItem.loveLevel > self.loveLevel ) {
+            [[DialogTip dialogTip] removeShow];
+            [[DialogTip dialogTip] showDialogTip:self.superview tipText:NotenoughLove];
+            
+        } else if ( model.allItem.infoItem.level > self.manLevel ) {
+            [[DialogTip dialogTip] removeShow];
+            [[DialogTip dialogTip] showDialogTip:self.superview tipText:NotenoughLevel];
+        }
     }
-    
-    NSString *giftId = self.giftIdArray[indexPath.row];
-    [self didSelectItemWithGiftId:giftId];
-    
-    if (self.backpackDelegate && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewDidSelectItemWithSelf:atIndexPath:)]) {
-        [self.backpackDelegate backpackPresentViewDidSelectItemWithSelf:self atIndexPath:indexPath];
-    }
-}
-
-
-- (void)didSelectItemWithGiftId:(NSString *)giftId {
-//    self.selectCellItem = [[LiveGiftDownloadManager giftDownloadManager]backGiftItemWithGiftID:giftId];
 }
 
 #pragma mark UIScrollViewDelegate
@@ -236,9 +314,9 @@
 #pragma mark - 发送按钮
 - (void)sendTheGift:(id)sender{
     
-    if (self.backpackDelegate  && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewSendBtnClick:)]){
+    if (self.backpackDelegate  && [self.backpackDelegate respondsToSelector:@selector(backpackPresentViewSendBtnClick:andSender:)]){
         
-        [self.backpackDelegate backpackPresentViewSendBtnClick:self];
+        [self.backpackDelegate backpackPresentViewSendBtnClick:self andSender:sender];
     }
 }
 
@@ -259,90 +337,55 @@
 }
 
 #pragma mark - 多功能按钮管理
-- (void)setupButtonBar {
-    self.buttonBar = [[SelectNumButton alloc] init];
-    [self addSubview:self.buttonBar];
-    [self.buttonBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@0);
-        make.left.equalTo(self.sendView.selectBtn.mas_left);
-        make.right.equalTo(self.sendView.selectBtn.mas_right);
-        self.buttonBarBottom = make.bottom.equalTo(self.sendView.mas_bottom);
-    }];
+- (void)setupButtonBar:(NSArray *)sendNumList {
     
-    self.buttonBar.isVertical = YES;
-    self.buttonBar.clipsToBounds = YES;
+    self.buttonBar.hidden = NO;
+    self.sendView.selectNumLabel.hidden = NO;
+    self.sendView.arrowImageView.hidden = NO;
     
     UIImage *whiteImage = [[UIImage alloc]createImageWithColor:[UIColor whiteColor] imageRect:CGRectMake(0, 0, 1, 1)];
-    UIImage *blueImage = [[UIImage alloc]createImageWithColor:COLOR_WITH_16BAND_RGB(0x0deaf3) imageRect:CGRectMake(0, 0, 1, 1)];
+    UIImage *blueImage = [[UIImage alloc]createImageWithColor:COLOR_WITH_16BAND_RGB(0xf7cd3a) imageRect:CGRectMake(0, 0, 1, 1)];
     
     NSMutableArray* items = [NSMutableArray array];
     
-    UIButton* thirdNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [thirdNumBtn setTitle:@"50" forState:UIControlStateNormal];
-    [thirdNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [thirdNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [thirdNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [thirdNumBtn addTarget:self action:@selector(selectThirdNum:) forControlEvents:UIControlEventTouchUpInside];
-    [thirdNumBtn setSelected:NO];
-    self.thirdNumBtn = thirdNumBtn;
-    [items addObject:self.thirdNumBtn];
-    
-    
-    UIButton* secondNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [secondNumBtn setTitle:@"20" forState:UIControlStateNormal];
-    [secondNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [secondNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [secondNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [secondNumBtn addTarget:self action:@selector(selectSecondNum:) forControlEvents:UIControlEventTouchUpInside];
-    [secondNumBtn setSelected:NO];
-    self.secondNumBtn = secondNumBtn;
-    [items addObject:self.secondNumBtn];
-    
-    UIButton* firstNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [firstNumBtn setTitle:@"1" forState:UIControlStateNormal];
-    [firstNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [firstNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
-    [firstNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
-    [firstNumBtn addTarget:self action:@selector(selectFirstNum:) forControlEvents:UIControlEventTouchUpInside];
-    [firstNumBtn setSelected:YES];
-    self.firstNumBtn = firstNumBtn;
-    [items addObject:self.firstNumBtn];
-    
-    self.buttonBar.items = items;
-    [self.buttonBar reloadData:YES];
+    for (int i = 0; i < sendNumList.count; i++) {
+        
+        NSString *title = [NSString stringWithFormat:@"%@",sendNumList[i]];
+        UIButton* firstNumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        [firstNumBtn setTitle:title forState:UIControlStateNormal];
+        [firstNumBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [firstNumBtn setBackgroundImage:whiteImage forState:UIControlStateNormal];
+        [firstNumBtn setBackgroundImage:blueImage forState:UIControlStateSelected];
+        [firstNumBtn addTarget:self action:@selector(selectFirstNum:) forControlEvents:UIControlEventTouchUpInside];
+        if (i == 0) {
+            self.sendView.selectNumLabel.text = title;
+            [firstNumBtn setSelected:YES];
+        } else {
+            [firstNumBtn setSelected:NO];
+        }
+        [items addObject:firstNumBtn];
+        
+        if (i == sendNumList.count - 1) {
+            self.buttonBar.items = items;
+            [self.buttonBar reloadData:YES];
+            self.buttonBarHeight = 42 * (int)sendNumList.count;
+        }
+    }
 }
 
 
 - (void)selectFirstNum:(id)sender{
+    UIButton *btn = sender;
+    [sender setSelected:YES];
     
-    [self.firstNumBtn setSelected:YES];
-    [self.secondNumBtn setSelected:NO];
-    [self.thirdNumBtn setSelected:NO];
-    
-    self.sendView.selectNumLabel.text = self.firstNumBtn.titleLabel.text;
-    
-    [self hideButtonBar];
-}
-
-- (void)selectSecondNum:(id)sender{
-    
-    [self.secondNumBtn setSelected:YES];
-    [self.firstNumBtn setSelected:NO];
-    [self.thirdNumBtn setSelected:NO];
-    
-    self.sendView.selectNumLabel.text = self.secondNumBtn.titleLabel.text;
-    
-    [self hideButtonBar];
-}
-
-- (void)selectThirdNum:(id)sender{
-    
-    [self.thirdNumBtn setSelected:YES];
-    [self.secondNumBtn setSelected:NO];
-    [self.firstNumBtn setSelected:NO];
-    
-    self.sendView.selectNumLabel.text = self.thirdNumBtn.titleLabel.text;
-    
+    if (self.buttonBar.items.count > 1) {
+        for (UIButton *button in self.buttonBar.items) {
+            if (btn != button) {
+                [button setSelected:NO];
+            }
+        }
+    }
+    self.sendView.selectNumLabel.text = btn.titleLabel.text;
     [self hideButtonBar];
 }
 
@@ -364,7 +407,7 @@
     [self.buttonBarBottom uninstall];
     
     [self.buttonBar mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@DESGIN_TRANSFORM_3X(120));
+        make.height.equalTo(@DESGIN_TRANSFORM_3X(self.buttonBarHeight));
         self.buttonBarBottom = make.bottom.equalTo(self.sendView.mas_top).offset(-2);
     }];
     [UIView animateWithDuration:0.3 animations:^{
@@ -397,5 +440,6 @@
         self.sendView.selectBtn.selected = NO;
     }];
 }
+
 
 @end

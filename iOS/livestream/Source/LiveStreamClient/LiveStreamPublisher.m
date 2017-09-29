@@ -415,9 +415,12 @@
         if( self.isStart ) {
             // 断线重新推流
             dispatch_async(self.reconnect_queue, ^{
-                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
                 [self.publisher stop];
-                [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), self.reconnect_queue, ^{
+                    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
+                    [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                });
             });
             
         } else {

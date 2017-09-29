@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flContentBody"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -68,8 +69,8 @@
 
             <!--用户端底部操作界面,包含发言，送礼，分享-->
             <include
-                android:id="@+id/ll_buttom_audience_freepublic"
-                layout="@layout/view_live_buttom_audience_freepublic"
+                android:id="@+id/ll_buttom_audience"
+                layout="@layout/view_live_buttom_audience_public"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -172,15 +173,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:visibility="invisible"
-                android:layout_marginRight="12dp"
-                android:layout_marginLeft="12dp" />
+                android:visibility="invisible" />
             <!--大礼物-->
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/advanceGift"
                 android:layout_width="match_parent"
                 android:layout_height="600dp"
                 android:layout_gravity="bottom"
+                fresco:actualImageScaleType="fitCenter"
                 android:visibility="gone" />
 
         </FrameLayout>
@@ -198,4 +198,15 @@
             custom:lineNumbPerPage="3">
         </com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout>
     </LinearLayout>
+
+    <!--视频上传区域-->
+    <include
+        android:id="@+id/includePublish"
+        layout="@layout/include_liveroom_publish"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="48dp"
+        android:layout_marginRight="16dp"/>
+
 </com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout>

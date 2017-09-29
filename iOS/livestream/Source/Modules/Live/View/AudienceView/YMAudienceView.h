@@ -21,8 +21,7 @@
 
 @interface YMAudienceView : UIView
 
-- (void)updateAudienceViewWithAudienceArray:(NSMutableArray *)audienceArray;
-
-@property(nonatomic,weak) id<YMAudienceViewDelegate> delegate;
+@property(nonatomic, weak) id<YMAudienceViewDelegate> delegate;
+@property(nonatomic, strong) NSMutableArray *audienceArray;
 
 @end

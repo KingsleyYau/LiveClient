@@ -19,6 +19,7 @@ class RequestManHandleBookingListCallback : public IRequestManHandleBookingListC
         FileLog("httprequest", "JNI::onGetScheduleInviteList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getBookInviteArray(env, item.list);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -34,7 +35,7 @@ class RequestManHandleBookingListCallback : public IRequestManHandleBookingListC
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, item.total, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, item.total, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -85,6 +86,7 @@ class RequestHandleBookingCallback : public IRequestHandleBookingCallback{
 
         FileLog("httprequest", "JNI::OnHandleBooking( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -95,7 +97,7 @@ class RequestHandleBookingCallback : public IRequestHandleBookingCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -140,6 +142,7 @@ class RequestSendCancelPrivateLiveInviteCallback : public IRequestSendCancelPriv
 
         FileLog("httprequest", "JNI::OnCancelPrivateRequest( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -150,7 +153,7 @@ class RequestSendCancelPrivateLiveInviteCallback : public IRequestSendCancelPriv
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -194,6 +197,7 @@ class RequestManBookingUnreadUnhandleNumCallback : public IRequestManBookingUnre
 
         FileLog("httprequest", "JNI::OnManBookingUnreadUnhandleNum( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -204,7 +208,7 @@ class RequestManBookingUnreadUnhandleNumCallback : public IRequestManBookingUnre
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, item.total, item.handleNum, item.scheduledUnreadNum, item.historyUnreadNum);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, item.totalNoReadNum, item.pendingNoReadNum, item.scheduledNoReadNum, item.historyNoReadNum);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -248,7 +252,7 @@ class RequestGetCreateBookingInfoCallback : public IRequestGetCreateBookingInfoC
         FileLog("httprequest", "JNI::OnGetCreateBookingInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
         jobject jItem = getBookInviteConfigItem(env, item);
-
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -263,12 +267,12 @@ class RequestGetCreateBookingInfoCallback : public IRequestGetCreateBookingInfoC
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
 		if(NULL != jItem){
-			env->DeleteGlobalRef(jItem);
+			env->DeleteLocalRef(jItem);
 		}
 
 		if(callBackObject != NULL){
@@ -310,6 +314,7 @@ class RequestSendBookingRequestCallback : public IRequestSendBookingRequestCallb
 
         FileLog("httprequest", "JNI::OnSendBookingRequest( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -320,7 +325,7 @@ class RequestSendBookingRequestCallback : public IRequestSendBookingRequestCallb
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -337,10 +342,10 @@ RequestSendBookingRequestCallback gRequestSendBookingRequestCallback;
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
  * Method:    CreateScheduleInvite
- * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;IZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_CreateScheduleInvite
-  (JNIEnv *env, jclass cls, jstring userId, jstring timeId, jint bookTime, jstring giftId, jint giftNum, jobject callback){
+  (JNIEnv *env, jclass cls, jstring userId, jstring timeId, jint bookTime, jstring giftId, jint giftNum, jboolean needSms, jobject callback){
 
     jlong taskId = -1;
     taskId = gHttpRequestController.SendBookingRequest(&gHttpRequestManager,
@@ -349,6 +354,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
     									bookTime,
     									JString2String(env, giftId),
     									giftNum,
+    									needSms,
     									&gRequestSendBookingRequestCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -356,3 +362,64 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
 
     return taskId;
 }
+
+/*********************************** 4.7.观众处理立即私密邀请  ****************************************/
+
+class RequestAcceptInstanceInviteCallback : public IRequestAcceptInstanceInviteCallback{
+	void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask* task, bool success, int errnum, const string& errmsg, const HttpAcceptInstanceInviteItem& item){
+		JNIEnv* env = NULL;
+        bool isAttachThread = false;
+        GetEnv(&env, &isAttachThread);
+
+        FileLog("httprequest", "JNI::OnAcceptInstanceInvite( success : %s, task : %p, roomId:%s isAttachThread:%d )", success?"true":"false", task, item.roomId.c_str(), isAttachThread);
+
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		/*callback object*/
+        jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;Ljava/lang/String;I)V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onAcceptInstanceInvite", signature.c_str());
+			FileLog("httprequest", "JNI::OnAcceptInstanceInvite( callback : %p, signature : %s )",
+						callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+				jint jroomType = LiveRoomTypeToInt(item.roomType);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jroomId, jroomType);
+				env->DeleteLocalRef(jerrmsg);
+				env->DeleteLocalRef(jroomId);
+			}
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+
+	}
+};
+
+RequestAcceptInstanceInviteCallback gRequestAcceptInstanceInviteCallback;
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_AcceptInstanceInvite
+ * Method:    AcceptInstanceInvite
+ * Signature: (Ljava/lang/String;ZILcom/qpidnetwork/livemodule/httprequest/OnAcceptInstanceInviteCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_AcceptInstanceInvite
+  (JNIEnv *env, jclass cls, jstring inviteId, jboolean isConfirm, jobject callback) {
+    jlong taskId = -1;
+    taskId = gHttpRequestController.AcceptInstanceInvite(&gHttpRequestManager,
+    									JString2String(env, inviteId),
+    									isConfirm,
+                                        &gRequestAcceptInstanceInviteCallback);
+
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+
+}
+
+

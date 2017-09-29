@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetHotLiveList
- * Signature: (IILcom/qpidnetwork/livemodule/httprequest/OnGetHotListCallback;)J
+ * Signature: (IIZLcom/qpidnetwork/livemodule/httprequest/OnGetHotListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetHotLiveList
-  (JNIEnv *, jclass, jint, jint, jobject);
+  (JNIEnv *, jclass, jint, jint, jboolean, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
@@ -114,10 +114,10 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetPromoAnchorList
- * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ * Signature: (IILjava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPromoAnchorList
-  (JNIEnv *, jclass, jint, jobject);
+  (JNIEnv *, jclass, jint, jint, jstring, jobject);
 
 #ifdef __cplusplus
 }

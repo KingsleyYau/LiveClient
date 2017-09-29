@@ -186,6 +186,8 @@ private:
 }
 
 - (instancetype)init {
+    NSLog(@"RtmpPlayerOC::init()");
+    
     if(self = [super init] ) {
         // 默认在前台
         _isBackGround = NO;
@@ -196,8 +198,14 @@ private:
         self.player->SetStatusCallback(self.statusCallback);
         self.player->SetCacheMS(1000);
         
-        // 默认使用硬解码
+#if TARGET_OS_SIMULATOR
+        // 模拟器, 默认使用软解码
+        _useHardDecoder = NO;
+#else
+        // 真机, 默认使用硬解码
         _useHardDecoder = YES;
+#endif
+        
         // 创建解码器和渲染器
         [self createDecoders];
         
@@ -210,6 +218,8 @@ private:
 }
 
 - (void)dealloc {
+    NSLog(@"RtmpPlayerOC::dealloc()");
+    
     if( self.statusCallback ) {
         delete self.statusCallback;
         self.statusCallback = NULL;

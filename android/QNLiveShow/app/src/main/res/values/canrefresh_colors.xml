@@ -6,7 +6,7 @@
     <color name="google_red">#EA4335</color>
     <color name="google_green">#34A853</color>
     <color name="google_yellow">#FBBC05</color>
-
+    <color name="google_orange">#ed6d64</color>
 
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_7">#77000000</color>
@@ -32,6 +32,8 @@
     <color name="black3">#ff999999</color>
     <color name="black4">#ffcccccc</color>
 
+    <color name="gray">#bfbfbf</color>
+
     <color name="show_bg">#f8f8f8</color>
     <color name="line">#e6e6e6</color>
     <color name="line_stroke">#ebebeb</color>
@@ -51,5 +53,8 @@
     <color name="tag_bg_color">#6479f0</color>
     <color name="shadow">#25808080</color>
 
+    <color name="talent_yellow">#ffd205</color>
+    <color name="talent_violet">#f25d0e86</color>
+    <color name="talent_btn_txt">#724602</color>
 
 </resources>

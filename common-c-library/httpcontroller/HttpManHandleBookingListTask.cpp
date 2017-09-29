@@ -51,7 +51,7 @@ void HttpManHandleBookingListTask::SetParam(
     
     char temp[16];
     snprintf(temp, sizeof(temp), "%d", type);
-    mHttpEntiy.AddContent(LIVEROOM_MANHANDLEBOOKINGLIST_TYPE, temp);
+    mHttpEntiy.AddContent(LIVEROOM_MANHANDLEBOOKINGLIST_TAG, temp);
     mType = type;
     
     snprintf(temp, sizeof(temp), "%d", start);

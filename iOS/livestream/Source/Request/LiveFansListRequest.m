@@ -12,8 +12,8 @@
 - (instancetype)init{
     if (self = [super init]) {
         self.roomId = @"";
-        self.page = 0;
-        self.number = 0;
+        self.start = 0;
+        self.step = 0;
     }
     
     return self;
@@ -26,7 +26,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager liveFansList:self.roomId page:self.page number:self.number finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *> * _Nullable array) {
+        NSInteger request = [self.manager liveFansList:self.roomId start:self.start step:self.step finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *> * _Nullable array) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理

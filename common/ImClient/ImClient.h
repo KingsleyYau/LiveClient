@@ -70,7 +70,7 @@ public:
      *  @param anchorId        主播ID
      *
      */
-    bool PublicRoomIn(SEQ_T reqId, const string& anchorId) override;
+    bool PublicRoomIn(SEQ_T reqId, const string& userId) override;
     
     /**
      *  3.14.观众开始／结束视频互动
@@ -81,6 +81,15 @@ public:
      *
      */
     bool ControlManPush(SEQ_T reqId, const string& roomId, IMControlType control) override;
+    
+    /**
+     *  3.15.获取指定立即私密邀请信息
+     *
+     *  @param reqId            请求序列号
+     *  @param invitationId     邀请ID
+     *
+     */
+    bool GetInviteInfo(SEQ_T reqId, const string& invitationId) override;
     
     // --------- 直播间文本消息 ---------
     /**
@@ -335,11 +344,9 @@ private:
      *  3.3.接收直播间关闭通知(观众)回调
      *
      *  @param roomId      直播间ID
-     *  @param userId      直播ID
-     *  @param nickName    直播昵称
      *
      */
-    void OnRecvRoomCloseNotice(const string& roomId, const string& userId, const string& nickName, LCC_ERR_TYPE err, const string& errMsg) override;
+    void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) override;
     
     /**
      *  3.4.接收观众进入直播间通知回调
@@ -424,7 +431,7 @@ private:
      *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
      *
      */
-    void OnRecvWaitStartOverNotice(const string& roomId, int leftSeconds) override;
+    void OnRecvWaitStartOverNotice(const StartOverRoomItem& item) override;
     
     /**
      *  3.12.接收观众／主播切换视频流通知接口 回调
@@ -452,10 +459,21 @@ private:
      *  @param success          操作是否成功
      *  @param reqId            请求序列号
      *  @param errMsg           结果描述
-     *  @param manPushUrl       直播间信息
+     *  @param manPushUrl       观众视频流url
      *
      */
     void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) override;
+    
+    /**
+     *  3.15.获取指定立即私密邀请信息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param item             立即私密邀请
+     *
+     */
+    void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item) override;
     
     /**
      *  4.2.接收直播间文本消息通知回调
@@ -523,14 +541,14 @@ private:
     /**
      *  7.4.接收主播立即私密邀请通知 回调
      *
-     *  @param logId     记录ID
-     *  @param anchorId   主播ID
-     *  @param nickName   主播昵称
-     *  @param avatarImg   主播头像url
-     *  @param msg   提示文字
+     *  @param inviteId     邀请ID
+     *  @param anchorId     主播ID
+     *  @param nickName     主播昵称
+     *  @param avatarImg    主播头像url
+     *  @param msg          提示文字
      *
      */
-    void OnRecvInstantInviteUserNotice(const string& logId, const string& anchorId, const string& nickName ,const string& avatarImg, const string& msg) override;
+    void OnRecvInstantInviteUserNotice(const string& inviteId, const string& anchorId, const string& nickName ,const string& avatarImg, const string& msg) override;
     
     /**
      *  7.5.接收主播预约私密邀请通知 回调
@@ -547,11 +565,10 @@ private:
     /**
      *  7.6.接收预约私密邀请回复通知 回调
      *
-     *  @param inviteId     邀请ID
-     *  @param replyType    主播回复（0:拒绝 1:同意 2:超时）
+     *  @param item     预约私密邀请回复知结构体
      *
      */
-    void OnRecvSendBookingReplyNotice(const string& inviteId, AnchorReplyType replyType) override;
+    void OnRecvSendBookingReplyNotice(const BookingReplyItem& item) override;
     
     /**
      *  7.7.接收预约开始倒数通知 回调
@@ -559,24 +576,19 @@ private:
      *  @param roomId       直播间ID
      *  @param userId       对端ID
      *  @param nickName     对端昵称
-     *  @param photoUrl     对端头像url
+     *  @param avatarImg    对端头像url
      *  @param leftSeconds  倒数时间（秒）
      *
      */
-    void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, int leftSeconds) override;
+    void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& avatarImg, int leftSeconds) override;
     
     /**
      *  8.2.接收直播间才艺点播回复通知 回调
      *
-     *  @param roomId           直播间ID
-     *  @param talentInviteId   才艺邀请ID
-     *  @param talentId         才艺ID
-     *  @param name             才艺名称
-     *  @param credit           观众当前的信用点余额
-     *  @param status           状态（1:已接受 2:拒绝）
+     *  @param item          才艺回复通知结构体
      *
      */
-    void OnRecvSendTalentNotice(const string& roomId, const string& talentInviteId, const string& talentId, const string& name, double credit, TalentStatus status) override;
+    void OnRecvSendTalentNotice(const TalentReplyItem& item) override;
     
     /**
      *  9.1.观众等级升级通知 回调

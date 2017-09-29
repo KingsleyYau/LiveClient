@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="bottom"
+    android:background="@android:color/transparent"
+    android:paddingBottom="10dp"
+    android:layout_gravity="bottom">
+
+        <ImageView
+            android:id="@+id/iv_inputMsg"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:background="@drawable/ic_live_buttom_input_paypublic"
+            android:gravity="center_vertical"
+            android:onClick="onClick"
+            android:layout_marginLeft="13dp" />
+
+
+        <ImageView
+            android:id="@+id/iv_gift_public"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/ic_live_buttom_gift_paypublic"
+            android:onClick="onClick" />
+
+</LinearLayout>

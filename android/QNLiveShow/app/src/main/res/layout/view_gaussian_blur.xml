@@ -11,6 +11,6 @@
         android:id="@+id/v_gaussianBlurFloat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#d9525252"/>
+        android:background="#de000000"/>
 </FrameLayout>
 

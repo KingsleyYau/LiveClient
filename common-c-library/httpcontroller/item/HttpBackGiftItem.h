@@ -16,7 +16,7 @@ using namespace std;
 
 #include "HttpGiftInfoItem.h"
 
-typedef list<int> HttpSendNumList;
+//typedef list<int> HttpSendNumList;
 class HttpBackGiftItem {
 public:
     bool Parse(const Json::Value& root) {

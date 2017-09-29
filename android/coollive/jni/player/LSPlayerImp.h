@@ -32,6 +32,7 @@ public:
 
 private:
 	void OnPlayerDisconnect(PlayerController* pc);
+	void OnPlayerOnDelayMaxTime(PlayerController* pc);
 
 private:
 	void CreateDecoders();

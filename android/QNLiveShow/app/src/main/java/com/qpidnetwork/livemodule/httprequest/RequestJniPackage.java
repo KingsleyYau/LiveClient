@@ -9,8 +9,6 @@ public class RequestJniPackage {
 	
 	/**
 	 * 5.1.获取背包礼物列表
-	 * @param start
-	 * @param step
 	 * @param callback
 	 * @return
 	 */

@@ -56,6 +56,7 @@ bool HttpVoucherListTask::ParseData(const string& url, bool bFlag, const char* b
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     VoucherList list;
+    int totalCount = 0;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -70,6 +71,9 @@ bool HttpVoucherListTask::ParseData(const string& url, bool bFlag, const char* b
                         item.Parse(dataJson[LIVEROOM_VOUCHERLIST_LIST].get(i, Json::Value::null));
                         list.push_back(item);
                     }
+                }
+                if (dataJson[LIVEROOM_VOUCHERLIST_TOTALCOUNT].isNumeric()) {
+                    totalCount = dataJson[LIVEROOM_VOUCHERLIST_TOTALCOUNT].asInt();
                 }
             }
             
@@ -86,7 +90,7 @@ bool HttpVoucherListTask::ParseData(const string& url, bool bFlag, const char* b
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnVoucherList(this, bParse, errnum, errmsg, list);
+        mpCallback->OnVoucherList(this, bParse, errnum, errmsg, list, totalCount);
     }
     
     return bParse;

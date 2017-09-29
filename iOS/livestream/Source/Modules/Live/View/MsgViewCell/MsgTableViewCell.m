@@ -7,12 +7,15 @@
 //
 
 #import "MsgTableViewCell.h"
+#import "NSAttributedString+YYText.h"
 
 @interface MsgTableViewCell ()
 
 @property (nonatomic, strong) YYTextLinePositionSimpleModifier *modifier;
 @property (nonatomic, strong) YYTextContainer *container;
 @property (nonatomic, strong) YYTextLayout *layout;
+@property (nonatomic, strong) UIButton *tapBtn;
+@property (nonatomic, copy) NSString *linkUrl;
 
 @end
 
@@ -48,24 +51,30 @@
     
     if (self) {
      
-        self.lvView = [LevelView getLevelView];
-        [self addSubview:self.lvView];
+//        self.lvView = [LevelView getLevelView];
+//        [self addSubview:self.lvView];
         
         self.messageLabel = [YYLabel new];
         self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 165, 0);
         self.messageLabel.displaysAsynchronously = YES;
         [self addSubview:self.messageLabel];
         
-        [self.lvView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.equalTo(@37);
-            make.height.equalTo(@16);
-            make.left.equalTo(@0);
-            make.bottom.equalTo(self.messageLabel.mas_top).offset(20);
-        }];
+        self.tapBtn = [[UIButton alloc] init];
+        self.tapBtn.backgroundColor = [UIColor clearColor];
+        [self.tapBtn addTarget:self action:@selector(pushGoAction) forControlEvents:UIControlEventTouchUpInside];
+        self.tapBtn.hidden = YES;
+        [self addSubview:self.tapBtn];
+        
+//        [self.lvView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.width.equalTo(@37);
+//            make.height.equalTo(@16);
+//            make.left.equalTo(@0);
+//            make.bottom.equalTo(self.messageLabel.mas_top).offset(20);
+//        }];
         self.backgroundColor = [UIColor clearColor];
         
         self.modifier = [[YYTextLinePositionSimpleModifier alloc] init];
-        self.modifier.fixedLineHeight = 16;
+        self.modifier.fixedLineHeight = 18;
         
         // 创建文本容器
         self.container = [[YYTextContainer alloc] init];
@@ -79,18 +88,15 @@
 - (void)changeMessageLabelWidth:(CGFloat)width {
     
     self.tableViewWidth = width;
-        
     self.messageLabel.width = width;
-    self.messageLabel.height = 0;
     self.container.size = CGSizeMake(width, CGFLOAT_MAX);
+    NSLog(@"changeMessageLabelWidth  %@", NSStringFromCGSize(self.size));
 }
 
 - (void)updataChatMessage:(MsgItem *)item{
     
-//    self.lvView.levelLabel.text = [NSString stringWithFormat:@"%lld0", (long long)item.level, nil];
-    self.lvView.levelLabel.text = [NSString stringWithFormat:@"89"];
-    
     // 生成排版结果
+    self.tapBtn.hidden = YES;
     YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
     self.messageLabel.size = layout.textBoundingSize;
     self.messageLabel.textLayout = layout;
@@ -99,6 +105,22 @@
     self.messageLabel.shadowBlurRadius = 1.0f;
     self.messageLabelWidth = self.messageLabel.frame.size.width;
     self.messageLabelHeight = self.messageLabel.frame.size.height;
+    
+    if (item.type == MsgType_Link) {
+        self.tapBtn.hidden = NO;
+        [self.tapBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(@(self.messageLabelWidth));
+            make.left.top.height.equalTo(self);
+        }];
+        self.linkUrl = item.linkStr;
+    }
+}
+
+- (void)pushGoAction {
+    
+    if ([self.msgDelegate respondsToSelector:@selector(msgCellRequestHttp:)]) {
+        [self.msgDelegate msgCellRequestHttp:self.linkUrl];
+    }
 }
 
 + (NSString *)textPreDetail {

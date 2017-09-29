@@ -164,7 +164,7 @@
 }
 
 
-- (NSAttributedString *)parseMessageAttributedTextEmotion:(NSMutableAttributedString *)text font:(UIFont *)font {
+- (NSMutableAttributedString *)parseMessageAttributedTextEmotion:(NSMutableAttributedString *)text font:(UIFont *)font {
     
     NSRange strRange;
 

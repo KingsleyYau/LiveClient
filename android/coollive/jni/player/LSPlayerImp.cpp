@@ -222,3 +222,7 @@ void LSPlayerImp::OnPlayerDisconnect(PlayerController* pc) {
 		ReleaseEnv(isAttachThread);
 	}
 }
+
+void LSPlayerImp::OnPlayerOnDelayMaxTime(PlayerController* pc) {
+
+}

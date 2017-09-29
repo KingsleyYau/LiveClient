@@ -18,13 +18,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;
-import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.ActivityUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.TimerTask;
 
 /**
@@ -174,17 +171,14 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
     @Override
     public void addNewLiveMsg(Object item) {
         boolean isAtBottom = !canScrollVertically(1); //值表示是否能向上滚动，false表示已经滚动到底部
-
         if(mLiveMsgManager.addNewMsg(mLiveMsgItems , item , isAtBottom)){
             mRecyclerViewAdapter.notifyDataSetChanged();
-
             //如果当前状态是在底部
             if(isAtBottom){
                 //滑动到底
                 scrollToPosition(mLiveMsgItems.size()-1);
             }
         }
-
         //如果不在底部，去取未读数
         if(!isAtBottom){
             mUnReadSum = mLiveMsgManager.getUnreadSum();

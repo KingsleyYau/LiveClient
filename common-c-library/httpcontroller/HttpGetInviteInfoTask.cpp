@@ -3,7 +3,7 @@
  *
  *  Created on: 2017-8-17
  *      Author: Alex
- *        desc: 3.9.获取指定立即私密邀请信息
+ *        desc: 3.9.获取指定立即私密邀请信息（已废弃）
  */
 
 #include "HttpGetInviteInfoTask.h"

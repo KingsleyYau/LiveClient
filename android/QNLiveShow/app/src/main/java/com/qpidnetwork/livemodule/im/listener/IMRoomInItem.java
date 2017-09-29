@@ -2,9 +2,20 @@ package com.qpidnetwork.livemodule.im.listener;
 
 import java.io.Serializable;
 
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
-
 public class IMRoomInItem implements Serializable{
+	
+	/**
+	 * 直播间类型
+	 * @author Hunter Mun
+	 *
+	 */
+	public enum IMLiveRoomType {
+		Unknown,				//未知
+		FreePublicRoom,			//免费公开直播间
+		NormalPrivateRoom,		//普通私密直播间
+		PaidPublicRoom,			//付费公开直播间
+		AdvancedPrivateRoom		//豪华私密直播间
+	}
 	
 	private static final long serialVersionUID = -2781675685594191161L;
 	
@@ -17,6 +28,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param nickName			主播昵称
 	 * @param photoUrl			主播头像url
 	 * @param videoUrls			视频流url（字符串数组）
+	 * @param roomId			视频流url（字符串数组）
 	 * @param roomType			直播间类型
 	 * @param credit			用户当前信用点
 	 * @param usedVoucher		是否使用试用券
@@ -25,7 +37,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param loveLevel			亲密度等级
 	 * @param rebateItem		返点信息（Object）
 	 * @param isFavorite		是否已收藏
-	 * @param showTime			开播前的倒数秒数
+	 * @param leftSeconds		开播前的倒数秒数
 	 * @param needWait			是否要等开播通知
 	 * @param roomPrice			直播间资费
 	 * @param videoPrice		视频资费
@@ -35,6 +47,7 @@ public class IMRoomInItem implements Serializable{
 						String nickName,
 						String photoUrl,
 						String[] videoUrls,
+						String roomId,
 						int roomType,
 						double credit,
 						boolean usedVoucher,
@@ -54,11 +67,12 @@ public class IMRoomInItem implements Serializable{
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
 		this.videoUrls = videoUrls;
+		this.roomId = roomId;
 		
-		if( roomType < 0 || roomType >= LiveRoomType.values().length ) {
-			this.roomType = LiveRoomType.Unknown;
+		if( roomType < 0 || roomType >= IMLiveRoomType.values().length ) {
+			this.roomType = IMLiveRoomType.Unknown;
 		} else {
-			this.roomType = LiveRoomType.values()[roomType];
+			this.roomType = IMLiveRoomType.values()[roomType];
 		}
 		
 		this.credit = credit;
@@ -81,7 +95,8 @@ public class IMRoomInItem implements Serializable{
 	public String nickName;
 	public String photoUrl;
 	public String[] videoUrls;
-	public LiveRoomType roomType;
+	public String roomId;
+	public IMLiveRoomType roomType;
 	public double credit;
 	public boolean usedVoucher;
 	public int fansNum;
@@ -96,4 +111,51 @@ public class IMRoomInItem implements Serializable{
 	public double roomPrice;
 	public double videoPrice;
 	public int audienceLimitNum;
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("IMRoomInItem[");
+		sb.append("userId:");
+		sb.append(userId);
+		sb.append(" nickName:");
+		sb.append(nickName);
+		sb.append(" photoUrl:");
+		sb.append(photoUrl);
+		sb.append(" videoUrls:");
+		sb.append(videoUrls);
+		sb.append(" roomType:");
+		sb.append(roomType);
+		sb.append(" roomId:");
+		sb.append(roomId);
+		sb.append(" credit:");
+		sb.append(credit);
+		sb.append(" usedVoucher:");
+		sb.append(usedVoucher);
+		sb.append(" fansNum:");
+		sb.append(fansNum);
+		sb.append(" emoTypeList:");
+		sb.append(emoTypeList);
+		sb.append(" loveLevel:");
+		sb.append(loveLevel);
+		sb.append(" rebateItem:");
+		sb.append(rebateItem);
+		sb.append(" isFavorite:");
+		sb.append(isFavorite);
+		sb.append(" leftSeconds:");
+		sb.append(leftSeconds);
+		sb.append(" needWait:");
+		sb.append(needWait);
+		sb.append(" manUploadRtmpUrls:");
+		sb.append(manUploadRtmpUrls);
+		sb.append(" manLevel:");
+		sb.append(manLevel);
+		sb.append(" roomPrice:");
+		sb.append(roomPrice);
+		sb.append(" videoPrice:");
+		sb.append(videoPrice);
+		sb.append(" audienceLimitNum:");
+		sb.append(audienceLimitNum);
+		sb.append("]");
+		return sb.toString();
+	}
 }

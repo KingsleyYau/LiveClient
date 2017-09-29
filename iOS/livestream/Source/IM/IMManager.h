@@ -21,7 +21,7 @@
  断线重登陆获取到的邀请状态
 
  */
-- (void)onRecvInviteReply:(InviteIdItemObject * _Nonnull)item;
+- (void)onRecvInviteReply:(ImInviteIdItemObject * _Nonnull)item;
 
 /**
  第一次登陆成功, 需要强制进入的直播间
@@ -69,6 +69,11 @@
  *  @return 是否成功
  */
 - (BOOL)removeDelegate:(id<IMManagerDelegate> _Nonnull)delegate;
+
+/**
+ 注销
+ */
+- (void)logout;
 
 #pragma mark - 直播间状态
 typedef void (^EnterRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem);
@@ -118,14 +123,21 @@ typedef void (^CancelInviteHandler)(BOOL success, LCC_ERR_TYPE errType, NSString
  */
 - (BOOL)cancelPrivateLive:(CancelInviteHandler _Nullable)finishHandler;
 
+typedef void (^GetIMInviteInfoHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImInviteIdItemObject *_Nonnull Item);
+/**
+ 获取指定立即私密邀请信息
+ *  param finishHandler 处理回调
+ @return YES:成功/NO:失败
+ */
+- (BOOL)getInviteInfo:(GetIMInviteInfoHandler _Nullable)finishHandler;
 /**
  发送才艺点播
 
  @param roomId 直播间Id
  @param talentId 点播Id
- @return 请求惟一Id
+ @return YES:成功/NO:失败
  */
-- (NSInteger)sendTalent:(NSString *_Nonnull)roomId talentId:(NSString *_Nonnull)talentId;
+- (BOOL)sendTalent:(NSString *_Nonnull)roomId talentId:(NSString *_Nonnull)talentId;
 
 #pragma mark - 消息和礼物
 /**
@@ -135,9 +147,9 @@ typedef void (^CancelInviteHandler)(BOOL success, LCC_ERR_TYPE errType, NSString
  @param nickName 名字
  @param msg 消息文本
  @param at 需要提醒人的Id
- @return 请求惟一Id
+ @return YES:成功/NO:失败
  */
-- (NSInteger)sendLiveChat:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at;
+- (BOOL)sendLiveChat:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at;
 
 /**
  发弹幕
@@ -145,9 +157,13 @@ typedef void (^CancelInviteHandler)(BOOL success, LCC_ERR_TYPE errType, NSString
  @param roomId 直播间Id
  @param nickName 名字
  @param msg 消息文本
- @return 请求惟一Id
+ @return YES:成功/NO:失败
  */
-- (NSInteger)sendToast:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg;
+- (BOOL)sendToast:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg;
+
+
+#pragma maek - 发送礼物
+typedef void (^SendGiftHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit, double rebateCredit);
 
 /**
  发礼物
@@ -162,8 +178,20 @@ typedef void (^CancelInviteHandler)(BOOL success, LCC_ERR_TYPE errType, NSString
  @param multi_click_start 连击开始位置
  @param multi_click_end 连接结束位置
  @param multi_click_id 连击Id
- @return 请求惟一Id
+ @param finishHandler 请求回调
+ @return YES:成功/NO:失败
  */
-- (NSInteger)sendGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (BOOL)sendGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id finishHandler:(SendGiftHandler _Nullable)finishHandler;
+
+#pragma mark - 视频互动
+typedef void (^ControlManPushHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSArray<NSString *> *_Nonnull manPushUrl);
+/**
+ 开始／结束视频互动
+
+ @param roomId 直播间ID
+ @param control 视频操作
+ @return YES:成功/NO:失败
+ */
+-(BOOL)controlManPush:(NSString *_Nonnull)roomId control:(IMControlType)control finishHandler:(ControlManPushHandler _Nullable )finishHandler;
 
 @end

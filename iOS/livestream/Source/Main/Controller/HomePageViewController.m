@@ -23,6 +23,9 @@
 
 @property(nonatomic, strong) JTSegmentControl* categoryControl;
 
+/** 导航栏右边按钮 */
+@property (nonatomic, strong) BadgeButton* navRightButton;
+
 @end
 
 @implementation HomePageViewController
@@ -36,6 +39,7 @@
     [self addChildViewController:hotVc];
     
     FollowingViewController* flVc = [[FollowingViewController alloc] initWithNibName:nil bundle:nil];
+    flVc.homePageVC = self;
     [self addChildViewController:flVc];
     
 //    DiscoverViewController* vc3 = [[DiscoverViewController alloc] initWithNibName:nil bundle:nil];
@@ -50,8 +54,10 @@
     
     // 设置不被NavigationBar和TabBar遮挡
     self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = YES;
+    self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
+#warning for test
+    [self reloadUnreadMessage];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -60,6 +66,7 @@
         [self reloadData:YES animated:NO];
     }
     [super viewDidAppear:animated];
+    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -102,14 +109,24 @@
     // 右边按钮
     NSMutableArray *array = [NSMutableArray array];
     
-    UIButton* navRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    image = [UIImage imageNamed:@"Home_Nav_Btn_Search"];
+//    UIButton* navRightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    image = [UIImage imageNamed:@"Home_Nav_Btn_Person"];
+//    [navRightButton setImage:image forState:UIControlStateNormal];
+//    [navRightButton sizeToFit];
+//    [navRightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:navRightButton];
+//    [array addObject:barButtonItem];
+    
+    BadgeButton* navRightButton = [BadgeButton buttonWithType:UIButtonTypeCustom];
+    self.navRightButton = navRightButton;
+    image = [UIImage imageNamed:@"Home_Nav_Btn_Person"];
     [navRightButton setImage:image forState:UIControlStateNormal];
     [navRightButton sizeToFit];
     [navRightButton addTarget:self action:@selector(searchAction:) forControlEvents:UIControlEventTouchUpInside];
-    
     barButtonItem = [[UIBarButtonItem alloc] initWithCustomView:navRightButton];
     [array addObject:barButtonItem];
+    
     
     [self.navigationItem setRightBarButtonItems:array animated:YES];
 }
@@ -132,8 +149,20 @@
     
     ChatListViewController *listViewController = [[ChatListViewController alloc]init];
     [self.navigationController pushViewController:listViewController animated:YES];
-    
+
+
 }
+
+
+/**
+ *  刷新未读消息
+ */
+#warning for test
+- (void)reloadUnreadMessage {
+    self.navRightButton.badgeValue = @"1";
+
+}
+
 
 #pragma mark - 数据逻辑
 - (void)reloadData:(BOOL)isReloadView animated:(BOOL)animated {
@@ -195,5 +224,7 @@
     self.curIndex = index;
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
 }
+
+
 
 @end

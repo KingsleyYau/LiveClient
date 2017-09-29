@@ -23,14 +23,14 @@
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         self.giftId = [coder decodeObjectForKey:@"giftId"];
-        self.giftNumList = [coder decodeObjectForKey:@"giftNumList"];
+        self.sendNumList = [coder decodeObjectForKey:@"sendNumList"];
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.giftId forKey:@"giftId"];
-    [coder encodeObject:self.giftNumList forKey:@"giftNumList"];
+    [coder encodeObject:self.sendNumList forKey:@"sendNumList"];
 }
 
 @end

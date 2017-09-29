@@ -69,7 +69,7 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[MSG_PARAM].isString()) {
             m_msg = tp.m_data[MSG_PARAM].asString();
         }
-        if (tp.m_data[CREDIT_PARAM].isDouble()) {
+        if (tp.m_data[CREDIT_PARAM].isNumeric()) {
             m_credit = tp.m_data[CREDIT_PARAM].asDouble();
         }
     }

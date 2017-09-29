@@ -10,11 +10,12 @@
 
 #import "TestViewController.h"
 #import "HomePageViewController.h"
+#import "PreLiveViewController.h"
 
 #import "LoginManager.h"
 
 #import "Masonry.h"
-
+#import "LiveUrlHandler.h"
 @interface MainViewController () <LoginManagerDelegate>
 
 /**
@@ -44,12 +45,16 @@
 - (void)initCustomParam {
     [super initCustomParam];
  
+    NSLog(@"MainViewController::initCustomParam()");
+    
     // 监听登录事件
     self.loginManager = [LoginManager manager];
     [self.loginManager addDelegate:self];
 }
 
 - (void)dealloc {
+    NSLog(@"MainViewController::dealloc()");
+    
     // 去掉登录事件
     [self.loginManager removeDelegate:self];
 }
@@ -83,20 +88,31 @@
     // 初始化底部TabBar
     self.tabBar.items = [NSArray arrayWithObjects:vcHome.tabBarItem, self.tabBarItemPublish, vcTest.tabBarItem, nil];
     
-    // 选中默认页
-    UITabBarItem* tabBarItemDefault = [self.tabBar.items objectAtIndex:0];
-    self.tabBar.selectedItem = tabBarItemDefault;
-    [self showCurrentViewController:tabBarItemDefault];
+//    // 选中默认页
+//    UITabBarItem* tabBarItemDefault = [self.tabBar.items objectAtIndex:0];
+//    self.tabBar.selectedItem = tabBarItemDefault;
+//    [self showCurrentViewController:tabBarItemDefault];
     
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-//    if( !self.viewDidAppearEver ) {
+    if( !self.viewDidAppearEver ) {
 //        // 第一次进入, 判断是否已经登录
 //        [self checkLogin:NO];
-//    }
+    }
+    // 检查是否需要跳转直播间
+    [self checkEnterLiveRoom];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // 选中默认页
+    UITabBarItem* tabBarItemDefault = [self.tabBar.items objectAtIndex:0];
+    self.tabBar.selectedItem = tabBarItemDefault;
+    [self showCurrentViewController:tabBarItemDefault];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -224,6 +240,8 @@
         make.width.equalTo(self.tabContainView);
         make.height.equalTo(self.tabContainView);
     }];
+    // 使约束生效
+    [viewController.view layoutSubviews];
     
     // 刷新底部Tab
     self.tabBarItemSelected = item;
@@ -262,4 +280,72 @@
     
 }
 
+#pragma mark - 跳转直播间
+- (void)checkEnterLiveRoom {
+    if( self.liveRoom ) {
+        PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+        vc.liveRoom = self.liveRoom;
+        vc.liveRoom.roomType = LiveRoomType_Private;
+        
+        KKNavigationController* nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+        [self.navigationController presentViewController:nvc animated:YES completion:nil];
+        
+        self.liveRoom = nil;
+    }
+}
+#pragma mark - URLHandler回调
+
+- (void)liveUrlHandler:(LiveUrlHandler * _Nonnull)handler openWithModule:(LiveUrlType)type {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%s",__func__);
+        switch (type) {
+//            case URLTypeEmf:{
+//
+//            }break;
+//            case URLTypeLadyDetail: {
+//
+//                
+//            }break;
+//            case URLTypeChatLady: {
+//
+//
+//            }break;
+//                
+//            case URLTypeLoveCall: {
+//                
+//            }
+//            break;
+            default:
+                break;
+        }
+    });
+}
+
+
+
+- (void)liveUrlHandlerActive:(LiveUrlHandler *)handler openWithModule:(LiveUrlType)type {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"%s",__func__);
+        switch (type) {
+//            case URLTypeEmf:{
+//
+//                
+//            }break;
+//            case URLTypeSetting: {
+//                
+//                
+//            }break;
+//            case URLTypeLadyDetail: {
+//                // 跳转ladydetail
+//                
+//                
+//            }break;
+//            case URLTypeChatLady: {
+//                
+//            }break;
+            default:
+                break;
+        }
+    });
+}
 @end

@@ -134,7 +134,7 @@
 }
 
 - (void)initCustomParam {
-//    self.backTitle = NSLocalizedString(@"Back", nil);
+    self.backTitle = NSLocalizedString(@"", nil);
 }
 
 - (void)setupNavigationBar {

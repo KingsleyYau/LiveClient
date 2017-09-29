@@ -8,24 +8,29 @@
 
 #import <UIKit/UIKit.h>
 
+#import "LiveRoom.h"
 #import "PlayViewController.h"
 
 #import "UITapImageView.h"
 #import "YMAudienceView.h"
 #import "ChardTipView.h"
 
-#import "LiveRoom.h"
-
 @interface PublicViewController : KKViewController
-
+#pragma mark - 数据参数
+/**
+ 直播间对象
+ */
 @property (nonatomic, strong) LiveRoom* liveRoom;
 
-// 播放控制器
+/**
+ 播放控制器
+ */
 @property (nonatomic, strong) PlayViewController *playVC;
 
+#pragma mark - 界面控件
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
 
-@property (weak, nonatomic) IBOutlet UITapImageView *chargeTipImageView;
+@property (weak, nonatomic) IBOutlet UITapImageView *roomTypeImageView;
 
 @property (weak, nonatomic) IBOutlet YMAudienceView *audienceView;
 
@@ -43,8 +48,6 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *followBtnWidth;
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chargeTipImageWidth;
-
 @property (strong, nonatomic) ChardTipView *tipView;
 
 
@@ -52,7 +55,7 @@
 
 - (IBAction)followLiverAction:(id)sender;
 
-- (IBAction)closeLiveRoom:(id)sender;
+- (IBAction)closeAction:(id)sender;
 
 
 @end

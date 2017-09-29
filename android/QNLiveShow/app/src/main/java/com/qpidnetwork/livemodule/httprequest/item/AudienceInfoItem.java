@@ -23,12 +23,14 @@ public class AudienceInfoItem {
 	 						String nickName,
 	 						String photoUrl,
 	 						String mountId,
-	 						String mountUrl){
+	 						String mountUrl,
+	 						int level){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
 		this.mountId = mountId;
 		this.mountUrl = mountUrl;
+		this.level = level;
 	}
 	
 	public String userId;
@@ -36,4 +38,17 @@ public class AudienceInfoItem {
 	public String photoUrl;
 	public String mountId;
 	public String mountUrl;
+	public int level;
+
+
+	@Override
+	public String toString() {
+		return "AudienceInfoItem[userId:"+userId
+				+ " nickName:"+nickName
+				+ " photoUrl:"+photoUrl
+				+ " mountId:"+mountId
+				+ " mountUrl:"+mountUrl
+				+ " level:"+level
+				+ "]";
+	}
 }

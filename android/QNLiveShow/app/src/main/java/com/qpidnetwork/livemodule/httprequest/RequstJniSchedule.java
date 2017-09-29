@@ -53,7 +53,7 @@ public class RequstJniSchedule {
 	
 	/**
 	 * 4.5.获取新建预约邀请信息
-	 * @param userId
+	 * @param anchorId
 	 * @return
 	 */
 	static public native long GetScheduleInviteCreateConfig(String anchorId, OnGetScheduleInviteCreateConfigCallback callback);
@@ -66,8 +66,17 @@ public class RequstJniSchedule {
 	 * @param giftId
 	 * @param giftNum
 	 * @param callback
+	 * @param needSms       是否需要短信通知
 	 * @return
 	 */
-	static public native long CreateScheduleInvite(String userId, String timeId, int bookTime, String giftId, int giftNum, OnRequestCallback callback);
+	static public native long CreateScheduleInvite(String userId, String timeId, int bookTime, String giftId, int giftNum, boolean needSms, OnRequestCallback callback);
 	
+	/**
+	 * 4.7.观众处理立即私密邀请
+	 * @param inviteId              // 邀请ID
+	 * @param isConfirmed           // 是否同意（0: 否， 1: 是）
+	 * @param callback
+	 * @return
+	 */
+	static public native long AcceptInstanceInvite(String inviteId, boolean isConfirmed, OnAcceptInstanceInviteCallback callback);
 }

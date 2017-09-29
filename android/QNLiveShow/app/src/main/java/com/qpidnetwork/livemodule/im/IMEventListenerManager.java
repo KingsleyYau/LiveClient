@@ -1,17 +1,18 @@
 package com.qpidnetwork.livemodule.im;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
+import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.utils.Log;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * 管理监听消息分发
@@ -19,7 +20,7 @@ import com.qpidnetwork.livemodule.utils.Log;
  * @since 2017-6-1
  */
 public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLiveRoomEventListener,
-										IMOtherEventListener{
+										IMOtherEventListener,IMLoginStatusListener{
 	
 	private static final String TAG = IMEventListenerManager.class.getName();
 	
@@ -323,11 +324,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, LCC_ERR_TYPE errType, String errMsg) {
+	public void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomCloseNotice(roomId, userId, nickName, errType, errMsg);
+				listener.OnRecvRoomCloseNotice(roomId, errType, errMsg);
 			}
 		}
 	}
@@ -395,6 +396,16 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnControlManPush(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnControlManPush(reqId, success, errType, errMsg, manPushUrl);
+			}
+		}
+	}
+
+	@Override
 	public void OnSendRoomMsg(boolean success, LCC_ERR_TYPE errType, String errMsg, IMMessageItem msgItem) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
@@ -457,6 +468,16 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnRecvSendSystemNotice(IMMessageItem msgItem) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvSendSystemNotice(msgItem);
+			}
+		}
+	}
+
+	@Override
 	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
@@ -509,6 +530,16 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
+	public void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem) {
+		synchronized(mIMInviteLaunchListeners){
+			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
+				IMInviteLaunchEventListener listener = iter.next();
+				listener.OnGetInviteInfo(reqId, success, errType, errMsg, inviteItem);
+			}
+		}
+	}
+
+	@Override
 	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
@@ -536,6 +567,62 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
 				listener.OnRecvInviteReply(inviteId, replyType, roomId, roomType, anchorId, nickName, avatarImg, message);
+			}
+		}
+	}
+
+
+	//------------------------断线重连-----------------------------------------
+	/**
+	 * 断线重登录事件监听listener列表
+	 */
+	private ArrayList<IMLoginStatusListener> mIMLoginStatusListeners = new ArrayList<>();
+
+	/**
+	 * 注册IM断线重连成功事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean registerIMLoginStatusListener(IMLoginStatusListener listener){
+		boolean result = false;
+		synchronized(mIMLoginStatusListeners) {
+			if (null != listener) {
+				boolean isExist = false;
+				for (Iterator<IMLoginStatusListener> iter = mIMLoginStatusListeners.iterator(); iter.hasNext(); ) {
+					IMLoginStatusListener theListener = iter.next();
+					if (theListener == listener) {
+						isExist = true;
+						break;
+					}
+				}
+
+				if (!isExist) {
+					result = mIMLoginStatusListeners.add(listener);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 注销断线重登录事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean unregisterIMLoginStatusListener(IMLoginStatusListener listener) {
+		boolean result = false;
+		synchronized(mIMLoginStatusListeners) {
+			result = mIMLoginStatusListeners.remove(listener);
+		}
+		return result;
+	}
+
+	@Override
+	public void onIMAutoReLogined() {
+		synchronized(mIMLoginStatusListeners){
+			for (Iterator<IMLoginStatusListener> iter = mIMLoginStatusListeners.iterator(); iter.hasNext(); ) {
+				IMLoginStatusListener listener = iter.next();
+				listener.onIMAutoReLogined();
 			}
 		}
 	}

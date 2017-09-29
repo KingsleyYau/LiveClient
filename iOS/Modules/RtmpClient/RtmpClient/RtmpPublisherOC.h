@@ -13,11 +13,11 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 // FPS
-#define FPS 10
+#define FPS 6
 // 关键帧间隔(每KEY_FRAME_INTERVAL帧就有一个关键帧)
 #define KEY_FRAME_INTERVAL FPS
 // 视频码率
-#define BIT_RATE 1000 * 1000
+#define BIT_RATE 400 * 1000
 
 // 音频码率
 //#define BIT_RATE 600 * 1000

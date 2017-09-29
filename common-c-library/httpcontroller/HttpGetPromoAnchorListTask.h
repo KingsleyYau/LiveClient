@@ -34,7 +34,9 @@ public:
      *
      */
     void SetParam(
-                    int number
+                    int number,
+                    PromoAnchorType type,
+                    const string& userId
                   );
     
     int GetNumber();
@@ -47,8 +49,10 @@ protected:
 	IRequestGetPromoAnchorListCallback* mpCallback;
     // 获取推荐个数
     int mNumber;
-
-
+    // 获取界面的类型（1:直播间 2:主播个人页）
+    PromoAnchorType mType;
+    // 当前界面的主播ID，返回结果将不包含当前主播（可无， 无则表示不过滤结果）
+    string mUserId;
 };
 
 #endif /* HttpGetPromoAnchorListTask_H_ */

@@ -70,51 +70,8 @@
     return self;
 }
 
-#pragma mark - 请求用户图片URL
-//- (void)requestUserPhotoWithID:(NSString *)userId type:(PhotoType)type{
-//    
-//    UserInfoItem *item = [[UserInfoItem alloc]init];
-//    item.requestState = REQUESTSTART;
-//    item.userId = userId;
-//    item.userHeadUrl = nil;
-//    item.coverUrl = nil;
-//    [self.userPhotoUrlDictionary setObject:item forKey:userId];
-//    
-//    NSLog(@"UserHeadUrlManager::REQUESTSTAR item %@ %d",item.userHeadUrl ,item.requestState);
-//    
-//    GetLiveRoomUserPhotoRequest *request = [[GetLiveRoomUserPhotoRequest alloc]init];
-//    request.userId = userId;
-//    request.photoType = type;
-//    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull photoUrl){
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            
-//            item.requestState = REQUESTEND;
-//            
-//            if (!photoUrl) {
-//                
-//                if (type == PHOTOTYPE_THUMB) {
-//                    item.userHeadUrl = photoUrl;
-//                }
-//                else{
-//                    item.coverUrl = photoUrl;
-//                }
-//                
-//            }
-//            // 数据存入字典
-//            [self.userPhotoUrlDictionary setObject:item forKey:userId];
-//            
-//            NSLog(@"UserHeadUrlManager::REQUESTEND item %@ %d",item.userHeadUrl ,item.requestState);
-//        });
-//        
-//    };
-//    [self.sessionManager sendRequest:request];
-//    
-//}
-
-
 #pragma mark - 请求图片URL block回调
-//- (void)getLiveRoomUserPhotoRequestWithUserId:(NSString *)userId andType:(PhotoType)type requestEnd:(RequestUserPhotoEnd)requestEnd{
+//- (void)getLiveRoomUserPhotoRequestWithUserId:(NSString *)userId requestEnd:(RequestUserPhotoEnd)requestEnd{
 //    UserInfoItem *item = [self.userPhotoUrlDictionary objectForKey:userId];
 //    if ( type == PHOTOTYPE_THUMB ) {
 //
@@ -165,41 +122,6 @@
 //    }
 //}
 
-//- (void)requestUserPhotoWithID:(NSString *)userId type:(PhotoType)type requestEnd:(RequestUserPhotoEnd)requestEnd{
-//    UserInfoItem *item = [[UserInfoItem alloc]init];
-//    item.requestState = REQUESTSTART;
-//    item.userId = userId;
-//    item.userHeadUrl = nil;
-//    item.coverUrl = nil;
-//    [self.userPhotoUrlDictionary setObject:item forKey:userId];
-//    
-//    GetLiveRoomUserPhotoRequest *request = [[GetLiveRoomUserPhotoRequest alloc]init];
-//    request.userId = userId;
-//    request.photoType = type;
-//    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull photoUrl){
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            
-//            item.requestState = REQUESTEND;
-//            
-//            if (!photoUrl) {
-//                
-//                if (type == PHOTOTYPE_THUMB) {
-//                    item.userHeadUrl = photoUrl;
-//                }
-//                else{
-//                    item.coverUrl = photoUrl;
-//                }
-//                requestEnd(userId,item);
-//                
-//            }else{
-//                
-//                requestEnd(nil,nil);
-//            }
-//            [self.userPhotoUrlDictionary setObject:item forKey:userId];
-//        });
-//        
-//    };
-//    [self.sessionManager sendRequest:request];
-//}
+
 
 @end

@@ -16,6 +16,7 @@
         self.bookTime = 0;
         self.giftId = @"";
         self.giftNum = 0;
+        self.needSms = false;
     }
     
     return self;
@@ -28,7 +29,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager sendBookingRequest:self.userId timeId:self.timeId bookTime:self.bookTime giftId:self.giftId giftNum:self.giftNum finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+        NSInteger request = [self.manager sendBookingRequest:self.userId timeId:self.timeId bookTime:self.bookTime giftId:self.giftId giftNum:self.giftNum needSms:self.needSms finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理

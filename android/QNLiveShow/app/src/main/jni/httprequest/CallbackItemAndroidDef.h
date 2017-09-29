@@ -23,12 +23,14 @@
 #define EMOTION_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/EmotionItem"
 #define TALENT_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/TalentInfoItem"
 #define TALENT_INVITE_ITEM_CLASS        "com/qpidnetwork/livemodule/httprequest/item/TalentInviteItem"
+#define AUDIENCE_BASE_INFO_ITEM_CLASS 	"com/qpidnetwork/livemodule/httprequest/item/AudienceBaseInfoItem"
 
 /* 4.预约私密     */
 #define BOOK_INVITE_ITEM_CLASS 			"com/qpidnetwork/livemodule/httprequest/item/BookInviteItem"
 #define BOOK_INVITE_CONFIG_ITEM_CLASS   "com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteConfig"
 #define BOOK_TIME_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookTimeItem"
 #define BOOK_GIFT_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteGiftItem"
+#define BOOK_PHONE_ITEM_CLASS   		"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookPhoneItem"
 
 /* 5.背包    */
 #define PACKAGE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"

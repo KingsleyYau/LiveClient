@@ -20,37 +20,45 @@
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="aPW-f4-rlM" customClass="UIImageViewTopFit">
                         <rect key="frame" x="0.0" y="0.0" width="219" height="151"/>
-                        <color key="backgroundColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pRq-VM-ckC">
-                        <rect key="frame" x="10" y="129" width="35.5" height="17"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rmZ-er-Sqi" userLabel="type">
+                        <rect key="frame" x="8" y="17" width="40" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Fxe-FM-zH2" userLabel="online">
+                        <rect key="frame" x="71" y="119" width="33" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v44-wB-R0M" userLabel="name">
+                        <rect key="frame" x="106" y="122" width="42" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LIVE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ksx-En-rwr">
-                        <rect key="frame" x="166" y="10" width="33" height="18"/>
-                        <color key="backgroundColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="calibratedRGB"/>
-                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <nil key="highlightedColor"/>
-                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="V5c-WN-sg4" userLabel="insterest">
+                        <rect key="frame" x="110" y="24" width="32" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IjT-aq-KvI" userLabel="insterest2">
+                        <rect key="frame" x="145" y="25" width="32" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k0T-2L-Pbr" userLabel="insterest1">
+                        <rect key="frame" x="179" y="25" width="32" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    </imageView>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstItem="pRq-VM-ckC" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="8yp-1W-U2q"/>
                 <constraint firstAttribute="trailing" secondItem="aPW-f4-rlM" secondAttribute="trailing" id="N7p-QB-5mG"/>
                 <constraint firstAttribute="bottom" secondItem="aPW-f4-rlM" secondAttribute="bottom" id="Z5w-XP-gaX"/>
-                <constraint firstAttribute="trailing" secondItem="Ksx-En-rwr" secondAttribute="trailing" constant="20" id="bWD-pA-Dwc"/>
-                <constraint firstItem="Ksx-En-rwr" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="eMA-Gl-P20"/>
-                <constraint firstAttribute="bottom" secondItem="pRq-VM-ckC" secondAttribute="bottom" constant="5" id="hbw-ET-hRF"/>
                 <constraint firstItem="aPW-f4-rlM" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qSc-S6-x91"/>
                 <constraint firstItem="aPW-f4-rlM" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="qqh-Rs-y56"/>
             </constraints>
             <size key="customSize" width="219" height="151"/>
             <connections>
                 <outlet property="imageViewContent" destination="aPW-f4-rlM" id="1sV-vQ-KB5"/>
-                <outlet property="nameLabel" destination="pRq-VM-ckC" id="uok-fy-kwa"/>
             </connections>
             <point key="canvasLocation" x="21.5" y="-9.5"/>
         </collectionViewCell>

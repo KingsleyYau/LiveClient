@@ -44,6 +44,12 @@ public:
             if( root[LIVEROOM_FANS_MOUNTURL].isString() ) {
                 mountUrl = root[LIVEROOM_FANS_MOUNTURL].asString();
             }
+            
+            /* level */
+            if( root[LIVEROOM_FANS_LEVEL].isIntegral() ) {
+                level = root[LIVEROOM_FANS_LEVEL].asInt();
+            }
+            
         }
 	}
 
@@ -53,6 +59,7 @@ public:
 		photoUrl = "";
         mountId = "";
         mountUrl = "";
+        level = 0;
 	}
 
 	virtual ~HttpLiveFansItem() {
@@ -65,12 +72,14 @@ public:
      * photoUrl		    观众头像url
      * mountId          坐驾ID
      * mountUrl         坐驾图片url
+     * level            用户等级
      */
     string userId;
 	string nickName;
 	string photoUrl;
     string mountId;
     string mountUrl;
+    int    level;
 };
 
 typedef list<HttpLiveFansItem> HttpLiveFansList;

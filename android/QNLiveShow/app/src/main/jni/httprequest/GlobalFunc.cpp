@@ -17,6 +17,8 @@ HttpRequestManager gHttpRequestManager;
 
 HttpRequestManager gPhotoUploadRequestManager;
 
+HttpRequestManager gConfigRequestManager;
+
 HttpRequestController gHttpRequestController;
 
 KMutex mTokenMutex;
@@ -118,6 +120,10 @@ string gToken;
  	InitClassHelper(env, AUDIENCE_INFO_ITEM_CLASS, &jAudienceInfoItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(AUDIENCE_INFO_ITEM_CLASS, jAudienceInfoItem));
 
+ 	jobject jAudienceBaseInfoItem;
+ 	InitClassHelper(env, AUDIENCE_BASE_INFO_ITEM_CLASS, &jAudienceBaseInfoItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(AUDIENCE_BASE_INFO_ITEM_CLASS, jAudienceBaseInfoItem));
+
  	jobject jSendableGiftItem;
  	InitClassHelper(env, SENDABLE_GIFT_ITEM_CLASS, &jSendableGiftItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(SENDABLE_GIFT_ITEM_CLASS, jSendableGiftItem));
@@ -158,6 +164,10 @@ string gToken;
  	jobject jBookGiftItem;
  	InitClassHelper(env, BOOK_GIFT_ITEM_CLASS, &jBookGiftItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_GIFT_ITEM_CLASS, jBookGiftItem));
+
+ 	jobject jBookPhoneItem;
+ 	InitClassHelper(env, BOOK_PHONE_ITEM_CLASS, &jBookPhoneItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_PHONE_ITEM_CLASS, jBookPhoneItem));
 
  	/* 5.背包    */
  	jobject jPackageGiftItem;

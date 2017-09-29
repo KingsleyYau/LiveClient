@@ -18,6 +18,7 @@ public class LoginItem {
 	 * @param level
 	 * @param experience
 	 * @param photoUrl
+	 * @param isPushAd
 	 */
     public LoginItem(
             String userId,
@@ -25,13 +26,15 @@ public class LoginItem {
             String nickName,
             int level,
             int experience,
-            String photoUrl) {
+            String photoUrl,
+            boolean isPushAd) {
         this.userId = userId;
         this.token = token;
         this.nickName = nickName;
         this.level = level;
         this.experience = experience;
         this.photoUrl = photoUrl;
+        this.isPushAd = isPushAd;
     }
 
     public String userId;
@@ -40,4 +43,5 @@ public class LoginItem {
     public int level;
     public int experience;
     public String photoUrl;
+    public boolean isPushAd;
 }

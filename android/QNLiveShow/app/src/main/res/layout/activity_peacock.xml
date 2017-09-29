@@ -28,4 +28,40 @@
         android:textSize="16sp"
         android:text="@string/txt_splash_dec"/>
 
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_handlerLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom|center_horizontal"
+        android:focusable="true"
+        android:visibility="gone"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/et_token"
+            android:layout_width="240dp"
+            android:hint="输入测试的token"
+            android:text="Harry_HHeEoKeotNFp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_testLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="登录测试帐号"
+            android:textSize="16sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_btn_next_usable"/>
+    </LinearLayout>
+
 </LinearLayout>

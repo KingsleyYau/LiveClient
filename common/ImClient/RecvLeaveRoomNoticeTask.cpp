@@ -15,11 +15,11 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
-#define USERID_PARAM           "userid"
-#define NICKNAME_PARAM         "nickname"
-#define PHOTOURL_PARAM         "photourl"
-#define FANSNUM_PARAM          "fansnum"
+#define ROOMID_LEAVE_PARAM           "roomid"
+#define USERID_PARAM                 "userid"
+#define NICKNAME_LEAVE_PARAM         "nickname"
+#define PHOTOURL_PARAM               "photourl"
+#define FANSNUM_PARAM                "fansnum"
 
 RecvLeaveRoomNoticeTask::RecvLeaveRoomNoticeTask(void)
 {
@@ -65,14 +65,14 @@ bool RecvLeaveRoomNoticeTask::Handle(const TransportProtocol& tp)
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ROOMID_PARAM].asString();
+        if (tp.m_data[ROOMID_LEAVE_PARAM].isString()) {
+            m_roomId = tp.m_data[ROOMID_LEAVE_PARAM].asString();
         }
         if (tp.m_data[USERID_PARAM].isString()) {
             m_userId = tp.m_data[USERID_PARAM].asString();
         }
-        if (tp.m_data[NICKNAME_PARAM].isString()) {
-            m_nickName = tp.m_data[NICKNAME_PARAM].asString();
+        if (tp.m_data[NICKNAME_LEAVE_PARAM].isString()) {
+            m_nickName = tp.m_data[NICKNAME_LEAVE_PARAM].asString();
         }
         if (tp.m_data[PHOTOURL_PARAM].isString()) {
             m_photourl = tp.m_data[PHOTOURL_PARAM].asString();

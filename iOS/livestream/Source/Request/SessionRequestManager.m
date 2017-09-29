@@ -76,7 +76,7 @@ static SessionRequestManager* gManager = nil;
                 if( self.loginManager.status == LOGINED ) {
                     // 已经登陆状态, 注销
                     NSLog(@"SessionRequestManager::handleRespond( [已经登陆状态, 注销] )");
-                    [self.loginManager logout:NO];
+                    [self.loginManager logout:NO msg:@""];
                 } else if ( self.loginManager.status == LOGINING ) {
                     // 正在登陆, 等待
                     NSLog(@"SessionRequestManager::handleRespond( [正在登陆状态, 等待] )");
@@ -99,7 +99,7 @@ static SessionRequestManager* gManager = nil;
         } else if ( errnum == LOGIN_BY_OTHER_DEVICE ) {
             // 主线程被踢(其他设备登录)
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.loginManager logout:YES];
+                [self.loginManager logout:YES msg:@""];
             });
         }
     }

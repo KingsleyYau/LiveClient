@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<LinearLayout-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:orientation="vertical"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingLeft="13dp"-->
+    <!--android:paddingRight="13dp"-->
+    <!--android:paddingTop="10dp"-->
+    <!--android:paddingBottom="10dp">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_giftToastMsg"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Im a toast msg."-->
+        <!--android:textSize="14sp"-->
+        <!--/>-->
+
+
+
+<!--</LinearLayout>-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:drawable/toast_frame"
+    android:layout_gravity="center">
+
+    <TextView
+        android:id="@android:id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@android:color/background_light"
+        android:shadowColor="#BB000000"
+        android:shadowRadius="2.75"
+        />
+
+</LinearLayout>

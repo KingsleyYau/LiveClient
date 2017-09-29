@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>liveframwork.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>14</integer>
+		</dict>
 		<key>livestream.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -13,6 +18,11 @@
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>50BF28F21E98976E00B8ED5D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>50E8E9B01F7D22A000AEFF17</key>
 		<dict>
 			<key>primary</key>
 			<true/>

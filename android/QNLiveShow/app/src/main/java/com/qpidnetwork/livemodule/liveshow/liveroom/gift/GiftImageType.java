@@ -7,8 +7,9 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
  */
 
 public enum GiftImageType {
-    Default,
-    Thumb,
-    ListDrawable,
-    Source
+    Unkonw,//默认值
+    MsgListIcon,//直播间聊天室
+    GiftListIcon,//直播间礼物列表
+    RepeatAnimImg,//直播间连送礼物
+    BigAnimSrc//直播间大礼物动画
 }

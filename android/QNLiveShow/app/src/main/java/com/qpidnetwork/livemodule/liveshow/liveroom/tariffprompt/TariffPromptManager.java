@@ -1,12 +1,17 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt;
 
-import android.app.Activity;
+import android.graphics.Color;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
+import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 /**
@@ -46,8 +51,8 @@ public class TariffPromptManager {
     public IMRoomInItem currIMRoomInItem;
     private LocalPreferenceManager localPreferenceManager;
 
-    public TariffPromptManager init(Activity activity, IMRoomInItem imRoomInItem){
-        localPreferenceManager = new LocalPreferenceManager(activity.getApplicationContext());
+    public TariffPromptManager init(IMRoomInItem imRoomInItem){
+        localPreferenceManager = new LocalPreferenceManager(LiveApplication.getContext());
         localTariffPrompt = (TariffPrompt) localPreferenceManager.getObject(imRoomInItem.roomType.toString());
         if(null == localTariffPrompt){
             localTariffPrompt = new TariffPrompt(true,null);
@@ -67,7 +72,6 @@ public class TariffPromptManager {
             case FreePublicRoom:
                 tariffPrompt = LiveApplication.getContext().getResources()
                         .getString(R.string.liveroom_tariff_prompt_free_public);
-
                 break;
             case PaidPublicRoom:
                 tariffPrompt = LiveApplication.getContext().getResources()
@@ -90,8 +94,30 @@ public class TariffPromptManager {
                     || localTariffPrompt.isFirstTimeIn;
         Log.d(TAG,"getRoomTariffInfo-isNeedUserConfirm:"+isNeedUserConfirm+" roomType:"+currIMRoomInItem.roomType.toString());
         if(null != listener){
-            listener.onGetRoomTariffInfo(tariffPrompt,isNeedUserConfirm,String.valueOf(currIMRoomInItem.roomPrice));
+            listener.onGetRoomTariffInfo(getTariffPromptStyle(tariffPrompt,String.valueOf(currIMRoomInItem.roomPrice)),isNeedUserConfirm);
         }
+    }
+
+    private SpannableString getTariffPromptStyle(String tariffprompt,String regex){
+        SpannableString spannableString = null;
+        if(!TextUtils.isEmpty(tariffprompt)){
+            spannableString = new SpannableString(tariffprompt);
+            int startIndex = tariffprompt.indexOf(regex);
+            if(!TextUtils.isEmpty(regex) && startIndex>=0 && startIndex<tariffprompt.length()){
+                spannableString.setSpan(new ForegroundColorSpan(Color.parseColor("#ffd205")),
+                        startIndex, startIndex+regex.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(LiveApplication.getContext(),9f)),
+                        0, startIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(LiveApplication.getContext(),10f)),
+                        startIndex, startIndex+regex.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(LiveApplication.getContext(),9f)),
+                        startIndex+regex.length(), tariffprompt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }else{
+                spannableString.setSpan(new AbsoluteSizeSpan(DisplayUtil.dip2px(LiveApplication.getContext(),9f)),
+                        0, tariffprompt.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            }
+        }
+        return spannableString;
     }
 
     public void update(){
@@ -114,6 +140,6 @@ public class TariffPromptManager {
     }
 
     public interface OnGetRoomTariffInfoListener{
-        void onGetRoomTariffInfo(String tariffPrompt, boolean isNeedUserConfirm, String regex);
+        void onGetRoomTariffInfo(SpannableString tariffPromptSpan, boolean isNeedUserConfirm);
     }
 }

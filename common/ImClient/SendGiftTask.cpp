@@ -15,8 +15,8 @@
 
 
 // 请求参数定义
-#define ROOMID_PARAM                "roomid"
-#define NICKNAME_PARAM              "nickname"
+//#define ROOMID_PARAM                "roomid"
+//#define NICKNAME_PARAM              "nickname"
 #define GIFTID_PARAM                "giftid"
 #define GIFTNAME_PARAM              "giftname"
 #define ISBACKPACK_PARAM            "is_backpack"
@@ -126,7 +126,7 @@ bool SendGiftTask::GetSendData(Json::Value& data)
         value[NICKNAME_PARAM] = m_nickName;
         value[GIFTID_PARAM] = m_giftId;
         value[GIFTNAME_PARAM] = m_giftName;
-        value[ISBACKPACK_PARAM] = m_isBackPack;
+        value[ISBACKPACK_PARAM] = m_isBackPack ? 1 : 0;
         value[GIFTNUM_PARAM] = m_giftNum;
         int isClick = m_multi_click ? 1 : 0;
         value[MULTI_CLICK_PARAM] = isClick;

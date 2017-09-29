@@ -36,21 +36,29 @@
     }
 }
 
-- (NSString* )text {
-    NSMutableString *fullText = [NSMutableString string];
+- (NSString *)fullText {
+    NSMutableString *mtFullText = [NSMutableString string];
     
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
         ChatTextAttachment *attachment = attrs[@"NSAttachment"];
         if( attachment ) {
-            [fullText appendString:attachment.text];
+            [mtFullText appendString:attachment.text];
             
         } else {
             NSAttributedString *str = [self.attributedText attributedSubstringFromRange:range];
-            [fullText appendString:str.string];
+            [mtFullText appendString:str.string];
         }
     }];
     
-    return [fullText copy];
+    return [mtFullText copy];
+}
+
+- (void)setFullText:(NSString *)fullText {
+    if( fullText ) {
+        self.attributedText = [[NSAttributedString alloc] initWithString:fullText attributes:nil];
+    } else {
+        self.attributedText = nil;
+    }
 }
 
 // 获取当前Range  备注：UITextField必须为第一响应者才有效

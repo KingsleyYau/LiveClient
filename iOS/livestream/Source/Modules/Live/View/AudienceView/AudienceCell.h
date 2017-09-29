@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AudienModel.h"
 
 @interface AudienceCell : UICollectionViewCell
 
@@ -14,7 +15,7 @@
 
 + (NSString *)cellIdentifier;
 
-- (void)updateHeadImageWith:(UIImage *)headModel;
+- (void)updateHeadImageWith:(AudienModel *)audienModel;
 
 - (void)setCornerRadius:(CGFloat)radius;
 

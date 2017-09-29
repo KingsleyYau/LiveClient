@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 高度 -->
+    <size android:height="@dimen/live_swicth_book_height" />
+    <!-- 圆角弧度 20 -->
+    <corners android:radius="@dimen/live_swicth_book_radius" />
+    <!-- 变化率 -->
+    <gradient
+        android:endColor="@color/talent_violet"
+        android:startColor="@color/talent_violet" />
+
+
+</shape>
+

@@ -14,9 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
-#define USERID_PARAM           "userid"
-#define NICKNAME_PARAM         "nickname"
+//#define ROOMID_PARAM           "roomid"
 
 RecvRoomCloseNoticeTask::RecvRoomCloseNoticeTask(void)
 {
@@ -27,8 +25,7 @@ RecvRoomCloseNoticeTask::RecvRoomCloseNoticeTask(void)
 	m_errMsg = "";
     
     m_roomId = "";
-    m_userId = "";
-    m_nickName = "";
+
 }
 
 RecvRoomCloseNoticeTask::~RecvRoomCloseNoticeTask(void)
@@ -63,12 +60,7 @@ bool RecvRoomCloseNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ROOMID_PARAM].isString()) {
             m_roomId = tp.m_data[ROOMID_PARAM].asString();
         }
-        if (tp.m_data[USERID_PARAM].isString()) {
-            m_userId = tp.m_data[USERID_PARAM].asString();
-        }
-        if (tp.m_data[NICKNAME_PARAM].isString()) {
-            m_nickName = tp.m_data[NICKNAME_PARAM].asString();
-        }
+
     }
     
     // 协议解析失败
@@ -81,7 +73,7 @@ bool RecvRoomCloseNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvRoomCloseNotice(m_roomId, m_userId, m_nickName, m_errType, m_errMsg);
+        m_listener->OnRecvRoomCloseNotice(m_roomId, m_errType, m_errMsg);
 		FileLog("LiveChatClient", "RecvRoomCloseNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

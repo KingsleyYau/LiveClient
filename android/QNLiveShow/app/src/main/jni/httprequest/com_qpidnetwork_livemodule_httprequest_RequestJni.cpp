@@ -44,6 +44,7 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 	const char *cpVersion = env->GetStringUTFChars(version, 0);
 	gHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gPhotoUploadRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
+	gConfigRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	CrashHandler::GetInstance()->SetVersion(cpVersion);
 	env->ReleaseStringUTFChars(version, cpVersion);
 }
@@ -90,6 +91,20 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 	gPhotoUploadRequestManager.SetWebSite(cpUploadSite);
 
 	env->ReleaseStringUTFChars(uploadSite, cpUploadSite);
+}
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetConfigSite
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetConfigSite
+  (JNIEnv *env, jclass cls, jstring configSite) {
+	const char *cpConfigSite = env->GetStringUTFChars(configSite, 0);
+
+	gConfigRequestManager.SetWebSite(cpConfigSite);
+
+	env->ReleaseStringUTFChars(configSite, cpConfigSite);
 }
 
 

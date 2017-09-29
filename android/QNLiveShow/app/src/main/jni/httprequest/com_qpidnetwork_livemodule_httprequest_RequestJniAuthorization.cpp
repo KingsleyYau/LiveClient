@@ -21,6 +21,8 @@ class RequestLoginCallback : public IRequestLoginCallback{
         /* turn object to java object here */
         jobject jItem = getLoginItem(env, item);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -35,7 +37,7 @@ class RequestLoginCallback : public IRequestLoginCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -90,6 +92,7 @@ class RequestLogoutCallback : public IRequestLogoutCallback{
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;)V";
@@ -98,7 +101,7 @@ class RequestLogoutCallback : public IRequestLogoutCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -143,6 +146,7 @@ class RequestUpdateTokenIdCallback : public IRequestUpdateTokenIdCallback{
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;)V";
@@ -151,7 +155,7 @@ class RequestUpdateTokenIdCallback : public IRequestUpdateTokenIdCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}

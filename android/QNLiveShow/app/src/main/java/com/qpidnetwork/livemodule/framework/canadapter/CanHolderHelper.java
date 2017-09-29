@@ -92,6 +92,10 @@ public class CanHolderHelper  implements View.OnClickListener, View.OnLongClickL
 
     }
 
+    public Context getContext(){
+        return mContext;
+    }
+
 
     public static CanHolderHelper  holderHelperByConvertView(View convertView, ViewGroup parent, int layoutId){
 

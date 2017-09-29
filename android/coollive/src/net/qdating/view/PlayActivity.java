@@ -23,7 +23,8 @@ import net.qdating.utils.CrashHandler;
 
 public class PlayActivity extends Activity {
 	private String url = "rtmp://172.25.32.17/live/max";
-//	private String url = "rtmp://172.25.32.17:1936/aac/max";
+//	private String url = "rtmp://192.168.88.17:1936/speex/fansi_CMTS09979_3351";
+//	private String url = "rtmp://172.25.32.17:1936/aac/myStream";
 	
 	String filePath = "/sdcard";
 	private String playH264File = "";//"/sdcard/coollive/play.h264";
@@ -59,6 +60,7 @@ public class PlayActivity extends Activity {
 		
 		editText = (EditText) this.findViewById(R.id.editText);
 		editText.setText(String.format("%s_mv", url));
+//		editText.setText(String.format("%s", url));
 		
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
 		editTextPublish.setText(String.format("%s_a", url));

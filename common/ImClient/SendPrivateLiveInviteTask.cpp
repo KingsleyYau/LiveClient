@@ -22,7 +22,7 @@
 // 返回
 #define INVITATIONID_PARAM               "invitation_id"
 #define TIMEOUT_PARAM                    "timeout"
-#define ROOMID_PARAM                     "roomid"
+//#define ROOMID_PARAM                     "roomid"
 
 
 SendPrivateLiveInviteTask::SendPrivateLiveInviteTask(void)
@@ -79,7 +79,7 @@ bool SendPrivateLiveInviteTask::Handle(const TransportProtocol& tp)
             timeOut = tp.m_data[TIMEOUT_PARAM].asInt();
         }
         if (tp.m_data[ROOMID_PARAM].isString()) {
-            roomId = tp.m_data[ROOMID_PARAM].isString();
+            roomId = tp.m_data[ROOMID_PARAM].asString();
         }
         
     }
@@ -162,8 +162,7 @@ void SendPrivateLiveInviteTask::GetHandleResult(LCC_ERR_TYPE& errType, string& e
 bool SendPrivateLiveInviteTask::InitParam(const string& userId, const string& logId, bool force)
 {
 	bool result = false;
-    if (!userId.empty()
-        && !logId.empty()) {
+    if (!userId.empty()) {
         m_userId = userId;
         m_logId = logId;
         m_force = force;

@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PresentSendView">
             <connections>
+                <outlet property="arrowImageView" destination="YAz-EM-lfg" id="b0u-H1-FlR"/>
                 <outlet property="selectBtn" destination="PNw-bT-4vz" id="cVJ-AP-6lV"/>
                 <outlet property="selectNumLabel" destination="1Cl-Tm-Pkq" id="gYu-dw-Du6"/>
                 <outlet property="sendBtn" destination="Sk9-wL-3iN" id="DBn-dH-iSd"/>
@@ -32,7 +33,7 @@
                             </state>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" red="0.047058823530000002" green="0.92941176469999998" blue="0.96078431369999995" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="backgroundColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="Sk9-wL-3iN" secondAttribute="trailing" id="SJE-FL-eqk"/>
                         <constraint firstItem="Sk9-wL-3iN" firstAttribute="top" secondItem="rD3-kJ-Tk2" secondAttribute="top" id="V4i-U4-5nE"/>

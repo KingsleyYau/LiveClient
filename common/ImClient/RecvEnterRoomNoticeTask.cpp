@@ -14,9 +14,9 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
+//#define ROOMID_PARAM           "roomid"
 #define USERID_PARAM           "userid"
-#define NICKNAME_PARAM         "nickname"
+//#define NICKNAME_PARAM         "nickname"
 #define PHOTOURL_PARAM         "photourl"
 #define RIDERID_PARAM          "riderid"
 #define RIDERNAME_PARAM        "ridername"

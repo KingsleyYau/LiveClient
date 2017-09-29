@@ -6,7 +6,7 @@ platform :ios, '8.0'
 target 'livestream' do
 	pod 'GPUImage', '~> 0.1.7'
 	pod 'AFNetworking', '~> 3.0.4'
-	pod 'SDWebImage', '~> 4.0.0'
+	pod 'SDWebImage', '~> 4.1.0'
 	pod 'Masonry', '~> 0.6.4'
 	pod 'TTTAttributedLabel', '~> 2.0.0'
 	pod 'Google/Analytics'

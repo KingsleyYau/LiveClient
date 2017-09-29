@@ -13,13 +13,6 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
-// 请求参数定义
-#define ROOMID_PARAM                "roomid"
-#define TALENTINVITEID_PARAM        "talent_inviteid"
-#define TALENTID_PARAM              "talentid"
-#define NAME_PARAM                  "name"
-#define CREDIT_PARAM                "credit"
-#define STATUS_PARAM                "status"
 
 RecvSendTalentNoticeTask::RecvSendTalentNoticeTask(void)
 {
@@ -55,36 +48,19 @@ bool RecvSendTalentNoticeTask::Handle(const TransportProtocol& tp)
 	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
-    string roomId = "";
-    string talentInviteId = "";
-    string talentId = "";
-    string name = "";
-    double credit = 0.0;
-    TalentStatus status = TALENTSTATUS_UNKNOW;
+//    string roomId = "";
+//    string talentInviteId = "";
+//    string talentId = "";
+//    string name = "";
+//    double credit = 0.0;
+//    TalentStatus status = TALENTSTATUS_UNKNOW;
+    TalentReplyItem item;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            roomId = tp.m_data[ROOMID_PARAM].asString();
-        }
-        if (tp.m_data[TALENTINVITEID_PARAM].isString()) {
-            talentInviteId = tp.m_data[TALENTINVITEID_PARAM].asString();
-        }
-        if (tp.m_data[TALENTID_PARAM].isString()) {
-            talentId = tp.m_data[TALENTID_PARAM].asString();
-        }
-        if (tp.m_data[NAME_PARAM].isString()) {
-            name = tp.m_data[NAME_PARAM].asString();
-        }
-        if (tp.m_data[CREDIT_PARAM].isNumeric()) {
-            credit = tp.m_data[CREDIT_PARAM].asDouble();
-        }
-        if (tp.m_data[STATUS_PARAM].isIntegral()) {
-            credit = GetTalentStatus(tp.m_data[STATUS_PARAM].asInt());
-        }
-    
+        item.Parse(tp.m_data);
     }
     
     // 协议解析失败
@@ -97,7 +73,7 @@ bool RecvSendTalentNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status);
+        m_listener->OnRecvSendTalentNotice(item);
 		FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

@@ -11,7 +11,7 @@
 #include <common/KLog.h>
 
 // 音频播放Buffer的大小(Bytes)
-const size_t kAQBufSize = 65536;
+const size_t kAQBufSize = 10240;
 
 AudioRendererImp::AudioRendererImp() {
     FileLevelLog("rtmpdump",
@@ -62,7 +62,7 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         mAudioBufferList.lock();
         if( mAudioBufferList.empty() ) {
             status = AudioQueueAllocateBuffer(mAudioQueue, kAQBufSize, &audioBuffer);
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [No More Cache AudioBuffer], this : %p )", this);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [No More Cache AudioBuffer], audioBuffer : %p )", audioBuffer);
             
         } else {
             audioBuffer = mAudioBufferList.front();
@@ -181,7 +181,7 @@ void AudioRendererImp::AudioQueueOutputCallback(
     AudioRendererImp* renderer = (AudioRendererImp *)inUserData;
     
     if( renderer ) {
-        FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::AudioQueueOutputCallback( this : %p, audioBuffer : %p )", renderer, inBuffer);
+        FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::AudioQueueOutputCallback( this : %p, audioBuffer : %p, size : %d )", renderer, inBuffer, renderer->mAudioBufferList.size());
         
         // 归还缓存
         renderer->mAudioBufferList.lock();

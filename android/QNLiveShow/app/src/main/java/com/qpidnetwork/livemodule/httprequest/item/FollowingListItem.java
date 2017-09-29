@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
+import java.util.List;
+
 /**
  * 关注的主播列表Item
  * @author Hunter Mun
@@ -17,7 +19,6 @@ public class FollowingListItem {
 	 * @param nickName			主播昵称
 	 * @param photoUrl			主播头像url
 	 * @param onlienStatus		主播在线状态
-	 * @param roomName			直播间名称
 	 * @param roomPhotoUrl		直播间封面图url
 	 * @param loveLevel			亲密度等级
 	 * @param roomType			直播间类型
@@ -28,12 +29,12 @@ public class FollowingListItem {
 							String nickName,
 							String photoUrl,
 							int onlienStatus,
-							String roomName,
 							String roomPhotoUrl,
 							int loveLevel,
 							int roomType,
 							int addDate,
-							String[] interests){
+							int[] interests,
+							int anchorType){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -44,7 +45,6 @@ public class FollowingListItem {
 			this.onlineStatus = AnchorOnlineStatus.values()[onlienStatus];
 		}
 		
-		this.roomName = roomName;
 		this.roomPhotoUrl = roomPhotoUrl;
 		this.loveLevel = loveLevel;
 		
@@ -55,7 +55,15 @@ public class FollowingListItem {
 		}
 		
 		this.addDate = addDate;
-		this.interests = interests;
+
+		//兴趣爱好
+		this.interests = IntToEnumUtils.intArrayToInterestTypeList(interests);
+		
+		if( anchorType < 0 || anchorType >= AnchorLevelType.values().length ) {
+			this.anchorType = AnchorLevelType.Unknown;
+		} else {
+			this.anchorType = AnchorLevelType.values()[anchorType];
+		}
 	}
 	
 	
@@ -63,10 +71,10 @@ public class FollowingListItem {
 	public String nickName;
 	public String photoUrl;
 	public AnchorOnlineStatus onlineStatus;
-	public String roomName;
 	public String roomPhotoUrl;
 	public LiveRoomType roomType;
 	public int loveLevel;
 	public int addDate;
-	public String[] interests;
+	public List<InterestType> interests;
+	public AnchorLevelType anchorType;
 }

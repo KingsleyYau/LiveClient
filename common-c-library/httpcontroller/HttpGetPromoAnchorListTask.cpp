@@ -12,6 +12,8 @@ HttpGetPromoAnchorListTask::HttpGetPromoAnchorListTask() {
 	// TODO Auto-generated constructor stub
 	mPath = LIVEROOM_GETPROMOANCHORLIST;
     mNumber = 0;
+    mType = PROMOANCHORTYPE_LIVEROOM;
+    mUserId = "";
 
 }
 
@@ -24,7 +26,9 @@ void HttpGetPromoAnchorListTask::SetCallback(IRequestGetPromoAnchorListCallback*
 }
 
 void HttpGetPromoAnchorListTask::SetParam(
-                                            int number
+                                            int number,
+                                            PromoAnchorType type,
+                                            const string& userId
                                           ) {
 
     char temp[16];
@@ -37,7 +41,17 @@ void HttpGetPromoAnchorListTask::SetParam(
         mNumber = number;
     }
 
-
+    if (type > PROMOANCHORTYPE_BEGIN && type <= PROMOANCHORTYPE_END ) {
+        snprintf(temp, sizeof(temp), "%d", type );
+        mHttpEntiy.AddContent(LIVEROOM_GETPROMOANCHORLIST_TYPE, temp);
+        mType = type;
+    }
+    
+    if (userId.length() > 0) {
+        mHttpEntiy.AddContent(LIVEROOM_GETPROMOANCHORLIST_USERID, userId.c_str());
+        mUserId = userId;
+    }
+    
     FileLog("httpcontroller",
             "HttpGetPromoAnchorListTask::SetParam( "
             "task : %p, "

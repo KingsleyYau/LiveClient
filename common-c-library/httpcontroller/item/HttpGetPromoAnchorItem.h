@@ -16,7 +16,7 @@ using namespace std;
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
 
-typedef list<int> HttpSendNumList;
+//typedef list<int> HttpSendNumList;
 class HttpGetPromoAnchorItem {
 public:
     bool Parse(const Json::Value& root) {

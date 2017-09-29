@@ -23,18 +23,26 @@
 @property (nonatomic, weak) IBOutlet UILabel* tipsLabel;
 @property (nonatomic, weak) IBOutlet UILabel* countDownLabel;
 @property (nonatomic, weak) IBOutlet UIButton *cancelButton;
+
 @property (nonatomic, weak) IBOutlet UIButton *retryButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *retryButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *startButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *startButtonHeight;
 @property (nonatomic, weak) IBOutlet UIButton *bookButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *bookButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *inviteButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inviteButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *addCreditButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *addCreditButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *viewProfileButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *viewProfileButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *viewBoardcastButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *viewBoardcastButtonHeight;
 
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *recommandViewWidth;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *recommandViewHeight;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *recommandViewWidth;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *recommandViewHeight;
 @property (nonatomic, weak) IBOutlet UIView *recommandView;
 @property (nonatomic, weak) IBOutlet UICollectionView *recommandCollectionView;
-
-#pragma mark - 界面事件
-- (IBAction)close:(id)sender;
-- (IBAction)retry:(id)sender;
-- (IBAction)book:(id)sender;
 
 @end

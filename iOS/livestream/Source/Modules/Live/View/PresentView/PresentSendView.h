@@ -21,6 +21,7 @@ typedef enum : NSUInteger {
 @property (weak, nonatomic) IBOutlet KKCheckButton *selectBtn;
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;
 @property (weak, nonatomic) IBOutlet UILabel *selectNumLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
 
 
 @property (nonatomic, strong) NSArray* data;

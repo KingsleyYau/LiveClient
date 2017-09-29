@@ -19,7 +19,7 @@
 
 // 返回
 #define ERRDATA_PARAM                 "errdata"
-#define ROOMID_PARAM                  "roomid"
+//#define ROOMID_PARAM                  "roomid"
 
 
 SendCancelPrivateLiveInviteTask::SendCancelPrivateLiveInviteTask(void)

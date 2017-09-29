@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "MsgItem.h"
-#import "SetStringItem.h"
+#import "RoomStyleItem.h"
 
 @interface LiveRoomMsgManager : NSObject
 
@@ -16,7 +16,6 @@
 
 + (instancetype)msgManager;
 
-- (NSMutableAttributedString *)presentTheSetStringItem:(SetStringItem *)strItem msgItem:(MsgItem *)item;
-
+- (NSMutableAttributedString *)presentTheRoomStyleItem:(RoomStyleItem *)roomStyleItem msgItem:(MsgItem *)item;
 
 @end

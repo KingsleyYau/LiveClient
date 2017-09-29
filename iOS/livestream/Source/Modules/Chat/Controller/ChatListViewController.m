@@ -13,11 +13,16 @@
 #import "ChatViewController.h"
 #import "LiveSDKHeader.h"
 
+
+
 @interface ChatListViewController ()<UITableViewDelegate, UITableViewDataSource, NoChatListViewDelagate>
 
 @property (nonatomic,strong) NSMutableArray *listArray;
 
 @property (nonatomic, strong) NoChatListView *nolistView;
+
+
+
 
 @end
 
@@ -42,12 +47,18 @@
     self.navigationItem.rightBarButtonItem = barButtonItem;
 
     [self setNavigationTitle:@"Private Message"];
+    
+    
+    
+
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
  
 //    self.listArray = [[NSMutableArray alloc] init];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -163,5 +174,8 @@
     }
     return _listArray;
 }
+
+
+
 
 @end

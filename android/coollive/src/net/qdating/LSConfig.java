@@ -29,7 +29,7 @@ public class LSConfig {
 	/**
 	 * 视频帧率(推流参数)
 	 */
-	public static int VIDEO_FPS = 10;
+	public static int VIDEO_FPS = 6;
 	/**
 	 * 视频关键帧间隔(推流参数)
 	 */
@@ -37,7 +37,7 @@ public class LSConfig {
 	/**
 	 * 视频采集临时Buffer, 数值越大, 效率越高, 占用内存越大(推流参数)
 	 */
-	public static int VIDEO_CAPTURE_BUFFER_COUNT = 3 * VIDEO_FPS;
+	public static int VIDEO_CAPTURE_BUFFER_COUNT = 30 + VIDEO_FPS;
 	
 	/**
 	 * 音频PCM采样率

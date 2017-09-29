@@ -154,7 +154,6 @@ public class CarManager {
         playCarInAnim(carView);
     }
 
-    //TODO:动画播放有点卡顿的现象，需要排查
     private void playCarInAnim(final CarView carView){
         animationSet = new AnimatorSet();
         float translationX = carView.getTranslationX();
@@ -229,9 +228,7 @@ public class CarManager {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                //播放结束，取出数据，重复使用view播放
                 carView.setVisibility(View.INVISIBLE);
-                //TODO:队列为空的情况下
                 ll_entranceCar.removeAllViews();
                 executeNextAnimTask();
             }
@@ -248,7 +245,7 @@ public class CarManager {
     public CarView generateEntranceCarView(Activity activity,CarInfo carInfo){
         CarView carView = new CarView(activity);
         carView.setCarMasterName(carInfo.nickName);
-//        carView.setCarImgUrl(carInfo.riderUrl);
+        carView.setCarImgUrl(carInfo.riderLocalPath);
         return carView;
     }
 }

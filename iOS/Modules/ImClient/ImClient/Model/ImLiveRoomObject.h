@@ -20,6 +20,7 @@
  * 礼物列表结构体
  * userId                   主播ID
  * nickName                 主播昵称
+ * roomId                   主播ID
  * photoUrl                 主播头像url
  * videoUrls                 视频流url
  * roomType                 直播间类型
@@ -40,6 +41,7 @@
  */
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
+@property (nonatomic, copy) NSString *_Nonnull roomId;
 @property (nonatomic, copy) NSString *_Nonnull photoUrl;
 @property (nonatomic, strong) NSArray<NSString *> *_Nonnull videoUrls;
 @property (nonatomic, assign) RoomType roomType;

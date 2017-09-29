@@ -69,13 +69,13 @@ bool RecvRebateInfoNoticeTask::Handle(const TransportProtocol& tp)
         }
         if (tp.m_data[REBATEINFO_PARAM].isObject()) {
             Json::Value permission = tp.m_data[REBATEINFO_PARAM];
-            if (permission[REBATEINFO_CURCREDIT_PARAM].isDouble()) {
+            if (permission[REBATEINFO_CURCREDIT_PARAM].isNumeric()) {
                 item.curCredit = permission[REBATEINFO_CURCREDIT_PARAM].asDouble();
             }
             if (permission[REBATEINFO_CURTIME_PARAM].isInt()) {
                 item.curTime = permission[REBATEINFO_CURTIME_PARAM].asInt();
             }
-            if (permission[REBATEINFO_PRECREDIT_PARAM].isDouble()) {
+            if (permission[REBATEINFO_PRECREDIT_PARAM].isNumeric()) {
                 item.preCredit = permission[REBATEINFO_PRECREDIT_PARAM].asDouble();
             }
             if (permission[REBATEINFO_PRETIME_PARAM].isInt()) {

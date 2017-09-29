@@ -31,6 +31,7 @@ static ConfigManager* gManager = nil;
         self.item = nil;
         self.finishHandlers = [NSMutableArray array];
         self.requestId = [RequestManager manager].invalidRequestId;
+        [self loadConfigParam];
     }
     return self;
 }
@@ -97,6 +98,17 @@ static ConfigManager* gManager = nil;
 
 - (void)clean {
     self.item = nil;
+}
+
+- (void)saveConfigParam {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:self.dontShow2WayVideoDialog forKey:@"dontShow2WayVideoDialog"];
+    [userDefaults synchronize];
+}
+
+- (void)loadConfigParam {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    self.dontShow2WayVideoDialog = [userDefaults boolForKey:@"dontShow2WayVideoDialog"];
 }
 
 @end

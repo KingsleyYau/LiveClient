@@ -24,6 +24,10 @@ public:
             if (root[LIVEROOM_MANHANDLEBOOKINGLIST_TOTAL].isInt()) {
                 total = root[LIVEROOM_MANHANDLEBOOKINGLIST_TOTAL].asInt();
             }
+            /* noReadCount */
+            if (root[LIVEROOM_MANHANDLEBOOLINGLIST_NOREADCOUNT].isInt()) {
+                noReadCount = root[LIVEROOM_MANHANDLEBOOLINGLIST_NOREADCOUNT].asInt();
+            }
             /* list */
             if (root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST].isArray()) {
                 for (int i = 0; i < root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST].size(); i++) {
@@ -43,6 +47,7 @@ public:
     
     HttpBookingInviteListItem() {
         total = 0;
+        noReadCount = 0;
 
     }
     
@@ -52,9 +57,11 @@ public:
     /**
      * 获取预约邀请列表
      * total           预约列表总数
+     * noReadCount     未读总数
      * list            预约列表
      */
     int total;
+    int noReadCount;
     BookingPrivateInviteItemList list;
 };
 

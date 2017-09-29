@@ -18,7 +18,7 @@
 #define Member_Join @"Joined"
 #define Member_Follow @"is following the broadcaster"
 #define Member_SentGift @"sent"
-
+#define Member_RiderJoin @"joined with his"
 
 
 @implementation LiveRoomMsgManager
@@ -35,7 +35,7 @@
     return manager;
 }
 
-- (NSMutableAttributedString *)presentTheSetStringItem:(SetStringItem *)strItem msgItem:(MsgItem *)item{
+- (NSMutableAttributedString *)presentTheRoomStyleItem:(RoomStyleItem *)roomStyleItem msgItem:(MsgItem *)item{
     
     
     NSMutableAttributedString *attributeStr;
@@ -43,34 +43,72 @@
     if (item.type != MsgType_Join) {
         attributeStr = [[NSMutableAttributedString alloc] initWithString:@""];
         
-    }else{
+    }else {
         attributeStr = [[NSMutableAttributedString alloc] init];
     }
     
-    // 拼名字
-    if (item.type == MsgType_Chat) {
-        [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ : ",item.name] font:NameFont color:strItem.nameColor]];
-    }else{
-        [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:strItem.nameColor]];
+    switch (item.type) {
+        case MsgType_Announce:
+            // 普通公告
+            [attributeStr appendAttributedString:[self parseMessage:item.text font:MessageFont color:roomStyleItem.announceStrColor]];
+            
+            break;
+            
+        case MsgType_Link:
+            // 带链接公告
+            [attributeStr appendAttributedString:[self linkMessage:item.text font:MessageFont color:roomStyleItem.announceStrColor]];
+            
+            break;
+        
+        case MsgType_Chat:
+            // 名字
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ : ",item.name] font:NameFont color:roomStyleItem.nameColor]];
+            // 内容
+            [attributeStr appendAttributedString:[self parseMessage:item.text font:MessageFont color:roomStyleItem.chatStrColor]];
+            
+            break;
+        
+        case MsgType_Follow:
+            // 名字
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
+            // 内容
+            [attributeStr appendAttributedString:[self parseMessage:Member_Follow font:MessageFont color:roomStyleItem.followStrColor]];
+            
+            break;
+            
+        case MsgType_Gift:
+            // 名字
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
+            // 内容
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ %@ ", Member_SentGift, item.giftName] font:MessageFont color:roomStyleItem.sendStrColor]];
+            
+            break;
+            
+        case MsgType_Join:
+            // 名字
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
+            // 内容
+            [attributeStr appendAttributedString:[self parseMessage:Member_Join font:MessageFont color:roomStyleItem.chatStrColor]];
+            
+            break;
+            
+        case MsgType_RiderJoin:
+            // 名字
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.riderStrColor]];
+            // 内容
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ”%@“", Member_RiderJoin, item.riderName]  font:MessageFont color:roomStyleItem.riderStrColor]];
+            
+            break;
+            
+        case MsgType_Share:
+            
+            break;
+            
+        default:
+            break;
     }
-    
-    // 拼内容
-    if (item.type == MsgType_Follow) {
-        
-        [attributeStr appendAttributedString:[self parseMessage:Member_Follow font:MessageFont color:strItem.followStrColor]];
-    } else if (item.type == MsgType_Gift) {
-        
-        [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ %@ ", Member_SentGift, item.giftName] font:MessageFont color:strItem.sendStrColor]];
-        
-    } else if (item.type == MsgType_Join) {
-        
-        [attributeStr appendAttributedString:[self parseMessage:Member_Join font:MessageFont color:strItem.chatStrColor]];
-    } else if (item.text != nil) {
-        
-        [attributeStr appendAttributedString:[self parseMessage:item.text font:MessageFont color:strItem.chatStrColor]];
-    }
-    
-    
+
+    // 拼送礼图片
     if (item.type == MsgType_Gift) {
         
         UIImageView *imageView = [[UIImageView alloc] init];
@@ -80,13 +118,11 @@
         [attributeStr appendAttributedString:attachText];
         
         if (item.giftNum > 1) {
-            [attributeStr appendAttributedString:[self parseMessage:
-                                                  [NSString stringWithFormat:@" x%d", item.giftNum]
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@" x%d", item.giftNum]
                                                                font:MessageFont
-                                                              color:strItem.sendStrColor]];
+                                                              color:roomStyleItem.sendStrColor]];
         }
     }
-    
     return attributeStr;
 }
 
@@ -98,6 +134,19 @@
                                      }
                              range:NSMakeRange(0, attributeString.length)
      ];
+    return attributeString;
+}
+
+- (NSAttributedString *)linkMessage:(NSString *)text font:(UIFont *)font color:(UIColor *)textColor {
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
+    [attributeString addAttributes:@{
+                                     NSFontAttributeName : font,
+                                     NSForegroundColorAttributeName:textColor,
+                                     NSUnderlineColorAttributeName:textColor
+                                     }
+                             range:NSMakeRange(0, attributeString.length)
+     ];
+    attributeString.yy_underlineStyle = NSUnderlineStyleSingle;
     return attributeString;
 }
 

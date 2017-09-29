@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/flBody"
     android:layout_width="match_parent"
-    android:layout_height="450dp"
-    android:layout_gravity="center">
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_hotlist_item">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/hotlist_item_default"
+        android:layout_gravity="center"/>
 
     <ImageView
         android:id="@+id/iv_roomBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,14 +38,22 @@
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="8dp">
+
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/ivInterest1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/interest_foods" />
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/ivInterest2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/interest_dance" />
+
+                <ImageView
+                    android:id="@+id/ivInterest3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
@@ -57,65 +72,58 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp">
                 <ImageView
                     android:id="@+id/ivOnlineStatus"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:background="@drawable/circle_solid_green"/>
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="24sp"
+                    android:textSize="18sp"
                     android:textColor="#FEFEFE"
                     android:textStyle="bold"
                     android:text="Carry"
-                    android:layout_marginLeft="4dp"/>
+                    android:layout_marginLeft="4dp"
+                    android:singleLine="true"
+                    android:ellipsize="middle"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/llStartContent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp">
-                <RelativeLayout
-                    android:id="@+id/rlPrivateContent"
-                    android:layout_width="0dp"
+                <ImageView
+                    android:id="@+id/btnPrivate"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                    <ImageView
-                        android:id="@+id/btnPrivate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/button_start_private_broadcast"
-                        android:clickable="true"
-                        android:layout_centerInParent="true"/>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/rlPublicContent"
-                    android:layout_width="0dp"
+                    android:src="@drawable/list_button_start_normal_private_broadcast"
+                    android:clickable="true" />
+                <ImageView
+                    android:id="@+id/btnPublic"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="24dp">
-                    <ImageView
-                        android:id="@+id/btnPublic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/button_view_paid_public_broadcast"
-                        android:clickable="true"
-                        android:layout_centerInParent="true"/>
-                </RelativeLayout>
+                    android:src="@drawable/list_button_view_free_public_broadcast"
+                    android:clickable="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="32dp"
+                    android:visibility="visible"/>
             </LinearLayout>
             <ImageView
                 android:id="@+id/btnSchedule"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/button_send_schedule"
+                android:src="@drawable/list_button_send_schedule"
                 android:clickable="true"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:layout_marginTop="12dp"/>
         </LinearLayout>
     
     </RelativeLayout>

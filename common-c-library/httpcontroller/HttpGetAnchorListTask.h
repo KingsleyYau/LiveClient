@@ -35,10 +35,12 @@ public:
      * 
      * @param start			       起始，用于分页，表示从第几个元素开始获取
      * @param step			       步长，用于分页，表示本次请求获取多少个元素
+     * @param hasWatch			   是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
      */
     void SetParam(
                   int start,
-                  int step
+                  int step,
+                  bool hasWatch
                   );
     
     /**
@@ -66,6 +68,8 @@ protected:
     int mStart;
     // 步长，用于分页，表示本次请求获取多少个元素
     int mStep;
+    // 是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
+    bool mHasWatch;
 };
 
 #endif /* HttpGetAnchorListTask_H_ */

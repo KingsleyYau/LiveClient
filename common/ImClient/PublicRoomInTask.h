@@ -42,14 +42,14 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(const string& anchorId);
+	bool InitParam(const string& userId);
 
 private:
 	IImClientListener*	m_listener;
 
 	SEQ_T           m_seq;		// seq
     
-    string          m_anchorId;   // 主播ID
+    string          m_userId;   // 主播ID
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

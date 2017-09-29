@@ -91,6 +91,10 @@ int TalentInviteStatusToInt(TalentStatus talentInviteStatus)
 	return value;
 }
 
+IMControlType IntToIMControlType(int value){
+	return (IMControlType)(value < _countof(IMControlTypeArray) ? IMControlTypeArray[value] : IMControlTypeArray[0]);
+}
+
 jobject getRebateItem(JNIEnv *env, const RebateInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_REBATE_ITEM_CLASS);
@@ -140,6 +144,7 @@ jintArray getJavaIntArray(JNIEnv *env, const list<int>& sourceList){
 			itr++)
 		{
 			*(pArray+i) = (*itr);
+			i++;
 		}
 		env->SetIntArrayRegion(jarray, 0, length, pArray);
 		delete [] pArray;
@@ -151,10 +156,10 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_ROOMIN_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;IDZI[IIDDI";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;IDZI[II";
 		signature += "L";
 		signature += IM_REBATE_ITEM_CLASS;
-		signature += ";ZIZ[Ljava/lang/String;I)V";
+		signature += ";ZIZ[Ljava/lang/String;IDDI)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
 		//videoList转Java数组
@@ -172,12 +177,14 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 		jstring juserId = env->NewStringUTF(item.userId.c_str());
 		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
 		int jroomType = RoomTypeToInt(item.roomType);
 		jItem = env->NewObject(jItemCls, init,
 					juserId,
 					jnickName,
 					jphotoUrl,
 					videoUrlArray,
+					jroomId,
 					jroomType,
 					item.credit,
 					item.usedVoucher,
@@ -197,6 +204,7 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 		env->DeleteLocalRef(juserId);
 		env->DeleteLocalRef(jnickName);
 		env->DeleteLocalRef(jphotoUrl);
+		env->DeleteLocalRef(jroomId);
 		if(NULL != videoUrlArray){
 			env->DeleteLocalRef(videoUrlArray);
 		}

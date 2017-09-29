@@ -86,12 +86,15 @@
 		50F089031D1A692900D7FDDF /* Arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F089021D1A692900D7FDDF /* Arrow@2x.png */; };
 		50F089051D1A69C700D7FDDF /* UIWidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F089041D1A69C700D7FDDF /* UIWidgetAssets.xcassets */; };
 		50F125411D1BE4FA00435C12 /* UIImageViewTopFit.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F125401D1BE4FA00435C12 /* UIImageViewTopFit.m */; };
+		5200A0961F66626800D6B752 /* UIImage+Combine.m in Sources */ = {isa = PBXBuildFile; fileRef = 5200A0951F66626800D6B752 /* UIImage+Combine.m */; };
 		52368D041CAE127800342E15 /* AgeRangeSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 52368D031CAE127800342E15 /* AgeRangeSlider.m */; };
 		524D25751D94C78D0066D57C /* AnimationImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 524D25741D94C78D0066D57C /* AnimationImageView.m */; };
 		524ECB541D7679470072CA81 /* UIImage+ScaleSize.m in Sources */ = {isa = PBXBuildFile; fileRef = 524ECB531D7679470072CA81 /* UIImage+ScaleSize.m */; };
 		525081991CBCF17F006CF6D3 /* UIImage+Circle.m in Sources */ = {isa = PBXBuildFile; fileRef = 525081981CBCF17F006CF6D3 /* UIImage+Circle.m */; };
 		5258EFFB1CD213970051D1D4 /* CircleLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5258EFFA1CD213970051D1D4 /* CircleLoadingView.m */; };
+		52702C041F79DFF5009AAE55 /* Fail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52702C031F79DFF5009AAE55 /* Fail@2x.png */; };
 		5270F5481CA91D9B00FE19DF /* UIBarButtonItem+setItemType.m in Sources */ = {isa = PBXBuildFile; fileRef = 5270F5441CA91D9B00FE19DF /* UIBarButtonItem+setItemType.m */; };
+		529DA2EB1F78AC7E00651318 /* ListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529DA2EA1F78AC7E00651318 /* ListViewController.m */; };
 		52A549E71CE4772C00F3BF2F /* SelectSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 52A549E61CE4772C00F3BF2F /* SelectSwitch.m */; };
 		CA23B868172137AB00458560 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA23B867172137AB00458560 /* WebViewController.m */; };
 		CA3F2A8D1884D4E800186869 /* NSBundle+DeviceFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = CA3F2A8C1884D4E800186869 /* NSBundle+DeviceFamily.m */; };
@@ -273,6 +276,8 @@
 		50F089041D1A69C700D7FDDF /* UIWidgetAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = UIWidgetAssets.xcassets; sourceTree = "<group>"; };
 		50F1253F1D1BE4FA00435C12 /* UIImageViewTopFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIImageViewTopFit.h; sourceTree = "<group>"; };
 		50F125401D1BE4FA00435C12 /* UIImageViewTopFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIImageViewTopFit.m; sourceTree = "<group>"; };
+		5200A0941F66626800D6B752 /* UIImage+Combine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Combine.h"; sourceTree = "<group>"; };
+		5200A0951F66626800D6B752 /* UIImage+Combine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Combine.m"; sourceTree = "<group>"; };
 		52368D021CAE127800342E15 /* AgeRangeSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AgeRangeSlider.h; sourceTree = "<group>"; };
 		52368D031CAE127800342E15 /* AgeRangeSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AgeRangeSlider.m; sourceTree = "<group>"; };
 		524D25731D94C78D0066D57C /* AnimationImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnimationImageView.h; sourceTree = "<group>"; };
@@ -283,8 +288,11 @@
 		525081981CBCF17F006CF6D3 /* UIImage+Circle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Circle.m"; sourceTree = "<group>"; };
 		5258EFF91CD213970051D1D4 /* CircleLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircleLoadingView.h; sourceTree = "<group>"; };
 		5258EFFA1CD213970051D1D4 /* CircleLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CircleLoadingView.m; sourceTree = "<group>"; };
+		52702C031F79DFF5009AAE55 /* Fail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fail@2x.png"; sourceTree = "<group>"; };
 		5270F5431CA91D9B00FE19DF /* UIBarButtonItem+setItemType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+setItemType.h"; sourceTree = "<group>"; };
 		5270F5441CA91D9B00FE19DF /* UIBarButtonItem+setItemType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+setItemType.m"; sourceTree = "<group>"; };
+		529DA2E91F78AC7E00651318 /* ListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListViewController.h; sourceTree = "<group>"; };
+		529DA2EA1F78AC7E00651318 /* ListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListViewController.m; sourceTree = "<group>"; };
 		52A549E51CE4772C00F3BF2F /* SelectSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SelectSwitch.h; sourceTree = "<group>"; };
 		52A549E61CE4772C00F3BF2F /* SelectSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelectSwitch.m; sourceTree = "<group>"; };
 		CA23B866172137AB00458560 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
@@ -577,6 +585,7 @@
 		50F089011D1A692900D7FDDF /* image */ = {
 			isa = PBXGroup;
 			children = (
+				52702C031F79DFF5009AAE55 /* Fail@2x.png */,
 				50F089021D1A692900D7FDDF /* Arrow@2x.png */,
 			);
 			path = image;
@@ -614,6 +623,8 @@
 				524D25741D94C78D0066D57C /* AnimationImageView.m */,
 				505878611EE640F4002A3101 /* UIImage_Color.h */,
 				505878621EE640F4002A3101 /* UIImage_Color.m */,
+				5200A0941F66626800D6B752 /* UIImage+Combine.h */,
+				5200A0951F66626800D6B752 /* UIImage+Combine.m */,
 			);
 			path = UIImage;
 			sourceTree = "<group>";
@@ -777,6 +788,8 @@
 			children = (
 				CAF53811171FDB71005DCB49 /* KKViewController.h */,
 				CAF53812171FDB71005DCB49 /* KKViewController.m */,
+				529DA2E91F78AC7E00651318 /* ListViewController.h */,
+				529DA2EA1F78AC7E00651318 /* ListViewController.m */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -911,6 +924,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5027D5AC1EF905CA00EE3B0E /* TZImagePickerController.bundle in Resources */,
+				52702C041F79DFF5009AAE55 /* Fail@2x.png in Resources */,
 				50F089051D1A69C700D7FDDF /* UIWidgetAssets.xcassets in Resources */,
 				50F089031D1A692900D7FDDF /* Arrow@2x.png in Resources */,
 				50EAD2931D17DE01008B8F76 /* PullRefreshView.xib in Resources */,
@@ -951,6 +965,7 @@
 				503A70361EEF6F9100BA8FF8 /* YYTextLayout.m in Sources */,
 				CAF5382F171FDB71005DCB49 /* BadgeButton.m in Sources */,
 				5027D5A61EF9056800EE3B0E /* TZPhotoPickerController.m in Sources */,
+				529DA2EB1F78AC7E00651318 /* ListViewController.m in Sources */,
 				505878631EE640F4002A3101 /* UIImage_Color.m in Sources */,
 				503A703F1EEF6F9100BA8FF8 /* UIView+YYAdd.m in Sources */,
 				CAF53830171FDB71005DCB49 /* KKCheckButton.m in Sources */,
@@ -1017,6 +1032,7 @@
 				5027D59E1EF9056800EE3B0E /* TZAssetCell.m in Sources */,
 				5027D5A51EF9056800EE3B0E /* TZLocationManager.m in Sources */,
 				CA42BD161797811A0011F458 /* UIWebView+Custom.m in Sources */,
+				5200A0961F66626800D6B752 /* UIImage+Combine.m in Sources */,
 				503A70331EEF6F9100BA8FF8 /* YYTextEffectWindow.m in Sources */,
 				254D0DBF1EF2626000DDBC0B /* YYSpriteSheetImage.m in Sources */,
 			);

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="U6b-Vx-4bR" customClass="LiveChannelTopCollectionReusableView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qnh-MK-57L">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                    <state key="normal" image="LiveChannel_TopBackground"/>
+                    <connections>
+                        <action selector="topBtnClickAction:" destination="U6b-Vx-4bR" eventType="touchUpInside" id="Yh0-06-wez"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Qnh-MK-57L" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" id="1Dx-Pv-1HM"/>
+                <constraint firstAttribute="bottom" secondItem="Qnh-MK-57L" secondAttribute="bottom" id="HeZ-nZ-p2Z"/>
+                <constraint firstItem="Qnh-MK-57L" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" id="KGj-Nb-tDe"/>
+                <constraint firstAttribute="trailing" secondItem="Qnh-MK-57L" secondAttribute="trailing" id="hXf-Qz-6X4"/>
+            </constraints>
+        </collectionReusableView>
+    </objects>
+    <resources>
+        <image name="LiveChannel_TopBackground" width="375" height="70"/>
+    </resources>
+</document>

@@ -9,21 +9,27 @@
 #import <Foundation/Foundation.h>
 #import "GetAllGiftListRequest.h"
 #import "AllGiftItem.h"
-
-@class LiveGiftDownloadManagerDelegate;
-@protocol LiveGiftDownloadManagerDelegate <NSObject>
-@optional
-
-- (void)downLoadWasCompleteWithGiftId:(NSString *)giftId;
-
-@end
+#import "BackpackGiftItem.h"
 
 typedef enum {
     DOWNLOADNONE = 0,
     DOWNLOADSTART,
     DOWNLOADING,
-    DOWNLOADEND
+    DOWNLOADEND,
+    DOWNLOADFAIL
 } DownLoadState;
+
+@class LiveGiftDownloadManagerDelegate;
+@protocol LiveGiftDownloadManagerDelegate <NSObject>
+@optional
+
+- (void)downloadState:(DownLoadState)state;
+
+@end
+
+
+@class LiveGiftDownloadManager;
+typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *liveRoomGiftList);
 
 @interface LiveGiftDownloadManager : NSObject
 
@@ -33,13 +39,21 @@ typedef enum {
 
 @property (nonatomic, retain) NSString *path;
 
-// 礼物对象数组
+@property (nonatomic, strong) NSMutableDictionary *bigGiftDownloadDic;
+
+// 所有礼物对象数组
 @property (nonatomic, strong) NSMutableArray<AllGiftItem *> *giftMuArray;
 
-+ (instancetype)giftDownloadManager;
++ (instancetype)manager;
+
+#pragma mark - 下载指定礼物详情
+- (void)downLoadGiftDetail:(AllGiftItem *)item;
+
+#pragma mark - 请求礼物列表
+- (void)getLiveRoomAllGiftListHaveNew:(BOOL)haveNew request:(RequestFinshtBlock)callBack;
 
 #pragma mark - 下载大礼物webp文件
-- (void)afnDownLoadFileWith:(NSString *)fileUrl giftId:(NSString *)giftId;
+- (void)afnDownLoadFileWith:(NSString *)fileUrl giftItem:(AllGiftItem *)giftItem;
 
 // 根据礼物ID判断是否有该礼物
 - (BOOL)judgeTheGiftidIsHere:(NSString *)giftId;
@@ -63,7 +77,10 @@ typedef enum {
 - (GiftType)backImgTypeWithGiftID:(NSString *)giftId;
 
 // 获取指定礼物详情
-- (void)requestListnotGift;
+- (void)requestListnotGiftID:(NSString *)giftId;
+
+// 删除大礼物文件
+- (void)deletWebpPath:(NSString *)giftId;
 
 // 添加新的礼物Item
 //- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item;

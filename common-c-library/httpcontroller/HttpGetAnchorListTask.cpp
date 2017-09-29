@@ -26,7 +26,8 @@ void HttpGetAnchorListTask::SetCallback(IRequestGetAnchorListCallback* callback)
 
 void HttpGetAnchorListTask::SetParam(
                                       int start,
-                                      int step
+                                      int step,
+                                      bool hasWatch
                                       ) {
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
@@ -41,16 +42,22 @@ void HttpGetAnchorListTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_PUBLIC_STEP, temp);
     mStep = step;
     
+    snprintf(temp, sizeof(temp), "%d", hasWatch ? 1 : 0);
+    mHttpEntiy.AddContent(LIVEROOM_HOT_HASWATCH, temp);
+    mHasWatch = hasWatch;
+    
     
     FileLog("httpcontroller",
             "HttpGetAnchorListTask::SetParam( "
             "task : %p, "
             "start : %d, "
             "step : %d, "
+            "hasWatch:%d,"
             ")",
             this,
             start,
-            step
+            step,
+            hasWatch
             );
 }
 

@@ -10,14 +10,14 @@
 #define HttpGetNewFansBaseInfoTask_H_
 
 #include "HttpRequestTask.h"
-#include "item/HttpLiveFansItem.h"
+#include "item/HttpLiveFansInfoItem.h"
 
 class HttpGetNewFansBaseInfoTask;
 
 class IRequestGetNewFansBaseInfoCallback {
 public:
 	virtual ~IRequestGetNewFansBaseInfoCallback(){};
-	virtual void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansItem& item) = 0;
+	virtual void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansInfoItem& item) = 0;
 };
       
 class HttpGetNewFansBaseInfoTask : public HttpRequestTask {

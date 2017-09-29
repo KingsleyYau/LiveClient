@@ -49,6 +49,14 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetConfigSite
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetConfigSite
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
  * Method:    StopRequest
  * Signature: (J)V
  */

@@ -65,8 +65,12 @@
 		FA48E48F1F60EAA000D590E1 /* ImScheduleRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E48E1F60EAA000D590E1 /* ImScheduleRoomObject.m */; };
 		FA48E4921F60EC2300D590E1 /* ImInviteIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E4911F60EC2300D590E1 /* ImInviteIdItemObject.m */; };
 		FA48E49B1F60F10300D590E1 /* ImLoginReturnObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E49A1F60F10300D590E1 /* ImLoginReturnObject.m */; };
+		FA5254671F7C8BDE00A997FD /* ImTalentReplyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */; };
 		FA84AF3A1F5F8B1000D91411 /* ImLiveRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA84AF391F5F8B1000D91411 /* ImLiveRoomObject.m */; };
 		FA84AF3D1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA84AF3B1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp */; };
+		FA8A85E31F678FB20003EA17 /* ImStartOverRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A85E21F678FB20003EA17 /* ImStartOverRoomObject.m */; };
+		FA8A85E71F67B3230003EA17 /* ImBookingReplyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A85E61F67B3230003EA17 /* ImBookingReplyObject.m */; };
+		FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */; };
 		FAB694151F5EA11C008A64B6 /* PublicRoomInTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB694131F5EA11C008A64B6 /* PublicRoomInTask.cpp */; };
 /* End PBXBuildFile section */
 
@@ -209,10 +213,21 @@
 		FA48E4911F60EC2300D590E1 /* ImInviteIdItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImInviteIdItemObject.m; sourceTree = "<group>"; };
 		FA48E4991F60F10300D590E1 /* ImLoginReturnObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImLoginReturnObject.h; sourceTree = "<group>"; };
 		FA48E49A1F60F10300D590E1 /* ImLoginReturnObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImLoginReturnObject.m; sourceTree = "<group>"; };
+		FA5254641F7C7ECC00A997FD /* TalentReplyItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TalentReplyItem.h; path = item/TalentReplyItem.h; sourceTree = "<group>"; };
+		FA5254651F7C8BDE00A997FD /* ImTalentReplyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImTalentReplyObject.h; sourceTree = "<group>"; };
+		FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImTalentReplyObject.m; sourceTree = "<group>"; };
 		FA84AF381F5F8B1000D91411 /* ImLiveRoomObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImLiveRoomObject.h; sourceTree = "<group>"; };
 		FA84AF391F5F8B1000D91411 /* ImLiveRoomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImLiveRoomObject.m; sourceTree = "<group>"; };
 		FA84AF3B1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvSendSystemNoticeTask.cpp; sourceTree = "<group>"; };
 		FA84AF3C1F5F9B9800D91411 /* RecvSendSystemNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvSendSystemNoticeTask.h; sourceTree = "<group>"; };
+		FA8A85E01F678BA70003EA17 /* StartOverRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartOverRoomItem.h; path = item/StartOverRoomItem.h; sourceTree = "<group>"; };
+		FA8A85E11F678FB20003EA17 /* ImStartOverRoomObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImStartOverRoomObject.h; sourceTree = "<group>"; };
+		FA8A85E21F678FB20003EA17 /* ImStartOverRoomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImStartOverRoomObject.m; sourceTree = "<group>"; };
+		FA8A85E41F67ACF10003EA17 /* BookingReplyItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BookingReplyItem.h; path = item/BookingReplyItem.h; sourceTree = "<group>"; };
+		FA8A85E51F67B3230003EA17 /* ImBookingReplyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImBookingReplyObject.h; sourceTree = "<group>"; };
+		FA8A85E61F67B3230003EA17 /* ImBookingReplyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImBookingReplyObject.m; sourceTree = "<group>"; };
+		FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetInviteInfoTask.cpp; sourceTree = "<group>"; };
+		FA92A5991F665B39004F239F /* GetInviteInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInviteInfoTask.h; sourceTree = "<group>"; };
 		FAB694131F5EA11C008A64B6 /* PublicRoomInTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PublicRoomInTask.cpp; sourceTree = "<group>"; };
 		FAB694141F5EA11C008A64B6 /* PublicRoomInTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicRoomInTask.h; sourceTree = "<group>"; };
 		FAB694171F5EA2DF008A64B6 /* RoomInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomInfoItem.h; path = item/RoomInfoItem.h; sourceTree = "<group>"; };
@@ -233,6 +248,8 @@
 		500B45061EE7D19500C89375 /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */,
+				FA92A5991F665B39004F239F /* GetInviteInfoTask.h */,
 				FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */,
 				FA1CEBD71F611B760010E671 /* ControlManPushTask.h */,
 				FA84AF3B1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp */,
@@ -346,6 +363,12 @@
 		506BC2791F58FD91001C2962 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FA5254651F7C8BDE00A997FD /* ImTalentReplyObject.h */,
+				FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */,
+				FA8A85E51F67B3230003EA17 /* ImBookingReplyObject.h */,
+				FA8A85E61F67B3230003EA17 /* ImBookingReplyObject.m */,
+				FA8A85E11F678FB20003EA17 /* ImStartOverRoomObject.h */,
+				FA8A85E21F678FB20003EA17 /* ImStartOverRoomObject.m */,
 				FA48E4991F60F10300D590E1 /* ImLoginReturnObject.h */,
 				FA48E49A1F60F10300D590E1 /* ImLoginReturnObject.m */,
 				FA48E4901F60EC2300D590E1 /* ImInviteIdItemObject.h */,
@@ -402,6 +425,9 @@
 		FAB694161F5EA2D3008A64B6 /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FA5254641F7C7ECC00A997FD /* TalentReplyItem.h */,
+				FA8A85E41F67ACF10003EA17 /* BookingReplyItem.h */,
+				FA8A85E01F678BA70003EA17 /* StartOverRoomItem.h */,
 				FA48E48C1F60E14F00D590E1 /* LoginReturnItem.h */,
 				FA48E48B1F60DB3C00D590E1 /* ScheduleRoomItem.h */,
 				FA48E48A1F60D46000D590E1 /* PrivateInviteItem.h */,
@@ -469,6 +495,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */,
 				5055918B1EF3E4AB000AF03A /* KickOffTask.cpp in Sources */,
 				500B45511EE7D19500C89375 /* TransportClient.cpp in Sources */,
 				506BC2881F58FD91001C2962 /* RebateInfoObject.m in Sources */,
@@ -479,6 +506,7 @@
 				500B45521EE7D19500C89375 /* TransportDataHandler.cpp in Sources */,
 				500B45481EE7D19500C89375 /* ITransportPacketHandler.cpp in Sources */,
 				FAB694151F5EA11C008A64B6 /* PublicRoomInTask.cpp in Sources */,
+				FA8A85E31F678FB20003EA17 /* ImStartOverRoomObject.m in Sources */,
 				506BC2871F58FD91001C2962 /* GiftInfoObject.m in Sources */,
 				506BC25B1F58FCE1001C2962 /* RecvBackpackUpdateNoticeTask.cpp in Sources */,
 				506BC2631F58FCE1001C2962 /* RecvLeaveRoomNoticeTask.cpp in Sources */,
@@ -486,6 +514,7 @@
 				506BC2741F58FCE1001C2962 /* SendGiftTask.cpp in Sources */,
 				506BC2661F58FCE1001C2962 /* RecvLoveLevelUpNoticeTask.cpp in Sources */,
 				506BC26A1F58FCE1001C2962 /* RecvScheduledInviteUserNoticeTask.cpp in Sources */,
+				FA8A85E71F67B3230003EA17 /* ImBookingReplyObject.m in Sources */,
 				506BC2731F58FCE1001C2962 /* SendCancelPrivateLiveInviteTask.cpp in Sources */,
 				506BC26C1F58FCE1001C2962 /* RecvSendChatNoticeTask.cpp in Sources */,
 				506BC26F1F58FCE1001C2962 /* RecvSendToastNoticeTask.cpp in Sources */,
@@ -524,6 +553,7 @@
 				506BC2771F58FCE1001C2962 /* SendTalentTask.cpp in Sources */,
 				506BC26B1F58FCE1001C2962 /* RecvSendBookingReplyNoticeTask.cpp in Sources */,
 				506BC2751F58FCE1001C2962 /* SendLiveChatTask.cpp in Sources */,
+				FA5254671F7C8BDE00A997FD /* ImTalentReplyObject.m in Sources */,
 				FA84AF3D1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp in Sources */,
 				506BC2701F58FCE1001C2962 /* RecvWaitStartOverNoticeTask.cpp in Sources */,
 				50F3839F1EE68A2C003D2765 /* ImClientOC.mm in Sources */,
@@ -636,7 +666,11 @@
 					"${COMMON_C_SRC_ROOT}",
 					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
 				);
-				OTHER_CFLAGS = "-DIOS";
+				OTHER_CFLAGS = (
+					"-DIOS",
+					"-DPRINT_JNI_LOG",
+					"-DFILE_JNI_LOG",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

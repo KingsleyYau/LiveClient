@@ -1,22 +1,17 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift.downloader;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
-import com.liulishuo.filedownloader.FileDownloadQueueSet;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -229,8 +224,7 @@ public class FileDownloadManager {
     public void deleteTempFile(BaseDownloadTask task){
         if(task != null){
             String tempPath = FileDownloadUtils.getTempPath(task.getPath());
-            if(!TextUtils.isEmpty(tempPath)
-                    && SystemUtils.fileExists(tempPath)){
+            if(SystemUtils.fileExists(tempPath)){
                 new File(tempPath).delete();
             }
         }
@@ -244,20 +238,25 @@ public class FileDownloadManager {
 
         @Override
         protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            Log.d(TAG,"pending-task.url: " + task.getUrl()+" soFarBytes:"+soFarBytes+" totalBytes:"+totalBytes);
         }
 
         @Override
         protected void connected(BaseDownloadTask task, String etag, boolean isContinue, int soFarBytes, int totalBytes) {
+            Log.d(TAG,"connected-task.url: " + task.getUrl()+" etag:"+etag
+                    +" isContinue:"+isContinue+" soFarBytes:"+soFarBytes+" totalBytes:"+totalBytes);
         }
 
         @Override
         protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            Log.d(TAG,"progress-task.url: " + task.getUrl()+" soFarBytes:"+soFarBytes+" totalBytes:"+totalBytes);
         }
 
         @Override
         protected void blockComplete(BaseDownloadTask task) {
+            Log.d(TAG,"blockComplete-task.url: " + task.getUrl());
             //清除监听器
-            removeSingleTaskListener(task.getUrl());
+//            removeSingleTaskListener(task.getUrl());
         }
 
         @Override
@@ -292,6 +291,7 @@ public class FileDownloadManager {
 
         @Override
         protected void error(BaseDownloadTask task, Throwable e) {
+            Log.d(TAG,"error-task.url:"+task.getUrl()+" errmsg:"+e.getMessage());
             e.printStackTrace();
             //清除监听器
             removeSingleTaskListener(task.getUrl());

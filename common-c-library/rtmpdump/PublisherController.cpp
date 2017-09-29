@@ -116,17 +116,17 @@ void PublisherController::Stop() {
 }
    
 void PublisherController::PushVideoFrame(void* data, int size, void* frame) {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
-                 "PublisherController::PushVideoFrame( "
-                 "data : %p, "
-                 "size : %d, "
-                 "frame : %p "
-                 ")",
-                 data,
-                 size,
-                 frame
-                 );
+//    FileLevelLog("rtmpdump",
+//                 KLog::LOG_MSG,
+//                 "PublisherController::PushVideoFrame( "
+//                 "data : %p, "
+//                 "size : %d, "
+//                 "frame : %p "
+//                 ")",
+//                 data,
+//                 size,
+//                 frame
+//                 );
     
     if( mpVideoEncoder ) {
         mpVideoEncoder->EncodeVideoFrame(data, size, frame);
@@ -134,15 +134,17 @@ void PublisherController::PushVideoFrame(void* data, int size, void* frame) {
 }
 
 void PublisherController::PushAudioFrame(void* data, int size, void* frame) {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
-                 "PublisherController::PushAudioFrame( "
-                 "data : %p, "
-                 "size : %d, "
-                 "frame : %p "
-                 ")",
-                 frame
-                 );
+//    FileLevelLog("rtmpdump",
+//                 KLog::LOG_MSG,
+//                 "PublisherController::PushAudioFrame( "
+//                 "data : %p, "
+//                 "size : %d, "
+//                 "frame : %p "
+//                 ")",
+//                 data,
+//                 size,
+//                 frame
+//                 );
     
     if( mpAudioEncoder ) {
         mpAudioEncoder->EncodeAudioFrame(data, size, frame);

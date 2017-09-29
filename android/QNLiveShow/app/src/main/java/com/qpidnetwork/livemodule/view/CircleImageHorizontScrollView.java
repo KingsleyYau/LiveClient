@@ -20,7 +20,6 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
-import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.squareup.picasso.Picasso;
 
@@ -46,7 +45,6 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
 
     private int horizontSpace = 0;
     private int itemWidth = 0;
-    private int showItemNumb = 0;
 
     public CircleImageHorizontScrollView(Context context) {
         this(context,null);
@@ -72,7 +70,6 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageHorizontScrollView);
         horizontSpace = a.getDimensionPixelSize(R.styleable.CircleImageHorizontScrollView_horizontSpace, horizontSpace);
         itemWidth = a.getDimensionPixelSize(R.styleable.CircleImageHorizontScrollView_itemWidth, itemWidth);
-        showItemNumb = a.getInteger(R.styleable.CircleImageHorizontScrollView_showItemNumb,showItemNumb);
     }
 
     private void initView(Context context){
@@ -83,6 +80,7 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
                 new HorizontalScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         layoutParams.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
         circleImageContainer.setLayoutParams(layoutParams);
+        circleImageContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(circleImageContainer);
     }
 
@@ -110,7 +108,7 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
         notifyDataSetChanged();
     }
 
-    //TODO:DELETE
+    //TODO:DELETE this code for test
     public int getListNum(){
         return null == imageUrlList ? 0 : imageUrlList.size();
     }
@@ -118,18 +116,17 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
     private void notifyDataSetChanged(){
         circleImageContainer.removeAllViews();
         int itemNumbs = imageUrlList.size();
-        int paddingDp = DisplayUtil.dip2px(getContext(),2f);
         gridView = (GridView)View.inflate(getContext(),R.layout.item_simple_gridview_1,null);
-        gridView.setPadding(paddingDp,paddingDp,paddingDp,paddingDp);
         gridView.setHorizontalSpacing(horizontSpace);
         int containerWidth = itemWidth*itemNumbs+(itemNumbs-1)*horizontSpace
                 +gridView.getPaddingLeft()+gridView.getPaddingRight();
         LinearLayout.LayoutParams gridViewLp = new LinearLayout.LayoutParams(
-                containerWidth, ViewGroup.LayoutParams.MATCH_PARENT);
+                containerWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
         gridViewLp.width =containerWidth;
         gridViewLp.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
         gridView.setLayoutParams(gridViewLp);
         circleImageContainer.addView(gridView);
+        gridView.setGravity(Gravity.CENTER_VERTICAL);
         //itemLayoutId布局
         gridViewAdapter = new CanAdapter<String>(
                 getContext(),R.layout.item_simple_online,imageUrlList) {
@@ -144,6 +141,12 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
                 if(!TextUtils.isEmpty(bean)){
                     Picasso.with(LiveApplication.getContext())
                             .load(bean).noFade()
+                            .placeholder(R.drawable.ic_default_photo_man)
+                            .error(R.drawable.ic_default_photo_man)
+                            .into(civ_userHeader);
+                }else{
+                    Picasso.with(LiveApplication.getContext())
+                            .load(R.drawable.ic_default_photo_man).noFade()
                             .into(civ_userHeader);
                 }
             }
@@ -165,10 +168,6 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
             }
         });
         gridView.setNumColumns(itemNumbs);
-        int parentWidth = itemWidth*showItemNumb;
-        ViewGroup.LayoutParams parentLp = getLayoutParams();
-        parentLp.width =parentWidth;
-        setLayoutParams(parentLp);
     }
 
     private OnCircleImageClickListener listener;

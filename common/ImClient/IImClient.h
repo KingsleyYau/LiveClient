@@ -17,6 +17,10 @@
 #include <vector>
 #include "item/RoomInfoItem.h"
 #include "item/LoginReturnItem.h"
+#include "item/StartOverRoomItem.h"
+#include "item/BookingReplyItem.h"
+#include "item/TalentReplyItem.h"
+
 using namespace std;
 
 // 直播间观众结构体
@@ -158,11 +162,9 @@ public:
      *  3.3.接收直播间关闭通知(观众)回调
      *
      *  @param roomId      直播间ID
-     *  @param userId      直播ID
-     *  @param nickName    直播昵称
      *
      */
-    virtual void OnRecvRoomCloseNotice(const string& roomId, const string& userId, const string& nickName, LCC_ERR_TYPE err, const string& errMsg) {};
+    virtual void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) {};
     
     /**
      *  3.4.接收观众进入直播间通知回调
@@ -243,11 +245,10 @@ public:
     /**
      *  3.11.直播间开播通知 回调
      *
-     *  @param roomId       直播间ID
-     *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
+     *  @param item       直播间开播通知结构体
      *
      */
-    virtual void OnRecvWaitStartOverNotice(const string& roomId, int leftSeconds) {};
+    virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem& item) {};
     
     /**
      *  3.12.接收观众／主播切换视频流通知接口 回调
@@ -276,10 +277,21 @@ public:
      *  @param success          操作是否成功
      *  @param reqId            请求序列号
      *  @param errMsg           结果描述
-     *  @param manPushUrl       直播间信息
+     *  @param manPushUrl       观众视频流url
      *
      */
     virtual void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) {};
+
+    /**
+     *  3.15.获取指定立即私密邀请信息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param item             立即私密邀请
+     *
+     */
+    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item) {};
     
     // ------------- 直播间处理(非消息) -------------
     /**
@@ -414,14 +426,14 @@ public:
     /**
      *  7.4.接收主播立即私密邀请通知 回调
      *
-     *  @param logId     记录ID
-     *  @param anchorId   主播ID
-     *  @param nickName   主播昵称
-     *  @param avatarImg   主播头像url
-     *  @param msg   提示文字
+     *  @param inviteId     邀请ID
+     *  @param anchorId     主播ID
+     *  @param nickName     主播昵称
+     *  @param avatarImg    主播头像url
+     *  @param msg          提示文字
      *
      */
-    virtual void OnRecvInstantInviteUserNotice(const string& logId, const string& anchorId, const string& nickName ,const string& avatarImg, const string& msg) {};
+    virtual void OnRecvInstantInviteUserNotice(const string& inviteId, const string& anchorId, const string& nickName ,const string& avatarImg, const string& msg) {};
     
     /**
      *  7.5.接收主播预约私密邀请通知 回调
@@ -438,11 +450,10 @@ public:
     /**
      *  7.6.接收预约私密邀请回复通知 回调
      *
-     *  @param inviteId     邀请ID
-     *  @param replyType    主播回复（0:拒绝 1:同意 2:超时）
+     *  @param item     预约私密邀请回复知结构体
      *
      */
-    virtual void OnRecvSendBookingReplyNotice(const string& inviteId, AnchorReplyType replyType) {};
+    virtual void OnRecvSendBookingReplyNotice(const BookingReplyItem& item) {};
     
     /**
      *  7.7.接收预约开始倒数通知 回调
@@ -450,11 +461,11 @@ public:
      *  @param roomId       直播间ID
      *  @param userId       对端ID
      *  @param nickName     对端昵称
-     *  @param photoUrl     对端头像url
+     *  @param avatarImg    对端头像url
      *  @param leftSeconds  倒数时间（秒）
      *
      */
-    virtual void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, int leftSeconds) {};
+    virtual void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& avatarImg, int leftSeconds) {};
 
     // ------------- 直播间才艺点播邀请 -------------
     /**
@@ -471,15 +482,10 @@ public:
     /**
      *  8.2.接收直播间才艺点播回复通知 回调
      *
-     *  @param roomId           直播间ID
-     *  @param talentInviteId   才艺邀请ID
-     *  @param talentId         才艺ID
-     *  @param name             才艺名称
-     *  @param credit           观众当前的信用点余额
-     *  @param status           状态（1:已接受 2:拒绝）
+     *  @param item          才艺回复通知结构体
      *
      */
-    virtual void OnRecvSendTalentNotice(const string& roomId, const string& talentInviteId, const string& talentId, const string& name, double credit, TalentStatus status) {};
+    virtual void OnRecvSendTalentNotice(const TalentReplyItem& item) {};
     
     // ------------- 公共 -------------
     /**
@@ -569,10 +575,10 @@ public:
      *  3.13.观众进入公开直播间
      *
      *  @param reqId         请求序列号
-     *  @param anchorId        主播ID
+     *  @param userId        主播ID
      *
      */
-    virtual bool PublicRoomIn(SEQ_T reqId, const string& anchorId) = 0;
+    virtual bool PublicRoomIn(SEQ_T reqId, const string& userId) = 0;
     
     /**
      *  3.14.观众开始／结束视频互动
@@ -583,6 +589,15 @@ public:
      *
      */
     virtual bool ControlManPush(SEQ_T reqId, const string& roomId, IMControlType control) = 0;
+    
+    /**
+     *  3.15.获取指定立即私密邀请信息
+     *
+     *  @param reqId            请求序列号
+     *  @param invitationId     邀请ID
+     *
+     */
+    virtual bool GetInviteInfo(SEQ_T reqId, const string& invitationId) = 0;
     
     // --------- 直播间文本消息 ---------
     /**

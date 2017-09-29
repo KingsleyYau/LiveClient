@@ -16,6 +16,7 @@ HttpSendBookingRequestTask::HttpSendBookingRequestTask() {
     mBookTime = 0;
     mGiftId = "";
     mGiftNum = 0;
+    mNeedSms = false;
 }
 
 HttpSendBookingRequestTask::~HttpSendBookingRequestTask() {
@@ -31,7 +32,8 @@ void HttpSendBookingRequestTask::SetParam(
                                           const string timeId,
                                           long bookTime,
                                           const string giftId,
-                                          int giftNum
+                                          int giftNum,
+                                          bool needSms
                                           ) {
 
 //	char temp[16];
@@ -59,10 +61,14 @@ void HttpSendBookingRequestTask::SetParam(
     }
     
     snprintf(temp, sizeof(temp), "%d", giftNum);
-    mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_GIFTNUM, giftId.c_str());
+    mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_GIFTNUM, temp);
     mGiftNum = giftNum;
-
     
+    
+    snprintf(temp, sizeof(temp), "%d", needSms == false ? 0 : 1);
+    mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_NEEDSMS, temp);
+    mNeedSms = needSms;
+
     FileLog("httpcontroller",
             "HttpSendBookingRequestTask::SetParam( "
             "task : %p, "
@@ -90,6 +96,10 @@ const string& HttpSendBookingRequestTask::GetGiftId() {
 
 int HttpSendBookingRequestTask::GetGiftNum() {
     return mGiftNum;
+}
+
+bool  HttpSendBookingRequestTask::GetNeedSms() {
+    return mNeedSms;
 }
 
 

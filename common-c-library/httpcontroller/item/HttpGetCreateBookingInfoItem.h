@@ -36,9 +36,9 @@ public:
             if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKTIME_STATUS].isInt()) {
                 status = (BookTimeStatus)root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKTIME_STATUS].asInt();
             }
-            if (!timeId.empty()) {
+//            if (!timeId.empty()) {
                 result = true;
-            }
+//            }
             return result;
         }
 
@@ -78,9 +78,9 @@ public:
             if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST_ISDEFAULT].isInt()) {
                 isDefault = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST_ISDEFAULT].asInt();
             }
-            if (num > 0) {
+            //if (num > 0) {
                 result = true;
-            }
+            //}
             return result;
         }
         
@@ -111,21 +111,21 @@ public:
                 giftId = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTID].asString();
             }
             
-            /* giftNumList */
-            if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST].isArray()) {
-                for (int i = 0; i < root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST].size(); i++) {
-                    Json::Value element = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST].get(i, Json::Value::null);
+            /* sendNumList */
+            if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_SENDNUMLIST].isArray()) {
+                for (int i = 0; i < root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_SENDNUMLIST].size(); i++) {
+                    Json::Value element = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_SENDNUMLIST].get(i, Json::Value::null);
                     GiftNumItem item;
                     if ( item.Parse(element)) {
-                        giftNumList.push_back(item);
+                        sendNumList.push_back(item);
                     }
                     
                 }
                 
             }
-            if (!giftId.empty()) {
+            //if (!giftId.empty()) {
                 result = true;
-            }
+            //}
             return result;
         }
         
@@ -139,10 +139,10 @@ public:
         /**
          * 有效直播间结构体
          * giftId		礼物ID
-         * giftNumList   可选礼物数量列表
+         * sendNumList   可选礼物数量列表
          */
         string      giftId;
-        GiftNumList giftNumList;
+        GiftNumList sendNumList;
     };
     typedef list<GiftItem> GiftList;
     
@@ -178,11 +178,51 @@ public:
         GiftList   giftList;
     };
     
+    class BookPhoneItem {
+    public:
+        void parse(const Json::Value& root) {
+            if (root.isObject()) {
+                if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE].isObject()) {
+                    /* country */
+                    if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_COUNTRY].isString()) {
+                        country = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_COUNTRY].asString();
+                    }
+                    /* areaCode */
+                    if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_AREACODE].isString()) {
+                        areaCode = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_AREACODE].asString();
+                    }
+                    /* phoneNo */
+                    if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_PHONENO].isString()) {
+                        phoneNo = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_PHONENO].asString();
+                    }
+                }
+
+            }
+        }
+        BookPhoneItem() {
+            country = "";
+            areaCode = "";
+            phoneNo = "";
+        }
+        virtual ~BookPhoneItem() {
+        
+        }
+        /**
+         * 验证的电话号码信息结构体
+         * country      国家
+         * areaCode     电话区号
+         * phoneNo      电话号码
+         */
+        string country;
+        string areaCode;
+        string phoneNo;
+    };
+    
     void Parse(const Json::Value& root) {
 		if( root.isObject() ) {
             
             /* bookDeposit */
-            if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKDEPOSIT].isDouble()) {
+            if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKDEPOSIT].isNumeric()) {
                 bookDeposit = root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKDEPOSIT].asDouble();
             }
             /* bookTime */
@@ -202,8 +242,10 @@ public:
             if( root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT].isObject() ) {
                 bookGift.Parse(root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT]);
             }
-
-            
+            /* bookPhone */
+            if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE].isObject()) {
+                bookPhone.parse(root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE]);
+            }
         }
     }
 
@@ -217,13 +259,15 @@ public:
 
     /**
      * 登录成功结构体
-     * bookDeposit	预约定金数
-     * bookTime      预约时间表
-     * bookGift      预约礼物
+     * bookDeposit      预约定金数
+     * bookTime         预约时间表
+     * bookGift         预约礼物
+     * bookPhone        已验证的电话号码
      */
     double bookDeposit;
     BookTimeList bookTime;
     BookGiftItem bookGift;
+    BookPhoneItem bookPhone;
 
 };
 

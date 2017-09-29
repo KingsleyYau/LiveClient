@@ -44,8 +44,6 @@ private:
 
 	SEQ_T               m_seq;		// seq
     
-    string              m_inviteId;        //  邀请ID
-    AnchorReplyType     m_replyType;   //  主播回复（0:拒绝 1:同意 2:超时）
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

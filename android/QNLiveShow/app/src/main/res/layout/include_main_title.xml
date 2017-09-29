@@ -43,14 +43,17 @@
             />
     </FrameLayout>
     <RelativeLayout
+        android:id="@+id/rlPersonalCenter"
         android:layout_width="@dimen/actionbar_backicon_height"
         android:layout_height="@dimen/actionbar_backicon_height"
-        android:layout_marginRight="8dp">
+        android:layout_marginRight="4dp"
+        android:onClick="onClick"
+        android:clickable="true">
         <ImageView
             android:id="@+id/btnCenter"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@drawable/u168"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/personal_center"
             android:layout_centerVertical="true"/>
         <TextView
             android:layout_width="16dp"
@@ -61,7 +64,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:layout_alignRight="@+id/btnCenter"
-            android:layout_alignTop="@+id/btnCenter"
+            android:layout_alignBottom="@+id/btnCenter"
             android:layout_marginTop="-4dp"
             android:layout_marginRight="-4dp"/>
     </RelativeLayout>

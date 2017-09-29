@@ -17,7 +17,8 @@ using namespace std;
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
 
-typedef list<string> InterestList;
+// typedef list<string> InterestList;
+typedef list<InterestType> InterestList;
 class HttpLiveRoomInfoItem {
 public:
 	void Parse(const Json::Value& root) {
@@ -57,10 +58,19 @@ public:
                 for (int i = 0; i < root[LIVEROOM_HOT_INTEREST].size(); i++) {
                     Json::Value element = root[LIVEROOM_HOT_INTEREST].get(i, Json::Value::null);
                     if (element.isString()) {
-                        interest.push_back(element.asString());
+                        //int intType = stoi(element.asString());
+                        int intType = atoi(element.asString().c_str());
+                        InterestType type = GetInterestType(intType);
+                        if (type != INTERESTTYPE_NOINTEREST) {
+                            interest.push_back(type);
+                        }
                     }
                 }
                 
+            }
+            /* anchorType */
+            if( root[LIVEROOM_HOT_ANCHORTYPE].isInt() ) {
+                anchorType = (AnchorLevelType)(root[LIVEROOM_HOT_ANCHORTYPE].asInt());
             }
         }
     }
@@ -72,6 +82,7 @@ public:
         roomPhotoUrl = "";
         onlineStatus  = ONLINE_STATUS_UNKNOWN;
         roomType = HTTPROOMTYPE_NOLIVEROOM;
+        anchorType = ANCHORLEVELTYPE_UNKNOW;
 	}
 
 	virtual ~HttpLiveRoomInfoItem() {
@@ -86,6 +97,7 @@ public:
      * roomPhotoUrl		直播间封面图url
      * roomType          直播间类型
      * interest          爱好ID列表
+     * anchorType        主播类型（1:白银 2:黄金）
      */
     string userId;
 	string nickName;
@@ -94,6 +106,7 @@ public:
     string roomPhotoUrl;
     HttpRoomType roomType;
     InterestList interest;
+    AnchorLevelType anchorType;
 };
 
 typedef list<HttpLiveRoomInfoItem> HotItemList;

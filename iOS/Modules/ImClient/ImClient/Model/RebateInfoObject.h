@@ -12,7 +12,7 @@
 @interface RebateInfoObject : NSObject
 /* 已返点数余额 */
 @property (nonatomic, assign) double curCredit;
-/* 剩余发电倒数时间（秒） */
+/* 剩余返点倒数时间（秒） */
 @property (nonatomic, assign) int curTime;
 /* 每期返点数 */
 @property (nonatomic, assign) double preCredit;

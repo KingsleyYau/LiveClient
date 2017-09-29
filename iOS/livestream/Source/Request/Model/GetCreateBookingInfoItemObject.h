@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "BookTimeItemObject.h"
 #import "GiftItemObject.h"
+#import "BookPhoneItemObject.h"
 
 @interface GetCreateBookingInfoItemObject : NSObject
 /**
@@ -20,5 +21,6 @@
 @property (nonatomic, assign) double bookDeposit;
 @property (nonatomic, strong) NSArray<BookTimeItemObject*>* bookTime;
 @property (nonatomic, strong) NSArray<GiftItemObject*>* bookGift;
+@property (nonatomic, strong) BookPhoneItemObject * bookPhone;
 
 @end

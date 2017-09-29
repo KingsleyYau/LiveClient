@@ -12,6 +12,8 @@
 - (instancetype)init{
     if (self = [super init]) {
         self.number = 0;
+        self.type = PROMOANCHORTYPE_LIVEROOM;
+        self.userId = @"";
     }
     
     return self;
@@ -24,7 +26,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getPromoAnchorList:self.number finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> * _Nullable array) {
+        NSInteger request = [self.manager getPromoAnchorList:self.number type:self.type userId:self.userId finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> * _Nullable array) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理

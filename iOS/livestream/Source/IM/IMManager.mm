@@ -8,6 +8,7 @@
 
 #import "IMManager.h"
 
+#import "ConfigManager.h"
 #import "LoginManager.h"
 #import "SessionRequestManager.h"
 
@@ -21,10 +22,13 @@
 @property (nonatomic, assign) BOOL isFirstLogin;
 // 是否已经登陆
 @property (nonatomic, assign) BOOL isIMLogin;
+// 是否被踢
+@property (nonatomic, assign) BOOL isKick;
 // 请求字典
 @property (nonatomic, strong) NSMutableDictionary *requestDictionary;
 // 上次发送返回的邀请
 @property (nonatomic, strong) NSString *inviteId;
+
 @end
 
 static IMManager *gManager = nil;
@@ -38,6 +42,8 @@ static IMManager *gManager = nil;
 }
 
 - (id)init {
+    NSLog(@"IMManager::init()");
+    
     if (self = [super init]) {
         self.delegates = [NSMutableArray array];
 
@@ -52,11 +58,14 @@ static IMManager *gManager = nil;
         self.requestDictionary = [NSMutableDictionary dictionary];
         self.isIMLogin = NO;
         self.isFirstLogin = YES;
+        self.isKick = NO;
     }
     return self;
 }
 
 - (void)dealloc {
+    NSLog(@"IMManager::dealloc()");
+    
     [self.client removeDelegate:self];
 
     [self.loginManager removeDelegate:self];
@@ -65,6 +74,8 @@ static IMManager *gManager = nil;
 - (BOOL)addDelegate:(id<IMManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
 
+    NSLog(@"IMManager::addDelegate( delegate : %@ )", delegate);
+    
     @synchronized(self.delegates) {
         // 查找是否已存在
         for (NSValue *value in self.delegates) {
@@ -88,6 +99,8 @@ static IMManager *gManager = nil;
 - (BOOL)removeDelegate:(id<IMManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
 
+    NSLog(@"IMManager::removeDelegate( delegate : %@ )", delegate);
+    
     @synchronized(self.delegates) {
         for (NSValue *value in self.delegates) {
             id<IMManagerDelegate> item = (id<IMManagerDelegate>)value.nonretainedObjectValue;
@@ -102,17 +115,40 @@ static IMManager *gManager = nil;
     return result;
 }
 
+- (void)login {
+    NSLog(@"IMManager::login( [IM登陆], token : %@ )", self.loginManager.loginItem.token);
+
+    // 开始登录IM
+    [self.client login:self.loginManager.loginItem.token pageName:PAGENAMETYPE_MOVEPAGE];
+}
+
+- (void)logout {
+    NSLog(@"IMManager::logout( [IM注销] )");
+    
+    // 开始注销IM
+    [self.client logout];
+}
+
 #pragma mark - HTTP登录回调
 - (void)manager:(LoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LoginItemObject *_Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString *_Nonnull)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 获取同步配置的IM服务器地址
-            NSMutableArray<NSString *> *urls = [NSMutableArray array];
-            [urls addObject:@"ws://172.25.32.17:3106"];
-            [self.client initClient:urls];
 
-            // 开始登录IM
-            [self.client login:loginItem.token pageName:PAGENAMETYPE_MOVEPAGE];
+            [[ConfigManager manager] synConfig:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject * _Nullable item) {
+                if( success ) {
+                    NSMutableArray<NSString *> *urls = [NSMutableArray array];
+
+//                    [urls addObject:@"ws://192.168.88.17:3106"];
+                    [urls addObject:@"ws://172.25.32.17:3106"];
+
+                    [self.client initClient:urls];
+                    
+                    // 开始登录IM
+                    [self login];
+                }
+            }];
+
         }
     });
 }
@@ -125,7 +161,7 @@ static IMManager *gManager = nil;
 }
 
 #pragma mark - IM登陆回调
-- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg item:(ImLoginReturnObject*_Nonnull)item {
+- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg item:(ImLoginReturnObject *_Nonnull)item {
     NSLog(@"IMManager::onLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
 
     if (errType == LCC_ERR_SUCCESS) {
@@ -137,24 +173,36 @@ static IMManager *gManager = nil;
             // 第一次IM登陆成功
             if (self.isFirstLogin) {
                 self.isFirstLogin = NO;
-                
+
                 // 处理是否在直播间中
-                if( ![self handleLoginRoomList:item.roomList] ) {
+                if (![self handleLoginRoomList:item.roomList]) {
                     // 处理是否在邀请中
-                    if( ![self handleLoginInviteList:item.inviteList] ) {
+                    if (![self handleLoginInviteList:item.inviteList]) {
                         // 不需要处理
                     }
                 }
-                
+
                 // 处理预约
                 [self handleLoginScheduleRoomList:item.scheduleRoomList];
-                
+
             } else {
                 // 断线重登陆
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // 查询邀请状态
-                    [self getInviteInfo];
-                });
+                
+                // 查询邀请状态
+                [self getInviteInfo:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ImInviteIdItemObject * _Nonnull Item) {
+                    if( success ) {
+                        // 成功获取到邀请状态
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            for (NSValue *value in self.delegates) {
+                                id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+                                if ([delegate respondsToSelector:@selector(onRecvInviteReply:)]) {
+                                    [delegate onRecvInviteReply:Item];
+                                }
+                            }
+                        });
+                    }
+                }];
+               
             }
         }
 
@@ -162,7 +210,7 @@ static IMManager *gManager = nil;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
             // IM断线, 3秒后重连
             if (self.loginManager.status == LOGINED) {
-                [self.client login:self.loginManager.loginItem.token pageName:PAGENAMETYPE_MOVEPAGE];
+                [self login];
             }
         });
     }
@@ -176,31 +224,43 @@ static IMManager *gManager = nil;
         self.isIMLogin = NO;
     }
 
-    //    if (errType == LCC_ERR_CONNECTFAIL) {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-        // IM断线, 3秒后重连
-        if (self.loginManager.status == LOGINED) {
-            [self.client login:self.loginManager.loginItem.token pageName:PAGENAMETYPE_MOVEPAGE];
+    @synchronized (self) {
+        if( !self.isKick ) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                // IM断线, 10秒后重连
+                if (self.loginManager.status == LOGINED) {
+                    [self login];
+                }
+            });
+        } else {
+            // 被踢
+            self.isKick = NO;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.loginManager logout:YES msg:@"你的账号已经在其他设备登陆"];
+            });
         }
-    });
-    //    }
+    }
 }
 
 - (void)onKickOff:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {
     NSLog(@"IMManager::onKickOff( [用户被挤掉线, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
+    @synchronized (self) {
+        self.isKick = YES;
+    }
 }
 
 #pragma mark - 首次登陆处理
 - (BOOL)handleLoginRoomList:(NSArray<NSString *> *)roomList {
     BOOL bFlag = NO;
-    
+
     NSString *roomId = nil;
-    if( roomList.count > 0 ) {
+    if (roomList.count > 0) {
         roomId = [roomList objectAtIndex:0];
-        
-        if( roomId.length > 0 ) {
+
+        if (roomId.length > 0) {
             bFlag = YES;
-            
+
             for (NSValue *value in self.delegates) {
                 id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
                 if ([delegate respondsToSelector:@selector(onHandleLoginRoom:)]) {
@@ -208,22 +268,21 @@ static IMManager *gManager = nil;
                 }
             }
         }
-
     }
-    
+
     return bFlag;
 }
 
 - (BOOL)handleLoginInviteList:(NSArray<ImInviteIdItemObject *> *)inviteList {
     BOOL bFlag = NO;
-    
+
     ImInviteIdItemObject *inviteItem = nil;
-    if( inviteList.count > 0 ) {
+    if (inviteList.count > 0) {
         inviteItem = [inviteList objectAtIndex:0];
-        
-        if( inviteItem ) {
+
+        if (inviteItem) {
             bFlag = YES;
-            
+
             for (NSValue *value in self.delegates) {
                 id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
                 if ([delegate respondsToSelector:@selector(onHandleLoginInvite:)]) {
@@ -231,22 +290,21 @@ static IMManager *gManager = nil;
                 }
             }
         }
-        
     }
-    
+
     return bFlag;
 }
 
-- (BOOL)handleLoginScheduleRoomList:(NSArray<ImScheduleRoomObject*> *)scheduleRoomList {
+- (BOOL)handleLoginScheduleRoomList:(NSArray<ImScheduleRoomObject *> *)scheduleRoomList {
     BOOL bFlag = YES;
-    
+
     for (NSValue *value in self.delegates) {
         id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
         if ([delegate respondsToSelector:@selector(onHandleLoginSchedule:)]) {
             [delegate onHandleLoginSchedule:scheduleRoomList];
         }
     }
-    
+
     return bFlag;
 }
 
@@ -258,8 +316,8 @@ static IMManager *gManager = nil;
     @synchronized(self) {
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client roomIn:reqId roomId:roomId];
-            if (bFlag) {
+            bFlag = [self.client roomIn:reqId roomId:roomId];
+            if (bFlag && finishHandler) {
                 [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
         }
@@ -269,31 +327,12 @@ static IMManager *gManager = nil;
 }
 
 - (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg item:(ImLiveRoomObject *_Nonnull)item {
-    NSLog(@"IMManager::onRoomIn( [发送观众进入直播间, %@], reqId : %u, errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", reqId, errType, errmsg);
+    NSLog(@"IMManager::onRoomIn( [发送观众进入直播间, %@], reqId : %u, errType : %d, errmsg : %@, reqId : %u )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", reqId, errType, errmsg, reqId);
 
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
         EnterRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
         if (finishHandler) {
-            //            ImLiveRoom *item = [[ImLiveRoom alloc] initWithUserId:item.userId
-            //                                                         nickName:item.nickName
-            //                                                         photoUrl:item.photoUrl
-            //                                                        videoUrls:item.videoUrls
-            //                                                         roomType:item.roomType
-            //                                                           credit:item.credit
-            //                                                      usedVoucher:item.usedVoucher
-            //                                                          fansNum:item.fansNum
-            //                                                      emoTypeList:item.emoTypeList
-            //                                                        loveLevel:item.loveLevel
-            //                                                       rebateInfo:item.rebateInfo
-            //                                                         favorite:item.favorite
-            //                                                      leftSeconds:item.leftSeconds
-            //                                                        waitStart:item.waitStart
-            //                                                       manPushUrl:item.manPushUrl
-            //                                                         manLevel:item.manLevel
-            //                                                        roomPrice:item.roomPrice
-            //                                                     manPushPrice:item.manPushPrice
-            //                                                      maxFansiNum:item.maxFansiNum];
             finishHandler(success, errType, errmsg, item);
         }
         [self.requestDictionary removeObjectForKey:key];
@@ -315,18 +354,18 @@ static IMManager *gManager = nil;
 }
 
 - (void)onRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {
-    NSLog(@"IMManager::onFansRoomOut( [发送观众退出直播间, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
+    NSLog(@"IMManager::onRoomOut( [发送观众退出直播间, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
 }
 
-- (BOOL)enterPublicRoom:(NSString *_Nonnull)anchorId finishHandler:(EnterPublicRoomHandler _Nullable)finishHandler {
-    NSLog(@"IMManager::enterPublicRoom( [发送观众进入公开直播间], anchorId : %@ )", anchorId);
+- (BOOL)enterPublicRoom:(NSString *_Nonnull)userId finishHandler:(EnterPublicRoomHandler _Nullable)finishHandler {
+    NSLog(@"IMManager::enterPublicRoom( [发送观众进入公开直播间], userId : %@ )", userId);
     BOOL bFlag = NO;
 
     @synchronized(self) {
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client publicRoomIn:reqId anchorId:anchorId];
-            if (bFlag) {
+            bFlag = [self.client publicRoomIn:reqId userId:userId];
+            if (bFlag && finishHandler) {
                 [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
         }
@@ -336,51 +375,28 @@ static IMManager *gManager = nil;
 }
 
 - (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg item:(ImLiveRoomObject *_Nonnull)item {
-    NSLog(@"IMManager::onPublicRoomIn( [发送观众进入公开直播间, %@], errType : %d, errmsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
+    NSLog(@"IMManager::onPublicRoomIn( [发送观众进入公开直播间, %@], errType : %d, errmsg : %@, reqId : %u )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, reqId);
 
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
         EnterRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
         if (finishHandler) {
-            //            ImLiveRoom *roomItem = [[ImLiveRoom alloc] initWithUserId:item.userId
-            //                                                             nickName:item.nickName
-            //                                                             photoUrl:item.photoUrl
-            //                                                            videoUrls:item.videoUrls
-            //                                                             roomType:item.roomType
-            //                                                               credit:item.credit
-            //                                                          usedVoucher:item.usedVoucher
-            //                                                              fansNum:item.fansNum
-            //                                                          emoTypeList:item.emoTypeList
-            //                                                            loveLevel:item.loveLevel
-            //                                                           rebateInfo:item.rebateInfo
-            //                                                             favorite:item.favorite
-            //                                                          leftSeconds:item.leftSeconds
-            //                                                            waitStart:item.waitStart
-            //                                                           manPushUrl:item.manPushUrl
-            //                                                             manLevel:item.manLevel
-            //                                                            roomPrice:item.roomPrice
-            //                                                         manPushPrice:item.manPushPrice
-            //                                                          manFansiNum:item.manFansiNum];
             finishHandler(success, err, errMsg, item);
         }
         [self.requestDictionary removeObjectForKey:key];
     }
 }
 
-- (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg manPushUrl:(NSArray<NSString *> *_Nonnull)manPushUrl {
-    NSLog(@"IMManager::onControlManPush( [观众开始／结束视频互动, %@], errType : %d, errmsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
-}
-
-- (void)onRecvRoomCloseNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {
-    NSLog(@"IMManager::onRecvRoomCloseNotice( [接收直播间关闭通知] )");
+- (void)onRecvRoomCloseNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {
+    NSLog(@"IMManager::onRecvRoomCloseNotice( [接收直播间关闭通知], roomId : %@, errType : %d, errMsg : %@ )", roomId, errType, errmsg);
 }
 
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum {
-    NSLog(@"IMManager::onRecvEnterRoomNotice( [接收观众进入直播间通知] )");
+    NSLog(@"IMManager::onRecvEnterRoomNotice( [接收观众进入直播间通知], roomId : %@, userId : %@, nickName : %@ )", roomId, userId, nickName);
 }
 
 - (void)onRecvLeaveRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl fansNum:(int)fansNum {
-    NSLog(@"IMManager::onRecvLeaveRoomNotice( [接收观众退出直播间通知] )");
+    NSLog(@"IMManager::onRecvLeaveRoomNotice( [接收观众退出直播间通知], roomId : %@, userId : %@, nickName : %@ )", roomId, userId, nickName);
 }
 
 - (void)onRecvRebateInfoNotice:(NSString *_Nonnull)roomId rebateInfo:(RebateInfoObject *_Nonnull)rebateInfo {
@@ -399,8 +415,8 @@ static IMManager *gManager = nil;
     NSLog(@"IMManager::onRecvCreditNotice( [接收定时扣费通知] )");
 }
 
-- (void)onRecvWaitStartOverNotice:(NSString *_Nonnull)roomId leftSeconds:(int)leftSeconds {
-    NSLog(@"IMManager::onRecvWaitStartOverNotice( [直播间开播通知] )");
+- (void)onRecvWaitStartOverNotice:(ImStartOverRoomObject *_Nonnull)item {
+    NSLog(@"IMManager::onRecvWaitStartOverNotice( [接收主播进入直播间通知], roomId : %@ )", item.roomId);
 }
 
 - (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSString *_Nonnull)playUrl {
@@ -415,8 +431,8 @@ static IMManager *gManager = nil;
     @synchronized(self) {
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client sendPrivateLiveInvite:reqId userId:userId logId:logId force:force];
-            if (bFlag) {
+            bFlag = [self.client sendPrivateLiveInvite:reqId userId:userId logId:logId force:force];
+            if (bFlag && finishHandler) {
                 [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
         }
@@ -426,7 +442,7 @@ static IMManager *gManager = nil;
 }
 
 - (void)onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg invitationId:(NSString *_Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString *_Nonnull)roomId {
-    NSLog(@"IMManager::onSendPrivateLiveInvite( [发送私密邀请, %@] )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败");
+    NSLog(@"IMManager::onSendPrivateLiveInvite( [发送私密邀请, %@], err : %d, errMsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
 
     @synchronized(self) {
         if (success) {
@@ -451,8 +467,8 @@ static IMManager *gManager = nil;
         if (self.isIMLogin) {
             if (self.inviteId) {
                 SEQ_T reqId = [self.client getReqId];
-                BOOL bFlag = [self.client sendCancelPrivateLiveInvite:reqId inviteId:self.inviteId];
-                if (bFlag) {
+                bFlag = [self.client sendCancelPrivateLiveInvite:reqId inviteId:self.inviteId];
+                if (bFlag && finishHandler) {
                     [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
                 }
                 // 清空邀请Id
@@ -465,7 +481,7 @@ static IMManager *gManager = nil;
 }
 
 - (void)onSendCancelPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg roomId:(NSString *_Nonnull)roomId {
-    NSLog(@"IMManager::onSendCancelPrivateLiveInvite( [发送私密邀请(取消), %@] )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败");
+    NSLog(@"IMManager::onSendCancelPrivateLiveInvite( [发送私密邀请(取消), %@], err : %d, errMsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
 
     @synchronized(self) {
         NSString *key = [NSString stringWithFormat:@"%u", reqId];
@@ -477,89 +493,153 @@ static IMManager *gManager = nil;
     }
 }
 
-- (void)getInviteInfo {
-    if (self.inviteId) {
-        NSLog(@"IMManager::getInviteInfo( [查询邀请状态], inviteId : %@ )", self.inviteId);
-        
-        GetInviteInfoRequest *request = [[GetInviteInfoRequest alloc] init];
-        request.inviteId = self.inviteId;
-        request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, InviteIdItemObject *_Nonnull item) {
-            NSLog(@"IMManager::getInviteInfo( [查询邀请状态, %@], inviteId : %@ )", success ? @"成功" : @"失败", self.inviteId);
-            if (success) {
-                for (NSValue *value in self.delegates) {
-                    id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-                    if ([delegate respondsToSelector:@selector(onRecvInviteReply:)]) {
-                        [delegate onRecvInviteReply:item];
-                    }
+- (BOOL)getInviteInfo:(GetIMInviteInfoHandler _Nullable)finishHandler {
+    
+    NSLog(@"IMManager::getInviteInfo( [获取指定立即私密邀请信息], inviteId : %@ )", self.inviteId);
+    BOOL bFlag = NO;
+    
+    @synchronized(self) {
+        if (self.isIMLogin) {
+            if (self.inviteId.length > 0) {
+                SEQ_T reqId = [self.client getReqId];
+                bFlag = [self.client getInviteInfo:reqId invitationId:self.inviteId];
+                if (bFlag && finishHandler) {
+                    [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
                 }
+//                // 清空邀请Id
+//                self.inviteId = nil;
             }
-        };
-        [self.sessionManager sendRequest:request];
+        }
+    }
+    
+    return bFlag;
+    
+}
+
+- (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg item:(ImInviteIdItemObject *_Nonnull)item {
+    NSLog(@"IMManager::onGetInviteInfo( [获取指定立即私密邀请信息, %@], errType : %d, errmsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        GetIMInviteInfoHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg, item);
+        }
+        [self.requestDictionary removeObjectForKey:key];
     }
 }
 
 - (void)onRecvInstantInviteReplyNotice:(NSString *_Nonnull)inviteId replyType:(ReplyType)replyType roomId:(NSString *_Nonnull)roomId roomType:(RoomType)roomType anchorId:(NSString *_Nonnull)anchorId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg msg:(NSString *_Nonnull)msg {
     NSLog(@"IMManager::onRecvInstantInviteReplyNotice( [接收立即私密邀请回复通知], roomId : %@, inviteId : %@, msg : %@ )", roomId, inviteId, msg);
+
+    @synchronized(self) {
+        if ([self.inviteId isEqualToString:inviteId]) {
+            // 清空邀请Id
+            self.inviteId = nil;
+        }
+    }
 }
 
-- (void)onRecvInstantInviteUserNotice:(NSString *_Nonnull)logId anchorId:(NSString *_Nonnull)anchorId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg msg:(NSString *_Nonnull)msg {
-    NSLog(@"IMManager::onRecvInstantInviteReplyNotice( [接收主播立即私密邀请通知] )");
+- (void)onRecvInstantInviteUserNotice:(NSString *_Nonnull)inviteId anchorId:(NSString *_Nonnull)anchorId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg msg:(NSString *_Nonnull)msg {
+    NSLog(@"IMManager::onRecvInstantInviteUserNotice( [接收主播立即私密邀请通知] )");
 }
 
 - (void)onRecvScheduledInviteUserNotice:(NSString *_Nonnull)inviteId anchorId:(NSString *_Nonnull)anchorId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg msg:(NSString *_Nonnull)msg {
     NSLog(@"IMManager::onRecvScheduledInviteUserNotice( [接收主播预约私密邀请通知] )");
 }
 
-- (void)onRecvSendBookingReplyNotice:(NSString *_Nonnull)inviteId replyType:(AnchorReplyType)replyType {
+- (void)onRecvSendBookingReplyNotice:(ImBookingReplyObject *_Nonnull)item {
     NSLog(@"IMManager::onRecvSendBookingReplyNotice( [接收预约私密邀请回复通知] )");
 }
 
-- (void)onRecvBookingNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl leftSeconds:(int)leftSeconds {
+- (void)onRecvBookingNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg leftSeconds:(int)leftSeconds {
     NSLog(@"IMManager::onRecvBookingNotice( [接收预约开始倒数通知] )");
 }
 
 #pragma mark - 才艺点播
-- (NSInteger)sendTalent:(NSString *_Nonnull)roomId talentId:(NSString *_Nonnull)talentId {
+- (BOOL)sendTalent:(NSString *_Nonnull)roomId talentId:(NSString *_Nonnull)talentId {
     NSLog(@"IMManager::sendTalent( [发送直播间才艺点播邀请], roomId : %@ )", roomId);
-    NSInteger requestId = INVALID_REQUEST_ID;
+    BOOL bFlag = NO;
 
     @synchronized(self) {
         // 标记IM登陆未登陆
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client sendTalent:reqId roomId:roomId talentId:talentId];
+            bFlag = [self.client sendTalent:reqId roomId:roomId talentId:talentId];
             if (bFlag) {
-                requestId = reqId;
             }
         }
     }
-    return requestId;
+    return bFlag;
 }
 
 - (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg talentInviteId:(NSString *_Nonnull)talentInviteId {
     NSLog(@"IMManager::onSendTalent( [发送直播间才艺点播邀请, %@], errType : %d, errmsg : %@ talentInviteId:%@)", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, talentInviteId);
+    
+    for (NSValue *value in self.delegates) {
+        id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+        if ([delegate respondsToSelector:@selector(onSendTalent:success:err:errMsg:talentInviteId:)]) {
+            [delegate onSendTalent:reqId success:success err:err errMsg:errMsg talentInviteId:talentInviteId];
+        }
+    }
 }
 
-- (void)onRecvSendTalentNotice:(NSString *_Nonnull)roomId talentInviteId:(NSString *_Nonnull)talentInviteId talentId:(NSString *_Nonnull)talentId name:(NSString *_Nonnull)name credit:(double)credit status:(TalentStatus)status {
+- (void)onRecvSendTalentNotice:(ImTalentReplyObject* _Nonnull)item {
     NSLog(@"IMManager::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
+    
+    for (NSValue *value in self.delegates) {
+        id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+        if ([delegate respondsToSelector:@selector(onRecvSendTalentNotice:)]) {
+            [delegate onRecvSendTalentNotice:item];
+        }
+    }
 }
 
-#pragma mark - 消息和礼物
-- (NSInteger)sendLiveChat:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at {
-    NSLog(@"IMManager::sendLiveChat( [发送直播间文本消息], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
-    NSInteger requestId = INVALID_REQUEST_ID;
+#pragma mark - 视频互动
+- (BOOL)controlManPush:(NSString *_Nonnull)roomId control:(IMControlType)control finishHandler:(ControlManPushHandler)finishHandler {
+    NSLog(@"IMManager::sendTalent( [发送视频互动], roomId : %@, control : %d )", roomId, control);
+    BOOL bFlag = NO;
 
     @synchronized(self) {
         // 标记IM登陆未登陆
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client sendLiveChat:reqId roomId:roomId nickName:nickName msg:msg at:at];
-            if (bFlag) {
-                requestId = reqId;
+            bFlag = [self.client controlManPush:reqId roomId:roomId control:control];
+            if (bFlag && finishHandler) {
+                [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
         }
     }
-    return requestId;
+    return bFlag;
+}
+
+- (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg manPushUrl:(NSArray<NSString *> *_Nonnull)manPushUrl {
+    NSLog(@"IMManager::onControlManPush( [发送视频互动, %@], errType : %d, errmsg : %@ manPushUrl.count : %lu )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, (unsigned long)manPushUrl.count);
+
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        ControlManPushHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg, manPushUrl);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
+}
+
+#pragma mark - 消息和礼物
+- (BOOL)sendLiveChat:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at {
+    NSLog(@"IMManager::sendLiveChat( [发送直播间文本消息], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
+    BOOL bFlag = NO;
+
+    @synchronized(self) {
+        // 标记IM登陆未登陆
+        if (self.isIMLogin) {
+            SEQ_T reqId = [self.client getReqId];
+            bFlag = [self.client sendLiveChat:reqId roomId:roomId nickName:nickName msg:msg at:at];
+            if (bFlag) {
+            }
+        }
+    }
+    return bFlag;
 }
 
 - (void)onSendLiveChat:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {
@@ -574,21 +654,20 @@ static IMManager *gManager = nil;
     NSLog(@"IMManager::onRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@ link: %@)", roomId, msg, link);
 }
 
-- (NSInteger)sendToast:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg {
+- (BOOL)sendToast:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg {
     NSLog(@"IMManager::sendToast( [发送直播间弹幕消息], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
-    NSInteger requestId = INVALID_REQUEST_ID;
+    BOOL bFlag = NO;
 
     @synchronized(self) {
         // 标记IM登陆未登陆
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client sendToast:reqId roomId:roomId nickName:nickName msg:msg];
+            bFlag = [self.client sendToast:reqId roomId:roomId nickName:nickName msg:msg];
             if (bFlag) {
-                requestId = reqId;
             }
         }
     }
-    return requestId;
+    return bFlag;
 }
 
 - (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
@@ -599,38 +678,47 @@ static IMManager *gManager = nil;
     NSLog(@"IMManager::onRecvSendToastNotice( [接收直播间弹幕通知], roomId : %@, fromId : %@, nickName : %@, msg : %@ )", roomId, fromId, nickName, msg);
 }
 
-- (NSInteger)sendGift:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName giftId:(NSString *_Nonnull)giftId giftName:(NSString *_Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id {
-    NSLog(@"IMManager::sendGift( [发送直播间弹幕消息], roomId : %@, nickName : %@, giftId : %@ )", roomId, nickName, giftId);
-    NSInteger requestId = INVALID_REQUEST_ID;
+- (BOOL)sendGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id finishHandler:(SendGiftHandler _Nullable)finishHandler {
+    NSLog(@"IMManager::sendGift( [发送直播间礼物消息], roomId : %@, nickName : %@, giftId : %@ )", roomId, nickName, giftId);
+    BOOL bFlag = NO;
 
     @synchronized(self) {
         // 标记IM登陆未登陆
         if (self.isIMLogin) {
             SEQ_T reqId = [self.client getReqId];
-            BOOL bFlag = [self.client sendGift:reqId roomId:roomId nickName:nickName giftId:giftId giftName:giftName isBackPack:isBackPack giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
-            if (bFlag) {
-                requestId = reqId;
+            bFlag = [self.client sendGift:reqId roomId:roomId nickName:nickName giftId:giftId giftName:giftName isBackPack:isBackPack giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            if (bFlag && finishHandler) {
+                [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
             }
         }
     }
-    return requestId;
+    return bFlag;
 }
 
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"IMManager::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
+    
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        SendGiftHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, errType, errmsg, credit, rebateCredit);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
 }
 
-- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id {
+- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id {
     NSLog(@"IMManager::onRecvSendGiftNotice( [接收直播间礼物通知], roomId : %@, fromId : %@, nickName : %@ )", roomId, fromId, nickName);
 }
 
 #pragma mark - 公共
 - (void)onRecvLevelUpNotice:(int)level {
-    NSLog(@"IMManager::onRecvLevelUpNotice( [接收观众等级升级通知] )");
+    NSLog(@"IMManager::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
 }
 
 - (void)onRecvLoveLevelUpNotice:(int)loveLevel {
-    NSLog(@"IMManager::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知] )");
+    NSLog(@"IMManager::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d )", loveLevel);
 }
 
 - (void)onRecvBackpackUpdateNotice:(BackpackInfoObject * _Nonnull)item {

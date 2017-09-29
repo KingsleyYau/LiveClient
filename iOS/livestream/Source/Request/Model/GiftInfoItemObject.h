@@ -26,6 +26,7 @@
  * loveLevel			发送礼物的亲密度限制，发送者亲密度>= 礼物亲密度才能发送
  * sendNumList       发送可选数量列表
  * update_time		礼物最后更新时间戳（1970年起的秒数）
+ * playTime         大礼物的swf播放时长（毫秒）
  */
 
 /* 礼物ID */
@@ -56,4 +57,6 @@
 @property (nonatomic, strong) NSMutableArray<NSNumber *>* sendNumList;
 /* 礼物最后更新时间戳（1970年起的秒数） */
 @property (nonatomic, assign) NSInteger updateTime;
+/* 大礼物的swf播放时长（毫秒） */
+@property (nonatomic, assign) int playTime;
 @end

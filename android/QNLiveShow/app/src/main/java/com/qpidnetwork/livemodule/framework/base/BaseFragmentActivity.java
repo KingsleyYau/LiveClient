@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.barlibrary.ImmersionBar;
+import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.MaterialProgressDialog;
 
 import java.lang.ref.WeakReference;
@@ -216,6 +217,10 @@ public class BaseFragmentActivity extends FragmentActivity implements View.OnCli
         mHandler.postDelayed(runnable, delay);
     }
 
+    protected void removeCallback(Runnable runnable){
+        mHandler.removeCallbacks(runnable);
+    }
+
     /**
      * 隐藏输入法界面，并使et失去焦点
      * @param et
@@ -251,6 +256,6 @@ public class BaseFragmentActivity extends FragmentActivity implements View.OnCli
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
-
+        Log.d(TAG,"onClick");
     }
 }

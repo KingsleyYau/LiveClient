@@ -11,9 +11,11 @@
 typedef enum MsgType {
     MsgType_Chat,
     MsgType_Gift,
-    MsgType_ThumbUp,
+    MsgType_Announce,
+    MsgType_Link,
     MsgType_Share,
     MsgType_Join,
+    MsgType_RiderJoin,
     MsgType_Follow,
 } MsgType;
 
@@ -24,9 +26,11 @@ typedef enum MsgType {
 @property (strong) NSString* name;
 @property (strong) NSString *giftName;
 @property (strong) NSString* text;
-@property (strong) NSAttributedString* attText;
+@property (strong) NSMutableAttributedString* attText;
 @property (nonatomic, strong) YYTextLayout *layout;
 @property (strong) NSString *smallImgUrl;
 @property (nonatomic, assign) int giftNum;
+@property (strong) NSString *linkStr;
+@property (strong) NSString *riderName;
 
 @end

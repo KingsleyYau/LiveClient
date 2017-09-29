@@ -20,7 +20,7 @@
 #define PLAY_DELAY_DROP_TIME 500
 // 帧延迟断开值(MS)
 #define PLAY_DELAY_DISCONNECT_TIME 5000
-
+// 无效的Timestamp
 #define INVALID_TIMESTAMP 0xFFFFFFFF
 
 namespace coollive {
@@ -245,6 +245,7 @@ void RtmpPlayer::Stop() {
 
         mStartPlayTime = 0;
         mPlayVideoAfterAudioDiff = 0;
+        mbVideoStartPlay = false;
     }
     
     mClientMutex.unlock();
@@ -381,7 +382,7 @@ void RtmpPlayer::Init() {
 
     mCacheMS = PLAY_CACHE_DEFAULT_MS;
     mbCacheFrame = true;
-    mbSyncFrame = false;
+    mbSyncFrame = true;
     
     mStartPlayTime = 0;
     mPlayVideoAfterAudioDiff = 0;
@@ -397,6 +398,7 @@ void RtmpPlayer::Init() {
     mpPlayAudioRunnable = new PlayAudioRunnable(this);
     
     mbShowNoCacheLog = false;
+    mbVideoStartPlay = false;
 }
 
 bool RtmpPlayer::IsCacheEnough() {
@@ -500,7 +502,7 @@ bool RtmpPlayer::IsCacheEnough() {
 	mAudioBufferList.unlock();
 
 	mPlayThreadMutex.lock();
-	if( endTimestamp - startTimestamp >= mCacheMS || mAudioBufferList.size() > 50 || mVideoBufferList.size() > 30 ) {
+	if( endTimestamp - startTimestamp >= mCacheMS || mAudioBufferList.size() > 150 || mVideoBufferList.size() > 90 ) {
 		// 缓存足够, 判断音频先开始还是视频先开始
         if( startVideoTimestamp > 0 && startAudioTimestamp > 0 ) {
             mPlayVideoAfterAudioDiff = startVideoTimestamp - startAudioTimestamp;
@@ -586,30 +588,88 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
 
 	long long curTime = (long long)getCurrentTime();
 
+//    if( mbSyncFrame ) {
+//        mPlayThreadMutex.lock();
+//        int diffStartTime = -1;
+//        if( isAudio ) {
+//            if( mPlayVideoAfterAudioDiff < 0 ) {
+//                // 播放音频帧时候发现, 视频先播, 计算延迟
+//                diffStartTime = (int)(curTime - mStartPlayTime);
+//            }
+//            
+//            if( diffStartTime == -1 || diffStartTime >= abs(mPlayVideoAfterAudioDiff) ) {
+//                bFlag = true;
+//            }
+//            
+//        } else {
+//            if( mPlayVideoAfterAudioDiff >= 0 ) {
+//                // 播放视频帧时候发现, 音频先播, 计算延迟
+//                diffStartTime = (int)(curTime - mStartPlayTime);
+//            }
+//            
+//            if( diffStartTime == -1 || diffStartTime >= abs(mPlayVideoAfterAudioDiff) ) {
+//                bFlag = true;
+//            }
+//        }
+//        mPlayThreadMutex.unlock();
+//    } else {
+//        bFlag = true;
+//    }
+    
     if( mbSyncFrame ) {
-        mPlayThreadMutex.lock();
-        int diffStartTime = -1;
         if( isAudio ) {
-            if( mPlayVideoAfterAudioDiff < 0 ) {
-                // 播放音频帧时候发现, 视频先播, 计算延迟
-                diffStartTime = (int)(curTime - mStartPlayTime);
-            }
-            
-            if( diffStartTime == -1 || diffStartTime >= abs(mPlayVideoAfterAudioDiff) ) {
-                bFlag = true;
-            }
-            
+            bFlag = true;
         } else {
-            if( mPlayVideoAfterAudioDiff >= 0 ) {
-                // 播放视频帧时候发现, 音频先播, 计算延迟
-                diffStartTime = (int)(curTime - mStartPlayTime);
-            }
-            
-            if( diffStartTime == -1 || diffStartTime >= abs(mPlayVideoAfterAudioDiff) ) {
+            // 视频未开播
+            if( !mbVideoStartPlay ) {
+                // 如果音频已经开播, 计算视频开播差值
+                FrameBuffer* audioFrame = NULL;
+                int audioTimestamp = INVALID_TIMESTAMP;
+                FrameBuffer* videoFrame = NULL;
+                int videoTimestamp = INVALID_TIMESTAMP;
+                
+                mAudioBufferList.lock();
+                if( !mAudioBufferList.empty() ) {
+                    audioFrame = mAudioBufferList.front();
+                    audioTimestamp = audioFrame->mTimestamp;
+                }
+                mAudioBufferList.unlock();
+                
+                // 下一帧播放的音频时间戳
+                if( audioTimestamp != INVALID_TIMESTAMP ) {
+                    // 音频已经开播
+                    mVideoBufferList.lock();
+                    if( !mVideoBufferList.empty() ) {
+                        videoFrame = mVideoBufferList.front();
+                        videoTimestamp = videoFrame->mTimestamp;
+                    }
+                    mVideoBufferList.unlock();
+                    
+                    // 音频的时间戳已经追上视频
+                    if( videoTimestamp <= audioTimestamp ) {
+                        FileLevelLog("rtmpdump",
+                                     KLog::LOG_WARNING,
+                                     "RtmpPlayer::IsPlay( "
+                                     "[Sync Video], "
+                                     "audioTimestamp : %d, "
+                                     "videoTimestamp : %d "
+                                     ")",
+                                     audioTimestamp,
+                                     videoTimestamp
+                                     );
+                        bFlag = true;
+                        mbVideoStartPlay = true;
+                    }
+                } else {
+                    // 没有音频
+                    bFlag = true;
+                    mbVideoStartPlay = true;
+                }
+            } else {
                 bFlag = true;
             }
         }
-        mPlayThreadMutex.unlock();
+        
     } else {
         bFlag = true;
     }
@@ -799,10 +859,14 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                         bDropFrame = true;
                                     }
                                     
-                                    // 播放延迟太大, 断开连接
-                                    if( delay > PLAY_DELAY_DISCONNECT_TIME ) {
-                                        bDisconnect = true;
+                                    // 只有音频才处理
+                                    if( isAudio ) {
+                                        // 播放延迟太大, 断开连接
+                                        if( delay > PLAY_DELAY_DISCONNECT_TIME ) {
+                                            bDisconnect = true;
+                                        }
                                     }
+
                                 }
                             }
 //                        }

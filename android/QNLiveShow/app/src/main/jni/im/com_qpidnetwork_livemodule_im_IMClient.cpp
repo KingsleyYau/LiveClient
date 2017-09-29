@@ -167,29 +167,25 @@ public:
     }
 
     // 接收直播间关闭通知(观众)
-    virtual void OnRecvRoomCloseNotice(const string& roomId, const string& userId, const string& nickName, LCC_ERR_TYPE err, const string& errMsg) override{
+    virtual void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "OnRecvRoomCloseNotice() callback, env:%p, isAttachThread:%d, roomId:%s, userId:%s, nickName:%s",
-				env, isAttachThread, roomId.c_str(), userId.c_str(), nickName.c_str());
+		FileLog(TAG, "OnRecvRoomCloseNotice() callback, env:%p, isAttachThread:%d, roomId:%s",
+				env, isAttachThread, roomId.c_str());
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V";
+			string signure = "(Ljava/lang/String;ILjava/lang/String;)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvRoomCloseNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvRoomCloseNotice() callback now");
 				jstring jroomId = env->NewStringUTF(roomId.c_str());
-				jstring juserId = env->NewStringUTF(userId.c_str());
-				jstring jnickName = env->NewStringUTF(nickName.c_str());
 				int errType = IMErrorTypeToInt(err);
 				jstring jerrmsg = env->NewStringUTF(errMsg.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, juserId, jnickName, errType, jerrmsg);
+				env->CallVoidMethod(gListener, jCallback, jroomId, errType, jerrmsg);
 				env->DeleteLocalRef(jroomId);
-				env->DeleteLocalRef(juserId);
-				env->DeleteLocalRef(jnickName);
 				env->DeleteLocalRef(jerrmsg);
 				FileLog(TAG, "OnRecvRoomCloseNotice() callback ok");
 			}
@@ -408,22 +404,28 @@ public:
     }
 
     // 直播间开播通知
-    virtual void OnRecvWaitStartOverNotice(const string& roomId, int leftSeconds) override{
+    virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem& item) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "OnRecvWaitStartOverNotice() callback, env:%p, isAttachThread:%d, roomId:%s, leftSeconds:%d", env, isAttachThread, roomId.c_str(), leftSeconds);
+		FileLog(TAG, "OnRecvWaitStartOverNotice() callback, env:%p, isAttachThread:%d, roomId:%s, leftSeconds:%d", env, isAttachThread, item.roomId.c_str(), item.leftSeconds);
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;I)V";
+			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvLiveStart", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvWaitStartOverNotice() callback now");
-				jstring jroomId = env->NewStringUTF(roomId.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, leftSeconds);
+				jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+				jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+				jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+				jstring javatarImg = env->NewStringUTF(item.avatarImg.c_str());
+				env->CallVoidMethod(gListener, jCallback, jroomId, janchorId, jnickName, javatarImg, item.leftSeconds);
 				env->DeleteLocalRef(jroomId);
+				env->DeleteLocalRef(janchorId);
+				env->DeleteLocalRef(jnickName);
+				env->DeleteLocalRef(javatarImg);
 				FileLog(TAG, "OnRecvWaitStartOverNotice() callback ok");
 			}
 		}
@@ -486,6 +488,88 @@ public:
 					env->DeleteLocalRef(roomInfoItem);
 				}
 				FileLog(TAG, "OnPublicRoomIn() callback ok");
+			}
+		}
+
+		ReleaseEnv(isAttachThread);
+    }
+
+    /**
+     *  3.14.观众开始／结束视频互动接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param manPushUrl       观众视频流url
+     *
+     */
+    virtual void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(TAG, "OnControlManPush() callback, env:%p, isAttachThread:%d, reqId:%d, errType:%d, errmsg:%s",
+				env, isAttachThread, reqId, err, errMsg.c_str());
+
+		//callback 回调
+		if(NULL != gListener){
+			jclass jCallbackCls = env->GetObjectClass(gListener);
+			string signure = "(IZILjava/lang/String;[Ljava/lang/String;)V";
+			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnControlManPush", signure.c_str());
+			if(NULL != jCallback){
+				FileLog(TAG, "OnControlManPush() callback now");
+				int errType = IMErrorTypeToInt(err);
+				jstring jerrmsg = env->NewStringUTF(errMsg.c_str());
+				//manPushUrl转Java数组
+				jobjectArray jmanUploadUrls = getJavaStringArray(env, manPushUrl);
+				env->CallVoidMethod(gListener, jCallback, reqId, success, errType, jerrmsg, jmanUploadUrls);
+				env->DeleteLocalRef(jerrmsg);
+				if(NULL != jmanUploadUrls){
+					env->DeleteLocalRef(jmanUploadUrls);
+				}
+				FileLog(TAG, "OnControlManPush() callback ok");
+			}
+		}
+
+		ReleaseEnv(isAttachThread);
+
+    }
+
+    /**
+     *  3.15.获取指定立即私密邀请信息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param item             立即私密邀请
+     *
+     */
+    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+		FileLog(TAG, "OnGetInviteInfo() callback, env:%p, isAttachThread:%d, errType:%d, errmsg:%s", env, isAttachThread, err, errMsg.c_str());
+
+		//callback 回调
+		if(NULL != gListener){
+			jclass jCallbackCls = env->GetObjectClass(gListener);
+			string signure = "(IZILjava/lang/String;";
+			signure += "L";
+			signure += IM_LOGIN_INVITE_ITEM_CLASS;
+			signure += ";";
+			signure += ")V";
+			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnGetInviteInfo", signure.c_str());
+			if(NULL != jCallback){
+				FileLog(TAG, "OnGetInviteInfo() callback now");
+				int errType = IMErrorTypeToInt(err);
+				jstring jerrmsg = env->NewStringUTF(errMsg.c_str());
+				jobject jinviteItem = getInviteItem(env, item);
+				env->CallVoidMethod(gListener, jCallback, reqId, success, errType, jerrmsg, jinviteItem);
+				env->DeleteLocalRef(jerrmsg);
+				if(NULL != jinviteItem){
+					env->DeleteLocalRef(jinviteItem);
+				}
+				FileLog(TAG, "OnGetInviteInfo() callback ok");
 			}
 		}
 
@@ -618,7 +702,7 @@ public:
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZIII)V";
+			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IZIII)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvRoomGiftNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvRoomGiftNotice() callback now");
@@ -861,24 +945,34 @@ public:
     }
 
     //7.6.接收预约私密邀请回复通知 回调
-    virtual void OnRecvSendBookingReplyNotice(const string& inviteId, AnchorReplyType replyType)  override{
+    virtual void OnRecvSendBookingReplyNotice(const BookingReplyItem& item)  override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
 		FileLog(TAG, "OnRecvSendBookingReplyNotice() callback, env:%p, isAttachThread:%d, inviteId:%s, replyType:%d", env, isAttachThread,
-				inviteId.c_str(), replyType);
+				item.inviteId.c_str(),item.replyType);
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;I)V";
+			string signure = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvSendBookingReplyNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvSendBookingReplyNotice() callback now");
-				jstring jinviteId = env->NewStringUTF(inviteId.c_str());
-				int jinviteReplyType = AnchorReplyTypeToInt(replyType);
-				env->CallVoidMethod(gListener, jCallback, jinviteId, jinviteReplyType);
+				jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+				int jinviteReplyType = InviteReplyTypeToInt(item.replyType);
+				jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+				jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+				jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+				jstring javatarImg = env->NewStringUTF(item.avatarImg.c_str());
+				jstring jmsg = env->NewStringUTF(item.msg.c_str());
+				env->CallVoidMethod(gListener, jCallback, jinviteId, jinviteReplyType, jroomId, janchorId, jnickName, javatarImg, jmsg);
 				env->DeleteLocalRef(jinviteId);
+				env->DeleteLocalRef(jroomId);
+				env->DeleteLocalRef(janchorId);
+				env->DeleteLocalRef(jnickName);
+				env->DeleteLocalRef(javatarImg);
+				env->DeleteLocalRef(jmsg);
 				FileLog(TAG, "OnRecvSendBookingReplyNotice() callback ok");
 			}
 		}
@@ -887,12 +981,12 @@ public:
     }
 
     //7.7.接收预约开始倒数通知
-    virtual void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, int leftSeconds) override{
+    virtual void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& avatarImg, int leftSeconds) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
-		FileLog(TAG, "OnRecvBookingNotice() callback, env:%p, isAttachThread:%d, roomId:%s, userId:%s, nickName:%s, photoUrl:%s, leftSeconds:%d",
-				env, isAttachThread, roomId.c_str(), userId.c_str(), nickName.c_str(), photoUrl.c_str(), leftSeconds);
+		FileLog(TAG, "OnRecvBookingNotice() callback, env:%p, isAttachThread:%d, roomId:%s, userId:%s, nickName:%s, avatarImg:%s, leftSeconds:%d",
+				env, isAttachThread, roomId.c_str(), userId.c_str(), nickName.c_str(), avatarImg.c_str(), leftSeconds);
 
 		//callback 回调
 		if(NULL != gListener){
@@ -904,12 +998,12 @@ public:
 				jstring jroomId = env->NewStringUTF(roomId.c_str());
 				jstring juserId = env->NewStringUTF(userId.c_str());
 				jstring jnickName = env->NewStringUTF(nickName.c_str());
-				jstring jphotoUrl = env->NewStringUTF(photoUrl.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, juserId, jnickName, jphotoUrl, leftSeconds);
+				jstring javatarImg = env->NewStringUTF(avatarImg.c_str());
+				env->CallVoidMethod(gListener, jCallback, jroomId, juserId, jnickName, javatarImg, leftSeconds);
 				env->DeleteLocalRef(jroomId);
 				env->DeleteLocalRef(juserId);
 				env->DeleteLocalRef(jnickName);
-				env->DeleteLocalRef(jphotoUrl);
+				env->DeleteLocalRef(javatarImg);
 				FileLog(TAG, "OnRecvBookingNotice() callback ok");
 			}
 		}
@@ -945,27 +1039,26 @@ public:
     }
 
     //8.2.接收直播间才艺点播回复通知
-    virtual void OnRecvSendTalentNotice(const string& roomId, const string& talentInviteId, const string& talentId, const string& name,
-    		double credit, TalentStatus status) override{
+    virtual void OnRecvSendTalentNotice(const TalentReplyItem& item) override{
 		JNIEnv* env = NULL;
 		bool isAttachThread = false;
 		GetEnv(&env, &isAttachThread);
 		FileLog(TAG, "OnRecvSendTalentNotice() callback, env:%p, isAttachThread:%d, roomId:%s, talentInviteId:%s, talentId:%s, name:%s, "
-				"credit:%f, status:%d", env, isAttachThread, roomId.c_str(), talentInviteId.c_str(), talentId.c_str(), name.c_str(), credit, status);
+				"credit:%f, status:%d", env, isAttachThread, item.roomId.c_str(), item.talentInviteId.c_str(), item.talentId.c_str(), item.name.c_str(), item.credit, item.status);
 
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DI)V";
+			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;DID)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvSendTalentNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvSendTalentNotice() callback now");
-				int talentStatus = TalentInviteStatusToInt(status);
-				jstring jroomId = env->NewStringUTF(roomId.c_str());
-				jstring jtalentInviteId = env->NewStringUTF(talentInviteId.c_str());
-				jstring jtalentId = env->NewStringUTF(talentId.c_str());
-				jstring jname = env->NewStringUTF(name.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, jtalentInviteId, jtalentId, jname, credit, talentStatus);
+				int talentStatus = TalentInviteStatusToInt(item.status);
+				jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+				jstring jtalentInviteId = env->NewStringUTF(item.talentInviteId.c_str());
+				jstring jtalentId = env->NewStringUTF(item.talentId.c_str());
+				jstring jname = env->NewStringUTF(item.name.c_str());
+				env->CallVoidMethod(gListener, jCallback, jroomId, jtalentInviteId, jtalentId, jname, item.credit, talentStatus, item.rebateCredit);
 				env->DeleteLocalRef(jroomId);
 				env->DeleteLocalRef(jtalentInviteId);
 				env->DeleteLocalRef(jtalentId);
@@ -1224,6 +1317,39 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_PublicRoo
 		string strAnchorId = JString2String(env, anchorId);
 		FileLog(TAG, "PublicRoomIn() reqId: %d, strAnchorId:%s", reqId, strAnchorId.c_str());
 		result = g_ImClient->PublicRoomIn(reqId, strAnchorId);
+	}
+	return result;
+}
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    ControlManPush
+ * Signature: (ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_ControlManPush
+  (JNIEnv *env, jclass cls, jint reqId, jstring roomId, jint controlType) {
+	bool result = false;
+	if(NULL != g_ImClient){
+		string strRoomId = JString2String(env, roomId);
+		IMControlType type = IntToIMControlType(controlType);
+		FileLog(TAG, "ControlManPush() reqId: %d, strRoomId:%s", reqId, strRoomId.c_str());
+		result = g_ImClient->ControlManPush(reqId, strRoomId, type);
+	}
+	return result;
+}
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    GetInviteInfo
+ * Signature: (ILjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_GetInviteInfo
+  (JNIEnv *env, jclass cls, jint reqId, jstring invitationId) {
+	bool result = false;
+	if(NULL != g_ImClient){
+		string strInvitationId = JString2String(env, invitationId);
+		FileLog(TAG, "GetInviteInfo() reqId: %d, strInvitationId:%s", reqId, strInvitationId.c_str());
+		result = g_ImClient->GetInviteInfo(reqId, strInvitationId);
 	}
 	return result;
 }

@@ -35,39 +35,29 @@ public class LiveMsgManager<T extends Object> {
             //正常加入数据
             dummyItems.add(item);
             result = true;
-
             //不在播放时，未读数+1
             if(!isPlaying){
                 mUnreadSum ++;
             }
         }else {
-            //列表数据已满
-
-            //当列表在底部时，正常插入删除、数据
+            //列表数据已满,当列表在底部时，正常插入删除、数据
             if(isPlaying){
                 //删除最旧的数据
                 dummyItems.remove(0);
                 //插入新数据
                 dummyItems.add(item);
-
                 result = true;
             }else{
-                //列表没滑动到最底
-
-                //如果缓存也爆了
+                //列表没滑动到最底,如果缓存也爆了
                 if(mCacheDummyItems.size() >= MAX_MSG_SUM){
                     //删掉最旧的数据
                     mCacheDummyItems.remove(0);
                 }
-
                 //把新数据加到缓存
                 mCacheDummyItems.add(item);
-
                 mUnreadSum ++;
-
                 result = false;
             }
-
         }
         return result;
     }

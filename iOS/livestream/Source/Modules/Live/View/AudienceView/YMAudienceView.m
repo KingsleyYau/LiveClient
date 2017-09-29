@@ -12,38 +12,11 @@
 @interface YMAudienceView ()<UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 
 @property(nonatomic,strong) UICollectionView *collectionView;
-@property(nonatomic,strong) NSArray *audienceArray;
+
 
 @end
 
 @implementation YMAudienceView
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        
-        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(24, 24);
-//        layout.minimumInteritemSpacing = 0;
-        layout.minimumLineSpacing = 2;
-        layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
-        self.collectionView.showsHorizontalScrollIndicator = NO;
-        [self.collectionView registerClass:[AudienceCell class] forCellWithReuseIdentifier:[AudienceCell cellIdentifier]];
-        self.collectionView.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.collectionView];
-        
-        
-        [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self);
-        }];
-        
-    }
-    return self;
-}
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     
@@ -51,7 +24,7 @@
     if (self) {
         
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(24, 24);
+        layout.itemSize = CGSizeMake(20, 20);
         //        layout.minimumInteritemSpacing = 0;
         layout.minimumLineSpacing = 2;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
@@ -75,9 +48,8 @@
 
 
 #pragma mark - Public Method
-
-- (void)updateAudienceViewWithAudienceArray:(NSMutableArray *)audienceArray{
-    self.audienceArray = audienceArray;
+- (void)setAudienceArray:(NSMutableArray *)audienceArray{
+    _audienceArray = audienceArray;
     [self.collectionView reloadData];
 }
 

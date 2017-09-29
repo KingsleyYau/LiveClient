@@ -10,7 +10,7 @@ public class PackageGiftItem {
 	 * 背包礼物Item
 	 * @param giftId			礼物Id
 	 * @param num				礼物数量
-	 * @param grantedData		礼物获取时间
+	 * @param grantedDate		礼物获取时间
 	 * @param expiredDate		礼物过期时间
 	 * @param isRead      		是否已读
 	 */

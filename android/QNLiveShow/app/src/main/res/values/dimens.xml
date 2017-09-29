@@ -34,5 +34,30 @@
 
     <dimen name="liveroom_messagelist_barrage_width">14dp</dimen>
     <dimen name="liveroom_messagelist_barrage_height">14dp</dimen>
+    
+    <dimen name="headerview_buttomlineheight_freepublic">7dp</dimen>
+    <dimen name="headerview_buttomlineheight_paidpublic">3dp</dimen>
+    <dimen name="headerview_buttomlineheight_normalprivate">3dp</dimen>
+    <dimen name="headerview_buttomlineheight_advanceprivate">3dp</dimen>
+
+    <!-- swicht -->
+    <dimen name="live_swicth_book_height">24dp</dimen>
+    <dimen name="live_swicth_book_radius">20dp</dimen>
+
+    <!-- 公用 -->
+    <dimen name="live_size_14sp">14sp</dimen>
+    <dimen name="live_size_16sp">16sp</dimen>
+
+    <dimen name="live_size_8dp">8dp</dimen>
+    <dimen name="live_size_14dp">14dp</dimen>
+    <dimen name="live_size_16dp">16dp</dimen>
+    <dimen name="live_size_30dp">30dp</dimen>
+    <dimen name="live_size_40dp">40dp</dimen>
+    <dimen name="live_size_80dp">80dp</dimen>
+    <dimen name="live_size_140dp">140dp</dimen>
+    <dimen name="live_size_180dp">180dp</dimen>
+    <dimen name="live_size_200dp">200dp</dimen>
+
+    
 
 </resources>

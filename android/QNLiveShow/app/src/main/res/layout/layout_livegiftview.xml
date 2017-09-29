@@ -40,7 +40,6 @@
             android:layout_width="16dp"
             android:layout_height="23dp"
             android:layout_marginRight="1dp"
-            android:src="@drawable/ic_live_gift_anim_number_7"
             android:scaleType="fitCenter"/>
 
         <ImageView
@@ -50,7 +49,6 @@
             android:layout_width="16dp"
             android:layout_height="23dp"
             android:layout_marginRight="1dp"
-            android:src="@drawable/ic_live_gift_anim_number_2"
             android:scaleType="fitCenter"/>
 
         <ImageView

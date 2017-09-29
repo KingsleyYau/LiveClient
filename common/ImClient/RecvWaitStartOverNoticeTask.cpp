@@ -13,11 +13,6 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
-// 请求参数定义
-#define ROOMID_PARAM          "roomid"
-#define LEFTSECONDS_PARAM     "left_seconds"
-
-
 
 RecvWaitStartOverNoticeTask::RecvWaitStartOverNoticeTask(void)
 {
@@ -27,8 +22,6 @@ RecvWaitStartOverNoticeTask::RecvWaitStartOverNoticeTask(void)
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
     
-    m_roomId = "";
-    m_leftSeconds = 0;
 }
 
 RecvWaitStartOverNoticeTask::~RecvWaitStartOverNoticeTask(void)
@@ -55,18 +48,14 @@ bool RecvWaitStartOverNoticeTask::Handle(const TransportProtocol& tp)
 	FileLog("LiveChatClient", "RecvSendAnchorPrivateBookInviteNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
+    StartOverRoomItem item;
+    
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ROOMID_PARAM].asString();
-        }
-        if (tp.m_data[LEFTSECONDS_PARAM].isIntegral()) {
-            m_leftSeconds = tp.m_data[LEFTSECONDS_PARAM].asInt();
-        }
-
+        item.Parse(tp.m_data);
     
     }
     
@@ -80,7 +69,7 @@ bool RecvWaitStartOverNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvWaitStartOverNotice(m_roomId, m_leftSeconds);
+        m_listener->OnRecvWaitStartOverNotice(item);
 		FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

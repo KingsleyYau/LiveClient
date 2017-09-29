@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) GiftInfoItemObject *infoItem;
 
+@property (nonatomic, assign) BOOL isDownloading;
+
 @end

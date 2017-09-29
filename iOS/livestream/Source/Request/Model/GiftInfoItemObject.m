@@ -28,6 +28,7 @@
         self.loveLevel = [coder decodeIntForKey:@"loveLevel"];
         self.sendNumList = [coder decodeObjectForKey:@"sendNumList"];
         self.updateTime = [coder decodeIntegerForKey:@"updateTime"];
+        self.playTime = [coder decodeIntForKey:@"playTime"];
     }
     return self;
 }
@@ -47,6 +48,7 @@
     [coder encodeInt:self.loveLevel forKey:@"loveLevel"];
     [coder encodeObject:self.sendNumList forKey:@"sendNumList"];
     [coder encodeInteger:self.updateTime forKey:@"updateTime"];
+    [coder encodeInt:self.playTime forKey:@"playTime"];
 }
 
 @end

@@ -22,8 +22,8 @@ static NSString *cellID = @"cellID";
         UIView *containerView = [[UINib nibWithNibName:NSStringFromClass([self class]) bundle:nil] instantiateWithOwner:self options:nil].firstObject;
         CGRect newFrame = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         containerView.frame = newFrame;
-        containerView.layer.cornerRadius = 6.0f;
-        containerView.layer.borderColor = [UIColor colorWithRed:12/255.0 green:237/255.0 blue:245/255.0 alpha:1].CGColor;
+        containerView.layer.cornerRadius = 3.0f;
+        containerView.layer.borderColor = COLOR_WITH_16BAND_RGB(0xf7cd3a).CGColor;
         containerView.layer.borderWidth = 1;
         containerView.layer.masksToBounds = YES;
         [self addSubview:containerView];
@@ -36,6 +36,5 @@ static NSString *cellID = @"cellID";
 - (void)drawRect:(CGRect)rect {
     // Drawing code
 }
-
 
 @end

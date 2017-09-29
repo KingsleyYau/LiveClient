@@ -83,7 +83,7 @@ bool HttpGetTalentStatusTask::ParseData(const string& url, bool bFlag, const cha
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-   HttpGetTalentStatusItem item;
+    HttpGetTalentStatusItem item;
     bool bParse = false;
     
     if ( bFlag ) {

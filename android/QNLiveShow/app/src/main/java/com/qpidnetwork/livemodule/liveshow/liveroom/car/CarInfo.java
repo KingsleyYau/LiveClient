@@ -13,6 +13,7 @@ public class CarInfo {
     public String riderId;
     public String riderName;
     public String riderUrl;
+    public String riderLocalPath;
 
     public CarInfo(){
 
@@ -24,5 +25,17 @@ public class CarInfo {
         this.riderId = riderId;
         this.riderName = riderName;
         this.riderUrl = riderUrl;
+    }
+
+
+    @Override
+    public String toString() {
+        return "CarInfo[nickName:"+nickName
+                + " userId:"+userId
+                + " riderId:"+riderId
+                + " riderName:"+riderName
+                + " riderUrl:"+riderUrl
+                + " riderLocalPath:"+riderLocalPath
+                + "]";
     }
 }

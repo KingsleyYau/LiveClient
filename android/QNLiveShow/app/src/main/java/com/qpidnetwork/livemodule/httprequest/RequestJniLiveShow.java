@@ -17,10 +17,11 @@ public class RequestJniLiveShow {
 	 * 3.1.分页获取热播列表
 	 * @param start
 	 * @param step
+	 * @param hasWatch  是否只获取观众看过的主播（0：否  1： 是   ）
 	 * @param callback
 	 * @return
 	 */
-	static public native long GetHotLiveList(int start, int step, OnGetHotListCallback callback);
+	static public native long GetHotLiveList(int start, int step, boolean hasWatch, OnGetHotListCallback callback);
 	
 	/**
 	 * 3.2.分页获取收藏主播当前开播列表
@@ -41,12 +42,12 @@ public class RequestJniLiveShow {
 	/**
 	 * 3.4.获取直播间观众头像列表
 	 * @param roomId
-	 * @param page
-	 * @param number
+	 * @param start
+	 * @param step
 	 * @param callback
 	 * @return
 	 */
-	static public native long GetAudienceListInRoom(String roomId, int page, int number, OnGetAudienceListCallback callback);
+	static public native long GetAudienceListInRoom(String roomId, int start, int step, OnGetAudienceListCallback callback);
 	
 	/**
 	 * 3.5. 获取礼物列表
@@ -97,7 +98,7 @@ public class RequestJniLiveShow {
 	/**
 	 * 3.11.获取才艺点播邀请状态
 	 * @param roomId
-	 * @param talentId
+	 * @param talentInviteId
 	 * @param callback
 	 * @return
 	 */
@@ -126,9 +127,10 @@ public class RequestJniLiveShow {
 	/**
 	 * 3.14.获取推荐主播列表
 	 * @param number
+	 * @param userId     当前界面的主播ID，返回结果将不包含当前主播（可无， 无则表示不过滤结果）
 	 * @param callback
 	 * @return
 	 */
-	static public native long GetPromoAnchorList(int number, OnGetPromoAnchorListCallback callback);
+	static public native long GetPromoAnchorList(int number, String userId, OnGetPromoAnchorListCallback callback);
 	
 }

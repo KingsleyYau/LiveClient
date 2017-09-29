@@ -126,7 +126,7 @@ static LoginManager* gManager = nil;
                 };
                 
                 GetConfigFinishHandler synConfigFinishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item) {
-//                    if( success ) {
+                    if( success ) {
                         NSInteger requestId = [manager login:token
                               deviceid:[manager getDeviceId]
                                  model:[[UIDevice currentDevice] model]
@@ -140,20 +140,20 @@ static LoginManager* gManager = nil;
                             [self callbackLoginStatus:NO errnum:errnum errmsg:@"Unknow error"];
                         }
                         
-//                    } else {
-//                        // 同步配置失败, 导致登陆失败
-//                        __block BOOL blockSuccess = success;
-//                        __block NSInteger blockErrnum = errnum;
-//                        __block NSString* blockErrmsg = errmsg;
-//                        
-//                        @synchronized(self) {
-//                            // 进入未登陆状态
-//                            _status = NONE;
-//                        }
-//                        
-//                        // 回调
-//                        [self callbackLoginStatus:blockSuccess errnum:blockErrnum errmsg:blockErrmsg];
-//                    }
+                    } else {
+                        // 同步配置失败, 导致登陆失败
+                        __block BOOL blockSuccess = success;
+                        __block NSInteger blockErrnum = errnum;
+                        __block NSString* blockErrmsg = errmsg;
+                        
+                        @synchronized(self) {
+                            // 进入未登陆状态
+                            _status = NONE;
+                        }
+                        
+                        // 回调
+                        [self callbackLoginStatus:blockSuccess errnum:blockErrnum errmsg:blockErrmsg];
+                    }
                 };
                 
                 // TODO:1.开始同步配置
@@ -180,9 +180,9 @@ static LoginManager* gManager = nil;
     return self.status;
 }
 
-- (void)logout:(BOOL)kick {
+- (void)logout:(BOOL)kick msg:(NSString *)msg {
     @synchronized(self) {
-        NSLog(@"LoginManager::logout( [Http注销], kick : %@, status : %d )", kick ? @"YES":@"NO", self.status);
+        NSLog(@"LoginManager::logout( [Http注销], kick : %@, msg : %@, status : %d )", kick ? @"YES":@"NO", msg, self.status);
         
         if (self.status != NONE) {
             if( kick ) {
@@ -193,9 +193,10 @@ static LoginManager* gManager = nil;
                 self.isAutoLogin = NO;
             }
             
-            // 清除用户帐号密码
+            // 清除token
             _token = nil;
-            _loginItem = nil;
+            // 不能清除, 其他地方在直接用里面的属性
+//            _loginItem = nil;
             
             // 保存用户信息
             [self saveLoginParam];
@@ -203,14 +204,12 @@ static LoginManager* gManager = nil;
             // 标记为已经注销
             _status = NONE;
             
-            @synchronized(self) {
-                for(NSValue* value in self.delegates) {
-                    id<LoginManagerDelegate> delegate = value.nonretainedObjectValue;
-                    if( [delegate respondsToSelector:@selector(manager:onLogout:)] ) {
-                        [delegate manager:self onLogout:kick];
-                    }
-                    
+            for(NSValue* value in self.delegates) {
+                id<LoginManagerDelegate> delegate = value.nonretainedObjectValue;
+                if( [delegate respondsToSelector:@selector(manager:onLogout:msg:)] ) {
+                    [delegate manager:self onLogout:kick msg:msg];
                 }
+                
             }
         }
     }

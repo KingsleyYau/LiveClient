@@ -17,4 +17,5 @@ public class TalentInfoItem {
 	public String talentId;
 	public String talentName;
 	public double talentCredit;
+	public boolean canRequest = true;	//能否发送此才艺（本地使用）
 }

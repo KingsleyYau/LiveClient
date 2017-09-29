@@ -18,6 +18,7 @@ class RequestGetAnchorListCallback : public IRequestGetAnchorListCallback{
         FileLog("httprequest", "JNI::OnGetAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getHotListArray(env, listItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -33,7 +34,7 @@ class RequestGetAnchorListCallback : public IRequestGetAnchorListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -55,15 +56,15 @@ RequestGetAnchorListCallback gRequestGetAnchorListCallback;
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetHotLiveList
- * Signature: (IILcom/qpidnetwork/livemodule/httprequest/OnGetLiveRoomListCallback;)J
+ * Signature: (IIZLcom/qpidnetwork/livemodule/httprequest/OnGetLiveRoomListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetHotLiveList
-  (JNIEnv *env, jclass cls, jint start, jint step, jobject callback){
-
+  (JNIEnv *env, jclass cls, jint start, jint step, jboolean hasWatch, jobject callback){
     jlong taskId = -1;
     taskId = gHttpRequestController.GetAnchorList(&gHttpRequestManager,
                                         start,
                                         step,
+                                        hasWatch,
                                         &gRequestGetAnchorListCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -83,7 +84,7 @@ class RequestGetFollowListCallback : public IRequestGetFollowListCallback{
         FileLog("httprequest", "JNI::OnGetFollowList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getFollowingListArray(env, listItem);
-
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -98,7 +99,7 @@ class RequestGetFollowListCallback : public IRequestGetFollowListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -151,6 +152,7 @@ class RequestGetRoomInfoCallback : public IRequestGetRoomInfoCallback{
 		jobjectArray jvalidItemArray = getValidRoomArray(env, Item.roomList);
 		//立即邀请中
 		jobjectArray jimmediateInviteArray = getImmediateInviteArray(env, Item.inviteList);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -169,7 +171,7 @@ class RequestGetRoomInfoCallback : public IRequestGetRoomInfoCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jvalidItemArray, jimmediateInviteArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jvalidItemArray, jimmediateInviteArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -222,6 +224,8 @@ class RequestLiveFansListCallback : public IRequestLiveFansListCallback{
 
 		jobjectArray jItemArray = getAudienceArray(env, listItem);
 
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -236,7 +240,7 @@ class RequestLiveFansListCallback : public IRequestLiveFansListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -261,13 +265,13 @@ RequestLiveFansListCallback gRequestLiveFansListCallback;
  * Signature: (Ljava/lang/String;IILcom/qpidnetwork/livemodule/httprequest/OnGetAudienceListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetAudienceListInRoom
-  (JNIEnv *env, jclass cls, jstring roomId, jint page, jint number, jobject callback){
+  (JNIEnv *env, jclass cls, jstring roomId, jint start, jint step, jobject callback){
 
     jlong taskId = -1;
     taskId = gHttpRequestController.LiveFansList(&gHttpRequestManager,
     									JString2String(env, roomId),
-    									page,
-    									number,
+    									start,
+    									step,
                                         &gRequestLiveFansListCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -287,6 +291,7 @@ class RequestGetAllGiftListCallback : public IRequestGetAllGiftListCallback{
         FileLog("httprequest", "JNI::onGetGiftList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getGiftArray(env, itemList);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -302,7 +307,7 @@ class RequestGetAllGiftListCallback : public IRequestGetAllGiftListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -350,6 +355,7 @@ class RequestGetGiftListByUserIdCallback : public IRequestGetGiftListByUserIdCal
         FileLog("httprequest", "JNI::onGetSendableGiftList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getSendableGiftArray(env, itemList);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -363,7 +369,7 @@ class RequestGetGiftListByUserIdCallback : public IRequestGetGiftListByUserIdCal
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -412,6 +418,7 @@ class RequestGetGiftDetailCallback : public IRequestGetGiftDetailCallback{
         FileLog("httprequest", "JNI::onGetGiftDetail( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobject jItem = getGiftDetailItem(env, item);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -427,7 +434,7 @@ class RequestGetGiftDetailCallback : public IRequestGetGiftDetailCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -476,6 +483,7 @@ class RequestGetEmoticonListCallback : public IRequestGetEmoticonListCallback{
         FileLog("httprequest", "JNI::onGetEmotionList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getEmotionCategoryArray(env, listItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -491,7 +499,7 @@ class RequestGetEmoticonListCallback : public IRequestGetEmoticonListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -539,6 +547,7 @@ class RequestGetInviteInfoCallback : public IRequestGetInviteInfoCallback{
         FileLog("httprequest", "JNI::onGetImediateInviteInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobject jItem = getImmediateInviteItem(env, inviteItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -554,7 +563,7 @@ class RequestGetInviteInfoCallback : public IRequestGetInviteInfoCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -603,6 +612,7 @@ class RequestGetTalentListCallback : public IRequestGetTalentListCallback{
         FileLog("httprequest", "JNI::OnGetTalentList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
         jobjectArray jtalentArray = getTalentArray(env, list);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -618,7 +628,7 @@ class RequestGetTalentListCallback : public IRequestGetTalentListCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jtalentArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jtalentArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -667,6 +677,7 @@ class RequestGetTalentStatusCallback : public IRequestGetTalentStatusCallback{
         FileLog("httprequest", "JNI::OnGetTalentStatus( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
         jobject jItem = getTalentInviteItem(env, item);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -682,7 +693,7 @@ class RequestGetTalentStatusCallback : public IRequestGetTalentStatusCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -724,14 +735,15 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 /*********************************** 3.12.获取指定观众信息  ****************************************/
 
 class RequestGetNewFansBaseInfoCallback : public IRequestGetNewFansBaseInfoCallback{
-	void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansItem& item){
+	void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansInfoItem& item){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
         FileLog("httprequest", "JNI::onGetAudienceDetailInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
-        jobject jItem = getAudienceInfoItem(env, item);
+        jobject jItem = getAudienceBaseInfoItem(env, item);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -739,7 +751,7 @@ class RequestGetNewFansBaseInfoCallback : public IRequestGetNewFansBaseInfoCallb
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;";
 			signature += "L";
-			signature += AUDIENCE_INFO_ITEM_CLASS;
+			signature += AUDIENCE_BASE_INFO_ITEM_CLASS;
 			signature += ";";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetAudienceDetailInfo", signature.c_str());
@@ -747,7 +759,7 @@ class RequestGetNewFansBaseInfoCallback : public IRequestGetNewFansBaseInfoCallb
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItem);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -797,6 +809,7 @@ class RequestControlManPushCallback : public IRequestControlManPushCallback{
         FileLog("httprequest", "JNI::OnControlManPush( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
         jobjectArray juploadUlrs = getJavaStringArray(env, uploadUrls);
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -808,12 +821,12 @@ class RequestControlManPushCallback : public IRequestControlManPushCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, juploadUlrs);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, juploadUlrs);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
 		if(juploadUlrs != NULL){
-			env->DeleteGlobalRef(juploadUlrs);
+			env->DeleteLocalRef(juploadUlrs);
 		}
 		if(callBackObject != NULL){
 			env->DeleteGlobalRef(callBackObject);
@@ -857,6 +870,7 @@ class RequestGetPromoAnchorListCallback : public IRequestGetPromoAnchorListCallb
         FileLog("httprequest", "JNI::OnGetPromoAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getHotListArray(env, listItem);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -872,7 +886,7 @@ class RequestGetPromoAnchorListCallback : public IRequestGetPromoAnchorListCallb
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -894,14 +908,18 @@ RequestGetPromoAnchorListCallback gRequestGetPromoAnchorListCallback;
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow
  * Method:    GetPromoAnchorList
- * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
+ * Signature: (IILjava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetPromoAnchorListCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLiveShow_GetPromoAnchorList
-  (JNIEnv *env, jclass cls, jint number, jobject callback){
+  (JNIEnv *env, jclass cls, jint number, jint type, jstring userId, jobject callback){
 
     jlong taskId = -1;
+    PromoAnchorType jtype = IntToPromoAnchorType(type);
     taskId = gHttpRequestController.GetPromoAnchorList(&gHttpRequestManager,
     									number,
+    									jtype,
+
+    									JString2String(env, userId),
                                         &gRequestGetPromoAnchorListCallback);
 
     jobject obj = env->NewGlobalRef(callback);

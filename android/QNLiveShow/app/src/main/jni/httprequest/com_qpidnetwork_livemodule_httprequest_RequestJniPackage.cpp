@@ -10,7 +10,7 @@
 /*********************************** 5.1.获取背包礼物列表  ****************************************/
 
 class RequestGiftListCallback : public IRequestGiftListCallback{
-	void OnGiftList(HttpGiftListTask* task, bool success, int errnum, const string& errmsg, const BackGiftItemList& listItem){
+	void OnGiftList(HttpGiftListTask* task, bool success, int errnum, const string& errmsg, const BackGiftItemList& listItem, int totalCount){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -18,7 +18,7 @@ class RequestGiftListCallback : public IRequestGiftListCallback{
         FileLog("httprequest", "JNI::onGetPackageGiftList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getPackgetGiftArray(env, listItem);
-
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -27,13 +27,14 @@ class RequestGiftListCallback : public IRequestGiftListCallback{
 			signature += "[L";
 			signature += PACKAGE_GIFT_ITEM_CLASS;
 			signature += ";";
+			signature += "I";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetPackageGiftList", signature.c_str());
 			FileLog("httprequest", "JNI::onGetPackageGiftList( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray, totalCount);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -73,7 +74,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
 /*********************************** 5.2.获取试用券列表  ****************************************/
 
 class RequestVoucherListCallback : public IRequestVoucherListCallback{
-	void OnVoucherList(HttpVoucherListTask* task, bool success, int errnum, const string& errmsg, const VoucherList& list){
+	void OnVoucherList(HttpVoucherListTask* task, bool success, int errnum, const string& errmsg, const VoucherList& list, int totalCount){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -81,6 +82,7 @@ class RequestVoucherListCallback : public IRequestVoucherListCallback{
         FileLog("httprequest", "JNI::OnVoucherList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getPackgetVoucherArray(env, list);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -90,13 +92,14 @@ class RequestVoucherListCallback : public IRequestVoucherListCallback{
 			signature += "[L";
 			signature += PACKAGE_VOUCHER_ITEM_CLASS;
 			signature += ";";
+			signature += "I";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetVouchersList", signature.c_str());
 			FileLog("httprequest", "JNI::OnVoucherList( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray, totalCount);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -136,7 +139,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
 /*********************************** 5.3.获取座驾列表  ****************************************/
 
 class RequestRideListCallback : public IRequestRideListCallback{
-	void OnRideList(HttpRideListTask* task, bool success, int errnum, const string& errmsg, const RideList& list){
+	void OnRideList(HttpRideListTask* task, bool success, int errnum, const string& errmsg, const RideList& list, int totalCount){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -144,6 +147,7 @@ class RequestRideListCallback : public IRequestRideListCallback{
         FileLog("httprequest", "JNI::OnRideList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		jobjectArray jItemArray = getPackgetRideArray(env, list);
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -153,13 +157,14 @@ class RequestRideListCallback : public IRequestRideListCallback{
 			signature += "[L";
 			signature += PACKAGE_RIDE_ITEM_CLASS;
 			signature += ";";
+			signature += "I";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetRidesList", signature.c_str());
 			FileLog("httprequest", "JNI::OnRideList( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, jItemArray);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItemArray, totalCount);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -206,6 +211,7 @@ class RequestSetRideCallback : public IRequestSetRideCallback{
 
         FileLog("httprequest", "JNI::OnSetRide( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -216,7 +222,7 @@ class RequestSetRideCallback : public IRequestSetRideCallback{
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -261,6 +267,8 @@ class RequestGetBackpackUnreadNumCallback : public IRequestGetBackpackUnreadNumC
 
         FileLog("httprequest", "JNI::OnGetBackpackUnreadNum( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
+        int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
@@ -271,7 +279,7 @@ class RequestGetBackpackUnreadNumCallback : public IRequestGetBackpackUnreadNumC
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errnum, jerrmsg, item.total, item.voucherUnreadNum,
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, item.total, item.voucherUnreadNum,
 						item.giftUnreadNum, item.rideUnreadNum);
 				env->DeleteLocalRef(jerrmsg);
 			}

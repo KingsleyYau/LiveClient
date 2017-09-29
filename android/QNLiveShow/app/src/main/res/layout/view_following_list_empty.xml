@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/icon_data_empty" />
+
+    <TextView
+        android:id="@+id/tvEmptyDesc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:textSize="14sp"
+        android:textColor="#C2C2C2"
+        android:text="@string/txt_endlive_shareTitle"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/btnHotList"
+        android:layout_marginTop="36dp"
+        android:layout_width="160dp"
+        android:layout_height="36dp"
+        android:background="@drawable/rectangle_rounded_angle_purple_bg"
+        android:text="Watch Hot Live"
+        android:textColor="@color/white"
+        android:textSize="16sp"/>
+</LinearLayout>
+

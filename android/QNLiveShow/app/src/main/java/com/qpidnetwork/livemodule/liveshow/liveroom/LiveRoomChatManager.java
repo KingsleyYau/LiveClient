@@ -3,10 +3,17 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
+import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -16,6 +23,7 @@ import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView;
 import com.qpidnetwork.livemodule.framework.livemsglist.MessageRecyclerView;
 import com.qpidnetwork.livemodule.framework.livemsglist.ViewHolder;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftImageType;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
@@ -126,7 +134,7 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
             case Gift:{
                 //检测礼物小图片存在与否，不存在自动下载，更新列表
                 NormalGiftManager.getInstance()
-                        .getGiftImage(liveMsgItem.giftMsgContent.giftId, GiftImageType.Thumb, this);
+                        .getGiftImage(liveMsgItem.giftMsgContent.giftId, GiftImageType.MsgListIcon, this);
 
                 //礼物消息列表展示
                 String giftNum = "";
@@ -147,9 +155,47 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                 span = Html.fromHtml(getResources().getString(
                         R.string.liveroom_message_template_roomin, liveMsgItem.nickName));
             }break;
+
+            case SysNotice: {
+                IMSysNoticeMessageContent msgContent = liveMsgItem.sysNoticeContent;
+                if (msgContent != null) {
+                    if (!TextUtils.isEmpty(msgContent.link)) {
+//                        span = Html.fromHtml(getResources().getString(
+//                                R.string.system_announcement_link, msgContent.link, msgContent.message));
+
+                        SpannableString spanString = new SpannableString(msgContent.message);
+                        //下划线
+                        UnderlineSpan underlineSpan = new UnderlineSpan();
+                        spanString.setSpan(underlineSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        //超链接
+                        URLSpan urlSpan = new URLSpan(msgContent.link);
+                        spanString.setSpan(urlSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        //字体颜色
+                        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0CD7DE"));
+                        spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        //加粗
+                        StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
+                        spanString.setSpan(styleSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+                        ll_userLevel.setText(spanString);
+                    }else{
+                        if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Normal){
+                            span = Html.fromHtml(getResources().getString(
+                                    R.string.system_announcement_unlink_normal, msgContent.message));
+                        }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.CarIn){
+                            span = Html.fromHtml(getResources().getString(
+                                    R.string.system_announcement_unlink_carin, msgContent.message));
+                        }else{
+                            span = Html.fromHtml(getResources().getString(
+                                    R.string.system_announcement_unlink_chat, msgContent.message));
+                        }
+                    }
+                }
+            }break;
             default:
                 break;
         }
+        ll_userLevel.setMovementMethod(liveMsgItem.msgType == IMMessageItem.MessageType.SysNotice
+                ? LinkMovementMethod.getInstance() : null);
         if(null != span){
             ll_userLevel.setText(span);
         }

@@ -140,33 +140,31 @@ public class LoginManager {
                             +" errMsg:"+errMsg+" item:"+item);
                         mLoginStatus = isSuccess ? LoginStatus.Logined : LoginStatus.Default;
                         if(isSuccess){
-                            try {
-                                //登录成功则先本地缓存登录信息
-                                LoginParam param = new LoginParam(qnToken);
-                                saveAccountInfo(param);
-                                mLoginItem = item;
-                                //更新礼物配置信息
-                                if(!NormalGiftManager.getInstance().isLocalAllGiftItemsExisted()){
-                                    NormalGiftManager.getInstance().getAllGiftItems(
-                                            new OnGetGiftListCallback() {
-                                                @Override
-                                                public void onGetGiftList(boolean isSuccess, int errCode,
-                                                                          String errMsg, GiftItem[] giftList) {
-                                                    if(isSuccess && null != giftList){
-                                                        //更新背包礼物配置信息
-                                                        PackageGiftManager.getInstance().getAllPackageGiftItems(null);
-                                                    }
-                                                }
-                                            });
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            //登录成功则先本地缓存登录信息
+                            LoginParam param = new LoginParam(qnToken);
+                            saveAccountInfo(param);
+                            mLoginItem = item;
                         }
                         for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
                             IAuthorizationListener listener = iter.next();
                             listener.onLogin(isSuccess, errCode, errMsg, item);
+                        }
+                        if(isSuccess){
+                            //更新礼物配置信息
+                            if(!NormalGiftManager.getInstance().isLocalAllGiftConfigExisted()){
+                                NormalGiftManager.getInstance().getAllGiftItems(
+                                        new OnGetGiftListCallback() {
+                                            @Override
+                                            public void onGetGiftList(boolean isSuccess, int errCode,
+                                                                      String errMsg, GiftItem[] giftList) {
+                                                if(isSuccess){
+                                                    //更新背包礼物配置信息
+                                                    PackageGiftManager.getInstance().getAllPackageGiftItems(null);
+                                                }
+                                            }
+                                        });
+
+                            }
                         }
                     }
                 }
@@ -186,7 +184,7 @@ public class LoginManager {
     public void logout(){
         mLoginStatus = LoginStatus.Default;
         mLoginItem = null;
-        clearAccountInfo();
+//        clearAccountInfo();
         RequestJniAuthorization.Logout(new OnRequestCallback() {
             @Override
             public void onRequest(boolean isSuccess, int errCode, String errMsg) {

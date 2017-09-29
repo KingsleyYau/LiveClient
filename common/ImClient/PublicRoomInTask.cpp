@@ -14,7 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ANCHORID_PARAM           "anchorid"
+#define USERID_PARAM           "userid"
 
 PublicRoomInTask::PublicRoomInTask(void)
 {
@@ -24,9 +24,7 @@ PublicRoomInTask::PublicRoomInTask(void)
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
     
-    m_anchorId = "";
-    
-
+    m_userId = "";
     
 }
 
@@ -93,7 +91,7 @@ bool PublicRoomInTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-        value[ANCHORID_PARAM] = m_anchorId;
+        value[USERID_PARAM] = m_userId;
         data = value;
     }
 
@@ -136,11 +134,11 @@ void PublicRoomInTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool PublicRoomInTask::InitParam(const string& anchorId)
+bool PublicRoomInTask::InitParam(const string& userId)
 {
 	bool result = false;
-    if (!anchorId.empty()) {
-        m_anchorId = anchorId;
+    if (!userId.empty()) {
+        m_userId = userId;
         result = true;
         
     }

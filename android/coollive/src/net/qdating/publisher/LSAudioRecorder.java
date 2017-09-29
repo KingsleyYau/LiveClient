@@ -92,7 +92,11 @@ public class LSAudioRecorder {
 		recording = false;
 		
 		if( audioRecorder != null ) {
-			audioRecorder.stop();
+			try{
+				audioRecorder.stop();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 }

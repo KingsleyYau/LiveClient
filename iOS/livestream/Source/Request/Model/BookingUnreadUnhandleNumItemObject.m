@@ -14,20 +14,20 @@
 @implementation BookingUnreadUnhandleNumItemObject
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
-        self.total = [coder decodeIntForKey:@"total"];
-        self.handleNum = [coder decodeIntForKey:@"handleNum"];
-        self.scheduledUnreadNum = [coder decodeIntForKey:@"scheduledUnreadNum"];
-        self.historyUnreadNum = [coder decodeIntForKey:@"historyUnreadNum"];
+        self.totalNoReadNum = [coder decodeIntForKey:@"totalNoReadNum"];
+        self.pendingNoReadNum = [coder decodeIntForKey:@"pendingNoReadNum"];
+        self.scheduledNoReadNum = [coder decodeIntForKey:@"scheduledNoReadNum"];
+        self.historyNoReadNum = [coder decodeIntForKey:@"historyNoReadNum"];
 
     }
     return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)coder {
-    [coder encodeInt:self.total forKey:@"total"];
-    [coder encodeInt:self.handleNum forKey:@"handleNum"];
-    [coder encodeInt:self.scheduledUnreadNum forKey:@"scheduledUnreadNum"];
-    [coder encodeInt:self.historyUnreadNum forKey:@"historyUnreadNum"];
+    [coder encodeInt:self.totalNoReadNum forKey:@"totalNoReadNum"];
+    [coder encodeInt:self.pendingNoReadNum forKey:@"pendingNoReadNum"];
+    [coder encodeInt:self.scheduledNoReadNum forKey:@"scheduledNoReadNum"];
+    [coder encodeInt:self.historyNoReadNum forKey:@"historyNoReadNum"];
 }
 
 @end

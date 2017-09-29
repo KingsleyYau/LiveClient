@@ -14,10 +14,10 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
+#define ROOMID_SEND_PARAM      "roomid"
 #define LEVEL_PARAM            "level"
 #define FROMID_PARAM           "fromid"
-#define NICKNAME_PARAM         "nickname"
+#define NICKNAME_SEND_PARAM    "nickname"
 #define MSG_PARAM              "msg"
 
 RecvSendChatNoticeTask::RecvSendChatNoticeTask(void)
@@ -64,8 +64,8 @@ bool RecvSendChatNoticeTask::Handle(const TransportProtocol& tp)
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ROOMID_PARAM].asString();
+        if (tp.m_data[ROOMID_SEND_PARAM].isString()) {
+            m_roomId = tp.m_data[ROOMID_SEND_PARAM].asString();
         }
         if (tp.m_data[LEVEL_PARAM].isInt()) {
             m_level = tp.m_data[LEVEL_PARAM].isInt();
@@ -73,8 +73,8 @@ bool RecvSendChatNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[FROMID_PARAM].isString()) {
             m_fromId = tp.m_data[FROMID_PARAM].asString();
         }
-        if (tp.m_data[NICKNAME_PARAM].isString()) {
-            m_nickName = tp.m_data[NICKNAME_PARAM].asString();
+        if (tp.m_data[NICKNAME_SEND_PARAM].isString()) {
+            m_nickName = tp.m_data[NICKNAME_SEND_PARAM].asString();
         }
         if (tp.m_data[MSG_PARAM].isString()) {
             m_Msg = tp.m_data[MSG_PARAM].asString();

@@ -12,6 +12,8 @@
 #import "GetConfigRequest.h"
 
 @interface ConfigManager : NSObject
+@property (assign) BOOL dontShow2WayVideoDialog;
+
 #pragma mark - 获取实例
 + (instancetype _Nonnull)manager;
 
@@ -28,5 +30,10 @@
  *  清除
  */
 - (void)clean;
+
+/**
+ 保存配置
+ */
+- (void)saveConfigParam;
 
 @end

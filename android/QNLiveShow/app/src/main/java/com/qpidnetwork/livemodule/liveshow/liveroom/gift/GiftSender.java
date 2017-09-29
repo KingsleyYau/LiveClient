@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.im.IMManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import static com.qpidnetwork.livemodule.utils.TestDataUtil.localCoins;
@@ -63,17 +64,16 @@ public class GiftSender {
      */
     public void sendStoreGift(GiftItem giftItem, boolean isRepeat, int sendNum,
                               GiftSendResultListener listener){
-        Log.d(TAG,"sendStoreGift-isRepeat:"+isRepeat
-                +" giftId:"+giftItem.id+" sendNum:"+sendNum);
-
+        Log.d(TAG,"sendStoreGift-id:"+giftItem.id+" name:"+giftItem.name+" isRepeat:"+isRepeat
+                +" sendNum:"+sendNum);
         //判断本地金币数量是否充足
         double reqCoins = giftItem.credit*sendNum;
         Log.d(TAG,"sendStoreGift-reqCoins:"+reqCoins+" localCoins:"+localCoins);
         //礼物首次发送，需要本地校验下金币数量是否充足
-        if(!isRepeat && localCoins < reqCoins){
+        if(!isRepeat && LiveRoomCreditRebateManager.getInstance().getCredit() < reqCoins){
             if(null != listener){
-                listener.onGiftReqSent(giftItem,ErrorCode.FAILED_COINS_NOTENOUGHT,
-                        "本地金币数量不够了！",localCoins,isRepeat);
+                listener.onGiftReqSent(giftItem,ErrorCode.FAILED_CREDITS_NOTENOUGHT,
+                        "本地金币数量不够了！",localCoins,isRepeat,sendNum);
             }
             return;
         }
@@ -81,13 +81,9 @@ public class GiftSender {
         if(!imReconnecting){
             Log.d(TAG,"sendStoreGift-未处于断网重连过程，真发送");
             sendGift(giftItem,isRepeat,sendNum);
-            if(!isRepeat){
-                localCoins-=reqCoins;
-                localCoins = (double)(Math.round(localCoins*100)/100.0);
-            }
         }
         if(null != listener){
-            listener.onGiftReqSent(giftItem,ErrorCode.SUCCESS,"",localCoins,isRepeat);
+            listener.onGiftReqSent(giftItem,ErrorCode.SUCCESS,"",localCoins,isRepeat,sendNum);
         }
     }
 
@@ -98,21 +94,21 @@ public class GiftSender {
      * @param sendNum
      * @param listener
      */
-    public void sendBackpackGift(GiftItem giftItem, boolean isRepeat, int sendNum,
+    public void sendBackpackGift(GiftItem giftItem, boolean isRepeat, int sendNum,int totalNum,
                                  GiftSendResultListener listener){
+        Log.d(TAG,"sendBackpackGift-id:"+giftItem.id+" name:"+giftItem.name+" isRepeat:"+isRepeat
+            +" sendNum:"+sendNum+" totalNum:"+totalNum);
         //每次判断剩余数量是否充足
-        int totalNum = PackageGiftManager.getInstance().getPackageGiftNumById(giftItem.id);
         if(totalNum>=sendNum){
             if(!imReconnecting) {
                 Log.d(TAG,"sendBackpackGift-未处于断网重连过程，真发送");
                 sendGift(giftItem, isRepeat, sendNum);
-                PackageGiftManager.getInstance().subPackageGiftNumById(giftItem.id,sendNum);
             }
-            listener.onPackReqSend(giftItem,ErrorCode.SUCCESS,"",isRepeat);
+            listener.onPackReqSend(giftItem,ErrorCode.SUCCESS,"",isRepeat,sendNum);
         }else{
             if(null != listener){
                 listener.onPackReqSend(giftItem,ErrorCode.FAILED_NUMBS_NOTENOUGHT,
-                        "剩余数量不足!",isRepeat);
+                        "剩余数量不足!",isRepeat,sendNum);
             }
         }
     }
@@ -163,7 +159,7 @@ public class GiftSender {
          * @param isRepeat
          */
         void onGiftReqSent(GiftItem normalGiftItem, ErrorCode errorCode, String message,
-                           double localCoins, boolean isRepeat);
+                           double localCoins, boolean isRepeat, int sendNum);
 
         /**
          * 背包礼物发送请求插入队列回调
@@ -173,7 +169,7 @@ public class GiftSender {
          * @param isRepeat
          */
         void onPackReqSend(GiftItem giftItem, ErrorCode errorCode,
-                           String message, boolean isRepeat);
+                           String message, boolean isRepeat, int sendNum);
     }
 
     /**
@@ -185,9 +181,9 @@ public class GiftSender {
          */
         SUCCESS,
         /**
-         * 失败-金币数量不够
+         * 失败-信用点数量不够
          */
-        FAILED_COINS_NOTENOUGHT,
+        FAILED_CREDITS_NOTENOUGHT,
         /**
          * 失败-断线重连中
          */

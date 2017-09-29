@@ -18,6 +18,7 @@ using namespace std;
 #define NICKNAME_PARAM         "nickname"
 #define PHOTOURL_PARAM         "photourl"
 #define VIDEOURL_PARAM         "videourl"
+#define ROOMID_PARAM		   "roomid"
 #define ROOMTYPE_PARAM         "room_type"
 #define CREDIT_PARAM           "credit"
 #define USEDVOUCHER_PARAM      "used_voucher"
@@ -58,11 +59,14 @@ public:
                 }
                 
             }
+            if (root[ROOMID_PARAM].isString()) {
+                roomId = root[ROOMID_PARAM].asString();
+            }
             if (root[ROOMTYPE_PARAM].isInt()) {
                 int type = root[ROOMTYPE_PARAM].asInt();
                 roomType = GetRoomType(type);
             }
-            if (root[CREDIT_PARAM].isDouble()) {
+            if (root[CREDIT_PARAM].isNumeric()) {
                 credit = root[CREDIT_PARAM].asDouble();
             }
             if (root[USEDVOUCHER_PARAM].isInt()) {
@@ -139,6 +143,7 @@ public:
         userId = "";
         nickName = "";
         photoUrl = "";
+        roomId = "";
         roomType = ROOMTYPE_UNKNOW;
         credit = 0.0;
         usedVoucher = false;
@@ -163,6 +168,7 @@ public:
      * nickName                 主播昵称
      * photoUrl                 主播头像url
      * videoUrl                 视频流url
+     * roomId					房间Id
      * roomType                 直播间类型
      * credit                   信用点
      * usedVoucher              是否使用使用劵（0:否 1:是）
@@ -183,6 +189,7 @@ public:
     string          nickName;
     string          photoUrl;
     list<string>    videoUrl;
+    string          roomId;
     RoomType        roomType;
     double          credit;
     bool            usedVoucher;

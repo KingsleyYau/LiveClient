@@ -51,6 +51,11 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    self.imageViewHeader.layer.cornerRadius = self.imageViewHeader.frame.size.height / 2;
+    self.imageViewHeader.layer.masksToBounds = YES;
+    
+    self.labelMessageBackgroundView.layer.cornerRadius = self.labelMessageBackgroundView.frame.size.height / 2;
+    self.labelMessageBackgroundView.layer.masksToBounds = YES;
 }
 
 @end

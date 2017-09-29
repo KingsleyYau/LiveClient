@@ -1,10 +1,17 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
-import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
@@ -14,13 +21,15 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
 import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniLiveShow;
+import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
-import com.qpidnetwork.livemodule.liveshow.liveroom.AudienceLiveRoomActivity;
-import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -42,7 +51,12 @@ public class FollowingListFragment extends BaseListFragment{
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mAdapter = createAdapter();
+        getPullToRefreshListView().addHeaderView(createHeaderView());
         getPullToRefreshListView().setAdapter(mAdapter);
+        getPullToRefreshListView().setHeaderDividersEnabled(true);
+        getPullToRefreshListView().setDivider(new ColorDrawable(getResources().getColor(R.color.hotlist_divider_color)));
+        getPullToRefreshListView().setDividerHeight(DisplayUtil.dip2px(getActivity(), 4));
+        showInitLoading();
         queryFollowingList(false);
     }
 
@@ -51,6 +65,7 @@ public class FollowingListFragment extends BaseListFragment{
         super.handleUiMessage(msg);
         switch (msg.what){
             case GET_FOLLOWING_CALLBACK:{
+                hideLoadingPage();
                 HttpRespObject response = (HttpRespObject)msg.obj;
                 if(response.isSuccess){
                     if(!(msg.arg1 == 1)){
@@ -61,11 +76,14 @@ public class FollowingListFragment extends BaseListFragment{
                         mFollowingList.addAll(Arrays.asList(followingArray));
                         mAdapter.setList(mFollowingList);
                     }
+                    //无数据
+                    if(mFollowingList == null || mFollowingList.size() == 0){
+                        showInitEmpty(getEmptyView());
+                    }
                 }else{
                     if(mFollowingList.size()>0){
-                        String errorMsg = (String)msg.obj;
                         if(getActivity() != null){
-                            Toast.makeText(getActivity(), errorMsg, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
                         }
                     }else{
                         //无数据显示错误页，引导用户
@@ -75,6 +93,16 @@ public class FollowingListFragment extends BaseListFragment{
             }break;
         }
         onRefreshComplete();
+    }
+
+    /**
+     * 生成列表头
+     * @return
+     */
+    private View createHeaderView(){
+        ImageView imageView = new ImageView(getActivity());
+        imageView.setImageResource(R.drawable.hotlist_default_header);
+        return  imageView;
     }
 
     private void queryFollowingList(final boolean isLoadMore){
@@ -95,30 +123,49 @@ public class FollowingListFragment extends BaseListFragment{
         });
     }
 
+    /**
+     * @return 设置emptyView
+     */
+    private View getEmptyView() {
+        // TODO Auto-generated method stub
+        View view  = LayoutInflater.from(getActivity()).inflate(R.layout.view_following_list_empty, null);
+        //edit by Jagger 设置为主题颜色
+        Button btnHotList= (Button)view.findViewById(R.id.btnHotList);
+        ((TextView)view.findViewById(R.id.tvEmptyDesc)).setText(getResources().getString(R.string.followinglist_empty_text));
+        btnHotList.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            if(getActivity() != null && getActivity() instanceof  MainFragmentActivity){
+                ((MainFragmentActivity)getActivity()).setCurrentPager(0);
+            }
+            }
+        });
+        return view;
+    }
+
     @Override
     public void onInitRetry() {
         super.onInitRetry();
         //错误也点击刷新
         mFollowingList.clear();
+        showInitLoading();
         queryFollowingList(false);
     }
 
     @Override
     public void onPullDownToRefresh() {
-        // TODO Auto-generated method stub
         super.onPullDownToRefresh();
         queryFollowingList(false);
     }
 
     @Override
     public void onPullUpToRefresh() {
-        // TODO Auto-generated method stub
         super.onPullUpToRefresh();
         queryFollowingList(true);
     }
     @Override
     public void onRefreshComplete() {
-        // TODO Auto-generated method stub
         super.onRefreshComplete();
     }
 
@@ -126,57 +173,129 @@ public class FollowingListFragment extends BaseListFragment{
         CanAdapter<FollowingListItem> adapter = new CanAdapter<FollowingListItem>(LiveApplication.getContext(), R.layout.item_hot_list, mFollowingList) {
             @Override
             protected void setView(CanHolderHelper helper, int position, FollowingListItem bean) {
+                //处理item大小（宽高相同）
+                AbsListView.LayoutParams params = (AbsListView.LayoutParams)helper.getConvertView().getLayoutParams();
+                params.height = DisplayUtil.getScreenWidth(helper.getContext());
 
                 helper.setImageResource(R.id.ivOnlineStatus, bean.onlineStatus == AnchorOnlineStatus.Online ? R.drawable.circle_solid_green :
                         R.drawable.circle_solid_grey);
                 helper.setText(R.id.tvName,bean.nickName);
 
-                //按钮区域
-                if(bean.onlineStatus == AnchorOnlineStatus.Online
-                        && bean.roomType != LiveRoomType.Unknown){
-                    //房间类型
-                    helper.setVisibility(R.id.btnSchedule, View.GONE);
-                    helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                    helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
-                    if(bean.roomType == LiveRoomType.FreePublicRoom
-                            || bean.roomType == LiveRoomType.PaidPublicRoom){
-                        helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
-                        helper.setVisibility(R.id.rlPrivateContent, View.VISIBLE);
-                        helper.setVisibility(R.id.rlPublicContent, View.VISIBLE);
+                //兴趣爱好区域
+                helper.setVisibility(R.id.ivInterest1, View.GONE);
+                helper.setVisibility(R.id.ivInterest2, View.GONE);
+                helper.setVisibility(R.id.ivInterest3, View.GONE);
+                if(bean.interests != null && bean.interests.size() > 0){
+                    if(bean.interests.size() >= 3){
+                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
+                        helper.setVisibility(R.id.ivInterest2, View.VISIBLE);
+                        helper.setVisibility(R.id.ivInterest3, View.VISIBLE);
+                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
+                        helper.setImageResource(R.id.ivInterest2, ImageUtil.getImageResoursceByName(bean.interests.get(1).name()));
+                        helper.setImageResource(R.id.ivInterest3, ImageUtil.getImageResoursceByName(bean.interests.get(2).name()));
+                    }else if(bean.interests.size() == 2){
+                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
+                        helper.setVisibility(R.id.ivInterest2, View.VISIBLE);
+                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
+                        helper.setImageResource(R.id.ivInterest2, ImageUtil.getImageResoursceByName(bean.interests.get(1).name()));
                     }else{
-                        helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_private);
-                        helper.setVisibility(R.id.rlPrivateContent, View.VISIBLE);
-                        helper.setVisibility(R.id.rlPublicContent, View.GONE);
+                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
+                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
                     }
+                }
 
-                    switch (bean.roomType){
-                        case FreePublicRoom:{
-                            helper.setImageResource(R.id.btnPrivate, R.drawable.button_start_private_broadcast);
-                            helper.setImageResource(R.id.btnPublic, R.drawable.button_view_free_public_broadcast);
-                        }break;
-                        case PaidPublicRoom:{
-                            helper.setImageResource(R.id.btnPrivate, R.drawable.button_start_private_broadcast);
-                            helper.setImageResource(R.id.btnPublic, R.drawable.button_view_paid_public_broadcast);
-                        }break;
-                        case AdvancedPrivateRoom:{
-                            helper.setImageResource(R.id.btnPrivate, R.drawable.button_start_private_broadcast);
-                        }break;
-                        case NormalPrivateRoom:{
-                            helper.setImageResource(R.id.btnPrivate, R.drawable.button_start_private_broadcast);
-                        }break;
+                //按钮区域
+                if(bean.onlineStatus == AnchorOnlineStatus.Online){
+                    if(bean.roomType != LiveRoomType.Unknown) {
+                        //在线直播中
+                        helper.setVisibility(R.id.btnSchedule, View.GONE);
+                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
+                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
+                        if (bean.roomType == LiveRoomType.FreePublicRoom
+                                || bean.roomType == LiveRoomType.PaidPublicRoom) {
+                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
+                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+                            helper.setVisibility(R.id.btnPublic, View.VISIBLE);
+                        } else {
+                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_private);
+                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+                            helper.setVisibility(R.id.btnPublic, View.GONE);
+                        }
+
+                        final ImageView btnPrivate = helper.getView(R.id.btnPrivate);
+                        Drawable privateDrawable = btnPrivate.getDrawable();
+                        if ((privateDrawable != null)
+                                && (privateDrawable instanceof AnimationDrawable)) {
+                            ((AnimationDrawable) privateDrawable).stop();
+                        }
+
+                        switch (bean.roomType) {
+                            case FreePublicRoom: {
+                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
+                                helper.setImageResource(R.id.btnPublic, R.drawable.list_button_view_free_public_broadcast);
+                            }
+                            break;
+                            case PaidPublicRoom: {
+                                setAndStartAdvancePrivateAnimation(btnPrivate);
+                                helper.setImageResource(R.id.btnPublic, R.drawable.list_button_view_paid_public_broadcast);
+                            }
+                            break;
+                            case AdvancedPrivateRoom: {
+                                setAndStartAdvancePrivateAnimation(btnPrivate);
+                            }
+                            break;
+                            case NormalPrivateRoom: {
+                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
+                            }
+                            break;
+                        }
+                    }else{
+                        //在线未直播
+                        helper.setVisibility(R.id.btnSchedule, View.GONE);
+                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
+                        helper.setVisibility(R.id.ivLiveType, View.GONE);
+                        helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+                        helper.setVisibility(R.id.btnPublic, View.GONE);
+                        ImageView btnPrivate = helper.getView(R.id.btnPrivate);
+                        if(bean.anchorType == AnchorLevelType.gold){
+                            setAndStartAdvancePrivateAnimation(btnPrivate);
+                        }else{
+                            helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
+                        }
                     }
                 }else{
                     helper.setVisibility(R.id.ivLiveType, View.GONE);
                     helper.setVisibility(R.id.llStartContent, View.GONE);
                     helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
-                    helper.setImageResource(R.id.btnSchedule, R.drawable.button_send_schedule);
+                    helper.setImageResource(R.id.btnSchedule, R.drawable.list_button_send_schedule);
                 }
 
-                if(!TextUtils.isEmpty(bean.photoUrl)){
+                helper.setImageResource(R.id.iv_roomBg, R.drawable.rectangle_transparent_drawable);
+                if(!TextUtils.isEmpty(bean.roomPhotoUrl)){
                     Picasso.with(LiveApplication.getContext())
-                            .load(bean.photoUrl)
+                            .load(bean.roomPhotoUrl)
+                            .placeholder(R.drawable.rectangle_transparent_drawable)
+                            .error(R.drawable.rectangle_transparent_drawable)
                             .into(helper.getImageView(R.id.iv_roomBg));
                 }
+            }
+
+            /**
+             * 设置启动帧动画
+             * @param view
+             */
+            private void setAndStartAdvancePrivateAnimation(final ImageView view){
+                view.setImageResource(R.drawable.anim_private_broadcast_button);
+                postUiDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Drawable tempDrawable = view.getDrawable();
+                        if((tempDrawable != null)
+                                && (tempDrawable instanceof AnimationDrawable)){
+                            ((AnimationDrawable)tempDrawable).start();
+                        }
+                    }
+                }, 200);
             }
 
             @Override
@@ -187,6 +306,7 @@ public class FollowingListFragment extends BaseListFragment{
                 helper.setItemChildClickListener(R.id.btnSchedule);
                 helper.setItemChildClickListener(R.id.iv_roomBg);
             }
+
         };
         adapter.setOnItemListener(new CanOnItemListener(){
             @Override
@@ -197,18 +317,19 @@ public class FollowingListFragment extends BaseListFragment{
                         //点击Item，打开主播详情
                     }break;
                     case R.id.btnPrivate: {
-                        //发出邀请
+                        //发起私密邀请
+                        startActivity(LiveRoomTransitionActivity.getInviteIntent(mContext,
+                                item.userId, item.nickName, item.photoUrl, "",item.roomPhotoUrl));
                     }break;
                     case R.id.btnPublic: {
                         //进入公共直播间
+                        startActivity(LiveRoomTransitionActivity.getRoomInIntent(mContext,
+                                item.userId, item.nickName, item.photoUrl, "",item.roomPhotoUrl));
                     }break;
                     case R.id.btnSchedule: {
                         //进入发送预约邀请
                     }break;
                 }
-                Intent intent = new Intent(getActivity(), AudienceLiveRoomActivity.class);
-                intent.putExtra(BaseCommonLiveRoomActivity.LIVEROOM_HOST_ID, item.userId);
-                startActivity(intent);
             }
         });
         return adapter;

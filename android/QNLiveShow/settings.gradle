@@ -1,1 +1,4 @@
 include ':app'
+include ':QNBridgeModule'
+project(':QNBridgeModule').projectDir=new File('../QNBridgeModule/trunk/')
+include ':QNBridgeModule:bridgeService'

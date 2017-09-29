@@ -34,13 +34,13 @@ public:
     /**
      *
      * @param liveRoomId                直播场次ID
-     * @param page                  页数（可无，无则表示获取所有）
-     * @param number                每页的元素数量（可无，无则表示获取所有）
+     * @param start                     起始，用于分页，表示从第几个元素开始获取
+     * @param step                      步长，用于分页，表示本次请求获取多少个元素
      */
     void SetParam(
                   string liveRoomId,
-                  int page,
-                  int number
+                  int start,
+                  int step
                   );
     
     /**
@@ -48,13 +48,13 @@ public:
      */
     const string& GetLiveRoomId();
     /**
-     * 页数（可无，无则表示获取所有）
+     * 起始，用于分页，表示从第几个元素开始获取
      */
-    int GetPage();
+    int GetStart();
     /**
-     * 每页的元素数量（可无，无则表示获取所有）
+     * 步长，用于分页，表示本次请求获取多少个元素
      */
-    int GetNumber();
+    int GetStep();
     
 protected:
     // Implement HttpRequestTask
@@ -65,10 +65,10 @@ protected:
     
     // 直播场次ID
     string mLiveRoomId;
-    // 页数（可无，无则表示获取所有）
-    int mPage;
-    // 每页的元素数量（可无，无则表示获取所有）
-    int mNumber;
+    // 起始，用于分页，表示从第几个元素开始获取
+    int mStart;
+    // 步长，用于分页，表示本次请求获取多少个元素
+    int mStep;
 };
 
 #endif /* HttpLiveFansListTask_H_ */

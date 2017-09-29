@@ -51,7 +51,7 @@ static LiveStreamSession* gSession = nil;
      * 1.必须使用AVAudioSessionCategoryPlayAndRecord, 然后audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO
      */
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord mode:AVAudioSessionModeDefault options:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
     [audioSession setActive:YES error:nil];
 }
 

@@ -11,7 +11,11 @@
 @implementation BarrageModel
 - (id)init {
     if( self = [super init] ) {
-        
+        self.name = @"";
+        self.message = @"";
+        self.url = @"";
+        self.userId = @"";
+        self.level = PriorityLevelHigh;
     }
     return self;
 }
@@ -29,9 +33,8 @@
     BarrageModel *item = [[BarrageModel alloc] init];
     item.name = name;
     item.message = message;
+    item.userId = userId;
     item.level = PriorityLevelHigh;
-    // 传用户ID获取图片url
-    item.url = userId;
     
     return item;
 }

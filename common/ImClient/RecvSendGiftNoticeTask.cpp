@@ -15,9 +15,9 @@
 
 
 // 接收参数定义
-#define ROOMID_PARAM                "roomid"
+#define ROOMID_GIFT_PARAM           "roomid"
 #define FROMID_PARAM                "fromid"
-#define NICKNAME_PARAM              "nickname"
+#define NICKNAME_GIFT_PARAM         "nickname"
 #define GIFTID_PARAM                "giftid"
 #define GIFTNAME_PARAM              "giftname"
 #define GIFTNUM_PARAM               "giftnum"
@@ -77,8 +77,8 @@ bool RecvSendGiftNoticeTask::Handle(const TransportProtocol& tp)
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ROOMID_PARAM].asString();
+        if (tp.m_data[ROOMID_GIFT_PARAM].isString()) {
+            m_roomId = tp.m_data[ROOMID_GIFT_PARAM].asString();
         }
         if (tp.m_data[FROMID_PARAM].isString()) {
             m_fromId = tp.m_data[FROMID_PARAM].asString();

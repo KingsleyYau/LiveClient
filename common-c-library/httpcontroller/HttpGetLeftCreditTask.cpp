@@ -64,7 +64,7 @@ bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char*
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             if (dataJson.isObject()) {
-                if (dataJson[LIVEROOM_GETCREDIT_CREDIT].isDouble()) {
+                if (dataJson[LIVEROOM_GETCREDIT_CREDIT].isNumeric()) {
                     credit = dataJson[LIVEROOM_GETCREDIT_CREDIT].asDouble();
                 }
                 

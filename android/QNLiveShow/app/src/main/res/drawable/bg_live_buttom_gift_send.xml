@@ -11,14 +11,14 @@
             <corners
                 android:topLeftRadius="0dp"
                 android:bottomLeftRadius="0dp"
-                android:topRightRadius="3dp"
-                android:bottomRightRadius="3dp"/>
+                android:topRightRadius="5dp"
+                android:bottomRightRadius="5dp"/>
 
 
 
             <!--solid - 填充色-->
             <solid
-                android:color="#0cedf5"/>
+                android:color="#f7cd3a"/>
 
             <!--stroke - 描边-->
             <!--<stroke-->

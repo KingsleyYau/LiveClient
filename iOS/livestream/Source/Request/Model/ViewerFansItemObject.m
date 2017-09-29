@@ -19,6 +19,7 @@
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.mountId = [coder decodeObjectForKey:@"mountId"];
         self.mountUrl = [coder decodeObjectForKey:@"mountUrl"];
+        self.level = [coder decodeIntForKey:@"level"];
     }
     return self;
 }
@@ -29,6 +30,7 @@
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeObject:self.mountId forKey:@"mountId"];
     [coder encodeObject:self.mountUrl forKey:@"mountUrl"];
+    [coder encodeInt:self.level forKey:@"level"];
 }
 
 @end

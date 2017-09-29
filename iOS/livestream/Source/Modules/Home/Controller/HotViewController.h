@@ -10,7 +10,7 @@
 
 #import "HotTableView.h"
 
-@interface HotViewController : KKViewController
+@interface HotViewController : ListViewController
 
 @property (weak) IBOutlet HotTableView* tableView;
 

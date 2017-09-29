@@ -11,12 +11,11 @@
 @interface LiveFansListRequest : SessionRequest
 /**
  * roomId                        直播间ID
- * page                          页数（可0， 0则表示获取所有， ）
- * number                        每页的元素数量（可0， 0则表示获取所有）
- */
+ * start                         起始，用于分页，表示从第几个元素开始获取
+ * step                          步长，用于分页，表示本次请求获取多少个元素 */
 
 @property (nonatomic, copy) NSString * _Nullable roomId;
-@property (nonatomic, assign)int page;
-@property (nonatomic, assign)int number;
+@property (nonatomic, assign)int start;
+@property (nonatomic, assign)int step;
 @property (nonatomic, strong) LiveFansListFinishHandler _Nullable finishHandler;
 @end

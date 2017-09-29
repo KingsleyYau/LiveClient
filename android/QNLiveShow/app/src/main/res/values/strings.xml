@@ -2,14 +2,12 @@
     <string name="app_name">Cool_Live</string>
     <string name="txt_splash_dec">This is my sologan !</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="tip_mainTab">Hello MainTab fragment</string>
     <string name="tip_startLive">Hello StartLive fragment</string>
     <string name="tip_hotList">Hello HotList fragment</string>
     <string name="tip_followingList">Hello FollowingList fragment</string>
     <string name="tip_dicoverList">Hello DicoverList fragment</string>
     <string name="tip_personInfoTip">Hello PersonInfo fragment</string>
-    <string name="tip_verificationSentToPhone">Verification code has been sent to your phone:</string>
     <string name="tip_passwordFormat">6 - 20 numbers or characters</string>
     <string name="tip_resetPassword">We will send the verification code to reset password</string>
     <string name="tip_countryOrRegion">Contry/Region:</string>
@@ -36,6 +34,8 @@
     <string name="tip_deleting">Deleting...</string>
     <string name="tip_complete">Complete</string>
     <string name="tip_failed">Failed</string>
+    <string name="tip_failed_to_load">Failed to load.</string>
+    <string name="tip_reload">Reload</string>
     <string name="tip_failed4UnConnectServ">Failed\nConnot connect to server</string>
 
     <string name="txt_tab_main">首页</string>
@@ -47,14 +47,11 @@
     <string name="txt_tab_discoverTab">最新</string>
 
     <string name="txt_searchTab">搜索</string>
-    <string name="txt_userAgreement">By logging in,you agree to you Terms of Use</string>
-    <string name="txt_singUpHintPhoneNumber">Verification code</string>
     <string name="txt_createPassword">Create a password</string>
     <string name="txt_signup_next">Sing Up</string>
     <string name="txt_signup_title">Sign Up with Phone Number</string>
     <string name="txt_login_title">Log in with Phone Number</string>
     <string name="txt_next">Next</string>
-    <string name="txt_resend">Resend</string>
     <string name="txt_password">Password</string>
     <string name="txt_login">Log in</string>
     <string name="txt_cancel">Cancel</string>
@@ -62,11 +59,10 @@
     <string name="txt_forgotPassword">Forgot password</string>
     <string name="txt_roomstatus_online">LIVE</string>
     <string name="txt_roomstatus_offline">OFFLINE</string>
-    <string name="txt_startlive_hinttitle">Add a title</string>
     <string name="txt_startlive_golive">Go Live</string>
 
     <string name="txt_hint_input_general">Say something...</string>
-    <string name="txt_hint_input_barrage">10 coins per flying comment</string>
+    <string name="txt_hint_input_barrage">0.1 credit per pop-up message</string>
     <string name="txt_send_msg">Send</string>
     <string name="txt_verification">Verification</string>
     <string name="txt_sent">sent</string>
@@ -107,17 +103,124 @@
     <string name="liveroom_message_template_gift"><![CDATA[<b><font color=\"#EC0102\"><xliff:g id="message_username">%1$s</xliff:g></font></b><font color=\"#DF3CE9\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s] </font><font color=\"#DF3CE9\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
     <string name="liveroom_message_gift_x">x %1$d</string>
 
-    <string name="liveroom_tariff_prompt_free_public">Free public performance is free to watch.</string>
-    <string name="liveroom_tariff_prompt_pre_public">Premium public performance is billed at %1$s credit per minute.</string>
-    <string name="liveroom_tariff_prompt_silver_private">Silver private performance is billed at %1$s credit per minute.</string>
-    <string name="liveroom_tariff_prompt_golden_private">Golden private performance is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_free_public">Public Broadcast is free to watch.</string>
+    <string name="liveroom_tariff_prompt_pre_public">VIP Public Broadcast is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_silver_private">Private broadcast is billed at %1$s credit per minute.</string>
+    <string name="liveroom_tariff_prompt_golden_private">VIP Private Broadcast is billed at %1$s credit per minute.</string>
     <string name="liveroom_tariff_prompt_ok">Got it</string>
-    <string name="liveroom_favorite_sending">Favoriting...</string>
-    <string name="liveroom_entrancecar_master">%1$s Joined</string>
     <string name="liveroom_entrancecar_joined">%1$s Joined</string>
+    <string name="liveroom_vipguest">VIP Guest</string>
+    <string name="liveroom_header_vipguestdata">(%1$s/%2$s)</string>
+
+    <!--LiveRoom Rebate-->
+    <string name="liveroom_rebate_current_credit">Rewarded credits:</string>
+    <string name="liveroom_rebate_generated_desc">Generated in:</string>
+    <string name="liveroom_rebate_rules">Rules:\n1. Watching every %1$s can get %2$s rewarded credits.\n2. Rewarded credits can only be used to send gifts in the same live session.\n3.When the live ends, rewarded credits would be cleaned up.</string>
 
     <!--ListView-->
     <string name="common_empty_text">No content yet.</string>
     <string name="common_btn_tap_to_retry">Top to retry</string>
+    <string name="followinglist_empty_text">No following performers.</string>
+
+    <!--room transition-->
+    <string name="liveroom_transition_anchor_private_broadcast_exception"> %1$s is in a private session. Do you want to send a private broadcast invitation now ?</string>
+    <string name="liveroom_transition_invite_novoucher_tips">Waitting for %1$s to start the session...\n\nWe will charge you 0.5 credits as the deposit of the invitation first.\nIf the broadcaster turn your invitation down, we will return it to you.\nIf you cancel the invitation when the broadcaster accept it, your credits won\'t be returned.</string>
+    <string name="liveroom_transition_invite_voucher_tips">Waitting for %1$s to start the session...\n\nWe have determined you have a Private Live Voucher. It would be applied when the live starts. The first 3 minutes is free.\nPrivate Live Price: 0.1 credit / minute</string>
+    <string name="liveroom_transition_enterroom_wait">%1$s has accepted your invitation.Live will start in</string>
+    <string name="liveroom_transition_invite_failed">Failed to send a private broadcast invitation .Please try again later.</string>
+    <string name="liveroom_transition_invite_deny">No response from %1$s, please try again later.</string>
+    <string name="liveroom_transition_invite_overtime">Invitation has been expired.</string>
+    <string name="liveroom_transition_invite_anchor_cancel">The invitation has been expired. Please try again.</string>
+
+    <string name="common_btn_ok">Ok</string>
+    <string name="common_btn_cancel">Cancel</string>
+    <string name="common_btn_add_credit">Add Credit</string>
+    <string name="liveroom_btn_end_live">End Live</string>
+    <string name="liveroom_btn_book_broadcast">Book</string>
+    <string name="liveroom_btn_browse_hotlist">Hot</string>
+    <string name="liveroom_my_balance">My Balance</string>
+    <string name="liveroom_gift_user_levellimit">This gift is only available for user level 5 or higher</string>
+    <string name="liveroom_gift_intimacy_levellimit">This gift is only available for intimacy 5 or higher</string>
+    <string name="liveroom_gift_pack_empty">Your backpack is empty</string>
+    <string name="liveroom_gift_pack_notsendable">Sorry, this gift can not be sent in this broadcaster room</string>
+    <string name="liveroom_popup_credits_noenough">Oops! Your don\'t have enough credits to send this pop-up message.</string>
+    <string name="liveroom_gift_credits_noenough">Oops! Your don\'t have enough credits to send this gift.</string>
+
+    <string name="live_balance_credits">My Balance: %1$s credits</string>
+    <string name="live_balance_recharge">Recharge</string>
+    <string name="live_balance_userId">ID:%1$s</string>
+
+    <string name="live_gift_coins">%1$s Credits</string>
+
+    <!--系统公告-->
+    <string name="system_announcement_link"><![CDATA[<b><font color=\"#0CD7DE\"><a href=\"%1$s\"><span>%2$s</span></a></font></b>]]></string>
+    <string name="system_announcement_unlink_normal"><![CDATA[<b><font color=\"#0CD7DE\">%1$s</font></b>]]></string>
+    <string name="system_announcement_unlink_carin"><![CDATA[<b><font color=\"#FFD205\">%1$s</font></b>]]></string>
+    <string name="system_announcement_unlink_chat"><![CDATA[<b><font color=\"#00B957\">%1$s</font></b>]]></string>
+
+    <string name="system_announcement_credits">You have been granted %1$s credits.</string>
+    <string name="system_announcement_level_upgraded">Congratulations! You have upgraded to Level %1$s.</string>
+    <string name="system_announcement_intimacylevel_upgraded"> Congratulations! Your intimacy level with %1$s has upgraded to Level %2$s.</string>
+
+    <!--个人中心-->
+    <string name="personal_center_title">Personal Center</string>
+    <string name="my_level_title">My Level</string>
+
+    <!--WebView Normal-->
+    <string name="common_webview_load_error">Oh no! A problem was encountered please try again.</string>
+    <string name="common_btn_tapRetry">Tap to retry</string>
+
+    <!--直播结束-->
+    <string name="endlive_tip_1">Broadcast has been ended.\nPlease come again later.</string>
+    <string name="endlive_tip_2">Please come again later.</string>
+    <string name="endlive_tip_3">Hope to see you next time.</string>
+    <string name="endlive_tip_4">Sorry, since you have not viewed broadcast over 1 minute,you are exited the broadcast room automatically.</string>
+
+    <string name="enterlive_withrider">%1$s joined with \"%2$s\"</string>
+
+    <!-- giff -->
+    <string name="live_gift_send_failed">Failed to send %1$s. Please try again.</string>
+    <string name="live_gift_send_failed_numnoenough">You don\'t have enough %1$s to send.</string>
+
+    <!-- 才艺 -->
+    <string name="live_talent_credits">%1$s credits</string>
+    <string name="live_talent_confirm"><Data><![CDATA[
+        <br><font color=\"#383838\" size=\"24\">Talent: </font><font color=\"#5d0e86\" size=\"24\">%1$s</font></br>
+        <br><font color=\"#383838\" size=\"24\">Price: </font><font color=\"#f7cd3a\" size=\"24\">%2$s credits</font></br>
+        <p><font color=\"#7d7d7d\" size=\"22\">If the broadcaster don\'t accept, your credits would be returned.</font></p>
+        ]]></Data>
+    </string>
+    <string name="live_talent_request_success">Your talent request \"%1$s\" has been sent successfully. Please wait for response.</string>
+    <string name="live_talent_request_failed">Oops, can not send a performance request while the broadcast is closing.</string>
+    <string name="live_talent_accepted">%1$s has accepted your request \"%2$s\"</string>
+    <string name="live_talent_declined">%1$s has declined your request \"%2$s\"</string>
+    <string name="live_talent_unknow">No response from the broadcaster</string>
+
+    <string name="live_msg_send_tips">Please do not send repeatedly</string>
+
+    <!--　广告　-->
+    <string name="live_ad_entrance_title">OUR LIVE CHANNEL IS BROCASTING NOW</string>
+    <string name="live_ad_entrance_go">GO WATCH</string>
+
+    <!-- 预约直播 -->
+    <string name="live_book_title">Book Private Broadcast</string>
+    <string name="live_book_tips1">When do you want to start the private live?</string>
+    <string name="live_date">Date</string>
+    <string name="live_time">Time</string>
+    <string name="live_add_vgift">Add a virtual gift</string>
+    <string name="live_quantity">Quantity:</string>
+    <string name="live_total_price">Total Price:</string>
+    <string name="live_notify_sms">Notify me with SMS</string>
+    <string name="live_mobile_number">Mobile Number</string>
+    <string name="live_note">Note:</string>
+    <string name="live_note_tips">
+        0.5 credits will be deducted from your account as the first 5 minutes of private live. In the below situations, your credits will be returned to your account:
+        \n
+        \n- The host did not accept your request.
+        \n- The host did not show up during the expected period
+    </string>
+    <string name="live_book_now">BOOK NOW</string>
+
+
 
 </resources>

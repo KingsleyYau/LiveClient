@@ -13,9 +13,6 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
-// 请求参数定义
-#define INVITEID_PARAM          "inviteid"
-#define REPLYTYPE_PARAM         "reply_type"
 
 
 
@@ -26,9 +23,6 @@ RecvSendBookingReplyNoticeTask::RecvSendBookingReplyNoticeTask(void)
 	m_seq = 0;
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
-    
-    m_inviteId = "";
-    m_replyType = ANCHORREPLYTYPE_UNKNOW;
 }
 
 RecvSendBookingReplyNoticeTask::~RecvSendBookingReplyNoticeTask(void)
@@ -54,19 +48,13 @@ bool RecvSendBookingReplyNoticeTask::Handle(const TransportProtocol& tp)
 
 	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
-	
+    BookingReplyItem item;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[INVITEID_PARAM].isString()) {
-            m_inviteId = tp.m_data[INVITEID_PARAM].asString();
-        }
-        if (tp.m_data[REPLYTYPE_PARAM].isIntegral()) {
-            m_replyType =  GetAnchorReplyType(tp.m_data[REPLYTYPE_PARAM].asInt());
-        }
-
+        item.Parse(tp.m_data);
     
     }
     
@@ -80,7 +68,7 @@ bool RecvSendBookingReplyNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvSendBookingReplyNotice(m_inviteId, m_replyType);
+        m_listener->OnRecvSendBookingReplyNotice(item);
 		FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

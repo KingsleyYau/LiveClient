@@ -23,10 +23,52 @@ typedef enum {
     LCC_ERR_SVRBREAK = -10004,       // 服务器踢下线
     LCC_ERR_INVITE_TIMEOUT = -10005, // 邀请超时
     // 服务器返回错误
-    LCC_ERR_ROOM_FULL = 10023,   // 房间人满
-    LCC_ERR_ROOM_CLOSE = 10029,  // 房间已经关闭
-    LCC_ERR_NO_CREDIT = 10025,   // 信用点不足
-    LCC_ERR_PRI_LIVING = -10006, // 主播正在私密直播中
+    LCC_ERR_ROOM_FULL = 10023,  // 房间人满
+    LCC_ERR_ROOM_CLOSE = 10029, // 房间已经关闭
+    LCC_ERR_NO_CREDIT = 10025,  // 信用点不足
+    // IM公用错误码
+    LCC_ERR_NO_LOGIN = 10002,                // 未登录
+    LCC_ERR_SYSTEM = 10003,                  // 系统错误
+    LCC_ERR_TOKEN_EXPIRE = 10004,            // Token 过期了
+    LCC_ERR_NOT_FOUND_ROOM = 10021,          // 进入房间失败 找不到房间信息or房间关闭
+    LCC_ERR_CREDIT_FAIL = 10027,             // 远程扣费接口调用失败
+    LCC_ERR_KICKOFF = 10037,                 // 被挤掉线 默认通知内容
+    LCC_ERR_NO_AUTHORIZED = 10039,           // 不能操作 不是对应的userid
+    LCC_ERR_LIVEROOM_NO_EXIST = 16104,       // 直播间不存在
+    LCC_ERR_LIVEROOM_CLOSED = 16106,         // 直播间已关闭
+    LCC_ERR_ANCHORID_INCONSISTENT = 16108,   // 主播id与直播场次的主播id不合
+    LCC_ERR_CLOSELIVE_DATA_FAIL = 16110,     // 关闭直播场次,数据表操作出错
+    LCC_ERR_CLOSELIVE_LACK_CODITION = 16122, // 主播立即关闭私密直播间, 不满足关闭条件
+    // 其它错误码
+    LCC_ERR_ENTER_ROOM_ERR = 10022,                    // 进入房间失败 数据库操作失败（添加记录or删除扣费记录）
+    LCC_ERR_NOT_FIND_ANCHOR = 10026,                   // 主播机构信息找不到
+    LCC_ERR_COUPON_FAIL = 10028,                       // 扣费信用点失败--扣除优惠券分钟数
+    LCC_ERR_ENTER_ROOM_NO_AUTHORIZED = 10033,          // 进入私密直播间 不是对应的userid
+    LCC_ERR_REPEAT_KICKOFF = 10038,                    // 被挤掉线 同一userid不通socket_id进入同一房间时
+    LCC_ERR_ANCHOR_NO_ON_LIVEROOM = 10055,             // 改主播不存在公开直播间
+    LCC_ERR_INCONSISTENT_ROOMTYPE = 10049,             // 赠送礼物失败、开始\结束推流失败 房间类型不符合
+    LCC_ERR_INCONSISTENT_CREDIT_FAIL = 10053,          // 扣费信用点数值的错误，扣费失败
+    LCC_ERR_REPEAT_END_STREAM = 10054,                 // 已结结束推流，不能重复操作
+    LCC_ERR_REPEAT_BOOKING_KICKOFF = 10046,            // 重复立即预约该主播被挤掉线.
+    LCC_ERR_NOT_IN_STUDIO = 15002,                     // You are not in the studio
+    LCC_ERR_INCONSISTENT_LEVEL = 10047,                // 赠送礼物失败 用户等级不符合
+    LCC_ERR_INCONSISTENT_LOVELEVEL = 10048,            // 赠送礼物失败 亲密度不符合
+    LCC_ERR_LESS_THAN_GIFT = 10050,                    // 赠送礼物失败 拥有礼物数量不足
+    LCC_ERR_SEND_GIFT_FAIL = 16144,                    // 发送礼物出错
+    LCC_ERR_SEND_GIFT_LESSTHAN_LEVEL = 16145,          // 发送礼物,男士级别不够
+    LCC_ERR_SEND_GIFT_LESSTHAN_LOVELEVEL = 16146,      // 发送礼物,男士主播亲密度不够
+    LCC_ERR_SEND_GIFT_NO_EXIST = 16147,                // 发送礼物,礼物不存在或已下架
+    LCC_ERR_SEND_GIFT_LEVEL_INCONSISTENT_LIVE = 16148, // 发送礼物,礼物级别限制与直播场次级别不符
+    LCC_ERR_SEND_GIFT_BACKPACK_NO_EXIST = 16151,       // 主播发礼物,背包礼物不存在
+    LCC_ERR_SEND_GIFT_BACKPACK_LESSTHAN = 16152,       // 主播发礼物,背包礼物数量不足
+    LCC_ERR_SEND_GIFT_PARAM_ERR = 16153,               // 发礼物,参数错误
+    LCC_ERR_SEND_TOAST_NOCAN = 15001,                  // 主播不能发送弹幕
+    LCC_ERR_ANCHOR_OFFLINE = 10034,                    // 立即私密邀请失败 主播不在线 /*important*/
+    LCC_ERR_ANCHOR_BUSY = 10035,                       // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
+    LCC_ERR_ANCHOR_PLAYING = 10056,                    // 主播正在私密直播中 /*important*/
+    LCC_ERR_NOTCAN_CANCEL_INVITATION = 10036,          // 取消立即私密邀请失败 状态不是带确认 /*important*/
+    LCC_ERR_NO_FOUND_CRONJOB = 10040,                  // cronjob 里找不到对应的定时器函数
+    LCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
 
 } LCC_ERR_TYPE;
 
@@ -66,8 +108,8 @@ inline PageNameType GetPageNameType(int value) {
 typedef enum {
     ROOMTYPE_NOLIVEROOM = 0,            // 没有直播间
     ROOMTYPE_FREEPUBLICLIVEROOM = 1,    // 免费公开直播间
-    ROOMTYPE_CHARGEPUBLICLIVEROOM = 2,  // 付费公开直播间
-    ROOMTYPE_COMMONPRIVATELIVEROOM = 3, // 普通私密直播间
+    ROOMTYPE_COMMONPRIVATELIVEROOM = 2, // 普通私密直播间
+    ROOMTYPE_CHARGEPUBLICLIVEROOM = 3,  // 付费公开直播间
     ROOMTYPE_LUXURYPRIVATELIVEROOM = 4, // 豪华私密直播间
     ROOMTYPE_UNKNOW,
     ROOMTYPE_BEGIN = ROOMTYPE_NOLIVEROOM,
@@ -76,6 +118,28 @@ typedef enum {
 
 // int 转换 RoomType
 inline RoomType GetRoomType(int value) {
+    //    RoomType type = ROOMTYPE_NOLIVEROOM;
+    //    switch (value) {
+    //        case 1:{
+    //            // 免费公开直播间
+    //            type = ROOMTYPE_FREEPUBLICLIVEROOM;
+    //        }break;
+    //        case 2:{
+    //            // 普通私密直播间
+    //            type = ROOMTYPE_COMMONPRIVATELIVEROOM;
+    //        }break;
+    //        case 3:{
+    //            // 付费公开直播间
+    //            type = ROOMTYPE_CHARGEPUBLICLIVEROOM;
+    //        }break;
+    //        case 4:{
+    //            // 豪华私密直播间
+    //            type = ROOMTYPE_LUXURYPRIVATELIVEROOM;
+    //        }break;
+    //        default:
+    //            break;
+    //    }
+    //    return type;
     return ROOMTYPE_BEGIN <= value && value < ROOMTYPE_END ? (RoomType)value : ROOMTYPE_UNKNOW;
 }
 

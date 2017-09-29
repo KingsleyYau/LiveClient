@@ -18,11 +18,20 @@ public class IMInviteListItem {
 	public IMInviteListItem(){
 		
 	}
-	
+
 	/**
-	 * @param inviteId		邀请ID
-	 * @param toId			接收者ID
-	 * @param fromId		发送者ID
+	 * @param inviteId
+	 * @param toId
+	 * @param oppositeNickname
+	 * @param oppositePhotoUrl
+	 * @param oppositeLevel
+	 * @param oppositeAge
+	 * @param oppositeCountry
+	 * @param isReaded
+	 * @param inviteTime
+	 * @param inviteType
+	 * @param validTime
+	 * @param roomId
 	 */
 	public IMInviteListItem(String inviteId,
 							String toId,
@@ -55,6 +64,21 @@ public class IMInviteListItem {
 		this.roomId = roomId;
 	}
 	
+    /**
+     * 立即私密邀请结构体
+     * inviteId             	邀请ID
+     * toId               		主播ID
+     * oppositeNickname		           主播头像url
+     * oppositePhotoUrl		           主播昵称
+     * oppositeLevel		  	主播头像url
+     * oppositeAge              主播头像url
+     * oppositeCountry		             主播头像url
+     * isReaded                  主播头像url
+     * inviteTime                主播头像url
+     * inviteType                回复状态（0:拒绝 1:同意 2:未回复 3:已超时 4:超时 5:观众／主播取消 6:主播缺席 7:观众缺席 8:已完成）
+     * validTime                 邀请的剩余有效时间（秒）（可无，仅reply_type = 2 存在）
+     * roomId                    直播间ID(可无， 仅reply_type = 1 存在)
+     */
 	public String inviteId;
 	public String toId;
 	public String oppositeNickname;

@@ -17,7 +17,7 @@ class HttpVoucherListTask;
 class IRequestVoucherListCallback {
 public:
 	virtual ~IRequestVoucherListCallback(){};
-	virtual void OnVoucherList(HttpVoucherListTask* task, bool success, int errnum, const string& errmsg, const VoucherList& list) = 0;
+	virtual void OnVoucherList(HttpVoucherListTask* task, bool success, int errnum, const string& errmsg, const VoucherList& list, int totalCount) = 0;
 };
       
 class HttpVoucherListTask : public HttpRequestTask {

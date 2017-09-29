@@ -9,6 +9,12 @@ import com.qpidnetwork.livemodule.im.listener.IMClientListener;
  */
 public class IMClient {
 	
+	//视频互动操作类型
+	public enum IMVideoInteractiveOperateType{
+		Start,		//开始
+		Close		//关闭
+	}
+	
 	static {
         try {
             System.loadLibrary("im-interface");
@@ -75,6 +81,27 @@ public class IMClient {
 	 * @return
 	 */
 	static public native boolean PublicRoomIn(int reqId, String anchorId);
+	
+	/**
+	 * 3.14.观众开始/结束视频互动
+	 * @param reqId
+	 * @param roomId    	直播间ID
+	 * @param operateType   
+	 * @return
+	 */
+	static public boolean ControlManPush(int reqId, String roomId, IMVideoInteractiveOperateType operateType) {
+		return ControlManPush(reqId, roomId, operateType.ordinal());
+	}
+	static public native boolean ControlManPush(int reqId, String roomId, int operateType);
+		
+	
+	/**
+	 * 3.15.获取指定立即私密邀请信息
+	 * @param reqId
+	 * @param invitetionId  邀请ID
+	 * @return
+	 */
+	static public native boolean GetInviteInfo(int reqId, String invitetionId);
 	
 	/**
 	 * 4.1. 发送聊天消息

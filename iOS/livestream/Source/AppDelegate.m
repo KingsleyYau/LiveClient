@@ -15,12 +15,9 @@
 
 #import "RequestManager.h"
 #import "FileCacheManager.h"
-#import "LoginManager.h"
-#import "IMManager.h"
-#import "LiveGiftDownloadManager.h"
 #import "LiveStreamSession.h"
 
-#import "LiveModule.h"
+#import "LiveUrlHandler.h"
 
 @implementation AppDelegate
 @synthesize demo = _demo;
@@ -60,21 +57,9 @@
     [RequestManager setLogEnable:YES];
     [RequestManager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
     
-    RequestManager* manager = [RequestManager manager];
-    [manager setWebSite:@"http://172.25.32.17:3107"];
-    
     // 设置接口请求环境
     // 如果调试模式, 直接进入正式环境
     [self setRequestHost:_debug];
-    
-    // 初始化登录管理器
-    LoginManager* loginManager = [LoginManager manager];
-    
-    // 初始化IM
-    IMManager* imManager = [IMManager manager];
-    
-    // 初始化礼物下载管理器
-    LiveGiftDownloadManager *downloadManager = [LiveGiftDownloadManager giftDownloadManager];
     
     // 初始化跟踪管理器(默认为真实环境)
 //    [[AnalyticsManager manager] initGoogleAnalytics:YES];
@@ -84,9 +69,7 @@
     
     // 初始化支付管理器
 //    [PaymentManager manager];
-    
-    // 自动登陆
-//    [[LoginManager manager] autoLogin];
+    [LiveUrlHandler shareInstance];
     
     // 清除webview的缓存
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -96,14 +79,7 @@
 
     // 开启后台播放
     [[LiveStreamSession session] activeSession];
-    
-    // 设置模块主界面
-    KKNavigationController *nvc = (KKNavigationController *)self.window.rootViewController;
-    UIViewController* vc = nvc.topViewController;
-    [[LiveModule module] setModuleViewController:vc];
-    
-    // 开始登陆
-    [[LiveModule module] start:MAX_TOKEN];
+
     // 延长启动画面时间
     // usleep(1000 * 1000);
 }
@@ -181,8 +157,8 @@
     
     NSString* urlString = [userInfo objectForKey:@"jumpurl"];
     if( urlString.length > 0 ) {
-//        NSURL* url = [NSURL URLWithString:urlString];
-//        [[URLHandler shareInstance] handleOpenURL:url];
+        NSURL* url = [NSURL URLWithString:urlString];
+        [[LiveUrlHandler shareInstance] handleOpenURL:url];
     }
 
 }
@@ -193,20 +169,38 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 //    NSLog(@"application::handleOpenURL( url : %@ )", url);
-//    return [[URLHandler shareInstance] handleOpenURL:url];
+    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 //    NSLog(@"application::openURL( sourceApplication : %@ )", sourceApplication);
-//    return [[URLHandler shareInstance] handleOpenURL:url];
+    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
 //    NSLog(@"application::openURL( options : %@ )", options);
-//    return [[URLHandler shareInstance] handleOpenURL:url];
+    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
+}
+
+- (void)registerRemoteNotifications:(UIApplication *)application {
+    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
+        // Register for Push Notitications, if running iOS 8
+        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
+                                                        UIUserNotificationTypeBadge |
+                                                        UIUserNotificationTypeSound);
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
+        [application registerUserNotificationSettings:settings];
+        [application registerForRemoteNotifications];
+        
+    }
+    
+    // 清除图标数字, 清空通知栏
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
 }
 
 - (void)setRequestHost:(BOOL)formal {
@@ -241,24 +235,6 @@
         _demo = NO;
     }
     return _demo;
-}
-
-- (void)registerRemoteNotifications:(UIApplication *)application {
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        // Register for Push Notitications, if running iOS 8
-        UIUserNotificationType userNotificationTypes = (UIUserNotificationTypeAlert |
-                                                        UIUserNotificationTypeBadge |
-                                                        UIUserNotificationTypeSound);
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:userNotificationTypes categories:nil];
-        [application registerUserNotificationSettings:settings];
-        [application registerForRemoteNotifications];
-        
-    }
-    
-    // 清除图标数字, 清空通知栏
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-    [[UIApplication sharedApplication] cancelAllLocalNotifications];
-    
 }
 
 @end

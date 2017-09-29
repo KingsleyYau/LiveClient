@@ -75,10 +75,10 @@
  *  3.13.观众进入公开直播间
  *
  *  @param reqId         请求序列号
- *  @param anchorId        主播ID
+ *  @param userId      主播ID
  *
  */
-- (BOOL)publicRoomIn:(SEQ_T)reqId anchorId:(NSString *_Nonnull)anchorId;
+- (BOOL)publicRoomIn:(SEQ_T)reqId userId:(NSString *_Nonnull)userId;
 /**
  *  3.14.观众开始／结束视频互动
  *
@@ -88,6 +88,15 @@
  *
  */
 -(BOOL)controlManPush:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId control:(IMControlType)control;
+
+/**
+ *  3.15.获取指定立即私密邀请信息
+ *
+ *  @param reqId         请求序列号
+ *  @param invitationId  邀请ID
+ *
+ */
+-(BOOL)getInviteInfo:(SEQ_T)reqId invitationId:(NSString *_Nonnull)invitationId;
 /**
  *  4.1.发送直播间文本消息
  *

@@ -12,30 +12,52 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/defaultVedioPlayerHeight">
 
-        <TextView
-            android:id="@+id/tv_creditTips"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/ll_credits"
+            android:layout_width="116dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:visibility="invisible"
-            android:background="@drawable/test"
-            android:layout_gravity="right"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/tip_roomGiftCredit"/>
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="13dp"
+            android:visibility="visible"
+            android:background="@drawable/bg_liveroom_creditstips_b03a0953"
+            android:gravity="center"
+            android:layout_gravity="right">
+
+            <TextView
+                android:id="@+id/tv_creditTips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:textColor="@android:color/white"
+                android:text="@string/tip_roomGiftCredit"/>
+
+            <TextView
+                android:id="@+id/tv_creditValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#ffd205"
+                android:text="0.65"/>
+
+        </LinearLayout>
+
+
 
         <ImageView
             android:id="@+id/iv_privateLiveNow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_live_privatelive_now"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_live_privatelive_freepublic"
             android:scaleType="centerCrop"
             android:layout_gravity="right|bottom"
             android:layout_marginRight="13dp"
-            android:layout_marginBottom="13dp"/>
+            android:layout_marginBottom="10dp"/>
 
-        <!--TODO:入场动画-->
         <LinearLayout
             android:id="@+id/ll_entranceCar"
             android:layout_width="match_parent"
@@ -73,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="13dp"
-            android:layout_marginRight="69dp"
+            android:layout_marginRight="68dp"
             android:layout_marginTop="11dp"/>
 
         <LinearLayout

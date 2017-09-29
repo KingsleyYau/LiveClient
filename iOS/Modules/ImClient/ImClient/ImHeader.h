@@ -16,5 +16,8 @@
 #import "Model/BackpackInfoObject.h"
 #import "Model/ImLiveRoomObject.h"
 #import "Model/ImLoginReturnObject.h"
+#import "Model/ImStartOverRoomObject.h"
+#import "Model/ImBookingReplyObject.h"
+#import "Model/ImTalentReplyObject.h"
 
 #endif /* ImHeader_h */

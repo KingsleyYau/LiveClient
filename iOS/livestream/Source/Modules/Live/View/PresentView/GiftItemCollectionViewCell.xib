@@ -18,26 +18,13 @@
                 <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_giftIcon_nomal" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
-                        <rect key="frame" x="25" y="0.0" width="40" height="40"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Gift_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
+                        <rect key="frame" x="25" y="-2" width="40" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="55T-or-0d8"/>
                             <constraint firstAttribute="width" constant="40" id="MoY-f3-A8w"/>
                         </constraints>
                     </imageView>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DFP-NI-v5v">
-                        <rect key="frame" x="31" y="71" width="29" height="12"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                        <state key="normal" title="100" image="Live_GiftMoney_Icon">
-                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </state>
-                    </button>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
-                        <rect key="frame" x="30" y="51" width="31" height="15"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                        <color key="textColor" red="0.51372549020000002" green="0.51372549020000002" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_bigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-jj-DsS">
                         <rect key="frame" x="76" y="4" width="10" height="10"/>
                         <constraints>
@@ -46,61 +33,95 @@
                         </constraints>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mhF-jb-LH1">
-                        <rect key="frame" x="62" y="3" width="25" height="25"/>
+                        <rect key="frame" x="69" y="3" width="18" height="18"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh">
-                                <rect key="frame" x="0.5" y="3.5" width="25.5" height="18"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh">
+                                <rect key="frame" x="0.5" y="3.5" width="18" height="11"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                <color key="textColor" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.21396970648241465" blue="0.085879382296033091" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.96862745100000003" green="0.80392156859999997" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="l41-v9-vBh" firstAttribute="centerY" secondItem="mhF-jb-LH1" secondAttribute="centerY" id="JyI-h1-5h3"/>
                             <constraint firstItem="l41-v9-vBh" firstAttribute="centerX" secondItem="mhF-jb-LH1" secondAttribute="centerX" id="Mfo-Zt-H8P"/>
-                            <constraint firstAttribute="width" constant="25" id="gSR-EE-uwn"/>
-                            <constraint firstAttribute="height" constant="25" id="xox-AM-JoU"/>
+                            <constraint firstAttribute="width" constant="18" id="gSR-EE-uwn"/>
+                            <constraint firstAttribute="height" constant="18" id="xox-AM-JoU"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="noe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mue-fu-Fwa">
+                        <rect key="frame" x="0.0" y="71.5" width="90" height="13.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="live_notSend_icon" translatesAutoresizingMaskIntoConstraints="NO" id="ZIV-jS-oGl">
+                        <rect key="frame" x="74" y="5" width="11" height="13"/>
+                    </imageView>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pnr-aC-qID">
+                        <rect key="frame" x="30" y="30" width="30" height="30"/>
+                        <color key="backgroundColor" white="1" alpha="0.69830907534246578" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="LlL-yX-gAU"/>
+                            <constraint firstAttribute="width" constant="30" id="M7g-J3-5bJ"/>
+                        </constraints>
+                    </activityIndicatorView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
+                        <rect key="frame" x="5" y="50" width="80" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="80" id="n9m-qg-2F2"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.51372549020000002" green="0.51372549020000002" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
+                <constraint firstAttribute="bottom" secondItem="mue-fu-Fwa" secondAttribute="bottom" constant="5" id="0OU-Gx-geF"/>
                 <constraint firstItem="mhF-jb-LH1" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="3" id="4lA-59-sSa"/>
                 <constraint firstItem="47x-lT-YTl" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="11.5" id="7xX-nX-0Jx"/>
-                <constraint firstItem="DFP-NI-v5v" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="5" id="8YX-w7-ljn"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="KHG-vl-Cef"/>
                 <constraint firstItem="47x-lT-YTl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LLx-qu-xju"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="7" id="PaX-hf-PgS"/>
                 <constraint firstAttribute="trailing" secondItem="mhF-jb-LH1" secondAttribute="trailing" constant="3" id="Q9f-kb-hcn"/>
                 <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="4" id="Rw8-Hj-95u"/>
                 <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="VcZ-Lq-CNj"/>
-                <constraint firstAttribute="bottom" secondItem="DFP-NI-v5v" secondAttribute="bottom" constant="7" id="WP7-CC-fvv"/>
-                <constraint firstItem="DFP-NI-v5v" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="iZn-2D-DHo"/>
+                <constraint firstItem="ZIV-jS-oGl" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="5" id="Ysm-IE-3WR"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="auj-er-p32"/>
+                <constraint firstItem="Pnr-aC-qID" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="hY5-YC-gbo"/>
                 <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="m6L-PP-2bI"/>
+                <constraint firstAttribute="trailing" secondItem="mue-fu-Fwa" secondAttribute="trailing" id="sii-Je-Iyi"/>
+                <constraint firstItem="Pnr-aC-qID" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="yvO-2k-CIL"/>
+                <constraint firstAttribute="trailing" secondItem="ZIV-jS-oGl" secondAttribute="trailing" constant="5" id="z0X-Ba-ab3"/>
             </constraints>
             <size key="customSize" width="167" height="169"/>
             <connections>
                 <outlet property="bigGiftLogo" destination="4cl-jj-DsS" id="xjX-Vq-Tbh"/>
                 <outlet property="bigGiftLogoHeight" destination="Gn4-yE-gia" id="OoM-mQ-sdf"/>
                 <outlet property="bigGiftLogoWidth" destination="Uad-MG-Ivj" id="QOq-ig-1GY"/>
-                <outlet property="giftCount" destination="DFP-NI-v5v" id="HOg-8O-MOX"/>
-                <outlet property="giftCountBottomOffset" destination="WP7-CC-fvv" id="8YF-ux-Qo5"/>
+                <outlet property="giftCountBottomOffset" destination="0OU-Gx-geF" id="cXv-4S-5Fz"/>
+                <outlet property="giftCountLabel" destination="mue-fu-Fwa" id="ucS-ya-KCg"/>
                 <outlet property="giftImageBottomOffset" destination="7xX-nX-0Jx" id="ZwR-jp-NkP"/>
                 <outlet property="giftImageHeight" destination="55T-or-0d8" id="qqT-B2-eJA"/>
                 <outlet property="giftImageView" destination="iKm-b7-Qu8" id="kqb-J3-061"/>
                 <outlet property="giftImageWidth" destination="MoY-f3-A8w" id="tVU-w9-XhY"/>
-                <outlet property="giftName" destination="47x-lT-YTl" id="bLm-hx-njN"/>
-                <outlet property="giftNameLableBottomOffset" destination="8YX-w7-ljn" id="MiJ-R6-ENE"/>
+                <outlet property="giftNameLabel" destination="47x-lT-YTl" id="X63-K2-ENu"/>
+                <outlet property="giftNameLableBottomOffset" destination="PaX-hf-PgS" id="Wly-dO-zLp"/>
                 <outlet property="haveNumLabel" destination="l41-v9-vBh" id="Wkn-ng-v0u"/>
                 <outlet property="haveNumView" destination="mhF-jb-LH1" id="Bet-Zk-rVT"/>
                 <outlet property="haveNumViewHeight" destination="xox-AM-JoU" id="Omc-aL-7Ns"/>
                 <outlet property="haveNumViewWidth" destination="gSR-EE-uwn" id="V7C-KT-HWg"/>
+                <outlet property="loadingView" destination="Pnr-aC-qID" id="bxs-0k-iMr"/>
+                <outlet property="notSendImageView" destination="ZIV-jS-oGl" id="yRj-jU-m4Y"/>
             </connections>
             <point key="canvasLocation" x="-121" y="56"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Live_GiftMoney_Icon" width="11" height="8"/>
+        <image name="Live_Gift_Nomal" width="44" height="44"/>
         <image name="Live_bigGift_Logo" width="13" height="13"/>
-        <image name="Live_giftIcon_nomal" width="25" height="25"/>
+        <image name="live_notSend_icon" width="11" height="13"/>
     </resources>
 </document>

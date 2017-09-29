@@ -14,30 +14,16 @@
      limitations under the License.
 -->
 
-<Button xmlns:android="http://schemas.android.com/apk/res/android"
+
+<Button
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@id/btn_giftCount"
     android:layout_width="match_parent"
-    android:layout_height="37dp"
+    android:layout_height="42dp"
     android:gravity="center"
-    android:text="1"
+    android:layout_gravity="center"
+    android:text="77"
+    android:paddingBottom="-1dp"
     android:textColor="#383838"
     android:textSize="16sp"
-    />
-
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--android:layout_width="51dp"-->
-<!--android:layout_height="37dp"-->
-<!--android:orientation="horizontal"-->
-<!--android:id="@+id/ll_giftCountItem"-->
-<!--android:gravity="center">-->
-<!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--android:id="@id/btn_giftCount"-->
-    <!--android:layout_width="50dp"-->
-    <!--android:layout_height="36dp"-->
-    <!--android:gravity="center"-->
-    <!--android:text="1"-->
-    <!--android:textColor="#383838"-->
-    <!--android:background="@drawable/bg_live_buttom_gift_count_list_buttom_tran"-->
-    <!--android:textSize="16sp"-->
-    <!--/>-->
-<!--</LinearLayout>-->
+    android:background="@null"/>

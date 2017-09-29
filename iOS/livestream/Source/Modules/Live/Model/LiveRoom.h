@@ -22,13 +22,18 @@ typedef enum LiveRoomType {
 
 @interface LiveRoom : NSObject
 
-@property (strong) NSString* roomId;
+@property (strong) NSString *roomId;
 @property (assign) LiveRoomType roomType;
+@property (strong) NSString *playUrl;
+@property (strong) NSString *publishUrl;
 
-@property (strong, readonly) NSString* userId;
-@property (strong, readonly) NSString* userName;
+@property (strong, readonly) NSString *userId;
+@property (strong, readonly) NSString *userName;
+@property (strong, readonly) NSString *photoUrl;
 
 @property (strong) LiveRoomInfoItemObject *httpLiveRoom;
 @property (strong) ImLiveRoomObject *imLiveRoom;
+
+@property (atomic, assign) double roomCredit;
 
 @end

@@ -6,7 +6,7 @@
     android:background="@drawable/bg_multiclick_item">
 
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-        android:src="@drawable/circleimageview_hugh"
+        android:src="@drawable/ic_default_photo_man"
         android:id="@+id/civ_photo"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -19,7 +19,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_live_buttom_gift_qiqiu"
+        android:src="@drawable/ic_default_gift"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="13dp"/>

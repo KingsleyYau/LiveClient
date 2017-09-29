@@ -14,10 +14,10 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM                "roomid"
+//#define ROOMID_PARAM                "roomid"
 #define USERID_PARAM                "userid"
-#define NICKNAME_PARAM              "nickname"
-#define PHOTOURL_PARAM              "photourl"
+//#define NICKNAME_PARAM              "nickname"
+#define AVATARIMG_PARAM             "avatar_img"
 #define LEFTSECONDS_PARAM           "left_seconds"
 
 
@@ -60,7 +60,7 @@ bool RecvBookingNoticeTask::Handle(const TransportProtocol& tp)
     string roomId = "";
     string userId = "";
     string nickName = "";
-    string photoUrl = "";
+    string avatarImg = "";
     int leftSeconds = 0;
     // 协议解析
     if (!tp.m_isRespond) {
@@ -76,8 +76,8 @@ bool RecvBookingNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[NICKNAME_PARAM].isString()) {
             nickName = tp.m_data[NICKNAME_PARAM].asString();
         }
-        if (tp.m_data[PHOTOURL_PARAM].isString()) {
-            photoUrl = tp.m_data[PHOTOURL_PARAM].asString();
+        if (tp.m_data[AVATARIMG_PARAM].isString()) {
+            avatarImg = tp.m_data[AVATARIMG_PARAM].asString();
         }
         if (tp.m_data[LEFTSECONDS_PARAM].isIntegral()) {
             leftSeconds = tp.m_data[LEFTSECONDS_PARAM].asInt();
@@ -96,7 +96,7 @@ bool RecvBookingNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvBookingNotice(roomId, userId, nickName, photoUrl, leftSeconds);
+        m_listener->OnRecvBookingNotice(roomId, userId, nickName, avatarImg, leftSeconds);
 		FileLog("LiveChatClient", "RecvBookingNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

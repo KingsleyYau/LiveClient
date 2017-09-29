@@ -174,7 +174,7 @@ void AudioEncoderAAC::EncodeAudioFrame(void* data, int size, void* frame) {
     	srcFrame->InitFrame(AFF_AAC, soundRate, soundSize, soundType);
 
     	FileLevelLog("rtmpdump",
-    				 KLog::LOG_MSG,
+    				 KLog::LOG_STAT,
     				 "AudioEncoderAAC::EncodeAudioFrame( "
     				 "this : %p, "
     				 "srcFrame : %p, "

@@ -13,8 +13,8 @@ HttpLiveFansListTask::HttpLiveFansListTask() {
 	// TODO Auto-generated constructor stub
 	mPath = LIVEROOM_LIVEFANSLIST;
     mLiveRoomId = "";
-    mPage = 0;
-    mNumber = 0;
+    mStart = 0;
+    mStep = 0;
 }
 
 HttpLiveFansListTask::~HttpLiveFansListTask() {
@@ -27,8 +27,8 @@ void HttpLiveFansListTask::SetCallback(IRequestLiveFansListCallback* callback) {
 
 void HttpLiveFansListTask::SetParam(
                                     string liveRoomId,
-                                    int page,
-                                    int number
+                                    int start,
+                                    int step
                                     ) {
 
 	char temp[16];
@@ -40,29 +40,26 @@ void HttpLiveFansListTask::SetParam(
         mLiveRoomId = liveRoomId;
     }
     
-    if (page > 0) {
-        snprintf(temp, sizeof(temp), "%d", page);
-        mHttpEntiy.AddContent(LIVEROOM_LIVEFANSLIST_PAGE, temp);
-        mPage = page;
-    }
-    
-    if (number > 0) {
-        snprintf(temp, sizeof(temp), "%d", number);
-        mHttpEntiy.AddContent(LIVEROOM_LIVEFANSLIST_NUMBER, temp);
-        mNumber = number;
-    }
+    snprintf(temp, sizeof(temp), "%d", start);
+    mHttpEntiy.AddContent(LIVEROOM_LIVEFANSLIST_START, temp);
+    mStart = start;
+
+    snprintf(temp, sizeof(temp), "%d", step);
+    mHttpEntiy.AddContent(LIVEROOM_LIVEFANSLIST_STEP, temp);
+    mStep = step;
+
 
     FileLog("httpcontroller",
             "HttpLiveFansListTask::SetParam( "
             "task : %p, "
             "liveRoomId : %s, "
-            "page:%d,"
-            "number:%d "
+            "start:%d,"
+            "step:%d "
             ")",
             this,
             liveRoomId.c_str(),
-            page,
-            number
+            start,
+            step
             );
 }
 
@@ -71,12 +68,12 @@ const string& HttpLiveFansListTask::GetLiveRoomId() {
     return mLiveRoomId;
 }
 
-int HttpLiveFansListTask::GetPage() {
-    return mPage;
+int HttpLiveFansListTask::GetStart() {
+    return mStart;
 }
 
-int HttpLiveFansListTask::GetNumber() {
-    return mNumber;
+int HttpLiveFansListTask::GetStep() {
+    return mStep;
 }
 
 bool HttpLiveFansListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {

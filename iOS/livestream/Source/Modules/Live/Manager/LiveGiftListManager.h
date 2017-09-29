@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "LiveGiftObject.h"
+#import "LiveRoomGiftModel.h"
+#import "AllGiftItem.h"
 
 @class LiveGiftListManager;
-typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *backArray);
+typedef void (^GetGiftFinshHandler)(BOOL success, NSMutableArray *roomShowGiftList, NSMutableArray *roomGiftList);
 
 @interface LiveGiftListManager : NSObject
 
@@ -18,8 +20,15 @@ typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *backArray);
 
 @property (nonatomic, strong) NSMutableArray *showGiftArray;
 
-+ (instancetype)liveGiftListManager;
++ (instancetype)manager;
 
-- (void)requestTheLiveGiftListWithRoomID:(NSString *)roomId callBack:(RequestFinshtBlock)back;
+#pragma mark - 获取直播间可发送礼物列表
+- (void)theLiveGiftListRequest:(NSString *)roomId finshHandler:(GetGiftFinshHandler)finshHandler;
+
+#pragma mark - 获取指定礼物详情
+- (void)getGiftDetailWithGiftid:(NSString *)giftId;
+
+#pragma mark - 判断礼物是否可发送
+- (BOOL)giftCanSendInLiveRoom:(AllGiftItem *)item;
 
 @end

@@ -64,7 +64,7 @@ bool RecvCreditNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ROOMID_PARAM].isString()) {
             m_roomId = tp.m_data[ROOMID_PARAM].asString();
         }
-        if (tp.m_data[CREDIT_PARAM].isDouble()) {
+        if (tp.m_data[CREDIT_PARAM].isNumeric()) {
             m_credit = tp.m_data[CREDIT_PARAM].asDouble();
         }
     }

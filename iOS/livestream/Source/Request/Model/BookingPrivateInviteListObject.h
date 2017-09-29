@@ -13,9 +13,11 @@
 /**
  * 获取预约邀请列表
  * total           预约列表总数
+ * noReadCount     未读总数
  * list            预约列表
  */
 @property (nonatomic, assign) int total;
+@property (nonatomic, assign) int noReadCount;
 @property (nonatomic, strong) NSMutableArray<BookingPrivateInviteItemObject *>* list;
 
 

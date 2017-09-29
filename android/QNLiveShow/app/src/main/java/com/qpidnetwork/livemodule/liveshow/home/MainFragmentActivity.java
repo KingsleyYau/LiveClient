@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -10,7 +11,12 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity;
+import com.qpidnetwork.livemodule.liveshow.welcome.PeacockActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 
 public class MainFragmentActivity extends BaseFragmentActivity {
 
@@ -27,6 +33,23 @@ public class MainFragmentActivity extends BaseFragmentActivity {
         super.onCreate(arg0);
         setContentView(R.layout.activity_main);
         initView();
+        Log.i("hunter", "MainFragmentActivity onCreate");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Bundle bundle = intent.getExtras();
+        Log.i("hunter", "MainFragmentActivity onNewIntetn");
+        if(bundle != null){
+            if(bundle.containsKey("event")){
+                String value = bundle.getString("event");
+                Log.i("hunter", "MainFragmentActivity onNewIntetn value: " + value);
+                if(value.equals("kickoff")){
+                    showKickOffDialog();
+                }
+            }
+        }
     }
 
     private void initView(){
@@ -52,6 +75,14 @@ public class MainFragmentActivity extends BaseFragmentActivity {
 
     }
 
+    /**
+     * 切换到页
+     * @param pageId
+     */
+    public void setCurrentPager(int pageId){
+        viewPagerContent.setCurrentItem(pageId);
+    }
+
     @Override
     public void onClick(View v) {
         super.onClick(v);
@@ -59,6 +90,33 @@ public class MainFragmentActivity extends BaseFragmentActivity {
             case R.id.btnBack:{
                 finish();
             }break;
+            case R.id.rlPersonalCenter:{
+                Intent intent = new Intent(this, PersonalCenterActivity.class);
+                startActivity(intent);
+            }break;
         }
     }
+
+    /**
+     * 被踢提示
+     */
+    private void showKickOffDialog(){
+        MaterialDialogAlert dialog = new MaterialDialogAlert(this);
+        dialog.setCancelable(false);
+        dialog.setMessage("Your account logined on another device. Please login again.");
+        dialog.addButton(dialog.createButton(getString(R.string.common_btn_ok), new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //被踢
+                LoginManager.getInstance().logout();
+
+                Intent intent = new Intent(MainFragmentActivity.this, PeacockActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        }));
+        dialog.show();
+    }
+
 }

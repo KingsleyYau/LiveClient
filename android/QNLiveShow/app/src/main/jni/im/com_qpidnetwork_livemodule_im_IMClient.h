@@ -73,6 +73,22 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_PublicRoo
 
 /*
  * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    ControlManPush
+ * Signature: (ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_ControlManPush
+  (JNIEnv *, jclass, jint, jstring, jint);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    GetInviteInfo
+ * Signature: (ILjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_GetInviteInfo
+  (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
  * Method:    SendRoomMsg
  * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
  */

@@ -11,16 +11,18 @@ import android.telephony.TelephonyManager;
 
 import com.facebook.drawee.backends.pipeline.BuildConfig;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.downloader.FileDownloadManager;
-import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.CrashHandler;
 import com.qpidnetwork.livemodule.utils.CrashHandlerJni;
+import com.qpidnetwork.livemodule.utils.IPConfigUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.impl.ServiceManager;
 
 /**
  * Created by Harry on 2017/5/16.
@@ -29,6 +31,7 @@ import com.qpidnetwork.livemodule.utils.SystemUtils;
 public class LiveApplication extends MultiDexApplication {
     private static Context mContext;
     private static final String TAG = LiveApplication.class.getSimpleName();
+    public static boolean isDemo = false;
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -67,7 +70,7 @@ public class LiveApplication extends MultiDexApplication {
             if (pi != null) {
                 //本地文件Log存放地址
                 RequestJni.SetLogDirectory(FileCacheManager.getInstance().getLogPath());
-                RequestJni.SetWebSite("http://172.25.32.17:3107");
+                RequestJni.SetWebSite(IPConfigUtil.getTestWebSiteUrl());
 //                RequestJni.SetPhotoUploadSite("http://172.25.32.17:82");
 //                RequestJni.SetWebSite("http://192.168.88.90:8881");
                 // 版本号
@@ -89,6 +92,9 @@ public class LiveApplication extends MultiDexApplication {
 
         //Fresco库初始化
         Fresco.initialize(this);
+
+        //接入公共模块
+        ServiceManager.getInstance(this).registerService(LiveService.getInstance(this));
 
     }
 

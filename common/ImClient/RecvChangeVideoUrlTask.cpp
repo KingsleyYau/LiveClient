@@ -14,7 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM            "roomid"
+//#define ROOMID_PARAM            "roomid"
 #define ISANCHOR_PARAM          "is_anchor"
 #define PLAYURL_PARAM           "play_url"
 
@@ -113,7 +113,7 @@ bool RecvChangeVideoUrlTask::GetSendData(Json::Value& data)
 // 获取命令号
 string RecvChangeVideoUrlTask::GetCmdCode() const
 {
-	return CMD_RECVWAITSTARTOVERNOTICE;
+	return CMD_RECVCHANGEVIDEOURL;
 }
 
 // 设置seq

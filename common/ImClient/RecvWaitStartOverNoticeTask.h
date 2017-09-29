@@ -43,9 +43,6 @@ private:
 	IImClientListener*	m_listener;
 
 	SEQ_T           m_seq;		// seq
-    
-    string          m_roomId;        //  直播间ID
-    int             m_leftSeconds;   //  开播前的倒数秒数（可无，无或0表示立即开播）
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

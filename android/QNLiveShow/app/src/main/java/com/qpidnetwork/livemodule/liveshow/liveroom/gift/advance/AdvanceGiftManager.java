@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.facebook.common.util.UriUtil;
@@ -15,6 +14,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.qpidnetwork.livemodule.utils.Log;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -28,34 +28,31 @@ import java.util.List;
 public class AdvanceGiftManager {
 
     private Activity mActivity;
+    private final String TAG = AdvanceGiftManager.class.getSimpleName();
     private SimpleDraweeView mSimpleDraweeView;        //webP播放器
-    private List<String> mAdvanceGiftList;             //待播放大礼物本地地址列表
+    private List<AdvanceGiftItem> advanceGiftItems;
     private boolean isAnimationRunning = false;        //是否正在播放大礼物动画
 
     public AdvanceGiftManager(Activity activity, SimpleDraweeView simpleDraweeView){
         this.mActivity = activity;
         this.mSimpleDraweeView = simpleDraweeView;
-        mAdvanceGiftList = new ArrayList<String>();
+        advanceGiftItems = new ArrayList<AdvanceGiftItem>();
     }
 
-    /**
-     * 添加webp动画
-     * @param path //webp动画本地地址
-     */
-    public void addAdvanceGiftItem(String path){
+    public void addAdvanceGiftItem(AdvanceGiftItem advanceGiftItem){
         if(isAnimationRunning){
             //动画播放中
-            addGiftPath(path);
+            addAdvanceGiftItemToQueue(advanceGiftItem);
         }else{
-            startPlayAdvanceAnimation(path);
+            startPlayAdvanceAnimation(advanceGiftItem);
         }
     }
 
     /**
      * 开始播放大礼物动画
-     * @param path
+     * @param advanceGiftItem
      */
-    private void startPlayAdvanceAnimation(String path){
+    private void startPlayAdvanceAnimation(final AdvanceGiftItem advanceGiftItem){
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(
@@ -67,20 +64,23 @@ public class AdvanceGiftManager {
                     if (anim instanceof AbstractAnimatedDrawable) {
                         AbstractAnimatedDrawable animatedDrawable = (AbstractAnimatedDrawable) anim;
 
-                        //反射尝试设置循环播放仅1次
+                        //反射尝试设置循环播放次数
                         try {
                             Field field = AbstractAnimatedDrawable.class.getDeclaredField("mLoopCount");
                             field.setAccessible(true);
-                            field.set(animatedDrawable, 1);
+                            field.set(animatedDrawable, advanceGiftItem.sendNum);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        animationDuration = animatedDrawable.getDuration();
+                        animationDuration = animatedDrawable.getDuration()*advanceGiftItem.sendNum;
+                        Log.d(TAG,"startPlayAdvanceAnimation-onFinalImageSet animationDuration:"+animationDuration
+                                +" sendNum:"+advanceGiftItem.sendNum);
                     }
                     if(animationDuration > 0){
                         isAnimationRunning = true;
 //                        mSimpleDraweeView.setVisibility(View.VISIBLE);
                         anim.start();
+
                         mSimpleDraweeView.postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -89,9 +89,9 @@ public class AdvanceGiftManager {
                                 }
                                 isAnimationRunning = false;
                                 mSimpleDraweeView.setVisibility(View.GONE);
-                                String path = getNextPlayGiftPath();
-                                if(!TextUtils.isEmpty(path)) {
-                                    startPlayAdvanceAnimation(path);
+                                AdvanceGiftItem item = getNextPlayAdvanceGiftItem();
+                                if(null != item) {
+                                    startPlayAdvanceAnimation(item);
                                 }
                             }
                         }, animationDuration);
@@ -102,7 +102,7 @@ public class AdvanceGiftManager {
 
         Uri uri = new Uri.Builder()
                 .scheme(UriUtil.LOCAL_FILE_SCHEME)
-                .path(path)
+                .path(advanceGiftItem.srcWebLocalPath)
                 .build();
 
         DraweeController controller = Fresco.newDraweeControllerBuilder()
@@ -114,38 +114,36 @@ public class AdvanceGiftManager {
         mSimpleDraweeView.setController(controller);
     }
 
-    /**
-     * 加入到待播放列表
-     * @param path
-     */
-    private void addGiftPath(String path){
-        synchronized (mAdvanceGiftList){
-            if(mAdvanceGiftList != null){
-                mAdvanceGiftList.add(path);
+
+    private void addAdvanceGiftItemToQueue(AdvanceGiftItem advanceGiftItem){
+        synchronized (advanceGiftItems){
+            if(advanceGiftItems != null){
+                advanceGiftItems.add(advanceGiftItem);
             }
         }
     }
+
 
     /**
      * 取出下一个待播放动画
      * @return
      */
-    private String getNextPlayGiftPath(){
-        String path = "";
-        synchronized (mAdvanceGiftList){
-            if(mAdvanceGiftList.size() > 0){
-                path = mAdvanceGiftList.remove(0);
+    private AdvanceGiftItem getNextPlayAdvanceGiftItem(){
+        AdvanceGiftItem item = null;
+        synchronized (advanceGiftItems){
+            if(advanceGiftItems.size() > 0){
+                item = advanceGiftItems.remove(0);
             }
         }
-        return path;
+        return item;
     }
 
     /**
      * 清除资源
      */
     public void onDestroy(){
-        synchronized (mAdvanceGiftList){
-            mAdvanceGiftList.clear();
+        synchronized (advanceGiftItems){
+            advanceGiftItems.clear();
         }
         //清除动画
         if(mSimpleDraweeView != null){

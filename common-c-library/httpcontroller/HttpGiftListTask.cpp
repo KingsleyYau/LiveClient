@@ -57,6 +57,7 @@ bool HttpGiftListTask::ParseData(const string& url, bool bFlag, const char* buf,
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     BackGiftItemList itemList;
+    int totalCount = 0;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -72,9 +73,12 @@ bool HttpGiftListTask::ParseData(const string& url, bool bFlag, const char* buf,
                         itemList.push_back(item);
                     }
                 }
+                
+                if (dataJson[LIVEROOM_BACKPACK_GIFT_TOTALCOUNT].isNumeric()) {
+                    totalCount = dataJson[LIVEROOM_BACKPACK_GIFT_TOTALCOUNT].asInt();
+                }
             }
             
-
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
@@ -86,7 +90,7 @@ bool HttpGiftListTask::ParseData(const string& url, bool bFlag, const char* buf,
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGiftList(this, bParse, errnum, errmsg, itemList);
+        mpCallback->OnGiftList(this, bParse, errnum, errmsg, itemList, totalCount);
     }
     
     return bParse;

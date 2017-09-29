@@ -19,7 +19,7 @@
         android:gravity="center_vertical"
         android:padding="6dp"
         android:clickable="true"
-        android:visibility="visible"
+        android:visibility="invisible"
         android:background="@drawable/bg_live_buttom_unreadmsg"
         android:drawablePadding="6dp"
         android:textColor="@android:color/white"

@@ -9,18 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "SendGiftItem.h"
 
+@class SendGiftTheQueueManager;
+@protocol SendGiftTheQueueManagerDelegate <NSObject>
+- (void)sendGiftFailWithItem:(SendGiftItem *)item;
+@optional
+
+@end
+
 @interface SendGiftTheQueueManager : NSObject
-
+@property (nonatomic, weak) id<SendGiftTheQueueManagerDelegate> delegate;
 @property (nonatomic, strong) NSMutableDictionary *sendGiftDictionary;
-
 @property (nonatomic, strong) NSMutableArray *sendGiftArray;
 
-/** 实例单例 */
-+ (instancetype)sendManager;
-
+/**
+ 在主线程调用
+ */
+- (void)unInit;
 //-------------- 礼物列表送礼逻辑 -----------------//
-
-
 /**
  字典增加/替换对象
 

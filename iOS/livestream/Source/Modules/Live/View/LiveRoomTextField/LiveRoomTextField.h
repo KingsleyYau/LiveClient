@@ -12,6 +12,8 @@
 
 @interface LiveRoomTextField : BLTextField
 
+@property (strong) NSString *fullText;
+
 /**
  *   生成富文本,用以显示表情
  *

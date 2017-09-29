@@ -35634,9 +35634,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     void srs_hijack_io_shutdown(srs_hijack_io_t ctx)
     {
         SrsBlockSyncSocket* skt = (SrsBlockSyncSocket*)ctx;
-        if( skt->connected ) {
-            shutdown(skt->fd, SHUT_RDWR);
-        } else {
+        shutdown(skt->fd, SHUT_RDWR);
+        if( !skt->connected ) {
             SOCKET_CLOSE(skt->fd);
         }
     }

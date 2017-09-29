@@ -1,7 +1,10 @@
 package com.qpidnetwork.livemodule.framework.base;
 
+import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -11,6 +14,8 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.view.MaterialAppBar;
+
+import java.lang.ref.WeakReference;
 
 /**
  * 添加基础ActionBar
@@ -22,7 +27,7 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity{
 	private LinearLayout llContainer;
 	private MaterialAppBar mActionBar;
 	private TextView errorMsg;
-	
+
 	@Override
 	protected void onCreate(Bundle arg0) {
 		// TODO Auto-generated method stub
@@ -85,6 +90,26 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity{
 			
 			finish();
 			break;
+		}
+	}
+
+	/**
+	 * 处理 请求返回,可避免Activity关闭后还处理界面的问题
+	 * @author Jagger
+	 * 2017-9-26
+	 */
+	protected static class UIHandler extends Handler {
+		private final WeakReference<Activity> mActivity;
+
+		public UIHandler(Activity activity){
+			mActivity = new WeakReference<Activity>(activity);
+		}
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			super.handleMessage(msg);
+			if(mActivity == null) return;
 		}
 	}
 }

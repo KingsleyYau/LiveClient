@@ -9,8 +9,11 @@
 #import "KKViewController.h"
 #import "FollowCollectionView.h"
 #import "HomePageViewController.h"
+#import "FollowTableView.h"
 
-@interface FollowingViewController : KKViewController
+@interface FollowingViewController : ListViewController
 @property (weak, nonatomic) IBOutlet FollowCollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet FollowTableView *tableView;
+
 @property (nonatomic, weak) HomePageViewController* homePageVC;
 @end

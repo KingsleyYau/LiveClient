@@ -25,11 +25,12 @@
     return self;
 }
 
-- (void)updateHeadImageWith:(UIImage *)headModel {
+- (void)updateHeadImageWith:(AudienModel *)audienModel {
     
     self.headImageView.layer.masksToBounds = YES;
     self.headImageView.layer.cornerRadius = self.headImageView.height / 2;
-    [self.headImageView setImage:headModel];
+    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:audienModel.photoUrl]
+                          placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"] options:0];
 }
 
 - (void)setCornerRadius:(CGFloat)radius{

@@ -20,11 +20,22 @@
 #import "LiveSendBarView.h"
 #import "YMAudienceView.h"
 #import "LiveViewController.h"
-
+#import "LiveGiftDownloadManager.h"
 #import "LiveRoom.h"
+#import "CreditView.h"
 
+#import "LiveRoomGiftModel.h"
+
+@class PlayViewController;
+@protocol PlayViewControllerDelegate <NSObject>
+@optional
+- (void)onGetLiveRoomGiftList:(NSArray<LiveRoomGiftModel *> *)array;
+- (void)onReEnterRoom:(PlayViewController *)vc;
+@end
 
 @interface PlayViewController : KKViewController
+
+@property (nonatomic, weak) id<PlayViewControllerDelegate> delegate;
 
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
@@ -38,13 +49,13 @@
 @property (nonatomic, strong) LoginManager *loginManager;
 
 /** 喇叭按钮 **/
-@property (nonatomic, weak) IBOutlet UITapImageView* btnChat;
+@property (nonatomic, weak) IBOutlet UITapImageView* chatBtn;
 
 /** 礼物按钮 **/
-@property (nonatomic, weak) IBOutlet UIButton* btnGift;
+@property (nonatomic, weak) IBOutlet UIButton* giftBtn;
 
 /** 礼物按钮约束 **/
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* btnGiftWidth;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint* giftBtnWidth;
 
 @property (weak, nonatomic) IBOutlet LiveSendBarView *liveSendBarView;
 
@@ -54,26 +65,30 @@
 // 才艺点播按钮
 @property (weak, nonatomic) IBOutlet UIButton *talentBtn;
 
+// 才艺点播按钮宽度
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentBtnWidth;
+
+// 才艺点播左边约束
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentBtnTailing;
+
+// 随机礼物背景
+@property (weak, nonatomic) IBOutlet UIImageView *randomGiftImageView;
+
 // 随机礼物按钮
 @property (weak, nonatomic) IBOutlet UIButton *randomGiftBtn;
+
+// 随机礼物按钮宽度
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnBgWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnWidth;
+
+// 随机礼物左边约束
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnTailing;
 
 /** 发送栏底部约束 **/
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewBottom;
 
 /** 输入框高度约束 **/
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewHeight;
-
-// 才艺点播按钮宽度
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentBtnWidth;
-
-// 随机礼物按钮宽度
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnWidth;
-
-// 才艺点播左边约束
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talenBtnLeading;
-
-// 随机礼物左边约束
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnLeading;
 
 /** 单击收起输入控件手势 **/
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
@@ -100,11 +115,30 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chooseGiftListViewTop;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewHeight;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewWidth;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewTop;
+
+// balanceView
+@property (nonatomic, strong) CreditView *creditView;
+
+#pragma mark - 界面事件
+
 /**
  点击礼物按钮
  
  @param sender <#sender description#>
  */
 - (IBAction)giftAction:(id)sender;
+
+/**
+ 关闭所有输入
+ */
+- (void)closeAllInputView;
+
+- (void)hiddenBottomView;
+- (void)showBottomView;
 
 @end

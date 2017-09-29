@@ -97,6 +97,11 @@ public:
             if( root[LIVEROOM_GIFTINFO_UPDATE_TIME].isIntegral() ) {
                 updateTime = root[LIVEROOM_GIFTINFO_UPDATE_TIME].asInt();
             }
+            
+            /* playTime */
+            if( root[LIVEROOM_GIFTINFO_PLAY_TIME].isIntegral() ) {
+                playTime = root[LIVEROOM_GIFTINFO_PLAY_TIME].asInt();
+            }
         }
     }
     
@@ -114,6 +119,7 @@ public:
         level = 0;
         loveLevel = 0;
         updateTime = 0;
+        playTime = 0;
     }
     
     virtual ~HttpGiftInfoItem() {
@@ -135,7 +141,8 @@ public:
      * level			    发送礼物的用户限制等级，发送者等级>= 礼物等级才能发送
      * loveLevel			发送礼物的亲密度限制，发送者亲密度>= 礼物亲密度才能发送
      * sendNumList       发送可选数量列表
-     * update_time		礼物最后更新时间戳（1970年起的秒数）
+     * updateTime		礼物最后更新时间戳（1970年起的秒数）
+     * playTime         大礼物的swf播放时长（毫秒）
      */
     string       giftId;
     string       name;
@@ -151,6 +158,7 @@ public:
     int          loveLevel;
     SendNumList  sendNumList;
     long         updateTime;
+    int          playTime;
 };
 
 typedef list<HttpGiftInfoItem> GiftItemList;

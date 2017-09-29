@@ -12,10 +12,10 @@
 /**
  * 礼物结构体
  * giftId		礼物ID
- * giftNumList   可选礼物数量列表
+ * sendNumList   可选礼物数量列表
  */
 @property (nonatomic, copy) NSString* _Nonnull giftId;
-@property (nonatomic, strong) NSArray<GiftNumItemObject*>* _Nonnull giftNumList;
+@property (nonatomic, strong) NSArray<GiftNumItemObject*>* _Nonnull sendNumList;
 
 
 @end

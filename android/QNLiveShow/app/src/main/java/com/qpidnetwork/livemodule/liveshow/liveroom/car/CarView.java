@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.car;
 
 import android.content.Context;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -12,6 +13,8 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.LiveApplication;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 /**
  * Description:
@@ -67,9 +70,9 @@ public class CarView extends LinearLayout{
 
     public void setCarImgUrl(String carImgUrl){
         Log.d(TAG,"setCarImgUrl-carImgUrl:"+carImgUrl);
-        if(null != iv_carImg){
+        if(!TextUtils.isEmpty(carImgUrl)){
             Picasso.with(LiveApplication.getContext())
-                    .load(carImgUrl).noFade()
+                    .load(new File(carImgUrl)).noFade()
                     .into(iv_carImg);
         }
     }

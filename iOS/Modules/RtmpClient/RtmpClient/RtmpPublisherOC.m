@@ -109,8 +109,14 @@ private:
         // 创建静音Buffer
         self.mpMuteBuffer = new EncodeDecodeBuffer();
         
-        // 默认使用硬编码
+#if TARGET_OS_SIMULATOR
+        // 模拟器, 默认使用软编码
+        _useHardEncoder = NO;
+#else
+        // 真机, 默认使用硬编码
         _useHardEncoder = YES;
+#endif
+
         // 创建解码器和渲染器
         [self createEncoders];
         

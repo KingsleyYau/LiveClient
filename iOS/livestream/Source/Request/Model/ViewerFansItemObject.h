@@ -16,10 +16,12 @@
  * photoUrl		    观众头像url
  * mountId          坐驾ID
  * mountUrl         坐驾图片url
+ * level            用户等级
  */
 @property (nonatomic, copy) NSString* userId;
 @property (nonatomic, copy) NSString* nickName;
 @property (nonatomic, copy) NSString* photoUrl;
 @property (nonatomic, copy) NSString* mountId;
 @property (nonatomic, copy) NSString* mountUrl;
+@property (nonatomic, assign) int level;
 @end

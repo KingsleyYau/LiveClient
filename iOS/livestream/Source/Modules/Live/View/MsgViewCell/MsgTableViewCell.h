@@ -10,6 +10,13 @@
 #import "LevelView.h"
 #import "MsgItem.h"
 
+@class MsgTableViewCell;
+@protocol MsgTableViewCellDelegate <NSObject>
+
+- (void)msgCellRequestHttp:(NSString *)linkUrl;
+
+@end
+
 @interface MsgTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) YYLabel *messageLabel;
@@ -18,6 +25,10 @@
 @property (nonatomic, assign) CGFloat tableViewWidth;
 @property (nonatomic, assign) CGFloat messageLabelWidth;
 @property (nonatomic, assign) CGFloat messageLabelHeight;
+
+/** 代理 */
+@property (nonatomic, weak) id<MsgTableViewCellDelegate> msgDelegate;
+
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;

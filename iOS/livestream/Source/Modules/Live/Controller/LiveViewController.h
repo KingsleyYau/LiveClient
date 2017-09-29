@@ -24,10 +24,11 @@
 #import "IMManager.h"
 #import "LoginManager.h"
 #import "MsgItem.h"
+#import "LiveRoom.h"
 
 #import "BigGiftAnimationView.h"
 #import "LiveRoomMsgManager.h"
-#import "SetStringItem.h"
+#import "RoomStyleItem.h"
 
 #define PlaceholderFontSize DESGIN_TRANSFORM_3X(14)
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
@@ -37,13 +38,12 @@
 @class LiveViewController;
 @protocol LiveViewControllerDelegate <NSObject>
 @optional
-- (void)sendRoomToastBackCoinsToPlay:(double)coins;
-
+- (void)onReEnterRoom:(LiveViewController *)vc;
 @end
 
 @interface LiveViewController : KKViewController
 #pragma mark - 直播间信息
-@property (nonatomic, strong) NSString *roomId;
+@property (nonatomic, strong) LiveRoom *liveRoom;
 
 #pragma mark - IM管理器
 @property (nonatomic, strong) IMManager *imManager;
@@ -66,10 +66,12 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *msgSuperViewBottom;
 // 底部阴影顶部约束
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *msgSuperViewTop;
-// 底部界面背景图
+// 底部界面
 @property (weak, nonatomic) IBOutlet UIView *liveBottomView;
 // 直播间字体
-@property (nonatomic, strong) SetStringItem *strItem;
+@property (nonatomic, strong) RoomStyleItem *roomStyleItem;
+// 直播间底部界面背景图
+@property (weak, nonatomic) IBOutlet UIImageView *liveBottomGroundView;
 
 #pragma mark - 未读消息控件
 // 未读消息提示view
@@ -83,13 +85,18 @@
 @property (weak, nonatomic) IBOutlet UIButton *cameraBtn;
 
 #pragma mark - 视频控件
+@property (weak, nonatomic) IBOutlet UIImageView *videoBgImageView;
 @property (nonatomic, weak) IBOutlet GPUImageView *videoView;
 
 #pragma mark - 预览视频控件
-@property (weak, nonatomic) IBOutlet GPUImageView *previewVideoView;
-// 预览视频宽度约束
+/**
+ 预览视频宽度约束
+ */
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewVideoViewWidth;
+@property (weak, nonatomic) IBOutlet GPUImageView *previewVideoView;
 @property (weak, nonatomic) IBOutlet UIImageView *previewImageView;
+@property (weak, nonatomic) IBOutlet UIButton *videoBtn;
+@property (weak, nonatomic) IBOutlet UIButton *muteBtn;
 
 #pragma mark - 大礼物展现界面
 @property (nonatomic, strong) BigGiftAnimationView *giftAnimationView;
@@ -104,8 +111,8 @@
 @property (nonatomic, weak) id<LiveViewControllerDelegate> liveDelegate;
 
 #pragma mark - 返点按钮
-@property (weak, nonatomic) IBOutlet UIButton *rebateBtn;
-
+@property (weak, nonatomic) IBOutlet UIView *rewardedBgView;
+@property (weak, nonatomic) IBOutlet UIButton *rewardedBtn;
 
 #pragma mark - 流播放推送事件
 - (void)play;
@@ -123,6 +130,13 @@
 - (BOOL)sendMsg:(NSString *)text isLounder:(BOOL)isLounder;
 
 /**
+ 增加本地提示
+
+ @param text 文本内容
+ */
+- (void)addTips:(NSAttributedString *)text;
+
+/**
  增加连击
 
  @param giftItem <#giftItem description#>
@@ -137,20 +151,9 @@
 - (void)starBigAnimationWithGiftID:(NSString *)giftID;
 
 /**
- 点赞动画
- */
-- (void)showLike;
-
-/**
- 插入直播间点赞消息
- */
-- (void)addLikeMessage:(NSString *)nickName;
-
-/**
  插入直播间送礼消息
  */
 - (void)addGiftMessageNickName:(NSString *)nickName giftID:(NSString *)giftID giftNum:(int)giftNum;
-
 
 /**
  插入直播间关注消息
@@ -158,13 +161,11 @@
 - (void)addAudienceFollowLiverMessage:(NSString *)nickName;
 
 /**
- <#Description#>
+ 置顶子View
 
  @param view <#view description#>
  */
-- (void)theSuviewToFrontWithView:(UIView *)view;
-
-
+- (void)bringSubviewToFrontFromView:(UIView *)view;
 
 /**
  坐骑出现动画

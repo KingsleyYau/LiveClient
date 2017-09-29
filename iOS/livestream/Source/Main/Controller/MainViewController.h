@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "LiveRoom.h"
+
 @interface MainViewController : KKViewController <UITabBarDelegate>
 
 /**
@@ -19,5 +21,10 @@
  底部TabBar
  */
 @property (weak) IBOutlet UITabBar* tabBar;
+
+/**
+ 需要跳转的直播间
+ */
+@property (strong) LiveRoom *liveRoom;
 
 @end

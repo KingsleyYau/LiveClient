@@ -15,11 +15,13 @@
 @class PresentView;
 @protocol PresentViewDelegate <NSObject>
 
-- (void)presentViewdidSelectItemWithSelf:(PresentView *)presentView atIndexPath:(NSIndexPath *)indexPath;
+- (void)presentViewShowBalance:(PresentView *) backpackView;
+- (void)presentViewdidSelectItemWithSelf:(PresentView *)presentView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath;
 - (void)presentViewDidScroll:(PresentView *)PresentViewView currentPageNumber:(NSInteger)page;
-- (void)presentViewSendBtnClick:(PresentView *)presentView;
+- (void)presentViewSendBtnClick:(PresentView *)presentView andSender:(id)sender;
 - (void)presentViewComboBtnInside:(PresentView *)presentView andSender:(id)sender;
 - (void)presentViewComboBtnDown:(PresentView *)presentView andSender:(id)sender;
+- (void)presentViewReloadList:(PresentView *)presentView;
 
 @end
 
@@ -28,9 +30,16 @@
 @property (weak, nonatomic) IBOutlet UIPageControl *pageView;
 @property (weak, nonatomic) IBOutlet CountTimeButton *comboBtn;
 @property (weak, nonatomic) IBOutlet PresentSendView *sendView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewHeight;
-@property (weak, nonatomic) IBOutlet UILabel *coinsNumLabel;
+@property (weak, nonatomic) IBOutlet UIView *requestFailView;
+@property (weak, nonatomic) IBOutlet UIButton *reloadBtn;
+@property (weak, nonatomic) IBOutlet UILabel *failTipLabel;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipImageViewTop;
 
+@property (assign, nonatomic) int manLevel;
+@property (assign, nonatomic) int loveLevel;
+
+// 随机可发送礼物下标数组 (NSNumber)
+@property (nonatomic, strong) NSMutableArray *canSendIndexArray;
 @property (nonatomic, strong) NSArray *giftIdArray;
 
 @property (nonatomic, assign) BOOL isCellSelect;
@@ -43,6 +52,9 @@
 /** 代理 */
 @property (nonatomic, weak) id<PresentViewDelegate> presentDelegate;
 
+
+- (IBAction)showMyBalance:(id)sender;
+
 - (void)reloadData;
 
 // 显示多功能按钮
@@ -50,5 +62,21 @@
 
 // 隐藏多功能按钮
 - (void)hideButtonBar;
+
+// 设置可选按钮数组
+- (void)setupButtonBar:(NSArray *)sendNumList;
+
+// 随机选中礼物
+- (void)randomSelect:(NSInteger)integer;
+
+// 显示没有礼物列表界面
+- (void)showNoListView;
+
+// 显示请求礼物列表失败界面
+- (void)showRequestFailView;
+
+// 重新请求礼物列表
+- (IBAction)reloadGiftList:(id)sender;
+
 
 @end

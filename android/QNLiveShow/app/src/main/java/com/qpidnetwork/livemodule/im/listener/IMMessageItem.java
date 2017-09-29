@@ -21,7 +21,8 @@ public class IMMessageItem implements Serializable{
 		Gift,			//礼物或大礼物
 		Barrage,		//弹幕
 		FollowHost,			//关注
-		RoomIn			//fans进入房间
+		RoomIn,			//fans进入房间
+		SysNotice			//系统公告
 	}
 
 	public MessageType msgType;	//消息类型
@@ -36,6 +37,9 @@ public class IMMessageItem implements Serializable{
 
 	/* 礼物、大礼物消息体 */
 	public IMGiftMessageContent giftMsgContent;
+
+	/* 系统公告 */
+	public IMSysNoticeMessageContent sysNoticeContent;
 	
 	public IMMessageItem(){
 		msgType = MessageType.Unknown;
@@ -81,6 +85,13 @@ public class IMMessageItem implements Serializable{
 		this.msgType = msgType;
 		this.textMsgContent = textContent;
 		this.giftMsgContent = giftContent;
+	}
+
+	public IMMessageItem(String roomId, int msgId, MessageType msgType, IMSysNoticeMessageContent sysNoticeContent){
+		this.roomId = roomId;
+		this.msgId = msgId;
+		this.msgType = msgType;
+		this.sysNoticeContent = sysNoticeContent;
 	}
 
 	/**

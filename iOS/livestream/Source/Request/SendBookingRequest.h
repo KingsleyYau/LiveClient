@@ -19,5 +19,7 @@
 @property (nonatomic, copy) NSString * _Nullable giftId;
 // 礼物数量
 @property (nonatomic, assign) int giftNum;
+// 是否需要短信通知
+@property (nonatomic, assign) BOOL needSms;
 @property (nonatomic, strong) SendBookingRequestFinishHandler _Nullable finishHandler;
 @end

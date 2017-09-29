@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.barrage;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -25,6 +26,7 @@ public class BarrageManager<T> {
     private HashMap<Animation, View> mAnimationViewMap;      //存储动画和View列表，用于会话结束时找回可使用View
     private IBarrageViewFiller<T> mBarrageFiller;               //弹幕view填充器
     private View ll_bulletScreen;
+    private boolean isSolftInputShow = false;
 
 
     public BarrageManager(Context context, List<View> listViews, View ll_bulletScreen){
@@ -70,6 +72,13 @@ public class BarrageManager<T> {
             synchronized (mBarrageDataList){
                 mBarrageDataList.add(0, barrageItem);
             }
+        }
+    }
+
+    public synchronized void changeBulletScreenBg(boolean isNeedShowWhiteBg){
+        isSolftInputShow = isNeedShowWhiteBg;
+        if(null != ll_bulletScreen && View.VISIBLE == ll_bulletScreen.getVisibility()){
+            ll_bulletScreen.setBackgroundColor(isNeedShowWhiteBg ? Color.parseColor("#deffffff") : Color.TRANSPARENT);
         }
     }
 
@@ -124,6 +133,7 @@ public class BarrageManager<T> {
 
     private void playBarrageViewEnterAnim(){
         if(View.INVISIBLE == ll_bulletScreen.getVisibility()){
+            ll_bulletScreen.setBackgroundColor(isSolftInputShow ? Color.parseColor("#deffffff") : Color.TRANSPARENT);
             AnimationSet animationSet1 = (AnimationSet) AnimationUtils.loadAnimation(mContext, R.anim.barrage_view_enter);
             animationSet1.setAnimationListener(new Animation.AnimationListener() {
                 @Override

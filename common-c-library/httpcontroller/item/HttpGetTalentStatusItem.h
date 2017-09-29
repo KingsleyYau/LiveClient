@@ -34,7 +34,7 @@ public:
                 name = root[LIVEROOM_GETTALENTSTATUS_NAME].asString();
             }
             /* credit */
-            if (root[LIVEROOM_GETTALENTSTATUS_CREDIT].isDouble()) {
+            if (root[LIVEROOM_GETTALENTSTATUS_CREDIT].isNumeric()) {
                 credit = root[LIVEROOM_GETTALENTSTATUS_CREDIT].asDouble();
             }            /* credit */
             if (root[LIVEROOM_GETTALENTSTATUS_STATUS].isInt()) {

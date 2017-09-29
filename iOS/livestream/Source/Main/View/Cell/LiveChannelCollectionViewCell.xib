@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="LiveChannelCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="293" height="206"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="293" height="206"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="guP-aO-ijt">
+                        <rect key="frame" x="0.0" y="0.0" width="293" height="206"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_RoomTypePrivateLive" translatesAutoresizingMaskIntoConstraints="NO" id="Gua-jh-2Qn">
+                        <rect key="frame" x="0.0" y="10" width="90" height="17"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3QD-CU-6sH">
+                        <rect key="frame" x="103" y="175.5" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="A3z-UE-DOL"/>
+                            <constraint firstAttribute="width" constant="20" id="G69-0d-MT2"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="20W-Nh-aKr">
+                        <rect key="frame" x="125" y="175" width="42" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_RoomTypePublicLive" translatesAutoresizingMaskIntoConstraints="NO" id="J7L-QQ-BML">
+                        <rect key="frame" x="0.0" y="10" width="85" height="17"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstItem="J7L-QQ-BML" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="FVz-12-cVP"/>
+                <constraint firstItem="guP-aO-ijt" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Fwm-0j-E21"/>
+                <constraint firstItem="3QD-CU-6sH" firstAttribute="centerY" secondItem="20W-Nh-aKr" secondAttribute="centerY" id="INC-me-jFg"/>
+                <constraint firstItem="guP-aO-ijt" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="JdQ-Mv-rlL"/>
+                <constraint firstItem="Gua-jh-2Qn" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="NGL-XH-NTt"/>
+                <constraint firstAttribute="bottom" secondItem="guP-aO-ijt" secondAttribute="bottom" id="RWh-ot-ggb"/>
+                <constraint firstItem="20W-Nh-aKr" firstAttribute="leading" secondItem="3QD-CU-6sH" secondAttribute="trailing" constant="2" id="Zd5-Ki-7Ec"/>
+                <constraint firstAttribute="trailing" secondItem="guP-aO-ijt" secondAttribute="trailing" id="iys-YH-u27"/>
+                <constraint firstAttribute="bottom" secondItem="20W-Nh-aKr" secondAttribute="bottom" constant="10" id="mED-uA-PeL"/>
+                <constraint firstItem="20W-Nh-aKr" firstAttribute="centerX" secondItem="guP-aO-ijt" secondAttribute="centerX" id="mXc-bo-Sxm"/>
+                <constraint firstItem="Gua-jh-2Qn" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qXb-XU-0EY"/>
+                <constraint firstItem="J7L-QQ-BML" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="10" id="xQU-TE-MG7"/>
+            </constraints>
+            <size key="customSize" width="293" height="206"/>
+            <connections>
+                <outlet property="coverImageView" destination="guP-aO-ijt" id="7pF-Ek-ax4"/>
+                <outlet property="nameLabel" destination="20W-Nh-aKr" id="nUL-vZ-IKW"/>
+                <outlet property="onlineImageView" destination="3QD-CU-6sH" id="5o0-7c-4ud"/>
+                <outlet property="roomTpyePublic" destination="J7L-QQ-BML" id="gR1-9P-cVF"/>
+                <outlet property="roomTypeImageView" destination="Gua-jh-2Qn" id="E65-Kl-KKQ"/>
+            </connections>
+            <point key="canvasLocation" x="-13.5" y="6"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Home_HotAndFollow_ImageView_Placeholder" width="360" height="360"/>
+        <image name="Home_HotAndFollow_ImageView_RoomTypePrivateLive" width="90" height="17"/>
+        <image name="Home_HotAndFollow_ImageView_RoomTypePublicLive" width="85" height="17"/>
+    </resources>
+</document>

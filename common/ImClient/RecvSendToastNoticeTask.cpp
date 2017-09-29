@@ -15,9 +15,9 @@
 
 
 // 接收参数定义
-#define ROOMID_PARAM                "roomid"
+#define ROOMID_TOAST_PARAM          "roomid"
 #define FROMID_PARAM                "fromid"
-#define NICKNAME_PARAM              "nickname"
+#define NICKNAME_TOAST_PARAM        "nickname"
 #define MSG_PARAM                   "msg"
 
 
@@ -65,14 +65,14 @@ bool RecvSendToastNoticeTask::Handle(const TransportProtocol& tp)
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         
-        if (tp.m_data[ROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[ROOMID_PARAM].asString();
+        if (tp.m_data[ROOMID_TOAST_PARAM].isString()) {
+            m_roomId = tp.m_data[ROOMID_TOAST_PARAM].asString();
         }
         if (tp.m_data[FROMID_PARAM].isString()) {
             m_fromId = tp.m_data[FROMID_PARAM].asString();
         }
-        if (tp.m_data[NICKNAME_PARAM].isString()) {
-            m_nickName = tp.m_data[NICKNAME_PARAM].asString();
+        if (tp.m_data[NICKNAME_TOAST_PARAM].isString()) {
+            m_nickName = tp.m_data[NICKNAME_TOAST_PARAM].asString();
         }
         if (tp.m_data[MSG_PARAM].isString()) {
             m_msg = tp.m_data[MSG_PARAM].asString();

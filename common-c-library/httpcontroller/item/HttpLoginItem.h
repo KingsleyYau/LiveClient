@@ -49,6 +49,11 @@ public:
             if( root[LOGIN_PHOTOURL].isString() ) {
                 photoUrl = root[LOGIN_PHOTOURL].asString();
             }
+            
+            /* isPushAd */
+            if( root[LOGIN_ISPUSHAD].isNumeric()) {
+                isPushAd = root[LOGIN_ISPUSHAD].asInt();
+            }
         }
         
     }
@@ -60,6 +65,7 @@ public:
         level = 0;
         experience = 0;
         photoUrl = "";
+        isPushAd = false;
     }
     
     virtual ~HttpLoginItem() {
@@ -68,11 +74,12 @@ public:
     /**
      * 登录成功结构体
      * userId			用户ID
-     * token				直播系统不同服务器的统一验证身份标识
-     * nickName          昵称
+     * token            直播系统不同服务器的统一验证身份标识
+     * nickName         昵称
      * levenl			级别
      * experience		经验值
      * photoUrl		    头像url
+     * isPushAd		    是否打开广告（0:否 1:是）
      */
     string userId;
     string token;
@@ -80,6 +87,7 @@ public:
     int level;
     int experience;
     string photoUrl;
+    bool isPushAd;
 };
 
 #endif /* LOGINITEM_H_ */

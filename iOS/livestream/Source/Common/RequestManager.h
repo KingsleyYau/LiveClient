@@ -30,6 +30,7 @@
 #import "VoucherItemObject.h"
 #import "RideItemObject.h"
 #import "GetBackPackUnreadNumItemObject.h"
+#import "AcceptInstanceInviteItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -206,12 +207,14 @@ typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *
  *  @param start			起始，用于分页，表示从第几个元素开始获取
  *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param hasWatch         是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
 - (NSInteger)getAnchorList:(int)start
                       step:(int)step
+                  hasWatch:(BOOL)hasWatch
              finishHandler:(GetAnchorListFinishHandler _Nullable)finishHandler;
 
 /**
@@ -269,16 +272,16 @@ typedef void (^LiveFansListFinishHandler)(BOOL success, NSInteger errnum, NSStri
 /**
  *  3.4.获取直播间观众头像列表接口
  *
- *  @param roomId			直播间ID
- *  @param finishHandler    接口回调
- * @param page                          页数（可0， 0则表示获取所有， ）
- * @param number                        每页的元素数量（可0， 0则表示获取所有）
+ *  @param roomId                       直播间ID
+ *  @param finishHandler                接口回调
+ *  @param start                        起始，用于分页，表示从第几个元素开始获取
+ *  @param step                         步长，用于分页，表示本次请求获取多少个元素
  *
  *  @return 成功请求Id
  */
 - (NSInteger)liveFansList:(NSString * _Nonnull)roomId
-                     page:(int)page
-                   number:(int)number
+                    start:(int)start
+                     step:(int)step
             finishHandler:(LiveFansListFinishHandler _Nullable)finishHandler;
 
 /**
@@ -362,7 +365,7 @@ typedef void (^GetEmoticonListFinishHandler)(BOOL success, NSInteger errnum, NSS
 - (NSInteger)getEmoticonList:(GetEmoticonListFinishHandler _Nullable)finishHandler;
 
 /**
- *  3.9.获取指定立即私密邀请信息接口回调
+ *  3.9.获取指定立即私密邀请信息接口(已废弃)回调
  *
  *  @param success 成功失败
  *  @param errnum  错误码
@@ -372,7 +375,7 @@ typedef void (^GetEmoticonListFinishHandler)(BOOL success, NSInteger errnum, NSS
 typedef void (^GetInviteInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, InviteIdItemObject * _Nonnull item);
 
 /**
- *  3.9.获取指定立即私密邀请信息接口
+ *  3.9.获取指定立即私密邀请信息接口(已废弃)
  *
  *  @param inviteId         邀请ID
  *  @param finishHandler    接口回调
@@ -482,11 +485,15 @@ typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, NSInteger errnum, 
  *  3.14.获取推荐主播列表接口
  *
  *  @param number           获取推荐个数
+ *  @param type             获取界面的类型（1:直播间 2:主播个人页）
+ *  @param userId           当前界面的主播ID，返回结果将不包含当前主播（可无， 无则表示不过滤结果）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
  */
 - (NSInteger)getPromoAnchorList:(int)number
+                           type:(PromoAnchorType)type
+                         userId:(NSString *_Nonnull)userId
                   finishHandler:(GetPromoAnchorListFinishHandler _Nullable)finishHandler;
 
 #pragma mark - 预约私密
@@ -613,6 +620,7 @@ typedef void (^SendBookingRequestFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param bookTime             预约时间
  *  @param giftId               礼物ID
  *  @param giftNum              礼物数量
+ *  @param needSms              是否需要短信通知（0:否 1:是 ）
  *  @param finishHandler        接口回调
  *
  *  @return 成功请求Id
@@ -622,18 +630,43 @@ typedef void (^SendBookingRequestFinishHandler)(BOOL success, NSInteger errnum, 
                        bookTime:(NSInteger)bookTime
                          giftId:(NSString* _Nullable)giftId
                         giftNum:(int)giftNum
+                        needSms:(BOOL)needSms
                     finishHandler:(SendBookingRequestFinishHandler _Nullable)finishHandler;
+
+/**
+ *  4.7.观众处理立即私密邀请接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^AcceptInstanceInviteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, AcceptInstanceInviteItemObject *   _Nonnull item);
+
+/**
+ *  4.7.观众处理立即私密邀请接口
+ *
+ *  @param inviteId             邀请ID
+ *  @param isConfirm            是否同意（0: 否， 1: 是）
+ *  @param finishHandler        接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)acceptInstanceInvite:(NSString* _Nullable)inviteId
+                        isConfirm:(BOOL)isConfirm
+                    finishHandler:(AcceptInstanceInviteFinishHandler _Nullable)finishHandler;
 
 #pragma mark - 背包
 
 /**
  *  5.1.获取背包礼物列表接口回调
  *
- *  @param success 成功失败
- *  @param errnum  错误码
- *  @param errmsg  错误提示
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        背包礼物列表
+ *  @param totalCount   列表总数
  */
-typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *>* _Nullable array);
+typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.1.获取背包礼物列表接口
@@ -650,8 +683,10 @@ typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString *
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
+ *  @param array        使用卷列表
+ *  @param totalCount   列表总数
  */
-typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *>* _Nullable array);
+typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.2.获取使用劵列表接口
@@ -668,8 +703,10 @@ typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param success 成功失败
  *  @param errnum  错误码
  *  @param errmsg  错误提示
+ *  @param array        座驾列表
+ *  @param totalCount   列表总数
  */
-typedef void (^RideListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *>* _Nullable array);
+typedef void (^RideListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.3.获取座驾列表接口
@@ -776,5 +813,96 @@ typedef void (^SetFavoriteFinishHandler)(BOOL success, NSInteger errnum, NSStrin
                   roomId:(NSString* _Nonnull)roomId
                    isFav:(BOOL)isFav
            finishHandler:(SetFavoriteFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.4.获取QN广告列表接口回调
+ *
+ *  @param success  成功失败
+ *  @param errnum   错误码
+ *  @param errmsg   错误提示
+ *  @param array    直播间列表
+ */
+typedef void (^GetAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
+
+/**
+ *  6.4.获取QN广告列表接口
+ *
+ *  @param finishHandler        接口回调
+ *  @param number               客户段需要获取的数量
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getAdAnchorList:(int)number
+               finishHandler:(GetAdAnchorListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.5.关闭QN广告列表接口回调
+ *
+ *  @param success  成功失败
+ *  @param errnum   错误码
+ *  @param errmsg   错误提示
+ */
+typedef void (^CloseAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  6.5.关闭QN广告列表接口
+ *
+ 
+ *  @param finishHandler        接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)closeAdAnchorList:(CloseAdAnchorListFinishHandler _Nullable)finishHandler;
+
+
+/**
+ *  6.6.获取手机验证码接口回调
+ *
+ *  @param success  成功失败
+ *  @param errnum   错误码
+ *  @param errmsg   错误提示
+ */
+typedef void (^GetPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  6.6.获取手机验证码接口
+ *
+ *  @param country              国家
+ *  @param areaCode             手机区号
+ *  @param phoneNo              手机号码
+ *  @param finishHandler        接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getPhoneVerifyCode:(NSString* _Nonnull)country
+                       areaCode:(NSString* _Nonnull)areaCode
+                        phoneNo:(NSString* _Nonnull)phoneNo
+                  finishHandler:(GetPhoneVerifyCodeFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.7.提交手机验证码接口回调
+ *
+ *  @param success  成功失败
+ *  @param errnum   错误码
+ *  @param errmsg   错误提示
+ */
+typedef void (^SubmitPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  6.7.提交手机验证码接口
+ *
+ *  @param country              国家
+ *  @param areaCode             手机区号
+ *  @param phoneNo              手机号码
+ *  @param verifyCode           验证码
+ *  @param finishHandler        接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)submitPhoneVerifyCode:(NSString* _Nonnull)country
+                          areaCode:(NSString* _Nonnull)areaCode
+                           phoneNo:(NSString* _Nonnull)phoneNo
+                        verifyCode:(NSString* _Nonnull)verifyCode
+                  finishHandler:(SubmitPhoneVerifyCodeFinishHandler _Nullable)finishHandler;
 
 @end

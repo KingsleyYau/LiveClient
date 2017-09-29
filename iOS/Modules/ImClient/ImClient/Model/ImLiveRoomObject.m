@@ -14,6 +14,7 @@
     if (self = [super init]) {
         self.userId = [coder decodeObjectForKey:@"userId"];
         self.nickName = [coder decodeObjectForKey:@"nickName"];
+        self.roomId = [coder decodeObjectForKey:@"roomId"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.videoUrls = [coder decodeObjectForKey:@"videoUrls"];
         self.roomType = [coder decodeIntForKey:@"roomType"];
@@ -38,6 +39,7 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.userId forKey:@"userId"];
     [coder encodeObject:self.nickName forKey:@"nickName"];
+    [coder encodeObject:self.roomId forKey:@"roomId"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeObject:self.videoUrls forKey:@"videoUrls"];
     [coder encodeInt:self.roomType forKey:@"roomType"];

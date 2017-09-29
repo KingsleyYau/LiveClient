@@ -56,6 +56,7 @@ bool HttpRideListTask::ParseData(const string& url, bool bFlag, const char* buf,
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     RideList list;
+    int totalCount = 0;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -71,6 +72,10 @@ bool HttpRideListTask::ParseData(const string& url, bool bFlag, const char* buf,
                         list.push_back(item);
                     }
                 }
+                
+                if (dataJson[LIVEROOM_RIDELIST_TOTALCOUNT].isNumeric()) {
+                    totalCount = dataJson[LIVEROOM_RIDELIST_TOTALCOUNT].asInt();
+                }
             }
 
         }
@@ -85,7 +90,7 @@ bool HttpRideListTask::ParseData(const string& url, bool bFlag, const char* buf,
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnRideList(this, bParse, errnum, errmsg, list);
+        mpCallback->OnRideList(this, bParse, errnum, errmsg, list, totalCount);
     }
     
     return bParse;

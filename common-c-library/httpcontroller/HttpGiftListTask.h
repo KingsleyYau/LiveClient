@@ -18,7 +18,7 @@ class HttpGiftListTask;
 class IRequestGiftListCallback {
 public:
 	virtual ~IRequestGiftListCallback(){};
-	virtual void OnGiftList(HttpGiftListTask* task, bool success, int errnum, const string& errmsg, const BackGiftItemList& list) = 0;
+	virtual void OnGiftList(HttpGiftListTask* task, bool success, int errnum, const string& errmsg, const BackGiftItemList& list, int totalCount) = 0;
 };
       
 class HttpGiftListTask : public HttpRequestTask {

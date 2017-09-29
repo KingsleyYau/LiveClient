@@ -3,8 +3,8 @@
     android:shape="rectangle">
     <!--corners - 边角弧度-->
     <corners
-        android:topLeftRadius="2.5dp"
-        android:topRightRadius="2.5dp"
+        android:topLeftRadius="5dp"
+        android:topRightRadius="5dp"
         android:bottomRightRadius="0dp"
         android:bottomLeftRadius="0dp"/>
 

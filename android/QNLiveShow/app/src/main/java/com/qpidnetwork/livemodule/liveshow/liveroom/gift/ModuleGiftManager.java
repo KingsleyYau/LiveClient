@@ -14,19 +14,20 @@ import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageVi
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.UserPhotoImageDownloader;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.advance.AdvanceGiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.advance.AdvanceGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.downloader.IFileDownloadedListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGift;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftItemView;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftView;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.livemodule.utils.TestDataUtil;
 import com.squareup.picasso.Picasso;
 
 import java.util.Random;
 
 import static com.qpidnetwork.livemodule.httprequest.item.GiftItem.GiftType.Normal;
-import static com.qpidnetwork.livemodule.utils.TestDataUtil.roomBgs;
 
 /**
  * 礼物动画模块
@@ -61,10 +62,13 @@ public class ModuleGiftManager {
     public void dispatchIMMessage(IMMessageItem msgItem){
         if(msgItem != null && msgItem.msgType == IMMessageItem.MessageType.Gift){
             String giftId = msgItem.giftMsgContent.giftId;
-            //TODO:DELETE测试demo
-            GiftItem giftItem = new GiftItem();
-            giftItem.giftType = Normal;
-//            GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(giftId);
+            GiftItem giftItem = null;
+            if(TestDataUtil.isContinueTestTask){
+                giftItem = new GiftItem();
+                giftItem.giftType = Normal;
+            }else{
+                giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(giftId);
+            }
             if(giftItem != null){
                 //本地已存在
                 switch (giftItem.giftType){
@@ -129,22 +133,19 @@ public class ModuleGiftManager {
      */
     private void addToAdvanceGiftManager(IMMessageItem msgItem){
         if(msgItem != null && msgItem.msgType == IMMessageItem.MessageType.Gift){
+            //IMGiftMessageContent包含了gift的id、name、num等信息，且是大礼物，因此重点关注的是img
             GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(msgItem.giftMsgContent.giftId);
             if(giftItem != null && giftItem.giftType == GiftItem.GiftType.Advanced){
                 String localPath = FileCacheManager.getInstance().getGiftLocalPath(giftItem.id, giftItem.srcWebpUrl);
                 if(SystemUtils.fileExists(localPath)){
                     if(mAdvanceGiftManager != null){
-                        mAdvanceGiftManager.addAdvanceGiftItem(localPath);
+                        mAdvanceGiftManager.addAdvanceGiftItem(new AdvanceGiftItem(localPath,msgItem.giftMsgContent.giftNum));
                     }
-                }else if(!TextUtils.isEmpty(giftItem.srcWebpUrl)){
+                }else{
                     //本地文件不存在，仅下载
-                    NormalGiftManager.getInstance().
-                            getGiftImage(giftItem.id, GiftImageType.Source, new IFileDownloadedListener() {
-                        @Override
-                        public void onCompleted(boolean isSuccess, String localFilePath, String fileUrl) {
-
-                        }
-                    });
+                    Log.d(TAG,"giftId:"+giftItem.id+" 对应的大礼物，本地动画文件不存在，这里仅下载，不播放动画");
+                    NormalGiftManager.getInstance()
+                            .getGiftImage(giftItem.id, GiftImageType.BigAnimSrc, null);
                 }
             }
         }
@@ -156,7 +157,7 @@ public class ModuleGiftManager {
         mLiveGiftView = new LiveGiftView(mActivity, viewContent){
             @Override
             public void onSetChileView(LiveGift liveGift , LiveGiftItemView v) {
-                v.setChildView(getGitfView(liveGift));
+                v.setChildView(getGiftView(liveGift));
             }
         };
         //连击动画速度
@@ -173,7 +174,7 @@ public class ModuleGiftManager {
      * @param liveGift
      * @return
      */
-    private View getGitfView(LiveGift liveGift){
+    private View getGiftView(LiveGift liveGift){
         LayoutInflater inflater = LayoutInflater.from(mActivity);
         View view = inflater.inflate(R.layout.item_multiclick_gift_anim , null);
         CircleImageView civ_photo = (CircleImageView)view.findViewById(R.id.civ_photo);
@@ -184,14 +185,17 @@ public class ModuleGiftManager {
             IMMessageItem msgItem = (IMMessageItem)liveGift.getObj();
             if(msgItem != null){
                 tvNickName.setText(msgItem.nickName);
-//                new UserPhotoImageDownloader(mActivity)
-//                        .setDefaultResource(R.drawable.circleimageview_hugh)
-//                        .loadUserPhoto(msgItem.userId).into(civ_photo);
-//                GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(msgItem.giftMsgContent.giftId);
-                //TODO:DELETE测试demo
-                GiftItem giftItem = new GiftItem();
-                giftItem.name = msgItem.giftMsgContent.giftName;
-                giftItem.smallImgUrl = roomBgs[new Random().nextInt(roomBgs.length)];
+                new UserPhotoImageDownloader(mActivity)
+                        .setDefaultResource(R.drawable.circleimageview_hugh)
+                        .loadUserPhoto(msgItem.userId).into(civ_photo);
+                GiftItem giftItem =null;
+                if(TestDataUtil.isContinueTestTask){
+                    giftItem = new GiftItem();
+                    giftItem.name = msgItem.giftMsgContent.giftName;
+                    giftItem.bigImageUrl = TestDataUtil.roomBgs[new Random().nextInt(TestDataUtil.roomBgs.length)];
+                }else{
+                    giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(msgItem.giftMsgContent.giftId);
+                }
 
                 if(giftItem != null && !TextUtils.isEmpty(giftItem.name)){
                     tvGiftName.setText(giftItem.name);
@@ -199,11 +203,19 @@ public class ModuleGiftManager {
                     tvGiftName.setText(msgItem.giftMsgContent.giftId);
                 }
 
-                if(!TextUtils.isEmpty(giftItem.smallImgUrl)){
-                    Picasso.with(mActivity).load(giftItem.smallImgUrl).into(ivGift);
+                if(!TextUtils.isEmpty(giftItem.bigImageUrl)){
+                    Picasso.with(mActivity)
+                            .load(giftItem.bigImageUrl)
+                            .placeholder(R.drawable.ic_default_gift)
+                            .error(R.drawable.ic_default_gift)
+                            .into(ivGift);
                 }
-                //TODO:DELETE
-                Picasso.with(mActivity).load(R.drawable.ic_live_buttom_gift_qiqiu).into(ivGift);
+                if(TestDataUtil.isContinueTestTask){
+                    Picasso.with(mActivity).load(R.drawable.ic_default_gift)
+                            .placeholder(R.drawable.ic_default_gift)
+                            .error(R.drawable.ic_default_gift)
+                            .into(ivGift);
+                }
             }
         }
         return view;

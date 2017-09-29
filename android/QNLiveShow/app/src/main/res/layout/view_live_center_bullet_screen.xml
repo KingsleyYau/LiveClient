@@ -34,7 +34,7 @@
         android:paddingLeft="7dp"
         android:paddingRight="12dp"
         android:gravity="center_vertical"
-        android:textColor="#ffffff"
+        android:textColor="#5d0186"
         android:singleLine="true"
         android:textSize="12sp"
         android:text="Nice to meet you!"
@@ -49,7 +49,7 @@
         style="@style/Text_Shadow"
         android:gravity="center_vertical"
         android:layout_marginLeft="7dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginBottom="2dp"
         android:layout_above="@id/tv_bulletContent"
         android:textColor="#ffd205"
         android:layout_toRightOf="@id/civ_bullletIcon"/>

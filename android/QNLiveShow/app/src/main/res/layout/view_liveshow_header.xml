@@ -6,8 +6,7 @@
     <ImageView
         android:id="@+id/iv_roomHeaderBg"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#c45d0e86"/>
+        android:layout_height="0dp"/>
 
     <LinearLayout
         android:id="@+id/ll_liveRoomHeader"
@@ -16,6 +15,7 @@
         android:background="@android:color/transparent"
         android:orientation="vertical">
 
+        <!--四个类型直播间公用的部分-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,14 +29,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginLeft="13dp"
                 android:visibility="visible"
-                android:src="@drawable/ic_live_freepublic"/>
+                android:src="@drawable/ic_live_paypublic"/>
 
             <com.qpidnetwork.livemodule.view.LiveRoomHeaderBezierView
                 android:id="@+id/lrhbv_flag"
                 android:layout_width="match_parent"
                 android:layout_height="8dp"
                 xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
-                custom:roomHeaderBgColor = "@color/room_base_color_free_public"
                 android:layout_marginLeft="8dp"
                 android:layout_toRightOf="@id/iv_roomFlag"
                 />
@@ -55,94 +54,221 @@
                 />
         </RelativeLayout>
 
-
-        <FrameLayout
+        <!--公开直播间-->
+        <LinearLayout
+            android:id="@+id/ll_publicRoomHeader"
+            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_marginBottom="7dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:id="@+id/rl_host_header"
+                android:onClick="onClick"
+                android:background="@drawable/bg_live_host_header"
+                android:layout_marginLeft="13dp"
+                android:paddingRight="3dp"
+                android:visibility="visible"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp">
 
-                <RelativeLayout
-                    android:id="@+id/rl_host_header"
-                    android:onClick="onClick"
-                    android:background="@drawable/bg_live_host_header"
-                    android:layout_marginLeft="13dp"
-                    android:paddingRight="3dp"
+                <TextView
+                    android:id="@+id/tv_hostName"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp">
+                    android:layout_height="wrap_content"
+                    android:text="Marry Lee"
+                    android:singleLine="true"
+                    android:textSize="11sp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginRight="6dp"
+                    android:layout_centerInParent="true"
+                    android:textColor="#f4f4f4"/>
 
-                    <TextView
-                        android:id="@+id/tv_hostName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Marry Lee"
-                        android:singleLine="true"
-                        android:textSize="9sp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_marginLeft="9dp"
-                        android:layout_marginRight="6dp"
-                        android:layout_centerInParent="true"
-                        android:textColor="#f4f4f4"/>
-
-                    <ImageView
-                        android:id="@+id/iv_follow"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_toRightOf="@id/tv_hostName"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_liveroom_follow"/>
-
-                </RelativeLayout>
-
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/iv_follow"
+                    android:layout_width="18dp"
                     android:layout_height="18dp"
-                    android:layout_marginLeft="7dp"
-                    android:background="@drawable/bg_live_host_header">
-                    <ImageView
-                        android:id="@+id/iv_onlineFlag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_live_room_online"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="8dp"/>
+                    android:layout_toRightOf="@id/tv_hostName"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_liveroom_follow"/>
 
-                    <TextView
-                        android:id="@+id/tv_onlineNum"
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!--免费公开直播间观众头像列表-->
+                <RelativeLayout
+                    android:id="@+id/rl_freePublic"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_roomOnlineNum"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="9sp"
-                        android:textColor="#f4f4f4"
+                        android:layout_height="18dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@id/iv_onlineFlag"
-                        android:layout_marginLeft="3dp"
-                        android:text="123465"
-                        android:gravity="center_vertical"
+                        android:paddingLeft="7dp"
                         android:paddingRight="7dp"
-                        android:drawablePadding="3dp"
-                        />
+                        android:background="@drawable/bg_live_host_header">
+                        <ImageView
+                            android:id="@+id/iv_onlineFlag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_live_room_online"
+                            android:layout_centerVertical="true"/>
+
+                        <TextView
+                            android:id="@+id/tv_onlineNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="10sp"
+                            android:textColor="#f4f4f4"
+                            android:visibility="visible"
+                            android:text="0"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@id/iv_onlineFlag"
+                            android:layout_marginLeft="3dp"
+                            android:gravity="center_vertical"
+                            />
+                    </RelativeLayout>
+
+
+                    <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
+                        android:id="@+id/cihsv_onlineFreePublic"
+                        android:layout_toRightOf="@id/rl_roomOnlineNum"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="13dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="22dp"
+                        android:scrollbars="none"
+                        xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+                        android:visibility="visible"
+                        custom:horizontSpace = "4dp"
+                        custom:itemWidth="18dp"/>
                 </RelativeLayout>
 
-                <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
-                    android:id="@+id/cihsv_online"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="10dp"
+                <!--付费公开直播间-->
+                <RelativeLayout
+                    android:id="@+id/rl_vipPublic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_marginRight="13dp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="22dp"
-                    android:scrollbars="none"
-                    xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
-                    custom:horizontSpace = "4dp"
-                    custom:itemWidth="18dp"
-                    custom:showItemNumb="0"/>
-            </LinearLayout>
-        </FrameLayout>
+                    android:layout_gravity="right"
+                    android:visibility="visible"
+                    android:background="@drawable/bg_live_header_online_base">
+
+                    <com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView
+                        android:id="@+id/cihsv_onlineVIPPublic"
+                        android:layout_width="82dp"
+                        android:layout_height="24dp"
+                        android:scrollbars="none"
+                        xmlns:custom="http://schemas.android.com/apk/res/com.qpidnetwork.livemodule"
+                        android:visibility="visible"
+                        android:layout_marginRight="6dp"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@+id/ll_vipGuest"
+                        android:layout_centerVertical="true"
+                        custom:horizontSpace = "5dp"
+                        custom:itemWidth="24dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/ll_vipGuest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="28dp"
+                        android:gravity="center"
+                        android:background="@drawable/bg_live_header_online_left"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:layout_marginLeft="1dp"
+                        android:layout_centerVertical="true"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ffe674"
+                            android:textSize="8sp"
+                            android:text="@string/liveroom_vipguest"/>
+
+                        <TextView
+                            android:id="@+id/tv_vipGuestData"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="#ffe674"
+                            android:textSize="8sp"
+                            android:text="@string/liveroom_header_vipguestdata"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </FrameLayout>
+        </LinearLayout>
+        <!--私密直播间-->
+        <LinearLayout
+            android:id="@+id/ll_privateRoomHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_liveroom_header_usericon_bg"
+                    android:scaleType="fitCenter"/>
+                
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civ_myHeaderIcon"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:src="@drawable/circleimageview_hugh"/>
+
+            </FrameLayout>
+
+
+                <ImageView
+                    android:id="@+id/iv_intimacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:src="@drawable/ic_liveroom_header_intimacy"/>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_liveroom_header_usericon_bg"
+                    android:scaleType="fitCenter"/>
+
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civ_hostHeaderIcon"
+                    android:layout_width="39dp"
+                    android:layout_height="39dp"
+                    android:src="@drawable/circleimageview_hugh"/>
+            </FrameLayout>
+
+        </LinearLayout>
+        <View
+            android:id="@+id/view_roomHeader_buttomLine"
+            android:layout_width="match_parent"
+            android:layout_height="7dp"/>
     </LinearLayout>
 </FrameLayout>

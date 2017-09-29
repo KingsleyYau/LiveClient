@@ -19,15 +19,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-        <!--<ImageView-->
-            <!--android:id="@+id/imageview1"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/ic_live_chat_emoji_0"-->
-            <!--/>-->
-
         <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-            android:src="@drawable/circleimageview_hugh"
             android:id="@+id/civ_userHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

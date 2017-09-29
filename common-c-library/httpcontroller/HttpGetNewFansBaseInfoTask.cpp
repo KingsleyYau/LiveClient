@@ -67,8 +67,7 @@ bool HttpGetNewFansBaseInfoTask::ParseData(const string& url, bool bFlag, const 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
-    HttpLiveFansItem item;
-    item.userId = mUserId;
+    HttpLiveFansInfoItem item;
     
     if ( bFlag ) {
         // 公共解析
@@ -86,6 +85,8 @@ bool HttpGetNewFansBaseInfoTask::ParseData(const string& url, bool bFlag, const 
         errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
     }
     
+    item.userId = mUserId;
+
     if( mpCallback != NULL ) {
         mpCallback->OnGetNewFansBaseInfo(this, bParse, errnum, errmsg, item);
     }

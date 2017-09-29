@@ -71,6 +71,8 @@ void HttpClient::SetLogEnable(bool enable) {
 
 HttpClient::HttpClient() {
 	// TODO Auto-generated constructor stub
+    FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::HttpClient( this : %p )", this);
+    
 	mpIHttpClientCallback = NULL;
 	mpCURL = NULL;
 	mUrl = "";
@@ -79,6 +81,7 @@ HttpClient::HttpClient() {
 
 HttpClient::~HttpClient() {
 	// TODO Auto-generated destructor stub
+    FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::~HttpClient( this : %p )", this);
 }
 
 void HttpClient::SetCookiesDirectory(string directory) {
@@ -394,8 +397,7 @@ void HttpClient::Init(string url) {
 }
 
 bool HttpClient::Request(const HttpEntiy* entiy) {
-	FileLog("httpclient", "HttpClient::Request( url : %s, entiy : %p )",
-			mUrl.c_str(), entiy);
+    FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, url : %s )", this, mUrl.c_str());
 	bool bFlag = true;
 
 	CURLcode res;
@@ -499,14 +501,14 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 		/* Basic Authentication */
 		if( entiy->mAuthorization.length() > 0 ) {
 			curl_easy_setopt(mpCURL, CURLOPT_USERPWD, entiy->mAuthorization.c_str());
-			FileLog("httpclient", "HttpClient::Request( Add authentication header : [%s] )", entiy->mAuthorization.c_str());
+			FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, Add authentication header : [%s] )", this, entiy->mAuthorization.c_str());
 		}
 
 		/* Headers */
 		for( HttpMap::const_iterator itr = entiy->mHeaderMap.begin(); itr != entiy->mHeaderMap.end(); itr++ ) {
 			string header = itr->first + ": " + itr->second;
 			pList = curl_slist_append(pList, header.c_str());
-			FileLog("httpclient", "HttpClient::Request( Add header : [%s] )", header.c_str());
+			FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, Add header : [%s] )", this, header.c_str());
 		}
 		// add by Samson 2015-04-23, add "device_type" to http header
 		pList = curl_slist_append(pList, DEVICE_TYPE);
@@ -526,7 +528,7 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
                     curl_free(tempBuffer);
                 }
 
-                FileLog("httpclient", "HttpClient::Request( Add content : [%s : %s] )", itr->first.c_str(), itr->second.c_str());
+                FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, Add content : [%s : %s] )", this, itr->first.c_str(), itr->second.c_str());
             }
             
             curl_easy_setopt(mpCURL, CURLOPT_POSTFIELDS, postData.c_str());
@@ -536,7 +538,7 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
             for( HttpMap::const_iterator itr = entiy->mContentMap.begin(); itr != entiy->mContentMap.end(); itr++ ) {
                 curl_formadd(&pPost, &pLast, CURLFORM_COPYNAME, itr->first.c_str(),
                         CURLFORM_COPYCONTENTS, itr->second.c_str(), CURLFORM_END);
-                FileLog("httpclient", "HttpClient::Request( Add content : [%s : %s] )", itr->first.c_str(), itr->second.c_str());
+                FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, Add content : [%s : %s] )", this, itr->first.c_str(), itr->second.c_str());
             }
 
             /* Files */
@@ -550,8 +552,8 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
                         CURLFORM_CONTENTTYPE, itr->second.mimeType.c_str(),
                         CURLFORM_END);
 
-                FileLog("httpclient", "HttpClient::Request( Add file filename : [%s], content [%s : %s,%s] )"
-                        , itr->first.c_str(), itr->first.c_str(), itr->second.fileName.c_str(), itr->second.mimeType.c_str());
+                FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, Add file filename : [%s], content [%s : %s,%s] )"
+                        , this, itr->first.c_str(), itr->first.c_str(), itr->second.fileName.c_str(), itr->second.mimeType.c_str());
             }
             
             if( pPost != NULL ) {
@@ -569,17 +571,17 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 
 	double totalTime = 0;
 	curl_easy_getinfo(mpCURL, CURLINFO_TOTAL_TIME, &totalTime);
-	FileLog("httpclient", "HttpClient::Request( totalTime : %f second )", totalTime);
+	FileLog("httpclient", "HttpClient::Request( this : %p, totalTime : %f second )", this, totalTime);
 
     char *urlp = NULL;
     curl_easy_getinfo(mpCURL, CURLINFO_REDIRECT_URL, &urlp);
     long count;
     curl_easy_getinfo(mpCURL, CURLINFO_REDIRECT_COUNT, &count);
-    FileLog("httpclient", "HttpClient::Request( redirect url : %s, count : %ld )", urlp, count);
+    FileLog("httpclient", "HttpClient::Request( this : %p, Redirect url : %s, count : %ld )", this, urlp, count);
     
     long http_code;
     curl_easy_getinfo(mpCURL, CURLINFO_HTTP_CODE, &http_code);
-    FileLog("httpclient", "HttpClient::Request( http_code : %ld )", http_code);
+    FileLevelLog("httpclient", KLog::LOG_STAT, "HttpClient::Request( this : %p, http_code : %ld )", this, http_code);
     
 	if( mpCURL != NULL ) {
 		curl_easy_cleanup(mpCURL);
@@ -595,10 +597,10 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 	}
 
 	cookie = GetCookies(host);
-	FileLog("httpclient", "HttpClient::Request( Cookie Recv : %s )", cookie.c_str());
+	FileLog("httpclient", "HttpClient::Request( this : %p, Cookie Recv : %s )", this, cookie.c_str());
 
 	bFlag = (res == CURLE_OK);
-	FileLog("httpclient", "HttpClient::Request( bFlag : %s , res : %d )", bFlag?"true":"false", res);
+    FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::Request( this : %p, bFlag : %s , res : %d )", this, bFlag?"true":"false", res);
 
 	return bFlag;
 }

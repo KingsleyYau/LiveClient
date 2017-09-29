@@ -167,6 +167,8 @@ private:
     long long mStartPlayTime;
     // 音视频开始播放时间差
     int mPlayVideoAfterAudioDiff;
+    // 视频开播时间戳
+    bool mbVideoStartPlay;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

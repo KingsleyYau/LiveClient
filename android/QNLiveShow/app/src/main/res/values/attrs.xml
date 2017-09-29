@@ -7,8 +7,6 @@
         <attr name="horizontSpace" format="dimension"/>
         <!--每个item的宽度-高度-->
         <attr name="itemWidth" format="dimension"/>
-        <!--展示的item数量,如果不为零，则parentWidth将重新计算-->
-        <attr name="showItemNumb" format="integer"/>
     </declare-styleable>
 
 

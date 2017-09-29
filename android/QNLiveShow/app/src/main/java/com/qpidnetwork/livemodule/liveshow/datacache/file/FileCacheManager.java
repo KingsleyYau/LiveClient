@@ -24,6 +24,7 @@ public class FileCacheManager {
     private final String TEMP = "temp";                //本地临时缓存路径
     private final String HTTP = "http";                //本地http缓存路径
     private final String GIFT = "gift";                //本地礼物图片缓存路径
+    private final String CAR = "car";                //本地座驾图片缓存路径
 
     private static FileCacheManager gFileCacheManager;
 
@@ -133,14 +134,14 @@ public class FileCacheManager {
     }
 
     /**
-     * 本地存放路径
+     * 本地存放路径(eg.  sdcard/live/gift/1/small.jpg)
      * @param giftId
      * @param url
      * @return
      */
     public String getGiftLocalPath(String giftId, String url){
         String localPath = getGiftPath();
-        localPath += giftId + File.separator;
+        localPath += giftId;
         localPath += parseGiftNameFromUrl(url);
         return  localPath;
     }
@@ -188,6 +189,24 @@ public class FileCacheManager {
         }
 
         return path;
+    }
+
+    private String getCarImgRootPath(){
+        /* 创建log路径 */
+        String path = mMainPath + CAR + File.separator;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        return path;
+    }
+
+    public String parseCarImgLocalPath(String riderId,String riderUrl){
+        String localPath = getCarImgRootPath();
+        localPath += riderId;
+        localPath += riderUrl.substring(riderUrl.lastIndexOf(File.separator),riderUrl.length());
+        return localPath;
     }
 
     /**

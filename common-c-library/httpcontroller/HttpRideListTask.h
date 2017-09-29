@@ -17,7 +17,7 @@ class HttpRideListTask;
 class IRequestRideListCallback {
 public:
 	virtual ~IRequestRideListCallback(){};
-	virtual void OnRideList(HttpRideListTask* task, bool success, int errnum, const string& errmsg, const RideList& list) = 0;
+	virtual void OnRideList(HttpRideListTask* task, bool success, int errnum, const string& errmsg, const RideList& list, int totalCount) = 0;
 };
       
 class HttpRideListTask : public HttpRequestTask {

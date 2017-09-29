@@ -13,5 +13,7 @@
 @property (nonatomic, assign) int start;
 // 步长，用于分页，表示本次请求获取多少个元素
 @property (nonatomic, assign) int step;
+// 是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
+@property (nonatomic, assign) BOOL hasWatch;
 @property (nonatomic, strong) GetAnchorListFinishHandler _Nullable finishHandler;
 @end

@@ -79,15 +79,19 @@
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
     NSLog(@"LiveStreamPlayer::playUrl( url : %@, recordFilePath : %@, recordH264FilePath : %@ )", url, recordFilePath, recordH264FilePath);
     
-    BOOL bFlag = YES;
+    BOOL bFlag = NO;
+    
+    [self cancel];
     
     self.url = url;
     self.recordFilePath = recordFilePath;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
 
-    [self cancel];
-    [self run];
+    if( self.url.length > 0 ) {
+        [self run];
+        bFlag = YES;
+    }
     
     return bFlag;
 }
@@ -154,9 +158,11 @@
         if( self.isStart ) {
             // 断线重新拉流
             dispatch_async(self.reconnect_queue, ^{
-                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
                 [self.player stop];
-                [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), self.reconnect_queue, ^{
+                    NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
+                    [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+                });
             });
             
         } else {

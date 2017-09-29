@@ -1,20 +1,27 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
+import android.text.TextUtils;
+
 import com.qpidnetwork.livemodule.httprequest.OnGetGiftDetailCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetPackageGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniPackage;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
+import com.qpidnetwork.livemodule.liveshow.model.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.qpidnetwork.livemodule.utils.TestDataUtil.isTestGiftErrorDeal;
+
 /**
  * 礼物列表管理类
  * Created by Hunter Mun on 2017/6/21.
+ * 1.在登录live模块，成功调用http接口文档的3.5 获取礼物列表接口的情况下，调用5.1 获取背包礼物接口，本地缓存
  */
 
 public class PackageGiftManager {
@@ -38,14 +45,18 @@ public class PackageGiftManager {
 
     private final String TAG = PackageGiftManager.class.getSimpleName();
 
-    //用户我的背包-礼物展示
-    private Map<String, List<PackageGiftItem>> allPackageGiftItemList = new HashMap<>();
     //用于直播间-背包礼物-界面刷新
-    private List<GiftItem> allPackageGiftItems = new ArrayList<>();
-    //用于直播间-背包礼物数量展示
+    private List<PackageGiftItem> allPackageGiftItems = new ArrayList<>();
+
+    private List<GiftItem> packageGiftItems = new ArrayList<>();
     private Map<String, Integer> allPackageGiftNumList = new HashMap<>();
-    private  GiftItem giftItem;
-    private boolean isWaitingForGetGiftDetail = false;
+
+    //1.dialog需要刷新adapter显示背包列表，所以需要list，或者遍历map生成list
+    //2.dialog需要显示背包item的数量，因此需要map获取int
+    //3.背包也需要动态显示可选数量
+    public HttpReqStatus packageGiftReqStatus = HttpReqStatus.NoReq;
+
+    public String currRoomId="";
     //-----------------------------私有方法定义-------------------
 
     /**
@@ -53,111 +64,130 @@ public class PackageGiftManager {
      * @param callback
      */
     public void getAllPackageGiftItems(final OnGetPackageGiftListCallback callback){
-        RequestJniPackage.GetPackageGiftList(new OnGetPackageGiftListCallback() {
-            @Override
-            public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList) {
-                Log.d(TAG,"onGetPackageGiftList-isSuccess:"+isSuccess+" errCode:"
-                        +" errMsg:"+errMsg+" packageGiftList:"+packageGiftList);
-
-                if(isSuccess && null != packageGiftList){
-                    allPackageGiftNumList.clear();
-                    allPackageGiftItemList.clear();
-                    allPackageGiftItems.clear();
-                    for (PackageGiftItem packageGiftItem : packageGiftList){
-                        while(isWaitingForGetGiftDetail){
-                            try {
-                                Thread.sleep(200l);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+        if((null != allPackageGiftItems && allPackageGiftItems.size()> 0) || HttpReqStatus.ReqSuccess == packageGiftReqStatus){
+            Log.d(TAG,"getAllPackageGiftItems-本地已经成功请求过或已存在背包礼物配置信息");
+            if(null != callback){
+//                PackageGiftItem[] packageGiftList = new PackageGiftItem[allPackageGiftItems.size()];
+//                for(int index = 0; index<allPackageGiftItems.size(); index++){
+//                    packageGiftList[index]=allPackageGiftItems.get(index);
+//                }
+                callback.onGetPackageGiftList(true, 0, "", null, 0);
+            }
+            updatePackageGift();
+        }else{
+            Log.d(TAG,"getAllPackageGiftItems-本地不存在背包礼物配置信息，发起GetPackageGiftList请求");
+            if(HttpReqStatus.Reqing == packageGiftReqStatus){
+                return;
+            }
+            packageGiftReqStatus = HttpReqStatus.Reqing;
+            RequestJniPackage.GetPackageGiftList(new OnGetPackageGiftListCallback() {
+                @Override
+                public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList, int totalCount) {
+                    Log.d(TAG,"onGetPackageGiftList-isSuccess:"+isSuccess+" errCode:"
+                            +" errMsg:"+errMsg+" packageGiftList:"+packageGiftList);
+                    Log.d(TAG,"getSendableGiftItems-isTestGiftErrorDeal:"+isTestGiftErrorDeal);
+                    if(isSuccess){
+                        packageGiftReqStatus = HttpReqStatus.ReqSuccess;
+                        allPackageGiftItems.clear();
+                        if(null == packageGiftList){
+                            return;
                         }
-                        List<PackageGiftItem> packageGiftItemList = new ArrayList<PackageGiftItem>();
-                        if(allPackageGiftItemList.containsKey(packageGiftItem.giftId)){
-                            packageGiftItemList = allPackageGiftItemList.get(packageGiftItem.giftId);
-                        }
-                        packageGiftItemList.add(packageGiftItem);
-                        allPackageGiftItemList.put(packageGiftItem.giftId,packageGiftItemList);
-
-                        int totalNum = allPackageGiftNumList.containsKey(packageGiftItem.giftId) ?
-                                allPackageGiftNumList.get(packageGiftItem.giftId) : 0;
-                        totalNum+=packageGiftItem.num;
-                        allPackageGiftNumList.put(packageGiftItem.giftId,totalNum);
-
-                        giftItem = NormalGiftManager.getInstance().
-                                queryLocalGiftDetailById(packageGiftItem.giftId);
-                        if(null == giftItem){
-                            isWaitingForGetGiftDetail = true;
-                            NormalGiftManager.getInstance().getGiftDetail(packageGiftItem.giftId, new OnGetGiftDetailCallback() {
-                                @Override
-                                public void onGetGiftDetail(boolean isSuccess, int errCode, String errMsg, GiftItem giftDetail) {
-                                    if(isSuccess){
-                                        giftItem = giftDetail;
-                                        if(!allPackageGiftItems.contains(giftItem)){
-                                            allPackageGiftItems.add(giftItem);
-                                        }
-
-                                        isWaitingForGetGiftDetail = false;
-                                    }
-                                }
-                            });
-                        }else{
-                            //TODO:需要排序
-                            if(!allPackageGiftItems.contains(giftItem)){
-                                allPackageGiftItems.add(giftItem);
-                            }
-                        }
+                        allPackageGiftItems.addAll(Arrays.asList(packageGiftList));
+                    }else{
+                        packageGiftReqStatus = HttpReqStatus.ResFailed;
+                    }
+                    if(null != callback){
+                        callback.onGetPackageGiftList(isSuccess, errCode, errMsg, packageGiftList, totalCount);
+                    }
+                    if(isSuccess){
+                        updatePackageGift();
                     }
                 }
-                if(null != callback){
-                    callback.onGetPackageGiftList(isSuccess,errCode,errMsg,packageGiftList);
+            });
+        }
+    }
+
+
+
+    private int showPkgGiftNum = 0;
+    public synchronized void updatePackageGift(){
+        boolean allPackageGiftConfigInited = null != allPackageGiftItems && allPackageGiftItems.size()>0;
+        boolean allGiftConfigInited = NormalGiftManager.getInstance().isLocalAllGiftConfigExisted();
+        boolean roomSendableGiftConfigInited = NormalGiftManager.getInstance().isLocalRoomSendableGiftExisted(currRoomId);
+        Log.d(TAG,"updatePackageGift-allPackageGiftConfigInited:"+allPackageGiftConfigInited
+                +" allGiftConfigInited:"+allGiftConfigInited
+                +" roomSendableGiftConfigInited:"+roomSendableGiftConfigInited
+                +" roomId:"+currRoomId);
+        if(!TextUtils.isEmpty(currRoomId) && !TextUtils.isEmpty(NormalGiftManager.getInstance().currRoomId)
+                && currRoomId.equals(NormalGiftManager.getInstance().currRoomId)){
+            if(allPackageGiftConfigInited && allGiftConfigInited && roomSendableGiftConfigInited){
+                packageGiftItems.clear();
+                allPackageGiftNumList.clear();
+                showPkgGiftNum = 0;
+                for(int index=0; index<allPackageGiftItems.size(); index++){
+                    PackageGiftItem packageGiftItem = allPackageGiftItems.get(index);
+                    if(!allPackageGiftNumList.containsKey(packageGiftItem.giftId)){
+                        allPackageGiftNumList.put(packageGiftItem.giftId,packageGiftItem.num);
+                        showPkgGiftNum+=1;
+                    }
                 }
-
+                Log.d(TAG,"updatePackageGift-showPkgGiftNum:"+showPkgGiftNum);
+                allPackageGiftNumList.clear();
+                for (final PackageGiftItem packageGiftItem : allPackageGiftItems){
+                    //接下来拿礼物详情
+                    NormalGiftManager.getInstance().getGiftDetail(packageGiftItem.giftId, new OnGetGiftDetailCallback() {
+                        @Override
+                        public void onGetGiftDetail(boolean isSuccess, int errCode, String errMsg, GiftItem giftDetail) {
+                            if(isSuccess && null != giftDetail){
+                                if(!packageGiftItems.contains(giftDetail)){
+                                    packageGiftItems.add(giftDetail);
+                                }
+                                int totalNumbs = 0;
+                                if(allPackageGiftNumList.containsKey(giftDetail.id)){
+                                    totalNumbs = allPackageGiftNumList.get(giftDetail.id);
+                                }
+                                totalNumbs+=packageGiftItem.num;
+                                allPackageGiftNumList.put(giftDetail.id,totalNumbs);
+                            }
+                            Log.d(TAG,"updatePackageGift-showPkgGiftNum:"+showPkgGiftNum+" packageGiftItems.size():"+packageGiftItems.size());
+                            if(packageGiftItems.size() == showPkgGiftNum && listeners != null && listeners.containsKey(currRoomId)){
+                                listeners.get(currRoomId).onPackageGiftDataChanged(currRoomId);
+                            }
+                        }
+                    });
+                }
             }
-        });
-    }
-
-
-
-    public boolean isLocalPackageGiftListExist(){
-        return null != allPackageGiftItemList && null != allPackageGiftNumList
-                && allPackageGiftItemList.size() ==  allPackageGiftNumList.size();
-    }
-
-    public List<GiftItem> getLocalRoomPackageGiftItems(){
-        return allPackageGiftItems;
-    }
-
-
-    /**
-     *
-     * 直播间 背包礼物数据
-     * @return
-     */
-    public Map<String, List<PackageGiftItem>> getLocalAllPackageGiftItemList(){
-        return allPackageGiftItemList;
-    }
-
-    public int getPackageGiftNumById(String giftId){
-        int num = 0;
-        if(allPackageGiftNumList.containsKey(giftId)){
-            num = allPackageGiftNumList.get(giftId);
         }
-        return num;
     }
 
-    public boolean subPackageGiftNumById(String giftId,int num){
-        boolean result = false;
-        if(allPackageGiftNumList.containsKey(giftId) && allPackageGiftItemList.containsKey(giftId)){
-            int totalNum = allPackageGiftNumList.get(giftId);
-            totalNum-=num;
-            if(totalNum>0){
-                allPackageGiftNumList.put(giftId,totalNum);
-            }else{
-                allPackageGiftNumList.remove(giftId);
-                allPackageGiftItemList.remove(giftId);
-            }
-            result = true;
+    public List<GiftItem> getLocalPackageGiftDetails(){
+        return packageGiftItems;
+    }
+
+    public Map<String,Integer> getLocalPackageGiftNumData(){
+        return allPackageGiftNumList;
+    }
+
+    //------------------------------自定义接口-------------------
+
+
+    private Map<String,OnPackageGiftDataChangeListener> listeners = new HashMap<>();
+
+    public void registerListener(String roomId,OnPackageGiftDataChangeListener listener){
+        Log.d(TAG,"registerListener-roomId:"+roomId);
+        if(null != listeners && !listeners.containsKey(roomId)){
+            listeners.put(roomId,listener);
         }
-        return result;
+    }
+
+    public void unregisterListener(String roomId){
+        Log.d(TAG,"unregisterListener-roomId:"+roomId);
+        if(null != listeners && listeners.containsKey(roomId)){
+            listeners.remove(roomId);
+        }
+    }
+
+    public interface OnPackageGiftDataChangeListener {
+        void onPackageGiftDataChanged(String currRoomId);
     }
 }

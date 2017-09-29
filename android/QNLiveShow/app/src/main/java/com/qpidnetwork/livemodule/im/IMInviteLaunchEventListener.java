@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.im;
 
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
+import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
@@ -19,7 +20,7 @@ public interface IMInviteLaunchEventListener {
 	 * @param errMsg
 	 * @param roomInfo
 	 */
-	public void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
+    void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
 
 	/**
 	 * 3.2.观众退出直播间回调
@@ -28,14 +29,24 @@ public interface IMInviteLaunchEventListener {
 	 * @param errType
 	 * @param errMsg
 	 */
-	public void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
+    void OnRoomOut(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
 
 	/**
 	 * 3.11.直播间开播通知
 	 * @param roomId
 	 * @param leftSeconds		开播前的倒数秒数
 	 */
-	public void OnRecvLiveStart(String roomId, int leftSeconds);
+    void OnRecvLiveStart(String roomId, int leftSeconds);
+
+	/**
+	 * 3.15.获取指定立即私密邀请信息接口
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 * @param inviteItem
+	 */
+	void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem);
 
 	/**
 	 * 7.1.观众立即私密邀请
@@ -47,7 +58,7 @@ public interface IMInviteLaunchEventListener {
 	 * @param timeout
 	 * @param roomId
 	 */
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
+    void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
 
 	/**
 	 * 7.2.观众取消立即私密邀请
@@ -57,7 +68,7 @@ public interface IMInviteLaunchEventListener {
 	 * @param errMsg
 	 * @param roomId
 	 */
-	public void OnCancelImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String roomId);
+    void OnCancelImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String roomId);
 
 	/**
 	 * 7.3.接收立即私密邀请回复通知
@@ -70,6 +81,6 @@ public interface IMInviteLaunchEventListener {
 	 * @param avatarImg
 	 * @param message
 	 */
-	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
-										   String nickName, String avatarImg, String message);
+    void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
+                           String nickName, String avatarImg, String message);
 }

@@ -13,7 +13,8 @@
 #import "ImageViewLoader.h"
 #import "FileCacheManager.h"
 
-@interface HotTableView() <ImageViewLoaderDelegate>
+#define IMAGE_COUNT 10
+@interface HotTableView () <ImageViewLoaderDelegate,HotTableViewCellDelegate>
 
 @end
 
@@ -26,7 +27,6 @@
     if (self) {
         // Initialization code
         [self initialize];
-        
     }
     return self;
 }
@@ -35,7 +35,6 @@
     self.delegate = self;
     self.dataSource = self;
     self.canDeleteItem = NO;
-        
 }
 
 - (void)awakeFromNib {
@@ -59,15 +58,16 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSInteger number = 0;
-    switch(section) {
+    switch (section) {
         case 0: {
-            if(self.items.count > 0) {
+            if (self.items.count > 0) {
                 number = self.items.count;
             }
         }
-        default:break;
+        default:
+            break;
     }
-	return number;
+    return number;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -79,43 +79,248 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *tableViewCell = nil;
 
+    NSMutableArray *animationArray = [NSMutableArray array];
+    for (int i = 1; i <= 6; i++) {
+        NSString *imageName = [NSString stringWithFormat:@"Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition%d", i];
+        UIImage *image = [UIImage imageNamed:imageName];
+        [animationArray addObject:image];
+    }
+
     HotTableViewCell *cell = [HotTableViewCell getUITableViewCell:tableView];
     tableViewCell = cell;
-    
+
     // 数据填充
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
-    
+
+    cell.tag = indexPath.row;
+//    cell.leftBtn.tag = indexPath.row;
+//    cell.midBtn.tag = indexPath.row;
+//    cell.rightBtn.tag = indexPath.row;
     // 人数
-//    cell.labelViewers.text = item.roomId;
-    
+    //    cell.labelViewers.text = item.roomId;
+
     // 房间名
-//    cell.labelRoomTitle.text = item.roomName;
-    
+    cell.labelRoomTitle.text = item.nickName;
+    //    cell.labelRoomTitle.text = item.nickName;
+
     // 国家
-//    cell.labelCountry.text = item.country;
+    //cell.labelCountry.text = item.country;
     
-    // 头像
-    cell.imageViewHeader.image = nil;
-    cell.imageViewLoader = [ImageViewLoader loader];
-    if ( item.roomPhotoUrl && ![item.roomPhotoUrl isEqualToString:@""] ) {
-        [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader options:0 imageUrl:item.roomPhotoUrl
-                                placeholderImage:[UIImage imageNamed:@"Login_Background"]];
+    cell.animationArray = animationArray;
+    if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+        cell.onlineView.backgroundColor = [UIColor colorWithHexString:@"b5b5b5"];
+    } else {
+        cell.onlineView.backgroundColor = [UIColor colorWithHexString:@"8edb2b"];
     }
+
+    cell.hotCellDelegate = self;
+    switch (item.roomType) {
+        // 没有直播间
+        case HTTPROOMTYPE_NOLIVEROOM: {
+            [cell.roomType setImage:nil];
+            cell.viewPublicFreeBtn.hidden = YES;
+            cell.viewPublicFeeBtn.hidden = YES;
+      
+            cell.vipPrivateCenterX.constant = 0;
+            cell.normalPrivateCenterX.constant = 0;
+            
+            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+                      cell.bookPrivateBtn.hidden = NO;
+                cell.normalPrivateBtn.hidden = YES;
+                cell.vipPrivateBtn.hidden = YES;
+            }else {
+                   cell.bookPrivateBtn.hidden = YES;
+                switch (item.anchorType) {
+                    case ANCHORLEVELTYPE_SILVER: {
+                        // 普通
+                        cell.normalPrivateBtn.hidden = NO;
+                        cell.vipPrivateBtn.hidden = YES;
+                    } break;
+                    case ANCHORLEVELTYPE_GOLD: {
+                        //                        //高级
+                        cell.vipPrivateBtn.hidden = NO;
+                        cell.normalPrivateBtn.hidden = YES;
+                    }
+                        
+                    default:
+                        break;
+                }
+            }
+
+        } break;
+        // 免费公开直播间
+        case HTTPROOMTYPE_FREEPUBLICLIVEROOM: {
+            [cell.roomType setImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_RoomTypePublicLive"]];
+            cell.vipPrivateCenterX.constant = -80;
+            cell.normalPrivateCenterX.constant = -80;
+            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+                // 不在线
+                [cell.roomType setImage:nil];
+                cell.viewPublicFreeBtn.hidden = YES;
+                cell.viewPublicFeeBtn.hidden = YES;
+                cell.bookPrivateBtn.hidden = NO;
+                cell.vipPrivateBtn.hidden = YES;
+                cell.normalPrivateBtn.hidden = YES;
+            } else {
+                // 高级还是普通的私密直播间
+                cell.viewPublicFreeBtn.hidden = NO;
+                cell.viewPublicFeeBtn.hidden = YES;
+                cell.bookPrivateBtn.hidden = YES;
+
+
+                switch (item.anchorType) {
+                    case ANCHORLEVELTYPE_SILVER: {
+                        // 普通
+                        cell.normalPrivateBtn.hidden = NO;
+                        cell.vipPrivateBtn.hidden = YES;
+
+                    } break;
+                    case ANCHORLEVELTYPE_GOLD: {
+                        cell.vipPrivateBtn.hidden = NO;
+                        cell.normalPrivateBtn.hidden = YES;
+                        //高级
+                    }
+
+                    default:
+                        break;
+                }
+            }
+
+        } break;
+        // 付费公开直播间
+        case HTTPROOMTYPE_CHARGEPUBLICLIVEROOM: {
+            [cell.roomType setImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_RoomTypePublicLive"]];
+            cell.vipPrivateCenterX.constant = -80;
+            cell.normalPrivateCenterX.constant = -80;
+            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+                [cell.roomType setImage:nil];
+                cell.viewPublicFreeBtn.hidden = YES;
+                cell.viewPublicFeeBtn.hidden = YES;
+                cell.bookPrivateBtn.hidden = NO;
+                cell.vipPrivateBtn.hidden = YES;
+                cell.normalPrivateBtn.hidden = YES;
+            } else {
+                cell.viewPublicFreeBtn.hidden = YES;
+                cell.viewPublicFeeBtn.hidden = NO;
+                cell.bookPrivateBtn.hidden = YES;
+                switch (item.anchorType) {
+                    case ANCHORLEVELTYPE_SILVER: {
+                        // 普通
+                        cell.normalPrivateBtn.hidden = NO;
+                        cell.vipPrivateBtn.hidden = YES;
+                    } break;
+                    case ANCHORLEVELTYPE_GOLD: {
+//                        //高级
+                        cell.vipPrivateBtn.hidden = NO;
+                        cell.normalPrivateBtn.hidden = YES;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+
+        } break;
+        // 普通私密直播间
+        case HTTPROOMTYPE_COMMONPRIVATELIVEROOM:
+        // 豪华私密直播间
+        case HTTPROOMTYPE_LUXURYPRIVATELIVEROOM: {
+            cell.vipPrivateCenterX.constant = 0;
+            cell.normalPrivateCenterX.constant = 0;
+            [cell.roomType setImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_RoomTypePrivateLive"]];
+            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+                [cell.roomType setImage:nil];
+                cell.viewPublicFreeBtn.hidden = YES;
+                cell.viewPublicFeeBtn.hidden = YES;
+                cell.bookPrivateBtn.hidden = NO;
+                cell.vipPrivateBtn.hidden = YES;
+                cell.normalPrivateBtn.hidden = YES;
+            } else {
+                cell.viewPublicFreeBtn.hidden = YES;
+                cell.viewPublicFeeBtn.hidden = YES;
+                cell.bookPrivateBtn.hidden = YES;
+                switch (item.anchorType) {
+                    case ANCHORLEVELTYPE_SILVER: {
+                        // 普通
+                        cell.vipPrivateBtn.hidden = YES;
+                        cell.normalPrivateBtn.hidden = NO;
+                    } break;
+                    case ANCHORLEVELTYPE_GOLD: {
+                        cell.vipPrivateBtn.hidden = NO;
+                        cell.normalPrivateBtn.hidden = YES;
+                    }
+
+                    default:
+                        break;
+                }
+            }
+
+        } break;
+
+        default:
+            break;
+    }
+
+    if (item.interest.count > 0) {
+
+        if (item.interest.count == 1) {
+            NSString *interest1Name = [NSString stringWithFormat:@"%@", item.interest[0]];
+            cell.interest3.image = [UIImage imageNamed:interest1Name];
+            cell.interest1.hidden = YES;
+            cell.interest2.hidden = YES;
+            cell.interest3.hidden = NO;
+        } else if (item.interest.count == 2) {
+            NSString *interest3Name = [NSString stringWithFormat:@"%@", item.interest[0]];
+            NSString *interest2Name = [NSString stringWithFormat:@"%@", item.interest[1]];
+            cell.interest3.image = [UIImage imageNamed:interest3Name];
+            cell.interest2.image = [UIImage imageNamed:interest2Name];
+            cell.interest1.hidden = YES;
+            cell.interest2.hidden = NO;
+            cell.interest3.hidden = NO;
+        } else {
+            NSString *interest3Name = [NSString stringWithFormat:@"%@", item.interest[0]];
+            NSString *interest2Name = [NSString stringWithFormat:@"%@", item.interest[1]];
+            NSString *interest1Name = [NSString stringWithFormat:@"%@", item.interest[2]];
+            cell.interest1.image = [UIImage imageNamed:interest1Name];
+            cell.interest2.image = [UIImage imageNamed:interest2Name];
+            cell.interest3.image = [UIImage imageNamed:interest3Name];
+
+            cell.interest1.hidden = NO;
+            cell.interest2.hidden = NO;
+            cell.interest3.hidden = NO;
+        }
+
+    } else {
+        cell.interest1.hidden = YES;
+        cell.interest2.hidden = YES;
+        cell.interest3.hidden = YES;
+    }
+
+
+    // 头像
+
+    cell.imageViewHeader.image = nil;
+    [cell.imageViewLoader stop];
+    [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader
+                                         options:0
+                                        imageUrl:item.roomPhotoUrl
+                                placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
+
+
     return tableViewCell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.row < self.items.count) {
-        if([self.tableViewDelegate respondsToSelector:@selector(tableView:didSelectItem:)]) {
+        if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didSelectItem:)]) {
             [self.tableViewDelegate tableView:self didSelectItem:[self.items objectAtIndex:indexPath.row]];
         }
     }
-
 }
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.canDeleteItem)
+    if (self.canDeleteItem)
         return UITableViewCellEditingStyleDelete;
     else {
         return UITableViewCellEditingStyleNone;
@@ -126,7 +331,7 @@
     switch (editingStyle) {
         case UITableViewCellEditingStyleDelete: {
             if (indexPath.row < self.items.count) {
-                if([self.tableViewDelegate respondsToSelector:@selector(tableView:willDeleteItem:)]) {
+                if ([self.tableViewDelegate respondsToSelector:@selector(tableView:willDeleteItem:)]) {
                     [self.tableViewDelegate tableView:self willDeleteItem:[self.items objectAtIndex:indexPath.row]];
                 }
             }
@@ -138,7 +343,7 @@
 }
 
 #pragma mark - 滚动界面回调 (UIScrollViewDelegate)
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if ([self.tableViewDelegate respondsToSelector:@selector(scrollViewDidScroll:)]) {
         [self.tableViewDelegate scrollViewDidScroll:scrollView];
     }
@@ -150,4 +355,89 @@
     }
 }
 
+#pragma mark - cell的点击事件回调 (HotTableViewCell)
+
+//#pragma mark - 免费公开直播间
+//- (void)publicStartPrivteBroadcast:(UIButton *)btn {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicStartPrivteBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didPublicStartPrivteBroadcast:index];
+//    }
+//}
+//
+//- (void)publicViewBroadcast:(UIButton *)btn {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicViewBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didPublicViewBroadcast:index];
+//    }
+//}
+//
+//#pragma mark - 付费公开直播间
+//
+//- (void)publicStartVipPrivteBroadcast:(UIButton *)btn {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicStartVipPrivteBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didPublicStartVipPrivteBroadcast:index];
+//    }
+//}
+//
+//- (void)publicViewVipBroadcast:(UIButton *)btn {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicViewVipBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didPublicViewVipBroadcast:index];
+//    }
+//}
+//
+//#pragma mark - 普通私密直播间和豪华
+//
+//- (void)privateStartBroadcast:(UIButton *)btn {
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPrivateStartBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didPrivateStartBroadcast:index];
+//    }
+//}
+//
+//#pragma mark - 离线状态
+//- (void)bookPrivateBroadcast:(UIButton *)btn {
+//
+//    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didBookPrivateBroadcast:)]) {
+//        NSInteger index = btn.tag;
+//        [self.tableViewDelegate tableView:self didBookPrivateBroadcast:index];
+//    }
+//    
+//}
+/** 预约私密直播间 */
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickBookPrivateBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didBookPrivateBroadcast:)]) {
+        [self.tableViewDelegate tableView:self didBookPrivateBroadcast:cell.tag];
+    }
+}
+
+/** 免费的公开直播间 */
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewPublicFreeBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicViewFreeBroadcast:)]) {
+        [self.tableViewDelegate tableView:self didPublicViewFreeBroadcast:cell.tag];
+    }
+}
+
+/** 付费的公开直播间 */
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewPublicFeeBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPublicViewVipFeeBroadcast:)]) {
+        [self.tableViewDelegate tableView:self didPublicViewVipFeeBroadcast:cell.tag];
+    }
+}
+
+/** 普通的私密直播间 */
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickNormalPrivateBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didPrivateStartBroadcast:)]) {
+        [self.tableViewDelegate tableView:self didPrivateStartBroadcast:cell.tag];
+    }
+}
+
+/** 豪华的私密直播间 */
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickVipPrivateBtn:(UIButton *)sender {
+    if ([self.tableViewDelegate respondsToSelector:@selector(tableView:didStartVipPrivteBroadcast:)]) {
+        [self.tableViewDelegate tableView:self didStartVipPrivteBroadcast:cell.tag];
+    }
+}
 @end

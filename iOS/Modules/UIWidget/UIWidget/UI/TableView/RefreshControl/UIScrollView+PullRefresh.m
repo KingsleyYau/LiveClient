@@ -16,7 +16,7 @@ typedef enum {
 } RefreshViewType;
 
 static NSString* delegateKey = @"delegateKey";
-
+static CGFloat headerHeight = 0;
 @implementation UIScrollView (PullRefresh)
 - (void)initPullRefresh:(id<UIScrollViewRefreshDelegate>)delegate pullDown:(BOOL)pullDown pullUp:(BOOL)pullUp {
     if( delegate ) {
@@ -33,7 +33,7 @@ static NSString* delegateKey = @"delegateKey";
             pullRefreshView = [PullRefreshView pullRefreshView:self];
             [pullRefreshView setup];
             
-            pullRefreshView.frame = CGRectMake(0, -pullRefreshView.frame.size.height, self.frame.size.width, pullRefreshView.frame.size.height);
+            pullRefreshView.frame = CGRectMake(0, -(pullRefreshView.frame.size.height), self.frame.size.width, pullRefreshView.frame.size.height);
             pullRefreshView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             pullRefreshView.tag = RefreshViewTypePullDown;
             [self addSubview:pullRefreshView];
@@ -71,6 +71,11 @@ static NSString* delegateKey = @"delegateKey";
     }
 }
 
+- (void)setHeaderContent:(CGFloat)headerViewHeight {
+    headerHeight = headerViewHeight;
+}
+
+
 - (void)startPullDown:(BOOL)animation {
     PullRefreshView* pullRefreshView = [self viewWithTag:RefreshViewTypePullDown];
     if( pullRefreshView && (pullRefreshView.state == PullRefreshNormal || pullRefreshView.state == PullRefreshPulling) ) {
@@ -83,8 +88,10 @@ static NSString* delegateKey = @"delegateKey";
         
         if( animation ) {
             [UIView animateWithDuration:0.5 animations:^{
-                [self setContentOffset:CGPointMake(0, -pullRefreshView.frame.size.height) animated:NO];
-                self.contentInset = UIEdgeInsetsMake(pullRefreshView.frame.size.height, 0, 0, 0);
+
+                    [self setContentOffset:CGPointMake(0, -pullRefreshView.frame.size.height) animated:NO];
+                    self.contentInset = UIEdgeInsetsMake(pullRefreshView.frame.size.height, 0, 0, 0);
+                
                 
             } completion:^(BOOL finished) {
                 id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
@@ -95,9 +102,10 @@ static NSString* delegateKey = @"delegateKey";
             }];
             
         } else {
-            [self setContentOffset:CGPointMake(0, -pullRefreshView.frame.size.height) animated:NO];
-            self.contentInset = UIEdgeInsetsMake(pullRefreshView.frame.size.height, 0, 0, 0);
 
+                [self setContentOffset:CGPointMake(0, -pullRefreshView.frame.size.height) animated:NO];
+                self.contentInset = UIEdgeInsetsMake(pullRefreshView.frame.size.height, 0, 0, 0);
+            
             id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
             if( [delegate respondsToSelector:@selector(pullDownRefresh:)] ) {
                 [delegate pullDownRefresh:self];
@@ -154,6 +162,7 @@ static NSString* delegateKey = @"delegateKey";
                 self.contentInset = UIEdgeInsetsMake(0, 0, pullRefreshView.frame.size.height, 0);
                 
             } completion:^(BOOL finished) {
+                
                 id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
                 if( [delegate respondsToSelector:@selector(pullUpRefresh:)] ) {
                     [delegate pullUpRefresh:self];
@@ -248,7 +257,8 @@ static NSString* delegateKey = @"delegateKey";
             // 正在上拉
             if( pullRefreshView.state != PullRefreshLoading ) {
                 // 不在加载中
-                if( offsetY > self.contentSize.height + pullRefreshView.frame.size.height - self.frame.size.height) {
+//                if( offsetY > self.contentSize.height + pullRefreshView.frame.size.height - self.frame.size.height) {
+                if( offsetY > self.contentSize.height - self.frame.size.height) {
                     // 正在上拉, 底部拉出, 标记为可以刷新
                     [pullRefreshView setState:PullRefreshPulling];
                     
@@ -278,7 +288,7 @@ static NSString* delegateKey = @"delegateKey";
             // 可以滚动
             pullRefreshView.hidden = NO;
             if( pullRefreshView.frame.origin.y != self.contentSize.height ) {
-                pullRefreshView.frame = CGRectMake(0, self.contentSize.height, self.frame.size.width, pullRefreshView.frame.size.height);
+                pullRefreshView.frame = CGRectMake(0, self.contentSize.height , self.frame.size.width, pullRefreshView.frame.size.height);
             }
             
         } else {

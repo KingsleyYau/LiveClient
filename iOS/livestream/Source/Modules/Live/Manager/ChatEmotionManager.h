@@ -55,6 +55,6 @@
 
 - (NSAttributedString *)parseMessageTextEmotion:(NSString *)text font:(UIFont *)font;
 
-- (NSAttributedString *)parseMessageAttributedTextEmotion:(NSMutableAttributedString *)text font:(UIFont *)font;
+- (NSMutableAttributedString *)parseMessageAttributedTextEmotion:(NSMutableAttributedString *)text font:(UIFont *)font;
 
 @end

@@ -57,6 +57,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
      * @param msg
      */
     protected void handleUiMessage(Message msg) {
+        Log.i(TAG, "handleUiMessage msg: " + msg.what);
     }
 
     /**
@@ -70,6 +71,10 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
 
     protected void sendUiMessageDelayed(Message msg, long delayMillis) {
         mUiHandler.sendMessageDelayed(msg, delayMillis);
+    }
+
+    protected void postUiDelayed(Runnable runnable, long delay){
+        mUiHandler.postDelayed(runnable, delay);
     }
 
     /**

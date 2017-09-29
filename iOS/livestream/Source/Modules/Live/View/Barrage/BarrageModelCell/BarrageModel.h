@@ -13,6 +13,7 @@
 
 @property (assign, nonatomic) PriorityLevel level;
 
+@property (copy, nonatomic) NSString *userId;
 @property (copy, nonatomic) NSString *url;
 @property (copy, nonatomic) NSString *message;
 @property (copy, nonatomic) NSString *name;

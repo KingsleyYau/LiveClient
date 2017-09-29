@@ -50,10 +50,18 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequstJniSchedule
  * Method:    CreateScheduleInvite
- * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;IZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_CreateScheduleInvite
-  (JNIEnv *, jclass, jstring, jstring, jint, jstring, jint, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jint, jstring, jint, jboolean, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_AcceptInstanceInvite
+ * Method:    AcceptInstanceInvite
+ * Signature: (Ljava/lang/String;ZILcom/qpidnetwork/livemodule/httprequest/OnAcceptInstanceInviteCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSchedule_AcceptInstanceInvite
+  (JNIEnv *, jclass, jstring, jboolean, jobject);
 
 #ifdef __cplusplus
 }

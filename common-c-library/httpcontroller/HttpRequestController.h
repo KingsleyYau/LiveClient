@@ -40,6 +40,11 @@
 #include "HttpGetNewFansBaseInfoTask.h"
 #include "HttpControlManPushTask.h"
 #include "HttpGetPromoAnchorListTask.h"
+#include "HttpAcceptInstanceInviteTask.h"
+#include "HttpGetAdAnchorListTask.h"
+#include "HttpCloseAdAnchorListTask.h"
+#include "HttpGetPhoneVerifyCodeTask.h"
+#include "HttpSubmitPhoneVerifyCodeTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -117,6 +122,7 @@ public:
      * @param pHttpRequestManager           http管理器
      * @param start                         起始，用于分页，表示从第几个元素开始获取
      * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param hasWatch                      是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -125,6 +131,7 @@ public:
                             HttpRequestManager *pHttpRequestManager,
                             int start,
                             int step,
+                            bool hasWatch,
                             IRequestGetAnchorListCallback* callback = NULL
                             );
     
@@ -163,8 +170,8 @@ public:
      *
      * @param pHttpRequestManager           http管理器
      * @param roomId                        直播间ID
-     * @param page                          页数（可0， 0则表示获取所有， ）
-     * @param number                        每页的元素数量（可0， 0则表示获取所有）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -172,8 +179,8 @@ public:
     long long LiveFansList(
                            HttpRequestManager *pHttpRequestManager,
                            const string& roomId,
-                           int page,
-                           int number,
+                           int start,
+                           int step,
                            IRequestLiveFansListCallback* callback = NULL
                           );
 
@@ -317,6 +324,8 @@ public:
      *
      * @param pHttpRequestManager           http管理器
      * @param number                        获取推荐个数
+     * @param type                          获取界面的类型（1:直播间 2:主播个人页）
+     * @param userId                        当前界面的主播ID，返回结果将不包含当前主播（可无， 无则表示不过滤结果）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -324,6 +333,8 @@ public:
     long long GetPromoAnchorList(
                                  HttpRequestManager *pHttpRequestManager,
                                  int number,
+                                 PromoAnchorType type,
+                                 const string& userId,
                                  IRequestGetPromoAnchorListCallback* callback = NULL
                              );
     
@@ -414,6 +425,7 @@ public:
      * @param bookTime                      预约时间
      * @param giftId                        礼物ID
      * @param giftNum                       礼物数量
+     * @param needSms                       是否需要短信通知（0:否 1:是 ）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -425,8 +437,26 @@ public:
                                  long bookTime,
                                  const string& giftId,
                                  int giftNum,
+                                 bool needSms,
                                  IRequestSendBookingRequestCallback* callback = NULL
                                 );
+    
+    /**
+     *  4.7.观众处理立即私密邀请
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param inviteId                      邀请ID
+     * @param isConfirm                     是否同意（0: 否， 1: 是）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AcceptInstanceInvite(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& inviteId,
+                                 bool isConfirm,
+                                 IRequestAcceptInstanceInviteCallback* callback = NULL
+                                 );
     
     /**
      *  5.1.获取背包礼物列表
@@ -539,6 +569,73 @@ public:
                             IRequestSetFavoriteCallback* callback = NULL
                             );
     
+    /**
+     *  6.4.获取QN广告列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param number                        客户段需要获取的数量
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetAdAnchorList(
+                              HttpRequestManager *pHttpRequestManager,
+                              int number,
+                              IRequestGetAdAnchorListCallback* callback = NULL
+                              );
+    
+    /**
+     *  6.5.关闭QN广告列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CloseAdAnchorList(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestCloseAdAnchorListCallback* callback = NULL
+                              );
+    
+    /**
+     * 6.6.获取手机验证码
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param country                       国家
+     * @param areaCode                      手机区号
+     * @param phoneNo                       手机号码
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPhoneVerifyCode(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& country,
+                                const string& areaCode,
+                                const string& phoneNo,
+                                IRequestGetPhoneVerifyCodeCallback* callback = NULL
+                                 );
+    
+    /**
+     * 6.7.提交手机验证码
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param country                       国家
+     * @param areaCode                      手机区号
+     * @param phoneNo                       手机号码
+     * @param verifyCode                    验证码
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SubmitPhoneVerifyCode(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& country,
+                                 const string& areaCode,
+                                 const string& phoneNo,
+                                 const string& verifyCode,
+                                 IRequestSubmitPhoneVerifyCodeCallback* callback = NULL
+                                 );
     
 private:
     void OnTaskFinish(IHttpTask* task);

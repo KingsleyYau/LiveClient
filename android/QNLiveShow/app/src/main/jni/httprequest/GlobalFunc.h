@@ -22,6 +22,7 @@
 
  extern HttpRequestManager gHttpRequestManager;
  extern HttpRequestManager gPhotoUploadRequestManager;
+ extern HttpRequestManager gConfigRequestManager;
  extern HttpRequestController gHttpRequestController;
 
  /* java callback object */

@@ -64,7 +64,7 @@ public class UserPhotoImageDownloader {
         if(!TextUtils.isEmpty(mUserId)){
             IMManager imManager = IMManager.getInstance();
             IMUserBaseInfoItem userInfo = imManager.getUserInfo(mUserId);
-            if(!TextUtils.isEmpty(userInfo.photoUrl)){
+            if(null != userInfo && !TextUtils.isEmpty(userInfo.photoUrl)){
                 if(mImageView != null) {
                     Picasso.with(mContext).load(userInfo.photoUrl).into(mImageView);
                 }

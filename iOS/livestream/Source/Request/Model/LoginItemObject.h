@@ -13,10 +13,11 @@
  * 登录成功结构体
  * userId			用户ID
  * token            直播系统不同服务器的统一验证身份标识
- * nickName             昵称
+ * nickName         昵称
  * levenl			级别
  * experience		经验值
  * photoUrl		    头像url
+ * isPushAd         是否打开广告（0:否 1:是）
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* token;
@@ -24,4 +25,5 @@
 @property (nonatomic, assign) int level;
 @property (nonatomic, assign) int experience;
 @property (nonatomic, strong) NSString* photoUrl;
+@property (nonatomic, assign) BOOL isPushAd;
 @end

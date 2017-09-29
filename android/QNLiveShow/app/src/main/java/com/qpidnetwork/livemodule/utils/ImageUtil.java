@@ -17,6 +17,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 
+import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 
 import java.io.File;
@@ -32,8 +33,64 @@ import static com.qpidnetwork.livemodule.utils.ActivityUtil.TAG;
 
 public class ImageUtil {
 
+    /**
+     * 高效获取指定路径下图片文件Bitmap（压缩处理，防止过大导致内存溢出）
+     * @param filePath 源文件地址
+     * @param reqWidth 目标文件宽度
+     * @param reqHeight 目标文件高度
+     * @return
+     */
+    public static Bitmap decodeSampledBitmapFromFile(String filePath, int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(filePath, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if(reqHeight == -1){
+            if (width > reqWidth) {
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((width / inSampleSize) > reqWidth) {
+                    inSampleSize *= 2;
+                }
+            }
+        }else if(reqWidth == -1){
+            if (height > reqHeight ) {
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((height / inSampleSize) > reqHeight) {
+                    inSampleSize *= 2;
+                }
+            }
+        }else{
+            if (height > reqHeight || width > reqWidth) {
+                // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+                // height and width larger than the requested height and width.
+                while ((height / inSampleSize) > reqHeight
+                        || (width / inSampleSize) > reqWidth) {
+                    inSampleSize *= 2;
+                }
+            }
+        }
 
 
+        return inSampleSize;
+    }
 
     /**
      * Gets the content:// URI  from the given corresponding path to a file
@@ -303,5 +360,20 @@ public class ImageUtil {
             e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 根据图片名称获取资源ID
+     * @param resName
+     * @return
+     */
+    public static int getImageResoursceByName(String resName){
+        int imgId = 0;
+        try {
+            imgId = R.drawable.class.getField(resName).getInt(null); // 图片的对应为R.drawable.e5
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return imgId;
     }
 }

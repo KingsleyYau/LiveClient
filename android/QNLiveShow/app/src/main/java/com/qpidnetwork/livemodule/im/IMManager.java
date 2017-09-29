@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.im;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -8,25 +9,33 @@ import android.text.TextUtils;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.im.listener.IMBookingReplyItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
 import com.qpidnetwork.livemodule.im.listener.IMLoginItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
+import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.IPConfigUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static android.R.attr.level;
 
 /**
  * IM聊天管理器（自动登录，事件分发等）
@@ -63,13 +72,11 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	/**
 	 * 消息ID生成器
 	 */
-	private AtomicInteger mMsgIdIndex = null;
-	private static final int MsgIdIndexBegin = 1;
+	public AtomicInteger mMsgIdIndex = null;
+	public static final int MsgIdIndexBegin = 1;
 	private HashMap<Integer, IMMessageItem> mSendingMsgMap;  //记录发送中消息Map
 	
 	private IMEventListenerManager mListenerManager; //通知事件分发器
-
-	private boolean isFirstSendLike = true; //在当前房间是否第一次发送点赞
 
 	/**
 	 * 请求操作类型
@@ -79,7 +86,8 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		HttpLogoutEvent,		//php注销通知
 		IMLoginEvent,			//IM登录成功通知
 		IMLogoutEvent,			//IM注销通知
-		IMAutoLoginEvent		//IM自动登录事件
+		IMAutoLoginEvent,		//IM自动登录事件
+		IMKickOff				//IM被踢事件
 	}
 	
 	public static IMManager newInstance(Context context){
@@ -96,7 +104,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	private IMManager(Context context){
 		this.mContext = context;
 		mUrlList = new ArrayList<String>();
-		mUrlList.add("ws://172.25.32.17:3106");
+		mUrlList.add(IPConfigUtil.getTestIMServerUrl());
 		mIsLogin = false;
 		mIsAutoRelogin = false;
 		mListenerManager = new IMEventListenerManager();
@@ -137,6 +145,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 					LCC_ERR_TYPE errType = LCC_ERR_TYPE.values()[msg.arg1];
 					if(errType == LCC_ERR_TYPE.LCC_ERR_SUCCESS){
 						mIsLogin = true;
+						reLoginSuc();
 					}else if(IsAutoRelogin(errType)){
 						timerToAutoLogin();
 					}else{
@@ -160,6 +169,14 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 				
 				case IMAutoLoginEvent:{
 					AutoRelogin();
+				}break;
+
+				case IMKickOff:{
+					Log.i("hunter", "IMManager kick off");
+					Intent intent = new Intent(mContext, MainFragmentActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.putExtra("event", "kickoff");
+					mContext.startActivity(intent);
 				}break;
 				
 				default:
@@ -252,15 +269,10 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 				// 重置参数
 				ResetParam();
 			}
-			// LiveChat登录
+			// LiveChat登录 result为true仅代表ConnectServer成功，但IM并没有登上，需要等待OnLoginIn回调
 			result = IMClient.Login(loginItem.token);
 			if (result){
 				mIsAutoRelogin = true;
-				if(GiftSender.getInstance().imReconnecting){
-					GiftSender.getInstance().hasIMReconnected = true;
-				}
-				GiftSender.getInstance().imReconnecting = false;
-				Log.d(TAG,"Login-断线重连成功");
 				mLoginItem = loginItem;
 			}
 		}
@@ -299,9 +311,6 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		Log.d(TAG, "IMManager::Logout() begin");
 		// 设置不自动重登录
 		mIsAutoRelogin = false;
-		//更新点赞状态
-		isFirstSendLike = true;
-
 		boolean result =  IMClient.Logout();
 		Log.d(TAG, "IMManager::Logout() end, result:%b", result);	
 		
@@ -346,12 +355,13 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	 */
 	public int RoomIn(String roomId){
 		int reqId = IM_INVALID_REQID;
-		//进入房间更新点赞状态
-		isFirstSendLike = true;
+		Log.d(TAG,"RoomIn-reqId0:"+reqId+" mIsLogin:"+mIsLogin+" roomId:"+roomId );
 		if(mIsLogin){
 			reqId = IMClient.GetReqId();
+			Log.d(TAG,"RoomIn-reqId1:"+reqId);
 			if(!IMClient.RoomIn(reqId, roomId)){
 				reqId = IM_INVALID_REQID;
+				Log.d(TAG,"RoomIn-reqId2:"+reqId);
 			}
 		}
 		return reqId;
@@ -374,6 +384,55 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	/**
+	 * 进入公开直播间
+	 * @param anchorId
+	 * @return
+	 */
+	public int PublicRoomIn(String anchorId){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.PublicRoomIn(reqId, anchorId)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		return reqId;
+	}
+
+	/**
+	 * 直播间互动，开启或关闭视频
+	 * @param roomId
+	 * @param operateType
+	 * @return
+	 */
+	public int ControlManPush(String roomId, IMClient.IMVideoInteractiveOperateType operateType){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.ControlManPush(reqId, roomId, operateType)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		return reqId;
+	}
+
+	/**
+	 * 断线重连获取指定邀请信息
+	 * @param invatationId
+	 * @return
+	 */
+	public int GetInviteInfo(String invatationId){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.GetInviteInfo(reqId, invatationId)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		return reqId;
+	}
+
+	/**
 	 * 发送消息
 	 * @param roomId
 	 * @param msg
@@ -382,9 +441,12 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	 */
 	public IMMessageItem sendRoomMsg(String roomId, String msg, String[] targetIds){
 		int reqId = IMClient.GetReqId();
+		Log.d(TAG,"sendRoomMsg-roomId:"+roomId+" msg:"+msg+" reqId0:"+reqId);
 		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), mLoginItem.userId, mLoginItem.nickName,
 				mLoginItem.level, IMMessageItem.MessageType.Normal, new IMTextMessageContent(msg), null);
-		if(!mIsLogin || !IMClient.SendRoomMsg(reqId, roomId, mLoginItem.nickName, msg, targetIds)){
+		boolean result = !mIsLogin || !IMClient.SendRoomMsg(reqId, roomId, mLoginItem.nickName, msg, targetIds);
+		Log.d(TAG,"sendRoomMsg-mIsLogin:"+mIsLogin+" result:"+result);
+		if(result){
 			return null;
 		}else{
 			//存储发送中消息
@@ -417,6 +479,22 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 			mSendingMsgMap.put(Integer.valueOf(reqId), msgItem);
 		}
 		return msgItem;
+	}
+
+	/**
+	 * 获取立即私密邀请状态
+	 * @param invitationId
+	 * @return
+	 */
+	public int GetImediateInviteInfo(String invitationId){
+		int reqId = IM_INVALID_REQID;
+//		if(mIsLogin){
+//			reqId = IMClient.GetReqId();
+//			if(!IMClient.PublicRoomIn(reqId, anchorId)){
+//				reqId = IM_INVALID_REQID;
+//			}
+//		}
+		return reqId;
 	}
 
 	/**
@@ -466,6 +544,23 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		if(mIsLogin){
 			reqId = IMClient.GetReqId();
 			if(!IMClient.CancelImmediatePrivateInvite(reqId, inviteId)){
+				reqId = IM_INVALID_REQID;
+			}
+		}
+		return reqId;
+	}
+
+	/**
+	 * 8.1.发送直播间才艺点播邀请
+	 * @param roomId
+	 * @param talentId
+	 * @return
+	 */
+	public int sendTalentInvite(String roomId, String talentId){
+		int reqId = IM_INVALID_REQID;
+		if(mIsLogin){
+			reqId = IMClient.GetReqId();
+			if(!IMClient.SendTalentInvite(reqId , roomId , talentId)){
 				reqId = IM_INVALID_REQID;
 			}
 		}
@@ -531,6 +626,16 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
+	public void OnControlManPush(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String[] manPushUrl) {
+		mListenerManager.OnControlManPush(reqId, success, errType, errMsg, manPushUrl);
+	}
+
+	@Override
+	public void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem) {
+		mListenerManager.OnGetInviteInfo(reqId, success, errType, errMsg, inviteItem);
+	}
+
+	@Override
 	public void OnSendRoomMsg(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
 		IMMessageItem msgItem = mSendingMsgMap.remove(Integer.valueOf(reqId));
 		mListenerManager.OnSendRoomMsg(success, errType, errMsg, msgItem);
@@ -560,22 +665,35 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 
 	@Override
 	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String talentInviteId) {
-
+		mListenerManager.OnSendTalent(reqId , success , errType ,errMsg);
 	}
 
 	@Override
 	public void OnKickOff(LCC_ERR_TYPE errType, String errMsg) {
+		//处理被踢逻辑
+		Message msg = Message.obtain();
+		msg.what = IMNotifyOptType.IMKickOff.ordinal();
+		mHandler.sendMessage(msg);
+
 		mListenerManager.OnKickOff(errType, errMsg);
 	}
 
 	@Override
-	public void OnRecvRoomCloseNotice(String roomId, String userId, String nickName, LCC_ERR_TYPE errType, String errMsg) {
-		mListenerManager.OnRecvRoomCloseNotice(roomId, userId, nickName, errType, errMsg);
+	public void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg) {
+		mListenerManager.OnRecvRoomCloseNotice(roomId, errType, errMsg);
 	}
 
 	@Override
-	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum) {
-		mListenerManager.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
+	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl,
+									  String riderId, String riderName, String riderUrl, int fansNum) {
+		//座驾为空的情况下
+		if(TextUtils.isEmpty(riderName) || TextUtils.isEmpty(riderUrl) || TextUtils.isEmpty(riderId)){
+			IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), userId,
+					nickName, level, IMMessageItem.MessageType.RoomIn, null,null);
+			mListenerManager.OnRecvRoomMsg(msgItem);
+		}
+		mListenerManager.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId,
+				riderName, riderUrl, fansNum);
 	}
 
 	@Override
@@ -609,7 +727,7 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnRecvLiveStart(String roomId, int leftSeconds) {
+	public void OnRecvLiveStart(String roomId, String anchorId, String nickName, String avatarImg, int leftSeconds) {
 		mListenerManager.OnRecvLiveStart(roomId, leftSeconds);
 	}
 
@@ -621,23 +739,34 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	@Override
 	public void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, String msg) {
 		//收到普通文本消息
-		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), fromId, nickName,
-				level, IMMessageItem.MessageType.Normal, new IMTextMessageContent(msg), null);
+		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), fromId,
+				nickName, level, IMMessageItem.MessageType.Normal,
+				new IMTextMessageContent(msg), null);
 		mListenerManager.OnRecvRoomMsg(msgItem);
-		Log.i(TAG, "OnRecvRoomMsg msgId:%d, roomId:%s, userId:%s", msgItem.msgId, msgItem.roomId, msgItem.userId);
+		Log.i(TAG, "OnRecvRoomMsg msgId:%d, roomId:%s, userId:%s", msgItem.msgId,
+				msgItem.roomId, msgItem.userId);
 	}
 
 	@Override
 	public void OnRecvSendSystemNotice(String roomId, String message, String link){
-
+		Log.d(TAG,"OnRecvSendSystemNotice-roomId:"+roomId+" message:"+message+" link:"+link);
+		IMSysNoticeMessageContent msgContent = new IMSysNoticeMessageContent(message,link, IMSysNoticeMessageContent.SysNoticeType.Normal);
+		IMMessageItem msgItem = new IMMessageItem(roomId,mMsgIdIndex.getAndIncrement(),
+				IMMessageItem.MessageType.SysNotice,msgContent);
+		mListenerManager.OnRecvSendSystemNotice(msgItem);
 	}
 
 	@Override
-	public void OnRecvRoomGiftNotice(String roomId, String fromId, String nickName, String giftId, String giftName, int giftNum, boolean multi_click, int multi_click_start, int multi_click_end, int multiClickId) {
-		IMGiftMessageContent msgContent = new IMGiftMessageContent(giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multiClickId);
-		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(), fromId, nickName, -1, IMMessageItem.MessageType.Gift, null, msgContent);
+	public void OnRecvRoomGiftNotice(String roomId, String fromId, String nickName, String giftId,
+									 String giftName, int giftNum, boolean multi_click,
+									 int multi_click_start, int multi_click_end, int multiClickId) {
+		IMGiftMessageContent msgContent = new IMGiftMessageContent(giftId, giftName, giftNum,
+				multi_click, multi_click_start, multi_click_end, multiClickId);
+		IMMessageItem msgItem = new IMMessageItem(roomId, mMsgIdIndex.getAndIncrement(),
+				fromId, nickName, -1, IMMessageItem.MessageType.Gift, null, msgContent);
 		mListenerManager.OnRecvRoomGiftNotice(msgItem);
-		Log.i(TAG, "OnRecvRoomGiftNotice msgId:%d, roomId:%s, userId:%s", msgItem.msgId, msgItem.roomId, msgItem.userId);
+		Log.i(TAG, "OnRecvRoomGiftNotice msgId:%d, roomId:%s, userId:%s", msgItem.msgId,
+				msgItem.roomId, msgItem.userId);
 	}
 
 	@Override
@@ -665,8 +794,8 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 	}
 
 	@Override
-	public void OnRecvSendBookingReplyNotice(String inviteId, BookInviteReplyType replyType) {
-		mListenerManager.OnRecvSendBookingReplyNotice(inviteId, replyType);
+	public void OnRecvSendBookingReplyNotice(IMBookingReplyItem imBookingReplyItem) {
+		mListenerManager.OnRecvSendBookingReplyNotice(imBookingReplyItem.inviteId, imBookingReplyItem.replyType);
 	}
 
 	@Override
@@ -681,6 +810,9 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 
 	@Override
 	public void OnRecvLevelUpNotice(int level) {
+        //更新用户信息中等级
+        LoginManager.getInstance().getmLoginItem().level = level;
+
 		mListenerManager.OnRecvLevelUpNotice(level);
 	}
 
@@ -694,5 +826,32 @@ public class IMManager extends IMClientListener implements IAuthorizationListene
 		mListenerManager.OnRecvBackpackUpdateNotice(item);
 	}
 
+	//--------------------断线重登陆---------------------------------------------------------
+	/**
+	 * 注册邀请启动监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean registerIMLoginStatusListener(IMLoginStatusListener listener){
+		return mListenerManager.registerIMLoginStatusListener(listener);
+	}
 
+	/**
+	 * 注销邀请启动监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean unregisterIMLoginStatusListener(IMLoginStatusListener listener){
+		return mListenerManager.unregisterIMLoginStatusListener(listener);
+	}
+
+	private void reLoginSuc(){
+		Log.d(TAG,"reLoginSuc");
+		if(GiftSender.getInstance().imReconnecting) {
+			GiftSender.getInstance().hasIMReconnected = true;
+			GiftSender.getInstance().imReconnecting = false;
+			Log.d(TAG, "Login-断线重连成功");
+			mListenerManager.onIMAutoReLogined();
+		}
+	}
 }

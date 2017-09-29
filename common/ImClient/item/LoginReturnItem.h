@@ -41,8 +41,8 @@ public:
                     }
                 }
                 if (dataJson[INVITELIST_PARAM].isArray()) {
-                    for (int i = 0; i < root[INVITELIST_PARAM].size(); i++) {
-                        Json::Value element = root[INVITELIST_PARAM].get(i, Json::Value::null);
+                    for (int i = 0; i < dataJson[INVITELIST_PARAM].size(); i++) {
+                        Json::Value element = dataJson[INVITELIST_PARAM].get(i, Json::Value::null);
                         PrivateInviteItem item;
                         if (item.Parse(element)) {
                             inviteList.push_back(item);
@@ -50,8 +50,8 @@ public:
                     }
                 }
                 if (dataJson[SCHEDULEROOMLIST_PARAM].isArray()) {
-                    for (int i = 0; i < root[SCHEDULEROOMLIST_PARAM].size(); i++) {
-                        Json::Value element = root[SCHEDULEROOMLIST_PARAM].get(i, Json::Value::null);
+                    for (int i = 0; i < dataJson[SCHEDULEROOMLIST_PARAM].size(); i++) {
+                        Json::Value element = dataJson[SCHEDULEROOMLIST_PARAM].get(i, Json::Value::null);
                         ScheduleRoomItem item;
                         if (item.Parse(element)) {
                             scheduleRoomList.push_back(item);

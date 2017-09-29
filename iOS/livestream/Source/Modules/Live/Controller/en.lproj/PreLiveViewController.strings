@@ -1,0 +1,25 @@
+
+/* Class = "UILabel"; text = "Recommanded Performers"; ObjectID = "Whb-I4-Yu4"; */
+"Whb-I4-Yu4.text" = "Recommanded Performers";
+
+/* Class = "UILabel"; text = "当前状态提示"; ObjectID = "dam-36-UhM"; */
+"dam-36-UhM.text" = "当前状态提示";
+
+/* Class = "UILabel"; text = "30 s"; ObjectID = "gdW-JK-7iy"; */
+"gdW-JK-7iy.text" = "30 s";
+
+/* Class = "UILabel"; text = "Waitting for Malinla to start the session...\n\nPrivate Broadcast Price: 0.1 credit / minute\n\nWe will charge you 0.5 credits as the deposit of the invitation first.\nIf the broadcaster turn your invitation down, we will return it to you.\nIf you cancel the invitation when the broadcaster accept it, your credits won't be returned."; ObjectID = "h2y-1A-AFR"; */
+"h2y-1A-AFR.text" = "Waitting for Malinla to start the session...\n\nPrivate Broadcast Price: 0.1 credit / minute\n\nWe will charge you 0.5 credits as the deposit of the invitation first.\nIf the broadcaster turn your invitation down, we will return it to you.\nIf you cancel the invitation when the broadcaster accept it, your credits won't be returned.";
+
+/* Class = "UILabel"; text = "Malinla"; ObjectID = "scc-RK-ANB"; */
+"scc-RK-ANB.text" = "Malinla";
+
+/* Class = "UILabel"; text = "180 s"; ObjectID = "wdp-1g-dpL"; */
+"wdp-1g-dpL.text" = "180 s";
+
+"PRELIVE_ERR_ADD_CREDIT" = "Oops! You don't have enough credits to start a private broadcast.";
+"PRELIVE_ERR_ENTERROOM_EXPIRE" = "Enter room has been expired.Please try again.";
+"PRELIVE_ERR_INVITATION_EXPIRE" = "The invitation has been expired.Please try again.";
+"PRELIVE_ERR_RESERVATION_EXPIRE" = "The invitation has been expired.Please try again.";
+"PRELIVE_ERR_BOARDCAST_LIVING" = "is in a private session.Do you want to send a private broadcast invitation now ?";
+"PRELIVE_TIPS_BOARDCAST_ENTERING" = "has accepted your invitation.Live will start in";

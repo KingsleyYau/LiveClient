@@ -23,7 +23,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="180" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View" customClass="UIImageViewTopFit">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Man_Head_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View" customClass="UIImageViewTopFit">
                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
@@ -102,4 +102,7 @@
             <point key="canvasLocation" x="-226.5" y="-168"/>
         </view>
     </objects>
+    <resources>
+        <image name="Man_Head_Nomal" width="100" height="100"/>
+    </resources>
 </document>

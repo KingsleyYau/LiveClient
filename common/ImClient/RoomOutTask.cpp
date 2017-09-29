@@ -14,7 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
+//#define ROOMID_PARAM           "roomid"
 
 RoomOutTask::RoomOutTask(void)
 {

@@ -14,9 +14,9 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define LOGID_PARAM           "log_id"
+#define INVITEID_PARAM        "invite_id"
 #define ANCHORID_PARAM        "anchor_id"
-#define NICKNAMET_PARAM        "nick_name"
+#define NICKNAMET_PARAM       "nick_name"
 #define AVATARIMG_PARAM       "avatar_img"
 #define MSG_PARAM             "msg"
 
@@ -29,7 +29,7 @@ RecvInstantInviteUserNoticeTask::RecvInstantInviteUserNoticeTask(void)
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
     
-    m_logId = "";
+    m_inviteId = "";
     m_anchorId = "";
     m_nickName = "";
     m_avatarImg = "";
@@ -66,8 +66,8 @@ bool RecvInstantInviteUserNoticeTask::Handle(const TransportProtocol& tp)
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[LOGID_PARAM].isString()) {
-            m_logId = tp.m_data[LOGID_PARAM].asString();
+        if (tp.m_data[INVITEID_PARAM].isString()) {
+            m_inviteId = tp.m_data[INVITEID_PARAM].asString();
         }
         if (tp.m_data[ANCHORID_PARAM].isString()) {
             m_anchorId = tp.m_data[ANCHORID_PARAM].asString();
@@ -93,7 +93,7 @@ bool RecvInstantInviteUserNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvInstantInviteUserNotice(m_logId, m_anchorId, m_nickName, m_avatarImg, m_msg);
+        m_listener->OnRecvInstantInviteUserNotice(m_inviteId, m_anchorId, m_nickName, m_avatarImg, m_msg);
 		FileLog("LiveChatClient", "RecvInstantInviteUserNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

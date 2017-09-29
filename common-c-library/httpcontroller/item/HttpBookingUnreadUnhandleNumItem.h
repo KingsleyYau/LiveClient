@@ -21,38 +21,38 @@ public:
     bool Parse(const Json::Value& root) {
         bool result = false;
         if (root.isObject()) {
-            /* total */
-            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTAL].isInt()) {
-                total = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTAL].asInt();
+            /* totalNoReadNum */
+            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTALNOREADNUM ].isInt()) {
+                totalNoReadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTALNOREADNUM ].asInt();
             }
-            /* handleNum */
-            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HANDLENUM].isInt()) {
-                handleNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HANDLENUM].asInt();
-            }
-            
-            /* scheduledUnreadNum */
-            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDUNREADNUM].isInt()) {
-                scheduledUnreadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDUNREADNUM].asInt();
+            /* pendingNoReadNum */
+            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_PENDINGNOREADNUM].isInt()) {
+                pendingNoReadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_PENDINGNOREADNUM].asInt();
             }
             
-            /* historyUnreadNum */
-            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYUNREADNUM].isInt()) {
-                historyUnreadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYUNREADNUM].asInt();
+            /* scheduledNoReadNum */
+            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDNOREADNUM].isInt()) {
+                scheduledNoReadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDNOREADNUM].asInt();
+            }
+            
+            /* historyNoReadNum */
+            if (root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYNOREADNUM].isInt()) {
+                historyNoReadNum = root[LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYNOREADNUM].asInt();
             }
 
         }
 
-        if (total > 0) {
-            result = true;
-        }
+        //if (totalNoReadNum > 0) {
+        result = true;
+       // }
         return result;
     }
     
     HttpBookingUnreadUnhandleNumItem() {
-        total = 0;
-        handleNum = 0;
-        scheduledUnreadNum = 0;
-        historyUnreadNum = 0;
+        totalNoReadNum = 0;
+        pendingNoReadNum = 0;
+        scheduledNoReadNum = 0;
+        historyNoReadNum = 0;
 
     }
     
@@ -61,15 +61,15 @@ public:
     }
     /**
      * 预约列表数量结构体
-     * total                 以下参数数量总和
-     * handleNum             待观众处理的数量
-     * scheduledUnreadNum    已接受的未读数量
-     * historyUnreadNum      历史超时、拒绝的未读数量
+     * totalNoReadNum                 以下参数数量总和
+     * pendingNoReadNum             待观众处理的数量
+     * scheduledNoReadNum    已接受的未读数量
+     * historyNoReadNum      历史超时、拒绝的未读数量
      */
-    int total;
-    int handleNum;
-    int scheduledUnreadNum;
-    int historyUnreadNum;
+    int totalNoReadNum;
+    int pendingNoReadNum;
+    int scheduledNoReadNum;
+    int historyNoReadNum;
 };
 
 #endif /* HTTPBOOKINGUNREADUNHANDLENUMITEM_H_*/

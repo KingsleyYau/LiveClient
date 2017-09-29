@@ -7,8 +7,10 @@ import com.qpidnetwork.livemodule.framework.widget.swipetoloadlayout.model.Chara
 import com.qpidnetwork.livemodule.im.listener.IMGiftMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
+import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
 import com.qpidnetwork.livemodule.liveshow.liveroom.car.CarInfo;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
 import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
 import com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView;
 
@@ -124,8 +126,6 @@ public class TestDataUtil {
 
     public static boolean isContinueTestTask = false;
 
-
-
     public static void testMulitGift(final OnIMMessageItemProducedListener listener){
         new Thread(){
             @Override
@@ -139,7 +139,7 @@ public class TestDataUtil {
                     }
                     int randomStart = random.nextInt(20);
                     int randomEnd = randomStart+random.nextInt(10);
-                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                    IMMessageItem imMessageItem = new IMMessageItem(GiftSender.getInstance().currRoomId,random.nextInt(Integer.MAX_VALUE),
                             "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.Gift,
                             null,new IMGiftMessageContent("1","kiss",random.nextInt(100),
                             false,randomStart,randomEnd,random.nextInt(Integer.MAX_VALUE)));
@@ -163,7 +163,7 @@ public class TestDataUtil {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                    IMMessageItem imMessageItem = new IMMessageItem(GiftSender.getInstance().currRoomId,random.nextInt(Integer.MAX_VALUE),
                             "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.Barrage,
                             new IMTextMessageContent("Harry said that he love you! [勾引]"),null);
                     if(null != listener){
@@ -179,13 +179,13 @@ public class TestDataUtil {
             @Override
             public void run() {
                 Random random = new Random();
-                while(isContinueTestTask){
+                if(isContinueTestTask){
                     try {
                         Thread.sleep(4000l);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                    IMMessageItem imMessageItem = new IMMessageItem(GiftSender.getInstance().currRoomId,random.nextInt(Integer.MAX_VALUE),
                             "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.RoomIn,
                             null,null);
                     if(null != listener){
@@ -196,7 +196,7 @@ public class TestDataUtil {
         }.start();
     }
 
-    public static void testTariffPrompt(final Activity activity, final TariffPromptManager.OnGetRoomTariffInfoListener listener){
+    public static void testTariffPrompt(final TariffPromptManager.OnGetRoomTariffInfoListener listener){
         final Random random = new Random();
         new Thread(){
             @Override
@@ -208,10 +208,10 @@ public class TestDataUtil {
                         e.printStackTrace();
                     }
                     String nickName = roomTitles[random.nextInt(roomTitles.length)];
-                    IMRoomInItem imRoomInItem = new IMRoomInItem(null,nickName,null,null,random.nextInt(4)+1 ,
+                    IMRoomInItem imRoomInItem = new IMRoomInItem(GiftSender.getInstance().currRoomId,nickName,null,null,"0",random.nextInt(4)+1 ,
                             0d,false,0,null,0,null,false,0,false,null,0,0.2d,0d,0);
                     Log.d(TAG,"testTariffPrompt-nickName:"+nickName+" roomType:"+imRoomInItem.roomType.toString());
-                    TariffPromptManager.getInstance().init(activity,imRoomInItem).getRoomTariffInfo(listener);
+                    TariffPromptManager.getInstance().init(imRoomInItem).getRoomTariffInfo(listener);
                 }
             }
         }.start();
@@ -256,15 +256,46 @@ public class TestDataUtil {
             @Override
             public void run() {
                 Random random = new Random();
-                while(isContinueTestTask){
+                if(isContinueTestTask){
                     try {
                         Thread.sleep(1500l);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    IMMessageItem imMessageItem = new IMMessageItem("0",random.nextInt(Integer.MAX_VALUE),
+                    IMMessageItem imMessageItem = new IMMessageItem(GiftSender.getInstance().currRoomId,random.nextInt(Integer.MAX_VALUE),
                             "1",names[random.nextInt(names.length)], random.nextInt(100), IMMessageItem.MessageType.FollowHost,
                             new IMTextMessageContent(""),null);
+                    if(null != listener){
+                        listener.onIMMessageItemProduced(imMessageItem);
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public static String[] roomSysNotices={
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod",
+            "Aenean euismod bibendum laoreet"
+    };
+
+    public static void testRoomSysNotice(final OnIMMessageItemProducedListener listener){
+        new Thread(){
+            @Override
+            public void run() {
+                Random random = new Random();
+                while(isContinueTestTask){
+                    try {
+                        Thread.sleep(1000l);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    int index = random.nextInt(roomSysNotices.length);
+                    IMMessageItem imMessageItem = new IMMessageItem(GiftSender.getInstance().currRoomId,random.nextInt(Integer.MAX_VALUE),
+                            IMMessageItem.MessageType.SysNotice,
+                            new IMSysNoticeMessageContent(roomSysNotices[index],0 == index ? null : "http://www.baidu.com",
+                            IMSysNoticeMessageContent.SysNoticeType.Normal));
+                    Log.d(TAG,"testRoomSysNotice-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
+
                     if(null != listener){
                         listener.onIMMessageItemProduced(imMessageItem);
                     }
@@ -284,12 +315,14 @@ public class TestDataUtil {
                 Random random = new Random();
                 while(isContinueTestTask){
                     try {
-                        Thread.sleep(500l);
+                        Thread.sleep(1000l);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     CarInfo audienceInfoItem = new CarInfo();
                     audienceInfoItem.nickName = roomTitles[random.nextInt(roomTitles.length)];
+                    audienceInfoItem.riderUrl = "//192.168.88.17:8888/ride1.png";
+                    audienceInfoItem.riderLocalPath = "/storage/emulated/0/Cool_Live/car/133/ride1.png";
                     if(null != listener){
                         listener.onAudienceInfoItemProduced(audienceInfoItem);
                     }
@@ -322,4 +355,6 @@ public class TestDataUtil {
             }
         }.start();
     }
+
+    public static boolean isTestGiftErrorDeal = false;
 }

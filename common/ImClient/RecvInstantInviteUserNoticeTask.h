@@ -44,7 +44,7 @@ private:
 
 	SEQ_T           m_seq;		// seq
     
-    string          m_logId;        // 记录ID
+    string          m_inviteId;      // 邀请ID
     string          m_anchorId;      // 主播ID
     string          m_nickName;      // 主播昵称
     string          m_avatarImg;      // 主播头像url

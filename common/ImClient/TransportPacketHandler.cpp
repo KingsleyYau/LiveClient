@@ -67,7 +67,7 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
 UNPACKET_RESULT_TYPE CTransportPacketHandler::Unpacket(const void* data, size_t dataLen, TransportProtocol& tp)
 {
 	UNPACKET_RESULT_TYPE result = UNPACKET_FAIL;
-    FileLog("LiveChatClient", "CTransportPacketHandler::Unpacket() begin");
+    FileLog("LiveChatClient", "CTransportPacketHandler::Unpacket() %s begin", data);
     
     Json::Value root;
     Json::Reader reader;

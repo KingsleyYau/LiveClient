@@ -60,12 +60,9 @@ void Statistics::AddVideoRecvFrame() {
     mVideoRecvFrameCount++;
     mStatusMutex.unlock();
     
-    CanRecvVideo();
-//    // 不需要准确
-//    while( mbRunning && !CanRecvVideo() ) {
-//        // 等待帧播放
-//        Sleep(100);
-//    }
+    if( !CanRecvAudio() && !CanRecvVideo() ) {
+        Sleep(100);
+    }
 }
 
 void Statistics::AddVideoPlayFrame() {
@@ -79,12 +76,9 @@ void Statistics::AddAudioRecvFrame() {
     mAudioRecvFrameCount++;
     mStatusMutex.unlock();
     
-    CanRecvAudio();
-//    // 不需要准确
-//    while( mbRunning && !CanRecvAudio() ) {
-//        // 等待帧播放
-//        Sleep(100);
-//    }
+    if( !CanRecvAudio() && !CanRecvVideo() ) {
+        Sleep(100);
+    }
 }
 
 void Statistics::AddAudioPlayFrame() {
@@ -101,11 +95,11 @@ bool Statistics::IsDropVideoFrame() {
 int Statistics::IsDisconnect() {
     bool bFlag = false;
     
-    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 300 ) {
+    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 720 ) {
         bFlag = true;
     }
     
-    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 500 ) {
+    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 1200 ) {
         bFlag = true;
     }
     
@@ -123,9 +117,11 @@ bool Statistics::CanRecvVideo() {
                  mVideoRecvFrameCount - mVideoPlayFrameCount
                  );
     
-    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 90 ) {
+    mStatusMutex.lock();
+    if( mVideoRecvFrameCount - mVideoPlayFrameCount >= 360 ) {
         bFlag = false;
     }
+    mStatusMutex.unlock();
     
     return bFlag;
 }
@@ -141,9 +137,11 @@ bool Statistics::CanRecvAudio() {
                  mAudioRecvFrameCount - mAudioPlayFrameCount
                  );
     
-    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 150 ) {
+    mStatusMutex.lock();
+    if( mAudioRecvFrameCount - mAudioPlayFrameCount >= 600 ) {
         bFlag = false;
     }
+    mStatusMutex.unlock();
     
     return bFlag;
 }

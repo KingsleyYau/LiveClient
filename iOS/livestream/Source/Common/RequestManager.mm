@@ -17,13 +17,13 @@
 
 #include <httpcontroller/HttpRequestDefine.h>
 
-static RequestManager* gManager = nil;
+static RequestManager *gManager = nil;
 @interface RequestManager () {
     HttpRequestManager mHttpRequestManager;
     HttpRequestController mHttpRequestController;
 }
 
-@property (nonatomic, strong) NSMutableDictionary* delegateDictionary;
+@property (nonatomic, strong) NSMutableDictionary *delegateDictionary;
 
 @end
 
@@ -31,17 +31,17 @@ static RequestManager* gManager = nil;
 
 #pragma mark - 获取实例
 + (instancetype)manager {
-    if( gManager == nil ) {
+    if (gManager == nil) {
         gManager = [[[self class] alloc] init];
     }
     return gManager;
 }
 
 - (id)init {
-    if( self = [super init] ) {
+    if (self = [super init]) {
         self.delegateDictionary = [NSMutableDictionary dictionary];
         self.versionCode = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"Version"];
-        
+
         mHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
     }
     return self;
@@ -51,7 +51,7 @@ static RequestManager* gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(NO);
-    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -59,7 +59,7 @@ static RequestManager* gManager = nil;
     CleanDir([directory UTF8String]);
 }
 
-- (void)setWebSite:(NSString * _Nonnull)webSite {
+- (void)setWebSite:(NSString *_Nonnull)webSite {
     mHttpRequestManager.SetWebSite([webSite UTF8String]);
 }
 
@@ -93,14 +93,13 @@ static RequestManager* gManager = nil;
 
 #pragma mark - 登陆认证模块
 
-
 class RequestLoginCallbackImp : public IRequestLoginCallback {
-public:
+  public:
     RequestLoginCallbackImp(){};
     ~RequestLoginCallbackImp(){};
-    void OnLogin(HttpLoginTask* task, bool success, int errnum, const string& errmsg, const HttpLoginItem& item) {
-        NSLog(@"RequestManager::onLogin( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnLogin(HttpLoginTask *task, bool success, int errnum, const string &errmsg, const HttpLoginItem &item) {
+        NSLog(@"RequestManager::onLogin( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         LoginFinishHandler handler = nil;
         LoginItemObject *obj = [[LoginItemObject alloc] init];
         obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
@@ -109,73 +108,73 @@ public:
         obj.level = item.level;
         obj.experience = item.experience;
         obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
-    
+        obj.isPushAd = item.isPushAd;
+
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
 RequestLoginCallbackImp gRequestLoginCallbackImp;
 
-- (NSInteger)login:(NSString * _Nonnull)qnsid
-          deviceid:(NSString * _Nonnull)deviceid
-             model:(NSString * _Nonnull)model
-      manufacturer:(NSString * _Nonnull)manufacturer
+- (NSInteger)login:(NSString *_Nonnull)qnsid
+          deviceid:(NSString *_Nonnull)deviceid
+             model:(NSString *_Nonnull)model
+      manufacturer:(NSString *_Nonnull)manufacturer
      finishHandler:(LoginFinishHandler _Nullable)finishHandler {
     string strQnsid;
     if (nil != qnsid) {
         strQnsid = [qnsid UTF8String];
     }
-    
+
     string strDeviceid;
     if (nil != deviceid) {
         strDeviceid = [deviceid UTF8String];
     }
-    
+
     string strModel;
     if (nil != model) {
         strModel = [model UTF8String];
     }
-    
+
     string strManufacturer;
     if (nil != manufacturer) {
         strManufacturer = [manufacturer UTF8String];
     }
-    
+
     NSInteger request = mHttpRequestController.Login(&mHttpRequestManager, strQnsid, strDeviceid, strModel, strManufacturer, &gRequestLoginCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
-
 class RequestLogoutCallbackImp : public IRequestLogoutCallback {
-public:
+  public:
     RequestLogoutCallbackImp(){};
     ~RequestLogoutCallbackImp(){};
-    
-    void OnLogout(HttpLogoutTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::onLogout( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success?"true":"false", errnum, errmsg.c_str());
-        
+
+    void OnLogout(HttpLogoutTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::onLogout( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         LogoutFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
@@ -184,77 +183,82 @@ RequestLogoutCallbackImp gRequestLogoutCallbackImp;
 
 - (NSInteger)logout:(LogoutFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.Logout(&mHttpRequestManager, &gRequestLogoutCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
-
 class RequestUpdateTokenIdCallbackImp : public IRequestUpdateTokenIdCallback {
-public:
+  public:
     RequestUpdateTokenIdCallbackImp(){};
     ~RequestUpdateTokenIdCallbackImp(){};
-    
-    void OnUpdateTokenId(HttpUpdateTokenIdTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::onLogout( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success?"true":"false", errnum, errmsg.c_str());
-        
+
+    void OnUpdateTokenId(HttpUpdateTokenIdTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::onLogout( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         UpdateTokenIdFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestUpdateTokenIdCallbackImp gRequestUpdateTokenIdCallbackImp;
 
-- (NSInteger)updateTokenId:(NSString * _Nonnull)tokenId
+- (NSInteger)updateTokenId:(NSString *_Nonnull)tokenId
              finishHandler:(UpdateTokenIdFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.UpdateTokenId(&mHttpRequestManager, [tokenId UTF8String], &gRequestUpdateTokenIdCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 #pragma mark - 直播间模块
 class RequestGetAnchorListCallbackImp : public IRequestGetAnchorListCallback {
-public:
+  public:
     RequestGetAnchorListCallbackImp(){};
     ~RequestGetAnchorListCallbackImp(){};
-    void OnGetAnchorList(HttpGetAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& listItem) {
-        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s, count : %lu )", task, success?"true":"false", errnum, errmsg.c_str(), listItem.size());
-        
+    void OnGetAnchorList(HttpGetAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &listItem) {
+        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s, count : %lu )", task, success ? "true" : "false", errnum, errmsg.c_str(), listItem.size());
+
         NSMutableArray *array = [NSMutableArray array];
         for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
-            LiveRoomInfoItemObject* item = [[LiveRoomInfoItemObject alloc] init];
+            LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
             item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
             item.onlineStatus = (*iter).onlineStatus;
             item.roomType = (*iter).roomType;
-            NSMutableArray* nsInterest = [NSMutableArray array];
+            NSMutableArray *nsInterest = [NSMutableArray array];
+            //int i = 0;
             for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
-                NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
-                [nsInterest addObject:strInterest];
+                //NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
+                int num = (*itr);
+                NSNumber *numInterest = [NSNumber numberWithInt:num];
+                [nsInterest addObject:numInterest];
+                //item->interest[i] = (*itr);
+                //i++;
             }
             item.interest = nsInterest;
+            item.anchorType = (*iter).anchorType;
             [array addObject:item];
-//            NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, userId : %@, nickName : %@, photoUrl : %@ , roomId : %@ , roomPhotoUrl : %@ , onlineStatus : %d , roomType : %d ", task, item.userId, item.nickName, item.photoUrl, item.roomId, item.roomPhotoUrl, item.onlineStatus, item.roomType);
+            //            NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, userId : %@, nickName : %@, photoUrl : %@ , roomId : %@ , roomPhotoUrl : %@ , onlineStatus : %d , roomType : %d ", task, item.userId, item.nickName, item.photoUrl, item.roomId, item.roomPhotoUrl, item.onlineStatus, item.roomType);
         }
         GetAnchorListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
@@ -262,8 +266,8 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
@@ -271,45 +275,47 @@ public:
 RequestGetAnchorListCallbackImp gRequestGetAnchorListCallbackImp;
 - (NSInteger)getAnchorList:(int)start
                       step:(int)step
+                  hasWatch:(BOOL)hasWatch
              finishHandler:(GetAnchorListFinishHandler _Nullable)finishHandler {
-    NSInteger request = mHttpRequestController.GetAnchorList(&mHttpRequestManager, start, step, &gRequestGetAnchorListCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    NSInteger request = mHttpRequestController.GetAnchorList(&mHttpRequestManager, start, step, hasWatch, &gRequestGetAnchorListCallbackImp);
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetFollowListCallbackImp : public IRequestGetFollowListCallback {
-public:
+  public:
     RequestGetFollowListCallbackImp(){};
     ~RequestGetFollowListCallbackImp(){};
-    void OnGetFollowList(HttpGetFollowListTask* task, bool success, int errnum, const string& errmsg, const FollowItemList& listItem) {
-        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetFollowList(HttpGetFollowListTask *task, bool success, int errnum, const string &errmsg, const FollowItemList &listItem) {
+        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (FollowItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
-            FollowItemObject* item = [[FollowItemObject alloc] init];
+            FollowItemObject *item = [[FollowItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomName = [NSString stringWithUTF8String:(*iter).roomName.c_str()];
             item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
             item.onlineStatus = (*iter).onlineStatus;
             item.roomType = (*iter).roomType;
             item.loveLevel = (*iter).loveLevel;
             item.addDate = (*iter).addDate;
-            NSMutableArray* nsInterest = [NSMutableArray array];
+            NSMutableArray *nsInterest = [NSMutableArray array];
             for (FollowInterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
-                NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
-                [nsInterest addObject:strInterest];
+                int num = (*itr);
+                NSNumber *numInterest = [NSNumber numberWithInt:num];
+                [nsInterest addObject:numInterest];
             }
             item.interest = nsInterest;
+            item.anchorType = (*iter).anchorType;
             [array addObject:item];
-            NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, userId : %@, nickName : %@, photoUrl : %@ , roomName : %@ , roomPhotoUrl : %@ , onlineStatus : %d , roomType : %d ", task, item.userId, item.nickName, item.photoUrl, item.roomName, item.roomPhotoUrl, item.onlineStatus, item.roomType);
+            NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, userId : %@, nickName : %@, photoUrl : %@ , roomPhotoUrl : %@ , onlineStatus : %d , roomType : %d ", task, item.userId, item.nickName, item.photoUrl, item.roomPhotoUrl, item.onlineStatus, item.roomType);
         }
         GetFollowListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
@@ -317,8 +323,8 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
@@ -328,37 +334,36 @@ RequestGetFollowListCallbackImp gRequestGetFollowListCallbackImp;
                       step:(int)step
              finishHandler:(GetFollowListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetFollowList(&mHttpRequestManager, start, step, &gRequestGetFollowListCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
-
 class RequestGetRoomInfoCallbackImp : public IRequestGetRoomInfoCallback {
-public:
+  public:
     RequestGetRoomInfoCallbackImp(){};
     ~RequestGetRoomInfoCallbackImp(){};
-    void OnGetRoomInfo(HttpGetRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpGetRoomInfoItem& Item) {
-        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        RoomInfoItemObject* Obj = [[RoomInfoItemObject alloc] init];
+    void OnGetRoomInfo(HttpGetRoomInfoTask *task, bool success, int errnum, const string &errmsg, const HttpGetRoomInfoItem &Item) {
+        NSLog(@"RequestManager::OnGetLiveRoomHot( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        RoomInfoItemObject *Obj = [[RoomInfoItemObject alloc] init];
         NSMutableArray *array = [NSMutableArray array];
         for (HttpGetRoomInfoItem::RoomItemList::const_iterator iter = Item.roomList.begin(); iter != Item.roomList.end(); iter++) {
-            RoomItemObject* item = [[RoomItemObject alloc] init];
+            RoomItemObject *item = [[RoomItemObject alloc] init];
             item.roomId = [NSString stringWithUTF8String:(*iter).roomId.c_str()];
             item.roomUrl = [NSString stringWithUTF8String:(*iter).roomUrl.c_str()];
             [array addObject:item];
         }
         Obj.roomList = array;
-        
+
         NSMutableArray *array1 = [NSMutableArray array];
         for (InviteItemList::const_iterator iter = Item.inviteList.begin(); iter != Item.inviteList.end(); iter++) {
-            InviteIdItemObject* item = [[InviteIdItemObject alloc] init];
+            InviteIdItemObject *item = [[InviteIdItemObject alloc] init];
             item.invitationId = [NSString stringWithUTF8String:(*iter).invitationId.c_str()];
             item.oppositeId = [NSString stringWithUTF8String:(*iter).oppositeId.c_str()];
             item.oppositeNickName = [NSString stringWithUTF8String:(*iter).oppositeNickName.c_str()];
@@ -374,15 +379,15 @@ public:
             [array1 addObject:item];
         }
         Obj.inviteList = array1;
-        
+
         GetRoomInfoFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], Obj);
         }
     }
@@ -390,31 +395,32 @@ public:
 RequestGetRoomInfoCallbackImp gGetRoomInfoCallbackImp;
 - (NSInteger)getRoomInfo:(GetRoomInfoFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetRoomInfo(&mHttpRequestManager, &gGetRoomInfoCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestLiveFansListCallbackImp : public IRequestLiveFansListCallback {
-public:
+  public:
     RequestLiveFansListCallbackImp(){};
     ~RequestLiveFansListCallbackImp(){};
-    void  OnLiveFansList(HttpLiveFansListTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansList& listItem) {
-        NSLog(@"RequestManager::OnLiveFansList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnLiveFansList(HttpLiveFansListTask *task, bool success, int errnum, const string &errmsg, const HttpLiveFansList &listItem) {
+        NSLog(@"RequestManager::OnLiveFansList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (HttpLiveFansList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
-            ViewerFansItemObject* item = [[ViewerFansItemObject alloc] init];
+            ViewerFansItemObject *item = [[ViewerFansItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
             item.mountId = [NSString stringWithUTF8String:(*iter).mountId.c_str()];
             item.mountUrl = [NSString stringWithUTF8String:(*iter).mountUrl.c_str()];
+            item.level = (*iter).level;
             [array addObject:item];
             NSLog(@"RequestManager::OnGetLiveRoomFansList( task : %p, userId : %@, nickName : %@, photoUrl : %@)", task, item.userId, item.nickName, item.photoUrl);
         }
@@ -424,37 +430,36 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
 RequestLiveFansListCallbackImp gLiveFansListCallbackImp;
 
-- (NSInteger)liveFansList:(NSString * _Nonnull)roomId
-                     page:(int)page
-                   number:(int)number
+- (NSInteger)liveFansList:(NSString *_Nonnull)roomId
+                    start:(int)start
+                     step:(int)step
             finishHandler:(LiveFansListFinishHandler _Nullable)finishHandler {
-    NSInteger request = mHttpRequestController.LiveFansList(&mHttpRequestManager, [roomId UTF8String], page, number, &gLiveFansListCallbackImp);
-    
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    NSInteger request = mHttpRequestController.LiveFansList(&mHttpRequestManager, [roomId UTF8String], start, step, &gLiveFansListCallbackImp);
+
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
-
 class RequestGetAllGiftListCallbackImp : public IRequestGetAllGiftListCallback {
-public:
+  public:
     RequestGetAllGiftListCallbackImp(){};
     ~RequestGetAllGiftListCallbackImp(){};
-    void OnGetAllGiftList(HttpGetAllGiftListTask* task, bool success, int errnum, const string& errmsg, const GiftItemList& itemList){
-        NSLog(@"RequestManager::OnGetLiveRoomAllGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetAllGiftList(HttpGetAllGiftListTask *task, bool success, int errnum, const string &errmsg, const GiftItemList &itemList) {
+        NSLog(@"RequestManager::OnGetLiveRoomAllGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (GiftItemList::const_iterator iter = itemList.begin(); iter != itemList.end(); iter++) {
             GiftInfoItemObject *gift = [[GiftInfoItemObject alloc] init];
@@ -465,19 +470,20 @@ public:
             gift.bigImgUrl = [NSString stringWithUTF8String:(*iter).bigImgUrl.c_str()];
             gift.srcFlashUrl = [NSString stringWithUTF8String:(*iter).srcFlashUrl.c_str()];
             gift.srcwebpUrl = [NSString stringWithUTF8String:(*iter).srcwebpUrl.c_str()];
-            gift.srcwebpUrl = [NSString stringWithUTF8String:(*iter).srcwebpUrl.c_str()];
             gift.credit = (*iter).credit;
             gift.multiClick = (*iter).multiClick;
             gift.type = (*iter).type;
             gift.level = (*iter).level;
             gift.loveLevel = (*iter).loveLevel;
             gift.updateTime = (*iter).updateTime;
-            for (HttpSendNumList::const_iterator iterNum = (*iter).sendNumList.begin(); iterNum != (*iter).sendNumList.end(); iterNum++) {
-                NSNumber* nsNum = [NSNumber numberWithInt:(*iterNum)];
-                [gift.sendNumList addObject:nsNum];
+            gift.playTime = (*iter).playTime;
+            NSMutableArray *arrayNum = [NSMutableArray array];
+            for (SendNumList::const_iterator iterNum = (*iter).sendNumList.begin(); iterNum != (*iter).sendNumList.end(); iterNum++) {
+                NSNumber *nsNum = [NSNumber numberWithInt:(*iterNum)];
+                [arrayNum addObject:nsNum];
             }
+            gift.sendNumList = arrayNum;
             [array addObject:gift];
-
         }
         GetAllGiftListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
@@ -485,8 +491,8 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
@@ -494,27 +500,28 @@ public:
 RequestGetAllGiftListCallbackImp gRequestGetAllGiftListCallbackImp;
 - (NSInteger)getAllGiftList:(GetAllGiftListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetAllGiftList(&mHttpRequestManager, &gRequestGetAllGiftListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetGiftListByUserIdCallbackImp : public IRequestGetGiftListByUserIdCallback {
-public:
+  public:
     RequestGetGiftListByUserIdCallbackImp(){};
     ~RequestGetGiftListByUserIdCallbackImp(){};
-    void OnGetGiftListByUserId(HttpGetGiftListByUserIdTask* task, bool success, int errnum, const string& errmsg, const GiftWithIdItemList& itemList) {
-        NSLog(@"RequestManager::OnGetAllGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetGiftListByUserId(HttpGetGiftListByUserIdTask *task, bool success, int errnum, const string &errmsg, const GiftWithIdItemList &itemList) {
+        NSLog(@"RequestManager::OnGetAllGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (GiftWithIdItemList::const_iterator iter = itemList.begin(); iter != itemList.end(); iter++) {
             GiftWithIdItemObject *item = [[GiftWithIdItemObject alloc] init];
             item.giftId = [NSString stringWithUTF8String:(*iter).giftId.c_str()];
             item.isShow = (*iter).isShow;
+            item.isPromo = (*iter).isPromo;
             [array addObject:item];
             NSLog(@"RequestManager::OnGetLiveRoomGiftListByUserId( task : %p, giftId : %@", task, item);
         }
@@ -524,32 +531,32 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
 RequestGetGiftListByUserIdCallbackImp gRequestGetGiftListByUserIdCallbackImp;
-- (NSInteger)getGiftListByUserId:(NSString * _Nonnull)roomId
+- (NSInteger)getGiftListByUserId:(NSString *_Nonnull)roomId
                    finishHandler:(GetGiftListByUserIdFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetGiftListByUserId(&mHttpRequestManager, [roomId UTF8String], &gRequestGetGiftListByUserIdCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetGiftDetailCallbackImp : public IRequestGetGiftDetailCallback {
-public:
+  public:
     RequestGetGiftDetailCallbackImp(){};
     ~RequestGetGiftDetailCallbackImp(){};
-    void OnGetGiftDetail(HttpGetGiftDetailTask* task, bool success, int errnum, const string& errmsg, const HttpGiftInfoItem& item) {
-        NSLog(@"RequestManager::OnGetGiftDetail( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetGiftDetail(HttpGetGiftDetailTask *task, bool success, int errnum, const string &errmsg, const HttpGiftInfoItem &item) {
+        NSLog(@"RequestManager::OnGetGiftDetail( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         GiftInfoItemObject *gift = [[GiftInfoItemObject alloc] init];
         gift.giftId = [NSString stringWithUTF8String:item.giftId.c_str()];
         gift.name = [NSString stringWithUTF8String:item.name.c_str()];
@@ -558,50 +565,55 @@ public:
         gift.bigImgUrl = [NSString stringWithUTF8String:item.bigImgUrl.c_str()];
         gift.srcFlashUrl = [NSString stringWithUTF8String:item.srcFlashUrl.c_str()];
         gift.srcwebpUrl = [NSString stringWithUTF8String:item.srcwebpUrl.c_str()];
-        gift.srcwebpUrl = [NSString stringWithUTF8String:item.srcwebpUrl.c_str()];
         gift.credit = item.credit;
         gift.multiClick = item.multiClick;
         gift.type = item.type;
         gift.level = item.level;
         gift.loveLevel = item.loveLevel;
         gift.updateTime = item.updateTime;
+        gift.playTime = item.playTime;
+        NSMutableArray *arrayNum = [NSMutableArray array];
+        for (SendNumList::const_iterator iterNum = item.sendNumList.begin(); iterNum != item.sendNumList.end(); iterNum++) {
+            NSNumber *nsNum = [NSNumber numberWithInt:(*iterNum)];
+            [arrayNum addObject:nsNum];
+        }
+        gift.sendNumList = arrayNum;
 
-        
         GetGiftDetailFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], gift);
         }
     }
 };
 RequestGetGiftDetailCallbackImp gRequestGetGiftDetailCallbackImp;
-- (NSInteger)getGiftDetail:(NSString * _Nonnull)giftId
+- (NSInteger)getGiftDetail:(NSString *_Nonnull)giftId
              finishHandler:(GetGiftDetailFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetGiftDetail(&mHttpRequestManager, [giftId UTF8String], &gRequestGetGiftDetailCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetEmoticonListCallbackImp : public IRequestGetEmoticonListCallback {
-public:
+  public:
     RequestGetEmoticonListCallbackImp(){};
     ~RequestGetEmoticonListCallbackImp(){};
-    void OnGetEmoticonList(HttpGetEmoticonListTask* task, bool success, int errnum, const string& errmsg, const EmoticonItemList& listItem) {
-        NSLog(@"RequestManager::OnGetEmoticonList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetEmoticonList(HttpGetEmoticonListTask *task, bool success, int errnum, const string &errmsg, const EmoticonItemList &listItem) {
+        NSLog(@"RequestManager::OnGetEmoticonList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (EmoticonItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
-            EmoticonItemObject* item = [[EmoticonItemObject alloc] init];
+            EmoticonItemObject *item = [[EmoticonItemObject alloc] init];
             item.type = (*iter).type;
             item.name = [NSString stringWithUTF8String:(*iter).name.c_str()];
             item.errMsg = [NSString stringWithUTF8String:(*iter).errMsg.c_str()];
@@ -617,39 +629,39 @@ public:
             item.emoList = arrayEmo;
             [array addObject:item];
         }
-        
+
         GetEmoticonListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
 RequestGetEmoticonListCallbackImp gRequestGetEmoticonListCallbackImp;
--(NSInteger)getEmoticonList:(GetEmoticonListFinishHandler _Nullable)finishHandler {
+- (NSInteger)getEmoticonList:(GetEmoticonListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetEmoticonList(&mHttpRequestManager, &gRequestGetEmoticonListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetInviteInfoCallbackImp : public IRequestGetInviteInfoCallback {
-public:
+  public:
     RequestGetInviteInfoCallbackImp(){};
     ~RequestGetInviteInfoCallbackImp(){};
-    void OnGetInviteInfo(HttpGetInviteInfoTask* task, bool success, int errnum, const string& errmsg, const HttpInviteInfoItem& inviteItem) {
-        NSLog(@"RequestManager::OnGetInviteInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        InviteIdItemObject* item = [[InviteIdItemObject alloc] init];
+    void OnGetInviteInfo(HttpGetInviteInfoTask *task, bool success, int errnum, const string &errmsg, const HttpInviteInfoItem &inviteItem) {
+        NSLog(@"RequestManager::OnGetInviteInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        InviteIdItemObject *item = [[InviteIdItemObject alloc] init];
         item.invitationId = [NSString stringWithUTF8String:inviteItem.invitationId.c_str()];
         item.oppositeId = [NSString stringWithUTF8String:inviteItem.oppositeId.c_str()];
         item.oppositeNickName = [NSString stringWithUTF8String:inviteItem.oppositeNickName.c_str()];
@@ -662,24 +674,24 @@ public:
         item.replyType = inviteItem.replyType;
         item.validTime = inviteItem.validTime;
         item.roomId = [NSString stringWithUTF8String:inviteItem.roomId.c_str()];
-        
+
         GetInviteInfoFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], item);
         }
     }
 };
 RequestGetInviteInfoCallbackImp gRequestGetInviteInfoCallbackImp;
-- (NSInteger)getInviteInfo:(NSString * _Nonnull)inviteId
+- (NSInteger)getInviteInfo:(NSString *_Nonnull)inviteId
              finishHandler:(GetInviteInfoFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetInviteInfo(&mHttpRequestManager, [inviteId UTF8String], &gRequestGetInviteInfoCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
@@ -689,53 +701,53 @@ RequestGetInviteInfoCallbackImp gRequestGetInviteInfoCallbackImp;
 }
 
 class RequestGetTalentListCallbackImp : public IRequestGetTalentListCallback {
-public:
+  public:
     RequestGetTalentListCallbackImp(){};
     ~RequestGetTalentListCallbackImp(){};
-    void OnGetTalentList(HttpGetTalentListTask* task, bool success, int errnum, const string& errmsg, const TalentItemList& list) {
-        NSLog(@"RequestManager::OnGetTalentList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+    void OnGetTalentList(HttpGetTalentListTask *task, bool success, int errnum, const string &errmsg, const TalentItemList &list) {
+        NSLog(@"RequestManager::OnGetTalentList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         NSMutableArray *array = [NSMutableArray array];
         for (TalentItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
-            GetTalentItemObject* item = [[GetTalentItemObject alloc] init];
+            GetTalentItemObject *item = [[GetTalentItemObject alloc] init];
             item.talentId = [NSString stringWithUTF8String:(*iter).talentId.c_str()];
             item.name = [NSString stringWithUTF8String:(*iter).name.c_str()];
             item.credit = (*iter).credit;
             [array addObject:item];
         }
-        
+
         GetTalentListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
 RequestGetTalentListCallbackImp gRequestGetTalentListCallbackImp;
-- (NSInteger)getTalentList:(NSString * _Nonnull)roomId
+- (NSInteger)getTalentList:(NSString *_Nonnull)roomId
              finishHandler:(GetTalentListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetTalentList(&mHttpRequestManager, [roomId UTF8String], &gRequestGetTalentListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetTalentStatusCallbackImp : public IRequestGetTalentStatusCallback {
-public:
+  public:
     RequestGetTalentStatusCallbackImp(){};
     ~RequestGetTalentStatusCallbackImp(){};
-    void OnGetTalentStatus(HttpGetTalentStatusTask* task, bool success, int errnum, const string& errmsg, const HttpGetTalentStatusItem& item) {
-        NSLog(@"RequestManager::OnGetTalentStatus( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+    void OnGetTalentStatus(HttpGetTalentStatusTask *task, bool success, int errnum, const string &errmsg, const HttpGetTalentStatusItem &item) {
+        NSLog(@"RequestManager::OnGetTalentStatus( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
 
-        GetTalentStatusItemObject* obj = [[GetTalentStatusItemObject alloc] init];
+        GetTalentStatusItemObject *obj = [[GetTalentStatusItemObject alloc] init];
         obj.talentInviteId = [NSString stringWithUTF8String:item.talentInviteId.c_str()];
         obj.talentId = [NSString stringWithUTF8String:item.talentId.c_str()];
         obj.name = [NSString stringWithUTF8String:item.name.c_str()];
@@ -748,164 +760,170 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
 RequestGetTalentStatusCallbackImp gRequestGetTalentStatusCallbackImp;
-- (NSInteger)getTalentStatus:(NSString * _Nonnull)roomId
-              talentInviteId:(NSString * _Nonnull)talentInviteId
+- (NSInteger)getTalentStatus:(NSString *_Nonnull)roomId
+              talentInviteId:(NSString *_Nonnull)talentInviteId
                finishHandler:(GetTalentStatusFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetTalentStatus(&mHttpRequestManager, [roomId UTF8String], [talentInviteId UTF8String], &gRequestGetTalentStatusCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetNewFansBaseInfoCallbackImp : public IRequestGetNewFansBaseInfoCallback {
-public:
+  public:
     RequestGetNewFansBaseInfoCallbackImp(){};
     ~RequestGetNewFansBaseInfoCallbackImp(){};
-    void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask* task, bool success, int errnum, const string& errmsg, const HttpLiveFansItem& item) {
-        NSLog(@"RequestManager::OnGetNewFansBaseInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        GetNewFansBaseInfoItemObject* obj = [[GetNewFansBaseInfoItemObject alloc] init];
+    void OnGetNewFansBaseInfo(HttpGetNewFansBaseInfoTask *task, bool success, int errnum, const string &errmsg, const HttpLiveFansInfoItem &item) {
+        NSLog(@"RequestManager::OnGetNewFansBaseInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        GetNewFansBaseInfoItemObject *obj = [[GetNewFansBaseInfoItemObject alloc] init];
         obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
         obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
-        obj.mountId = [NSString stringWithUTF8String:item.mountId.c_str()];
-        obj.mountUrl = [NSString stringWithUTF8String:item.mountUrl.c_str()];
-        
+        obj.riderId = [NSString stringWithUTF8String:item.riderId.c_str()];
+        obj.riderName = [NSString stringWithUTF8String:item.riderName.c_str()];
+        obj.riderUrl = [NSString stringWithUTF8String:item.riderUrl.c_str()];
+
         GetNewFansBaseInfoFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
 RequestGetNewFansBaseInfoCallbackImp gRequestGetNewFansBaseInfoCallbackImp;
-- (NSInteger)getNewFansBaseInfo:(NSString * _Nonnull)userId
+- (NSInteger)getNewFansBaseInfo:(NSString *_Nonnull)userId
                   finishHandler:(GetNewFansBaseInfoFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetNewFansBaseInfo(&mHttpRequestManager, [userId UTF8String], &gRequestGetNewFansBaseInfoCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestControlManPushCallbackImp : public IRequestControlManPushCallback {
-public:
+  public:
     RequestControlManPushCallbackImp(){};
     ~RequestControlManPushCallbackImp(){};
-    void OnControlManPush(HttpControlManPushTask* task, bool success, int errnum, const string& errmsg, const list<string>& uploadUrls) {
-        NSLog(@"RequestManager::OnControlManPush( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        NSMutableArray* nsUploadUrls = [NSMutableArray array];
+    void OnControlManPush(HttpControlManPushTask *task, bool success, int errnum, const string &errmsg, const list<string> &uploadUrls) {
+        NSLog(@"RequestManager::OnControlManPush( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        NSMutableArray *nsUploadUrls = [NSMutableArray array];
         for (list<string>::const_iterator itr = uploadUrls.begin(); itr != uploadUrls.end(); itr++) {
-            NSString* strUploadUrl = [NSString stringWithUTF8String:(*itr).c_str()];
+            NSString *strUploadUrl = [NSString stringWithUTF8String:(*itr).c_str()];
             [nsUploadUrls addObject:strUploadUrl];
         }
-        
+
         ControlManPushFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], nsUploadUrls);
         }
     }
 };
 RequestControlManPushCallbackImp gRequestControlManPushCallbackImp;
-- (NSInteger)controlManPush:(NSString * _Nonnull)roomId
+- (NSInteger)controlManPush:(NSString *_Nonnull)roomId
                     control:(ControlType)control
               finishHandler:(ControlManPushFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.ControlManPush(&mHttpRequestManager, [roomId UTF8String], control, &gRequestControlManPushCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetPromoAnchorListCallbackImp : public IRequestGetPromoAnchorListCallback {
-public:
+  public:
     RequestGetPromoAnchorListCallbackImp(){};
     ~RequestGetPromoAnchorListCallbackImp(){};
-    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& listItem) {
-        NSLog(@"RequestManager::OnGetPromoAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &listItem) {
+        NSLog(@"RequestManager::OnGetPromoAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
-            LiveRoomInfoItemObject* item = [[LiveRoomInfoItemObject alloc] init];
+            LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
+            //            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
             item.onlineStatus = (*iter).onlineStatus;
             item.roomType = (*iter).roomType;
-            NSMutableArray* nsInterest = [NSMutableArray array];
-            for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
-                NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
-                [nsInterest addObject:strInterest];
-            }
-            item.interest = nsInterest;
+            //            NSMutableArray* nsInterest = [NSMutableArray array];
+            //            for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+            //                int num = (*itr);
+            //                NSNumber *numInterest = [NSNumber numberWithInt:num];
+            //                [nsInterest addObject:numInterest];
+            //            }
+            //            item.interest = nsInterest;
+            item.anchorType = (*iter).anchorType;
             [array addObject:item];
         }
-        
+
         GetPromoAnchorListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
 RequestGetPromoAnchorListCallbackImp gRequestGetPromoAnchorListCallbackImp;
 - (NSInteger)getPromoAnchorList:(int)number
+                           type:(PromoAnchorType)type
+                         userId:(NSString *_Nonnull)userId
                   finishHandler:(GetPromoAnchorListFinishHandler _Nullable)finishHandler {
-    NSInteger request = mHttpRequestController.GetPromoAnchorList(&mHttpRequestManager, number, &gRequestGetPromoAnchorListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    NSInteger request = mHttpRequestController.GetPromoAnchorList(&mHttpRequestManager, number, type, [userId UTF8String], &gRequestGetPromoAnchorListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 #pragma mark - 预约私密
 
 class RequestManHandleBookingListCallbackImp : public IRequestManHandleBookingListCallback {
-public:
+  public:
     RequestManHandleBookingListCallbackImp(){};
     ~RequestManHandleBookingListCallbackImp(){};
-    void OnManHandleBookingList(HttpManHandleBookingListTask* task, bool success, int errnum, const string& errmsg, const HttpBookingInviteListItem& BookingListItem) {
-        NSLog(@"RequestManager::OnManHandleBookingList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        BookingPrivateInviteListObject* item = [[BookingPrivateInviteListObject alloc] init];
+    void OnManHandleBookingList(HttpManHandleBookingListTask *task, bool success, int errnum, const string &errmsg, const HttpBookingInviteListItem &BookingListItem) {
+        NSLog(@"RequestManager::OnManHandleBookingList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        BookingPrivateInviteListObject *item = [[BookingPrivateInviteListObject alloc] init];
         item.total = BookingListItem.total;
+        item.noReadCount = BookingListItem.noReadCount;
         NSMutableArray *array = [NSMutableArray array];
         for (BookingPrivateInviteItemList::const_iterator iter = BookingListItem.list.begin(); iter != BookingListItem.list.end(); iter++) {
             BookingPrivateInviteItemObject *obj = [[BookingPrivateInviteItemObject alloc] init];
@@ -928,15 +946,15 @@ public:
             [array addObject:obj];
         }
         item.list = array;
-        
+
         ManHandleBookingListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], item);
         }
     }
@@ -947,101 +965,101 @@ RequestManHandleBookingListCallbackImp gRequestManHandleBookingListCallbackImp;
                              step:(int)step
                     finishHandler:(ManHandleBookingListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.ManHandleBookingList(&mHttpRequestManager, type, start, step, &gRequestManHandleBookingListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestHandleBookingCallbackImp : public IRequestHandleBookingCallback {
-public:
+  public:
     RequestHandleBookingCallbackImp(){};
     ~RequestHandleBookingCallbackImp(){};
-    void OnHandleBooking(HttpHandleBookingTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::OnHandleBooking( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnHandleBooking(HttpHandleBookingTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnHandleBooking( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         HandleBookingFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestHandleBookingCallbackImp gRequestHandleBookingCallbackImp;
-- (NSInteger)handleBooking:(NSString * _Nonnull)inviteId
+- (NSInteger)handleBooking:(NSString *_Nonnull)inviteId
                  isConfirm:(BOOL)isConfirm
              finishHandler:(HandleBookingFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.HandleBooking(&mHttpRequestManager, [inviteId UTF8String], isConfirm, &gRequestHandleBookingCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestSendCancelPrivateLiveInviteCallbackImp : public IRequestSendCancelPrivateLiveInviteCallback {
-public:
+  public:
     RequestSendCancelPrivateLiveInviteCallbackImp(){};
     ~RequestSendCancelPrivateLiveInviteCallbackImp(){};
-    void OnSendCancelPrivateLiveInvite(HttpSendCancelPrivateLiveInviteTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::OnSendCancelPrivateLiveInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnSendCancelPrivateLiveInvite(HttpSendCancelPrivateLiveInviteTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnSendCancelPrivateLiveInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         SendCancelPrivateLiveInviteFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestSendCancelPrivateLiveInviteCallbackImp gRequestSendCancelPrivateLiveInviteCallbackImp;
-- (NSInteger)sendCancelPrivateLiveInvite:(NSString * _Nonnull)invitationId
+- (NSInteger)sendCancelPrivateLiveInvite:(NSString *_Nonnull)invitationId
                            finishHandler:(SendCancelPrivateLiveInviteFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.SendCancelPrivateLiveInvite(&mHttpRequestManager, [invitationId UTF8String], &gRequestSendCancelPrivateLiveInviteCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestManBookingUnreadUnhandleNumCallbackImp : public IRequestManBookingUnreadUnhandleNumCallback {
-public:
+  public:
     RequestManBookingUnreadUnhandleNumCallbackImp(){};
     ~RequestManBookingUnreadUnhandleNumCallbackImp(){};
-    void OnManBookingUnreadUnhandleNum(HttpManBookingUnreadUnhandleNumTask* task, bool success, int errnum, const string& errmsg, const HttpBookingUnreadUnhandleNumItem& item) {
-        NSLog(@"RequestManager::OnManBookingUnreadUnhandleNum( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        BookingUnreadUnhandleNumItemObject* obj = [[BookingUnreadUnhandleNumItemObject alloc] init];
-        obj.total = item.total;
-        obj.handleNum = item.handleNum;
-        obj.scheduledUnreadNum = item.scheduledUnreadNum;
-        obj.historyUnreadNum = item.historyUnreadNum;
-        
+    void OnManBookingUnreadUnhandleNum(HttpManBookingUnreadUnhandleNumTask *task, bool success, int errnum, const string &errmsg, const HttpBookingUnreadUnhandleNumItem &item) {
+        NSLog(@"RequestManager::OnManBookingUnreadUnhandleNum( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        BookingUnreadUnhandleNumItemObject *obj = [[BookingUnreadUnhandleNumItemObject alloc] init];
+        obj.totalNoReadNum = item.totalNoReadNum;
+        obj.pendingNoReadNum = item.pendingNoReadNum;
+        obj.scheduledNoReadNum = item.scheduledNoReadNum;
+        obj.historyNoReadNum = item.historyNoReadNum;
+
         ManBookingUnreadUnhandleNumFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
@@ -1049,23 +1067,23 @@ public:
 RequestManBookingUnreadUnhandleNumCallbackImp gRequestManBookingUnreadUnhandleNumCallbackImp;
 - (NSInteger)manBookingUnreadUnhandleNum:(ManBookingUnreadUnhandleNumFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.ManBookingUnreadUnhandleNum(&mHttpRequestManager, &gRequestManBookingUnreadUnhandleNumCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetCreateBookingInfoCallbackImp : public IRequestGetCreateBookingInfoCallback {
-public:
+  public:
     RequestGetCreateBookingInfoCallbackImp(){};
     ~RequestGetCreateBookingInfoCallbackImp(){};
-    void OnGetCreateBookingInfo(HttpGetCreateBookingInfoTask* task, bool success, int errnum, const string& errmsg, const HttpGetCreateBookingInfoItem& item) {
-        NSLog(@"RequestManager::OnGetCreateBookingInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        GetCreateBookingInfoItemObject* obj = [[GetCreateBookingInfoItemObject alloc] init];
+    void OnGetCreateBookingInfo(HttpGetCreateBookingInfoTask *task, bool success, int errnum, const string &errmsg, const HttpGetCreateBookingInfoItem &item) {
+        NSLog(@"RequestManager::OnGetCreateBookingInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        GetCreateBookingInfoItemObject *obj = [[GetCreateBookingInfoItemObject alloc] init];
         obj.bookDeposit = item.bookDeposit;
         NSMutableArray *arrayBookTime = [NSMutableArray array];
         for (HttpGetCreateBookingInfoItem::BookTimeList::const_iterator iter = item.bookTime.begin(); iter != item.bookTime.end(); iter++) {
@@ -1076,54 +1094,60 @@ public:
             [arrayBookTime addObject:objBookTime];
         }
         obj.bookTime = arrayBookTime;
-        
+
         NSMutableArray *arrayBookGift = [NSMutableArray array];
         for (HttpGetCreateBookingInfoItem::GiftList::const_iterator iterBookGift = item.bookGift.giftList.begin(); iterBookGift != item.bookGift.giftList.end(); iterBookGift++) {
             GiftItemObject *objBookGift = [[GiftItemObject alloc] init];
             objBookGift.giftId = [NSString stringWithUTF8String:(*iterBookGift).giftId.c_str()];
             NSMutableArray *arrayGiftNum = [NSMutableArray array];
-            for (HttpGetCreateBookingInfoItem::GiftNumList::const_iterator iterGiftNum = (*iterBookGift).giftNumList.begin(); iterGiftNum != (*iterBookGift).giftNumList.end(); iterGiftNum++) {
-                GiftNumItemObject* objGiftNum = [[GiftNumItemObject alloc] init];
+            for (HttpGetCreateBookingInfoItem::GiftNumList::const_iterator iterGiftNum = (*iterBookGift).sendNumList.begin(); iterGiftNum != (*iterBookGift).sendNumList.end(); iterGiftNum++) {
+                GiftNumItemObject *objGiftNum = [[GiftNumItemObject alloc] init];
                 objGiftNum.num = (*iterGiftNum).num;
                 objGiftNum.isDefault = (*iterGiftNum).isDefault;
                 [arrayGiftNum addObject:objGiftNum];
             }
-            objBookGift.giftNumList = arrayGiftNum;
+            objBookGift.sendNumList = arrayGiftNum;
             [arrayBookGift addObject:objBookGift];
         }
         obj.bookGift = arrayBookGift;
-        
+
+        BookPhoneItemObject *bookPhone = [[BookPhoneItemObject alloc] init];
+        bookPhone.country = [NSString stringWithUTF8String:item.bookPhone.country.c_str()];
+        bookPhone.areaCode = [NSString stringWithUTF8String:item.bookPhone.areaCode.c_str()];
+        bookPhone.phoneNo = [NSString stringWithUTF8String:item.bookPhone.phoneNo.c_str()];
+        obj.bookPhone = bookPhone;
+
         GetCreateBookingInfoFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
 RequestGetCreateBookingInfoCallbackImp gRequestGetCreateBookingInfoCallbackImp;
-- (NSInteger)getCreateBookingInfo:(NSString* _Nullable)userId
+- (NSInteger)getCreateBookingInfo:(NSString *_Nullable)userId
                     finishHandler:(GetCreateBookingInfoFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetCreateBookingInfo(&mHttpRequestManager, [userId UTF8String], &gRequestGetCreateBookingInfoCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestSendBookingRequestCallbackImp : public IRequestSendBookingRequestCallback {
-public:
+  public:
     RequestSendBookingRequestCallbackImp(){};
     ~RequestSendBookingRequestCallbackImp(){};
-    void OnSendBookingRequest(HttpSendBookingRequestTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::OnSendBookingRequest( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+    void OnSendBookingRequest(HttpSendBookingRequestTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnSendBookingRequest( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
 
         SendBookingRequestFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
@@ -1131,84 +1155,121 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestSendBookingRequestCallbackImp gRequestSendBookingRequestCallbackImp;
-- (NSInteger)sendBookingRequest:(NSString* _Nullable)userId
-                         timeId:(NSString* _Nullable)timeId
+- (NSInteger)sendBookingRequest:(NSString *_Nullable)userId
+                         timeId:(NSString *_Nullable)timeId
                        bookTime:(NSInteger)bookTime
-                         giftId:(NSString* _Nullable)giftId
+                         giftId:(NSString *_Nullable)giftId
                         giftNum:(int)giftNum
+                        needSms:(BOOL)needSms
                   finishHandler:(SendBookingRequestFinishHandler _Nullable)finishHandler {
-    NSInteger request = mHttpRequestController.SendBookingRequest(&mHttpRequestManager, [userId UTF8String], [timeId UTF8String], bookTime, [giftId UTF8String], giftNum, &gRequestSendBookingRequestCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    NSInteger request = mHttpRequestController.SendBookingRequest(&mHttpRequestManager, [userId UTF8String], [timeId UTF8String], bookTime, [giftId UTF8String], giftNum, needSms, &gRequestSendBookingRequestCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
+    return request;
+}
+
+class RequestAcceptInstanceInviteCallbackImp : public IRequestAcceptInstanceInviteCallback {
+  public:
+    RequestAcceptInstanceInviteCallbackImp(){};
+    ~RequestAcceptInstanceInviteCallbackImp(){};
+    void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask *task, bool success, int errnum, const string &errmsg, const HttpAcceptInstanceInviteItem &item) {
+        NSLog(@"RequestManager::OnAcceptInstanceInvite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        AcceptInstanceInviteItemObject *obj = [[AcceptInstanceInviteItemObject alloc] init];
+        obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+        obj.roomType = item.roomType;
+
+        AcceptInstanceInviteFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+RequestAcceptInstanceInviteCallbackImp gRequestAcceptInstanceInviteCallbackImp;
+- (NSInteger)acceptInstanceInvite:(NSString *_Nullable)inviteId
+                        isConfirm:(BOOL)isConfirm
+                    finishHandler:(AcceptInstanceInviteFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.AcceptInstanceInvite(&mHttpRequestManager, [inviteId UTF8String], isConfirm, &gRequestAcceptInstanceInviteCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+
     return request;
 }
 
 #pragma mark - 背包
 
 class RequestGiftListCallbackImp : public IRequestGiftListCallback {
-public:
+  public:
     RequestGiftListCallbackImp(){};
     ~RequestGiftListCallbackImp(){};
-    void OnGiftList(HttpGiftListTask* task, bool success, int errnum, const string& errmsg, const BackGiftItemList& list) {
-        NSLog(@"RequestManager::OnGiftList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGiftList(HttpGiftListTask *task, bool success, int errnum, const string &errmsg, const BackGiftItemList &list, int totalCount) {
+        NSLog(@"RequestManager::OnGiftList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (BackGiftItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
-            BackGiftItemObject* item = [[BackGiftItemObject alloc] init];
+            BackGiftItemObject *item = [[BackGiftItemObject alloc] init];
             item.giftId = [NSString stringWithUTF8String:(*iter).giftId.c_str()];
             item.num = (*iter).num;
             item.grantedDate = (*iter).grantedDate;
             item.expDate = (*iter).expDate;
             item.read = (*iter).read;
             [array addObject:item];
-            
         }
-        
+
         GiftListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
 RequestGiftListCallbackImp gRequestGiftListCallbackImp;
 - (NSInteger)giftList:(GiftListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GiftList(&mHttpRequestManager, &gRequestGiftListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestVoucherListCallbackImp : public IRequestVoucherListCallback {
-public:
+  public:
     RequestVoucherListCallbackImp(){};
     ~RequestVoucherListCallbackImp(){};
-    void OnVoucherList(HttpVoucherListTask* task, bool success, int errnum, const string& errmsg, const VoucherList& list) {
-        NSLog(@"RequestManager::OnVoucherList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-    
+    void OnVoucherList(HttpVoucherListTask *task, bool success, int errnum, const string &errmsg, const VoucherList &list, int totalCount) {
+        NSLog(@"RequestManager::OnVoucherList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (VoucherList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
-            VoucherItemObject* item = [[VoucherItemObject alloc] init];
+            VoucherItemObject *item = [[VoucherItemObject alloc] init];
             item.voucherId = [NSString stringWithUTF8String:(*iter).voucherId.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
             item.desc = [NSString stringWithUTF8String:(*iter).desc.c_str()];
@@ -1221,43 +1282,42 @@ public:
             item.expDate = (*iter).expDate;
             item.read = (*iter).read;
             [array addObject:item];
-            
         }
- 
+
         VoucherListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
 RequestVoucherListCallbackImp gRequestVoucherListCallbackImp;
 - (NSInteger)voucherList:(VoucherListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.VoucherList(&mHttpRequestManager, &gRequestVoucherListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestRideListCallbackImp : public IRequestRideListCallback {
-public:
+  public:
     RequestRideListCallbackImp(){};
     ~RequestRideListCallbackImp(){};
-    void OnRideList(HttpRideListTask* task, bool success, int errnum, const string& errmsg, const RideList& list) {
-        NSLog(@"RequestManager::OnRideList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnRideList(HttpRideListTask *task, bool success, int errnum, const string &errmsg, const RideList &list, int totalCount) {
+        NSLog(@"RequestManager::OnRideList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         NSMutableArray *array = [NSMutableArray array];
         for (RideList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
-            RideItemObject* item = [[RideItemObject alloc] init];
+            RideItemObject *item = [[RideItemObject alloc] init];
             item.rideId = [NSString stringWithUTF8String:(*iter).rideId.c_str()];
             item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
             item.name = [NSString stringWithUTF8String:(*iter).name.c_str()];
@@ -1266,71 +1326,70 @@ public:
             item.read = (*iter).read;
             item.isUse = (*iter).isUse;
             [array addObject:item];
-            
         }
-        
+
         RideListFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
 RequestRideListCallbackImp gRequestRideListCallbackImp;
 - (NSInteger)rideList:(RideListFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.RideList(&mHttpRequestManager, &gRequestRideListCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestSetRideCallbackImp : public IRequestSetRideCallback {
-public:
+  public:
     RequestSetRideCallbackImp(){};
     ~RequestSetRideCallbackImp(){};
-    void OnSetRide(HttpSetRideTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::OnSetRide( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+    void OnSetRide(HttpSetRideTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnSetRide( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         SetRideFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestSetRideCallbackImp gRequestSetRideCallbackImp;
-- (NSInteger)setRide:(NSString* _Nonnull)rideId
+- (NSInteger)setRide:(NSString *_Nonnull)rideId
        finishHandler:(SetRideFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.SetRide(&mHttpRequestManager, [rideId UTF8String], &gRequestSetRideCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetBackpackUnreadNumCallbackImp : public IRequestGetBackpackUnreadNumCallback {
-public:
+  public:
     RequestGetBackpackUnreadNumCallbackImp(){};
     ~RequestGetBackpackUnreadNumCallbackImp(){};
-    void OnGetBackpackUnreadNum(HttpGetBackpackUnreadNumTask* task, bool success, int errnum, const string& errmsg, const HttpGetBackPackUnreadNumItem& item) {
-        NSLog(@"RequestManager::OnGetBackpackUnreadNum( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        GetBackPackUnreadNumItemObject* obj = [[GetBackPackUnreadNumItemObject alloc] init];
+    void OnGetBackpackUnreadNum(HttpGetBackpackUnreadNumTask *task, bool success, int errnum, const string &errmsg, const HttpGetBackPackUnreadNumItem &item) {
+        NSLog(@"RequestManager::OnGetBackpackUnreadNum( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        GetBackPackUnreadNumItemObject *obj = [[GetBackPackUnreadNumItemObject alloc] init];
         obj.total = item.total;
         obj.voucherUnreadNum = item.voucherUnreadNum;
         obj.giftUnreadNum = item.giftUnreadNum;
@@ -1342,8 +1401,8 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
@@ -1351,41 +1410,37 @@ public:
 RequestGetBackpackUnreadNumCallbackImp gRequestGetBackpackUnreadNumCallbackImp;
 - (NSInteger)getBackpackUnreadNum:(GetBackpackUnreadNumFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetBackpackUnreadNum(&mHttpRequestManager, &gRequestGetBackpackUnreadNumCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 #pragma mark - 其它
 
 class RequestGetConfigCallbackImp : public IRequestGetConfigCallback {
-public:
+  public:
     RequestGetConfigCallbackImp(){};
     ~RequestGetConfigCallbackImp(){};
-    void OnGetConfig(HttpGetConfigTask* task, bool success, int errnum, const string& errmsg, const HttpConfigItem& configItem) {
-        NSLog(@"RequestManager::OnGetConfig( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
+    void OnGetConfig(HttpGetConfigTask *task, bool success, int errnum, const string &errmsg, const HttpConfigItem &configItem) {
+        NSLog(@"RequestManager::OnGetConfig( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         ConfigItemObject *obj = [[ConfigItemObject alloc] init];
-        obj.imSvrIp = [NSString stringWithUTF8String:configItem.imSvrIp.c_str()];
-        obj.imSvrPort = configItem.imSvrPort;
-        obj.httpSvrIp = [NSString stringWithUTF8String:configItem.httpSvrIp.c_str()];
-        obj.httpSvrPort = configItem.httpSvrPort;
-        obj.uploadSvrIp = [NSString stringWithUTF8String:configItem.uploadSvrIp.c_str()];
-        obj.uploadSvrPort = configItem.uploadSvrPort;
+        obj.imSvrUrl = [NSString stringWithUTF8String:configItem.imSvrUrl.c_str()];
+        obj.httpSvrUrl = [NSString stringWithUTF8String:configItem.httpSvrUrl.c_str()];
         obj.addCreditsUrl = [NSString stringWithUTF8String:configItem.addCreditsUrl.c_str()];
-  
+
         GetConfigFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
@@ -1393,31 +1448,30 @@ public:
 RequestGetConfigCallbackImp gRequestGetConfigCallbackImp;
 - (NSInteger)getConfig:(GetConfigFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetConfig(&mHttpRequestManager, &gRequestGetConfigCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestGetLeftCreditCallbackImp : public IRequestGetLeftCreditCallback {
-public:
+  public:
     RequestGetLeftCreditCallbackImp(){};
     ~RequestGetLeftCreditCallbackImp(){};
-    void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, double credit) {
-        NSLog(@"RequestManager::OnGetLeftCredit( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
+    void OnGetLeftCredit(HttpGetLeftCreditTask *task, bool success, int errnum, const string &errmsg, double credit) {
+        NSLog(@"RequestManager::OnGetLeftCredit( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
 
-        
         GetLeftCreditFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], credit);
         }
     }
@@ -1425,42 +1479,197 @@ public:
 RequestGetLeftCreditCallbackImp gRequestGetLeftCreditCallbackImp;
 - (NSInteger)getLeftCredit:(GetLeftCreditFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.GetLeftCredit(&mHttpRequestManager, &gRequestGetLeftCreditCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }
     }
-    
+
     return request;
 }
 
 class RequestSetFavoriteCallbackImp : public IRequestSetFavoriteCallback {
-public:
+  public:
     RequestSetFavoriteCallbackImp(){};
     ~RequestSetFavoriteCallbackImp(){};
-    void OnSetFavorite(HttpSetFavoriteTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"RequestManager::OnSetFavorite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success?"true":"false", errnum, errmsg.c_str());
-        
-        
+    void OnSetFavorite(HttpSetFavoriteTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnSetFavorite( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
         SetFavoriteFinishHandler handler = nil;
         RequestManager *manager = [RequestManager manager];
         @synchronized(manager.delegateDictionary) {
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-        
-        if( handler ) {
+
+        if (handler) {
             handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
 RequestSetFavoriteCallbackImp gRequestSetFavoriteCallbackImp;
-- (NSInteger)setFavorite:(NSString* _Nonnull)userId
-                  roomId:(NSString* _Nonnull)roomId
+- (NSInteger)setFavorite:(NSString *_Nonnull)userId
+                  roomId:(NSString *_Nonnull)roomId
                    isFav:(BOOL)isFav
            finishHandler:(SetFavoriteFinishHandler _Nullable)finishHandler {
     NSInteger request = mHttpRequestController.SetFavorite(&mHttpRequestManager, [userId UTF8String], [roomId UTF8String], isFav, &gRequestSetFavoriteCallbackImp);
-    if( request != HTTPREQUEST_INVALIDREQUESTID ) {
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+
+    return request;
+}
+
+class RequestGetAdAnchorListCallbackImp : public IRequestGetAdAnchorListCallback {
+  public:
+    RequestGetAdAnchorListCallbackImp(){};
+    ~RequestGetAdAnchorListCallbackImp(){};
+    void OnGetAdAnchorList(HttpGetAdAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &list) {
+        NSLog(@"RequestManager::OnGetAdAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        NSMutableArray *array = [NSMutableArray array];
+        for (HotItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
+            item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
+            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
+            item.onlineStatus = (*iter).onlineStatus;
+            item.roomType = (*iter).roomType;
+            NSMutableArray *nsInterest = [NSMutableArray array];
+            //int i = 0;
+            for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+                //NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
+                int num = (*itr);
+                NSNumber *numInterest = [NSNumber numberWithInt:num];
+                [nsInterest addObject:numInterest];
+                //item->interest[i] = (*itr);
+                //i++;
+            }
+            item.interest = nsInterest;
+            item.anchorType = (*iter).anchorType;
+            [array addObject:item];
+        }
+
+        GetAdAnchorListFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetAdAnchorListCallbackImp gRequestGetAdAnchorListCallbackImp;
+- (NSInteger)getAdAnchorList:(int)number
+               finishHandler:(GetAdAnchorListFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetAdAnchorList(&mHttpRequestManager, number, &gRequestGetAdAnchorListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+
+    return request;
+}
+
+class RequestCloseAdAnchorListCallbackImp : public IRequestCloseAdAnchorListCallback {
+  public:
+    RequestCloseAdAnchorListCallbackImp(){};
+    ~RequestCloseAdAnchorListCallbackImp(){};
+    void OnCloseAdAnchorList(HttpCloseAdAnchorListTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnCloseAdAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        CloseAdAnchorListFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestCloseAdAnchorListCallbackImp gRequestCloseAdAnchorListCallbackImp;
+- (NSInteger)closeAdAnchorList:(CloseAdAnchorListFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.CloseAdAnchorList(&mHttpRequestManager, &gRequestCloseAdAnchorListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+
+    return request;
+}
+
+class RequestGetPhoneVerifyCodeCallbackImp : public IRequestGetPhoneVerifyCodeCallback {
+  public:
+    RequestGetPhoneVerifyCodeCallbackImp(){};
+    ~RequestGetPhoneVerifyCodeCallbackImp(){};
+    void OnGetPhoneVerifyCode(HttpGetPhoneVerifyCodeTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnGetPhoneVerifyCode( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        GetPhoneVerifyCodeFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestGetPhoneVerifyCodeCallbackImp gRequestGetPhoneVerifyCodeCallbackImp;
+- (NSInteger)getPhoneVerifyCode:(NSString *_Nonnull)country
+                       areaCode:(NSString *_Nonnull)areaCode
+                        phoneNo:(NSString *_Nonnull)phoneNo
+                  finishHandler:(GetPhoneVerifyCodeFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.GetPhoneVerifyCode(&mHttpRequestManager, [country UTF8String], [areaCode UTF8String], [phoneNo UTF8String], &gRequestGetPhoneVerifyCodeCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+
+    return request;
+}
+
+class RequestSubmitPhoneVerifyCodeCallbackImp : public IRequestSubmitPhoneVerifyCodeCallback {
+  public:
+    RequestSubmitPhoneVerifyCodeCallbackImp(){};
+    ~RequestSubmitPhoneVerifyCodeCallbackImp(){};
+    void OnSubmitPhoneVerifyCode(HttpSubmitPhoneVerifyCodeTask *task, bool success, int errnum, const string &errmsg) {
+        NSLog(@"RequestManager::OnSubmitPhoneVerifyCode( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+
+        SubmitPhoneVerifyCodeFinishHandler handler = nil;
+        RequestManager *manager = [RequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+
+        if (handler) {
+            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestSubmitPhoneVerifyCodeCallbackImp gRequestSubmitPhoneVerifyCodeCallbackImp;
+- (NSInteger)submitPhoneVerifyCode:(NSString *_Nonnull)country
+                          areaCode:(NSString *_Nonnull)areaCode
+                           phoneNo:(NSString *_Nonnull)phoneNo
+                        verifyCode:(NSString *_Nonnull)verifyCode
+                     finishHandler:(SubmitPhoneVerifyCodeFinishHandler _Nullable)finishHandler {
+    NSInteger request = mHttpRequestController.SubmitPhoneVerifyCode(&mHttpRequestManager, [country UTF8String], [areaCode UTF8String], [phoneNo UTF8String], [verifyCode UTF8String], &gRequestSubmitPhoneVerifyCodeCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
         }

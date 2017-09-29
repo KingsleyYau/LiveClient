@@ -139,13 +139,14 @@ long long HttpRequestController::GetAnchorList(
                                                HttpRequestManager *pHttpRequestManager,
                                                int start,
                                                int step,
+                                               bool hasWatch,
                                                IRequestGetAnchorListCallback* callback
                                                ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetAnchorListTask* task = new HttpGetAnchorListTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(start, step);
+    task->SetParam(start, step, hasWatch);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -233,15 +234,15 @@ long long HttpRequestController::GetRoomInfo(
 long long HttpRequestController::LiveFansList(
                                               HttpRequestManager *pHttpRequestManager,
                                               const string& roomId,
-                                              int page,
-                                              int number,
+                                              int start,
+                                              int step,
                                               IRequestLiveFansListCallback* callback
                                               ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLiveFansListTask* task = new HttpLiveFansListTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(roomId, page, number);
+    task->SetParam(roomId, start, step);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -548,13 +549,15 @@ long long HttpRequestController::ControlManPush(
 long long HttpRequestController::GetPromoAnchorList(
                              HttpRequestManager *pHttpRequestManager,
                              int number,
+                             PromoAnchorType type,
+                             const string& userId,
                              IRequestGetPromoAnchorListCallback* callback
                                                     ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetPromoAnchorListTask* task = new HttpGetPromoAnchorListTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(number);
+    task->SetParam(number, type, userId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -740,13 +743,47 @@ long long HttpRequestController::SendBookingRequest(
                              long bookTime,
                              const string& giftId,
                              int giftNum,
+                             bool needSms,
                              IRequestSendBookingRequestCallback* callback
                                                     ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpSendBookingRequestTask* task = new HttpSendBookingRequestTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(userId, timeId, bookTime, giftId, giftNum);
+    task->SetParam(userId, timeId, bookTime, giftId, giftNum, needSms);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::AcceptInstanceInvite(
+                                                      HttpRequestManager *pHttpRequestManager,
+                                                      const string& inviteId,
+                                                      bool isConfirm,
+                                                      IRequestAcceptInstanceInviteCallback* callback
+                                                      ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAcceptInstanceInviteTask* task = new HttpAcceptInstanceInviteTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId, isConfirm);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -991,6 +1028,135 @@ long long HttpRequestController::SetFavorite(
     HttpSetFavoriteTask* task = new HttpSetFavoriteTask();
     task->Init(pHttpRequestManager);
     task->SetParam(userId, roomId, isFav);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long HttpRequestController::GetAdAnchorList(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 int number,
+                                                 IRequestGetAdAnchorListCallback* callback
+                                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetAdAnchorListTask* task = new HttpGetAdAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(number);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::CloseAdAnchorList(
+                                                   HttpRequestManager *pHttpRequestManager,
+                                                   IRequestCloseAdAnchorListCallback* callback
+                                                   ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCloseAdAnchorListTask* task = new HttpCloseAdAnchorListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPhoneVerifyCode(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    const string& country,
+                                                    const string& areaCode,
+                                                    const string& phoneNo,
+                                                    IRequestGetPhoneVerifyCodeCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPhoneVerifyCodeTask* task = new HttpGetPhoneVerifyCodeTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(country, areaCode, phoneNo);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SubmitPhoneVerifyCode(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    const string& country,
+                                                    const string& areaCode,
+                                                    const string& phoneNo,
+                                                    const string& verifyCode,
+                                                    IRequestSubmitPhoneVerifyCodeCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSubmitPhoneVerifyCodeTask* task = new HttpSubmitPhoneVerifyCodeTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(country, areaCode, phoneNo, verifyCode);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

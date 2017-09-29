@@ -141,7 +141,11 @@ bool CTransportDataHandler::Start(const list<string>& urls)
 	// 赋值
 	m_urls = urls;
 	// 启动发送及连接线程
-	if (NULL != m_loopThread) {
+    if (NULL != m_loopThread) {
+        // 先置为true，防止线程启动后 m_loopThread->Start() 才返回，导致线程处理函数(LoopThread)执行过程中 m_bStart=false 出错
+        m_bStart = true;
+        
+        // 启动线程
 		m_bStart = m_loopThread->Start(LoopThread, this);
         FileLog("LiveChatClient", "CTransportDataHandler::Start() m_bStart:%d, m_loopThread:%p, this:%p", m_bStart, m_loopThread, this);
 	}

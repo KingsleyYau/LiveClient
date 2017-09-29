@@ -17,8 +17,9 @@
     if( self = [super init] ) {
         self.nickName = @"";
         self.photoUrl = @"";
-        self.mountId = @"";
-        self.mountUrl = @"";
+        self.riderId = @"";
+        self.riderName = @"";
+        self.riderUrl = @"";
     }
     return self;
 }
@@ -27,8 +28,9 @@
     if (self = [super init]) {
         self.nickName = [coder decodeObjectForKey:@"nickName"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
-        self.mountId = [coder decodeObjectForKey:@"mountId"];
-        self.mountUrl = [coder decodeObjectForKey:@"mountUrl"];
+        self.riderId = [coder decodeObjectForKey:@"riderId"];
+        self.riderName = [coder decodeObjectForKey:@"riderName"];
+        self.riderUrl = [coder decodeObjectForKey:@"riderUrl"];
     }
     return self;
 }
@@ -36,8 +38,9 @@
 - (void)encodeWithCoder:(NSCoder *)coder {
     [coder encodeObject:self.nickName forKey:@"nickName"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
-    [coder encodeObject:self.mountId forKey:@"mountId"];
-    [coder encodeObject:self.mountUrl forKey:@"mountUrl"];
+    [coder encodeObject:self.riderId forKey:@"riderId"];
+    [coder encodeObject:self.riderName forKey:@"riderName"];
+    [coder encodeObject:self.riderUrl forKey:@"riderUrl"];
 
 }
 

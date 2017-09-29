@@ -14,7 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
-#define ROOMID_PARAM           "roomid"
+#define ROOMID_ROOMIN_PARAM           "roomid"
 
 
 RoomInTask::RoomInTask(void)
@@ -61,6 +61,8 @@ bool RoomInTask::Handle(const TransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         
         item.Parse(tp.m_data);
+        //本地存储roomid
+        item.roomId = m_roomId;
     }
     
     // 协议解析失败
@@ -92,7 +94,7 @@ bool RoomInTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-        value[ROOMID_PARAM] = m_roomId;
+        value[ROOMID_ROOMIN_PARAM] = m_roomId;
         data = value;
     }
 

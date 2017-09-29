@@ -42,6 +42,7 @@
 #define LOGIN_LEVEL 			"level"
 #define LOGIN_EXPERIENCE        "experience"
 #define LOGIN_PHOTOURL			"photourl"
+#define LOGIN_ISPUSHAD          "is_push_ad"
 
 
 /* 2.2.注销 */
@@ -80,6 +81,10 @@
 /* 接口路径 */
 #define LIVEROOM_GETANCHORLIST             "/manList/v1/getAnchorList"
 
+/**
+ * 请求
+ */
+#define LIVEROOM_HOT_HASWATCH               "has_watch"
 
 /**
  * 返回
@@ -91,6 +96,7 @@
 #define LIVEROOM_HOT_ROOMPHOTOURL         "room_photourl"
 #define LIVEROOM_HOT_ROOMTYPE             "room_type"
 #define LIVEROOM_HOT_INTEREST             "interest"
+#define LIVEROOM_HOT_ANCHORTYPE           "anchor_type"
 
 /* 3.2.获取Follow列表 */
 /* 接口路径 */
@@ -103,12 +109,12 @@
 #define LIVEROOM_FOLLOW_NICKNAME             "nickname"
 #define LIVEROOM_FOLLOW_PHOTOURL             "photourl"
 #define LIVEROOM_FOLLOW_ONLINESTATUS         "online_status"
-#define LIVEROOM_FOLLOW_ROOMNAME             "room_name"
 #define LIVEROOM_FOLLOW_ROOMPHOTOURL         "room_photourl"
 #define LIVEROOM_FOLLOW_ROOMTYPE             "room_type"
 #define LIVEROOM_FOLLOW_LOVELEVEL            "love_level"
 #define LIVEROOM_FOLLOW_ADDDATE              "add_date"
 #define LIVEROOM_FOLLOW_INTEREST             "interest"
+#define LIVEROOM_FOLLOW_ANCHORTYPE           "anchor_type"
 
 /* 3.3.获取本人有效直播间或邀请信息(已废弃) */
 /* 接口路径 */
@@ -142,8 +148,8 @@
  * 请求
  */
 #define LIVEROOM_LIVEFANSLIST_LIVEROOMID                "live_room_id"
-#define LIVEROOM_LIVEFANSLIST_PAGE                      "page"
-#define LIVEROOM_LIVEFANSLIST_NUMBER                    "number"
+#define LIVEROOM_LIVEFANSLIST_START                     "start"
+#define LIVEROOM_LIVEFANSLIST_STEP                      "step"
 
 /**
  * 返回
@@ -153,6 +159,7 @@
 #define LIVEROOM_FANS_PHOTO_URL          "photourl"
 #define LIVEROOM_FANS_MOUNTID            "mountid"
 #define LIVEROOM_FANS_MOUNTURL           "mounturl"
+#define LIVEROOM_FANS_LEVEL              "level"
 
 
 /* 3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表) */
@@ -166,7 +173,6 @@
  */
 
 #define LIVEROOM_GIFT_LIST                  "list"
-#define LIVEROOM_GIFTLIST_GIFT                "gift"
 
 #define LIVEROOM_GIFTINFO_ID                "id"
 #define LIVEROOM_GIFTINFO_NAME              "name"
@@ -183,6 +189,7 @@
 #define LIVEROOM_GIFTINFO_SENDNUMLIST       "send_num_list"
 #define LIVEROOM_GIFTINFO_SENDNUMLIST_NUM        "num"
 #define LIVEROOM_GIFTINFO_UPDATE_TIME       "updatetime"
+#define LIVEROOM_GIFTINFO_PLAY_TIME         "play_time"
 
 
 
@@ -197,6 +204,7 @@
 #define LIVEROOM_GETGIFTLISTBYUSERID_LIST                  "list"
 #define LIVEROOM_GETGIFTLISTBYUSERID_ID                             "id"
 #define LIVEROOM_GETGIFTLISTBYUSERID_ISHOW                          "is_show"
+#define LIVEROOM_GETGIFTLISTBYUSERID_ISPROMO                        "is_promo"
 
 /* 3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示） */
 /* 接口路径 */
@@ -205,7 +213,7 @@
 /**
  *  请求
  */
-#define LIVEROOM_GiftID                        "giftid"
+#define LIVEROOM_GiftID                        "gift_id"
 
 /* 3.8.获取文本表情列表（用于观众端/主播端获取文本聊天礼物列表） */
 /* 接口路径 */
@@ -225,7 +233,7 @@
 #define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOSIGN                      "emo_sign"
 #define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOURL                       "emo_url"
 
-/* 3.9.获取指定立即私密邀请信息 */
+/* 3.9.获取指定立即私密邀请信息 （已废弃）*/
 /* 接口路径 */
 #define LIVEROOM_GETINVITEINFO             "/imMan/v1/getInviteInfo"
 
@@ -291,8 +299,9 @@
  */
 #define LIVEROOM_GETNEWFANSBASEINFO_NICKNAME            "nickname"
 #define LIVEROOM_GETNEWFANSBASEINFO_PHOTOURL            "photourl"
-#define LIVEROOM_GETNEWFANSBASEINFO_MOUNTID             "mountid"
-#define LIVEROOM_GETNEWFANSBASEINFO_MOUNTURL            "mounturl"
+#define LIVEROOM_GETNEWFANSBASEINFO_RIDERID             "riderid"
+#define LIVEROOM_GETNEWFANSBASEINFO_RIDERNAME           "ridername"
+#define LIVEROOM_GETNEWFANSBASEINFO_RIDERURL            "riderurl"
 
 /* 3.13.观众开始／结束视频互动（废弃） */
 /* 接口路径 */
@@ -316,7 +325,9 @@
 /**
  *  请求
  */
-#define LIVEROOM_GETPROMOANCHORLIST_NUMBER             "number"
+#define LIVEROOM_GETPROMOANCHORLIST_NUMBER              "number"
+#define LIVEROOM_GETPROMOANCHORLIST_TYPE                "type"
+#define LIVEROOM_GETPROMOANCHORLIST_USERID              "userid"
 
 /**
  *  返回
@@ -333,12 +344,12 @@
 /* ########################	背包 模块  ######################## */
 /* 4.1.观众待处理的预约邀请列表 */
 /* 接口路径 */
-#define LIVEROOM_MANHANDLEBOOKINGLIST                  "/manList/v1/manHandleBookingList"
+#define LIVEROOM_MANHANDLEBOOKINGLIST                  "/share/v1/getScheduleList"
 
 /**
  *  请求
  */
-#define LIVEROOM_MANHANDLEBOOKINGLIST_TYPE                     "type"
+#define LIVEROOM_MANHANDLEBOOKINGLIST_TAG                      "tag"
 #define LIVEROOM_MANHANDLEBOOKINGLIST_START                    "start"
 #define LIVEROOM_MANHANDLEBOOKINGLIST_STEP                     "step"
 
@@ -346,6 +357,7 @@
  *  返回
  */
 #define LIVEROOM_MANHANDLEBOOKINGLIST_TOTAL                   "total"
+#define LIVEROOM_MANHANDLEBOOLINGLIST_NOREADCOUNT             "no_read_count"
 #define LIVEROOM_MANHANDLEBOOKINGLIST_LIST                    "list"
 #define LIVEROOM_MANHANDLEBOOLINGLEST_LIST_BOOKING                  "booking"
 #define LIVEROOM_MANHANDLEBOOKINGLIST_LIST_BOOKING_INVITATIONID                   "invitation_id"
@@ -377,7 +389,7 @@
 
 /* 4.3.取消预约邀请 */
 /* 接口路径 */
-#define LIVEROOM_SENDCANCELPRIVATELIVEINVITE                  "/imMan/v1/sendCancelPrivateLiveInvite"
+#define LIVEROOM_SENDCANCELPRIVATELIVEINVITE                  "/man/v1/cancelPrivateRequest"
 
 /**
  *  请求
@@ -386,15 +398,15 @@
 
 /* 4.4.获取预约邀请未读或待处理数量 */
 /* 接口路径 */
-#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM                  "/manList/v1/manBookingUnreadUnhandleNum"
+#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM                  "/share/v1/getScheduleListNoReadNum"
 
 /**
  *  返回
  */
-#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTAL                   "total"
-#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HANDLENUM               "handle_num"
-#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDUNREADNUM      "scheduled_unread_num"
-#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYUNREADNUM        "history_unread_num"
+#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_TOTALNOREADNUM          "total_no_read_num"
+#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_PENDINGNOREADNUM        "pending_no_read_num"
+#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_SCHEDULEDNOREADNUM      "scheduled_no_read_num"
+#define LIVEROOM_MANBOOKINGUNREADUNHANDKENUM_HISTORYNOREADNUM        "history_no_read_num"
 
 /* 4.5.获取新建预约邀请信息 */
 /* 接口路径 */
@@ -416,9 +428,13 @@
 #define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT              "book_gift"
 #define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST                 "gift_list"
 #define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTID                      "giftid"
-#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST                 "gift_num_list"
+#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_SENDNUMLIST                 "send_num_list"
 #define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST_NUM                              "num"
 #define LIVEROOM_GETCREATEBOOKINGINFO_BOOKGIFT_GIFTLIST_GIFTNUMLIST_ISDEFAULT                        "is_default"
+#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE             "book_phone"
+#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_COUNTRY                 "country"
+#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_AREACODE                "area_code"
+#define LIVEROOM_GETCREATEBOOKINGINFO_BOOKPHONE_PHONENO                 "phone_no"
 
 /* 4.6.新建预约邀请 */
 /* 接口路径 */
@@ -432,7 +448,23 @@
 #define LIVEROOM_SENDBOOKINGREQUEST_BOOKTIME        "book_time"
 #define LIVEROOM_SENDBOOKINGREQUEST_GIFTID          "giftid"
 #define LIVEROOM_SENDBOOKINGREQUEST_GIFTNUM         "gift_num"
+#define LIVEROOM_SENDBOOKINGREQUEST_NEEDSMS         "need_sms"
 
+/* 4.7.观众处理立即私密邀请 */
+/* 接口路径 */
+#define LIVEROOM_ACCEPTINSTACEINVITE                  "/man/v1/acceptInstanceInvite"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_ACCEPTINSTACEINVITE_INVITEID          "invite_id"
+#define LIVEROOM_ACCEPTINSTACEINVITE_ISCONFIRM         "is_confirm"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_ACCEPTINSTACEINVITE_ROOMID          "room_id"
+#define LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE        "room_type"
 
 /* ########################	背包 模块  ######################## */
 /* 5.1.获取背包礼物列表 */
@@ -448,6 +480,7 @@
 #define LIVEROOM_BACKPACK_GIFT_LIST_GRANTEDDATE             "granted_date"
 #define LIVEROOM_BACKPACK_GIFT_LIST_EXPDATE                 "exp_date"
 #define LIVEROOM_BACKPACK_GIFT_LIST_READ                    "read"
+#define LIVEROOM_BACKPACK_GIFT_TOTALCOUNT             "total_count"
 
 /* 5.2.获取试用劵列表 */
 /* 接口路径 */
@@ -468,6 +501,7 @@
 #define LIVEROOM_VOUCHERLIST_LIST_GRANTEDDATE               "granted_date"
 #define LIVEROOM_VOUCHERLIST_LIST_EXPDATE                   "exp_date"
 #define LIVEROOM_VOUCHERLIST_LIST_READ                      "read"
+#define LIVEROOM_VOUCHERLIST_TOTALCOUNT              "total_count"
 
 /* 5.3.获取座驾列表 */
 /* 接口路径 */
@@ -484,6 +518,7 @@
 #define LIVEROOM_RIDELIST_LIST_EXPDATE                  "exp_date"
 #define LIVEROOM_RIDELIST_LIST_READ                     "read"
 #define LIVEROOM_RIDELIST_LIST_ISUSE                    "is_use"
+#define LIVEROOM_RIDELIST_TOTALCOUNT            "total_count"
 
 /* 5.4.使用／取消座驾 */
 /* 接口路径 */
@@ -516,12 +551,8 @@
 /**
  * 返回
  */
-#define LIVEROOM_IMSVR_IP                       "imsvr_ip"
-#define LIVEROOM_IMSVR_PORT                     "imsvr_port"
-#define LIVEROOM_HTTPSVR_IP                     "httpsvr_ip"
-#define LIVEROOM_HTTPSVR_PORT                   "httpsvr_port"
-#define LIVEROOM_UPLOADSVR_IP                   "uploadsvr_ip"
-#define LIVEROOM_UPLOADSVR_PORT                 "uploadsvr_port"
+#define LIVEROOM_IMSVR_URL                       "imsvr_url"
+#define LIVEROOM_HTTPSVR_URL                     "httpsvr_url"
 #define LIVEROOM_ADDCREDITS_URL                 "addcredits_url"
 
 /* 6.2.获取账号余额 */
@@ -544,5 +575,41 @@
 #define LIVEROOM_SETFAVORITE_ROOMID                       "roomid"
 #define LIVEROOM_SETFAVORITE_ISFAV                        "is_fav"
 
+
+/* 6.4.获取QN广告列表 */
+/* 接口路径 */
+#define LIVEROOM_GETADANCHORLIST                        "/manList/v1/getAdAnchorList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETADANCHORLIST_NUMBER                 "number"
+
+/* 6.5.关闭QN广告列表 */
+/* 接口路径 */
+#define LIVEROOM_CLOSEADANCHORLIST                        "/manList/v1/closeAdAnchorList"
+
+/* 6.6.获取手机验证码 */
+/* 接口路径 */
+#define LIVEROOM_GETPHONEVERIFYCODE                       "/man/v1/getPhoneVerifyCode"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETPHONEVERIFYCODE_COUNTRY                      "country"
+#define LIVEROOM_GETPHONEVERIFYCODE_AREACODE                     "area_code"
+#define LIVEROOM_GETPHONEVERIFYCODE_PHONENO                      "phone_no"
+
+/* 6.7.提交手机验证码 */
+/* 接口路径 */
+#define LIVEROOM_SUBMITPHONEVERIFYCODE                       "/man/v1/submitPhoneVerifyCode"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_SUBMITPHONEVERIFYCODE_COUNTRY                      "country"
+#define LIVEROOM_SUBMITPHONEVERIFYCODE_AREACODE                     "area_code"
+#define LIVEROOM_SUBMITPHONEVERIFYCODE_PHONENO                      "phone_no"
+#define LIVEROOM_SUBMITPHONEVERIFYCODE_VERIFYCODE                   "verify_code"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.utils;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.text.Spanned;
@@ -8,12 +9,9 @@ import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.regex.Pattern;
 
 /**
@@ -64,18 +62,19 @@ public class HtmlImageGetter implements Html.ImageGetter {
                     drawable = getGiftDrawable(giftId);
                     if(drawable == null){
                         //使用礼物默认图片
-                        drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
+                        drawable = context.getResources().getDrawable(R.drawable.ic_default_gift);
                     }
                 }break;
                 case Level:{
                     String level = source.substring(1, source.length());
-                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
+                    //默认高级表情
+                    drawable = context.getResources().getDrawable(R.drawable.ic_default_gift);
                 }break;
                 case Normal:{
-                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
+                    drawable = context.getResources().getDrawable(R.drawable.ic_default_gift);
                 }break;
                 default:{
-                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
+                    drawable = context.getResources().getDrawable(R.drawable.ic_default_gift);
                 }break;
             }
             drawable.setBounds(0, 0, (imgWidth == 0 ? drawable.getIntrinsicWidth() : imgWidth),
@@ -97,23 +96,23 @@ public class HtmlImageGetter implements Html.ImageGetter {
         if(giftItem != null && !TextUtils.isEmpty(giftItem.smallImgUrl)){
             String smallImageLocalPath = FileCacheManager.getInstance().getGiftLocalPath(giftId, giftItem.smallImgUrl);
             if(SystemUtils.fileExists(smallImageLocalPath)){
-                FileInputStream is = null;
-                try {
-                    is = new FileInputStream(smallImageLocalPath);
+                drawable = new BitmapDrawable(ImageUtil.decodeSampledBitmapFromFile(smallImageLocalPath, DisplayUtil.dip2px(context, 20), DisplayUtil.dip2px(context, 20)));
+//                FileInputStream is = null;
+//                try {
+//                    is = new FileInputStream(smallImageLocalPath);
 //                    drawable = Drawable.createFromStream(is, "");
-                    drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_qiqiu);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }finally {
-                    if(is != null){
-                        //解决InputStream由于未关闭导致内存泄漏问题
-                        try {
-                            is.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }finally {
+//                    if(is != null){
+//                        //解决InputStream由于未关闭导致内存泄漏问题
+//                        try {
+//                            is.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             }
         }
         return drawable;

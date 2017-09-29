@@ -20,6 +20,7 @@
         self.level = [coder decodeIntForKey:@"level"];
         self.experience = [coder decodeIntForKey:@"experience"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
+        self.isPushAd = [coder decodeBoolForKey:@"isPushAd"];
     }
     return self;
 }
@@ -31,6 +32,7 @@
     [coder encodeInt:self.level forKey:@"level"];
     [coder encodeInt:self.experience forKey:@"experience"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
+    [coder encodeBool:self.isPushAd forKey:@"isPushAd"];
 
 }
 

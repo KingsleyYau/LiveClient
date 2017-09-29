@@ -26,10 +26,42 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
  * Method:    AddOrCancelFavorite
- * Signature: (Ljava/lang/String;ZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;ZLcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_AddOrCancelFavorite
-  (JNIEnv *, jclass, jstring, jboolean, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jboolean, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetAdAnchorList
+ * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnGetAdAnchorListCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetAdAnchorList
+  (JNIEnv *, jclass, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    CloseAdAnchorList
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_CloseAdAnchorList
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetPhoneVerifyCode
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetPhoneVerifyCode
+  (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    SubmitPhoneVerifyCode
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_SubmitPhoneVerifyCode
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jobject);
 
 #ifdef __cplusplus
 }

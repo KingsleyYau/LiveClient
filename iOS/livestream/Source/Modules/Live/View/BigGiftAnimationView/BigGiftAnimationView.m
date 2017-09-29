@@ -25,7 +25,7 @@ static dispatch_once_t onceToken;
         if (sharedInstance == nil) {
             sharedInstance = [[BigGiftAnimationView alloc] init];
             [sharedInstance carWebPImage];
-            sharedInstance.downloadManager = [LiveGiftDownloadManager giftDownloadManager];
+            sharedInstance.downloadManager = [LiveGiftDownloadManager manager];
             sharedInstance.downloadManager.managerDelegate = sharedInstance;
         }
         
@@ -56,18 +56,20 @@ static dispatch_once_t onceToken;
     
     BOOL isHaveImage = NO;
     
-    NSString *filePath = [[LiveGiftDownloadManager giftDownloadManager]doCheckLocalGiftWithGiftID:giftID];
-    NSData *imageData = [[NSFileManager defaultManager]contentsAtPath:filePath];
+    NSString *filePath = [[LiveGiftDownloadManager manager] doCheckLocalGiftWithGiftID:giftID];
+    NSData *imageData = [[NSFileManager defaultManager] contentsAtPath:filePath];
+    YYImage *image = [YYImage imageWithData:imageData];
     
-    // 如果没文件再去下载
-    if (imageData == nil) {
-//        LiveRoomGiftItemObject *item = [self.downloadManager backGiftItemWithGiftID:giftID];
-//        [self.downloadManager afnDownLoadFileWith:item.srcUrl giftId:giftID];
+    // 如果没文件再去下载或者下载不成功
+    if (image == nil) {
+        AllGiftItem *item = [self.downloadManager backGiftItemWithGiftID:giftID];
+        // 删除本地文件
+        [self.downloadManager deletWebpPath:giftID];
+        [self.downloadManager afnDownLoadFileWith:giftID giftItem:item];
         
         isHaveImage = NO;
     }else{
         
-        YYImage *image = [YYImage imageWithData:imageData];
         self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
         self.carGiftView.image = image;
         [self addSubview:self.carGiftView];
@@ -80,20 +82,6 @@ static dispatch_once_t onceToken;
     }
     
     return isHaveImage;
-}
-
-- (void)downLoadWasCompleteWithGiftId:(NSString *)giftId{
-    
-    NSString *filePath = [[LiveGiftDownloadManager giftDownloadManager]doCheckLocalGiftWithGiftID:giftId];
-    NSData *imageData = [[NSFileManager defaultManager]contentsAtPath:filePath];
-    YYImage *image = [YYImage imageWithData:imageData];
-    self.carGiftView.contentMode = UIViewContentModeScaleAspectFit;
-    self.carGiftView.image = image;
-    [self addSubview:self.carGiftView];
-    [self.carGiftView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.equalTo(self);
-        make.width.equalTo(@SCREEN_WIDTH);
-    }];
 }
 
 - (UIImage *)carWebPImage{

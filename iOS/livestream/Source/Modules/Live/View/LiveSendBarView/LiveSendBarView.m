@@ -25,30 +25,20 @@
         containerView.frame = newFrame;
         [self addSubview:containerView];
         
-        [self.louderBtn setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder_Highlighted"] forState:UIControlStateSelected];
-        
-        self.inputBackGroundView.layer.cornerRadius = self.inputBackGroundView.height * 0.5;
-        self.inputBackGroundView.layer.masksToBounds = YES;
-        self.inputBackGroundColorView.layer.cornerRadius = self.inputBackGroundColorView.height * 0.5;
-        self.inputBackGroundColorView.layer.masksToBounds = YES;
-        
-        self.sendBtn.layer.cornerRadius = self.sendBtn.frame.size.height / 2;
-        UIEdgeInsets titleInset = UIEdgeInsetsMake(5, 5, 5, 5);
-        [self.sendBtn setTitleEdgeInsets:titleInset];
+        [self.louderBtn setImage:[UIImage imageNamed:@"Pubilc_Pop_Btn"] forState:UIControlStateSelected];
         
         self.inputTextField.bottomLine.hidden = YES;
         self.inputTextField.font = PlaceholderFont;
         self.inputTextField.delegate = self;
         
         self.emotionBtn.adjustsImageWhenHighlighted = NO;
-        [self.emotionBtn setImage:[UIImage imageNamed:@"Chat-EmotionGray"] forState:UIControlStateNormal];
-        [self.emotionBtn setImage:[UIImage imageNamed:@"Chat-EmotionBlue"] forState:UIControlStateSelected];
+        [self.emotionBtn setImage:[UIImage imageNamed:@"Send_Emotion_Btn"] forState:UIControlStateNormal];
+        [self.emotionBtn setImage:[UIImage imageNamed:@"Send_Emotion_Btn"] forState:UIControlStateSelected];
         
         self.emotionBtn.selectedChangeDelegate = self;
         self.louderBtn.selectedChangeDelegate = self;
         
         [self changePlaceholder:NO];
-        
     }
     return self;
 }
@@ -64,8 +54,8 @@
         [self.inputTextField endEditing:YES];
         UIButton *emotionBtn = (UIButton *)sender;
         
-        if (self.delagate  && [self.delagate respondsToSelector:@selector(sendBarEmotionAction:isSelected:)]){
-            [self.delagate sendBarEmotionAction:self isSelected:emotionBtn.selected];
+        if (self.delegate  && [self.delegate respondsToSelector:@selector(sendBarEmotionAction:isSelected:)]){
+            [self.delegate sendBarEmotionAction:self isSelected:emotionBtn.selected];
         }
     }
 }
@@ -106,10 +96,10 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     bool bFlag = NO;
     
-    if( self.inputTextField.text.length > 0 ) {
+    if( self.inputTextField.fullText.length > 0 ) {
         
-        if (self.delagate  && [self.delagate respondsToSelector:@selector(sendBarSendAction:)]){
-            [self.delagate sendBarSendAction:self];
+        if (self.delegate  && [self.delegate respondsToSelector:@selector(sendBarSendAction:)]){
+            [self.delegate sendBarSendAction:self];
         }
         
         bFlag = YES;
@@ -120,52 +110,49 @@
 #pragma mark - 事件管理
 - (IBAction)sendAction:(id)sender {
     
-    if (self.delagate  && [self.delagate respondsToSelector:@selector(sendBarSendAction:)]){        
-        [self.delagate sendBarSendAction:self];
+    if (self.delegate  && [self.delegate respondsToSelector:@selector(sendBarSendAction:)]){
+        [self.delegate sendBarSendAction:self];
     }
 }
 
 
 #pragma mark - 界面管理
 - (void)sendButtonNotUser{
-    self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+//    self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
     self.sendBtn.userInteractionEnabled = NO;
 }
 
 - (void)sendButtonCanUser{
-    self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
+//    self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x0CEDF5);
     self.sendBtn.userInteractionEnabled = YES;
 }
 
 - (void)changePlaceholder:(BOOL)louder {
     UIFont* font = PlaceholderFont;
-    UIColor* color = [UIColor whiteColor];
     
     if( louder ) {
         // 切换成弹幕
         NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"INPUT_LOUDER_PLACEHOLDER")];
         [attributeString addAttributes:@{
                                          NSFontAttributeName : font,
-                                         NSForegroundColorAttributeName:color
+                                         NSForegroundColorAttributeName:self.placeholderColor
                                          }
                                  range:NSMakeRange(0, attributeString.length)
          ];
         self.inputTextField.attributedPlaceholder = attributeString;
-        self.inputBackGroundColorView.backgroundColor = COLOR_WITH_16BAND_RGB(0xFFD205);
-        [self.louderBtn setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder_Selected"] forState:UIControlStateNormal];
+        [self.louderBtn setImage:self.louderBtnImage forState:UIControlStateSelected];
         
     } else {
         // 切换成功普通
         NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"INPUT_PLACEHOLDER")];
         [attributeString addAttributes:@{
                                          NSFontAttributeName : font,
-                                         NSForegroundColorAttributeName:color
+                                         NSForegroundColorAttributeName:COLOR_WITH_16BAND_RGB(0xb5b5b5)
                                          }
                                  range:NSMakeRange(0, attributeString.length)
          ];
         self.inputTextField.attributedPlaceholder = attributeString;
-        self.inputBackGroundColorView.backgroundColor = COLOR_WITH_16BAND_RGB(0x686868);
-        [self.louderBtn setImage:[UIImage imageNamed:@"Live_Input_Btn_Louder"] forState:UIControlStateNormal];
+        [self.louderBtn setImage:[UIImage imageNamed:@"Send_Pop_Close"] forState:UIControlStateNormal];
     }
 }
 

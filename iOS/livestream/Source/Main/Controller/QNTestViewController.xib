@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="QNTestViewController">
+            <connections>
+                <outlet property="activityView" destination="1XM-jg-Kl2" id="BxT-UV-mbl"/>
+                <outlet property="textField" destination="DfN-Zd-1du" id="Ss3-kr-foQ"/>
+                <outlet property="view" destination="iN0-l3-epB" id="VgA-NQ-cLz"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please input your token:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RYp-d0-Xf6">
+                    <rect key="frame" x="96" y="100" width="183.5" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Max_rklm7BZwcERW" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DfN-Zd-1du">
+                    <rect key="frame" x="87.5" y="141" width="200" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="7Iy-Dz-pGz"/>
+                        <constraint firstAttribute="height" constant="40" id="WET-W6-0ZJ"/>
+                    </constraints>
+                    <nil key="textColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hMP-SN-pZU" userLabel="Login Button">
+                    <rect key="frame" x="168" y="201" width="38" height="30"/>
+                    <state key="normal" title="Login"/>
+                    <connections>
+                        <action selector="loginAction:" destination="-1" eventType="touchUpInside" id="2TP-zn-PCG"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YP4-Yf-Wmq" userLabel="Cancel Button">
+                    <rect key="frame" x="163" y="241" width="48" height="30"/>
+                    <state key="normal" title="Cancel"/>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="cN0-OA-Acq"/>
+                    </connections>
+                </button>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="1XM-jg-Kl2">
+                    <rect key="frame" x="178" y="547" width="20" height="20"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="hMP-SN-pZU" firstAttribute="top" secondItem="DfN-Zd-1du" secondAttribute="bottom" constant="20" id="6NN-dL-Ihl"/>
+                <constraint firstItem="hMP-SN-pZU" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="7kN-xC-3Vl"/>
+                <constraint firstItem="YP4-Yf-Wmq" firstAttribute="top" secondItem="hMP-SN-pZU" secondAttribute="bottom" constant="10" id="Bg4-PH-nXt"/>
+                <constraint firstItem="YP4-Yf-Wmq" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="CL6-YQ-ObH"/>
+                <constraint firstItem="1XM-jg-Kl2" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-100" id="dtl-0R-AVY"/>
+                <constraint firstItem="RYp-d0-Xf6" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="100" id="eZO-Sb-ft9"/>
+                <constraint firstItem="DfN-Zd-1du" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="s62-yP-4tZ"/>
+                <constraint firstItem="1XM-jg-Kl2" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="sDz-DK-7RU"/>
+                <constraint firstItem="RYp-d0-Xf6" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="tu6-IA-Wmd"/>
+                <constraint firstItem="DfN-Zd-1du" firstAttribute="top" secondItem="RYp-d0-Xf6" secondAttribute="bottom" constant="20" id="vhX-2g-AOs"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <point key="canvasLocation" x="23.5" y="-276"/>
+        </view>
+    </objects>
+</document>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FollowTableViewCell" rowHeight="314" id="UOf-xs-8Tr" userLabel="Hot Table View Cell" customClass="FollowTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="376" height="314"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" tableViewCell="UOf-xs-8Tr" id="8XP-Q3-W0o">
+                <rect key="frame" x="0.0" y="0.0" width="376" height="314"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pxv-xy-KDw" userLabel="Header Image View" customClass="UIImageViewTopFit">
+                        <rect key="frame" x="0.0" y="0.0" width="376" height="312"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Eeb-d5-YdP">
+                        <rect key="frame" x="163" y="228" width="49" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_RoomTypePrivateLive" translatesAutoresizingMaskIntoConstraints="NO" id="8D3-eL-sNq">
+                        <rect key="frame" x="0.0" y="21" width="90" height="17"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_IntersetWhite" translatesAutoresizingMaskIntoConstraints="NO" id="x9E-6X-h2R">
+                        <rect key="frame" x="258" y="21" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="24" id="9AS-3l-SZC"/>
+                            <constraint firstAttribute="height" constant="24" id="tMH-sj-lJy"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_InsterestCook" translatesAutoresizingMaskIntoConstraints="NO" id="3Aw-DA-Kvy">
+                        <rect key="frame" x="292" y="21" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="5Cb-F3-89V"/>
+                            <constraint firstAttribute="width" constant="24" id="g6x-ja-1o7"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_InsterestSport" translatesAutoresizingMaskIntoConstraints="NO" id="gIj-J0-VhG">
+                        <rect key="frame" x="326" y="21" width="24" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="24" id="buJ-h6-jHq"/>
+                            <constraint firstAttribute="width" constant="24" id="cfa-wt-myV"/>
+                        </constraints>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h2h-nf-9XQ">
+                        <rect key="frame" x="141" y="230" width="20" height="20"/>
+                        <color key="backgroundColor" red="0.0039215686269999999" green="0.66666666669999997" blue="0.0039215686269999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="20" id="51H-rG-zfb"/>
+                            <constraint firstAttribute="height" constant="20" id="W20-FY-BbY"/>
+                        </constraints>
+                    </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RDp-Rv-VWU">
+                        <rect key="frame" x="200.5" y="267" width="135" height="27"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="135" id="EJf-08-vLk"/>
+                        </constraints>
+                        <state key="normal" image="Home_HotAndFollow_Btn_FreeWhite"/>
+                        <connections>
+                            <action selector="viewPublicfreeBtnClick:" destination="UOf-xs-8Tr" eventType="touchUpInside" id="sGE-rp-K79"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eeS-jf-ggg">
+                        <rect key="frame" x="200.5" y="263.5" width="135" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="135" id="CeG-3i-Wgz"/>
+                        </constraints>
+                        <state key="normal" image="Home_HotAndFollow_Btn_ViewVipPublicBroadcastView"/>
+                        <connections>
+                            <action selector="viewPublicFeeBtnClick:" destination="UOf-xs-8Tr" eventType="touchUpInside" id="L9l-tc-LMq"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3sJ-c4-VtH">
+                        <rect key="frame" x="104" y="270" width="169" height="24"/>
+                        <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
+                        <connections>
+                            <action selector="bookPrivateBtnClick:" destination="UOf-xs-8Tr" eventType="touchUpInside" id="dU8-NB-fyk"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mxx-mZ-rBd">
+                        <rect key="frame" x="41" y="268" width="135" height="26"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="135" id="xib-PF-olQ"/>
+                        </constraints>
+                        <state key="normal" image="Home_HotAndFollow_Btn_StartNormalPrivateBroadcastBlue"/>
+                        <connections>
+                            <action selector="normalPrivateBtnClick:" destination="UOf-xs-8Tr" eventType="touchUpInside" id="jdl-zF-C6w"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TBz-bG-fhh">
+                        <rect key="frame" x="40.5" y="265.5" width="135" height="28"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="135" id="OWo-q8-yeY"/>
+                        </constraints>
+                        <state key="normal" image="Home_HotAndFollow_Btn_StartVipPrivateBroadcast"/>
+                        <connections>
+                            <action selector="vipPrivateBtnClick:" destination="UOf-xs-8Tr" eventType="touchUpInside" id="Wsd-C9-Ye3"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" red="0.74509803919999995" green="0.74509803919999995" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
+                <constraints>
+                    <constraint firstItem="gIj-J0-VhG" firstAttribute="leading" secondItem="3Aw-DA-Kvy" secondAttribute="trailing" constant="10" id="10I-oR-1Bh"/>
+                    <constraint firstItem="eeS-jf-ggg" firstAttribute="centerX" secondItem="pxv-xy-KDw" secondAttribute="centerX" constant="80" id="1V3-RM-lZm"/>
+                    <constraint firstAttribute="bottom" secondItem="eeS-jf-ggg" secondAttribute="bottom" constant="20" id="AJn-Dn-YKp"/>
+                    <constraint firstAttribute="bottom" secondItem="RDp-Rv-VWU" secondAttribute="bottom" constant="19" id="CBH-Cb-XX1"/>
+                    <constraint firstAttribute="bottom" secondItem="3sJ-c4-VtH" secondAttribute="bottom" constant="19" id="E5W-3G-4jw"/>
+                    <constraint firstAttribute="bottom" secondItem="Mxx-mZ-rBd" secondAttribute="bottom" constant="19" id="J1x-fU-f2L"/>
+                    <constraint firstItem="h2h-nf-9XQ" firstAttribute="centerY" secondItem="Eeb-d5-YdP" secondAttribute="centerY" id="KJk-AZ-YBV"/>
+                    <constraint firstItem="3sJ-c4-VtH" firstAttribute="centerX" secondItem="pxv-xy-KDw" secondAttribute="centerX" id="OXP-LF-uN6"/>
+                    <constraint firstItem="x9E-6X-h2R" firstAttribute="top" secondItem="3Aw-DA-Kvy" secondAttribute="top" id="QhO-Sp-188"/>
+                    <constraint firstItem="pxv-xy-KDw" firstAttribute="leading" secondItem="8XP-Q3-W0o" secondAttribute="leading" id="SKY-wP-QaF"/>
+                    <constraint firstItem="Eeb-d5-YdP" firstAttribute="centerX" secondItem="8XP-Q3-W0o" secondAttribute="centerX" id="Sh4-2r-N21"/>
+                    <constraint firstItem="pxv-xy-KDw" firstAttribute="top" secondItem="8XP-Q3-W0o" secondAttribute="top" id="TRh-Mj-ZN4"/>
+                    <constraint firstItem="8D3-eL-sNq" firstAttribute="leading" secondItem="8XP-Q3-W0o" secondAttribute="leading" id="UUn-xa-rtc"/>
+                    <constraint firstItem="3Aw-DA-Kvy" firstAttribute="leading" secondItem="x9E-6X-h2R" secondAttribute="trailing" constant="10" id="ctV-9X-mYb"/>
+                    <constraint firstItem="Mxx-mZ-rBd" firstAttribute="centerX" secondItem="pxv-xy-KDw" secondAttribute="centerX" constant="-80" id="fhB-cm-1qn"/>
+                    <constraint firstItem="8D3-eL-sNq" firstAttribute="top" secondItem="8XP-Q3-W0o" secondAttribute="top" constant="21" id="gIx-Fc-fEV"/>
+                    <constraint firstItem="gIj-J0-VhG" firstAttribute="top" secondItem="8XP-Q3-W0o" secondAttribute="top" constant="21" id="h9C-qN-6H5"/>
+                    <constraint firstItem="Eeb-d5-YdP" firstAttribute="leading" secondItem="h2h-nf-9XQ" secondAttribute="trailing" constant="2" id="hKi-VZ-EDu"/>
+                    <constraint firstItem="Eeb-d5-YdP" firstAttribute="bottom" secondItem="pxv-xy-KDw" secondAttribute="bottom" constant="-60" id="hPX-vi-sSR"/>
+                    <constraint firstAttribute="bottom" secondItem="pxv-xy-KDw" secondAttribute="bottom" constant="1" id="jwK-V2-GAo"/>
+                    <constraint firstItem="3Aw-DA-Kvy" firstAttribute="top" secondItem="gIj-J0-VhG" secondAttribute="top" id="k6Z-qa-2V7"/>
+                    <constraint firstItem="RDp-Rv-VWU" firstAttribute="centerX" secondItem="pxv-xy-KDw" secondAttribute="centerX" constant="80" id="ke6-Cq-MSR"/>
+                    <constraint firstItem="TBz-bG-fhh" firstAttribute="centerX" secondItem="pxv-xy-KDw" secondAttribute="centerX" constant="-80" id="kmt-Qd-Cb7"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="gIj-J0-VhG" secondAttribute="trailing" constant="26" id="svY-hJ-7Nm"/>
+                    <constraint firstAttribute="bottom" secondItem="TBz-bG-fhh" secondAttribute="bottom" constant="20" id="xZD-1h-xSa"/>
+                    <constraint firstAttribute="trailing" secondItem="pxv-xy-KDw" secondAttribute="trailing" id="yJ9-1i-AYV"/>
+                </constraints>
+                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="bookPrivateBtn" destination="3sJ-c4-VtH" id="DCW-DL-ZWM"/>
+                <outlet property="imageViewHeader" destination="pxv-xy-KDw" id="aB0-9O-9QB"/>
+                <outlet property="interest1" destination="x9E-6X-h2R" id="ywe-kx-LAb"/>
+                <outlet property="interest2" destination="3Aw-DA-Kvy" id="g25-W8-zM8"/>
+                <outlet property="interest3" destination="gIj-J0-VhG" id="ScY-ei-3rA"/>
+                <outlet property="labelRoomTitle" destination="Eeb-d5-YdP" id="Ygh-f2-hoC"/>
+                <outlet property="normalPrivateBtn" destination="Mxx-mZ-rBd" id="nvM-af-kKn"/>
+                <outlet property="normalPrivateCenterX" destination="fhB-cm-1qn" id="cBJ-SC-bNp"/>
+                <outlet property="onlineView" destination="h2h-nf-9XQ" id="2D2-AS-2uo"/>
+                <outlet property="roomType" destination="8D3-eL-sNq" id="gEa-MD-kxS"/>
+                <outlet property="viewPublicFeeBtn" destination="eeS-jf-ggg" id="STo-CG-gnG"/>
+                <outlet property="viewPublicFreeBtn" destination="RDp-Rv-VWU" id="6dX-XO-pQF"/>
+                <outlet property="vipPrivateBtn" destination="TBz-bG-fhh" id="qrJ-YM-PB5"/>
+                <outlet property="vipPrivateCenterX" destination="kmt-Qd-Cb7" id="pc8-WX-wYV"/>
+            </connections>
+            <point key="canvasLocation" x="294" y="427"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="169" height="24"/>
+        <image name="Home_HotAndFollow_Btn_FreeWhite" width="150" height="27"/>
+        <image name="Home_HotAndFollow_Btn_StartNormalPrivateBroadcastBlue" width="148" height="26"/>
+        <image name="Home_HotAndFollow_Btn_StartVipPrivateBroadcast" width="151" height="28"/>
+        <image name="Home_HotAndFollow_Btn_ViewVipPublicBroadcastView" width="153" height="30"/>
+        <image name="Home_HotAndFollow_ImageView_InsterestCook" width="24" height="24"/>
+        <image name="Home_HotAndFollow_ImageView_InsterestSport" width="24" height="24"/>
+        <image name="Home_HotAndFollow_ImageView_IntersetWhite" width="15" height="18"/>
+        <image name="Home_HotAndFollow_ImageView_RoomTypePrivateLive" width="90" height="17"/>
+    </resources>
+</document>

@@ -44,7 +44,7 @@ void HttpSetFavoriteTask::SetParam(
     
     char temp[16];
     snprintf(temp, sizeof(temp), "%d", isFav ? 1 : 0);
-    mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_BOOKTIME, temp);
+    mHttpEntiy.AddContent(LIVEROOM_SETFAVORITE_ISFAV, temp);
     mIsFav = isFav;
     
     FileLog("httpcontroller",

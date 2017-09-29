@@ -7,18 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import "LiveRoomGiftItemObject.h"
 
 @interface BackpackGiftItem : NSObject
-
-//@property (nonatomic, strong) LiveRoomGiftItemObject *item;
-
-@property (nonatomic, assign) int giftNum;
-
-@property (nonatomic, assign) int granted_date;
-
-@property (nonatomic, assign) int exp_date;
-
-@property (nonatomic, strong) NSArray *send_num_list;
+/**
+ * 礼物列表结构体
+ * giftId                 礼物ID
+ * num                    礼物数量
+ * grantedDate            获取时间（1970年起的秒数）
+ * expDate		         过期时间（1970年起的秒数）
+ * read                   已读状态（0:未读 1:已读）
+ */
+@property (nonatomic, copy) NSString *giftId;
+@property (nonatomic, assign) int num;
+@property (nonatomic, assign) NSInteger grantedDate;
+@property (nonatomic, assign) NSInteger expDate;
+@property (nonatomic, assign) BOOL read;
 
 @end

@@ -1,0 +1,15 @@
+其它项目如果引用：
+http://blog.csdn.net/xiaogang107/article/details/61916081
+
+主工程中需要做以下三件事：
+1、在project的settings.gradle里面增加
+
+    include ':QNBridgeModule'
+    project(':QNBridgeModule').projectDir=new File('../QNBridgeModule/')
+    include ':QNBridgeModule:bridgeService'
+
+2、在 Module:app 的build.gradle文件中增加
+
+    compile project(':QNBridgeModule:bridgeService')
+
+3、主工程点击Android Studio的菜单中的Build->Clean Project

@@ -20,11 +20,13 @@
 
 @interface LiveSendBarView : UIView <KKCheckButtonDelegate, UITextFieldDelegate>
 
-@property (nonatomic, weak) IBOutlet id<LiveSendBarViewDelegate> delagate;
+@property (nonatomic, weak) IBOutlet id<LiveSendBarViewDelegate> delegate;
+
+@property (weak, nonatomic) IBOutlet UIImageView *sendBarBgImageView;
 
 @property (weak, nonatomic) IBOutlet UIView *inputBackGroundView;
 
-@property (weak, nonatomic) IBOutlet UIView *inputBackGroundColorView;
+@property (weak, nonatomic) IBOutlet UIImageView *inputBackGroundImageView;
 
 @property (weak, nonatomic) IBOutlet KKCheckButton *louderBtn;
 
@@ -33,6 +35,11 @@
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;
 
 @property (weak, nonatomic) IBOutlet KKCheckButton *emotionBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *emotionBtnWidth;
+
+@property (nonatomic, strong) UIImage *louderBtnImage;
+@property (nonatomic, strong) UIColor *placeholderColor;
+
 
 - (IBAction)sendAction:(id)sender;
 

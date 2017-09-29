@@ -57,7 +57,7 @@
             if( viewScaleSize < imageScaleSize ) {
                 // view的[高宽比]小于image[高宽比]
                 // 裁剪图片
-                
+                    self.contentMode = UIViewContentModeScaleAspectFill;
             } else {
                 // view的[高宽比]大于image[高宽比]
                 // 改变填充方式, 等比全显示

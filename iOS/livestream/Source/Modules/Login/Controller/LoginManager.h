@@ -32,7 +32,7 @@
  *  @param manager 登陆状态管理器实例
  *  @param kick  是否主动注销(YES:主动/NO:超时)
  */
-- (void)manager:(LoginManager * _Nonnull)manager onLogout:(BOOL)kick;
+- (void)manager:(LoginManager * _Nonnull)manager onLogout:(BOOL)kick msg:(NSString * _Nullable)msg;
 
 @end
 
@@ -104,7 +104,7 @@ typedef enum {
  *  @param kick 是否主动注销(或者被踢)
  *
  */
-- (void)logout:(BOOL)kick;
+- (void)logout:(BOOL)kick msg:(NSString * _Nullable)msg;
 
 /**
  *  自动登陆

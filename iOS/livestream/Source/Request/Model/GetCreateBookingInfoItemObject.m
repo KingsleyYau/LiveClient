@@ -25,6 +25,7 @@
         self.bookDeposit = [coder decodeDoubleForKey:@"bookDeposit"];
         self.bookTime = [coder decodeObjectForKey:@"bookTime"];
         self.bookGift = [coder decodeObjectForKey:@"bookGift"];
+        self.bookPhone = [coder decodeObjectForKey:@"bookPhone"];
     }
     return self;
 }
@@ -33,6 +34,7 @@
     [coder encodeDouble:self.bookDeposit forKey:@"bookDeposit"];
     [coder encodeObject:self.bookTime forKey:@"bookTime"];
     [coder encodeObject:self.bookGift forKey:@"bookGift"];
+    [coder encodeObject:self.bookPhone forKey:@"bookPhone"];
 }
 
 @end

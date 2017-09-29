@@ -90,4 +90,13 @@
  */
 - (NSString *)imageCacheFromPhoneAlbumnPath:(UIImage *)image fileName:(NSString *)fileName;
 
+/**
+ *  删除目录
+ *
+ *  @param path 目录路径
+ *
+ *  @return 成功/失败
+ */
+- (BOOL)removeDirectory:(NSString*)path;
+
 @end

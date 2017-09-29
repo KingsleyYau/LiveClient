@@ -19,7 +19,6 @@
             android:id="@+id/tv_carMaster"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="AbJjHhZz01dc"
             android:textSize="8sp"
             android:gravity="center"
             android:ellipsize="end"
@@ -44,6 +43,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_liveroom_car"/>
+        android:scaleType="fitCenter"/>
 </LinearLayout>

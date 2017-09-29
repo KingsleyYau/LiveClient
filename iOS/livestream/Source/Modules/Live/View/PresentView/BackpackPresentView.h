@@ -10,15 +10,19 @@
 #import "PresentSendView.h"
 #import "CountTimeButton.h"
 #import "SelectNumButton.h"
+#import "RoomBackGiftItem.h"
+#import "LiveGiftListManager.h"
 
 @class BackpackPresentView;
 @protocol BackpackPresentViewDelegate <NSObject>
 
-- (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView atIndexPath:(NSIndexPath *)indexPath;
+- (void)backpackPresentViewShowBalance:(BackpackPresentView *) backpackView;
+- (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath;
 - (void)backpackPresentViewDidScroll:(BackpackPresentView *)backpackView currentPageNumber:(NSInteger)page;
-- (void)backpackPresentViewSendBtnClick:(BackpackPresentView *)backpackView;
+- (void)backpackPresentViewSendBtnClick:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewComboBtnInside:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewComboBtnDown:(BackpackPresentView *)backpackView andSender:(id)sender;
+- (void)backpackPresentViewReloadList:(BackpackPresentView *)presentView;
 
 @end
 
@@ -29,22 +33,28 @@
 @property (weak, nonatomic) IBOutlet UIPageControl *pageView;
 @property (weak, nonatomic) IBOutlet CountTimeButton *comboBtn;
 @property (weak, nonatomic) IBOutlet PresentSendView *sendView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewHeight;
-@property (weak, nonatomic) IBOutlet UILabel *coinsNumLabel;
+@property (weak, nonatomic) IBOutlet UIView *requestFailView;
+@property (weak, nonatomic) IBOutlet UILabel *failTipLabel;
+@property (weak, nonatomic) IBOutlet UIButton *reloadBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipImageViewTop;
+
+@property (nonatomic, assign) int manLevel;
+@property (nonatomic, assign) int loveLevel;
 
 @property (nonatomic, strong) NSArray *giftIdArray;
 
-@property (nonatomic, strong) NSMutableArray *giftItemArray;
-
 @property (nonatomic, assign) BOOL isCellSelect;
 
-//@property (nonatomic, strong) LiveRoomGiftItemObject *selectCellItem;
+@property (nonatomic, strong) AllGiftItem *selectCellItem;
 
 // 多功能按钮
 @property (strong) SelectNumButton* buttonBar;
 
 /** 代理 */
 @property (nonatomic, weak) id<BackpackPresentViewDelegate> backpackDelegate;
+
+
+- (IBAction)showMyBalance:(id)sender;
 
 - (void)reloadData;
 
@@ -53,5 +63,17 @@
 
 // 隐藏多功能按钮
 - (void)hideButtonBar;
+
+// 设置可选按钮
+- (void)setupButtonBar:(NSArray *)sendNumList;
+
+// 显示没有礼物列表界面
+- (void)showNoListView;
+
+// 显示请求礼物列表失败界面
+- (void)showRequestFailView;
+
+// 重新请求礼物列表
+- (IBAction)reloadGiftList:(id)sender;
 
 @end
