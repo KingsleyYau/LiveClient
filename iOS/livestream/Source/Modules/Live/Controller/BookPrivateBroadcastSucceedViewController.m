@@ -7,10 +7,11 @@
 //
 
 #import "BookPrivateBroadcastSucceedViewController.h"
-#import "UIView+YYAdd.h"
 #import "BookPrivateBroadcastSucceedHeadView.h"
 #import "LiveGiftDownloadManager.h"
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
+#import "LSMyReservationsViewController.h"
+#import "LiveModule.h"
 @interface BookPrivateBroadcastSucceedViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -20,19 +21,29 @@
 
 @implementation BookPrivateBroadcastSucceedViewController
 
+- (void)initCustomParam {
+    [super initCustomParam];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    self.title = NSLocalizedStringFromSelf(@"BOOK_PRIVATE_TITLE");
+    
     self.giftDownloadManager = [LiveGiftDownloadManager manager];
     
-    self.titleArray = @[@"Broadcaster",@"Reservation Time",@"Virtual Gift"];
+    self.titleArray = @[NSLocalizedStringFromSelf(@"BROAD_CASTER"),NSLocalizedStringFromSelf(@"RESER_TIME"),NSLocalizedStringFromSelf(@"VIRTUAL_GIFT")];
     
     [self setTableHeadView];
     [self setTableFooterView];
     [self.tableView reloadData];
+}
+
+- (IBAction)backBtnDid:(UIButton *)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)setTableHeadView
@@ -47,45 +58,51 @@
     footerView.backgroundColor = [UIColor clearColor];
     UIButton * okBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     okBtn.frame = CGRectMake(footerView.frame.size.width/2 - 201/2, 24, 201, 35);
-    [okBtn setTitle:@"OK" forState:UIControlStateNormal];
+    [okBtn setTitle:NSLocalizedString(@"OK", @"OK") forState:UIControlStateNormal];
     okBtn.layer.cornerRadius = 5;
     okBtn.layer.masksToBounds = YES;
-    okBtn.backgroundColor = [UIColor colorWithHexString:@"f94ceb"];
-    [okBtn addTarget:self action:@selector(backBtn:) forControlEvents:UIControlEventTouchUpInside];
+    okBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xf94ceb);
+    [okBtn addTarget:self action:@selector(backBtnDid:) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:okBtn];
     
     UIButton * myBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    myBtn.frame = CGRectMake(footerView.frame.size.width/2 - 201/2, okBtn.bottom + 13, 201, 35);
-    [myBtn setTitle:@"My Reservations" forState:UIControlStateNormal];
+    CGFloat bottom = okBtn.frame.origin.y + okBtn.frame.size.height;
+    myBtn.frame = CGRectMake(footerView.frame.size.width/2 - 201/2, bottom + 13, 201, 35);
+    [myBtn setTitle:NSLocalizedStringFromSelf(@"MY_RESER") forState:UIControlStateNormal];
     myBtn.layer.cornerRadius = 5;
     myBtn.layer.masksToBounds = YES;
-    myBtn.backgroundColor = [UIColor colorWithHexString:@"5d0e86"];
+    myBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
     [myBtn addTarget:self action:@selector(myBtnDid:) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:myBtn];
     
     [self.tableView setTableFooterView:footerView];
 }
 
-- (IBAction)backBtn:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 - (void)myBtnDid:(UIButton *)btn
 {
+    [self dismissViewControllerAnimated:NO completion:nil];
+    LSMyReservationsViewController * vc = [[LSMyReservationsViewController alloc]initWithNibName:nil bundle:nil];
+    [[[LiveModule module] moduleVC].navigationController pushViewController:vc animated:YES];
+}
+
+- (void)setupContainView {
     
+    [super setupContainView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
+    [self.navigationController setNavigationBarHidden:NO];
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -118,9 +135,9 @@
         cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         cell.textLabel.font = [UIFont systemFontOfSize:14];
-        cell.textLabel.textColor = [UIColor colorWithHexString:@"3c3c3c"];
+        cell.textLabel.textColor = COLOR_WITH_16BAND_RGB(0x3c3c3c);
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-        cell.detailTextLabel.textColor = [UIColor colorWithHexString:@"5d0e86"];
+        cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
         
         cell.textLabel.text = [self.titleArray objectAtIndex:indexPath.row];
     }
@@ -136,14 +153,14 @@
     {
         NSString * giftUrl = [self.giftDownloadManager backSmallImgUrlWithGiftID:self.giftId];
         
-        UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(self.tableView.width - 80, 10, 30, 30)];
+        UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(self.tableView.frame.size.width - 80, 10, 30, 30)];
         icon.layer.cornerRadius = 4;
         icon.layer.masksToBounds = YES;
         [cell addSubview:icon];
-        ImageViewLoader * imageViewLoader = [ImageViewLoader loader];
+        LSImageViewLoader *imageViewLoader = [LSImageViewLoader loader];
         [imageViewLoader loadImageWithImageView:icon options:0 imageUrl:giftUrl placeholderImage:nil];
     
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"X%ld",self.giftNum];
+        cell.detailTextLabel.text = [NSString stringWithFormat:@"X%ld",(long)self.giftNum];
     }
 
     return cell;

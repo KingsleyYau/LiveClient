@@ -8,6 +8,7 @@
 
 #import "GiftItemCollectionViewCell.h"
 #import "LiveGiftDownloadManager.h"
+#import "LSImageViewLoader.h"
 
 @interface GiftItemCollectionViewCell ()
 
@@ -32,6 +33,8 @@
 
 @property (nonatomic, strong) LiveGiftDownloadManager *loadManager;
 
+@property (nonatomic, strong) LSImageViewLoader *imageLoader;
+
 @end
 
 @implementation GiftItemCollectionViewCell
@@ -44,6 +47,7 @@
         
         [self updataMasonry];
         self.loadManager = [LiveGiftDownloadManager manager];
+        self.imageLoader = [LSImageViewLoader loader];
     }
     return self;
 }
@@ -64,6 +68,7 @@
 - (void)updataMasonry{
     
     self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
+    self.giftNameLabel.textColor = COLOR_WITH_16BAND_RGB_ALPHA(0x8cffffff);
     self.giftCountLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(9)];
     self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
     self.giftNameLableBottomOffset.constant = 0;
@@ -73,7 +78,7 @@
 //    self.haveNumViewWidth.constant = DESGIN_TRANSFORM_3X(18);
 //    self.haveNumViewHeight.constant = DESGIN_TRANSFORM_3X(18);
 //    self.haveNumView.layer.cornerRadius = DESGIN_TRANSFORM_3X(9);
-    self.haveNumView.layer.cornerRadius = 9;
+    self.haveNumView.layer.cornerRadius = self.haveNumView.frame.size.height / 2;
     self.haveNumView.layer.masksToBounds = YES;
 //    self.haveNumLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(14)];
 }
@@ -91,7 +96,9 @@
 /** 背包隐藏view */
 - (void)backpackHiddenView {
     
-    self.giftCountLabel.hidden = YES;
+    self.giftCountLabel.font = [UIFont systemFontOfSize:0];
+    [self.giftCountLabel sizeToFit];
+    self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(10);
     self.bigGiftLogo.hidden = YES;
     self.haveNumView.hidden = NO;
 }
@@ -127,8 +134,8 @@
     
     self.giftNameLabel.text = item.infoItem.name;
     
-    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:item.infoItem.middleImgUrl]
-                          placeholderImage:[UIImage imageNamed:@"Live_Gift_Nomal"] options:0];
+    [self.imageLoader loadImageWithImageView:self.giftImageView options:0 imageUrl:item.infoItem.middleImgUrl placeholderImage:
+     [UIImage imageNamed:@"Live_Gift_Nomal"]];
     
     self.giftCountLabel.text = [NSString stringWithFormat:@"%0.1f Credits",item.infoItem.credit];
     
@@ -141,12 +148,14 @@
     
     self.bigGiftLogo.hidden = YES;
     
-    self.giftNameLabel.text = backItem.allItem.infoItem.name;
+    AllGiftItem *item = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:backItem.giftId];
     
-    if ( backItem.allItem.infoItem.type == GIFTTYPE_COMMON ) {
+    self.giftNameLabel.text = item.infoItem.name;
+    
+    if ( item.infoItem.type == GIFTTYPE_COMMON ) {
         self.loadingView.hidden = YES;
     }else{
-        AllGiftItem *dicItem = [self.loadManager.bigGiftDownloadDic objectForKey:backItem.allItem.infoItem.giftId];
+        AllGiftItem *dicItem = [self.loadManager.bigGiftDownloadDic objectForKey:item.infoItem.giftId];
         if (dicItem.isDownloading) {
             [self.loadingView startAnimating];
             self.loadingView.hidden = NO;
@@ -156,7 +165,7 @@
         }
     }
     
-    if ( loveLV < backItem.allItem.infoItem.loveLevel || manLV < backItem.allItem.infoItem.level || !canSend ) {
+    if ( loveLV < item.infoItem.loveLevel || manLV < item.infoItem.level || !canSend ) {
         self.notSendImageView.hidden = NO;
         self.haveNumView.hidden = YES;
         self.haveNumLabel.hidden = YES;
@@ -166,10 +175,14 @@
         self.haveNumLabel.hidden = NO;
     }
     
-    [self.giftImageView sd_setImageWithURL:[NSURL URLWithString:backItem.allItem.infoItem.middleImgUrl]
-                          placeholderImage:[UIImage imageNamed:@"Live_Gift_Nomal"] options:0];
+    [self.imageLoader loadImageWithImageView:self.giftImageView options:0 imageUrl:item.infoItem.middleImgUrl placeholderImage:
+     [UIImage imageNamed:@"Live_Gift_Nomal"]];
     
-    self.haveNumLabel.text = [NSString stringWithFormat:@"%d",backItem.num]; //[NSString stringWithFormat:@"%d",backItem.num];
+    if ( backItem.num > 100 ) {
+        self.haveNumLabel.text = [NSString stringWithFormat:@"99+"];
+    } else {
+        self.haveNumLabel.text = [NSString stringWithFormat:@"%d",backItem.num];
+    }
 }
 
 + (NSString *)cellIdentifier {

@@ -74,7 +74,7 @@ bool VideoHardEncoder::Reset() {
 }
 
 void VideoHardEncoder::Pause() {
-    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::Pause( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::Pause( this : %p )", this);
     
     DestroyContext();
 }

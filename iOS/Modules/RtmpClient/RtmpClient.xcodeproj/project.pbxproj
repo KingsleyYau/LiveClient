@@ -119,6 +119,7 @@
 		506D67931EF10DF40022A666 /* PlayerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerController.h; sourceTree = "<group>"; };
 		50A050001EA89EC2009CF72C /* RtmpPublisher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RtmpPublisher.cpp; sourceTree = "<group>"; };
 		50A050011EA89EC2009CF72C /* RtmpPublisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmpPublisher.h; sourceTree = "<group>"; };
+		50AE07291F97336A005CF8D2 /* RtmpClient-PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RtmpClient-PrefixHeader.pch"; sourceTree = "<group>"; };
 		50C994B81E8F9281001E1355 /* libRtmpClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRtmpClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		50CD56951F1353AC00EC3C4A /* PublisherController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PublisherController.cpp; sourceTree = "<group>"; };
 		50CD56961F1353AC00EC3C4A /* PublisherController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublisherController.h; sourceTree = "<group>"; };
@@ -298,6 +299,7 @@
 				50E88B931EA09ECC00696279 /* RtmpPublisherOC.h */,
 				50E88B941EA09ECC00696279 /* RtmpPublisherOC.m */,
 				500520231E94C85D00C45E22 /* third-party */,
+				50AE07291F97336A005CF8D2 /* RtmpClient-PrefixHeader.pch */,
 			);
 			path = RtmpClient;
 			sourceTree = "<group>";
@@ -497,8 +499,10 @@
 				DEVELOPMENT_TEAM = MK37J4UMHH;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/RtmpClient-PrefixHeader.pch";
 				GPUIMAGE_SRC_ROOT = "${SRCROOT}/../GPUImage/Source";
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Config",
 					"${COMMON_C_SRC_ROOT}",
 					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
 					"${GPUIMAGE_SRC_ROOT}",
@@ -533,8 +537,10 @@
 				DEVELOPMENT_TEAM = MK37J4UMHH;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/RtmpClient-PrefixHeader.pch";
 				GPUIMAGE_SRC_ROOT = "${SRCROOT}/../GPUImage/Source";
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Config",
 					"${COMMON_C_SRC_ROOT}",
 					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
 					"${GPUIMAGE_SRC_ROOT}",

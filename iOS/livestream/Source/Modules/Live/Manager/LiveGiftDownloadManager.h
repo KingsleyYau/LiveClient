@@ -44,16 +44,18 @@ typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *liveRoomGiftList
 // 所有礼物对象数组
 @property (nonatomic, strong) NSMutableArray<AllGiftItem *> *giftMuArray;
 
+@property (nonatomic, strong) NSMutableDictionary *bigGiftDataDictionary;
+
 + (instancetype)manager;
 
 #pragma mark - 下载指定礼物详情
-- (void)downLoadGiftDetail:(AllGiftItem *)item;
+- (void)downLoadGiftDetail:(NSString *)giftID;
 
 #pragma mark - 请求礼物列表
 - (void)getLiveRoomAllGiftListHaveNew:(BOOL)haveNew request:(RequestFinshtBlock)callBack;
 
 #pragma mark - 下载大礼物webp文件
-- (void)afnDownLoadFileWith:(NSString *)fileUrl giftItem:(AllGiftItem *)giftItem;
+- (void)afnDownLoadFileWith:(NSString *)webpUrl giftItem:(AllGiftItem *)giftItem;
 
 // 根据礼物ID判断是否有该礼物
 - (BOOL)judgeTheGiftidIsHere:(NSString *)giftId;
@@ -85,6 +87,8 @@ typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *liveRoomGiftList
 // 添加新的礼物Item
 //- (void)addNewGIftItemToArray:(LiveRoomGiftItemObject *)item;
 
+typedef void (^DownLoadWebpHandler)(BOOL success, UIImage* image, NSData* data);
 
+//- (void)getBigGiftWebpImageWithUrl:(NSString *)url giftItem:(AllGiftItem *)item finishHandler:(DownLoadWebpHandler)finishHandler;
 
 @end

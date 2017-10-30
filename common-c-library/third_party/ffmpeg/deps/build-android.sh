@@ -99,7 +99,7 @@ function configure_x86 {
 	export CROSS_COMPILE="i686-linux-android-"
 	export CROSS_COMPILE_PREFIX=$TOOLCHAIN/bin/$CROSS_COMPILE
 
-	export CONFIG_PARAM=""
+	export CONFIG_PARAM="--disable-asm"
 
 	export OPTIMIZE_CFLAGS="-m32"
 
@@ -139,9 +139,9 @@ function build_x264 {
 				--enable-static \
 				--enable-pic \
 				--disable-cli \
-				--disable-asm \
 				$CONFIG_PARAM \
 				|| exit 1
+				#--disable-asm \ android must build arm64 without this param, only bulid x86 with this param
     		
     		
 	make clean || exit 1
@@ -194,7 +194,7 @@ function build_ffmpeg {
 	echo "# Start building ffmpeg for $ARCH_ABI"
 	FFMPEG="ffmpeg-$VERSION"
 	cd $FFMPEG
-
+	
 	# build
 	./configure \
 						--prefix=$PREFIX \
@@ -262,7 +262,7 @@ function build_ffmpeg_so {
 
 # Start Build
 BUILD_ARCH=(arm armv7a x86 arm64)
-#BUILD_ARCH=(x86)
+#BUILD_ARCH=(arm64)
 
 echo "# Starting building..."
 
@@ -272,7 +272,7 @@ for var in ${BUILD_ARCH[@]};do
 	configure_toolchain
 	echo "# Starting building for $ARCH_ABI..."
 	#build_fdk_aac || exit 1
-	#build_x264 || exit 1
+	build_x264 || exit 1
 	build_ffmpeg || exit 1
 	echo "# Starting building for $ARCH_ABI finish..."
 done

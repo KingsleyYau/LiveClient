@@ -22,13 +22,13 @@ public:
         bool result = false;
         if (root.isObject()) {
             /* roomId */
-            if (root[LIVEROOM_ACCEPTINSTACEINVITE_INVITEID].isString()) {
-                roomId = root[LIVEROOM_ACCEPTINSTACEINVITE_INVITEID].asString();
+            if (root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMID].isString()) {
+                roomId = root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMID].asString();
             }
             
             /* roomType */
-            if (root[LIVEROOM_ACCEPTINSTACEINVITE_ISCONFIRM].isIntegral()) {
-                roomType = (HttpRoomType)root[LIVEROOM_ACCEPTINSTACEINVITE_ISCONFIRM].asInt();
+            if (root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE].isIntegral()) {
+                roomType = (HttpRoomType)root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE].asInt();
             }
         }
         result = true;

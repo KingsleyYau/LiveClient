@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/custom_dialog_left_right_margin"
+    android:layout_marginRight="@dimen/custom_dialog_left_right_margin"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_custom_dialog">
+
+    <RelativeLayout
+        android:layout_marginTop="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="18dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_talentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:textSize="14sp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/live_talent_name"/>
+        <TextView
+            android:id="@+id/tv_talentNameValue"
+            android:layout_toRightOf="@id/tv_talentName"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#5d0e86"/>
+        <TextView
+            android:id="@+id/tv_talentPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/tv_talentName"
+            android:layout_below="@id/tv_talentName"
+            android:layout_marginTop="8dp"
+            android:textSize="14sp"
+            android:textColorLink="@color/custom_dialog_txt_color_simple"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/live_talent_price"/>
+
+        <TextView
+            android:id="@+id/tv_talentPriceValue"
+            android:layout_toRightOf="@id/tv_talentPrice"
+            android:layout_alignBottom="@id/tv_talentPrice"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#f7cd3a"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_talentTips"
+            android:layout_below="@+id/tv_talentPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginBottom="21dp"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:textColor="#7d7d7d"
+            android:text="@string/live_talent_tips"/>
+
+        <LinearLayout
+            android:layout_below="@id/tv_talentTips"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_cancelTalent"
+                android:layout_width="80dp"
+                android:layout_height="match_parent"
+                android:textColor="@color/custom_dialog_txt_color_btn_no"
+                android:background="@drawable/bg_interactive_video_cancel"
+                android:text="@string/common_btn_cancel"/>
+
+            <Button
+                android:id="@+id/btn_requestTalent"
+                android:layout_width="80dp"
+                android:layout_marginLeft="46dp"
+                android:textColor="@color/custom_dialog_txt_color_simple"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_talent_confirm_request"
+                android:text="@string/live_talent_request"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_closeConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="13dp"
+        android:src="@drawable/ic_close_talent_confirm"/>
+</FrameLayout>

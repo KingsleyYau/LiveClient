@@ -7,6 +7,7 @@
 //
 
 #import "FollowTableViewCell.h"
+#import "LiveBundle.h"
 
 @implementation FollowTableViewCell
 
@@ -21,9 +22,10 @@
 + (id)getUITableViewCell:(UITableView*)tableView {
     FollowTableViewCell *cell = (FollowTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[FollowTableViewCell cellIdentifier]];
     if ( nil == cell ) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:@"FollowTableViewCell" owner:tableView options:nil];
+        
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"FollowTableViewCell" owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-           cell.imageViewLoader = [ImageViewLoader loader];
+           cell.imageViewLoader = [LSImageViewLoader loader];
 //        cell.imageViewLoader = nil;
     }
     cell.imageViewHeader.image = nil;

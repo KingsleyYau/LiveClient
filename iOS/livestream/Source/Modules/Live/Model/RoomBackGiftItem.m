@@ -10,10 +10,4 @@
 
 @implementation RoomBackGiftItem
 
-- (AllGiftItem *)allItem{
-    
-    return [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:_giftId];
-}
-
-
 @end

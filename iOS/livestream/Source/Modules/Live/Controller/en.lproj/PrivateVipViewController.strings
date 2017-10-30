@@ -1,2 +1,3 @@
 
-"ROOM_TYPE_TIPS" = "VIP Private Broadcast is billed at 0.1 credit per minute.";
+"VIP_PRIVATE_TIP" = "VIP Private Broadcast is billed at ";
+"CREDIT_TIP" = " credit per minute.";

@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LevelView.h"
 #import "MsgItem.h"
 
 @class MsgTableViewCell;
@@ -21,7 +20,6 @@
 
 @property (nonatomic, strong) YYLabel *messageLabel;
 
-@property (nonatomic, strong) LevelView *lvView;
 @property (nonatomic, assign) CGFloat tableViewWidth;
 @property (nonatomic, assign) CGFloat messageLabelWidth;
 @property (nonatomic, assign) CGFloat messageLabelHeight;

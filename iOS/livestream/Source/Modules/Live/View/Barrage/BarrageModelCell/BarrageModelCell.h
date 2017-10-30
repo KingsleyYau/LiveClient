@@ -7,7 +7,7 @@
 //
 
 #import "BarrageViewCell.h"
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 
 @class BarrageModel, BarrageView;
 
@@ -16,8 +16,8 @@
 @property (weak, nonatomic) IBOutlet UILabel* labelName;
 @property (weak, nonatomic) IBOutlet UILabel* labelMessage;
 @property (weak, nonatomic) IBOutlet UIView* labelMessageBackgroundView;
-@property (weak, nonatomic) IBOutlet UIImageViewTopFit* imageViewHeader;
-@property (strong, nonatomic) ImageViewLoader* imageViewHeaderLoader;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit* imageViewHeader;
+@property (strong, nonatomic) LSImageViewLoader* imageViewHeaderLoader;
 
 @property (strong, nonatomic) BarrageModel *model;
 

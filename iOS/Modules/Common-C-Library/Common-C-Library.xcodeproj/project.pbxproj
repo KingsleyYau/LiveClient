@@ -61,8 +61,6 @@
 		504CDA531C7FDD7F00DBB429 /* PngHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504CDA4D1C7FDD7F00DBB429 /* PngHandler.cpp */; };
 		504CDA541C7FDD7F00DBB429 /* PngReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504CDA4F1C7FDD7F00DBB429 /* PngReader.cpp */; };
 		504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 504CDA511C7FDD7F00DBB429 /* PngWriter.cpp */; };
-		505D86901C7EF748006FDAC7 /* Common_C_Library.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D868F1C7EF748006FDAC7 /* Common_C_Library.h */; };
-		505D86921C7EF748006FDAC7 /* Common_C_Library.mm in Sources */ = {isa = PBXBuildFile; fileRef = 505D86911C7EF748006FDAC7 /* Common_C_Library.mm */; };
 		506BC2C41F590201001C2962 /* HttpControlManPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC28C1F590200001C2962 /* HttpControlManPushTask.cpp */; };
 		506BC2C51F590201001C2962 /* HttpGetAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC28E1F590200001C2962 /* HttpGetAllGiftListTask.cpp */; };
 		506BC2C61F590201001C2962 /* HttpGetAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2901F590200001C2962 /* HttpGetAnchorListTask.cpp */; };
@@ -95,12 +93,15 @@
 		507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 507FFA281C9FD76D0083EC06 /* CheckMemoryList.cpp */; };
 		5095E3F91ED6C02E004FFA3B /* HttpLogoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5095E3E41ED6C02E004FFA3B /* HttpLogoutTask.cpp */; };
 		509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */; };
+		50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50AE07211F96FCF6005CF8D2 /* LSCommon_C_Library.mm */; };
 		50F383991EE688AC003D2765 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 50F383971EE688AC003D2765 /* mongoose.c */; };
+		FA548FCD1F975C9D003EE3C2 /* HttpBannerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA548FCB1F975C9D003EE3C2 /* HttpBannerTask.cpp */; };
 		FA5D06B01F6BC1930035B530 /* HttpGetAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06AE1F6BC1930035B530 /* HttpGetAdAnchorListTask.cpp */; };
 		FA5D06B91F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06B71F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp */; };
 		FA5F7B061F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B041F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp */; };
 		FA5F7B0C1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B0A1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp */; };
 		FA92A5A31F669349004F239F /* HttpAcceptInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA92A5A11F669349004F239F /* HttpAcceptInstanceInviteTask.cpp */; };
+		FAA2CD241F90600300807C3B /* HttpServerSpeedTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAA2CD221F90600300807C3B /* HttpServerSpeedTask.cpp */; };
 		FAB6940B1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB694091F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp */; };
 /* End PBXBuildFile section */
 
@@ -111,7 +112,6 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
-				505D86901C7EF748006FDAC7 /* Common_C_Library.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,8 +241,6 @@
 		504CDA511C7FDD7F00DBB429 /* PngWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PngWriter.cpp; sourceTree = "<group>"; };
 		504CDA521C7FDD7F00DBB429 /* PngWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PngWriter.h; sourceTree = "<group>"; };
 		505D868C1C7EF748006FDAC7 /* libCommon-C-Library.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCommon-C-Library.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		505D868F1C7EF748006FDAC7 /* Common_C_Library.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common_C_Library.h; sourceTree = "<group>"; };
-		505D86911C7EF748006FDAC7 /* Common_C_Library.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Common_C_Library.mm; sourceTree = "<group>"; };
 		506BC28C1F590200001C2962 /* HttpControlManPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpControlManPushTask.cpp; sourceTree = "<group>"; };
 		506BC28D1F590200001C2962 /* HttpControlManPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpControlManPushTask.h; sourceTree = "<group>"; };
 		506BC28E1F590200001C2962 /* HttpGetAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetAllGiftListTask.cpp; sourceTree = "<group>"; };
@@ -330,9 +328,13 @@
 		509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequestController.cpp; sourceTree = "<group>"; };
 		509A8DA81ECBE6C1004720CF /* HttpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequestController.h; sourceTree = "<group>"; };
 		50A9B9121EEFDECB00A4CE50 /* HttpLiveRoomCoverPhotoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveRoomCoverPhotoItem.h; sourceTree = "<group>"; };
+		50AE07201F96FCF6005CF8D2 /* LSCommon_C_Library.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCommon_C_Library.h; sourceTree = "<group>"; };
+		50AE07211F96FCF6005CF8D2 /* LSCommon_C_Library.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LSCommon_C_Library.mm; sourceTree = "<group>"; };
 		50F383971EE688AC003D2765 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
 		50F383981EE688AC003D2765 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		D180B77A1D3CD25D00DCFBA5 /* DeviceTypeDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTypeDef.h; sourceTree = "<group>"; };
+		FA548FCB1F975C9D003EE3C2 /* HttpBannerTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpBannerTask.cpp; sourceTree = "<group>"; };
+		FA548FCC1F975C9D003EE3C2 /* HttpBannerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBannerTask.h; sourceTree = "<group>"; };
 		FA5D06AE1F6BC1930035B530 /* HttpGetAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetAdAnchorListTask.cpp; sourceTree = "<group>"; };
 		FA5D06AF1F6BC1930035B530 /* HttpGetAdAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetAdAnchorListTask.h; sourceTree = "<group>"; };
 		FA5D06B71F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseAdAnchorListTask.cpp; sourceTree = "<group>"; };
@@ -345,6 +347,8 @@
 		FA92A5A21F669349004F239F /* HttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
 		FA92A5A41F6694AB004F239F /* HttpAcceptInstanceInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteItem.h; sourceTree = "<group>"; };
 		FA9C1A0A1F7492E7007241E1 /* HttpLiveFansInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveFansInfoItem.h; sourceTree = "<group>"; };
+		FAA2CD221F90600300807C3B /* HttpServerSpeedTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServerSpeedTask.cpp; sourceTree = "<group>"; };
+		FAA2CD231F90600300807C3B /* HttpServerSpeedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServerSpeedTask.h; sourceTree = "<group>"; };
 		FAB694091F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetPromoAnchorListTask.cpp; sourceTree = "<group>"; };
 		FAB6940A1F5E8ECA008A64B6 /* HttpGetPromoAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorListTask.h; sourceTree = "<group>"; };
 		FAB6940C1F5E90B0008A64B6 /* HttpGetPromoAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorItem.h; sourceTree = "<group>"; };
@@ -364,6 +368,10 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				FA548FCB1F975C9D003EE3C2 /* HttpBannerTask.cpp */,
+				FA548FCC1F975C9D003EE3C2 /* HttpBannerTask.h */,
+				FAA2CD221F90600300807C3B /* HttpServerSpeedTask.cpp */,
+				FAA2CD231F90600300807C3B /* HttpServerSpeedTask.h */,
 				FA5F7B0A1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp */,
 				FA5F7B0B1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.h */,
 				FA5F7B041F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp */,
@@ -705,9 +713,9 @@
 		505D868E1C7EF748006FDAC7 /* Common-C-Library */ = {
 			isa = PBXGroup;
 			children = (
+				50AE07201F96FCF6005CF8D2 /* LSCommon_C_Library.h */,
+				50AE07211F96FCF6005CF8D2 /* LSCommon_C_Library.mm */,
 				501BF3811C7EFF460052C59F /* common */,
-				505D868F1C7EF748006FDAC7 /* Common_C_Library.h */,
-				505D86911C7EF748006FDAC7 /* Common_C_Library.mm */,
 				504CDA361C7FDB0500DBB429 /* httpclient */,
 				5007B1D81ECAA9F000C2C17F /* httpcontroller */,
 				504CDA4B1C7FDD7F00DBB429 /* imghandle */,
@@ -807,6 +815,7 @@
 			files = (
 				507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */,
 				506BC2DB1F590201001C2962 /* HttpSendCancelPrivateLiveInviteTask.cpp in Sources */,
+				FAA2CD241F90600300807C3B /* HttpServerSpeedTask.cpp in Sources */,
 				504CDA451C7FDB0500DBB429 /* HttpClient.cpp in Sources */,
 				504CDA291C7FDA2D00DBB429 /* tinystr.cpp in Sources */,
 				501BF3B41C7EFF460052C59F /* KSocket.cpp in Sources */,
@@ -816,6 +825,7 @@
 				506BC2DC1F590201001C2962 /* HttpSetFavoriteTask.cpp in Sources */,
 				FA5F7B0C1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp in Sources */,
 				506BC2C71F590201001C2962 /* HttpGetBackpackUnreadNumTask.cpp in Sources */,
+				FA548FCD1F975C9D003EE3C2 /* HttpBannerTask.cpp in Sources */,
 				506BC2DD1F590201001C2962 /* HttpSetRideTask.cpp in Sources */,
 				506BC2CA1F590201001C2962 /* HttpGetEmoticonListTask.cpp in Sources */,
 				506BC2CB1F590201001C2962 /* HttpGetFollowListTask.cpp in Sources */,
@@ -832,6 +842,7 @@
 				509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */,
 				506BC2D31F590201001C2962 /* HttpGetTalentStatusTask.cpp in Sources */,
 				507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */,
+				50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */,
 				506BC2D51F590201001C2962 /* HttpHandleBookingTask.cpp in Sources */,
 				501BF3B11C7EFF460052C59F /* IAutoLock.cpp in Sources */,
 				501BF3B01C7EFF460052C59F /* CommonFunc.cpp in Sources */,
@@ -847,7 +858,6 @@
 				504CDA351C7FDA4100DBB429 /* AmfParser.cpp in Sources */,
 				501BF3B31C7EFF460052C59F /* KLog.cpp in Sources */,
 				501BF3AC1C7EFF460052C59F /* Arithmetic.cpp in Sources */,
-				505D86921C7EF748006FDAC7 /* Common_C_Library.mm in Sources */,
 				5007B1DF1ECAAA5900C2C17F /* HttpBaseTask.cpp in Sources */,
 				504CD9FC1C7FD6AF00DBB429 /* png.c in Sources */,
 				504CDA481C7FDB0500DBB429 /* HttpRequest.cpp in Sources */,
@@ -1017,6 +1027,8 @@
 					"-D_HTTPS_SUPPORT",
 					"-DPRINT_JNI_LOG",
 					"-DFILE_JNI_LOG",
+					"-fvisibility=hidden",
+					"-DMG_ENABLE_SSL",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1049,6 +1061,7 @@
 					"-DIOS",
 					"-fpermissive",
 					"-D_HTTPS_SUPPORT",
+					"-fvisibility=hidden",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

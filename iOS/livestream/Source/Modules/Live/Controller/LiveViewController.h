@@ -6,13 +6,14 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-#import "ChatTextView.h"
+#import "LSChatTextView.h"
 #import "GPUImageView.h"
-#import "UITextFieldAlign.h"
+#import "LSUITextFieldAlign.h"
 #import "TableSuperView.h"
 #import "DriveView.h"
+
 
 #import "BarrageView.h"
 #import "BarrageModel.h"
@@ -21,8 +22,8 @@
 #import "GiftComboView.h"
 #import "GiftComboManager.h"
 
-#import "IMManager.h"
-#import "LoginManager.h"
+#import "LSImManager.h"
+#import "LSLoginManager.h"
 #import "MsgItem.h"
 #import "LiveRoom.h"
 
@@ -39,17 +40,18 @@
 @protocol LiveViewControllerDelegate <NSObject>
 @optional
 - (void)onReEnterRoom:(LiveViewController *)vc;
+- (void)bringRewardViewInTop:(LiveViewController *)vc;
 @end
 
-@interface LiveViewController : KKViewController
+@interface LiveViewController : LSGoogleAnalyticsViewController
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 
 #pragma mark - IM管理器
-@property (nonatomic, strong) IMManager *imManager;
+@property (nonatomic, strong) LSImManager *imManager;
 
 #pragma mark - 登录管理器
-@property (nonatomic, strong) LoginManager *loginManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
 
 #pragma mark - 连击控件
 @property (nonatomic, weak) IBOutlet UIView *giftView;
@@ -84,6 +86,8 @@
 #pragma mark - 邀请私密直播按钮
 @property (weak, nonatomic) IBOutlet UIButton *cameraBtn;
 
+@property (weak, nonatomic) IBOutlet UILabel *countdownLabel;
+
 #pragma mark - 视频控件
 @property (weak, nonatomic) IBOutlet UIImageView *videoBgImageView;
 @property (nonatomic, weak) IBOutlet GPUImageView *videoView;
@@ -95,8 +99,11 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewVideoViewWidth;
 @property (weak, nonatomic) IBOutlet GPUImageView *previewVideoView;
 @property (weak, nonatomic) IBOutlet UIImageView *previewImageView;
-@property (weak, nonatomic) IBOutlet UIButton *videoBtn;
+@property (weak, nonatomic) IBOutlet UIButton *showBtn;
+@property (weak, nonatomic) IBOutlet UIButton *stopVideoBtn;
 @property (weak, nonatomic) IBOutlet UIButton *muteBtn;
+@property (weak, nonatomic) IBOutlet UIButton *startVideoBtn;
+@property (weak, nonatomic) IBOutlet UIImageView *startVideoImageView;
 
 #pragma mark - 大礼物展现界面
 @property (nonatomic, strong) BigGiftAnimationView *giftAnimationView;
@@ -113,6 +120,12 @@
 #pragma mark - 返点按钮
 @property (weak, nonatomic) IBOutlet UIView *rewardedBgView;
 @property (weak, nonatomic) IBOutlet UIButton *rewardedBtn;
+
+#pragma mark - 互动直播ActivityView
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *preActivityView;
+
+
+@property (nonatomic, assign) BOOL isWantLeave;
 
 #pragma mark - 流播放推送事件
 - (void)play;
@@ -151,14 +164,9 @@
 - (void)starBigAnimationWithGiftID:(NSString *)giftID;
 
 /**
- 插入直播间送礼消息
- */
-- (void)addGiftMessageNickName:(NSString *)nickName giftID:(NSString *)giftID giftNum:(int)giftNum;
-
-/**
  插入直播间关注消息
  */
-- (void)addAudienceFollowLiverMessage:(NSString *)nickName;
+//- (void)addAudienceFollowLiverMessage:(NSString *)nickName;
 
 /**
  置顶子View

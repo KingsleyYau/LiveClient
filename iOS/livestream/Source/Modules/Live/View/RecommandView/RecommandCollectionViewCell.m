@@ -22,7 +22,7 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.imageViewLoader = [ImageViewLoader loader];
+        self.imageViewLoader = [LSImageViewLoader loader];
         self.imageView.layer.cornerRadius = [RecommandCollectionViewCell cellWidth] / 2;
         self.imageView.layer.masksToBounds = YES;
     }
@@ -30,10 +30,11 @@
     return self;
 }
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
+- (void)layoutSubviews {
     
+    self.imageView.layer.cornerRadius = [RecommandCollectionViewCell cellWidth] / 2;
+    self.imageView.layer.masksToBounds = YES;
 }
+
 
 @end

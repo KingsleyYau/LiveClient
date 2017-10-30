@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="permission_cancel">取消</string>
+    <string name="permission_setting">去設置</string>
+    <string name="permission_title_permission_failed">權限申請失敗</string>
+    <string name="permission_message_permission_failed">我們需要的壹些權限被您拒絕或者系統發生錯誤申請失敗，請您到設置頁面手動授權，否則功能無法正常使用！</string>
+
+    <string name="permission_resume">繼續</string>
+    <string name="permission_title_permission_rationale">權限已被拒絕</string>
+    <string name="permission_message_permission_rationale">您已經拒絕過我們申請授權，請您同意授權，否則功能無法正常使用！</string>
+
+    <string name="ok">好的</string>
+    <string name="no">就不</string>
+    <string name="title_dialog">提示</string>
+    <string name="message_permission_failed">我們需要的壹些必要權限被禁止，請授權給我們。</string>
+</resources>

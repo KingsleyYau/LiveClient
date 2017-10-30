@@ -94,7 +94,7 @@
         self.pageLineCount = ((self.collectionView.frame.size.height - self.itemSize) / (self.itemSize + self.lineSpace)) + 1;
     }
     
-    self.paddingY = self.collectionView.frame.size.height - (self.pageLineCount * (self.itemSize + self.lineSpace));
+    self.paddingY = 0;
     if( self.paddingY < self.lineSpace * 2 ) {
         // 上下边距小于间隔
         self.paddingY = self.lineSpace;

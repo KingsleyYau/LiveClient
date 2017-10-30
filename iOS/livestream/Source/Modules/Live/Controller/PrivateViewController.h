@@ -11,7 +11,7 @@
 #import "LiveRoom.h"
 #import "PlayViewController.h"
 
-#import "UITapImageView.h"
+#import "LSUITapImageView.h"
 #import "ChardTipView.h"
 
 @class PrivateViewController;
@@ -20,7 +20,7 @@
 - (void)onSetupViewController:(PrivateViewController *)vc;
 @end
 
-@interface PrivateViewController : KKViewController
+@interface PrivateViewController : LSGoogleAnalyticsViewController
 #pragma mark - 数据参数
 /**
  直播间对象
@@ -41,12 +41,13 @@
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chargeTipImageWidth;
-@property (weak, nonatomic) IBOutlet UITapImageView *roomTypeImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 @property (strong, nonatomic) ChardTipView *tipView;
 
 #pragma mark - 男女士头像
 @property (weak, nonatomic) IBOutlet UIImageView *manHeadBgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *manHeadImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *ladyHeadBgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *ladyHeadImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *intimacyImageView;
 

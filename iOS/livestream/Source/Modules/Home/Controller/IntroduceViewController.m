@@ -19,7 +19,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    self.title = @"Live Channerl Guide";
+    self.title = NSLocalizedStringFromSelf(@"CHANNERL_TITLR");
     
     self.introduceView.UIDelegate = self;
     self.introduceView.navigationDelegate = self;
@@ -39,8 +39,6 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
-    // 设置导航栏返回按钮
-    [self setBackleftBarButtonItemOffset:15];
 }
 
 - (void)setupContainView{
@@ -80,8 +78,8 @@
     
 
 //    webSiteUrl = @"https://tympanus.net/Development/AnimatedBooks/index.html";
-    webSiteUrl = @"http://h5.gonet.com.cn/h5site/demo26/";
-
+//    webSiteUrl = @"http://h5.gonet.com.cn/h5site/demo26/";
+    webSiteUrl = self.bannerUrl;
     // webview请求url
     
     NSURL *url = [NSURL URLWithString:webSiteUrl];
@@ -175,8 +173,8 @@
 
 - (void)showFailView {
     self.failView.hidden = NO;
-    self.failTipsText = @"Failed to load";
-    self.failBtnText = @"Reload";
+    self.failTipsText = NSLocalizedString(@"List_FailTips",@"List_FailTips");
+    self.failBtnText = NSLocalizedString(@"List_Reload",@"List_Reload");
     self.delegateSelect = @selector(retryToload:);
     [self reloadFailViewContent];
     

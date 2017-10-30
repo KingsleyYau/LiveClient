@@ -15,6 +15,8 @@
 
 // 请求参数定义
 #define ROOMID_PARAM           "roomid"
+#define ERRNO_PARAM				"errno"
+#define ERRMSG_PARAM       		"errmsg"
 
 
 
@@ -51,7 +53,7 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -62,6 +64,12 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ROOMID_PARAM].isString()) {
             m_roomId = tp.m_data[ROOMID_PARAM].asString();
         }
+        if (tp.m_data[ERRNO_PARAM].isInt()) {
+        	m_errType = (LCC_ERR_TYPE)tp.m_data[ERRNO_PARAM].asInt();
+        }
+        if (tp.m_data[ERRMSG_PARAM].isString()) {
+        	m_errMsg = tp.m_data[ERRMSG_PARAM].asString();
+        }
     }
     
     // 协议解析失败
@@ -70,15 +78,15 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvLeavingPublicRoomNotice(m_roomId, m_errType, m_errMsg);
-		FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() end");
 
 	return result;
 }
@@ -88,14 +96,14 @@ bool RecvLeavingPublicRoomNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLeavingPublicRoomNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

@@ -50,9 +50,6 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     
     if (self) {
-     
-//        self.lvView = [LevelView getLevelView];
-//        [self addSubview:self.lvView];
         
         self.messageLabel = [YYLabel new];
         self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 165, 0);
@@ -65,12 +62,6 @@
         self.tapBtn.hidden = YES;
         [self addSubview:self.tapBtn];
         
-//        [self.lvView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.width.equalTo(@37);
-//            make.height.equalTo(@16);
-//            make.left.equalTo(@0);
-//            make.bottom.equalTo(self.messageLabel.mas_top).offset(20);
-//        }];
         self.backgroundColor = [UIColor clearColor];
         
         self.modifier = [[YYTextLinePositionSimpleModifier alloc] init];
@@ -88,17 +79,19 @@
 - (void)changeMessageLabelWidth:(CGFloat)width {
     
     self.tableViewWidth = width;
-    self.messageLabel.width = width;
+    CGRect frame = self.messageLabel.frame;
+    frame.size.width = width;
+    self.messageLabel.frame = frame;
     self.container.size = CGSizeMake(width, CGFLOAT_MAX);
-    NSLog(@"changeMessageLabelWidth  %@", NSStringFromCGSize(self.size));
 }
 
 - (void)updataChatMessage:(MsgItem *)item{
-    
     // 生成排版结果
     self.tapBtn.hidden = YES;
     YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
-    self.messageLabel.size = layout.textBoundingSize;
+    CGRect frame = self.messageLabel.frame;
+    frame.size = layout.textBoundingSize;
+    self.messageLabel.frame = frame;
     self.messageLabel.textLayout = layout;
     self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
     self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);

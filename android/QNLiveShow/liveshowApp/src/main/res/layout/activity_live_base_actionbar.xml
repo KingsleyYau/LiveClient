@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/fl_commTitleBar"
+        android:layout_width="match_parent"
+        android:background="#5d0e86"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_commTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Martin"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_centerInParent="true"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
+
+        <ImageView
+            android:id="@+id/iv_commBack"
+            android:src="@drawable/ic_arrow_back_white"
+            android:layout_alignTop="@id/tv_commTitle"
+            android:layout_alignBottom="@id/tv_commTitle"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_below="@id/fl_commTitleBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/errorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="72dp"
+        android:background="#86FF0000"
+        android:padding="8dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

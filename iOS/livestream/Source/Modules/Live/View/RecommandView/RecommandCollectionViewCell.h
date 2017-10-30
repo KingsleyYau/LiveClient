@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 
 @interface RecommandCollectionViewCell : UICollectionViewCell
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (nonatomic, weak) IBOutlet UILabel *nameLabel;
-@property (nonatomic, strong) ImageViewLoader *imageViewLoader;
+@property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellWidth;

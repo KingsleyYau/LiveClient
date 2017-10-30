@@ -9,54 +9,96 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>7</integer>
+			<integer>10</integer>
 		</dict>
 		<key>GPUImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>9</integer>
-		</dict>
-		<key>GoogleToolboxForMac.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-			<key>orderHint</key>
-			<integer>8</integer>
+			<integer>11</integer>
 		</dict>
 		<key>Masonry.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>10</integer>
+			<integer>12</integer>
 		</dict>
 		<key>Pods-livestream.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>11</integer>
+			<integer>13</integer>
+		</dict>
+		<key>Pods-livestream_sdk.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>14</integer>
 		</dict>
 		<key>SDWebImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>12</integer>
+			<integer>15</integer>
 		</dict>
-		<key>TTTAttributedLabel.xcscheme</key>
+		<key>YYImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>16</integer>
+		</dict>
+		<key>YYText.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>17</integer>
+		</dict>
+		<key>libwebp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>18</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0C58BD46D6E9FE56AB31251D03F40E24</key>
+		<key>014A3A3F212638B3B5E8A425188F69DE</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>053484163EAE86707B0A5902111035D9</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>25E5C397D3CBFD4F26C2715048C1A7F2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3039855819258EBDC122D712622B7F1E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>384A8C228B88CE2AD32280A86CF8A96F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3EAE7DC98FC1A31C0B92A265236E344F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>49D7C0B1AA5C8DD2826B2E350679A6C6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -66,12 +108,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>84702FDFF79488C1913B198B2EEA2BBD</key>
+		<key>4FD2E5EC76CE31850DB0FB79B298D511</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>9423F009866DB2B83B1705ECE553304F</key>
+		<key>5C092842F89339E19AF1F6CD9C3EB3F1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -86,7 +128,27 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E1BBB76ADBF2EF4EF2CE5DF6BBC77296</key>
+		<key>A77E779288E2B1A6B23C303A1EE3D153</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C26685D3FD54D5A25C0B289C7B0766E3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C361DD238985373A0AA5ECA2B0531C3F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EB7B44E6439F968CB5D3082681F0B82E</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>FB6F7635FB13EEAE9014EE007FE8B0B7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

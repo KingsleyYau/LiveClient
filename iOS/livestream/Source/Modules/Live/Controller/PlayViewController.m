@@ -10,44 +10,41 @@
 
 #import "LiveFinshViewController.h"
 
-#import "ChatFriendlyEmotionView.h"
-#import "ChatEmotionChooseView.h"
+#import "LSLiveAdvancedEmotionView.h"
+#import "LSLiveStandardEmotionView.h"
+#import "RewardView.h"
 
 #import "LiveModule.h"
-
-#import "ChatTextLadyTableViewCell.h"
-#import "ChatTextSelfTableViewCell.h"
 
 #import "LiveStreamPlayer.h"
 #import "CountTimeButton.h"
 
-#import "FileCacheManager.h"
-#import "ChatEmotionManager.h"
-#import "SessionRequestManager.h"
+#import "LSFileCacheManager.h"
+#import "LSChatEmotionManager.h"
+#import "LSSessionRequestManager.h"
 #import "SendGiftTheQueueManager.h"
 #import "BackpackSendGiftManager.h"
 
 #import "AllGiftItem.h"
 #import "SendGiftItem.h"
 
-#import "ChatEmotion.h"
-#import "ChatMessageObject.h"
+#import "LSChatEmotion.h"
+#import "LSChatMessageObject.h"
 #import "LiveGiftListManager.h"
 
-#import "Dialog.h"
 #import "DialogOK.h"
 #import "DialogTip.h"
 
 #import "TalentOnDemandViewController.h"
 
 #define ComboTitleFont [UIFont boldSystemFontOfSize:30]
-#define ToastUnderbalance @"Oops! Your don't have enough credits to send this pop-up message."
 
-@interface PlayViewController () <UITextFieldDelegate, KKCheckButtonDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,
-                                  PresentViewDelegate, IMLiveRoomManagerDelegate, LiveViewControllerDelegate, ChatEmotionChooseViewDelegate, ChatEmotionKeyboardViewDelegate, ChatFriendlyEmotionViewDelegate, ChatTextViewDelegate, GiftPresentViewDelegate, BackpackPresentViewDelegate, LiveSendBarViewDelegate, UIGestureRecognizerDelegate, LiveGiftDownloadManagerDelegate,SendGiftTheQueueManagerDelegate>
+@interface PlayViewController () <UITextFieldDelegate, LSCheckButtonDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,
+                                  PresentViewDelegate, IMLiveRoomManagerDelegate, LiveViewControllerDelegate, LSLiveStandardEmotionViewDelegate, LSPageChooseKeyboardViewDelegate, LSLiveAdvancedEmotionViewDelegate, LSChatTextViewDelegate,  BackpackPresentViewDelegate, LiveSendBarViewDelegate, UIGestureRecognizerDelegate, LiveGiftDownloadManagerDelegate, SendGiftTheQueueManagerDelegate,
+                                  CreditViewDelegate, RewardViewDelegate>
 
 /** IM管理器 **/
-@property (nonatomic, strong) IMManager *imManager;
+@property (nonatomic, strong) LSImManager *imManager;
 
 /** 首次点赞 **/
 @property (nonatomic, assign) BOOL isFirstLike;
@@ -82,13 +79,13 @@
 @property (nonatomic, strong) NSMutableArray<NSString *> *bigGiftArray;
 
 /** 表情选择器键盘 **/
-@property (nonatomic, strong) ChatEmotionKeyboardView *chatEmotionKeyboardView;
+@property (nonatomic, strong) LSPageChooseKeyboardView *LSPageChooseKeyboardView;
 
 /** 普通表情 */
-@property (nonatomic, strong) ChatEmotionChooseView *chatNomalEmotionView;
+@property (nonatomic, strong) LSLiveStandardEmotionView *chatNomalEmotionView;
 
 /** 高亲密度表情 */
-@property (nonatomic, strong) ChatFriendlyEmotionView *chatFriendlyEmotionView;
+@property (nonatomic, strong) LSLiveAdvancedEmotionView *LSLiveAdvancedEmotionView;
 
 /** 键盘弹出高度 */
 @property (nonatomic, assign) CGFloat keyboardHeight;
@@ -105,26 +102,23 @@
 @property (nonatomic, assign) int starNum;
 @property (nonatomic, assign) int endNum;
 
-/** 本地信用点 */
-@property (nonatomic, assign) float creditNum;
-
 /** 本地用户返点 */
 @property (nonatomic, assign) float cur_creditNum;
 
 /** 表情转义符解析器 **/
-@property (nonatomic, strong) ChatMessageObject *chatMessageObject;
+@property (nonatomic, strong) LSChatMessageObject *chatMessageObject;
 
 /** 送礼队列管理类 **/
 @property (nonatomic, strong) SendGiftTheQueueManager *sendGiftTheQueueManager;
 
 /** 表情管理类 **/
-@property (nonatomic, strong) ChatEmotionManager *emotionManager;
+@property (nonatomic, strong) LSChatEmotionManager *emotionManager;
 
 /** 背包礼物管理类 */
 @property (nonatomic, strong) BackpackSendGiftManager *backGiftManager;
 
 /** 接口管理器 **/
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 // 礼物列表管理器
 @property (nonatomic, strong) LiveGiftListManager *listManager;
@@ -137,6 +131,19 @@
 @property (nonatomic, assign) NSInteger presentRow;
 
 @property (nonatomic, assign) NSInteger backRow;
+
+#pragma mark - 返点控件
+@property (nonatomic, strong) RewardView *rewardView;
+
+#pragma mark - 3秒toast控件
+@property (nonatomic, strong) DialogTip *dialogTipView;
+
+// 返点详情约束
+@property (nonatomic, assign) int creditOffset;
+
+@property (strong) MASConstraint *creditViewBottom;
+
+@property (strong) MASConstraint *emotionViewBottom;
 
 @end
 
@@ -151,17 +158,20 @@
     [self addChildViewController:self.liveVC];
     self.liveVC.liveDelegate = self;
 
-    self.chatMessageObject = [[ChatMessageObject alloc] init];
+    // 初始化toast控件
+    self.dialogTipView = [DialogTip dialogTip];
 
-    self.imManager = [IMManager manager];
+    self.chatMessageObject = [[LSChatMessageObject alloc] init];
+
+    self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
 
     // 初始化管理器
-    self.loginManager = [LoginManager manager];
-    self.sessionManager = [SessionRequestManager manager];
+    self.loginManager = [LSLoginManager manager];
+    self.sessionManager = [LSSessionRequestManager manager];
     self.sendGiftTheQueueManager = [[SendGiftTheQueueManager alloc] init];
-    self.emotionManager = [ChatEmotionManager emotionManager];
+    self.emotionManager = [LSChatEmotionManager emotionManager];
     self.backGiftManager = [BackpackSendGiftManager backpackGiftManager];
     self.listManager = [LiveGiftListManager manager];
     self.loadManager = [LiveGiftDownloadManager manager];
@@ -175,9 +185,11 @@
 
     // 记录连击ID初始化
     self.recordClickId = 0;
-    
+
     self.presentRow = 0;
     self.backRow = 0;
+
+    self.creditOffset = 0;
 }
 
 - (void)dealloc {
@@ -218,32 +230,8 @@
     // 初始化礼物列表界面
     //    self.chooseGiftListView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 99);
     self.chooseGiftListViewWidth.constant = SCREEN_WIDTH;
-    self.chooseGiftListViewHeight.constant = SCREEN_WIDTH * 0.5 + 99;
+    self.chooseGiftListViewHeight.constant = SCREEN_WIDTH * 0.5 + 89;
 
-    self.creditNum = 10000000;
-
-    UIWindow *window = AppDelegate().window;
-    self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.backBtn setBackgroundColor:Color(0, 0, 0, 0.7)];
-    [self.backBtn addTarget:self action:@selector(hiddenCreditView) forControlEvents:UIControlEventTouchUpInside];
-    self.backBtn.hidden = YES;
-    [window addSubview:self.backBtn];
-    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(window);
-    }];
-
-    self.creditView = [CreditView creditView];
-    self.creditView.hidden = YES;
-    [window addSubview:self.creditView];
-    [self.creditView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.left.equalTo(window);
-        make.height.equalTo(@(259));
-        make.bottom.equalTo(window);
-    }];
-
-    // 加载普通表情
-    [self.emotionManager reloadEmotion];
-    
     WeakObject(self, weakSelf);
     [self.chatBtn addTapBlock:^(id obj) {
         if ([weakSelf.liveSendBarView.inputTextField canBecomeFirstResponder]) {
@@ -254,7 +242,7 @@
     // 隐藏才艺点播
     self.talentBtnWidth.constant = 0;
     self.talentBtnTailing.constant = 0;
-    
+
     // 隐藏随机礼物
     self.randomGiftBtnWidth.constant = 0;
     self.randomGiftBtnBgWidth.constant = 0;
@@ -274,6 +262,8 @@
     [self closeAllInputView];
 
     self.bottomView.hidden = YES;
+
+    [self.dialogTipView removeShow];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -304,7 +294,7 @@
     // 移除所有送礼队列
     [self.sendGiftTheQueueManager removeAllSendGift];
     [self.sendGiftTheQueueManager unInit];
-    
+
     // 停止连击
     [self.presentView.comboBtn stop];
 }
@@ -320,12 +310,78 @@
 
     // 初始化礼物列表
     [self setupGiftListView];
+
+    // 初始化信用点详情
+    [self setupCreditView];
+
+    // 初始化返点界面
+    [self setupRewardView];
 }
 
-- (void)hiddenCreditView {
+#pragma mark - 返点控件
+- (void)setupRewardView {
 
+    IMRebateItem *item = [[IMRebateItem alloc] init];
+    item.curTime = self.liveRoom.imLiveRoom.rebateInfo.curTime;
+    item.curCredit = self.liveRoom.imLiveRoom.rebateInfo.curCredit;
+    item.preTime = self.liveRoom.imLiveRoom.rebateInfo.preTime;
+    item.preCredit = self.liveRoom.imLiveRoom.rebateInfo.preCredit;
+
+    // 初始化返点界面
+    self.rewardView = [RewardView rewardView];
+    self.rewardView.delegate = self;
+    [self.rewardView setupTimeAndCredit:item];
+    self.rewardView.hidden = YES;
+    [self.view addSubview:self.rewardView];
+
+    [self.rewardView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.view);
+        make.width.equalTo(@280);
+        make.height.equalTo(@250);
+    }];
+}
+
+#pragma mark - RewardViewDelegate
+- (void)rewardViewCloseAction:(RewardView *)creditView {
+    [self hiddenPushSubView];
+}
+
+#pragma mark - 信用点详情界面
+- (void)setupCreditView {
+
+    self.backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.backBtn setBackgroundColor:Color(0, 0, 0, 0.4)];
+    [self.backBtn addTarget:self action:@selector(hiddenPushSubView) forControlEvents:UIControlEventTouchUpInside];
     self.backBtn.hidden = YES;
-    self.creditView.hidden = YES;
+    [self.view addSubview:self.backBtn];
+    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.left.equalTo(self.view);
+        make.width.equalTo(@SCREEN_WIDTH);
+        make.height.equalTo(@SCREEN_HEIGHT);
+    }];
+
+    self.creditView = [CreditView creditView];
+    self.creditView.delegate = self;
+    [self.view addSubview:self.creditView];
+    [self.creditView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.equalTo(@SCREEN_WIDTH);
+        make.height.equalTo(@234);
+        make.left.equalTo(self.view);
+        self.creditViewBottom = make.top.equalTo(self.view.mas_bottom).offset(self.creditOffset);
+    }];
+}
+
+#pragma mark -  CreditViewDelegate
+- (void)creditViewCloseAction:(CreditView *)creditView {
+    [self hiddenPushSubView];
+}
+
+- (void)hiddenPushSubView {
+    self.backBtn.hidden = YES;
+    self.rewardView.hidden = YES;
+    if (self.creditOffset != 0) {
+        [self closeCreditView];
+    }
 }
 
 #pragma mark - 文本和表情输入控件管理
@@ -370,20 +426,10 @@
 
 // 发送聊天或者弹幕
 - (void)sendBarSendAction:(LiveSendBarView *)sendBarView {
-    
-    float userCredit = self.liveRoom.roomCredit + self.liveRoom.imLiveRoom.rebateInfo.curCredit;
-    if (userCredit) {
-        
-        if ([self.liveVC sendMsg:self.liveSendBarView.inputTextField.fullText isLounder:self.liveSendBarView.louderBtn.selected]) {
-            self.liveSendBarView.inputTextField.fullText = nil;
-            [self.liveSendBarView sendButtonNotUser];
-        }
-    } else {
-        DialogOK *dialogOKView = [DialogOK dialog];
-        dialogOKView.tipsLabel.text = ToastUnderbalance;
-        [dialogOKView showDialog:self.view actionBlock:^{
-            NSLog(@"没钱了。。");
-        }];
+
+    if ([self.liveVC sendMsg:self.liveSendBarView.inputTextField.fullText isLounder:self.liveSendBarView.louderBtn.selected]) {
+        self.liveSendBarView.inputTextField.fullText = nil;
+        [self.liveSendBarView sendButtonNotUser];
     }
 }
 
@@ -391,48 +437,56 @@
 - (void)setupEmotionInputView {
     // 普通表情
     if (self.chatNomalEmotionView == nil) {
-        self.chatNomalEmotionView = [ChatEmotionChooseView emotionChooseView:self];
+        self.chatNomalEmotionView = [LSLiveStandardEmotionView emotionChooseView:self];
         self.chatNomalEmotionView.delegate = self;
-        self.chatNomalEmotionView.emotions = self.emotionManager.emotionArray;
+        self.chatNomalEmotionView.stanListItem = self.emotionManager.stanListItem;
+        self.chatNomalEmotionView.tipView.hidden = NO;
+        self.chatNomalEmotionView.tipLabel.text = self.emotionManager.stanListItem.errMsg;
         [self.chatNomalEmotionView reloadData];
     }
 
     // 高亲密度表情
-    if (self.chatFriendlyEmotionView == nil) {
-        self.chatFriendlyEmotionView = [ChatFriendlyEmotionView friendlyEmotionView:self];
-        self.chatFriendlyEmotionView.delegate = self;
-        self.chatFriendlyEmotionView.emotions = self.emotionManager.emotionArray;
-        [self.chatFriendlyEmotionView reloadData];
+    if (self.LSLiveAdvancedEmotionView == nil) {
+        self.LSLiveAdvancedEmotionView = [LSLiveAdvancedEmotionView friendlyEmotionView:self];
+        self.LSLiveAdvancedEmotionView.delegate = self;
+        self.LSLiveAdvancedEmotionView.advanListItem = self.emotionManager.advanListItem;
+        self.LSLiveAdvancedEmotionView.tipView.hidden = NO;
+        self.LSLiveAdvancedEmotionView.tipLabel.text = self.emotionManager.advanListItem.errMsg;
+        [self.LSLiveAdvancedEmotionView reloadData];
     }
 
     // 表情选择器
-    if (self.chatEmotionKeyboardView == nil) {
-        self.chatEmotionKeyboardView = [ChatEmotionKeyboardView chatEmotionKeyboardView:self];
-        self.chatEmotionKeyboardView.delegate = self;
+    if (self.LSPageChooseKeyboardView == nil) {
+        self.LSPageChooseKeyboardView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
+        self.LSPageChooseKeyboardView.delegate = self;
 
-        [self.view addSubview:self.chatEmotionKeyboardView];
+        [self.view addSubview:self.LSPageChooseKeyboardView];
 
-        [self.chatEmotionKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(self.inputMessageView.mas_width);
-            make.height.equalTo(@262);
+            make.height.equalTo(@219);
             make.left.equalTo(self.view.mas_left).offset(0);
-            make.top.equalTo(self.inputMessageView.mas_bottom).offset(5);
+            self.emotionViewBottom = make.top.equalTo(self.inputMessageView.mas_bottom).offset(5);
         }];
-        
+
         NSMutableArray *array = [NSMutableArray array];
         
-        UIColor *normalColor = [UIColor whiteColor];
-        UIColor *selectColor = [UIColor blackColor];
-        NSString *title = @"Standard";
-        UIButton *button = [self setupChooserBarBtnType:0 normalImage:nil selectImage:nil bgNormalImage:nil bgSelectImage:nil titleText:title titleNormalColor:normalColor titleSelectColor:selectColor];
+        UIImage *bgSelectImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0x2b2b2b) imageRect:CGRectMake(0, 0, 1, 1)];
+        UIImage *bgNormalImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0x000000) imageRect:CGRectMake(0, 0, 1, 1)];
+        UIColor *titleNormalColor = COLOR_WITH_16BAND_RGB_ALPHA(0x59ffffff);
+        UIColor *titlrSelectColor = COLOR_WITH_16BAND_RGB(0xf7cd3a);
+        
+        NSString *title = NSLocalizedStringFromSelf(@"STANDARD");
+        UIButton *button = [self setupChooserBarBtnType:0 normalImage:nil selectImage:nil bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:title titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
         [array addObject:button];
 
-        title = @"Advanced";
-        UIButton *btn = [self setupChooserBarBtnType:0 normalImage:nil selectImage:nil bgNormalImage:nil bgSelectImage:nil titleText:title titleNormalColor:normalColor titleSelectColor:selectColor];
+        title = NSLocalizedStringFromSelf(@"ADVANCE");
+        UIButton *btn = [self setupChooserBarBtnType:0 normalImage:nil selectImage:nil bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:title titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
         [array addObject:btn];
 
-        self.chatEmotionKeyboardView.buttons = array;
+        self.LSPageChooseKeyboardView.buttons = array;
     }
+    [self getLiveRoomEmotionList];
 }
 
 #pragma mark - 初始化礼物列表选择控件
@@ -454,29 +508,28 @@
     }
 
     if (self.giftListView == nil) {
-        self.giftListView = [ChatEmotionKeyboardView chatEmotionKeyboardView:self];
+        self.giftListView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
         self.giftListView.delegate = self;
         [self.chooseGiftListView addSubview:self.giftListView];
         [self.giftListView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.chooseGiftListView);
         }];
     }
-    UIImage *bgSelectImage = [[UIImage alloc] createImageWithColor:COLOR_WITH_16BAND_RGB(0x2b2b2b) imageRect:CGRectMake(0, 0, 1, 1)];
-    UIImage *bgNormalImage = [[UIImage alloc] createImageWithColor:COLOR_WITH_16BAND_RGB(0x000000) imageRect:CGRectMake(0, 0, 1, 1)];
+    UIImage *bgSelectImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0x2b2b2b) imageRect:CGRectMake(0, 0, 1, 1)];
+    UIImage *bgNormalImage = [LSUIImageFactory createImageWithColor:COLOR_WITH_16BAND_RGB(0x000000) imageRect:CGRectMake(0, 0, 1, 1)];
     UIImage *normalImage = [UIImage imageNamed:@"live_giftList_normal"];
     UIImage *selectImage = [UIImage imageNamed:@"live_giftList_select"];
-    UIColor *titleNormalColor = COLOR_WITH_16BAND_RGB(0xffffff);
+    UIColor *titleNormalColor = COLOR_WITH_16BAND_RGB_ALPHA(0x59ffffff);
     UIColor *titlrSelectColor = COLOR_WITH_16BAND_RGB(0xf7cd3a);
-    NSString *titleText = @"  Store";
-    
+    NSString *titleText = NSLocalizedStringFromSelf(@"STORE");
+
     NSMutableArray *array = [NSMutableArray array];
     UIButton *button = [self setupChooserBarBtnType:1 normalImage:normalImage selectImage:selectImage bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:titleText titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
     [array addObject:button];
-    
-    
+
     normalImage = [UIImage imageNamed:@"live_backlist_normal"];
     selectImage = [UIImage imageNamed:@"live_backlist_select"];
-    titleText = @"  Backpack";
+    titleText = NSLocalizedStringFromSelf(@"BACKPACK");
     UIButton *btn = [self setupChooserBarBtnType:1 normalImage:normalImage selectImage:selectImage bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:titleText titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
     [array addObject:btn];
 
@@ -486,45 +539,61 @@
 }
 
 - (UIButton *)setupChooserBarBtnType:(int)type normalImage:(UIImage *)normalImage selectImage:(UIImage *)selectImage bgNormalImage:(UIImage *)bgNormalImage bgSelectImage:(UIImage *)bgSelectImage titleText:(NSString *)titleText titleNormalColor:(UIColor *)normalColor titleSelectColor:(UIColor *)selectColor {
-    
+
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    
+
     if (type) {
         [button setImage:normalImage forState:UIControlStateNormal];
         [button setImage:selectImage forState:UIControlStateSelected];
         [button setImage:selectImage forState:UIControlStateSelected | UIControlStateHighlighted];
-        [button setBackgroundImage:bgNormalImage forState:UIControlStateNormal];
-        [button setBackgroundImage:bgSelectImage forState:UIControlStateSelected];
-        [button setBackgroundImage:bgSelectImage forState:UIControlStateSelected | UIControlStateHighlighted];
     }
+    [button setBackgroundImage:bgNormalImage forState:UIControlStateNormal];
+    [button setBackgroundImage:bgSelectImage forState:UIControlStateSelected];
+    [button setBackgroundImage:bgSelectImage forState:UIControlStateSelected | UIControlStateHighlighted];
     button.titleLabel.font = [UIFont systemFontOfSize:15];
     [button setTitleColor:normalColor forState:UIControlStateNormal];
     [button setTitleColor:selectColor forState:UIControlStateSelected];
     [button setTitleColor:selectColor forState:UIControlStateSelected | UIControlStateHighlighted];
     [button setTitle:titleText forState:UIControlStateNormal];
     button.adjustsImageWhenHighlighted = NO;
-    
+
     return button;
+}
+
+#pragma mark - 显示直播间可发送表情
+- (void)getLiveRoomEmotionList {
+    
+    for (NSNumber *i in self.liveRoom.imLiveRoom.emoTypeList) {
+        if ( [i intValue] == 1 ) {
+            self.LSLiveAdvancedEmotionView.tipView.hidden = YES;
+        } else {
+            self.chatNomalEmotionView.tipView.hidden = YES;
+        }
+    }
 }
 
 #pragma mark - 获取直播间礼物列表
 - (void)getLiveRoomGiftList {
 
     // TODO:获取礼物列表
-    [self.loadManager getLiveRoomAllGiftListHaveNew:NO request:^(BOOL success, NSMutableArray *liveRoomGiftList) {
-        if (success) {
-            // 发送获取直播间礼物列表请求
-            [self sendLiveRoomGiftListRequest];
-        }
-    }];
+    [self.loadManager getLiveRoomAllGiftListHaveNew:NO
+                                            request:^(BOOL success, NSMutableArray *liveRoomGiftList) {
+                                                if (success) {
+                                                    // 发送获取直播间礼物列表请求
+                                                    [self sendLiveRoomGiftListRequest];
+                                                }
+                                            }];
 
     // 判断本地是否有背包礼物
-    if (!self.backGiftManager.roombackGiftArray && !self.backGiftManager.roombackGiftArray.count) {
-        self.backpackView.requestFailView.hidden = NO;
+    if (!self.backGiftManager.roombackGiftArray.count) {
+
+        [self.backpackView showNoListView];
+        // 请求背包礼物
         [self sendBackpackGiftListRequest];
 
     } else {
-        self.backpackView.requestFailView.hidden = YES;
+        // 显示礼物列表
+        [self.backpackView showGiftListView];
         self.backpackView.giftIdArray = self.backGiftManager.roombackGiftArray;
     }
 }
@@ -536,9 +605,12 @@
                                         self.presentView.giftIdArray = roomShowGiftList;
 
                                         if (self.loadManager.giftMuArray.count) {
-                                            self.presentView.requestFailView.hidden = YES;
+
+                                            // 显示礼物列表
+                                            [self.presentView showGiftListView];
                                         } else {
-                                            self.presentView.requestFailView.hidden = NO;
+                                            // 显示没有礼物列表界面
+                                            [self.presentView showNoListView];
                                         }
 
                                         // 回调获取礼物成功
@@ -547,7 +619,8 @@
                                         }
 
                                     } else {
-                                        self.presentView.requestFailView.hidden = NO;
+                                        // 显示请求礼物失败界面
+                                        [self.presentView showRequestFailView];
                                     }
 
                                 }];
@@ -557,8 +630,19 @@
     // TODO:请求背包礼物列表
     [self.backGiftManager getBackpackListRequest:^(BOOL success, NSMutableArray *backArray) {
         if (success) {
-            self.backpackView.requestFailView.hidden = YES;
-            self.backpackView.giftIdArray = backArray;
+
+            if (backArray.count) {
+                [self.backpackView showGiftListView];
+                self.backpackView.giftIdArray = backArray;
+
+            } else {
+                // 显示没有背包礼物列表
+                [self.backpackView showNoListView];
+            }
+
+        } else {
+            // 显示获取背包礼物失败
+            [self.backpackView showRequestFailView];
         }
     }];
 }
@@ -575,9 +659,17 @@
 #pragma mark - LiveViewControllerDelegate
 // 返回更新用户信用点余额
 - (void)onReEnterRoom:(LiveViewController *)vc {
-    if( [self.delegate respondsToSelector:@selector(onReEnterRoom:)] ) {
+    if ([self.delegate respondsToSelector:@selector(onReEnterRoom:)]) {
         [self.delegate onReEnterRoom:self];
     }
+}
+
+- (void)bringRewardViewInTop:(LiveViewController *)vc {
+
+    [self.view bringSubviewToFront:self.backBtn];
+    [self.view bringSubviewToFront:self.rewardView];
+    self.backBtn.hidden = NO;
+    self.rewardView.hidden = NO;
 }
 
 #pragma mark - 请求数据逻辑
@@ -603,12 +695,19 @@
             if (type == 2) {
                 self.comboBtn.hidden = YES;
                 self.backpackView.sendView.hidden = NO;
+                bFlag = NO;
+            }
+            // 背包礼物没了
+            if (!self.backpackView.giftIdArray.count) {
+                [self.backpackView showNoListView];
             }
 
         } else {
+
             // 礼物数量不够，发送失败
-            NSString *tip = [NSString stringWithFormat:@"You don't have enough %@ to send.", sendItem.giftItem.infoItem.name];
-            [[DialogTip dialogTip] showDialogTip:self.view tipText:tip];
+            NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DONT_HAVE_ENOUGH"), sendItem.giftItem.infoItem.name];
+            [self showDialogTipView:tip];
+            bFlag = NO;
         }
 
     } else {
@@ -619,10 +718,17 @@
 }
 
 #pragma mark - SendGiftTheQueueManagerDelegate
+// 发送大礼物失败 提示
 - (void)sendGiftFailWithItem:(SendGiftItem *)item {
-    
-    NSString *tip = [NSString stringWithFormat:@"Failed to send %@. Please try again.",item.giftItem.infoItem.name];
-    [[DialogTip dialogTip] showDialogTip:self.view tipText:tip];
+
+    NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"BIG_GIFT_SEND_FAIL"), item.giftItem.infoItem.name];
+    [self showDialogTipView:tip];
+}
+
+// 信用点不足礼物发送失败 隐藏连击按钮
+- (void)sendGiftNoCredit:(SendGiftItem *)item {
+    self.comboBtn.hidden = YES;
+    self.presentView.sendView.hidden = NO;
 }
 
 #pragma mark - IM回调
@@ -630,6 +736,61 @@
     NSLog(@"PlayViewController::onLogout( [IM注销通知], errType : %d, errmsg : %@ )", errType, errmsg);
     // 移除所有送礼队列
     [self.sendGiftTheQueueManager removeAllSendGift];
+}
+
+- (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
+    NSLog(@"LiveViewController::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        if (success) {
+            self.liveRoom.roomCredit = credit;
+            self.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
+
+            IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
+            imRebateItem.curCredit = self.liveRoom.imLiveRoom.rebateInfo.curCredit;
+            imRebateItem.curTime = self.liveRoom.imLiveRoom.rebateInfo.curTime;
+            imRebateItem.preCredit = self.liveRoom.imLiveRoom.rebateInfo.preCredit;
+            imRebateItem.preTime = self.liveRoom.imLiveRoom.rebateInfo.preTime;
+            // 更新返点控件
+            [self.rewardView setupTimeAndCredit:imRebateItem];
+        }
+    });
+}
+
+- (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
+    NSLog(@"LiveViewController::onSendToast( [发送直播间弹幕消息, %@], errmsg : %@, credit : %f, rebateCredit : %f )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errmsg, credit, rebateCredit);
+    dispatch_async(dispatch_get_main_queue(), ^{
+
+        if (success) {
+            self.liveRoom.roomCredit = credit;
+            self.liveRoom.imLiveRoom.rebateInfo.curCredit = rebateCredit;
+
+            IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
+            imRebateItem.curCredit = self.liveRoom.imLiveRoom.rebateInfo.curCredit;
+            imRebateItem.curTime = self.liveRoom.imLiveRoom.rebateInfo.curTime;
+            imRebateItem.preCredit = self.liveRoom.imLiveRoom.rebateInfo.preCredit;
+            imRebateItem.preTime = self.liveRoom.imLiveRoom.rebateInfo.preTime;
+            // 更新返点控件
+            [self.rewardView setupTimeAndCredit:imRebateItem];
+        }
+    });
+}
+
+- (void)onRecvRebateInfoNotice:(NSString *_Nonnull)roomId rebateInfo:(RebateInfoObject *_Nonnull)rebateInfo {
+    NSLog(@"PlayViewController::onRecvRebateInfoNotice( [接收返点通知], roomId : %@", roomId);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 设置余额及返点信息管理器
+        IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
+        imRebateItem.curCredit = rebateInfo.curCredit;
+        imRebateItem.curTime = rebateInfo.curTime;
+        imRebateItem.preCredit = rebateInfo.preCredit;
+        imRebateItem.preTime = rebateInfo.preTime;
+
+        // 更新本地返点信息
+        self.liveRoom.imLiveRoom.rebateInfo = rebateInfo;
+        // 更新返点控件
+        [self.rewardView setupTimeAndCredit:imRebateItem];
+    });
 }
 
 #pragma mark - 界面事件
@@ -643,11 +804,50 @@
     // 隐藏底部输入框
     [self hiddenBottomView];
 
+    // 随机礼物按钮默认选中礼物列表
+    if (sender == self.randomGiftBtn) {
+        [self.giftListView toggleButtonSelect:0];
+    }
+    
     // 显示礼物列表
     [self showChooseGiftListView];
 }
 
 #pragma mark - 界面显示/隐藏
+/** 显示信用详情 **/
+- (void)showCreditView {
+    [self.creditViewBottom uninstall];
+    self.creditOffset = -234;
+    [self.creditView mas_updateConstraints:^(MASConstraintMaker *make) {
+        self.creditViewBottom = make.top.equalTo(self.view.mas_bottom).offset(self.creditOffset);
+    }];
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         [self.view layoutIfNeeded];
+
+                     }
+                     completion:^(BOOL finished){
+
+                     }];
+}
+
+/** 收起信用详情 **/
+- (void)closeCreditView {
+    [self.creditViewBottom uninstall];
+    self.creditOffset = 0;
+    [self.creditView mas_updateConstraints:^(MASConstraintMaker *make) {
+        self.creditViewBottom = make.top.equalTo(self.view.mas_bottom).offset(self.creditOffset);
+    }];
+    [UIView animateWithDuration:0.25
+                     animations:^{
+                         [self.view layoutIfNeeded];
+
+                     }
+                     completion:^(BOOL finished){
+
+                     }];
+}
+
 /** 显示礼物列表 **/
 - (void)showChooseGiftListView {
 
@@ -681,10 +881,10 @@
             if (self.liveVC.unReadMsgCount) {
                 self.liveVC.msgTipsView.hidden = NO;
             }
-            if (self.presentView.buttonBar.height) {
+            if (self.presentView.buttonBar.frame.size.height) {
                 [self.presentView hideButtonBar];
             }
-            if (self.backpackView.buttonBar.height) {
+            if (self.backpackView.buttonBar.frame.size.height) {
                 [self.backpackView hideButtonBar];
             }
         }];
@@ -701,11 +901,16 @@
     // 关闭系统键盘
     [self.liveSendBarView.inputTextField resignFirstResponder];
 
-    if (self.inputMessageViewBottom.constant != -self.chatEmotionKeyboardView.frame.size.height) {
+    if (self.inputMessageViewBottom.constant != -self.LSPageChooseKeyboardView.frame.size.height) {
         // 未显示则显示
-        [self moveInputBarWithKeyboardHeight:self.chatEmotionKeyboardView.frame.size.height withDuration:0.25];
+        [self moveInputBarWithKeyboardHeight:self.LSPageChooseKeyboardView.frame.size.height withDuration:0.25];
+
+        [self.emotionViewBottom uninstall];
+        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+            self.emotionViewBottom = make.top.equalTo(self.inputMessageView.mas_bottom);
+        }];
     }
-    [self.chatEmotionKeyboardView reloadData];
+    [self.LSPageChooseKeyboardView reloadData];
 }
 
 - (void)closeAllInputView {
@@ -738,6 +943,11 @@
                      completion:nil];
 }
 
+// 显示3秒toas提示控件
+- (void)showDialogTipView:(NSString *)tipText {
+    [self.dialogTipView showDialogTip:self.view tipText:tipText];
+}
+
 #pragma mark - LiveGiftDownloadManagerDelegate
 - (void)downloadState:(DownLoadState)state {
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -750,30 +960,32 @@
 
 #pragma mark - 礼物列表界面回调(PresentViewDelegate)
 - (void)presentViewShowBalance:(PresentView *)backpackView {
-    [self closeChooseGiftListView];
+    //    [self closeChooseGiftListView];
 
     [self.creditView updateUserBalance:self.liveRoom.roomCredit];
+    [self.view bringSubviewToFront:self.backBtn];
+    [self.view bringSubviewToFront:self.creditView];
     self.backBtn.hidden = NO;
-    self.creditView.hidden = NO;
+    [self showCreditView];
 }
 
 - (void)presentViewSendBtnClick:(PresentView *)presentView andSender:(id)sender {
     self.sendBtn = sender;
-    
+
     // 标记已经点击
     self.isFirstClick = YES;
 
-    if (self.presentView.buttonBar.height) {
+    if (self.presentView.buttonBar.frame.size.height) {
         [self.presentView hideButtonBar];
     }
 
     // 个人信用点和返点
     float userCredit = self.liveRoom.roomCredit + self.liveRoom.imLiveRoom.rebateInfo.curCredit;
-    
+
     if (presentView.isCellSelect) {
         // 判断本地信用点是否够送礼
         if (userCredit - presentView.selectCellItem.infoItem.credit > 0) {
-            
+
             // 生成连击ID
             [self getTheClickID];
 
@@ -797,13 +1009,14 @@
             }
 
         } else {
-            
+
             DialogOK *dialogOKView = [DialogOK dialog];
-            dialogOKView.tipsLabel.text = ToastUnderbalance;
-            [dialogOKView showDialog:self.view actionBlock:^{
-                NSLog(@"没钱了。。");
-            }];
-            
+            dialogOKView.tipsLabel.text = NSLocalizedStringFromSelf(@"SENDGIFT_ERR_ADD_CREDIT");
+            [dialogOKView showDialog:self.view
+                         actionBlock:^{
+                             NSLog(@"没钱了。。");
+                         }];
+
             // 钱不够 清队列
             [self.sendGiftTheQueueManager removeAllSendGift];
         }
@@ -872,12 +1085,26 @@
 }
 
 - (void)presentViewdidSelectItemWithSelf:(PresentView *)presentView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath {
-    
+
     if (self.presentRow != indexPath.row) {
         self.comboBtn.hidden = YES;
         self.presentView.sendView.hidden = NO;
         [presentView setupButtonBar:list];
         self.presentRow = indexPath.row;
+    }
+}
+
+- (void)presentViewdidSelectGiftLevel:(int)level loveLevel:(int)loveLevel {
+
+    if (level > self.liveRoom.imLiveRoom.manLevel) {
+
+        NSString *manLevelTip = [NSString stringWithFormat:@"%@%d%@", NSLocalizedStringFromSelf(@"NO_TENOUGH_LEVEL"), level, NSLocalizedStringFromSelf(@"OR_HIGHER")];
+        [self showDialogTipView:manLevelTip];
+
+    } else if (loveLevel > self.liveRoom.imLiveRoom.loveLevel) {
+
+        NSString *loveTip = [NSString stringWithFormat:@"%@%d%@", NSLocalizedStringFromSelf(@"NO_TENOUGH_LOVE"), loveLevel, NSLocalizedStringFromSelf(@"OR_HIGHER")];
+        [self showDialogTipView:loveTip];
     }
 }
 
@@ -891,18 +1118,20 @@
 
 #pragma mark - 礼物背包界面回调(BackpackPresentViewDelegate)
 - (void)backpackPresentViewShowBalance:(BackpackPresentView *)backpackView {
-    [self closeChooseGiftListView];
+    //    [self closeChooseGiftListView];
 
     [self.creditView updateUserBalance:self.liveRoom.roomCredit];
+    [self.view bringSubviewToFront:self.backBtn];
+    [self.view bringSubviewToFront:self.creditView];
     self.backBtn.hidden = NO;
-    self.creditView.hidden = NO;
+    [self showCreditView];
 }
 
 - (void)backpackPresentViewSendBtnClick:(BackpackPresentView *)backpackView andSender:(id)sender {
     self.sendBtn = sender;
     self.isBackpackFirstClick = YES;
-    
-    if (self.backpackView.buttonBar.height) {
+
+    if (self.backpackView.buttonBar.frame.size.height) {
         [self.backpackView hideButtonBar];
     }
 
@@ -912,8 +1141,6 @@
 
         if (backpackView.selectCellItem.infoItem.type == GIFTTYPE_COMMON) {
             if (backpackView.selectCellItem.infoItem.multiClick) {
-                self.backpackView.sendView.hidden = YES;
-                backpackView.comboBtn.hidden = NO;
                 // 连击礼物
                 [self backpackPresentViewComboBtnInside:backpackView andSender:backpackView.comboBtn];
 
@@ -950,40 +1177,48 @@
     }
 
     // 发送连击礼物请求
-    [self sendRoomGiftFormAllGiftItem:backpackView.selectCellItem andGiftNum:_giftNum starNum:_starNum endNum:_endNum isBack:YES];
+    BOOL bFlag = [self sendRoomGiftFormAllGiftItem:backpackView.selectCellItem
+                                        andGiftNum:_giftNum
+                                           starNum:_starNum
+                                            endNum:_endNum
+                                            isBack:YES];
     self.selectCellItem = backpackView.selectCellItem;
 
-    self.comboBtn = sender;
-    [self.comboBtn setBackgroundImage:[UIImage imageNamed:@"Live_cambo_nomal"] forState:UIControlStateNormal];
+    if (bFlag) {
 
-    [sender stopCountDown];
-    [sender startCountDownWithSecond:30];
+        self.backpackView.sendView.hidden = YES;
+        backpackView.comboBtn.hidden = NO;
 
-    // 连击按钮倒计时改变回调
-    WeakObject(self, weakSelf);
-    [sender countDownChanging:^NSAttributedString *(CountTimeButton *countDownButton, NSInteger second) {
-        countDownButton.titleLabel.numberOfLines = 0;
-        //        weakSelf.countdownSender = 1;
-        return [weakSelf appendComboButtonTitle:[NSString stringWithFormat:@"%ld", (long)second]];
-    }];
+        self.comboBtn = sender;
+        [self.comboBtn setBackgroundImage:[UIImage imageNamed:@"Live_cambo_nomal"] forState:UIControlStateNormal];
 
-    // 连击按钮倒计时结束回调
-    [sender countDownFinished:^NSAttributedString *(CountTimeButton *countDownButton, NSInteger second) {
-        if (second <= 0.0) {
-            weakSelf.comboBtn.hidden = YES;
-            weakSelf.backpackView.sendView.hidden = NO;
+        [sender stopCountDown];
+        [sender startCountDownWithSecond:30];
 
-            //            weakSelf.countdownSender = 0;
-            weakSelf.isFirstClick = YES;
+        // 连击按钮倒计时改变回调
+        WeakObject(self, weakSelf);
+        [sender countDownChanging:^NSAttributedString *(CountTimeButton *countDownButton, NSInteger second) {
+            countDownButton.titleLabel.numberOfLines = 0;
+            //        weakSelf.countdownSender = 1;
+            return [weakSelf appendComboButtonTitle:[NSString stringWithFormat:@"%ld", (long)second]];
+        }];
 
-            weakSelf.starNum = 0;
-            weakSelf.endNum = 0;
-            weakSelf.giftNum = 0;
-            weakSelf.totalGiftNum = 0;
-        }
+        // 连击按钮倒计时结束回调
+        [sender countDownFinished:^NSAttributedString *(CountTimeButton *countDownButton, NSInteger second) {
+            if (second <= 0.0) {
+                weakSelf.comboBtn.hidden = YES;
+                weakSelf.backpackView.sendView.hidden = NO;
+                //            weakSelf.countdownSender = 0;
+                weakSelf.isFirstClick = YES;
 
-        return [weakSelf appendComboButtonTitle:@"30"];
-    }];
+                weakSelf.starNum = 0;
+                weakSelf.endNum = 0;
+                weakSelf.giftNum = 0;
+                weakSelf.totalGiftNum = 0;
+            }
+            return [weakSelf appendComboButtonTitle:@"30"];
+        }];
+    }
 }
 
 - (void)backpackPresentViewComboBtnDown:(BackpackPresentView *)backpackView andSender:(id)sender {
@@ -992,12 +1227,30 @@
 }
 
 - (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath {
-    
+
     if (self.backRow != indexPath.row) {
         self.comboBtn.hidden = YES;
         self.backpackView.sendView.hidden = NO;
         [backpackView setupButtonBar:list];
         self.backRow = indexPath.row;
+    }
+}
+
+- (void)backpackPresentViewdidSelectGiftLevel:(int)level loveLevel:(int)loveLevel canSend:(BOOL)canSend {
+
+    if (!canSend) {
+        [self showDialogTipView:NSLocalizedStringFromSelf(@"CANNOT_SEND_TIP")];
+
+    } else {
+
+        if (level > self.liveRoom.imLiveRoom.manLevel) {
+            NSString *manLevelTip = [NSString stringWithFormat:@"%@%d%@", NSLocalizedStringFromSelf(@"NO_TENOUGH_LEVEL"), level, NSLocalizedStringFromSelf(@"OR_HIGHER")];
+            [self showDialogTipView:manLevelTip];
+
+        } else if (loveLevel > self.liveRoom.imLiveRoom.loveLevel) {
+            NSString *loveTip = [NSString stringWithFormat:@"%@%d%@", NSLocalizedStringFromSelf(@"NO_TENOUGH_LOVE"), loveLevel, NSLocalizedStringFromSelf(@"OR_HIGHER")];
+            [self showDialogTipView:loveTip];
+        }
     }
 }
 
@@ -1090,44 +1343,44 @@
     }
 }
 
-#pragma mark - 普通表情选择回调 (ChatEmotionChooseViewDelegate)
-- (void)chatEmotionChooseView:(ChatEmotionChooseView *)chatEmotionChooseView didSelectNomalItem:(NSInteger)item {
+#pragma mark - 普通表情选择回调 (LSLiveStandardEmotionViewDelegate)
+- (void)LSLiveStandardEmotionView:(LSLiveStandardEmotionView *)LSLiveStandardEmotionView didSelectNomalItem:(NSInteger)item {
     if (self.liveSendBarView.inputTextField.fullText.length < 70) {
         // 插入表情描述到输入框
-        ChatEmotion *emotion = [self.emotionManager.emotionArray objectAtIndex:item];
+        LSChatEmotion *emotion = [self.emotionManager.stanEmotionList objectAtIndex:item];
         [self.liveSendBarView.inputTextField insertEmotion:emotion];
 
         [self.liveSendBarView sendButtonCanUser];
     }
 }
 
-#pragma mark - 高亲密度表情选择回调 (ChatFriendlyEmotionViewDelegate)
-- (void)chatFriendlyEmotionView:(ChatFriendlyEmotionView *)chatFriendlyEmotionView didSelectNomalItem:(NSInteger)item {
+#pragma mark - 高亲密度表情选择回调 (LSLiveAdvancedEmotionViewDelegate)
+- (void)LSLiveAdvancedEmotionView:(LSLiveAdvancedEmotionView *)LSLiveAdvancedEmotionView didSelectNomalItem:(NSInteger)item {
     if (self.liveSendBarView.inputTextField.fullText.length < 70) {
         // 插入表情描述到输入框
-        ChatEmotion *emotion = [self.emotionManager.emotionArray objectAtIndex:item];
+        LSChatEmotion *emotion = [self.emotionManager.advanEmotionList objectAtIndex:item];
         [self.liveSendBarView.inputTextField insertEmotion:emotion];
 
         [self.liveSendBarView sendButtonCanUser];
     }
 }
 
-#pragma mark - 表情、礼物键盘选择回调 (ChatEmotionKeyboardViewDelegate)
-- (NSUInteger)pagingViewCount:(ChatEmotionKeyboardView *)chatEmotionKeyboardView {
+#pragma mark - 表情、礼物键盘选择回调 (LSPageChooseKeyboardViewDelegate)
+- (NSUInteger)pagingViewCount:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView {
     return 2;
 }
 
-- (Class)chatEmotionKeyboardView:(ChatEmotionKeyboardView *)chatEmotionKeyboardView classForIndex:(NSUInteger)index {
+- (Class)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView classForIndex:(NSUInteger)index {
     Class cls = nil;
 
-    if (chatEmotionKeyboardView == self.chatEmotionKeyboardView) {
+    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
         if (index == 0) {
             // 普通表情
-            cls = [ChatEmotionChooseView class];
+            cls = [LSLiveStandardEmotionView class];
 
         } else if (index == 1) {
             // 高亲密度表情
-            cls = [ChatFriendlyEmotionView class];
+            cls = [LSLiveAdvancedEmotionView class];
         }
 
     } else {
@@ -1153,18 +1406,17 @@
     return cls;
 }
 
-- (UIView *)chatEmotionKeyboardView:(ChatEmotionKeyboardView *)chatEmotionKeyboardView pageViewForIndex:(NSUInteger)index {
+- (UIView *)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView pageViewForIndex:(NSUInteger)index {
     UIView *view = nil;
 
-    if (chatEmotionKeyboardView == self.chatEmotionKeyboardView) {
+    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
         if (index == 0) {
-            // 普通礼物列表
             view = self.chatNomalEmotionView;
             view.frame = CGRectMake(0, 0, ViewBoundsSize.width, ViewBoundsSize.height);
 
         } else if (index == 1) {
-            // 背包礼物列表
-            view = self.chatFriendlyEmotionView;
+
+            view = self.LSLiveAdvancedEmotionView;
             view.frame = CGRectMake(0, 0, ViewBoundsSize.width, ViewBoundsSize.height);
         }
     } else {
@@ -1178,15 +1430,15 @@
     return view;
 }
 
-- (void)chatEmotionKeyboardView:(ChatEmotionKeyboardView *)chatEmotionKeyboardView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    if (chatEmotionKeyboardView == self.chatEmotionKeyboardView) {
+- (void)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
+    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
         if (index == 0) {
             // 普通表情
             [self.chatNomalEmotionView reloadData];
 
         } else if (index == 1) {
             // 高级表情
-            [self.chatFriendlyEmotionView reloadData];
+            [self.LSLiveAdvancedEmotionView reloadData];
         }
 
     } else {
@@ -1198,8 +1450,8 @@
     }
 }
 
-- (void)chatEmotionKeyboardView:(ChatEmotionKeyboardView *)chatEmotionKeyboardView didShowPageViewForDisplay:(NSUInteger)index {
-    if (chatEmotionKeyboardView == self.chatEmotionKeyboardView) {
+- (void)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView didShowPageViewForDisplay:(NSUInteger)index {
+    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
         if (index == 0) {
         } else if (index == 1) {
         }
@@ -1232,12 +1484,18 @@
         // 收起键盘
         self.inputMessageViewBottom.constant = -5;
         self.liveVC.msgSuperViewTop.constant = 5;
-//        self.liveVC.barrageView.backgroundColor = Color(255, 255, 255, 0.9);
-        self.liveVC.barrageView.backgroundColor = self.liveVC.roomStyleItem.barrageBgColor;// Color(255, 255, 255, 0);
+        
+        //        self.liveVC.barrageView.backgroundColor = Color(255, 255, 255, 0.9);
+        self.liveVC.barrageView.backgroundColor = self.liveVC.roomStyleItem.barrageBgColor; // Color(255, 255, 255, 0);
         self.liveVC.barrageView.layer.shadowColor = [UIColor blackColor].CGColor;
         self.liveVC.barrageView.layer.shadowOffset = CGSizeMake(0, 1);
         self.liveVC.barrageView.layer.shadowRadius = 1;
         self.liveVC.barrageView.layer.shadowOpacity = 0.5;
+        
+        [self.emotionViewBottom uninstall];
+        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+            self.emotionViewBottom = make.top.equalTo(self.inputMessageView.mas_bottom).offset(5);
+        }];
     }
 
     [UIView animateWithDuration:duration

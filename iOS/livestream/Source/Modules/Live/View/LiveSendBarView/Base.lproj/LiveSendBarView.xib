@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -36,7 +35,7 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LAH-xN-1OC">
                             <rect key="frame" x="0.0" y="0.0" width="278" height="38"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfb-hm-0eC" userLabel="Louder Button" customClass="KKCheckButton">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zfb-hm-0eC" userLabel="Louder Button" customClass="LSCheckButton">
                             <rect key="frame" x="5" y="8" width="48" height="22"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="48" id="Bco-c3-LXe"/>
@@ -51,7 +50,7 @@
                             <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                             <textInputTraits key="textInputTraits" returnKeyType="send"/>
                         </textField>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-gN-uXn" userLabel="Emotion Button" customClass="KKCheckButton">
+                        <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tq4-gN-uXn" userLabel="Emotion Button" customClass="LSCheckButton">
                             <rect key="frame" x="240" y="4" width="30" height="30"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="30" id="3tK-BO-RqA"/>
@@ -113,6 +112,6 @@
         <image name="Live_Public_SendBar_bg" width="375" height="44"/>
         <image name="Pubilc_Pop_Btn" width="44" height="20"/>
         <image name="Public_Send_Btn" width="55" height="35"/>
-        <image name="Send_Emotion_Btn" width="25" height="26"/>
+        <image name="Send_Emotion_Btn" width="25" height="25"/>
     </resources>
 </document>

@@ -8,7 +8,8 @@
 
 #import "VerifyMobileNumberViewController.h"
 #import "SubmitPhoneVerifyCodeRequest.h"
-@interface VerifyMobileNumberViewController ()<UITextFieldDelegate>
+#import "GetPhoneVerifyCodeRequest.h"
+@interface VerifyMobileNumberViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *phoneLabel;
 @property (weak, nonatomic) IBOutlet UIButton *changeBtn;
@@ -16,9 +17,10 @@
 @property (weak, nonatomic) IBOutlet UIButton *resendBtn;
 @property (weak, nonatomic) IBOutlet UILabel *errorLabel;
 @property (weak, nonatomic) IBOutlet UITextField *codeTextField;
+@property (weak, nonatomic) IBOutlet UIView *errorView;
 @property (nonatomic, strong) NSTimer * timer;
 @property (nonatomic, assign) int time;
-@property (nonatomic, strong) SessionRequestManager* sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @end
 
 @implementation VerifyMobileNumberViewController
@@ -34,34 +36,79 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.phoneLabel.text = [NSString stringWithFormat:@"%@-%@",self.countryStr,self.phoneStr];
+    self.title = NSLocalizedStringFromSelf(@"VERIFY_TITLE");
     
-    self.codeTextField.delegate = self;
+    self.changeBtn.layer.cornerRadius = 5;
+    self.changeBtn.layer.masksToBounds = YES;
+    self.verifyBtn.layer.cornerRadius = 5;
+    self.verifyBtn.layer.masksToBounds = YES;
+    self.resendBtn.layer.cornerRadius = 5;
+    self.resendBtn.layer.masksToBounds = YES;
+    
+    [self setPhoneLabelText];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTime) userInfo:nil repeats:YES];
+    self.time = 30;
     
-    self.sessionManager = [SessionRequestManager manager];
+    self.sessionManager = [LSSessionRequestManager manager];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+- (void)setPhoneLabelText
 {
-    if (textField.text.length > 0) {
+    self.phoneLabel.text = [NSString stringWithFormat:@"+%@-%@",self.country.zipCode,self.phoneStr];
+    
+    CGFloat phoneW = [self.phoneLabel.text sizeWithAttributes:@{NSFontAttributeName:self.phoneLabel.font}].width;
+    
+    CGRect phoneRect = self.phoneLabel.frame;
+    phoneRect.size.width = phoneW;
+    self.phoneLabel.frame = phoneRect;
+    
+    CGRect btnRect = self.changeBtn.frame;
+    CGFloat right = self.phoneLabel.frame.origin.x + self.phoneLabel.frame.size.width + 10;
+    btnRect.origin.x = right;
+    self.changeBtn.frame = btnRect;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textChange:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+- (void)textChange:(NSNotification *)notifi
+{
+    if (self.codeTextField.text.length > 0) {
+        self.verifyBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
         self.verifyBtn.userInteractionEnabled = YES;
     }
-    return YES;
+    else
+    {
+        self.verifyBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+        self.verifyBtn.userInteractionEnabled = NO;
+    }
 }
 
 - (void)countDownTime
 {
-    self.time += [self.timer timeInterval];
-    [self.resendBtn setTitle:[NSString stringWithFormat:@"Resend in %ds",self.time] forState:UIControlStateNormal];
+    self.time -= [self.timer timeInterval];
+    NSString *times = [NSString stringWithFormat:@"%d",self.time];
+    [self.resendBtn setTitle:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"RESEND_IN"),times] forState:UIControlStateNormal];
+    self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
     self.resendBtn.userInteractionEnabled = NO;
-    if (self.time >= 30.0f) {
+    if (self.time <= 0.0f) {
         [self.resendBtn setTitle:@"Resend" forState:UIControlStateNormal];
+        self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
         self.resendBtn.userInteractionEnabled = YES;
         [self.timer invalidate];
         self.timer = nil;
-        self.time = 0;
+        self.time = 30;
     }
 }
 
@@ -72,9 +119,37 @@
 
 - (IBAction)ResendCode:(UIButton *)sender {
     
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTime) userInfo:nil repeats:YES];
+    [self showLoading];
+    self.resendBtn.userInteractionEnabled = NO;
+    GetPhoneVerifyCodeRequest * request = [[GetPhoneVerifyCodeRequest alloc]init];
+    request.country = self.country.fullName;
+    request.areaCode = self.country.zipCode;
+    request.phoneNo = self.phoneStr;
+    
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [self hideLoading];
+            if (success) {
+              self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTime) userInfo:nil repeats:YES];
+            }
+            else
+            {
+                [self showErrorMessage:errmsg];
+                self.resendBtn.userInteractionEnabled = YES;
+            }
+        });
+        
+    };
+    [self.sessionManager sendRequest:request];
+    
+ 
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    [self.view endEditing:YES];
+}
 
 - (IBAction)changeBtnDid:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];
@@ -86,17 +161,29 @@
         [self showLoading];
         SubmitPhoneVerifyCodeRequest * request = [[SubmitPhoneVerifyCodeRequest alloc]init];
         request.phoneNo = self.phoneStr;
-        request.country = self.countryStr;
+        request.country = self.country.shortName;
+        request.areaCode = self.country.zipCode;
         request.verifyCode = self.codeTextField.text;
         request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 if (success) {
-                    
+                    for (UIViewController * vc in self.navigationController.viewControllers) {
+                        if ([vc isKindOfClass:NSClassFromString(@"BookPrivateBroadcastViewController")]) {
+                            [self.navigationController popToViewController:vc animated:YES];
+                        }
+                    }
                 }
                 else
                 {
-                    [self showErrorMessage:errmsg];
+                    if (errnum == 10066) {
+                        self.errorView.hidden = NO;
+                    }
+                    else
+                    {
+                      [self showErrorMessage:errmsg];
+                    }
+                    
                 }
             });
         };

@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 
 @class HotTableViewCell;
 @protocol HotTableViewCellDelegate <NSObject>
@@ -22,12 +22,10 @@
 
 @end
 
-
 @interface HotTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) IBOutlet UIImageViewTopFit *imageViewHeader;
-@property (nonatomic, strong) ImageViewLoader* imageViewLoader;
-
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
+@property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *roomType;
@@ -46,10 +44,11 @@
 /** 付费私密直播间 */
 @property (weak, nonatomic) IBOutlet UIButton *viewPublicFeeBtn;
 /** 播放数组 */
-@property (nonatomic, strong) NSMutableArray* animationArray;
+@property (nonatomic, strong) NSMutableArray *animationArray;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPrivateCenterX;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPrivateCenterX;
-
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPublicCenterX;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPublicCenterX;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;

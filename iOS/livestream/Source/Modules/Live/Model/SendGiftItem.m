@@ -7,7 +7,7 @@
 //
 
 #import "SendGiftItem.h"
-#import "LoginManager.h"
+#import "LSLoginManager.h"
 
 @implementation SendGiftItem
 
@@ -17,7 +17,7 @@
     
     if (self) {
         
-        LoginManager *manager = [LoginManager manager];
+        LSLoginManager *manager = [LSLoginManager manager];
         
         self.giftItem = item;
         self.giftNum = giftNum;

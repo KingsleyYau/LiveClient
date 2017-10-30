@@ -34,7 +34,7 @@ function configure_i386 {
 	export HOST=$ARCH-apple-darwin
 	
 	toolchain=$(xcrun --sdk $PLATFORM -f clang)
-	export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
+	#export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
 	
 	configure_prefix
 }
@@ -48,7 +48,7 @@ function configure_x86_64 {
 	export HOST=$ARCH-apple-darwin
 	
 	toolchain=$(xcrun --sdk $PLATFORM -f clang)
-	export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
+	#export CROSS_COMPILE_PREFIX="`dirname $toolchain`/"
 	
 	configure_prefix
 }
@@ -238,8 +238,8 @@ for var in ${BUILD_ARCH[@]};do
 	configure_$var
 	show_enviroment
 	echo "# Starting building for $ARCH..."
-	#build_fdk_aac || exit 1
-	#build_x264 || exit 1
+	build_fdk_aac || exit 1
+	build_x264 || exit 1
 	build_ffmpeg || exit 1
 	echo "# Build for $ARCH finish"
 done

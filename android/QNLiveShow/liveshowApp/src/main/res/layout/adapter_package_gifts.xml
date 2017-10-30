@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:background="#F5F5F5">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/rectangle_radius8_connor_solid_white_stoke_transparent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="bottom|center_horizontal">
+            <ImageView
+                android:id="@+id/ivGiftPhoto"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_live_buttom_gift_freepublic"/>
+            <TextView
+                android:id="@+id/tvGiftName"
+                android:layout_marginTop="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="Rose"
+                android:textSize="11sp"
+                android:includeFontPadding="false" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D2D2D2"
+            android:layerType="software"/>
+        <TextView
+            android:id="@+id/tvGiftExpire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:padding="4dp"
+            android:ellipsize="end"
+            android:text="Use by: 30/10/2017"
+            android:textColor="@color/gray"
+            android:gravity="center_horizontal"
+            android:textSize="9sp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvGiftNum"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/bg_custom_orange_circle"
+        android:text="9"
+        android:textColor="@color/white"
+        android:textSize="11sp"
+        android:gravity="center"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="3dp"/>
+
+    <ImageView
+        android:id="@+id/ivUnread"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/bg_custom_red_circle"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="3dp"/>
+
+</RelativeLayout>

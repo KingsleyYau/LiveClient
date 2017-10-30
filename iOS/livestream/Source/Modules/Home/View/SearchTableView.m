@@ -7,7 +7,7 @@
 //
 
 #import "SearchTableView.h"
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 #import "SearchTableViewCell.h"
 #import "SearchListObject.h"
 

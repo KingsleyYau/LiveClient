@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 #import "UserInfo.h"
-#import "SessionRequestManager.h"
+#import "LSSessionRequestManager.h"
 
 @interface UserInfoManager : NSObject
 

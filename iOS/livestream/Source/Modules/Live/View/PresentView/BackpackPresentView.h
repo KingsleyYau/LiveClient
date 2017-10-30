@@ -18,6 +18,7 @@
 
 - (void)backpackPresentViewShowBalance:(BackpackPresentView *) backpackView;
 - (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath;
+- (void)backpackPresentViewdidSelectGiftLevel:(int)level loveLevel:(int)loveLevel canSend:(BOOL)canSend;
 - (void)backpackPresentViewDidScroll:(BackpackPresentView *)backpackView currentPageNumber:(NSInteger)page;
 - (void)backpackPresentViewSendBtnClick:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewComboBtnInside:(BackpackPresentView *)backpackView andSender:(id)sender;
@@ -72,6 +73,9 @@
 
 // 显示请求礼物列表失败界面
 - (void)showRequestFailView;
+
+// 显示礼物列表
+- (void)showGiftListView;
 
 // 重新请求礼物列表
 - (IBAction)reloadGiftList:(id)sender;

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface UpdateTokenIdRequest : SessionRequest
+@interface UpdateTokenIdRequest : LSSessionRequest
 // 用于Push Notification的ID
 @property (nonatomic, strong) NSString* _Nullable tokenId;
 @property (nonatomic, strong) UpdateTokenIdFinishHandler _Nullable finishHandler;

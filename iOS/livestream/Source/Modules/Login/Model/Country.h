@@ -16,4 +16,6 @@
 
 
 - (instancetype)initWithDict:(NSDictionary *)dict;
+
++ (Country *)findPhoneCodeByCountry ;
 @end

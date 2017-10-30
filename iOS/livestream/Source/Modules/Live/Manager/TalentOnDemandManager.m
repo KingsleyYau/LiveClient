@@ -10,7 +10,7 @@
 
 @interface TalentOnDemandManager ()
 
-@property (nonatomic, strong) SessionRequestManager* sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @end
 
 @implementation TalentOnDemandManager
@@ -32,7 +32,7 @@
 {
     self = [super init];
     if (self) {
-        self.sessionManager = [SessionRequestManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
    
     }
     return self;

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetPhoneVerifyCodeRequest : SessionRequest
+@interface GetPhoneVerifyCodeRequest : LSSessionRequest
 
 @property (nonatomic, copy) NSString *_Nonnull country;
 @property (nonatomic, copy) NSString *_Nonnull areaCode;

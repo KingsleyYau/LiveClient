@@ -10,12 +10,14 @@
 #import "CountryCodeViewController.h"
 #import "Country.h"
 #import "GetPhoneVerifyCodeRequest.h"
-@interface AddMobileNumberViewController ()<CountryCodeViewControllerDelegate,UITextFieldDelegate>
+#import "VerifyMobileNumberViewController.h"
+@interface AddMobileNumberViewController ()<CountryCodeViewControllerDelegate>
 @property (weak, nonatomic) IBOutlet UIButton *countryCodeBtn;
 @property (nonatomic, strong) Country * countryItem;
 @property (weak, nonatomic) IBOutlet UITextField *phoneTextField;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
-@property (nonatomic, strong) SessionRequestManager* sessionManager;
+@property (weak, nonatomic) IBOutlet UIButton *sendBtn;
+@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @end
 
 @implementation AddMobileNumberViewController
@@ -23,11 +25,42 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.title = @"Add Mobile Number";
+    self.title = NSLocalizedStringFromSelf(@"ADD_MOBILE_NUMBER");
     
-    self.phoneTextField.delegate = self;
+    self.sendBtn.layer.cornerRadius = 5;
+    self.sendBtn.layer.masksToBounds = YES;
     
-    self.sessionManager = [SessionRequestManager manager];
+    self.sessionManager = [LSSessionRequestManager manager];
+    
+    self.countryItem = [Country findPhoneCodeByCountry];
+    
+    [self.countryCodeBtn setTitle:[NSString stringWithFormat:@"%@ (+%@)",self.countryItem.fullName,self.countryItem.zipCode] forState:UIControlStateNormal];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textChange:) name:UITextFieldTextDidChangeNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+- (void)textChange:(NSNotification *)notifi
+{
+    if (self.phoneTextField.text.length > 0) {
+        self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        self.sendBtn.userInteractionEnabled = YES;
+    }
+    else
+    {
+        self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+        self.sendBtn.userInteractionEnabled = NO;
+    }
 }
 
 - (void)initCustomParam {
@@ -44,11 +77,6 @@
     [self.view endEditing:YES];
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    
-    return YES;
-}
 
 - (IBAction)verifyCodeBtnDid:(UIButton *)sender {
     CountryCodeViewController * vc = [[CountryCodeViewController alloc]initWithNibName:nil bundle:nil];
@@ -72,22 +100,26 @@
 - (IBAction)sendBtn:(UIButton *)sender {
     
     if (self.phoneTextField.text.length == 0) {
-        [self showErrorMessage:@"Please enter a valid phone number."];
+        [self showErrorMessage:NSLocalizedStringFromSelf(@"ENTER_PHONE_NUMBER")];
         return;
     }
     self.infoLabel.hidden = YES;
     [self showLoading];
+    NSString * phone = self.phoneTextField.text;
     GetPhoneVerifyCodeRequest * request = [[GetPhoneVerifyCodeRequest alloc]init];
     request.country = self.countryItem.fullName;
     request.areaCode = self.countryItem.zipCode;
-    request.phoneNo = self.phoneTextField.text;
+    request.phoneNo = phone;
     
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
     
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self hideLoading];
             if (success) {
-                
+                VerifyMobileNumberViewController * vc = [[VerifyMobileNumberViewController alloc]initWithNibName:nil bundle:nil];
+                vc.phoneStr = phone;
+                vc.country = self.countryItem;
+                [self.navigationController pushViewController:vc animated:YES];
             }
             else
             {

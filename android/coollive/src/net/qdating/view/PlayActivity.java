@@ -22,8 +22,8 @@ import net.qdating.R;
 import net.qdating.utils.CrashHandler;
 
 public class PlayActivity extends Activity {
-	private String url = "rtmp://172.25.32.17/live/max";
-//	private String url = "rtmp://192.168.88.17:1936/speex/fansi_CMTS09979_3351";
+	private String url = "rtmp://172.25.32.17:8899/live/max";
+//	private String url = "rtmp://172.25.32.17:1936/speex/fansi_CMTS09976_101098";
 //	private String url = "rtmp://172.25.32.17:1936/aac/myStream";
 	
 	String filePath = "/sdcard";
@@ -59,11 +59,13 @@ public class PlayActivity extends Activity {
 		CrashHandlerJni.SetCrashLogDirectory(filePath);
 		
 		editText = (EditText) this.findViewById(R.id.editText);
-		editText.setText(String.format("%s_mv", url));
-//		editText.setText(String.format("%s", url));
+		String playUrl = String.format("%s_mv", url);
+//		String playUrl = "rtmp://172.25.32.17:1936/speex/fansi_CMTS09976_101098";
+		editText.setText(playUrl);
 		
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
-		editTextPublish.setText(String.format("%s_a", url));
+		String publishUrl = String.format("%s_a", url);
+		editTextPublish.setText(publishUrl);
 		
 		surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
 		surfaceView.setKeepScreenOn(true);

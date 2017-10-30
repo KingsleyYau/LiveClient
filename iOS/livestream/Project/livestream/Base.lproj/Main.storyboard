@@ -12,7 +12,7 @@
         <!--Main View Controller-->
         <scene sceneID="lvk-0g-MyF">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dQg-tF-urY" customClass="MainViewController" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dQg-tF-urY" customClass="LSMainViewController" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="DBZ-jw-QVq"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="fT4-U4-gui">
@@ -28,12 +28,11 @@
         <!--程序入口Navigation Controller-->
         <scene sceneID="KYb-IJ-UnT">
             <objects>
-                <navigationController id="irJ-k4-1uv" userLabel="程序入口Navigation Controller" customClass="KKNavigationController" sceneMemberID="viewController">
+                <navigationController id="irJ-k4-1uv" userLabel="程序入口Navigation Controller" customClass="LSNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="QTm-p6-7AD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" red="0.36470588240000001" green="0.054901960780000002" blue="0.52549019610000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <color key="barTintColor" red="0.36470588240000001" green="0.054901960780000002" blue="0.52549019610000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="barTintColor" red="0.094117647060000004" green="0.53333333329999999" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Rus-My-Ooj" kind="relationship" relationship="rootViewController" id="fGr-5p-wBd"/>
@@ -43,10 +42,10 @@
             </objects>
             <point key="canvasLocation" x="-4644" y="-2393"/>
         </scene>
-        <!--QNTestViewController-->
+        <!--LSTestViewController-->
         <scene sceneID="MUP-dp-ZgU">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Rus-My-Ooj" userLabel="QNTestViewController" customClass="QNTestViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Rus-My-Ooj" userLabel="LSTestViewController" customClass="LSTestViewController" sceneMemberID="viewController">
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Login Test" id="N2g-e5-pj8"/>
                 </viewController>

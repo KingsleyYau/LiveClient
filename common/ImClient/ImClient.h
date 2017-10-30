@@ -441,7 +441,7 @@ private:
      *  @param playUrl      播放url
      *
      */
-    void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const string& playUrl) override;
+    void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl) override;
     
     /**
      *  3.13.观众进入公开直播间接口 回调
@@ -483,9 +483,10 @@ private:
      *  @param fromId      发送方的用户ID
      *  @param nickName    发送方的昵称
      *  @param msg         文本消息内容
+     *  @param honorUrl    勋章图片url
      *
      */
-    void OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg) override;
+    void OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) override;
     
     /**
      *  4.3.接收直播间公告消息回调
@@ -509,9 +510,10 @@ private:
      *  @param multi_click_start    连击起始数
      *  @param multi_click_end      连击结束数
      *  @param multi_click_id       连击ID，相同则表示是同一次连击
+     *  @param honorUrl             勋章图片url
      *
      */
-    void OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) override;
+    void OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string& honorUrl) override;
     
     /**
      *  6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
@@ -520,9 +522,10 @@ private:
      *  @param fromId               发送方的用户ID
      *  @param nickName             发送方的昵称
      *  @param msg                  消息内容
+     *  @param honorUrl             勋章图片url
      *
      */
-    void OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) override;
+    void OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) override;
 
     /**
      *  7.3.接收立即私密邀请回复通知 回调
@@ -613,4 +616,13 @@ private:
      *
      */
     void OnRecvBackpackUpdateNotice(const BackpackInfo& item) override;
+    
+    /**
+     *  9.4.观众勋章升级通知
+     *
+     *  @param honorId          勋章ID
+     *  @param honorUrl         勋章图片url
+     *
+     */
+    void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) override;
 };

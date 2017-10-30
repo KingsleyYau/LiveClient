@@ -1,0 +1,214 @@
+package com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
+import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
+import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.view.ProgressButton;
+import com.squareup.picasso.Picasso;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Created by Hunter on 17/9/30.
+ */
+
+public class ComfirmedInviteAdapter extends BaseAdapter {
+
+    private Context mContext;
+    private List<BookInviteItem> mBookInviteItemList;
+    private OnComfirmedInviteClickListener mListener;
+    private final String TAG = ComfirmedInviteAdapter.class.getSimpleName();
+
+    public ComfirmedInviteAdapter(Context context, List<BookInviteItem> bookInviteItemList){
+        this.mContext = context;
+        this.mBookInviteItemList = bookInviteItemList;
+    }
+
+    /**
+     * 设置事件监听器
+     * @param listener
+     */
+    public void setOnComfirmedInviteClickListener(OnComfirmedInviteClickListener listener){
+        mListener = listener;
+    }
+
+    @Override
+    public int getCount() {
+        return mBookInviteItemList.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return mBookInviteItemList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        ViewHolder holder;
+        if(convertView == null){
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_comfirmed_schedule_invite, parent, false);
+            holder = new ViewHolder(convertView);
+        }else{
+            holder = (ViewHolder)convertView.getTag();
+        }
+
+        final BookInviteItem item = mBookInviteItemList.get(position);
+
+        //已读／未读
+        if(item.isReaded){
+            holder.ivUnread.setVisibility(View.INVISIBLE);
+        }else{
+            holder.ivUnread.setVisibility(View.VISIBLE);
+        }
+
+        holder.tvAnchorName.setText(item.oppositeNickname);
+        //到期时间
+        holder.tvBookTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_book_time_desc),
+                new SimpleDateFormat("MMM dd  HH:mm", Locale.ENGLISH).format(new Date(((long)item.bookTime) * 1000))));
+
+        //礼物图片
+        holder.civAnchorPhoto.setImageResource(R.drawable.ic_default_photo_woman);
+        if(!TextUtils.isEmpty(item.oppositePhotoUrl)) {
+            Picasso.with(mContext).load(item.oppositePhotoUrl)
+                    .error(R.drawable.ic_default_photo_woman)
+                    .placeholder(R.drawable.ic_default_photo_woman)
+                    .into(holder.civAnchorPhoto);
+        }
+
+
+
+        //设置点击事件
+        if(holder.btnStartProcess.isFinish()){
+            holder.btnStartProcess.initState();
+        }
+        //根据预约事件计算处理界面倒计时显示
+        calculateAndUpdateLeftTime(item.bookTime, holder);
+
+        holder.btnStartProcess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(v instanceof ProgressButton){
+                    ProgressButton button = (ProgressButton)v;
+                    if(button.isFinish()){
+                        if(mListener != null){
+                            mListener.onStartEnterRoomClick(item);
+                        }
+                    }
+                }
+            }
+        });
+
+        return convertView;
+    }
+
+    /**
+     * 处理不同状态预约处理
+     * @param bookTime 预约时间，单位秒
+     */
+    private void calculateAndUpdateLeftTime(int bookTime, ViewHolder holder){
+        int currTime = (int)(System.currentTimeMillis()/1000);
+        int leftDay = 0;
+        int leftHour = 0;
+        int leftMinute = 0;
+        int leftSecond = 0;
+        if(currTime < bookTime){
+            //未开始
+            leftDay = (bookTime - currTime)/(24 * 60 * 60);
+            leftHour = ((bookTime - currTime)/(60 * 60))%24;
+            leftMinute = ((bookTime - currTime)/60%(60*24));
+            leftSecond = (bookTime - currTime) % 60;
+        }
+        Log.d(TAG,"calculateAndUpdateLeftTime-bookTime:"+bookTime+" leftDay:"+leftDay
+                +" leftHour:"+leftHour);
+        Log.d(TAG,"calculateAndUpdateLeftTime-leftMinute:"+leftMinute+" leftSecond:"+leftSecond);
+        if(leftDay > 0 || leftHour > 0 || leftMinute > 0 || leftSecond > 0){
+            //倒计时中
+            holder.llCountDown.setVisibility(View.GONE);
+            holder.rlStart.setVisibility(View.GONE);
+            if(leftDay > 0){
+                //超过一天
+                holder.llCountDown.setVisibility(View.VISIBLE);
+                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_day_hour), String.valueOf(leftDay), String.valueOf(leftHour)));
+            }else if(leftHour > 0){
+                //超过1小时小于1天
+                holder.llCountDown.setVisibility(View.VISIBLE);
+                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_hour_minute), String.valueOf(leftHour), String.valueOf(leftMinute)));
+            }else if(leftMinute >= 3 && leftSecond>=0){
+                //1小时以内，3分钟以上
+                holder.llCountDown.setVisibility(View.VISIBLE);
+                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_minute_second), String.valueOf(leftMinute), String.valueOf(leftSecond)));
+            }else{
+                //三分钟以内
+                holder.rlStart.setVisibility(View.VISIBLE);
+                int progress = (int)((180-leftMinute * 60 - leftSecond)/180f*100);
+                if(holder.btnStartProcess.isStop()){
+                    holder.btnStartProcess.setStop(false);
+                }
+                holder.btnStartProcess.setProgress(progress);
+                Log.d(TAG,"calculateAndUpdateLeftTime-progress:"+progress);
+            }
+        }else{
+            //时间已经到
+            holder.llCountDown.setVisibility(View.GONE);
+            holder.rlStart.setVisibility(View.VISIBLE);
+            if(holder.btnStartProcess.isStop()){
+                holder.btnStartProcess.setStop(false);
+            }
+            holder.btnStartProcess.setProgress(100);
+            Log.d(TAG,"calculateAndUpdateLeftTime-progress:"+100);
+        }
+    }
+
+    private class ViewHolder{
+
+        public ViewHolder(){
+
+        }
+
+        public ViewHolder(View convertView){
+            civAnchorPhoto = (CircleImageView)convertView.findViewById(R.id.civAnchorPhoto);
+            tvAnchorName = (TextView)convertView.findViewById(R.id.tvAnchorName);
+            tvBookTime = (TextView)convertView.findViewById(R.id.tvBookTime);
+            llCountDown = (LinearLayout) convertView.findViewById(R.id.llCountDown);
+            tvLeftTime = (TextView)convertView.findViewById(R.id.tvLeftTime);
+            rlStart = (RelativeLayout)convertView.findViewById(R.id.rlStart);
+            btnStartProcess = (ProgressButton)convertView.findViewById(R.id.btnStartProcess);
+            ivUnread = (ImageView)convertView.findViewById(R.id.ivUnread);
+            convertView.setTag(this);
+        }
+
+        public CircleImageView civAnchorPhoto;
+        public TextView tvAnchorName;
+        public TextView tvBookTime;
+        public LinearLayout llCountDown;
+        public TextView tvLeftTime;
+        public RelativeLayout rlStart;
+        public ProgressButton btnStartProcess;
+        public ImageView ivUnread;
+    }
+
+    public interface OnComfirmedInviteClickListener{
+        public void onStartEnterRoomClick(BookInviteItem item);
+    }
+}

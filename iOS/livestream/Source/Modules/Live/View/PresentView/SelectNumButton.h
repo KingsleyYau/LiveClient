@@ -6,8 +6,8 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKButtonBar.h"
+#import "LSButtonBar.h"
 
-@interface SelectNumButton : KKButtonBar
+@interface SelectNumButton : LSButtonBar
 
 @end

@@ -32,6 +32,8 @@
         self.roomPrice = [coder decodeDoubleForKey:@"roomPrice"];
         self.manPushPrice = [coder decodeDoubleForKey:@"manPushPrice"];
         self.maxFansiNum = [coder decodeIntForKey:@"maxFansiNum"];
+        self.honorId = [coder decodeObjectForKey:@"honorId"];
+        self.honorImg = [coder decodeObjectForKey:@"honorImg"];
     }
     return self;
 }
@@ -57,6 +59,8 @@
     [coder encodeDouble:self.roomPrice forKey:@"roomPrice"];
     [coder encodeDouble:self.manPushPrice forKey:@"manPushPrice"];
     [coder encodeInt:self.maxFansiNum forKey:@"maxFansiNum"];
+    [coder encodeObject:self.honorId forKey:@"honorId"];
+    [coder encodeObject:self.honorImg forKey:@"honorImg"];
 }
 
 

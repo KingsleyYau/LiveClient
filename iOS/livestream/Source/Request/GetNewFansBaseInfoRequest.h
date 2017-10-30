@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetNewFansBaseInfoRequest : SessionRequest
+@interface GetNewFansBaseInfoRequest : LSSessionRequest
 // 观众ID
 @property (nonatomic, copy) NSString * _Nullable  userId;
 @property (nonatomic, strong) GetNewFansBaseInfoFinishHandler _Nullable finishHandler;

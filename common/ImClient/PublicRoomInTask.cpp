@@ -49,7 +49,7 @@ bool PublicRoomInTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "PublicRoomInTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "PublicRoomInTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     RoomInfoItem item;
@@ -68,16 +68,16 @@ bool PublicRoomInTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "PublicRoomInTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "PublicRoomInTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnPublicRoomIn(GetSeq(), success, m_errType, m_errMsg, item);
-		FileLog("LiveChatClient", "PublicRoomInTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "PublicRoomInTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "PublicRoomInTask::Handle() end");
+	FileLog("ImClient", "PublicRoomInTask::Handle() end");
 
 	return result;
 }
@@ -87,7 +87,7 @@ bool PublicRoomInTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "PublicRoomInTask::GetSendData() begin");
+	FileLog("ImClient", "PublicRoomInTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -97,7 +97,7 @@ bool PublicRoomInTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RoomInTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RoomInTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -151,6 +151,6 @@ void PublicRoomInTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
         RoomInfoItem item;
-        m_listener->OnPublicRoomIn(m_seq, false, LCC_ERR_CONNECTFAIL, "", item);
+        m_listener->OnPublicRoomIn(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, item);
 	}
 }

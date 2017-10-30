@@ -3,7 +3,6 @@
 //  TZImagePickerController
 //
 //  Created by randy on 17/6/19.
-//  Copyright © 2017年 谭真. All rights reserved.
 //
 
 #import "DeleteTipView.h"
@@ -112,15 +111,17 @@
 
 
 - (void)deleteTipViewShowWithTap:(NSInteger)tag {
-    
     self.tagNum = tag;
 
-    [AppDelegate().window addSubview:self];
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    [window addSubview:self];
+    
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = self.frame;
         rect.origin.y = 0;
         self.frame = rect;
     }];
+
 }
 
 @end

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface SendBookingRequest : SessionRequest
+@interface SendBookingRequest : LSSessionRequest
 // 主播ID
 @property (nonatomic, copy) NSString * _Nullable  userId;
 // 预约时间ID

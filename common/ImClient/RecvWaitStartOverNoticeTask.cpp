@@ -45,7 +45,7 @@ bool RecvWaitStartOverNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendAnchorPrivateBookInviteNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendAnchorPrivateBookInviteNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     StartOverRoomItem item;
@@ -65,15 +65,15 @@ bool RecvWaitStartOverNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvWaitStartOverNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvWaitStartOverNotice(item);
-		FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvWaitStartOverNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvWaitStartOverNoticeTask::Handle() end");
 
 	return result;
 }
@@ -83,14 +83,14 @@ bool RecvWaitStartOverNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvWaitStartOverNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvWaitStartOverNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvWaitStartOverNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface ControlManPushRequest : SessionRequest
+@interface ControlManPushRequest : LSSessionRequest
 // 直播间ID
 @property (nonatomic, copy) NSString * _Nullable  roomId;
 @property (nonatomic, assign) ControlType control;

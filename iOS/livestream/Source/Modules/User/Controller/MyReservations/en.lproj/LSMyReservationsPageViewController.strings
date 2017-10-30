@@ -1,0 +1,38 @@
+
+/* Class = "UIButton"; normalTitle = "Hot Broadcasters"; ObjectID = "oOu-Vi-CxX"; */
+"oOu-Vi-CxX.normalTitle" = "Hot Broadcasters";
+
+
+"Credits_Tip" = "Oops! Your don't have enough credits to confirm this live request.";
+
+"Cancel_Reservation" = "Are you sure to cancel this private live request?";
+
+"Decline_Reservation" = "Are you sure you want to decline this schedule?";
+
+"Cancel_Success" = "The reservation has been canceled successfully";
+
+"Comfirm_Success" = "Schedule has been confirmed successfully";
+
+"Decline_Success" = "Schedule has been declineed successfully";
+
+
+"NoData_Tip_1" = "No new invites at the moment.\nGo make a reservation now.";
+"NoData_Tip_2" = "No pending confirmation at the moment.\nGo make a reservation now.";
+"NoData_Tip_3" = "No confirmed reservations at the moment.\nGo make a reservation now.";
+"NoData_Tip_4" = "No history reservations.\nGo make a reservation now.";
+
+"Reservation_Time" = "Reservation Time:";
+
+"Failed_Message" = "Failed to load.";
+"Hot_Broadcasters" = "Hot Broadcasters";
+"Reload" = "Reload";
+
+"History_Msg_1" = "Booking Declined";
+"History_Msg_2" = "Broadcast Viewer\nNo-Show";
+"History_Msg_3" = "Broadcast Broadcaster\nNo-Show";
+"History_Msg_4" = "Booking Unconfirmed";
+"History_Msg_5" = "Broadcast Completed";
+"History_Msg_6" = "Booking Canceled";
+
+"YES" = "YES";
+"NO" = "NO";

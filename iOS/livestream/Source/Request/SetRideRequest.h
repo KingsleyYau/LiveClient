@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface SetRideRequest : SessionRequest
+@interface SetRideRequest : LSSessionRequest
 // 座驾ID
 @property (nonatomic, copy) NSString *_Nonnull rideId;
 @property (nonatomic, strong) SetRideFinishHandler _Nullable finishHandler;

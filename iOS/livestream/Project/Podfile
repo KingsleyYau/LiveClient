@@ -4,10 +4,19 @@ platform :ios, '8.0'
 #use_frameworks!
 
 target 'livestream' do
-	pod 'GPUImage', '~> 0.1.7'
-	pod 'AFNetworking', '~> 3.0.4'
-	pod 'SDWebImage', '~> 4.1.0'
-	pod 'Masonry', '~> 0.6.4'
-	pod 'TTTAttributedLabel', '~> 2.0.0'
-	pod 'Google/Analytics'
+	pod 'GPUImage', '0.1.7'
+	pod 'AFNetworking', '3.0.4'
+	pod 'SDWebImage', '4.1.0'
+	pod 'Masonry', '0.6.4'
+	pod 'YYText', '1.0.7'
+	pod 'SDWebImage/WebP'
+end
+
+target 'livestream_sdk' do
+	pod 'GPUImage', '0.1.7'
+	pod 'AFNetworking', '3.0.4'
+	pod 'SDWebImage', '4.1.0'
+	pod 'Masonry', '0.6.4'
+	pod 'YYText', '1.0.7'
+	pod 'SDWebImage/WebP'
 end

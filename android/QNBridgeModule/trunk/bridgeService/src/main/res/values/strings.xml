@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">QNBridgeModule</string>
+
+    <!-- 权限提醒 -->
+    <string name="permission_cancel">Cancel</string>
+    <string name="permission_setting">Setting</string>
+    <string name="permission_title_permission_failed">Permission apply failure</string>
+    <string name="permission_message_permission_failed">We need some permissions are you refuse or system error, would you please go to Settings page manual authorization, otherwise the function to use!</string>
+
+    <string name="permission_resume">Resume</string>
+    <string name="permission_title_permission_rationale">Permission denied</string>
+    <string name="permission_message_permission_rationale">You have rejected us for authorization, would you please authorize, otherwise the function to use!</string>
+
+    <string name="ok">OK</string>
+    <string name="no">NO</string>
+    <string name="title_dialog">Tips</string>
+    <string name="message_permission_failed">We need some of the necessary authority to be prohibited, please authorize us.</string>
 </resources>

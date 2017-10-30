@@ -53,7 +53,7 @@ bool RecvCreditNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvCreditNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvCreditNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -75,15 +75,15 @@ bool RecvCreditNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvCreditNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvCreditNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvCreditNotice(m_roomId, m_credit);
-		FileLog("LiveChatClient", "RecvCreditNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvCreditNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvCreditNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvCreditNoticeTask::Handle() end");
 
 	return result;
 }
@@ -93,14 +93,14 @@ bool RecvCreditNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvCreditNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvCreditNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvCreditNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvCreditNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

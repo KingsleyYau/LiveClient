@@ -7,17 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LSYYImage.h"
 
-@interface BigGiftAnimationView : UIView
-
-@property (nonatomic, strong)YYAnimatedImageView *carGiftView;
-
-@property (nonatomic, strong)NSArray *webpPaths;
+@interface BigGiftAnimationView : LSYYAnimatedImageView
 
 + (instancetype)sharedObject;
-
-+(void)attemptDealloc;
-
-- (BOOL)starAnimationWithGiftID:(NSString *)giftID;
 
 @end

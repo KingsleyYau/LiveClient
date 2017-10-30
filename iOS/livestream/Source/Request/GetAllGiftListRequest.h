@@ -6,8 +6,8 @@
 //  Copyright © 2016年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetAllGiftListRequest : SessionRequest
+@interface GetAllGiftListRequest : LSSessionRequest
 @property (nonatomic, strong) GetAllGiftListFinishHandler _Nullable finishHandler;
 @end

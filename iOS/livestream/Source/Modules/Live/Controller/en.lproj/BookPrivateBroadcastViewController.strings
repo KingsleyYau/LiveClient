@@ -3,3 +3,13 @@
 "FCw-ox-yok.text" = "BookPrivateBroadcast";
 
 "Credits_Iofo" = " credits will be deducted from your account as the first 5 minutes of private live. In the below situations, your credits will be returned to your account:\n\n- The host did not accept your request.\n- The host did not show up during the expected period";
+
+"BOOKPRIVATE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"BOOKING_SCHEDULE_ERR" = "Sorry, this broadcaster does not offer a booking schedule at the moment.";
+
+"BOOK_NOW" = "BOOK NOW";
+
+"WHEN_STAR_PRIVATE" = "When do you want to start the private live?";
+
+"NOTE" = "Note:";

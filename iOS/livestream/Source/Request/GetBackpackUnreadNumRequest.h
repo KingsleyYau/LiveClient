@@ -6,8 +6,8 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetBackpackUnreadNumRequest : SessionRequest
+@interface GetBackpackUnreadNumRequest : LSSessionRequest
 @property (nonatomic, strong) GetBackpackUnreadNumFinishHandler _Nullable finishHandler;
 @end

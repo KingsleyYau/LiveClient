@@ -449,6 +449,11 @@ void VideoHardDecoder::DestroyContext() {
         mSession = NULL;
     }
     
+    if( mFormatDesc != nil ) {
+        CFRelease(mFormatDesc);
+        mFormatDesc = NULL;
+    }
+    
     mRuningMutex.unlock();
 }
     

@@ -45,7 +45,7 @@ class PublisherStatusCallbackImp;
 @property (assign) AudioEncoder* audioEncoder;
 
 #pragma mark - 后台处理
-@property (nonatomic) BOOL isBackGround;
+@property (nonatomic) BOOL isBackground;
 @property (nonatomic, strong) NSDate* enterBackgroundTime;
 @property (nonatomic, strong) NSDate* startTime;
 
@@ -121,7 +121,7 @@ private:
         [self createEncoders];
         
         // 注册前后台切换通知
-        _isBackGround = NO;
+        _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
@@ -220,8 +220,8 @@ recordH264FilePath:(NSString *)recordH264FilePath
 
 #pragma mark - 后台处理
 - (void)willEnterBackground:(NSNotification*)notification {
-    if( _isBackGround == NO ) {
-        _isBackGround = YES;
+    if( _isBackground == NO ) {
+        _isBackground = YES;
         
         // 销毁硬编码器
         self.videoEncoder->Pause();
@@ -231,8 +231,8 @@ recordH264FilePath:(NSString *)recordH264FilePath
 }
 
 - (void)willEnterForeground:(NSNotification*)notification {
-    if( _isBackGround == YES ) {
-        _isBackGround = NO;
+    if( _isBackground == YES ) {
+        _isBackground = NO;
         
         // 重置视频编码器
         self.videoEncoder->Reset();

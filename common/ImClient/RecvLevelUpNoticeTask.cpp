@@ -47,7 +47,7 @@ bool RecvLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvLevelUpNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvLevelUpNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     int level = 0;
@@ -57,7 +57,7 @@ bool RecvLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         if (tp.m_data[LEVEL_PARAM].isIntegral()) {
-            level = GetTalentStatus(tp.m_data[LEVEL_PARAM].asInt());
+            level = tp.m_data[LEVEL_PARAM].asInt();
         }
     
     }
@@ -68,15 +68,15 @@ bool RecvLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvLevelUpNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvLevelUpNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvLevelUpNotice(level);
-		FileLog("LiveChatClient", "RecvLevelUpNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvLevelUpNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvLevelUpNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvLevelUpNoticeTask::Handle() end");
 
 	return result;
 }
@@ -86,14 +86,14 @@ bool RecvLevelUpNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLevelUpNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLevelUpNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLevelUpNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLevelUpNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

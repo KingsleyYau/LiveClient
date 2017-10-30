@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface BookPrivateBroadcastSucceedViewController : UIViewController
+#import "LSGoogleAnalyticsViewController.h"
+
+@interface BookPrivateBroadcastSucceedViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, copy) NSString * userName;
 @property (nonatomic, copy) NSString * time;

@@ -53,7 +53,7 @@ bool SendLiveChatTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "SendLiveChatTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "SendLiveChatTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -69,15 +69,15 @@ bool SendLiveChatTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "SendLiveChatTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "SendLiveChatTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnSendLiveChat(GetSeq(), result, m_errType, m_errMsg);
-		FileLog("LiveChatClient", "SendLiveChatTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "SendLiveChatTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "SendLiveChatTask::Handle() end");
+	FileLog("ImClient", "SendLiveChatTask::Handle() end");
 
 	return result;
 }
@@ -87,7 +87,7 @@ bool SendLiveChatTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "SendLiveChatTask::GetSendData() begin");
+	FileLog("ImClient", "SendLiveChatTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -106,7 +106,7 @@ bool SendLiveChatTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "SendLiveChatTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "SendLiveChatTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -165,6 +165,6 @@ bool SendLiveChatTask::InitParam(const string& roomId, const string& nickName, c
 void SendLiveChatTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
-        m_listener->OnSendLiveChat(m_seq, false, LCC_ERR_CONNECTFAIL, "");
+        m_listener->OnSendLiveChat(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC);
 	}
 }

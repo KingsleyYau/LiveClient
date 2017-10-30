@@ -1,0 +1,98 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="title_bar_height">35dp</dimen>
+    <dimen name="title_bar_margin_left">13dp</dimen>
+    <dimen name="title_bar_txt_size">12dp</dimen>
+    <dimen name="girdview_gift_padding">5dp</dimen>
+    <dimen name="girdview_gift_vertical_spacing">5dp</dimen>
+    <dimen name="girdview_gift_horizontal_spacing">5dp</dimen>
+    <dimen name="listmsgview_item_decoration">8dp</dimen>
+    <dimen name="coverphoto_min_width">640px</dimen>
+    <dimen name="coverphoto_min_height">640px</dimen>
+    <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
+    <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
+    <dimen name="coverphoto_corner_radiu">3dp</dimen>
+    <dimen name="liveroom_bullet_height">46dp</dimen>
+
+    <!--消息列表礼物大小处理-->
+    <dimen name="liveroom_messagelist_gift_width">16dp</dimen>
+    <dimen name="liveroom_messagelist_gift_height">16dp</dimen>
+    <dimen name="defaultVedioPlayerHeight">270dp</dimen>
+    <dimen name="imButtomMargin">56dp</dimen>
+    <dimen name="liveroom_mulitgift_width">142dp</dimen>
+    <dimen name="liveroom_mulitgift_height">40dp</dimen>
+
+    <dimen name="liveroom_car_default_topmargin">8dp</dimen>
+    <dimen name="liveroom_car_default_rightmargin">42dp</dimen>
+
+    <!--actionBar 设置-->
+    <dimen name="actionbar_height">56dp</dimen>
+    <dimen name="actionbar_icon_width">56dp</dimen>
+    <dimen name="actionbar_shadow_height">4dp</dimen>
+    <dimen name="actionbar_indicator_height">3dp</dimen>
+    <dimen name="actionbar_backicon_height">48dp</dimen>
+
+    <dimen name="liveroom_messagelist_barrage_width">14dp</dimen>
+    <dimen name="liveroom_messagelist_barrage_height">14dp</dimen>
+
+    <dimen name="headerview_roomflag_margintop_freepublic">8dp</dimen>
+    <dimen name="headerview_roomflag_margintop_paidpublic">7dp</dimen>
+    <dimen name="headerview_roomflag_margintop_normalprivate">7dp</dimen>
+    <dimen name="headerview_roomflag_margintop_advanceprivate">5dp</dimen>
+
+    <dimen name="headerview_roomflag_height_freepublic">26dp</dimen>
+    <dimen name="headerview_roomflag_height_paidpublic">29dp</dimen>
+    <dimen name="headerview_roomflag_height_normalprivate">26dp</dimen>
+    <dimen name="headerview_roomflag_height_advanceprivate">31dp</dimen>
+
+    <dimen name="headerview_roomflag_marginbottom_freepublic">8dp</dimen>
+    <dimen name="headerview_roomflag_marginbottom_paidpublic">3dp</dimen>
+    <dimen name="headerview_roomflag_marginbottom_normalprivate">5dp</dimen>
+    <dimen name="headerview_roomflag_marginbottom_advanceprivate">3dp</dimen>
+    
+    <dimen name="headerview_bottomlineheight_freepublic">7dp</dimen>
+    <dimen name="headerview_bottomlineheight_paidpublic">7dp</dimen>
+    <dimen name="headerview_bottomlineheight_normalprivate">5dp</dimen>
+    <dimen name="headerview_bottomlineheight_advanceprivate">4dp</dimen>
+
+    <dimen name="headerview_height_public">75dp</dimen>
+    <dimen name="headerview_height_private">90dp</dimen>
+
+    <dimen name="live_buttomgift_leftmargin_freepublic">15dp</dimen>
+    <dimen name="live_buttomgift_leftmargin_paypublic">13dp</dimen>
+    <dimen name="live_buttomgift_leftmargin_normalprv">15dp</dimen>
+    <dimen name="live_buttomgift_leftmargin_advanceprv">14dp</dimen>
+
+    <dimen name="live_buttomrecommgift_leftmargin_normalprv">15dp</dimen>
+    <dimen name="live_buttomrecommgift_leftmargin_advanceprv">11dp</dimen>
+
+    <!-- swicht -->
+    <dimen name="live_swicth_book_height">24dp</dimen>
+    <dimen name="live_swicth_book_radius">20dp</dimen>
+
+    <!-- 公用 -->
+    <dimen name="live_size_14sp">14sp</dimen>
+    <dimen name="live_size_16sp">16sp</dimen>
+
+    <dimen name="live_size_8dp">8dp</dimen>
+    <dimen name="live_size_14dp">14dp</dimen>
+    <dimen name="live_size_16dp">16dp</dimen>
+    <dimen name="live_size_30dp">30dp</dimen>
+    <dimen name="live_size_40dp">40dp</dimen>
+    <dimen name="live_size_60dp">60dp</dimen>
+    <dimen name="live_size_80dp">80dp</dimen>
+    <dimen name="live_size_100dp">100dp</dimen>
+    <dimen name="live_size_120dp">120dp</dimen>
+    <dimen name="live_size_140dp">140dp</dimen>
+    <dimen name="live_size_180dp">180dp</dimen>
+    <dimen name="live_size_200dp">200dp</dimen>
+
+    <!-- progressButton -->
+    <dimen name="corner_radius">8dp</dimen>
+    <dimen name="layer_padding">0dp</dimen>
+
+    <!--统一样式 自定义对话框-->
+    <dimen name="custom_dialog_left_right_margin">30dp</dimen>
+    <dimen name="custom_dialog_text_size_simple">12sp</dimen>
+
+</resources>

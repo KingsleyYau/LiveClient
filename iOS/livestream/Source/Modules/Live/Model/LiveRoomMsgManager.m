@@ -7,7 +7,7 @@
 //
 
 #import "LiveRoomMsgManager.h"
-
+#import "LSImageViewLoader.h"
 
 #define NameFontSize 14
 #define NameFont [UIFont fontWithName:@"AvenirNext-DemiBold" size:NameFontSize]
@@ -15,11 +15,9 @@
 #define MessageFontSize 16
 #define MessageFont [UIFont fontWithName:@"AvenirNext-DemiBold" size:MessageFontSize]
 
-#define Member_Join @"Joined"
-#define Member_Follow @"is following the broadcaster"
-#define Member_SentGift @"sent"
-#define Member_RiderJoin @"joined with his"
-
+@interface LiveRoomMsgManager ()
+@property (nonatomic, strong) LSImageViewLoader *loader;
+@end
 
 @implementation LiveRoomMsgManager
 
@@ -30,6 +28,7 @@
     dispatch_once(&onceToken, ^{
         
         manager = [[LiveRoomMsgManager alloc] init];
+        manager.loader = [LSImageViewLoader loader];
     });
     
     return manager;
@@ -45,6 +44,17 @@
         
     }else {
         attributeStr = [[NSMutableAttributedString alloc] init];
+    }
+    
+    if (![item.honorUrl isEqualToString:@""] && item.honorUrl != nil) {
+        UIImageView *honorImageView = [[UIImageView alloc] init];
+        [self.loader loadImageWithImageView:honorImageView options:0 imageUrl:item.honorUrl placeholderImage:
+         [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
+        
+        honorImageView.frame = CGRectMake(0, 0, 13, 14);
+        NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:honorImageView contentMode:UIViewContentModeCenter attachmentSize:honorImageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
+        [attributeStr appendAttributedString:attachText];
+        [attributeStr appendAttributedString:[[NSAttributedString alloc]initWithString:@" "]];
     }
     
     switch (item.type) {
@@ -72,7 +82,7 @@
             // 名字
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
             // 内容
-            [attributeStr appendAttributedString:[self parseMessage:Member_Follow font:MessageFont color:roomStyleItem.followStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_Follow",@"Member_Follow") font:MessageFont color:roomStyleItem.followStrColor]];
             
             break;
             
@@ -80,7 +90,7 @@
             // 名字
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
             // 内容
-            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ %@ ", Member_SentGift, item.giftName] font:MessageFont color:roomStyleItem.sendStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ %@ ", NSLocalizedString(@"Member_SentGift",@"Member_SentGift"), item.giftName] font:MessageFont color:roomStyleItem.sendStrColor]];
             
             break;
             
@@ -88,7 +98,7 @@
             // 名字
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.nameColor]];
             // 内容
-            [attributeStr appendAttributedString:[self parseMessage:Member_Join font:MessageFont color:roomStyleItem.chatStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_Join",@"Member_Join") font:MessageFont color:roomStyleItem.chatStrColor]];
             
             break;
             
@@ -96,7 +106,7 @@
             // 名字
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:NameFont color:roomStyleItem.riderStrColor]];
             // 内容
-            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ”%@“", Member_RiderJoin, item.riderName]  font:MessageFont color:roomStyleItem.riderStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ \"%@\"", NSLocalizedString(@"Member_RiderJoin",@"Member_RiderJoin"), item.riderName]  font:MessageFont color:roomStyleItem.riderStrColor]];
             
             break;
             
@@ -112,11 +122,13 @@
     if (item.type == MsgType_Gift) {
         
         UIImageView *imageView = [[UIImageView alloc] init];
-        [imageView sd_setImageWithURL:[NSURL URLWithString:item.smallImgUrl] placeholderImage:[UIImage imageNamed:@"Live_Publish_Btn_Gift"] options:0];
-        imageView.frame = CGRectMake(0, 0, 15, 15);
+        [self.loader loadImageWithImageView:imageView options:0 imageUrl:item.smallImgUrl placeholderImage:
+         [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
+        
+        imageView.frame = CGRectMake(0, 0, 20, 20);
         NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
         [attributeStr appendAttributedString:attachText];
-        
+
         if (item.giftNum > 1) {
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@" x%d", item.giftNum]
                                                                font:MessageFont

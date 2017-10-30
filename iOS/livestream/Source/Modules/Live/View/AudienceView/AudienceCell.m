@@ -7,6 +7,11 @@
 //
 
 #import "AudienceCell.h"
+#import "LSImageViewLoader.h"
+
+@interface AudienceCell ()
+@property (nonatomic, strong) LSImageViewLoader *imageLoader;
+@end
 
 @implementation AudienceCell
 
@@ -19,18 +24,21 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        
-        
+        self.imageLoader = [LSImageViewLoader loader];
     }
     return self;
 }
 
-- (void)updateHeadImageWith:(AudienModel *)audienModel {
+- (void)updateHeadImageWith:(AudienModel *)audienModel isVip:(BOOL)isVip {
     
+    if (isVip) {
+        self.headImageView.layer.cornerRadius = 13;
+    } else {
+        self.headImageView.layer.cornerRadius = 12.5;
+    }
     self.headImageView.layer.masksToBounds = YES;
-    self.headImageView.layer.cornerRadius = self.headImageView.height / 2;
-    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:audienModel.photoUrl]
-                          placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"] options:0];
+    
+    [self.imageLoader loadImageWithImageView:self.headImageView options:0 imageUrl:audienModel.photoUrl placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"]];
 }
 
 - (void)setCornerRadius:(CGFloat)radius{
@@ -38,9 +46,10 @@
     self.headImageView.layer.cornerRadius = radius;
 }
 
+
+
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
 }
 
 @end

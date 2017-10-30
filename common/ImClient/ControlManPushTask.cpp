@@ -53,7 +53,7 @@ bool ControlManPushTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "ControlManPushTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ControlManPushTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     list<string> manPushUrl;
@@ -80,16 +80,16 @@ bool ControlManPushTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "ControlManPushTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ControlManPushTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnControlManPush(GetSeq(), success, m_errType, m_errMsg, manPushUrl);
-		FileLog("LiveChatClient", "ControlManPushTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ControlManPushTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "ControlManPushTask::Handle() end");
+	FileLog("ImClient", "ControlManPushTask::Handle() end");
 
 	return result;
 }
@@ -99,7 +99,7 @@ bool ControlManPushTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "ControlManPushTask::GetSendData() begin");
+	FileLog("ImClient", "ControlManPushTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -110,7 +110,7 @@ bool ControlManPushTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "ControlManPushTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ControlManPushTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

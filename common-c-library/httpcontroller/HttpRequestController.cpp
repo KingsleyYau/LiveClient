@@ -41,7 +41,8 @@ void HttpRequestController::Stop(long long requestId) {
 
 long long HttpRequestController::Login(
                                        HttpRequestManager *pHttpRequestManager,
-                                       const string& qnsid,
+                                       const string& manId,
+                                       const string& userSid,
                                        const string& deviceid,
                                        const string& model,
                                        const string& manufacturer,
@@ -51,7 +52,7 @@ long long HttpRequestController::Login(
     
     HttpLoginTask* task = new HttpLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(qnsid, deviceid, model, manufacturer);
+    task->SetParam(manId, userSid, deviceid, model, manufacturer);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -1157,6 +1158,68 @@ long long HttpRequestController::SubmitPhoneVerifyCode(
     HttpSubmitPhoneVerifyCodeTask* task = new HttpSubmitPhoneVerifyCodeTask();
     task->Init(pHttpRequestManager);
     task->SetParam(country, areaCode, phoneNo, verifyCode);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::ServerSpeed(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string& sid,
+                                             int res,
+                                             IRequestServerSpeedCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpServerSpeedTask* task = new HttpServerSpeedTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(sid, res);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::Banner(
+                                        HttpRequestManager *pHttpRequestManager,
+                                        IRequestBannerCallback* callback
+                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpBannerTask* task = new HttpBannerTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

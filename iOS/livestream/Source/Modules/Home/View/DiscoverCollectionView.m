@@ -10,7 +10,8 @@
 #import "DiscoverCollectionViewCell.h"
 #import "DiscoverHeaderView.h"
 #import "DiscoverListItemObject.h"
-#import "FileCacheManager.h"
+#import "LSFileCacheManager.h"
+#import "LiveBundle.h"
 
 @implementation DiscoverCollectionView
 
@@ -35,7 +36,8 @@
     
     self.alwaysBounceVertical = YES;
     //注册cell
-    [self registerNib:[UINib nibWithNibName:@"DiscoverCollectionViewCell" bundle:[NSBundle mainBundle]]  forCellWithReuseIdentifier:[DiscoverCollectionViewCell cellIdentifier]];
+    NSBundle *bundle = [LiveBundle mainBundle];
+    [self registerNib:[UINib nibWithNibName:@"DiscoverCollectionViewCell" bundle:bundle]  forCellWithReuseIdentifier:[DiscoverCollectionViewCell cellIdentifier]];
     [self registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     UICollectionViewFlowLayout *flow = [[UICollectionViewFlowLayout alloc] init];
     flow.minimumLineSpacing = 5.0f;
@@ -65,7 +67,7 @@
     
     [cell.imageCoverView setImage:nil];
     // 创建新的
-    cell.imageViewLoader = [ImageViewLoader loader];
+    cell.imageViewLoader = [LSImageViewLoader loader];
     [cell.imageViewLoader loadImageWithImageView:cell.imageCoverView options:0 imageUrl:item.imageUrl
                                 placeholderImage:[UIImage imageNamed:@""]];
     

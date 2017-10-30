@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface SetFavoriteRequest : SessionRequest
+@interface SetFavoriteRequest : LSSessionRequest
 // 主播ID
 @property (nonatomic, copy) NSString * _Nonnull userId;
 // 直播间ID（可无，无则表示不在直播间操作）

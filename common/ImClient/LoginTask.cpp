@@ -50,7 +50,7 @@ bool LoginTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "LoginTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "LoginTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
     
     LoginReturnItem item;
@@ -62,6 +62,12 @@ bool LoginTask::Handle(const TransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         
         item.Parse(tp.m_data);
+        
+        Json::FastWriter writer;
+        string tmp = writer.write(tp.m_data);
+        
+        FileLevelLog("ImClient", KLog::LOG_WARNING, "LoginTask::Handle( json : %s )", tmp.c_str());
+        
     }
 
 	// 协议解析失败
@@ -70,15 +76,15 @@ bool LoginTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "LoginTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "LoginTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
 		m_listener->OnLogin(m_errType, m_errMsg, item);
-		FileLog("LiveChatClient", "LoginTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "LoginTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "LoginTask::Handle() end");
+	FileLog("ImClient", "LoginTask::Handle() end");
 
 	return result;
 }
@@ -88,7 +94,7 @@ bool LoginTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "LoginTask::GetSendData() begin");
+	FileLog("ImClient", "LoginTask::GetSendData() begin");
 
     {
         // 构造json协议
@@ -99,7 +105,7 @@ bool LoginTask::GetSendData(Json::Value& data)
     }
     result = true;
 
-	FileLog("LiveChatClient", "LoginTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "LoginTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -156,6 +162,6 @@ void LoginTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
         LoginReturnItem item;
-		m_listener->OnLogin(LCC_ERR_CONNECTFAIL, "", item);
+		m_listener->OnLogin(LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, item);
 	}
 }

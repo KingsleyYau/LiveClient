@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatEmotion.h"
-#import "ChatTextAttachment.h"
+#import "LSChatEmotion.h"
+#import "LSChatTextAttachment.h"
 
 @class LiveChatTextView;
 @protocol LiveChatTextViewDelegate <NSObject>
@@ -31,7 +31,7 @@
  *
  *  @param emotion 表情模型
  */
-- (void)insertEmotion:(ChatEmotion* )emotion;
+- (void)insertEmotion:(LSChatEmotion* )emotion;
 
 @property(nonatomic,weak) id<LiveChatTextViewDelegate> textViewdelegate;
 

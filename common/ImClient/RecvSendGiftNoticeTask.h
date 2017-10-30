@@ -54,6 +54,7 @@ private:
     string          m_roomId;   // 直播间ID
     string          m_fromId;   // 发送方的用户ID
     string          m_nickName;  // 发送人昵称
+    string          m_honorUrl;  // 勋章图片url
     string          m_giftId;  // 礼物ID
     string 			m_giftName;	//礼物名称
     int             m_giftNum;  // 本次发送礼物的数量

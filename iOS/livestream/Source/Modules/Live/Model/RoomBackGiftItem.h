@@ -15,6 +15,4 @@
 @property (nonatomic, copy) NSString *giftId;
 @property (nonatomic, assign) int num;
 
-@property (nonatomic, strong) AllGiftItem *allItem;
-
 @end

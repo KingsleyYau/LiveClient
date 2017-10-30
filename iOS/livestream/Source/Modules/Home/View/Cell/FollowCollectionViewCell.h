@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 
 @interface FollowCollectionViewCell : UICollectionViewCell
 
 
-@property (nonatomic, weak) IBOutlet UIImageViewTopFit *imageViewContent;
-@property (nonatomic, strong) ImageViewLoader* imageViewLoader;
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewContent;
+@property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 + (NSString *)cellIdentifier;
 @end

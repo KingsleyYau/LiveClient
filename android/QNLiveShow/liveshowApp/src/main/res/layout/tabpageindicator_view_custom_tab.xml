@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_tabTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="VoucherV"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_digitalHint"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginLeft="1dp"
+        android:gravity="center"
+        android:background="@drawable/bg_custom_ff4747_circle"
+        android:singleLine="true"
+        android:text="3"
+        android:ellipsize="end"
+        android:visibility="visible"
+        android:textColor="@android:color/white"
+        android:textSize="10sp" />
+
+
+</LinearLayout>

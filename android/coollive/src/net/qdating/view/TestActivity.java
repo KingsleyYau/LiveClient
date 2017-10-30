@@ -11,7 +11,7 @@ import net.qdating.LSPublisher;
 import net.qdating.R;
 
 public class TestActivity extends Activity {
-	private String url = "rtmp://172.25.32.17/live/max";
+	private String url = "rtmp://172.25.32.17:8899/live/max";
 	
 	String filePath = "/sdcard";
 	
@@ -33,13 +33,13 @@ public class TestActivity extends Activity {
 		
 		// 播放相关
 		player.init(surfaceView, null);
-		player.playUrl(String.format("%s_i", url), "", "", "");
+		player.playUrl(String.format("%s_mv", url), "", "", "");
 		
 		// 推送相关
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
 		publisher.init(surfaceViewPublish, rotation, null);
-		publisher.publisherUrl(String.format("%s_a2", url), "", "");
+		publisher.publisherUrl(String.format("%s_a", url), "", "");
 		
 		handler.postDelayed(new Runnable() {
 			@Override
@@ -47,7 +47,7 @@ public class TestActivity extends Activity {
 				// TODO Auto-generated method stub
 				finish();
 			}
-		}, 10000);
+		}, 15000);
 	}
 	
 	@Override

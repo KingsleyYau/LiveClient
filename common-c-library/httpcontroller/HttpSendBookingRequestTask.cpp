@@ -58,12 +58,14 @@ void HttpSendBookingRequestTask::SetParam(
     if( giftId.length() > 0 ) {
         mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_GIFTID, giftId.c_str());
         mGiftId = giftId;
+        
+        snprintf(temp, sizeof(temp), "%d", giftNum);
+        mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_GIFTNUM, temp);
+        mGiftNum = giftNum;
+        
     }
     
-    snprintf(temp, sizeof(temp), "%d", giftNum);
-    mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_GIFTNUM, temp);
-    mGiftNum = giftNum;
-    
+
     
     snprintf(temp, sizeof(temp), "%d", needSms == false ? 0 : 1);
     mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_NEEDSMS, temp);

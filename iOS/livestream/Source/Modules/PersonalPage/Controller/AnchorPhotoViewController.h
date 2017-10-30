@@ -6,10 +6,10 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-@interface AnchorPhotoViewController : KKViewController
-@property (weak, nonatomic) IBOutlet PZPagingScrollView *pagingScrollView;
+@interface AnchorPhotoViewController : LSGoogleAnalyticsViewController
+@property (weak, nonatomic) IBOutlet LSPZPagingScrollView *pagingScrollView;
 // 主播封面url数组
 @property (nonatomic, strong) NSArray *ladyListArray;
 // 封面位置

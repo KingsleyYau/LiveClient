@@ -54,7 +54,7 @@ bool SendTalentTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "SendTalentTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "SendTalentTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
 
@@ -76,16 +76,16 @@ bool SendTalentTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "SendTalentTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "SendTalentTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnSendTalent(GetSeq(), success, m_errType, m_errMsg, talentInviteId);
-		FileLog("LiveChatClient", "SendTalentTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "SendTalentTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "SendTalentTask::Handle() end");
+	FileLog("ImClient", "SendTalentTask::Handle() end");
 
 	return result;
 }
@@ -95,7 +95,7 @@ bool SendTalentTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "SendTalentTask::GetSendData() begin");
+	FileLog("ImClient", "SendTalentTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -106,7 +106,7 @@ bool SendTalentTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "SendTalentTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "SendTalentTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -162,6 +162,6 @@ bool SendTalentTask::InitParam(const string& roomId, const string& talentId)
 void SendTalentTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendTalent(GetSeq(), false, LCC_ERR_CONNECTFAIL, "", "");
+        m_listener->OnSendTalent(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "");
     }
 }

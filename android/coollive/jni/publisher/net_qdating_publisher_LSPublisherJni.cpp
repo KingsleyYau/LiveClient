@@ -21,7 +21,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	}
 
 	KLog::SetLogDirectory("/sdcard/coollive");
-	KLog::SetLogLevel(KLog::LOG_MSG);
+	KLog::SetLogLevel(KLog::LOG_WARNING);
 
 	jobject jLSVideoFrameItem;
 	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);

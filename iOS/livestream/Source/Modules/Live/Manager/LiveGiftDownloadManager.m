@@ -7,25 +7,30 @@
 //
 
 #import "LiveGiftDownloadManager.h"
-#import "LoginManager.h"
+#import "LSLoginManager.h"
 #import "AFNetWorkHelpr.h"
-#import "FileCacheManager.h"
-#import "ImageViewLoader.h"
-#import "SessionRequestManager.h"
+#import "LSFileCacheManager.h"
+#import "LSImageViewLoader.h"
+#import "LSSessionRequestManager.h"
 #import "GetGiftDetailRequest.h"
 #import "GiftListRequest.h"
 #import "GetGiftDetailRequest.h"
+#import "LSYYImage.h"
 
 @interface LiveGiftDownloadManager () <LoginManagerDelegate>
 
-@property (nonatomic, strong) LoginManager *loginManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
 
 @property (nonatomic, strong) NSMutableDictionary *fileNameDictionary;
 
 /**
  *  接口管理器
  */
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
+
+@property (nonatomic, assign) BOOL isFirstLogin;
+
+@property (nonatomic, strong) NSArray *webpArray;
 
 @end
 
@@ -34,39 +39,41 @@
 + (instancetype)manager {
 
     static LiveGiftDownloadManager *giftDownloadManager = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
     if (giftDownloadManager == nil) {
         giftDownloadManager = [[LiveGiftDownloadManager alloc] init];
     }
-//    });
-
     return giftDownloadManager;
 }
 
 - (instancetype)init {
-
     self = [super init];
 
     if (self) {
 
-        self.loginManager = [LoginManager manager];
+        self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
-        self.sessionManager = [SessionRequestManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
         self.fileNameDictionary = [[NSMutableDictionary alloc] init];
         self.giftMuArray = [[NSMutableArray alloc] init];
         self.bigGiftDownloadDic = [[NSMutableDictionary alloc] init];
+        self.bigGiftDataDictionary = [[NSMutableDictionary alloc] init];
+        self.isFirstLogin = YES;
+        self.webpArray = [[NSArray alloc] init];
     }
     return self;
 }
 
 // 监听HTTP登录
-- (void)manager:(LoginManager *)manager onLogin:(BOOL)success loginItem:(LoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
-            // 请求礼物列表
-            [self getLiveRoomAllGiftListHaveNew:YES request:^(BOOL success, NSMutableArray *liveRoomGiftList){
-            }];
+
+            if (self.isFirstLogin) {
+                // 请求礼物列表
+                [self getLiveRoomAllGiftListHaveNew:YES
+                                            request:^(BOOL success, NSMutableArray *liveRoomGiftList){
+                                            }];
+            }
         }
     });
 }
@@ -74,18 +81,17 @@
 #pragma mark - 请求礼物列表
 - (void)getLiveRoomAllGiftListHaveNew:(BOOL)haveNew request:(RequestFinshtBlock)callBack {
 
-    if (self.giftMuArray && self.giftMuArray.count && !haveNew) {
+    if (self.giftMuArray.count && !haveNew) {
 
-            callBack(YES, self.giftMuArray);
-        
+        callBack(YES, self.giftMuArray);
+
     } else {
 
         GetAllGiftListRequest *request = [[GetAllGiftListRequest alloc] init];
         request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<GiftInfoItemObject *> *_Nullable array) {
             dispatch_async(dispatch_get_main_queue(), ^{
 
-                NSLog(@"LiveGiftDownloadManager::GetAllGiftListRequest[发送获取所有礼物列表请求结果] success:%d"
-                       " ErrNum:%ld ErrMsg%@",success, (long)errnum, errmsg);
+                NSLog(@"LiveGiftDownloadManager::GetAllGiftListRequest( [发送获取所有礼物列表请求结果], success : %d, errnum : %ld, errmsg : %@, count : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
                 if (success) {
                     if (array != nil && array.count) {
                         for (GiftInfoItemObject *object in array) {
@@ -97,10 +103,12 @@
                         [self downLoadSrcImage];
                         callBack(success, self.giftMuArray);
                     }
+                    self.isFirstLogin = NO;
 
                 } else {
                     self.giftMuArray = nil;
                     callBack(success, self.giftMuArray);
+                    self.isFirstLogin = YES;
                 }
             });
         };
@@ -111,19 +119,32 @@
 #pragma mark - 下载礼物详情
 - (void)downLoadSrcImage {
 
+    NSMutableArray *bigArray = [[NSMutableArray alloc] init];
     for (AllGiftItem *giftItem in self.giftMuArray) {
 
         if (giftItem.infoItem.type == GIFTTYPE_Heigh) {
-            [self afnDownLoadFileWith:giftItem.infoItem.srcwebpUrl giftItem:giftItem];
+
+            [bigArray addObject:giftItem];
         }
         [self downLoadSmallImage:giftItem.infoItem.smallImgUrl];
         [self downLoadMiddleImage:giftItem.infoItem.middleImgUrl];
         [self downLoadBigImage:giftItem.infoItem.bigImgUrl];
     }
+    self.webpArray = bigArray;
+    [self downLoadWebpImage];
+}
+
+- (void)downLoadWebpImage {
+
+    for (AllGiftItem *item in self.webpArray) {
+        [self afnDownLoadFileWith:item.infoItem.srcwebpUrl giftItem:item];
+    }
 }
 
 #pragma mark - 下载指定礼物详情
-- (void)downLoadGiftDetail:(AllGiftItem *)item {
+- (void)downLoadGiftDetail:(NSString *)giftID {
+
+    AllGiftItem *item = [self backGiftItemWithGiftID:giftID];
 
     if (item.infoItem.type == GIFTTYPE_Heigh) {
         [self afnDownLoadFileWith:item.infoItem.srcwebpUrl giftItem:item];
@@ -134,75 +155,115 @@
 }
 
 #pragma mark - 下载大礼物webp文件
-- (void)afnDownLoadFileWith:(NSString *)fileUrl giftItem:(AllGiftItem *)giftItem {
-    
-    NSLog(@"livedownloadmanager :: afnDownLoadFileWith[下载webp文件] fileUrl %@", fileUrl);
-    // 删除本地礼物
-    [self deletWebpPath:giftItem.infoItem.giftId];
-    
-    // 下载webp文件
-    _status = DOWNLOADSTART;
-    NSURL *url = [NSURL URLWithString:fileUrl];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+- (void)afnDownLoadFileWith:(NSString *)webpUrl giftItem:(AllGiftItem *)giftItem {
+    //    NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( [下载webp文件], fileUrl %@ )", webpUrl);
 
-    NSURLSessionDownloadTask *downloadTask = [[AFNetWorkHelpr shareInstrue].manager downloadTaskWithRequest:request
-        progress:^(NSProgress *_Nonnull downloadProgress) {
+    NSString *filePath = [[LiveGiftDownloadManager manager] doCheckLocalGiftWithGiftID:giftItem.infoItem.giftId];
+    NSData *imageData = [[NSFileManager defaultManager] contentsAtPath:filePath];
+    LSYYImage *image = [LSYYImage imageWithData:imageData];
 
-            float pargress = downloadProgress.completedUnitCount / downloadProgress.totalUnitCount;
-            if (pargress == 1) {
-                _status = DOWNLOADEND;
-                giftItem.isDownloading = NO;
-                [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
+    if (image == nil) {
+        // 删除本地礼物
+        [self deletWebpPath:giftItem.infoItem.giftId];
 
-                if ([self.managerDelegate respondsToSelector:@selector(downloadState:)]) {
-                    [self.managerDelegate downloadState:_status];
+        // 下载webp文件
+        _status = DOWNLOADSTART;
+        NSURL *url = [NSURL URLWithString:webpUrl];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+
+        NSURLSessionDownloadTask *downloadTask = [[AFNetWorkHelpr shareInstrue].manager downloadTaskWithRequest:request
+            progress:^(NSProgress *_Nonnull downloadProgress) {
+
+                float pargress = downloadProgress.completedUnitCount / downloadProgress.totalUnitCount;
+                if (pargress == 1) {
+                    _status = DOWNLOADEND;
+                    giftItem.isDownloading = NO;
+                    [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
+
+                    if ([self.managerDelegate respondsToSelector:@selector(downloadState:)]) {
+                        [self.managerDelegate downloadState:_status];
+                    }
+                } else {
+                    _status = DOWNLOADING;
+                    giftItem.isDownloading = YES;
+                    [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
                 }
-            } else {
-                _status = DOWNLOADING;
-                giftItem.isDownloading = YES;
-                [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
+
             }
+            destination:^NSURL *_Nonnull(NSURL *_Nonnull targetPath, NSURLResponse *_Nonnull response) {
 
-        }
-        destination:^NSURL *_Nonnull(NSURL *_Nonnull targetPath, NSURLResponse *_Nonnull response) {
+                NSString *path = [[LSFileCacheManager manager] bigGiftCachePathWithGiftId:giftItem.infoItem.giftId];
 
-            NSString *path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftItem.infoItem.giftId];
+                NSURL *documentsDirectoryURL = nil;
+                if (path) {
+                    documentsDirectoryURL = [NSURL fileURLWithPath:path];
+                }
+                return documentsDirectoryURL;
 
-            NSURL *documentsDirectoryURL = nil;
-            if (path) {
-                documentsDirectoryURL = [NSURL fileURLWithPath:path];
             }
-            return documentsDirectoryURL;
+            completionHandler:^(NSURLResponse *_Nonnull response, NSURL *_Nullable filePath, NSError *_Nullable error) {
 
-        }
-        completionHandler:^(NSURLResponse *_Nonnull response, NSURL *_Nullable filePath, NSError *_Nullable error) {
+                if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
 
-            if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
-                
-                if (error == nil && ((NSHTTPURLResponse *)response).statusCode == 200) {
+                    NSInteger code = ((NSHTTPURLResponse *)response).statusCode;
+                    if (error == nil && (code == 200 || code == 304)) {
 
-                    NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith[webp文件下载成功] (WebP fileName : %@)"
-                          , [filePath lastPathComponent]);
+                        NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( [webp文件下载成功], WebP fileName : %@ )", [filePath lastPathComponent]);
+                    } else {
+                        _status = DOWNLOADFAIL;
+                        [self deletWebpPath:giftItem.infoItem.giftId];
+                        NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( [webP下载失败...], WebPUrl : %@ )", webpUrl);
+                    }
+
                 } else {
                     _status = DOWNLOADFAIL;
                     [self deletWebpPath:giftItem.infoItem.giftId];
-                    NSLog(@"webP下载失败。。。");
+                    NSLog(@"LiveGiftDownloadManager::afnDownLoadFileWith( [webP下载失败...], WebPUrl : %@ )", webpUrl);
                 }
-                
-            } else {
-                _status = DOWNLOADFAIL;
-                [self deletWebpPath:giftItem.infoItem.giftId];
-                NSLog(@"webP下载失败。。。");
-            }
-        }];
-    // 开始下载
-    [downloadTask resume];
+            }];
+        // 开始下载
+        [downloadTask resume];
+    }
 }
+
+//// SDWebImage下载webp文件
+//- (void)getBigGiftWebpImageWithUrl:(NSString *)url giftItem:(AllGiftItem *)giftItem finishHandler:(DownLoadWebpHandler)finishHandler {
+//
+//    [[SDWebImageManager sharedManager].imageDownloader setValue:@"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" forHTTPHeaderField:@"Accept"];
+//    [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+//
+//        float currentProgress = (float)receivedSize / (float)expectedSize;
+//        if (currentProgress == 1) {
+//            _status = DOWNLOADEND;
+//            giftItem.isDownloading = NO;
+//            [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
+//
+//            if ([self.managerDelegate respondsToSelector:@selector(downloadState:)]) {
+//                [self.managerDelegate downloadState:_status];
+//            }
+//        } else {
+//            _status = DOWNLOADING;
+//            giftItem.isDownloading = YES;
+//            [self.bigGiftDownloadDic setObject:giftItem forKey:giftItem.infoItem.giftId];
+//        }
+//
+//    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+//
+//        NSLog(@"LiveGiftDownloadManager::getBigGiftWebpImageWithUrl : success: %@, error: %@, imageURL: %@"
+//              ,(image != nil) ? @"成功" : @"失败", error, imageURL);
+//
+//        if (data) {
+//            finishHandler(YES, image, data);
+//        } else {
+//            finishHandler(NO, nil, nil);
+//        }
+//    }];
+//}
 
 // 删除大礼物文件
 - (void)deletWebpPath:(NSString *)giftId {
-    NSString *path = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
-    [[FileCacheManager manager] removeDirectory:path];
+    NSString *path = [[LSFileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+    [[LSFileCacheManager manager] removeDirectory:path];
 }
 
 #pragma mark - 下载礼物小图标(文本聊天框显示)
@@ -215,7 +276,7 @@
         }
         completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
             if (image) {
-                NSLog(@"LiveGiftDownloadManager::downLoadSmallImage[下载礼物小图标结果] ( smallImage imageURL : %@ )", imageURL);
+                //                NSLog(@"LiveGiftDownloadManager::downLoadSmallImage( [下载礼物小图标结果], smallImage imageURL : %@ )", imageURL);
             }
         }];
 }
@@ -230,7 +291,7 @@
         }
         completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
             if (image) {
-                NSLog(@"LiveGiftDownloadManager::downLoadMiddleImage[下载礼物中图标结果]( MiddleImage imageURL : %@ )", imageURL);
+                //                NSLog(@"LiveGiftDownloadManager::downLoadMiddleImage( [下载礼物中图标结果], middleImage imageURL : %@ )", imageURL);
             }
         }];
 }
@@ -245,7 +306,7 @@
         }
         completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
             if (image) {
-                NSLog(@"LiveGiftDownloadManager::downLoadBigImage[下载礼物大图标结果]( BigImage imageURL : %@ )", imageURL);
+                //                NSLog(@"LiveGiftDownloadManager::downLoadBigImage( [下载礼物大图标结果], bigImage imageURL : %@ )", imageURL);
             }
         }];
 }
@@ -315,7 +376,7 @@
 - (NSString *)doCheckLocalGiftWithGiftID:(NSString *)giftId {
 
     NSString *filePath = nil;
-    NSString *webPPath = [[FileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
+    NSString *webPPath = [[LSFileCacheManager manager] bigGiftCachePathWithGiftId:giftId];
 
     filePath = [self.fileNameDictionary objectForKey:giftId];
 
@@ -383,14 +444,13 @@
 }
 
 #pragma mark - 根据礼物id拿到礼物Type
-- (GiftType)backImgTypeWithGiftID:(NSString *)giftId{
-    
-    GiftType type;
-    
+- (GiftType)backImgTypeWithGiftID:(NSString *)giftId {
+    GiftType type = GIFTTYPE_UNKNOWN;
+
     if (self.giftMuArray.count != 0) {
-        
+
         for (AllGiftItem *giftItem in self.giftMuArray) {
-            
+
             if ([giftItem.infoItem.giftId isEqualToString:giftId]) {
                 type = giftItem.infoItem.type;
             }
@@ -401,14 +461,14 @@
 
 #pragma mark - 获取指定礼物详情
 - (void)requestListnotGiftID:(NSString *)giftId {
-    
+
     GetGiftDetailRequest *request = [[GetGiftDetailRequest alloc] init];
     request.giftId = giftId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GiftInfoItemObject * _Nullable item) {
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, GiftInfoItemObject *_Nullable item) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            
+
             if (success) {
-                
+
                 AllGiftItem *allItem = [[AllGiftItem alloc] init];
                 allItem.infoItem = item;
                 for (int i = 0; i < self.giftMuArray.count; i++) {
@@ -418,7 +478,7 @@
                     }
                 }
                 // 下载礼物
-                [self downLoadGiftDetail:allItem];
+                [self downLoadGiftDetail:giftId];
             }
         });
     };

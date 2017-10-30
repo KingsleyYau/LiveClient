@@ -196,7 +196,7 @@
  *  @param playUrl      播放url
  *
  */
-- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSString* _Nonnull)playUrl;
+- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl;
 
 #pragma mark - 直播间文本消息信息
 /**
@@ -216,9 +216,10 @@
  *  @param fromId      发送方的用户ID
  *  @param nickName    发送方的昵称
  *  @param msg         文本消息内容
+ *  @param honorUrl    勋章图片url
  *
  */
-- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+- (void)onRecvSendChatNotice:(NSString* _Nonnull)roomId level:(int)level fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl;
 
 /**
  *  4.3.接收直播间公告消息回调
@@ -256,9 +257,10 @@
  *  @param multi_click_start    连击起始数
  *  @param multi_click_end      连击结束数
  *  @param multi_click_id       连击ID，相同则表示是同一次连击
+ *  @param honorUrl             勋章图片url
  *
  */
-- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvSendGiftNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(NSString* _Nonnull)honorUrl;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**
@@ -280,9 +282,10 @@
  *  @param fromId               发送方的用户ID
  *  @param nickName             发送方的昵称
  *  @param msg                  消息内容
+ *  @param honorUrl             勋章图片url
  *
  */
-- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg;
+- (void)onRecvSendToastNotice:(NSString* _Nonnull)roomId fromId:(NSString* _Nonnull)fromId nickName:(NSString* _Nonnull)nickName msg:(NSString* _Nonnull)msg honorUrl:(NSString* _Nonnull)honorUrl;
 
 #pragma mark - 邀请私密直播
 /**
@@ -415,5 +418,14 @@
  *
  */
 - (void)onRecvBackpackUpdateNotice:(BackpackInfoObject * _Nonnull)item;
+
+/**
+ *  9.4.观众勋章升级通知
+ *
+ *  @param honorId          勋章ID
+ *  @param honorUrl         勋章图片url
+ *
+ */
+- (void)onRecvGetHonorNotice:(NSString * _Nonnull)honorId honorUrl:(NSString * _Nonnull)honorUrl;
 
 @end

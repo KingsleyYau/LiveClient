@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/custom_dialog_left_right_margin"
+    android:layout_marginRight="@dimen/custom_dialog_left_right_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@drawable/bg_rebate_popupwindow"
+        android:id="@+id/ll_simpleTips"
+       android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_closeSimpleTips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_credits_dialog_close"
+            android:layout_gravity="top|right"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tv_simpleTips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="28dp"
+            android:layout_marginRight="28dp"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/newinvite_cancel_tips"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="19dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="18dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="73dp"
+                android:layout_height="30dp"
+                android:background="@drawable/bg_interactive_video_cancel"
+                android:textSize="@dimen/custom_dialog_text_size_simple"
+                android:textColor="@color/custom_dialog_txt_color_btn_no"
+                android:text="@string/live_inter_video_yes"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/tv_confirm"
+                android:layout_width="73dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="48dp"
+                android:background="@drawable/bg_interactive_video_confirm"
+                android:textSize="@dimen/custom_dialog_text_size_simple"
+                android:textColor="@color/custom_dialog_txt_color_btn_yes"
+                android:gravity="center"
+                android:text="@string/live_inter_video_no"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

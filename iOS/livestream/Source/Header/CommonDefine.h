@@ -9,29 +9,31 @@
 #ifndef CommonDefine_h
 #define CommonDefine_h
 
-#import "AppDelegate.h"
+#import <Foundation/Foundation.h>
+
+#import "LiveBundle.h"
+#import "Config.h"
 
 #define BOOL2YES(flag) flag?@"YES":@"NO"
 #define BOOL2SUCCESS(flag) flag?@"Success":@"Fail"
 
 #define WeakObject(Obj, weakObj) __weak typeof(Obj) weakObj = Obj
 
-// 仅Debug模式输出consle log
-#ifndef __OPTIMIZE__
-#define NSLog(...) @synchronized(AppDelegate()){NSLog(__VA_ARGS__);}
-#define printf(...) printf{__VA_ARGS__}
-#else
-#define NSLog(...) {}
-#define printf(...) {}
-#endif
-
-#define NSLocalizedStringFromSelf(key) NSLocalizedStringFromTable(key, [[self class] description], nil)
-#define NSLocalizedStringFromErrorCode(key) NSLocalizedStringFromTable(key, @"LocalizableErrorCode", nil)
+#undef NSLocalizedString
+#define NSLocalizedString(key, comment) \
+[[LiveBundle mainBundle] localizedStringForKey:key value:comment table:nil]
+//#define NSLocalizedStringFromErrorCode(key) NSLocalizedStringFromTable(key, @"LocalizableErrorCode", nil)
+#define NSLocalizedStringFromErrorCode(key) \
+[[LiveBundle mainBundle] localizedStringForKey:key value:nil table:@"LocalizableErrorCode"]
+//#define NSLocalizedStringFromSelf(key) NSLocalizedStringFromTable(key, [[self class] description], nil)
+#define NSLocalizedStringFromSelf(key) \
+[[LiveBundle mainBundle] localizedStringForKey:key value:nil table:[[self class] description]]
 
 #define Color(r, g, b, a) [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
 
 //16进制颜色转换
 #define COLOR_WITH_16BAND_RGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#define COLOR_WITH_16BAND_RGB_ALPHA(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:((float)((rgbValue & 0xFF000000) >> 24))/255.0]
 
 #define DESGIN_TRANSFORM_3X(V) (V*SCREEN_HEIGHT*1.0/640)
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)

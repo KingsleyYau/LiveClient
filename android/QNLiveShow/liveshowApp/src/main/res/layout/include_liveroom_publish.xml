@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    android:layout_width="94dp"
+    android:layout_height="125dp">
+
+    <SurfaceView
+        android:id="@+id/svPublisher"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <include
+        android:id="@+id/view_gaussian_blur_me"
+        layout="@layout/view_gaussian_blur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/iv_publishstart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:src="@drawable/ic_live_publish_start"
+        android:layout_gravity="center"
+        android:clickable="true"/>
+
+
+
+    <FrameLayout
+        android:id="@+id/flPublishOperate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp">
+        <ImageView
+            android:id="@+id/iv_publishstop"
+            android:layout_width="19dp"
+            android:layout_height="17dp"
+            android:src="@drawable/ic_live_publish_stop"
+            android:layout_gravity="bottom|left"
+            android:layout_marginLeft="17dp"
+            android:clickable="true"/>
+
+
+        <ImageView
+            android:id="@+id/iv_publishsoundswitch"
+            android:layout_width="19dp"
+            android:layout_height="17dp"
+            android:src="@drawable/ic_live_publish_sound_on"
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="17dp"
+            android:clickable="true"/>
+    </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/publishLoading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scrollbarStyle="insideInset"
+        android:indeterminateDrawable="@drawable/live_loading_progress"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDuration="1000"
+        android:visibility="gone"
+        android:layout_gravity="center"/>
+</FrameLayout>

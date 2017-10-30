@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--common-->
+    <color name="listview_divider_grey">#16000000</color>
+    <color name="blue_color">#0099FF</color>
+    <color name="text_color_dark">#333333</color>
+    <color name="text_color_grey">#666666</color>
+    
+    <color name="online_normal_green">#8EDB2B</color>
+    <color name="offline_normal_grey">#B5B5B5</color>
+
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="bg_MainActivity">#f8f9fb</color>
+    <color name="bg_MainButtomTabView">#b3000000</color>
+    <color name="bg_title_bar">#5d0e86</color>
+
+    <color name="txt_color_next_usable">#232323</color>
+
+    <color name="txt_color_oninput">#5d0e86</color>
+
+    <color name="style_color_primary">#d32f2f</color>
+    <color name="style_color_primary_dark">#b71c1c</color>
+    <color name="style_color_primary_light">#FFCDD2</color>
+    <color name="style_color_accent">#d32f2f</color>
+    <color name="style_window_background">#212121</color>
+    <color name="style_window_background_light">#ffffff</color>
+
+    <color name="list_gift_count_selected">#f7cd3a</color>
+    <color name="cover_state_use">#5d0e86</color>
+
+    <color name="dialog_background">#00000000</color>
+    <color name="color_giftcount_item">#6b6b6b</color>
+
+    <color name="text_shadow_color">#B2000000</color>
+    <color name="messagelist_shadow_color">#000000</color>
+
+    <!-- holo light button background -->
+    <color name="holo_light_btn_bg_n">#00FFFFFF</color>
+    <color name="holo_light_btn_bg_a">#16FFFFFF</color>
+    <color name="holo_light_btn_bg_p">#32000000</color>
+
+    <color name="hotlist_divider_color">#B4A5FF</color>
+    <color name="normal_purple">#501B75</color>
+
+    <color name="liveroom_top_barcolor_freepublic">#cdb4b9</color>
+    <color name="liveroom_top_barcolor_normalprivate">#cdb4b9</color>
+    <color name="liveroom_top_barcolor_paidpublicRoom">#5d5c5c</color>
+    <color name="liveroom_top_barcolor_advancedprivate">#cdb4b9</color>
+
+    <color name="live_book_bg">#f5f5f5</color>
+
+    <color name="dark_gray">#5E5E5E</color>
+
+    <!-- process button -->
+    <color name="progress_bg">#fff2c0</color>
+    <color name="purple_progress">#03a9f4</color>
+    <color name="blue_pressed">#7cb342</color>
+    <color name="blue_normal">#ffffbb33</color>
+
+    <!--统一样式 自定义对话框-->
+    <color name="custom_dialog_txt_color_simple">#383838</color>
+    <color name="custom_dialog_txt_color_btn_yes">@android:color/white</color>
+    <color name="custom_dialog_txt_color_btn_no">#3c3c3c</color>
+
+</resources>

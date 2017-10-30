@@ -8,7 +8,7 @@
 
 #import "UserHeadUrlManager.h"
 
-#import "SessionRequestManager.h"
+#import "LSSessionRequestManager.h"
 
 @implementation UserInfoItem
 
@@ -30,7 +30,7 @@
 @interface UserHeadUrlManager ()
 
 #pragma mark - 接口管理器
-@property (nonatomic, strong) SessionRequestManager* sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 
 @property (nonatomic, strong) NSMutableArray* delegates;
 
@@ -64,7 +64,7 @@
         _userId = nil;
         _photoUrl = nil;
         
-        self.sessionManager = [SessionRequestManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
     }
     
     return self;

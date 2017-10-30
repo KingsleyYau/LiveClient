@@ -860,12 +860,12 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                     }
                                     
                                     // 只有音频才处理
-                                    if( isAudio ) {
+//                                    if( isAudio ) {
                                         // 播放延迟太大, 断开连接
                                         if( delay > PLAY_DELAY_DISCONNECT_TIME ) {
                                             bDisconnect = true;
                                         }
-                                    }
+//                                    }
 
                                 }
                             }

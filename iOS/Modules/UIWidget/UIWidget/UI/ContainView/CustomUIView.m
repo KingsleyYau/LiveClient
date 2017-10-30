@@ -8,9 +8,9 @@
 #import "CustomUIView.h"
 
 @implementation UIView (Custom)
-- (void)removeAllSubviews{
+- (void)removeAllSubviews {
     NSArray *subViews = self.subviews;
-    for(UIView *view in subViews){
+    for (UIView *view in subViews) {
         [view removeFromSuperview];
     }
 }

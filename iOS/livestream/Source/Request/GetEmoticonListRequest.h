@@ -6,8 +6,8 @@
 //  Copyright © 2016年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetEmoticonListRequest : SessionRequest
+@interface GetEmoticonListRequest : LSSessionRequest
 @property (nonatomic, strong) GetEmoticonListFinishHandler _Nullable finishHandler;
 @end

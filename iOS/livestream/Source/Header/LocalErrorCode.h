@@ -1,0 +1,20 @@
+//
+//  LocalErrorCode.h
+//  livestream
+//
+//  Created by Max on 2017/10/7.
+//  Copyright © 2017年 net.qdating. All rights reserved.
+//
+
+#ifndef LocalErrorCode_h
+#define LocalErrorCode_h
+
+#define LCC_ERR_DEFAULT (LCC_ERR_TYPE)(LCC_ERR_FAIL - 10000)
+#define LCC_ERR_INVITE_NO_RESPOND LCC_ERR_DEFAULT - 1
+#define LCC_ERR_INVITATION_EXPIRE LCC_ERR_INVITE_NO_RESPOND - 1
+#define LCC_ERR_INVITE_FAIL LCC_ERR_INVITATION_EXPIRE - 1
+#define LCC_ERR_INVITE_REJECT LCC_ERR_INVITE_FAIL - 1
+#define LCC_ERR_BOARDCAST_EXPIRE LCC_ERR_INVITE_REJECT - 1
+#define LCC_ERR_BACKGROUND_TIMEOUT LCC_ERR_BOARDCAST_EXPIRE - 1
+
+#endif /* LocalErrorCode_h */

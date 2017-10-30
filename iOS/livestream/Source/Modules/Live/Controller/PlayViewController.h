@@ -6,16 +6,15 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-#import "IMManager.h"
+#import "LSImManager.h"
 
-#import "UITapImageView.h"
+#import "LSUITapImageView.h"
 #import "PresentView.h"
 #import "CountTimeButton.h"
 #import "LiveRoomTextField.h"
-#import "GiftPresentView.h"
-#import "ChatEmotionKeyboardView.h"
+#import "LSPageChooseKeyboardView.h"
 #import "BackpackPresentView.h"
 #import "LiveSendBarView.h"
 #import "YMAudienceView.h"
@@ -33,7 +32,7 @@
 - (void)onReEnterRoom:(PlayViewController *)vc;
 @end
 
-@interface PlayViewController : KKViewController
+@interface PlayViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, weak) id<PlayViewControllerDelegate> delegate;
 
@@ -46,21 +45,21 @@
 #pragma mark - 文本输入控件
 
 /** 登录管理器 **/
-@property (nonatomic, strong) LoginManager *loginManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
 
 /** 喇叭按钮 **/
-@property (nonatomic, weak) IBOutlet UITapImageView* chatBtn;
+@property (nonatomic, weak) IBOutlet LSUITapImageView * chatBtn;
 
 /** 礼物按钮 **/
-@property (nonatomic, weak) IBOutlet UIButton* giftBtn;
+@property (nonatomic, weak) IBOutlet UIButton *giftBtn;
 
 /** 礼物按钮约束 **/
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* giftBtnWidth;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *giftBtnWidth;
 
 @property (weak, nonatomic) IBOutlet LiveSendBarView *liveSendBarView;
 
 /** 发送栏 **/
-@property (nonatomic, weak) IBOutlet UIView* inputMessageView;
+@property (nonatomic, weak) IBOutlet UIView *inputMessageView;
 
 // 才艺点播按钮
 @property (weak, nonatomic) IBOutlet UIButton *talentBtn;
@@ -85,10 +84,10 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *randomGiftBtnTailing;
 
 /** 发送栏底部约束 **/
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewBottom;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewBottom;
 
 /** 输入框高度约束 **/
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint* inputMessageViewHeight;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *inputMessageViewHeight;
 
 /** 单击收起输入控件手势 **/
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
@@ -100,7 +99,7 @@
 @property (strong, nonatomic) BackpackPresentView *backpackView;
 
 /**  选择礼物列表界面 **/
-@property (strong, nonatomic) ChatEmotionKeyboardView *giftListView;
+@property (strong, nonatomic) LSPageChooseKeyboardView *giftListView;
 
 /**  选择礼物承载界面 **/
 @property (weak, nonatomic) IBOutlet UIView *chooseGiftListView;

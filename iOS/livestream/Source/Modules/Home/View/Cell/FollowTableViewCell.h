@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 @class FollowTableViewCell;
 @protocol FollowTableViewCellDelegate <NSObject>
 @optional
@@ -20,8 +20,8 @@
 
 @end
 @interface FollowTableViewCell : UITableViewCell
-@property (nonatomic, weak) IBOutlet UIImageViewTopFit *imageViewHeader;
-@property (nonatomic, strong) ImageViewLoader* imageViewLoader;
+@property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
+@property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
@@ -44,6 +44,8 @@
 @property (nonatomic, strong) NSMutableArray* animationArray;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPrivateCenterX;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPrivateCenterX;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPublicCenterX;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPublicCenterX;
 
 /** 代理 */
 @property (nonatomic, weak) id<FollowTableViewCellDelegate> followCellDelegate;

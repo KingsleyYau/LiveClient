@@ -6,7 +6,7 @@
 //
 
 #import "Country.h"
-
+#import "LiveBundle.h"
 
 @interface Country ()
 
@@ -26,5 +26,28 @@
     return self;
 }
 
++ (Country *)findByShortName:(NSString *)shortName {
+ 
+    NSString *profilePlistPath = [[LiveBundle mainBundle] pathForResource:@"Country" ofType:@"plist"];
+    NSArray *profileArray = [[NSArray alloc] initWithContentsOfFile:profilePlistPath];
+    
+    for (NSDictionary *dict in profileArray) {
+        Country  *country = [[Country alloc] initWithDict:dict];
+        if ([country.shortName isEqualToString:shortName]) {
+            if ([country.shortName isEqualToString:@"AU"]||[country.shortName isEqualToString:@"US"]) {
+                return country;
+            }
+            return country;
+        }
+    }
+    return nil;
+}
 
++ (Country *)findPhoneCodeByCountry {
+    NSLocale *local = [NSLocale currentLocale];
+    NSString *countryCode = [local objectForKey:NSLocaleCountryCode];
+    // 根据国籍区号获得手机区号
+    Country *country = [Country findByShortName:countryCode];
+    return country;
+}
 @end

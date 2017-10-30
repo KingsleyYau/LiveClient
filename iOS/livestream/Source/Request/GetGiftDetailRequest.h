@@ -6,9 +6,9 @@
 //  Copyright © 2016年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetGiftDetailRequest : SessionRequest
+@interface GetGiftDetailRequest : LSSessionRequest
 // 礼物ID
 @property (nonatomic, copy) NSString* _Nonnull giftId;
 @property (nonatomic, strong) GetGiftDetailFinishHandler _Nullable finishHandler;

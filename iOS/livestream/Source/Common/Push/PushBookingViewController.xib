@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PushBookingViewController">
+            <connections>
+                <outlet property="ladyImageView" destination="Hg7-eh-fe7" id="kaT-mU-ST5"/>
+                <outlet property="tipsLabel" destination="gm0-Sp-0V5" id="wtZ-kK-2eQ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Test_Lady_Head" translatesAutoresizingMaskIntoConstraints="NO" id="Hg7-eh-fe7" userLabel="Lady Image View">
+                    <rect key="frame" x="10" y="5" width="34" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Hg7-eh-fe7" secondAttribute="height" multiplier="1:1" id="xEM-YE-f2T"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Karen is inviting you to start  a private broadcast." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gm0-Sp-0V5" userLabel="Tips Label">
+                    <rect key="frame" x="49" y="5" width="224" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XmC-V2-J46" userLabel="Accept Button">
+                    <rect key="frame" x="278" y="5" width="69" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="69" id="xnl-qD-7RQ"/>
+                    </constraints>
+                    <state key="normal" title="Start Now"/>
+                    <connections>
+                        <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="mB4-Ve-nfc"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TlJ-Pa-Dqk" userLabel="Cancel Button">
+                    <rect key="frame" x="352" y="5" width="13" height="13"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="13" id="P4i-3q-4Xs"/>
+                        <constraint firstAttribute="width" secondItem="TlJ-Pa-Dqk" secondAttribute="height" multiplier="1:1" id="e3C-3h-0ty"/>
+                    </constraints>
+                    <state key="normal" title="Button" image="Live_Preview_Btn_Cancel"/>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="exH-l5-T35"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="1kQ-Hc-5aE"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="trailing" secondItem="TlJ-Pa-Dqk" secondAttribute="leading" constant="-5" id="3aG-ay-jY6"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="top" secondItem="Hg7-eh-fe7" secondAttribute="top" id="A1Q-8F-VF0"/>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="5" id="CwD-LR-WXs"/>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="IqW-5N-eym"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="trailing" secondItem="XmC-V2-J46" secondAttribute="leading" constant="-5" id="JSa-PV-Ur8"/>
+                <constraint firstItem="TlJ-Pa-Dqk" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="5" id="Tes-vc-Ed6"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="bottom" secondItem="Hg7-eh-fe7" secondAttribute="bottom" id="eJl-K2-fBd"/>
+                <constraint firstItem="TlJ-Pa-Dqk" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="hVk-9Z-v4Z"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="leading" secondItem="Hg7-eh-fe7" secondAttribute="trailing" constant="5" id="ibQ-sr-hbG"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="bottom" secondItem="Hg7-eh-fe7" secondAttribute="bottom" id="rSN-ia-xYx"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="top" secondItem="Hg7-eh-fe7" secondAttribute="top" id="xWX-cs-FLG"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="35.5" y="56"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+        <image name="Test_Lady_Head" width="100" height="100"/>
+    </resources>
+</document>

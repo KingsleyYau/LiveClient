@@ -27,6 +27,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef SRS_AUTO_HEADER_HPP
 #define SRS_AUTO_HEADER_HPP
 
+// Add by Max
+#include <netdb.h>
+#include <netinet/tcp.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
+
+// Add by Max
+/*
+ * TCP_KEEPIDLE for Android in <linux/tcp.h>
+ * TCP_KEEPALIVE for iOS in <netinet/tcp.h>
+ */
+#if !defined(TCP_KEEPIDLE) && defined(TCP_KEEPALIVE)
+#define TCP_KEEPIDLE TCP_KEEPALIVE
+#endif
+
 #define SRS_AUTO_BUILD_TS "1491358399"
 #define SRS_AUTO_BUILD_DATE "2017-04-05 10:13:19"
 #define SRS_AUTO_UNAME "Darwin MaxdeMac-mini.local 16.4.0 Darwin Kernel Version 16.4.0: Thu Dec 22 22:53:21 PST 2016; root:xnu-3789.41.3~3/RELEASE_X86_64 x86_64"
@@ -35663,6 +35678,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             return ERROR_SOCKET_CONNECT;
         } else {
             skt->connected = true;
+            
+            // Add by Max
+            /*deal with the tcp keepalive
+             iKeepAlive = 1 (check keepalive)
+             iKeepIdle = 600 (active keepalive after socket has idled for 10 minutes)
+             KeepInt = 60 (send keepalive every 1 minute after keepalive was actived)
+             iKeepCount = 3 (send keepalive 3 times before disconnect from peer)
+             */
+            int iKeepAlive = 1, iKeepIdle = 1, KeepInt = 10, iKeepCount = 1;
+            setsockopt(skt->fd, SOL_SOCKET, SO_KEEPALIVE, (void*)&iKeepAlive, sizeof(iKeepAlive));
+            setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPIDLE, (void*)&iKeepIdle, sizeof(iKeepIdle));
+            setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPINTVL, (void *)&KeepInt, sizeof(KeepInt));
+            setsockopt(skt->fd, IPPROTO_TCP, TCP_KEEPCNT, (void *)&iKeepCount, sizeof(iKeepCount));
         }
         
         return ERROR_SUCCESS;

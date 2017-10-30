@@ -41,6 +41,9 @@
 #pragma mark - 重连线程
 @property (strong) dispatch_queue_t reconnect_queue;
 
+#pragma mark - 后台处理
+@property (nonatomic) BOOL isBackground;
+
 @end
 
 @implementation LiveStreamPlayer
@@ -64,6 +67,9 @@
         self.player.delegate = self;
         
         self.pixelBufferInput = [[ImageCVPixelBufferInput alloc] init];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
     
     return self;
@@ -73,6 +79,9 @@
     NSLog(@"LiveStreamPlayer::dealloc()");
     
     [self stop];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 #pragma mark - 对外接口
@@ -144,8 +153,12 @@
 #pragma mark - 视频接收处理
 - (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC * _Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
     if( buffer ) {
-        // 这里显示视频
-        [self.pixelBufferInput processCVPixelBuffer:buffer];
+        @synchronized (self) {
+            if( !_isBackground ) {
+                // 这里显示视频
+                [self.pixelBufferInput processCVPixelBuffer:buffer];
+            }
+        }
     }
 }
 
@@ -159,8 +172,15 @@
             // 断线重新拉流
             dispatch_async(self.reconnect_queue, ^{
                 [self.player stop];
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), self.reconnect_queue, ^{
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), self.reconnect_queue, ^{
                     NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
+                    
+                    // 是否需要切换URL
+                    if( [self.delegate respondsToSelector:@selector(playerShouldChangeUrl:)] ) {
+                        self.url = [self.delegate playerShouldChangeUrl:self];
+                    }
+                    
                     [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
                 });
             });
@@ -184,6 +204,31 @@
             NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime( [Disconnect] )");
             [self.player stop];
         });
+    }
+}
+
+#pragma mark - 视频采集后台
+#pragma mark - 视频采集后台
+- (void)willEnterBackground:(NSNotification *)notification {
+    @synchronized (self) {
+        if( _isBackground == NO ) {
+            _isBackground = YES;
+            
+            dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+            dispatch_suspend(videoProcessingQueue);
+            glFinish();
+        }
+    }
+}
+
+- (void)willEnterForeground:(NSNotification *)notification {
+    @synchronized (self) {
+        if( _isBackground == YES ) {
+            _isBackground = NO;
+            
+            dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+            dispatch_resume(videoProcessingQueue);
+        }
     }
 }
 

@@ -13,13 +13,28 @@
 
 #import "GPUImage.h"
 
+@class LiveStreamPlayer;
+@protocol LiveStreamPlayerDelegate <NSObject>
+@optional
+- (NSString * _Nullable)playerShouldChangeUrl:(LiveStreamPlayer * _Nonnull)player;
+
+@end
+
 @interface LiveStreamPlayer : NSObject
 /**
  显示界面
  */
-@property (nonatomic, weak) GPUImageView* _Nullable playView;
+@property (strong, nonatomic) GPUImageView* _Nullable playView;
 
-#pragma mark - 获取实例
+/**
+ 委托
+ */
+@property (weak) id<LiveStreamPlayerDelegate> _Nullable delegate;
+
+/**
+ 当前播放URL
+ */
+@property (strong, readonly) NSString * _Nonnull url;
 
 /**
  *  获取实例

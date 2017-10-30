@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_emojiContainer"
+    android:layout_gravity="center"
+    android:layout_width="59dp"
+    android:layout_height="49dp">
+
+    <ImageView
+        android:id="@+id/iv_emoji"
+        android:layout_width="29dp"
+        android:layout_height="29dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_live_chat_emoji_0"/>
+
+</RelativeLayout>

@@ -11,6 +11,27 @@
 
 #define SEQ_T unsigned int
 
+
+/* 本地错误代码 */
+#define IMLOCAL_ERROR_CODE_TIMEOUT			"LOCAL_ERROR_CODE_TIMEOUT"
+#define IMLOCAL_ERROR_CODE_TIMEOUT_DESC		"Trouble connecting to the server, please try again later."
+#define IMLOCAL_ERROR_CODE_PARSEFAIL			"LOCAL_ERROR_CODE_PARSEFAIL"
+#define IMLOCAL_ERROR_CODE_PARSEFAIL_DESC		"Trouble connecting to the server, please try again later."
+#define IMLOCAL_ERROR_CODE_FILEOPTFAIL		"LOCAL_ERROR_CODE_FILEOPTFAIL"
+#define IMLOCAL_ERROR_CODE_FILEOPTFAIL_DESC	"Error encountered while writing your file storage."
+
+/**
+ * 服务器错误码
+ */
+/* 未登录 */
+#define ERROR_CODE_MBCE0003			"0003"
+
+/* 本地直播错误代码 */
+#define IMLOCAL_LIVE_ERROR_CODE_SUCCESS			0
+#define IMLOCAL_LIVE_ERROR_CODE_FAIL			1
+#define IMLOCAL_LIVE_ERROR_CODE_TIMEOUT			2
+#define IMLOCAL_LIVE_ERROR_CODE_PARSEFAIL       3
+
 // 处理结果
 typedef enum {
     LCC_ERR_SUCCESS = 0,   // 成功
@@ -33,7 +54,7 @@ typedef enum {
     LCC_ERR_NOT_FOUND_ROOM = 10021,          // 进入房间失败 找不到房间信息or房间关闭
     LCC_ERR_CREDIT_FAIL = 10027,             // 远程扣费接口调用失败
     LCC_ERR_KICKOFF = 10037,                 // 被挤掉线 默认通知内容
-    LCC_ERR_NO_AUTHORIZED = 10039,           // 不能操作 不是对应的userid
+    LCC_ERR_NO_AUTHORIZED = 10039,           //10021 不能操作 不是对应的userid
     LCC_ERR_LIVEROOM_NO_EXIST = 16104,       // 直播间不存在
     LCC_ERR_LIVEROOM_CLOSED = 16106,         // 直播间已关闭
     LCC_ERR_ANCHORID_INCONSISTENT = 16108,   // 主播id与直播场次的主播id不合

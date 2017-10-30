@@ -16,6 +16,8 @@
 // 请求参数定义
 #define ROOMID_PARAM           "roomid"
 #define CREDIT_PARAM           "credit"
+#define ERRNO_PARAM				"errno"
+#define ERRMSG_PARAM       		"errmsg"
 
 
 
@@ -53,7 +55,7 @@ bool RecvRoomKickoffNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvRoomKickoffNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -67,6 +69,12 @@ bool RecvRoomKickoffNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[CREDIT_PARAM].isNumeric()) {
             m_credit = tp.m_data[CREDIT_PARAM].asDouble();
         }
+        if (tp.m_data[ERRNO_PARAM].isInt()) {
+        	m_errType = (LCC_ERR_TYPE)tp.m_data[ERRNO_PARAM].asInt();
+        }
+        if (tp.m_data[ERRMSG_PARAM].isString()) {
+        	m_errMsg = tp.m_data[ERRMSG_PARAM].asString();
+        }
     }
     
     // 协议解析失败
@@ -75,15 +83,15 @@ bool RecvRoomKickoffNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvRoomKickoffNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvRoomKickoffNotice(m_roomId, m_errType, m_errMsg, m_credit);
-		FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvRoomKickoffNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvRoomKickoffNoticeTask::Handle() end");
 
 	return result;
 }
@@ -93,14 +101,14 @@ bool RecvRoomKickoffNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvRoomKickoffNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvRoomKickoffNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvRoomKickoffNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

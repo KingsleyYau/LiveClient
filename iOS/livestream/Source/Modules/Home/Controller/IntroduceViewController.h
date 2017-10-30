@@ -6,8 +6,11 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-@interface IntroduceViewController : ListViewController
+@interface IntroduceViewController : LSListViewController
 
+
+/** 链接 */
+@property (nonatomic, copy) NSString* bannerUrl;
 @end

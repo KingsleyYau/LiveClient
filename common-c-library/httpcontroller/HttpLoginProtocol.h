@@ -28,7 +28,8 @@
 /**
  * 请求
  */
-#define LOGIN_QNSID			    "qnsid"
+#define LOGIN_MANID             "manid"
+#define LOGIN_USERSID			"user_sid"
 #define LOGIN_DEVICEID		    "deviceid"
 #define LOGIN_MODEL		        "model"
 #define LOGIN_MANUFACTURER		"manufacturer"
@@ -43,6 +44,10 @@
 #define LOGIN_EXPERIENCE        "experience"
 #define LOGIN_PHOTOURL			"photourl"
 #define LOGIN_ISPUSHAD          "is_push_ad"
+#define LOGIN_SVRLIST           "svr_list"
+#define LOGIN_SVRLIST_SVRID                 "svrid"
+#define LOGIN_SVRLIST_TURL                  "turl"
+#define LOGIN_USERTYPE          "user_type"
 
 
 /* 2.2.注销 */
@@ -232,6 +237,8 @@
 #define LIVEROOM_EMOTICON_LIST_EMOLIST_ID                           "id"
 #define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOSIGN                      "emo_sign"
 #define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOURL                       "emo_url"
+#define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE                      "emo_type"
+#define LIVEROOM_EMOTICON_LIST_EMOLIST_EMOICONURL                   "emo_icon_url"
 
 /* 3.9.获取指定立即私密邀请信息 （已废弃）*/
 /* 接口路径 */
@@ -611,5 +618,25 @@
 #define LIVEROOM_SUBMITPHONEVERIFYCODE_AREACODE                     "area_code"
 #define LIVEROOM_SUBMITPHONEVERIFYCODE_PHONENO                      "phone_no"
 #define LIVEROOM_SUBMITPHONEVERIFYCODE_VERIFYCODE                   "verify_code"
+
+/* 6.8.提交流媒体服务器测速结果 */
+/* 接口路径 */
+#define LIVEROOM_SUBMITSERVERVELOMETER                              "/share/v1/t"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_SUBMITSERVERVELOMETER_SID                          "sid"
+#define LIVEROOM_SUBMITSERVERVELOMETER_RES                          "res"
+
+/* 6.9.获取Hot/Following列表头部广告 */
+/* 接口路径 */
+#define LIVEROOM_BANNER                                 "/manList/v1/banner"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_BANNER_BANNERIMG                               "banner_img"
+#define LIVEROOM_BANNER_BANNERLINK                              "banner_link"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

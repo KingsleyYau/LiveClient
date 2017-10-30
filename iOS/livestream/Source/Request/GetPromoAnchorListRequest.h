@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetPromoAnchorListRequest : SessionRequest
+@interface GetPromoAnchorListRequest : LSSessionRequest
 // 获取推荐个数
 @property (nonatomic, assign) int number;
 // 获取界面的类型（1:直播间 2:主播个人页）

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetTalentListRequest : SessionRequest
+@interface GetTalentListRequest : LSSessionRequest
 // 直播间ID
 @property (nonatomic, copy) NSString * _Nullable  roomId;
 @property (nonatomic, strong) GetTalentListFinishHandler _Nullable finishHandler;

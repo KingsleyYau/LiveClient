@@ -55,7 +55,7 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvLackOfCreditNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -80,15 +80,15 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvLackOfCreditNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvLackOfCreditNotice(m_roomId, m_msg, m_credit);
-		FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvLackOfCreditNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvLackOfCreditNoticeTask::Handle() end");
 
 	return result;
 }
@@ -98,14 +98,14 @@ bool RecvLackOfCreditNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLackOfCreditNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLackOfCreditNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLackOfCreditNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

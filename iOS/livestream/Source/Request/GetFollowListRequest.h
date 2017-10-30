@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetFollowListRequest : SessionRequest
+@interface GetFollowListRequest : LSSessionRequest
  // 起始，用于分页，表示从第几个元素开始获取
 @property (nonatomic, assign) int start;
 // 步长，用于分页，表示本次请求获取多少个元素

@@ -61,7 +61,7 @@ bool SendToastTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "SendToastTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "SendToastTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
 
@@ -85,16 +85,16 @@ bool SendToastTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "SendToastTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "SendToastTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnSendToast(GetSeq(), success, m_errType, m_errMsg, m_credit, m_rebateCredit);
-		FileLog("LiveChatClient", "SendToastTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "SendToastTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "SendToastTask::Handle() end");
+	FileLog("ImClient", "SendToastTask::Handle() end");
 
 	return result;
 }
@@ -104,7 +104,7 @@ bool SendToastTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "SendToastTask::GetSendData() begin");
+	FileLog("ImClient", "SendToastTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -118,7 +118,7 @@ bool SendToastTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "SendToastTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "SendToastTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -176,6 +176,6 @@ bool SendToastTask::InitParam(const string& roomId, const string nickName, const
 void SendToastTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendToast(GetSeq(), false, LCC_ERR_CONNECTFAIL, "", 0.0, 0.0);
+        m_listener->OnSendToast(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, 0.0, 0.0);
     }
 }

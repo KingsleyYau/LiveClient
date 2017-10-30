@@ -7,10 +7,10 @@
 //  预约直播
 
 #import <UIKit/UIKit.h>
-#import "GoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
 
-@interface BookPrivateBroadcastViewController :GoogleAnalyticsViewController
+@interface BookPrivateBroadcastViewController :LSGoogleAnalyticsViewController
 
 @property (nonatomic, copy) NSString * userId;
 @property (nonatomic, copy) NSString * userName;

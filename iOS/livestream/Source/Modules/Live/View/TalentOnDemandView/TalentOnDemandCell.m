@@ -7,10 +7,9 @@
 //
 
 #import "TalentOnDemandCell.h"
+#import "LiveBundle.h"
 
 @implementation TalentOnDemandCell
-
-
 + (NSString *)cellIdentifier {
     return @"TalentOnDemandCell";
 }
@@ -19,10 +18,9 @@
     return 45;
 }
 
-
 - (void)awakeFromNib {
     [super awakeFromNib];
-    
+
     self.requestBtn.layer.cornerRadius = 5;
     self.requestBtn.layer.masksToBounds = YES;
 }
@@ -33,15 +31,15 @@
     // Configure the view for the selected state
 }
 
-+ (id)getUITableViewCell:(UITableView*)tableView {
++ (id)getUITableViewCell:(UITableView *)tableView {
     TalentOnDemandCell *cell = (TalentOnDemandCell *)[tableView dequeueReusableCellWithIdentifier:[TalentOnDemandCell cellIdentifier]];
-    
-    if (nil == cell){
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:[TalentOnDemandCell cellIdentifier] owner:tableView options:nil];
+
+    if (nil == cell) {
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[TalentOnDemandCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-    
+
     return cell;
 }
 

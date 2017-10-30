@@ -10,8 +10,8 @@
 
 #import "HotTableViewCell.h"
 
-#import "ImageViewLoader.h"
-#import "FileCacheManager.h"
+#import "LSImageViewLoader.h"
+#import "LSFileCacheManager.h"
 
 #define IMAGE_COUNT 10
 @interface HotTableView () <ImageViewLoaderDelegate,HotTableViewCellDelegate>
@@ -48,7 +48,7 @@
 
 #pragma mark - 列表界面回调 (UITableViewDataSource / UITableViewDelegate)
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0;
+    return 1.5;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -108,9 +108,9 @@
     
     cell.animationArray = animationArray;
     if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-        cell.onlineView.backgroundColor = [UIColor colorWithHexString:@"b5b5b5"];
+        cell.onlineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xB5B5B5);
     } else {
-        cell.onlineView.backgroundColor = [UIColor colorWithHexString:@"8edb2b"];
+        cell.onlineView.backgroundColor = COLOR_WITH_16BAND_RGB(0x8EDB2B);
     }
 
     cell.hotCellDelegate = self;
@@ -151,8 +151,10 @@
         // 免费公开直播间
         case HTTPROOMTYPE_FREEPUBLICLIVEROOM: {
             [cell.roomType setImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_RoomTypePublicLive"]];
-            cell.vipPrivateCenterX.constant = -80;
-            cell.normalPrivateCenterX.constant = -80;
+            cell.vipPrivateCenterX.constant = DESGIN_TRANSFORM_3X(-90);
+            cell.normalPrivateCenterX.constant = DESGIN_TRANSFORM_3X(-90);
+            cell.vipPublicCenterX.constant = DESGIN_TRANSFORM_3X(90);
+            cell.normalPublicCenterX.constant = DESGIN_TRANSFORM_3X(90);
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 // 不在线
                 [cell.roomType setImage:nil];
@@ -190,8 +192,10 @@
         // 付费公开直播间
         case HTTPROOMTYPE_CHARGEPUBLICLIVEROOM: {
             [cell.roomType setImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_RoomTypePublicLive"]];
-            cell.vipPrivateCenterX.constant = -80;
-            cell.normalPrivateCenterX.constant = -80;
+            cell.vipPrivateCenterX.constant = DESGIN_TRANSFORM_3X(-90);
+            cell.normalPrivateCenterX.constant = DESGIN_TRANSFORM_3X(-90);
+            cell.vipPublicCenterX.constant = DESGIN_TRANSFORM_3X(90);
+            cell.normalPublicCenterX.constant = DESGIN_TRANSFORM_3X(90);
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 [cell.roomType setImage:nil];
                 cell.viewPublicFreeBtn.hidden = YES;
@@ -264,23 +268,23 @@
     if (item.interest.count > 0) {
 
         if (item.interest.count == 1) {
-            NSString *interest1Name = [NSString stringWithFormat:@"%@", item.interest[0]];
+            NSString *interest1Name = [NSString stringWithFormat:@"interest_%@", item.interest[0]];
             cell.interest3.image = [UIImage imageNamed:interest1Name];
             cell.interest1.hidden = YES;
             cell.interest2.hidden = YES;
             cell.interest3.hidden = NO;
         } else if (item.interest.count == 2) {
-            NSString *interest3Name = [NSString stringWithFormat:@"%@", item.interest[0]];
-            NSString *interest2Name = [NSString stringWithFormat:@"%@", item.interest[1]];
+            NSString *interest3Name = [NSString stringWithFormat:@"interest_%@", item.interest[0]];
+            NSString *interest2Name = [NSString stringWithFormat:@"interest_%@", item.interest[1]];
             cell.interest3.image = [UIImage imageNamed:interest3Name];
             cell.interest2.image = [UIImage imageNamed:interest2Name];
             cell.interest1.hidden = YES;
             cell.interest2.hidden = NO;
             cell.interest3.hidden = NO;
         } else {
-            NSString *interest3Name = [NSString stringWithFormat:@"%@", item.interest[0]];
-            NSString *interest2Name = [NSString stringWithFormat:@"%@", item.interest[1]];
-            NSString *interest1Name = [NSString stringWithFormat:@"%@", item.interest[2]];
+            NSString *interest3Name = [NSString stringWithFormat:@"interest_%@", item.interest[0]];
+            NSString *interest2Name = [NSString stringWithFormat:@"interest_%@", item.interest[1]];
+            NSString *interest1Name = [NSString stringWithFormat:@"interest_%@", item.interest[2]];
             cell.interest1.image = [UIImage imageNamed:interest1Name];
             cell.interest2.image = [UIImage imageNamed:interest2Name];
             cell.interest3.image = [UIImage imageNamed:interest3Name];
@@ -340,6 +344,12 @@
         default:
             break;
     }
+}
+
+-(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerSection = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 1.5)];
+    headerSection.backgroundColor = [UIColor clearColor];
+    return headerSection;
 }
 
 #pragma mark - 滚动界面回调 (UIScrollViewDelegate)

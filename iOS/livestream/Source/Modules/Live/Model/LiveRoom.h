@@ -23,17 +23,36 @@ typedef enum LiveRoomType {
 @interface LiveRoom : NSObject
 
 @property (strong) NSString *roomId;
+@property (strong) NSString *userId;
+@property (strong) NSString *userName;
 @property (assign) LiveRoomType roomType;
-@property (strong) NSString *playUrl;
-@property (strong) NSString *publishUrl;
 
-@property (strong, readonly) NSString *userId;
-@property (strong, readonly) NSString *userName;
+@property (strong, nonatomic) NSArray<NSString *> *playUrlArray;
+@property (strong, readonly) NSString *playUrl;
+@property (strong, nonatomic) NSArray<NSString *> *publishUrlArray;
+@property (strong, readonly) NSString *publishUrl;
+
 @property (strong, readonly) NSString *photoUrl;
+@property (strong, readonly) NSString *roomPhotoUrl;
 
 @property (strong) LiveRoomInfoItemObject *httpLiveRoom;
 @property (strong) ImLiveRoomObject *imLiveRoom;
 
 @property (atomic, assign) double roomCredit;
+
+/**
+ 重置
+ */
+- (void)reset;
+
+/**
+ 切换播放Url
+ */
+- (NSString *)changePlayUrl;
+
+/**
+ 切换推送Url
+ */
+- (NSString *)changePublishUrl;
 
 @end

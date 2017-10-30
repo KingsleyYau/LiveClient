@@ -58,7 +58,7 @@ bool RecvBackpackUpdateNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvBackpackUpdateNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     BackpackInfo item;
@@ -112,15 +112,15 @@ bool RecvBackpackUpdateNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvBackpackUpdateNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvBackpackUpdateNotice(item);
-		FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvBackpackUpdateNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvBackpackUpdateNoticeTask::Handle() end");
 
 	return result;
 }
@@ -130,14 +130,14 @@ bool RecvBackpackUpdateNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvBackpackUpdateNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvBackpackUpdateNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvBackpackUpdateNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

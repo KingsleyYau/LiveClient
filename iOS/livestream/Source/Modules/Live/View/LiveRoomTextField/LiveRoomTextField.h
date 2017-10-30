@@ -6,19 +6,18 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "BLTextField.h"
-#import "ChatEmotion.h"
-#import "ChatTextAttachment.h"
+#import "LSChatEmotion.h"
+#import "LSChatTextAttachment.h"
 
-@interface LiveRoomTextField : BLTextField
+@interface LiveRoomTextField : LSBLTextField
 
-@property (strong) NSString *fullText;
+@property (strong) NSString * _Nullable fullText;
 
 /**
  *   生成富文本,用以显示表情
  *
  *  @param emotion 表情模型
  */
-- (void)insertEmotion:(ChatEmotion* _Nonnull)emotion;
+- (void)insertEmotion:(LSChatEmotion* _Nonnull)emotion;
 
 @end

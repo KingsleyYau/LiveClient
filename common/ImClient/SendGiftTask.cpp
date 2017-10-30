@@ -75,7 +75,7 @@ bool SendGiftTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "SendGiftTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "SendGiftTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
 
@@ -99,16 +99,16 @@ bool SendGiftTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "SendGiftTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "SendGiftTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnSendGift(GetSeq(), success, m_errType, m_errMsg, m_credit, m_rebateCredit);
-		FileLog("LiveChatClient", "SendGiftTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "SendGiftTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "SendGiftTask::Handle() end");
+	FileLog("ImClient", "SendGiftTask::Handle() end");
 
 	return result;
 }
@@ -118,7 +118,7 @@ bool SendGiftTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "SendGiftTask::GetSendData() begin");
+	FileLog("ImClient", "SendGiftTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -140,7 +140,7 @@ bool SendGiftTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "SendGiftTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "SendGiftTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -206,6 +206,6 @@ bool SendGiftTask::InitParam(const string& roomId, const string nickName, const 
 void SendGiftTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendGift(GetSeq(), false, LCC_ERR_CONNECTFAIL, "", 0.0, 0.0);
+        m_listener->OnSendGift(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, 0.0, 0.0);
     }
 }

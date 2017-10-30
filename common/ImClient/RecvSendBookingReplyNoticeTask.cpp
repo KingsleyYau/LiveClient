@@ -46,7 +46,7 @@ bool RecvSendBookingReplyNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendBookingReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
     BookingReplyItem item;
     // 协议解析
@@ -64,15 +64,15 @@ bool RecvSendBookingReplyNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvSendBookingReplyNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvSendBookingReplyNotice(item);
-		FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvSendBookingReplyNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvSendBookingReplyNoticeTask::Handle() end");
 
 	return result;
 }
@@ -82,14 +82,14 @@ bool RecvSendBookingReplyNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvSendBookingReplyNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvSendBookingReplyNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvSendBookingReplyNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

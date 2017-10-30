@@ -24,5 +24,6 @@
 @property (nonatomic, copy) NSString* _Nullable nickName;
 @property (nonatomic, copy) NSString* _Nullable avatarImg;
 @property (nonatomic, assign) int leftSeconds;
+@property (nonatomic, strong) NSArray<NSString *>* _Nullable playUrl;
 
 @end

@@ -47,6 +47,10 @@ typedef enum {
     HTTP_LCC_ERR_ANCHOR_BUSY = 10035, // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
     HTTP_LCC_ERR_CHOOSE_TIME_ERR = 10042, // 预约时间错误 /*important*/
     HTTP_LCC_ERR_BOOK_EXIST = 10043, // 用户预约时间段已经存在预约 /*important*/
+    HTTP_LCC_ERR_BIND_PHONE = 10064, // 手机号码已绑定
+    HTTP_LCC_ERR_RETRY_PHONE = 10065, // 请稍后再重试
+    HTTP_LCC_ERR_MORE_TWENTY_PHONE = 10066, // 60分钟内验证超过20次，请24小时后再试
+    HTTP_LCC_ERR_UPDATE_PHONE_FAIL = 10067 // 更新失败
  } HTTP_LCC_ERR_TYPE;
 
 
@@ -55,6 +59,12 @@ typedef enum LoginType {
     LoginType_Phone = 0,
     LoginType_Email =1,
 } LoginType;
+
+typedef enum UserType {
+    USERTYPEUNKNOW = 0,     // 未知
+    USERTYPEA1 = 1,         // A1类型
+    USERTYPEA2 = 2          // A2类型
+}UserType;
 
 /*主播在线状态*/
 typedef enum{
@@ -111,6 +121,12 @@ typedef enum {
     EMOTICONTYPE_STANDARD = 0,      // Standard
     EMOTICONTYPE_ADVANCED = 1       // Advanced
 }EmoticonType;
+
+/* 表情类型 */
+typedef enum {
+    EMOTICONACTIONTYPE_STATIC = 0,      // 静态表情
+    EMOTICONACTIONTYPE_DYNAMIC = 1      // 动画表情
+}EmoticonActionType;
 
 // 回复状态
 typedef enum {

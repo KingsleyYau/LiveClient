@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -16,13 +17,13 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You have insufficient credits to start 2-way video." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FDa-Zg-UzK" userLabel="Tips Label">
-                    <rect key="frame" x="20" y="20" width="335" height="43"/>
+                    <rect key="frame" x="20" y="25" width="335" height="43"/>
                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mX6-VG-6EM" userLabel="OK Button">
-                    <rect key="frame" x="127.5" y="83" width="120" height="35"/>
+                    <rect key="frame" x="127.5" y="88" width="120" height="35"/>
                     <color key="backgroundColor" red="1" green="0.82352941180000006" blue="0.019607843140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="35" id="b5z-gB-rmT"/>
@@ -35,20 +36,37 @@
                         <action selector="actionOK:" destination="iN0-l3-epB" eventType="touchUpInside" id="7c8-Eo-5II"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Hu-fu-CfF" userLabel="Close Button">
+                    <rect key="frame" x="345" y="0.0" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="1Hu-fu-CfF" secondAttribute="height" multiplier="1:1" id="2Go-Av-ogg"/>
+                        <constraint firstAttribute="width" constant="30" id="Cl7-ao-AlB"/>
+                    </constraints>
+                    <state key="normal" image="TalentClose_btn_black"/>
+                    <connections>
+                        <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="WQS-Sa-nRX"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="mX6-VG-6EM" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="P4e-VU-ksp"/>
+                <constraint firstItem="1Hu-fu-CfF" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Yrw-Yb-pYX"/>
                 <constraint firstItem="mX6-VG-6EM" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-20" id="czi-c0-icq"/>
-                <constraint firstItem="FDa-Zg-UzK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="j4t-yb-40P"/>
+                <constraint firstItem="FDa-Zg-UzK" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="25" id="j4t-yb-40P"/>
                 <constraint firstItem="FDa-Zg-UzK" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" constant="-20" id="jY2-nm-qTi"/>
+                <constraint firstAttribute="trailing" secondItem="1Hu-fu-CfF" secondAttribute="trailing" id="mf2-nd-SXb"/>
                 <constraint firstItem="mX6-VG-6EM" firstAttribute="top" secondItem="FDa-Zg-UzK" secondAttribute="bottom" constant="20" id="ru2-St-9Dw"/>
                 <constraint firstItem="FDa-Zg-UzK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="yn4-XZ-6W6"/>
             </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
             <connections>
                 <outlet property="okButton" destination="mX6-VG-6EM" id="erv-WW-rFW"/>
                 <outlet property="tipsLabel" destination="FDa-Zg-UzK" id="45l-pI-ecS"/>
             </connections>
         </view>
     </objects>
+    <resources>
+        <image name="TalentClose_btn_black" width="9" height="9"/>
+    </resources>
 </document>

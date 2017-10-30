@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/iv_gaussianBlur"
+        android:src="@drawable/ic_default_photo_man_1"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <View
+        android:id="@+id/v_gaussianBlurFloat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:background="#a6000000"/>
+</FrameLayout>
+

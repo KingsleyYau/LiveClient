@@ -72,6 +72,7 @@ static const string CMD_RECVSENDTALENTNOTICE = "imShare/sendTalentNotice"; //8.2
 static const string CMD_RECVLEVELUPNOTICE = "imMan/levelUpNotice";    // 9.1.观众等级升级通知
 static const string CMD_RECVLOVELEVELUPNOTICE = "imMan/loveLevelUpNotice";    // 9.2.观众亲密度升级通知
 static const string CMD_RECVBACKPACKUPDATENOTICE = "imMan/backpackUpdateNotice";    // 9.3.背包更新通知
+static const string CMD_RECVGETHONORNOTICE = "imShare/getHonorNotice";  // 9.4.观众勋章升级通知
 
 // 判断是否客户端主动请求的命令
 inline bool IsRequestCmd(const string& cmd)

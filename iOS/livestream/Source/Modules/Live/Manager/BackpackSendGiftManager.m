@@ -8,14 +8,14 @@
 
 #import "BackpackSendGiftManager.h"
 #import "GiftListRequest.h"
-#import "LoginManager.h"
-#import "IMManager.h"
+#import "LSLoginManager.h"
+#import "LSImManager.h"
 
 @interface BackpackSendGiftManager () <LoginManagerDelegate>
 
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
-@property (nonatomic, strong) LoginManager *loginManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
 
 @property (nonatomic, assign) BOOL isFirstSend;
 
@@ -36,14 +36,14 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        LoginManager *logManager = [LoginManager manager];
+        LSLoginManager *logManager = [LSLoginManager manager];
         [logManager addDelegate:self];
         self.backGiftArray = [[NSMutableArray alloc] init];
         self.roombackGiftArray = [[NSMutableArray alloc] init];
         self.roombackGiftDic = [[NSMutableDictionary alloc] init];
         self.backGiftItem = [[RoomBackGiftItem alloc] init];
-        self.sessionManager = [SessionRequestManager manager];
-        self.loginManager = [LoginManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
+        self.loginManager = [LSLoginManager manager];
         self.sendGiftArray = [[NSMutableArray alloc] init];
         self.isFirstSend = YES;
     }
@@ -51,7 +51,7 @@
 }
 
 // 监听HTTP登录
-- (void)manager:(LoginManager *)manager onLogin:(BOOL)success loginItem:(LoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 请求背包礼物列表
@@ -68,9 +68,7 @@
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg,
                               NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
         
-        NSLog(@"BackpackSendGiftManager::GiftListRequest[发送获取背包礼物列表请求结果] success:%d"
-               " ErrNum:%ld ErrMsg:%@ array:%@",
-              success, (long)errnum, errmsg, array);
+        NSLog(@"BackpackSendGiftManager::GiftListRequest( [发送获取背包礼物列表请求结果], success : %d, errnum : %ld, errmsg : %@, totalCount : %d )", success, (long)errnum, errmsg, totalCount);
 
         dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -91,6 +89,9 @@
                             }
                         }
                     }
+                } else {
+                    // 没有背包礼物返回空数组
+                    callBack(success, self.roombackGiftArray);
                 }
             } else {
                 self.roombackGiftArray = nil;
@@ -140,6 +141,17 @@
     return isFinsh;
 }
 
+
+/**
+ 发送背包礼物
+ 
+ successType 0  背包礼物不足
+ successType 1  发送成功
+ successType 2  发送成功并且刚好送完
+
+ @param sendItem 发送礼物item
+ @return 发送类型
+ */
 - (int)sendBackpackGiftWithSendGiftItem:(SendGiftItem *)sendItem {
 
     int successType = -1;
@@ -193,11 +205,11 @@
 
 - (void)sendBackGiftQurest {
 
-    IMManager *manager = [IMManager manager];
+    LSImManager *manager = [LSImManager manager];
     SendGiftItem *item = self.sendGiftArray[0];
 
     // 送礼
-    [manager sendGift:item.roomID
+    BOOL result = [manager sendGift:item.roomID
                  nickName:self.loginManager.loginItem.nickName
                    giftId:item.giftItem.infoItem.giftId
                  giftName:item.giftItem.infoItem.name
@@ -228,6 +240,11 @@
                     }
                 });
             }];
+    
+    if (!result) {
+        [self.sendGiftArray removeAllObjects];
+        self.isFirstSend = YES;
+    }
 }
 
 - (void)updataBackpackGiftList {

@@ -12,7 +12,7 @@
 static UserInfoManager *gManager = nil;
 @interface UserInfoManager ()
 #pragma mark - 接口管理器
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 // 缓存数据
 @property (nonatomic, strong) NSMutableDictionary *dictionary;
 @end
@@ -31,7 +31,7 @@ static UserInfoManager *gManager = nil;
         // 初始化缓存
         self.dictionary = [NSMutableDictionary dictionary];
         // 初始请求管理器
-        self.sessionManager = [SessionRequestManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
     }
     return self;
 }

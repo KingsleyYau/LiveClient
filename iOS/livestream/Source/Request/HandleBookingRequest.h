@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface HandleBookingRequest : SessionRequest
+@interface HandleBookingRequest : LSSessionRequest
 
 // 邀请ID
 @property (nonatomic, copy) NSString* _Nonnull inviteId;

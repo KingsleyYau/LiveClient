@@ -38,6 +38,8 @@
  * roomPrice                直播间资费
  * manPushPrice             视频资费
  * maxFansiNum		        最大人数限制
+ * honorId                  勋章ID
+ * honorImg                 勋章图片url
  */
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
@@ -59,5 +61,7 @@
 @property (nonatomic, assign) double roomPrice;
 @property (nonatomic, assign) double manPushPrice;
 @property (nonatomic, assign) int maxFansiNum;
+@property (nonatomic, copy) NSString *_Nonnull honorId;
+@property (nonatomic, copy) NSString *_Nonnull honorImg;
 
 @end

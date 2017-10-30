@@ -480,7 +480,7 @@ bool VideoEncoderH264::CreateContext() {
     
     bool bFlag = true;
     avcodec_register_all();
-    av_log_set_level(AV_LOG_ERROR);
+//    av_log_set_level(AV_LOG_ERROR);
     
     mCodec = avcodec_find_encoder(AV_CODEC_ID_H264);
     if ( !mCodec ) {
@@ -510,6 +510,7 @@ bool VideoEncoderH264::CreateContext() {
          防止编码延迟
          */
         av_opt_set(mContext->priv_data, "tune", "zerolatency", 0);
+        // 设置不分片
 //        av_opt_set(mContext->priv_data, "x264-params", "sliced-threads=0", 0);
 
         /**
@@ -534,7 +535,7 @@ bool VideoEncoderH264::CreateContext() {
         mContext->height = mHeight;
         mContext->time_base = (AVRational){1, mFPS};
         mContext->gop_size = mKeyFrameInterval;
-        mContext->max_b_frames = 0;
+        mContext->max_b_frames = 0;// optional param 可选参数，禁用B帧，设置 x264 参数 profile 值为 baseline 时，此参数失效
         AVPixelFormat srcFormat = AV_PIX_FMT_YUV420P;
         mContext->pix_fmt = srcFormat;
         
@@ -561,7 +562,6 @@ bool VideoEncoderH264::CreateContext() {
                         this,
                         ret
                         );
-            mContext = NULL;
             bFlag = false;
         }
     }
@@ -593,6 +593,7 @@ void VideoEncoderH264::DestroyContext() {
     
     if( mContext ) {
         avcodec_close(mContext);
+        avcodec_free_context(&mContext);
         mContext = NULL;
     }
     

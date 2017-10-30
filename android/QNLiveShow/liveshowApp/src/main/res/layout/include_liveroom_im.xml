@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+
+    <!--右上角返点信息显示、中间的视频加载loading动画、左下角的连送动画、右下角的立即私密按钮、入场动画-->
+    <FrameLayout
+        android:id="@+id/rl_media"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultVedioPlayerHeight">
+
+        <LinearLayout
+            android:id="@+id/ll_rebate"
+            android:layout_width="116dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="13dp"
+            android:visibility="visible"
+            android:background="@drawable/bg_liveroom_creditstips_b03a0953"
+            android:gravity="center"
+            android:layout_gravity="right">
+
+            <TextView
+                android:id="@+id/tv_rebateTips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="8sp"
+                android:textColor="@android:color/white"
+                android:text="@string/tip_roomGiftCredit"/>
+
+            <TextView
+                android:id="@+id/tv_rebateValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#ffd205"
+                android:text="0.65"/>
+
+        </LinearLayout>
+
+
+
+        <ImageView
+            android:id="@+id/iv_privateLiveNow"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_live_privatelive_freepublic"
+            android:scaleType="centerCrop"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="13dp"
+            android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_entranceCar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top|right"
+            android:orientation="horizontal"
+            android:layout_gravity="right">
+
+            <include
+                layout="@layout/view_liveroom_car"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/flMultiGift"
+            android:layout_width="match_parent"
+            android:layout_height="98dp"
+            android:layout_gravity="bottom|left"
+            android:layout_marginBottom="37dp"
+            android:layout_marginRight="80dp">
+        </FrameLayout>
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_imMsgContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1">
+
+        <include layout="@layout/view_liveroom_msglist"
+            android:id="@+id/fl_msglist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="68dp"
+            android:layout_marginTop="11dp"/>
+
+        <LinearLayout
+            android:id="@+id/ll_bulletScreen"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/liveroom_bullet_height"
+            android:clickable="false"
+            android:visibility="invisible"
+            android:gravity="center_vertical"
+            android:paddingBottom="3dp"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/rl_bullet1"
+                layout="@layout/view_live_center_bullet_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:visibility="invisible"/>
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

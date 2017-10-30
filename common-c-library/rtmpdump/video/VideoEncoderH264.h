@@ -37,7 +37,8 @@ class VideoEncoderH264 : public VideoEncoder {
 public:
     VideoEncoderH264();
     virtual ~VideoEncoderH264();
-
+    static void GobalInit();
+    
 public:
     bool Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type);
     void SetCallback(VideoEncoderCallback* callback);

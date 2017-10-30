@@ -62,6 +62,7 @@
 		506BC28B1F58FD91001C2962 /* VoucherInfoObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC2851F58FD91001C2962 /* VoucherInfoObject.m */; };
 		50F3839F1EE68A2C003D2765 /* ImClientOC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50F3839B1EE68A2C003D2765 /* ImClientOC.mm */; };
 		FA1CEBD81F611B760010E671 /* ControlManPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */; };
+		FA3315C31F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */; };
 		FA48E48F1F60EAA000D590E1 /* ImScheduleRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E48E1F60EAA000D590E1 /* ImScheduleRoomObject.m */; };
 		FA48E4921F60EC2300D590E1 /* ImInviteIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E4911F60EC2300D590E1 /* ImInviteIdItemObject.m */; };
 		FA48E49B1F60F10300D590E1 /* ImLoginReturnObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E49A1F60F10300D590E1 /* ImLoginReturnObject.m */; };
@@ -198,12 +199,15 @@
 		506BC2831F58FD91001C2962 /* RoomTopFanItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RoomTopFanItemObject.m; sourceTree = "<group>"; };
 		506BC2841F58FD91001C2962 /* VoucherInfoObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VoucherInfoObject.h; sourceTree = "<group>"; };
 		506BC2851F58FD91001C2962 /* VoucherInfoObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VoucherInfoObject.m; sourceTree = "<group>"; };
+		50AE072C1F9736AD005CF8D2 /* ImClient-PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ImClient-PrefixHeader.pch"; sourceTree = "<group>"; };
 		50F383321EE68807003D2765 /* libImClient.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libImClient.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		50F3839A1EE68A2C003D2765 /* ImClientOC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImClientOC.h; sourceTree = "<group>"; };
 		50F3839B1EE68A2C003D2765 /* ImClientOC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ImClientOC.mm; sourceTree = "<group>"; };
 		50F3839C1EE68A2C003D2765 /* IMLiveRoomManagerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMLiveRoomManagerListener.h; sourceTree = "<group>"; };
 		FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlManPushTask.cpp; sourceTree = "<group>"; };
 		FA1CEBD71F611B760010E671 /* ControlManPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlManPushTask.h; sourceTree = "<group>"; };
+		FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvGetHonorNoticeTask.cpp; sourceTree = "<group>"; };
+		FA3315C21F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvGetHonorNoticeTask.h; sourceTree = "<group>"; };
 		FA48E48A1F60D46000D590E1 /* PrivateInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrivateInviteItem.h; path = item/PrivateInviteItem.h; sourceTree = "<group>"; };
 		FA48E48B1F60DB3C00D590E1 /* ScheduleRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScheduleRoomItem.h; path = item/ScheduleRoomItem.h; sourceTree = "<group>"; };
 		FA48E48C1F60E14F00D590E1 /* LoginReturnItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginReturnItem.h; path = item/LoginReturnItem.h; sourceTree = "<group>"; };
@@ -248,6 +252,8 @@
 		500B45061EE7D19500C89375 /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */,
+				FA3315C21F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.h */,
 				FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */,
 				FA92A5991F665B39004F239F /* GetInviteInfoTask.h */,
 				FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */,
@@ -412,12 +418,13 @@
 		50F383341EE68807003D2765 /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
-				506BC2791F58FD91001C2962 /* Model */,
 				500B45061EE7D19500C89375 /* ImClient */,
 				50F3839A1EE68A2C003D2765 /* ImClientOC.h */,
 				50F3839B1EE68A2C003D2765 /* ImClientOC.mm */,
-				50F3839C1EE68A2C003D2765 /* IMLiveRoomManagerListener.h */,
 				5034E21B1F5FE0D900334B76 /* ImHeader.h */,
+				50F3839C1EE68A2C003D2765 /* IMLiveRoomManagerListener.h */,
+				506BC2791F58FD91001C2962 /* Model */,
+				50AE072C1F9736AD005CF8D2 /* ImClient-PrefixHeader.pch */,
 			);
 			path = ImClient;
 			sourceTree = "<group>";
@@ -495,6 +502,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA3315C31F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp in Sources */,
 				FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */,
 				5055918B1EF3E4AB000AF03A /* KickOffTask.cpp in Sources */,
 				500B45511EE7D19500C89375 /* TransportClient.cpp in Sources */,
@@ -662,7 +670,9 @@
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				DEVELOPMENT_TEAM = MK37J4UMHH;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/ImClient-PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Config",
 					"${COMMON_C_SRC_ROOT}",
 					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
 				);
@@ -670,6 +680,8 @@
 					"-DIOS",
 					"-DPRINT_JNI_LOG",
 					"-DFILE_JNI_LOG",
+					"-fvisibility=hidden",
+					"-DMG_ENABLE_SSL",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -687,11 +699,16 @@
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				DEVELOPMENT_TEAM = MK37J4UMHH;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/ImClient-PrefixHeader.pch";
 				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../Config",
 					"${COMMON_C_SRC_ROOT}",
 					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
 				);
-				OTHER_CFLAGS = "-DIOS";
+				OTHER_CFLAGS = (
+					"-DIOS",
+					"-fvisibility=hidden",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

@@ -10,11 +10,23 @@
 
 #import "GPUImage.h"
 
+@class LiveStreamPublisher;
+@protocol LiveStreamPublisherDelegate <NSObject>
+@optional
+- (NSString * _Nullable)publisherShouldChangeUrl:(LiveStreamPublisher * _Nonnull)publisher;
+
+@end
+
 @interface LiveStreamPublisher : NSObject
 /**
  显示界面
  */
 @property (nonatomic, weak) GPUImageView* _Nullable publishView;
+
+/**
+ 委托
+ */
+@property (weak) id<LiveStreamPublisherDelegate> _Nullable delegate;
 
 /**
  是否开启美颜
@@ -26,7 +38,11 @@
  */
 @property (nonatomic, assign) BOOL mute;
 
-#pragma mark - 获取实例
+/**
+ 当前推送URL
+ */
+@property (strong, readonly) NSString * _Nonnull url;
+
 /**
  *  获取实例
  *

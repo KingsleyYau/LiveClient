@@ -4,7 +4,6 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -45,9 +44,9 @@
                             <rect key="frame" x="0.0" y="0.0" width="320" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Btn_Chat" translatesAutoresizingMaskIntoConstraints="NO" id="QEE-ZY-SOL" userLabel=" Chat Button" customClass="UITapImageView">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Btn_Chat" translatesAutoresizingMaskIntoConstraints="NO" id="QEE-ZY-SOL" userLabel=" Chat Button" customClass="LSUITapImageView">
                             <rect key="frame" x="10" y="8" width="162" height="32"/>
-                            <rect key="contentStretch" x="0.72999999999999998" y="0.0" width="0.050000000000000003" height="1"/>
+                            <rect key="contentStretch" x="0.90000000000000002" y="0.0" width="0.01" height="1"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1n-mD-AK2" userLabel="Talents Button">
                             <rect key="frame" x="182" y="4" width="36" height="36"/>
@@ -125,8 +124,8 @@
     <resources>
         <image name="Live_Play_Btn_Gift_Random" width="40" height="40"/>
         <image name="Live_Private_Vip_Btn_Talent" width="47" height="47"/>
-        <image name="Live_Public_Btn_Chat" width="186" height="32"/>
-        <image name="Live_Public_Btn_Gift" width="46" height="46"/>
+        <image name="Live_Public_Btn_Chat" width="160" height="32"/>
+        <image name="Live_Public_Btn_Gift" width="41" height="45"/>
         <image name="Live_Publish_Btn_Gift" width="37" height="44"/>
     </resources>
 </document>

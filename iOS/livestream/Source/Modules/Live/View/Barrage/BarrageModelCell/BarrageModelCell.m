@@ -8,6 +8,7 @@
 
 #import "BarrageModelCell.h"
 #import "BarrageView.h"
+#import "LiveBundle.h"
 
 @interface BarrageModelCell ()
 @end
@@ -15,7 +16,7 @@
 @implementation BarrageModelCell
 
 - (instancetype)reloadCustomCell {
-    return [[NSBundle mainBundle] loadNibNamed:@"BarrageModelCell" owner:self options:0].firstObject;
+    return [[LiveBundle mainBundle] loadNibNamed:@"BarrageModelCell" owner:self options:0].firstObject;
 }
 
 + (instancetype)cellWithBarrageView:(BarrageView *)barrageView {

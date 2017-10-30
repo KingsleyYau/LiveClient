@@ -50,7 +50,8 @@ HttpRequest::HttpRequest() {
 
 HttpRequest::~HttpRequest() {
 	// TODO Auto-generated destructor stub
-	mHttpClient.Stop();
+//	mHttpClient.Stop();
+    StopRequest(true);
 
 	if( mpHttpRequestRunnable != NULL ) {
 		delete mpHttpRequestRunnable;

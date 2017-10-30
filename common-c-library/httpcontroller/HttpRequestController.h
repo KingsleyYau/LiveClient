@@ -45,6 +45,8 @@
 #include "HttpCloseAdAnchorListTask.h"
 #include "HttpGetPhoneVerifyCodeTask.h"
 #include "HttpSubmitPhoneVerifyCodeTask.h"
+#include "HttpServerSpeedTask.h"
+#include "HttpBannerTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -78,7 +80,8 @@ public:
      */
     long long     Login(
                         HttpRequestManager *pHttpRequestManager,
-                        const string& qnsid,
+                        const string& manId,
+                        const string& userSid,
                         const string& deviceid,
                         const string& model,
                         const string& manufacturer,
@@ -637,6 +640,35 @@ public:
                                  IRequestSubmitPhoneVerifyCodeCallback* callback = NULL
                                  );
     
+    /**
+     * 6.8.提交流媒体服务器测速结果
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param sid                           流媒体服务器ID
+     * @param res                           http请求完成时间（毫秒）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ServerSpeed(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& sid,
+                        int res,
+                        IRequestServerSpeedCallback* callback = NULL
+                        );
+    
+    /**
+     * 6.9.获取Hot/Following列表头部广告
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long Banner(
+                     HttpRequestManager *pHttpRequestManager,
+                    IRequestBannerCallback* callback = NULL
+                    );
 private:
     void OnTaskFinish(IHttpTask* task);
     

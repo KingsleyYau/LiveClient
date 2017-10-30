@@ -8,45 +8,74 @@
 
 #import "LiveModule.h"
 
-#import "MainViewController.h"
+#pragma mark - 界面
+#import "LSMainViewController.h"
 #import "LiveChannelAdViewController.h"
+#import "PushInviteViewController.h"
+#import "PushBookingViewController.h"
 
-#import "LoginManager.h"
-#import "RequestManager.h"
-#import "SessionRequestManager.h"
-#import "IMManager.h"
-
+#pragma mark - 登录
 #import "LiveGiftListManager.h"
 #import "LiveGiftDownloadManager.h"
-#import "LiveStreamSession.h"
-#import "FileCacheManager.h"
+#import "LSChatEmotionManager.h"
+
+#pragma mark - 公共
+#import "LSFileCacheManager.h"
 #import "BackpackSendGiftManager.h"
 #import "UserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
+#import "LiveBundle.h"
 
+#pragma mark - HTTP
+#import "LSLoginManager.h"
+#import "LSRequestManager.h"
+#import "LSSessionRequestManager.h"
+
+#pragma mark - IM
+#import "LSImManager.h"
+
+#pragma mark - 流媒体
+#import "LiveGobalManager.h"
+#import "LiveStreamSession.h"
+
+#pragma mark - 广告
 #import "GetAnchorListRequest.h"
 #import "LiveChannelAdView.h"
 
-#import "IQNService.h"
-#import "IServiceManager.h"
+#pragma mark - URL跳转
+#import "LiveUrlHandler.h"
 
-#import "Dialog.h"
+#pragma mark - QN
+#import "LiveService.h"
 
-static LiveModule *gMmodule = nil;
-@interface LiveModule () <LoginManagerDelegate, IQNService, IMLiveRoomManagerDelegate, IMManagerDelegate> {
-    UIViewController *_moduleViewController;
+static LiveModule *gModule = nil;
+@interface LiveModule () <LoginManagerDelegate, IQNService, IServiceManager, IMLiveRoomManagerDelegate, IMManagerDelegate> {
+    UIViewController *_moduleVC;
+    UIViewController *_adVc;
 }
 
-@property (nonatomic, strong) NSString *token;
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
-@property (nonatomic, strong) LoginManager *loginManager;
-@property (nonatomic, strong) IMManager *imManager;
-@property (nonatomic, strong) LiveGiftListManager *giftListManager;
-@property (nonatomic, strong) LiveGiftDownloadManager *giftDownloadManager;
-@property (nonatomic, strong) BackpackSendGiftManager *backGiftManager;
-@property (nonatomic, strong) LiveChannelAdViewController *liveChannel;
-#pragma mark - 余额及返点信息管理器
-@property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
+// 是否在后台
+@property (assign, nonatomic) BOOL isBackground;
+@property (strong, nonatomic) NSString *manId;
+@property (strong, nonatomic) NSString *token;
+@property (strong, nonatomic) LSSessionRequestManager *sessionManager;
+@property (strong, nonatomic) LSLoginManager *loginManager;
+@property (strong, nonatomic) LSImManager *imManager;
+@property (strong, nonatomic) LiveGobalManager *liveGobalManager;
+@property (strong, nonatomic) LiveGiftListManager *giftListManager;
+@property (strong, nonatomic) LiveGiftDownloadManager *giftDownloadManager;
+@property (strong, nonatomic) BackpackSendGiftManager *backGiftManager;
+@property (strong, nonatomic) LSChatEmotionManager *emotionManager;
+@property (strong, nonatomic) LiveChannelAdViewController *liveChannel;
+// 余额及返点信息管理器
+@property (strong, nonatomic) LiveRoomCreditRebateManager *creditRebateManager;
+// 通知界面
+@property (strong, nonatomic) UIViewController *notificationVC;
+@property (strong, nonatomic) UIColor *tintColor;
+@property (strong, nonatomic) UIColor *barTintColor;
+@property (strong, nonatomic) NSDictionary *barTitleTextAttributes;
+// 广告界面
+@property (strong, nonatomic) UIViewController *adVc;
 
 @end
 
@@ -55,31 +84,44 @@ static LiveModule *gMmodule = nil;
 + (instancetype)module {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        if (!gMmodule) {
-            gMmodule = [[LiveModule alloc] init];
+        if (!gModule) {
+            gModule = [[LiveModule alloc] init];
         }
     });
-    return gMmodule;
+    return gModule;
 }
 
 - (id)init {
+    NSLog(@"LiveModule::init()");
+
     if (self = [super init]) {
         // 模块主界面
-        _moduleViewController = nil;
+        _moduleVC = nil;
+        _fromVC = nil;
+        _notificationVC = nil;
+        _adVc = nil;
+        // 创建直播服务
+        [LiveService service];
+        // 资源全局管理
+        [LiveBundle gobalInit];
+        // 初始化流媒体管理器
+        self.liveGobalManager = [LiveGobalManager manager];
         // 初始化Http登陆管理器
-        self.loginManager = [LoginManager manager];
+        self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
         // 初始化IM管理器
-        self.imManager = [IMManager manager];
+        self.imManager = [LSImManager manager];
         [self.imManager addDelegate:self];
         [self.imManager.client addDelegate:self];
         // 初始化礼物下载器
         self.giftListManager = [LiveGiftListManager manager];
         self.giftDownloadManager = [LiveGiftDownloadManager manager];
+        // 初始化聊天表情管理器
+        self.emotionManager = [LSChatEmotionManager emotionManager];
         // 初始化背包礼物管理器
         self.backGiftManager = [BackpackSendGiftManager backpackGiftManager];
         // 初始session管理器
-        self.sessionManager = [SessionRequestManager manager];
+        self.sessionManager = [LSSessionRequestManager manager];
         // 初始化用户信息管理器
         [UserInfoManager manager];
         // 初始化余额及返点信息管理器
@@ -89,53 +131,56 @@ static LiveModule *gMmodule = nil;
         // 开启后台播放
         [[LiveStreamSession session] activeSession];
         // 设置接口管理类属性
-        [RequestManager setLogEnable:YES];
-        [RequestManager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
-        RequestManager *manager = [RequestManager manager];
-        [manager setWebSite:@"http://172.25.32.17:3107"];
-        //[manager setWebSite:@"http://192.168.88.17:3107"];
-
-        // QNService
-        _serviceManager = nil;
+        [LSRequestManager setLogEnable:YES];
+        [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
+        LSRequestManager *manager = [LSRequestManager manager];
+        [manager setWebSite:@""];
     }
     return self;
 }
 
 - (void)dealloc {
+    NSLog(@"LiveModule::dealloc()");
+
     if (_serviceManager) {
         [_serviceManager removeService:self];
     }
+
     [self.imManager.client removeDelegate:self];
     [self.imManager removeDelegate:self];
     [self.loginManager removeDelegate:self];
 }
 
-- (void)setServiceManager:(IServiceManager *)serviceManager {
-    _serviceManager = serviceManager;
-    [_serviceManager addService:self];
+- (void)setConfigUrl:(NSString *)url {
+    NSLog(@"LiveModule::setConfigUrl( url : %@ )", url);
+    
+    LSRequestManager *manager = [LSRequestManager manager];
+    [manager setWebSite:url];
 }
 
-- (BOOL)start:(NSString *)token {
+- (BOOL)start:(NSString *)manId token:(NSString *)token {
     BOOL bFlag = YES;
 
-    NSLog(@"LiveModule::start( token : %@ )", token);
+    NSLog(@"LiveModule::start( manId : %@, token : %@ )", manId, token);
 
     @synchronized(self) {
         self.token = token;
+        self.manId = manId;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.loginManager login:self.token];
+        [self.loginManager login:self.manId userSid:self.token];
     });
 
     return bFlag;
 }
 
 - (void)stop {
-    NSLog(@"LiveModule::stop( token : %@ )", self.token);
+    NSLog(@"LiveModule::stop( manId : %@, token : %@ )", self.manId, self.token);
 
     @synchronized(self) {
         self.token = nil;
+        self.manId = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -144,155 +189,151 @@ static LiveModule *gMmodule = nil;
     });
 }
 
-- (void)setModuleViewController:(UIViewController *)vc {
-    _moduleViewController = vc;
+#pragma mark - Get/Set方法
+- (void)setServiceManager:(id<IServiceManager>)serviceManager {
+    _serviceManager = serviceManager;
+    if (_serviceManager) {
+        [_serviceManager addService:self.service];
+    }
 }
 
-- (UIViewController *)moduleViewController {
-    if (!_moduleViewController) {
-        _moduleViewController = [[MainViewController alloc] initWithNibName:nil bundle:nil];
+- (id<IQNService>)service {
+    return (id<IQNService>)[LiveService service];
+}
+
+- (void)setFromVC:(UIViewController *)fromVC {
+    _fromVC = fromVC;
+    self.tintColor = _fromVC.navigationController.navigationBar.tintColor;
+    self.barTintColor = _fromVC.navigationController.navigationBar.barTintColor;
+    self.barTitleTextAttributes = _fromVC.navigationController.navigationBar.titleTextAttributes;
+}
+
+- (UIViewController *)notificationVC {
+    NSLog(@"LiveModule::notificationVC()");
+    return _notificationVC;
+}
+
+- (UIViewController *)adVc {
+    NSLog(@"LiveModule::notificationVC()");
+    return _adVc;
+}
+
+- (void)setModuleVC:(UIViewController *)vc {
+    _moduleVC = vc;
+}
+
+- (UIViewController *)moduleVC {
+    if (!_moduleVC) {
+        _moduleVC = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
     }
-    return _moduleViewController;
+    return _moduleVC;
 }
 
 #pragma mark - HTTP登录回调
-- (void)manager:(LoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LoginItemObject *_Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString *_Nonnull)errmsg {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString *_Nonnull)errmsg {
     if (success) {
+        if (loginItem.isPushAd) {
+            // 调用QN弹出广告
+            LiveChannelAdViewController *vc = [[LiveChannelAdViewController alloc] initWithNibName:nil bundle:nil];
+            _adVc = vc;
+            if ([self.delegate respondsToSelector:@selector(moduleOnAdViewController:)]) {
+                [self.delegate moduleOnAdViewController:self];
+            }
+        }
+
         // Http登陆成功
-        if( [self.delegate respondsToSelector:@selector(moduleOnLogin:)] ) {
+        if ([self.delegate respondsToSelector:@selector(moduleOnLogin:)]) {
             [self.delegate moduleOnLogin:self];
         }
     } else {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             // 继续登陆
             if (self.token) {
-                [self.loginManager login:self.token];
+                [self.loginManager login:self.manId userSid:self.token];
             }
         });
     }
 }
 
-- (void)manager:(LoginManager *_Nonnull)manager onLogout:(BOOL)kick msg:(NSString *)msg {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(BOOL)kick msg:(NSString *)msg {
+    NSLog(@"LiveModule::onLogout( [Http注销], kick : %@, msg : %@ )", BOOL2YES(kick), msg);
+
     // Http注销
     @synchronized(self) {
         self.token = nil;
+        self.manId = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 停止直播间, 退出到模块入口
-        [self stopService];
-        
+        [[LiveService service] stopService];
+
         // 通知外部模块停止
-        if ([self.delegate respondsToSelector:@selector(module:onLogout:msg:)]) {
-            [self.delegate module:self onLogout:kick msg:msg];
+        if ([self.delegate respondsToSelector:@selector(moduleOnLogout:kick:msg:)]) {
+            [self.delegate moduleOnLogout:self kick:kick msg:msg];
         }
     });
 }
 
 #pragma mark - IM通知
-- (void)onHandleLoginRoom:(NSString * _Nonnull)roomId {
+- (void)onHandleLoginRoom:(NSString *_Nonnull)roomId {
     // TODO:第一次登陆成功, 通知QN强制进入直播间
-    NSLog(@"LiveModule::onHandleLoginRoom( roomId : %@ )", roomId);
-    
-    if( self.serviceManager ) {
-        NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@", roomId];
-        [self.serviceManager openSpecifyService:[NSURL URLWithString:urlString] fromVC:nil];
-    }
+    NSLog(@"LiveModule::onHandleLoginRoom( [第一次登陆成功, 通知QN强制进入直播间], roomId : %@ )", roomId);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 生成直播间跳转的URL
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:@"" roomType:LiveRoomType_Private];
+        [[LiveService service] openUrlByLive:url];
+    });
 }
 
-- (void)onHandleLoginInvite:(ImInviteIdItemObject * _Nonnull)inviteItem {
+- (void)onHandleLoginInvite:(ImInviteIdItemObject *_Nonnull)inviteItem {
     // TODO:第一次登陆成功, 通知QN强制进入有效的立即私密邀请
-    NSLog(@"LiveModule::onHandleLoginInvite( roomId : %@, userId : %@, replyType : %d )", inviteItem.roomId, inviteItem.oppositeId, (int)inviteItem.replyType);
-    
-    if( self.serviceManager ) {
-        NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?service=live&module=liveroom&roomid=%@anchorid=%@&roomtype=1", inviteItem.roomId, inviteItem.oppositeId];
-        [self.serviceManager openSpecifyService:[NSURL URLWithString:urlString] fromVC:nil];
-    }
+    NSLog(@"LiveModule::onHandleLoginInvite( [第一次登陆成功, 通知QN强制进入有效的立即私密邀请], invitationId : %@, roomId : %@, userId : %@, replyType : %d )", inviteItem.invitationId, inviteItem.roomId, inviteItem.oppositeId, (int)inviteItem.replyType);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 生成直播间跳转的URL
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId userId:inviteItem.oppositeId roomType:LiveRoomType_Private];
+        [[LiveService service] openUrlByLive:url];
+    });
 }
 
-#pragma mark - 广告
-- (void)getAdView {
-    GetAnchorListRequest *request = [[GetAnchorListRequest alloc] init];
+- (void)onRecvInstantInviteUserNotice:(NSString *_Nonnull)inviteId anchorId:(NSString *_Nonnull)anchorId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg msg:(NSString *_Nonnull)msg {
+    // TODO:接收主播立即私密邀请通知
+    NSLog(@"LiveModule::onRecvInstantInviteUserNotice( [接收主播立即私密邀请通知, show : %@], inviteId : %@, userId : %@, userName : %@, msg : %@ )", BOOL2YES(_moduleVC.navigationController), inviteId, anchorId, nickName, msg);
 
-    int start = 1;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (_moduleVC.navigationController) {
+            // 生成直播间跳转的URL
+            NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" userId:anchorId roomType:LiveRoomType_Private];
+            // 调用QN弹出通知
+            PushInviteViewController *vc = [[PushInviteViewController alloc] initWithNibName:nil bundle:nil];
+            vc.url = url;
+            _notificationVC = vc;
 
-    // 每页最大纪录数
-    request.start = start;
-    request.step = 4;
-    request.hasWatch = NO;
-
-    // 调用接口
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //            NSLog(@"HotViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
-            NSMutableArray *dataArray = [NSMutableArray array];
-            if (success) {
-                dataArray = (NSMutableArray *)array;
+            if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
+                [self.delegate moduleOnNotification:self];
             }
-
-            LiveChannelAdViewController *liveChannel = [[LiveChannelAdViewController alloc] initWithNibName:nil bundle:nil];
-            LiveChannelAdView *adView = [LiveChannelAdView initWithLiveChannelAdViewXib:liveChannel];
-            adView.contentView.items = dataArray;
-            [adView.contentView reloadData];
-            self.liveChannel = liveChannel;
-
-            adView.contentView.liveChannelDelegate = self.liveChannel;
-            ;
-            adView.adViewDelegate = self.liveChannel;
-            ;
-            if ([self.delegate respondsToSelector:@selector(module:onGetAdView:)]) {
-                [self.delegate module:self onGetAdView:adView];
-            }
-
-        });
-
-    };
-
-    [self.sessionManager sendRequest:request];
-}
-
-#pragma mark - QN交互
-- (NSString *)getServiceName {
-    return @"live";
-}
-
-- (NSString *)getServiceConflict {
-    return @"live module tips";
-}
-
-- (void)openUrl:(NSURL *)url fromVC:(UIViewController *)vc {
-    // 跳转到指定界面
-    NSLog(@"LiveModule::openUrl( url : %@, vc : %@ )", url, vc);
-    
-    self.fromVC = vc;
-}
-
-- (BOOL)isStopService:(NSURL *)url {
-    return NO;
-}
-
-- (void)stopService {
-    // 停止服务
-    NSLog(@"LiveModule::stopService()");
-    
-    // 强制关闭过渡和直播间界面
-    if( _moduleViewController ) {
-        UIViewController *vc = _moduleViewController.navigationController.topViewController;
-        [vc dismissViewControllerAnimated:YES completion:nil];
-        
-        // 退出其他导航栏界面
-        if( self.fromVC ) {
-            // 从其他界面推进
-            [_moduleViewController.navigationController popToViewController:self.fromVC animated:YES];
-        } else {
-            // 直接显示
-            [_moduleViewController.navigationController popToRootViewControllerAnimated:YES];
         }
-    }
-    
-    @synchronized(self) {
-        self.fromVC = nil;
-    }
+    });
+}
+
+- (void)onRecvBookingNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName avatarImg:(NSString *_Nonnull)avatarImg leftSeconds:(int)leftSeconds {
+    // TODO:接收主播预约开始倒数邀请通知
+    NSLog(@"LiveModule::onRecvBookingNotice( [接收预约开始倒数通知], roomId : %@, userId : %@, userName : %@, leftSeconds : %d )", roomId, userId, nickName, leftSeconds);
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 生成直播间跳转的URL
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
+        // 调用QN弹出通知
+        PushBookingViewController *vc = [[PushBookingViewController alloc] initWithNibName:nil bundle:nil];
+        vc.url = url;
+        _notificationVC = vc;
+
+        if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
+            [self.delegate moduleOnNotification:self];
+        }
+    });
 }
 
 @end

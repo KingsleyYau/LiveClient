@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "MengQi D Luffy"; ObjectID = "KJf-OI-eXV"; */
+"KJf-OI-eXV.text" = "MengQi D Luffy";
+
+/* Class = "UILabel"; text = "Broadcast has been ended.
+  Please come again later."; ObjectID = "RUq-oa-6Jg"; */
+"RUq-oa-6Jg.text" = "Broadcast has been ended.
+  Please come again later.";
+
+/* Class = "UILabel"; text = "Recommanded Performers"; ObjectID = "eSP-gf-u6p"; */
+"eSP-gf-u6p.text" = "Recommanded Performers";
+
+"TIMEOUT_A_MINUTE" = "Sorry, since you have not viewed broadcast over 1 minute, you are exited the broadcast room automatically.";
+
+"WATCHING_ERR_ADD_CREDIT" = "You don't have enough credits to continue watching this broadcast.";

@@ -6,8 +6,10 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LiveRoomInfoItemObject.h"
 
-@interface AnchorPersonalViewController : KKViewController
+@interface AnchorPersonalViewController : LSListViewController
+
+@property (nonatomic, strong) LiveRoomInfoItemObject *liveRoomInfo;
 
 @end

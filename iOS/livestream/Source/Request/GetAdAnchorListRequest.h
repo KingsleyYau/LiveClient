@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetAdAnchorListRequest : SessionRequest
+@interface GetAdAnchorListRequest : LSSessionRequest
 // 客户段需要获取的数量
 @property (nonatomic, assign) int number;
 @property (nonatomic, strong) GetAdAnchorListFinishHandler _Nullable finishHandler;

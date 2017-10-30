@@ -15,23 +15,23 @@
 #define PARAM_ERROR 10001
 
 /**
- *  Session失效
- */
-#define SESSION_TIMEOUT 10002
-
-/**
  系统错误
  */
 #define SYSTEM_ERROR 10003
 
 /**
- 其他设备登录
+ *  Session失效
  */
-#define LOGIN_BY_OTHER_DEVICE 10004
+#define SESSION_TIMEOUT 10004
 
 /**
  其他设备登录
  */
-#define SESSION_REQUEST_WITHOUT_LOGIN 10005
+#define LOGIN_BY_OTHER_DEVICE 11111111
+
+/**
+ 其他设备登录
+ */
+#define SESSION_REQUEST_WITHOUT_LOGIN 2222222
 
 #endif /* RequestErrorCode_h */

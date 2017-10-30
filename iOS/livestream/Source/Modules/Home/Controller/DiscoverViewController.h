@@ -6,10 +6,10 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 #import "DiscoverCollectionView.h"
 
-@interface DiscoverViewController : KKViewController
+@interface DiscoverViewController : LSGoogleAnalyticsViewController
 @property (weak, nonatomic) IBOutlet DiscoverCollectionView *collectionView;
 
 @end

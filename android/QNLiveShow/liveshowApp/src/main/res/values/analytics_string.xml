@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ScreenName KeyWords Define -->
+    <!-- for dialog in full path -->
+    <string name="parent_keywords">;parentkeywords;</string>
+    
+    <!-- ScreenName Define -->
+    <!-- 1. ActivityClassName -->
+    <!-- 2. ParentScreenName_ActivityClassName -->
+    <!-- 3. ParentScreenName_ActivityClassName_tag -->    
+    <!-- 4. ParentScreenName_ActivityClassName_taglevel1_taglevel2... -->
+    <!-- 5. tag -->
+    <!-- 6. ;parentkeywords;tag -->
+
+	<!--hot/following list-->
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_0">Live.HotList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_1">Live.FollowingList</string>
+
+	<!--anchor profile-->
+	<string name="com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity">BroadcasterProfile</string>
+
+	<!--personal center-->
+    <string name="com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity">Live.PersonalCenter</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_0">MySchedules.New</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_1">MySchedules.Sent</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_2">MySchedules.Scheduled</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_3">MySchedules.History</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_0">MyBackpack.Voucher</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_1">MyBackpack.Gift</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_2">MyBackpack.Ride</string>
+
+	<!--live room-->
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.FreePublicLiveRoomActivity">PublicBroadcast</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.PayPublicLiveRoomActivity">VIPPublicBroadcast</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.NormalPrivateLiveRoomActivity">PrivateBroadcast</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.AdvancePrivateLiveRoomActivity">VIPPrivateBroadcast</string>
+
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity">BroadcastTransition</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomNormalErrorActivity">BroadcastEnd</string>
+
+	<!--schedule invite-->
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity">RequestBooking</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.BookSuccessActivity">RequestBooking.Success</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.AddMobileActivity">InputMobileNumber</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.VerifyMobileActivity">VerifyMobileNumber</string>
+
+	<!-- Event Define -->
+	<string name="LiveChatF_Category">LiveChat</string>
+	<string name="LiveChatF_Action_TakePhoto">TakePhoto</string>
+	<string name="LiveChatF_Label_TakePhoto">LiveChat.TakePhoto</string>
+	<string name="LiveChatF_Action_Photo">Photo</string>
+	<string name="LiveChatF_Label_Photo">LiveChat.Photo</string>
+	<string name="LiveChatF_Action_Voice">Voice</string>
+	<string name="LiveChatF_Label_Voice">LiveChat.Voice</string>
+	<string name="LiveChatF_Action_AnimatedEmotions">AnimatedEmotions</string>
+	<string name="LiveChatF_Label_AnimatedEmotions">LiveChat.AnimatedEmotions</string>
+	<string name="LiveChatF_Action_MagicIcon">MagicIcon</string>
+	<string name="LiveChatF_Label_MagicIcon">LiveChat.MagicIcon</string>
+	<string name="LiveChatF_Action_BuyScene">BuyScene</string>
+	<string name="LiveChatF_Label_BuyScene">LiveChat.BuyScene</string>
+	<string name="LiveChatF_Action_ActaviteScene">ActaviteScene</string>
+	<string name="LiveChatF_Label_ActaviteScene">LiveChat.ActaviteScene</string>
+	<string name="LiveChatF_Action_Slide">Pull</string>
+	<string name="LiveChatF_Label_Slide">LiveChat.Pull</string>
+	
+	<string name="BuyCredit_Category">AppError</string>
+	<string name="BuyCredit_Action_SSLError">BuyCredit_SSLError</string>
+	
+	<string name="ChooseSite_Category">ChooseSite</string>
+	<string name="ChooseSite_Action">To</string>
+	<string name="ChooseSite_Label">.ChooseSite.</string>
+	
+	<string name="OpenApp_Category">OpenAPP</string>
+	<string name="OpenApp_Label">-</string>
+</resources>

@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetCreateBookingInfoRequest : SessionRequest
+@interface GetCreateBookingInfoRequest : LSSessionRequest
 // 主播ID
 @property (nonatomic, copy) NSString * _Nullable  userId;
 @property (nonatomic, strong) GetCreateBookingInfoFinishHandler _Nullable finishHandler;

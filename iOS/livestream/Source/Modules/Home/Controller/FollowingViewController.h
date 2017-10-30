@@ -6,14 +6,14 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 #import "FollowCollectionView.h"
-#import "HomePageViewController.h"
+#import "LSHomePageViewController.h"
 #import "FollowTableView.h"
 
-@interface FollowingViewController : ListViewController
+@interface FollowingViewController : LSListViewController
 @property (weak, nonatomic) IBOutlet FollowCollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet FollowTableView *tableView;
 
-@property (nonatomic, weak) HomePageViewController* homePageVC;
+@property (nonatomic, weak) LSHomePageViewController* homePageVC;
 @end

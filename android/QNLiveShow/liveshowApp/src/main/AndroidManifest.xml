@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.qpidnetwork.livemodule">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <application
+        android:name=".liveshow.LiveApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/CustomTheme.App">
+
+        <!-- 文件下载器进程 -->
+        <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
+        <service
+            android:name="com.liulishuo.filedownloader.services.FileDownloadService$SeparateProcessService"
+            android:process=":filedownloader" />
+
+        <activity
+            android:name=".liveshow.welcome.PeacockActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".liveshow.home.MainFragmentActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <!-- 直播间 -->
+
+        <activity
+            android:name=".liveshow.liveroom.LiveRoomTransitionActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 个人中心 -->
+        <activity
+            android:name=".liveshow.personal.PersonalCenterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.WebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.personal.mypackage.MyPackageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.personal.scheduleinvite.ScheduleInviteActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".liveshow.liveroom.LiveRoomNormalErrorActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity android:name=".liveshow.personal.TestTalentActivity" />
+
+        <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
+        <activity
+            android:name=".liveshow.liveroom.FreePublicLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".liveshow.liveroom.PayPublicLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".liveshow.liveroom.NormalPrivateLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".liveshow.liveroom.AdvancePrivateLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+
+        <!-- 广告 -->
+        <activity
+            android:name=".liveshow.ad.AD4QNActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 预约直播　 -->
+        <activity
+            android:name=".liveshow.personal.book.BookPrivateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".liveshow.personal.book.AddMobileActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".liveshow.personal.book.SelectCountryActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".liveshow.personal.book.VerifyMobileActivity" />
+        <activity android:name=".liveshow.personal.book.BookSuccessActivity"></activity>
+
+        <!--　引导　-->
+        <activity android:name=".liveshow.guide.GuideActivity"></activity>
+    </application>
+
+</manifest>

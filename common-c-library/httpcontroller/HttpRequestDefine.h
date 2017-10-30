@@ -30,14 +30,6 @@
 #define LOCAL_LIVE_ERROR_CODE_TIMEOUT			2
 #define LOCAL_LIVE_ERROR_CODE_PARSEFAIL         3
 
-// Insufficient parameters or parameter error(未传action参数或action参数不正确)
-#define LOCAL_LIVE_ERROR_CODE_PARAMETER         10001
-// Need to login (未登录)
-#define LOCAL_LIVE_ERROR_CODE_NO_LOGIN          10002
-// Error(系统错误)
-#define LOCAL_LIVE_ERROR_CODE_SYSTEM            10003
-
-
 
 
 /* 公共字段 */

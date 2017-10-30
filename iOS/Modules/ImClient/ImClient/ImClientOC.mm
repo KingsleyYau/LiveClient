@@ -169,7 +169,7 @@ class ImClientCallback;
  *  @param playUrl      播放url
  *
  */
-- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const string &)playUrl;
+- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl;
 
 /**
  *  3.13.观众进入公开直播间接口 回调
@@ -222,9 +222,10 @@ class ImClientCallback;
  *  @param fromId      发送方的用户ID
  *  @param nickName    发送方的昵称
  *  @param msg         文本消息内容
+ *  @param honorUrl    勋章图片url
  *
  */
-- (void)onRecvSendChatNotice:(const string &)roomId level:(int)level fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg;
+- (void)onRecvSendChatNotice:(const string &)roomId level:(int)level fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg honorUrl:(const string &)honorUrl;
 
 /**
  *  4.3.接收直播间公告消息回调
@@ -262,9 +263,10 @@ class ImClientCallback;
  *  @param multi_click_start    连击起始数
  *  @param multi_click_end      连击结束数
  *  @param multi_click_id       连击ID相同则表示同一次连击
+ *  @param honorUrl             勋章图片url
  *
  */
-- (void)onRecvSendGiftNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName giftId:(const string &)giftId giftName:(const string &)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvSendGiftNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName giftId:(const string &)giftId giftName:(const string &)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(const string &)honorUrl;
 
 #pragma mark - 直播间弹幕消息操作回调
 /**
@@ -286,9 +288,10 @@ class ImClientCallback;
  *  @param fromId               发送方的用户ID
  *  @param nickName             发送方的昵称
  *  @param msg                  消息内容
+ *  @param honorUrl             勋章图片url
  *
  */
-- (void)onRecvSendToastNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg;
+- (void)onRecvSendToastNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg honorUrl:(const string &)honorUrl;
 
 #pragma mark - 邀请私密直播
 // ------------- 邀请私密直播 -------------
@@ -422,6 +425,15 @@ class ImClientCallback;
  */
 - (void)onRecvBackpackUpdateNotice:(const BackpackInfo &)item;
 
+/**
+ *  9.4.观众勋章升级通知
+ *
+ *  @param honorId          勋章ID
+ *  @param honorUrl         勋章图片url
+ *
+ */
+- (void)onRecvGetHonorNotice:(const string &)honorId honorUrl:(const string &)honorUrl;
+
 @end
 
 class ImClientCallback : public IImClientListener {
@@ -433,36 +445,26 @@ class ImClientCallback : public IImClientListener {
 
   public:
     virtual void OnLogin(LCC_ERR_TYPE err, const string &errmsg, const LoginReturnItem &item) {
-        //        NSLog(@"ImClientCallback::OnLogin() err:%d, errmsg:%s"
-        //              , err, errmsg.c_str());
         if (nil != clientOC) {
             [clientOC onLogin:err errMsg:errmsg item:item];
         }
     }
     virtual void OnLogout(LCC_ERR_TYPE err, const string &errmsg) {
-        //        NSLog(@"ImClientCallback::OnLogout() err:%d, errmsg:%s"
-        //              , err, errmsg.c_str());
         if (nil != clientOC) {
             [clientOC onLogout:err errMsg:errmsg];
         }
     }
     virtual void OnKickOff(LCC_ERR_TYPE err, const string &errmsg) {
-        //        NSLog(@"ImClientCallback::OnKickOff() "
-        //              );
         if (nil != clientOC) {
             [clientOC onKickOff:err errMsg:errmsg];
         }
     }
     virtual void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const RoomInfoItem &item) {
-        //        NSLog(@"ImClientCallback::OnRoomIn() err:%d, errmsg:%s"
-        //              , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onRoomIn:success reqId:reqId errType:err errMsg:errMsg item:item];
         }
     }
     virtual void OnRoomOut(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) {
-        //        NSLog(@"ImClientCallback::OnRoomOut() err:%d, errmsg:%s"
-        //              , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onRoomOut:success reqId:reqId errType:err errMsg:errMsg];
         }
@@ -470,38 +472,28 @@ class ImClientCallback : public IImClientListener {
 
     // 4.1.发送直播间文本消息
     virtual void OnSendLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) {
-        //        NSLog(@"ImClientCallback::OnSendLiveChat() err:%d, errmsg:%s"
-        //              , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onSendLiveChat:success reqId:reqId errType:err errMsg:errMsg];
         }
     }
     virtual void OnRecvRoomCloseNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg) {
-        //        NSLog(@"ImClientCallback::OnRecvRoomCloseNotice() roomId:%s, userId:%s, nickName:%s"
-        //              , roomId.c_str(), userId.c_str(), nickName.c_str());
         if (nil != clientOC) {
             [clientOC onRecvRoomCloseNotice:roomId errType:err errMsg:errMsg];
         }
     }
 
     virtual void OnRecvEnterRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, const string &riderId, const string &riderName, const string &riderUrl, int fansNum) {
-        //        NSLog(@"ImClientCallback::OnRecvEnterRoomNotice() roomId:%s, userId:%s, nickName:%s, photoUrl:%s riderId;%s ridername:%s riderUrl:%s fansNum:%d"
-        //              , roomId.c_str(), userId.c_str(), nickName.c_str(), photoUrl.c_str(), riderId.c_str(), riderName.c_str(), riderUrl.c_str(), fansNum);
         if (nil != clientOC) {
             [clientOC onRecvEnterRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl riderId:riderId riderName:riderName riderUrl:riderUrl fansNum:fansNum];
         }
     }
     virtual void OnRecvLeaveRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, int fansNum) {
-        //        NSLog(@"ImClientCallback::OnRecvLeaveRoomNotice() roomId:%s, userId:%s, nickName:%s, photoUrl:%s fansNum:%d"
-        //              , roomId.c_str(), userId.c_str(), nickName.c_str(), photoUrl.c_str(), fansNum);
         if (nil != clientOC) {
             [clientOC onRecvLeaveRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl fansNum:fansNum];
         }
     }
 
     virtual void OnRecvRebateInfoNotice(const string &roomId, const RebateInfoItem &item) {
-        //        NSLog(@"ImClientCallback::OnRecvRebateInfoNotice() roomId:%s"
-        //              , roomId.c_str());
         if (nil != clientOC) {
             [clientOC onRecvRebateInfoNotice:roomId rebateInfo:item];
         }
@@ -509,16 +501,12 @@ class ImClientCallback : public IImClientListener {
 
     // 3.7.接收关闭直播间倒数通知
     virtual void OnRecvLeavingPublicRoomNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg) {
-        //        NSLog(@"ImClientCallback::OnRecvLeavingPublicRoomNotice() roomId:%s err:%d errMsg:%s"
-        //              , roomId.c_str(), err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onRecvLeavingPublicRoomNotice:roomId err:err errMsg:errMsg];
         }
     }
 
     virtual void OnRecvRoomKickoffNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg, double credit) {
-        //        NSLog(@"ImClientCallback::OnRecvRoomKickoffNotice() roomId:%s  err:%d, errmsg:%s credit:%f"
-        //              , roomId.c_str(), err, errMsg.c_str(), credit);
         if (nil != clientOC) {
             [clientOC onRecvRoomKickoffNotice:roomId errType:err errMsg:errMsg credit:credit];
         }
@@ -526,8 +514,6 @@ class ImClientCallback : public IImClientListener {
 
     // 3.9.接收充值通知
     virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit) {
-        //        NSLog(@"ImClientCallback::OnRecvLackOfCreditNotice() roomId:%s  msg:%s credit:%f"
-        //              , roomId.c_str(), msg.c_str(), credit);
         if (nil != clientOC) {
             [clientOC onRecvLackOfCreditNotice:roomId msg:msg credit:credit];
         }
@@ -535,8 +521,6 @@ class ImClientCallback : public IImClientListener {
 
     // 3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）
     virtual void OnRecvCreditNotice(const string &roomId, double credit) {
-        //        NSLog(@"ImClientCallback::OnRecvCreditNotice() roomId:%s credit:%f"
-        //              , roomId.c_str(), credit);
         if (nil != clientOC) {
             [clientOC onRecvCreditNotice:roomId credit:credit];
         }
@@ -564,8 +548,7 @@ class ImClientCallback : public IImClientListener {
      *  @param playUrl      播放url
      *
      */
-    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const string &playUrl) {
-        //        NSLog(@"ImClientCallback::OnRecvChangeVideoUrl() roomId:%s isAnchor:%d playUrl:%s", roomId.c_str(), isAnchor, playUrl.c_str());
+    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const list<string> &playUrl) {
         if (nil != clientOC) {
             [clientOC onRecvChangeVideoUrl:roomId isAnchor:isAnchor playUrl:playUrl];
         }
@@ -585,11 +568,9 @@ class ImClientCallback : public IImClientListener {
         }
     }
 
-    virtual void OnRecvSendChatNotice(const string &roomId, int level, const string &fromId, const string &nickName, const string &msg) {
-        //                NSLog(@"OnRecvSendChatNotice() roomId:%s, level:%d ,fromId:%s, nickName:%s, msg:%s"
-        //                      , roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str());
+    virtual void OnRecvSendChatNotice(const string &roomId, int level, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) {
         if (nil != clientOC) {
-            [clientOC onRecvSendChatNotice:roomId level:level fromId:fromId nickName:nickName msg:msg];
+            [clientOC onRecvSendChatNotice:roomId level:level fromId:fromId nickName:nickName msg:msg honorUrl:honorUrl];
         }
     }
 
@@ -640,35 +621,29 @@ class ImClientCallback : public IImClientListener {
     // ------------- 直播间点赞 -------------
     // 5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
     virtual void OnSendGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) {
-        //        NSLog(@"ImClientCallback::OnSendGift() err:%d, errmsg:%s"
-        //              , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onSendGift:success reqId:reqId errType:err errMsg:errMsg credit:credit rebateCredit:rebateCredit];
         }
     }
 
     // 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-    virtual void OnRecvSendGiftNotice(const string &roomId, const string &fromId, const string &nickName, const string &giftId, const string &giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
-        //        NSLog(@"ImClientCallback::OnRecvSendGiftNotice()");
+    virtual void OnRecvSendGiftNotice(const string &roomId, const string &fromId, const string &nickName, const string &giftId, const string &giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string &honorUrl) {
         if (nil != clientOC) {
-            [clientOC onRecvSendGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftName:giftName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            [clientOC onRecvSendGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftName:giftName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id honorUrl:honorUrl];
         }
     }
 
     // ------------- 直播间弹幕消息 -------------
     // 6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
     virtual void OnSendToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) {
-        //        NSLog(@"ImClientCallback::OnSendToast() err:%d, errmsg:%s"
-        //              , err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onSendToast:success reqId:reqId errType:err errMsg:errMsg credit:credit rebateCredit:rebateCredit];
         }
     }
     // 6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
-    virtual void OnRecvSendToastNotice(const string &roomId, const string &fromId, const string &nickName, const string &msg) {
-        //        NSLog(@"ImClientCallback::OnRecvRoomToastNotice()");
+    virtual void OnRecvSendToastNotice(const string &roomId, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) {
         if (nil != clientOC) {
-            [clientOC onRecvSendToastNotice:roomId fromId:fromId nickName:nickName msg:msg];
+            [clientOC onRecvSendToastNotice:roomId fromId:fromId nickName:nickName msg:msg honorUrl:honorUrl];
         }
     }
 
@@ -686,7 +661,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &invitationId, int timeOut, const string &roomId) {
-        //        NSLog(@"ImClientCallback::OnSendPrivateLiveInvite()");
         if (nil != clientOC) {
             [clientOC onSendPrivateLiveInvite:success reqId:reqId err:err errMsg:errMsg invitationId:invitationId timeOut:timeOut roomId:roomId];
         }
@@ -703,7 +677,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnSendCancelPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &roomId) {
-        //        NSLog(@"ImClientCallback::OnSendCancelPrivateLiveInvite()");
         if (nil != clientOC) {
             [clientOC onSendCancelPrivateLiveInvite:success reqId:reqId err:err errMsg:errMsg roomId:roomId];
         }
@@ -723,7 +696,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvInstantInviteReplyNotice(const string &inviteId, ReplyType replyType, const string &roomId, RoomType roomType, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
-        //        NSLog(@"ImClientCallback::OnRecvInstantInviteReplyNotice");
         if (nil != clientOC) {
             [clientOC onRecvInstantInviteReplyNotice:inviteId replyType:replyType roomId:roomId roomType:roomType anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
@@ -740,7 +712,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvInstantInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
-        //        NSLog(@"ImClientCallback::OnRecvInstantInviteUserNotice");
         if (nil != clientOC) {
             [clientOC onRecvInstantInviteUserNotice:inviteId anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
@@ -757,7 +728,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvScheduledInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
-        //        NSLog(@"ImClientCallback::OnRecvScheduledInviteUserNotice");
         if (nil != clientOC) {
             [clientOC onRecvScheduledInviteUserNotice:inviteId anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
@@ -770,7 +740,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvSendBookingReplyNotice(const BookingReplyItem &item) {
-        //        NSLog(@"ImClientCallback::OnRecvSendBookingReplyNotice");
         if (nil != clientOC) {
             [clientOC onRecvSendBookingReplyNotice:item];
         }
@@ -787,7 +756,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvBookingNotice(const string &roomId, const string &userId, const string &nickName, const string &avatarImg, int leftSeconds) {
-        //        NSLog(@"ImClientCallback::OnRecvBookingNotice() roomId:%s userId:%s nickName:%s photoUrl:%s leftSeconds:%d", roomId.c_str(), userId.c_str(), nickName.c_str(), photoUrl.c_str(), leftSeconds);
         if (nil != clientOC) {
             [clientOC onRecvBookingNotice:roomId userId:userId nickName:nickName avatarImg:avatarImg leftSeconds:leftSeconds];
         }
@@ -803,7 +771,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &talentInviteId) {
-        //        NSLog(@"ImClientCallback::OnSendTalent() reqId:%d success:%d err:%d errMsg:%s", reqId, success, err, errMsg.c_str());
         if (nil != clientOC) {
             [clientOC onSendTalent:reqId success:success err:err errMsg:errMsg talentInviteId:talentInviteId];
         }
@@ -816,7 +783,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvSendTalentNotice(const TalentReplyItem &item) {
-        //        NSLog(@"ImClientCallback::OnRecvSendTalentNotice() roomId:%s talentInviteId:%s talentId:%s name:%s credit:%f status:%d", roomId.c_str(), talentInviteId.c_str(), talentId.c_str(), name.c_str(), credit, status);
         if (nil != clientOC) {
             [clientOC onRecvSendTalentNotice:item];
         }
@@ -830,7 +796,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvLevelUpNotice(int level) {
-        //        NSLog(@"ImClientCallback::OnRecvLevelUpNotice() level:%d", level);
         if (nil != clientOC) {
             [clientOC onRecvLevelUpNotice:level];
         }
@@ -843,7 +808,6 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvLoveLevelUpNotice(int loveLevel) {
-        //        NSLog(@"ImClientCallback::OnRecvLoveLevelUpNotice() loveLevel:%d", loveLevel);
         if (nil != clientOC) {
             [clientOC onRecvLoveLevelUpNotice:loveLevel];
         }
@@ -856,9 +820,21 @@ class ImClientCallback : public IImClientListener {
      *
      */
     virtual void OnRecvBackpackUpdateNotice(const BackpackInfo &item) {
-        //        NSLog(@"ImClientCallback::OnRecvBackpackUpdateNotice()");
         if (nil != clientOC) {
             [clientOC onRecvBackpackUpdateNotice:item];
+        }
+    }
+    
+    /**
+     *  9.4.观众勋章升级通知
+     *
+     *  @param honorId          勋章ID
+     *  @param honorUrl         勋章图片url
+     *
+     */
+    virtual void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) {
+        if (nil != clientOC) {
+            [clientOC onRecvGetHonorNotice:honorId honorUrl:honorUrl];
         }
     }
 
@@ -902,7 +878,6 @@ class ImClientCallback : public IImClientListener {
 
 - (BOOL)addDelegate:(id<IMLiveRoomManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
-
     NSLog(@"ImClientOC::addDelegate( delegate : %@ )", delegate);
 
     @synchronized(self) {
@@ -1306,6 +1281,7 @@ class ImClientCallback : public IImClientListener {
     }
     obj.emoTypeList = numArrayEmo;
     obj.loveLevel = item.loveLevel;
+   
 
     RebateInfoObject *itemObject = [RebateInfoObject alloc];
     itemObject.curCredit = item.rebateInfo.curCredit;
@@ -1327,6 +1303,9 @@ class ImClientCallback : public IImClientListener {
     obj.roomPrice = item.roomPrice;
     obj.manPushPrice = item.manPushPrice;
     obj.maxFansiNum = item.maxFansiNum;
+    obj.manLevel = item.manlevel;
+    obj.honorId = [NSString stringWithUTF8String:item.honorId.c_str()];
+    obj.honorImg = [NSString stringWithUTF8String:item.honorImg.c_str()];
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
@@ -1399,6 +1378,8 @@ class ImClientCallback : public IImClientListener {
     obj.manPushPrice = item.manPushPrice;
     obj.maxFansiNum = item.maxFansiNum;
     obj.manLevel = item.manlevel;
+    obj.honorId = [NSString stringWithUTF8String:item.honorId.c_str()];
+    obj.honorImg = [NSString stringWithUTF8String:item.honorImg.c_str()];
 
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
@@ -1584,6 +1565,13 @@ class ImClientCallback : public IImClientListener {
     obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
     obj.avatarImg = [NSString stringWithUTF8String:item.avatarImg.c_str()];
     obj.leftSeconds = item.leftSeconds;
+    NSMutableArray *nsPlayUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = item.playUrl.begin(); iter != item.playUrl.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsPlayUrl addObject:pushUrl];
+    }
+    obj.playUrl = nsPlayUrl;
 
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
@@ -1595,9 +1583,15 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const string &)playUrl {
+- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-    NSString *nsPlayUrl = [NSString stringWithUTF8String:playUrl.c_str()];
+    //NSString *nsPlayUrl = [NSString stringWithUTF8String:playUrl.c_str()];
+    NSMutableArray *nsPlayUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = playUrl.begin(); iter != playUrl.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsPlayUrl addObject:pushUrl];
+    }
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
@@ -1621,16 +1615,17 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvSendChatNotice:(const string &)roomId level:(int)level fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg {
+- (void)onRecvSendChatNotice:(const string &)roomId level:(int)level fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg  honorUrl:(const string &)honorUrl{
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString *nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
     NSString *nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     NSString *nsMsg = [NSString stringWithUTF8String:msg.c_str()];
+    NSString *nsHonorUrl = [NSString stringWithUTF8String:honorUrl.c_str()];
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onRecvSendChatNotice:level:fromId:nickName:msg:)]) {
-                [delegate onRecvSendChatNotice:nsRoomId level:level fromId:nsFromId nickName:nsNickName msg:nsMsg];
+            if ([delegate respondsToSelector:@selector(onRecvSendChatNotice:level:fromId:nickName:msg:honorUrl:)]) {
+                [delegate onRecvSendChatNotice:nsRoomId level:level fromId:nsFromId nickName:nsNickName msg:nsMsg honorUrl:nsHonorUrl];
             }
         }
     }
@@ -1664,18 +1659,19 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvSendGiftNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName giftId:(const string &)giftId giftName:(const string &)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id;
+- (void)onRecvSendGiftNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName giftId:(const string &)giftId giftName:(const string &)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(const string &)honorUrl;
 {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString *nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
     NSString *nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     NSString *nsGigtId = [NSString stringWithUTF8String:giftId.c_str()];
     NSString *nsGigtName = [NSString stringWithUTF8String:giftName.c_str()];
+    NSString *nsHonorUrl = [NSString stringWithUTF8String:honorUrl.c_str()];
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onRecvSendGiftNotice:fromId:nickName:giftId:giftName:giftNum:multi_click:multi_click_start:multi_click_end:multi_click_id:)]) {
-                [delegate onRecvSendGiftNotice:nsRoomId fromId:nsFromId nickName:nsNickName giftId:nsGigtId giftName:nsGigtName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id];
+            if ([delegate respondsToSelector:@selector(onRecvSendGiftNotice:fromId:nickName:giftId:giftName:giftNum:multi_click:multi_click_start:multi_click_end:multi_click_id:honorUrl:)]) {
+                [delegate onRecvSendGiftNotice:nsRoomId fromId:nsFromId nickName:nsNickName giftId:nsGigtId giftName:nsGigtName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id honorUrl:nsHonorUrl];
             }
         }
     }
@@ -1695,16 +1691,17 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvSendToastNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg {
+- (void)onRecvSendToastNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg honorUrl:(const string &)honorUrl{
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString *nsFromId = [NSString stringWithUTF8String:fromId.c_str()];
     NSString *nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
     NSString *nsMsg = [NSString stringWithUTF8String:msg.c_str()];
+    NSString *nsHonorUrl = [NSString stringWithUTF8String:honorUrl.c_str()];
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onRecvSendToastNotice:fromId:nickName:msg:)]) {
-                [delegate onRecvSendToastNotice:nsRoomId fromId:nsFromId nickName:nsNickName msg:nsMsg];
+            if ([delegate respondsToSelector:@selector(onRecvSendToastNotice:fromId:nickName:msg:honorUrl:)]) {
+                [delegate onRecvSendToastNotice:nsRoomId fromId:nsFromId nickName:nsNickName msg:nsMsg honorUrl:nsHonorUrl];
             }
         }
     }
@@ -1911,6 +1908,20 @@ class ImClientCallback : public IImClientListener {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if( [delegate respondsToSelector:@selector(onRecvBackpackUpdateNotice:)] ) {
                 [delegate onRecvBackpackUpdateNotice:itemObject];
+            }
+        }
+    }
+}
+
+- (void)onRecvGetHonorNotice:(const string &)honorId honorUrl:(const string &)honorUrl {
+    NSString * nsHonorId = [NSString stringWithUTF8String:honorId.c_str()];
+    NSString * nsHonorUrl = [NSString stringWithUTF8String:honorUrl.c_str()];
+    @synchronized (self) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvGetHonorNotice:honorUrl:)] ) {
+                [delegate onRecvGetHonorNotice:nsHonorId honorUrl:nsHonorUrl];
             }
         }
     }

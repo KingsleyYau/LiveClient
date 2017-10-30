@@ -356,6 +356,13 @@ open class JTSegmentControl: UIControl {
         scrollToPointWhenIndexChanged = scrollView.center
     }
     
+    // Add by Max 
+    open func setupViewOpen() {
+        setupViews();
+        
+        scrollToPointWhenIndexChanged = scrollView.center
+    }
+    
     fileprivate func setupViews() {
         addSubview(scrollView)
         scrollView.addSubview(contentView)

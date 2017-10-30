@@ -30,18 +30,18 @@ CTaskManager::CTaskManager(void)
 
 CTaskManager::~CTaskManager(void)
 {
-	FileLog("LiveChatClient", "CTaskManager::~CTaskManager() begin");
+	FileLog("ImClient", "CTaskManager::~CTaskManager() begin");
 	Stop();
-	FileLog("LiveChatClient", "CTaskManager::~CTaskManager() stop ok");
+	FileLog("ImClient", "CTaskManager::~CTaskManager() stop ok");
 	ITransportDataHandler::Release(m_dataHandler);
 	m_dataHandler = NULL;
-	FileLog("LiveChatClient", "CTaskManager::~CTaskManager() end");
+	FileLog("ImClient", "CTaskManager::~CTaskManager() end");
 }
 
 // 初始化接口
 bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListener, ITaskManagerListener* mgrListener)
 {
-	FileLog("LiveChatClient", "CTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
+	FileLog("ImClient", "CTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
             , urls.size(), clientListener, mgrListener);
 
 	if (!m_bInit) {
@@ -50,13 +50,13 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 			m_dataHandler = ITransportDataHandler::Create();
 			m_bInit = m_dataHandler->Init(this);
 		}
-		FileLog("LiveChatClient", "CTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
+		FileLog("ImClient", "CTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
 
 		// 初始化 task map
 		if (m_bInit) {
 			m_bInit = m_requestTaskMap.Init();
 		}
-		FileLog("LiveChatClient", "CTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
+		FileLog("ImClient", "CTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
 
 		// 赋值
 		if (m_bInit) {
@@ -66,7 +66,7 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 		}
 	}
 
-	FileLog("LiveChatClient", "CTaskManager::Init() end");
+	FileLog("ImClient", "CTaskManager::Init() end");
 
 	return m_bInit;
 }
@@ -74,37 +74,37 @@ bool CTaskManager::Init(const list<string>& urls, IImClientListener* clientListe
 // 开始
 bool CTaskManager::Start()
 {
-	FileLog("LiveChatClient", "CTaskManager::Start()");
+	FileLog("ImClient", "CTaskManager::Start()");
 	if (m_bInit && !m_bStart) {
 		m_bStart = m_dataHandler->Start(m_urls);
 	}
-	FileLog("LiveChatClient", "CTaskManager::Start() m_bStart:%d", m_bStart);
+	FileLog("ImClient", "CTaskManager::Start() m_bStart:%d", m_bStart);
 	return m_bStart;
 }
 	
 // 停止（不等待）
 bool CTaskManager::Stop()
 {
-	FileLog("LiveChatClient", "CTaskManager::Stop()");
+	FileLog("ImClient", "CTaskManager::Stop()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->Stop();
 		m_bStart = !result;
 	}
-	FileLog("LiveChatClient", "CTaskManager::Stop() result:%d", result);
+	FileLog("ImClient", "CTaskManager::Stop() result:%d", result);
 	return result;
 }
 
 // 停止（等待）
 bool CTaskManager::StopAndWait()
 {
-	FileLog("LiveChatClient", "CTaskManager::StopAndWait()");
+	FileLog("ImClient", "CTaskManager::StopAndWait()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->StopAndWait();
 		m_bStart = !result;
 	}
-	FileLog("LiveChatClient", "CTaskManager::StopAndWait() result:%d", result);
+	FileLog("ImClient", "CTaskManager::StopAndWait() result:%d", result);
 
 	return result;	
 }
@@ -112,21 +112,21 @@ bool CTaskManager::StopAndWait()
 // 是否已经开始
 bool CTaskManager::IsStart()
 {
-	FileLog("LiveChatClient", "CTaskManager::IsStart() m_bStart:%d", m_bStart);
+	FileLog("ImClient", "CTaskManager::IsStart() m_bStart:%d", m_bStart);
 	return m_bStart;
 }
 	
 // 处理请求的task
 bool CTaskManager::HandleRequestTask(ITask* task)
 {
-	FileLog("LiveChatClient", "CTaskManager::HandleRequestTask() task:%p", task);
+	FileLog("ImClient", "CTaskManager::HandleRequestTask() task:%p", task);
 
 	bool result = false;
 	if (m_bInit && NULL != task) {
 		result = m_dataHandler->SendTaskData(task);
 	}
 
-	FileLog("LiveChatClient", "CTaskManager::HandleRequestTask() result:%d", result);
+	FileLog("ImClient", "CTaskManager::HandleRequestTask() result:%d", result);
 
 	return result;
 }
@@ -135,17 +135,17 @@ bool CTaskManager::HandleRequestTask(ITask* task)
 // 连接callback
 void CTaskManager::OnConnect(bool success)
 {
-	FileLog("LiveChatClient", "CTaskManager::OnConnect() success:%d", success);
+	FileLog("ImClient", "CTaskManager::OnConnect() success:%d", success);
 	if (NULL != m_mgrListener) {
 		m_mgrListener->OnConnect(success);
 	}
-	FileLog("LiveChatClient", "CTaskManager::OnConnect() end");
+	FileLog("ImClient", "CTaskManager::OnConnect() end");
 }
 	
 // 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop才能停止）
 void CTaskManager::OnDisconnect(const TaskList& listUnsentTask)
 {
-	FileLog("LiveChatClient", "CTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
+	FileLog("ImClient", "CTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
 	if (NULL != m_mgrListener) {
 		// 回调 发送不成功 或 发送成功但没有回应 的task
 		m_requestTaskMap.InsertTaskList(listUnsentTask);
@@ -164,13 +164,13 @@ void CTaskManager::OnDisconnect(const TaskList& listUnsentTask)
 			delete task;
 		}
 	}
-	FileLog("LiveChatClient", "CTaskManager::OnDisconnect() end");
+	FileLog("ImClient", "CTaskManager::OnDisconnect() end");
 }
 	
 // 发送callback
 void CTaskManager::OnSend(bool success, ITask* task)
 {
-	FileLog("LiveChatClient", "CTaskManager::OnSend() success:%d, task:%p, cmd:%s, seq:%d"
+	FileLog("ImClient", "CTaskManager::OnSend() success:%d, task:%p, cmd:%s, seq:%d"
 			, success, task, task->GetCmdCode().c_str(), task->GetSeq());
 	if (success)
 	{
@@ -189,7 +189,7 @@ void CTaskManager::OnSend(bool success, ITask* task)
         // 发送失败，放回待处理队列，等待断开处理
         m_requestTaskMap.Insert(task);
     }
-	FileLog("LiveChatClient", "CTaskManager::OnSend() end");
+	FileLog("ImClient", "CTaskManager::OnSend() end");
 	// 发送不成功，网络应已断开，程序会调用 OnDisconnect()，不用在此处理
 }
 	
@@ -197,8 +197,8 @@ void CTaskManager::OnSend(bool success, ITask* task)
 void CTaskManager::OnRecv(const TransportProtocol& tp)
 {
 	FileLevelLog(
-                 "LiveChatClient",
-                 KLog::LOG_WARNING,
+                 "ImClient",
+                 KLog::LOG_MSG,
                  "CTaskManager::OnRecv() cmd:%s, seq:%d, data.empty:%d",
                  tp.m_cmd.c_str(),
                  tp.m_reqId,
@@ -226,7 +226,7 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
             // 命令是客户端主动请求，但协议解析不是返回命令（没有res_data）
             Json::FastWriter writer;
             string data = writer.write(tp.m_data);
-            FileLevelLog("LiveChatClient",
+            FileLevelLog("ImClient",
                          KLog::LOG_ERR_USER,
                          "CTaskManager::OnRecv() tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s, data:%s"
                          , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str(), data.c_str());
@@ -241,7 +241,7 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
 		}
 	}
 
-	FileLog("LiveChatClient", "CTaskManager::OnRecv() get task:%p, m_mgrListener:%p", task, m_mgrListener);
+	FileLog("ImClient", "CTaskManager::OnRecv() get task:%p, m_mgrListener:%p", task, m_mgrListener);
 	if (NULL != task) {
 		task->Handle(tp);
 
@@ -252,6 +252,6 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
 		delete task;
 	}
 
-	FileLog("LiveChatClient", "CTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
+	FileLog("ImClient", "CTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
 		, tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str());
 }

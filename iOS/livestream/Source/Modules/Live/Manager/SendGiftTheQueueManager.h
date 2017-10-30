@@ -12,6 +12,7 @@
 @class SendGiftTheQueueManager;
 @protocol SendGiftTheQueueManagerDelegate <NSObject>
 - (void)sendGiftFailWithItem:(SendGiftItem *)item;
+- (void)sendGiftNoCredit:(SendGiftItem *)item;
 @optional
 
 @end

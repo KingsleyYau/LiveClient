@@ -20,8 +20,8 @@
 #include <common/KMutex.h>
 #include <common/CheckMemoryLeak.h>
 
-#define DEVICE_ANDROID_TYPE "dev-type: 10"
-#define DEVICE_IPHONE_TYPE "dev-type: 20"
+#define DEVICE_ANDROID_TYPE "dev-type: 30"
+#define DEVICE_IPHONE_TYPE "dev-type: 31"
 #ifdef IOS  /* IOS */
 #define DEVICE_TYPE DEVICE_IPHONE_TYPE
 #else
@@ -34,25 +34,28 @@
 CURLSH *sh;
 string COOKIES_FILE = "/sdcard/qpidnetwork/cookie";
 
+static KMutex gCurlShareMutex;
 void HttpClient::Init() {
 	curl_global_init(CURL_GLOBAL_ALL);
 	curl_version_info_data *data = curl_version_info(CURLVERSION_FIRST);
 
 	if( data->version != NULL ) {
-		FileLog("httpclient", "HttpClient::Init( curl_version : %s )", data->version);
+        FileLevelLog("httpclient", KLog::LOG_WARNING, "HttpClient::Init( curl_version : %s )", data->version);
 	}
 
 	if( data->ssl_version != NULL ) {
-		FileLog("httpclient", "HttpClient::Init( ssl_version : %s )", data->ssl_version);
+		FileLevelLog("httpclient", KLog::LOG_WARNING, "HttpClient::Init( ssl_version : %s )", data->ssl_version);
 	}
 
 	sh = curl_share_init();
 	curl_share_setopt(sh, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
+    curl_share_setopt(sh, CURLSHOPT_LOCKFUNC, Curl_Lock);
+    curl_share_setopt(sh, CURLSHOPT_UNLOCKFUNC, Curl_Unlock);
 }
 
 void HttpClient::SetLogDirectory(string directory) {
 	KLog::SetLogDirectory(directory);
-	FileLog("httpclient", "HttpClient::SetLogDirectory( directory : %s )", directory.c_str());
+	FileLevelLog("httpclient", KLog::LOG_MSG, "HttpClient::SetLogDirectory( directory : %s )", directory.c_str());
 
 	curl_version_info_data *data = curl_version_info(CURLVERSION_FIRST);
 
@@ -777,4 +780,14 @@ CURLcode HttpClient::Curl_SSL_Handle(CURL *curl, void *sslctx, void *param)
 
 	  /* all set to go */
 	  return CURLE_OK ;
+}
+
+void HttpClient::Curl_Lock(CURL *handle, curl_lock_data data, curl_lock_access access, void *useptr) {
+    FileLevelLog("httpclient", KLog::LOG_STAT, "HttpClient::Curl_Lock( access : %d )", access);
+    gCurlShareMutex.lock();
+}
+
+void HttpClient::Curl_Unlock(CURL *handle, curl_lock_data data, void *useptr) {
+    FileLevelLog("httpclient", KLog::LOG_STAT, "HttpClient::Curl_Unlock()");
+    gCurlShareMutex.unlock();
 }

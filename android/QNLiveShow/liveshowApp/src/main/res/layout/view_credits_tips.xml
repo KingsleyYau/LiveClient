@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:paddingLeft="@dimen/custom_dialog_left_right_margin"
+    android:paddingRight="@dimen/custom_dialog_left_right_margin"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="@drawable/bg_rebate_popupwindow"
+        android:id="@+id/ll_creditsNoEnough"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_closeCreditsTips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_credits_dialog_close"
+            android:layout_gravity="top|right"
+            android:padding="8dp"/>
+
+        <TextView
+            android:id="@+id/tv_balanceTips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/liveroom_popup_credits_noenough"/>
+
+        <Button
+            android:id="@+id/btn_getCredits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#724602"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:background="@drawable/bg_balance_recharge"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="28dp"
+            android:textAllCaps="false"
+            android:text="@string/common_btn_add_credit"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

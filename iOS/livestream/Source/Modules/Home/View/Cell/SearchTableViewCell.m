@@ -7,7 +7,8 @@
 //
 
 #import "SearchTableViewCell.h"
-#import "FileCacheManager.h"
+#import "LSFileCacheManager.h"
+#import "LiveBundle.h"
 
 @implementation SearchTableViewCell
 
@@ -26,7 +27,7 @@
     
     SearchTableViewCell *cell = (SearchTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[SearchTableViewCell cellIdentifier]];
     if ( nil == cell ) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:@"SearchTableViewCell" owner:tableView options:nil];
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"SearchTableViewCell" owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
     }
     
@@ -35,7 +36,7 @@
 
 - (void)setTheUserMessage:(SearchListObject *)lists{
     
-    self.imageViewLoader = [ImageViewLoader loader];
+    self.imageViewLoader = [LSImageViewLoader loader];
     [self.imageViewLoader loadImageWithImageView:self.userHeadImage options:0 imageUrl:lists.userHeadUrl
                                 placeholderImage:[UIImage imageNamed:@""]];
     

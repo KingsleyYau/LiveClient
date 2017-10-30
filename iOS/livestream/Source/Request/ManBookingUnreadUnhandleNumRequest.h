@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface ManBookingUnreadUnhandleNumRequest : SessionRequest
+@interface ManBookingUnreadUnhandleNumRequest : LSSessionRequest
 
 @property (nonatomic, strong) ManBookingUnreadUnhandleNumFinishHandler _Nullable finishHandler;
 @end

@@ -37,6 +37,17 @@ public:
             if( root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOURL].isString() ) {
                 emoUrl = root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOURL].asString();
             }
+            
+            /* emoType */
+            if( root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE].isNumeric()) {
+                emoType = (EmoticonActionType)root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE].asInt();
+            }
+            
+            /* emoIconUrl */
+            if( root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOICONURL].isString() ) {
+                emoIconUrl = root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOICONURL].asString();
+            }
+            
         }
         if (!emoSign.empty()) {
             result = true;
@@ -48,6 +59,8 @@ public:
         emoId = "";
         emoSign = "";
         emoUrl = "";
+        emoType = EMOTICONACTIONTYPE_STATIC;
+        emoIconUrl = "";
     }
     
     virtual ~HttpEmoticonInfoItem() {
@@ -58,10 +71,14 @@ public:
      * emoId             表情ID
      * emoSign			表情文本标记
      * emoUrl		    表情图片url
+     * emoType          表情类型（0：静态表情，1：动画表情）
+     * emoIconUrl       表情icon图片url，用于移动端在表情列表显示
      */
     string   emoId;
     string   emoSign;
     string   emoUrl;
+    EmoticonActionType emoType;
+    string   emoIconUrl;
 };
 
  typedef list<HttpEmoticonInfoItem> EmoticonInfoItemList;

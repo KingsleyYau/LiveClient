@@ -1,0 +1,13 @@
+
+/* Class = "UILabel"; text = "My Balance"; ObjectID = "3Km-IY-YAV"; */
+"3Km-IY-YAV.text" = "My Balance";
+
+/* Class = "UILabel"; text = "Failed to load"; ObjectID = "AJl-ZW-vE1"; */
+"AJl-ZW-vE1.text" = "Failed to load";
+
+/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "nI1-nI-gM5"; */
+"nI1-nI-gM5.normalTitle" = "Reload";
+
+"REQUEST_FAIL_TIP" = "Failed to load";
+
+"NO_LIST_TIP" = "Your backpack is empty.";

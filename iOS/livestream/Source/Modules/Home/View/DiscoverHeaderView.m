@@ -7,14 +7,15 @@
 //
 
 #import "DiscoverHeaderView.h"
+#import "LiveBundle.h"
 
 @implementation DiscoverHeaderView
 
 + (instancetype)initDiscoverHeaderViewXib {
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:@"DiscoverHeaderView" owner:nil options:nil];
+    NSBundle *bundle = [LiveBundle mainBundle];
+    NSArray *nibs = [bundle loadNibNamedWithFamily:@"DiscoverHeaderView" owner:nil options:nil];
     DiscoverHeaderView* view = [nibs objectAtIndex:0];
 
-    
     return view;
 }
 @end

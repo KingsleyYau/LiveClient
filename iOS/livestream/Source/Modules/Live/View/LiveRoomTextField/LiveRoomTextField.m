@@ -10,13 +10,13 @@
 
 @implementation LiveRoomTextField
 
-- (void)insertEmotion:(ChatEmotion *)emotion {
+- (void)insertEmotion:(LSChatEmotion *)emotion {
     if( emotion ) {
         // 生成富文本
         NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] initWithAttributedString:self.attributedText];
         
         // 计算表情位置
-        ChatTextAttachment *attachment = [[ChatTextAttachment alloc] init];
+        LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
         attachment.bounds = CGRectMake(0, -4, self.font.lineHeight, self.font.lineHeight);
         attachment.text = emotion.text;
         attachment.image = emotion.image;
@@ -40,7 +40,7 @@
     NSMutableString *mtFullText = [NSMutableString string];
     
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
-        ChatTextAttachment *attachment = attrs[@"NSAttachment"];
+        LSChatTextAttachment *attachment = attrs[@"NSAttachment"];
         if( attachment ) {
             [mtFullText appendString:attachment.text];
             

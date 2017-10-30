@@ -19,7 +19,7 @@
 #define FROMID_PARAM                "fromid"
 #define NICKNAME_TOAST_PARAM        "nickname"
 #define MSG_PARAM                   "msg"
-
+#define HONORURL_PARAM              "honor_url"
 
 RecvSendToastNoticeTask::RecvSendToastNoticeTask(void)
 {
@@ -33,6 +33,7 @@ RecvSendToastNoticeTask::RecvSendToastNoticeTask(void)
     m_fromId = "";
     m_nickName = "";
     m_msg = "";
+    m_honorUrl = "";
 }
 
 RecvSendToastNoticeTask::~RecvSendToastNoticeTask(void)
@@ -56,7 +57,7 @@ bool RecvSendToastNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendToastNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendToastNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -77,6 +78,9 @@ bool RecvSendToastNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[MSG_PARAM].isString()) {
             m_msg = tp.m_data[MSG_PARAM].asString();
         }
+        if (tp.m_data[HONORURL_PARAM].isString()) {
+            m_honorUrl = tp.m_data[HONORURL_PARAM].asString();
+        }
 
     }
     
@@ -86,15 +90,15 @@ bool RecvSendToastNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvSendToastNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvSendToastNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvSendToastNotice(m_roomId, m_fromId, m_nickName, m_msg);
-		FileLog("LiveChatClient", "RecvSendToastNoticeTask::Handle() callback end, result:%d", result);
+        m_listener->OnRecvSendToastNotice(m_roomId, m_fromId, m_nickName, m_msg, m_honorUrl);
+		FileLog("ImClient", "RecvSendToastNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvSendToastNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvSendToastNoticeTask::Handle() end");
 
 	return result;
 }
@@ -104,7 +108,7 @@ bool RecvSendToastNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvSendToastNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvSendToastNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -114,7 +118,7 @@ bool RecvSendToastNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvSendToastNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvSendToastNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

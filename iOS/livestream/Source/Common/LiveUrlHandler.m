@@ -7,9 +7,9 @@
 //
 
 #import "LiveUrlHandler.h"
-#import "LoginManager.h"
-static LiveUrlHandler* gInstance = nil;
-@interface LiveUrlHandler()<LoginManagerDelegate>
+#import "LSLoginManager.h"
+static LiveUrlHandler *gInstance = nil;
+@interface LiveUrlHandler () <LoginManagerDelegate>
 /**
  *  是否已经被URL打开
  */
@@ -21,165 +21,204 @@ static LiveUrlHandler* gInstance = nil;
 @property (assign, atomic) BOOL hasHandle;
 
 /** 代理数组 */
-@property (nonatomic,strong) NSMutableArray *delegates;
-
+@property (nonatomic, strong) NSMutableArray *delegates;
 
 @end
 
-
 @implementation LiveUrlHandler
 + (instancetype)shareInstance {
-    if( gInstance == nil ) {
+    if (gInstance == nil) {
         gInstance = [[[self class] alloc] init];
     }
     return gInstance;
 }
 
 - (id)init {
-    if( self = [super init] ) {
-        _openByUrl = NO;
+    if (self = [super init]) {
         _type = LiveUrlTypeNone;
-        self.hasHandle = NO;
-        self.delegates = [NSMutableArray array];
-        // 自动登陆
-        [[LoginManager manager] addDelegate:self];
+
+        // 通知数组
+//        self.delegates = [NSMutableArray array];
     }
     return self;
 }
 
-- (void)addDelegate:(id<LiveUrlHandlerDelegate>)delegate {
-    @synchronized(self.delegates) {
-        [self.delegates addObject:[NSValue valueWithNonretainedObject:delegate]];
-    }
-}
+- (BOOL)handleOpenURL {
+    BOOL bFlag = NO;
 
-- (void)removeDelegate:(id<LiveUrlHandlerDelegate>)delegate {
-    @synchronized(self.delegates) {
-        for(NSValue* value in self.delegates) {
-            id<LiveUrlHandlerDelegate> item = (id<LiveUrlHandlerDelegate>)value.nonretainedObjectValue;
-            if( item == delegate ) {
-                [self.delegates removeObject:value];
-                break;
-            }
+    NSURL *url = self.url;
+    if (url) {
+        NSLog(@"LiveUrlHandler::handleOpenURL( url : %@ )", url);
+
+        // 跳转模块
+        NSString *serviceKey = [LSURLQueryParam urlParamForKey:@"service" url:url];
+        if ([serviceKey isEqualToString:@"live"]) {
+            // 跳转模块
+            NSString *moduleKey = [LSURLQueryParam urlParamForKey:@"module" url:url];
+            [self getURL:url moduleType:moduleKey];
         }
     }
+
+    self.url = nil;
+
+    return bFlag;
 }
-
-
-- (BOOL)handleOpenURL:(NSURL *)url {
-    NSLog(@"URLHandler::handleOpenURL( url : %@ )", url);
-    NSLog(@"URLHandler::handleOpenURL( url.host : %@ )", url.host);         
-    NSLog(@"URLHandler::handleOpenURL( url.path : %@ )", url.path);
-    NSLog(@"URLHandler::handleOpenURL( url.query : %@ )", url.query);
-    
-//    // 第一次进入通知GA,暂无GA
-//    if( !_openByUrl ) {
-//        _openByUrl = YES;
-//        [[AnalyticsManager manager] openURL:url];
-//    }
-    
-    
-    // 跳转模块
-    //可无，无则默认为qn
-    if ([[url parameterForKey:@"service"] isEqualToString:@"qn"] ||[url parameterForKey:@"service"].length == 0) {
-        self.isQNModule = YES;
-    }
-    else
-    {
-        self.isQNModule = NO;
-    }
-    
-    // 跳转模块
-    NSString* moduleString = [url parameterForKey:@"module"];
-    [self getURL:url moduleType:moduleString];
-    
-    [self dealWithURL];
-    
-    return YES;
-}
-
 
 - (void)getURL:(NSURL *)url moduleType:(NSString *)moduleString {
-    //    if( [moduleString isEqualToString:@"emf"] ) {
-    //        // 跳转emf
-    //        _type = URLTypeEmf;
-    //    }else if ([moduleString isEqualToString:@"setting"]) {
-    //        _type = URLTypeSetting;
-    //    }else if ([moduleString isEqualToString:@"ladydetail"]) {
-    //        _type = URLTypeLadyDetail;
-    //        _urlParameter = [url parameterForKey:@"ladyid"];
-    //
-    //    }else if ([moduleString isEqualToString:@"chatlady"]) {
-    //        _type = URLTypeChatLady;
-    //        _urlParameter = [url parameterForKey:@"ladyid"];
-    //    }
+    if ([moduleString isEqualToString:@"main"]) {
+        // 跳转主页
+        _type = LiveUrlTypeMain;
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"anchordetail"]) {
+        _type = LiveUrlTypeDetail;
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"liveroom"]) {
+        _type = LiveUrlTypeInvite;
+        [self parseInvitation:url];
+    } else if ([moduleString isEqualToString:@"newbooking"]) {
+        _type = LiveUrlTypeBooking;
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"bookinglist"]) {
+        _type = LiveUrlTypeBookingList;
 
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"backpacklist"]) {
+        _type = LiveUrlTypeBackpackList;
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"buycredit"]) {
+        _type = LiveUrlTypeBuyCredit;
+        [self parseLive:url Type:_type];
+    } else if ([moduleString isEqualToString:@"mylevel"]) {
+        _type = LiveUrlTypeMyLevel;
+        [self parseLive:url Type:_type];
+    }
 }
 
-- (BOOL)dealWithURL {
-    // 标记需要处理
-    self.hasHandle = YES;
-    
-    LoginManager* manager = [LoginManager manager];
-    switch (manager.status) {
-        case NONE: {
-            // 没登陆
-        }
-        case LOGINING:{
-            // 登陆中
-        }break;
-        case LOGINED:{
-            // 已经登陆
-            [self callDelegate];
-        }break;
+- (BOOL)parseLive:(NSURL *)url Type:(LiveUrlType)type {
+    BOOL bFlag = YES;
+    switch (type) {
+        case LiveUrlTypeMain: {
+            NSString *listType = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+            _mainTpye = [listType intValue];
+            int index = 0;
+            if (_mainTpye == MainListTypeFollow) {
+                index = 1;
+            }
+
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openMainType:)]) {
+                [self.delegate liveUrlHandler:self openMainType:index];
+            }
+
+        } break;
+        case LiveUrlTypeDetail: {
+            // TODO:弹出广告页面,个人详情
+            NSString *anchorId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openAnchorDetail:)]) {
+                [self.delegate liveUrlHandler:self openAnchorDetail:anchorId];
+            }
+
+        } break;
+        case LiveUrlTypeLiveroom: {
+
+        } break;
+        case LiveUrlTypeBooking: {
+            // TODO:进入新建预约界面
+            NSString *anchorId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openBooking:)]) {
+                [self.delegate liveUrlHandler:self openBooking:anchorId];
+            }
+
+        } break;
+        case LiveUrlTypeBookingList: {
+            // TODO:进入预约列表界面
+            NSString *listType = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+            _bookType = [listType intValue];
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openBookingList:)]) {
+                [self.delegate liveUrlHandler:self openBookingList:_bookType];
+            }
+
+        } break;
+        case LiveUrlTypeBackpackList: {
+            // TODO:进入背包列表界面
+            NSString *listType = [LSURLQueryParam urlParamForKey:@"listtype" url:url];
+            _backPackType = [listType intValue];
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openBackpackList:)]) {
+                [self.delegate liveUrlHandler:self openBackpackList:_backPackType];
+            }
+        } break;
+        case LiveUrlTypeBuyCredit: {
+            // TODO:进入充值界面
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandlerOpenAddCredit:)]) {
+                [self.delegate liveUrlHandlerOpenAddCredit:self];
+            }
+
+        } break;
+        case LiveUrlTypeMyLevel: {
+            // TODO:进入我的等级界面
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandlerOpenMyLevel:)]) {
+                [self.delegate liveUrlHandlerOpenMyLevel:self];
+            }
+
+        } break;
         default:
             break;
     }
-    
-    return NO;
+
+    return bFlag;
 }
 
-- (void)callDelegate {
-    if( self.hasHandle ) {
-        self.hasHandle = NO;
+- (BOOL)parseInvitation:(NSURL *)url {
+    // TODO:解析进入直播间URL
+    BOOL bFlag = YES;
+
+    NSLog(@"LiveUrlHandler::parseInvitation( url : %@ )", url);
+    
+    NSString *roomId = [LSURLQueryParam urlParamForKey:@"roomid" url:url];
+    NSString *userId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
+    LiveRoomType roomType = LiveRoomType_Public;
+    NSString *roomTypeString = [LSURLQueryParam urlParamForKey:@"roomtype" url:url];
+    NSString *userName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
+
+    if( [roomTypeString isEqualToString:@"3"] ) {
+        // 应邀
+        roomType = LiveRoomType_Private;
         
-        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
-        [[UIApplication sharedApplication] cancelAllLocalNotifications];
-        // 点击推送进入到前台会将此标记位改为NO,只会响应active
-        if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
-            @synchronized(self.delegates) {
-                for(NSValue* value in self.delegates) {
-                    id<LiveUrlHandlerDelegate> delegate = value.nonretainedObjectValue;
-                    if( [delegate  respondsToSelector:@selector(liveUrlHandlerActive:openWithModule:)] ) {
-//                        [delegate handlerActive:self openWithModule:self.type];
-                        [delegate liveUrlHandlerActive:self openWithModule:self.type];
-                    }
-                }
-            }
-        }else {
-            @synchronized(self.delegates) {
-                for(NSValue* value in self.delegates) {
-                    id<LiveUrlHandlerDelegate> delegate = value.nonretainedObjectValue;
-                    if( [delegate  respondsToSelector:@selector(liveUrlHandler:openWithModule:)] ) {
-//                        [delegate handler:self openWithModule:self.type];
-                        [delegate liveUrlHandler:self openWithModule:self.type];
-                    }
-                }
-            }
+        NSString *inviteId = [LSURLQueryParam urlParamForKey:@"invitationid" url:url];
+        if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openInvited:userId:inviteId:)]) {
+            [self.delegate liveUrlHandler:self openInvited:userName userId:userId inviteId:inviteId];
         }
         
+    } else {
+        // 主动邀请
+        if ([roomTypeString isEqualToString:@"1"]) {
+            roomType = LiveRoomType_Private;
+        }
         
-        
-        
+        if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openPreLive:userId:roomType:)]) {
+            [self.delegate liveUrlHandler:self openPreLive:roomId userId:userId roomType:roomType];
+        }
     }
+
+    return bFlag;
 }
 
-#pragma mark - LoginManager回调
-- (void)manager:(LoginManager * _Nonnull)manager onLogin:(BOOL)success loginItem:(LoginItemObject * _Nullable)loginItem errnum:(NSString * _Nonnull)errnum errmsg:(NSString * _Nonnull)errmsg serverId:(int)serverId {
-    NSLog(@"URLHandler::onLogin( 接收登录回调 success : %d )", success);
-    // 有未处理的URL请求
-    if( success ) {
-        [self callDelegate];
+#pragma mark - 获取模块URL
+- (NSURL *)createUrlToInviteByRoomId:(NSString *)roomId userId:(NSString *)userId roomType:(LiveRoomType)roomType {
+    int roomTypeInt = 0;
+    if (roomType == LiveRoomType_Private || roomType == LiveRoomType_Private_VIP) {
+        roomTypeInt = 1;
     }
+
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&roomid=%@&anchorid=%@&roomtype=%d", roomId, userId, roomTypeInt];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
 }
+
+- (NSURL *)instantUrlToInviteUserByInviteId:(NSString *)inviteId anchorId:(NSString *)anchorId nickName:(NSString *)nickName {
+    
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&invitationid=%@&anchorid=%@&anchorname=%@&roomtype=%d", inviteId, anchorId, nickName, 3];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
 @end

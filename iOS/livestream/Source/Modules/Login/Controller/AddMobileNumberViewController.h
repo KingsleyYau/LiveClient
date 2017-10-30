@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GoogleAnalyticsViewController.h"
-@interface AddMobileNumberViewController : GoogleAnalyticsViewController
+#import "LSGoogleAnalyticsViewController.h"
+@interface AddMobileNumberViewController : LSGoogleAnalyticsViewController
 
 @end

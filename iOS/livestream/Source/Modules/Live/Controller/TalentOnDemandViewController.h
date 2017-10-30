@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import "LiveRoom.h"
-#import "GoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 @protocol TalentOnDemandVCDelegate <NSObject>
 @optional;
 - (void)talentOnDemandVCCancelButtonDid;
 
 - (void)onSendtalentOnDemandMessage:(NSAttributedString *)message;
+
 @end
 
-@interface TalentOnDemandViewController : GoogleAnalyticsViewController
+@interface TalentOnDemandViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, weak) id<TalentOnDemandVCDelegate> delegate;
 

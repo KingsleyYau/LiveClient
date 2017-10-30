@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import "LSGoogleAnalyticsViewController.h"
 #import "LiveRoom.h"
 
-@interface PrivateVipViewController : KKViewController
+@interface PrivateVipViewController : LSGoogleAnalyticsViewController
 @property (nonatomic, strong) LiveRoom* liveRoom;
 @end

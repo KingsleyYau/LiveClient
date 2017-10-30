@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "GoogleAnalyticsViewController.h"
-@interface VerifyMobileNumberViewController : GoogleAnalyticsViewController
+#import "LSGoogleAnalyticsViewController.h"
+#import "Country.h"
+
+@interface VerifyMobileNumberViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, copy) NSString * phoneStr;
+@property (nonatomic, strong) Country * country;
 
-@property (nonatomic, copy) NSString * countryStr;
-
-@property (nonatomic, copy) NSString * verifyCode;
 @end

@@ -164,61 +164,67 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 		if( mCamera == null ) {
 			int cameraIndex = getCamera(true);
 			if( cameraIndex != -1 ) {
-				// 打开摄像头
-				mCamera = Camera.open(cameraIndex);
-				if( mCamera != null ) {
-					bFlag = true;
-					
-					// 获取采集参数
-					Camera.Parameters parameters = mCamera.getParameters();
-					
-					// 设置采集的格式
-//					int[] formats = getCameraPreviewFormats(mCamera);
-//					parameters.setPreviewFormat(formats[0]);
-					parameters.setPreviewFormat(ImageFormat.NV21);
-					
-					// 设置采集分辨率
-					Size bestSize = getBestSuppportPreviewSize(mCamera);
-					if( bestSize != null ) {
-						parameters.setPreviewSize(bestSize.width, bestSize.height);
-					} else {
-						bFlag = false;
+				try {
+					// 打开摄像头
+					mCamera = Camera.open(cameraIndex);
+					if( mCamera != null ) {
+						bFlag = true;
+						
+						// 获取采集参数
+						Camera.Parameters parameters = mCamera.getParameters();
+						
+						// 设置采集的格式
+//						int[] formats = getCameraPreviewFormats(mCamera);
+//						parameters.setPreviewFormat(formats[0]);
+						parameters.setPreviewFormat(ImageFormat.NV21);
+						
+						// 设置采集分辨率
+						Size bestSize = getBestSuppportPreviewSize(mCamera);
+						if( bestSize != null ) {
+							parameters.setPreviewSize(bestSize.width, bestSize.height);
+						} else {
+							bFlag = false;
+						}
+						
+						// 设置采集帧率
+						int fps = getBestCameraPreviewFrameRate(mCamera);
+						if( fps != INVALID_FRAMERATE ) {
+							parameters.setPreviewFrameRate(fps);
+//							parameters.setPreviewFpsRange(fps, fps);
+						} else {
+							bFlag = false;
+						}
+						
+						// 设置采集参数
+						mCamera.setParameters(parameters);
+						
+						int degrees = 0;
+						switch (rotation) {
+						case Surface.ROTATION_0: degrees = 0; break;
+						case Surface.ROTATION_90: degrees = 90; break;
+						case Surface.ROTATION_180: degrees = 180; break;
+						case Surface.ROTATION_270: degrees = 270; break;
+						}
+						
+						int result;
+						Camera.CameraInfo info = new Camera.CameraInfo();
+					    Camera.getCameraInfo(cameraIndex, info);
+					    if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+					    	result = (info.orientation + degrees) % 360;
+					    	result = (360 - result) % 360;  // compensate the mirror
+					    } else {  // back-facing
+					    	result = (info.orientation - degrees + 360) % 360;
+					    }
+					    
+					    previewRotation = result;
+						if( captureCallback != null ) {
+							captureCallback.onChangeRotation(previewRotation);
+						}
 					}
-					
-					// 设置采集帧率
-					int fps = getBestCameraPreviewFrameRate(mCamera);
-					if( fps != INVALID_FRAMERATE ) {
-						parameters.setPreviewFrameRate(fps);
-//						parameters.setPreviewFpsRange(fps, fps);
-					} else {
-						bFlag = false;
-					}
-					
-					// 设置采集参数
-					mCamera.setParameters(parameters);
-					
-					int degrees = 0;
-					switch (rotation) {
-					case Surface.ROTATION_0: degrees = 0; break;
-					case Surface.ROTATION_90: degrees = 90; break;
-					case Surface.ROTATION_180: degrees = 180; break;
-					case Surface.ROTATION_270: degrees = 270; break;
-					}
-					
-					int result;
-					Camera.CameraInfo info = new Camera.CameraInfo();
-				    Camera.getCameraInfo(cameraIndex, info);
-				    if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-				    	result = (info.orientation + degrees) % 360;
-				    	result = (360 - result) % 360;  // compensate the mirror
-				    } else {  // back-facing
-				    	result = (info.orientation - degrees + 360) % 360;
-				    }
-				    
-				    previewRotation = result;
-					if( captureCallback != null ) {
-						captureCallback.onChangeRotation(previewRotation);
-					}
+				}  catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.d(LSConfig.TAG, String.format("LSVideoCapture::initCapture( [Exception], e : %s )", e.toString()));
 				}
 			}
 		}

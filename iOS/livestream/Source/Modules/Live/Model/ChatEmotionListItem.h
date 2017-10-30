@@ -8,11 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "ChatEmotionItem.h"
+#import "EmoticonInfoItemObject.h"
 
 @interface ChatEmotionListItem : NSObject
 
-@property (nonatomic, assign) int emo_type;
-
-@property (nonatomic, strong) NSArray<ChatEmotionItem *> *chatList;
+@property (nonatomic, assign) EmoticonType type;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, copy) NSString *errMsg;
+@property (nonatomic, copy) NSString *emoUrl;
+@property (nonatomic, strong) NSMutableArray<ChatEmotionItem *> *emoList;
 
 @end

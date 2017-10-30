@@ -7,6 +7,7 @@
 //
 
 #import "TalentTipView.h"
+#import "LiveBundle.h"
 
 @interface TalentTipView ()
 
@@ -14,43 +15,39 @@
 
 @implementation TalentTipView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self =  [[NSBundle mainBundle] loadNibNamed:@"TalentTipView" owner:self options:nil].firstObject;
+        self = [[LiveBundle mainBundle] loadNibNamed:@"TalentTipView" owner:self options:nil].firstObject;
         self.frame = frame;
     }
     return self;
 }
 
-- (void)awakeFromNib
-{
+- (void)awakeFromNib {
     [super awakeFromNib];
-    
+
     self.layer.cornerRadius = 10;
     self.layer.masksToBounds = YES;
-    
+
     self.cancelBtn.layer.cornerRadius = 5;
     self.cancelBtn.layer.masksToBounds = YES;
-    
+
     self.requstBtn.layer.cornerRadius = 5;
     self.requstBtn.layer.masksToBounds = YES;
 }
 
-- (void)setTalentName:(NSString *)name
-{
-    NSString * message = [NSString stringWithFormat:@"%@%@",self.talentLabel.text,name];
+- (void)setTalentName:(NSString *)name {
+    NSString *message = [NSString stringWithFormat:@"%@%@", self.talentLabel.text, name];
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:message];
-    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"5d0e86"] range:[message rangeOfString:name]];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x5D0E86) range:[message rangeOfString:name]];
     self.talentLabel.attributedText = attr;
 }
 
-- (void)setPriceNum:(NSString *)price
-{
-    NSString * message = [NSString stringWithFormat:@"%@%@",self.priceLabel.text,price];
+- (void)setPriceNum:(NSString *)price {
+    NSString *message = [NSString stringWithFormat:@"%@%@", self.priceLabel.text, price];
     NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:message];
-    [attr addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithHexString:@"f7cd3a"] range:[message rangeOfString:price]];
+    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:[message rangeOfString:price]];
     self.priceLabel.attributedText = attr;
 }
 

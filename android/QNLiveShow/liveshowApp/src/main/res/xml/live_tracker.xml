@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="TypographyDashes">
+    <integer name="ga_sessionTimeout">1800</integer>
+
+    <!--
+    <bool name="ga_autoActivityTracking">false</bool>
+    -->
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <int name="ga_dispatchPeriod">5</int>
+
+    <!-- The screen names that will appear in reports -->
+    <!--
+    <screenName name="com.qpidnetwork.dating.DefaultActivity">Start</screenName>
+	<screenName name="com.qpidnetwork.dating.home.HomeActivity">Home</screenName>
+	<screenName name="com.qpidnetwork.dating.ChooseSiteActivity">ChooseSite</screenName>
+
+	<screenName name="com.qpidnetwork.dating.emf.EMFListActivity">EMF.List</screenName>
+	<screenName name="com.qpidnetwork.dating.emf.EMFDetailActivity">EMF.Detail</screenName>
+	<screenName name="com.qpidnetwork.dating.emf.EMFAttachmentPreviewActivity">EMF.AttachmentPreview</screenName>
+	<screenName name="com.qpidnetwork.dating.emf.EMFSearchActivity">EMF.Search</screenName>
+	<screenName name="com.qpidnetwork.dating.emf.MailEditActivity">EMF.MailEdit</screenName>
+	<screenName name="com.qpidnetwork.dating.emf.EmotionChooseActivity">EMF.EmotionChoose</screenName>
+	<screenName name="com.qpidnetwork.dating.admirer.AdmirersListActivity">Admirer.List</screenName>
+
+	<screenName name="com.qpidnetwork.dating.lovecall.LoveCallListActivity">LoveCall.List</screenName>
+	<screenName name="com.qpidnetwork.dating.lovecall.LoveCallDetailActivity">LoveCall.Detail</screenName>
+
+	<screenName name="com.qpidnetwork.dating.livechat.ChatActivity">LiveChat.Chat</screenName>
+	<screenName name="com.qpidnetwork.dating.livechat.voice.VoiceRecordActivity">LiveChat.VoiceRecord</screenName>
+	<screenName name="com.qpidnetwork.dating.livechat.picture.PictureSelectActivity">LiveChat.PictureChoose</screenName>
+	<screenName name="com.qpidnetwork.dating.livechat.LivechatPrivatePhotoPreview">LiveChat.PhotoPreview</screenName>
+
+	<screenName name="com.qpidnetwork.dating.contacts.ContactsListActivity">Contact.List</screenName>
+	<screenName name="com.qpidnetwork.dating.contacts.ContactSearchActivity">Contact.Search</screenName>
+
+	<screenName name="com.qpidnetwork.dating.lady.LadyDetailActivity">Lady.Detail</screenName>
+	<screenName name="com.qpidnetwork.dating.lady.LadyLabelActivity">Lady.SetLabel</screenName>
+	<screenName name="com.qpidnetwork.dating.lady.VideoDetailActivity">Lady.VideoDetail</screenName>
+
+	<screenName name="com.qpidnetwork.dating.quickmatch.QuickMatchActivity">QuickMatch</screenName>
+
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterActivity">Auth.Register</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterByEmailActivity">Auth.Email</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterPasswordActivity">Auth.EmailPassword</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterByFacebookActivity">Auth.Facebook</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterFacebookPasswordActivity">Auth.FacebookPassword</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.LoginActivity">Auth.Login</screenName>
+	<screenName name="com.qpidnetwork.dating.authorization.RegisterResetPasswordActivity">Auth.ResetPassword</screenName>
+
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileActivity">MyProfile.Main</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileDetailActivity">MyProfile.Detail</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileDetailSelfIntroActivity">MyProfile.IntroEdit</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileMatchCriteriaActivity">MyProfile.MatchCriteria</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfilePhotoActivity">MyProfile.Photo</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfilePhoneVerifyActivity">MyProfile.PhoneVerify</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfilePhoneVerifyMobileActivity">MyProfile.MobileVerify</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfilePhoneVerifyLandlineActivity">MyProfile.LandlineVerify</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfilePhoneVerifyMobileCodeActivity">MyProfile.CheckCodeVerify</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileSelectCountryActivity">MyProfile.SelectCountry</screenName>
+	<screenName name="com.qpidnetwork.dating.profile.MyProfileChangePasswordActivity">MyProfile.ChangePassword</screenName>
+
+	<screenName name="com.qpidnetwork.dating.setting.SettingActivity">Setting.Main</screenName>
+
+	<srceenName name="com.qpidnetwork.dating.credit.BuyCreditActivity">BuyCredit</srceenName>
+	 -->
+
+    <!--  The following value should be replaced with correct property id. -->
+    <string name="ga_trackingId">UA-62455061-1</string>
+</resources>

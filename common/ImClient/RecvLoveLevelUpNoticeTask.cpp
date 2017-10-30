@@ -47,7 +47,7 @@ bool RecvLoveLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvLoveLevelUpNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     int loveLevel = 0;
@@ -57,7 +57,7 @@ bool RecvLoveLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         if (tp.m_data[LOVELEVEL_PARAM].isIntegral()) {
-            loveLevel = GetTalentStatus(tp.m_data[LOVELEVEL_PARAM].asInt());
+            loveLevel = tp.m_data[LOVELEVEL_PARAM].asInt();
         }
     
     }
@@ -68,15 +68,15 @@ bool RecvLoveLevelUpNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvLoveLevelUpNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvLoveLevelUpNotice(loveLevel);
-		FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvLoveLevelUpNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvLoveLevelUpNoticeTask::Handle() end");
 
 	return result;
 }
@@ -86,14 +86,14 @@ bool RecvLoveLevelUpNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLoveLevelUpNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLoveLevelUpNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLoveLevelUpNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

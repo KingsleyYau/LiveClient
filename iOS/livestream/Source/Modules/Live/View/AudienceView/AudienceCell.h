@@ -15,7 +15,7 @@
 
 + (NSString *)cellIdentifier;
 
-- (void)updateHeadImageWith:(AudienModel *)audienModel;
+- (void)updateHeadImageWith:(AudienModel *)audienModel isVip:(BOOL)isVip;
 
 - (void)setCornerRadius:(CGFloat)radius;
 

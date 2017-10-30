@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetTalentStatusRequest : SessionRequest
+@interface GetTalentStatusRequest : LSSessionRequest
 // 直播间ID
 @property (nonatomic, copy) NSString * _Nullable  roomId;
 // 才艺点播邀请ID

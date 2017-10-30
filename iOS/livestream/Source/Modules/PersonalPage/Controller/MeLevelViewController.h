@@ -6,8 +6,8 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "KKViewController.h"
+#import "LSListViewController.h"
 
-@interface MeLevelViewController : KKViewController
+@interface MeLevelViewController : LSListViewController
 
 @end

@@ -17,6 +17,8 @@
         self.emoId = [coder decodeObjectForKey:@"emoId"];
         self.emoSign = [coder decodeObjectForKey:@"emoSign"];
         self.emoUrl = [coder decodeObjectForKey:@"emoUrl"];
+        self.emoType = [coder decodeIntForKey:@"emoType"];
+        self.emoIconUrl = [coder decodeObjectForKey:@"emoIconUrl"];
     }
     return self;
 }
@@ -25,6 +27,8 @@
     [coder encodeObject:self.emoId forKey:@"emoId"];
     [coder encodeObject:self.emoSign  forKey:@"emoSign"];
     [coder encodeObject:self.emoUrl forKey:@"emoUrl"];
+    [coder encodeInt:self.emoType forKey:@"emoType"];
+    [coder encodeObject:self.emoIconUrl forKey:@"emoIconUrl"];
 }
 
 @end

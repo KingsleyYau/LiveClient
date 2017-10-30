@@ -1,4 +1,5 @@
 
 
-"ROOM_TYPE_TIPS" = "VIP Public Broadcast  is billed at";
-"CREDIT_TIP" = "credit per minute.";
+"PUBLIV_TIP" = "Private broadcast is billed at ";
+"CREDIT_TIP" = " credit per minute.";
+"PUSH_TIPS" = "2-way video is billed at %@ credit per minute. Are you sure to turn it on?";

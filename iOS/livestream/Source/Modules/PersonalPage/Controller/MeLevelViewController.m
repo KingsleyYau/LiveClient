@@ -20,6 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.title = @"My Level";
     
     self.meLevelView.UIDelegate = self;
     self.meLevelView.navigationDelegate = self;
@@ -37,8 +38,6 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
-    // 设置导航栏返回按钮
-    [self setBackleftBarButtonItemOffset:15];
 }
 
 
@@ -74,8 +73,9 @@
     NSString *webSiteUrl = @"";
     
     
-    //    webSiteUrl = @"https://tympanus.net/Development/AnimatedBooks/index.html";
-    webSiteUrl = @"http://baidu.com";
+    // webSiteUrl = @"https://tympanus.net/Development/AnimatedBooks/index.html";
+     webSiteUrl = @"http://baidu.com";
+    // webSiteUrl = @"http://www.google.com";
     // webview请求url
     
     NSURL *url = [NSURL URLWithString:webSiteUrl];
@@ -146,8 +146,7 @@
 // * @param decisionHandler 是否调转block
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
-    NSLog(@"%s",__func__);
-    
+    NSLog(@"%s %@ %@ target:%d", __func__, [navigationAction.sourceFrame.request.URL absoluteString], [navigationAction.targetFrame.request.URL absoluteString], navigationAction.targetFrame.mainFrame);
     
     decisionHandler(WKNavigationActionPolicyAllow);
 }
@@ -161,9 +160,34 @@
     [self hideLoading];
     NSLog(@"%s---=====%@",__func__,error);
     
-    
+   [self showFailView]; 
 }
 
 
+// 创建新的webview
+// 可以指定配置对象、导航动作对象、window特性
+- (nullable WKWebView *)webView:(WKWebView *)webView createWebViewWithConfiguration:(WKWebViewConfiguration *)configuration forNavigationAction:(WKNavigationAction *)navigationAction windowFeatures:(WKWindowFeatures *)windowFeatures {
+    NSLog(@"%s---%@ %ld", __func__, [navigationAction.request.URL absoluteString], (long)navigationAction.navigationType);
+//    
+//    if (!navigationAction.targetFrame.isMainFrame) {
+//        [webView loadRequest:navigationAction.request];
+//    }
+    return nil;
+}
+
+#pragma mark - 加载失败
+- (void)showFailView {
+    self.failView.hidden = NO;
+    self.failTipsText = NSLocalizedString(@"List_FailTips",@"List_FailTips");
+    self.failBtnText = NSLocalizedString(@"List_Reload",@"List_Reload");
+    self.delegateSelect = @selector(retryToload:);
+    [self reloadFailViewContent];
+    
+}
+
+- (void)retryToload:(UIButton *)btn {
+    self.failView.hidden = YES;
+    [self requestWebview];
+}
 
 @end

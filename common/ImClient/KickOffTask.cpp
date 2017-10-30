@@ -46,7 +46,7 @@ bool KickOffTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "KickOffTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "KickOffTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -64,15 +64,15 @@ bool KickOffTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "KickOffTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "KickOffTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnKickOff(m_errType, m_errMsg);
-		FileLog("LiveChatClient", "KickOffTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "KickOffTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "KickOffTask::Handle() end");
+	FileLog("ImClient", "KickOffTask::Handle() end");
 
 	return result;
 }
@@ -82,7 +82,7 @@ bool KickOffTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "AudienceRoomInTask::GetSendData() begin");
+	FileLog("ImClient", "AudienceRoomInTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -92,7 +92,7 @@ bool KickOffTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "AudienceRoomInTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "AudienceRoomInTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

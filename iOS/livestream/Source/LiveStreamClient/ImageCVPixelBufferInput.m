@@ -94,7 +94,6 @@
 
     CVPixelBufferUnlockBaseAddress(pixelBuffer, kCVPixelBufferLock_ReadOnly);
     CFRelease(pixelBuffer);
-        
     });
     
     return YES;

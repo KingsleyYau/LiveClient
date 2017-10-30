@@ -55,7 +55,7 @@ bool RecvRebateInfoNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvRebateInfoNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvRebateInfoNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     RebateInfoItem item;
@@ -90,15 +90,15 @@ bool RecvRebateInfoNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvRebateInfoNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvRebateInfoNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvRebateInfoNotice(m_roomId, item);
-		FileLog("LiveChatClient", "RecvRebateInfoNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvRebateInfoNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvRebateInfoNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvRebateInfoNoticeTask::Handle() end");
 
 	return result;
 }
@@ -108,14 +108,14 @@ bool RecvRebateInfoNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

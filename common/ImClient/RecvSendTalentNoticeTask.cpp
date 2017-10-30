@@ -45,7 +45,7 @@ bool RecvSendTalentNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendTalentNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
 //    string roomId = "";
@@ -69,15 +69,15 @@ bool RecvSendTalentNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvSendTalentNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvSendTalentNotice(item);
-		FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvSendTalentNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvSendTalentNoticeTask::Handle() end");
 
 	return result;
 }
@@ -87,14 +87,14 @@ bool RecvSendTalentNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvSendTalentNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvSendTalentNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvSendTalentNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

@@ -13,7 +13,8 @@
 HttpLoginTask::HttpLoginTask() {
     // TODO Auto-generated constructor stub
     mPath = STREAMLOGIN_PATH;
-    mQnsid = "";
+    mManId = "";
+    mUserSid = "";
     mDeviceId = "";
     mModel = "";
     mManufacturer = "";
@@ -28,19 +29,25 @@ void HttpLoginTask::SetCallback(IRequestLoginCallback* callback) {
 }
 
 void HttpLoginTask::SetParam(
-                                   string qnsid,
-                                   string deviceid,
-                                   string model,
-                                   string manufacturer
+                                    string manId,
+                                    string userSid,
+                                    string deviceid,
+                                    string model,
+                                    string manufacturer
                                    ) {
     
     //	char temp[16];
     mHttpEntiy.Reset();
     mHttpEntiy.SetSaveCookie(true);
     
-    if (qnsid.length() > 0) {
-        mHttpEntiy.AddContent(LOGIN_QNSID, qnsid.c_str());
-        mQnsid = qnsid;
+    if (manId.length() > 0) {
+        mHttpEntiy.AddContent(LOGIN_MANID, manId.c_str());
+        mManId = manId;
+    }
+    
+    if (userSid.length() > 0) {
+        mHttpEntiy.AddContent(LOGIN_USERSID, userSid.c_str());
+        mUserSid = userSid;
     }
     
     if( deviceid.length() > 0 ) {
@@ -62,26 +69,33 @@ void HttpLoginTask::SetParam(
 	FileLog("httpcontroller",
             "HttpStreamLoginTask::SetParam( "
             "task : %p, "
-            "qnsid : %s "
+            "manId : %s"
+            "userSid : %s "
             "deviceid : %s "
             "model : %s "
             "manufacturer : %s "
             ")",
             this,
-            qnsid.c_str(),
+            manId.c_str(),
+            userSid.c_str(),
             deviceid.c_str(),
             model.c_str(),
             manufacturer.c_str()
             );
 }
 
-
+/**
+ * 获取QN会员ID
+ */
+const string& HttpLoginTask::GetManId() {
+    return mUserSid;
+}
 
 /**
  * 获取QN系统登录验证返回的标识
  */
-const string& HttpLoginTask::GetQnsid() {
-    return mQnsid;
+const string& HttpLoginTask::GetUserSid() {
+    return mUserSid;
 }
 
 /**

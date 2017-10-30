@@ -34,7 +34,8 @@ class VideoDecoderH264 : public VideoDecoder {
 public:
 	VideoDecoderH264();
 	~VideoDecoderH264();
-
+    static void GobalInit();
+    
 public:
 	bool Create(VideoDecoderCallback* callback);
     bool Reset();

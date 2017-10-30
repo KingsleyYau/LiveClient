@@ -57,7 +57,7 @@ bool RecvLeaveRoomNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -88,15 +88,15 @@ bool RecvLeaveRoomNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvLeaveRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_fansNum);
-		FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvLeaveRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::Handle() end");
 
 	return result;
 }
@@ -106,7 +106,7 @@ bool RecvLeaveRoomNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::GetSendData() begin");
     {
 //        // 构造json协议
 //        Json::Value value;
@@ -120,7 +120,7 @@ bool RecvLeaveRoomNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvLeaveRoomNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvLeaveRoomNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

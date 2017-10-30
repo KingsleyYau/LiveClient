@@ -18,16 +18,18 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, copy) SelectBlock valueChangeBlock;
 
-@property (weak, nonatomic) IBOutlet KKCheckButton *selectBtn;
+@property (weak, nonatomic) IBOutlet LSCheckButton *selectBtn;
 @property (weak, nonatomic) IBOutlet UIButton *sendBtn;
 @property (weak, nonatomic) IBOutlet UILabel *selectNumLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *arrowImageView;
+@property (nonatomic, strong) UIView *containerView;
 
 
 @property (nonatomic, strong) NSArray* data;
 @property (nonatomic, assign) PullMenuStatus status;
 /** tableview */
 @property (nonatomic, strong) UITableView* tableView;
+
 
 //-(void)pullMenuShow;
 //-(void)pullMenuDismiss;

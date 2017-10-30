@@ -53,7 +53,7 @@ private:
     string          m_fromId;       // 直播系统不同服务器的统一验证身份标识
     string          m_nickName;    // 观众昵称
     string          m_Msg;         // 文本消息内容
-
+    string          m_HonorUrl;    // 勋章图片url
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

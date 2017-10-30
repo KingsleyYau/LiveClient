@@ -7,14 +7,14 @@
 //
 
 #import "SendGiftTheQueueManager.h"
-#import "IMManager.h"
-#import "LoginManager.h"
+#import "LSImManager.h"
+#import "LSLoginManager.h"
 
 @interface SendGiftTheQueueManager () <IMManagerDelegate, IMLiveRoomManagerDelegate>
 
 @property (nonatomic, assign) BOOL isFirstSend;
-@property (nonatomic, strong) LoginManager *loginManager;
-@property (nonatomic, strong) IMManager *imManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
+@property (nonatomic, strong) LSImManager *imManager;
 
 @end
 
@@ -27,8 +27,8 @@
         self.sendGiftDictionary = [[NSMutableDictionary alloc] init];
         self.sendGiftArray = [[NSMutableArray alloc] init];
         self.isFirstSend = YES;
-        self.loginManager = [LoginManager manager];
-        self.imManager = [IMManager manager];
+        self.loginManager = [LSLoginManager manager];
+        self.imManager = [LSImManager manager];
         [self.imManager addDelegate:self];
         [self.imManager.client addDelegate:self];
     }
@@ -71,16 +71,16 @@
 
 - (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)giftItem {
     [self.sendGiftArray addObject:giftItem];
-    NSLog(@"SendGiftTheQueueManager::sendLiveRoomGiftRequestWithGiftItem( array : %@, count : %lu )", self.sendGiftArray, (unsigned long)self.sendGiftArray.count);
+    NSLog(@"SendGiftTheQueueManager::sendLiveRoomGiftRequestWithGiftItem( count : %lu )", (unsigned long)self.sendGiftArray.count);
 
     if (self.isFirstSend) {
-        [self sendGiftQurest];
         self.isFirstSend = NO;
+        [self sendGiftQurest];
     }
 }
 
 - (void)sendGiftQurest {
-    IMManager *manager = [IMManager manager];
+    LSImManager *manager = [LSImManager manager];
     SendGiftItem *item = self.sendGiftArray[0];
 
     // 送礼
@@ -95,12 +95,12 @@
                     multi_click_end:item.endNum
                      multi_click_id:item.clickID
                       finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit, double rebateCredit) {
-                          NSLog(@"SendGiftTheQueueManager::sendGiftQurest( [接收发送礼物结果], success : %d, errType : %d, errMsg : %@, credit : %f, rebateCredit : %f)", success, errType, errMsg, credit, rebateCredit);
+                          NSLog(@"SendGiftTheQueueManager::sendGiftQurest( [接收发送礼物结果], success : %d, errType : %d, errMsg : %@, credit : %f, rebateCredit : %f )", success, errType, errMsg, credit, rebateCredit);
 
                           dispatch_async(dispatch_get_main_queue(), ^{
                               if (success) {
                                   [self.sendGiftArray removeObjectAtIndex:0];
-                                  NSLog(@"SendGiftTheQueueManager::sendGiftQurest( array : %@, count : %lu )", self.sendGiftArray, (unsigned long)self.sendGiftArray.count);
+                                  NSLog(@"SendGiftTheQueueManager::sendGiftQurest( success, count : %lu )", (unsigned long)self.sendGiftArray.count);
 
                                   if (self.sendGiftArray.count) {
                                       [self sendGiftQurest];
@@ -109,11 +109,22 @@
                                   }
 
                               } else {
+                                  NSLog(@"SendGiftTheQueueManager::sendGiftQurest( error, count : %lu )", (unsigned long)self.sendGiftArray.count);
+                                  // 发送失败清队列
                                   [self.sendGiftArray removeAllObjects];
                                   self.isFirstSend = YES;
+
+                                  // 发送大礼物失败回调
                                   if (item.giftItem.infoItem.type == GIFTTYPE_Heigh) {
                                       if (self.delegate && [self.delegate respondsToSelector:@selector(sendGiftFailWithItem:)]) {
                                           [self.delegate sendGiftFailWithItem:item];
+                                      }
+                                  }
+
+                                  // 信用点不足发送失败
+                                  if (errType == LCC_ERR_NO_CREDIT) {
+                                      if (self.delegate && [self.delegate respondsToSelector:@selector(sendGiftNoCredit:)]) {
+                                          [self.delegate sendGiftNoCredit:item];
                                       }
                                   }
                               }
@@ -122,8 +133,10 @@
                       }];
 
     if (!relues) {
+        NSLog(@"SendGiftTheQueueManager::sendGiftQurest( removeAllObjects--sendGiftArray )");
         [self.sendGiftArray removeAllObjects];
         self.isFirstSend = YES;
+        // 发送大礼物失败回调
         if (item.giftItem.infoItem.type == GIFTTYPE_Heigh) {
             if (self.delegate && [self.delegate respondsToSelector:@selector(sendGiftFailWithItem:)]) {
                 [self.delegate sendGiftFailWithItem:item];

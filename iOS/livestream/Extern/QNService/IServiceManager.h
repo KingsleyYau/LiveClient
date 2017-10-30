@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "IQNService.h"
 
-@interface IServiceManager : NSObject
 
-+ (instancetype _Nonnull)shareInstance;
+@protocol IServiceManager <NSObject>
+@optional;
 
 - (void)addService:(id <IQNService> _Nonnull)service;
 
@@ -23,6 +23,6 @@
 //注销互斥服务
 - (void)stopService:(id <IQNService> _Nullable)service;
 
-- (void)openSpecifyService:(NSURL * _Nonnull)url fromVC:(UIViewController * _Nonnull)vc;
-
+- (void)openSpecifyService:(NSURL * _Nonnull)url;
 @end
+

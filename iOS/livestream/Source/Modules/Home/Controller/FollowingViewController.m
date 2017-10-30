@@ -8,7 +8,7 @@
 
 #import "FollowingViewController.h"
 #import "FollowListItemObject.h"
-#import "SessionRequestManager.h"
+#import "LSSessionRequestManager.h"
 #import "GetFollowListRequest.h"
 #import "IntroduceViewController.h"
 #import "PreLiveViewController.h"
@@ -23,7 +23,7 @@
 /**
  *  接口管理器
  */
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 @end
 
@@ -43,7 +43,7 @@
     [super initCustomParam];
     self.items = [NSMutableArray array];
 
-    self.sessionManager = [SessionRequestManager manager];
+    self.sessionManager = [LSSessionRequestManager manager];
 }
 
 - (void)dealloc {
@@ -85,18 +85,30 @@
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
 
-    UIView *vc = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 100)];
-    vc.backgroundColor = [UIColor cyanColor];
 
-    //    UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    UIButton *btn = [[UIButton alloc] initWithFrame:vc.frame];
-    //    btn.center = vc.center;
-    [btn setBackgroundImage:[UIImage imageNamed:@"Home_HotAndFollow_TableViewHeader_Banner"] forState:UIControlStateNormal];
-    [vc addSubview:btn];
 
-    [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
-
+    
+    UIScrollView *vc = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 100)];
+    vc.showsVerticalScrollIndicator = NO;
+    vc.showsHorizontalScrollIndicator = NO;
+    
+    NSArray *bannerList = @[@"Home_HotAndFollow_TableViewHeader_Banner"];
+    // 刷新相册列表
+    vc.contentSize =  CGSizeMake(bannerList.count * vc.frame.size.width, 0);
+    for (int i = 0; i < bannerList.count; i++) {
+        CGRect frame = CGRectMake(vc.frame.size.width * i, 0, vc.frame.size.width, vc.frame.size.height);
+        
+        UIButton *btn = [[UIButton alloc] initWithFrame:frame];
+        [btn setBackgroundImage:[UIImage imageNamed:bannerList[i]] forState:UIControlStateNormal];
+        btn.tag = i;
+        [vc addSubview:btn];
+        
+        [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
+    }
     [self.tableView setTableHeaderView:vc];
+    
     [self.tableView.tableHeaderView setHidden:YES];
 
     self.tableView.tableViewDelegate = self;
@@ -105,8 +117,8 @@
 - (void)showTipsContent {
 
     self.failView.hidden = NO;
-    self.failTipsText = @"No following performers";
-    self.failBtnText = @"Watch Hot Live";
+    self.failTipsText = NSLocalizedStringFromSelf(@"NO_FOLLOW_PERFORMER");
+    self.failBtnText = NSLocalizedStringFromSelf(@"WATCH_HOT_LIVE");
     self.delegateSelect = @selector(BrowseToHotAction:);
     [self reloadFailViewContent];
 }
@@ -118,8 +130,8 @@
 - (void)showFailTipsContent {
 
     self.failView.hidden = NO;
-    self.failTipsText = @"Faild to load";
-    self.failBtnText = @"Reload";
+    self.failTipsText = NSLocalizedString(@"List_FailTips",@"List_FailTips");
+    self.failBtnText = NSLocalizedString(@"List_Reload",@"List_Reload");
     self.delegateSelect = @selector(reloadBtnClickAction:);
     [self reloadFailViewContent];
 }
@@ -203,14 +215,14 @@
 
     GetFollowListRequest *request = [[GetFollowListRequest alloc] init];
 
-    int start = 1;
+    int start = 0;
     if (!loadMore) {
         // 刷最新
-        start = 1;
+        start = 0;
 
     } else {
         // 刷更多
-        start = self.items ? ((int)self.items.count + 1) : 1;
+        start = self.items ? ((int)self.items.count) : 0;
     }
 
     // 每页最大纪录数
@@ -255,13 +267,26 @@
                             [self.tableView scrollsToTop];
                         });
                     }
+                }else {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                        if (self.items.count > PageSize) {
+                            // 拉到下一页
+                            UITableViewCell *cell = [self.tableView visibleCells].firstObject;
+                            NSIndexPath *index = [self.tableView indexPathForCell:cell];
+                            NSInteger row = index.row;
+                            NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
+                            [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                        }
+                        
+                        
+                    });
                 }
 
             } else {
                 if (!loadMore) {
                     // 停止头部
                     [self.tableView finishPullDown:YES];
-                    self.items = nil;
+                     [self.items removeAllObjects];
                     [self showFailTipsContent];
                     [self.tableView.tableHeaderView setHidden:YES];
 
@@ -306,7 +331,18 @@
 }
 
 - (void)btnClick:(UIButton *)btn {
+    NSInteger index = btn.tag;
     IntroduceViewController *introduceVc = [[IntroduceViewController alloc] initWithNibName:nil bundle:nil];
+    
+    switch (index) {
+        case 0:{
+            introduceVc.bannerUrl = @"http://h5.gonet.com.cn/h5site/demo26/";
+        } break;
+            
+        default:
+            break;
+    }
+    
     [self.navigationController pushViewController:introduceVc animated:YES];
     NSLog(@"%s", __func__);
 }
@@ -342,7 +378,7 @@
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
 
-    KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];
 }
 
@@ -356,7 +392,7 @@
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
 
-    KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];
 }
 
@@ -370,7 +406,7 @@
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
 
-    KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];
 }
 /** 豪华的私密直播间 */
@@ -383,7 +419,7 @@
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
 
-    KKNavigationController *nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];
 }
 

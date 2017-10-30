@@ -307,6 +307,7 @@ void AudioDecoderAAC::DestroyContext() {
     
     if( mContext ) {
         avcodec_close(mContext);
+        avcodec_free_context(&mContext);
         mContext = NULL;
     }
     

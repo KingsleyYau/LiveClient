@@ -22,6 +22,8 @@
     
     self.items = [NSMutableArray array];
     
+    // 设置导航栏返回按钮
+    [self setBackleftBarButtonItemOffset:0];
 }
 
 - (void)dealloc {
@@ -44,12 +46,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     
-    // 设置导航栏返回按钮
-    [self setBackleftBarButtonItemOffset:0];
+
     
     UIButton *searchBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [searchBtn setFrame:CGRectMake(0, 0, 60, 40)];
-    [searchBtn setTitle:@"Search" forState:UIControlStateNormal];
+    [searchBtn setTitle:NSLocalizedStringFromSelf(@"SEARCH") forState:UIControlStateNormal];
     [searchBtn addTarget:self action:@selector(searchUserAction:) forControlEvents:UIControlEventTouchUpInside];
     UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:searchBtn];
     self.navigationItem.rightBarButtonItem = barButtonItem;
@@ -99,7 +100,7 @@
     imageVIew.frame = CGRectMake(0, 0, 30, 30);
     self.textField.leftView = imageVIew;
     self.textField.leftViewMode = UITextFieldViewModeAlways;
-    self.textField.placeholder = @"Search username/ID";
+    self.textField.placeholder = NSLocalizedStringFromSelf(@"PLACEHOLDER_TEXT");
     [self.textField setBackgroundColor:COLOR_WITH_16BAND_RGB(0xf1f1f1)];
     self.textField.frame = CGRectMake(0, 0, 260, 30);
     self.textField.delegate = self;

@@ -9,6 +9,7 @@
 #import "CountryTableView.h"
 #import "CountryTableViewCell.h"
 #import "Country.h"
+#import "LiveBundle.h"
 
 @implementation CountryTableView
 - (id)initWithFrame:(CGRect)frame {
@@ -38,7 +39,7 @@
 
 
 - (void)setupCountryPlist {
-    NSString *profilePlistPath = [[NSBundle mainBundle] pathForResource:@"Country" ofType:@"plist"];
+    NSString *profilePlistPath = [[LiveBundle mainBundle] pathForResource:@"Country" ofType:@"plist"];
     NSArray *profileArray = [[NSArray alloc] initWithContentsOfFile:profilePlistPath];
     Country  *countryItem = nil;
     NSMutableArray *tempArray = [NSMutableArray array];

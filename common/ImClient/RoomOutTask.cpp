@@ -48,7 +48,7 @@ bool RoomOutTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RoomOutTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RoomOutTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -64,16 +64,16 @@ bool RoomOutTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RoomOutTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RoomOutTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnRoomOut(GetSeq(), success, m_errType, m_errMsg);
-		FileLog("LiveChatClient", "RoomOutTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RoomOutTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RoomOutTask::Handle() end");
+	FileLog("ImClient", "RoomOutTask::Handle() end");
 
 	return result;
 }
@@ -83,7 +83,7 @@ bool RoomOutTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RoomOutTask::GetSendData() begin");
+	FileLog("ImClient", "RoomOutTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -93,7 +93,7 @@ bool RoomOutTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RoomOutTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RoomOutTask::GetSendData() end, result:%d", result);
 
 	return result;
 }
@@ -148,6 +148,6 @@ bool RoomOutTask::InitParam(const string& roomId)
 void RoomOutTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
-        m_listener->OnRoomOut(m_seq, false, LCC_ERR_CONNECTFAIL, "");
+        m_listener->OnRoomOut(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC);
 	}
 }

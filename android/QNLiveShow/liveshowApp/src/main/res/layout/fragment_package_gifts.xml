@@ -1,0 +1,22 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:orientation="vertical">
+
+    <GridView
+        android:id="@+id/gridView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        android:verticalSpacing="9dp"
+        android:horizontalSpacing="14dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:paddingTop="9dp"
+        android:scrollbars="none"
+        android:fadingEdge="none"
+        android:cacheColorHint="#00000000"
+        android:overScrollMode="never"/>
+
+</FrameLayout>

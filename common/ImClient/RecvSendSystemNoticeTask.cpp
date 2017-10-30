@@ -52,7 +52,7 @@ bool RecvSendSystemNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendSystemNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendSystemNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -77,15 +77,15 @@ bool RecvSendSystemNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvSendSystemNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvSendSystemNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvSendSystemNotice(m_roomId, m_msg, m_link);
-		FileLog("LiveChatClient", "RecvSendSystemNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvSendSystemNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvSendSystemNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvSendSystemNoticeTask::Handle() end");
 
 	return result;
 }
@@ -95,7 +95,7 @@ bool RecvSendSystemNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvSendSystemNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvSendSystemNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -107,7 +107,7 @@ bool RecvSendSystemNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvSendSystemNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvSendSystemNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

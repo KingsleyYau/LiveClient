@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "GiftComboNumView.h"
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 #import "GiftItem.h"
 
 @class GiftComboView;
@@ -22,10 +22,10 @@
 
 @property (weak, nonatomic) IBOutlet UIView *backView;
 @property (weak, nonatomic) IBOutlet UIImageView *backImageView; /**< 背景图 */
-@property (weak, nonatomic) IBOutlet UIImageViewTopFit *iconImageView; /**< 头像 */
-@property (weak, nonatomic) ImageViewLoader* imageViewHeaderLoader;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *iconImageView; /**< 头像 */
+@property (weak, nonatomic) LSImageViewLoader* imageViewHeaderLoader;
 @property (weak, nonatomic) IBOutlet UIImageView *giftImageView; /**< 礼物图片 */
-@property (weak, nonatomic) ImageViewLoader* imageViewGiftLoader;
+@property (weak, nonatomic) LSImageViewLoader* imageViewGiftLoader;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;/**< 名称 */
 @property (weak, nonatomic) IBOutlet UILabel *sendLabel;/**< 送出 */
 @property (weak, nonatomic) IBOutlet GiftComboNumView *numberView;

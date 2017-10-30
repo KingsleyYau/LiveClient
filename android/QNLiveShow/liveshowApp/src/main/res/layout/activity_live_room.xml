@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentBody"
+    android:background="@drawable/ic_live_roomtheme_advancepri"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 背景不随软键盘切换部分：视频播放view-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llBackBody"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_bgContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/include_audience_area"
+                    layout="@layout/include_liveroom_audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/include_anchor_area"
+                    layout="@layout/include_liveroom_anchor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!--用户端底部操作界面,包含发言，送礼，分享-->
+            <include
+                android:id="@+id/ll_buttom_audience"
+                layout="@layout/view_live_buttom_audience"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_gravity="bottom"
+                android:visibility="visible" />
+
+            <!--主播端底部操作界面,包含发言，送礼，直播控制-->
+            <RelativeLayout
+                android:id="@+id/rl_anchorOperate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <include
+                    android:id="@+id/rl_buttom_broadcast"
+                    layout="@layout/view_live_buttom_broadcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:visibility="visible" />
+
+                <!--按钮展开区域-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/rl_buttom_broadcast"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="13dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/btn_switchCamera"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/ic_live_buttom_camera_switch"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/btn_switchFlash"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/selector_live_buttom_flash"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/btn_switchBeauty"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/selector_live_buttom_beauty"
+                        android:onClick="onClick"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <!--最上层消息控制等-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:paddingBottom="@dimen/imButtomMargin">
+
+                <include
+                    android:id="@+id/view_roomHeader"
+                    layout="@layout/view_liveshow_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <!--房间头部-->
+                <include
+                    android:id="@+id/include_im_body"
+                    layout="@layout/include_liveroom_im"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:visibility="visible" />
+
+                <include
+                    android:id="@+id/view_tariff_prompt"
+                    layout="@layout/view_tariff_prompt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="3dp"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <!--主播端同用户端共用，切换到消息输入场景,样式一样-->
+            <include
+                android:id="@+id/rl_inputMsg"
+                layout="@layout/view_live_buttom_sendmsg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:visibility="invisible" />
+            <!--大礼物-->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/advanceGift"
+                android:layout_width="match_parent"
+                android:layout_height="600dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                fresco:actualImageScaleType="fitCenter" />
+
+        </FrameLayout>
+
+        <!--最底部为表情选择器-->
+        <com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/etsl_emojiContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:visibility="gone"
+            custom:columnNumbPerPage="5"
+            custom:lineNumbPerPage="3"/>
+    </LinearLayout>
+
+    <!--视频上传区域-->
+    <include
+        android:id="@+id/includePublish"
+        layout="@layout/include_liveroom_publish"
+        android:layout_width="93dp"
+        android:layout_height="125dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="76dp"
+        android:layout_marginRight="13dp"/>
+
+</com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout>

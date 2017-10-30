@@ -10,27 +10,28 @@
 #import "PlayViewController.h"
 #import "PreLiveViewController.h"
 
-#import "SessionRequestManager.h"
+#import "LSSessionRequestManager.h"
 #import "PublicViewController.h"
 #import "GetAnchorListRequest.h"
 #import "IntroduceViewController.h"
 #import "GetAnchorListRequest.h"
 #import "FollowCollectionView.h"
-#import "LoginManager.h"
+#import "LSLoginManager.h"
 #import "BookPrivateBroadcastViewController.h"
+#import "AnchorPersonalViewController.h"
+
 #define PageSize 10
 @interface HotViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate>
 
 /**
  *  接口管理器
  */
-@property (nonatomic, strong) SessionRequestManager *sessionManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 /**
  列表
  */
 @property (nonatomic, strong) NSMutableArray *items;
-
 
 @end
 
@@ -41,29 +42,24 @@
 
     self.items = [NSMutableArray array];
 
-    self.sessionManager = [SessionRequestManager manager];
-    
-    
-    // 设置失败页属性
-    self.failTipsText = @"Failed to load";
-    
-    self.failBtnText = @"Reload";
-    
-    self.delegateSelect = @selector(reloadBtnClick:);
+    self.sessionManager = [LSSessionRequestManager manager];
 
+    // 设置失败页属性
+    self.failTipsText = NSLocalizedString(@"List_FailTips",@"List_FailTips");
+
+    self.failBtnText = NSLocalizedString(@"List_Reload",@"List_Reload");
+
+    self.delegateSelect = @selector(reloadBtnClick:);
 }
 
 - (void)dealloc {
-    NSLog(@"%s",__func__);
+    NSLog(@"%s", __func__);
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-
 }
-
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -76,11 +72,11 @@
     if (self.items.count == 0 && !self.viewDidAppearEver) {
         // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
         [self.tableView startPullDown:YES];
-        
-    }    
-    
+    }
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+}
 
 - (void)setupContainView {
     [super setupContainView];
@@ -96,106 +92,122 @@
     //    [self.view addSubview:vc];
 }
 
-
-
 - (void)setupTableView {
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-   
 
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
 
-    UIView *vc = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 100)];
-    vc.backgroundColor = [UIColor cyanColor];
+    UIScrollView *vc = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, screenSize.width, 100)];
+    vc.showsVerticalScrollIndicator = NO;
+    vc.showsHorizontalScrollIndicator = NO;
 
-    //    UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    UIButton *btn = [[UIButton alloc] initWithFrame:vc.frame];
-    //    btn.center = vc.center;
-    [btn setBackgroundImage:[UIImage imageNamed:@"Home_HotAndFollow_TableViewHeader_Banner"] forState:UIControlStateNormal];
-    [vc addSubview:btn];
+    NSArray *bannerList = @[ @"Home_HotAndFollow_TableViewHeader_Banner" ];
+    // 刷新相册列表
+    vc.contentSize = CGSizeMake(bannerList.count * vc.frame.size.width, 0);
+    for (int i = 0; i < bannerList.count; i++) {
+        CGRect frame = CGRectMake(vc.frame.size.width * i, 0, vc.frame.size.width, vc.frame.size.height);
 
-    [btn addTarget:self action:@selector(adBannerClickAction:) forControlEvents:UIControlEventTouchUpInside];
+        UIButton *btn = [[UIButton alloc] initWithFrame:frame];
+        [btn setBackgroundImage:[UIImage imageNamed:bannerList[i]] forState:UIControlStateNormal];
+        btn.tag = i;
+        [vc addSubview:btn];
+
+        [btn addTarget:self action:@selector(adBannerClickAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
 
     [self.tableView setTableHeaderView:vc];
-    
-//     self.tableView.headerViewHeight = self.tableView.tableHeaderView.height;
-    [self.tableView setHeaderContent:self.tableView.tableHeaderView.height];
-    [self.tableView.tableHeaderView setHidden:YES];
+
+    //     self.tableView.headerViewHeight = self.tableView.tableHeaderView.height;
+    [self.tableView setHeaderContent:self.tableView.tableHeaderView.frame.size.height];
+//    [self.tableView.tableHeaderView setHidden:YES];
 
     self.tableView.tableViewDelegate = self;
 }
 
-
-
 - (void)adBannerClickAction:(UIButton *)btn {
+    NSInteger index = btn.tag;
     IntroduceViewController *introduceVc = [[IntroduceViewController alloc] initWithNibName:nil bundle:nil];
+
+    switch (index) {
+        case 0: {
+            introduceVc.bannerUrl = @"http://h5.gonet.com.cn/h5site/demo26/";
+        } break;
+
+        default:
+            break;
+    }
+
     [self.navigationController pushViewController:introduceVc animated:YES];
+    //    self.failView.hidden = NO;
     NSLog(@"%s", __func__);
 }
 
 #pragma mark - 数据逻辑
 
-
 - (void)reloadData:(BOOL)isReloadView {
+    NSLog(@"HotViewController::reloadData( isReloadView : %@ )", BOOL2YES(isReloadView));
+
     // 数据填充
     if (isReloadView) {
-        
+
         NSMutableSet *set = [NSMutableSet set];
-        
-        NSPredicate *duplicate = [NSPredicate predicateWithBlock: ^BOOL(id obj, NSDictionary *bind) {
-            
-            LiveRoomInfoItemObject *objItem = (LiveRoomInfoItemObject*)obj;
-            
+
+        NSPredicate *duplicate = [NSPredicate predicateWithBlock:^BOOL(id obj, NSDictionary *bind) {
+
+            LiveRoomInfoItemObject *objItem = (LiveRoomInfoItemObject *)obj;
+
             BOOL seen = [set containsObject:objItem.userId];
-            
+
             if (!seen) {
-                
+
                 [set addObject:objItem.userId];
-                
             }
             return !seen;
-            
+
         }];
-        
-        
+
         NSArray *noRepeatArray = [NSMutableArray arrayWithArray:[self.items filteredArrayUsingPredicate:duplicate]];
-        
+
         self.tableView.items = noRepeatArray;
-//        self.tableView.items = self.items;
+        //        self.tableView.items = self.items;
         [self.tableView reloadData];
 
-//        UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-//        NSIndexPath *index = [self.tableView indexPathForCell:cell];
-//        NSInteger row = index.row;
-//
-//        if (self.items.count > 0) {
-//            if (row < self.items.count) {
-//                NSIndexPath *nextLadyIndex = [NSIndexPath indexPathForRow:row inSection:0];
-//            [self.tableView scrollToRowAtIndexPath:nextLadyIndex atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-//            }
-//        }
+        //        UITableViewCell *cell = [self.tableView visibleCells].firstObject;
+        //        NSIndexPath *index = [self.tableView indexPathForCell:cell];
+        //        NSInteger row = index.row;
+        //
+        //        if (self.items.count > 0) {
+        //            if (row < self.items.count) {
+        //                NSIndexPath *nextLadyIndex = [NSIndexPath indexPathForRow:row inSection:0];
+        //            [self.tableView scrollToRowAtIndexPath:nextLadyIndex atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        //            }
+        //        }
     }
 }
 
 - (void)tableView:(HotTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-//    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-//    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-//    liveRoom.roomType = LiveRoomType_Public;
-//    liveRoom.httpLiveRoom = item;
-//    vc.liveRoom = liveRoom;
-//    [self.navigationController pushViewController:vc animated:YES];
+    //    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+    //    LiveRoom *liveRoom = [[LiveRoom alloc] init];
+    //    liveRoom.roomType = LiveRoomType_Public;
+    //    liveRoom.httpLiveRoom = item;
+    //    vc.liveRoom = liveRoom;
+    //    [self.navigationController pushViewController:vc animated:YES];
+
+    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
+    listViewController.liveRoomInfo = item;
+    [self.navigationController pushViewController:listViewController animated:YES];
 }
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
     self.view.userInteractionEnabled = NO;
 
-//    [self getListRequest:NO];
-//    [self initTestData];
+    //    [self getListRequest:NO];
+    //    [self initTestData];
 
     [self getListRequest:NO];
-
 }
 
 - (void)pullUpRefresh {
@@ -212,7 +224,6 @@
 - (void)pullUpRefresh:(UIScrollView *)scrollView {
     // 上拉更多回调
     [self pullUpRefresh];
-
 }
 
 #pragma mark 数据逻辑
@@ -265,29 +276,29 @@
                     if (self.items.count > 0) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                             // 拉到最顶
-//                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-//                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
+                            //                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+                            //                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
                             [self.tableView scrollsToTop];
                         });
-                    
                     }
-                }else {
+                } else {
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        // 拉到下一页
-                        UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-                        NSIndexPath *index = [self.tableView indexPathForCell:cell];
-                        NSInteger row = index.row;
-                        NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
-                        [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
-                        
+                        if (self.items.count > PageSize) {
+                            // 拉到下一页
+                            UITableViewCell *cell = [self.tableView visibleCells].firstObject;
+                            NSIndexPath *index = [self.tableView indexPathForCell:cell];
+                            NSInteger row = index.row;
+                            NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
+                            [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                        }
+
                     });
                 }
             } else {
-           
                 if (!loadMore) {
                     // 停止头部
                     [self.tableView finishPullDown:YES];
-                     self.items = nil;
+                    [self.items removeAllObjects];
                     [self.tableView.tableHeaderView setHidden:YES];
                     self.failView.hidden = NO;
 
@@ -299,7 +310,7 @@
                 [self reloadData:YES];
             }
             self.view.userInteractionEnabled = YES;
-        
+
         });
 
     };
@@ -329,7 +340,7 @@
 - (void)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-//    [self getListRequest:YES];
+    //    [self getListRequest:YES];
     [self.tableView startPullDown:YES];
 }
 
@@ -342,9 +353,9 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
-    
-    KKNavigationController* nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:nvc animated:YES completion:nil];
+
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
 }
 
 /** 付费的公开直播间 */
@@ -356,9 +367,9 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
-    
-    KKNavigationController* nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:nvc animated:YES completion:nil];
+
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
 }
 
 /** 普通的私密直播间 */
@@ -370,9 +381,9 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
-    
-    KKNavigationController* nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
-    [self.navigationController presentViewController:nvc animated:YES completion:nil];
+
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
 }
 /** 豪华的私密直播间 */
 - (void)tableView:(HotTableView *)tableView didStartVipPrivteBroadcast:(NSInteger)index {
@@ -383,8 +394,16 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
     liveRoom.httpLiveRoom = item;
     vc.liveRoom = liveRoom;
-    
-    KKNavigationController* nvc = [[KKNavigationController alloc] initWithRootViewController:vc];
+
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
+}
+
+- (void)navgationControllerPresent:(UIViewController *)controller {
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
+    nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
+    nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
+    nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
     [self.navigationController presentViewController:nvc animated:YES completion:nil];
 }
 
@@ -395,6 +414,8 @@
     BookPrivateBroadcastViewController * vc = [[BookPrivateBroadcastViewController alloc]initWithNibName:nil bundle:nil];
     vc.userId = item.userId;
     vc.userName = item.nickName;
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
 }
 @end

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@android:color/transparent"
+    android:gravity="center_vertical|left"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <View
+        android:id="@+id/v_bulletTxtBgColor"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_alignRight="@+id/tv_bulletContent"
+        android:layout_alignTop="@+id/tv_bulletContent"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_live_center_bullet_screen"
+        />
+
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+        android:src="@drawable/circleimageview_hugh"
+        android:id="@+id/civ_bullletIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentBottom="true"/>
+
+    <TextView
+        android:id="@+id/tv_bulletContent"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/civ_bullletIcon"
+        android:paddingLeft="7dp"
+        android:paddingRight="12dp"
+        android:gravity="center_vertical"
+        android:textColor="#5d0186"
+        android:singleLine="true"
+        android:textSize="12sp"
+        android:text="Nice to meet you!"
+        />
+
+    <TextView
+        android:id="@+id/tv_bulletName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:text="QHJyjitp"
+        style="@style/Text_Shadow"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="7dp"
+        android:layout_marginBottom="2dp"
+        android:layout_above="@id/tv_bulletContent"
+        android:textColor="#ffd205"
+        android:layout_toRightOf="@id/civ_bullletIcon"/>
+</RelativeLayout>

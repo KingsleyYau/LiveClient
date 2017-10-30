@@ -7,28 +7,37 @@
 //
 
 #import "DialogTip.h"
+#import "LiveBundle.h"
+
 @interface DialogTip ()
 @property (strong) UIView* view;
 @end
 
-
 @implementation DialogTip
 
 + (DialogTip *)dialogTip{
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
-    DialogTip* view = [nibs objectAtIndex:0];
-    view.layer.cornerRadius = 10;
-    view.layer.masksToBounds = YES;
-    view.isShow = NO;
+    
+    static DialogTip* view;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
+        view = [nibs objectAtIndex:0];
+        view.layer.cornerRadius = 10;
+        view.layer.masksToBounds = YES;
+        view.isShow = NO;
+    });
     return view;
 }
 
-
 - (void)showDialogTip:(UIView *)view tipText:(NSString *)tip {
+    if (self.isShow) {
+        [self removeShow];
+    }
+    
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
     self.view = view;
     self.tipsLabel.text = tip;
-//    self.view.userInteractionEnabled = NO;
-    UIWindow* window = AppDelegate().window;
+    //    self.view.userInteractionEnabled = NO;
     [window addSubview:self];
     [window bringSubviewToFront:self];
     
@@ -38,16 +47,16 @@
         make.centerX.equalTo(window);
     }];
     
-    [self sizeToFit];
-    
     self.isShow = YES;
     
+    [self sizeToFit];
     [self performSelector:@selector(removeShow) withObject:nil afterDelay:3.0];
 }
 
 - (void)removeShow {
     self.isShow = NO;
     [self removeFromSuperview];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 //    self.view.userInteractionEnabled = YES;
 }
 

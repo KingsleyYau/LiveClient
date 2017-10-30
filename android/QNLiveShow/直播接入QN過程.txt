@@ -1,0 +1,65 @@
+修改工程爲AAR項目：
+1.在屬於liveshowApp的build.gradle中修改
+
+	//apply plugin: 'com.android.application'
+	apply plugin:'com.android.library'
+
+	註釋
+	//applicationId "com.qpidnetwork.livemodule"
+
+2.在Manifest.xml中　註釋
+    <!--android:name=".liveshow.LiveApplication"-->
+    <!--android:theme="@style/CustomTheme.App"-->
+    <!--android:icon="@mipmap/ic_launcher"-->
+
+	…
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+
+3.排除與QN中衝突的JAR包：
+	compile fileTree(include: ['*.jar'], excludes: ['bolts-tasks-1.4.0.jar', 'picasso-2.5.2.jar'], dir: 'libs')
+	provided files('libs/bolts-tasks-1.4.0.jar')
+	provided files('libs/picasso-2.5.2.jar')
+
+引入工程：
+1、在QN project的settings.gradle里面增加
+
+    include ':QNLiveShow'
+	project(':QNLiveShow').projectDir=new File('../Live/Android/QNLiveShow/')
+	include ':QNLiveShow:liveshowApp'
+
+
+2、在QN Module:app 的build.gradle文件中增加
+
+    compile project(':QNBridgeModule:bridgeService')
+
+    增加直播第三方AAR文件目錄：
+    //外部aar
+    repositories {
+        flatDir {
+            dirs 'libs' , "../../Live/Android/QNLiveShow/liveshowApp/libs"  // aar目录
+        }
+    }
+
+3、主工程点击Android Studio的菜单中的Build->Clean Project
+
+修改直播項目代碼：
+1.LiveApplication　爲AAR時，不再執行，把初始化要做的事放在LiveShowModule中。
+2.修改與QN重名的資源文件，增加:live_　標識
+3.修改switch使用资源id时提示为变量错误（转为if ／else if）
+4.修改自定义stytle 未使用xmlns:custom="http://schemas.android.com/apk/res-auto"致资源目录错误异常；
+5.修改JNI中與QN衝突的代碼
+
+ps:
+1.Error: Your project contains C++ files but it is not using a supported native build system:
+	解决方案：
+		1.在项目的gradle.properties添加 android.useDeprecatedNdk=true；
+		2.    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['src/main/libs']
+        }
+    }

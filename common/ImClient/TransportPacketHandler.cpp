@@ -26,7 +26,7 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
 {
 	//printf("CTransportPacketHandler::Packet() task:%p, data:%p, dataLen:%d\n", task, data, dataLen);
 
-	FileLog("LiveChatClient", "CTransportPacketHandler::Packet() begin");
+	FileLog("ImClient", "CTransportPacketHandler::Packet() begin");
 
 	// 获取task数据
     Json::Value req_data;
@@ -58,7 +58,7 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
         result = true;
     }
 	
-	FileLog("LiveChatClient", "CTransportPacketHandler::Packet() end, result:%d, strData:%s", result,  strData.c_str());
+	FileLog("ImClient", "CTransportPacketHandler::Packet() end, result:%d, strData:%s", result,  strData.c_str());
 
 	return result;
 }
@@ -67,7 +67,7 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
 UNPACKET_RESULT_TYPE CTransportPacketHandler::Unpacket(const void* data, size_t dataLen, TransportProtocol& tp)
 {
 	UNPACKET_RESULT_TYPE result = UNPACKET_FAIL;
-    FileLog("LiveChatClient", "CTransportPacketHandler::Unpacket() %s begin", data);
+    FileLog("ImClient", "CTransportPacketHandler::Unpacket() %s begin", data);
     
     Json::Value root;
     Json::Reader reader;

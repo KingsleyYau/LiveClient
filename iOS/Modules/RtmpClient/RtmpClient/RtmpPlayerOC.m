@@ -49,7 +49,7 @@ class PlayerStatusCallbackImp;
 @property (assign) AudioDecoder* audioDecoder;
 
 #pragma mark - 后台处理
-@property (nonatomic) BOOL isBackGround;
+@property (nonatomic) BOOL isBackground;
 
 @end
 
@@ -190,7 +190,7 @@ private:
     
     if(self = [super init] ) {
         // 默认在前台
-        _isBackGround = NO;
+        _isBackground = NO;
 
         // 创建播放控制器
         self.player = new PlayerController();
@@ -270,9 +270,7 @@ private:
 }
 
 - (void)renderVideoFrame:(CVPixelBufferRef _Nonnull)buffer {
-    if( !self.isBackGround ) {
-        [self.delegate rtmpPlayerRenderVideoFrame:self buffer:buffer];
-    }
+    [self.delegate rtmpPlayerRenderVideoFrame:self buffer:buffer];
 }
 
 - (void)createDecoders {
@@ -334,8 +332,8 @@ private:
 #pragma mark - 视频采集后台
 - (void)willEnterBackground:(NSNotification *)notification {
     @synchronized (self) {
-        if( _isBackGround == NO ) {
-            _isBackGround = YES;
+        if( _isBackground == NO ) {
+            _isBackground = YES;
             
             // 销毁硬解码器
             if( self.videoDecoder ) {
@@ -347,8 +345,8 @@ private:
 
 - (void)willEnterForeground:(NSNotification *)notification {
     @synchronized (self) {
-        if( _isBackGround == YES ) {
-            _isBackGround = NO;
+        if( _isBackground == YES ) {
+            _isBackground = NO;
             
             // 重置硬视频解码器
             if( self.videoDecoder ) {

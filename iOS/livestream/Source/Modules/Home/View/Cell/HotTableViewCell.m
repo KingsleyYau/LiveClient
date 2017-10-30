@@ -7,6 +7,7 @@
 //
 
 #import "HotTableViewCell.h"
+#import "LiveBundle.h"
 
 @implementation HotTableViewCell
 + (NSString *)cellIdentifier {
@@ -20,10 +21,10 @@
 + (id)getUITableViewCell:(UITableView*)tableView {
     HotTableViewCell *cell = (HotTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[HotTableViewCell cellIdentifier]];
     if ( nil == cell ) {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:@"HotTableViewCell" owner:tableView options:nil];
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"HotTableViewCell" owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.animationArray = [NSMutableArray array];
-        cell.imageViewLoader = [ImageViewLoader loader];
+        cell.imageViewLoader = [LSImageViewLoader loader];
     }
     
     cell.imageViewHeader.image = nil;

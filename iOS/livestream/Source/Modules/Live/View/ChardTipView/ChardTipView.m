@@ -8,12 +8,6 @@
 
 #import "ChardTipView.h"
 
-#define PublicTip @"Public Broadcast is free to watch."
-#define VIPPublicTip @"VIP Public Broadcast is billed at "
-#define PrivateTip @"Private broadcast is billed at "
-#define VIPPrivateTip @"VIP Private Broadcast is billed at "
-#define CreditTip @" credit per minute."
-
 @interface ChardTipView ()
 
 @property (nonatomic, strong) UIView *backgroundView;
@@ -60,7 +54,7 @@
         }];
         
         self.gotBtn = [[UIButton alloc] init];
-        [self.gotBtn setTitle:@"Got it" forState:UIControlStateNormal];
+        [self.gotBtn setTitle:NSLocalizedString(@"GOT_IT",@"GOT_IT") forState:UIControlStateNormal];
         [self.gotBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         self.gotBtn.titleLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(12)];
         self.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
@@ -107,6 +101,7 @@
         make.height.equalTo(@0);
         make.bottom.equalTo(self.backgroundView.mas_bottom);
     }];
+    self.gotBtn.hidden = YES;
     return isShow;
 }
 

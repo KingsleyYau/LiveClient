@@ -8,18 +8,23 @@
 
 #import "AnchorPersonalViewController.h"
 #import "AnchorPersonalView.h"
+#import "PreLiveViewController.h"
+#import "MeLevelViewController.h"
+#import "LSHomePageViewController.h"
+#import "BookPrivateBroadcastViewController.h"
+#import "LiveChannelAdViewController.h"
+#import "LSMyReservationsViewController.h"
 
-@interface AnchorPersonalViewController () <WKUIDelegate,WKNavigationDelegate>
+@interface AnchorPersonalViewController () <WKUIDelegate, WKNavigationDelegate>
 @property (weak, nonatomic) IBOutlet AnchorPersonalView *anchorPersonalView;
-
 @end
 
 @implementation AnchorPersonalViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
     
+    // Do any additional setup after loading the view from its nib.
     self.anchorPersonalView.UIDelegate = self;
     self.anchorPersonalView.navigationDelegate = self;
     [self requestWebview];
@@ -36,8 +41,6 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
-    // 设置导航栏返回按钮
-    [self setBackleftBarButtonItemOffset:15];
 }
 
 
@@ -68,15 +71,10 @@
 // 请求webview
 - (void)requestWebview
 {
-    
-    
     NSString *webSiteUrl = @"";
-    
-    
-    //    webSiteUrl = @"https://tympanus.net/Development/AnimatedBooks/index.html";
+    // webSiteUrl = @"https://tympanus.net/Development/AnimatedBooks/index.html";
     webSiteUrl = @"http://demo-mobile.charmdate.com/member/lady_profile/womanid/P580502/devicetype/31/versioncode/110/showButton/1";
     // webview请求url
-    
     NSURL *url = [NSURL URLWithString:webSiteUrl];
     // url请求
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
@@ -87,13 +85,10 @@
 }
 
 #pragma mark - WKNavigationDelegate (导航的代理：提供了追踪主窗口网页加载过程和判断主窗口和子窗口是否进行页面加载新页面的相关方法)
-
 // webview的权限处理的代理
 - (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler{
     
     NSLog(@"%s",__func__);
-    
-    
     //AFNetworking中的处理方式
     NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     __block NSURLCredential *credential = nil;
@@ -151,6 +146,8 @@
     [self hideLoading];
     NSLog(@"%s---=====%@",__func__,error);
     
+    [self showFailView];
+    
 }
 
 // 当main frame最后下载数据失败时，会回调
@@ -193,6 +190,8 @@
  */
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler{
     NSLog(@"%s",__func__);
+    
+
     // url
     NSString *hostName = [navigationAction.request.URL absoluteString];
     // 跳转模块
@@ -225,7 +224,24 @@
      NSLog(@"%s---%@ %ld", __func__, [navigationAction.request.URL absoluteString], (long)navigationAction.navigationType);
     
     if (!navigationAction.targetFrame.isMainFrame) {
-        [webView loadRequest:navigationAction.request];
+        // [webView loadRequest:navigationAction.request];
+        //[[LiveUrlHandler shareInstance] handleOpenURL:navigationAction.request.URL];
+        //NSString *hostName = @"qpidnetwork://app/open?service=live&module=bookinglist&listtype=1";
+        //NSString *hostName = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&anchorid=%@", self.liveRoomInfo.userId];
+        // 跳转模块
+        NSString *commonJump = @"qpidnetwork://app/open?";
+        NSString *hostName = [navigationAction.request.URL absoluteString];
+        // test 
+        //NSString *hostName = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&anchorid=%@&roomtype=1", self.liveRoomInfo.userId];
+        //NSString *hostName = @"qpidnetwork://app/open?service=live&module=bookinglist&listtype=1";
+        //NSString *hostName = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&anchorid=%@", self.liveRoomInfo.userId];
+        if ((hostName != nil) && [hostName hasPrefix:commonJump]) {
+//            NSURL *url = [NSURL URLWithString:hostName];
+            //[LiveUrlHandler shareInstance].url = navigationAction.request.URL;
+//            [LiveUrlHandler shareInstance].url = url;
+//            [[LiveUrlHandler shareInstance] handleOpenURL];
+        }
+
     }
     return nil;
 }
@@ -234,8 +250,8 @@
 //alert 警告框
 -(void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler{
     NSLog(@"%s---",__func__);
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"警告" message:@"调用alert提示框" preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"WARNING", @"WARNING") message:NSLocalizedString(@"CALL_ALERT_BOX", @"CALL_ALERT_BOX") preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         completionHandler();
     }]];
     [self presentViewController:alert animated:YES completion:nil];
@@ -246,11 +262,11 @@
 //confirm 确认框
 -(void)webView:(WKWebView *)webView runJavaScriptConfirmPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(BOOL))completionHandler{
     NSLog(@"%s---",__func__);
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"确认框" message:@"调用confirm提示框" preferredStyle:UIAlertControllerStyleAlert];
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"CONFIR_BOX", @"CONFIR_BOX") message:NSLocalizedString(@"CALL_CONFIRM_BOX", @"CALL_CONFIRM_BOX") preferredStyle:UIAlertControllerStyleAlert];
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SURE", @"SURE") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         completionHandler(YES);
     }]];
-    [alert addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", @"CANCEL") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         completionHandler(NO);
     }]];
     [self presentViewController:alert animated:YES completion:NULL];
@@ -263,12 +279,12 @@
 // 调用JS的prompt()方法
 - (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * __nullable result))completionHandler {
     NSLog(@"%s---",__func__);
-    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"输入框" message:@"调用输入框" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"INPUT_BOX", @"INPUT_BOX") message:NSLocalizedString(@"CALL_INPUT_BOX", @"CALL_INPUT_BOX") preferredStyle:UIAlertControllerStyleAlert];
     [alert addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.textColor = [UIColor blackColor];
     }];
     
-    [alert addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"SURE", @"SURE") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         completionHandler([[alert.textFields lastObject] text]);
     }]];
     
@@ -302,6 +318,21 @@
     }
     
     return parameters;
+}
+
+#pragma mark - 加载失败
+- (void)showFailView {
+    self.failView.hidden = NO;
+    self.failTipsText = NSLocalizedString(@"List_FailTips", @"List_FailTips");
+    self.failBtnText = NSLocalizedString(@"List_Reload", @"List_Reload");
+    self.delegateSelect = @selector(retryToload:);
+    [self reloadFailViewContent];
+    
+}
+
+- (void)retryToload:(UIButton *)btn {
+    self.failView.hidden = YES;
+    [self requestWebview];
 }
 
 @end

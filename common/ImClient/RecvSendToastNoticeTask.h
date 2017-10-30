@@ -55,6 +55,5 @@ private:
     string          m_fromId;   // 发送方的用户ID
     string          m_nickName;  // 发送人昵称
     string          m_msg;  // 消息内容
-
-
+    string          m_honorUrl; // 勋章图片url
 };

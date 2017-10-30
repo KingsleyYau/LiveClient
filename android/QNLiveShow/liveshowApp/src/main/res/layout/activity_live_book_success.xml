@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/live_book_bg"
+    tools:context="com.qpidnetwork.livemodule.liveshow.personal.book.BookSuccessActivity">
+
+    <!-- 顶部　-->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="112dp"
+        android:background="@drawable/live_book_seccess_top"
+        android:orientation="vertical"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/live_book_success_tips1"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/talent_light_violet"
+            android:textSize="30sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/live_book_success_tips2"
+            android:textAlignment="center"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+    <!-- 内容　-->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_content"
+        android:layout_width="0dp"
+        android:layout_height="158dp"
+        android:background="@color/white"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <!-- 主播名　-->
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/txt_broadcaster"
+            app:layout_constraintTop_toTopOf="parent"
+            button:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_broadcaster_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="8dp"
+            button:layout_constraintBaseline_toBaselineOf="@+id/textView11"
+            button:layout_constraintHorizontal_bias="1.0"
+            button:layout_constraintLeft_toRightOf="@+id/textView11"
+            button:layout_constraintRight_toRightOf="parent" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/black3"
+            button:layout_constraintLeft_toLeftOf="parent"
+            button:layout_constraintRight_toRightOf="parent"
+            button:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <!-- 日期　-->
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/txt_reservations"
+            button:layout_constraintLeft_toLeftOf="parent"
+            button:layout_constraintTop_toBottomOf="@+id/view2" />
+
+        <TextView
+            android:id="@+id/tv_book_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="8dp"
+            button:layout_constraintBaseline_toBaselineOf="@+id/textView13"
+            button:layout_constraintHorizontal_bias="1.0"
+            button:layout_constraintLeft_toRightOf="@+id/textView13"
+            button:layout_constraintRight_toRightOf="parent" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/black3"
+            button:layout_constraintHorizontal_bias="0.0"
+            button:layout_constraintLeft_toLeftOf="parent"
+            button:layout_constraintRight_toRightOf="parent"
+            button:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+        <!-- 礼物　-->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/cl_gift"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3">
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/txt_virtual_gift"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_gift_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/live_book_giftsumx"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView18"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <!-- 图片 -->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_gift"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_gift_num"
+                app:layout_constraintRight_toLeftOf="@+id/tv_gift_num"
+                app:layout_constraintTop_toTopOf="@+id/tv_gift_num"
+                fresco:actualImageScaleType="fitXY"
+                fresco:backgroundImage="@color/gray"
+                fresco:placeholderImage="@drawable/icon_data_empty"
+                fresco:roundBottomLeft="true"
+                fresco:roundBottomRight="true"
+                fresco:roundTopLeft="true"
+                fresco:roundTopRight="true"
+                fresco:roundedCornerRadius="4dp" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- OK　-->
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btn_ok"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_content"
+        button:background="@color/talent_light_violet"
+        button:title="@string/txt_ok"
+        button:title_color="@color/white"
+        button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+    <!-- my_reservations　-->
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btn_myreservations"
+        android:layout_width="180dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_ok"
+        button:background="@color/talent_violet"
+        button:title="@string/live_book_my_reservations"
+        button:title_color="@color/white"
+        button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+</android.support.constraint.ConstraintLayout>

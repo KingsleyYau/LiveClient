@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/live_book_bg"
+    tools:context="com.qpidnetwork.livemodule.liveshow.personal.book.VerifyMobileActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cly_error"
+        android:layout_width="0dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:text="TextView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cly_error"
+            tools:text="@string/live_book_error_tips1" />
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_error_back"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/live_size_14dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginRight="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            button:background="@color/talent_violet"
+            button:title="@string/live_book_add_another_num"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cly_content"
+        android:layout_width="0dp"
+        android:layout_height="495dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="@dimen/live_size_14dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginRight="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/live_book_verify_num_tips1"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_resend"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:padding="@dimen/live_size_8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/et_code"
+            app:layout_constraintLeft_toRightOf="@+id/et_code"
+            app:layout_constraintTop_toBottomOf="@+id/tv_number"
+            button:background="@color/talent_violet"
+            button:title="@string/live_book_resend"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+        <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+            android:id="@+id/et_code"
+            android:layout_width="198dp"
+            android:layout_height="52dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_number" />
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_summit"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/live_size_14dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginRight="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintHorizontal_bias="0.504"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_code"
+            button:background="@color/talent_violet"
+            button:title="@string/live_book_verify"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+        <TextView
+            android:id="@+id/tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:text="TextView"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_change"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/live_size_14dp"
+            android:layout_marginLeft="@dimen/live_size_14dp"
+            android:layout_marginRight="@dimen/live_size_14dp"
+            android:layout_marginStart="@dimen/live_size_14dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/live_book_change_num"
+            android:textColor="@color/talent_violet"
+            app:layout_constraintHorizontal_bias="0.05"
+            app:layout_constraintLeft_toRightOf="@+id/tv_number"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

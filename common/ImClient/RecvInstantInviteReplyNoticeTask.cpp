@@ -64,7 +64,7 @@ bool RecvInstantInviteReplyNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -104,15 +104,15 @@ bool RecvInstantInviteReplyNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvInstantInviteReplyNotice(m_inviteId, m_replyType, m_roomId, m_roomType, m_anchorId, m_nickName, m_avatarImg, m_msg);
-		FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() end");
 
 	return result;
 }
@@ -122,14 +122,14 @@ bool RecvInstantInviteReplyNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvInstantInviteReplyNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

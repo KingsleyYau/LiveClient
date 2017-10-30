@@ -1,0 +1,133 @@
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context="com.qpidnetwork.livemodule.liveshow.personal.book.AddMobileActivity">-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/textView4"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:text="@string/live_book_country_code"-->
+        <!--android:textSize="@dimen/live_size_14sp"-->
+        <!--app:layout_constraintBaseline_toBaselineOf="@+id/editText"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/editText"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:ems="10"-->
+        <!--android:inputType="textPersonName"-->
+        <!--android:text="Name"-->
+        <!--android:textSize="@dimen/live_size_14sp"-->
+        <!--app:layout_constraintLeft_toLeftOf="@+id/guideline2"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--app:layout_constraintHorizontal_bias="0.0" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/textView5"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:text="@string/live_book_mobile_number"-->
+        <!--android:textSize="@dimen/live_size_14sp"-->
+        <!--app:layout_constraintBaseline_toBaselineOf="@+id/editText2"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/editText2"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginTop="16dp"-->
+        <!--android:ems="10"-->
+        <!--android:inputType="textPersonName"-->
+        <!--android:text="Name"-->
+        <!--android:textSize="@dimen/live_size_14sp"-->
+        <!--app:layout_constraintLeft_toLeftOf="@+id/guideline2"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/editText"-->
+        <!--app:layout_constraintHorizontal_bias="0.0" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/button"-->
+        <!--android:layout_width="207dp"-->
+        <!--android:layout_height="44dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginRight="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="24dp"-->
+        <!--android:text="Button"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/editText2" />-->
+
+    <!--<android.support.constraint.Guideline-->
+        <!--android:id="@+id/guideline2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintGuide_percent="0.3" />-->
+<!--</android.support.constraint.ConstraintLayout>-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/live_book_bg"
+    android:padding="24dp">
+
+    <!-- 区号　-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+            android:id="@+id/et_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iv_select_country_code"
+            android:layout_width="@dimen/live_size_16dp"
+            android:layout_height="@dimen/live_size_16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/ic_arrow_right" />
+
+    </RelativeLayout>
+
+    <!-- 号码　-->
+    <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+        android:id="@+id/et_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!-- Send Verify　-->
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btn_Send"
+        android:layout_width="@dimen/live_size_140dp"
+        android:layout_height="@dimen/live_size_40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:layout_marginTop="@dimen/live_size_16dp"
+        button:background="@color/talent_violet"
+        button:title="@string/live_book_send_verify_code"
+        button:title_color="@color/white"
+        button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"/>
+
+</LinearLayout>

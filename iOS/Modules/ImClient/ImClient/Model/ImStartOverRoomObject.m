@@ -19,6 +19,7 @@
         self.nickName = [coder decodeObjectForKey:@"nickName"];
         self.avatarImg = [coder decodeObjectForKey:@"avatarImg"];
         self.leftSeconds = [coder decodeIntForKey:@"leftSeconds"];
+        self.playUrl = [coder decodeObjectForKey:@"playUrl"];
     }
     return self;
 }
@@ -29,6 +30,7 @@
     [coder encodeObject:self.nickName forKey:@"nickName"];
     [coder encodeObject:self.avatarImg forKey:@"avatarImg"];
     [coder encodeInt:self.leftSeconds forKey:@"leftSeconds"];
+    [coder encodeObject:self.playUrl forKey:@"playUrl"];
 
 }
 

@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SearchTableView.h"
 
-@interface SearchViewController : KKViewController
+#import "SearchTableView.h"
+#import "LSGoogleAnalyticsViewController.h"
+
+@interface SearchViewController : LSGoogleAnalyticsViewController
 
 @property (strong, nonatomic) UITextField *textField;
 

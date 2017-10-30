@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface CloseAdAnchorListRequest : SessionRequest
+@interface CloseAdAnchorListRequest : LSSessionRequest
 
 @property (nonatomic, strong) CloseAdAnchorListFinishHandler _Nullable finishHandler;
 @end

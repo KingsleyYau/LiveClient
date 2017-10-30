@@ -54,7 +54,7 @@ bool RecvBookingNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvBookingNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvBookingNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     string roomId = "";
@@ -92,15 +92,15 @@ bool RecvBookingNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvBookingNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvBookingNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvBookingNotice(roomId, userId, nickName, avatarImg, leftSeconds);
-		FileLog("LiveChatClient", "RecvBookingNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvBookingNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvBookingNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvBookingNoticeTask::Handle() end");
 
 	return result;
 }
@@ -110,14 +110,14 @@ bool RecvBookingNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvBookingNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvBookingNoticeTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvBookingNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvBookingNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

@@ -18,6 +18,7 @@
 #define ROOMID_GIFT_PARAM           "roomid"
 #define FROMID_PARAM                "fromid"
 #define NICKNAME_GIFT_PARAM         "nickname"
+#define HONORURL_PARAM              "honor_url"
 #define GIFTID_PARAM                "giftid"
 #define GIFTNAME_PARAM              "giftname"
 #define GIFTNUM_PARAM               "giftnum"
@@ -38,6 +39,7 @@ RecvSendGiftNoticeTask::RecvSendGiftNoticeTask(void)
     m_roomId = "";
     m_fromId = "";
     m_nickName = "";
+    m_honorUrl = "";
     m_giftId = "";
     m_giftName = "";
     m_giftNum = 0;
@@ -68,7 +70,7 @@ bool RecvSendGiftNoticeTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvSendGiftNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvSendGiftNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -85,6 +87,9 @@ bool RecvSendGiftNoticeTask::Handle(const TransportProtocol& tp)
         }
         if (tp.m_data[NICKNAME_PARAM].isString()) {
             m_nickName = tp.m_data[NICKNAME_PARAM].asString();
+        }
+        if (tp.m_data[HONORURL_PARAM].isString()) {
+            m_honorUrl = tp.m_data[HONORURL_PARAM].asString();
         }
         if (tp.m_data[GIFTID_PARAM].isString()) {
             m_giftId = tp.m_data[GIFTID_PARAM].asString();
@@ -116,15 +121,15 @@ bool RecvSendGiftNoticeTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvSendGiftNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvSendGiftNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvSendGiftNotice(m_roomId, m_fromId, m_nickName, m_giftId, m_giftName, m_giftNum, m_multi_click, m_multi_click_start, m_multi_click_end, m_multi_click_id);
-		FileLog("LiveChatClient", "RecvSendGiftNoticeTask::Handle() callback end, result:%d", result);
+        m_listener->OnRecvSendGiftNotice(m_roomId, m_fromId, m_nickName, m_giftId, m_giftName, m_giftNum, m_multi_click, m_multi_click_start, m_multi_click_end, m_multi_click_id, m_honorUrl);
+		FileLog("ImClient", "RecvSendGiftNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvSendGiftNoticeTask::Handle() end");
+	FileLog("ImClient", "RecvSendGiftNoticeTask::Handle() end");
 
 	return result;
 }
@@ -134,7 +139,7 @@ bool RecvSendGiftNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvSendGiftNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "RecvSendGiftNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -144,7 +149,7 @@ bool RecvSendGiftNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvSendGiftNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvSendGiftNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

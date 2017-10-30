@@ -1117,9 +1117,9 @@ void ImClient::OnRecvWaitStartOverNotice(const StartOverRoomItem& item)
  *  @param playUrl      播放url
  *
  */
-void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const string& playUrl)
+void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl)
 {
-    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() begin, ImClient:%p roomId:%s isAnchor:%d playUrl:%s", this, roomId.c_str(), isAnchor, playUrl.c_str());
+    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() begin, ImClient:%p roomId:%s isAnchor:%d", this, roomId.c_str(), isAnchor);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
@@ -1127,22 +1127,22 @@ void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const s
         IImClientListener* callback = *itr;
         callback->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
     }
-    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() end, ImClient:%p roomId:%s isAnchor:%d playUrl:%s", this, roomId.c_str(), isAnchor, playUrl.c_str());
+    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() end, ImClient:%p roomId:%s isAnchor:%d", this, roomId.c_str(), isAnchor);
     m_listenerListLock->Unlock();
 }
 
 
 // 4.2.接收直播间文本消息通知
-void ImClient::OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg) {
-    FileLog("ImClient", "ImClient::OnRecvSendChatNotice() begin, ImClient:%p roomId:%s level:%d fromId:%s nickName:%s msg:%s", this, roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str());
+void ImClient::OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) {
+    FileLog("ImClient", "ImClient::OnRecvSendChatNotice() begin, ImClient:%p roomId:%s level:%d fromId:%s nickName:%s msg:%s honorUrl:%s", this, roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str(), honorUrl.c_str());
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvSendChatNotice(roomId, level, fromId, nickName, msg);
+        callback->OnRecvSendChatNotice(roomId, level, fromId, nickName, msg, honorUrl);
     }
-    FileLog("ImClient", "ImClient::OnRecvSendChatNotice() end, ImClient:%p roomId:%s level:%d fromId:%s nickName:%s msg:%s", this, roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str());
+    FileLog("ImClient", "ImClient::OnRecvSendChatNotice() end, ImClient:%p roomId:%s level:%d fromId:%s nickName:%s msg:%s honorUrl:%s", this, roomId.c_str(), level, fromId.c_str(), nickName.c_str(), msg.c_str(), honorUrl.c_str());
     m_listenerListLock->Unlock();
 }
 
@@ -1161,30 +1161,30 @@ void ImClient::OnRecvSendSystemNotice(const string& roomId, const string& msg, c
 }
 
 // 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-void ImClient::OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {
-    FileLog("ImClient", "ImClient::OnRecvSendGiftNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d , multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+void ImClient::OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string& honorUrl) {
+    FileLog("ImClient", "ImClient::OnRecvSendGiftNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d , multi_click_id:%d honorUrl:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id, honorUrl.c_str());
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvSendGiftNotice(roomId, fromId, nickName, giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+        callback->OnRecvSendGiftNotice(roomId, fromId, nickName, giftId, giftName, giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id, honorUrl);
     }
-    FileLog("ImClient", "ImClient::OnRecvSendGiftNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id:%d", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id);
+    FileLog("ImClient", "ImClient::OnRecvSendGiftNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s giftId:%s giftName:%s giftNum:%d multi_click:%d multi_click_start:%d multi_click_end:%d multi_click_id:%d honorUrl:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), giftId.c_str(), giftName.c_str(), giftNum, multi_click, multi_click_start, multi_click_end, multi_click_id, honorUrl.c_str());
     m_listenerListLock->Unlock();
 }
 
 // 6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
-void ImClient::OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) {
-    FileLog("ImClient", "ImClient::OnRecvSendToastNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s msg:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), msg.c_str());
+void ImClient::OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) {
+    FileLog("ImClient", "ImClient::OnRecvSendToastNotice() begin, ImClient:%p roomId:%s fromId:%s nickName:%s msg:%s honorUrl:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), msg.c_str(), honorUrl.c_str());
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvSendToastNotice(roomId, fromId, nickName, msg);
+        callback->OnRecvSendToastNotice(roomId, fromId, nickName, msg, honorUrl);
     }
-    FileLog("ImClient", "ImClient::OnRecvSendToastNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s msg:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), msg.c_str());
+    FileLog("ImClient", "ImClient::OnRecvSendToastNotice() end, ImClient:%p roomId:%s fromId:%s nickName:%s msg:%s honorUrl:%s", this, roomId.c_str(), fromId.c_str(), nickName.c_str(), msg.c_str(), honorUrl.c_str());
     m_listenerListLock->Unlock();
 }
 
@@ -1383,6 +1383,27 @@ void ImClient::OnRecvBackpackUpdateNotice(const BackpackInfo& item)
         callback->OnRecvBackpackUpdateNotice(item);
     }
     FileLog("ImClient", "ImClient::OnRecvBackpackUpdateNotice() end,  ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  9.4.观众勋章升级通知
+ *
+ *  @param honorId          勋章ID
+ *  @param honorUrl         勋章图片url
+ *
+ */
+void ImClient::OnRecvGetHonorNotice(const string& honorId, const string& honorUrl)
+{
+    FileLog("ImClient", "ImClient::OnRecvGetHonorNotice() begin, ImClient:%p honorId:%s honorUrl:%s", this, honorId.c_str(), honorUrl.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvGetHonorNotice(honorId, honorUrl);
+    }
+    FileLog("ImClient", "ImClient::OnRecvGetHonorNotice() end,  ImClient:%p honorId:%s honorUrl:%s", this, honorId.c_str(), honorUrl.c_str());
     m_listenerListLock->Unlock();
 }
 

@@ -7,15 +7,16 @@
 //
 
 #import "DialogOK.h"
+#import "LiveBundle.h"
 
 @interface DialogOK ()
-@property (strong) UIView* view;
+@property (weak) UIView* view;
 @property (strong) void(^actionBlock)();
 @end
 
 @implementation DialogOK
 + (DialogOK *)dialog {
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
+    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
     DialogOK* view = [nibs objectAtIndex:0];
     
     view.layer.cornerRadius = 10;
@@ -29,12 +30,12 @@
 - (void)showDialog:(UIView *)view actionBlock:(void(^)())actionBlock {
     self.actionBlock = actionBlock;
     
-    self.view = view;
-    self.view.userInteractionEnabled = NO;
-    UIWindow* window = AppDelegate().window;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [window addSubview:self];
     [window bringSubviewToFront:self];
     
+    self.view = view;
+    self.view.userInteractionEnabled = NO;
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(window.mas_width).offset(-60);
         make.centerY.equalTo(window.mas_centerY);
@@ -48,8 +49,12 @@
     if( self.actionBlock ) {
         self.actionBlock();
     }
+}
+
+- (IBAction)closeAction:(id)sender {
     [self removeFromSuperview];
     self.view.userInteractionEnabled = YES;
 }
+
 
 @end

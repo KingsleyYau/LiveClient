@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <YYText.h>
 
 typedef enum MsgType {
     MsgType_Chat,
@@ -32,5 +33,6 @@ typedef enum MsgType {
 @property (nonatomic, assign) int giftNum;
 @property (strong) NSString *linkStr;
 @property (strong) NSString *riderName;
+@property (strong) NSString *honorUrl;
 
 @end

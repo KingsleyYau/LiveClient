@@ -6,9 +6,9 @@
 //  Copyright © 2016年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface LiveFansListRequest : SessionRequest
+@interface LiveFansListRequest : LSSessionRequest
 /**
  * roomId                        直播间ID
  * start                         起始，用于分页，表示从第几个元素开始获取

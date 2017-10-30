@@ -44,6 +44,11 @@ RtmpPublisher::~RtmpPublisher() {
     FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::~RtmpPublisher( publisher : %p )", this);
     
     Stop();
+    
+    if( mpPublishRunnable ) {
+        delete mpPublishRunnable;
+        mpPublishRunnable = NULL;
+    }
 }
 
 bool RtmpPublisher::PublishUrl(const string& url, const string& recordAACFilePath) {

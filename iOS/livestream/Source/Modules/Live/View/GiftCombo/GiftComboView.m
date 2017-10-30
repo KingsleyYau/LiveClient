@@ -7,6 +7,7 @@
 //
 
 #import "GiftComboView.h"
+#import "LiveBundle.h"
 
 static NSInteger const kTimeOut = 3;             /**< 超时移除时长 */
 static CGFloat const kRemoveAnimationTime = 0.5; /**< 移除动画时长 */
@@ -37,14 +38,13 @@ static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
 
 #pragma mark - 初始化
 + (instancetype)giftComboView:(id)owner {
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
+    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
     GiftComboView *view = [nibs objectAtIndex:0];
     return view;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        //        self = [[[NSBundle mainBundle] loadNibNamed:@"GiftComboView" owner:self options:nil] lastObject];
     }
     return self;
 }

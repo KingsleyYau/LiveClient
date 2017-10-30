@@ -33,6 +33,7 @@
 #include "RecvBackpackUpdateNoticeTask.h"
 #include "RecvChangeVideoUrlTask.h"
 #include "RecvSendSystemNoticeTask.h"
+#include "RecvGetHonorNoticeTask.h"
 #include "IImClientDef.h"
 
 
@@ -136,6 +137,10 @@ ITask* ITask::CreateTaskWithCmd(const string& cmd)
         // 9.3.背包更新通知
         task = new RecvBackpackUpdateNoticeTask();
     }
+//    else if (cmd == CMD_RECVGETHONORNOTICE) {
+//        // 9.4.观众勋章升级通知
+//        task = new RecvGetHonorNoticeTask();
+//    }
     return task;
 }
 

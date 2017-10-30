@@ -44,7 +44,7 @@ public:
 	virtual void OnRecv(const TransportProtocol& tp) override;
 
 private:
-	IImClientListener*	m_clientListener;	// LiveChatClient监听器
+	IImClientListener*	m_clientListener;	// ImClient监听器
 	ITaskManagerListener*		m_mgrListener;		// TaskManager监听器
 	ITransportDataHandler*		m_dataHandler;		// 传输数据处理器
 

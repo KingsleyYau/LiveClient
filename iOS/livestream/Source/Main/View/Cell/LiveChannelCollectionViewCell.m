@@ -13,7 +13,7 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
-    self.imageViewLoader = [ImageViewLoader loader];
+    self.imageViewLoader = [LSImageViewLoader loader];
     self.onlineImageView.layer.cornerRadius = self.onlineImageView.frame.size.width * 0.5f;
     self.onlineImageView.layer.masksToBounds = YES;
 }

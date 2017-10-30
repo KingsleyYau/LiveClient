@@ -26,7 +26,7 @@
         NSInteger request = [self.manager getLeftCredit:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, double credit) {
             BOOL bFlag = NO;
             
-            // 没有处理过, 才进入SessionRequestManager处理
+            // 没有处理过, 才进入LSSessionRequestManager处理
             if( !weakSelf.isHandleAlready && weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(request:handleRespond:errnum:errmsg:)] ) {
                 bFlag = [self.delegate request:weakSelf handleRespond:success errnum:errnum errmsg:errmsg];
                 weakSelf.isHandleAlready = YES;

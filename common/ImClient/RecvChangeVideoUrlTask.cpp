@@ -51,12 +51,12 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "RecvChangeVideoUrlTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     string roomId = "";
     bool isAnchor = false;
-    string playUrl = "";
+    list<string> playUrl;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -68,10 +68,16 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ISANCHOR_PARAM].isIntegral()) {
             isAnchor = tp.m_data[ISANCHOR_PARAM].asInt() == 1 ? true : false;
         }
-        if (tp.m_data[PLAYURL_PARAM].isString()) {
-            playUrl = tp.m_data[PLAYURL_PARAM].asString();
+        if (tp.m_data[PLAYURL_PARAM].isArray()) {
+            
+            for (int i = 0; i < tp.m_data[PLAYURL_PARAM].size(); i++) {
+                Json::Value element = tp.m_data[PLAYURL_PARAM].get(i, Json::Value::null);
+                if (element.isString()) {
+                    playUrl.push_back(element.asString());
+                }
+            }
         }
-    
+        
     }
     
     // 协议解析失败
@@ -80,15 +86,15 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "RecvChangeVideoUrlTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
-		FileLog("LiveChatClient", "RecvChangeVideoUrlTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "RecvChangeVideoUrlTask::Handle() end");
+	FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() end");
 
 	return result;
 }
@@ -98,14 +104,14 @@ bool RecvChangeVideoUrlTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "RecvChangeVideoUrlTask::GetSendData() begin");
+	FileLog("ImClient", "RecvChangeVideoUrlTask::GetSendData() begin");
     {
 
     }
 
     result = true;
 
-	FileLog("LiveChatClient", "RecvChangeVideoUrlTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "RecvChangeVideoUrlTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

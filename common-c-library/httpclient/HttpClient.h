@@ -67,7 +67,10 @@ private:
 	static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param);
 	static size_t CurlHandle(void *buffer, size_t size, size_t nmemb, void *data);
 	void HttpHandle(void *buffer, size_t size, size_t nmemb);
-
+    
+    static void Curl_Lock(CURL *handle, curl_lock_data data, curl_lock_access access, void *useptr);
+    static void Curl_Unlock(CURL *handle, curl_lock_data data, void *useptr);
+    
 	static size_t CurlProgress(
 			void *data,
             double downloadTotal,

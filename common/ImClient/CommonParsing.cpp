@@ -2,7 +2,7 @@
  * author: Samson.Fan
  *   date: 2015-06-16
  *   file: CommonParsing.cpp
- *   desc: LiveChatClient公共解析协议
+ *   desc: ImClient公共解析协议
  */
 
 #include "CommonParsing.h"

@@ -49,6 +49,7 @@ public:
 };
 
 class RecvRunnable;
+class CheckConnectRunnable;
 class RtmpDump {
 public:
     static void GobalInit();
@@ -76,11 +77,6 @@ public:
      @return 成功／失败
      */
     bool PublishUrl(const string& url, const string& recordAACFilePath);
-    
-    /**
-     读取接收流数据
-     */
-    void ReadPackage();
     
     /**
      发送原始h264视频帧
@@ -117,6 +113,12 @@ public:
      断开连接
      */
     void Stop();
+
+public:
+    // 接收线程处理
+    void RecvRunnableHandle();
+    // 检查超时线程处理
+    void CheckConnectRunnableHandle();
     
 private:
     void Destroy();
@@ -140,8 +142,15 @@ private:
     KMutex mClientMutex;
     bool mbRunning;
     
+    // 接收线程
     KThread mRecvThread;
     RecvRunnable* mpRecvRunnable;
+    
+    // 检查连接超时线程
+    KThread mCheckConnectThread;
+    CheckConnectRunnable* mpCheckConnectRunnable;
+    // 连接超时(MS)
+    int mConnectTimeout;
     
     // 收包参数
     char* mpSps;

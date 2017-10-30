@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="41dp"
+        android:layout_marginRight="41dp"
+        android:background="@drawable/bg_rebate_popupwindow"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/iv_closeRebateTips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_credits_dialog_close"
+                android:layout_gravity="top|right"
+                android:padding="8dp"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_roomRebate"
+                android:layout_marginTop="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:visibility="visible">
+                <LinearLayout
+                    android:id="@+id/ll_info1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#3c3c3c"
+                        android:textSize="14sp"
+                        android:text="Rewarded credits: "/>
+
+                    <TextView
+                        android:id="@+id/tv_currRoomRebate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textColor="#ffd205"
+                        android:textStyle="bold"
+                        android:text="0.62"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_info2"
+                    android:layout_below="@id/ll_info1"
+                    android:layout_alignLeft="@id/ll_info1"
+                    android:layout_marginTop="9dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="14sp"
+                        android:textColor="#3c3c3c"
+                        android:text="Generated in: "/>
+
+                    <TextView
+                        android:id="@+id/tv_countRebateUpdated"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="#ffd205"
+                        android:text="300s"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_below="@id/ll_info2"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="16dp"
+                    android:id="@+id/tv_rebateNote1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/custom_dialog_text_size_simple"
+                    android:textColor="#3c3c3c"
+                    android:text="@string/live_backcredits_tips41"/>
+
+
+                <TextView
+                    android:layout_below="@id/tv_rebateNote1"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/tv_rebateNote2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/custom_dialog_text_size_simple"
+                    android:textColor="#3c3c3c"
+                    android:text="@string/live_backcredits_tips42"/>
+
+                <TextView
+                    android:layout_below="@id/tv_rebateNote2"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/tv_rebateNote3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/custom_dialog_text_size_simple"
+                    android:textColor="#3c3c3c"
+                    android:text="@string/live_backcredits_tips43"/>
+
+                <TextView
+                    android:layout_below="@id/tv_rebateNote3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginTop="1dp"
+                    android:id="@+id/tv_rebateNote4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/custom_dialog_text_size_simple"
+                    android:textColor="#3c3c3c"
+                    android:layout_marginBottom="23dp"
+                    android:text="@string/live_backcredits_tips44"/>
+
+            </RelativeLayout>
+
+            <ProgressBar
+                android:id="@+id/pb_loadingRebate"
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center"
+                android:scrollbarStyle="insideInset"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDuration="1000"/>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

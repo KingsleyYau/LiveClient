@@ -74,9 +74,9 @@ public:
 		}
 		memset(pRep, 0, iLen);
 
-		if ((pC_Begin = strIstr(pData, pBegin)) > 0) {
+		if ((pC_Begin = strIstr(pData, pBegin)) != 0) {
 
-			if ((pC_End = strIstr(pC_Begin, pEnd)) > 0) {
+			if ((pC_End = strIstr(pC_Begin, pEnd)) != 0) {
 
 				memcpy(pRep, pC_Begin, pC_End - pC_Begin);
 				strRet = pRep;

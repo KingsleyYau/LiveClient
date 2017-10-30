@@ -408,7 +408,7 @@
     }
 }
 
-- (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)publisher {
+- (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)rtmpClient {
     @synchronized (self) {
         self.isConnected = NO;
         
@@ -417,8 +417,14 @@
             dispatch_async(self.reconnect_queue, ^{
                 [self.publisher stop];
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), self.reconnect_queue, ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), self.reconnect_queue, ^{
                     NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
+                    
+                    // 是否需要切换URL
+                    if( [self.delegate respondsToSelector:@selector(publisherShouldChangeUrl:)] ) {
+                        self.url = [self.delegate publisherShouldChangeUrl:self];
+                    }
+                    
                     [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
                 });
             });

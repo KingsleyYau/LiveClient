@@ -258,7 +258,7 @@ public:
      *  @param playUrl      播放url
      *
      */
-    virtual void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const string& playUrl) {};
+    virtual void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl) {};
     
     /**
      *  3.13.观众进入公开直播间接口 回调
@@ -312,9 +312,10 @@ public:
      *  @param fromId      发送方的用户ID
      *  @param nickName    发送方的昵称
      *  @param msg         文本消息内容
+     *  @param honorUrl    勋章图片url
      *
      */
-    virtual void OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg) {};
+    virtual void OnRecvSendChatNotice(const string& roomId, int level, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) {};
     
     /**
      *  4.3.接收直播间公告消息回调
@@ -352,9 +353,10 @@ public:
      *  @param multi_click_start    连击起始数
      *  @param multi_click_end      连击结束数
      *  @param multi_click_id       连击ID，相同则表示是同一次连击
+     *  @param honorUrl             勋章图片url
      *
      */
-    virtual void OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id) {};
+    virtual void OnRecvSendGiftNotice(const string& roomId, const string& fromId, const string& nickName, const string& giftId, const string& giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string& honorUrl) {};
 
     // ------------- 直播间弹幕消息 -------------
     /**
@@ -377,9 +379,10 @@ public:
      *  @param fromId               发送方的用户ID
      *  @param nickName             发送方的昵称
      *  @param msg                  消息内容
+     *  @param honorUrl             勋章图片url
      *
      */
-    virtual void OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg) {};
+    virtual void OnRecvSendToastNotice(const string& roomId, const string& fromId, const string& nickName, const string& msg, const string& honorUrl) {};
 
     // ------------- 邀请私密直播 -------------
     /**
@@ -511,6 +514,15 @@ public:
      *
      */
     virtual void OnRecvBackpackUpdateNotice(const BackpackInfo& item) {};
+    
+    /**
+     *  9.4.观众勋章升级通知
+     *
+     *  @param honorId          勋章ID
+     *  @param honorUrl         勋章图片url
+     *
+     */
+    virtual void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) {};
     
 };
 

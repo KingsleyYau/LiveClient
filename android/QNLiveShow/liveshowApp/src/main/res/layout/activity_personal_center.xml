@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <!--My Reservations-->
+    <LinearLayout
+        android:id="@+id/llInvite"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onClick">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_reservations"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/my_schedule_invite_title"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"/>
+        <TextView
+            android:id="@+id/tvInviteUnread"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/bg_custom_ff4747_circle"
+            android:text="55"
+            android:visibility="visible"
+            android:textSize="9sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:gravity="center_vertical|center_horizontal"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_height="1dp"
+        android:background="#61db96ff"/>
+
+    <!--My Package-->
+    <LinearLayout
+        android:id="@+id/llBackPack"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onClick">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_backpack"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/my_package_title"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"/>
+        <TextView
+            android:id="@+id/tvPackageUnread"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_custom_ff4747_circle"
+            android:textSize="9sp"
+            android:visibility="invisible"
+            android:gravity="center"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="#61db96ff"/>
+
+    <!--My Level-->
+    <LinearLayout
+        android:id="@+id/llMyLevel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_level"/>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:text="@string/my_level_title"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/iv_myLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_level_icon_2"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="#61db96ff"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f5f5f5"/>
+</LinearLayout>

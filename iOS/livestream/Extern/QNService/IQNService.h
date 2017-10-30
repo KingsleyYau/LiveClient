@@ -15,7 +15,7 @@
 - (NSString *)getServiceName;
 
 //打开URL
-- (void)openUrl:(NSURL *)url fromVC:(UIViewController *)vc;
+- (void)openUrl:(NSURL *)url fromVC:(UIViewController *)fromVC;
 
 - (NSString *)getServiceConflict;
 

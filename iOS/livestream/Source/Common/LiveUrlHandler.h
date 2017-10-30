@@ -8,48 +8,72 @@
 
 #import <Foundation/Foundation.h>
 
+#import "LiveRoom.h"
+
 typedef enum {
     LiveUrlTypeNone = 0,
-    LiveUrlTypeQuickmatch,
-    LiveUrlTypeEmf,
-    LiveUrlTypeSetting,
-    LiveUrlTypeLadyDetail,
-    LiveUrlTypeChatLady,
-    LiveUrlTypeLoveCall,
-    LiveUrlTypeAdmirer,
-    LiveUrlTypeContact,
-    LiveUrlTypeHelps,
-    LiveUrlTypeOverview,
-    LiveUrlTypeChatlist,
-    LiveUrlTypeBuycredit,
-    LiveUrlTypeMyprofile,
-    LiveUrlTypeChatinvite,
-    LiveUrlTypeSendEMF
-}LiveUrlType;
+    LiveUrlTypeMain,
+    LiveUrlTypeDetail,
+    LiveUrlTypeLiveroom,
+    LiveUrlTypeInvite,
+    LiveUrlTypeInvited,
+    LiveUrlTypeBooking,
+    LiveUrlTypeBookingList,
+    LiveUrlTypeBackpackList,
+    LiveUrlTypeBuyCredit,
+    LiveUrlTypeMyLevel
+} LiveUrlType;
 
+typedef enum {
+    BookingListUrlTypeWaitUser = 1,
+    BookingListUrlTypeWaitAnchor,
+    BookingListUrlTypeConfirm,
+    BookingListUrlTypeHistory
+} BookingListUrlType;
+
+typedef enum {
+    BackPackListUrlTypePresent = 1,
+    BackPackListUrlTypeVoucher,
+    BackPackListUrlTypeDrive,
+} BackPackListUrlType;
+
+typedef enum {
+    MainListTypeHot = 1,
+    MainListTypeFollow,
+} MainListType;
+
+typedef enum {
+    UrlRoomTypePublic = 0,
+    UrlRoomTypePrivate,
+} UrlRoomType;
 
 @class LiveUrlHandler;
 @protocol LiveUrlHandlerDelegate <NSObject>
 @optional
 
 /**
- 处理后台的链接跳转
- @param handler 链接管理器
- @param type    链接的类型
- */
-- (void)liveUrlHandler:(LiveUrlHandler * _Nonnull)handler openWithModule:(LiveUrlType)type;
+ 主动邀请处理器
 
-/**
- 处理前台的链接跳转
- 
- @param handler 链接管理器
- @param type 链接的类型
+ @param handler 处理器
+ @param roomId 直播间Id
+ @param userId 主播Id
+ @param roomType 直播间类型
  */
-- (void)liveUrlHandlerActive:(LiveUrlHandler * _Nonnull)handler openWithModule:(LiveUrlType)type;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPreLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openInvited:(NSString *_Nullable)userName userId:(NSString *_Nullable)userId inviteId:(NSString *_Nullable)inviteId;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openAnchorDetail:(NSString *_Nullable)anchorId;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBooking:(NSString *_Nullable)anchorId;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBookingList:(int)bookType;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBackpackList:(int)BackpackType;
+- (void)liveUrlHandlerOpenAddCredit:(LiveUrlHandler *_Nonnull)handler;
+- (void)liveUrlHandlerOpenMyLevel:(LiveUrlHandler *_Nonnull)handler;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openWithModule:(LiveUrlType)type;
+- (void)liveUrlHandlerActive:(LiveUrlHandler *_Nonnull)handler openWithModule:(LiveUrlType)type;
+
 @end
-@interface LiveUrlHandler : NSObject
-+ (instancetype _Nonnull)shareInstance;
 
+@interface LiveUrlHandler : NSObject
 /**
  委托
  */
@@ -58,44 +82,39 @@ typedef enum {
 /**
  当前调用类型
  */
-@property (assign, atomic, readonly) LiveUrlType type;
+@property (assign, readonly) LiveUrlType type;
+
+/** 主页类型 */
+@property (nonatomic, assign) MainListType mainTpye;
+/** 预约类型 */
+@property (nonatomic, assign) BookingListUrlType bookType;
+/** 背包类型 */
+@property (nonatomic, assign) BackPackListUrlType backPackType;
+/** 房间类型 */
+@property (nonatomic, assign) UrlRoomType roomType;
 
 /**
- 当前调用的参数
+ 设置需要处理的链接
  */
-@property (nonatomic,strong,readonly) NSString * _Nullable urlParameter;
+@property (strong) NSURL *_Nullable url;
+
 /**
- 是不是QN模块
+ 获取实例
+
+ @return 实例
  */
-@property (nonatomic,assign) BOOL isQNModule;
++ (instancetype _Nonnull)shareInstance;
 
 /**
  解析调用过来的URL
  
- @param url 原始链接
- 
  @return 处理结果[YES:成功/NO:失败]
  */
-- (BOOL)handleOpenURL:(NSURL * _Nonnull)url;
+- (BOOL)handleOpenURL;
 
-/**
- 处理调用过来的URL
- 
- @return 处理结果[YES:成功/NO:不需要处理]
- */
-- (BOOL)dealWithURL;
+#pragma mark - 获取模块URL
+- (NSURL * _Nonnull)createUrlToInviteByRoomId:(NSString * _Nullable)roomId userId:(NSString * _Nullable)roomId roomType:(LiveRoomType)roomType;
 
-/**
- *  增加监听器
- *
- *  @param delegate 监听器
- */
-- (void)addDelegate:(id<LiveUrlHandlerDelegate> _Nonnull)delegate;
+- (NSURL * _Nonnull)instantUrlToInviteUserByInviteId:(NSString * _Nullable)inviteId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName;
 
-/**
- *  移除监听器
- *
- *  @param delegate 监听器
- */
-- (void)removeDelegate:(id<LiveUrlHandlerDelegate> _Nonnull)delegate;
 @end

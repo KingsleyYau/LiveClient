@@ -7,6 +7,7 @@
 //
 
 #import "CountryTableViewCell.h"
+#import "LiveBundle.h"
 
 @implementation CountryTableViewCell
 
@@ -33,7 +34,7 @@
     CountryTableViewCell *cell = (CountryTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[CountryTableViewCell cellIdentifier]];
     
     if (nil == cell){
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:[CountryTableViewCell cellIdentifier] owner:tableView options:nil];
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamed:[CountryTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
     }
     

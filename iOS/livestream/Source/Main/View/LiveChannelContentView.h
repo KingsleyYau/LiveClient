@@ -14,16 +14,15 @@
 @optional
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didSelectLady:(NSInteger)item;
 
-
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didClickTop:(UIButton *)btn;
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didClickGoWatch:(UIButton *)btn;
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didBackPlaceholer:(UIButton *)btn;
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didSelecRoom:(NSIndexPath *)room;
 @end
 
-@interface LiveChannelContentView : UICollectionView<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,KKCheckButtonDelegate>
+@interface LiveChannelContentView : UICollectionView <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, LSCheckButtonDelegate>
 
-@property (nonatomic, weak) id <LiveChannelContentViewDelegate> liveChannelDelegate;
+@property (nonatomic, weak) id<LiveChannelContentViewDelegate> liveChannelDelegate;
 @property (nonatomic, copy) NSArray *items;
 /** 展开状态 */
 @property (nonatomic, assign) BOOL spreadOut;

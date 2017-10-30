@@ -51,7 +51,7 @@
         }];
         
         UIButton *cancelBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-        [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+        [cancelBtn setTitle:NSLocalizedString(@"CANCEL", @"CANCEL") forState:UIControlStateNormal];
         [cancelBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [cancelBtn setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
         cancelBtn.layer.cornerRadius = 10;
@@ -106,9 +106,9 @@
 }
 
 - (void)promptViewShow {
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    [window addSubview:self];
     
-    AppDelegate *delegate = AppDelegate();
-    [delegate.window addSubview:self];
     [UIView animateWithDuration:0.3 animations:^{
         CGRect rect = self.frame;
         rect.origin.y = 0;

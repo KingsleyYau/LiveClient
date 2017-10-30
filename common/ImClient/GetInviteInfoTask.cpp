@@ -49,7 +49,7 @@ bool GetInviteInfoTask::Handle(const TransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("LiveChatClient", "GetInviteInfoTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "GetInviteInfoTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     PrivateInviteItem item;
@@ -69,16 +69,16 @@ bool GetInviteInfoTask::Handle(const TransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("LiveChatClient", "GetInviteInfoTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "GetInviteInfoTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnGetInviteInfo(GetSeq(), success, m_errType, m_errMsg, item);
-		FileLog("LiveChatClient", "GetInviteInfoTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "GetInviteInfoTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("LiveChatClient", "GetInviteInfoTask::Handle() end");
+	FileLog("ImClient", "GetInviteInfoTask::Handle() end");
 
 	return result;
 }
@@ -88,7 +88,7 @@ bool GetInviteInfoTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("LiveChatClient", "GetInviteInfoTask::GetSendData() begin");
+	FileLog("ImClient", "GetInviteInfoTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -98,7 +98,7 @@ bool GetInviteInfoTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("LiveChatClient", "GetInviteInfoTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "GetInviteInfoTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

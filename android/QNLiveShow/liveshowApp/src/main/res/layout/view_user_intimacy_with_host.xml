@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="18dp"
+        android:layout_marginLeft="18dp"
+        android:background="@drawable/bg_rebate_popupwindow"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+
+        <FrameLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/iv_closeIntimacyPw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_credits_dialog_close"
+                android:layout_gravity="top|right"
+                android:padding="8dp"/>
+
+            <LinearLayout
+                android:id="@+id/ll_intimacyData"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:layout_marginTop="26dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_intimacyWithWho"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/live_intimacy_title"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#3c3c3c"/>
+
+                <ImageView
+                    android:id="@+id/iv_intimacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ic_liveroom_header_intimacy_1"/>
+
+                <TextView
+                    android:id="@+id/tv_currLoveLevelScale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="3dp"
+                    android:textSize="10sp"
+                    android:textColor="#3c3c3c"
+                    android:text="@string/live_intimacy_levelscale"/>
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tv_currLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textColor="#3c3c3c"
+                        android:textSize="10dp"/>
+                    
+                    <LinearLayout
+                        android:layout_marginLeft="9dp"
+                        android:layout_marginRight="9dp"
+                        android:background="@drawable/bg_intimacy_totalexp"
+                        android:layout_width="178dp"
+                        android:layout_height="3dp">
+                        <View
+                            android:id="@+id/v_currlevelscale"
+                            android:layout_width="100dp"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/bg_intimacy_currexp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_nextLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Level 1"
+                        android:textColor="#3c3c3c"
+                        android:textSize="10dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_marginTop="26dp"
+                    android:id="@+id/tv_intimacynote1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#3c3c3c"
+                    android:text="@string/live_intimacy_note1"/>
+                <TextView
+                    android:id="@+id/tv_intimacynote2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#3c3c3c"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/live_intimacy_note2"/>
+                <TextView
+                    android:id="@+id/tv_intimacynote3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:textColor="#3c3c3c"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/live_intimacy_note3"
+                    android:layout_marginBottom="26dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_loadFailed"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="44dp"
+                android:visibility="visible">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_view_data_sosad"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tip_failed_to_load"
+                    android:layout_marginTop="12dp"
+                    android:textColor="#c2c2c2"
+                    android:textSize="12sp"/>
+
+                <TextView
+                    android:id="@+id/tv_reloadIntimacyData"
+                    android:layout_width="75dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="30dp"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    android:background="@drawable/bg_btn_reload_intimacy"
+                    android:textSize="12sp"
+                    android:text="@string/tip_reload"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_loadintimacy"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="30dip"
+                android:orientation="vertical"
+                android:layout_marginTop="30dp">
+
+                <ProgressBar
+                    android:layout_width="49dp"
+                    android:layout_height="49dp"
+                    android:scrollbarStyle="insideInset"
+                    android:indeterminateDrawable="@drawable/live_loading_progress"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDuration="1000"
+                    android:layout_marginTop="46dp"
+                    android:layout_gravity="center_horizontal"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tip_loading"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:textColor="#c2c2c2"
+                    android:textSize="12sp"/>
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

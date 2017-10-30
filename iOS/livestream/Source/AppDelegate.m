@@ -11,13 +11,12 @@
 #import <UserNotifications/UserNotifications.h>
 #import <AVFoundation/AVFoundation.h>
 
-#import <FirebaseCore/FirebaseCore.h>
-
-#import "RequestManager.h"
-#import "FileCacheManager.h"
+#import "LSRequestManager.h"
+#import "LSFileCacheManager.h"
 #import "LiveStreamSession.h"
 
 #import "LiveUrlHandler.h"
+#import "LiveModule.h"
 
 @implementation AppDelegate
 @synthesize demo = _demo;
@@ -36,6 +35,7 @@
     // 设置公共属性
     _debug = NO;
     
+    NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil startImmediately:YES];
     // 初始化Crash Log捕捉
 //    [CrashLogManager manager];
     
@@ -47,15 +47,15 @@
     
     // 为Document目录增加iTunes不同步属性
     NSURL *url = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]];
-    [url addSkipBackupAttribute];
+    [LSURLFileAttribute addSkipBackupAttribute:url];
     
     // 设置导航默认返回键
-//    KKNavigationController *nvc = (KKNavigationController *)self.window.rootViewController;
+//    LSNavigationController *nvc = (LSNavigationController *)self.window.rootViewController;
 //    [nvc.navigationBar setTintColor:[UIColor whiteColor]];
     
     // 设置接口管理类属性
-    [RequestManager setLogEnable:YES];
-    [RequestManager setLogDirectory:[[FileCacheManager manager] requestLogPath]];
+    [LSRequestManager setLogEnable:YES];
+    [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
     
     // 设置接口请求环境
     // 如果调试模式, 直接进入正式环境
@@ -63,8 +63,8 @@
     
     // 初始化跟踪管理器(默认为真实环境)
 //    [[AnalyticsManager manager] initGoogleAnalytics:YES];
-    [[FIRAnalyticsConfiguration sharedInstance] setAnalyticsCollectionEnabled:NO];
-    [[FIRConfiguration sharedInstance] setLoggerLevel:FIRLoggerLevelMin];
+//    [[FIRAnalyticsConfiguration sharedInstance] setAnalyticsCollectionEnabled:NO];
+//    [[FIRConfiguration sharedInstance] setLoggerLevel:FIRLoggerLevelMin];
 //    [FIRApp configure];
     
     // 初始化支付管理器
@@ -92,42 +92,12 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"AppDelegate::applicationDidEnterBackground()");
     
-    // 标记为后台
-    self.isBackground = YES;
-
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithName:@"MyTask" expirationHandler:^{
-        // Clean up any unfinished task business by marking where you
-        // stopped or ending the task outright.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // Do the work associated with the task, preferably in chunks.
-        
-        while(self.isBackground) {
-            NSTimeInterval left = [application backgroundTimeRemaining];
-            NSLog(@"AppDelegate::applicationDidEnterBackground( left : %f )", (double)left);
-            sleep(5);
-        }
-        
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    });
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     NSLog(@"AppDelegate::applicationWillEnterForeground()");
     
-    // 标记为前台
-    self.isBackground = NO;
-    
-    // 清空推送
-    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
-
-    // 前后台切换强制重登录
-
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -154,12 +124,6 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"AppDelegate::didReceiveRemoteNotification( userInfo : %@ )", userInfo);
-    
-    NSString* urlString = [userInfo objectForKey:@"jumpurl"];
-    if( urlString.length > 0 ) {
-        NSURL* url = [NSURL URLWithString:urlString];
-        [[LiveUrlHandler shareInstance] handleOpenURL:url];
-    }
 
 }
 
@@ -169,19 +133,16 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
 //    NSLog(@"application::handleOpenURL( url : %@ )", url);
-    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
 //    NSLog(@"application::openURL( sourceApplication : %@ )", sourceApplication);
-    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
 //    NSLog(@"application::openURL( options : %@ )", options);
-    return [[LiveUrlHandler shareInstance] handleOpenURL:url];
     return YES;
 }
 
@@ -204,7 +165,7 @@
 }
 
 - (void)setRequestHost:(BOOL)formal {
-//    RequestManager* manager = [RequestManager manager];
+//    LSRequestManager* manager = [LSRequestManager manager];
     if( formal ) {
         // 配置真是环境
         if( _demo ) {

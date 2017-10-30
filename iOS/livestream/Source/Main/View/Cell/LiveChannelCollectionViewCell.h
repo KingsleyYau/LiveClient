@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ImageViewLoader.h"
+#import "LSImageViewLoader.h"
 
 @interface LiveChannelCollectionViewCell : UICollectionViewCell
 @property (weak, nonatomic) IBOutlet UIImageView *coverImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *roomTypeImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *roomTpyePublic;
@@ -19,7 +19,7 @@
 /**
  *  头像下载器
  */
-@property (nonatomic, strong) ImageViewLoader *imageViewLoader;
+@property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 + (NSString *)cellIdentifier;
 
 @end

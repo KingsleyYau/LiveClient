@@ -19,6 +19,7 @@ using namespace std;
 #define SRARTNICKNAME_PARAM        "nick_name"
 #define AVATARIMG_PARAM            "avatar_img"
 #define LEFTSECONDS_PARAM          "left_seconds"
+#define PLAYURL_PARAM              "play_url"
 
 
 class StartOverRoomItem {
@@ -46,6 +47,16 @@ public:
             if (root[LEFTSECONDS_PARAM].isIntegral()) {
                 leftSeconds = root[LEFTSECONDS_PARAM].asInt();
             }
+            /* playUrl */
+            if (root[PLAYURL_PARAM].isArray()) {
+                
+                for (int i = 0; i < root[PLAYURL_PARAM].size(); i++) {
+                    Json::Value element = root[PLAYURL_PARAM].get(i, Json::Value::null);
+                    if (element.isString()) {
+                        playUrl.push_back(element.asString());
+                    }
+                }
+            }
             
         }
         result = true;
@@ -70,12 +81,14 @@ public:
      * nickName               主播昵称
      * avatarImg              主播头像url
      * leftSeconds            开播前的倒数秒数（可无，无或0表示立即开播）
+     * playUrl                视频播放url
      */
     string                roomId;
     string                anchorId;
     string                nickName;
     string                avatarImg;
     int                   leftSeconds;
+    list<string>          playUrl;
     
 };
 

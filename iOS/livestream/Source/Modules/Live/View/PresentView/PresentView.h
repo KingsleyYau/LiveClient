@@ -17,6 +17,7 @@
 
 - (void)presentViewShowBalance:(PresentView *) backpackView;
 - (void)presentViewdidSelectItemWithSelf:(PresentView *)presentView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath;
+- (void)presentViewdidSelectGiftLevel:(int)level loveLevel:(int)loveLevel;
 - (void)presentViewDidScroll:(PresentView *)PresentViewView currentPageNumber:(NSInteger)page;
 - (void)presentViewSendBtnClick:(PresentView *)presentView andSender:(id)sender;
 - (void)presentViewComboBtnInside:(PresentView *)presentView andSender:(id)sender;
@@ -74,6 +75,15 @@
 
 // 显示请求礼物列表失败界面
 - (void)showRequestFailView;
+
+// 显示礼物列表
+- (void)showGiftListView;
+
+// 发送按钮不可用
+- (void)sendViewNotUserEnabled;
+
+// 发送按钮可用
+- (void)sendViewCanUserEnabled;
 
 // 重新请求礼物列表
 - (IBAction)reloadGiftList:(id)sender;

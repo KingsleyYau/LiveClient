@@ -3,4 +3,29 @@
 "msj-HT-Fvg.normalTitle" = "Send";
 
 "INPUT_LOUDER_PLACEHOLDER" = "10 coins per flying comment";
+
 "INPUT_PLACEHOLDER" = "Say something...";
+
+"SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"NO_TENOUGH_LOVE" = "This gift is only available for intimacy ";
+
+"NO_TENOUGH_LEVEL" = "This gift is only available for user level ";
+
+"OR_HIGHER" = " or higher.";
+
+"CANNOT_SEND_TIP" = "Sorry, this gift can not be sent in this broadcaster room.";
+
+"STANDARD" = "Standard";
+
+"ADVANCE" = "Advanced";
+
+"STORE" = "  Store";
+
+"BACKPACK" = "  Backpack";
+
+"DONT_HAVE_ENOUGH" = "You don't have enough %@ to send.";
+
+"BIG_GIFT_SEND_FAIL" = "Failed to send %@. Please try again.";
+
+

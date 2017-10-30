@@ -1,0 +1,19 @@
+
+/* Class = "UIButton"; normalTitle = "Resend in 30s"; ObjectID = "8sB-Ke-stv"; */
+"8sB-Ke-stv.normalTitle" = "Resend in 30s";
+
+/* Class = "UILabel"; text = "We have send a code to your mobile number"; ObjectID = "JKv-Le-dCP"; */
+"JKv-Le-dCP.text" = "We have send a code to your mobile number";
+
+/* Class = "UIButton"; normalTitle = "Change"; ObjectID = "Mq3-tv-tH9"; */
+"Mq3-tv-tH9.normalTitle" = "Change";
+
+/* Class = "UIButton"; normalTitle = "Verify"; ObjectID = "pof-ca-yZY"; */
+"pof-ca-yZY.normalTitle" = "Verify";
+
+/* Class = "UILabel"; text = "Sorry, you have made too many verification attempts. This number is blocked for 24 hours, please  use another mobile number."; ObjectID = "wNB-6i-4ee"; */
+"wNB-6i-4ee.text" = "Sorry, you have made too many verification attempts. This number is blocked for 24 hours, please  use another mobile number.";
+
+"VERIFY_TITLE" = "Verify Mobile Number";
+
+"RESEND_IN" = "Resend in %@s";

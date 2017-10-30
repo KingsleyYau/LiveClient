@@ -442,7 +442,8 @@ int GetProcessPid(string name) {
 void SystemComandExecute(string command) {
 	string sCommand = command;
 	sCommand += " &>/dev/null";
-	system(sCommand.c_str());
+	//system(sCommand.c_str());
+    popen(sCommand.c_str(), "w");
 	FileLog("JNI::SystemComandExecute", "command : %s", sCommand.c_str());
 }
 

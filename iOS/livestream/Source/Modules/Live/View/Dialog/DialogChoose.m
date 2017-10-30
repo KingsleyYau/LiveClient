@@ -7,9 +7,10 @@
 //
 
 #import "DialogChoose.h"
+#import "LiveBundle.h"
 
 @interface DialogChoose ()
-@property (strong) UIView* view;
+@property (weak) UIView* view;
 @property (strong) void(^cancelBlock)();
 @property (strong) void(^actionBlock)();
 
@@ -17,7 +18,7 @@
 
 @implementation DialogChoose
 + (DialogChoose *)dialog {
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
+    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
     DialogChoose* view = [nibs objectAtIndex:0];
     
     view.layer.cornerRadius = 10;
@@ -42,15 +43,14 @@
     self.cancelBlock = cancelBlock;
     self.actionBlock = actionBlock;
     
-    self.view = view;
-    self.view.userInteractionEnabled = NO;
-    UIWindow* window = AppDelegate().window;
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
     [window addSubview:self];
     [window bringSubviewToFront:self];
     
+    self.view = view;
+    self.view.userInteractionEnabled = NO;
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(window.mas_width).offset(-60);
-//        make.height.greaterThanOrEqualTo(@225);
         make.centerY.equalTo(window.mas_centerY);
         make.centerX.equalTo(window);
     }];

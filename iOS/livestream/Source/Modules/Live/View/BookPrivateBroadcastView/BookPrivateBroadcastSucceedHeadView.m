@@ -7,6 +7,7 @@
 //
 
 #import "BookPrivateBroadcastSucceedHeadView.h"
+#import "LiveBundle.h"
 
 @interface BookPrivateBroadcastSucceedHeadView ()
 
@@ -18,7 +19,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self =  [[NSBundle mainBundle] loadNibNamed:@"BookPrivateBroadcastSucceedHeadView" owner:self options:nil].firstObject;
+        self =  [[LiveBundle mainBundle] loadNibNamed:@"BookPrivateBroadcastSucceedHeadView" owner:self options:nil].firstObject;
         self.frame = frame;
     }
     return self;

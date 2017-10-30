@@ -34,6 +34,8 @@ using namespace std;
 #define ROOMPRICE_PARAM        "room_price"
 #define MANPUSHPRICE_PARAM     "man_push_price"
 #define MAXFANSINUM_PARAM      "max_fansi_num"
+#define HONORID_PARAM          "honor_id"
+#define HONORIMG_PARAM         "honor_img"
 
 class RoomInfoItem {
 public:
@@ -48,16 +50,6 @@ public:
             }
             if (root[PHOTOURL_PARAM].isString()) {
                 photoUrl = root[PHOTOURL_PARAM].asString();
-            }
-            if (root[VIDEOURL_PARAM].isArray()) {
-                
-                for (int i = 0; i < root[VIDEOURL_PARAM].size(); i++) {
-                    Json::Value element = root[VIDEOURL_PARAM].get(i, Json::Value::null);
-                    if (element.isString()) {
-                        videoUrl.push_back(element.asString());
-                    }
-                }
-                
             }
             if (root[ROOMID_PARAM].isString()) {
                 roomId = root[ROOMID_PARAM].asString();
@@ -106,6 +98,17 @@ public:
             }
             if (root[WAITSTART_PARAM].isInt()) {
                 waitStart = root[WAITSTART_PARAM].asInt() == 0 ? false : true;
+                if (waitStart == false) {
+                    if (root[VIDEOURL_PARAM].isArray()) {
+                        
+                        for (int i = 0; i < root[VIDEOURL_PARAM].size(); i++) {
+                            Json::Value element = root[VIDEOURL_PARAM].get(i, Json::Value::null);
+                            if (element.isString()) {
+                                videoUrl.push_back(element.asString());
+                            }
+                        }
+                    }
+                }
             }
             if (root[MANPUSHURL_PARAM].isArray()) {
                 
@@ -132,6 +135,14 @@ public:
                 maxFansiNum = root[MAXFANSINUM_PARAM].asInt();
             }
             
+            if (root[HONORID_PARAM].isString()) {
+                honorId = root[HONORID_PARAM].asString();
+            }
+            
+            if (root[HONORIMG_PARAM].isString()) {
+                honorImg = root[HONORIMG_PARAM].asString();
+            }
+            
         }
 
         result = true;
@@ -156,6 +167,8 @@ public:
         roomPrice = 0.0;
         manPushPrice = 0.0;
         maxFansiNum = 0;
+        honorId = "";
+        honorImg = "";
     }
     
     virtual ~RoomInfoItem() {
@@ -184,6 +197,8 @@ public:
      * roomPrice                直播间资费
      * manPushPrice             视频资费
      * maxFansiNum		        最大人数限制
+     * honorId                  勋章ID
+     * honorImg                 勋章图片url
      */
     string          userId;
     string          nickName;
@@ -205,6 +220,8 @@ public:
     double          roomPrice;
     double          manPushPrice;
     int             maxFansiNum;
+    string          honorId;
+    string          honorImg;
 };
 
 

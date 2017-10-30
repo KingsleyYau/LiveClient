@@ -8,6 +8,8 @@
 
 #include "RtmpDump.h"
 
+#include <common/CommonFunc.h>
+
 #include <sys/time.h>
 
 #include <netdb.h>
@@ -32,13 +34,30 @@ public:
     }
 protected:
     void onRun() {
-        mContainer->ReadPackage();
+        mContainer->RecvRunnableHandle();
     }
     
 private:
     RtmpDump *mContainer;
 };
 
+class CheckConnectRunnable : public KRunnable {
+public:
+    CheckConnectRunnable(RtmpDump *container) {
+        mContainer = container;
+    }
+    virtual ~CheckConnectRunnable() {
+        mContainer = NULL;
+    }
+protected:
+    void onRun() {
+        mContainer->CheckConnectRunnableHandle();
+    }
+    
+private:
+    RtmpDump *mContainer;
+};
+    
 void RtmpDump::GobalInit() {
     FileLog("rtmpdump", "RtmpDump::GobalInit( Example for srs-librtmp )");
     FileLog("rtmpdump", "RtmpDump::GobalInit( SRS(ossrs) client librtmp library )");
@@ -69,8 +88,10 @@ RtmpDump::RtmpDump()
     
     mIsPlay = true;
     mIsConnected = false;
+    mConnectTimeout = 5000;
     
     mpRecvRunnable = new RecvRunnable(this);
+    mpCheckConnectRunnable = new CheckConnectRunnable(this);
 }
 
 RtmpDump::~RtmpDump() {
@@ -78,6 +99,22 @@ RtmpDump::~RtmpDump() {
     
     if( mpRecvRunnable ) {
         delete mpRecvRunnable;
+        mpRecvRunnable = NULL;
+    }
+    
+    if( mpCheckConnectRunnable ) {
+        delete mpCheckConnectRunnable;
+        mpCheckConnectRunnable = NULL;
+    }
+    
+    if( mpSps ) {
+        delete[] mpSps;
+        mpSps = NULL;
+    }
+    
+    if( mpPps ) {
+        delete[] mpPps;
+        mpPps = NULL;
     }
 }
 
@@ -138,7 +175,8 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const st
         
         mbRunning = true;
         mRecvThread.Start(mpRecvRunnable);
-
+        mCheckConnectThread.Start(mpCheckConnectRunnable);
+        
     } else {
         Stop();
     }
@@ -211,7 +249,7 @@ bool RtmpDump::PublishUrl(const string& url, const string& recordAACFilePath) {
     return bFlag;
 }
 
-void RtmpDump::ReadPackage() {    
+void RtmpDump::RecvRunnableHandle() {    
 //    int64_t nb_packets = 0;
     u_int32_t pre_timestamp = 0;
     int64_t pre_now = -1;
@@ -224,13 +262,15 @@ void RtmpDump::ReadPackage() {
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
-                 "RtmpDump::ReadPackage( "
+                 "RtmpDump::RecvRunnableHandle( "
                  "[Start], "
                  "this : %p "
                  ")",
                  this
                  );
     
+    // 设置读写超时
+    srs_rtmp_set_timeout(mpRtmp, 0, 0);
     bool bFlag = (0 == srs_rtmp_handshake(mpRtmp));
     if( bFlag ) {
         bFlag = (0 == srs_rtmp_connect_app(mpRtmp));
@@ -238,19 +278,19 @@ void RtmpDump::ReadPackage() {
             if( mIsPlay ) {
                 bFlag = (0 == srs_rtmp_play_stream(mpRtmp));
                 if( !bFlag ) {
-                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_play_stream fail] )");
+                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_play_stream fail] )");
                 }
             } else {
                 bFlag = (0 == srs_rtmp_publish_stream(mpRtmp));
                 if( !bFlag ) {
-                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_publish_stream fail] )");
+                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_publish_stream fail] )");
                 }
             }
         } else {
-            FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_connect_app fail] )");
+            FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_connect_app fail] )");
         }
     } else {
-        FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::ReadPackage( [srs_rtmp_handshake fail] )");
+        FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_handshake fail] )");
     }
     
     // 标记为已经连接上服务器
@@ -265,7 +305,7 @@ void RtmpDump::ReadPackage() {
         
         FileLevelLog("rtmpdump",
                      KLog::LOG_MSG,
-                     "RtmpDump::ReadPackage( [Connected] )"
+                     "RtmpDump::RecvRunnableHandle( [Connected] )"
                      );
         
         if( mpRtmpDumpCallback ) {
@@ -312,10 +352,10 @@ void RtmpDump::ReadPackage() {
         if( mpFlv ) {
             if( is_flv_msg ) {
                 if( srs_flv_write_tag(mpFlv, type, timestamp, frame, frame_size) != 0 ) {
-//                    FileLog("RtmpDump", "RtmpDump::ReadPackage( [srs_flv_write_tag fail] )");
+//                    FileLog("RtmpDump", "RtmpDump::RecvRunnableHandle( [srs_flv_write_tag fail] )");
                 }
             } else {
-//                FileLog("RtmpDump", "RtmpDump::ReadPackage( [drop message type=%#x, size=%dB] )", type, frame_size);
+//                FileLog("RtmpDump", "RtmpDump::RecvRunnableHandle( [drop message type=%#x, size=%dB] )", type, frame_size);
             }
         }
         
@@ -324,7 +364,7 @@ void RtmpDump::ReadPackage() {
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
-                 "RtmpDump::ReadPackage( "
+                 "RtmpDump::RecvRunnableHandle( "
                  "[Exit], "
                  "this : %p "
                  ")",
@@ -520,6 +560,7 @@ void RtmpDump::Stop() {
         }
         
         mRecvThread.Stop();
+        mCheckConnectThread.Stop();
         
         Destroy();
     }
@@ -802,5 +843,64 @@ bool RtmpDump::GetADTS(int packetSize, char* header, int headerSize) {
     }
 
     return bFlag;
+}
+    
+void RtmpDump::CheckConnectRunnableHandle() {
+    bool bBreak = false;
+    long long startTime = (long long)getCurrentTime();
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::CheckConnectRunnableHandle( "
+                 "[Start], "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
+    while (mbRunning) {
+        mClientMutex.lock();
+        if( mIsConnected ) {
+            // 已经连接上服务器, 标记退出线程
+            bBreak = true;
+        } else {
+            // 计算超时
+            long long curTime = (long long)getCurrentTime();
+            int diffTime = (int)(curTime - startTime);
+            if( diffTime >= mConnectTimeout ) {
+                // 超时, 断开连接
+                FileLevelLog("rtmpdump",
+                             KLog::LOG_WARNING,
+                             "RtmpDump::CheckConnectRunnableHandle( "
+                             "[Shutdown for connect timeout], "
+                             "this : %p "
+                             ")",
+                             this
+                             );
+                
+                if( mpRtmp ) {
+                    srs_rtmp_shutdown(mpRtmp);
+                }
+                bBreak = true;
+            }
+        }
+        mClientMutex.unlock();
+        
+        if( bBreak ) {
+            break;
+        }
+        
+        Sleep(100);
+        
+    }
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::CheckConnectRunnableHandle( "
+                 "[Exit], "
+                 "this : %p "
+                 ")",
+                 this
+                 );
 }
 }

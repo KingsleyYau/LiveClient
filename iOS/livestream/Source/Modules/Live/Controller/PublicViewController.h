@@ -11,11 +11,11 @@
 #import "LiveRoom.h"
 #import "PlayViewController.h"
 
-#import "UITapImageView.h"
+#import "LSUITapImageView.h"
 #import "YMAudienceView.h"
 #import "ChardTipView.h"
 
-@interface PublicViewController : KKViewController
+@interface PublicViewController : LSGoogleAnalyticsViewController
 #pragma mark - 数据参数
 /**
  直播间对象
@@ -30,7 +30,7 @@
 #pragma mark - 界面控件
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
 
-@property (weak, nonatomic) IBOutlet UITapImageView *roomTypeImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 
 @property (weak, nonatomic) IBOutlet YMAudienceView *audienceView;
 

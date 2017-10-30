@@ -6,9 +6,9 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface ManHandleBookingListRequest : SessionRequest
+@interface ManHandleBookingListRequest : LSSessionRequest
 
 // 列表类型（0:等待观众处理 1:等待主播处理 2:已确认 3：历史）
 @property (nonatomic, assign) BookingListType type;

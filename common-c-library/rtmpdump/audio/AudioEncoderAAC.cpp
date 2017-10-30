@@ -45,7 +45,7 @@ AudioEncoderAAC::AudioEncoderAAC()
 	FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioEncoderAAC::AudioEncoderAAC( this : %p )", this);
 
     avcodec_register_all();
-    av_log_set_level(AV_LOG_ERROR);
+//    av_log_set_level(AV_LOG_ERROR);
 
     // 参数
     mSampleRate = 0;
@@ -470,7 +470,6 @@ bool AudioEncoderAAC::CreateContext() {
                         ret,
 						errbuf
                         );
-            mContext = NULL;
             bFlag = false;
         }
     }
@@ -503,6 +502,7 @@ void AudioEncoderAAC::DestroyContext() {
 
     if( mContext ) {
         avcodec_close(mContext);
+        avcodec_free_context(&mContext);
         mContext = NULL;
     }
 

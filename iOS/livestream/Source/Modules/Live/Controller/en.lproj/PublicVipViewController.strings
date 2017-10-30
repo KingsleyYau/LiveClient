@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Marry LeeLee"; ObjectID = "QdY-wA-qdz"; */
+"QdY-wA-qdz.normalTitle" = "Marry LeeLee";
+
+/* Class = "UILabel"; text = "VIP Guest"; ObjectID = "ioe-kp-dlj"; */
+"ioe-kp-dlj.text" = "VIP Guest";
+
+/* Class = "UILabel"; text = "(4/6)"; ObjectID = "x5g-IZ-heY"; */
+"x5g-IZ-heY.text" = "(4/6)";
+
+"VIP_PUBLIC_TIP" = "VIP Public Broadcast is billed at ";
+
+"CREDIT_TIP" = " credit per minute.";

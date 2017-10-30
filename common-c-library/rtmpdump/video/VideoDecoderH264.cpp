@@ -311,7 +311,7 @@ bool VideoDecoderH264::CreateContext() {
     
     bool bFlag = true;
     avcodec_register_all();
-    av_log_set_level(AV_LOG_ERROR);
+//    av_log_set_level(AV_LOG_ERROR);
     
     mCodec = avcodec_find_decoder(AV_CODEC_ID_H264);
     if ( !mCodec ) {
@@ -358,7 +358,6 @@ bool VideoDecoderH264::CreateContext() {
                     ")",
                     this
                     );
-            mContext = NULL;
             bFlag = false;
         }
     }
@@ -390,6 +389,7 @@ void VideoDecoderH264::DestroyContext() {
     
     if( mContext ) {
         avcodec_close(mContext);
+        avcodec_free_context(&mContext);
         mContext = NULL;
     }
     

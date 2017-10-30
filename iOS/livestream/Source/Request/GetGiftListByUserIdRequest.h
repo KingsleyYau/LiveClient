@@ -6,9 +6,9 @@
 //  Copyright © 2016年 qpidnetwork. All rights reserved.
 //
 
-#import "SessionRequest.h"
+#import "LSSessionRequest.h"
 
-@interface GetGiftListByUserIdRequest : SessionRequest
+@interface GetGiftListByUserIdRequest : LSSessionRequest
 // 直播间ID
 @property (nonatomic, copy) NSString* _Nonnull roomId;
 @property (nonatomic, strong) GetGiftListByUserIdFinishHandler _Nullable finishHandler;
