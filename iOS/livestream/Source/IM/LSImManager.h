@@ -28,7 +28,7 @@
 
  @param roomId 直播间Id
  */
-- (void)onHandleLoginRoom:(NSString * _Nonnull)roomId;
+- (void)onHandleLoginRoom:(NSString * _Nonnull)roomId userId:(NSString * _Nullable)userId userName:(NSString * _Nullable)userName;
 
 /**
  第一次登陆成功, 本人邀请中有效的立即私密邀请
@@ -122,6 +122,15 @@ typedef void (^CancelInviteHandler)(BOOL success, LCC_ERR_TYPE errType, NSString
  @return YES:成功/NO:失败
  */
 - (BOOL)cancelPrivateLive:(CancelInviteHandler _Nullable)finishHandler;
+
+
+typedef void (^InstantInviteUserReportHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg);
+/**
+ 观众端是否显示主播立即私密邀请
+ 
+ @return YES:成功/NO:失败
+ */
+- (BOOL)InstantInviteUserReport:(NSString * _Nonnull)inviteId isShow:(BOOL)isShow finishHandler:(InstantInviteUserReportHandler _Nullable)finishHandler;
 
 typedef void (^GetIMInviteInfoHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImInviteIdItemObject *_Nonnull Item);
 /**

@@ -114,9 +114,10 @@
  *  @param riderName   座驾名称
  *  @param riderUrl    座驾图片url
  *  @param fansNum     观众人数
+ *  @param honorImg    勋章图片url
  *
  */
-- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum;
+- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString* _Nonnull)honorImg;
 
 /**
  *  3.5.接收观众退出直播间通知回调
@@ -143,11 +144,12 @@
  *  3.7.接收关闭直播间倒数通知回调
  *
  *  @param roomId      直播间ID
+ *  @param leftSeconds 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
  *  @param err         错误码
  *  @param errMsg      错误描述
  *
  */
-- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
 
 
 /**
@@ -226,10 +228,11 @@
  *
  *  @param roomId      直播间ID
  *  @param msg         公告消息内容
- *  @param link        公告链接（可无，无则表示不是带链接的公告消息）
+ *  @param link        公告链接（可无，无则表示不是带链接的公告消息）（仅当type=0有效）
+ *  @param type        公告类型（0：普通，1：警告）
  *
  */
-- (void)onRecvSendSystemNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg link:(NSString* _Nonnull)link;
+- (void)onRecvSendSystemNotice:(NSString* _Nonnull)roomId msg:(NSString* _Nonnull)msg link:(NSString* _Nonnull)link type:(IMSystemType)type;
 
 #pragma mark - 直播间礼物消息操作回调
 /**
@@ -373,6 +376,16 @@
  */
 - (void)onRecvBookingNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg  leftSeconds:(int)leftSeconds;
 
+/**
+ *  7.8.观众端是否显示主播立即私密邀请 回调
+ *
+ *  @param success       操作是否成功
+ *  @param reqId         请求序列号
+ *  @param err           结果类型
+ *  @param errMsg        结果描述
+ *
+ */
+- (void)onSendInstantInviteUserReport:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
 // ------------- 直播间才艺点播邀请 -------------
 /**
  *  8.1.发送直播间才艺点播邀请 回调

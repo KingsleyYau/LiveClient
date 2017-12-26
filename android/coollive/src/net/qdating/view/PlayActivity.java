@@ -22,8 +22,7 @@ import net.qdating.R;
 import net.qdating.utils.CrashHandler;
 
 public class PlayActivity extends Activity {
-	private String url = "rtmp://172.25.32.17:8899/live/max";
-//	private String url = "rtmp://172.25.32.17:1936/speex/fansi_CMTS09976_101098";
+	private String url = "rtmp://172.25.32.17:19351/live/max";
 //	private String url = "rtmp://172.25.32.17:1936/aac/myStream";
 	
 	String filePath = "/sdcard";
@@ -60,7 +59,7 @@ public class PlayActivity extends Activity {
 		
 		editText = (EditText) this.findViewById(R.id.editText);
 		String playUrl = String.format("%s_mv", url);
-//		String playUrl = "rtmp://172.25.32.17:1936/speex/fansi_CMTS09976_101098";
+		playUrl = "rtmp://52.196.96.7:7474/test_flash/test";
 		editText.setText(playUrl);
 		
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);

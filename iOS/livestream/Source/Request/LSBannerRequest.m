@@ -23,7 +23,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager banner:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink) {
+        NSInteger request = [self.manager banner:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入SessionRequestManager处理
@@ -33,7 +33,7 @@
             }
             
             if( !bFlag && weakSelf.finishHandler ) {
-                weakSelf.finishHandler(success, errnum, errmsg, bannerImg, bannerLink);
+                weakSelf.finishHandler(success, errnum, errmsg, bannerImg, bannerLink, bannerName);
                 [weakSelf finishRequest];
             }
         }];
@@ -45,7 +45,7 @@
 - (void)callRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
 
-        self.finishHandler(NO, errnum, errmsg, @"", @"");
+        self.finishHandler(NO, errnum, errmsg, @"", @"", @"");
     }
     
     [super callRespond:success errnum:errnum errmsg:errmsg];

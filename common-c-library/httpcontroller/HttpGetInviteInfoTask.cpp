@@ -35,7 +35,7 @@ void HttpGetInviteInfoTask::SetParam(
         mInvitationId = inviteId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetInviteInfoTask::SetParam( "
             "task : %p, "
             ")",
@@ -52,7 +52,7 @@ const string& HttpGetInviteInfoTask::GetInviteId() {
 
 
 bool HttpGetInviteInfoTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetInviteInfoTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -64,7 +64,7 @@ bool HttpGetInviteInfoTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetInviteInfoTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetInviteInfoTask::ParseData( buf : %s )", buf);
     }
     
 

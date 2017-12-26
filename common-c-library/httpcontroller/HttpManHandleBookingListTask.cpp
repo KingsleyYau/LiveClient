@@ -62,7 +62,7 @@ void HttpManHandleBookingListTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_MANHANDLEBOOKINGLIST_STEP, temp);
     mStep = step;
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpManHandleBookingListTask::SetParam( "
             "task : %p, "
             "type :%d, "
@@ -78,7 +78,7 @@ void HttpManHandleBookingListTask::SetParam(
 
 
 bool HttpManHandleBookingListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpManHandleBookingListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -90,7 +90,7 @@ bool HttpManHandleBookingListTask::ParseData(const string& url, bool bFlag, cons
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpManHandleBookingListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpManHandleBookingListTask::ParseData( buf : %s )", buf);
     }
     
 

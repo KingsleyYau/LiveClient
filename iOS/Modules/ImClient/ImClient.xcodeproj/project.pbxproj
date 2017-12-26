@@ -72,7 +72,9 @@
 		FA8A85E31F678FB20003EA17 /* ImStartOverRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A85E21F678FB20003EA17 /* ImStartOverRoomObject.m */; };
 		FA8A85E71F67B3230003EA17 /* ImBookingReplyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A85E61F67B3230003EA17 /* ImBookingReplyObject.m */; };
 		FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */; };
+		FA97FB091FD8E61E00880178 /* SendInstantInviteUserReportTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA97FB071FD8E61D00880178 /* SendInstantInviteUserReportTask.cpp */; };
 		FAB694151F5EA11C008A64B6 /* PublicRoomInTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB694131F5EA11C008A64B6 /* PublicRoomInTask.cpp */; };
+		FAC903B11FAC09C7007F92BD /* ImLoginRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC903B01FAC09C7007F92BD /* ImLoginRoomObject.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -232,10 +234,15 @@
 		FA8A85E61F67B3230003EA17 /* ImBookingReplyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImBookingReplyObject.m; sourceTree = "<group>"; };
 		FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetInviteInfoTask.cpp; sourceTree = "<group>"; };
 		FA92A5991F665B39004F239F /* GetInviteInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInviteInfoTask.h; sourceTree = "<group>"; };
+		FA97FB071FD8E61D00880178 /* SendInstantInviteUserReportTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendInstantInviteUserReportTask.cpp; sourceTree = "<group>"; };
+		FA97FB081FD8E61D00880178 /* SendInstantInviteUserReportTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInstantInviteUserReportTask.h; sourceTree = "<group>"; };
 		FAB694131F5EA11C008A64B6 /* PublicRoomInTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PublicRoomInTask.cpp; sourceTree = "<group>"; };
 		FAB694141F5EA11C008A64B6 /* PublicRoomInTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PublicRoomInTask.h; sourceTree = "<group>"; };
 		FAB694171F5EA2DF008A64B6 /* RoomInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RoomInfoItem.h; path = item/RoomInfoItem.h; sourceTree = "<group>"; };
 		FAB694181F5EA338008A64B6 /* RebateInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RebateInfoItem.h; path = item/RebateInfoItem.h; sourceTree = "<group>"; };
+		FAC903AD1FAC01DD007F92BD /* LSLoginRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSLoginRoomItem.h; path = item/LSLoginRoomItem.h; sourceTree = "<group>"; };
+		FAC903AF1FAC09C6007F92BD /* ImLoginRoomObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImLoginRoomObject.h; sourceTree = "<group>"; };
+		FAC903B01FAC09C7007F92BD /* ImLoginRoomObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImLoginRoomObject.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +259,8 @@
 		500B45061EE7D19500C89375 /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA97FB071FD8E61D00880178 /* SendInstantInviteUserReportTask.cpp */,
+				FA97FB081FD8E61D00880178 /* SendInstantInviteUserReportTask.h */,
 				FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */,
 				FA3315C21F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.h */,
 				FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */,
@@ -369,6 +378,8 @@
 		506BC2791F58FD91001C2962 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FAC903AF1FAC09C6007F92BD /* ImLoginRoomObject.h */,
+				FAC903B01FAC09C7007F92BD /* ImLoginRoomObject.m */,
 				FA5254651F7C8BDE00A997FD /* ImTalentReplyObject.h */,
 				FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */,
 				FA8A85E51F67B3230003EA17 /* ImBookingReplyObject.h */,
@@ -432,6 +443,7 @@
 		FAB694161F5EA2D3008A64B6 /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FAC903AD1FAC01DD007F92BD /* LSLoginRoomItem.h */,
 				FA5254641F7C7ECC00A997FD /* TalentReplyItem.h */,
 				FA8A85E41F67ACF10003EA17 /* BookingReplyItem.h */,
 				FA8A85E01F678BA70003EA17 /* StartOverRoomItem.h */,
@@ -510,6 +522,7 @@
 				506BC26E1F58FCE1001C2962 /* RecvSendTalentNoticeTask.cpp in Sources */,
 				500B45431EE7D19500C89375 /* ImClient.cpp in Sources */,
 				500B45411EE7D19500C89375 /* HearbeatTask.cpp in Sources */,
+				FA97FB091FD8E61E00880178 /* SendInstantInviteUserReportTask.cpp in Sources */,
 				506BC2651F58FCE1001C2962 /* RecvLevelUpNoticeTask.cpp in Sources */,
 				500B45521EE7D19500C89375 /* TransportDataHandler.cpp in Sources */,
 				500B45481EE7D19500C89375 /* ITransportPacketHandler.cpp in Sources */,
@@ -537,6 +550,7 @@
 				500B45421EE7D19500C89375 /* IImClient.cpp in Sources */,
 				506BC2611F58FCE1001C2962 /* RecvInstantInviteUserNoticeTask.cpp in Sources */,
 				506BC25F1F58FCE1001C2962 /* RecvEnterRoomNoticeTask.cpp in Sources */,
+				FAC903B11FAC09C7007F92BD /* ImLoginRoomObject.m in Sources */,
 				FA48E48F1F60EAA000D590E1 /* ImScheduleRoomObject.m in Sources */,
 				506BC2721F58FCE1001C2962 /* RoomOutTask.cpp in Sources */,
 				506BC2681F58FCE1001C2962 /* RecvRoomCloseNoticeTask.cpp in Sources */,
@@ -617,7 +631,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -659,6 +673,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -678,10 +693,10 @@
 				);
 				OTHER_CFLAGS = (
 					"-DIOS",
+					"-DMG_ENABLE_SSL",
+					"-fvisibility=hidden",
 					"-DPRINT_JNI_LOG",
 					"-DFILE_JNI_LOG",
-					"-fvisibility=hidden",
-					"-DMG_ENABLE_SSL",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -707,7 +722,10 @@
 				);
 				OTHER_CFLAGS = (
 					"-DIOS",
+					"-DMG_ENABLE_SSL",
 					"-fvisibility=hidden",
+					"-DPRINT_JNI_LOG",
+					"-DFILE_JNI_LOG",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

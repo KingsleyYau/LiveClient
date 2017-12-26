@@ -28,6 +28,10 @@ public:
             if (root[LIVEROOM_VOUCHERLIST_LIST_PHOTOURL].isString()) {
                 photoUrl = root[LIVEROOM_VOUCHERLIST_LIST_PHOTOURL].asString();
             }
+            /* photoUrlMobile */
+            if (root[LIVEROOM_VOUCHERLIST_LIST_PHOTOURLMOBILE].isString()) {
+                photoUrlMobile = root[LIVEROOM_VOUCHERLIST_LIST_PHOTOURLMOBILE].asString();
+            }
             /* desc */
             if (root[LIVEROOM_VOUCHERLIST_LIST_DESC].isString()) {
                 desc = root[LIVEROOM_VOUCHERLIST_LIST_DESC].asString();
@@ -56,6 +60,10 @@ public:
             if (root[LIVEROOM_VOUCHERLIST_LIST_GRANTEDDATE].isIntegral()) {
                 grantedDate = root[LIVEROOM_VOUCHERLIST_LIST_GRANTEDDATE].asInt();
             }
+            /* startValidDate */
+            if (root[LIVEROOM_VOUCHERLIST_LIST_STARTVALIDDATE].isIntegral()) {
+                startValidDate = root[LIVEROOM_VOUCHERLIST_LIST_STARTVALIDDATE].asInt();
+            }
             /* expDate */
             if (root[LIVEROOM_VOUCHERLIST_LIST_EXPDATE].isIntegral()) {
                 expDate = root[LIVEROOM_VOUCHERLIST_LIST_EXPDATE].asInt();
@@ -71,6 +79,7 @@ public:
     HttpVoucherItem() {
         voucherId = "";
         photoUrl = "";
+        photoUrlMobile = "";
         desc = "";
         useRoomType = USEROOMTYPE_LIMITLESS;
         anchorType = ANCHORTYPE_LIMITLESS;
@@ -78,6 +87,7 @@ public:
         anchorNcikName = "";
         anchorPhotoUrl = "";
         grantedDate = 0;
+        startValidDate = 0;
         expDate = 0;
         read = false;
 
@@ -91,6 +101,7 @@ public:
      * 有效邀请数组结构体
      * voucherId       试用劵ID
      * photoUrl        试用劵图标url
+     * photoUrlMobile  试用券图标url（移动端使用）
      * desc            试用劵描述
      * useRoomType     可用的直播间类型（0: 不限 1:公开 2:私密）
      * anchorType      主播类型（0:不限 1:没看过直播的主播 2:指定主播）
@@ -98,11 +109,13 @@ public:
      * anchorNcikName  主播昵称
      * anchorPhotoUrl  主播头像url
      * grantedDate     获取时间
+     * startValidDate  有效开始时间
      * expDate         过期时间
      * read            已读状态（0:未读 1:已读）
      */
     string voucherId;
     string photoUrl;
+    string photoUrlMobile;
     string desc;
     UseRoomType useRoomType;
     AnchorType anchorType;
@@ -110,6 +123,7 @@ public:
     string anchorNcikName;
     string anchorPhotoUrl;
     long grantedDate;
+    long startValidDate;
     long expDate;
     bool read;
 };

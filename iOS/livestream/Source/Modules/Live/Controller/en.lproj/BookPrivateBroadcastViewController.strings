@@ -1,8 +1,8 @@
 
-/* Class = "UILabel"; text = "BookPrivateBroadcast"; ObjectID = "FCw-ox-yok"; */
-"FCw-ox-yok.text" = "BookPrivateBroadcast";
+/* Class = "UILabel"; text = "Request Booking"; ObjectID = "FCw-ox-yok"; */
+"FCw-ox-yok.text" = "Request Booking";
 
-"Credits_Iofo" = " credits will be deducted from your account as the first 5 minutes of private live. In the below situations, your credits will be returned to your account:\n\n- The host did not accept your request.\n- The host did not show up during the expected period";
+"Credits_Iofo" = " credits will be deducted as deposit for the first 5 minutes of the broadcast. The deposit will be returned to your account if:\n\n- The broadcaster does not accept your request.\n- The broadcaster does not show up during the booking period.";
 
 "BOOKPRIVATE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
 
@@ -10,6 +10,10 @@
 
 "BOOK_NOW" = "BOOK NOW";
 
-"WHEN_STAR_PRIVATE" = "When do you want to start the private live?";
+"WHEN_STAR_PRIVATE" = "When do you want to start the private broadcast?";
 
 "NOTE" = "Note:";
+
+"Book_Private_Broadcast" = "Book Private Broadcast";
+
+"Add_First_Mobile" = "Please add a mobile number first.";

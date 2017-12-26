@@ -18,11 +18,14 @@
     NSString *_roomId;
     NSString *_userId;
     NSString *_userName;
+    NSString *_photoUrl;
     NSString *_playUrl;
     NSString *_publishUrl;
     double _roomCredit;
 
+    NSArray<NSString *> *_playUrlArray;
     NSInteger _playUrlIndex;
+    NSArray<NSString *> *_publishUrlArray;
     NSInteger _publishUrlIndex;
 }
 @end
@@ -56,12 +59,21 @@
     if (_httpLiveRoom) {
         _httpLiveRoom.userId = _userId;
     }
+
+    if (_imLiveRoom) {
+        _imLiveRoom.userId = _userId;
+    }
 }
 
 - (NSString *)userId {
     if (!_userId) {
         _userId = _httpLiveRoom.userId;
     }
+
+    if (!_userId) {
+        _userId = _imLiveRoom.userId;
+    }
+
     return _userId;
 }
 
@@ -79,10 +91,37 @@
 
 - (void)setUserName:(NSString *)userName {
     _userName = userName;
+
+    if (_httpLiveRoom) {
+        _httpLiveRoom.nickName = _userName;
+    }
+
+    if (_imLiveRoom) {
+        _imLiveRoom.nickName = _userName;
+    }
 }
 
 - (NSString *)photoUrl {
-    return _httpLiveRoom.photoUrl;
+    if (!_photoUrl) {
+        if (_httpLiveRoom) {
+            _photoUrl = _httpLiveRoom.photoUrl;
+        }
+    }
+
+    if (!_photoUrl) {
+        if (_imLiveRoom) {
+            _photoUrl = _imLiveRoom.photoUrl;
+        }
+    }
+
+    return _photoUrl;
+}
+
+- (void)setPhotoUrl:(NSString *)photoUrl {
+    _photoUrl = photoUrl;
+    if (_httpLiveRoom) {
+        _httpLiveRoom.photoUrl = _photoUrl;
+    }
 }
 
 - (NSString *)roomPhotoUrl {
@@ -96,10 +135,6 @@
     return _roomCredit;
 }
 
-- (void)setRoomCredit:(double)roomCredit {
-    _roomCredit = roomCredit;
-}
-
 - (NSArray<NSString *> *)playUrlArray {
     if (!_playUrlArray) {
         _playUrlArray = _imLiveRoom.videoUrls;
@@ -107,14 +142,20 @@
     return _playUrlArray;
 }
 
-- (NSString *)playUrl {
-    if (!_playUrl || _playUrl.length == 0) {
-        if (self.playUrlArray.count > 0) {
-            NSString *url = [self.playUrlArray objectAtIndex:_playUrlIndex];
-            _playUrl = [NSString stringWithFormat:@"%@?"DEVICEID_KEY"=%@&"TOKEN_KEY"=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
-        }
+- (void)setPlayUrlArray:(NSArray<NSString *> *)playUrlArray {
+    _playUrlArray = playUrlArray;
+    if (_imLiveRoom) {
+        _imLiveRoom.videoUrls = _playUrlArray;
     }
-    return _playUrl;
+}
+
+- (NSString *)playUrl {
+    NSString *realUrl = @"";
+    if (self.playUrlArray.count > 0) {
+        NSString *url = [self.playUrlArray objectAtIndex:_playUrlIndex];
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+    }
+    return realUrl;
 }
 
 - (NSArray<NSString *> *)publishUrlArray {
@@ -124,19 +165,26 @@
     return _publishUrlArray;
 }
 
-- (NSString *)publishUrl {
-    if (!_publishUrl || _publishUrl.length == 0) {
-        if (self.publishUrlArray.count > 0) {
-            NSString *url = [self.publishUrlArray objectAtIndex:_publishUrlIndex];
-            _publishUrl = [NSString stringWithFormat:@"%@?"DEVICEID_KEY"=%@&"TOKEN_KEY"=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
-        }
+- (void)setPublishUrlArray:(NSArray<NSString *> *)publishUrlArray {
+    _publishUrlArray = publishUrlArray;
+    if (_imLiveRoom) {
+        _imLiveRoom.manPushUrl = _publishUrlArray;
     }
-    return _publishUrl;
+}
+
+- (NSString *)publishUrl {
+    NSString *realUrl = @"";
+    if (self.publishUrlArray.count > 0) {
+        NSString *url = [self.publishUrlArray objectAtIndex:_publishUrlIndex];
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+    }
+    return realUrl;
 }
 
 #pragma mark - 其他方法
 - (void)reset {
     // 清空旧的流地址
+    NSLog(@"LiveRoom::reset()");
     _playUrlIndex = 0;
     _publishUrlIndex = 0;
     self.playUrlArray = nil;
@@ -144,16 +192,20 @@
 }
 
 - (NSString *)changePlayUrl {
+    NSLog(@"LiveRoom::changePlayUrl( _playUrlIndex : %d, playUrlArray : %@ )", (int)_playUrlIndex, self.playUrlArray);
     if (self.playUrlArray.count > 0) {
-        _playUrlIndex = _playUrlIndex++ % self.playUrlArray.count;
+        _playUrlIndex++;
+        _playUrlIndex = _playUrlIndex % self.playUrlArray.count;
     }
 
     return self.playUrl;
 }
 
 - (NSString *)changePublishUrl {
+    NSLog(@"LiveRoom::changePublishUrl( _publishUrlIndex : %d, publishUrlArray : %@ )", (int)_publishUrlIndex, self.publishUrlArray);
     if (self.publishUrlArray.count > 0) {
-        _publishUrlIndex = _publishUrlIndex++ % self.publishUrlArray.count;
+        _publishUrlIndex++;
+        _publishUrlIndex = _publishUrlIndex % self.publishUrlArray.count;
     }
 
     return self.publishUrl;

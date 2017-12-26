@@ -24,6 +24,8 @@ public:
 public:
 	// 连接callback
 	virtual void OnConnect(bool success) = 0;
+	// 断开连接callback
+	virtual void OnDisconnect() = 0;
 	// 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop）
 	virtual void OnDisconnect(const TaskList& listUnsentTask) = 0;
 	// 发送callback

@@ -42,4 +42,11 @@ public interface OnServiceEventListener {
      * @param isShow
      */
     public void onAdvertShowNotify(IQNService service, boolean isShow);
+
+    /**
+     * 子模块需要menu未读展示通知
+     * @param service
+     * @param isShow
+     */
+    public void onModudleUnreadFlagsNotify(IQNService service, boolean isShow);
 }

@@ -19,4 +19,6 @@
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
 + (id)getUITableViewCell:(UITableView*)tableView;
+- (void)updateCount:(NSInteger)count;
+- (void)updateLevel:(NSInteger)level;
 @end

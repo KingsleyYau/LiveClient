@@ -28,7 +28,7 @@ void HttpGetConfigTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetConfigTask::SetParam( "
             "task : %p, "
             ")",
@@ -38,7 +38,7 @@ void HttpGetConfigTask::SetParam(
 
 
 bool HttpGetConfigTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetConfigTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -50,7 +50,7 @@ bool HttpGetConfigTask::ParseData(const string& url, bool bFlag, const char* buf
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetConfigTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetConfigTask::ParseData( buf : %s )", buf);
     }
     
 

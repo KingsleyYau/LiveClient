@@ -15,6 +15,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *onlineImageView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *roomTpyePublic;
+@property (weak, nonatomic) IBOutlet UIImageView *interestLeft;
+@property (weak, nonatomic) IBOutlet UIImageView *interestRight;
 
 /**
  *  头像下载器

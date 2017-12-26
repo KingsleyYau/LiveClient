@@ -28,7 +28,7 @@ void HttpGetBackpackUnreadNumTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetBackpackUnreadNumTask::SetParam( "
             "task : %p, "
             ")",
@@ -37,7 +37,7 @@ void HttpGetBackpackUnreadNumTask::SetParam(
 }
 
 bool HttpGetBackpackUnreadNumTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetBackpackUnreadNumTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -49,7 +49,7 @@ bool HttpGetBackpackUnreadNumTask::ParseData(const string& url, bool bFlag, cons
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetBackpackUnreadNumTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetBackpackUnreadNumTask::ParseData( buf : %s )", buf);
     }
     
 

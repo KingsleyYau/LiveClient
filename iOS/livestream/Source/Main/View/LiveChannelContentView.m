@@ -92,9 +92,9 @@ static NSString *footerViewIdentifier = @"footerView";
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.item];
 
     // 房间名
-    cell.nameLabel.text = item.userId;
-    //    cell.labelRoomTitle.text = item.nickName;
-
+//    cell.nameLabel.text = item.userId;
+        cell.nameLabel.text = item.nickName;
+    cell.nameLabel.textColor = [UIColor whiteColor];
     // 国家
     //    cell.labelCountry.text = item.country;
 
@@ -165,6 +165,28 @@ static NSString *footerViewIdentifier = @"footerView";
         }
     }
 
+    if (item.interest.count > 0) {
+        
+        if (item.interest.count == 1) {
+            NSString *interestRightName = [NSString stringWithFormat:@"interest_%@", item.interest[0]];
+            cell.interestRight.image = [UIImage imageNamed:interestRightName];
+            cell.interestLeft.hidden = YES;
+            cell.interestRight.hidden = NO;
+        } else {
+            NSString *interestRightName = [NSString stringWithFormat:@"interest_%@", item.interest[0]];
+            NSString *interestLeftName = [NSString stringWithFormat:@"interest_%@", item.interest[1]];
+            cell.interestRight.image = [UIImage imageNamed:interestRightName];
+            cell.interestLeft.image = [UIImage imageNamed:interestLeftName];
+            cell.interestLeft.hidden = NO;
+            cell.interestRight.hidden = NO;
+        }
+    } else {
+        cell.interestLeft.hidden = NO;
+        cell.interestRight.hidden = NO;
+
+    }
+    
+    
     // 头像
 
     cell.coverImageView.image = nil;
@@ -180,8 +202,8 @@ static NSString *footerViewIdentifier = @"footerView";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"%s", __func__);
 
-    if ([self.liveChannelDelegate respondsToSelector:@selector(liveChannelContentView:didSelecRoom:)]) {
-        [self.liveChannelDelegate liveChannelContentView:self didSelecRoom:indexPath];
+    if ([self.liveChannelDelegate respondsToSelector:@selector(liveChannelContentView:didSelectLady:)]) {
+        [self.liveChannelDelegate liveChannelContentView:self didSelectLady:indexPath.row];
     }
 }
 
@@ -266,5 +288,9 @@ static NSString *footerViewIdentifier = @"footerView";
 
 - (void)placeholderBackImageViewDidTap:(UITapGestureRecognizer *)gesture {
     NSLog(@"%s",__func__);
+    if ([self.liveChannelDelegate respondsToSelector:@selector(liveChannelContentView:didBackPlaceholer:)]) {
+        [self.liveChannelDelegate liveChannelContentView:self didBackPlaceholer:gesture];
+    }
+
 }
 @end

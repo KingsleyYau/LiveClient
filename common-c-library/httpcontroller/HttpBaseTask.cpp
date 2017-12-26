@@ -26,7 +26,7 @@ IHttpTaskCallback* HttpBaseTask::GetHttpTaskCallback() {
 }
 
 bool HttpBaseTask::Start() {
-	FileLog("httpcontroller", "HttpBaseTask::Start( task : %p, mbStop : %s )", this, mbCanStart?"true":"false");
+	FileLog(LIVESHOW_HTTP_LOG, "HttpBaseTask::Start( task : %p, mbStop : %s )", this, mbCanStart?"true":"false");
 	bool bFlag = mbCanStart;
 	if( !bFlag ) {
 		OnTaskFinish();
@@ -35,7 +35,7 @@ bool HttpBaseTask::Start() {
 }
 
 void HttpBaseTask::Stop() {
-	FileLog("httpcontroller", "HttpBaseTask::Stop( task : %p )", this);
+	FileLog(LIVESHOW_HTTP_LOG, "HttpBaseTask::Stop( task : %p )", this);
 	mbCanStart = false;
 }
 
@@ -44,7 +44,7 @@ void HttpBaseTask::Reset() {
 }
 
 void HttpBaseTask::OnTaskFinish() {
-	FileLog("httpcontroller", "HttpBaseTask::OnTaskFinish( task : %p )", this);
+	FileLog(LIVESHOW_HTTP_LOG, "HttpBaseTask::OnTaskFinish( task : %p )", this);
 	if( mpHttpTaskCallback != NULL ) {
 		mpHttpTaskCallback->OnTaskFinish(this);
 	}

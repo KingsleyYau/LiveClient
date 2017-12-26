@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -15,6 +15,7 @@
                 <outlet property="barrageView" destination="tKU-mh-VjR" id="V02-Pn-S9L"/>
                 <outlet property="cameraBtn" destination="2PJ-gU-CpY" id="bw1-LH-qJQ"/>
                 <outlet property="countdownLabel" destination="gg0-Z3-xeH" id="LZo-ac-mQ3"/>
+                <outlet property="debugLabel" destination="mZV-VJ-gyf" id="7QQ-KL-N1L"/>
                 <outlet property="giftView" destination="fj7-Dt-UAT" id="dRK-MF-wX8"/>
                 <outlet property="liveBottomView" destination="Oyo-bw-5eR" id="Xts-Rx-Pq4"/>
                 <outlet property="msgSuperViewBottom" destination="2ne-3T-iYS" id="uha-7N-DB3"/>
@@ -55,6 +56,12 @@
                         <constraint firstAttribute="height" secondItem="vTO-X9-DjF" secondAttribute="width" multiplier="3:4" id="xX7-Hk-doY"/>
                     </constraints>
                 </view>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="characterWrap" numberOfLines="20" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mZV-VJ-gyf" userLabel="Debug Label">
+                    <rect key="frame" x="10" y="30" width="355" height="0.0"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fj7-Dt-UAT" userLabel="Gift View">
                     <rect key="frame" x="0.0" y="145.5" width="375" height="115"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -83,7 +90,7 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oyo-bw-5eR" userLabel="Live Bottom View">
-                    <rect key="frame" x="0.0" y="281.5" width="375" height="385.5"/>
+                    <rect key="frame" x="0.0" y="281" width="375" height="385.5"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7l2-vK-Qqy" userLabel="TableSuperView" customClass="TableSuperView">
@@ -115,7 +122,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="115" height="153"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Square" translatesAutoresizingMaskIntoConstraints="NO" id="f2O-ye-Tjm" userLabel="Preview Image View">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Two_Video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="f2O-ye-Tjm" userLabel="Preview Image View">
                             <rect key="frame" x="0.0" y="0.0" width="115" height="153"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </imageView>
@@ -143,7 +150,7 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rNF-hb-v5w" userLabel="Start Video Button">
                             <rect key="frame" x="0.0" y="0.0" width="115" height="153"/>
-                            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.65000000000000002" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <state key="normal" image="Live_Publish_Btn_Camera_Open_Big"/>
                         </button>
                         <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="lUr-e1-kgS" userLabel="Start Video Image View">
@@ -226,14 +233,14 @@
                         <constraint firstItem="mO3-gE-u0W" firstAttribute="top" secondItem="k0K-oG-W4B" secondAttribute="top" constant="8" id="nbm-NN-LgD"/>
                     </constraints>
                 </view>
-                <view alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dg0-rG-lgf" userLabel="Rewarded Bg View">
+                <view hidden="YES" alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dg0-rG-lgf" userLabel="Rewarded Bg View">
                     <rect key="frame" x="171" y="7" width="191" height="20"/>
                     <color key="backgroundColor" red="0.36470588240000001" green="0.054901960780000002" blue="0.52549019610000003" alpha="0.5" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="J49-nU-1Re"/>
                     </constraints>
                 </view>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wWB-x0-Jfm">
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wWB-x0-Jfm">
                     <rect key="frame" x="179" y="3" width="175" height="29"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <state key="normal">
@@ -270,6 +277,7 @@
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="0vh-vG-ypd"/>
                 <constraint firstItem="Dg0-rG-lgf" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="7" id="1p9-Dl-HPB"/>
                 <constraint firstAttribute="bottom" secondItem="7l2-vK-Qqy" secondAttribute="bottom" priority="750" constant="50" id="2ne-3T-iYS"/>
+                <constraint firstItem="mZV-VJ-gyf" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="vTO-X9-DjF" secondAttribute="bottom" constant="-20" id="3S1-cH-vhg"/>
                 <constraint firstItem="Oyo-bw-5eR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="4hJ-Mb-U7A"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="top" secondItem="7l2-vK-Qqy" secondAttribute="top" constant="-6" id="4ka-9r-sVU"/>
                 <constraint firstItem="7l2-vK-Qqy" firstAttribute="leading" secondItem="Oyo-bw-5eR" secondAttribute="leading" constant="15" id="5lN-jt-0kl"/>
@@ -282,14 +290,17 @@
                 <constraint firstItem="2PJ-gU-CpY" firstAttribute="trailing" secondItem="vTO-X9-DjF" secondAttribute="trailing" constant="-13" id="Mya-3k-4qt"/>
                 <constraint firstItem="DdK-1F-mg9" firstAttribute="leading" secondItem="vTO-X9-DjF" secondAttribute="leading" id="Qba-bS-QIz"/>
                 <constraint firstItem="l8x-C3-6XH" firstAttribute="bottom" secondItem="7l2-vK-Qqy" secondAttribute="bottom" id="RyJ-3p-CaM"/>
+                <constraint firstItem="mZV-VJ-gyf" firstAttribute="leading" secondItem="vTO-X9-DjF" secondAttribute="leading" constant="10" id="UvL-c0-p7l"/>
                 <constraint firstItem="7l2-vK-Qqy" firstAttribute="top" secondItem="vTO-X9-DjF" secondAttribute="bottom" constant="5" id="VOk-i0-Tzz"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VVB-nq-Fax"/>
+                <constraint firstItem="mZV-VJ-gyf" firstAttribute="top" secondItem="vTO-X9-DjF" secondAttribute="top" constant="30" id="Vca-E8-01Z"/>
                 <constraint firstItem="gg0-Z3-xeH" firstAttribute="centerX" secondItem="2PJ-gU-CpY" secondAttribute="centerX" id="at0-dD-b3Y"/>
                 <constraint firstItem="k0K-oG-W4B" firstAttribute="bottom" secondItem="dKv-VQ-e8F" secondAttribute="bottom" id="dBN-SJ-npc"/>
                 <constraint firstItem="vTO-X9-DjF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fc9-Uc-nCx"/>
                 <constraint firstItem="wWB-x0-Jfm" firstAttribute="centerY" secondItem="Dg0-rG-lgf" secondAttribute="centerY" id="fiq-KO-tMz"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="iKr-KU-oxn"/>
                 <constraint firstItem="Oyo-bw-5eR" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="ima-7L-TRl"/>
+                <constraint firstItem="mZV-VJ-gyf" firstAttribute="trailing" secondItem="vTO-X9-DjF" secondAttribute="trailing" constant="-10" id="jZO-9v-KVs"/>
                 <constraint firstItem="gg0-Z3-xeH" firstAttribute="bottom" secondItem="2PJ-gU-CpY" secondAttribute="bottom" constant="-10" id="k1N-Bf-9uC"/>
                 <constraint firstItem="DdK-1F-mg9" firstAttribute="height" secondItem="vTO-X9-DjF" secondAttribute="height" id="kHs-mb-FhF"/>
                 <constraint firstItem="wWB-x0-Jfm" firstAttribute="leading" secondItem="Dg0-rG-lgf" secondAttribute="leading" constant="8" id="mbB-Nf-m2L"/>
@@ -311,11 +322,11 @@
         </view>
     </objects>
     <resources>
-        <image name="Default_Img_Man_Square" width="150" height="200"/>
         <image name="Live_Msg_UnRead" width="9" height="5"/>
         <image name="Live_Publish_Btn_Camera_Open_Big" width="28" height="34"/>
         <image name="Live_Publish_Btn_Camera_Stop" width="19" height="19"/>
         <image name="Live_Publish_Btn_Mute" width="11" height="16"/>
         <image name="Live_willbe_end" width="67" height="67"/>
+        <image name="Two_Video_icon" width="120" height="160"/>
     </resources>
 </document>

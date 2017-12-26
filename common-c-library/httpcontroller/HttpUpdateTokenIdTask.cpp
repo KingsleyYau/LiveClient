@@ -3,7 +3,7 @@
  *
  *  Created on: 2017-8-17
  *      Author: Alex
- *        desc: 2.6.上传tokenid接口
+ *        desc: 2.3.上传tokenid接口
  */
 
 #include "HttpUpdateTokenIdTask.h"
@@ -35,7 +35,7 @@ void HttpUpdateTokenIdTask::SetParam(
         mTokenId = tokenId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpUpdateTokenIdTask::SetParam( "
             "task : %p, "
             "tokenId : %s, "
@@ -50,7 +50,7 @@ const string& HttpUpdateTokenIdTask::GetmTokenId() {
 }
 
 bool HttpUpdateTokenIdTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpUpdateTokenIdTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -62,7 +62,7 @@ bool HttpUpdateTokenIdTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSetModifyInfoTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpUpdateTokenIdTask::ParseData( buf : %s )", buf);
     }
     
 

@@ -13,6 +13,7 @@
 #import "LiveStreamPublisher.h"
 
 #import "LSRequestManager.h"
+#import "LSFileCacheManager.h"
 
 @interface StreamTestViewController ()
 
@@ -27,23 +28,37 @@
 
 @implementation StreamTestViewController
 #pragma mark - 界面初始化
+- (void)dealloc {
+    NSLog(@"StreamTestViewController::dealloc()");
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-
+    [LSRequestManager setLogEnable:YES];
+    [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
+    
     self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
     self.publisher = [LiveStreamPublisher instance];
+    [self.publisher initCapture];
     self.publisher.publishView = self.previewPublishView;
 
     self.palyer = [LiveStreamPlayer instance];
     self.palyer.playView = self.previewView;
 
-    self.url = @"rtmp://172.25.32.17:8899/live/max";
-
-//    self.textFieldAddress.text = [NSString stringWithFormat:@"%@_mv", self.url, nil];
-    self.textFieldAddress.text = @"rtmp://172.25.32.133:8899/play/anchor_fly11_111111112?token=aaa";
+//    self.url = @"rtmp://172.25.32.17:8899/live/max";
+    self.url = @"rtmp://172.25.32.184:1935/live/max";
+    
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@_mv", self.url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@_i", self.url, nil];
+    
+//    self.textFieldAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
+//    self.textFieldAddress.text = @"rtmp://52.196.96.7:7474/test_flash/test";
+//    self.textFieldAddress.text = @"rtmp://52.196.96.7:4000/cdn_standard/fansi_CM42137154_6507";
+//    self.textFieldPublishAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
+//    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:7474/test_flash/test";
+//    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:4000/cdn_standard/fansi_CM42137154_6507";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -58,18 +73,32 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    // 添加键盘事件
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
     // 添加手势
     [self addSingleTap];
+    
+    // 关闭锁屏
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 
+    // 去除键盘事件
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+    
     // 去除手势
     [self removeSingleTap];
 
     // 停止流
     [self stop:nil];
+    
+    // 允许锁屏
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
 
 - (void)initCustomParam {
@@ -86,8 +115,6 @@
 }
 
 - (IBAction)publish:(id)sender {
-    //    [self stop:self];
-
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
 
@@ -127,14 +154,12 @@
 }
 
 - (IBAction)play:(id)sender {
-    //    [self stop:self];
-
     NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString *recordFilePath = @"";     //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
+    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 
@@ -159,6 +184,10 @@
 
 - (IBAction)mute:(id)sender {
     self.publisher.mute = !self.publisher.mute;
+}
+
+- (IBAction)roate:(id)sender {
+    [self.publisher rotateCamera];
 }
 
 #pragma mark - 单击屏幕
@@ -193,6 +222,54 @@
                 self.navigationController.navigationBar.hidden = YES;
             }];
     });
+}
+
+#pragma mark - 处理键盘回调
+- (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
+    BOOL bFlag = NO;
+    
+    // Ensures that all pending layout operations have been completed
+    [self.view layoutIfNeeded];
+    
+    if (height != 0) {
+        // 弹出键盘
+        self.playBottom.constant = -(height + 20);
+        
+    } else {
+        // 收起键盘
+        self.playBottom.constant = -20;
+    }
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         // Make all constraint changes here, Called on parent view
+                         [self.view layoutIfNeeded];
+                         
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+}
+
+- (void)keyboardWillShow:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSValue *aValue = [userInfo objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardRect = [aValue CGRectValue];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+
+    [self moveInputBarWithKeyboardHeight:keyboardRect.size.height withDuration:animationDuration];
+}
+
+- (void)keyboardWillHide:(NSNotification *)notification {
+    NSDictionary* userInfo = [notification userInfo];
+    NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSTimeInterval animationDuration;
+    [animationDurationValue getValue:&animationDuration];
+    
+    // 动画收起键盘
+    [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
 }
 
 @end

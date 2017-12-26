@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "Country.h"
+#import "LSGoogleAnalyticsViewController.h"
 
 @protocol CountryCodeViewControllerDelegate <NSObject>
 
@@ -15,7 +16,7 @@
 
 @end
 
-@interface CountryCodeViewController : UIViewController
+@interface CountryCodeViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, weak) id<CountryCodeViewControllerDelegate> delegate;
 @end

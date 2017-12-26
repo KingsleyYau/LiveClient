@@ -31,6 +31,7 @@
 #import "RideItemObject.h"
 #import "GetBackPackUnreadNumItemObject.h"
 #import "AcceptInstanceInviteItemObject.h"
+#import "LSUserInfoItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -67,12 +68,28 @@
  *  @param directory 可写入目录
  */
 + (void)setLogDirectory:(NSString * _Nonnull)directory;
+
+/**
+ *  设置同步配置接口服务器域名
+ *
+ *  @param configWebSite 服务器域名
+ */
+- (void)setConfigWebSite:(NSString * _Nonnull)webSite;
+
 /**
  *  设置接口服务器域名
  *
  *  @param webSite 服务器域名
  */
 - (void)setWebSite:(NSString * _Nonnull)webSite;
+
+/**
+ *  设置同步配置接口服务器域名
+ *
+ *  @param webSite 服务器域名
+ */
+- (void)setConfigWebSite:(NSString * _Nonnull)webSite;
+
 /**
  *  设置接口服务器用户认证
  *
@@ -82,16 +99,16 @@
 - (void)setAuthorization:(NSString * _Nonnull)user password:(NSString * _Nonnull)password;
 
 /**
- *  清除Cookies
+ *  清除所有Cookies
  */
 - (void)cleanCookies;
 
 /**
- *  根据域名获取Cookies
- *
- *  @param site 域名
+ 获取所有Cookies
+ 
+ @return cookies
  */
-- (void)getCookies:(NSString * _Nonnull)site;
+- (NSArray<NSHTTPCookie *> * _Nullable)getCookies;
 
 /**
  *  停止请求接口
@@ -209,6 +226,7 @@ typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param start			起始，用于分页，表示从第几个元素开始获取
  *  @param step             步长，用于分页，表示本次请求获取多少个元素
  *  @param hasWatch         是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
+ *  @param isForTest        是否可看到测试主播（0：否，1：是）（整型）（可无，无则默认为0）
  *  @param finishHandler    接口回调
  *
  *  @return 成功请求Id
@@ -216,6 +234,7 @@ typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSStr
 - (NSInteger)getAnchorList:(int)start
                       step:(int)step
                   hasWatch:(BOOL)hasWatch
+                 isForTest:(BOOL)isForTest
              finishHandler:(GetAnchorListFinishHandler _Nullable)finishHandler;
 
 /**
@@ -934,8 +953,11 @@ typedef void (^ServerSpeedFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param success  成功失败
  *  @param errnum   错误码
  *  @param errmsg   错误提示
+ *  @param bannerImg 广告图片url
+ *  @param bannerLink 广告点击进入的Web页面url
+ *  @param bannerName 广告名称，用于App Webview加载网页时，在Navigation显示的title
  */
-typedef void (^BannerFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink);
+typedef void (^BannerFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName);
 
 /**
  *  6.9.获取Hot/Following列表头部广告接口
@@ -945,5 +967,26 @@ typedef void (^BannerFinishHandler)(BOOL success, NSInteger errnum, NSString * _
  *  @return 成功请求Id
  */
 - (NSInteger)banner:(BannerFinishHandler _Nullable)finishHandler;
+
+/**
+ *  6.10.获取主播/观众信息接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param userInfoItem 观众/主播信息
+ */
+typedef void (^GetUserInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LSUserInfoItemObject * _Nullable userInfoItem);
+
+/**
+ *  6.10.获取主播/观众信息接口
+ *
+ *  @param userId           观众ID或主播ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getUserInfo:(NSString * _Nonnull) userId
+           finishHandler:(GetUserInfoFinishHandler _Nullable)finishHandler;
 
 @end

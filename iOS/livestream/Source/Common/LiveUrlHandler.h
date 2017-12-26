@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "LSUrlParmItem.h"
 #import "LiveRoom.h"
 
 typedef enum {
@@ -61,6 +61,7 @@ typedef enum {
  */
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPreLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openInvited:(NSString *_Nullable)userName userId:(NSString *_Nullable)userId inviteId:(NSString *_Nullable)inviteId;
+//- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index isForTest:(BOOL)forTest;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openAnchorDetail:(NSString *_Nullable)anchorId;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBooking:(NSString *_Nullable)anchorId;
@@ -115,6 +116,10 @@ typedef enum {
 #pragma mark - 获取模块URL
 - (NSURL * _Nonnull)createUrlToInviteByRoomId:(NSString * _Nullable)roomId userId:(NSString * _Nullable)roomId roomType:(LiveRoomType)roomType;
 
-- (NSURL * _Nonnull)instantUrlToInviteUserByInviteId:(NSString * _Nullable)inviteId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName;
+- (NSURL * _Nonnull)createUrlToInviteByInviteId:(NSString * _Nullable)inviteId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName;
+
+- (NSURL * _Nonnull)createUrlToLookLadyAnchorId:(NSString * _Nullable)anchorId;
+#pragma mark - 解析URL
+- (LSUrlParmItem *)parseUrlParms:(NSURL *)url ;
 
 @end

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -24,7 +25,10 @@
                     </connections>
                 </collectionView>
                 <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="Iq1-jx-ica">
-                    <rect key="frame" x="290" y="183" width="39" height="37"/>
+                    <rect key="frame" x="290" y="199" width="39" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="23" id="RzQ-xM-a9g"/>
+                    </constraints>
                     <color key="pageIndicatorTintColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                     <color key="currentPageIndicatorTintColor" red="1" green="1" blue="1" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                 </pageControl>
@@ -55,7 +59,7 @@
                 <constraint firstItem="qoR-8U-LP0" firstAttribute="top" secondItem="cSH-wa-aeJ" secondAttribute="top" id="MnE-za-aOw"/>
                 <constraint firstItem="ZsV-TY-JaB" firstAttribute="top" secondItem="cSH-wa-aeJ" secondAttribute="top" id="SqP-kB-8g6"/>
                 <constraint firstItem="qoR-8U-LP0" firstAttribute="height" secondItem="cSH-wa-aeJ" secondAttribute="height" id="VkL-bc-Xk8"/>
-                <constraint firstItem="Iq1-jx-ica" firstAttribute="bottom" secondItem="cSH-wa-aeJ" secondAttribute="bottom" constant="-2" id="WG0-fB-p2p"/>
+                <constraint firstItem="Iq1-jx-ica" firstAttribute="bottom" secondItem="cSH-wa-aeJ" secondAttribute="bottom" id="WG0-fB-p2p"/>
                 <constraint firstAttribute="trailing" secondItem="ZsV-TY-JaB" secondAttribute="trailing" id="Ys2-ME-kql"/>
                 <constraint firstItem="qoR-8U-LP0" firstAttribute="width" secondItem="cSH-wa-aeJ" secondAttribute="width" id="aty-4T-ck6"/>
                 <constraint firstItem="Iq1-jx-ica" firstAttribute="centerX" secondItem="cSH-wa-aeJ" secondAttribute="centerX" id="hMd-2X-Uvz"/>

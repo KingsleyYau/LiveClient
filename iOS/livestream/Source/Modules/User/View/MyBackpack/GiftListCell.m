@@ -13,12 +13,10 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
 
-    self.numLabel.layer.cornerRadius = self.numLabel.frame.size.width / 2;
-    self.numLabel.layer.masksToBounds = YES;
-
     self.unreadView.layer.cornerRadius = self.unreadView.frame.size.width / 2;
     self.unreadView.layer.masksToBounds = YES;
-
+    self.timeLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(7)];
+    self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(10)];
     self.layer.cornerRadius = 5;
     self.layer.masksToBounds = YES;
 }
@@ -29,7 +27,7 @@
 
 - (NSString *)getTime:(NSInteger)time {
     NSDateFormatter *stampFormatter = [[NSDateFormatter alloc] init];
-    [stampFormatter setDateFormat:@"dd/MM/yyyy"];
+    [stampFormatter setDateFormat:@"MMM dd HH:mm"];
     NSDate *timeDate = [NSDate dateWithTimeIntervalSince1970:time];
     NSString *timeStr = [stampFormatter stringFromDate:timeDate];
 

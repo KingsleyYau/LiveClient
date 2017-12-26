@@ -16,6 +16,21 @@
 
     self.unreadView.layer.cornerRadius = self.unreadView.frame.size.width / 2;
     self.unreadView.layer.masksToBounds = YES;
+    
+    self.ladyHeadView.layer.cornerRadius = self.ladyHeadView.frame.size.width/2;
+    self.ladyHeadView.layer.masksToBounds = YES;
+    
+//    UIImage * image = [UIImage imageNamed:@"Vouchers_BG"];
+//    
+//    CGFloat top = 30; // 顶端盖高度
+//    CGFloat bottom = 30; // 底端盖高度
+//    CGFloat left = 165; // 左端盖宽度
+//    CGFloat right = 30; // 右端盖宽度
+//    UIEdgeInsets insets = UIEdgeInsetsMake(top, left, bottom, right);
+//    
+//    image = [image resizableImageWithCapInsets:insets resizingMode:UIImageResizingModeStretch];
+//    
+//    self.vouchersBGView.image = image;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -47,7 +62,7 @@
 
 - (NSString *)getTime:(NSInteger)time {
     NSDateFormatter *stampFormatter = [[NSDateFormatter alloc] init];
-    [stampFormatter setDateFormat:@"dd/MM/yyyy"];
+    [stampFormatter setDateFormat:@"MMM dd HH:mm"];
     NSDate *timeDate = [NSDate dateWithTimeIntervalSince1970:time];
     NSString *timeStr = [stampFormatter stringFromDate:timeDate];
 

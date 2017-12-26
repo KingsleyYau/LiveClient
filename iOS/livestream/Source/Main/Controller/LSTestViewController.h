@@ -8,7 +8,7 @@
 
 #import "LSGoogleAnalyticsViewController.h"
 
-@interface LSTestViewController : LSGoogleAnalyticsViewController
+@interface LSTestViewController : LSViewController
 
 @property (weak) IBOutlet UITextField *textField;
 @property (weak) IBOutlet UIActivityIndicatorView *activityView;

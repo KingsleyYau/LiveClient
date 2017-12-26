@@ -93,10 +93,16 @@
 
                 NSLog(@"LiveGiftDownloadManager::GetAllGiftListRequest( [发送获取所有礼物列表请求结果], success : %d, errnum : %ld, errmsg : %@, count : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
                 if (success) {
+                    // 清空旧数据
+                    [self.giftMuArray removeAllObjects];
+                    
                     if (array != nil && array.count) {
                         for (GiftInfoItemObject *object in array) {
                             AllGiftItem *item = [[AllGiftItem alloc] init];
                             item.infoItem = object;
+                            if (!self.giftMuArray) {
+                                self.giftMuArray = [[NSMutableArray alloc] init];
+                            }
                             [self.giftMuArray addObject:item];
                         }
                         // 下载大礼物动画
@@ -276,7 +282,7 @@
         }
         completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
             if (image) {
-                //                NSLog(@"LiveGiftDownloadManager::downLoadSmallImage( [下载礼物小图标结果], smallImage imageURL : %@ )", imageURL);
+//                NSLog(@"LiveGiftDownloadManager::downLoadSmallImage( [下载礼物小图标结果], smallImage imageURL : %@ )", imageURL);
             }
         }];
 }

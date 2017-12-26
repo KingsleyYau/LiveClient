@@ -27,5 +27,6 @@
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
-+ (id)getUITableViewCell:(UITableView*)tableView isOpen:(BOOL)isOpen;
+// isHaveNumber是否有增加过电话
++ (id)getUITableViewCell:(UITableView*)tableView isOpen:(BOOL)isOpen isHaveNumber:(BOOL)isHaveNumber;
 @end

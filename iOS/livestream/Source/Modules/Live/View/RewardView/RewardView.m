@@ -20,12 +20,20 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *loadingView;
 @property (weak, nonatomic) IBOutlet UIView *loadingBgView;
 
+@property (weak, nonatomic) IBOutlet UILabel *rulesLabel;
+
 
 @end
 
 @implementation RewardView
 
 - (void)dealloc {
+    NSLog(@"RewardView::dealloc()");
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)stopTime {
     [self.timer invalidate];
     self.timer = nil;
 }
@@ -40,6 +48,7 @@
     rewardView.layer.cornerRadius = 5;
     rewardView.timeNumLabel.font = [UIFont boldSystemFontOfSize:19];
     rewardView.creditNumLabel.font = [UIFont boldSystemFontOfSize:19];
+    rewardView.rulesLabel.text = NSLocalizedStringFromSelf(@"eRZ-DY-sV9.text");
     return rewardView;
 }
 
@@ -55,6 +64,21 @@
         self.timer = nil;
     }
     self.timeCount = item.curTime;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(changeTimeLabel) userInfo:nil repeats:YES];
+    [self.timer setFireDate:[NSDate distantPast]];
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+}
+
+- (void)updataCredit:(double)credit {
+    self.creditNumLabel.text = [NSString stringWithFormat:@"%.2f",credit];
+}
+
+- (void)updataCurTime:(int)curTime {
+    if ( self.timer ) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
+    self.timeCount = curTime;
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0f target:self selector:@selector(changeTimeLabel) userInfo:nil repeats:YES];
     [self.timer setFireDate:[NSDate distantPast]];
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];

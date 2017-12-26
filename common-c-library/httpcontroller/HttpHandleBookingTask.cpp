@@ -44,7 +44,7 @@ void HttpHandleBookingTask::SetParam(
     mIsConfirm = isConfirm;
     
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpHandleBookingTask::SetParam( "
             "task : %p, "
             "inviteId :%s, "
@@ -66,7 +66,7 @@ bool HttpHandleBookingTask::GetIsConfirm() {
 }
 
 bool HttpHandleBookingTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpHandleBookingTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -78,7 +78,7 @@ bool HttpHandleBookingTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpHandleBookingTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpHandleBookingTask::ParseData( buf : %s )", buf);
     }
     
 

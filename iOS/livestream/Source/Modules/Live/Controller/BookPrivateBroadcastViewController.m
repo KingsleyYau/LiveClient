@@ -45,6 +45,8 @@
 @property (nonatomic, copy) NSString *giftId;
 @property (nonatomic, assign) int giftNum;
 @property (nonatomic, assign) BOOL needSms;
+
+@property (strong) DialogOK *dialogBookAddCredit;
 @end
 
 @implementation BookPrivateBroadcastViewController
@@ -53,17 +55,21 @@
     [super initCustomParam];
 }
 
+- (void)dealloc {
+    if (self.dialogBookAddCredit) {
+        [self.dialogBookAddCredit removeFromSuperview];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // 隐藏导航栏
-    self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
+    self.title = NSLocalizedStringFromSelf(@"Book_Private_Broadcast");
 
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     self.pickerView.dataSource = self;
     self.pickerView.delegate = self;
 
@@ -82,13 +88,15 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+    self.navigationController.navigationBar.translucent = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
     [self getBookPrivateBroadcastData];
-    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
 }
 
 - (IBAction)backBtnDid:(UIButton *)sender {
@@ -149,6 +157,10 @@
 
 #pragma mark 获取预约信息
 - (void)getBookPrivateBroadcastData {
+    if (!self.userId) {
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
+    }
     [self showLoading];
     GetCreateBookingInfoRequest *request = [[GetCreateBookingInfoRequest alloc] init];
     request.userId = self.userId;
@@ -159,7 +171,15 @@
                 self.noteStr = [NSString stringWithFormat:@"%0.1f%@", item.bookDeposit, NSLocalizedStringFromSelf(@"Credits_Iofo")];
 
                 if (item.bookTime.count > 0) {
-                    [self getBookTimeData:item.bookTime];
+                    
+                    NSArray *result = [item.bookTime sortedArrayUsingComparator:^NSComparisonResult(BookTimeItemObject * _Nonnull obj1, BookTimeItemObject * _Nonnull obj2) {
+
+                        NSString * time1 = [NSString stringWithFormat:@"%ld",obj1.time];
+                        NSString * time2 = [NSString stringWithFormat:@"%ld",obj2.time];
+                        return [time1 compare:time2]; //升序
+                    }];
+                    
+                    [self getBookTimeData:result];
                 }
 
                 self.bookGift = item.bookGift;
@@ -171,8 +191,10 @@
                 }
 
                 self.bookPhoneItem = item.bookPhone;
-
-                self.needSms = item.bookPhone.phoneNo.length > 0 ? YES : NO;
+                
+                if (item.bookPhone) {
+                    self.needSms = item.bookPhone.phoneNo.length > 0 ? YES : NO;
+                }
 
                 [self setTableFooterView];
 
@@ -188,6 +210,11 @@
 
 #pragma mark 发送预约
 - (void)sendBookPrivateBroadcast {
+
+    if (!self.userId) {
+        return;
+    }
+    
     SendBookingRequest *request = [[SendBookingRequest alloc] init];
     request.userId = self.userId;
     if (self.isShowVG) {
@@ -204,7 +231,6 @@
             [self.bookNowBtn setTitle:NSLocalizedStringFromSelf(@"BOOK_NOW") forState:UIControlStateNormal];
             if (success) {
                 NSLog(@"预约成功");
-                [self.navigationController popViewControllerAnimated:NO];
                 BookPrivateBroadcastSucceedViewController *vc = [[BookPrivateBroadcastSucceedViewController alloc] initWithNibName:nil bundle:nil];
                 vc.userName = self.userName;
                 vc.time = [NSString stringWithFormat:@"%@.%@", self.dayStr, self.timeStr];
@@ -212,15 +238,30 @@
                     vc.giftId = self.giftId;
                     vc.giftNum = self.giftNum;
                 }
-                [[[LiveModule module] moduleVC] presentViewController:vc animated:YES completion:nil];
+                vc.view.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
+                [self addChildViewController:vc];
+                [self.view addSubview:vc.view];
+                
+                [UIView animateWithDuration:0.2 animations:^{
+                    vc.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+                }];
             } else {
                 if (errnum == 10025) {
-                    DialogOK *dialogOK = [DialogOK dialog];
-                    dialogOK.tipsLabel.text = NSLocalizedStringFromSelf(@"BOOKPRIVATE_ERR_ADD_CREDIT");
-                    [dialogOK showDialog:self.view
-                             actionBlock:^{
-                                 NSLog(@"跳转到充值界面");
-                             }];
+                    if (self.dialogBookAddCredit) {
+                        [self.dialogBookAddCredit removeFromSuperview];
+                    }
+                    WeakObject(self, weakSelf);
+                    self.dialogBookAddCredit = [DialogOK dialog];
+                    self.dialogBookAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"BOOKPRIVATE_ERR_ADD_CREDIT");
+                    [self.dialogBookAddCredit showDialog:self.view
+                                             actionBlock:^{
+                                                 NSLog(@"跳转到充值界面");
+                                                     [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+                                                 UIViewController *vc = [LiveModule module].addCreditVc;
+                                                 if (vc) {
+                                                     [weakSelf.navigationController pushViewController:vc animated:YES];
+                                                 }
+                                             }];
                 } else {
                     [self showDialog:errmsg];
                 }
@@ -319,7 +360,8 @@
 
 - (AddPhoneNumCell *)showAddPhoneNumCell:(UITableView *)tableView {
     AddPhoneNumCell *result = nil;
-    AddPhoneNumCell *cell = [AddPhoneNumCell getUITableViewCell:tableView isOpen:self.needSms];
+    // isHaveNumber是否有增加过电话
+    AddPhoneNumCell *cell = [AddPhoneNumCell getUITableViewCell:tableView isOpen:self.needSms isHaveNumber:self.bookPhoneItem.phoneNo.length  > 0 ? YES : NO];
     cell.delegate = self;
     result = cell;
 
@@ -327,12 +369,12 @@
         cell.phoneNumLabel.text = [NSString stringWithFormat:@"+%@-%@", self.bookPhoneItem.areaCode, self.bookPhoneItem.phoneNo];
         cell.addBtn.hidden = YES;
         cell.changeBtn.hidden = NO;
-        cell.switchBGView.userInteractionEnabled = YES;
+        //cell.switchBGView.userInteractionEnabled = YES;
     } else {
         cell.phoneNumLabel.text = @"";
         cell.addBtn.hidden = NO;
         cell.changeBtn.hidden = YES;
-        cell.switchBGView.userInteractionEnabled = NO;
+        //cell.switchBGView.userInteractionEnabled = NO;
     }
 
     return result;
@@ -350,6 +392,12 @@
         cell.textLabel.textColor = COLOR_WITH_16BAND_RGB(0x3c3c3c);
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
         cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        
+        if (row == 1) {
+            UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(10, 0, screenSize.width - 20, 0.5)];
+            lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
+            [cell addSubview:lineView];
+        }
     }
     if (isDayTime) {
         cell.textLabel.text = row == 0 ? @"Date" : @"Time";
@@ -426,7 +474,8 @@
 
         NSArray *array = [self.dayTimeArray[self.selectRow] objectForKey:@"time"];
         NSString *times = [array objectAtIndex:row];
-        return [[times componentsSeparatedByString:@"&"] firstObject];
+        times = [[times componentsSeparatedByString:@"&"] firstObject];
+        return [times stringByReplacingOccurrencesOfString:@"-" withString:@" "];
     }
     return @"";
 }
@@ -440,13 +489,13 @@
 
         NSString *times = [[self.dayTimeArray[row] objectForKey:@"time"] objectAtIndex:0];
         NSArray *timeData = [times componentsSeparatedByString:@"&"];
-        self.timeStr = [timeData firstObject];
+        self.timeStr = [[timeData firstObject] stringByReplacingOccurrencesOfString:@"-" withString:@" "];
         self.timeId = [[[timeData lastObject] componentsSeparatedByString:@"-"] firstObject];
         self.bookTime = [[[[timeData lastObject] componentsSeparatedByString:@"-"] lastObject] integerValue];
     } else {
         NSString *times = [self.dayTimeArray[self.selectRow] objectForKey:@"time"][row];
         NSArray *timeData = [times componentsSeparatedByString:@"&"];
-        self.timeStr = [timeData firstObject];
+        self.timeStr = [[timeData firstObject] stringByReplacingOccurrencesOfString:@"-" withString:@" "];
         self.timeId = [[[timeData lastObject] componentsSeparatedByString:@"-"] firstObject];
         self.bookTime = [[[[timeData lastObject] componentsSeparatedByString:@"-"] lastObject] integerValue];
     }
@@ -465,7 +514,8 @@
         //只有可预约的时间段才插入数组
         if (obj.status == BOOKTIMESTATUS_BOOKING) {
             NSDateFormatter *stampFormatter = [[NSDateFormatter alloc] init];
-            [stampFormatter setDateFormat:@"MMM-dd HH:mm"];
+            stampFormatter.locale=[[NSLocale alloc]initWithLocaleIdentifier:@"en_US"];
+            [stampFormatter setDateFormat:@"MMM-dd h:mm-a"];
             NSDate *timeDate = [NSDate dateWithTimeIntervalSince1970:obj.time];
             NSString *timeStr = [stampFormatter stringFromDate:timeDate];
             //拼接时间和时间ID
@@ -477,7 +527,11 @@
             [dayArary addObject:dayStr];
         }
     }
-
+    
+    if (dayArary.count == 0) {
+        return;
+    }
+    
     NSMutableArray *dateArray = [NSMutableArray arrayWithArray:timeArray];
 
     NSMutableArray *times = [@[] mutableCopy];
@@ -495,7 +549,8 @@
 
             if ([string isEqualToString:jstring]) {
 
-                [tempArray addObject:[[dateArray[j] componentsSeparatedByString:@" "] lastObject]];
+                NSString * times = [[dateArray[j] componentsSeparatedByString:@" "] lastObject];
+                [tempArray addObject:times];
 
                 [dateArray removeObjectAtIndex:j];
                 j -= 1;
@@ -518,12 +573,18 @@
                                @"time" : [times objectAtIndex:i] };
         [self.dayTimeArray addObject:dic];
     }
+    
+    NSArray * dataTimes = [self.dayTimeArray copy];
+    if (self.dayTimeArray.count > 3) {
+        dataTimes = [dataTimes subarrayWithRange:NSMakeRange(0, 3)];
+        self.dayTimeArray = [NSMutableArray arrayWithArray:dataTimes];
+    }
 
     self.dayStr = [[self.dayTimeArray objectAtIndex:0] objectForKey:@"day"];
 
     NSArray *timesArray = [[self.dayTimeArray objectAtIndex:0] objectForKey:@"time"];
     NSArray *timeData = [[timesArray objectAtIndex:0] componentsSeparatedByString:@"&"];
-    self.timeStr = [timeData firstObject];
+    self.timeStr = [[timeData firstObject] stringByReplacingOccurrencesOfString:@"-" withString:@" "];
     self.timeId = [[[timeData lastObject] componentsSeparatedByString:@"-"] firstObject];
     self.bookTime = [[[[timeData lastObject] componentsSeparatedByString:@"-"] lastObject] integerValue];
 }
@@ -543,6 +604,13 @@
 #pragma mark 手机是否发信息回调
 - (void)addPhoneNumCellSwitchOn:(BOOL)isOn {
     self.needSms = isOn;
+    
+    if (self.bookPhoneItem.phoneNo.length > 0) {
+        
+    } else {
+        
+        [self showDialog: NSLocalizedStringFromSelf(@"Add_First_Mobile")];
+    }
 
     [self.tableView reloadData];
 }

@@ -12,31 +12,31 @@
 #include <string>
 #include"ScheduleRoomItem.h"
 #include"PrivateInviteItem.h"
+#include"LSLoginRoomItem.h"
 using namespace std;
 
 #include <json/json/json.h>
 
 #define NOTICE_PARAM                    "notice"
 #define ROOMLIST_PARAM                  "roomlist"
-#define ROOMID_PARAM                    "roomid"
 #define INVITELIST_PARAM                "invitelist"
 #define SCHEDULEROOMLIST_PARAM          "schedule_roomlist"
-
-typedef list<string> RoomList;
-
+typedef list<LSLoginRoomItem> LSLoginRoomList;
+typedef list<ScheduleRoomItem> ScheduleRoomList;
 class LoginReturnItem {
 public:
     bool Parse(const Json::Value& root) {
         bool result = false;
         if (root.isObject()) {
-            /* anchorImg */
+            /* roomList */
             if (root[NOTICE_PARAM].isObject()) {
                 Json::Value dataJson = root[NOTICE_PARAM];
                 if (dataJson[ROOMLIST_PARAM].isArray()) {
                     for (int i = 0; i < dataJson[ROOMLIST_PARAM].size(); i++) {
                         Json::Value element = dataJson[ROOMLIST_PARAM].get(i, Json::Value::null);
-                        if (element[ROOMID_PARAM].isString()) {
-                            roomList.push_back(element[ROOMID_PARAM].asString());
+                        LSLoginRoomItem item;
+                        if (item.Parse(element)) {
+                            roomList.push_back(item);
                         }
                     }
                 }
@@ -77,13 +77,13 @@ public:
      * inviteList               本人邀请中有效的立即私密邀请
      * scheduleRoomList		    预约且未进入过直播
      */
-    RoomList                roomList;
+    LSLoginRoomList         roomList;
     InviteList              inviteList;
     ScheduleRoomList        scheduleRoomList;
     
 };
 
-typedef list<ScheduleRoomItem> ScheduleRoomList;
+
 
 
 #endif /* LOGINRETURNITEM_H_*/

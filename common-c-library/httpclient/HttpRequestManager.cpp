@@ -26,7 +26,7 @@ HttpRequestManager::~HttpRequestManager() {
 }
 
 void HttpRequestManager::SetWebSite(string website) {
-	FileLog("httprequest", "HttpRequestManager::SetWebSite( website : %s )", website.c_str());
+	FileLog(LIVESHOW_HTTP_LOG, "HttpRequestManager::SetWebSite( website : %s )", website.c_str());
 	mWebSite = website;
 }
 
@@ -36,7 +36,7 @@ void HttpRequestManager::SetVersionCode(string versionKey, string versionCode) {
 }
 
 void HttpRequestManager::SetAuthorization(string user, string password) {
-	FileLog("httprequest", "HttpRequestManager::SetAuthorization( user : %s, password : %s )",
+	FileLog(LIVESHOW_HTTP_LOG, "HttpRequestManager::SetAuthorization( user : %s, password : %s )",
 			user.c_str(), password.c_str());
 	mUser = user;
 	mPassword = password;
@@ -69,7 +69,7 @@ const HttpRequest* HttpRequestManager::StartRequest(
 
         if( requestId != (long long)INVALID_REQUEST ) {
             // 发起请求成功
-            FileLog("httprequest",
+            FileLog(LIVESHOW_HTTP_LOG,
                     "HttpRequestManager::StartRequest( "
                     "[Success], "
                     "request : %p, "
@@ -92,7 +92,7 @@ const HttpRequest* HttpRequestManager::StartRequest(
             
         } else {
             // 发起请求失败
-            FileLog("httprequest",
+            FileLog(LIVESHOW_HTTP_LOG,
                     "HttpRequestManager::StartRequest( "
                     "[Fail], "
                     "request : %p, "
@@ -117,7 +117,7 @@ const HttpRequest* HttpRequestManager::StartRequest(
 }
 
 void HttpRequestManager::StopRequest(const HttpRequest* request) {
-    FileLog("httprequest", "HttpRequestManager::StopRequest( "
+    FileLog(LIVESHOW_HTTP_LOG, "HttpRequestManager::StopRequest( "
             "request : %p "
             ")",
             request
@@ -133,7 +133,7 @@ void HttpRequestManager::StopRequest(const HttpRequest* request) {
 }
 
 void HttpRequestManager::StopAllRequest(bool bWait) {
-	FileLog("httprequest", "HttpRequestManager::StopAllRequest( "
+	FileLog(LIVESHOW_HTTP_LOG, "HttpRequestManager::StopAllRequest( "
             "bWait : %s "
             ")",
             bWait?"true":"false"
@@ -165,7 +165,7 @@ void HttpRequestManager::StopAllRequest(bool bWait) {
 }
 
 void HttpRequestManager::OnFinish(HttpRequest* request, bool bFlag, const char* buf, int size) {
-	FileLog("httprequest",
+	FileLog(LIVESHOW_HTTP_LOG,
             "HttpRequestManager::OnFinish( "
 			"request : %p, "
             "bFlag : %s, "
@@ -177,6 +177,7 @@ void HttpRequestManager::OnFinish(HttpRequest* request, bool bFlag, const char* 
 			);
 
 	mRequestMutex.lock();
+
     
     // 回调
     IHttpRequestManagerCallbackMap::iterator itr = mIHttpRequestManagerCallbackMap.find(request);
@@ -197,6 +198,7 @@ void HttpRequestManager::OnFinish(HttpRequest* request, bool bFlag, const char* 
 }
 
 void HttpRequestManager::OnReceiveBody(HttpRequest* request, const char* buf, int size) {
+
 	mRequestMutex.lock();
 
     IHttpRequestManagerCallbackMap::iterator itr = mIHttpRequestManagerCallbackMap.find(request);
@@ -205,4 +207,5 @@ void HttpRequestManager::OnReceiveBody(HttpRequest* request, const char* buf, in
     }
 	
 	mRequestMutex.unlock();
+
 }

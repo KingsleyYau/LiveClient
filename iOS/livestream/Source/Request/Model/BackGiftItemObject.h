@@ -12,13 +12,15 @@
  * giftId                 礼物ID
  * num                    礼物数量
  * grantedDate            获取时间（1970年起的秒数）
- * expDate		         过期时间（1970年起的秒数）
+ * startValidDate         有效开始时间（1970年起的秒数）
+ * expDate		          过期时间（1970年起的秒数）
  * read                   已读状态（0:未读 1:已读）
  */
 @interface BackGiftItemObject : NSObject
 @property (nonatomic, copy) NSString *giftId;
 @property (nonatomic, assign) int num;
 @property (nonatomic, assign) NSInteger grantedDate;
+@property (nonatomic, assign) NSInteger startValidDate;
 @property (nonatomic, assign) NSInteger expDate;
 @property (nonatomic, assign) BOOL read;
 

@@ -14,6 +14,7 @@
         self.start = 0;
         self.step = 0;
         self.hasWatch = NO;
+        self.isForTest = NO;
     }
     
     return self;
@@ -26,7 +27,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getAnchorList:self.start step:self.step hasWatch:self.hasWatch finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> * _Nullable array)  {
+        NSInteger request = [self.manager getAnchorList:self.start step:self.step hasWatch:self.hasWatch isForTest:self.isForTest finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> * _Nullable array)  {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理

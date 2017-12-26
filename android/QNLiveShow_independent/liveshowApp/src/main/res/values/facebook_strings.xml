@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--facebook-->
+    <string name="facebook_app_id">145949329397789</string>
+    <string name="fb_login_protocol_scheme">fb145949329397789</string>
+    <string name="fbControlAppName">QNLiveShow_independent</string>
+
+</resources>

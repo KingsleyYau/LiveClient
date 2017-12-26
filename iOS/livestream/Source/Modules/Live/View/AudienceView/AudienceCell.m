@@ -38,6 +38,7 @@
     }
     self.headImageView.layer.masksToBounds = YES;
     
+    [self.imageLoader stop];
     [self.imageLoader loadImageWithImageView:self.headImageView options:0 imageUrl:audienModel.photoUrl placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"]];
 }
 

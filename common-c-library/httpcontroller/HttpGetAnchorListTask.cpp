@@ -14,6 +14,7 @@ HttpGetAnchorListTask::HttpGetAnchorListTask() {
 	mPath = LIVEROOM_GETANCHORLIST;
     mStart = 0;
     mStep = 0;
+    mIsForTest = false;
 }
 
 HttpGetAnchorListTask::~HttpGetAnchorListTask() {
@@ -27,7 +28,8 @@ void HttpGetAnchorListTask::SetCallback(IRequestGetAnchorListCallback* callback)
 void HttpGetAnchorListTask::SetParam(
                                       int start,
                                       int step,
-                                      bool hasWatch
+                                      bool hasWatch,
+                                      bool isForTest
                                       ) {
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
@@ -46,18 +48,27 @@ void HttpGetAnchorListTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_HOT_HASWATCH, temp);
     mHasWatch = hasWatch;
     
+    // isForTest为零不传参数
+    if (isForTest == true) {
+        snprintf(temp, sizeof(temp), "%d", isForTest ? 1 : 0);
+        mHttpEntiy.AddContent(LIVEROOM_HOT_ISFORTEST, temp);
+        mIsForTest = isForTest;
+    }
     
-    FileLog("httpcontroller",
+    
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetAnchorListTask::SetParam( "
             "task : %p, "
             "start : %d, "
             "step : %d, "
             "hasWatch:%d,"
+            "isForTest:%d,"
             ")",
             this,
             start,
             step,
-            hasWatch
+            hasWatch,
+            isForTest
             );
 }
 
@@ -70,7 +81,7 @@ int HttpGetAnchorListTask::GetStep() {
 }
 
 bool HttpGetAnchorListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetAnchorListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -82,7 +93,7 @@ bool HttpGetAnchorListTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetAnchorListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetAnchorListTask::ParseData( buf : %s )", buf);
     }
     
 

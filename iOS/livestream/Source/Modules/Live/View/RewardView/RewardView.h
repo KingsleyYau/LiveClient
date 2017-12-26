@@ -29,6 +29,12 @@
 
 - (void)setupTimeAndCredit:(IMRebateItem *)item;
 
+- (void)updataCredit:(double)credit;
+
+- (void)updataCurTime:(int)curTime;
+
 - (IBAction)closeView:(id)sender;
+
+- (void)stopTime;
 
 @end

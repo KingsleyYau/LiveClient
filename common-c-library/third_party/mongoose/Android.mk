@@ -12,6 +12,8 @@ LOCAL_MODULE := mongoose
 
 LOCAL_MODULE_FILENAME := libmongoose
 
+LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)/openssl/include
+
 LOCAL_CPPFLAGS  := -std=c++11
 
 REAL_PATH := $(realpath $(LOCAL_PATH))

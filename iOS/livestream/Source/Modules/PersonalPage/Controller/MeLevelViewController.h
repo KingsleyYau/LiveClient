@@ -8,6 +8,7 @@
 
 #import "LSListViewController.h"
 
+#import "LSGoogleAnalyticsViewController.h"
 @interface MeLevelViewController : LSListViewController
 
 @end

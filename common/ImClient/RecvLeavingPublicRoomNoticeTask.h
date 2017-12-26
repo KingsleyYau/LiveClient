@@ -45,8 +45,7 @@ private:
 	SEQ_T           m_seq;		// seq
     
     string          m_roomId;      // 直播间ID
-
-
+    int             m_leftSeconds; // 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述
     

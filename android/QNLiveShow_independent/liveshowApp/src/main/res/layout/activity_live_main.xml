@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPagerContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/actionbar_height"
+        />
+    
+    <include
+        android:id="@+id/includeTitle"
+        layout="@layout/include_main_title"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"/>
+
+</RelativeLayout>

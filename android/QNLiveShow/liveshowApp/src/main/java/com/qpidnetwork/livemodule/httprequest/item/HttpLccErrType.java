@@ -45,5 +45,9 @@ public enum HttpLccErrType {
     HTTP_LCC_ERR_BIND_PHONE, 				// 手机号码已绑定(10064)
     HTTP_LCC_ERR_RETRY_PHONE, 				// 请稍后再重试(10065)
     HTTP_LCC_ERR_MORE_TWENTY_PHONE, 		// 60分钟内验证超过20次，请24小时后再试(10066)
-    HTTP_LCC_ERR_UPDATE_PHONE_FAIL 			// 更新失败(10067)
+    HTTP_LCC_ERR_UPDATE_PHONE_FAIL, 		// 更新失败(10067)
+    HTTP_LCC_ERR_ANCHOR_OFFLIVE,			// 主播不在线，不能操作(10059)
+    HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING,    // 观众已同意预约(10072)
+    HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING,    // 预约邀请已超时（当观众拒绝时, 10073）
+    HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING      // 预约邀请已超时（当观众同意时, 10078）
 }

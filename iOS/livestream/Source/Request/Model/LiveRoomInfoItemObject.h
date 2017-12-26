@@ -39,6 +39,8 @@
 //主播类型（1:白银 2:黄金）
 @property (nonatomic, assign) AnchorLevelType anchorType;
 
+@property (nonatomic, assign) int loveLevel;
+@property (nonatomic, assign) NSInteger addDate;
 // - (void)SetInterestWithIndex:(InterestType)type index:(int)index;
 
 @end

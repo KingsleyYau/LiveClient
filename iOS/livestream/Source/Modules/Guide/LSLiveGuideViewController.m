@@ -8,9 +8,15 @@
 
 #import "LSLiveGuideViewController.h"
 #import "LiveModule.h"
+#import "LSLoginManager.h"
+#import "LSConfigManager.h"
+#import "LiveWebViewController.h"
 
 
-@interface LSLiveGuideViewController ()<UIScrollViewDelegate>
+
+@interface LSLiveGuideViewController ()<UIScrollViewDelegate,UITextViewDelegate>
+@property (weak, nonatomic) IBOutlet UITextView *tipInfo;
+
 
 @end
 
@@ -19,35 +25,71 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+  
+    self.tipInfo.delegate = self;
+    self.tipInfo.editable = NO;
+    self.tipInfo.dataDetectorTypes = UIDataDetectorTypeLink;
+    [self.tipInfo textContainer].lineBreakMode = NSLineBreakByWordWrapping;
+    self.tipInfo.delaysContentTouches = YES;
+    self.tipInfo.textColor = [UIColor whiteColor];
+    self.tipInfo.hidden = YES;
+   
+    NSString *tips = NSLocalizedString(@"POLICY",@"POLICY");
+    NSString *linkTips = NSLocalizedString(@"LINK_POLICY",@"LINK_POLICY");
     
-    
-    switch (self.guideType) {
-        case 1:{
-            self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_Fee",@"LiveGuide_Fee_1",@"LiveGuide_Fee_2",@"LiveGuide_All_4", nil];
-        }break;
-        case 2:{
-             self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_All",@"LiveGuide_All_1",@"LiveGuide_All_2",@"LiveGuide_All_3",@"LiveGuide_All_4", nil];
-        }break;
+    self.tipInfo.attributedText = [self AllString:tips ChangeString:linkTips ChangeStrColor:[UIColor whiteColor] StrStyle:NSUnderlineStyleSingle font:[UIFont systemFontOfSize:12]];
+    self.tipInfo.linkTextAttributes = @{NSForegroundColorAttributeName :[UIColor whiteColor]};
+    switch ([LSLoginManager manager].loginItem.userType) {
+        case USERTYPEA1:{
+            if (self.listGuide) {
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_List_Fee",@"LiveGuide_List_Fee_1",@"LiveGuide_List_All_2",@"LiveGuide_List_All_3", nil];
 
+            }else {
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_Person_Fee",@"LiveGuide_Person_Fee_1",@"LiveGuide_Person_All_2",@"LiveGuide_Person_All_3", nil];
+
+            }
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLaunch"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }break;
+        case USERTYPEA2:{
+            if (self.listGuide) {
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_List_All",@"LiveGuide_List_All_1",@"LiveGuide_List_All_2",@"LiveGuide_List_All_3", nil];
+
+            }else {
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_Person_All",@"LiveGuide_Person_All_1",@"LiveGuide_Person_All_2",@"LiveGuide_Person_All_3", nil];
+
+            }
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLaunch"];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }break;
+            
             
         default:
             break;
     }
     
-
+    
     
 }
+
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-   
- 
+//      self.navigationController.navigationBarHidden = YES;
+    self.navigationController.navigationBar.hidden = YES;
+    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
 }
 
 - (void)setupContainView {
     [super setupContainView];
-
+    
     [self setupScrollView];
     
 }
@@ -55,7 +97,9 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     //testData
-     [self reloadData:YES dataArray:self.guideListArray];
+    [self reloadData:YES dataArray:self.guideListArray];
+    
+
 }
 
 
@@ -80,8 +124,12 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     int pageNum =(int)(scrollView.contentOffset.x / scrollView.frame.size.width + 0.5);
     self.pageControl.currentPage = pageNum;
-    
-
+    self.guideIndex = pageNum;
+    if (pageNum == self.pageControl.numberOfPages - 1) {
+        self.tipInfo.hidden = NO;
+    }else {
+        self.tipInfo.hidden = YES;
+    }
     
 }
 
@@ -90,18 +138,12 @@
     [scrollView setContentOffset:offsetofScrollView];
 }
 
-#pragma mark - 点击按钮事件
-- (IBAction)startAction:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-
-
-}
 
 
 
 #pragma mark - 数据逻辑
 - (void)reloadData:(BOOL)isReloadView dataArray:(NSArray *)array{
-
+    
     
     if( isReloadView ) {
         // 刷新指示器
@@ -109,7 +151,7 @@
         
         // 引导页
         self.guideScrollView.contentSize =  CGSizeMake(array.count * screenSize.width, 0);
-
+        
         if (array.count > 0) {
             for (int i = 0; i < array.count; i++) {
                 CGRect frame = CGRectMake(screenSize.width * i, 0, screenSize.width, screenSize.height);
@@ -122,11 +164,11 @@
                     [guideView addGestureRecognizer:tap];
                 }else {
                     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollToNext:)];
-                  
-                         [guideView addGestureRecognizer:tap];
-                      tap.view.tag = i + 1;
+                    
+                    [guideView addGestureRecognizer:tap];
+                    tap.view.tag = i + 1;
                 }
-                guideView.contentMode = UIViewContentModeScaleAspectFit;
+                guideView.contentMode = UIViewContentModeScaleAspectFill;
                 
                 [self.guideScrollView addSubview:guideView];
             }
@@ -137,11 +179,16 @@
 }
 
 - (void)closeGuide:(UIGestureRecognizer *)gesture {
-            LSNavigationController *nvc = (LSNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-            UIViewController* vc = [LiveModule module].moduleVC;
-     [nvc pushViewController:vc animated:YES gesture:NO];
-//    [self dismissViewControllerAnimated:NO completion:nil];
-    [self dismissViewControllerAnimated:YES completion:nil];
+//    LSNavigationController *nvc = (LSNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
+//    UIViewController* vc = [LiveModule module].moduleVC;
+////    [nvc pushViewController:vc animated:YES gesture:NO];
+//    //    [self dismissViewControllerAnimated:NO completion:nil];
+//    [self dismissViewControllerAnimated:YES completion:nil];
+    if ([self.guideDelegate respondsToSelector:@selector(lsLiveGuideViewControllerDidFinishGuide:)]) {
+        [self.guideDelegate lsLiveGuideViewControllerDidFinishGuide:self];
+    }
+    
+
     
 }
 
@@ -151,4 +198,60 @@
     CGPoint offset = CGPointMake(SCREEN_WIDTH * index, 0);
     [self.guideScrollView setContentOffset:offset animated:YES];
 }
+
+
+
+- (NSMutableAttributedString *)AllString:(NSString *)allStr ChangeString:(NSString *)changeStr ChangeStrColor:(UIColor *)changeStrColor StrStyle:(NSInteger)style font:(UIFont* )font{
+    
+    NSString *str = [NSString stringWithFormat:@"%@", allStr];
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str]; // assume string exists
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    
+    paragraphStyle.lineSpacing = 0;
+    NSRange allRange = [str rangeOfString:allStr];
+    NSRange urlRange = [str rangeOfString:changeStr];
+    [string addAttribute:NSForegroundColorAttributeName
+                   value:[UIColor whiteColor]
+                   range:allRange];
+    [string addAttribute:NSUnderlineStyleAttributeName
+                   value:@(style)
+                   range:urlRange];
+    [string addAttribute:NSLinkAttributeName
+                   value:changeStr
+                   range:urlRange];
+
+    [string addAttribute:NSForegroundColorAttributeName
+                   value:changeStrColor
+                   range:urlRange];
+
+    
+    [string addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, string.length)];
+    
+    [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
+    [string endEditing];
+    
+    
+    
+    return string;
+    
+}
+
+- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *url = [LSConfigManager manager].item.userProtocol;
+        LiveWebViewController *webViewController = [[LiveWebViewController alloc] init];
+        webViewController.url = url;
+    
+//        webViewController.url = @"https://www.baidu.com/";
+        self.navigationController.navigationBar.hidden = NO;
+        [self.navigationController pushViewController:webViewController animated:YES];
+        
+    });
+    return YES;
+}
+
+
+
 @end

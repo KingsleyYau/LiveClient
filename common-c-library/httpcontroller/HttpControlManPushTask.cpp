@@ -44,7 +44,7 @@ void HttpControlManPushTask::SetParam(
     }
 
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpControlManPushTask::SetParam( "
             "task : %p, "
             ")",
@@ -61,7 +61,7 @@ ControlType HttpControlManPushTask::GetControl() {
 }
 
 bool HttpControlManPushTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpControlManPushTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -73,7 +73,7 @@ bool HttpControlManPushTask::ParseData(const string& url, bool bFlag, const char
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpControlManPushTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpControlManPushTask::ParseData( buf : %s )", buf);
     }
     
 

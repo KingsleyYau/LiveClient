@@ -10,7 +10,7 @@
 
 #import "HotTableView.h"
 
-@interface HotViewController : LSListViewController
+@interface HotViewController : LSGoogleAnalyticsViewController
 
 @property (weak) IBOutlet HotTableView* tableView;
 

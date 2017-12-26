@@ -27,7 +27,7 @@ HttpEntiy::~HttpEntiy() {
 
 }
 void HttpEntiy::AddHeader(string key, string value) {
-//	FileLog("httpclient", "HttpEntiy::AddHeader( key : %s, value : %s )", key.c_str(), value.c_str());
+//	FileLog(LIVESHOW_HTTP_LOG, "HttpEntiy::AddHeader( key : %s, value : %s )", key.c_str(), value.c_str());
 	HttpMap::iterator itr = mHeaderMap.find(key);
 	if( itr != mHeaderMap.end() ) {
 		itr->second = value;
@@ -44,7 +44,7 @@ void HttpEntiy::SetKeepAlive(bool isKeepAlive) {
 }
 
 void HttpEntiy::SetAuthorization(string user, string password) {
-//	FileLog("httpclient", "HttpEntiy::SetAuthorization( user : %s, password : %s )", user.c_str(), password.c_str());
+//	FileLog(LIVESHOW_HTTP_LOG, "HttpEntiy::SetAuthorization( user : %s, password : %s )", user.c_str(), password.c_str());
 	if( user.length() > 0 && password.length() > 0 ) {
 		mAuthorization = user + ":" + password;
 	}
@@ -64,7 +64,7 @@ void HttpEntiy::SetDownloadTimeout(double downloadTimeout) {
 }
 
 void HttpEntiy::AddContent(string key, string value) {
-//	FileLog("httpclient", "HttpEntiy::AddContent( key : %s, value : %s )", key.c_str(), value.c_str());
+//	FileLog(LIVESHOW_HTTP_LOG, "HttpEntiy::AddContent( key : %s, value : %s )", key.c_str(), value.c_str());
 	HttpMap::iterator itr = mContentMap.find(key);
 	if( itr != mContentMap.end() ) {
 		itr->second = value;
@@ -74,7 +74,7 @@ void HttpEntiy::AddContent(string key, string value) {
 }
 
 void HttpEntiy::AddFile(string key, string fileName, string mimeType) {
-//	FileLog("httpclient", "HttpEntiy::AddFile( key : %s, fileName : %s, mimeType : %s )", key.c_str(), fileName.c_str(), mimeType.c_str());
+//	FileLog(LIVESHOW_HTTP_LOG, "HttpEntiy::AddFile( key : %s, fileName : %s, mimeType : %s )", key.c_str(), fileName.c_str(), mimeType.c_str());
 	FileMap::iterator itr = mFileMap.find(key);
 	if( itr != mFileMap.end() ) {
 		itr->second.fileName = fileName;

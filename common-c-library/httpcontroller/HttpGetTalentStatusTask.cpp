@@ -42,7 +42,7 @@ void HttpGetTalentStatusTask::SetParam(
         mTalentInviteId = talentInviteId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetTalentStatusTask::SetParam( "
             "task : %p, "
             ")",
@@ -65,7 +65,7 @@ const string& HttpGetTalentStatusTask::TalentInviteId() {
 }
 
 bool HttpGetTalentStatusTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetTalentStatusTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -77,7 +77,7 @@ bool HttpGetTalentStatusTask::ParseData(const string& url, bool bFlag, const cha
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetTalentStatusTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetTalentStatusTask::ParseData( buf : %s )", buf);
     }
     
 

@@ -14,6 +14,9 @@
 // 发布休眠
 #define PUBLISH_SLEEP_TIME 1
 
+#define VIDEO_BUFFER_COUNT 50
+#define AUDIO_BUFFER_COUNT 250
+
 namespace coollive {
 class PublishRunnable : public KRunnable {
 public:
@@ -51,7 +54,7 @@ RtmpPublisher::~RtmpPublisher() {
     }
 }
 
-bool RtmpPublisher::PublishUrl(const string& url, const string& recordAACFilePath) {
+bool RtmpPublisher::PublishUrl(const string& url) {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
@@ -67,7 +70,9 @@ bool RtmpPublisher::PublishUrl(const string& url, const string& recordAACFilePat
         Stop();
     }
     
-    bFlag = mpRtmpDump->PublishUrl(url, recordAACFilePath);
+    InitBuffer();
+    
+    bFlag = mpRtmpDump->PublishUrl(url);
     if( bFlag ) {
         // 开始播放
         mbRunning = true;
@@ -91,6 +96,27 @@ bool RtmpPublisher::PublishUrl(const string& url, const string& recordAACFilePat
                  );
     
     return bFlag;
+}
+
+void RtmpPublisher::Init() {
+    mbRunning = false;
+    
+    mCacheVideoBufferQueue.SetCacheQueueSize(VIDEO_BUFFER_COUNT);
+    mCacheAudioBufferQueue.SetCacheQueueSize(AUDIO_BUFFER_COUNT);
+    
+    mpPublishRunnable = new PublishRunnable(this);
+}
+    
+void RtmpPublisher::InitBuffer() {
+    for(int i = 0; i < VIDEO_BUFFER_COUNT; i++) {
+        VideoFrame* videoFrame = new VideoFrame();
+        mCacheVideoBufferQueue.PushBuffer(videoFrame);
+    }
+    
+    for(int i = 0; i < VIDEO_BUFFER_COUNT; i++) {
+        AudioFrame* audioFrame = new AudioFrame();
+        mCacheAudioBufferQueue.PushBuffer(audioFrame);
+    }
 }
 
 void RtmpPublisher::Stop() {
@@ -154,40 +180,39 @@ void RtmpPublisher::Stop() {
                  );
 }
 
-void RtmpPublisher::Init() {
-    mbRunning = false;
-    
-    mCacheVideoBufferQueue.SetCacheQueueSize(30);
-    mCacheAudioBufferQueue.SetCacheQueueSize(100);
-    
-    mpPublishRunnable = new PublishRunnable(this);
-}
-
 void RtmpPublisher::SendVideoFrame(char* data, int size, u_int32_t timestamp) {
     mClientMutex.lock();
     
     if( mbRunning ) {
         VideoFrame* videoFrame = (VideoFrame *)mCacheVideoBufferQueue.PopBuffer();
         if( !videoFrame ) {
-            videoFrame = new VideoFrame();
+//            videoFrame = new VideoFrame();
+//            FileLevelLog("rtmpdump",
+//                         KLog::LOG_MSG,
+//                         "RtmpPublisher::SendVideoFrame( "
+//                         "[New Video frame], "
+//                         "videoFrame : %p "
+//                         ")",
+//                         videoFrame
+//                         );
+            
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "RtmpPublisher::SendVideoFrame( "
-                         "[New Video frame], "
-                         "videoFrame : %p "
-                         ")",
-                         videoFrame
+                         "[Cache Video buffer is full, droped] "
+                         ")"
                          );
         }
         
         if( videoFrame ) {
             videoFrame->SetBuffer((const unsigned char *)data, size);
             videoFrame->mTimestamp = timestamp;
+            
+            mVideoBufferList.lock();
+            mVideoBufferList.push_back(videoFrame);
+            mVideoBufferList.unlock();
         }
-        
-        mVideoBufferList.lock();
-        mVideoBufferList.push_back(videoFrame);
-        mVideoBufferList.unlock();
+
     }
     
     mClientMutex.unlock();
@@ -207,14 +232,20 @@ void RtmpPublisher::SendAudioFrame(
     if( mbRunning ) {
         AudioFrame* audioFrame = (AudioFrame *)mCacheAudioBufferQueue.PopBuffer();
         if( !audioFrame ) {
-            audioFrame = new AudioFrame();
+//            audioFrame = new AudioFrame();
+//            FileLevelLog("rtmpdump",
+//                         KLog::LOG_MSG,
+//                         "RtmpPublisher::SendAudioFrame( "
+//                         "[New Audio frame], "
+//                         "audioFrame : %p "
+//                         ")",
+//                         audioFrame
+//                         );
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "RtmpPublisher::SendAudioFrame( "
-                         "[New Audio frame], "
-                         "audioFrame : %p "
-                         ")",
-                         audioFrame
+                         "[Cache Audio buffer is full, droped] "
+                         ")"
                          );
         }
         
@@ -222,11 +253,11 @@ void RtmpPublisher::SendAudioFrame(
             audioFrame->InitFrame(sound_format, sound_rate, sound_size, sound_type);
             audioFrame->SetBuffer((const unsigned char *)data, size);
             audioFrame->mTimestamp = timestamp;
+            
+            mAudioBufferList.lock();
+            mAudioBufferList.push_back(audioFrame);
+            mAudioBufferList.unlock();
         }
-        
-        mAudioBufferList.lock();
-        mAudioBufferList.push_back(audioFrame);
-        mAudioBufferList.unlock();
     }
     
     mClientMutex.unlock();
@@ -256,7 +287,7 @@ void RtmpPublisher::PublishHandle() {
         // 发送视频帧
         if( videoFrame ) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "RtmpPublisher::PublishHandle( "
                          "[Send Video Frame], "
                          "frame : %p, "
@@ -296,7 +327,7 @@ void RtmpPublisher::PublishHandle() {
         // 发送音频帧
         if( audioFrame ) {
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_STAT,
                          "RtmpPublisher::PublishHandle( "
                          "[Send Audio Frame], "
                          "frame : %p, "

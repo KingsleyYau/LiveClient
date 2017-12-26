@@ -18,6 +18,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (weak, nonatomic) IBOutlet UIView *unreadView;
+@property (weak, nonatomic) IBOutlet UIImageView *vouchersBGView;
+@property (weak, nonatomic) IBOutlet UILabel *liveTypeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ladyTypeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *onlyLadyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *ladyLabel;
+@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 
 + (NSString *)cellIdentifier;
 

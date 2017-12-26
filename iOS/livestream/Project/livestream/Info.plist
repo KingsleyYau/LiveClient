@@ -28,14 +28,12 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) Camera use</string>
+	<string>This lets you take photos right from within Qdating.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) Microphone use</string>
+	<string>This lets you send Voice Messages, and record videos with sound.</string>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>audio</string>
 		<string>fetch</string>
-		<string>newsstand-content</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UIFileSharingEnabled</key>

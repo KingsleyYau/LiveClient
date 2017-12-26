@@ -11,6 +11,8 @@
 @interface Dialog : UIView
 
 @property (nonatomic, weak) IBOutlet UILabel* tipsLabel;
+@property (weak, nonatomic) IBOutlet UIButton *okButton;
+
 
 + (Dialog *)dialog;
 - (void)showDialog:(UIView *)view  actionBlock:(void(^)())actionBlock;

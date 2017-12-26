@@ -35,16 +35,17 @@ public class LiveApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        //FileCacheManager 单例初始化
+        FileCacheManager.newInstance(this);
+        // Jni错误捕捉(需要咸鱼httprequest库加载，httprequest库对CrashHandler库有依赖)
+        CrashHandlerJni.SetCrashLogDirectory(FileCacheManager.getInstance().getCrashInfoPath());
+
         //Application初始化
          LiveService.newInstance(this);
 
         //Java Crash日志管理
         CrashHandler.newInstance(this);
         CrashHandler.getInstance().SaveAppVersionFile();
-
-        // Jni错误捕捉
-        CrashHandlerJni.SetCrashLogDirectory(FileCacheManager.getInstance().getCrashInfoPath());
-
     }
 
     private void setStrictMode() {

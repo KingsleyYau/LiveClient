@@ -13,7 +13,7 @@
 @protocol DriveViewDelegate <NSObject>
 @optional
 
-- (void)canPlayDirve:(DriveView *)driveView audienceModel:(AudienceModel *)model;
+- (void)canPlayDirve:(DriveView *)driveView audienceModel:(AudienceModel *)model ifError:(NSError *)error;
 
 @end
 

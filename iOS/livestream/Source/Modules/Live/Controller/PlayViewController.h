@@ -30,6 +30,7 @@
 @optional
 - (void)onGetLiveRoomGiftList:(NSArray<LiveRoomGiftModel *> *)array;
 - (void)onReEnterRoom:(PlayViewController *)vc;
+- (void)pushToAddCredit:(PlayViewController *)vc;
 @end
 
 @interface PlayViewController : LSGoogleAnalyticsViewController
@@ -52,9 +53,6 @@
 
 /** 礼物按钮 **/
 @property (nonatomic, weak) IBOutlet UIButton *giftBtn;
-
-/** 礼物按钮约束 **/
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *giftBtnWidth;
 
 @property (weak, nonatomic) IBOutlet LiveSendBarView *liveSendBarView;
 
@@ -104,21 +102,11 @@
 /**  选择礼物承载界面 **/
 @property (weak, nonatomic) IBOutlet UIView *chooseGiftListView;
 
-@property (weak, nonatomic) IBOutlet UIImageView *bottomView;
-
-@property (weak, nonatomic) IBOutlet UIImageView *bottomPeopleView;
-
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chooseGiftListViewHeight;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chooseGiftListViewWidth;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chooseGiftListViewTop;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewHeight;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewWidth;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *talentOnDemandViewTop;
 
 // balanceView
 @property (nonatomic, strong) CreditView *creditView;

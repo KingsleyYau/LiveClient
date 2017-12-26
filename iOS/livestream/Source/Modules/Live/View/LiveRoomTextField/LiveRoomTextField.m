@@ -42,8 +42,9 @@
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
         LSChatTextAttachment *attachment = attrs[@"NSAttachment"];
         if( attachment ) {
-            [mtFullText appendString:attachment.text];
-            
+            if (attachment.text) {
+                [mtFullText appendString:attachment.text];
+            }
         } else {
             NSAttributedString *str = [self.attributedText attributedSubstringFromRange:range];
             [mtFullText appendString:str.string];

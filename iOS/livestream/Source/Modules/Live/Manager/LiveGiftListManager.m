@@ -60,15 +60,17 @@
             NSLog(@"LiveGiftListManager::requestTheLiveGiftListWithRoomID( [发送获取直播间可发送礼物列表请求结果], roomId : %@, success : %s, errnum : %ld, errmsg : %@, count : %u )", roomId, success ? "true" : "false", (long)errnum, errmsg, (unsigned int)array.count);
 
             if (success) {
+                // 成功清除旧数据
+                [self.liveGiftArray removeAllObjects];
+                [self.showGiftArray removeAllObjects];
+                
                 if (array && array.count != 0) {
-                    [self.liveGiftArray removeAllObjects];
-                    [self.showGiftArray removeAllObjects];
-
                     for (int i = 0; i < array.count; i++) {
                         GiftWithIdItemObject *item = array[i];
                         LiveRoomGiftModel *model = [[LiveRoomGiftModel alloc] init];
                         model.giftId = item.giftId;
                         model.isShow = item.isShow;
+                        model.isPromo = item.isPromo;
                         [self.liveGiftArray addObject:model];
                         if (model.isShow) {
                             [self.showGiftArray addObject:model];

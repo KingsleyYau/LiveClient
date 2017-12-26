@@ -11,4 +11,5 @@
 
 @interface MyBackpackViewController : LSGoogleAnalyticsViewController
 
+- (void)getunreadCount;
 @end

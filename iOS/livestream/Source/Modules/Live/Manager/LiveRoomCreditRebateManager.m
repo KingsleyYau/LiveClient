@@ -16,7 +16,7 @@
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 @property (nonatomic, strong) LSLoginManager *loginManager;
-
+@property (nonatomic, strong) NSMutableArray *delegates;
 @end
 
 @implementation LiveRoomCreditRebateManager
@@ -45,6 +45,7 @@
         self.imRebateItem.curTime = 0;
         self.imRebateItem.preCredit = 0.0;
         self.imRebateItem.preTime = 0;
+        self.delegates = [NSMutableArray array];
     }
 
     return self;
@@ -60,13 +61,57 @@
     });
 }
 
+- (BOOL)addDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate {
+    BOOL result = NO;
+    
+    NSLog(@"liveRoomCreditRebateManager::addDelegate( delegate : %@ )", delegate);
+    
+    @synchronized(self.delegates) {
+        // 查找是否已存在
+        for (NSValue *value in self.delegates) {
+            id<LiveRoomCreditRebateManagerDelegate> item = (id<LiveRoomCreditRebateManagerDelegate>)value.nonretainedObjectValue;
+            if (item == delegate) {
+                result = YES;
+                break;
+            }
+        }
+        
+        // 未存在则添加
+        if (!result) {
+            [self.delegates addObject:[NSValue valueWithNonretainedObject:delegate]];
+            result = YES;
+        }
+    }
+    
+    return result;
+}
+
+- (BOOL)removeDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate {
+    BOOL result = NO;
+    
+    NSLog(@"liveRoomCreditRebateManager::removeDelegate( delegate : %@ )", delegate);
+    
+    @synchronized(self.delegates) {
+        for (NSValue *value in self.delegates) {
+            id<LiveRoomCreditRebateManagerDelegate> item = (id<LiveRoomCreditRebateManagerDelegate>)value.nonretainedObjectValue;
+            if (item == delegate) {
+                [self.delegates removeObject:value];
+                result = YES;
+                break;
+            }
+        }
+    }
+    
+    return result;
+}
+
 #pragma mark - 请求账号余额
 - (void)getLeftCreditRequest {
 
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, double credit) {
 
-        NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
+        NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
 
         dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -81,8 +126,15 @@
 
 // 设置信用点
 - (void)setCredit:(double)credit {
+    NSLog(@"liveRoomCreditRebateManager::setCredit credit:%@",@(credit));
     @synchronized(self) {
         self.mCredit = credit;
+        for (NSValue *value in self.delegates) {
+            id<LiveRoomCreditRebateManagerDelegate> delegate = (id<LiveRoomCreditRebateManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(updataCredit:)]) {
+                [delegate updataCredit:credit];
+            }
+        }
     }
 }
 

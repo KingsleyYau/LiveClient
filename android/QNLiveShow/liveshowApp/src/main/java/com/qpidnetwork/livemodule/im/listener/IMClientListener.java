@@ -2,6 +2,8 @@ package com.qpidnetwork.livemodule.im.listener;
 
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 
+import java.nio.charset.Charset;
+
 
 /**
  * IM Client事件监听器
@@ -66,6 +68,8 @@ public abstract class IMClientListener {
 		LCC_ERR_NOTCAN_CANCEL_INVITATION, 	// 取消立即私密邀请失败 状态不是带确认 /*important*/(10036)
 		LCC_ERR_NO_FOUND_CRONJOB, 			// cronjob 里找不到对应的定时器函数(10040)
 		LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/(10052)
+		LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间(10088)
+
 	}
 
 	//邀请答复类型
@@ -87,6 +91,12 @@ public abstract class IMClientListener {
 		Unknown,
 		Accepted,
 		Rejested
+	}
+
+	// 直播间公告类型
+	public enum IMSystemType{
+		common,			// 普通
+		warn			// 警告
 	}
 	
 	/**
@@ -157,7 +167,16 @@ public abstract class IMClientListener {
 	private LCC_ERR_TYPE intToErrType(int errIndex){
 		return LCC_ERR_TYPE.values()[errIndex];
 	}
-	
+
+	/**
+	 * 直播间公告类型
+	 * @param IMSystemType
+	 * @return
+	 */
+	private IMSystemType intToIMSystemType(int systemType){
+		return IMSystemType.values()[systemType];
+	}
+
 	/**
 	 * 2.1.登录回调
 	 * @param errType
@@ -311,6 +330,18 @@ public abstract class IMClientListener {
 	public void OnCancelImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String roomId){
 		OnCancelImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, roomId);
 	}
+
+	/**
+	 * 7.8.观众端是否显示主播立即私密邀请
+	 * @param reqId
+	 * @param success
+	 * @param errType
+	 * @param errMsg
+	 */
+	public abstract void OnInstantInviteUserReport(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
+	public void OnInstantInviteUserReport(int reqId, boolean success, int errType, String errMsg){
+		OnInstantInviteUserReport(reqId, success, intToErrType(errType), errMsg);
+	}
 	
 	/**
 	 * 8.1.发送直播间才艺点播邀请回调
@@ -354,8 +385,9 @@ public abstract class IMClientListener {
 	 * @param nickName
 	 * @param photoUrl
 	 * @param fansNum
+	 * @param honorImg
 	 */
-	public abstract void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum);
+	public abstract void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum, String honorImg);
 	
 	/**
 	 * 3.5.接收观众退出直播间通知
@@ -380,9 +412,9 @@ public abstract class IMClientListener {
 	 * @param err
 	 * @param errMsg
 	 */
-	public abstract void OnRecvLeavingPublicRoomNotice(String roomId, LCC_ERR_TYPE err, String errMsg);
-	public void OnRecvLeavingPublicRoomNotice(String roomId, int errType, String errMsg){
-		OnRecvLeavingPublicRoomNotice(roomId, intToErrType(errType), errMsg);
+	public abstract void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg);
+	public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, int errType, String errMsg){
+		OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, intToErrType(errType), errMsg);
 	}
 	
 	/**
@@ -441,14 +473,23 @@ public abstract class IMClientListener {
 	 * @param honorUrl
 	 */
 	public abstract void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, String msg, String honorUrl);
+	public void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, byte[] msg, String honorUrl){
+		//解决emoji6.0以下jni使用NewStringUTF越界读（或者crash问题）
+		OnRecvRoomMsg(roomId, level, fromId, nickName, new String(msg, Charset.forName("UTF-8")), honorUrl);
+	}
 	
 	/**
 	 * 4.3.接收直播间公告消息
 	 * @param roomId
 	 * @param message
 	 * @param link
+	 * @param type 公告类型（0：普通，1：警告）
 	 */
-	public abstract void OnRecvSendSystemNotice(String roomId, String message, String link);
+
+	public abstract void OnRecvSendSystemNotice(String roomId, String message, String link, IMSystemType type);
+	public void OnRecvSendSystemNotice(String roomId, String message, String link, int type){
+		OnRecvSendSystemNotice(roomId, message, link, intToIMSystemType(type));
+	}
 	
 	/**
 	 * 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
@@ -476,6 +517,10 @@ public abstract class IMClientListener {
 	 * @param honorUrl
 	 */
 	public abstract void OnRecvRoomToastNotice(String roomId, String fromId, String nickName, String msg, String honorUrl);
+	public void OnRecvRoomToastNotice(String roomId, String fromId, String nickName, byte[] msg, String honorUrl){
+		//解决emoji6.0以下jni使用NewStringUTF越界读（或者crash问题）
+		OnRecvRoomToastNotice(roomId, fromId, nickName, new String(msg, Charset.forName("UTF-8")), honorUrl);
+	}
 	
 	/**
 	 * 7.3.接收立即私密邀请回复通知
@@ -560,14 +605,15 @@ public abstract class IMClientListener {
 	public abstract void OnRecvLoveLevelUpNotice(int lovelevel);
 	
 	/**
-	 * 9.3.观众勋章升级通知
+	 * 9.3.背包更新通知
 	 * @param item
 	 */
 	public abstract void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item);
 	
 	/**
-	 * 9.4.背包更新通知
-	 * @param item
+	 * 9.4.观众勋章升级通知
+	 * @param honorId
+	 * @param honorUrl
 	 */
 	public abstract void OnRecvGetHonorNotice(String honorId, String honorUrl);
 }

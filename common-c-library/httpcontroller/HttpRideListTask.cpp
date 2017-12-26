@@ -28,7 +28,7 @@ void HttpRideListTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpRideListTask::SetParam( "
             "task : %p, "
             ")",
@@ -37,7 +37,7 @@ void HttpRideListTask::SetParam(
 }
 
 bool HttpRideListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpRideListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -49,7 +49,7 @@ bool HttpRideListTask::ParseData(const string& url, bool bFlag, const char* buf,
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpRideListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRideListTask::ParseData( buf : %s )", buf);
     }
     
 

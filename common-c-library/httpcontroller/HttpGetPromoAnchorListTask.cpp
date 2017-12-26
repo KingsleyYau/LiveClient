@@ -52,7 +52,7 @@ void HttpGetPromoAnchorListTask::SetParam(
         mUserId = userId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetPromoAnchorListTask::SetParam( "
             "task : %p, "
             ")",
@@ -65,7 +65,7 @@ int HttpGetPromoAnchorListTask::GetNumber() {
 }
 
 bool HttpGetPromoAnchorListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetPromoAnchorListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -77,7 +77,7 @@ bool HttpGetPromoAnchorListTask::ParseData(const string& url, bool bFlag, const 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetPromoAnchorListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetPromoAnchorListTask::ParseData( buf : %s )", buf);
     }
     
 

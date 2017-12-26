@@ -10,10 +10,11 @@
 #import "FollowCollectionView.h"
 #import "LSHomePageViewController.h"
 #import "FollowTableView.h"
+#import "HotTableView.h"
 
-@interface FollowingViewController : LSListViewController
+@interface FollowingViewController : LSGoogleAnalyticsViewController
 @property (weak, nonatomic) IBOutlet FollowCollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet FollowTableView *tableView;
+@property (weak, nonatomic) IBOutlet HotTableView *tableView;
 
 @property (nonatomic, weak) LSHomePageViewController* homePageVC;
 @end

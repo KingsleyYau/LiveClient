@@ -52,7 +52,7 @@ bool PngReader::Init()
 		// 打开源文件
 		m_file = fopen(m_path.c_str(), "rb");
 		if (m_file == NULL) {
-			FileLog("ImageHandler", "ConvertEmotionImage() open file fail! path:%s", m_path.c_str());
+			FileLog("ImageHandler", "PngReader::ConvertEmotionImage() open file fail! path:%s", m_path.c_str());
 			break;
 		}
 
@@ -60,21 +60,21 @@ bool PngReader::Init()
 		m_readPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		if (m_readPtr == NULL)
 		{
-			FileLog("ImageHandler", "ConvertEmotionImage() png_create_read_struct() read fail!");
+			FileLog("ImageHandler", "PngReader::ConvertEmotionImage() png_create_read_struct() read fail!");
 			break;
 		}
 
 		m_readInfoPtr = png_create_info_struct(m_readPtr);
 		if (m_readInfoPtr == NULL)
 		{
-			FileLog("ImageHandler", "ConvertEmotionImage() png_create_info_struct() read info fail!");
+			FileLog("ImageHandler", "PngReader::ConvertEmotionImage() png_create_info_struct() read info fail!");
 			break;
 		}
 
 		m_readEndInfoPtr = png_create_info_struct(m_readPtr);
 		if (m_readEndInfoPtr == NULL)
 		{
-			FileLog("ImageHandler", "ConvertEmotionImage() png_create_info_struct() read end info fail!");
+			FileLog("ImageHandler", "PngReader::ConvertEmotionImage() png_create_info_struct() read end info fail!");
 			break;
 		}
 

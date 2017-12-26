@@ -7,6 +7,13 @@
 //
 
 #import "LSViewController.h"
+@class LSListViewController;
+@protocol LSListViewControllerDelegate <NSObject>
+@optional
+
+- (void)lsListViewController:(LSListViewController *)listView didClick:(UIButton *)sender;
+
+@end
 
 @interface LSListViewController : LSViewController
 
@@ -24,6 +31,8 @@
 @property (nonatomic, copy) NSString *failTipsText;
 /** 错误按钮文字 */
 @property (nonatomic, copy) NSString *failBtnText;
+/** 代理 */
+@property (nonatomic, weak) id<LSListViewControllerDelegate> delegate;
 @property (nonatomic, assign) SEL delegateSelect;
 - (void)reloadFailViewContent;
 

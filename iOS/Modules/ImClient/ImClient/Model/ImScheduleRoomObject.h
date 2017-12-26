@@ -14,14 +14,20 @@
 
 /**
  * 立即私密邀请结构体
+ * anchorId                 主播ID
+ * nickName                 主播昵称
  * anchorImg                主播头像url
  * anchorCoverImg           主播封面图url
- * anchorCoverImg		    最晚可进入的时间（1970年起的秒数）
+ * anchorCoverImg            最晚可进入的时间（1970年起的秒数）
+ * leftSeconds              倒数时间（秒)
  * roomId                   直播间ID
  */
+@property (nonatomic, copy) NSString *_Nonnull anchorId;
+@property (nonatomic, copy) NSString *_Nonnull nickName;
 @property (nonatomic, copy) NSString *_Nonnull anchorImg;
 @property (nonatomic, copy) NSString *_Nonnull anchorCoverImg;
 @property (nonatomic, assign) NSInteger canEnterTime;
+@property (nonatomic, assign) int leftSeconds;
 @property (nonatomic, copy) NSString *_Nonnull roomId;
 
 @end

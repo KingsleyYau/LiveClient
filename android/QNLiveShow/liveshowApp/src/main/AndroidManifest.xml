@@ -12,15 +12,23 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- 独立版 -->
+    <!--<application-->
+        <!--android:name=".liveshow.LiveApplication"-->
+        <!--android:allowBackup="true"-->
+        <!--android:icon="@mipmap/ic_launcher"-->
+        <!--android:label="@string/app_name"-->
+        <!--android:roundIcon="@mipmap/ic_launcher_round"-->
+        <!--android:supportsRtl="true"-->
+        <!--android:theme="@style/CustomTheme.App">-->
+
+    <!-- 嵌入版 -->
     <application
-        android:name=".liveshow.LiveApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/CustomTheme.App">
+        android:supportsRtl="true">
 
         <!-- 文件下载器进程 -->
         <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
@@ -31,11 +39,13 @@
         <activity
             android:name=".liveshow.welcome.PeacockActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- 独立版 -->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".liveshow.home.MainFragmentActivity"
@@ -52,9 +62,12 @@
         <activity
             android:name=".liveshow.personal.PersonalCenterActivity"
             android:screenOrientation="portrait" />
+
+        <!--android:hardwareAccelerated="true"--> <!-- add by Jagger 视频有问题可加上试试 -->
         <activity
             android:name=".liveshow.WebViewActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"/>
         <activity
             android:name=".liveshow.personal.mypackage.MyPackageActivity"
             android:screenOrientation="portrait" />
@@ -65,9 +78,7 @@
         <activity
             android:name=".liveshow.liveroom.LiveRoomNormalErrorActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
-        <activity android:name=".liveshow.personal.TestTalentActivity" />
+            android:theme="@android:style/Theme.Black.NoTitleBar"/>
 
         <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
         <activity
@@ -114,7 +125,8 @@
         <!-- 广告 -->
         <activity
             android:name=".liveshow.ad.AD4QNActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
 
         <!-- 预约直播　 -->
         <activity
@@ -124,16 +136,29 @@
         <activity
             android:name=".liveshow.personal.book.AddMobileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".liveshow.personal.book.SelectCountryActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".liveshow.personal.book.VerifyMobileActivity" />
-        <activity android:name=".liveshow.personal.book.BookSuccessActivity"></activity>
+
+        <activity android:name=".liveshow.personal.book.VerifyMobileActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".liveshow.personal.book.BookSuccessActivity"
+            android:screenOrientation="portrait"></activity>
 
         <!--　引导　-->
-        <activity android:name=".liveshow.guide.GuideActivity"></activity>
-    </application>
+        <activity android:name=".liveshow.guide.GuideActivity"
+            android:screenOrientation="portrait"></activity>
+
+        <!-- android:launchMode="singleTop"
+         android:process=":AnchorProfileWebView"
+         android:screenOrientation="portrait"-->
+         <activity android:name=".liveshow.anchor.AnchorProfileActivity"
+             android:hardwareAccelerated="true"
+             android:screenOrientation="portrait"
+            ></activity>
+     </application>
 
 </manifest>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/iv_personPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_personal_photo_default"/>
+
+
+        <ImageView
+            android:id="@+id/iv_goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="19dp"
+            android:paddingBottom="19dp"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:onClick="onClick"
+            android:src="@drawable/ic_left_arrow_white"/>
+
+        <ImageView
+            android:id="@+id/iv_editPersonalInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_personal_edit"
+            android:onClick="onClick"
+            android:paddingTop="19dp"
+            android:paddingBottom="19dp"
+            android:paddingRight="14dp"
+            android:paddingLeft="14dp"
+            android:layout_gravity="right"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_host_list_float"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_gravity="bottom"
+            android:paddingLeft="13dp"
+            android:paddingRight="13dp"
+            android:paddingBottom="13dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_myNickName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_gravity="bottom"
+                android:textColor="@android:color/white"
+                android:text=""/>
+
+            <ImageView
+                android:id="@+id/iv_myLevel"
+                android:layout_width="26dp"
+                android:layout_height="11dp"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="bottom"/>
+
+            <TextView
+                android:id="@+id/tv_myID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:layout_gravity="bottom"
+                android:gravity="right"
+                android:text="ID:65535"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!--my coins-->
+    <LinearLayout
+        android:id="@+id/ll_myCoins"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:background="@android:color/white"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_personal_coins"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginLeft="12dp"
+            android:text="@string/my_coins_title"
+            android:gravity="center_vertical"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_coinNumb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp"
+            android:text=""
+            android:layout_marginRight="10dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--My Bookings-->
+    <LinearLayout
+        android:id="@+id/ll_myBookings"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onClick">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_reservations"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/my_schedule_invite_title"
+            android:textSize="12sp"
+            android:layout_marginLeft="12dp"/>
+
+        <com.qpidnetwork.livemodule.view.DotView.DotView
+            android:id="@+id/dv_InviteUnread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_12sp"
+            android:layout_marginRight="10dp"
+            app:dotPadding="2dp">
+        </com.qpidnetwork.livemodule.view.DotView.DotView>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_height="1dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--My BackPack-->
+    <LinearLayout
+        android:id="@+id/ll_backPack"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onClick">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_backpack"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/my_package_title"
+            android:textSize="12sp"
+            android:layout_marginLeft="12dp"/>
+        <TextView
+            android:id="@+id/tv_pkgUnread"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/bg_custom_ff4747_circle"
+            android:visibility="visible"
+            android:layout_marginRight="10dp"
+            android:gravity="center"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--My Level-->
+    <LinearLayout
+        android:id="@+id/ll_myLevel"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_level"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/my_level_title"
+            android:textSize="12sp" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+    <!--Settings-->
+    <LinearLayout
+        android:id="@+id/ll_setting"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:clickable="true"
+        android:onClick="onClick">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_personal_setting"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:text="@string/settings_title"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_right"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="46dp"
+        android:background="@color/personal_item_devide"/>
+</LinearLayout>

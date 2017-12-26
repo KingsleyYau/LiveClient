@@ -7,8 +7,8 @@
 //
 
 #import "LSGoogleAnalyticsViewController.h"
-
+#import "MyBackpackViewController.h"
 @interface MyRidesViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, strong) UIViewController * mainVC;
+@property (nonatomic, strong) MyBackpackViewController * mainVC;
 @end

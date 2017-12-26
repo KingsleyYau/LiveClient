@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+    <!--头像-->
+    <LinearLayout
+        android:id="@+id/ll_userPhoto"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:text="@string/profile_avatar_1"/>
+        <TextView
+            android:id="@+id/tv_photoAuditeStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/profile_photo_status_rejecte"
+            android:text="@string/profile_photo_status_pending"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:text="@string/profile_avatar_2"/>
+
+
+        
+        <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+            android:id="@+id/civ_currPhoto"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/ic_default_photo_man"
+            android:layout_marginRight="12dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_right_arrow"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--ID-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp"
+            android:text="@string/profile_id"/>
+        <TextView
+            android:id="@+id/tv_userId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/profile_item_value"
+            android:textSize="12sp"
+            android:text="123456"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--NickName-->
+    <LinearLayout
+        android:id="@+id/ll_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:clickable="true"
+        android:onClick="onClick"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp"
+            android:text="@string/live_edit_profile_nickname_tips1"/>
+        <TextView
+            android:id="@+id/tv_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/profile_item_value"
+            android:textSize="12sp"
+            android:layout_marginRight="10dp"
+            android:text="WeiHaitao"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1px"
+            android:src="@drawable/ic_right_arrow"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--Gender-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp"
+            android:text="@string/profile_gender"/>
+        <TextView
+            android:id="@+id/tv_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/profile_item_value"
+            android:textSize="12sp"
+            android:text="@string/live_edit_profile_male"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <!--Birthday-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
+            android:textSize="12sp"
+            android:text="@string/live_edit_profile_birthday_tips1"/>
+        <TextView
+            android:id="@+id/tv_birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="@color/profile_item_value"
+            android:textSize="12sp"
+            android:text="1985 - 06 - 12"/>/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+</LinearLayout>

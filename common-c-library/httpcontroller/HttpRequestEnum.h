@@ -50,7 +50,24 @@ typedef enum {
     HTTP_LCC_ERR_BIND_PHONE = 10064, // 手机号码已绑定
     HTTP_LCC_ERR_RETRY_PHONE = 10065, // 请稍后再重试
     HTTP_LCC_ERR_MORE_TWENTY_PHONE = 10066, // 60分钟内验证超过20次，请24小时后再试
-    HTTP_LCC_ERR_UPDATE_PHONE_FAIL = 10067 // 更新失败
+    HTTP_LCC_ERR_UPDATE_PHONE_FAIL = 10067, // 更新失败
+    HTTP_LCC_ERR_ANCHOR_OFFLIVE = 10059,       // 主播不在线，不能操作
+    HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING = 10072, // 观众已同意预约
+    HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING = 10073, // 预约邀请已超时（当观众拒绝时）
+    HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING = 10078,   // 预约邀请已超时（当观众同意时）
+    HTTP_LCC_ERR_FACEBOOK_NO_MAILBOX = 61001,     // Facebook没有邮箱（需要提交邮箱）
+    HTTP_LCC_ERR_FACEBOOK_EXIST_QN_MAILBOX = 61002, // Facebook邮箱已在QN注册（需要换邮箱）
+    HTTP_LCC_ERR_FACEBOOK_EXIST_LS_MAILBOX = 61003,  // Facebook邮箱已在直播独立站注册（需要输入密码）
+    HTTP_LCC_ERR_FACEBOOK_TOKEN_INVALID = 61004,     // Facebook token无效登录失败
+    HTTP_LCC_ERR_FACEBOOK_PARAMETER_FAIL = 61005,    // 参数错误
+    HTTP_LCC_ERR_FACEBOOK_ALREADY_REGISTER = 61006,  // Facebook帐号已在QN注册（提示错误）
+    HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX = 62001,          // 邮箱已在QN注册
+    HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX = 62002,          // 邮箱已在直播独立站注册
+    HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN = 62003,        // 年龄小于18岁
+    HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL = 62004,            // 参数错误
+    HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT = 63001,           // 密码不正确
+    HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL = 63002,              // 邮箱未注册
+    HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL = 64001           // 邮箱未注册
  } HTTP_LCC_ERR_TYPE;
 
 
@@ -204,6 +221,24 @@ typedef enum {
 }AnchorLevelType;
 
 typedef enum {
+    GENDERTYPE_UNKNOW = 0,              // 未知
+    GENDERTYPE_MAN = 1,                 // 男
+    GENDERTYPE_LADY = 2                 // nv
+}GenderType;
+
+typedef enum {
+    SHARETYPE_OTHER = 0,              // 其它
+    SHARETYPE_FACEBOOK = 1,           // Facebook
+    SHARETYPE_TWITTER = 2             // Twitter
+}ShareType;
+
+typedef enum {
+    SHAREPAGETYPE_UNKNOW = 0,                 // 未知
+    SHAREPAGETYPE_ANCHOR = 1,                 // 主播资料页
+    SHAREPAGETYPE_FREEROOM = 2                // 免费公开直播间
+}SharePageType;
+
+typedef enum {
     INTERESTTYPE_UNKNOW = 0,                        // 0:未知
     INTERESTTYPE_GOINGTORESTAURANTS = 1,            // 1:Going to Restaurants
     INTERESTTYPE_COOKING = 2,                       // 2:Cooking
@@ -240,5 +275,43 @@ typedef enum {
 inline PromoAnchorType GetPromoAnchorType(int value) {
     return PROMOANCHORTYPE_BEGIN < value && value <= PROMOANCHORTYPE_END ? (PromoAnchorType)value : PROMOANCHORTYPE_UNKNOW;
 }
+
+// AppStore支付完成返回的状态code
+typedef enum {
+    APPSTOREPAYTYPE_UNKNOW = 0,                             // 未知
+    APPSTOREPAYTYPE_PAYSUCCES = 1,                           // 支付成功
+    APPSTOREPAYTYPE_PAYFAIL = 2,                     // 支付失败
+    APPSTOREPAYTYPE_PAYRECOVERY = 3,                     // 恢复交易(仅非消息及自动续费商品)
+    APPSTOREPAYTYPE_NOIMMEDIATELYPAY = 4,                     // 无法立即支付
+}AppStorePayCodeType;
+
+// 昵称审核状态
+typedef enum {
+    NICKNAMEVERIFYSTATUS_FINISH = 0,                             // 审核完成
+    NICKNAMEVERIFYSTATUS_HANDLDING = 1                           // 审核中
+}NickNameVerifyStatus;
+
+// int 转换 PromoAnchorType
+inline NickNameVerifyStatus GetNickNameVerifyStatus(int value) {
+    return NICKNAMEVERIFYSTATUS_FINISH <= value && value <= NICKNAMEVERIFYSTATUS_HANDLDING ? (NickNameVerifyStatus)value : NICKNAMEVERIFYSTATUS_HANDLDING;
+}
+
+// 头像审核状态
+typedef enum {
+    PHOTOVERIFYSTATUS_NOPHOTO_AND_FINISH = 0,                             // 没有头像及审核成功
+    PHOTOVERIFYSTATUS_HANDLDING = 1,                                      // 审核中
+    PHOTOVERIFYSTATUS_NOPASS = 2,                                         // 不合格
+}PhotoVerifyStatus;
+
+// int 转换 PromoAnchorType
+inline PhotoVerifyStatus GetPhotoVerifyStatus(int value) {
+    return PHOTOVERIFYSTATUS_NOPHOTO_AND_FINISH <= value && value <= PHOTOVERIFYSTATUS_NOPASS ? (PhotoVerifyStatus)value : PHOTOVERIFYSTATUS_HANDLDING;
+}
+
+// 验证码种类
+typedef enum {
+    VERIFYCODETYPE_LOGIN = 0,                             // “login”：登录
+    VERIFYCODETYPE_FINDPW = 1                             // “findpw”：找回密码
+}VerifyCodeType;
 
 #endif

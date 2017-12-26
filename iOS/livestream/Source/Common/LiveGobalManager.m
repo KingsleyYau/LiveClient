@@ -12,6 +12,7 @@
 
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
+    BOOL _canShowInvite;
 }
 #pragma mark - 前后台切换逻辑
 @property (assign) BOOL isBackground;
@@ -37,13 +38,15 @@ static LiveGobalManager *gManager = nil;
 
     if (self = [super init]) {
         if (!self.backgroundQueue) {
-            self.backgroundQueue = dispatch_queue_create("backgroundQueue", DISPATCH_QUEUE_SERIAL);
+            self.backgroundQueue = dispatch_queue_create("liveBackgroundQueue", DISPATCH_QUEUE_SERIAL);
         }
 
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
+        _canShowInvite = YES;
     }
     return self;
 }
@@ -54,6 +57,33 @@ static LiveGobalManager *gManager = nil;
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (BOOL)canShowInvite:(NSString *)uesrId {
+    BOOL bFlag = NO;
+    
+    if( _canShowInvite ) {
+        if( self.liveRoom ) {
+            // 当前存在直播间
+            if( self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP ) {
+                // 当前是公开直播间, 是否和邀请的主播Id一样
+                if( [self.liveRoom.userId isEqualToString:uesrId] ) {
+                    bFlag = YES;
+                }
+            } else {
+                // 其他直播间
+            }
+        } else {
+            // 不存在直播间
+            bFlag = YES;
+        }
+    }
+
+    return bFlag;
+}
+
+- (void)setCanShowInvite:(BOOL)canShowInvite {
+    _canShowInvite = canShowInvite;
 }
 
 #pragma mark - 后台处理
@@ -67,14 +97,18 @@ static LiveGobalManager *gManager = nil;
         self.enterBackgroundTime = [NSDate date];
 
         UIApplication *app = [UIApplication sharedApplication];
-        self.bgTask = [app beginBackgroundTaskWithName:@"BackgroundTask"
+        self.bgTask = [app beginBackgroundTaskWithName:@"GobalLiveBgTask"
                                      expirationHandler:^{
                                          // Clean up any unfinished task business by marking where you
                                          // stopped or ending the task outright.
                                          [self stopLive];
 
-                                         [app endBackgroundTask:self.bgTask];
-                                         self.bgTask = UIBackgroundTaskInvalid;
+                                         NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired]] )");
+                                         
+                                         if( self.bgTask != UIBackgroundTaskInvalid ) {
+                                             [app endBackgroundTask:self.bgTask];
+                                             self.bgTask = UIBackgroundTaskInvalid;
+                                         }
                                      }];
 
         dispatch_async(self.backgroundQueue, ^{
@@ -97,13 +131,17 @@ static LiveGobalManager *gManager = nil;
                 // 后台进入直播间超过60秒
                 if (enterRoomBgTime > BACKGROUND_TIMEOUT) {
                     [self stopLive];
+                    break;
                 }
 
                 sleep(1);
             }
 
-            [app endBackgroundTask:self.bgTask];
-            self.bgTask = UIBackgroundTaskInvalid;
+            if( self.bgTask != UIBackgroundTaskInvalid  ) {
+                [app endBackgroundTask:self.bgTask];
+                self.bgTask = UIBackgroundTaskInvalid;
+            }
+
         });
     }
 }
@@ -119,6 +157,7 @@ static LiveGobalManager *gManager = nil;
 - (void)stopLive {
     @synchronized(self) {
         if (self.liveRoom) {
+            NSLog(@"LiveGobalManager::stopLive  [发送退出直播间:%@]",self.liveRoom.roomId);
             // 发送IM退出直播间命令
             [[LSImManager manager] leaveRoom:self.liveRoom.roomId];
             self.liveRoom = nil;

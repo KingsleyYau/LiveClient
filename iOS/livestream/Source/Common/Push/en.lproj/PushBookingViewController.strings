@@ -1,0 +1,11 @@
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "TlJ-Pa-Dqk"; */
+"TlJ-Pa-Dqk.normalTitle" = "Button";
+
+/* Class = "UIButton"; normalTitle = "Start Now"; ObjectID = "XmC-V2-J46"; */
+"XmC-V2-J46.normalTitle" = "Start Now";
+
+/* Class = "UILabel"; text = "Private broadcast with Karen will be started soon."; ObjectID = "gm0-Sp-0V5"; */
+"gm0-Sp-0V5.text" = "Private broadcast with Karen will be started soon.";
+
+"PUSH_BROADCAST_TIP" = "Private broadcast with %@ will be started soon.";

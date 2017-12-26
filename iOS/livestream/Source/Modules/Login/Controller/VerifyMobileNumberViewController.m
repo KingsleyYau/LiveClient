@@ -45,6 +45,10 @@
     self.resendBtn.layer.cornerRadius = 5;
     self.resendBtn.layer.masksToBounds = YES;
     
+    CGRect rect = self.codeTextField.frame;
+    rect.size.width = screenSize.width - self.resendBtn.frame.size.width - 50;
+    self.codeTextField.frame = rect;
+    
     [self setPhoneLabelText];
     
     self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTime) userInfo:nil repeats:YES];
@@ -99,7 +103,7 @@
 {
     self.time -= [self.timer timeInterval];
     NSString *times = [NSString stringWithFormat:@"%d",self.time];
-    [self.resendBtn setTitle:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"RESEND_IN"),times] forState:UIControlStateNormal];
+    [self.resendBtn setTitle:[NSString stringWithFormat:@"%@s",times] forState:UIControlStateNormal];
     self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
     self.resendBtn.userInteractionEnabled = NO;
     if (self.time <= 0.0f) {

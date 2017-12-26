@@ -35,7 +35,13 @@
     cell.interest1.layer.cornerRadius = cell.interest1.frame.size.height * 0.5f;
     cell.interest1.layer.masksToBounds = YES;
 
-
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.colors = @[(__bridge id)[UIColor colorWithRed:125.0/255.0 green:125.0/255.0 blue:124.0/255.0 alpha:1].CGColor, (__bridge id)[UIColor clearColor].CGColor];
+    gradientLayer.locations = @[@0.0, @1.0];
+    gradientLayer.startPoint = CGPointMake(0, 1.0);
+    gradientLayer.endPoint = CGPointMake(0, 0.0);
+    gradientLayer.frame = CGRectMake(0, 0, screenSize.width, cell.bottomView.bounds.size.height);
+    [cell.bottomView.layer addSublayer:gradientLayer];
     
     return cell;
 }

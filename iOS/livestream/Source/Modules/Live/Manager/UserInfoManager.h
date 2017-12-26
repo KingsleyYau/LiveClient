@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "UserInfo.h"
+#import "LSUserInfoModel.h"
 #import "LSSessionRequestManager.h"
 
 @interface UserInfoManager : NSObject
@@ -22,7 +22,16 @@
 + (instancetype _Nonnull)manager;
 
 #pragma mark - 获取用户详情
-typedef void (^GetUserInfoHandler)(UserInfo * _Nonnull item);
+typedef void (^GetUserInfoHandler)(LSUserInfoModel * _Nonnull item);
+
+/**
+ 请求用户详情
+ 
+ @param userId 用户Id
+ @param finishHandler 获取成功回调
+ */
+- (void)requestUserInfo:(NSString * _Nonnull)userId finishHandler:(GetUserInfoHandler _Nullable)finishHandler;
+
 /**
  获取用户详情
 

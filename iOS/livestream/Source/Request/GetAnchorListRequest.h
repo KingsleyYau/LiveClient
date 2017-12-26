@@ -15,5 +15,7 @@
 @property (nonatomic, assign) int step;
 // 是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0）
 @property (nonatomic, assign) BOOL hasWatch;
+// 是否可看到测试主播（0：否，1：是）（整型）（可无，无则默认为0）
+@property (nonatomic, assign) BOOL isForTest;
 @property (nonatomic, strong) GetAnchorListFinishHandler _Nullable finishHandler;
 @end

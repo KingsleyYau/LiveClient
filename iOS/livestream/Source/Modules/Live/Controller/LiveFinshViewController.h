@@ -23,6 +23,8 @@
 
 @property (weak, nonatomic) IBOutlet UICollectionView *recommandCollectionView;
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *recommandViewWidth;
+
 @property (weak, nonatomic) IBOutlet UIButton *bookPrivateBtn;
 
 @property (weak, nonatomic) IBOutlet UIButton *viewHotBtn;

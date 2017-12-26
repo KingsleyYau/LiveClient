@@ -58,7 +58,6 @@
 
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
-    [self.unreadCountManager getBackpackUnreadCount];
 
     CGFloat bottom = self.topView.frame.origin.y + self.topView.frame.size.height;
     self.pagingScrollView = [[LSPZPagingScrollView alloc] initWithFrame:CGRectMake(0, bottom, SCREEN_WIDTH, SCREEN_HEIGHT - bottom)];
@@ -69,18 +68,26 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+    self.navigationController.navigationBar.translucent = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+}
+
+- (void)getunreadCount
+{
+    [self.unreadCountManager getBackpackUnreadCount];
 }
 
 - (void)segmentControlSelectedTag:(NSInteger)tag {
     self.curIndex = tag;
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
-    self.view.userInteractionEnabled = NO;
-    [self.unreadCountManager getBackpackUnreadCount];
+   //self.view.userInteractionEnabled = NO;
 }
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
-    self.view.userInteractionEnabled = YES;
+    //self.view.userInteractionEnabled = YES;
     NSArray *count = @[ [NSString stringWithFormat:@"%d", item.voucherUnreadNum],
                         [NSString stringWithFormat:@"%d", item.giftUnreadNum],
                         [NSString stringWithFormat:@"%d", item.rideUnreadNum] ];

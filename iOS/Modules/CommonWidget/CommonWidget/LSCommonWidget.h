@@ -14,6 +14,8 @@
 #import "LSURLFileAttribute.h"
 #import "LSURLQueryParam.h"
 
+#import "LSTimer.h"
+
 @interface LSCommonWidget : NSObject
 
 @end

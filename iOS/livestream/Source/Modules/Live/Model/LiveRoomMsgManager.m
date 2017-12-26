@@ -46,10 +46,9 @@
         attributeStr = [[NSMutableAttributedString alloc] init];
     }
     
-    if (![item.honorUrl isEqualToString:@""] && item.honorUrl != nil) {
+    if ( item.honorUrl.length > 0 && item.honorUrl != nil ) {
         UIImageView *honorImageView = [[UIImageView alloc] init];
-        [self.loader loadImageWithImageView:honorImageView options:0 imageUrl:item.honorUrl placeholderImage:
-         [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
+        [self.loader loadImageWithImageView:honorImageView options:0 imageUrl:item.honorUrl placeholderImage:[UIImage imageNamed:@"Live_ medal_nomal"]];
         
         honorImageView.frame = CGRectMake(0, 0, 13, 14);
         NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:honorImageView contentMode:UIViewContentModeCenter attachmentSize:honorImageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
@@ -70,6 +69,13 @@
             
             break;
         
+        case MsgType_Warning:
+            // 警告提示
+            [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"ANNOUNCE_WARNING",@"ANNOUNCE_WARNING") font:MessageFont color:roomStyleItem.warningStrColor]];
+            [attributeStr appendAttributedString:[self parseMessage:item.text font:MessageFont color:roomStyleItem.warningStrColor]];
+            
+            break;
+            
         case MsgType_Chat:
             // 名字
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ : ",item.name] font:NameFont color:roomStyleItem.nameColor]];
@@ -125,15 +131,13 @@
         [self.loader loadImageWithImageView:imageView options:0 imageUrl:item.smallImgUrl placeholderImage:
          [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
         
-        imageView.frame = CGRectMake(0, 0, 20, 20);
+        imageView.frame = CGRectMake(0, 0, 21, 21);
         NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
         [attributeStr appendAttributedString:attachText];
-
-        if (item.giftNum > 1) {
-            [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@" x%d", item.giftNum]
-                                                               font:MessageFont
-                                                              color:roomStyleItem.sendStrColor]];
-        }
+        [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@" x%d", item.giftNum]
+                                                           font:MessageFont
+                                                          color:roomStyleItem.sendStrColor]];
+        
     }
     return attributeStr;
 }

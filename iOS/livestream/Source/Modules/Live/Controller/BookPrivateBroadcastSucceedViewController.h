@@ -16,5 +16,5 @@
 @property (nonatomic, copy) NSString * time;
 @property (nonatomic, copy) NSString * giftId;
 @property (nonatomic, assign) NSInteger giftNum;
-
+ 
 @end

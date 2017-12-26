@@ -14,10 +14,9 @@
 #import "SearchViewController.h"
 #import "LSUserInfoListViewController.h"
 #import "LSUserUnreadCountManager.h"
+#import "LSImManager.h"
+@interface LSHomePageViewController () <JTSegmentControlDelegate, LSUserUnreadCountManagerDelegate, LSPZPagingScrollViewDelegate,IMLiveRoomManagerDelegate>
 
-@interface LSHomePageViewController () <JTSegmentControlDelegate, LSUserUnreadCountManagerDelegate, LSPZPagingScrollViewDelegate>
-
-@property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 
 @property (nonatomic, assign) NSInteger curIndex;
 
@@ -29,9 +28,16 @@
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
 
 @property (nonatomic, assign) int unreadCount;
+
+@property (nonatomic, strong) LSImManager *iMManager;
 @end
 
 @implementation LSHomePageViewController
+
+- (void)dealloc
+{
+    [self.iMManager.client removeDelegate:self];
+}
 
 #pragma mark - 界面初始化
 - (void)initCustomParam {
@@ -109,6 +115,9 @@
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
     self.unreadCount = 0;
+    
+    self.iMManager = [LSImManager manager];
+    [self.iMManager.client addDelegate:self];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -118,10 +127,8 @@
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-
-    self.unreadCount = 0;
-    [self.unreadCountManager getResevationsUnredCount];
-    [self.unreadCountManager getBackpackUnreadCount];
+    
+    [self reloadUnreadCount];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -132,15 +139,29 @@
     [super viewDidAppear:animated];
 }
 
+- (void)reloadUnreadCount
+{
+    self.unreadCount = 0;
+    [self.unreadCountManager getResevationsUnredCount];
+}
+
 #pragma mark 获取用户中心未读数
 - (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject *)item {
-    self.unreadCount = item.totalNoReadNum + self.unreadCount;
-    [self reloadUnreadMessage];
+    self.unreadCount = item.totalNoReadNum;
+    [self.unreadCountManager getBackpackUnreadCount];
 }
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
-    self.unreadCount = item.total + self.unreadCount;
-    [self reloadUnreadMessage];
+    
+    if (self.unreadCount == 0 && item.total > 0) {
+        //显示红点
+        self.navRightButton.badgeValue = nil;
+        self.navRightButton.unreadCont = [NSString stringWithFormat:@"%d",item.total];
+    }
+    else
+    {
+      [self reloadUnreadMessage];
+    }
 }
 
 #pragma mark - 界面事件
@@ -173,10 +194,17 @@
  *  刷新未读消息
  */
 - (void)reloadUnreadMessage {
+     self.navRightButton.unreadCont = nil;
     if (self.unreadCount == 0) {
         self.navRightButton.badgeValue = nil;
     } else {
-        self.navRightButton.badgeValue = [NSString stringWithFormat:@"%d", self.unreadCount];
+        if (self.unreadCount > 99) {
+             self.navRightButton.badgeValue = @"99+";
+        }
+        else
+        {
+              self.navRightButton.badgeValue = [NSString stringWithFormat:@"%d", self.unreadCount];
+        }
     }
 }
 
@@ -191,6 +219,7 @@
 
 - (UIView *)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView pageViewForIndex:(NSUInteger)index {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, pagingScrollView.frame.size.width, pagingScrollView.frame.size.height)];
+    
     return view;
 }
 
@@ -215,7 +244,7 @@
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.curIndex = index;
-
+//    [self reportDidShowPage:index];
     [self.categoryControl moveTo:self.curIndex];
     [self setupNavigationBar];
 }
@@ -224,6 +253,31 @@
 - (void)didSelectedWithSegement:(JTSegmentControl *_Nonnull)segement index:(NSInteger)index {
     self.curIndex = index;
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+}
+
+#pragma mark - 背包更新通知
+- (void)onRecvBackpackUpdateNotice:(BackpackInfoObject *)item
+{
+    [self reloadUnreadCount];
+}
+
+#pragma mark - 预约更新通知
+//接收主播预约私密邀请通知
+- (void)onRecvScheduledInviteUserNotice:(NSString* _Nonnull)inviteId anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg
+{
+    [self reloadUnreadCount];
+}
+
+//接收预约私密邀请回复通知
+- (void)onRecvSendBookingReplyNotice:(ImBookingReplyObject* _Nonnull)item
+{
+    [self reloadUnreadCount];
+}
+
+//接收预约开始倒数通知
+- (void)onRecvBookingNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg  leftSeconds:(int)leftSeconds
+{
+    [self reloadUnreadCount];
 }
 
 @end

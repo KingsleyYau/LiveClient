@@ -50,8 +50,7 @@ HttpRequest::HttpRequest() {
 
 HttpRequest::~HttpRequest() {
 	// TODO Auto-generated destructor stub
-//	mHttpClient.Stop();
-    StopRequest(true);
+    StopRequest(false);
 
 	if( mpHttpRequestRunnable != NULL ) {
 		delete mpHttpRequestRunnable;
@@ -65,7 +64,7 @@ HttpRequest::~HttpRequest() {
 }
 
 long long HttpRequest::StartRequest(string host, string path, const HttpEntiy& entiy) {
-	FileLog("httprequest",
+	FileLog(LIVESHOW_HTTP_LOG,
             "HttpRequest::StartRequest( "
             "request : %p, "
 			"host : %s, "
@@ -97,7 +96,7 @@ long long HttpRequest::StartRequest(const string& url, const HttpEntiy& entiy)
 }
 
 void HttpRequest::StopRequest(bool bWait) {
-	FileLog("httprequest",
+	FileLog(LIVESHOW_HTTP_LOG,
             "HttpRequest::StopRequest( "
             "request : %p, "
             "url : %s, "
@@ -150,7 +149,7 @@ void HttpRequest::GetSendDataCount(int& total, int& send) const {
 }
 
 string HttpRequest::GetContentType() const {
-	FileLog("httprequest",
+	FileLog(LIVESHOW_HTTP_LOG,
             "HttpRequest::GetHttpClient( "
             "request : %p, "
             "url : %s "

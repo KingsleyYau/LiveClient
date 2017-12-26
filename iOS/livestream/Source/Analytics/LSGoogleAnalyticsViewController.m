@@ -13,7 +13,7 @@
 @implementation LSGoogleAnalyticsViewController
 
 - (void)dealloc {
-    // 跟踪屏幕销毁
+    // 跟踪屏幕销毁[LSRequestManager manager].invalidRequestId 
     [[LiveModule module].analyticsManager reportDeallocScreen:self];
 }
 

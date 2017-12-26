@@ -19,6 +19,7 @@
         self.photoUrl = @"";
         self.name = @"";
         self.grantedDate = 0;
+        self.startValidDate = 0;
         self.expDate = 0;
         self.read = NO;
         self.isUse = NO;
@@ -32,6 +33,7 @@
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.name = [coder decodeObjectForKey:@"name"];
         self.grantedDate = [coder decodeIntegerForKey:@"grantedDate"];
+        self.startValidDate = [coder decodeIntegerForKey:@"startValidDate"];
         self.expDate = [coder decodeIntegerForKey:@"expDate"];
         self.read = [coder decodeBoolForKey:@"read"];
         self.isUse = [coder decodeBoolForKey:@"isUse"];
@@ -44,6 +46,7 @@
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeObject:self.name forKey:@"name"];
     [coder encodeInteger:self.grantedDate forKey:@"grantedDate"];
+    [coder encodeInteger:self.startValidDate forKey:@"startValidDate"];
     [coder encodeInteger:self.expDate forKey:@"expDate"];
     [coder encodeBool:self.read forKey:@"read"];
     [coder encodeBool:self.isUse forKey:@"isUse"];

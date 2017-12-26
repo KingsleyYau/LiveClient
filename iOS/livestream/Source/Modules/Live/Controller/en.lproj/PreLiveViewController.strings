@@ -1,6 +1,6 @@
 
-/* Class = "UILabel"; text = "Recommanded Performers"; ObjectID = "Whb-I4-Yu4"; */
-"Whb-I4-Yu4.text" = "Recommanded Performers";
+/* Class = "UILabel"; text = "Recommended Broadcasters"; ObjectID = "Whb-I4-Yu4"; */
+"Whb-I4-Yu4.text" = "Recommended Broadcasters";
 
 /* Class = "UILabel"; text = "当前状态提示"; ObjectID = "dam-36-UhM"; */
 "dam-36-UhM.text" = "当前状态提示";
@@ -8,7 +8,7 @@
 /* Class = "UILabel"; text = "30 s"; ObjectID = "gdW-JK-7iy"; */
 "gdW-JK-7iy.text" = "30 s";
 
-/* Class = "UILabel"; text = "Waitting for Malinla to start the session...\n\nPrivate Broadcast Price: 0.1 credit / minute\n\nWe will charge you 0.5 credits as the deposit of the invitation first.\nIf the broadcaster turn your invitation down, we will return it to you.\nIf you cancel the invitation when the broadcaster accept it, your credits won't be returned."; ObjectID = "h2y-1A-AFR"; */
+/* Class = "UILabel"; text = "Waiting for the broadcaster to start broadcast..."; ObjectID = "h2y-1A-AFR"; */
 "h2y-1A-AFR.text" = "Tips";
 
 /* Class = "UILabel"; text = "Malinla"; ObjectID = "scc-RK-ANB"; */
@@ -17,41 +17,47 @@
 /* Class = "UILabel"; text = "180 s"; ObjectID = "wdp-1g-dpL"; */
 "wdp-1g-dpL.text" = "180 s";
 
-/*** 状态提示 ***/
-// 邀请成功提示
-"PRELIVE_TIPS_INVITE_SUCCESS" = "Waitting for to start the session...\n\nPrivate Broadcast Price: 0.1 credit / minute\n\nWe will charge you 0.5 credits as the deposit of the invitation first.\nIf the broadcaster turn your invitation down, we will return it to you.\nIf you cancel the invitation when the broadcaster accept it, your credits won't be returned.";
-// 主播已确认提示
-"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster has accepted your invitation. Live will start in";
-
-/*** 错误处理提示 ***/
-"PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
-// 用户邀请超时
-"PRELIVE_ERR_INVITATION_EXPIRE" = "The invitation has been expired. Please try again.";
-// 用户重连邀请超时
-"PRELIVE_ERR_RESERVATION_EXPIRE" = "The invitation has been expired. Please try again.";
-// 主播邀请超时
-"PRELIVE_ERR_BOARDCAST_EXPIRE" = "Invitation has been expired.";
-// 若主播私密直播中，是否确认邀请并推荐主播
-"PRELIVE_ERR_BOARDCAST_LIVING" = "This broadcaster is in a private broadcast. Do you still wish to send the invitation?";
-// 公开直播间结束或还未开启
-"PRELIVE_ERR_BROADCAST_HAS_BEEN_ENDED" = "Broadcast has been ended.";
+/************** 发送即时邀请错误提示 *****************/
 // 主播已拒绝、无回复或缺席
 "PRELIVE_ERR_INVITE_NO_RESPONE" = "The broadcaster is not responding.\nPlease try again later.";
 // 主播已拒绝有留言
 "PRELIVE_ERR_INVITE_REJECT" = "Sorry, the broadcaster has declined your invitation and left you a message as below:\n%@";
-// 邀请发送失败
+// 邀请发送失败(网络问题)
 "PRELIVE_ERR_INVITE_FAIL" = "Failed to send a private broadcast invitation, please try again.";
+// 信用点不足
+"PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+// 若主播私密直播中，是否确认邀请并推荐主播
+"PRELIVE_ERR_BOARDCAST_LIVING" = "This broadcaster is in a private broadcast. Do you still wish to send the invitation?";
 // 主播不在线
 "PRELIVE_ERR_BOARDCAST_OFFLINE" = "The broadcaster offline, please check back later.";
-// 网络中断
-"LOCAL_ERROR_CODE_TIMEOUT" = "Failed to send a private broadcast invitation, please try again.";
-// 服务器返回错误
-"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";
-// 进入直播间超时
-"COMEIN_LIVEROOM_TIMEOUT" = "Failed to enter the broadcast room, please try again later.";
-// 180秒超时
+// 若用户断线，不断重连，但180秒后连接失败，则提示
 "RECONNECTION_TIMEOUT" = "Failed to connect.Please try again later.";
 
+
+/************** 发送即时私密邀请状态提示 *****************/
+// 邀请发送成功，等待主播确认
+"PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
+// 主播已确认提示
+"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nPrivate broadcast will start in";
+
+
+/************** 进入直播间通用错误提示 *****************/
+// 进入直播间超时
+"COMEIN_LIVEROOM_TIMEOUT" = "Failed to enter the broadcast room, please try again later.";
+// 服务器返回错误
+"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";
+
+
+/************** 进入付费公开直播间通用错误提示 *****************/
+// 房间满人
+"LIVE_ROOM_FULL" = "Broadcast room is full. \nPlease check back later.";
+// 网络中断(公共错误)
+//"LOCAL_ERROR_CODE_TIMEOUT" = "Failed to send a private broadcast invitation, please try again.";
+
+
+/************** 预约直播开始错误提示 *****************/
+// 统一提示
+"BOOKING_ERROR_TREATING" = "Could not connect to the broadcaster. Please try again later.";
 
 
 

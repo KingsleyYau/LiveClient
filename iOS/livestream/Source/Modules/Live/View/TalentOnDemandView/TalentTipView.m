@@ -45,10 +45,13 @@
 }
 
 - (void)setPriceNum:(NSString *)price {
-    NSString *message = [NSString stringWithFormat:@"%@%@", self.priceLabel.text, price];
-    NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:message];
-    [attr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:[message rangeOfString:price]];
-    self.priceLabel.attributedText = attr;
+    NSString *message = [NSString stringWithFormat:@"%@ %@", self.priceLabel.text, price];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:self.priceLabel.text
+                                                                                attributes:@{NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle)}];
+    NSAttributedString *atbPrice = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",price]];
+    [attrStr appendAttributedString:atbPrice];
+    [attrStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:[message rangeOfString:price]];
+    self.priceLabel.attributedText = attrStr;
 }
 
 - (IBAction)cancelBtnDid:(UIButton *)sender {

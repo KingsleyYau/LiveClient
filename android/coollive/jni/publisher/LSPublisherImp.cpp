@@ -64,7 +64,7 @@ LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, job
 	}
 
 	mPublisher.SetStatusCallback(this);
-//	mPublisher.SetVideoParam(width, height, bitRate, keyFrameInterval, fps);
+	mPublisher.SetVideoParam(width, height);
 //	mPublisher.SetAudioParam(44100, 1, 16);
 
 	mVideoFilters.SetFiltersCallback(this);

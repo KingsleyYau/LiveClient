@@ -21,6 +21,8 @@
 + (NSString *)toStringYMD:(NSDate *)date;
 // NSDate to NSString. ie yyyy-mm-dd hh:mm:ss
 + (NSString *)toStringYMDHMS:(NSDate *)date;
+// NSDate to NSString. ie yyyy_mm_dd_hh_mm_ss
++ (NSString *)toStringYMDHMSWithUnderLine:(NSDate *)date;
 // NSDate to NSString. ie yyyy-mm-dd hh:mm
 + (NSString *)toStringYMDHM:(NSDate *)date;
 // NSDate to NSString. ie yy-mm-dd hh:mm

@@ -7,9 +7,15 @@
 //
 
 #import "LiveRoomInfoItemObject.h"
+#import "LSLiveWKWebViewController.h"
+#import "IntroduceView.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-@interface AnchorPersonalViewController : LSListViewController
+@interface AnchorPersonalViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, strong) LiveRoomInfoItemObject *liveRoomInfo;
+@property (weak, nonatomic) IBOutlet IntroduceView *personalView;
+
+@property (nonatomic, copy) NSString *anchorId;
+@property (nonatomic, assign) int enterRoom;
 
 @end

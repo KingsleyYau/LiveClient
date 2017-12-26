@@ -11,7 +11,7 @@
 #import "SearchTableViewCell.h"
 #import "SearchListObject.h"
 
-@interface SearchTableView()<ImageViewLoaderDelegate>
+@interface SearchTableView()
 
 @property (nonatomic, strong) SearchTableViewCell *searchCell;
 

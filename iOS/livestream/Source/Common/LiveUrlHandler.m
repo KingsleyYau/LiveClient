@@ -8,6 +8,7 @@
 
 #import "LiveUrlHandler.h"
 #import "LSLoginManager.h"
+
 static LiveUrlHandler *gInstance = nil;
 @interface LiveUrlHandler () <LoginManagerDelegate>
 /**
@@ -36,9 +37,6 @@ static LiveUrlHandler *gInstance = nil;
 - (id)init {
     if (self = [super init]) {
         _type = LiveUrlTypeNone;
-
-        // 通知数组
-//        self.delegates = [NSMutableArray array];
     }
     return self;
 }
@@ -74,7 +72,8 @@ static LiveUrlHandler *gInstance = nil;
         [self parseLive:url Type:_type];
     } else if ([moduleString isEqualToString:@"liveroom"]) {
         _type = LiveUrlTypeInvite;
-        [self parseInvitation:url];
+        LSUrlParmItem *item = [self parseUrlParms:url];
+        [self invitationRoomIn:item andUrl:url];
     } else if ([moduleString isEqualToString:@"newbooking"]) {
         _type = LiveUrlTypeBooking;
         [self parseLive:url Type:_type];
@@ -104,7 +103,6 @@ static LiveUrlHandler *gInstance = nil;
             if (_mainTpye == MainListTypeFollow) {
                 index = 1;
             }
-
             if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openMainType:)]) {
                 [self.delegate liveUrlHandler:self openMainType:index];
             }
@@ -167,39 +165,39 @@ static LiveUrlHandler *gInstance = nil;
     return bFlag;
 }
 
-- (BOOL)parseInvitation:(NSURL *)url {
-    // TODO:解析进入直播间URL
-    BOOL bFlag = YES;
+- (LSUrlParmItem *)parseUrlParms:(NSURL *)url {
+    LSUrlParmItem *item = [[LSUrlParmItem alloc] init];
 
-    NSLog(@"LiveUrlHandler::parseInvitation( url : %@ )", url);
-    
-    NSString *roomId = [LSURLQueryParam urlParamForKey:@"roomid" url:url];
-    NSString *userId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
-    LiveRoomType roomType = LiveRoomType_Public;
-    NSString *roomTypeString = [LSURLQueryParam urlParamForKey:@"roomtype" url:url];
-    NSString *userName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
+    item.roomId = [LSURLQueryParam urlParamForKey:@"roomid" url:url];
+    item.userId = [LSURLQueryParam urlParamForKey:@"anchorid" url:url];
+    item.roomType = LiveRoomType_Public;
+    item.roomTypeString = [LSURLQueryParam urlParamForKey:@"roomtype" url:url];
+    item.userName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
 
-    if( [roomTypeString isEqualToString:@"3"] ) {
+    return item;
+}
+
+- (void)invitationRoomIn:(LSUrlParmItem *)item andUrl:(NSURL *)url {
+
+    if ([item.roomTypeString isEqualToString:@"3"]) {
         // 应邀
-        roomType = LiveRoomType_Private;
-        
+        item.roomType = LiveRoomType_Private;
+
         NSString *inviteId = [LSURLQueryParam urlParamForKey:@"invitationid" url:url];
         if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openInvited:userId:inviteId:)]) {
-            [self.delegate liveUrlHandler:self openInvited:userName userId:userId inviteId:inviteId];
+            [self.delegate liveUrlHandler:self openInvited:item.userName userId:item.userId inviteId:inviteId];
         }
-        
+
     } else {
         // 主动邀请
-        if ([roomTypeString isEqualToString:@"1"]) {
-            roomType = LiveRoomType_Private;
+        if ([item.roomTypeString isEqualToString:@"1"]) {
+            item.roomType = LiveRoomType_Private;
         }
-        
+
         if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openPreLive:userId:roomType:)]) {
-            [self.delegate liveUrlHandler:self openPreLive:roomId userId:userId roomType:roomType];
+            [self.delegate liveUrlHandler:self openPreLive:item.roomId userId:item.userId roomType:item.roomType];
         }
     }
-
-    return bFlag;
 }
 
 #pragma mark - 获取模块URL
@@ -214,11 +212,24 @@ static LiveUrlHandler *gInstance = nil;
     return url;
 }
 
-- (NSURL *)instantUrlToInviteUserByInviteId:(NSString *)inviteId anchorId:(NSString *)anchorId nickName:(NSString *)nickName {
-    
-    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&invitationid=%@&anchorid=%@&anchorname=%@&roomtype=%d", inviteId, anchorId, nickName, 3];
+- (NSURL *)createUrlToInviteByInviteId:(NSString *)inviteId anchorId:(NSString *)anchorId nickName:(NSString *)nickName {
+    NSString *codeName = [self encodeParameter:nickName];
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&invitationid=%@&anchorid=%@&anchorname=%@&roomtype=%d", inviteId, anchorId, codeName, 3];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
+}
+
+- (NSURL *)createUrlToLookLadyAnchorId:(NSString *)anchorId {
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=anchordetail&anchorid=%@",anchorId];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSString *)encodeParameter:(NSString *)originalPara {
+    CFStringRef encodeParaCf = CFURLCreateStringByAddingPercentEscapes(NULL, (__bridge CFStringRef)originalPara, NULL, CFSTR("!*'();:@&=+$,/?%#[]"), kCFStringEncodingUTF8);
+    NSString *encodePara = (__bridge NSString *)(encodeParaCf);
+    CFRelease(encodeParaCf);
+    return encodePara;
 }
 
 @end

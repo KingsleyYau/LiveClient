@@ -12,6 +12,7 @@
 @class CreditView;
 @protocol CreditViewDelegate <NSObject>
 - (void)creditViewCloseAction:(CreditView *)creditView;
+- (void)rechargeCreditAction:(CreditView *)creditView;
 @end
 
 @interface CreditView : UIView
@@ -33,10 +34,12 @@
 
 + (CreditView *) creditView;
 
-- (void)updateUserBalance:(double)credit;
+- (void)updateUserBalanceCredit:(double)credit headImage:(NSString *)imgUrl level:(int)lv;
+
+- (void)userLevelUp:(int)level;
+- (void)userCreditChange:(double)credit;
 
 // 跳转充值界面
 - (IBAction)userRecharge:(id)sender;
-
 
 @end

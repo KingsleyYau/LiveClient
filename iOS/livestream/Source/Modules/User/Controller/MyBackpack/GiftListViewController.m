@@ -8,6 +8,7 @@
 
 #import "GiftListViewController.h"
 #import "GiftListRequest.h"
+#import "DialogTip.h"
 @interface GiftListViewController ()<UIScrollViewRefreshDelegate>
 
 @property (weak, nonatomic) IBOutlet GiftListWaterfallView *giftListWaterfallView;
@@ -15,6 +16,8 @@
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 @property (weak, nonatomic) IBOutlet UIButton *infoBtn;
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
+@property (nonatomic, assign) BOOL isRequstData;
+@property (nonatomic, strong) NSTimer * timer;
 @end
 
 @implementation GiftListViewController
@@ -30,7 +33,24 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self getGiftList];
+    self.isRequstData = YES;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadData) userInfo:nil repeats:YES];
+}
+
+- (void)loadData
+{
+    [self.timer invalidate];
+    self.timer = nil;
+    if (self.isRequstData) {
+        [self showLoading];
+        [self getGiftList];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.isRequstData = NO;
 }
 
 /**
@@ -54,35 +74,54 @@
 
 - (void)getGiftList
 {
-    [self showLoading];
+    self.infoView.hidden = YES;
+    //self.giftListWaterfallView.hidden = NO;
     GiftListRequest * request = [[GiftListRequest alloc]init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 [self.giftListWaterfallView finishPullDown:YES];
+                [self.mainVC getunreadCount];
+                
+                self.giftListWaterfallView.items = array;
+                
                 if (success) {
-                    self.giftListWaterfallView.items = array;
-                    [self.giftListWaterfallView reloadData];
-                    
+
                     if (self.giftListWaterfallView.items.count == 0) {
-                          [self showInfoViewMsg:@"No Gifts"];
+                          [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Gifts") hiddenBtn:YES];
                     }
                 }
                 else
                 {
-                       [self showInfoViewMsg:@"Failed to load"];
+                    if (array.count == 0) {
+                      [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                    }
+                    else
+                    {
+                        [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
+                    }
                 }
+                [self.giftListWaterfallView reloadData];
+
             });
     };
     
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg
+- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
 {
     self.infoView.hidden = NO;
-    self.infoBtn.hidden = YES;
+    self.infoBtn.layer.cornerRadius = 5;
+    self.infoBtn.layer.masksToBounds = YES;
     self.infoLabel.text = msg;
+    self.infoBtn.hidden = hidden;
+    //self.giftListWaterfallView.hidden = YES;
+}
+
+- (IBAction)reloadBtnDid:(UIButton *)sender {
+    [self showLoading];
+    [self getGiftList];
 }
 
 @end

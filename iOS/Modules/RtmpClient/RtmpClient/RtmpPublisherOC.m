@@ -103,6 +103,7 @@ private:
         
         // 创建流推送器
         self.publisher = new PublisherController();
+        self.publisher->SetVideoParam(_width, _height);
         self.statusCallback = new PublisherStatusCallbackImp(self);
         self.publisher->SetStatusCallback(self.statusCallback);
         

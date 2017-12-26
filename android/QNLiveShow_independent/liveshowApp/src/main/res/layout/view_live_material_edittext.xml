@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp" >
+    
+    <EditText 
+        android:id="@+id/edit"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="32dp"
+        android:textSize="16sp"
+        android:singleLine="true"
+        android:paddingBottom="8dp"
+        android:textCursorDrawable="@drawable/material_live_text_field_cursor"/>
+    
+    <View android:id="@+id/divider"
+        android:layout_height="1dp"
+        android:layout_width="match_parent"
+        android:background="@color/black1"
+        android:layout_gravity="bottom"/>
+
+    <ImageView
+        android:id="@+id/img_left"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginLeft="4dp"
+        android:layout_gravity="center_vertical"
+        android:visibility="gone"
+        android:src="@android:color/black"/>
+
+    <ImageView
+        android:id="@+id/img_right"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginRight="4dp"
+        android:layout_gravity="right|center_vertical"
+        android:visibility="gone"
+        android:src="@android:color/holo_blue_light"/>
+    
+
+</FrameLayout>

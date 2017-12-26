@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 
 import com.qpidnetwork.livemodule.R;
@@ -15,6 +16,8 @@ import com.qpidnetwork.livemodule.httprequest.OnGetScheduleInviteListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule.ScheduleInviteType;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
+import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
+import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -25,6 +28,9 @@ import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_NO_CREDIT;
+import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING;
 
 /**
  * 主播发来的待用户处理的预约邀请列表
@@ -82,21 +88,29 @@ public class NewInviteFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_NEW_INVITE_CALLBACK:{
                 hideLoadingProcess();
                 if(response.isSuccess){
+                    //列表刷新成功，更新未读
+                    ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
+
                     if(msg.arg1 != 1){
                         mNewInviteList.clear();
                     }
                     BookInviteItem[] bookInviteArray = (BookInviteItem[])response.data;
                     if(bookInviteArray != null) {
                         mNewInviteList.addAll(Arrays.asList(bookInviteArray));
-                        mAdapter.notifyDataSetChanged();
                     }
+                    mAdapter.notifyDataSetChanged();
                     //无数据
                     if(mNewInviteList == null || mNewInviteList.size() == 0){
                         showEmptyView(R.string.newinvite_empty_tips,R.string.invite_empty_hot_broadcasters);
+                    }else{
+                        hideNodataPage();
                     }
                 }else{
                     if(mNewInviteList.size()>0){
@@ -127,24 +141,35 @@ public class NewInviteFragment extends BaseListFragment{
                     if(null != mContext && mContext instanceof BaseFragmentActivity){
                         BaseFragmentActivity mActivity = (BaseFragmentActivity)mContext;
                         if(1 == msg.arg1){//确认出错
-                            if(response.errCode == 10025) {//扣费失败,信用点不足
-                                mActivity.showCreditNoEnoughPopupWindow(R.string.newinvite_confirm_nocredits_tips,fl_baseContainer,false);
-                            }else if(response.errCode == 10078){//错过确认时间(预约时间4分钟前可确定),无法确认
-                                mActivity.showThreeSecondTips(mActivity.getResources().getString(R.string.newinvite_confirm_failed_timeout_tips),Gravity.CENTER);
-                            }else{//其他错误10079
-                                mActivity.showToast(getResources().getString(R.string.newinvite_confirm_failed_tips));
+                            if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_NO_CREDIT) {//扣费失败,信用点不足
+                                mActivity.showCreditNoEnoughDialog(R.string.newinvite_confirm_nocredits_tips);
+                            }
+//                            else if(!TextUtils.isEmpty(response.errMsg)){//错过确认时间(预约时间4分钟前可确定),无法确认
+//                                mActivity.showThreeSecondTips(response.errMsg,Gravity.CENTER);
+//                            }
+                            else{//其他错误10079
+                                mActivity.showThreeSecondTips(response.errMsg,Gravity.CENTER);
+//                                mActivity.showToast(getResources().getString(R.string.newinvite_confirm_failed_tips));
                             }
                         }else{//拒绝出错
-                            if(response.errCode == 10072){//失败,该预约已经确定
+//                            if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HttpLccErrType.HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING){//失败,该预约已经确定
+//                                mActivity.showThreeSecondTips(
+//                                        getResources().getString(R.string.newinvite_cancel_failed_confirmed_tips),
+//                                            Gravity.CENTER);
+//                            }else if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HttpLccErrType.HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING){//失败(已超过可确定的时机)
+//                                mActivity.showThreeSecondTips(
+//                                        getResources().getString(R.string.newinvite_cancel_failed_timeout_tips),
+//                                        Gravity.CENTER);
+//                            }else{//其他错误10074
+//                                mActivity.showToast(getResources().getString(R.string.newinvite_cancel_failed_tips));
+//                            }
+                            if(!TextUtils.isEmpty(response.errMsg)){
                                 mActivity.showThreeSecondTips(
-                                        getResources().getString(R.string.newinvite_cancel_failed_confirmed_tips),
-                                            Gravity.CENTER);
-                            }else if(response.errCode == 10073){//失败(已超过可确定的时机)
-                                mActivity.showThreeSecondTips(
-                                        getResources().getString(R.string.newinvite_cancel_failed_timeout_tips),
+                                        response.errMsg,
                                         Gravity.CENTER);
-                            }else{//其他错误10074
-                                mActivity.showToast(getResources().getString(R.string.newinvite_cancel_failed_tips));
+                            }else{
+//                                mActivity.showToast(getResources().getString(R.string.newinvite_cancel_failed_tips));
+                                mActivity.showToast("");
                             }
                         }
                     }
@@ -178,8 +203,10 @@ public class NewInviteFragment extends BaseListFragment{
      * 显示无数据页
      */
     private void showEmptyView(int tipsResId, int btnResId){
-        setDefaultEmptyMessage(getResources().getString(tipsResId));
-        setDefaultEmptyButtonText(getResources().getString(btnResId));
+        if(null != getActivity()){
+            setDefaultEmptyMessage(getActivity().getResources().getString(tipsResId));
+            setDefaultEmptyButtonText(getActivity().getResources().getString(btnResId));
+        }
         showNodataPage();
     }
 
@@ -211,6 +238,12 @@ public class NewInviteFragment extends BaseListFragment{
 
     @Override
     public void onPullDownToRefresh() {
+        super.onPullDownToRefresh();
+        queryNewInviteList(false);
+    }
+
+    @Override
+    public void onReloadDataInEmptyView() {
         super.onPullDownToRefresh();
         queryNewInviteList(false);
     }

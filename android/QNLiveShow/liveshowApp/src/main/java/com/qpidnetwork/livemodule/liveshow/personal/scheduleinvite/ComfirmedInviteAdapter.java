@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.ProgressButton;
 import com.squareup.picasso.Picasso;
@@ -31,7 +34,7 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<BookInviteItem> mBookInviteItemList;
-    private OnComfirmedInviteClickListener mListener;
+    private OnComfirmedInviteEventListener mListener;
     private final String TAG = ComfirmedInviteAdapter.class.getSimpleName();
 
     public ComfirmedInviteAdapter(Context context, List<BookInviteItem> bookInviteItemList){
@@ -43,7 +46,7 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
      * 设置事件监听器
      * @param listener
      */
-    public void setOnComfirmedInviteClickListener(OnComfirmedInviteClickListener listener){
+    public void setOnComfirmedInviteClickListener(OnComfirmedInviteEventListener listener){
         mListener = listener;
     }
 
@@ -96,6 +99,26 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
                     .into(holder.civAnchorPhoto);
         }
 
+        holder.civAnchorPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userId = "";
+                LoginItem loginItem = LoginManager.getInstance().getLoginItem();
+                if(loginItem != null){
+                    if(!item.fromId.equals(loginItem.userId)){
+                        userId = item.fromId;
+                    }else if(!item.toId.equals(loginItem.userId)){
+                        userId = item.toId;
+                    }
+                }
+                //跳转到主播详情页
+                if(!TextUtils.isEmpty(userId)){
+                    mContext.startActivity(AnchorProfileActivity.getAnchorInfoIntent(mContext, mContext.getResources().getString(R.string.live_webview_anchor_profile_title),
+                            userId, false));
+                }
+            }
+        });
+
 
 
         //设置点击事件
@@ -103,17 +126,15 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
             holder.btnStartProcess.initState();
         }
         //根据预约事件计算处理界面倒计时显示
-        calculateAndUpdateLeftTime(item.bookTime, holder);
+        calculateAndUpdateLeftTime(item, holder);
 
         holder.btnStartProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(v instanceof ProgressButton){
-                    ProgressButton button = (ProgressButton)v;
-                    if(button.isFinish()){
-                        if(mListener != null){
-                            mListener.onStartEnterRoomClick(item);
-                        }
+                    //按钮出现后，点击就可以进入直播间
+                    if(mListener != null) {
+                        mListener.onStartEnterRoomClick(item);
                     }
                 }
             }
@@ -123,45 +144,32 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
     }
 
     /**
-     * 处理不同状态预约处理
-     * @param bookTime 预约时间，单位秒
+     * 处理不同状态预约处理（剩余时间1分钟1内时，开始进入直播间倒计时（倒计时时长为180秒））
+     * @param item 预约时间，单位秒
      */
-    private void calculateAndUpdateLeftTime(int bookTime, ViewHolder holder){
+    private void calculateAndUpdateLeftTime(BookInviteItem item, ViewHolder holder){
         int currTime = (int)(System.currentTimeMillis()/1000);
-        int leftDay = 0;
-        int leftHour = 0;
-        int leftMinute = 0;
-        int leftSecond = 0;
-        if(currTime < bookTime){
-            //未开始
-            leftDay = (bookTime - currTime)/(24 * 60 * 60);
-            leftHour = ((bookTime - currTime)/(60 * 60))%24;
-            leftMinute = ((bookTime - currTime)/60%(60*24));
-            leftSecond = (bookTime - currTime) % 60;
-        }
-        Log.d(TAG,"calculateAndUpdateLeftTime-bookTime:"+bookTime+" leftDay:"+leftDay
-                +" leftHour:"+leftHour);
-        Log.d(TAG,"calculateAndUpdateLeftTime-leftMinute:"+leftMinute+" leftSecond:"+leftSecond);
-        if(leftDay > 0 || leftHour > 0 || leftMinute > 0 || leftSecond > 0){
-            //倒计时中
-            holder.llCountDown.setVisibility(View.GONE);
-            holder.rlStart.setVisibility(View.GONE);
-            if(leftDay > 0){
-                //超过一天
-                holder.llCountDown.setVisibility(View.VISIBLE);
-                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_day_hour), String.valueOf(leftDay), String.valueOf(leftHour)));
-            }else if(leftHour > 0){
-                //超过1小时小于1天
-                holder.llCountDown.setVisibility(View.VISIBLE);
-                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_hour_minute), String.valueOf(leftHour), String.valueOf(leftMinute)));
-            }else if(leftMinute >= 3 && leftSecond>=0){
-                //1小时以内，3分钟以上
-                holder.llCountDown.setVisibility(View.VISIBLE);
-                holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_minute_second), String.valueOf(leftMinute), String.valueOf(leftSecond)));
-            }else{
-                //三分钟以内
+        int bookTime = item.bookTime;
+        //初始化状态
+        holder.llCountDown.setVisibility(View.GONE);
+        holder.rlStart.setVisibility(View.GONE);
+        if(bookTime - currTime <= 0){
+            //剩余时间少于等于1分钟，显示进度button
+            int tmpTime = bookTime - currTime;
+            int leftTime = 180 - Math.abs(tmpTime);
+            if(leftTime <= 0){
+                //显示进度条按钮
                 holder.rlStart.setVisibility(View.VISIBLE);
-                int progress = (int)((180-leftMinute * 60 - leftSecond)/180f*100);
+                holder.btnStartProcess.setProgress(100);
+
+                //到期，刷新界面
+                if(mListener != null){
+                    mListener.onScheduleInvalidNotify(item);
+                }
+            }else{
+                //显示进度条按钮
+                holder.rlStart.setVisibility(View.VISIBLE);
+                int progress = (int)((180 - leftTime)/180f*100);
                 if(holder.btnStartProcess.isStop()){
                     holder.btnStartProcess.setStop(false);
                 }
@@ -169,14 +177,36 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
                 Log.d(TAG,"calculateAndUpdateLeftTime-progress:"+progress);
             }
         }else{
-            //时间已经到
-            holder.llCountDown.setVisibility(View.GONE);
-            holder.rlStart.setVisibility(View.VISIBLE);
-            if(holder.btnStartProcess.isStop()){
-                holder.btnStartProcess.setStop(false);
+            //剩余时间大于1分钟，显示倒数
+            int leftDay = 0;
+            int leftHour = 0;
+            int leftMinute = 0;
+            int leftSecond = 0;
+            if(currTime < bookTime){
+                //未开始
+                leftDay = (bookTime - currTime)/(24 * 60 * 60);
+                leftHour = ((bookTime - currTime)/(60 * 60))%24;
+                leftMinute = ((((bookTime - currTime)/60)%(60*24))%60);
+                leftSecond = (bookTime - currTime) % 60;
             }
-            holder.btnStartProcess.setProgress(100);
-            Log.d(TAG,"calculateAndUpdateLeftTime-progress:"+100);
+            Log.d(TAG,"calculateAndUpdateLeftTime-bookTime:"+bookTime+" leftDay:"+leftDay
+                    +" leftHour:"+leftHour);
+            Log.d(TAG,"calculateAndUpdateLeftTime-leftMinute:"+leftMinute+" leftSecond:"+leftSecond);
+            if(leftDay > 0 || leftHour > 0 || leftMinute > 0 || leftSecond > 0){
+                if(leftDay > 0){
+                    //超过一天
+                    holder.llCountDown.setVisibility(View.VISIBLE);
+                    holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_day_hour), String.valueOf(leftDay), String.valueOf(leftHour)));
+                }else if(leftHour > 0){
+                    //超过1小时小于1天
+                    holder.llCountDown.setVisibility(View.VISIBLE);
+                    holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_hour_minute), String.valueOf(leftHour), String.valueOf(leftMinute)));
+                }else{
+                    //1小时以内，1分钟以上
+                    holder.llCountDown.setVisibility(View.VISIBLE);
+                    holder.tvLeftTime.setText(String.format(mContext.getResources().getString(R.string.schedule_invite_confirmed_format_minute_second), String.valueOf(leftMinute), String.valueOf(leftSecond)));
+                }
+            }
         }
     }
 
@@ -208,7 +238,8 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
         public ImageView ivUnread;
     }
 
-    public interface OnComfirmedInviteClickListener{
-        public void onStartEnterRoomClick(BookInviteItem item);
+    public interface OnComfirmedInviteEventListener{
+        void onStartEnterRoomClick(BookInviteItem item);
+        void onScheduleInvalidNotify(BookInviteItem item);
     }
 }

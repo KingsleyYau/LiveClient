@@ -177,9 +177,10 @@ public:
      *  @param riderName   座驾名称
      *  @param riderUrl    座驾图片url
      *  @param fansNum     观众人数
+     *  @param honorImg    勋章图片url
      *
      */
-    virtual void OnRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum) {};
+    virtual void OnRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum, const string& honorImg) {};
     
     /**
      *  3.5.接收观众退出直播间通知回调
@@ -206,11 +207,12 @@ public:
      *  3.7.接收关闭直播间倒数通知回调
      *
      *  @param roomId      直播间ID
+     *  @param leftSeconds 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
      *  @param err         错误码
      *  @param errMsg      错误描述
      *
      */
-    virtual void OnRecvLeavingPublicRoomNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) {};
+    virtual void OnRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, LCC_ERR_TYPE err, const string& errMsg) {};
     
     /**
      *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
@@ -322,10 +324,11 @@ public:
      *
      *  @param roomId      直播间ID
      *  @param msg         公告消息内容
-     *  @param link        公告链接（可无，无则表示不是带链接的公告消息）
+     *  @param link        公告链接（可无，无则表示不是带链接的公告消息） （仅当type=0有效）
+     *  @param type        公告类型（0：普通，1：警告）
      *
      */
-    virtual void OnRecvSendSystemNotice(const string& roomId, const string& msg, const string& link) {};
+    virtual void OnRecvSendSystemNotice(const string& roomId, const string& msg, const string& link, IMSystemType type) {};
     
     // ------------- 直播间礼物消息 -------------
     /**
@@ -469,6 +472,17 @@ public:
      *
      */
     virtual void OnRecvBookingNotice(const string& roomId, const string& userId, const string& nickName, const string& avatarImg, int leftSeconds) {};
+    
+    /**
+     *  7.8.观众端是否显示主播立即私密邀请 回调
+     *
+     *  @param success       操作是否成功
+     *  @param reqId         请求序列号
+     *  @param err           结果类型
+     *  @param errMsg        结果描述
+     *
+     */
+    virtual void OnSendInstantInviteUserReport(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {};
 
     // ------------- 直播间才艺点播邀请 -------------
     /**
@@ -674,6 +688,16 @@ public:
      *
      */
     virtual bool SendCancelPrivateLiveInvite(SEQ_T reqId, const string& inviteId) = 0;
+    
+    /**
+     *  7.8.观众端是否显示主播立即私密邀请
+     *
+     *  @param reqId                 请求序列号
+     *  @param inviteId              邀请ID
+     *  @param isshow                观众端是否弹出邀请（整型）（0：否，1：是）
+     *
+     */
+    virtual bool SendInstantInviteUserReport(SEQ_T reqId, const string& inviteId, bool isShow) = 0;
     
     // ------------- 直播间才艺点播邀请 -------------
     /**

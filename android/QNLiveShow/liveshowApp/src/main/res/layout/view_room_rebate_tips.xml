@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="116dp"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:visibility="visible"
+    android:background="@drawable/bg_liveroom_creditstips_b03a0953"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_rebateTips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="8sp"
+        android:textColor="@android:color/white"
+        android:text="@string/tip_roomGiftCredit"/>
+
+    <TextView
+        android:id="@+id/tv_rebateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="10sp"
+        android:textColor="#ffd205" />
+
+</LinearLayout>
+

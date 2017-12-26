@@ -44,4 +44,6 @@
 @property (nonatomic, retain) NSArray *items;
 @property (nonatomic, assign) BOOL canDeleteItem;
 
+
+
 @end

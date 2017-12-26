@@ -47,7 +47,7 @@ void HttpSetFavoriteTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_SETFAVORITE_ISFAV, temp);
     mIsFav = isFav;
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSetFavoriteTask::SetParam( "
             "task : %p, "
             ")",
@@ -68,8 +68,8 @@ bool HttpSetFavoriteTask::GetIsFav() {
 }
 
 bool HttpSetFavoriteTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
-            "HttpGetBackpackUnreadNumTask::ParseData( "
+    FileLog(LIVESHOW_HTTP_LOG,
+            "HttpSetFavoriteTask::ParseData( "
             "task : %p, "
             "url : %s, "
             "bFlag : %s "
@@ -80,7 +80,7 @@ bool HttpSetFavoriteTask::ParseData(const string& url, bool bFlag, const char* b
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSetFavoriteTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSetFavoriteTask::ParseData( buf : %s )", buf);
     }
     
 

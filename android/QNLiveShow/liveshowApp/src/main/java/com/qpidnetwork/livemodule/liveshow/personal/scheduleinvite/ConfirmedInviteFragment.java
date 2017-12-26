@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
@@ -47,13 +49,16 @@ public class ConfirmedInviteFragment extends BaseListFragment{
 
     private ComfirmedInviteAdapter mAdapter;
     private List<BookInviteItem> mComfirmedInviteList;
+    //解决onResume和setUserVisibleHint同时被调用，导致刷新两次，未读数目错误
+    private boolean mIsVisbleRefresh = false;
+    private boolean mIsCurrentVisible = false;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mComfirmedInviteList = new ArrayList<BookInviteItem>();
         mAdapter = new ComfirmedInviteAdapter(getActivity(), mComfirmedInviteList);
-        mAdapter.setOnComfirmedInviteClickListener(new ComfirmedInviteAdapter.OnComfirmedInviteClickListener() {
+        mAdapter.setOnComfirmedInviteClickListener(new ComfirmedInviteAdapter.OnComfirmedInviteEventListener() {
             @Override
             public void onStartEnterRoomClick(BookInviteItem item) {
                 //开始私密聊天，直接进入房间
@@ -69,7 +74,21 @@ public class ConfirmedInviteFragment extends BaseListFragment{
                             LiveRoomTransitionActivity.CategoryType.Schedule_Invite_Enter_Room,
                             anchorId, item.oppositeNickname, item.oppositePhotoUrl, item.roomId,null);
                     getActivity().startActivity(intent);
+
+                    //GA统计预约到期，点击进入直播间
+                    if(getActivity() != null && getActivity() instanceof AnalyticsFragmentActivity){
+                        ((AnalyticsFragmentActivity)getActivity()).onAnalyticsEvent(getResources().getString(R.string.Live_EnterBroadcast_Category),
+                                getResources().getString(R.string.Live_EnterBroadcast_Action_NormalEnterBroadcast),
+                                getResources().getString(R.string.Live_EnterBroadcast_Label_NormalEnterBroadcast));
+                    }
                 }
+            }
+
+            @Override
+            public void onScheduleInvalidNotify(BookInviteItem item) {
+                //预约邀请失效通知
+                showLoadingProcess();
+                queryComfirmedInviteList(false);
             }
         });
         getPullToRefreshListView().setAdapter(mAdapter);
@@ -85,10 +104,28 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        //点击开始视频返回后，重新刷新列表(添加标志为解决setUserVisibleHint／onResume 重复刷新问题)
+        if(!mIsVisbleRefresh && mIsCurrentVisible){
+            showLoadingProcess();
+            queryComfirmedInviteList(false);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mIsVisbleRefresh = false;
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         //Fragment是否可见，用于viewpager切换时再加载
+        mIsCurrentVisible = isVisibleToUser;
         if(isVisibleToUser){
+            mIsVisbleRefresh = true;
             //切换到当前fragment
             showLoadingProcess();
             queryComfirmedInviteList(false);
@@ -104,21 +141,35 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_COMFIRMED_INVITE_CALLBACK:{
                 hideLoadingProcess();
                 if(response.isSuccess){
+                    //列表刷新成功，更新未读
+                    ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
+
                     if(!(msg.arg1 == 1)){
                         mComfirmedInviteList.clear();
                     }
                     BookInviteItem[] bookInviteArray = (BookInviteItem[])response.data;
                     if(bookInviteArray != null) {
                         mComfirmedInviteList.addAll(Arrays.asList(bookInviteArray));
-                        mAdapter.notifyDataSetChanged();
                     }
+
+                    //添加过滤，本地判断超时不显示，防止判断过期循环调用接口导致死循环及显示错误
+                    List<BookInviteItem> tempInViteList = filterOvertimeSchedule(mComfirmedInviteList);
+                    mComfirmedInviteList.clear();
+                    mComfirmedInviteList.addAll(tempInViteList);
+
+                    mAdapter.notifyDataSetChanged();
                     //无数据
                     if(mComfirmedInviteList == null || mComfirmedInviteList.size() == 0){
                         showEmptyView();
+                    }else{
+                        hideNodataPage();
                     }
 
                     //列表刷新成功，需重新计算倒数计时器
@@ -163,8 +214,10 @@ public class ConfirmedInviteFragment extends BaseListFragment{
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.scheduled_empty_tips));
-        setDefaultEmptyButtonText(getResources().getString(R.string.invite_empty_hot_broadcasters));
+        if(null != getActivity()){
+            setDefaultEmptyMessage(getActivity().getResources().getString(R.string.scheduled_empty_tips));
+            setDefaultEmptyButtonText(getActivity().getString(R.string.invite_empty_hot_broadcasters));
+        }
         showNodataPage();
     }
 
@@ -177,9 +230,11 @@ public class ConfirmedInviteFragment extends BaseListFragment{
         if(isLoadMore){
             start = mComfirmedInviteList.size();
         }
-        LiveRequestOperator.getInstance().GetScheduleInviteList(RequstJniSchedule.ScheduleInviteType.Confirmed, start, Default_Step, new OnGetScheduleInviteListCallback() {
+        LiveRequestOperator.getInstance().GetScheduleInviteList(RequstJniSchedule.ScheduleInviteType.Confirmed,
+                start, Default_Step, new OnGetScheduleInviteListCallback() {
             @Override
-            public void onGetScheduleInviteList(boolean isSuccess, int errCode, String errMsg, int totel, BookInviteItem[] bookInviteList) {
+            public void onGetScheduleInviteList(boolean isSuccess, int errCode, String errMsg,
+                                                int totel, BookInviteItem[] bookInviteList) {
                 HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, bookInviteList);
                 Message msg = Message.obtain();
                 msg.what = GET_COMFIRMED_INVITE_CALLBACK;
@@ -200,6 +255,12 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     public void onPullUpToRefresh() {
         super.onPullUpToRefresh();
         queryComfirmedInviteList(true);
+    }
+
+    @Override
+    public void onReloadDataInEmptyView() {
+        super.onReloadDataInEmptyView();
+        queryComfirmedInviteList(false);
     }
 
     /**
@@ -236,7 +297,6 @@ public class ConfirmedInviteFragment extends BaseListFragment{
                     }
                 };
             }
-
             mComfirmedInviteTimer.schedule(timerTask, timeStamp , timeStamp);
         }
     }
@@ -254,7 +314,7 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     }
 
     /**
-     * 获取事件最小
+     * 获取事件最小(修改默认每秒刷新一次)
      * @return
      */
     private int getCountDownStamp(){
@@ -264,7 +324,11 @@ public class ConfirmedInviteFragment extends BaseListFragment{
             for(BookInviteItem item : mComfirmedInviteList){
                 int currTime = (int)(System.currentTimeMillis()/1000);
                 if(item.bookTime - currTime > 0){
-                    minStamp = Math.min(minStamp, item.bookTime - currTime);
+                    if(minStamp == 0){
+                        minStamp = item.bookTime - currTime;
+                    }else {
+                        minStamp = Math.min(minStamp, item.bookTime - currTime);
+                    }
                 }
             }
             if(minStamp >= 24 * 60 * 60){
@@ -276,7 +340,7 @@ public class ConfirmedInviteFragment extends BaseListFragment{
                 timestamp = ONE_SECOND_TIMESTAMP;
             }
         }
-        return  timestamp;
+        return  ONE_SECOND_TIMESTAMP;
     }
 
     @Override
@@ -284,4 +348,32 @@ public class ConfirmedInviteFragment extends BaseListFragment{
         super.onDestroy();
         stopTimer();
     }
+
+    /**
+     * 过滤去掉超时过期的预约邀请(过期条件为预约事件＋2分钟)
+     * @param bookInviteList
+     * @return
+     */
+    private List<BookInviteItem> filterOvertimeSchedule(List<BookInviteItem> bookInviteList){
+        List<BookInviteItem> tempInviteList = new ArrayList<BookInviteItem>();
+        if(bookInviteList != null){
+            int currTime = (int)(System.currentTimeMillis()/1000);
+            for(BookInviteItem item : bookInviteList){
+                if(item.bookTime + 3 * 60 > currTime){
+                    tempInviteList.add(item);
+                }
+            }
+        }
+        return tempInviteList;
+    }
+
+    /**
+     * 系统时间改变通知，重置定时器，解决定时器由于系统时间改变挂起问题
+     */
+    public void onSystemTimeChange(){
+        //充值定时器
+        stopTimer();
+        startTimerInternal(getCountDownStamp());
+    }
+
 }

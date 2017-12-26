@@ -153,6 +153,16 @@
 - (BOOL)sendCancelPrivateLiveInvite:(SEQ_T)reqId inviteId:(NSString *_Nonnull)inviteId;
 
 /**
+ *  7.8.观众端是否显示主播立即私密邀请
+ *
+ *  @param reqId                 请求序列号
+ *  @param inviteId              邀请ID
+ *  @param isShow                观众端是否弹出邀请
+ *
+ */
+- (BOOL)sendInstantInviteUserReport:(SEQ_T)reqId inviteId:(NSString *_Nonnull)inviteId isShow:(BOOL)isShow;
+
+/**
  *  8.1.发送直播间才艺点播邀请
  *
  *  @param reqId                 请求序列号

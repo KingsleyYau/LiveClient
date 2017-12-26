@@ -74,10 +74,18 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
  * Method:    Banner
- * Signature: (Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnBannerCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_Banner
   (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetUserInfo
+ * Signature: (Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnGetUserInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetUserInfo
+  (JNIEnv *, jclass, jstring, jobject);
 
 #ifdef __cplusplus
 }

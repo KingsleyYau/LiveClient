@@ -6,12 +6,14 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSListViewController.h"
 
-@interface LiveWebViewController : LSGoogleAnalyticsViewController
+@interface LiveWebViewController : LSListViewController
 
-@property (strong, nonatomic) UIWebView *webView;
+@property (nonatomic, copy) NSString *url;
 
-- (void)requestHttp:(NSURLRequest *)request;
+@property (nonatomic, assign) BOOL isIntimacy;
+
+@property (nonatomic, copy) NSString *anchorId;
 
 @end

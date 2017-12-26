@@ -9,6 +9,7 @@ import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetVouchersListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
+import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +31,9 @@ public class VoucherFragment extends BaseListFragment{
         mAdapter = new VoucherListAdapter(getActivity(), mVoucherList);
         getPullToRefreshListView().setAdapter(mAdapter);
 
-        //关闭上啦刷新和下拉刷新
-        closePullDownRefresh();
+        //关闭下拉刷新
+//        closePullDownRefresh();
+        //关闭上啦刷新
         closePullUpRefresh(true);
     }
 
@@ -41,6 +43,7 @@ public class VoucherFragment extends BaseListFragment{
         //Fragment是否可见，用于viewpager切换时再加载
         if(isVisibleToUser){
             //切换到当前fragment
+            showLoadingProcess();
             queryVoucherList();
         }
     }
@@ -50,16 +53,24 @@ public class VoucherFragment extends BaseListFragment{
         super.handleUiMessage(msg);
         hideLoadingProcess();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         if(response.isSuccess){
+            //列表刷新成功，更新未读
+            ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();
+
             mVoucherList.clear();
             VoucherItem[] voucherItems = (VoucherItem[])response.data;
             if(voucherItems != null) {
                 mVoucherList.addAll(Arrays.asList(voucherItems));
-                mAdapter.notifyDataSetChanged();
             }
+            mAdapter.notifyDataSetChanged();
 
             if(mVoucherList.size() <= 0 ){
                 showEmptyView();
+            }else{
+                hideNodataPage();
             }
         }else{
             if(mVoucherList != null && mVoucherList.size() > 0){
@@ -74,29 +85,44 @@ public class VoucherFragment extends BaseListFragment{
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
+        showLoadingProcess();
         queryVoucherList();
     }
 
     @Override
     protected void onDefaultEmptyGuide() {
         super.onDefaultEmptyGuide();
-        queryVoucherList();
+//        queryVoucherList();
     }
 
     /**
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.followinglist_empty_text));
-        setDefaultEmptyButtonText(getResources().getString(R.string.common_hotlist_guide));
+        setDefaultEmptyMessage(getResources().getString(R.string.my_package_voucher_empty_tips));
+        setDefaultEmptyButtonText("");//无按钮，隐藏
         showNodataPage();
+    }
+
+    /**
+     * 下拉刷新
+     */
+    @Override
+    public void onPullDownToRefresh() {
+        super.onPullDownToRefresh();
+        queryVoucherList();
+    }
+
+    @Override
+    public void onReloadDataInEmptyView() {
+        super.onReloadDataInEmptyView();
+        queryVoucherList();
     }
 
     /**
      * 刷新试聊券列表
      */
     private void queryVoucherList(){
-        showLoadingProcess();
         LiveRequestOperator.getInstance().GetVouchersList(new OnGetVouchersListCallback() {
             @Override
             public void onGetVouchersList(boolean isSuccess, int errCode, String errMsg, VoucherItem[] voucherList, int totalCount) {

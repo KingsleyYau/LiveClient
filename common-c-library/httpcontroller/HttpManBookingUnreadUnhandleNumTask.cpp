@@ -29,7 +29,7 @@ void HttpManBookingUnreadUnhandleNumTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpManBookingUnreadUnhandleNumTask::SetParam( "
             "task : %p, "
             ")",
@@ -39,7 +39,7 @@ void HttpManBookingUnreadUnhandleNumTask::SetParam(
 
 
 bool HttpManBookingUnreadUnhandleNumTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpManBookingUnreadUnhandleNumTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -51,7 +51,7 @@ bool HttpManBookingUnreadUnhandleNumTask::ParseData(const string& url, bool bFla
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpManBookingUnreadUnhandleNumTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpManBookingUnreadUnhandleNumTask::ParseData( buf : %s )", buf);
     }
     
 

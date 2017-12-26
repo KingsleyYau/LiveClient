@@ -46,7 +46,7 @@
         
         cell.nameLabel.text = obj.name;
         
-        cell.timeLabel.text = [NSString stringWithFormat:@"Use By:%@",[cell getTime:obj.expDate]];
+        cell.timeLabel.text = [NSString stringWithFormat:@"%@:\n%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
         
         [cell setRidesBtnBG:obj.isUse];
         
@@ -79,19 +79,23 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    RideItemObject * obj = [self.items objectAtIndex:indexPath.row];
-    
-    if ([self.delegates respondsToSelector:@selector(myRidesWaterfallViewDidRiesId:)]) {
-        [self.delegates myRidesWaterfallViewDidRiesId:obj.isUse?@"":obj.rideId];
+    if (self.items.count > 0) {
+        RideItemObject * obj = [self.items objectAtIndex:indexPath.row];
+        
+        if ([self.delegates respondsToSelector:@selector(myRidesWaterfallViewDidRiesId:)]) {
+            [self.delegates myRidesWaterfallViewDidRiesId:obj.isUse?@"":obj.rideId];
+        }
     }
 }
 
 - (void)myRidesBtnDid:(NSInteger)row
 {
-    RideItemObject * obj = [self.items objectAtIndex:row];
-    
-    if ([self.delegates respondsToSelector:@selector(myRidesWaterfallViewDidRiesId:)]) {
-        [self.delegates myRidesWaterfallViewDidRiesId:obj.isUse?@"":obj.rideId];
+    if (self.items.count > 0) {
+        RideItemObject * obj = [self.items objectAtIndex:row];
+        
+        if ([self.delegates respondsToSelector:@selector(myRidesWaterfallViewDidRiesId:)]) {
+            [self.delegates myRidesWaterfallViewDidRiesId:obj.isUse?@"":obj.rideId];
+        }
     }
 }
 

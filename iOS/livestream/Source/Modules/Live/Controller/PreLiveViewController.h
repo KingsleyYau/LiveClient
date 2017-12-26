@@ -26,9 +26,10 @@
 
 @property (nonatomic, weak) IBOutlet UIButton *retryButton;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *retryButtonHeight;
-@property (nonatomic, weak) IBOutlet UIButton *startButton;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *startButtonTop;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *startButtonHeight;
+@property (nonatomic, weak) IBOutlet UIButton *vipStartButton;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *vipStartButtonTop;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *vipStartButtonHeight;
+
 @property (nonatomic, weak) IBOutlet UIButton *bookButton;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *bookButtonTop;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *bookButtonHeight;

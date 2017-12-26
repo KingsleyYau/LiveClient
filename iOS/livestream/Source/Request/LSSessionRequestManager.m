@@ -84,12 +84,13 @@ static LSSessionRequestManager* gManager = nil;
                     // 注销状态, 返回失败
                     NSLog(@"LSSessionRequestManager::handleRespond( [注销状态, 返回失败] )");
                     @synchronized (self) {
-                        // 回调失败
-                        for(LSSessionRequest* request in self.array) {
-                            if( request ) {
+                        // 回调失败   注释掉回调所有请求，改为回调当前的请求就可以了
+//                        for(LSSessionRequest* request in self.array) {
+//                            if( request ) {
                                 [request callRespond:success errnum:(NSInteger)SESSION_REQUEST_WITHOUT_LOGIN errmsg:@"Send session request without login"];
-                            }
-                        }
+//                            }
+//                        }
+                        [self.array removeObject:request];
                     }
                 }
             });

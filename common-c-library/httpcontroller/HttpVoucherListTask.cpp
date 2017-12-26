@@ -28,7 +28,7 @@ void HttpVoucherListTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpVoucherListTask::SetParam( "
             "task : %p, "
             ")",
@@ -37,7 +37,7 @@ void HttpVoucherListTask::SetParam(
 }
 
 bool HttpVoucherListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpVoucherListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -49,7 +49,7 @@ bool HttpVoucherListTask::ParseData(const string& url, bool bFlag, const char* b
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpVoucherListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpVoucherListTask::ParseData( buf : %s )", buf);
     }
     
 

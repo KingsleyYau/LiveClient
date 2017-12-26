@@ -35,7 +35,7 @@ void HttpGetNewFansBaseInfoTask::SetParam(
         mUserId = userId;
     }
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetNewFansBaseInfoTask::SetParam( "
             "task : %p, "
             ")",
@@ -48,7 +48,7 @@ const string& HttpGetNewFansBaseInfoTask::GetUserId() {
 }
 
 bool HttpGetNewFansBaseInfoTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetNewFansBaseInfoTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -60,7 +60,7 @@ bool HttpGetNewFansBaseInfoTask::ParseData(const string& url, bool bFlag, const 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetNewFansBaseInfoTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetNewFansBaseInfoTask::ParseData( buf : %s )", buf);
     }
     
 

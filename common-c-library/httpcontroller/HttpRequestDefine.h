@@ -57,5 +57,7 @@
 #define COMMON_ERRCODE		"errcode"
 #define COMMON_ERRMSG		"errmsg"
 #define COMMON_INFO			"info"
+#define COMMON_IOSPAY_RESULT                      "result"
+#define COMMON_IIOSPAY_CODE                       "code"
 
 #endif /* REQUESTDEFINE_H_ */

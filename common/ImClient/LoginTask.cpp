@@ -66,8 +66,6 @@ bool LoginTask::Handle(const TransportProtocol& tp)
         Json::FastWriter writer;
         string tmp = writer.write(tp.m_data);
         
-        FileLevelLog("ImClient", KLog::LOG_WARNING, "LoginTask::Handle( json : %s )", tmp.c_str());
-        
     }
 
 	// 协议解析失败

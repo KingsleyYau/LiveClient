@@ -56,6 +56,14 @@ public:
     void SetStatusCallback(PublisherStatusCallback* pc);
     
     /**
+     设置推流视频参数
+     
+     @param width 视频宽
+     @param height 视频高
+     */
+    void SetVideoParam(int width, int height);
+    
+    /**
      发布流连接
      
      @param url 连接

@@ -138,8 +138,7 @@ public class RoomRebateTipsPopupWindow extends PopupWindow implements View.OnCli
             pb_loadingRebate.setVisibility(View.GONE);
             //3.更新规则说明以及当前已返点
             if(null != mActivity && null != mActivity.get()){
-                tv_rebateNote2.setText(mActivity.get().getResources().getString(R.string.live_backcredits_tips42,
-                        String.valueOf(rebateItem.pre_time),String.valueOf(rebateItem.pre_credit)));
+                tv_rebateNote2.setText(mActivity.get().getResources().getString(R.string.live_backcredits_tips42));
             }
             tv_currRoomRebate.setText(String.valueOf(rebateItem.cur_credit));
             //4.重新开始倒计时

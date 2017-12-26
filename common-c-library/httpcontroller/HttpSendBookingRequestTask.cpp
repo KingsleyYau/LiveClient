@@ -71,7 +71,7 @@ void HttpSendBookingRequestTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_SENDBOOKINGREQUEST_NEEDSMS, temp);
     mNeedSms = needSms;
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendBookingRequestTask::SetParam( "
             "task : %p, "
             ")",
@@ -106,7 +106,7 @@ bool  HttpSendBookingRequestTask::GetNeedSms() {
 
 
 bool HttpSendBookingRequestTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendBookingRequestTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -118,7 +118,7 @@ bool HttpSendBookingRequestTask::ParseData(const string& url, bool bFlag, const 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSendBookingRequestTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSendBookingRequestTask::ParseData( buf : %s )", buf);
     }
     
 

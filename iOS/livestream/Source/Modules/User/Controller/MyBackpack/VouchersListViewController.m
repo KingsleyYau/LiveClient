@@ -9,6 +9,7 @@
 #import "VouchersListViewController.h"
 #import "VouchersCell.h"
 #import "VoucherListRequest.h"
+#import "DialogTip.h"
 @interface VouchersListViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewRefreshDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *infoView;
@@ -37,13 +38,15 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self showLoading];
     [self getVoucherListRequest];
 }
 
 #pragma mark 重新加载
 - (IBAction)reloadBtnDid:(UIButton *)sender {
     
-    [self pullDownRefresh];
+    [self showLoading];
+    [self getVoucherListRequest];
 }
 
 /**
@@ -64,35 +67,46 @@
 - (void)getVoucherListRequest
 {
     self.infoView.hidden = YES;
-    [self showLoading];
+    //self.tableView.hidden = NO;
     VoucherListRequest * request = [[VoucherListRequest alloc]init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *> * _Nullable array, int totalCount) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 [self.tableView finishPullDown:YES];
+                [self.mainVC getunreadCount];
+                
+                self.array = array;
                 if (success) {
-                    self.array = array;
-                    [self.tableView reloadData];
                     
                     if (self.array.count == 0) {
-                       [self showInfoViewMsg:@"No Vouchers"];
+                       [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Vouchers") hiddenBtn:YES];
                     }
                 }
                 else
                 {
-                    [self showInfoViewMsg:@"Failed to load"];
+                    if (array.count == 0) {
+                        [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                    }
+                    else
+                    {
+                        [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
+                    }
                 }
+                [self.tableView reloadData];
             });
     };
     
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg
+- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
 {
     self.infoView.hidden = NO;
-    self.infoBtn.hidden = YES;
+    self.infoBtn.layer.cornerRadius = 5;
+    self.infoBtn.layer.masksToBounds = YES;
     self.infoLabel.text = msg;
+    self.infoBtn.hidden = hidden;
+    //self.tableView.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,27 +140,77 @@
     if (self.array.count > 0) {
         VoucherItemObject * obj = [self.array objectAtIndex:indexPath.row];
         
-        [cell.imageViewLoader stop];
+        
         if (!cell.imageViewLoader) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-        [cell.imageViewLoader loadImageWithImageView:cell.minImage options:0 imageUrl:obj.photoUrl placeholderImage:nil];
         
-        cell.timeLabel.text = [NSString stringWithFormat:@"Use by:%@",[cell getTime:obj.expDate]];
+        [cell.imageViewLoader loadImageWithImageView:cell.minImage options:0 imageUrl:obj.photoUrlMobile placeholderImage:nil];
+        
+        cell.timeLabel.text = [NSString stringWithFormat:@"%@:%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
         
         cell.unreadView.hidden = obj.read;
         
+        cell.titleLabel.text = obj.desc;
+        
+        // 指定主播
         if (obj.anchorType == ANCHORTYPE_APPOINTANCHOR)
         {
             cell.oneLadyView.hidden = NO;
             cell.allLadyView.hidden = YES;
             
-            [cell.imageViewLoader loadImageWithImageView:cell.ladyHeadView options:0 imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
+            cell.nameLabel.text = obj.anchorNcikName;
+
+//            [cell.imageViewLoader loadImageWithImageView:cell.ladyHeadView options:0 imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
+
+            [[LSImageViewLoader loader] sdWebImageLoadView:cell.ladyHeadView options:0 imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"] finishHandler:^(UIImage *image) {
+                cell.ladyHeadView.image = image;
+            }];
+            
+            cell.ladyLabel.text = NSLocalizedStringFromSelf(@"Only_broadcaster");
+            // 公开
+            if (obj.useRoomType == USEROOMTYPE_PUBLIC)
+            {
+                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
+            }
+            //私密
+            else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
+            {
+               cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
+            }
+            else
+            {
+               cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"No_limit");
+            }
         }
+        // 不限和没看过直播的主播
         else
         {
             cell.oneLadyView.hidden = YES;
             cell.allLadyView.hidden = NO;
+            
+            if (obj.anchorType == ANCHORTYPE_NOSEEANCHOR) {
+              cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"New broadcasters");
+            }
+            else
+            {
+              cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"No_limit");
+            }
+            
+            // 公开
+            if (obj.useRoomType == USEROOMTYPE_PUBLIC)
+            {
+                cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
+            }
+            //私密
+            else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
+            {
+               cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
+            }
+            else
+            {
+               cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
+            }
         }
     }
     

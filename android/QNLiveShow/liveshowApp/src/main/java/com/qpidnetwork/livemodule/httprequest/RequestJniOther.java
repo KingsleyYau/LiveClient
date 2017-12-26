@@ -83,5 +83,12 @@ public class RequestJniOther {
 	 * @return
 	 */
 	static public native long Banner(OnBannerCallback callback);
-
+	
+	/**
+	 * 6.10.获取主播/观众信息
+	 * @param userId   		观众ID或者主播ID
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetUserInfo(String userId, OnGetUserInfoCallback callback);
 }

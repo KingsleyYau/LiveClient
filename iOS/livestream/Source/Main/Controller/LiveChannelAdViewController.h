@@ -10,6 +10,6 @@
 #import "LiveChannelContentView.h"
 #import "LiveChannelAdView.h"
 
-@interface LiveChannelAdViewController : LSGoogleAnalyticsViewController<LiveChannelAdViewDelegate,LiveChannelContentViewDelegate>
+@interface LiveChannelAdViewController : LSGoogleAnalyticsViewController
 
 @end

@@ -99,7 +99,9 @@
 
                           dispatch_async(dispatch_get_main_queue(), ^{
                               if (success) {
-                                  [self.sendGiftArray removeObjectAtIndex:0];
+                                  if (self.sendGiftArray.count > 0) {
+                                      [self.sendGiftArray removeObjectAtIndex:0];
+                                  }
                                   NSLog(@"SendGiftTheQueueManager::sendGiftQurest( success, count : %lu )", (unsigned long)self.sendGiftArray.count);
 
                                   if (self.sendGiftArray.count) {

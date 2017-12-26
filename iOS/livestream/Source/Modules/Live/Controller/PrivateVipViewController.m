@@ -10,11 +10,18 @@
 
 #import "PrivateViewController.h"
 #import "TalentOnDemandViewController.h"
+#import "LiveModule.h"
+#import "RoomTypeIsFirstManager.h"
 
 @interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate>
 @property (strong) PrivateViewController *vc;
 @property (strong) TalentOnDemandViewController *talentVC;
 @property (nonatomic, strong) UIButton *backBtn;
+#pragma mark - 直播间管理器
+// 是否第一次进类型直播间管理器
+@property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
+
+@property (nonatomic, assign) BOOL haveCome;
 @end
 
 @implementation PrivateVipViewController
@@ -22,8 +29,10 @@
 - (void)initCustomParam {
     [super initCustomParam];
 
-    NSLog(@"PrivateVipViewController::initCustomParam()");
-
+    NSLog(@"PrivateVipViewController::initCustomParam( self : %p )", self);
+    
+    self.firstManager = [RoomTypeIsFirstManager manager];
+    
     self.vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
     self.vc.delegate = self;
     [self addChildViewController:self.vc];
@@ -33,7 +42,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"PrivateVipViewController::dealloc()");
+    NSLog(@"PrivateVipViewController::dealloc( self : %p )", self);
 }
 
 - (void)viewDidLoad {
@@ -42,16 +51,27 @@
     
     self.talentVC.liveRoom = self.liveRoom;
     self.talentVC.delegate = self;
+    
+    self.liveRoom.superView = self.view;
+    self.liveRoom.superController = self;
 }
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     [self.talentVC getTalentList:self.liveRoom.roomId];
+    
+    self.haveCome = [self.firstManager getThisTypeHaveCome:@"Private_VIP_Join"];
+    if (self.haveCome) {
+        [self.vc.tipView hiddenChardTip];
+    } else {
+        self.vc.tipView.hidden = NO;
+        [self.firstManager comeinLiveRoomWithType:@"Private_VIP_Join" HaveComein:YES];
+    }
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 }
 
 - (void)setupContainView {
@@ -83,6 +103,21 @@
     }];
 }
 
+- (void)setUpLiveRoomType:(PrivateViewController *)vc {
+    // 连击礼物
+    self.vc.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Vip_Bg_Combo"];
+    // 弹幕
+    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(61, 51, 44, 0.9);//Color(83, 13, 120, 0.9);
+    // 消息列表界面
+    self.vc.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0Xffd205);
+    self.vc.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0XFF5ABB);
+    self.vc.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XFFD205);
+    self.vc.playVC.liveVC.roomStyleItem.chatStrColor = [UIColor whiteColor];
+    self.vc.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
+    self.vc.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
+    self.vc.playVC.liveVC.roomStyleItem.warningStrColor = COLOR_WITH_16BAND_RGB(0x992926);
+}
+
 - (void)onSetupViewController:(PrivateViewController *)vc {
     // 标题背景
     self.vc.bgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Bottom"];
@@ -96,17 +131,6 @@
     self.vc.ladyHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Lady_Head"];
     // 关注按钮
     [self.vc.followBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Follow"] forState:UIControlStateNormal];
-    // 连击礼物
-    self.vc.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Vip_Bg_Combo"];
-    // 弹幕
-    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(61, 51, 44, 0.9);//Color(83, 13, 120, 0.9);
-    // 消息列表界面
-    self.vc.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0Xffd205);
-    self.vc.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0XFF5ABB);
-    self.vc.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XFFD205);
-    self.vc.playVC.liveVC.roomStyleItem.chatStrColor = [UIColor whiteColor];
-    self.vc.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
-    self.vc.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
     // 返点界面
     self.vc.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X644C3B);//Color(61, 51, 44, 1.0);
     // 才艺点播
@@ -139,6 +163,8 @@
 
 #pragma mark - 按钮事件
 - (IBAction)talentAction:(id)sender {
+    
+    [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickTalent eventCategory:EventCategoryBroadcast];
     // 隐藏底部输入框
     [self.vc.playVC hiddenBottomView];
     
@@ -183,6 +209,13 @@
 
 - (void)onSendtalentOnDemandMessage:(NSAttributedString *)message {
     [self.vc.playVC.liveVC addTips:message];
+}
+
+- (void)pushToRechargeCredit {
+    UIViewController *vc = [LiveModule module].addCreditVc;
+    if (vc) {
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 @end

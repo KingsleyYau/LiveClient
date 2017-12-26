@@ -1,17 +1,18 @@
-apply plugin: 'com.android.application'
-//apply plugin:'com.android.library'
+//apply plugin: 'com.android.application'
+apply plugin:'com.android.library'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.3"
     defaultConfig {
-        applicationId "com.qpidnetwork.livemodule"
+//        applicationId "com.qpidnetwork.livemodule"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         //testInstrumentationRunner "android.support.test.runner.Android  JUnitRunner"
         multiDexEnabled true
+
         renderscriptTargetApi 15
         renderscriptSupportModeEnabled true
 
@@ -51,7 +52,21 @@ repositories {
 
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'],
+            excludes: [
+                    'bolts-tasks-1.4.0.jar'
+                    ,'picasso-2.5.2.jar'
+                    ,'haha-2.0.3.jar'
+                    ,'leakcanary-watcher-1.5.4.jar'
+                    ,'okhttp-3.9.1.jar'
+                    ,'okio-1.13.0.jar'
+            ], dir: 'libs')
+    provided files('libs/bolts-tasks-1.4.0.jar')
+    provided files('libs/picasso-2.5.2.jar')
+    provided files('libs/okhttp-3.9.1.jar')
+    provided files('libs/okio-1.13.0.jar')
+
     compile(name: 'filedownloader-1.6.8', ext: 'aar')
     //    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     //        exclude group: 'com.android.support', module: 'support-annotations'
@@ -61,6 +76,7 @@ dependencies {
     compile(name: 'animated-base-1.3.0', ext: 'aar')
     compile(name: 'animated-base-support-1.3.0', ext: 'aar')
     compile(name: 'animated-webp-1.3.0', ext: 'aar')
+    compile(name: 'animated-gif-1.3.0', ext: 'aar')
     compile(name: 'drawee-1.3.0', ext: 'aar')
     compile(name: 'fbcore-1.3.0', ext: 'aar')
     compile(name: 'fresco-1.3.0', ext: 'aar')
@@ -82,7 +98,6 @@ dependencies {
 //    debugCompile(name: 'leakcanary-android-1.5.4', ext: 'aar')
 //    releaseCompile(name: 'leakcanary-android-no-op-1.5.4', ext: 'aar')
 //    compile(name: 'leakcanary-analyzer-1.5.4', ext: 'aar')
-    //GA
     compile project(':Google-play-services_lib')
 }
 

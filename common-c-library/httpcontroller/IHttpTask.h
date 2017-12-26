@@ -8,6 +8,8 @@
 #ifndef IHTTPTASK_H_
 #define IHTTPTASK_H_
 
+#include <httpclient/HttpLiveShowLog.h>
+
 class IHttpTask {
 public:
 	virtual ~IHttpTask(){};

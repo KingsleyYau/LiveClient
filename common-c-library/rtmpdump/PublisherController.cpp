@@ -47,6 +47,10 @@ void PublisherController::SetStatusCallback(PublisherStatusCallback* pc) {
     mpPublisherStatusCallback = pc;
 }
     
+void PublisherController::SetVideoParam(int width, int height) {
+    mRtmpDump.SetVideoParam(width, height);
+}
+    
 bool PublisherController::PublishUrl(const string& url, const string& recordH264FilePath, const string& recordAACFilePath) {
     bool bFlag = false;
     
@@ -59,7 +63,7 @@ bool PublisherController::PublishUrl(const string& url, const string& recordH264
                  );
     
     // 开始发布
-    bFlag = mRtmpPublisher.PublishUrl(url, recordAACFilePath);
+    bFlag = mRtmpPublisher.PublishUrl(url);
     // 开始编码
     if( bFlag ) {
         bFlag = mpVideoEncoder->Reset();

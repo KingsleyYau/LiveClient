@@ -17,6 +17,11 @@
 
 - (void)myReservationsCancelBtnDidForRow:(NSInteger)row;
 
+- (void)myReservationsStartNowDidForRow:(NSInteger)row;
+
+- (void)myReservationsCountdownEnd;
+
+- (void)myReservationsHeadDidForRow:(NSInteger)row;
 @end
 
 @interface NewInvitesCell : UITableViewCell
@@ -34,10 +39,11 @@
 @property (weak, nonatomic) IBOutlet UIView *colorView;
 
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
+@property (weak, nonatomic) IBOutlet UITapGestureRecognizer *startNowTap;
 
-@property (nonatomic, strong) NSTimer * timer;
 @property (nonatomic, assign) NSInteger time;
 @property (nonatomic, assign) NSInteger countdownTime;
+@property (weak, nonatomic) IBOutlet UITapGestureRecognizer *haedTap;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;

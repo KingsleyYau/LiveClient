@@ -35,6 +35,10 @@ public:
             if (root[LIVEROOM_BACKPACK_GIFT_LIST_GRANTEDDATE].isInt()) {
                 grantedDate = root[LIVEROOM_BACKPACK_GIFT_LIST_GRANTEDDATE].asInt();
             }
+            /* startValidDate */
+            if (root[LIVEROOM_BACKPACK_GIFT_LIST_STARTVALIDDATE].isInt()) {
+                startValidDate = root[LIVEROOM_BACKPACK_GIFT_LIST_STARTVALIDDATE].asInt();
+            }
   
             /* expDate */
             if (root[LIVEROOM_BACKPACK_GIFT_LIST_EXPDATE].isInt()) {
@@ -57,6 +61,7 @@ public:
         giftId = "";
         num = 0;
         grantedDate = 0;
+        startValidDate = 0;
         expDate = 0;
         read = false;
     }
@@ -70,12 +75,14 @@ public:
      * giftId                 礼物ID
      * num                    礼物数量
      * grantedDate            获取时间（1970年起的秒数）
-     * expDate		         过期时间（1970年起的秒数）
+     * startValidDate         有效开始时间（1970年起的秒数）
+     * expDate		          过期时间（1970年起的秒数）
      * read                   已读状态（0:未读 1:已读）
      */
     string giftId;
     int    num;
     long   grantedDate;
+    long   startValidDate;
     long   expDate;
     bool   read;
 };

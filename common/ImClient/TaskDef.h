@@ -63,6 +63,7 @@ static const string CMD_RECVINSTANTINVITEUSERNOTICE = "imLady/instantInviteUserN
 static const string CMD_RECVSCHEDULEDINVITEUSERNOTICE = "imLady/scheduledInviteUserNotice"; // 7.5.接收主播预约私密邀请通知
 static const string CMD_RECVSENDBOOKINGREPLYNOTICE =   "imLady/scheduledInviteReplyNotice"; // 7.6.接收预约私密邀请回复通知
 static const string CMD_RECBOOKINGNOTICE =   "bookingNotice"; // 7.7.接收预约开始倒数通知
+static const string CMD_SENDINSTANTINVITEUSERREPORT = "imLady/instantInviteUserReport";     // 7.8.观众端是否显示主播立即私密邀请
 
 // ------------- 直播间才艺点播邀请 -------------
 static const string CMD_SENDTALENT = "imMan/sendTalent";    // 8.1.发送直播间才艺点播邀请
@@ -92,6 +93,7 @@ inline bool IsRequestCmd(const string& cmd)
         || cmd == CMD_SENDPRIVATELIVEINVITE       // 7.1.观众立即私密邀请
         || cmd == CMD_SENDCANCELPRIVATEINVITE     // 7.2.观众取消立即私密邀请
         || cmd == CMD_SENDTALENT                  // 8.1.发送直播间才艺点播邀请
+        || cmd == CMD_SENDINSTANTINVITEUSERREPORT // 7.8.观众端是否显示主播立即私密邀请
         )
     {
         result = true;

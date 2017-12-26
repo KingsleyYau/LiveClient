@@ -10,20 +10,21 @@
 #import "LiveBundle.h"
 
 @interface DialogTip ()
-@property (strong) UIView* view;
+@property (weak) UIView *view;
 @end
 
 @implementation DialogTip
 
-+ (DialogTip *)dialogTip{
-    
-    static DialogTip* view;
++ (DialogTip *)dialogTip {
+
+    static DialogTip *view;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
         view = [nibs objectAtIndex:0];
         view.layer.cornerRadius = 10;
         view.layer.masksToBounds = YES;
+        view.tag = DialogTag;
         view.isShow = NO;
     });
     return view;
@@ -33,22 +34,22 @@
     if (self.isShow) {
         [self removeShow];
     }
-    
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    self.view = view;
+
+//    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+//    self.view = view;
     self.tipsLabel.text = tip;
     //    self.view.userInteractionEnabled = NO;
-    [window addSubview:self];
-    [window bringSubviewToFront:self];
-    
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
+
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(window.mas_width).offset(-DESGIN_TRANSFORM_3X(100));
-        make.centerY.equalTo(window.mas_centerY);
-        make.centerX.equalTo(window);
+        make.width.equalTo(view.mas_width).offset(-DESGIN_TRANSFORM_3X(100));
+        make.centerY.equalTo(view.mas_centerY);
+        make.centerX.equalTo(view);
     }];
-    
+
     self.isShow = YES;
-    
+
     [self sizeToFit];
     [self performSelector:@selector(removeShow) withObject:nil afterDelay:3.0];
 }
@@ -57,7 +58,7 @@
     self.isShow = NO;
     [self removeFromSuperview];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-//    self.view.userInteractionEnabled = YES;
+    //    self.view.userInteractionEnabled = YES;
 }
 
 @end

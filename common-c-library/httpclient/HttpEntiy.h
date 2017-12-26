@@ -11,6 +11,7 @@
 
 #include <string>
 #include <map>
+#include "HttpLiveShowLog.h"
 using namespace std;
 
 typedef map<string, string> HttpMap;

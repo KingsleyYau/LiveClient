@@ -3,7 +3,7 @@ platform :ios, '8.0'
 #使用动态连接
 #use_frameworks!
 
-target 'livestream' do
+def shared_pods
 	pod 'GPUImage', '0.1.7'
 	pod 'AFNetworking', '3.0.4'
 	pod 'SDWebImage', '4.1.0'
@@ -12,11 +12,11 @@ target 'livestream' do
 	pod 'SDWebImage/WebP'
 end
 
+target 'livestream' do
+	shared_pods
+	#pod 'MobileVLCKit', '2.2.2'
+end
+
 target 'livestream_sdk' do
-	pod 'GPUImage', '0.1.7'
-	pod 'AFNetworking', '3.0.4'
-	pod 'SDWebImage', '4.1.0'
-	pod 'Masonry', '0.6.4'
-	pod 'YYText', '1.0.7'
-	pod 'SDWebImage/WebP'
+	shared_pods
 end

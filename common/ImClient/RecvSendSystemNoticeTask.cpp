@@ -17,6 +17,7 @@
 #define ROOMID_PARAM           "roomid"
 #define MSG_PARAM              "msg"
 #define LINK_PARAM             "link"
+#define TYPE_PARAM             "type"
 
 RecvSendSystemNoticeTask::RecvSendSystemNoticeTask(void)
 {
@@ -29,6 +30,7 @@ RecvSendSystemNoticeTask::RecvSendSystemNoticeTask(void)
     m_roomId = "";
     m_msg = "";
     m_link = "";
+    m_type = IMSYSTEMTYPE_COMMON;
 }
 
 RecvSendSystemNoticeTask::~RecvSendSystemNoticeTask(void)
@@ -69,6 +71,9 @@ bool RecvSendSystemNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[LINK_PARAM].isString()) {
             m_link = tp.m_data[LINK_PARAM].asString();
         }
+        if (tp.m_data[TYPE_PARAM].isNumeric()) {
+            m_type = GetIMSystemType(tp.m_data[TYPE_PARAM].asInt());
+        }
     }
     
     // 协议解析失败
@@ -81,7 +86,7 @@ bool RecvSendSystemNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvSendSystemNotice(m_roomId, m_msg, m_link);
+        m_listener->OnRecvSendSystemNotice(m_roomId, m_msg, m_link, m_type);
 		FileLog("ImClient", "RecvSendSystemNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

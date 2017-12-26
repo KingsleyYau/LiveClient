@@ -186,7 +186,7 @@ private:
 }
 
 - (instancetype)init {
-    NSLog(@"RtmpPlayerOC::init()");
+    NSLog(@"RtmpPlayerOC::init( self : %p )", self);
     
     if(self = [super init] ) {
         // 默认在前台
@@ -218,7 +218,7 @@ private:
 }
 
 - (void)dealloc {
-    NSLog(@"RtmpPlayerOC::dealloc()");
+    NSLog(@"RtmpPlayerOC::dealloc( self : %p )", self);
     
     if( self.statusCallback ) {
         delete self.statusCallback;
@@ -240,7 +240,7 @@ private:
 - (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
     BOOL bFlag = YES;
     
-    NSLog(@"RtmpPlayerOC::playUrl( url : %@, recordFilePath : %@, recordH264FilePath : %@, recordAACFilePath : %@ )", url, recordFilePath, recordH264FilePath, recordAACFilePath);
+    NSLog(@"RtmpPlayerOC::playUrl( self : %p, url : %@, recordFilePath : %@, recordH264FilePath : %@, recordAACFilePath : %@ )", self, url, recordFilePath, recordH264FilePath, recordAACFilePath);
     
     bFlag = self.player->PlayUrl([url UTF8String], [recordFilePath UTF8String], [recordH264FilePath UTF8String], [recordAACFilePath UTF8String]);
     
@@ -251,7 +251,11 @@ private:
 }
 
 - (void)stop {
+    NSLog(@"RtmpPlayerOC::stop( self : %p )", self);
+    
     self.player->Stop();
+    
+    NSLog(@"RtmpPlayerOC::stop( [Finish], self : %p )", self);
 }
 
 #pragma mark - 私有方法

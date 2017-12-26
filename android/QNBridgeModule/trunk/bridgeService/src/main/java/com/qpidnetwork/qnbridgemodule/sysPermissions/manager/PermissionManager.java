@@ -68,6 +68,24 @@ public class PermissionManager {
                 .start();
     }
 
+    public void requestVideo() {
+        AndPermission.with(mContext)
+                .requestCode(REQUEST_CODE_PERMISSION)
+                .permission(Permission.STORAGE, Permission.AUDIO, Permission.CAMERA)
+                .callback(this)
+                // rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框；
+                // 这样避免用户勾选不再提示，导致以后无法申请权限。
+                // 你也可以不设置。
+                .rationale(new RationaleListener() {
+                    @Override
+                    public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+                        // 这里的对话框可以自定义，只要调用rationale.resume()就可以继续申请。
+                        AndPermission.rationaleDialog(mContext, rationale).show();
+                    }
+                })
+                .start();
+    }
+
     @PermissionYes(REQUEST_CODE_PERMISSION)
     public void yes(List<String> permissions) {
         this.mCallback.onSuccessful();

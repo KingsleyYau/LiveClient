@@ -28,7 +28,7 @@ void HttpGetLeftCreditTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetLeftCreditTask::SetParam( "
             "task : %p, "
             ")",
@@ -38,7 +38,7 @@ void HttpGetLeftCreditTask::SetParam(
 
 
 bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetLeftCreditTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -50,7 +50,7 @@ bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetLeftCreditTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetLeftCreditTask::ParseData( buf : %s )", buf);
     }
     
 

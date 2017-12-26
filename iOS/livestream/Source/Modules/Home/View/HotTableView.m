@@ -14,7 +14,7 @@
 #import "LSFileCacheManager.h"
 
 #define IMAGE_COUNT 10
-@interface HotTableView () <ImageViewLoaderDelegate,HotTableViewCellDelegate>
+@interface HotTableView () <HotTableViewCellDelegate>
 
 @end
 
@@ -85,7 +85,9 @@
         UIImage *image = [UIImage imageNamed:imageName];
         [animationArray addObject:image];
     }
-
+    
+    
+    
     HotTableViewCell *cell = [HotTableViewCell getUITableViewCell:tableView];
     tableViewCell = cell;
 
@@ -93,19 +95,18 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
 
     cell.tag = indexPath.row;
-//    cell.leftBtn.tag = indexPath.row;
-//    cell.midBtn.tag = indexPath.row;
-//    cell.rightBtn.tag = indexPath.row;
+    //    cell.leftBtn.tag = indexPath.row;
+    //    cell.midBtn.tag = indexPath.row;
+    //    cell.rightBtn.tag = indexPath.row;
     // 人数
     //    cell.labelViewers.text = item.roomId;
 
     // 房间名
     cell.labelRoomTitle.text = item.nickName;
-    //    cell.labelRoomTitle.text = item.nickName;
 
     // 国家
     //cell.labelCountry.text = item.country;
-    
+
     cell.animationArray = animationArray;
     if (item.onlineStatus != ONLINE_STATUS_LIVE) {
         cell.onlineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xB5B5B5);
@@ -120,31 +121,34 @@
             [cell.roomType setImage:nil];
             cell.viewPublicFreeBtn.hidden = YES;
             cell.viewPublicFeeBtn.hidden = YES;
-      
+
             cell.vipPrivateCenterX.constant = 0;
             cell.normalPrivateCenterX.constant = 0;
-            
+
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-                      cell.bookPrivateBtn.hidden = NO;
+                cell.bookPrivateBtn.hidden = NO;
                 cell.normalPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = YES;
-            }else {
-                   cell.bookPrivateBtn.hidden = YES;
-                switch (item.anchorType) {
-                    case ANCHORLEVELTYPE_SILVER: {
-                        // 普通
-                        cell.normalPrivateBtn.hidden = NO;
-                        cell.vipPrivateBtn.hidden = YES;
-                    } break;
-                    case ANCHORLEVELTYPE_GOLD: {
-                        //                        //高级
-                        cell.vipPrivateBtn.hidden = NO;
-                        cell.normalPrivateBtn.hidden = YES;
-                    }
-                        
-                    default:
-                        break;
-                }
+            } else {
+                cell.bookPrivateBtn.hidden = YES;
+                
+                // Modify by Max, 不用显示普通私密
+//                switch (item.anchorType) {
+//                    case ANCHORLEVELTYPE_SILVER: {
+//                        // 普通
+//                        cell.normalPrivateBtn.hidden = NO;
+//                        cell.vipPrivateBtn.hidden = YES;
+//                    } break;
+//                    case ANCHORLEVELTYPE_GOLD: {
+//                        // 高级
+//                        cell.vipPrivateBtn.hidden = NO;
+//                        cell.normalPrivateBtn.hidden = YES;
+//                    }
+//                    default:
+//                        break;
+//                }
+                cell.vipPrivateBtn.hidden = NO;
+                cell.normalPrivateBtn.hidden = YES;
             }
 
         } break;
@@ -169,23 +173,25 @@
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = YES;
 
-
-                switch (item.anchorType) {
-                    case ANCHORLEVELTYPE_SILVER: {
-                        // 普通
-                        cell.normalPrivateBtn.hidden = NO;
-                        cell.vipPrivateBtn.hidden = YES;
-
-                    } break;
-                    case ANCHORLEVELTYPE_GOLD: {
-                        cell.vipPrivateBtn.hidden = NO;
-                        cell.normalPrivateBtn.hidden = YES;
-                        //高级
-                    }
-
-                    default:
-                        break;
-                }
+                // Modify by Max, 不用显示普通私密
+//                switch (item.anchorType) {
+//                    case ANCHORLEVELTYPE_SILVER: {
+//                        // 普通
+//                        cell.normalPrivateBtn.hidden = NO;
+//                        cell.vipPrivateBtn.hidden = YES;
+//
+//                    } break;
+//                    case ANCHORLEVELTYPE_GOLD: {
+//                        cell.vipPrivateBtn.hidden = NO;
+//                        cell.normalPrivateBtn.hidden = YES;
+//                        //高级
+//                    }
+//
+//                    default:
+//                        break;
+//                }
+                cell.vipPrivateBtn.hidden = NO;
+                cell.normalPrivateBtn.hidden = YES;
             }
 
         } break;
@@ -207,21 +213,25 @@
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = NO;
                 cell.bookPrivateBtn.hidden = YES;
-                switch (item.anchorType) {
-                    case ANCHORLEVELTYPE_SILVER: {
-                        // 普通
-                        cell.normalPrivateBtn.hidden = NO;
-                        cell.vipPrivateBtn.hidden = YES;
-                    } break;
-                    case ANCHORLEVELTYPE_GOLD: {
-//                        //高级
-                        cell.vipPrivateBtn.hidden = NO;
-                        cell.normalPrivateBtn.hidden = YES;
-                    }
-
-                    default:
-                        break;
-                }
+                
+                // Modify by Max, 不用显示普通私密
+//                switch (item.anchorType) {
+//                    case ANCHORLEVELTYPE_SILVER: {
+//                        // 普通
+//                        cell.normalPrivateBtn.hidden = NO;
+//                        cell.vipPrivateBtn.hidden = YES;
+//                    } break;
+//                    case ANCHORLEVELTYPE_GOLD: {
+//                        //                        //高级
+//                        cell.vipPrivateBtn.hidden = NO;
+//                        cell.normalPrivateBtn.hidden = YES;
+//                    }
+//
+//                    default:
+//                        break;
+//                }
+                cell.vipPrivateBtn.hidden = NO;
+                cell.normalPrivateBtn.hidden = YES;
             }
 
         } break;
@@ -243,20 +253,24 @@
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = YES;
-                switch (item.anchorType) {
-                    case ANCHORLEVELTYPE_SILVER: {
-                        // 普通
-                        cell.vipPrivateBtn.hidden = YES;
-                        cell.normalPrivateBtn.hidden = NO;
-                    } break;
-                    case ANCHORLEVELTYPE_GOLD: {
-                        cell.vipPrivateBtn.hidden = NO;
-                        cell.normalPrivateBtn.hidden = YES;
-                    }
-
-                    default:
-                        break;
-                }
+                
+                // Modify by Max, 不用显示普通私密
+//                switch (item.anchorType) {
+//                    case ANCHORLEVELTYPE_SILVER: {
+//                        // 普通
+//                        cell.vipPrivateBtn.hidden = YES;
+//                        cell.normalPrivateBtn.hidden = NO;
+//                    } break;
+//                    case ANCHORLEVELTYPE_GOLD: {
+//                        cell.vipPrivateBtn.hidden = NO;
+//                        cell.normalPrivateBtn.hidden = YES;
+//                    }
+//
+//                    default:
+//                        break;
+//                }
+                cell.vipPrivateBtn.hidden = NO;
+                cell.normalPrivateBtn.hidden = YES;
             }
 
         } break;
@@ -300,7 +314,6 @@
         cell.interest3.hidden = YES;
     }
 
-
     // 头像
 
     cell.imageViewHeader.image = nil;
@@ -309,7 +322,6 @@
                                          options:0
                                         imageUrl:item.roomPhotoUrl
                                 placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
-
 
     return tableViewCell;
 }
@@ -346,7 +358,7 @@
     }
 }
 
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerSection = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 1.5)];
     headerSection.backgroundColor = [UIColor clearColor];
     return headerSection;
@@ -414,7 +426,7 @@
 //        NSInteger index = btn.tag;
 //        [self.tableViewDelegate tableView:self didBookPrivateBroadcast:index];
 //    }
-//    
+//
 //}
 /** 预约私密直播间 */
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickBookPrivateBtn:(UIButton *)sender {

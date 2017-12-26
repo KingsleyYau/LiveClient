@@ -11,6 +11,7 @@
 @interface LSBadgeButton : UIButton {
 
 }
-@property (nonatomic, retain) NSString *badgeValue;
-@property (nonatomic, retain) UIImage* imageBadge;
+@property (nonatomic, copy) NSString *badgeValue;
+@property (nonatomic, strong) UIImage* imageBadge;
+@property (nonatomic, copy) NSString * unreadCont;
 @end

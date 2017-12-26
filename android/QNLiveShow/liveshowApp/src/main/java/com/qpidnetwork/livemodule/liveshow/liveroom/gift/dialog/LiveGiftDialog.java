@@ -3,7 +3,6 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.gift.dialog;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -33,8 +32,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.AudienceBalanceInfoPopupWindow;
-import com.qpidnetwork.livemodule.liveshow.model.HttpReqStatus;
+import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
 
@@ -52,7 +50,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private final String TAG = LiveGiftDialog.class.getSimpleName();
     private WeakReference<BaseCommonLiveRoomActivity> mActivity;
     //tab
-    private View ll_StoreGiftTab;
+    private View ll_storeGiftTab;
     private ImageView iv_StoreGiftTab;
     private TextView tv_StoreGiftTab;
     private View ll_PkgGiftTab;
@@ -81,11 +79,14 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     //提示
     private LinearLayout ll_loading;
     private LinearLayout ll_emptyData;
+    private TextView tvEmptyDesc;
     private LinearLayout ll_errorRetry;
     private TextView tv_reloadGiftList;
     //dialog和adapters共用的数据
     private List<GiftItem> giftItems = new ArrayList<>();
-    public static GiftItem lastSelectedGiftItem = null;
+    private GiftItem lastSelectedGiftItem = null;//用于礼物发送、连送动画逻辑展示
+    private GiftItem lastClickedStoreGiftItem = null;//用于选中状态展示判断
+    private GiftItem lastClickedPkgGiftItem = null;//用于选中状态展示判断
     private List<GiftItem> packagGiftItems = new ArrayList<>();
     private Map<String,SendableGiftItem> sendableGiftItemMap = new HashMap<>();
     private Map<String,GiftItem> packageGiftIdItems = new HashMap<>();
@@ -111,10 +112,8 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private int giftNumPerPage = 0;
     private int giftColumnNumPerPage = 0;
 
-    private boolean isBackPackDataChanged = false;
-    private boolean isSendableGiftDataChanged = false;
     private boolean notFirstDialogShow = false;
-
+    private boolean canOpenNumberSelector = true;
     private View rootView;
 
     public LiveGiftDialog(BaseCommonLiveRoomActivity context){
@@ -188,7 +187,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         ll_repeatSendAnim.setOnClickListener(this);
         tv_sendGift.setOnClickListener(this);
         ll_sendGift.setOnClickListener(this);
-        ll_StoreGiftTab = rootView.findViewById(R.id.ll_StoreGiftTab);
+        ll_storeGiftTab = rootView.findViewById(R.id.ll_StoreGiftTab);
         iv_StoreGiftTab = (ImageView) rootView.findViewById(R.id.iv_StoreGiftTab);
         tv_StoreGiftTab = (TextView) rootView.findViewById(R.id.tv_StoreGiftTab);
         ll_PkgGiftTab = rootView.findViewById(R.id.ll_PkgGiftTab);
@@ -198,6 +197,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         ll_loading = (LinearLayout) rootView.findViewById(R.id.ll_loading);
         ll_loading.setVisibility(View.GONE);
         ll_emptyData = (LinearLayout) rootView.findViewById(R.id.ll_emptyData);
+        tvEmptyDesc = (TextView) rootView.findViewById(R.id.tvEmptyDesc);
         ll_emptyData.setVisibility(View.GONE);
         ll_errorRetry = (LinearLayout) rootView.findViewById(R.id.ll_errorRetry);
         ll_errorRetry.setVisibility(View.GONE);
@@ -218,34 +218,24 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
             Log.d(TAG,"show");
         }
         super.show();
-        if(isBackPackDataChanged){
-            //更新gift列表的item数量
-            updateBackPackGiftData();
-        }
+        Log.d(TAG,"show-notFirstDialogShow:"+notFirstDialogShow
+                +" lastClickedGiftTab:"+lastClickedGiftTab);
         List<GiftItem> listData = new ArrayList<>();
         if(notFirstDialogShow){
-            if(null != recommendGift){
-                lastClickedGiftTab = GiftTab.GiftTabFlag.STORE;
-            }
-            if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
-                if(isSendableGiftDataChanged){
-                    listData = refreshGiftDataOnView();
-                    isSendableGiftDataChanged = false;
-                }else{
-                    listData = giftItems;
+            if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
+                //如果推荐礼物不为空，且上次隐藏对话框前选的tab是backpack
+                if(null != recommendGift){
+                    lastClickedGiftTab = GiftTab.GiftTabFlag.STORE;
                 }
-            }else if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
-                if(isBackPackDataChanged){
-                    listData = refreshGiftDataOnView();
-                    isBackPackDataChanged = false;
-                }else{
-                    listData = packagGiftItems;
-                }
+                listData = refreshGiftDataOnView();
+            }else if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
+                listData = giftItems;
             }
+
             //更新指示器数量
             updateIndicatorView(pageCount);
+            //连送动画
             if(null == recommendGift){
-                //连送动画
                 Log.d(TAG,"show-lastSelectedGiftItem.id:"+(null != lastSelectedGiftItem ? lastSelectedGiftItem.id : null));
                 Log.d(TAG,"show-lastRepeatSentGiftItem.id:"+(null != lastRepeatSentGiftItem ? lastRepeatSentGiftItem.id : null));
                 boolean isNeedShowLastResendAnim = null != lastRepeatSentGiftItem && null != lastSelectedGiftItem
@@ -256,7 +246,8 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
                     //判断是否需要重启连击动画
                     long surplusTime = periodTime * mLastRepeatCount;
                     long overTime = System.currentTimeMillis() - mLastDismissTime;
-                    Log.d(TAG,"show-periodTime:"+periodTime+" mLastRepeatCount:"+mLastRepeatCount+" surplusTime:"+surplusTime+" overTime:"+overTime);
+                    Log.d(TAG,"show-periodTime:"+periodTime+" mLastRepeatCount:"
+                            +mLastRepeatCount+" surplusTime:"+surplusTime+" overTime:"+overTime);
                     if(overTime < surplusTime){
                         //连击动画未结束
                         long startCount = (surplusTime - overTime)/periodTime;
@@ -265,21 +256,29 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
                     }
                 }
             }
+            updateGiftTabStyle(lastClickedGiftTab);
         }else{
             listData = giftItems;
         }
         notFirstDialogShow = true;
-        if(null != recommendGift){
+        if(null != recommendGift ){
             lastSelectedGiftItem = recommendGift;
+            //更改可选数量
+            final List<Integer> numList = getGiftNumList();
+            updateGiftCountSelected(numList,0);
+            lastClickedStoreGiftItem = lastSelectedGiftItem;
             lastRepeatSentGiftItem = null;
         }
-        //更新item的选中状态
-        updateItemViewSelectedStatus(lastSelectedGiftItem.id);
+        if(null != lastSelectedGiftItem){
+            //更新item的选中状态,理论上lastSelectedGiftItem对应lastClickedGiftTab,所以这里可以直接传递lastSelectedGiftItem.id
+            updateItemViewSelectedStatus(lastSelectedGiftItem.id);
+        }
         int pageIndex = listData.indexOf(lastSelectedGiftItem)/giftNumPerPage;
         Log.d(TAG,"show-pageIndex:"+pageIndex+" listData.size:"+listData.size());
         sl_giftPagerContainer.setToScreen(pageIndex);
         updateIndicatorStatus(pageIndex);
         showDataTipsView();
+        showGiftLevelTips(false);
     }
 
     @Override
@@ -337,45 +336,50 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
      * @param giftTypes
      */
     private void updateGiftTypeTab(final String[] giftTypes){
-        ll_StoreGiftTab.setTag(giftTabs[0]);
+        ll_storeGiftTab.setTag(giftTabs[0]);
         ll_PkgGiftTab.setTag(giftTabs[1]);
         if(null == tabClickListener){
             tabClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GiftTab.GiftTabFlag giftTab = null;
-                    int i = v.getId();
-                    if (i == R.id.ll_StoreGiftTab) {
-                        giftTab = GiftTab.GiftTabFlag.STORE;
-
-                    } else if (i == R.id.ll_PkgGiftTab) {
-                        giftTab = GiftTab.GiftTabFlag.BACKPACK;
-                        //store背景色变
-
-                    } else {
-                        giftTab = GiftTab.GiftTabFlag.STORE;
-
-                    }
-                    ll_StoreGiftTab.setBackgroundColor(giftTab == GiftTab.GiftTabFlag.STORE ? Color.BLACK : Color.parseColor("#2b2b2b"));
-                    iv_StoreGiftTab.setImageDrawable(mActivity.get().getResources().getDrawable(
-                            giftTab == GiftTab.GiftTabFlag.STORE ? R.drawable.ic_gifttab_store_selected : R.drawable.ic_gifttab_store_unselected));
-                    tv_StoreGiftTab.setTextColor(Color.parseColor(giftTab == GiftTab.GiftTabFlag.STORE ? "#f7cd3a" : "#59ffffff"));
-                    ll_PkgGiftTab.setBackgroundColor(giftTab == GiftTab.GiftTabFlag.BACKPACK ? Color.BLACK : Color.parseColor("#2b2b2b"));
-                    iv_PkgGiftTab.setImageDrawable(mActivity.get().getResources().getDrawable(
-                            giftTab == GiftTab.GiftTabFlag.BACKPACK ? R.drawable.ic_gifttab_pkg_selected : R.drawable.ic_gifttab_pkg_unselected));
-                    tv_PkgGiftTab.setTextColor(Color.parseColor(giftTab == GiftTab.GiftTabFlag.BACKPACK ? "#f7cd3a" : "#59ffffff"));
-                    updateRepeatAnimStatus(null, GiftSender.ErrorCode.FAILED_OTHER);
+                    GiftTab.GiftTabFlag giftTab = v.getId() == R.id.ll_PkgGiftTab ? GiftTab.GiftTabFlag.BACKPACK : GiftTab.GiftTabFlag.STORE;
                     if(lastClickedGiftTab != giftTab){
+                        sl_giftPagerContainer.abortScrollAnimation();
                         lastClickedGiftTab = giftTab;
+                        updateGiftTabStyle(giftTab);
+                        updateRepeatAnimStatus(null, GiftSender.ErrorCode.FAILED_OTHER);
+                        if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
+                            if(null == packagGiftItems || packagGiftItems.size() ==0){
+                                if(null != mActivity && null != mActivity.get()){
+                                    mActivity.get().reloadPkgGiftData();
+                                }
+                            }
+                        }
                         updateGiftView();
                         showDataTipsView();
                     }
-
                 }
             };
-            ll_StoreGiftTab.setOnClickListener(tabClickListener);
+            ll_storeGiftTab.setOnClickListener(tabClickListener);
             ll_PkgGiftTab.setOnClickListener(tabClickListener);
         }
+    }
+
+    private void updateGiftTabStyle(GiftTab.GiftTabFlag giftTab) {
+        ll_storeGiftTab.setBackgroundColor(giftTab == GiftTab.GiftTabFlag.BACKPACK ?
+                Color.BLACK : Color.parseColor("#2b2b2b"));
+        iv_StoreGiftTab.setImageDrawable(mActivity.get().getResources().getDrawable(
+                giftTab == GiftTab.GiftTabFlag.STORE ?
+                        R.drawable.ic_gifttab_store_selected : R.drawable.ic_gifttab_store_unselected));
+        tv_StoreGiftTab.setTextColor(Color.parseColor(giftTab == GiftTab.GiftTabFlag.STORE ?
+                "#f7cd3a" : "#59ffffff"));
+        ll_PkgGiftTab.setBackgroundColor(giftTab == GiftTab.GiftTabFlag.STORE ?
+                Color.BLACK : Color.parseColor("#2b2b2b"));
+        iv_PkgGiftTab.setImageDrawable(mActivity.get().getResources().getDrawable(
+                giftTab == GiftTab.GiftTabFlag.BACKPACK ?
+                        R.drawable.ic_gifttab_pkg_selected : R.drawable.ic_gifttab_pkg_unselected));
+        tv_PkgGiftTab.setTextColor(Color.parseColor(giftTab == GiftTab.GiftTabFlag.BACKPACK ?
+                "#f7cd3a" : "#59ffffff"));
     }
 
     /**
@@ -387,14 +391,21 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
             if(null == giftItems || giftItems.size() == 0){
                 if(HttpReqStatus.ResFailed == NormalGiftManager.getInstance().getRoomSendableGiftReqStatus(imRoomInItem.roomId)
                         || HttpReqStatus.ResFailed == NormalGiftManager.getInstance().allGiftConfigReqStatus){
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(false,false,true);
                 }else if(HttpReqStatus.Reqing ==sendableGiftReqStatus
                         || HttpReqStatus.Reqing == NormalGiftManager.getInstance().allGiftConfigReqStatus){
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(true,false,false);
                 }else{
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(false,true,false);
                 }
             }else{
+                canOpenNumberSelector = true;
                 showDataTipsViewByStatus(false,false,false);
             }
         }else{
@@ -403,17 +414,24 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
                         || HttpReqStatus.ResFailed == NormalGiftManager.getInstance().allGiftConfigReqStatus
                         || HttpReqStatus.ResFailed == sendableGiftReqStatus){
                     //加载出错
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(false,false,true);
                 }else if(HttpReqStatus.Reqing == NormalGiftManager.getInstance().allGiftConfigReqStatus
                     || PackageGiftManager.getInstance().packageGiftReqStatus==HttpReqStatus.Reqing
                         || HttpReqStatus.Reqing == sendableGiftReqStatus){
                     //刷新之中
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(true,false,false);
                 }else{
                     //没有数据
+                    canOpenNumberSelector = false;
+                    setSendGiftBtnEnable(false);
                     showDataTipsViewByStatus(false,true,false);
                 }
             }else{
+                canOpenNumberSelector = true;
                 showDataTipsViewByStatus(false,false,false);
             }
         }
@@ -422,6 +440,13 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private void showDataTipsViewByStatus(boolean isLoading, boolean isEmpty, boolean isError){
         ll_loading.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         ll_emptyData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if(isEmpty && tvEmptyDesc != null){
+            if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
+                tvEmptyDesc.setText(R.string.liveroom_gift_store_empty);
+            }else{
+                tvEmptyDesc.setText(R.string.liveroom_gift_pack_empty);
+            }
+        }
         ll_errorRetry.setVisibility(isError ? View.VISIBLE : View.GONE);
     }
 
@@ -431,17 +456,35 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     @SuppressLint("NewApi")
     private void updateGiftView(){
         Log.d(TAG,"updateGiftView");
-        refreshGiftDataOnView();
+        List<GiftItem> listData = refreshGiftDataOnView();
         setViewLayoutParams();
-        //更新指示器的选中状态
-        updateIndicatorStatus(0);
-        sl_giftPagerContainer.setToScreen(0);
         //更新礼物页的选中状态，默认选中第一个
         if(giftAdapters.size()>0){
-            lastSelectedGiftItem = (GiftItem) giftAdapters.get(0).getList().get(0);
+            if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
+                if(null != lastClickedStoreGiftItem){
+                    lastSelectedGiftItem = lastClickedStoreGiftItem;
+                }else{
+                    lastSelectedGiftItem = (GiftItem) giftAdapters.get(0).getList().get(0);
+                    lastClickedStoreGiftItem = lastSelectedGiftItem;
+                }
+            }else{
+                if(null != lastClickedPkgGiftItem){
+                    lastSelectedGiftItem = lastClickedPkgGiftItem;
+                }else{
+                    lastSelectedGiftItem = (GiftItem) giftAdapters.get(0).getList().get(0);
+                    lastClickedPkgGiftItem = lastSelectedGiftItem;
+                }
+            }
+            //计算当前页的索引,切换
+            int currPageSelectedIndex = listData.indexOf(lastSelectedGiftItem)/giftNumPerPage;
+            updateIndicatorStatus(currPageSelectedIndex);
+            sl_giftPagerContainer.setToScreen(currPageSelectedIndex);
+            //更新礼物可选数量
             final List<Integer> numList = getGiftNumList();
             updateGiftCountSelected(numList,0);
+            //更新礼物选中状态
             updateItemViewSelectedStatus(lastSelectedGiftItem.id);
+            //等级提示
             showGiftLevelTips(false);
         }
     }
@@ -472,13 +515,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
 
     @NonNull
     private List<GiftItem> refreshGiftDataOnView() {
-        List<GiftItem> listData = new ArrayList<>();
-        if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
-            listData = packagGiftItems;
-            isBackPackDataChanged = false;
-        }else{
-            listData = giftItems;
-        }
+        List<GiftItem> listData = lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK ? packagGiftItems : giftItems;
         pageCount = (listData.size()/giftNumPerPage)+ (0 == listData.size()%giftNumPerPage ? 0 : 1);
         Log.d(TAG,"refreshGiftDataOnView-listData.size:"+ listData.size()+" pageCount:"+pageCount
                 +" giftNumPerPage:"+giftNumPerPage);
@@ -490,35 +527,44 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         for(int index=0 ; index<pageCount; index++){
             gridView = (GridView) View.inflate(mActivity.get(), R.layout.item_simple_gridview_1,null);
             int maxPagePosition = giftNumPerPage*(index+1);
-            final GiftAdapter<GiftItem> storeGiftAdapter = new GiftAdapter(mActivity.get(),
+            final GiftAdapter<GiftItem> giftAdapter = new GiftAdapter(mActivity.get(),
                     R.layout.item_girdview_gift, listData.subList(giftNumPerPage*index,
                     maxPagePosition< listData.size() ? maxPagePosition : listData.size()),lastClickedGiftTab);
             if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
-                storeGiftAdapter.setPackageGiftNums(packageGiftNums);
+                giftAdapter.setPackageGiftNums(packageGiftNums);
             }
-            storeGiftAdapter.setItemWidth(gridViewItemWidth);
-            storeGiftAdapter.setOnItemListener(new CanOnItemListener(){
+            giftAdapter.setItemWidth(gridViewItemWidth);
+            giftAdapter.setOnItemListener(new CanOnItemListener(){
                 @Override
                 public void onItemChildClick(View view, int position) {
-                    GiftItem selectedGiftItem = (GiftItem) storeGiftAdapter.getList().get(position);
+                    GiftItem selectedGiftItem = (GiftItem) giftAdapter.getList().get(position);
                     Log.d(TAG,"refreshGiftDataOnView-onItemChildClick position:"+position
                             +" selectedGiftItem.id:"+selectedGiftItem.id
                             +" selectedGiftItem.name:"+selectedGiftItem.name
                             +" selectedGiftItem.giftType:"+selectedGiftItem.giftType);
-                    if(selectedGiftItem != lastSelectedGiftItem){
+                    boolean diffGift = selectedGiftItem != lastSelectedGiftItem;
+//                    if((diffGift&&giftAdapter.getList().size()>1)|| giftAdapter.getList().size()==1){
                         lastSelectedGiftItem = selectedGiftItem;
+                        showGiftLevelTips(true);
+//                    }
+                    if(diffGift){
+                        //更改可选数量
                         final List<Integer> numList = getGiftNumList();
                         updateGiftCountSelected(numList,0);
-//                    updateRepeatAnimStatus(null, GiftSender.ErrorCode.FAILED_OTHER);
-                        //改变按钮状态
+                        //改变连送动画状态
                         changeSendAnimVisible();
+                        //更改选中状态
+                        if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
+                            lastClickedPkgGiftItem = lastSelectedGiftItem;
+                        }else{
+                            lastClickedStoreGiftItem = lastSelectedGiftItem;
+                        }
                         updateItemViewSelectedStatus(lastSelectedGiftItem.id);
-                        showGiftLevelTips(true);
                     }
                 }
             });
-            gridView.setAdapter(storeGiftAdapter);
-            giftAdapters.add(storeGiftAdapter);
+            gridView.setAdapter(giftAdapter);
+            giftAdapters.add(giftAdapter);
             gridView.setNumColumns(giftColumnNumPerPage);// 每行显示几个
             gridView.setColumnWidth(gridViewItemWidth);
             gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
@@ -534,35 +580,46 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private void showGiftLevelTips(boolean isUserChooseGift){
         Log.d(TAG,"showGiftLevelTips-isUserChooseGift:"+isUserChooseGift);
         String msg = "";
-        Log.d(TAG,"showGiftLevelTips-lastSelectedGiftItem.levelLimit:"+lastSelectedGiftItem.levelLimit
-                +" imRoomInItem.manLevel:"+imRoomInItem.manLevel
-                +" lastSelectedGiftItem.lovelevelLimit:"+lastSelectedGiftItem.lovelevelLimit
-                +" imRoomInItem.loveLevel:"+imRoomInItem.loveLevel
-                );
+
         Map<String,SendableGiftItem> sendableGiftItemMap = NormalGiftManager.getInstance().getLocalRoomSendableGiftMap(imRoomInItem.roomId);
-        if(lastSelectedGiftItem.levelLimit > imRoomInItem.manLevel){
-            msg = mActivity.get().getResources().getString(
-                    R.string.liveroom_gift_user_levellimit);
-        }else if(lastSelectedGiftItem.lovelevelLimit > imRoomInItem.loveLevel){
-            msg = mActivity.get().getResources().getString(
-                    R.string.liveroom_gift_intimacy_levellimit);
-        }else if(null != sendableGiftItemMap && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)){
-            msg = mActivity.get().getResources().getString(
-                    R.string.liveroom_gift_pack_notsendable);
+        if(null != lastSelectedGiftItem && null != imRoomInItem){
+            Log.d(TAG,"showGiftLevelTips-lastSelectedGiftItem.levelLimit:"+lastSelectedGiftItem.levelLimit
+                    +" imRoomInItem.manLevel:"+imRoomInItem.manLevel
+                    +" lastSelectedGiftItem.lovelevelLimit:"+lastSelectedGiftItem.lovelevelLimit
+                    +" imRoomInItem.loveLevel:"+imRoomInItem.loveLevel
+            );
+            if(lastSelectedGiftItem.levelLimit > imRoomInItem.manLevel){
+                msg = mActivity.get().getResources().getString(
+                        R.string.liveroom_gift_user_levellimit,String.valueOf(lastSelectedGiftItem.levelLimit));
+            }else if(lastSelectedGiftItem.lovelevelLimit > imRoomInItem.loveLevel){
+                msg = mActivity.get().getResources().getString(
+                        R.string.liveroom_gift_intimacy_levellimit,String.valueOf(lastSelectedGiftItem.lovelevelLimit));
+            }else if(null != sendableGiftItemMap && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)){
+                msg = mActivity.get().getResources().getString(
+                        R.string.liveroom_gift_pack_notsendable);
+            }
         }
+
         if(null != mActivity && null != mActivity.get()){
             if(!TextUtils.isEmpty(msg)){
                 if(isUserChooseGift){
                     mActivity.get().showThreeSecondTips(msg, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
                 }
-                tv_sendGift.setBackgroundDrawable(mActivity.get().getResources().getDrawable(R.drawable.bg_live_buttom_gift_send_unusable));
-                tv_sendGift.setEnabled(false);
+                setSendGiftBtnEnable(false);
             }else{
-                tv_sendGift.setEnabled(true);
-                tv_sendGift.setBackgroundDrawable(mActivity.get().getResources().getDrawable(R.drawable.selector_live_buttom_gift_send));
+                setSendGiftBtnEnable(true);
             }
         }
+    }
 
+    private void setSendGiftBtnEnable(boolean enabled){
+        tv_sendGift.setBackgroundDrawable(mActivity.get().getResources().getDrawable(
+                enabled ?R.drawable.selector_live_buttom_gift_send :R.drawable.bg_live_buttom_gift_send_unusable));
+        tv_sendGift.setEnabled(enabled);
+        tv_sendGift.setTextColor(enabled ? mActivity.get().getResources().getColor(R.color.custom_dialog_txt_color_simple) : Color.WHITE);
+        ll_countChooser.setBackgroundDrawable(mActivity.get().getResources().getDrawable(
+                enabled ? R.drawable.bg_live_buttom_gift_count_chooser_usuable :  R.drawable.bg_live_buttom_gift_count_chooser_unusuable
+        ));
     }
 
     /**
@@ -676,8 +733,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         updateRepeatAnimStatus(giftItem,errorCode);
         if(errorCode == GiftSender.ErrorCode.FAILED_CREDITS_NOTENOUGHT){
             if(null != mActivity && null != mActivity.get()){
-                mActivity.get().showCreditNoEnoughPopupWindow(R.string.liveroom_gift_credits_noenough
-                        ,rootView,true);
+                mActivity.get().showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
             }
         }
     }
@@ -708,19 +764,25 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
                 if(null != giftAdapters && giftAdapters.size()>0){
                     int pageToBeSelectedIndex = lastPageSelectedIndex+1<pageCount ? lastPageSelectedIndex : 0;
                     lastSelectedGiftItem = (GiftItem) giftAdapters.get(pageToBeSelectedIndex).getList().get(0);
+                    lastClickedPkgGiftItem = lastSelectedGiftItem;
                     final List<Integer> numList = getGiftNumList();
                     updateGiftCountSelected(numList,0);
                     //更新item的选中状态
-                    updateItemViewSelectedStatus(lastSelectedGiftItem.id);
+                    updateItemViewSelectedStatus(lastClickedPkgGiftItem.id);
                     //更新指示器的选中状态
                     updateIndicatorStatus(pageToBeSelectedIndex);
                     sl_giftPagerContainer.setToScreen(pageToBeSelectedIndex);
                     Log.d(TAG,"onPackReqSend-lastSelectedGiftItem.name:"+lastSelectedGiftItem.name
-                            +" lastSelectedGiftItem.id:"+lastSelectedGiftItem.id);
-                    showGiftLevelTips(false);
-
+                            +" lastSelectedGiftItem.id:"+lastSelectedGiftItem.id+" lastClickedPkgGiftId.id:"+lastClickedPkgGiftItem.id);
                 }
                 updateRepeatAnimStatus(null, GiftSender.ErrorCode.FAILED_OTHER);
+                if(0 == packagGiftItems.size()){
+                    lastSelectedGiftItem = null;
+                    lastRepeatSentGiftItem = null;
+                    lastClickedPkgGiftItem = null;
+                    setSendGiftBtnEnable(false);
+                    showDataTipsViewByStatus(false,true,false);
+                }
             }else{
                 //更新指定gift的totalNum
                 if(currPageIndex<giftAdapters.size()){
@@ -734,12 +796,6 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
 
     public void notifyGiftSentFailed(IMClientListener.LCC_ERR_TYPE errType){
         updateRepeatAnimStatus(null,GiftSender.ErrorCode.FAILED_OTHER);
-        if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT){
-            if(null != mActivity && null != mActivity.get()){
-                mActivity.get().showCreditNoEnoughPopupWindow(R.string.liveroom_gift_credits_noenough
-                        ,rootView,true);
-            }
-        }
     }
 
     /**
@@ -772,13 +828,22 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         int i = view.getId();
         if (i == R.id.tv_reloadGiftList) {
             if (null != mActivity && mActivity.get() != null) {
-                mActivity.get().initRoomGiftDataSet();
+                if(lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
+                    mActivity.get().reloadPkgGiftData();
+                }else{
+                    mActivity.get().reloadStoreGiftData();
+                }
             }
             showDataTipsView();
-
         } else if (i == R.id.ll_userBalance) {
-            showAudienceBalanceInfoDialog();
-
+            //GA统计点击查看个人点数
+            if(mActivity != null && mActivity.get() != null){
+                BaseCommonLiveRoomActivity activity = mActivity.get();
+                activity.showAudienceBalanceInfoDialog(rootView);
+                activity.onAnalyticsEvent(activity.getResources().getString(R.string.Live_Broadcast_Category),
+                        activity.getResources().getString(R.string.Live_Broadcast_Action_MyBalance),
+                        activity.getResources().getString(R.string.Live_Broadcast_Label_MyBalance));
+            }
         } else if (i == R.id.fl_giftDialogContainer) {
         } else if (i == R.id.fl_giftDialogRootView) {
             dismiss();
@@ -791,11 +856,14 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         } else if (i == R.id.tv_sendGift || i == R.id.ll_sendGift) {
             //这个按钮可点击的时候，说明要么是刚开始送礼，要么是上个连送礼物动画播放过程中，切换了选择的礼物
             if (null != lastSelectedGiftItem) {
-                if (lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK
+                if (null != packagGiftItems && packagGiftItems.size()>0
+                        && lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK
                         && null != sendableGiftItemMap
-                        && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)) {
+                        && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)
+                        && packagGiftItems.contains(lastSelectedGiftItem)) {
                     mActivity.get().showThreeSecondTips(mActivity.get().getResources().getString(
-                            R.string.liveroom_gift_pack_notsendable), Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+                            R.string.liveroom_gift_pack_notsendable),
+                            Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
                     return;
                 }
 
@@ -809,7 +877,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
             lv_giftCount.setVisibility(View.GONE);
 
         } else if (i == R.id.ll_countChooser) {
-            if (ll_repeatSendAnim.getVisibility() == View.GONE) {
+            if (ll_repeatSendAnim.getVisibility() == View.GONE && canOpenNumberSelector) {
                 boolean isShowing = lv_giftCount.getVisibility() == View.VISIBLE;
                 iv_countIndicator.setSelected(isShowing);
                 lv_giftCount.setVisibility(isShowing ? View.GONE : View.VISIBLE);
@@ -824,30 +892,11 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     /**
      * 更新普通房间可发送礼物
      */
-    public void updateStoreGiftData(List<GiftItem> sendableGiftDetails){
+    public void notifyStoreGiftData(List<GiftItem> sendableGiftDetails){
         this.giftItems.clear();
         this.giftItems.addAll(sendableGiftDetails);
-        isSendableGiftDataChanged = true;
         //界面展示为loading、empty、error-reload则更新界面展示
         if(isShowing() && null != lastClickedGiftTab && lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
-            if((null != ll_emptyData && ll_emptyData.getVisibility() == View.VISIBLE)
-                    || (null != ll_errorRetry && ll_errorRetry.getVisibility() == View.VISIBLE)
-                    || (null != ll_loading && ll_loading.getVisibility() == View.VISIBLE)){
-                updateGiftView();
-                showDataTipsView();
-                isSendableGiftDataChanged = false;
-            }
-        }
-    }
-
-    public void setBackPackDataChanged(){
-        isBackPackDataChanged = true;
-        if(null == packagGiftItems || packagGiftItems.size()==0){
-            updateBackPackGiftData();
-            isBackPackDataChanged = false;
-        }
-        //界面展示为loading、empty、error-reload则更新界面展示
-        if(isShowing() && null != lastClickedGiftTab && lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
             if((null != ll_emptyData && ll_emptyData.getVisibility() == View.VISIBLE)
                     || (null != ll_errorRetry && ll_errorRetry.getVisibility() == View.VISIBLE)
                     || (null != ll_loading && ll_loading.getVisibility() == View.VISIBLE)){
@@ -858,20 +907,38 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     }
 
     /**
+     * 通知界面背包列表数据发生更改
+     * @param isSuccess
+     */
+    public void notifyBackPackDataChanged(boolean isSuccess){
+        Log.d(TAG,"notifyBackPackDataChanged-isSuccess:"+isSuccess);
+        if(isSuccess){
+            updateBackPackGiftData();
+        }
+        //界面展示为loading、empty、error-reload则更新界面展示
+        if(isShowing() && null != lastClickedGiftTab && lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK){
+            updateGiftView();
+            showDataTipsView();
+        }
+    }
+
+    /**
      * 更新背包礼物列表
      */
     public void updateBackPackGiftData(){
-        List<GiftItem> pkgGiftItems = PackageGiftManager.getInstance().getLocalPackageGiftDetails();
-        Map<String,Integer> pkgGiftNums = PackageGiftManager.getInstance().getLocalPackageGiftNumData();
-        sendableGiftItemMap = NormalGiftManager.getInstance().getLocalRoomSendableGiftMap(imRoomInItem.roomId);
-        packagGiftItems.clear();
-        packageGiftNums.clear();
-        packageGiftIdItems.clear();
-        //深赋值，避免Integer内存引用相同，导致manager更新引起dialog的直接性更改
-        for(GiftItem giftItem : pkgGiftItems){
-            packagGiftItems.add(giftItem);
-            packageGiftNums.put(giftItem.id,new Integer(pkgGiftNums.get(giftItem.id).intValue()));
-            packageGiftIdItems.put(giftItem.id,giftItem);
+        synchronized (packageGiftNums){
+            List<GiftItem> pkgGiftItems = PackageGiftManager.getInstance().getLocalPackageGiftDetails();
+            Map<String,Integer> pkgGiftNums = PackageGiftManager.getInstance().getLocalPackageGiftNumData();
+            sendableGiftItemMap = NormalGiftManager.getInstance().getLocalRoomSendableGiftMap(imRoomInItem.roomId);
+            packagGiftItems.clear();
+            packageGiftNums.clear();
+            packageGiftIdItems.clear();
+            //深赋值，避免Integer内存引用相同，导致manager更新引起dialog的直接性更改
+            for(GiftItem giftItem : pkgGiftItems){
+                packagGiftItems.add(giftItem);
+                packageGiftNums.put(giftItem.id,pkgGiftNums.get(giftItem.id));
+                packageGiftIdItems.put(giftItem.id,giftItem);
+            }
         }
     }
 
@@ -928,24 +995,6 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         }
     }
 
-    //---------------------------------------自定义Toast-------------------------------
-
-
-
-    //------------------------用户信用点信息对话框-----------------------------------------
-    private AudienceBalanceInfoPopupWindow pw_audienceBalanceInfo;
-
-    private void showAudienceBalanceInfoDialog(){
-        if(null == pw_audienceBalanceInfo){
-            pw_audienceBalanceInfo = new AudienceBalanceInfoPopupWindow(mActivity.get().getApplicationContext());
-            pw_audienceBalanceInfo.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        }
-        pw_audienceBalanceInfo.setUserLevel(imRoomInItem.manLevel);
-        pw_audienceBalanceInfo.showAtLocation(rootView,Gravity.BOTTOM,ViewGroup.LayoutParams.FILL_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-    }
-
     /******************************* 定时器相关  *************************************/
     /**
      * 指定初始位置启动定时器
@@ -981,11 +1030,10 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
                     public void run() {
                         //记录最后一次显示
                         mLastRepeatCount = executeCount;
-
                         if (null != tv_timeCount) {
                             tv_timeCount.setText(String.valueOf(executeCount));
-                            tv_timeCount.setTextColor(mActivity.get().getResources().getColor(
-                                    R.color.custom_dialog_txt_color_simple));
+//                            tv_timeCount.setTextColor(mActivity.get().getResources().getColor(
+//                                    R.color.custom_dialog_txt_color_simple));
                         }
                         Log.d(TAG,"MSG_WAHT_UPDATE_COUNTER-tv_timeCount:"+executeCount);
                     }

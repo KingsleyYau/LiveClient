@@ -135,6 +135,14 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 	}
 }
 
+bool AudioRendererImp::Start() {
+	return true;
+}
+
+void AudioRendererImp::Stop() {
+
+}
+
 void AudioRendererImp::Reset() {
     // 播放音频
 	JNIEnv* env;

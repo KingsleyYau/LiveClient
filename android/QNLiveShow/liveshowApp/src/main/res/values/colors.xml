@@ -48,13 +48,15 @@
     <color name="normal_purple">#501B75</color>
 
     <color name="liveroom_top_barcolor_freepublic">#cdb4b9</color>
-    <color name="liveroom_top_barcolor_normalprivate">#cdb4b9</color>
+    <color name="liveroom_top_barcolor_normalprivate">#5d5c5c</color>
     <color name="liveroom_top_barcolor_paidpublicRoom">#5d5c5c</color>
-    <color name="liveroom_top_barcolor_advancedprivate">#cdb4b9</color>
+    <color name="liveroom_top_barcolor_advancedprivate">#5d5c5c</color>
 
     <color name="live_book_bg">#f5f5f5</color>
 
     <color name="dark_gray">#5E5E5E</color>
+
+    <color name="text_light_white">#C2C2C2</color>
 
     <!-- process button -->
     <color name="progress_bg">#fff2c0</color>
@@ -66,5 +68,7 @@
     <color name="custom_dialog_txt_color_simple">#383838</color>
     <color name="custom_dialog_txt_color_btn_yes">@android:color/white</color>
     <color name="custom_dialog_txt_color_btn_no">#3c3c3c</color>
+
+    <color name="talent_confirm_dialog_confirm">#724602</color>
 
 </resources>

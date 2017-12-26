@@ -28,7 +28,7 @@ void HttpLogoutTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-	FileLog("httpcontroller",
+	FileLog(LIVESHOW_HTTP_LOG,
             "HttpLogoutTask::SetParam( "
             "task : %p, "
 			")",
@@ -37,7 +37,7 @@ void HttpLogoutTask::SetParam(
 }
 
 bool HttpLogoutTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpLogoutTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -49,7 +49,7 @@ bool HttpLogoutTask::ParseData(const string& url, bool bFlag, const char* buf, i
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpLogoutTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpLogoutTask::ParseData( buf : %s )", buf);
     }
     
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;

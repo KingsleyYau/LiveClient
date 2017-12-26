@@ -9,13 +9,26 @@
 #import <Foundation/Foundation.h>
 #import "IMRebateItem.h"
 
+@class LiveRoomCreditRebateManager;
+@protocol LiveRoomCreditRebateManagerDelegate <NSObject>
+@optional
+- (void)updataCredit:(double)credit;
+@end
+
+
 @interface LiveRoomCreditRebateManager : NSObject
 
 @property (nonatomic, assign) double mCredit;
 @property (nonatomic, strong) IMRebateItem *imRebateItem;
+@property (nonatomic, weak) id<LiveRoomCreditRebateManagerDelegate> delegate;
 
 /** 单例实例 */
 + (instancetype)creditRebateManager;
+
+- (BOOL)addDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate;
+
+- (BOOL)removeDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate;
+
 // 设置信用点
 - (void)setCredit:(double)credit;
 // 获取信用点

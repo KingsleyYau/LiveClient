@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogui_shape_wihte_round_corner"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialogui_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/live_forgot_pw_tips2"
+        android:textColor="@color/black"
+        android:textSize="@dimen/live_size_14sp"/>
+
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btn_ok"
+        android:layout_width="@dimen/live_size_140dp"
+        android:layout_height="@dimen/live_size_40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:layout_marginTop="@dimen/live_size_30dp"
+        button:background="@color/login_violet"
+        button:title="@string/ok"
+        button:title_color="@color/white"
+        button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+
+</LinearLayout>
+
+
+

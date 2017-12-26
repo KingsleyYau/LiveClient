@@ -14,6 +14,7 @@
 #include <common/CheckMemoryLeak.h>
 
 // 请求参数定义
+#define LEFTSECONDS_PARAM      "left_seconds"
 #define ROOMID_PARAM           "roomid"
 #define ERRNO_PARAM				"errno"
 #define ERRMSG_PARAM       		"errmsg"
@@ -29,6 +30,7 @@ RecvLeavingPublicRoomNoticeTask::RecvLeavingPublicRoomNoticeTask(void)
 	m_errMsg = "";
     
     m_roomId = "";
+    m_leftSeconds = 0;
 
 }
 
@@ -64,6 +66,9 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ROOMID_PARAM].isString()) {
             m_roomId = tp.m_data[ROOMID_PARAM].asString();
         }
+        if (tp.m_data[LEFTSECONDS_PARAM].isIntegral()) {
+            m_leftSeconds = tp.m_data[LEFTSECONDS_PARAM].asInt();
+        }
         if (tp.m_data[ERRNO_PARAM].isInt()) {
         	m_errType = (LCC_ERR_TYPE)tp.m_data[ERRNO_PARAM].asInt();
         }
@@ -82,7 +87,7 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvLeavingPublicRoomNotice(m_roomId, m_errType, m_errMsg);
+        m_listener->OnRecvLeavingPublicRoomNotice(m_roomId, m_leftSeconds, m_errType, m_errMsg);
 		FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

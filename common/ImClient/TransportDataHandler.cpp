@@ -200,16 +200,18 @@ bool CTransportDataHandler::StopProc()
 	// 断开连接
 	DisconnectProc();
 
-	FileLog("ImClient", "CTransportDataHandler::StopProc() m_loopThread->WaitAndStop()");
+	FileLog("ImClient", "CTransportDataHandler::StopProc() m_loopThread->WaitAndStop() begin");
 	// 停接收线程
 	if (NULL != m_loopThread) {
 		m_loopThread->WaitAndStop();
 	}
+    
+    FileLog("ImClient", "CTransportDataHandler::StopProc() m_client->Disconnect() begin");
 
 	m_urls.clear();
 
     m_client->Disconnect();
-	FileLog("ImClient", "CTransportDataHandler::StopProc() m_client->Disconnect()");
+	FileLog("ImClient", "CTransportDataHandler::StopProc() m_client->Disconnect() end");
 	
 	long long endTime = getCurrentTime();
 	long long diffTime = DiffTime(startTime, endTime);
@@ -285,10 +287,15 @@ void CTransportDataHandler::LoopThreadProc(void)
         
         m_client->Loop();
         
+        FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() loop");
+        
         // 停止发送线程
         if (NULL != m_sendThread) {
             m_sendThread->WaitAndStop();
         }
+        
+        FileLog("ImClient", "CTransportDataHandler::LoopThreadProc() m_sendThread->WaitAndStop()");
+        
         // 设置接收线程的标志位为false
         m_loopThread->SetStartSign();
     }
@@ -347,6 +354,17 @@ void CTransportDataHandler::SendProc()
 				success = m_client->SendData(buffer, dataLen);
             }
 
+            // Add by Max 20171201
+            FileLevelLog("ImClient",
+                         KLog::LOG_WARNING,
+                         "CTaskManager::SendProc( "
+                         "len : %d, "
+                         "data : %s "
+                         ")",
+                         dataLen,
+                         buffer
+                         );
+            
 			if (NULL != m_listener) {
 				m_listener->OnSend(success, task);
 			}
@@ -378,6 +396,8 @@ void CTransportDataHandler::DisconnectProc()
 void CTransportDataHandler::DisconnectCallback()
 {
 	FileLog("ImClient", "CTransportDataHandler::DisconnectCallback()");
+	m_listener->OnDisconnect();
+	
 	m_sendTaskListLock->Lock();
 	if (NULL != m_listener) {
 		m_listener->OnDisconnect(m_sendTaskList);
@@ -397,6 +417,20 @@ void CTransportDataHandler::OnConnect(bool success)
 
 void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen)
 {
+    // Add by Max 20171201
+    unsigned char* buffer = new unsigned char[dataLen + 1];
+    memcpy(buffer, data, dataLen);
+    buffer[dataLen] = '\0';
+    FileLevelLog("ImClient",
+                KLog::LOG_WARNING,
+                "CTaskManager::OnRecvData( "
+                "len : %d, "
+                "data : %s "
+                ")",
+                dataLen,
+                buffer
+                );
+    
     // 虽然报警告，但是没有加这些，Unpacket的数据有时被改变，暂时不知道原因
     size_t strLen = dataLen;
     if (NULL != m_listener) {
@@ -406,6 +440,9 @@ void CTransportDataHandler::OnRecvData(const unsigned char* data, size_t dataLen
             m_listener->OnRecv(tp);
         }
     }
+    
+    // Add by Max 20171201
+    delete[] buffer;
 }
 
 void CTransportDataHandler::OnDisconnect()

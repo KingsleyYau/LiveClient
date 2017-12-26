@@ -43,6 +43,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param audienceLimitNum	最大人数限制
 	 * @param honorId           勋章ID
      * @param honorImg          勋章图片url
+	 * @param popPrice			直播间的POP消息资费
 	 */	
 	public IMRoomInItem(String userId,
 						String nickName,
@@ -65,7 +66,9 @@ public class IMRoomInItem implements Serializable{
 						double videoPrice,
 						int audienceLimitNum,
 						String honorId,
-						String honorImg){
+						String honorImg,
+						double popPrice,
+						int useCoupon){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -94,6 +97,8 @@ public class IMRoomInItem implements Serializable{
 		this.audienceLimitNum = audienceLimitNum;
 		this.honorId = honorId;
 		this.honorImg = honorImg;
+		this.popPrice = popPrice;
+		this.useCoupon = useCoupon;
 	}
 	
 	public String userId; 
@@ -118,4 +123,17 @@ public class IMRoomInItem implements Serializable{
 	public int audienceLimitNum;
 	public String honorId;
 	public String honorImg;
+	public double popPrice;
+	public int useCoupon;
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder("IMRoomInItem[");
+		sb.append("honorId:");
+		sb.append(honorId);
+		sb.append(" honorImg:");
+		sb.append(honorImg);
+		sb.append("]");
+		return sb.toString();
+	}
 }

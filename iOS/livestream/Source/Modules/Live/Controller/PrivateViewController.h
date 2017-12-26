@@ -13,11 +13,13 @@
 
 #import "LSUITapImageView.h"
 #import "ChardTipView.h"
+#import "RoomTypeIsFirstManager.h"
 
 @class PrivateViewController;
 @protocol PrivateViewControllerDelegate <NSObject>
 @optional
 - (void)onSetupViewController:(PrivateViewController *)vc;
+- (void)setUpLiveRoomType:(PrivateViewController *)vc;
 @end
 
 @interface PrivateViewController : LSGoogleAnalyticsViewController
@@ -48,8 +50,8 @@
 @property (weak, nonatomic) IBOutlet UIImageView *manHeadBgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *manHeadImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *ladyHeadBgImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *ladyHeadImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *intimacyImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *ladyHeadImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *intimacyImageView;
 
 #pragma mark - 按钮
 @property (weak, nonatomic) IBOutlet UIButton *followBtn;

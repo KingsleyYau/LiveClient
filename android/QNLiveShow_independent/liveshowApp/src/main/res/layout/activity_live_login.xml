@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.qpidnetwork.livemodule.liveshow.login.LiveLoginActivity">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/main_sdv5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black3"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/live_size_60dp"
+        android:layout_height="@dimen/live_size_120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/live_size_100dp"
+        android:src="@android:drawable/ic_dialog_info" />
+
+
+    <TextView
+        android:id="@+id/txt_guide_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:text="@string/live_login_tips1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/live_size_10sp" />
+
+
+    <!-- E-mail　-->
+    <FrameLayout
+        android:id="@+id/fl_login_email"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_50dp"
+        android:layout_above="@id/txt_guide_link"
+        android:layout_marginLeft="@dimen/live_size_46dp"
+        android:layout_marginRight="@dimen/live_size_46dp"
+        android:layout_marginBottom="@dimen/live_size_30dp"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/selector_live_login_email">
+
+        <ImageView
+            android:layout_width="@dimen/live_size_24dp"
+            android:layout_height="@dimen/live_size_24dp"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_live_login_email" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="@string/live_login_email"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+    </FrameLayout>
+
+
+    <!-- FaceBook　-->
+    <FrameLayout
+        android:id="@+id/fl_login_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_50dp"
+        android:layout_above="@id/fl_login_email"
+        android:layout_marginLeft="@dimen/live_size_46dp"
+        android:layout_marginRight="@dimen/live_size_46dp"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:layout_centerHorizontal="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/selector_live_login_facebook">
+
+        <ImageView
+            android:layout_width="@dimen/live_size_24dp"
+            android:layout_height="@dimen/live_size_24dp"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_live_login_facebook" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:text="@string/live_login_facebook"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+    </FrameLayout>
+
+</RelativeLayout>

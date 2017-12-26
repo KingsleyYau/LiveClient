@@ -85,16 +85,18 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     
     // 重置分析器
     mStatistics.Start();
-    // 开始解码
+    // 重置解码器
     if( bFlag ) {
         bFlag = mpVideoDecoder->Reset();
     }
     if( bFlag ) {
         bFlag = mpAudioDecoder->Reset();
     }
+    // 重置音频播放器
+    mpAudioRenderer->Start();
     // 开始播放
     if( bFlag ) {
-        bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath, recordAACFilePath);
+        bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath);
     }
     // 开始录制
     if( bFlag ) {
@@ -138,6 +140,8 @@ void PlayerController::Stop() {
     // 停止录制
     mVideoRecorderH264.Stop();
     mAudioRecorderAAC.Stop();
+    // 停止音频播放
+    mpAudioRenderer->Stop();
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -344,6 +348,12 @@ void PlayerController::OnResetVideoStream(RtmpPlayer* player) {
 }
     
 void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnResetAudioStream("
+                 ")"
+                 );
+    
     if( mpAudioRenderer ) {
         mpAudioRenderer->Reset();
     }

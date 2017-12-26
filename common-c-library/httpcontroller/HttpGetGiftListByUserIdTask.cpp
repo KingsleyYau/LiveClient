@@ -36,7 +36,7 @@ void HttpGetGiftListByUserIdTask::SetParam(
         mRoomId = roomId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetGiftListByUserIdTask::SetParam( "
             "task : %p, "
             "roomId : %s"
@@ -53,7 +53,7 @@ const string& HttpGetGiftListByUserIdTask::GetRoomId() {
 
 
 bool HttpGetGiftListByUserIdTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetGiftListByUserIdTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -65,7 +65,7 @@ bool HttpGetGiftListByUserIdTask::ParseData(const string& url, bool bFlag, const
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetGiftListByUserIdTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetGiftListByUserIdTask::ParseData( buf : %s )", buf);
     }
     
     GiftWithIdItemList itemList;

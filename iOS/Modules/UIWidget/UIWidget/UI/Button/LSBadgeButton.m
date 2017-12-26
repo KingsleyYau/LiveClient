@@ -77,6 +77,27 @@
     }
 }
 
+- (void)setUnreadCont:(NSString *)unreadCont
+{
+    _unreadCont = unreadCont;
+     UIView *badgeView = [self viewWithTag:BADGE_TAG];
+    if (self.unreadCont) {
+        if (!badgeView) {
+  
+            badgeView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 4, self.frame.size.height - 8, 8, 8)];
+            badgeView.tag = BADGE_TAG;
+            badgeView.backgroundColor = [UIColor redColor];
+            [self addSubview:badgeView];
+            badgeView.layer.cornerRadius = badgeView.frame.size.height * 0.5;
+            badgeView.layer.masksToBounds = YES;
+        }
+    }
+    else
+    {
+      [badgeView removeFromSuperview];
+    }
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {

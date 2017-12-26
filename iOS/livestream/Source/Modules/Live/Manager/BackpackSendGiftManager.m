@@ -63,7 +63,7 @@
 
 #pragma mark - 请求背包礼物列表
 - (void)getBackpackListRequest:(RequestRoomGiftBlock)callBack {
-
+    
     GiftListRequest *request = [[GiftListRequest alloc] init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg,
                               NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
@@ -73,6 +73,11 @@
         dispatch_async(dispatch_get_main_queue(), ^{
 
             if (success) {
+                // 请求成功 清空旧数据
+                [self.backGiftArray removeAllObjects];
+                [self.roombackGiftArray removeAllObjects];
+                [self.roombackGiftDic removeAllObjects];
+                
                 if (array != nil && array.count) {
                     for (BackGiftItemObject *object in array) {
                         BackpackGiftItem *item = [[BackpackGiftItem alloc] init];
@@ -82,20 +87,16 @@
                         item.expDate = object.expDate;
                         item.read = object.read;
                         [self.backGiftArray addObject:item];
-
-                        if (self.backGiftArray.count == array.count) {
-                            if ([self screenGiftIdSame]) {
-                                callBack(success, self.roombackGiftArray);
-                            }
-                        }
+                    }
+                    if ([self screenGiftIdSame]) {
+                        callBack(success, self.roombackGiftArray);
                     }
                 } else {
                     // 没有背包礼物返回空数组
                     callBack(success, self.roombackGiftArray);
                 }
             } else {
-                self.roombackGiftArray = nil;
-                callBack(success, self.roombackGiftArray);
+                callBack(success, nil);
             }
         });
     };
@@ -226,8 +227,9 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
 
                     if (success) {
-
-                        [self.sendGiftArray removeObjectAtIndex:0];
+                        if (self.sendGiftArray.count > 0) {
+                            [self.sendGiftArray removeObjectAtIndex:0];
+                        }
                         if (self.sendGiftArray.count) {
                             [self sendBackGiftQurest];
                         } else {

@@ -49,6 +49,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPrivateCenterX;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPublicCenterX;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPublicCenterX;
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;

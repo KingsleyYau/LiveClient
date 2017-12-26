@@ -55,7 +55,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
                     return;
                 }
                 String token = et_token.getText().toString();
-                showProgressDialog(getResources().getString(R.string.tip_waitlogin));
+                showToast(getResources().getString(R.string.tip_waitlogin));
                 LoginManager.getInstance().login("", token);
             }
         });
@@ -130,7 +130,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
     }
 
     @Override
-    public void onLogout() {
+    public void onLogout(boolean isMannual) {
 
     }
 }

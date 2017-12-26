@@ -12,21 +12,23 @@
 static NSInteger const kTimeOut = 3;             /**< 超时移除时长 */
 static CGFloat const kRemoveAnimationTime = 0.5; /**< 移除动画时长 */
 static CGFloat const kNumberAnimationTime = 0.1; /**< 数字改变动画时长 */
-static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
+static CGFloat const kNumberChangeTime = 0.55;    /**< 计时器时长 */
 
 //static CGFloat const kNumberAnimationScaleStart = 2.0;
 //static CGFloat const kNumberAnimationScale = 0.5;
 
 @interface GiftComboView ()
 
+@property (strong) LSTimer *playTimer;
+
 @property (nonatomic, strong) NSTimer *liveTimer; /**< 定时器控制自身移除 */
 @property (nonatomic, assign) NSInteger liveTimerForSecond;
 @property (nonatomic, assign) BOOL isSetNumber;
-@property (nonatomic, strong) NSTimer *playTimer;
-@property (nonatomic, strong) NSThread *thread;
+//@property (nonatomic, strong) NSTimer *playTimer;
 
 @property (nonatomic, strong) dispatch_queue_t serialQueue;
 @property (nonatomic, strong) NSRunLoop *playLoop;
+
 
 @property (nonatomic, assign) BOOL isPlayTimerStop;
 
@@ -50,7 +52,7 @@ static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
 }
 
 - (void)dealloc {
-    NSLog(@"GiftComboView::dealloc()");
+    NSLog(@"GiftComboView::dealloc( self : %p )", self);
     
     self.isPlayTimerStop = YES;
 }
@@ -58,7 +60,7 @@ static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
 - (void)awakeFromNib {
     [super awakeFromNib];
     
-    NSLog(@"GiftComboView::awakeFromNib()");
+    NSLog(@"GiftComboView::awakeFromNib( self : %p )", self);
     
     self.liveTimerForSecond = 0;
     self.playTime = kNumberChangeTime;
@@ -71,30 +73,18 @@ static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
     self.isPlayTimerStop = YES;
     self.isPlayGiftCombo = NO;
 
-    self.serialQueue = dispatch_queue_create("serial_queue", DISPATCH_QUEUE_SERIAL);
-    
-//    WeakObject(self, weakSelf);
-    
-    dispatch_async(self.serialQueue, ^{
-        self.playLoop = [NSRunLoop currentRunLoop];
-        @synchronized(self) {
-            if (!self.playTimer) {
-                self.playTimer = [NSTimer scheduledTimerWithTimeInterval:self.playTime
-                                                                      target:self
-                                                                    selector:@selector(play)
-                                                                    userInfo:nil
-                                                                     repeats:YES];
-                [[NSRunLoop currentRunLoop] addTimer:self.playTimer forMode:NSDefaultRunLoopMode];
-            }
-        }
-        [[NSRunLoop currentRunLoop] run];
-    });
+    // 初始化播放计时器
+    self.playTimer = [[LSTimer alloc] init];
+    WeakObject(self, weakSelf);
+    [self.playTimer startTimer:nil timeInterval:self.playTime * NSEC_PER_SEC starNow:YES action:^{
+        [weakSelf play];
+    }];
 }
 
 - (void)removeFromSuperview {
     [super removeFromSuperview];
     
-    NSLog(@"GiftComboView::removeFromSuperview()");
+    NSLog(@"GiftComboView::removeFromSuperview( self : %p )", self);
 }
 
 - (void)setEndNum:(NSInteger)endNum {
@@ -146,16 +136,9 @@ static CGFloat const kNumberChangeTime = 1.0;    /**< 计时器时长 */
 }
 
 - (void)stopGiftCombo {
-    self.serialQueue = nil;
-
-    @synchronized(self) {
-        [self.playTimer invalidate];
-        self.playTimer = nil;
-    }
-
-    if ([self.playLoop getCFRunLoop]) {
-        CFRunLoopStop([self.playLoop getCFRunLoop]);
-    }
+    NSLog(@"GiftComboView::stopGiftCombo( self : %p )", self);
+    
+    [self.playTimer stopTimer];
 }
 
 #pragma mark - Private

@@ -22,6 +22,7 @@
 #define RIDERNAME_PARAM        "ridername"
 #define RIDERURL_PARAM         "riderurl"
 #define FANSNUM_PARAM          "fansnum"
+#define HONORIMG_PARAM         "honor_img"
 
 RecvEnterRoomNoticeTask::RecvEnterRoomNoticeTask(void)
 {
@@ -39,6 +40,7 @@ RecvEnterRoomNoticeTask::RecvEnterRoomNoticeTask(void)
     m_riderId = "";
     m_riderName = "";
     m_riderUrl = "";
+    m_honorImg = "";
 }
 
 RecvEnterRoomNoticeTask::~RecvEnterRoomNoticeTask(void)
@@ -91,8 +93,11 @@ bool RecvEnterRoomNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[RIDERURL_PARAM].isString()) {
             m_riderUrl = tp.m_data[RIDERURL_PARAM].asString();
         }
-        if (tp.m_data[FANSNUM_PARAM].isInt()) {
+        if (tp.m_data[FANSNUM_PARAM].isNumeric()) {
             m_fansNum = tp.m_data[FANSNUM_PARAM].asInt();
+        }
+        if (tp.m_data[HONORIMG_PARAM].isString()) {
+            m_honorImg = tp.m_data[HONORIMG_PARAM].asString();
         }
     }
     
@@ -106,7 +111,7 @@ bool RecvEnterRoomNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum);
+        m_listener->OnRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum, m_honorImg);
 		FileLog("ImClient", "RecvEnterRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

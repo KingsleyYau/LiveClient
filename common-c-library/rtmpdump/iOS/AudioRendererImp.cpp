@@ -81,8 +81,8 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
             AudioTimeStamp outActualStartTime;
             status = AudioQueueEnqueueBufferWithParameters(mAudioQueue, audioBuffer, 0, NULL, 0, 0, 0, NULL, NULL, &outActualStartTime);
             if( status == noErr ) {
-                FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::RenderAudioFrame( this : %p, audioBuffer : %p, mSampleTime : %f )", this,
-                             audioBuffer, outActualStartTime.mSampleTime);
+                FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioRendererImp::RenderAudioFrame( this : %p, audioBuffer : %p, size : %d, mSampleTime : %f )", this,
+                             audioBuffer, audioFrame->mBufferLen, outActualStartTime.mSampleTime);
             } else {
                 FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [AudioQueueEnqueueBuffer Fail], this : %p, status : %d )", this, (int)status);
             }
@@ -91,6 +91,52 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
             FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioRendererImp::RenderAudioFrame( [AudioQueueAllocateBuffer Fail], this : %p, status : %d )", this, (int)status);
         }
 //    }
+}
+
+bool AudioRendererImp::Start() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Start( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
+    BOOL bFlag = YES;
+    if( mAudioQueue ) {
+        // 开始播放
+        OSStatus status = noErr;
+        status = AudioQueueStart(mAudioQueue, NULL);
+        if( status == noErr ) {
+            bFlag = true;
+        }
+    }
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Start( "
+                 "[%s], "
+                 "this : %p "
+                 ")",
+                 bFlag?"Success":"Fail",
+                 this
+                 );
+    
+    return bFlag;
+}
+
+void AudioRendererImp::Stop() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "AudioRendererImp::Stop( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+    
+    if( mAudioQueue ) {
+        AudioQueueStop(mAudioQueue, YES);
+    }
 }
 
 void AudioRendererImp::Reset() {
@@ -159,12 +205,6 @@ bool AudioRendererImp::Create() {
                     mAudioBufferList.push_back(audioBuffer);
                     mAudioBufferList.unlock();
                 }
-            }
-            
-            // 开始播放
-            status = AudioQueueStart(mAudioQueue, NULL);
-            if( status == noErr ) {
-                bFlag = true;
             }
         }
 

@@ -47,6 +47,22 @@
 #include "HttpSubmitPhoneVerifyCodeTask.h"
 #include "HttpServerSpeedTask.h"
 #include "HttpBannerTask.h"
+#include "HttpGetUserInfoTask.h"
+#include "HttpOwnFackBookLoginTask.h"
+#include "HttpOwnRegisterTask.h"
+#include "HttpOwnEmailLoginTask.h"
+#include "HttpOwnFindPasswordTask.h"
+#include "HttpOwnCheckMailRegistrationTask.h"
+#include "HttpGetShareLinkTask.h"
+#include "HttpSetShareSucTask.h"
+#include "HttpUploadPhotoTask.h"
+#include "HttpPremiumMembershipTask.h"
+#include "HttpGetIOSPayTask.h"
+#include "HttpIOSPayCallTask.h"
+#include "HttpSubmitFeedBackTask.h"
+#include "HttpGetManBaseInfoTask.h"
+#include "HttpSetManBaseInfoTask.h"
+#include "HttpGetVerificationCodeTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -70,7 +86,8 @@ public:
      *  2.1.登陆接口
      *
      * @param pHttpRequestManager           http管理器
-     * @param qnsid                         QN系统登录验证返回的标识
+     * @param manId                         QN会员ID
+     * @param userSid                       QN系统登录验证返回的标识
      * @param deviceid                      设备唯一标识
      * @param model                         设备型号（格式：设备型号－系统版本号）
      * @param manufacturer                  制造厂商
@@ -117,7 +134,170 @@ public:
                             IRequestUpdateTokenIdCallback* callback = NULL
                             );
     
-
+    /**
+     *  2.4.Facebook注册及登录（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param fToken                              Facebook登录返回的accessToken
+     * @param versionCode                         客户端内部版本号
+     * @param utmReferrer                         APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
+     * @param model                               设备型号
+     * @param deviceId                            设备唯一标识
+     * @param manufacturer                        制造厂商
+     * @param inviteCode                          推荐码（可无）
+     * @param email                               用户注册的邮箱（可无）
+     * @param passWord                            登录密码（可无）
+     * @param birthDay                            出生日期（可无，但未绑定时必须提交，格式为：2015-02-20）
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnFackBookLogin(
+                               HttpRequestManager *pHttpRequestManager,
+                               const string& fToken,
+                               const string& versionCode,
+                               const string& utmReferrer,
+                               const string& model,
+                               const string& deviceId,
+                               const string& manufacturer,
+                               const string& inviteCode = "",
+                               const string& email = "",
+                               const string& passWord = "",
+                               const string& birthDay = "",
+                               IRequestOwnFackBookLoginCallback* callback = NULL
+                            );
+    
+    
+    /**
+     *  2.5.邮箱注册（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param email                电子邮箱
+     * @param passWord             密码
+     * @param gender               性别（M：男，F：女）
+     * @param nickName             昵称
+     * @param birthDay             出生日期（格式为：2015-02-20）
+     * @param inviteCode           推荐码（可无）
+     * @param model                设备型号
+     * @param deviceid             设备唯一标识
+     * @param manufacturer         制造厂商
+     * @param utmReferrer          APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnRegister(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string email,
+                              const string passWord,
+                              GenderType gender,
+                              const string nickName,
+                              const string birthDay,
+                              const string inviteCode,
+                              const string model,
+                              const string deviceid,
+                              const string manufacturer,
+                              const string utmReferrer,
+                               IRequestOwnRegisterCallback* callback = NULL
+                               );
+    
+    /**
+     *  2.6.邮箱登录（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param email                         用户的email或id
+     * @param passWord                      登录密码
+     * @param versionCode                   客户端内部版本号
+     * @param model                         设备型号（格式：设备型号-系统版本号-API版本号-分辨率）
+     * @param deviceid                      设备唯一标识
+     * @param manufacturer                  制造厂商
+     * @param checkCode                     验证码
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnEmailLogin(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string email,
+                          const string passWord,
+                          const string versionCode,
+                          const string model,
+                          const string deviceid,
+                          const string manufacturer,
+                          const string checkCode,
+                          IRequestOwnEmailLoginCallback* callback = NULL
+                          );
+    
+    /**
+     *  2.7.找回密码（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param sendMail                      用户的email或id
+     * @param checkCode                     验证码
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnFindPassword(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string sendMail,
+                            const string checkCode,
+                            IRequestOwnFindPasswordCallback* callback = NULL
+                            );
+    
+    /**
+     *  2.8.检测邮箱注册状态（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param email                         电子邮箱
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnCheckMail(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string email,
+                          IRequestOwnCheckMailRegistrationCallback* callback = NULL
+                          );
+    
+    /**
+     *  2.9.提交用户头像接口（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param photoName                     上传头像文件名
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long OwnUploadPhoto(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string photoName,
+                           IRequestUploadPhotoCallback* callback = NULL
+                           );
+    
+    /**
+     *  2.10.获取验证码（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param verifyType                    验证码种类，（“login”：登录；“findpw”：找回密码）
+     * @param useCode                       是否需要验证码，（1：必须；0：不限，服务端自动检测ip国家）
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetVerificationCode(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  VerifyCodeType verifyType,
+                                  bool useCode,
+                                  IRequestGetVerificationCodeCallback* callback = NULL
+                                  );
     
     /**
      *  3.1.获取Hot列表接口
@@ -126,6 +306,7 @@ public:
      * @param start                         起始，用于分页，表示从第几个元素开始获取
      * @param step                          步长，用于分页，表示本次请求获取多少个元素
      * @param hasWatch                      是否只获取观众看过的主播（0: 否 1: 是  可无，无则默认为0
+     * @param isForTest                     是否可看到测试主播（0：否，1：是）（整型）（可无，无则默认为0）
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -135,6 +316,7 @@ public:
                             int start,
                             int step,
                             bool hasWatch,
+                            bool isForTest,
                             IRequestGetAnchorListCallback* callback = NULL
                             );
     
@@ -669,6 +851,161 @@ public:
                      HttpRequestManager *pHttpRequestManager,
                     IRequestBannerCallback* callback = NULL
                     );
+    
+    /**
+     * 6.10.获取主播/观众信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param userId                        观众ID或主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetUserInfo(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& userId,
+                          IRequestGetUserInfoCallback* callback = NULL
+                     );
+    
+    /**
+     * 6.11.获取分享链接
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param shareuserId                   发起分享的主播/观众ID
+     * @param anchorId                      被分享的主播ID
+     * @param shareType                     分享渠道（0：其它，1：Facebook，2：Twitter）
+     * @param sharePageType                 分享类型（1：主播资料页，2：免费公开直播间）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetShareLink(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& shareuserId,
+                          const string& anchorId,
+                          ShareType shareType,
+                          SharePageType sharePageType,
+                          IRequestGetShareLinkCallback* callback = NULL
+                          );
+    
+    /**
+     * 6.12.分享链接成功
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param shareId                       分享ID（参考《6.11.获取分享链接（http post）》的shareid参数）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SetShareSuc(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string& shareId,
+                           IRequestSetShareSucCallback* callback = NULL
+                           );
+    
+    /**
+     * 6.13.提交Feedback（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器
+     * mail                                 用户邮箱
+     * msg                                  feedback内容）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SubmitFeedBack(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& mail,
+                             const string& msg,
+                             IRequestSubmitFeedBackCallback* callback = NULL
+                             );
+    
+    /**
+     * 6.14.获取个人信息（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetManBaseInfo(
+                             HttpRequestManager *pHttpRequestManager,
+                             IRequestGetManBaseInfoCallback* callback = NULL
+                             );
+    
+    /**
+     * 6.15.设置个人信息（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param nickName                      昵称
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SetManBaseInfo(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& nickName,
+                             IRequestSetManBaseInfoCallback* callback = NULL
+                             );
+    
+    /**
+     * 7.1.获取买点信息（仅独立）（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param siteId                        站点ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long PremiumMembership(
+                          HttpRequestManager *pHttpRequestManager,
+                          const string& siteId,
+                          IRequestPremiumMembershipCallback* callback = NULL
+                          );
+    
+    /**
+     * 7.2.获取订单信息（仅独立）（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param manid            男士ID
+     * @param sid              跨服务器唯一标识
+     * @param number           信用点套餐ID
+     * @param siteid           站点ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetIOSPay(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& manid,
+                        const string& sid,
+                        const string& number,
+                        const string& siteid,
+                        IRequestGetIOSPayCallback* callback = NULL
+                        );
+    
+    /**
+     * 7.3.验证订单信息（仅独立）（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * manid            男士ID
+     * sid              跨服务器唯一标识
+     * receipt          AppStore支付成功返回的receipt参数
+     * orderNo          订单号
+     * code             AppStore支付完成返回的状态code（APPSTOREPAYTYPE_PAYSUCCES：支付成功，APPSTOREPAYTYPE_PAYFAIL：支付失败，APPSTOREPAYTYPE_PAYRECOVERY：恢复交易(仅非消息及自动续费商品)，APPSTOREPAYTYPE_NOIMMEDIATELYPAY：无法立即支付）（可无，默认：APPSTOREPAYTYPE_PAYSUCCES）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long IOSPayCall(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& manid,
+                        const string& sid,
+                        const string& receipt,
+                        const string& orderNo,
+                        AppStorePayCodeType code,
+                        IRequestIOSPayCallCallback* callback = NULL
+                        );
 private:
     void OnTaskFinish(IHttpTask* task);
     

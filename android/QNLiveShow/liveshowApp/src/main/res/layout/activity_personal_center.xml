@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -28,18 +29,26 @@
             android:text="@string/my_schedule_invite_title"
             android:textSize="12sp"
             android:layout_marginLeft="15dp"/>
-        <TextView
-            android:id="@+id/tvInviteUnread"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:background="@drawable/bg_custom_ff4747_circle"
-            android:text="55"
-            android:visibility="visible"
-            android:textSize="9sp"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:gravity="center_vertical|center_horizontal"
-            android:textColor="@color/white" />
+        <!--<TextView-->
+            <!--android:id="@+id/tvInviteUnread"-->
+            <!--android:layout_width="15dp"-->
+            <!--android:layout_height="15dp"-->
+            <!--android:background="@drawable/bg_custom_ff4747_circle"-->
+            <!--android:visibility="visible"-->
+            <!--android:textSize="9sp"-->
+            <!--android:singleLine="true"-->
+            <!--android:ellipsize="end"-->
+            <!--android:gravity="center_vertical|center_horizontal"-->
+            <!--android:textColor="@color/white" />-->
+        <com.qpidnetwork.livemodule.view.DotView.DotView
+            android:id="@+id/dv_InviteUnread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_10sp"
+            app:dotPadding="2dp">
+        </com.qpidnetwork.livemodule.view.DotView.DotView>
     </LinearLayout>
     <View
         android:layout_width="match_parent"

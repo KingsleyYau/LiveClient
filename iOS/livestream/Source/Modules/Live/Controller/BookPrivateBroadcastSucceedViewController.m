@@ -12,6 +12,7 @@
 #import "LSImageViewLoader.h"
 #import "LSMyReservationsViewController.h"
 #import "LiveModule.h"
+#import "LiveGobalManager.h"
 @interface BookPrivateBroadcastSucceedViewController ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -30,20 +31,19 @@
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    
-    self.title = NSLocalizedStringFromSelf(@"BOOK_PRIVATE_TITLE");
-    
+        
     self.giftDownloadManager = [LiveGiftDownloadManager manager];
     
     self.titleArray = @[NSLocalizedStringFromSelf(@"BROAD_CASTER"),NSLocalizedStringFromSelf(@"RESER_TIME"),NSLocalizedStringFromSelf(@"VIRTUAL_GIFT")];
     
     [self setTableHeadView];
     [self setTableFooterView];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView reloadData];
 }
 
-- (IBAction)backBtnDid:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)backBtnDid:(UIButton *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)setTableHeadView
@@ -65,6 +65,7 @@
     [okBtn addTarget:self action:@selector(backBtnDid:) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:okBtn];
     
+    // 需求已改，不显示
     UIButton * myBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     CGFloat bottom = okBtn.frame.origin.y + okBtn.frame.size.height;
     myBtn.frame = CGRectMake(footerView.frame.size.width/2 - 201/2, bottom + 13, 201, 35);
@@ -73,6 +74,7 @@
     myBtn.layer.masksToBounds = YES;
     myBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
     [myBtn addTarget:self action:@selector(myBtnDid:) forControlEvents:UIControlEventTouchUpInside];
+    myBtn.hidden = YES;
     [footerView addSubview:myBtn];
     
     [self.tableView setTableFooterView:footerView];
@@ -81,7 +83,6 @@
 
 - (void)myBtnDid:(UIButton *)btn
 {
-    [self dismissViewControllerAnimated:NO completion:nil];
     LSMyReservationsViewController * vc = [[LSMyReservationsViewController alloc]initWithNibName:nil bundle:nil];
     [[[LiveModule module] moduleVC].navigationController pushViewController:vc animated:YES];
 }
@@ -89,18 +90,6 @@
 - (void)setupContainView {
     
     [super setupContainView];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:YES];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self.navigationController setNavigationBarHidden:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -139,28 +128,32 @@
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
         cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
         
-        cell.textLabel.text = [self.titleArray objectAtIndex:indexPath.row];
-    }
-    
-    if (indexPath.row == 0) {
-        cell.detailTextLabel.text = self.userName;
-    }
-    else if (indexPath.row == 1)
-    {
-        cell.detailTextLabel.text = self.time;
-    }
-    else
-    {
-        NSString * giftUrl = [self.giftDownloadManager backSmallImgUrlWithGiftID:self.giftId];
+        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(10, 0, screenSize.width - 20, 0.5)];
+        lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
+        [cell addSubview:lineView];
         
-        UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(self.tableView.frame.size.width - 80, 10, 30, 30)];
-        icon.layer.cornerRadius = 4;
-        icon.layer.masksToBounds = YES;
-        [cell addSubview:icon];
-        LSImageViewLoader *imageViewLoader = [LSImageViewLoader loader];
-        [imageViewLoader loadImageWithImageView:icon options:0 imageUrl:giftUrl placeholderImage:nil];
-    
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"X%ld",(long)self.giftNum];
+        cell.textLabel.text = [self.titleArray objectAtIndex:indexPath.row];
+        
+        if (indexPath.row == 0) {
+            cell.detailTextLabel.text = self.userName;
+        }
+        else if (indexPath.row == 1)
+        {
+            cell.detailTextLabel.text = self.time;
+        }
+        else
+        {
+            NSString * giftUrl = [self.giftDownloadManager backMiddleImgUrlWithGiftID:self.giftId];
+            
+            UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(self.tableView.frame.size.width - 80, 10, 30, 30)];
+            icon.layer.cornerRadius = 4;
+            icon.layer.masksToBounds = YES;
+            [cell addSubview:icon];
+            LSImageViewLoader *imageViewLoader = [LSImageViewLoader loader];
+            [imageViewLoader loadImageWithImageView:icon options:0 imageUrl:giftUrl placeholderImage:nil];
+            
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"X%ld",(long)self.giftNum];
+        }
     }
 
     return cell;

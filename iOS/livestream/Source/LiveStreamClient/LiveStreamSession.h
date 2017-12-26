@@ -24,6 +24,11 @@
 - (void)activeSession;
 
 /**
+ 停止后台播放
+ */
+- (void)inactiveSession;
+
+/**
  开始播放
  */
 - (void)startPlay;

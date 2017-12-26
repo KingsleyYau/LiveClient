@@ -1,0 +1,148 @@
+<resources>
+
+    <!--启动页背景-->
+    <style name="CustomTheme.App" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <!--Peacock页面同Application的theme一样，windowBackground都为一张图片-->
+        <!--<item name="android:windowBackground">@color/bg_MainActivity</item>-->
+    </style>
+
+    <!--自定义SimpleDoubleBtnTipsDialog样式-->
+    <style name="CustomTheme.SimpleDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>-->
+    </style>
+    <style name="CustomTheme.SimpleDialog.Anim" parent="@android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/gift_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
+    </style>
+
+
+    <style name="CustomTheme.LiveGiftDialog" parent="@android:style/Theme.Dialog">
+        <!--没有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--窗口浮动-->
+        <item name="android:windowIsFloating">true</item>
+        <!--透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--背景是否昏暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@color/dialog_background</item>
+        <!--进出动画-->
+        <item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="CustomTheme.UserBalanceInfoDialog" parent="@android:style/Theme.Dialog">
+        <!--没有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--窗口浮动-->
+        <item name="android:windowIsFloating">true</item>
+        <!--透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--背景是否昏暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <!--进出动画-->
+        <item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="CustomTheme.SimpleDialog.Btn" parent="@android:style/Theme.Dialog">
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_width">73dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="CustomTheme.SimpleDialog.Btn.Cancel" parent="@style/CustomTheme.SimpleDialog.Btn">
+        <item name="android:background">@drawable/bg_custom_dialog_cancel</item>
+        <item name="android:layout_marginRight">24dp</item>
+    </style>
+    <style name="CustomTheme.SimpleDialog.Btn.Confirm" parent="@style/CustomTheme.SimpleDialog.Btn">
+        <item name="android:background">@drawable/bg_custom_dialog_confirm</item>
+        <item name="android:layout_marginLeft">24dp</item>
+    </style>
+
+
+    <!--自定义逻辑对应于"下一步操作"按钮的通用样式-->
+    <style name="CustomTheme.Btn.Next" parent="@android:style/Theme">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">162.5dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:layout_marginTop">83dp</item>
+        <item name="android:textColor">#fffefe</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:background">@drawable/selector_btn_next</item>
+
+    </style>
+
+
+    <style name="CustomTheme.EndLive.Title" parent="@android:style/Theme">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#b4a5ff</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="CustomTheme.EndLive.MoreBroadcast.Item" parent="@android:style/Theme">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_marginTop">15.5dp</item>
+        <item name="android:layout_marginBottom">24.5dp</item>
+        <item name="android:layout_width">51dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="CustomTheme.EndLive.MoreBroadcast.Header" parent="@android:style/Theme">
+        <item name="android:layout_width">51dp</item>
+        <item name="android:layout_height">51dp</item>
+    </style>
+
+    <style name="CustomTheme.EndLive.MoreBroadcast.NickName" parent="@android:style/Theme">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#bebebe</item>
+       <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">3dp</item>
+    </style>
+
+    <!--公用UI元素-->
+    <style name="Text_Shadow">
+        <item name="android:shadowColor">@color/messagelist_shadow_color</item>
+        <item name="android:shadowRadius">1</item>
+        <item name="android:shadowDy">1</item>
+    </style>
+
+    <!--Diaglog Theme-->
+    <style name="themeDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!-- 边框 -->
+        <item name="android:windowIsFloating">true</item><!-- 是否浮现在activity之上 -->
+        <item name="android:windowIsTranslucent">false</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+
+    <!-- MaleCheckBox theme -->
+    <style name="MaleCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_cb_male</item>
+    </style>
+
+    <!-- FemaleCheckBox theme -->
+    <style name="FemaleCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_cb_female</item>
+    </style>
+</resources>

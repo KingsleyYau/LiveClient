@@ -210,7 +210,7 @@
 //根据cell的width确定动画的时间
 - (NSTimeInterval)animationDurationWithCell:(BarrageViewCell *)cell width:(CGFloat)cellWdith
 {
-    return [cell calculateAnimationDurationWithBarrageWidth:W spacing:spaceing cellWidth:cellWdith speedBaseVlaue:self.speedBaseVlaue];
+    return 6;
 }
 
 //检测cell是否实现了BarrageViewCellAble协议
@@ -271,6 +271,7 @@
             [self.highPrioritys addObject:obj];
             break;
     }
+    NSLog(@"BarrageView::addModel array:%@ obj:%p",self.highPrioritys,obj);
 }
 
 //从数据源中删除obj
@@ -375,6 +376,8 @@
     NSArray *subArray = [self subArrayWithNumber:self.numbers];//需要展示的models
     for (id<BarrageModelAble> obj in subArray) {
         if (![self.dataArray containsObject:obj]) continue;
+        
+        NSLog(@"BarrageView::startAnimation subArray:%@ obj:%p",subArray,obj);
         //1.谁来展示
         BarrageViewCell *currentCell = [self.dataSouce barrageView:self cellForModel:obj];
         

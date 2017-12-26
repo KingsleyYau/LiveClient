@@ -2,33 +2,35 @@ package com.qpidnetwork.livemodule.liveshow.home;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
+import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnBannerCallback;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
+import com.qpidnetwork.livemodule.httprequest.item.UserType;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.guide.GuideActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity;
 import com.qpidnetwork.livemodule.liveshow.welcome.PeacockActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.view.DotView.DotLayout;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 
-public class MainFragmentActivity extends BaseFragmentActivity implements ScheduleInvitePackageUnreadManager.OnUnreadListener,
+public class MainFragmentActivity extends BaseActionBarFragmentActivity implements ScheduleInvitePackageUnreadManager.OnUnreadListener,
         ViewPager.OnPageChangeListener{
 
     private static final String LAUNCH_URL = "launchUrl";
@@ -37,12 +39,14 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
     //头部
     private FrameLayout btnBack;
     private TabPageIndicator tabPageIndicator;
-    private TextView tv_centerUnReadNum;
+//    private TextView tv_centerUnReadNum;
+    private DotLayout dl_UnReadNum;
 
     //内容
     private ViewPager viewPagerContent;
     private MainFragmentPagerAdapter mAdapter;
     private ScheduleInvitePackageUnreadManager mScheduleInvitePackageUnreadManager;
+    private boolean mNeedShowGuide = true;
 
   /**
      * 外部启动Url跳转
@@ -64,6 +68,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
      */
     public static void launchActivityWithListType(Context context, int listType){
         Intent intent = new Intent(context, MainFragmentActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(LAUNCH_PARAMS_LISTTYPE, listType);
         context.startActivity(intent);
     }
@@ -71,7 +76,10 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        setContentView(R.layout.activity_live_main);
+        setCustomContentView(R.layout.activity_live_main);
+        //
+        setTitleVisible(View.GONE);
+
         TAG = MainFragmentActivity.class.getSimpleName();
 
         //GA统计，设置Activity不需要report
@@ -80,24 +88,61 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
         initView();
         parseIntent(getIntent());
         //服务启动
-        LiveService.getInstance().onMoudleServiceStart();
+        if(LiveService.getInstance() == null){
+            //crash异常启动退回home页面
+            finish();
+        }else{
+            LiveService.getInstance().onMoudleServiceStart();
+        }
+
         mScheduleInvitePackageUnreadManager = ScheduleInvitePackageUnreadManager.getInstance();
         mScheduleInvitePackageUnreadManager.registerUnreadListener(this);
         mScheduleInvitePackageUnreadManager.GetCountOfUnreadAndPendingInvite();
         mScheduleInvitePackageUnreadManager.GetPackageUnreadCount();
         setCenterUnReadNumAndStyle();
+        initData();
+
+        //引导页
+        if(mNeedShowGuide){
+            showGuideView();
+        }
+    }
+
+    private void initData(){
+        Log.d(TAG,"initData");
+        LiveRequestOperator.getInstance().Banner(new OnBannerCallback() {
+            @Override
+            public void onBanner(boolean isSuccess, int errCode, String errMsg,
+                                 String bannerImg, String bannerLink, String bannerName) {
+                Log.d(TAG,"onBanner-isSuccess:"+isSuccess+" errCode:"+errCode
+                        +" errMsg:"+errMsg+" bannerImg:"+bannerImg+" bannerLink:"+bannerLink
+                        +" bannerName:"+bannerName);
+                if(isSuccess){
+                    final BannerItem bannerItem = new BannerItem(bannerImg,bannerLink,bannerName);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(null != mAdapter){
+                                mAdapter.notifyBannerImgChanged(bannerItem);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     @Override
     protected void onDestroy() {
         //服務結束
-        LiveService.getInstance().onModuleServiceEnd();
+        if(LiveService.getInstance() != null) {
+            LiveService.getInstance().onModuleServiceEnd();
+        }
         super.onDestroy();
         mScheduleInvitePackageUnreadManager.unregisterUnreadListener(this);
     }
@@ -113,6 +158,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
      * @param intent
      */
     private void parseIntent(Intent intent){
+        Log.d(TAG,"parseIntent");
         Bundle bundle = intent.getExtras();
         String url = "";
         int defaultPage = 0;
@@ -129,9 +175,11 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
         //根据Url执行跳转
         if(!TextUtils.isEmpty(url) && !URL2ActivityManager.isHomeMainPage(url)){
             //url非指向当前main界面
-            URL2ActivityManager.URL2Activity(this, url);
+            manager.URL2Activity(this, url);
+            mNeedShowGuide = false;
         }else{
-            defaultPage = URL2ActivityManager.getMainListType(Uri.parse(url));
+            defaultPage = manager.getMainListType(Uri.parse(url));
+            mNeedShowGuide = true;
         }
 
         //切换默认页
@@ -143,6 +191,7 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
     }
 
     private void initView(){
+        Log.d(TAG,"initView");
         btnBack = (FrameLayout) findViewById(R.id.btnBack);
         btnBack.setOnClickListener(this);
         tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabPageIndicator);
@@ -159,9 +208,9 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
         tabPageIndicator.setHasDigitalHint(false);
         //设置中间竖线上下的padding值
         tabPageIndicator.setDividerPadding(DisplayUtil.dip2px(this, 10));
-        //引导页
-        showGuideView();
-        tv_centerUnReadNum = (TextView) findViewById(R.id.tv_centerUnReadNum);
+
+//        tv_centerUnReadNum = (TextView) findViewById(R.id.tv_centerUnReadNum);
+        dl_UnReadNum = (DotLayout)findViewById(R.id.dl_UnReadNum);
     }
 
     private void setCenterUnReadNumAndStyle(){
@@ -169,17 +218,34 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
         ScheduleInviteUnreadItem inviteItem = mScheduleInvitePackageUnreadManager.getScheduleInviteUnreadItem();
         //刷新背包未读数目
         PackageUnreadCountItem packageItem = mScheduleInvitePackageUnreadManager.getPackageUnreadCountItem();
-        if((null == inviteItem || inviteItem.total==0) && (null == packageItem || packageItem.total==0)){
-            tv_centerUnReadNum.setVisibility(View.GONE);
-        }else{
-            tv_centerUnReadNum.setVisibility(View.VISIBLE);
-        }
-        if(inviteItem != null && inviteItem.total>0){
-            if(inviteItem.total>=9){
-                tv_centerUnReadNum.setText(String.valueOf(9));
-            }else{
-                tv_centerUnReadNum.setText(String.valueOf(inviteItem.total));
+//        if((null == inviteItem || inviteItem.total == 0) && (null == packageItem || packageItem.total == 0)){
+////            tv_centerUnReadNum.setVisibility(View.GONE);
+//            dl_UnReadNum.show(false);
+//        }else{
+////            tv_centerUnReadNum.setVisibility(View.VISIBLE);
+//            dl_UnReadNum.show(true);    //没指定数目时,显示一个小小的红点
+//        }
+//        if(inviteItem != null && inviteItem.total>0){
+////            if(inviteItem.total >= 99){
+//////                tv_centerUnReadNum.setText(String.valueOf(99) + "+");
+////            }else{
+////                tv_centerUnReadNum.setText(String.valueOf(inviteItem.total));
+//                dl_UnReadNum.show(true , inviteItem.total); //控件已控制 大于99时,显示99+
+////            }
+//        }else{
+////            tv_centerUnReadNum.setText("");
+//            dl_UnReadNum.show(true);
+//        }
+
+
+        if(null == inviteItem || inviteItem.total == 0) {
+            if(null == packageItem || packageItem.total == 0){
+                dl_UnReadNum.show(false);
+            }else {
+                dl_UnReadNum.show(true);    //没指定数目时,显示一个小小的红点
             }
+        }else {
+            dl_UnReadNum.show(true , inviteItem.total); //控件已控制 大于99时,显示99+
         }
     }
 
@@ -226,21 +292,12 @@ public class MainFragmentActivity extends BaseFragmentActivity implements Schedu
      * 显示引导页
      */
     private void showGuideView(){
-        //SP
-        SharedPreferences sharedPreferences = getSharedPreferences("guideSetting", MODE_PRIVATE);
-
-        //小于指定版本号　则显示引导
-        int version = sharedPreferences.getInt("guideVersion", 0);
-        if(version < SystemUtils.getVersionCode(mContext)){ // < 可以改为某个版本号，不然每次更新都会显示引导页
-//            startActivity(new Intent(mContext , GuideActivity.class));
-            startActivity(GuideActivity.getIntent(mContext , GuideActivity.GuideType.ALL));
-
-            //保存版本号，表示已经看过
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("guideVersion", SystemUtils.getVersionCode(mContext));
-            editor.commit();
+        Log.d(TAG,"showGuideView");
+        if(LoginManager.getInstance().getLoginItem()!=null && LoginManager.getInstance().getLoginItem().userType == UserType.AllRoom){
+            GuideActivity.show(mContext , GuideActivity.GuideType.MAIN_A);
+        }else{
+            GuideActivity.show(mContext , GuideActivity.GuideType.MAIN_B);
         }
-
     }
 
     @Override

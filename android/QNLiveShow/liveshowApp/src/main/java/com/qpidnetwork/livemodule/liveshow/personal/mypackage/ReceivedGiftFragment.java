@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.personal.mypackage;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,14 @@ import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
+import com.qpidnetwork.livemodule.framework.base.BaseLoadingFragment;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetGiftDetailCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetPackageGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
 import java.util.ArrayList;
@@ -26,8 +29,9 @@ import java.util.List;
  * Created by Hunter on 17/9/26.
  */
 
-public class ReceivedGiftFragment extends BaseListFragment {
+public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRefreshLayout.OnRefreshListener {
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private GridView mGridView;
     private List<PackageGiftItem> mPackageGifts;
     private PackageGiftsAdapter mAdapter;
@@ -36,6 +40,9 @@ public class ReceivedGiftFragment extends BaseListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         setCustomContent(R.layout.fragment_package_gifts);
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         mGridView = (GridView)view.findViewById(R.id.gridView);
         return view;
     }
@@ -54,6 +61,7 @@ public class ReceivedGiftFragment extends BaseListFragment {
         //Fragment是否可见，用于viewpager切换时再加载
         if(isVisibleToUser){
             //切换到当前fragment
+            showLoadingProcess();
             queryPackageGifts();
         }
     }
@@ -61,20 +69,28 @@ public class ReceivedGiftFragment extends BaseListFragment {
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
-        hideLoadingProcess();
+        onRefreshComplete();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         if(response.isSuccess){
+            //列表刷新成功，更新未读
+            ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();
+
             mPackageGifts.clear();
             PackageGiftItem[] packageGifts = (PackageGiftItem[])response.data;
             if(packageGifts != null) {
                 mPackageGifts.addAll(Arrays.asList(packageGifts));
                 //过滤本地是否已有礼物详情
                 filterToCompleteGiftDetail();
-                mAdapter.notifyDataSetChanged();
             }
+            mAdapter.notifyDataSetChanged();
 
             if(mPackageGifts.size() <= 0 ){
                 showEmptyView();
+            }else{
+                hideNodataPage();
             }
         }else{
             if(mPackageGifts != null && mPackageGifts.size() > 0){
@@ -117,21 +133,22 @@ public class ReceivedGiftFragment extends BaseListFragment {
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
+        showLoadingProcess();
         queryPackageGifts();
     }
 
     @Override
     protected void onDefaultEmptyGuide() {
         super.onDefaultEmptyGuide();
-        queryPackageGifts();
+//        queryPackageGifts();
     }
 
     /**
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.followinglist_empty_text));
-        setDefaultEmptyButtonText(getResources().getString(R.string.common_hotlist_guide));
+        setDefaultEmptyMessage(getResources().getString(R.string.my_package_gift_empty_tips));
+        setDefaultEmptyButtonText("");
         showNodataPage();
     }
 
@@ -139,7 +156,6 @@ public class ReceivedGiftFragment extends BaseListFragment {
      * 获取背包礼物列表
      */
     private void queryPackageGifts(){
-        showLoadingProcess();
         LiveRequestOperator.getInstance().GetPackageGiftList(new OnGetPackageGiftListCallback() {
             @Override
             public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList, int totalCount) {
@@ -151,4 +167,21 @@ public class ReceivedGiftFragment extends BaseListFragment {
         });
     }
 
+    /**
+     * 刷新完成UI
+     */
+    private void onRefreshComplete(){
+        swipeRefreshLayout.setRefreshing(false);
+        hideLoadingProcess();
+    }
+
+    @Override
+    public void onRefresh() {
+        queryPackageGifts();
+    }
+
+    @Override
+    public void onReloadDataInEmptyView() {
+        queryPackageGifts();
+    }
 }

@@ -29,7 +29,7 @@ public class LSConfig {
 	/**
 	 * 视频帧率(推流参数)
 	 */
-	public static int VIDEO_FPS = 6;
+	public static int VIDEO_FPS = 10;
 	/**
 	 * 视频关键帧间隔(推流参数)
 	 */
@@ -51,4 +51,9 @@ public class LSConfig {
 	 * 音频PCM精度
 	 */
 	public static int BIT_PER_SAMPLE = 16;
+	
+	/**
+	 * 
+	 */
+	public static int MAGIC_TEXTURE_ID = 10;
 }

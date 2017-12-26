@@ -36,6 +36,9 @@ using namespace std;
 #define MAXFANSINUM_PARAM      "max_fansi_num"
 #define HONORID_PARAM          "honor_id"
 #define HONORIMG_PARAM         "honor_img"
+#define POPPRICE_PARAM         "pop_price"
+#define USECOUPON_PARAM        "use_coupon"
+#define SHARELINK_PARAM        "share_link"
 
 class RoomInfoItem {
 public:
@@ -143,6 +146,17 @@ public:
                 honorImg = root[HONORIMG_PARAM].asString();
             }
             
+            if (root[POPPRICE_PARAM].isNumeric()) {
+                popPrice = root[POPPRICE_PARAM].asDouble();
+            }
+            
+            if (root[USECOUPON_PARAM].isNumeric()) {
+                useCoupon = root[USECOUPON_PARAM].asInt();
+            }
+            
+            if (root[SHARELINK_PARAM].isString()) {
+                shareLink = root[SHARELINK_PARAM].asString();
+            }
         }
 
         result = true;
@@ -169,6 +183,9 @@ public:
         maxFansiNum = 0;
         honorId = "";
         honorImg = "";
+        popPrice = 0.0;
+        useCoupon = 0;
+        shareLink = "";
     }
     
     virtual ~RoomInfoItem() {
@@ -199,6 +216,9 @@ public:
      * maxFansiNum		        最大人数限制
      * honorId                  勋章ID
      * honorImg                 勋章图片url
+     * popPrice                 直播间的POP消息资费
+     * useCoupon                试聊卷分钟数
+     * shareLink                默认分享链接
      */
     string          userId;
     string          nickName;
@@ -222,6 +242,9 @@ public:
     int             maxFansiNum;
     string          honorId;
     string          honorImg;
+    double          popPrice;
+    int             useCoupon;
+    string          shareLink;
 };
 
 

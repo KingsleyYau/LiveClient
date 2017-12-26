@@ -115,7 +115,7 @@
         button.tag = i + 88;
         [self.scrollView addSubview:button];
         [button addTarget:self action:@selector(virtualGiftDid:) forControlEvents:UIControlEventTouchUpInside];
-        [button sd_setImageWithURL:[NSURL URLWithString:giftItem.infoItem.smallImgUrl] forState:UIControlStateNormal];
+        [button sd_setImageWithURL:[NSURL URLWithString:giftItem.infoItem.middleImgUrl] forState:UIControlStateNormal];
 
         if (i == 0) {
             self.oldButton = button;
@@ -159,8 +159,12 @@
             [self setPriceNum:priceNum];
         }
     }
-
-    self.numView.contentSize = CGSizeMake(self.numView.frame.size.width, 30 * array.count);
+    CGRect frame = self.numView.frame;
+    frame.origin.y = self.numBtn.frame.origin.y - 7 - 30 * array.count;
+    frame.size.height = 30 * array.count;
+    self.numView.frame = frame;
+//    self.numView.contentSize = CGSizeMake(self.numView.frame.size.width, 30 * array.count);
+    
 }
 
 - (void)virtualGiftDid:(UIButton *)button {
@@ -202,10 +206,10 @@
         [self.delegate addVirtualGiftsCellSelectGiftId:self.giftId andNum:self.num];
     }
 
-    NSString *priceStr = [NSString stringWithFormat:@"%@  %0.1f %@", NSLocalizedStringFromSelf(@"TOTAL_PRICE"), num, NSLocalizedStringFromSelf(@"CRDITS")];
+    NSString *priceStr = [NSString stringWithFormat:@"%@  %0.2f %@", NSLocalizedStringFromSelf(@"TOTAL_PRICE"), num, NSLocalizedStringFromSelf(@"CRDITS")];
     NSMutableAttributedString *mAttStr = [[NSMutableAttributedString alloc] initWithString:priceStr];
 
-    NSRange priceRange = [priceStr rangeOfString:[NSString stringWithFormat:@"%0.1f", num]];
+    NSRange priceRange = [priceStr rangeOfString:[NSString stringWithFormat:@"%0.2f", num]];
     [mAttStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:priceRange];
     [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:priceRange];
     NSRange crditsRange = [priceStr rangeOfString:NSLocalizedStringFromSelf(@"CRDITS")];

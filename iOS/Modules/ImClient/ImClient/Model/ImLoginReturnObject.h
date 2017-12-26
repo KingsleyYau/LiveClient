@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "ImInviteIdItemObject.h"
 #import "ImScheduleRoomObject.h"
+#import "ImLoginRoomObject.h"
 
 /**
  * 立即私密邀请结构体
@@ -18,7 +19,7 @@
  */
 
 @interface ImLoginReturnObject : NSObject
-@property (nonatomic, strong) NSArray<NSString*> * _Nullable roomList;
+@property (nonatomic, strong) NSArray<ImLoginRoomObject*> * _Nullable roomList;
 @property (nonatomic, strong) NSArray<ImInviteIdItemObject*> * _Nullable inviteList;
 @property (nonatomic, strong) NSArray<ImScheduleRoomObject*> * _Nullable scheduleRoomList;
 

@@ -3,8 +3,10 @@ package net.qdating.publisher;
 import java.io.IOException;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.graphics.ImageFormat;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.PreviewCallback;
@@ -29,6 +31,12 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 	
 	private CaptureThread captureThread;
 	private boolean videoCaptureInit = false;
+	
+	//add by hunter
+	private boolean mIsCaptureStart = false;			//标记预览任务是否开启
+	private boolean mCameraPreviewing = false;			//标记camera是否预览中
+	//Jagger add
+	private SurfaceTexture mSurfaceTexture;
 	
 	private class CaptureThread extends HandlerThread {
 		private Handler mHandler;
@@ -65,6 +73,7 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 		captureThread = new CaptureThread("CaptureThread", this);
 	}
 	
+	@SuppressLint("NewApi") 
 	public boolean init(SurfaceHolder holder, ILSVideoCaptureCallback callback, int rotation) {
 		boolean bFlag = false;
 		
@@ -74,17 +83,18 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		surfaceHolder.addCallback(this);
 		surfaceHolder.setFixedSize(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+		//Jagger add
+		mSurfaceTexture = new SurfaceTexture(LSConfig.MAGIC_TEXTURE_ID);
 		
 		captureCallback = callback;
 		this.rotation = rotation;
 		
 		captureThread.start();
-		
 		// 异步开启摄像头
 		captureThread.startCapture();
 		try {
 			synchronized (this) {
-				this.wait();
+				this.wait(); 
 			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -105,8 +115,9 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 		stop();
 		
 		captureThread.quit();
-		
 		if( mCamera != null ) {
+			stopPreview();
+			
 			mCamera.setPreviewCallbackWithBuffer(null);
 			mCamera.release();
 			mCamera = null;
@@ -120,44 +131,68 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 	}
 	
 	public boolean start() {
-		boolean bFlag = true;
-		
-		if( mCamera != null ) {
-			// 设置采集缓存Buffer
-			Size bestSize = mCamera.getParameters().getPreviewSize();
-			PixelFormat pixelFormat = new PixelFormat();
-			PixelFormat.getPixelFormatInfo(ImageFormat.NV21, pixelFormat);
-			
-			int bufSize = bestSize.width * bestSize.height * pixelFormat.bitsPerPixel / 8;
-			byte[] buffer = null;
-			for (int i = 0; i < LSConfig.VIDEO_CAPTURE_BUFFER_COUNT; i++) {
-				buffer = new byte[bufSize];
-				mCamera.addCallbackBuffer(buffer);
-			}
-			mCamera.setPreviewCallbackWithBuffer(this);
-//			mCamera.setPreviewTexture();
-			
-			// 开启预览
-			mCamera.startPreview();
-			
-			bFlag = true;
-		}
-
+		mIsCaptureStart = true;
+		//
+		boolean bFlag = startInternal();
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::start( [%s] )", bFlag?"Success":"Fail"));
 		
 		return bFlag;
 	}
 	
+	@SuppressLint("NewApi") 
 	public void stop() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::stop()"));
 		
+		mIsCaptureStart = false;
 		if( mCamera != null ) {
+			//Jagger add
+			mSurfaceTexture.release();
+			stopPreview();
 			// 停止预览
-			mCamera.stopPreview();
+//			mCamera.stopPreview();
 			mCamera.setPreviewCallbackWithBuffer(null);
+			//标记camera预览状态
+			mCameraPreviewing = false;
 		}
 	}
 	
+	/**
+	 * 开启录制
+	 */
+	public boolean startInternal(){
+		boolean bFlag = false;
+		if( mCamera != null && !mCameraPreviewing) {
+			try{
+				// 设置采集缓存Buffer
+				Size bestSize = mCamera.getParameters().getPreviewSize();
+				PixelFormat pixelFormat = new PixelFormat();
+				PixelFormat.getPixelFormatInfo(ImageFormat.NV21, pixelFormat);
+				
+				int bufSize = bestSize.width * bestSize.height * pixelFormat.bitsPerPixel / 8;
+				byte[] buffer = null;
+				for (int i = 0; i < LSConfig.VIDEO_CAPTURE_BUFFER_COUNT; i++) {
+					buffer = new byte[bufSize];
+					mCamera.addCallbackBuffer(buffer);
+				}
+				mCamera.setPreviewCallbackWithBuffer(this);
+//				mCamera.setPreviewTexture();
+				
+				// 开启预览
+				mCamera.startPreview();
+				//标记camera预览状态
+				mCameraPreviewing = true;
+				bFlag = true;
+			}catch(Exception e){
+				Log.d(LSConfig.TAG, String.format("LSVideoCapture::startInternal():%s",e.toString()));
+			}
+			
+		}else if(mCameraPreviewing){
+			bFlag = true;
+		}
+		return bFlag;
+	}
+	
+	@SuppressLint("NewApi") 
 	private boolean initCapture() {
 		boolean bFlag = false;
 		
@@ -167,6 +202,9 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 				try {
 					// 打开摄像头
 					mCamera = Camera.open(cameraIndex);
+					//Jagger add
+					mCamera.setPreviewTexture(mSurfaceTexture);
+					
 					if( mCamera != null ) {
 						bFlag = true;
 						
@@ -217,6 +255,9 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 					    }
 					    
 					    previewRotation = result;
+					    //Jagger add
+					    mCamera.setDisplayOrientation(previewRotation);
+					    
 						if( captureCallback != null ) {
 							captureCallback.onChangeRotation(previewRotation);
 						}
@@ -242,8 +283,12 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 		if( mCamera != null ) {
 			try {
 				mCamera.setPreviewDisplay(holder);
-				mCamera.setDisplayOrientation(previewRotation);
-				
+				//Jagger del 移到initCapture()去了
+//				mCamera.setDisplayOrientation(previewRotation);
+				//开启预览
+				if(mIsCaptureStart){
+					startInternal();
+				}
 			} catch (RuntimeException e) {
 				 Log.d(LSConfig.TAG, String.format("LSVideoCapture::startPreview( error : %s )", e.toString()));
 				 e.printStackTrace();
@@ -261,6 +306,9 @@ public class LSVideoCapture implements PreviewCallback, Callback {
 			// 停止预览
 			mCamera.setPreviewCallback(null);
 			mCamera.stopPreview();
+			
+			//标记camera预览状态
+			mCameraPreviewing = false;
 		}
 	}
 	

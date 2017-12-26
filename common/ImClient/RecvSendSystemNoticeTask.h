@@ -51,6 +51,7 @@ private:
     string          m_roomId;      // 直播间ID
     string          m_msg;         // 公告消息内容
     string          m_link;        // 公告链接（可无，无则表示不是带链接的公告消息）
+    IMSystemType    m_type;        // 公告类型（0:普通 1:警告）
 
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果

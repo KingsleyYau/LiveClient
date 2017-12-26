@@ -77,14 +77,14 @@ string gToken;
 
  /* JNI_OnLoad */
  jint JNI_OnLoad(JavaVM* vm, void* reserved) {
- 	FileLog("httprequest", "JNI_OnLoad( httprequest.so JNI_OnLoad )");
+ 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::JNI_OnLoad( httprequest.so JNI_OnLoad )");
  	gJavaVM = vm;
 
  	// Get JNI
  	JNIEnv* env;
  	if (JNI_OK != vm->GetEnv(reinterpret_cast<void**> (&env),
                             JNI_VERSION_1_4)) {
- 		FileLog("httprequest", "JNI_OnLoad ( could not get JNI env )");
+ 		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::JNI_OnLoad ( could not get JNI env )");
  		return -1;
  	}
 
@@ -186,10 +186,18 @@ string gToken;
  	InitClassHelper(env, PACKAGE_RIDE_ITEM_CLASS, &jPackageRideItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_RIDE_ITEM_CLASS, jPackageRideItem));
 
- 	/* 4.其他    */
+ 	/* 6.其他    */
  	jobject jConfigItem;
  	InitClassHelper(env, OTHER_CONFIG_ITEM_CLASS, &jConfigItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_CONFIG_ITEM_CLASS, jConfigItem));
+
+ 	jobject jAnchorInfoItem;
+ 	InitClassHelper(env, OTHER_ANCHORINFO_ITEM_CLASS, &jAnchorInfoItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_ANCHORINFO_ITEM_CLASS, jAnchorInfoItem));
+
+ 	jobject jUserInfoItem;
+ 	InitClassHelper(env, OTHER_USERINFO_ITEM_CLASS, &jUserInfoItem);
+ 	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_USERINFO_ITEM_CLASS, jUserInfoItem));
 
  	return JNI_VERSION_1_4;
  }

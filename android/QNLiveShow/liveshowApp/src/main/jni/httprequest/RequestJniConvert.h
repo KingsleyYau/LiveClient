@@ -53,6 +53,10 @@ static const int HTTPErrorTypeArray[] = {
 	    HTTP_LCC_ERR_RETRY_PHONE, 				// 请稍后再重试
 	    HTTP_LCC_ERR_MORE_TWENTY_PHONE, 		// 60分钟内验证超过20次，请24小时后再试
 	    HTTP_LCC_ERR_UPDATE_PHONE_FAIL, 		// 更新失败
+	    HTTP_LCC_ERR_ANCHOR_OFFLIVE,            // 主播不在线，不能操作
+		HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING, 	// 观众已同意预约
+		HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING, 	// 预约邀请已超时（当观众拒绝时）
+		HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING,   	// 预约邀请已超时（当观众同意时）
 };
 
 // 底层状态转换JAVA坐标
@@ -155,7 +159,8 @@ int TalentInviteStatusToInt(HTTPTalentStatus talentStatus);
 static const int BookInviteTimeStatusArray[]{
 	BOOKTIMESTATUS_BOOKING,             // 可预约
 	BOOKTIMESTATUS_INVITEED,            // 本人已邀请
-	BOOKTIMESTATUS_COMFIRMED             // 本人已确认
+	BOOKTIMESTATUS_COMFIRMED,           // 本人已确认
+	BOOKTIMESTATUS_INVITEEDOTHER		// 本人已邀请其它主播
 };
 
 // 底层状态转换JAVA坐标
@@ -239,5 +244,8 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item);
 jobject getAudienceBaseInfoItem(JNIEnv *env, const HttpLiveFansInfoItem& item);
 jobjectArray getServerArray(JNIEnv *env, const HttpLoginItem::SvrList& list);
 jobject getServerItem(JNIEnv *env, const HttpLoginItem::SvrItem& item);
+
+jobject getUserInfoItem(JNIEnv *env, const HttpUserInfoItem& item);
+jobject getAnchorInfoItem(JNIEnv *env, const HttpAnchorInfoItem& item);
 
 #endif

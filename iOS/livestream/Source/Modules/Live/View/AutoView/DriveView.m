@@ -50,11 +50,8 @@
                            placeholderImage:[UIImage imageNamed:@"live_room_car"]
                                     options:0
                                   completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
-
-                                      if (image) {
-                                          if (self.delegate && [self.delegate respondsToSelector:@selector(canPlayDirve:audienceModel:)]) {
-                                              [self.delegate canPlayDirve:self audienceModel:model];
-                                          }
+                                      if (self.delegate && [self.delegate respondsToSelector:@selector(canPlayDirve:audienceModel:ifError:)]) {
+                                          [self.delegate canPlayDirve:self audienceModel:model ifError:error];
                                       }
                                   }];
 }

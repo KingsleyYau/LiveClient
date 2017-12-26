@@ -14,7 +14,6 @@
 #import "TableSuperView.h"
 #import "DriveView.h"
 
-
 #import "BarrageView.h"
 #import "BarrageModel.h"
 #import "BarrageModelCell.h"
@@ -41,9 +40,14 @@
 @optional
 - (void)onReEnterRoom:(LiveViewController *)vc;
 - (void)bringRewardViewInTop:(LiveViewController *)vc;
+- (void)noCreditPushTo:(LiveViewController *)vc;
+- (void)liveViewIsPlay:(LiveViewController *)vc;
 @end
 
 @interface LiveViewController : LSGoogleAnalyticsViewController
+#pragma mark - 调试信息
+@property (nonatomic, weak) IBOutlet UILabel *debugLabel;
+
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 
@@ -130,6 +134,7 @@
 #pragma mark - 流播放推送事件
 - (void)play;
 - (void)stopPlay;
+- (void)initPublish;
 - (void)publish;
 - (void)stopPublish;
 

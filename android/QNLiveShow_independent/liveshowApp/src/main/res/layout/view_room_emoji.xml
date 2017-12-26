@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/ll_emojiRootView"
+    android:background="#535353"
+    android:orientation="vertical">
+    <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/tpi_tabIndicator"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="29dip"
+        custom:titleTextColorUnselected="#59ffffff"
+        custom:titleTextColorSelected="#f7cd3a"
+        custom:titleTextSize="12sp"
+        custom:hasDigitalHint="false"
+        custom:tabSelectedBgColor="#2b2b2b"
+        custom:tabUnselectedBgColor="@android:color/black"
+        custom:underlineColor="@android:color/holo_blue_bright"
+        custom:underlineHeight="0dp"
+        custom:indicatorColor="@android:color/holo_orange_dark"
+        custom:indicatorHeight="0dp">
+
+    </com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator>
+
+    <FrameLayout
+        android:id="@+id/fl_emojiContainer"
+        android:layout_marginTop="1dp"
+        android:background="#2b2b2b"
+        android:layout_width="match_parent"
+        android:layout_height="190dp">
+        <LinearLayout
+            android:id="@+id/ll_emojiContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.qpidnetwork.livemodule.view.ScrollLayout
+                android:id="@+id/sl_pagerContainer"
+                android:background="@android:color/transparent"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="13dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_height="149dp"
+                xmlns:custom="http://schemas.android.com/apk/res-auto"
+                custom:columnNumbPerPage="6"
+                custom:lineNumbPerPage="3"
+                custom:gridViewVerticalSpacing="1dp"
+                custom:gridViewHorizontalSpacing="1dp">
+
+            </com.qpidnetwork.livemodule.view.ScrollLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_pageIndicator"
+                android:layout_width="match_parent"
+                android:layout_gravity="bottom"
+                android:layout_height="6dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+            </LinearLayout>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_itemUnusableTip"
+            android:text="@string/tip_emoji_unusable"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:background="#c4000000"
+            android:paddingLeft="46dp"
+            android:visibility="visible"
+            android:paddingRight="46dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/ll_emojiLoading"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#2b2b2b"
+            android:layout_marginBottom="36dip"
+            android:orientation="vertical"
+            android:layout_marginTop="30dp">
+
+            <ProgressBar
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:scrollbarStyle="insideInset"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDuration="1000"
+                android:layout_marginTop="46dp"
+                android:layout_gravity="center_horizontal"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tip_loading"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:textColor="#a3ffffff"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_emptyEmojiData"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#2b2b2b"
+            android:layout_marginBottom="36dip"
+            android:orientation="vertical"
+            android:layout_marginTop="30dp">
+
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="46dp"
+                android:src="@drawable/ic_view_data_sosad"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/liveroom_gift_pack_empty"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:textColor="#a3ffffff"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_retryLoadEmoji"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="#2b2b2b"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_marginBottom="36dip"
+            android:layout_marginTop="30dp">
+
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="23dp"
+                android:src="@drawable/ic_view_data_sosad"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tip_failed_to_load"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:textColor="#a3ffffff"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/tv_reloadEmojiList"
+                android:layout_width="88dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:textColor="#3c3c3c"
+                android:gravity="center"
+                android:background="@drawable/bg_btn_reload_giftlist"
+                android:textSize="12sp"
+                android:text="@string/tip_reload"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+</LinearLayout>

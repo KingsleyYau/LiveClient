@@ -15,17 +15,9 @@
 
 + (instancetype)manager;
 
-- (void)comeinLiveRoomWithType:(LiveRoomType)type HaveComein:(BOOL)haveComein;
+- (void)comeinLiveRoomWithType:(NSString *)type HaveComein:(BOOL)haveComein;
 
-- (BOOL)getThisTypeHaveCome:(LiveRoomType)type;
-
-@end
-
-
-@interface RoomTypeFirst : NSObject
-
-@property (nonatomic, assign) LiveRoomType type;
-
-@property (nonatomic, assign) BOOL haveComein;
+- (BOOL)getThisTypeHaveCome:(NSString *)type;
 
 @end
+

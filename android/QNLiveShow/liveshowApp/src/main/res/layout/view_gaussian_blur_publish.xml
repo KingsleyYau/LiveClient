@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/iv_gaussianBlur"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        fresco:actualImageScaleType="fitXY"
+        fresco:placeholderImage="@drawable/bg_interactive_video_default"
+        fresco:placeholderImageScaleType="fitXY"
+        fresco:failureImage="@drawable/bg_interactive_video_default"
+        android:src="@drawable/bg_interactive_video_default"
+        fresco:failureImageScaleType="fitXY"
+        />
+    <View
+        android:id="@+id/v_gaussianBlurFloat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#a6000000"/>
+</FrameLayout>
+

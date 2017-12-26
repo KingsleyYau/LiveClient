@@ -29,7 +29,7 @@ void HttpGetEmoticonListTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetEmoticonListTask::SetParam( "
             "task : %p, "
             ")",
@@ -39,7 +39,7 @@ void HttpGetEmoticonListTask::SetParam(
 
 
 bool HttpGetEmoticonListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetEmoticonListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -51,7 +51,7 @@ bool HttpGetEmoticonListTask::ParseData(const string& url, bool bFlag, const cha
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetEmoticonListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetEmoticonListTask::ParseData( buf : %s )", buf);
     }
     
     EmoticonItemList itemList;

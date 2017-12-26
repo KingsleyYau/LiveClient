@@ -30,7 +30,7 @@
                 android:orientation="horizontal">
                 <LinearLayout
                     android:id="@+id/ll_StoreGiftTab"
-                    android:background="@android:color/black"
+                    android:background="#2b2b2b"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
@@ -51,12 +51,12 @@
                         android:textSize="@dimen/custom_dialog_text_size_simple"
                         android:textColor="#f7cd3a"
                         android:layout_marginLeft="7dp"
-                        android:text="Store"/>
+                        android:text="@string/liveroom_gift_tab_store"/>
 
                 </LinearLayout>
                 <LinearLayout
                     android:id="@+id/ll_PkgGiftTab"
-                    android:background="#2b2b2b"
+                    android:background="@android:color/black"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
@@ -77,7 +77,7 @@
                         android:textSize="@dimen/custom_dialog_text_size_simple"
                         android:textColor="#59ffffff"
                         android:layout_marginLeft="7dp"
-                        android:text="BlackPack"/>
+                        android:text="@string/liveroom_gift_tab_blackpace"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -155,7 +155,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
-                android:text="30"
                 android:textColor="@color/custom_dialog_txt_color_simple"
                 android:textSize="28sp" />
 
@@ -164,7 +163,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_timeCount"
                 android:gravity="center"
-                android:text="Combo"
+                android:text="@string/liveroom_gift_repeat_tips"
                 android:textColor="@color/custom_dialog_txt_color_simple"
                 android:textSize="15sp" />
         </LinearLayout>
@@ -178,6 +177,10 @@
             android:layout_marginBottom="36dip"
             android:orientation="vertical"
             android:layout_marginTop="30dp">
+
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#535353"/>
 
             <ProgressBar
                 android:layout_width="49dp"
@@ -210,6 +213,10 @@
             android:orientation="vertical"
             android:layout_marginTop="30dp">
 
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#535353"/>
+
             <ImageView
                 android:layout_width="49dp"
                 android:layout_height="49dp"
@@ -218,6 +225,7 @@
                 android:src="@drawable/ic_view_data_sosad"/>
 
             <TextView
+                android:id="@+id/tvEmptyDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/liveroom_gift_pack_empty"
@@ -237,6 +245,10 @@
             android:orientation="vertical"
             android:layout_marginBottom="36dip"
             android:layout_marginTop="30dp">
+
+            <View android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#535353"/>
 
             <ImageView
                 android:layout_width="49dp"
@@ -304,7 +316,7 @@
                 android:layout_alignTop="@id/ll_sendGift"
                 android:layout_gravity="right"
                 android:layout_toLeftOf="@id/ll_sendGift"
-                android:background="@drawable/bg_live_buttom_gift_count_chooser"
+                android:background="@drawable/bg_live_buttom_gift_count_chooser_usuable"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="13dp"
@@ -316,7 +328,6 @@
                     android:layout_height="28dp"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical|left"
-                    android:text="0"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/custom_dialog_text_size_simple" />
 

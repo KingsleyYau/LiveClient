@@ -36,6 +36,8 @@ public:
 public:
 	// 连接callback
 	virtual void OnConnect(bool success) override;
+	// 断开连接callback（先回调OnDisconnect()再回调OnDisconnect(const TaskList& list)）
+	virtual void OnDisconnect() override;
 	// 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop才能停止）
 	virtual void OnDisconnect(const TaskList& listUnsentTask) override;
 	// 发送callback

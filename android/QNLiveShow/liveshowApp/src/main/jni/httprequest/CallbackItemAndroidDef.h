@@ -40,5 +40,7 @@
 
 /* 6.其他    */
 #define OTHER_CONFIG_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ConfigItem"
+#define OTHER_ANCHORINFO_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/AnchorInfoItem"
+#define OTHER_USERINFO_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/UserInfoItem"
 
 #endif /* CALLBACKITEMANDROIDDEF_H_ */

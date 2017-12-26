@@ -140,13 +140,13 @@ static LSImManager *gManager = nil;
                     
                     NSMutableArray<NSString *> *urls = [NSMutableArray array];
                     [urls addObject:item.imSvrUrl];
+                     //[urls addObject:@"wss://174.129.224.73:443"];
                     [self.client initClient:urls];
                     
                     // 开始登录IM
                     [self login];
                 }
             }];
-
         }
     });
 }
@@ -249,20 +249,18 @@ static LSImManager *gManager = nil;
 }
 
 #pragma mark - 首次登陆处理
-- (BOOL)handleLoginRoomList:(NSArray<NSString *> *)roomList {
+- (BOOL)handleLoginRoomList:(NSArray<ImLoginRoomObject*> * )roomList {
     BOOL bFlag = NO;
 
-    NSString *roomId = nil;
     if (roomList.count > 0) {
-        roomId = [roomList objectAtIndex:0];
-
-        if (roomId.length > 0) {
+        ImLoginRoomObject* roomObj = [roomList objectAtIndex:0];
+        if (roomObj.roomId.length > 0) {
             bFlag = YES;
 
             for (NSValue *value in self.delegates) {
                 id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
-                if ([delegate respondsToSelector:@selector(onHandleLoginRoom:)]) {
-                    [delegate onHandleLoginRoom:roomId];
+                if ([delegate respondsToSelector:@selector(onHandleLoginRoom:userId:userName:)]) {
+                    [delegate onHandleLoginRoom:roomObj.roomId userId:roomObj.anchorId userName:roomObj.nickName];
                 }
             }
         }
@@ -389,9 +387,11 @@ static LSImManager *gManager = nil;
     NSLog(@"LSImManager::onRecvRoomCloseNotice( [接收直播间关闭通知], roomId : %@, errType : %d, errMsg : %@ )", roomId, errType, errmsg);
 }
 
-- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum {
+
+- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString * _Nonnull)honorImg{
     NSLog(@"LSImManager::onRecvEnterRoomNotice( [接收观众进入直播间通知], roomId : %@, userId : %@, nickName : %@ )", roomId, userId, nickName);
 }
+
 
 - (void)onRecvLeaveRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl fansNum:(int)fansNum {
     NSLog(@"LSImManager::onRecvLeaveRoomNotice( [接收观众退出直播间通知], roomId : %@, userId : %@, nickName : %@ )", roomId, userId, nickName);
@@ -401,12 +401,12 @@ static LSImManager *gManager = nil;
     NSLog(@"LSImManager::onRecvRebateInfoNotice( [接收返点通知] )");
 }
 
-- (void)onRecvLeavingPublicRoomNotice:(NSString *_Nonnull)roomId err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg {
+- (void)onRecvLeavingPublicRoomNotice:(NSString *_Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString *_Nonnull)errMsg {
     NSLog(@"LSImManager::onRecvLeavingPublicRoomNotice( [接收关闭直播间倒数通知] )");
 }
 
 - (void)onRecvRoomKickoffNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString *_Nonnull)errmsg credit:(double)credit {
-    NSLog(@"LSImManager::onRecvRoomKickoffNotice( [接收直播间禁言通知] )");
+    NSLog(@"LSImManager::onRecvRoomKickoffNotice( [接收踢出直播间通知], roomId : %@ )",roomId);
 }
 
 - (void)onRecvCreditNotice:(NSString *_Nonnull)roomId credit:(double)credit {
@@ -418,7 +418,7 @@ static LSImManager *gManager = nil;
 }
 
 - (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl {
-    NSLog(@"LSImManager::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], playUrl : %@ )", playUrl );
+    NSLog(@"LSImManager::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ )", roomId, playUrl);
 }
 
 #pragma mark - 私密直播间
@@ -490,6 +490,41 @@ static LSImManager *gManager = nil;
         [self.requestDictionary removeObjectForKey:key];
     }
 }
+
+- (BOOL)InstantInviteUserReport:(NSString * _Nonnull)inviteId isShow:(BOOL)isShow finishHandler:(InstantInviteUserReportHandler _Nullable)finishHandler {
+    NSLog(@"LSImManager::InstantInviteUserReport( [观众端是否显示主播立即私密邀请 ], inviteId : %@ )", self.inviteId);
+    BOOL bFlag = NO;
+    
+    @synchronized(self) {
+        if (self.isIMLogin) {
+            if (inviteId) {
+                SEQ_T reqId = [self.client getReqId];
+                bFlag = [self.client sendInstantInviteUserReport:reqId inviteId:inviteId isShow:isShow];
+                if (bFlag && finishHandler) {
+                    [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
+                }
+                // 清空邀请Id
+                self.inviteId = nil;
+            }
+        }
+    }
+    
+    return bFlag;
+}
+
+- (void)onSendInstantInviteUserReport:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg {
+    NSLog(@"LSImManager::onSendInstantInviteUserReport( [观众端是否显示主播立即私密邀请, %@], err : %d, errMsg : %@ )", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg);
+    
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        InstantInviteUserReportHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
+}
+
 
 - (BOOL)getInviteInfo:(GetIMInviteInfoHandler _Nullable)finishHandler {
     
@@ -648,8 +683,8 @@ static LSImManager *gManager = nil;
     NSLog(@"LSImManager::onRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@, honorUrl : %@ )", roomId, nickName, msg, honorUrl);
 }
 
-- (void)onRecvSendSystemNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg link:(NSString *_Nonnull)link {
-    NSLog(@"LSImManager::onRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@, link: %@ )", roomId, msg, link);
+- (void)onRecvSendSystemNotice:(NSString *_Nonnull)roomId msg:(NSString *_Nonnull)msg link:(NSString *_Nonnull)link type:(IMSystemType)type{
+    NSLog(@"LSImManager::onRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@, link: %@ type:%d)", roomId, msg, link, type);
 }
 
 - (BOOL)sendToast:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg {
@@ -713,6 +748,8 @@ static LSImManager *gManager = nil;
 #pragma mark - 公共
 - (void)onRecvLevelUpNotice:(int)level {
     NSLog(@"LSImManager::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
+    // 更新本地用户等级
+    self.loginManager.loginItem.level = level;
 }
 
 - (void)onRecvLoveLevelUpNotice:(int)loveLevel {

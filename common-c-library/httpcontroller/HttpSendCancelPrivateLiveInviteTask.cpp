@@ -37,7 +37,7 @@ void HttpSendCancelPrivateLiveInviteTask::SetParam(
     }
  
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendCancelPrivateLiveInviteTask::SetParam( "
             "task : %p, "
             "invitationId :%s, "
@@ -54,7 +54,7 @@ string HttpSendCancelPrivateLiveInviteTask::GetInvitationId() {
 
 
 bool HttpSendCancelPrivateLiveInviteTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSendCancelPrivateLiveInviteTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -66,7 +66,7 @@ bool HttpSendCancelPrivateLiveInviteTask::ParseData(const string& url, bool bFla
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSendCancelPrivateLiveInviteTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSendCancelPrivateLiveInviteTask::ParseData( buf : %s )", buf);
     }
     
 

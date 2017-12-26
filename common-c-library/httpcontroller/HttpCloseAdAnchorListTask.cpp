@@ -26,7 +26,7 @@ void HttpCloseAdAnchorListTask::SetParam(
                                           ) {
 
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpCloseAdAnchorListTask::SetParam( "
             "task : %p, "
             ")",
@@ -35,7 +35,7 @@ void HttpCloseAdAnchorListTask::SetParam(
 }
 
 bool HttpCloseAdAnchorListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpCloseAdAnchorListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -47,7 +47,7 @@ bool HttpCloseAdAnchorListTask::ParseData(const string& url, bool bFlag, const c
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpCloseAdAnchorListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpCloseAdAnchorListTask::ParseData( buf : %s )", buf);
     }
     
     

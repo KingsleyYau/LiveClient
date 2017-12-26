@@ -42,7 +42,7 @@ void HttpServerSpeedTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_SUBMITSERVERVELOMETER_RES, temp);
     mRes = res;
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpServerSpeedTask::SetParam( "
             "task : %p, "
             ")",
@@ -59,7 +59,7 @@ int HttpServerSpeedTask::GetRes() {
 }
 
 bool HttpServerSpeedTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpServerSpeedTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -71,7 +71,7 @@ bool HttpServerSpeedTask::ParseData(const string& url, bool bFlag, const char* b
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSubmitPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSubmitPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
     }
     
     

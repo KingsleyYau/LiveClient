@@ -36,6 +36,14 @@ public:
             if (root[LIVEROOM_RIDELIST_LIST_GRANTEDDATE].isIntegral()) {
                 grantedDate = root[LIVEROOM_RIDELIST_LIST_GRANTEDDATE].asInt();
             }
+            /* grantedDate */
+            if (root[LIVEROOM_RIDELIST_LIST_GRANTEDDATE].isIntegral()) {
+                grantedDate = root[LIVEROOM_RIDELIST_LIST_GRANTEDDATE].asInt();
+            }
+            /* startValidDate */
+            if (root[LIVEROOM_RIDELIST_LIST_STARTVALIDDATE].isIntegral()) {
+                startValidDate = root[LIVEROOM_RIDELIST_LIST_STARTVALIDDATE].asInt();
+            }
             /* expDate */
             if (root[LIVEROOM_RIDELIST_LIST_EXPDATE].isIntegral()) {
                 expDate = root[LIVEROOM_RIDELIST_LIST_EXPDATE].asInt();
@@ -57,6 +65,7 @@ public:
         photoUrl = "";
         name = "";
         grantedDate = 0;
+        startValidDate = 0;
         expDate = 0;
         read = false;
         isUse = false;
@@ -73,6 +82,7 @@ public:
      * photoUrl        座驾图片url
      * name            座驾名称
      * grantedDate     获取时间
+     * startValidDate  有效开始时间
      * expDate         过期时间
      * read            已读状态（0:未读 1:已读）
      * isUse           是否使用中（0:否 1:是）
@@ -81,6 +91,7 @@ public:
     string photoUrl;
     string name;
     long grantedDate;
+    long startValidDate;
     long expDate;
     bool read;
     bool isUse;

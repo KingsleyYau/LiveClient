@@ -28,7 +28,7 @@ void HttpGiftListTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGiftListTask::SetParam( "
             "task : %p, "
             ")",
@@ -38,7 +38,7 @@ void HttpGiftListTask::SetParam(
 
 
 bool HttpGiftListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGiftListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -50,7 +50,7 @@ bool HttpGiftListTask::ParseData(const string& url, bool bFlag, const char* buf,
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGiftListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGiftListTask::ParseData( buf : %s )", buf);
     }
     
 

@@ -223,6 +223,16 @@ extern int srs_rtmp_play_stream(srs_rtmp_t rtmp);
 */
 extern int srs_rtmp_publish_stream(srs_rtmp_t rtmp);
 
+// add by Samson 2017-11-07
+/**
+* send @setDataFrame().
+* category: publish
+* previous: publish-stream
+* next: destroy
+* @return 0, success; otherwise, failed.
+*/
+extern int srs_rtmp_set_data_frame(srs_rtmp_t rtmp, int width, int height);
+
 /**
 * do bandwidth check with srs server.
 * 

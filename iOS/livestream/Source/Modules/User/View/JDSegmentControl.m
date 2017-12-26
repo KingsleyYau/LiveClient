@@ -34,7 +34,7 @@
         label.textColor = [UIColor whiteColor];
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [UIFont systemFontOfSize:9];
-        label.layer.cornerRadius = label.frame.size.width/2;
+        label.layer.cornerRadius = label.frame.size.height/2;
         label.layer.masksToBounds = YES;
         label.hidden = YES;
         _unreadLabel = label;
@@ -47,6 +47,26 @@
         
     }
     return self;
+}
+
+- (void)updateUnreadCount:(NSString *)count
+{
+    if ([count intValue] == 0) {
+        _unreadLabel.hidden = YES;
+    }
+    else
+    {
+        _unreadLabel.hidden = NO;
+        if ([count intValue] > 99) {
+            _unreadLabel.frame = CGRectMake(self.frame.size.width - 20, 5, 20, 12);
+            _unreadLabel.text = @"99+";
+        }
+        else
+        {
+           _unreadLabel.frame = CGRectMake(self.frame.size.width - 15, 5, 12, 12);
+            _unreadLabel.text = count;
+        }
+    }
 }
 
 @end
@@ -146,14 +166,7 @@
 {
     for (int i = 0; i < countArray.count; i++) {
         JDUnreadButton * button = [self viewWithTag:i + 88];
-        if ([countArray[i] intValue] == 0) {
-            button.unreadLabel.hidden = YES;
-        }
-        else
-        {
-            button.unreadLabel.hidden = NO;
-            button.unreadLabel.text = countArray[i];
-        }
+        [button updateUnreadCount:countArray[i]];
     }
 }
 

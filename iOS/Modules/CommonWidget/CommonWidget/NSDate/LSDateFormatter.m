@@ -53,6 +53,7 @@
 
     return [NSString stringWithFormat:@"%ld月%ld日", (long)month, (long)day];
 }
+
 + (NSString *)toStringYMDHMS:(NSDate *)date {
     NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
     NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:date];
@@ -64,6 +65,19 @@
     NSInteger second = [comoponents second];
 
     return [NSString stringWithFormat:@"%ld-%ld-%ld %ld:%.2ld:%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
+}
+
++ (NSString *)toStringYMDHMSWithUnderLine:(NSDate *)date {
+    NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:date];
+    NSInteger year = [comoponents year];
+    NSInteger month = [comoponents month];
+    NSInteger day = [comoponents day];
+    NSInteger hour = [comoponents hour];
+    NSInteger minute = [comoponents minute];
+    NSInteger second = [comoponents second];
+
+    return [NSString stringWithFormat:@"%ld_%ld_%ld_%ld_%.2ld_%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
 }
 
 + (NSString *)toStringYMDHM:(NSDate *)date {

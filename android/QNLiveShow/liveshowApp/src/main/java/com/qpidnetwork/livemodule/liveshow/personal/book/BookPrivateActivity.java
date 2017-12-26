@@ -3,13 +3,16 @@ package com.qpidnetwork.livemodule.liveshow.personal.book;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,22 +26,27 @@ import android.widget.Toast;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.WheelView;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetScheduleInviteCreateConfigCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
-import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
+import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteBookTimeItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteConfig;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_NO_CREDIT;
 
 /**
  * 预约私密直播界面
@@ -65,7 +73,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private List<GiftItem> mGifts = new ArrayList<>();
     private ArrayList<String> mGiftNums = new ArrayList<String>();
     private double mSelectGiftCredit = 0d;
-    private Map<String , List<TimeDetail>> mMapDates = new HashMap<>(); //把时间封装，方便联动
+    private LinkedHashMap<String , List<TimeDetail>> mMapDates = new LinkedHashMap<>(); //把时间封装，方便联动(有序)
     private ArrayList<String> mDates = new ArrayList<String>();         //日期滚轮显示的数据
     private ArrayList<String> mTimes = new ArrayList<String>();         //时间滚轮显示的数据
     private int mPostionDatePick = 0;                                   //日期选中索引
@@ -78,7 +86,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private String mPhone = "";
 
     //控件
-    private TextView mTvBookDate , mTvBookTime , mTvBookGiftCredit , mTvBookNumber ,mTvChangeNumber;
+    private TextView mTvBookDate , mTvBookTime , mTvBookGiftCredit , mTvBookNumber ,mTvChangeNumber , mTvTipsTotalPirce , mTvNoteTips;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private BoolGiftAdapter mAdapter;
@@ -117,7 +125,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         }
 
         //设置头
-        setTitle(getString(R.string.live_book_title), Color.GRAY);
+        setTitle(getString(R.string.live_book_title), Color.WHITE);
 
         //
         initUI();
@@ -182,6 +190,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
         //礼物数量
         mSpinnerAdpter = new ArrayAdapter(mContext , android.R.layout.simple_spinner_item , mGiftNums);
+        mSpinnerAdpter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mSpinnerGift = (Spinner)findViewById(R.id.spinner_book_gift_sum);
         mSpinnerGift.setAdapter(mSpinnerAdpter);
@@ -196,6 +205,11 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
             }
         });
+
+        //礼物总价(Total Price:)
+        mTvTipsTotalPirce = (TextView) findViewById(R.id.txt_book_gift_tips);
+        mTvTipsTotalPirce.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+        mTvTipsTotalPirce.getPaint().setAntiAlias(true);//抗锯齿
 
         //礼物总价
         mTvBookGiftCredit = (TextView) findViewById(R.id.txt_book_gift_price);
@@ -236,17 +250,21 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                 onSummit();
             }
         });
+
+        //Note
+        mTvNoteTips = (TextView) findViewById(R.id.tv_book_live_note);
+
     }
 
     /**
      * 取数据
      */
     private void getData(){
-        RequstJniSchedule.GetScheduleInviteCreateConfig(mAnchorId, new OnGetScheduleInviteCreateConfigCallback() {
+        LiveRequestOperator.getInstance().GetScheduleInviteCreateConfig(mAnchorId, new OnGetScheduleInviteCreateConfigCallback() {
             @Override
             public void onGetScheduleInviteCreateConfig(boolean isSuccess, int errCode, String errMsg, ScheduleInviteConfig scheduleInviteConfig) {
                 if(isSuccess){
-                    mScheduleInviteConfig = scheduleInviteConfig;
+                    mScheduleInviteConfig = filterInvalidBookTime(scheduleInviteConfig);
                     sendEmptyUiMessage(REQUEST_CONFIG_SUCCESS);
                 }else {
                     sendEmptyUiMessage(REQUEST_CONFIG_FAILED);
@@ -263,6 +281,14 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
             switch (msg.what){
                 case REQUEST_CONFIG_SUCCESS:
                     //取预约信息成功
+                    if(mScheduleInviteConfig == null){
+                        return;
+                    }
+
+                    //更新描述
+                    if(mTvNoteTips != null){
+                        mTvNoteTips.setText(Html.fromHtml(String.format(getResources().getString(R.string.live_note_tips), String.valueOf(mScheduleInviteConfig.bookDeposit))));
+                    }
 
                     //处理时间
                     if(mScheduleInviteConfig.bookTimeList != null && mScheduleInviteConfig.bookTimeList.length > 0){
@@ -283,6 +309,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                     }else{
                         mTvBookDate.setText("");
                         mTvBookTime.setText("");
+                        mBtnBook.setButtonBackground(getResources().getColor(R.color.black3));
+                        mBtnBook.setEnabled(false);
                     }
 
                     //处理礼物
@@ -290,12 +318,15 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                         mLinearLayoutAddGift.setVisibility(View.VISIBLE);
 
                         for (int i = 0 ; i < mScheduleInviteConfig.bookGiftList.length; i++){
-                            mGifts.add(
-                                    NormalGiftManager.getInstance().queryLocalGiftDetailById(mScheduleInviteConfig.bookGiftList[i].giftId)
-                            );
+                            GiftItem item = NormalGiftManager.getInstance().queryLocalGiftDetailById(mScheduleInviteConfig.bookGiftList[i].giftId);
+                            if(item != null){
+                                mGifts.add(item);
+                            }
                         }
                         mAdapter.notifyDataSetChanged();
-                        mAdapter.setSelection(0);
+                        if(mGifts.size() > 0) {
+                            mAdapter.setSelection(0);
+                        }
                     }
 
                     //处理电话号码
@@ -319,7 +350,14 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                     break;
                 case REQUEST_SUMMIT_FAILED:
                     //预约失败
-                    Toast.makeText(mContext , String.valueOf(msg.obj) , Toast.LENGTH_LONG).show();
+                    HttpRespObject response = (HttpRespObject)msg.obj;
+                    if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_NO_CREDIT){
+                        showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
+                    }else{
+                        Toast.makeText(mContext , response.errMsg , Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                default:
                     break;
 
             }
@@ -330,6 +368,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
      * 生成日期时间配对表
      */
     private void setMapDates(){
+        Arrays.sort(mScheduleInviteConfig.bookTimeList);
+
         for (int i = 0 ; i < mScheduleInviteConfig.bookTimeList.length; i++){
             //转为一个指定的格式
             String dateDeail = DateUtil.getDateDetail(mScheduleInviteConfig.bookTimeList[i].time * 1000l);
@@ -344,7 +384,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
             timeDetail.timestamp = mScheduleInviteConfig.bookTimeList[i].time;
 
             //返回的数据排序有问题，例如会把12:00 AM　排在3:00 AM之前
-            Log.d("Jagger", "setMapDates: " + dateDeail + "  " + timeDetail.timeStr);
+            Log.d("Jagger", "setMapDates: " + dateDeail + "  " + timeDetail.timeStr + ",timestamp:" + timeDetail.timestamp);
 
             if(mMapDates.containsKey(date)){
                 mMapDates.get(date).add(timeDetail);
@@ -362,9 +402,12 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
      */
     private void setDateList(){
         mDates.clear();
-        Set set = mMapDates.keySet();   //反序了
-        for(Iterator iterator = set.iterator();iterator.hasNext();){
-            mDates.add(0,(String) iterator.next());
+
+        Iterator<Map.Entry<String , List<TimeDetail>>> iterator = mMapDates.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String , List<TimeDetail>> entry = iterator.next();
+            String dateStr = entry.getKey();
+            mDates.add(dateStr);
         }
     }
 
@@ -442,7 +485,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private void setTotalPrice(int position){
         mGiftSum = Integer.parseInt(mGiftNums.get(position));
         double sumCredit =  mSelectGiftCredit * mGiftSum;
-        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , sumCredit)));// .valueOf(sumCredit)));
+        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , sumCredit)));
     }
 
     /**
@@ -466,15 +509,33 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private void setSMSEnable(boolean enable){
         if(enable){
             mSwitchSMS.setChecked(true);
-            mSwitchSMS.setEnabled(true);
+            mSwitchSMS.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });
+
             mTvChangeNumber.setText(R.string.live_book_change_num);
+            mTvBookNumber.setVisibility(View.VISIBLE);
+            mTvBookNumber.setText(mPhone);
         }else {
-            //无验证号码时不可选，点击无反应
+            //无验证号码时不可选，点击提示
             mSwitchSMS.setChecked(false);
-            mSwitchSMS.setEnabled(false);
+            mSwitchSMS.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if(event.getAction() == MotionEvent.ACTION_DOWN){
+                        Toast.makeText(mContext , getString(R.string.live_book_add_number_tips1) , Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                    return true;
+                }
+            });
+
             mTvChangeNumber.setText(R.string.live_book_add_num);
+            mTvBookNumber.setVisibility(View.GONE);
         }
-        mTvBookNumber.setText(mPhone);
     }
 
     /**
@@ -494,7 +555,6 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         wv.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
             @Override
             public void onSelected(int selectedIndex, String item) {
-                Log.d("Jagger", "[Date Dialog]selectedIndex: " + selectedIndex + ", item: " + item);
                 mPostionDatePick = selectedIndex;
             }
         });
@@ -539,7 +599,6 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         wv.setOnWheelViewListener(new WheelView.OnWheelViewListener() {
             @Override
             public void onSelected(int selectedIndex, String item) {
-                Log.d("Jagger", "[Time Dialog]selectedIndex: " + selectedIndex + ", item: " + item);
                 mPostionTimePick = selectedIndex;
             }
         });
@@ -571,14 +630,14 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
             mGiftSum = 0;
         }
 
-        RequstJniSchedule.CreateScheduleInvite(mAnchorId, mTimeID, mTimestamp, mGiftID, mGiftSum, mSwitchSMS.isChecked(), new OnRequestCallback() {
+        LiveRequestOperator.getInstance().CreateScheduleInvite(mAnchorId, mTimeID, mTimestamp, mGiftID, mGiftSum, mSwitchSMS.isChecked(), new OnRequestCallback() {
             @Override
             public void onRequest(boolean isSuccess, int errCode, String errMsg) {
                 if(isSuccess){
                     sendEmptyUiMessage(REQUEST_SUMMIT_SUCCESS);
                 }else{
                     Message msg = new Message();
-                    msg.obj = errMsg;
+                    msg.obj = new HttpRespObject(isSuccess, errCode, errMsg, null);
                     msg.what = REQUEST_SUMMIT_FAILED;
                     sendUiMessage(msg);
                 }
@@ -614,5 +673,26 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                 break;
             default:break;
         }
+    }
+
+    /**
+     * 过滤去掉无法预约的事件区间
+     * @param scheduleInviteConfig
+     */
+    private ScheduleInviteConfig filterInvalidBookTime(ScheduleInviteConfig scheduleInviteConfig){
+        if(scheduleInviteConfig != null && (scheduleInviteConfig.bookTimeList != null)
+                && (scheduleInviteConfig.bookTimeList.length > 0)){
+            List<ScheduleInviteBookTimeItem> tempList = new ArrayList<ScheduleInviteBookTimeItem>();
+            for(ScheduleInviteBookTimeItem item : scheduleInviteConfig.bookTimeList){
+                if(item.bookTimeStatus == ScheduleInviteBookTimeItem.BookTimeStatus.Bookable){
+                    //可预约
+                    tempList.add(item);
+                }
+            }
+            ScheduleInviteBookTimeItem[] tempArray = new ScheduleInviteBookTimeItem[tempList.size()];
+
+            scheduleInviteConfig.bookTimeList = tempList.toArray(tempArray);
+        }
+        return scheduleInviteConfig;
     }
 }

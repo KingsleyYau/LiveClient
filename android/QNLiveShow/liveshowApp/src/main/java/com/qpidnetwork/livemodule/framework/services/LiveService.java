@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
+import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
+import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
+import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.liveshow.ad.AD4QNActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
@@ -21,7 +25,7 @@ import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
-import com.qpidnetwork.livemodule.utils.IPConfigUtil;
+import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.bean.MainModuleConfig;
 import com.qpidnetwork.qnbridgemodule.interfaces.IQNService;
@@ -31,7 +35,9 @@ import com.qpidnetwork.qnbridgemodule.interfaces.OnServiceEventListener;
  * Created by Jagger on 2017/9/18.
  */
 
-public class LiveService implements IQNService {
+public class LiveService implements IQNService, ScheduleInvitePackageUnreadManager.OnUnreadListener {
+
+    private static final String TAG = LiveService.class.getName();
 
     private static Application mApplicationContext;
     private MainModuleConfig mMainModuleConfig;
@@ -39,6 +45,10 @@ public class LiveService implements IQNService {
     private OnServiceEventListener mOnServiceStatusChangeListener;
     //判断是否demo环境
     public static boolean isDebug = false;
+    public static boolean isForTest = false;        //业务需要
+
+    //是否第一次启动
+    public static boolean mIsFirstLaunch = false;
 
     public static LiveService newInstance(Application c){
         if(mQNService == null){
@@ -60,6 +70,7 @@ public class LiveService implements IQNService {
 
     private void initWithinApplication(Application context){
         mApplicationContext =  context;
+        mIsFirstLaunch = true;
 
         // 设置log级别（demo环境才打印log）
 //        if (ApplicationSettingUtil.isDemoEnviroment(this)) {
@@ -71,6 +82,7 @@ public class LiveService implements IQNService {
 
         //FileCacheManager 单例初始化
         FileCacheManager.newInstance(mApplicationContext);
+        //
         FileDownloadManager.init(mApplicationContext,true);
 
         //http请求Jni初始化
@@ -83,7 +95,9 @@ public class LiveService implements IQNService {
                 isDebug = pi.versionName.matches(".*[a-zA-Z].*");
                 //本地文件Log存放地址
                 RequestJni.SetLogDirectory(FileCacheManager.getInstance().getLogPath());
-                RequestJni.SetWebSite(IPConfigUtil.getTestWebSiteUrl());
+                //IM本地log
+                IMClient.IMSetLogDirectory(FileCacheManager.getInstance().getIMLogPath());
+//                RequestJni.SetWebSite(IPConfigUtil.getTestWebSiteUrl());
 //                RequestJni.SetPhotoUploadSite("http://172.25.32.17:82");
 //                RequestJni.SetWebSite("http://192.168.88.90:8881");
                 // 版本号
@@ -121,19 +135,24 @@ public class LiveService implements IQNService {
 //        ServiceManager.getInstance(mApplicationContext).registerService(LiveService.getInstance(mApplicationContext));
 
         //背包及预约邀请等未读管理器
-        ScheduleInvitePackageUnreadManager.getInstance();
+        ScheduleInvitePackageUnreadManager unreadManager = ScheduleInvitePackageUnreadManager.getInstance();
+        unreadManager.registerUnreadListener(this);
 
         //初始化pushmanager
         PushManager.newInstance(mApplicationContext);
     }
 
     @Override
-    public void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid) {
+    public void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, String configDomain) {
+        Log.i(TAG, "onMainServiceLogin isSucess:%d userId:%s token:%s ga_uid:%s configDomain:%s", isSucess?1:0, userId, token, ga_uid, configDomain);
+//        String domain = "http://demo-live.charmdate.com:3007";      //客户端https支持有问题，先写死http环境
+        RequestJni.SetConfigSite(configDomain);
         LoginManager.getInstance().onMainMoudleLogin(isSucess, userId, token, ga_uid);
     }
 
     @Override
     public void onMainServiceLogout(LogoutType type, String tips) {
+        Log.i(TAG, "onMainServiceLogout LogoutType:%s tips:%s ", type.name(), tips);
         LoginManager.getInstance().onMainMoudleLogout(type, tips);
     }
 
@@ -159,6 +178,7 @@ public class LiveService implements IQNService {
     @Override
     public void openUrl(Context context, String url) {
         //传递Url给MainFragmentActivity
+        Log.i(TAG, "openUrl url:%s ", url);
         MainFragmentActivity.launchActivityWIthUrl(context, url);
     }
 
@@ -171,6 +191,12 @@ public class LiveService implements IQNService {
     public boolean checkNeedLogin(String url){
         //整个板块都需要登录
         return true;
+    }
+
+    @Override
+    public void setForTest(boolean isForTest) {
+        Log.i(TAG, "setForTest isForTest: " + isForTest);
+        this.isForTest = isForTest;
     }
 
     /**
@@ -200,10 +226,6 @@ public class LiveService implements IQNService {
     }
 
     /***************************** 服务状态统计  *****************************************/
-    //是否正在直播中
-    private boolean mIsInLive = false;
-    private String mTargetId = "";
-
     /**
      * 检测url是否与当前模块冲突
      * @param url
@@ -212,7 +234,7 @@ public class LiveService implements IQNService {
     @Override
     public boolean checkServiceConflict(String url){
         //直播处理过程中，任何url处理都需要停止当前直播服务
-        return mIsInLive;
+        return IMManager.getInstance().isCurrentInLive();
     }
 
     @Override
@@ -227,30 +249,67 @@ public class LiveService implements IQNService {
     }
 
     /**
-     * 标记当前服务是否进行中（以在直播间过度页和直播间页为准）
-     * @param isActive
-     */
-    public void setServiceActive(boolean isActive, String targetId){
-        this.mIsInLive = isActive;
-        this.mTargetId = targetId;
-    }
-
-    /**
-     * 检测主播邀请是否通知（在直播模块，切不再直播过程中才推送）
+     * 检测主播邀请是否通知（在直播模块，且不再直播过程中才推送）
      * @param anchorId
      * @return
      */
     public boolean checkAnchorInviteNotify(String anchorId){
         boolean notify = true;
+        String liveAnchorId = IMManager.getInstance().getCurrentLivingAnchorId();
         if(isModuleServiceEnd){
             notify = false;
         }else{
-            notify = !(mIsInLive && anchorId.equals(mTargetId));
+            if(IMManager.getInstance().isCurrentInLive()){
+                //直播中非当前主播立即私密邀请不push
+                if(anchorId.equals(liveAnchorId)){
+                    notify = true;
+                }else{
+                    notify = false;
+                }
+            }else{
+                notify = true;
+            }
         }
+        Log.i("hunter", "checkAnchorInviteNotify anchorId: " + anchorId + " isModuleServiceEnd: " + isModuleServiceEnd + " mTargetId: " + liveAnchorId + " notify: " + notify);
         return notify;
     }
 
+    /**
+     * push点击，主模块接收后，通知子模块完成GA统计，仅用于GA统计
+     * @param url
+     */
+    @Override
+    public void onPushClickGAReport(String url){
+        Log.i(TAG, "onPushClickGAReport url:%s ", url);
+        String moduleName = URL2ActivityManager.getInstance().getModuleNameByUrl(url);
+        if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_LIVE_ROOM)){
+            AnalyticsManager instance = AnalyticsManager.getsInstance();
+            if(instance != null) {
+                if(TextUtils.isEmpty(URL2ActivityManager.getInstance().getRoomIdByUrl(url))){
+                    //房间号为空，则为主播邀请
+                    instance.ReportEvent(mApplicationContext.getResources().getString(R.string.Live_Global_Category),
+                            mApplicationContext.getResources().getString(R.string.Live_Global_Action_ClickInvitation),
+                            mApplicationContext.getResources().getString(R.string.Live_Global_Label_ClickInvitation));
+                }else{
+                    //预约到期
+                    instance.ReportEvent(mApplicationContext.getResources().getString(R.string.Live_Global_Category),
+                            mApplicationContext.getResources().getString(R.string.Live_Global_Action_ClickBookingStart),
+                            mApplicationContext.getResources().getString(R.string.Live_Global_Label_ClickBookingStart));
+                }
+            }
+        }
+    }
+
     /******************************  事件统计分发   **************************************/
+
+    /**
+     * 获取是否为test使用
+     * @return
+     */
+    public boolean getForTest(){
+        Log.i(TAG, "getForTest isForTest: " + isForTest);
+        return isForTest;
+    }
     /**
      * 服務狀態改變監聽器
      * @param onServiceStatusListener
@@ -264,6 +323,7 @@ public class LiveService implements IQNService {
      * 模块session过期处理
      */
     public void onModuleSessionOverTime() {
+        Log.i(TAG, "onModuleSessionOverTime event");
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onTokenExpired(this);
         }
@@ -273,6 +333,7 @@ public class LiveService implements IQNService {
      * 模块被踢
      */
     public void onModuleKickoff() {
+        Log.i(TAG, "onModuleKickoff event");
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onKickOffNotify(this);
         }
@@ -281,7 +342,8 @@ public class LiveService implements IQNService {
     /**
      * 模块开始
      */
-    public void onMoudleServiceStart() {
+        public void onMoudleServiceStart() {
+        Log.i(TAG, "onMoudleServiceStart event");
         isModuleServiceEnd = false;
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onServiceStart(this);
@@ -292,6 +354,7 @@ public class LiveService implements IQNService {
      * 模块结束
      */
     public void onModuleServiceEnd() {
+        Log.i(TAG, "onModuleServiceEnd event");
         isModuleServiceEnd = true;
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onServiceEnd(this);
@@ -302,6 +365,7 @@ public class LiveService implements IQNService {
      * 添加买点跳转由主模块处理
      */
     public void onAddCreditClick(){
+        Log.i(TAG, "onAddCreditClick event");
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onAddCreditClick(this);
         }
@@ -312,9 +376,39 @@ public class LiveService implements IQNService {
      * @param isShow
      */
     public void onAdvertShowNotify(boolean isShow){
+        Log.i(TAG, "onAdvertShowNotify event isShow: " + isShow);
         if(mOnServiceStatusChangeListener != null){
+            Log.i(TAG, "onAdvertShowNotify isShow");
             mOnServiceStatusChangeListener.onAdvertShowNotify(this, isShow);
         }
     }
 
+    /**
+     * 模块未读通知
+     */
+    public void onModuleUnreadNotify(){
+        ScheduleInvitePackageUnreadManager manager = ScheduleInvitePackageUnreadManager.getInstance();
+        PackageUnreadCountItem packageUnreadItem = manager.getPackageUnreadCountItem();
+        ScheduleInviteUnreadItem scheduleInviteItem = manager.getScheduleInviteUnreadItem();
+        boolean needShow = false;
+        if((scheduleInviteItem != null && scheduleInviteItem.total > 0)){
+            needShow = true;
+        }
+        Log.i(TAG, "onModuleUnreadNotify event needShow: " + needShow);
+        if(mOnServiceStatusChangeListener != null){
+            Log.i(TAG, "onModuleUnreadNotify needShow");
+            mOnServiceStatusChangeListener.onModudleUnreadFlagsNotify(this, needShow);
+        }
+    }
+
+    /*********************************** 统计直播模块未读标志  **********************************************/
+    @Override
+    public void onScheduleInviteUnreadUpdate(ScheduleInviteUnreadItem item) {
+        onModuleUnreadNotify();
+    }
+
+    @Override
+    public void onPackageUnreadUpdate(PackageUnreadCountItem item) {
+//        onModuleUnreadNotify();
+    }
 }

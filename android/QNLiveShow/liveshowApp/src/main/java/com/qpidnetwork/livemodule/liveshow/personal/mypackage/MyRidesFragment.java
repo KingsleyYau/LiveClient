@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.personal.mypackage;
 
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetRidesListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.RideItem;
+import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.Log;
 
@@ -25,11 +27,12 @@ import java.util.List;
  * Created by Hunter on 17/9/26.
  */
 
-public class MyRidesFragment extends BaseLoadingFragment{
+public class MyRidesFragment extends BaseLoadingFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final int GET_PACKAGE_RIDERLIST_CALLBACK = 1;
     private static final int USE_OR_CANCEL_RIDER_CALLBCAK = 2;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private GridView mGridView;
     private PackageRidersAdapter mAdapter;
     private List<RideItem> mRideList;
@@ -38,6 +41,9 @@ public class MyRidesFragment extends BaseLoadingFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         setCustomContent(R.layout.fragment_package_rider);
+        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         mGridView = (GridView)view.findViewById(R.id.gridView);
         return view;
     }
@@ -63,6 +69,7 @@ public class MyRidesFragment extends BaseLoadingFragment{
         //Fragment是否可见，用于viewpager切换时再加载
         if(isVisibleToUser){
             //切换到当前fragment
+            showLoadingProcess();
             queryPackageRiderList();
         }
     }
@@ -70,20 +77,28 @@ public class MyRidesFragment extends BaseLoadingFragment{
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
-        hideLoadingProcess();
+        onRefreshComplete();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_PACKAGE_RIDERLIST_CALLBACK:{
                 if(response.isSuccess){
+                    //列表刷新成功，更新未读
+                    ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();
+
                     mRideList.clear();
                     RideItem[] packageRiders = (RideItem[])response.data;
                     if(packageRiders != null) {
                         mRideList.addAll(Arrays.asList(packageRiders));
-                        mAdapter.notifyDataSetChanged();
                     }
+                    mAdapter.notifyDataSetChanged();
 
                     if(mRideList.size() <= 0 ){
                         showEmptyView();
+                    }else{
+                        hideNodataPage();
                     }
                 }else{
                     if(mRideList != null && mRideList.size() > 0){
@@ -100,12 +115,14 @@ public class MyRidesFragment extends BaseLoadingFragment{
                 RideItem rideItem = (RideItem)response.data;
                 if(response.isSuccess){
                     //刷新列表
-                    for(RideItem item : mRideList){
-                        if(item.rideId.equals(rideItem.rideId)){
-                            item.isUsing = !item.isUsing;
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged();
+//                    for(RideItem item : mRideList){
+//                        if(item.rideId.equals(rideItem.rideId)){
+//                            item.isUsing = !item.isUsing;
+//                        }
+//                    }
+//                    mAdapter.notifyDataSetChanged();
+                    showLoadingProcess();
+                    queryPackageRiderList();
                 }else{
                     if(getActivity() != null) {
                         Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
@@ -119,6 +136,7 @@ public class MyRidesFragment extends BaseLoadingFragment{
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
+        showLoadingProcess();
         queryPackageRiderList();
     }
 
@@ -126,8 +144,8 @@ public class MyRidesFragment extends BaseLoadingFragment{
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.followinglist_empty_text));
-        setDefaultEmptyButtonText(getResources().getString(R.string.common_hotlist_guide));
+        setDefaultEmptyMessage(getResources().getString(R.string.my_package_rider_empty_tips));
+        setDefaultEmptyButtonText("");
         showNodataPage();
     }
 
@@ -135,7 +153,6 @@ public class MyRidesFragment extends BaseLoadingFragment{
      * 获取背包座驾列表
      */
     private void queryPackageRiderList(){
-        showLoadingProcess();
         LiveRequestOperator.getInstance().GetRidesList(new OnGetRidesListCallback() {
             @Override
             public void onGetRidesList(boolean isSuccess, int errCode, String errMsg, RideItem[] rideList, int totalCount) {
@@ -169,5 +186,23 @@ public class MyRidesFragment extends BaseLoadingFragment{
                 sendUiMessage(msg);
             }
         });
+    }
+
+    /**
+     * 刷新完成UI
+     */
+    private void onRefreshComplete(){
+        swipeRefreshLayout.setRefreshing(false);
+        hideLoadingProcess();
+    }
+
+    @Override
+    public void onRefresh() {
+        queryPackageRiderList();
+    }
+
+    @Override
+    public void onReloadDataInEmptyView() {
+        queryPackageRiderList();
     }
 }

@@ -48,11 +48,11 @@
     self.paddingX = 0;
     self.paddingY = 0;
     
-    self.itemSize = 29;
-    self.itemSpace = (SCREEN_WIDTH - (num * 29)) / (num + 1);
-//    self.itemSpaceReal = 0;
-    self.lineSpace = 21;
-//    self.lineSpaceReal = 0;
+    self.itemSize = SCREEN_WIDTH / num;
+    self.itemSpace = 0;
+    //    self.itemSpaceReal = 0;
+    self.lineSpace = 0;
+    //    self.lineSpaceReal = 0;
     
     self.lineItemCount = 0;
     self.lineCount = 0;
@@ -109,7 +109,9 @@
         // 重新计算边距
         self.paddingY = self.collectionView.frame.size.height - (self.pageLineCount * (self.itemSize + self.lineSpace));
     }
-    self.paddingY = self.paddingY / 2;
+    
+    self.paddingY = (self.paddingY / 2 > 10) ? self.paddingY / 2 : 14;
+    self.pageLineCount = 3;
     
     // 计算页数
     if( self.pageLineCount != 0 ) {

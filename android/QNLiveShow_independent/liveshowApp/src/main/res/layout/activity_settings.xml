@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:clickable="true"
+        android:id="@+id/ll_feedback"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/settings_feedback"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_right_arrow"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <LinearLayout
+        android:clickable="true"
+        android:id="@+id/ll_aboutUs"
+        android:onClick="onClick"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/settings_about_us"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_right_arrow"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <Button
+        android:id="@+id/btn_Logout"
+        android:layout_width="113dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="33dp"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_interactive_video_confirm"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        android:onClick="onClick"
+        android:layout_marginBottom="52dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:text="@string/settings_logoug"/>
+
+</LinearLayout>

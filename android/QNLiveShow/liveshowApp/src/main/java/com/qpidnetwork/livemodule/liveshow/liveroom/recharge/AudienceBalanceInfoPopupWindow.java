@@ -10,16 +10,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.squareup.picasso.Picasso;
@@ -35,7 +35,7 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     private TextView tv_userId;
     private TextView tv_userBalance;
     private ImageView iv_userLevel;
-    private Button btn_gotoRecharge;
+    private TextView tv_gotoRecharge;
     private int manLevel = 0;
     private View rootView;
 
@@ -86,8 +86,27 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
         tv_userId = (TextView) rootView.findViewById(R.id.tv_userId);
         tv_userBalance = (TextView) rootView.findViewById(R.id.tv_userBalance);
         iv_userLevel = (ImageView) rootView.findViewById(R.id.iv_userLevel);
-        btn_gotoRecharge = (Button) rootView.findViewById(R.id.btn_gotoRecharge);
-        btn_gotoRecharge.setOnClickListener(this);
+        tv_gotoRecharge = (TextView) rootView.findViewById(R.id.tv_gotoRecharge);
+        tv_gotoRecharge.setOnClickListener(this);
+    }
+
+    public void updateBalanceViewData(){
+        if(null != context){
+            String userBalance =context.getResources().getString(R.string.live_balance_credits,
+                    String.valueOf(LiveRoomCreditRebateManager.getInstance().getCredit()));
+            SpannableString spannableString = new SpannableString(userBalance);
+            ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
+                    context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
+            int index = userBalance.indexOf(":");
+            if(index >= 0) {
+                spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
+                spannableString.setSpan(foregroundColorSpan2, index+1, userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (tv_userBalance != null) {
+                    tv_userBalance.setText(spannableString);
+                }
+            }
+        }
     }
 
     private void updateViewData() {
@@ -112,10 +131,12 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
         ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
                 context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
         int index = userBalance.indexOf(":");
-        spannableString.setSpan(foregroundColorSpan1,0,index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
-        spannableString.setSpan(foregroundColorSpan2,index,userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_userBalance.setText(spannableString);
+        if(index >= 0) {
+            spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
+            spannableString.setSpan(foregroundColorSpan2, index + 1, userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_userBalance.setText(spannableString);
+        }
     }
 
     @Override
@@ -124,9 +145,13 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
         if (i == R.id.iv_backBalanceDialog) {
             dismiss();
 
-        } else if (i == R.id.btn_gotoRecharge) {
-            Toast.makeText(context, "跳转到充值界面", Toast.LENGTH_SHORT).show();
+        } else if (i == R.id.tv_gotoRecharge) {
+            LiveService.getInstance().onAddCreditClick();
 
+            //GA统计点击充值
+            AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
+                    context.getResources().getString(R.string.Live_Global_Action_AddCredit),
+                    context.getResources().getString(R.string.Live_Global_Label_AddCredit));
         } else {
         }
     }

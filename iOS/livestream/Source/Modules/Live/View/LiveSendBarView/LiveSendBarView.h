@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LiveRoomTextField.h"
+#import "LiveRoom.h"
 
 @class LiveSendBarView;
 @protocol LiveSendBarViewDelegate <NSObject>
@@ -39,6 +40,8 @@
 
 @property (nonatomic, strong) UIImage *louderBtnImage;
 @property (nonatomic, strong) UIColor *placeholderColor;
+
+@property (nonatomic, strong) LiveRoom *liveRoom;
 
 - (IBAction)sendAction:(id)sender;
 

@@ -15,6 +15,7 @@ static LiveStreamSession* gSession = nil;
 @interface LiveStreamSession ()
 @property (assign) NSInteger playingCount;
 @property (assign) NSInteger capturingCount;
+@property (strong) dispatch_queue_t sessionQueue;
 @end
 
 @implementation LiveStreamSession
@@ -32,6 +33,8 @@ static LiveStreamSession* gSession = nil;
         self.playingCount = 0;
         self.capturingCount = 0;
         
+        self.sessionQueue = dispatch_queue_create("sessionQueue", DISPATCH_QUEUE_SERIAL);
+        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
     }
@@ -47,21 +50,51 @@ static LiveStreamSession* gSession = nil;
 
 #pragma mark - Session控制
 - (void)activeSession {
-    /**
-     * 1.必须使用AVAudioSessionCategoryPlayAndRecord, 然后audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO
-     */
-    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
-    [audioSession setActive:YES error:nil];
+    NSLog(@"LiveStreamSession::activeSession()");
+    
+    dispatch_async(self.sessionQueue, ^{
+        /**
+         * 1.必须使用AVAudioSessionCategoryPlayAndRecord, 然后audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO
+         */
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionMixWithOthers error:nil];
+        NSError *error = nil;
+        [audioSession setActive:YES error:&error];
+        if( error ) {
+            NSLog(@"LiveStreamSession::activeSession( error : %@ )", error);
+        }
+    });
+}
+
+- (void)inactiveSession {
+    NSLog(@"LiveStreamSession::inactiveSession()");
+    
+    dispatch_async(self.sessionQueue, ^{
+        AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+        NSError *error = nil;
+        [audioSession setActive:NO error:&error];
+        if( error ) {
+            NSLog(@"LiveStreamSession::inactiveSession( error : %@ )", error);
+        }
+    });
 }
 
 - (void)startPlay {
+    NSLog(@"LiveStreamSession::startPlay()");
+    
     @synchronized (self) {
+        if( self.playingCount == 0 && self.capturingCount == 0 ) {
+            // 开启后台播放
+            [[LiveStreamSession session] activeSession];
+        }
+        
         self.playingCount++;
         
         if( self.capturingCount == 0 ) {
+            // 没有在录制
             AVAudioSession *audioSession = [AVAudioSession sharedInstance];
             if( ![self useHeadphones] ) {
+                // 没有耳机, 设置使用扬声器
                 [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
             }
         }
@@ -69,13 +102,27 @@ static LiveStreamSession* gSession = nil;
 }
 
 - (void)stopPlay {
+    NSLog(@"LiveStreamSession::stopPlay()");
+    
     @synchronized (self) {
         self.playingCount--;
+        
+        if( self.capturingCount == 0 && self.playingCount == 0 ) {
+            // 禁止后台播放
+            [[LiveStreamSession session] inactiveSession];
+        }
     }
 }
 
 - (void)startCapture {
+    NSLog(@"LiveStreamSession::startCapture()");
+    
     @synchronized (self) {
+        if( self.playingCount == 0 && self.capturingCount == 0 ) {
+            // 开启后台播放
+            [[LiveStreamSession session] activeSession];
+        }
+        
         self.capturingCount++;
         
         AVAudioSession *audioSession = [AVAudioSession sharedInstance];
@@ -84,6 +131,8 @@ static LiveStreamSession* gSession = nil;
 }
 
 - (void)stopCapture {
+    NSLog(@"LiveStreamSession::stopCapture()");
+    
     @synchronized (self) {
         self.capturingCount--;
         
@@ -92,6 +141,11 @@ static LiveStreamSession* gSession = nil;
             if( ![self useHeadphones] ) {
                 [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:nil];
             }
+        }
+        
+        if( self.capturingCount == 0 && self.playingCount == 0 ) {
+            // 禁止后台播放
+            [[LiveStreamSession session] inactiveSession];
         }
     }
 }

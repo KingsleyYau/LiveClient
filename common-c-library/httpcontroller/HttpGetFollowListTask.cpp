@@ -42,7 +42,7 @@ void HttpGetFollowListTask::SetParam(
     mStep = step;
     
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetFollowListTask::SetParam( "
             "task : %p, "
             "start : %d, "
@@ -63,7 +63,7 @@ int HttpGetFollowListTask::GetStep() {
 }
 
 bool HttpGetFollowListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetFollowListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -75,7 +75,7 @@ bool HttpGetFollowListTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetFollowListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetFollowListTask::ParseData( buf : %s )", buf);
     }
     
 

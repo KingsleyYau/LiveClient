@@ -17,7 +17,7 @@ HttpRequestController::~HttpRequestController() {
 }
 
 void HttpRequestController::OnTaskFinish(IHttpTask* task) {
-    FileLog("httpcontroller", "HttpRequestController::OnTaskFinish( task : %p )", task);
+    FileLog(LIVESHOW_HTTP_LOG, "HttpRequestController::OnTaskFinish( task : %p )", task);
     
     // 清除回调
     mRequestMap.Lock();
@@ -136,18 +136,262 @@ long long HttpRequestController::UpdateTokenId(
     return requestId;
 }
 
+long long HttpRequestController::OwnFackBookLogin(
+                                                  HttpRequestManager *pHttpRequestManager,
+                                                  const string& fToken,
+                                                  const string& versionCode,
+                                                  const string& utmReferrer,
+                                                  const string& model,
+                                                  const string& deviceId,
+                                                  const string& manufacturer,
+                                                  const string& inviteCode,
+                                                  const string& email,
+                                                  const string& passWord,
+                                                  const string& birthDay,
+                                                  IRequestOwnFackBookLoginCallback* callback
+                                                  ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOwnFackBookLoginTask* task = new HttpOwnFackBookLoginTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(model, deviceId, manufacturer, fToken, email, passWord, birthDay, inviteCode, versionCode, utmReferrer);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OwnRegister(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string email,
+                                             const string passWord,
+                                             GenderType gender,
+                                             const string nickName,
+                                             const string birthDay,
+                                             const string inviteCode,
+                                             const string model,
+                                             const string deviceid,
+                                             const string manufacturer,
+                                             const string utmReferrer,
+                                             IRequestOwnRegisterCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOwnRegisterTask* task = new HttpOwnRegisterTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(email, passWord, gender, nickName, birthDay, inviteCode, model, deviceid, manufacturer, utmReferrer);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OwnEmailLogin(
+                                               HttpRequestManager *pHttpRequestManager,
+                                               const string email,
+                                               const string passWord,
+                                               const string versionCode,
+                                               const string model,
+                                               const string deviceid,
+                                               const string manufacturer,
+                                               const string checkCode,
+                                               IRequestOwnEmailLoginCallback* callback
+                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOwnEmailLoginTask* task = new HttpOwnEmailLoginTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(email, passWord, versionCode, model, deviceid, manufacturer, checkCode);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OwnFindPassword(
+                                                 HttpRequestManager *pHttpRequestManager,
+                                                 const string sendMail,
+                                                 const string checkCode,
+                                                 IRequestOwnFindPasswordCallback* callback
+                                                 ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOwnFindPasswordTask* task = new HttpOwnFindPasswordTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(sendMail, checkCode);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OwnCheckMail(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string email,
+                                              IRequestOwnCheckMailRegistrationCallback* callback
+                                              ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpOwnCheckMailRegistrationTask* task = new HttpOwnCheckMailRegistrationTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(email);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::OwnUploadPhoto(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string photoName,
+                                                IRequestUploadPhotoCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpUploadPhotoTask* task = new HttpUploadPhotoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(photoName);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetVerificationCode(
+                                                     HttpRequestManager *pHttpRequestManager,
+                                                     VerifyCodeType verifyType,
+                                                     bool useCode,
+                                                     IRequestGetVerificationCodeCallback* callback
+                                                     ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetVerificationCodeTask* task = new HttpGetVerificationCodeTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(verifyType, useCode);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetAnchorList(
                                                HttpRequestManager *pHttpRequestManager,
                                                int start,
                                                int step,
                                                bool hasWatch,
+                                               bool isForTest,
                                                IRequestGetAnchorListCallback* callback
                                                ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpGetAnchorListTask* task = new HttpGetAnchorListTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(start, step, hasWatch);
+    task->SetParam(start, step, hasWatch, isForTest);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -1220,6 +1464,295 @@ long long HttpRequestController::Banner(
     HttpBannerTask* task = new HttpBannerTask();
     task->Init(pHttpRequestManager);
     task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetUserInfo(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string& userId,
+                                             IRequestGetUserInfoCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetUserInfoTask* task = new HttpGetUserInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(userId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetShareLink(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              const string& shareuserId,
+                                              const string& anchorId,
+                                              ShareType shareType,
+                                              SharePageType sharePageType,
+                                              IRequestGetShareLinkCallback* callback
+                                              ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetShareLinkTask* task = new HttpGetShareLinkTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(shareuserId, anchorId, shareType, sharePageType);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetShareSuc(
+                                             HttpRequestManager *pHttpRequestManager,
+                                             const string& shareId,
+                                             IRequestSetShareSucCallback* callback
+                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetShareSucTask* task = new HttpSetShareSucTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(shareId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SubmitFeedBack(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& mail,
+                                                const string& msg,
+                                                IRequestSubmitFeedBackCallback* callback
+                                                )   {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSubmitFeedBackTask* task = new HttpSubmitFeedBackTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(mail, msg);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetManBaseInfo(
+                         HttpRequestManager *pHttpRequestManager,
+                         IRequestGetManBaseInfoCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetManBaseInfoTask* task = new HttpGetManBaseInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetManBaseInfo(
+                                                HttpRequestManager *pHttpRequestManager,
+                                                const string& nickName,
+                                                IRequestSetManBaseInfoCallback* callback
+                                                ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetManBaseInfoTask* task = new HttpSetManBaseInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(nickName);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::PremiumMembership(
+                                                   HttpRequestManager *pHttpRequestManager,
+                                                   const string& siteId,
+                                                   IRequestPremiumMembershipCallback* callback
+                                                   ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpPremiumMembershipTask* task = new HttpPremiumMembershipTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(siteId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetIOSPay(
+                                           HttpRequestManager *pHttpRequestManager,
+                                           const string& manid,
+                                           const string& sid,
+                                           const string& number,
+                                           const string& siteid,
+                                           IRequestGetIOSPayCallback* callback
+                                           ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetIOSPayTask* task = new HttpGetIOSPayTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manid, sid, number, siteid);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::IOSPayCall(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            const string& manid,
+                                            const string& sid,
+                                            const string& receipt,
+                                            const string& orderNo,
+                                            AppStorePayCodeType code,
+                                            IRequestIOSPayCallCallback* callback
+                                            ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpIOSPayCallTask* task = new HttpIOSPayCallTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(manid, sid, receipt, orderNo, code);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

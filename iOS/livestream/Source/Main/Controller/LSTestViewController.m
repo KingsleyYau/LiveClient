@@ -11,12 +11,14 @@
 #import "LSMainViewController.h"
 #import "StreamTestViewController.h"
 #import "LSLiveGuideViewController.h"
+
 #import "LiveModule.h"
 #import "LSConfigManager.h"
 
 @interface LSTestViewController () <LiveModuleDelegate>
 @property (nonatomic, strong) NSString *_Nullable token;
 @property (nonatomic, strong) NSString *_Nullable isShowGuide;
+@property (strong, nonatomic) UIWindow *window;
 @end
 
 @implementation LSTestViewController
@@ -33,12 +35,17 @@
     config.item = [[ConfigItemObject alloc] init];
     //    config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
     //    config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
-    config.item.httpSvrUrl = @"http://172.25.32.17:3107";
-    config.item.imSvrUrl = @"ws://172.25.32.17:3106";
+    config.item.httpSvrUrl = @"http://172.25.32.17:8817";
+    config.item.imSvrUrl = @"ws://172.25.32.17:8816";
 
     [[LiveModule module] setServiceManager:nil];
     [LiveModule module].delegate = self;
-    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:3107"];
+    [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8817"];
+//    [[LiveModule module] setConfigUrl:@"https://demo-live.charmdate.com:446"];
+}
+
+- (void)initialiseSubwidge {
+    [super initialiseSubwidge];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -110,18 +117,6 @@
     if (!_token || _token.length == 0) {
         _token = MAX_TOKEN;
     }
-
-    //    _isShowGuide = [userDefaults valueForKey:_token];
-
-    //    if ([userDefaults valueForKey:@"ShowGuide"] == nil) {
-    //         [LiveModule module].showGuideView = YES;
-    //    }else {
-    //         [LiveModule module].showGuideView = NO;
-    //    }
-
-    //    if( !_token || _token.length == 0 ) {
-    //        _token = RANDY_TOKEN;
-    //    }
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {
@@ -162,18 +157,31 @@
     NSLog(@"LSTestViewController::moduleOnNotification()");
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIWindow *parentView = [UIApplication sharedApplication].keyWindow;
+        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        
         UIViewController *vc = [LiveModule module].notificationVC;
-        [parentView.rootViewController addChildViewController:vc];
-        [parentView addSubview:vc.view];
-
+        CGRect frame = CGRectMake(0, self.navigationController.navigationBar.frame.size.height + 20 + 5, self.view.frame.size.width, vc.view.frame.size.height);
+        self.window = [[UIWindow alloc] initWithFrame:frame];
+        self.window.windowLevel = UIWindowLevelAlert + 1;
+        UIWindow *parentView = self.window;
+        [self.window addSubview:vc.view];
+        [self.window makeKeyAndVisible];
+        
         [vc.view mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(parentView).offset(self.navigationController.navigationBar.frame.size.height + 20 + 5);
+            make.top.equalTo(parentView).offset(0);
             make.left.equalTo(parentView).offset(10);
             make.right.equalTo(parentView).offset(-10);
             make.height.equalTo(@(vc.view.frame.size.height));
         }];
+        
+        // Keep the original keyWindow and avoid some unpredictable problems
+        [keyWindow makeKeyWindow];
     });
+}
+
+- (void)moduleOnNotificationDisappear:(LiveModule *)module {
+    NSLog(@"LSTestViewController::moduleOnNotificationDisappear()");
+    self.window = nil;
 }
 
 - (void)moduleOnAdViewController:(LiveModule *)module {

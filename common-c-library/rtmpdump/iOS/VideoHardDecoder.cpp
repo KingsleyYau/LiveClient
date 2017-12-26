@@ -76,6 +76,7 @@ void VideoHardDecoder::Pause() {
     
 bool VideoHardDecoder::Reset() {
     bool bFlag = true;
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::Reset( this : %p )", this);
     
     mRuningMutex.lock();
     if(

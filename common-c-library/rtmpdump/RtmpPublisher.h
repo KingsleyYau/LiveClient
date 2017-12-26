@@ -29,10 +29,9 @@ public:
      发布流连接
      
      @param url 连接
-     @param recordAACFilePath AAC录制路径
      @return 成功／失败
      */
-    bool PublishUrl(const string& url, const string& recordAACFilePath);
+    bool PublishUrl(const string& url);
     
     /**
      停止
@@ -75,6 +74,7 @@ private:
     
 private:
     void Init();
+    void InitBuffer();
     
 private:
     // Rtmp传输模块

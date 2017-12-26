@@ -122,7 +122,26 @@ void RtmpDump::SetCallback(RtmpDumpCallback* callback) {
     mpRtmpDumpCallback = callback;
 }
 
-bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath) {
+void RtmpDump::SetVideoParam(int width, int height) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "RtmpDump::SetVideoParam( "
+                 "this : %p, "
+                 "width : %d, "
+                 "height : %d "
+                 ")",
+                 this,
+                 width,
+                 height
+                 );
+    
+    mClientMutex.lock();
+    mWidth = width;
+    mHeight = height;
+    mClientMutex.unlock();
+}
+    
+bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath) {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
@@ -200,7 +219,7 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath, const st
     return bFlag;
 }
 
-bool RtmpDump::PublishUrl(const string& url, const string& recordAACFilePath) {
+bool RtmpDump::PublishUrl(const string& url) {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
@@ -285,6 +304,8 @@ void RtmpDump::RecvRunnableHandle() {
                 if( !bFlag ) {
                     FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_publish_stream fail] )");
                 }
+                // 发送支持Flash播放的视频分辨率
+                srs_rtmp_set_data_frame(mpRtmp, mWidth, mHeight);
             }
         } else {
             FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_connect_app fail] )");
@@ -599,7 +620,7 @@ void RtmpDump::Destroy() {
         srs_flv_close(mpFlv);
         mpFlv = NULL;
     }
-
+    
 //	FileLog("rtmpdump", "RtmpDump::Destroy( "
 //			"[Success], "
 //			"this : %p "

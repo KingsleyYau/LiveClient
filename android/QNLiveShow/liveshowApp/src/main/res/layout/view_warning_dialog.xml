@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <LinearLayout
+        android:background="@drawable/bg_custom_dialog_warning"
+        android:id="@+id/ll_warnContent"
+        android:layout_marginLeft="@dimen/custom_dialog_left_right_margin"
+        android:layout_marginRight="@dimen/custom_dialog_left_right_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:src="@drawable/ic_system_notice_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:text="@string/system_notice_warning_title"
+                android:textColor="@color/custom_dialog_txt_color_simple"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_warningContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="19dp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:textSize="@dimen/custom_dialog_text_size_simple"/>
+
+        <TextView
+            android:id="@+id/tv_OK"
+            android:layout_width="114dp"
+            android:layout_height="30dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:background="@drawable/bg_interactive_video_confirm"
+            android:text="@string/common_btn_ok"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="24dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

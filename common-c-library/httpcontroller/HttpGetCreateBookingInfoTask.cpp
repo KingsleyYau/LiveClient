@@ -36,7 +36,7 @@ void HttpGetCreateBookingInfoTask::SetParam(
     }
     
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetCreateBookingInfoTask::SetParam( "
             "task : %p, "
             ")",
@@ -51,7 +51,7 @@ const string& HttpGetCreateBookingInfoTask::GetUserId() {
 
 
 bool HttpGetCreateBookingInfoTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetCreateBookingInfoTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -63,7 +63,7 @@ bool HttpGetCreateBookingInfoTask::ParseData(const string& url, bool bFlag, cons
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetCreateBookingInfoTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetCreateBookingInfoTask::ParseData( buf : %s )", buf);
     }
     
 

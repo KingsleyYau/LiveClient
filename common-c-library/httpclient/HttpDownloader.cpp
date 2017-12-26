@@ -33,7 +33,7 @@ bool HttpDownloader::StartDownload(const string& url, const string& localPath, I
 {
 	bool result = false;
 
-	FileLog("LiveChatManager", "HttpDownloader::StratDownload() url:%s, localPath:%s, callback:%p"
+	FileLog(LIVESHOW_HTTP_LOG, "HttpDownloader::StratDownload() url:%s, localPath:%s, callback:%p"
 			, url.c_str(), localPath.c_str(), callback);
 
 	if (!url.empty() && !localPath.empty())
@@ -44,7 +44,7 @@ bool HttpDownloader::StartDownload(const string& url, const string& localPath, I
 		// 开始下载
 		if (OpenTempFile())
 		{
-			FileLog("LiveChatManager", "HttpDownloader::StratDownload() begin download, url:%s, localPath:%s"
+			FileLog(LIVESHOW_HTTP_LOG, "HttpDownloader::StratDownload() begin download, url:%s, localPath:%s"
 					, url.c_str(), localPath.c_str());
 
 			HttpEntiy entiy;
@@ -55,7 +55,7 @@ bool HttpDownloader::StartDownload(const string& url, const string& localPath, I
 			result = (INVALID_REQUEST != m_request.StartRequest(url, entiy));
 			m_isDownloading = result;
 
-			FileLog("LiveChatManager", "HttpDownloader::StratDownload() start download, url:%s, localPath:%s, result:%d"
+			FileLog(LIVESHOW_HTTP_LOG, "HttpDownloader::StratDownload() start download, url:%s, localPath:%s, result:%d"
 					, url.c_str(), localPath.c_str(), result);
 		}
 

@@ -14,6 +14,8 @@ namespace coollive {
     public:
         virtual ~AudioRenderer(){};
         virtual void RenderAudioFrame(void* audioFrame) = 0;
+        virtual bool Start() = 0;
+        virtual void Stop() = 0;
         virtual void Reset() = 0;
     };
 }

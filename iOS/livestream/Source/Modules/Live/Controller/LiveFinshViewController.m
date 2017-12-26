@@ -13,8 +13,10 @@
 #import "GetPromoAnchorListRequest.h"
 #import "LSImageViewLoader.h"
 #import "LiveBundle.h"
+#import "LiveModule.h"
+#import "AnchorPersonalViewController.h"
 
-@interface LiveFinshViewController ()
+@interface LiveFinshViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
 #pragma mark - 推荐逻辑
 @property (atomic, strong) NSArray *recommandItems;
 
@@ -40,21 +42,19 @@
     self.bookPrivateBtn.hidden = NO;
     self.viewHotBtn.hidden = YES;
     self.addCreditBtn.hidden = YES;
+    self.recommandView.hidden = YES;
     self.imageLoader = [LSImageViewLoader loader];
-    
-    [self handleError:self.errType errMsg:self.errMsg];
+    self.sessionManager = [LSSessionRequestManager manager];
 }
 
 - (void)setupContainView {
     // 初始化模糊背景
-    [self setupBgImageView];
+//    [self setupBgImageView];
 
     // 初始化推荐控件
     [self setupRecommandView];
-
-    // 请求推荐列表
-    [self getAdvisementList];
     
+    // 更新控件数据
     [self updateControlDataSource];
 }
 
@@ -66,38 +66,59 @@
      [UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
     
     [self.imageLoader loadImageWithImageView:self.backgroundImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:
-     [UIImage imageNamed:@"Live_PreLive_Img_Bg"]];
+     nil];
     
     self.nameLabel.text = self.liveRoom.userName;
 }
 
+#pragma mark - 根据错误码显示界面
 - (void)handleError:(LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg {
     
     switch (errType) {
-        case LCC_ERR_COUPON_FAIL:{
             
+        // TOOP:1 没钱
+        case LCC_ERR_NO_CREDIT:
+        case LCC_ERR_COUPON_FAIL:{
+            self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = YES;
             self.viewHotBtn.hidden = YES;
             self.addCreditBtn.hidden = NO;
             self.tipLabel.text = NSLocalizedStringFromSelf(@"WATCHING_ERR_ADD_CREDIT");
-            
         } break;
-        
-        case LCC_ERR_BACKGROUND_TIMEOUT:{
             
+        // TOOP:2 退入后台60s超时
+        case LCC_ERR_BACKGROUND_TIMEOUT:{
+            self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = YES;
             self.viewHotBtn.hidden = NO;
             self.addCreditBtn.hidden = YES;
             self.tipLabel.text = NSLocalizedStringFromSelf(@"TIMEOUT_A_MINUTE");
-            
         } break;
-            
-        default:{
-            
+        
+        // TOOP:3 正常关闭直播间,显示推荐主播列表
+        case LCC_ERR_RECV_REGULAR_CLOSE_ROOM:{
+            [self getAdvisementList];
             self.bookPrivateBtn.hidden = NO;
             self.viewHotBtn.hidden = YES;
             self.addCreditBtn.hidden = YES;
+            self.tipLabel.text = self.errMsg;
+        } break;
+        
+        // TOOP:4 被踢出直播间
+        case LCC_ERR_ROOM_LIVEKICKOFF:{
+            self.recommandView.hidden = YES;
+            self.bookPrivateBtn.hidden = YES;
+            self.viewHotBtn.hidden = NO;
+            self.addCreditBtn.hidden = YES;
+            self.tipLabel.text = self.errMsg;
+        } break;
             
+        default:{
+            self.recommandView.hidden = YES;
+            self.bookPrivateBtn.hidden = NO;
+            self.viewHotBtn.hidden = YES;
+            self.addCreditBtn.hidden = YES;
+            self.tipLabel.text = self.errMsg;
         } break;
     }
     
@@ -108,11 +129,12 @@
     
     // 隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
+    
+    [self handleError:self.errType errMsg:self.errMsg];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -138,12 +160,17 @@
     self.recommandView.hidden = YES;
 }
 
+#pragma mark - 请求推荐列表
 - (void)getAdvisementList {
+    
+    NSLog(@"LiveFinshViewController::getAdvisementList [请求推荐列表]");
     // TODO:获取推荐列表
     GetPromoAnchorListRequest *request = [[GetPromoAnchorListRequest alloc] init];
     request.number = 2;
-    request.userId = @"";
+    request.type = PROMOANCHORTYPE_LIVEROOM;
+    request.userId = self.liveRoom.userId;
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+        NSLog(@"LiveFinshViewController::getAdvisementList [请求推荐列表返回] success : %@, errmsg : %@, promoNum : %lu",success ? @"成功" : @"失败", errmsg, array.count);
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 // 刷新推荐列表
@@ -157,6 +184,7 @@
 
 - (void)reloadRecommandView {
     // TODO:刷新推荐列表
+    self.recommandViewWidth.constant = [RecommandCollectionViewCell cellWidth] * self.recommandItems.count + ((self.recommandItems.count - 1) * 20);
     self.recommandView.hidden = NO;
     [self.recommandCollectionView reloadData];
 }
@@ -175,11 +203,21 @@
     [cell.imageViewLoader loadImageWithImageView:cell.imageView
                                          options:0
                                         imageUrl:item.photoUrl
-                                placeholderImage:[UIImage imageNamed:@"Test_Lady_Head"]];
+                                placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
 
     cell.nameLabel.text = item.nickName;
 
     return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
+    LiveRoomInfoItemObject *item = [self.recommandItems objectAtIndex:indexPath.row];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToLookLadyAnchorId:item.userId];
+    [LiveUrlHandler shareInstance].url = url;
+    
+    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 }
 
 - (IBAction)cancleAction:(id)sender {
@@ -199,16 +237,14 @@
 
 
 - (IBAction)viewHotAction:(id)sender {
-    [self.navigationController dismissViewControllerAnimated:YES
-                                                  completion:^{
-                                                      
-                                                  }];
+    // 回到Hot列表
+    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 }
 
 
 - (IBAction)addCreditAction:(id)sender {
-    
-    
+    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
 }
 
 

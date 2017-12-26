@@ -65,7 +65,7 @@
         self.backgroundColor = [UIColor clearColor];
         
         self.modifier = [[YYTextLinePositionSimpleModifier alloc] init];
-        self.modifier.fixedLineHeight = 18;
+        self.modifier.fixedLineHeight = 19;
         
         // 创建文本容器
         self.container = [[YYTextContainer alloc] init];

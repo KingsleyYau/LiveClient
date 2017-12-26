@@ -13,7 +13,10 @@
 #import "LSMainViewController.h"
 #import "GetAdAnchorListRequest.h"
 #import "CloseAdAnchorListRequest.h"
-@interface LiveChannelAdViewController () <LiveModuleDelegate>
+#import "LiveUrlHandler.h"
+#import "LiveService.h"
+#import "LSMainViewController.h"
+@interface LiveChannelAdViewController () <LiveModuleDelegate,LiveChannelAdViewDelegate,LiveChannelContentViewDelegate>
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *collectionViewHeight;
 /**  */
@@ -26,7 +29,7 @@
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 @property (weak, nonatomic) IBOutlet LiveChannelContentView *collectionView;
 
-@property (nonatomic, strong) NSMutableArray *items;
+@property (nonatomic, strong) NSMutableArray <LiveRoomInfoItemObject *> *items;
 
 /** QN交互 */
 @property (nonatomic, strong) LiveModule *module;
@@ -37,20 +40,22 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-
+    
     // 隐藏导航栏
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    //    self.adTopView = [LiveChannelTopView initWithLiveChannelView];
-
+    
     self.module = [LiveModule module];
-    self.module.delegate = self;
-
+    
+    
     self.sessionManager = [LSSessionRequestManager manager];
-
-    //    self.adTopView.topViewdelegate = self;
+  
+    BOOL result =  [self getAdList];
+    NSLog(@"[self getAdList] = %d",result);
 }
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -60,12 +65,13 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     //    [self getListRequest:YES];
-    [self getAdList];
+//     BOOL result =  [self getAdList];
+//    NSLog(@"[self getAdList] = %d",result);
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.adView hideAnimation];
+//    [self.adView hideAnimation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -75,39 +81,43 @@
 - (BOOL)getAdList {
     GetAdAnchorListRequest *request = [[GetAdAnchorListRequest alloc] init];
     request.number = 4;
-
+    
     // 调用接口
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            //            NSLog(@"HotViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
+            NSLog(@"livechannel::getAdList( [%@], count : %ld )", BOOL2SUCCESS(success), (long)array.count);
             NSMutableArray *dataArray = [NSMutableArray array];
             if (success) {
-                //                dataArray = (NSMutableArray *)array;
-                for (int i = 0; i < request.number; i++) {
-                    LiveRoomInfoItemObject *item = array[i];
-                    if (item) {
-                        [dataArray addObject:item];
+                //如果推荐主播超过4个则显示4个,如果少于2个则显示单张封面图,超过2个显示个数
+                if (array.count > request.number) {
+                    for (int i = 0; i < request.number; i++) {
+                        LiveRoomInfoItemObject *item = array[i];
+                        if (item) {
+                            [dataArray addObject:item];
+                        }
+                    }
+                }else if(array.count <= 2){
+                    
+                }else {
+                    for (int i = 0; i < array.count; i++) {
+                        LiveRoomInfoItemObject *item = array[i];
+                        if (item) {
+                            [dataArray addObject:item];
+                        }
                     }
                 }
+                
             }
-
+            
             self.items = (NSMutableArray *)dataArray;
-            //            LiveChannelAdViewController *liveChannel = [[LiveChannelAdViewController alloc] initWithNibName:nil bundle:nil];
-
-            //            adView.contentView.items = dataArray;
-            ////            [adView.contentView reloadData];
-            ////            self.liveChannel = liveChannel;
-            //
-            //            adView.contentView.liveChannelDelegate = self;
-            //
-            //            adView.adViewDelegate = self;
-
+            
+            
             [self reloadData:YES];
-
+            
         });
-
+        
     };
-
+    
     return [self.sessionManager sendRequest:request];
 }
 
@@ -122,51 +132,67 @@
 }
 
 - (void)liveChannelAdView:(LiveChannelAdView *)view didClickCloseBtn:(UIButton *)sender {
-
+    
     [self closeAdList];
 }
 
 - (void)placeholderBackImageViewDidTap:(UITapGestureRecognizer *)gesture {
     NSLog(@"LiveChannelAdViewController-%s", __func__);
     //TODO::点击进入直播hot列表
+    [[LiveModule module].analyticsManager reportActionEvent:LiveChannelClickLiveAd eventCategory:EventCategoryQN];
+    [self pushToList];
 }
 
-- (void)liveChannelAdView:(LiveChannelAdView *)view didClickTopToList:(UIButton *)sender {
-    NSLog(@"LiveChannelAdViewController-%s", __func__);
-    //TODO::点击进入直播hot列表
-}
 
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didClickGoWatch:(UIButton *)btn {
     NSLog(@"LiveChannelAdViewController-%s", __func__);
     //TODO::点击进入直播hot列表
-    //    LSMainViewController *main = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
-    //    main.view.frame =  [UIScreen mainScreen].bounds;
-    //    main.tabContainView.frame =  [UIScreen mainScreen].bounds;
-    //    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:main];
-    UIViewController *vc = [LiveModule module].moduleVC;
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:vc];
-    [UIApplication sharedApplication].keyWindow.rootViewController = nvc;
+    
+    [[LiveModule module].analyticsManager reportActionEvent:LiveChannelClickGoWatch eventCategory:EventCategoryQN];
+    [self pushToList];
 }
 
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didSelectLady:(NSInteger)item {
     NSLog(@"LiveChannelAdViewController-%s", __func__);
-    //TODO::点击进入直播间主播个人热详情
+    //TODO::点击进入直播间主播个人详情
+    [[LiveModule module].analyticsManager reportActionEvent:LiveChannelClickCover eventCategory:EventCategoryQN];
+    
+    [LiveModule module].showListGuide = NO;
+    LiveRoomInfoItemObject *itemInfo = [self.items objectAtIndex:item];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToLookLadyAnchorId:itemInfo.userId];
+    [[LiveModule module].serviceManager openSpecifyService:url];
+    
+    
+    
+    
 }
 
 - (void)liveChannelContentView:(LiveChannelContentView *)contentView didClickTop:(UIButton *)btn {
     NSLog(@"LiveChannelAdViewController-%s", __func__);
     //TODO::点击进入直播hot列表
-    LSMainViewController *main = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:main];
-    [UIApplication sharedApplication].keyWindow.rootViewController = nvc;
+    [[LiveModule module].analyticsManager reportActionEvent:LiveChannelClickGoWatch eventCategory:EventCategoryQN];
+    [self pushToList];
+    
+}
+
+- (void)pushToList {
+    
+    NSURL *url = [NSURL URLWithString:@"qpidnetwork://app/open?site:4&service=live&module=main"];
+    [LiveModule module].showListGuide = YES;
+    [[LiveModule module].serviceManager openSpecifyService:url];
+
 }
 
 - (BOOL)closeAdList {
+    
+    [[LiveModule module].analyticsManager reportActionEvent:LiveChannelCloseAd eventCategory:EventCategoryQN];
     CloseAdAnchorListRequest *request = [[CloseAdAnchorListRequest alloc] init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.adView hideAnimation];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self.view removeFromSuperview];
+            [self removeFromParentViewController];
+            
         });
     };
     return [self.sessionManager sendRequest:request];

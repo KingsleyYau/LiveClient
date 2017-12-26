@@ -15,8 +15,8 @@
 
 // 请求参数定义
 #define ROOMID_PARAM           "roomid"
-#define MSG_PARAM              "msg"
-#define CREDIT_PARAM           "credit"
+#define ERRMSG_PARAM           "errmsg"
+#define LEFTCREDIT_PARAM       "left_credit"
 
 
 
@@ -66,11 +66,11 @@ bool RecvLackOfCreditNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ROOMID_PARAM].isString()) {
             m_roomId = tp.m_data[ROOMID_PARAM].asString();
         }
-        if (tp.m_data[MSG_PARAM].isString()) {
-            m_msg = tp.m_data[MSG_PARAM].asString();
+        if (tp.m_data[ERRMSG_PARAM].isString()) {
+            m_msg = tp.m_data[ERRMSG_PARAM].asString();
         }
-        if (tp.m_data[CREDIT_PARAM].isNumeric()) {
-            m_credit = tp.m_data[CREDIT_PARAM].asDouble();
+        if (tp.m_data[LEFTCREDIT_PARAM].isNumeric()) {
+            m_credit = tp.m_data[LEFTCREDIT_PARAM].asDouble();
         }
     }
     
@@ -100,7 +100,13 @@ bool RecvLackOfCreditNoticeTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvLackOfCreditNoticeTask::GetSendData() begin");
     {
-
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        data = value;
     }
 
     result = true;

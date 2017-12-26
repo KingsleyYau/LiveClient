@@ -9,7 +9,7 @@
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSViewController.h"
 
-@interface LSGoogleAnalyticsViewController : LSViewController
+@interface LSGoogleAnalyticsViewController : LSListViewController
 
 /**
  显示分页

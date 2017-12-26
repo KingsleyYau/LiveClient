@@ -35,7 +35,7 @@ void HttpSetRideTask::SetParam(
         mRideId = rideId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSetRideTask::SetParam( "
             "task : %p, "
             ")",
@@ -48,7 +48,7 @@ const string& HttpSetRideTask::GetRideId() {
 }
 
 bool HttpSetRideTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpSetRideTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -60,7 +60,7 @@ bool HttpSetRideTask::ParseData(const string& url, bool bFlag, const char* buf, 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSetRideTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSetRideTask::ParseData( buf : %s )", buf);
     }
     
 

@@ -90,6 +90,7 @@ typedef enum {
     LCC_ERR_NOTCAN_CANCEL_INVITATION = 10036,          // 取消立即私密邀请失败 状态不是带确认 /*important*/
     LCC_ERR_NO_FOUND_CRONJOB = 10040,                  // cronjob 里找不到对应的定时器函数
     LCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
+    LCC_ERR_RECV_REGULAR_CLOSE_ROOM = 10088,           // 用户接收正常关闭直播间
 
 } LCC_ERR_TYPE;
 
@@ -231,4 +232,15 @@ typedef enum {
 // int 转换 IMControlType
 inline IMControlType GetIMControlType(int value) {
     return IMCONTROLTYPE_UNKNOW < value && value <= IMCONTROLTYPE_CLOSE ? (IMControlType)value : IMCONTROLTYPE_UNKNOW;
+}
+
+// 直播间公告类型
+typedef enum {
+    IMSYSTEMTYPE_COMMON = 0,
+    IMSYSTEMTYPE_WARN = 1
+}IMSystemType;
+
+// int 转换 IMSystemType
+inline IMSystemType GetIMSystemType(int value) {
+    return IMSYSTEMTYPE_COMMON <= value && value <= IMSYSTEMTYPE_WARN ? (IMSystemType)value : IMSYSTEMTYPE_COMMON;
 }

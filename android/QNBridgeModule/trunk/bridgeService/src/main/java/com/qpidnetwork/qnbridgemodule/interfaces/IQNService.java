@@ -17,8 +17,9 @@ public interface IQNService {
      * @param userId
      * @param token
      * @param ga_uid
+     * @param configDomain      //用于同步配置的域名
      */
-    void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid);
+    void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, String configDomain);
 
 	enum LogoutType {
         AutoLogout,         //session过期等导致后台注销自动登录
@@ -33,7 +34,7 @@ public interface IQNService {
      * App 被踢出通知模块
      */
     void onAppKickoff(String tips);
-	
+
     /**
      * 获取模块名称
      */
@@ -90,9 +91,21 @@ public interface IQNService {
     void launchAdvertActivity(Context context);
 
     /**
+     * push点击时间GA统计接口
+     * @param url
+     */
+    void onPushClickGAReport(String url);
+
+    /**
      * 服務事件通知監聽器
      * @param onServiceStatusListener
      */
     void setOnServiceStatusChangeListener(OnServiceEventListener onServiceStatusListener);
+
+    /**
+     * 是否用作测试
+     * @param isForTest
+     */
+    void setForTest(boolean isForTest);
 
 }

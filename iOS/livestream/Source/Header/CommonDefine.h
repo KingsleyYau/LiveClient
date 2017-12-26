@@ -13,11 +13,18 @@
 
 #import "LiveBundle.h"
 #import "Config.h"
+#import "LSGoogleAnalyticsAction.h"
 
 #define BOOL2YES(flag) flag?@"YES":@"NO"
 #define BOOL2SUCCESS(flag) flag?@"Success":@"Fail"
 
 #define WeakObject(Obj, weakObj) __weak typeof(Obj) weakObj = Obj
+
+#ifdef DEBUG
+#define DEBUG_STRING(str) str
+#else
+#define DEBUG_STRING(str) @""
+#endif
 
 #undef NSLocalizedString
 #define NSLocalizedString(key, comment) \
@@ -41,11 +48,7 @@
 #define ViewBoundsSize self.view.bounds.size
 
 #define deviceTokenStringKEY @"deviceTokenString"
-
-#if TARGET_IPHONE_SIMULATOR
-#define SIMULATOR 1
-#elif TARGET_OS_IPHONE
-#define SIMULATOR 0
-#endif
+#define DialogTag -1
+#define IsDialog(view) ((view.tag & 0x8FFFFFFF) >> 31)
 
 #endif

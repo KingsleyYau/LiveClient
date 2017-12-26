@@ -115,47 +115,71 @@
 #pragma mark - 下载Standard表情图
 - (void)downloadStandardEmoticon {
     // Standard icont图
-    [self downLoadListEmotionWithItem:nil andUrl:self.stanListItem.emoUrl emotionType:self.stanListItem.type];
+    [self downLoadListEmotionWithItem:nil andUrl:self.stanListItem.emoUrl emotionType:self.stanListItem.type index:0];
     
     // Standard 表情图
     for (int i = 0; i < self.stanListItem.emoList.count; i++) {
         ChatEmotionItem *emoItem = self.stanListItem.emoList[i];
-        [self downLoadListEmotionWithItem:emoItem andUrl:emoItem.emoIconUrl emotionType:self.stanListItem.type];
+        [self downLoadListEmotionWithItem:emoItem andUrl:emoItem.emoIconUrl emotionType:self.stanListItem.type index:i];
+        
+        LSChatEmotion* emotion = [[LSChatEmotion alloc] init];
+        emotion.text = emoItem.emoSign;
+        [self.stanEmotionList addObject:emotion];
     }
 }
 
 #pragma mark - 下载Advanced表情图
 - (void)downloadAdvancedEmoticon {
     // Advanced icont图
-    [self downLoadListEmotionWithItem:nil andUrl:self.advanListItem.emoUrl emotionType:self.advanListItem.type];
+    [self downLoadListEmotionWithItem:nil andUrl:self.advanListItem.emoUrl emotionType:self.advanListItem.type index:0];
     
     // Advanced 表情图
     for (int i = 0; i < self.advanListItem.emoList.count; i++) {
         ChatEmotionItem *emoItem = self.advanListItem.emoList[i];
-        [self downLoadListEmotionWithItem:emoItem andUrl:emoItem.emoIconUrl emotionType:self.advanListItem.type];
+        [self downLoadListEmotionWithItem:emoItem andUrl:emoItem.emoIconUrl emotionType:self.advanListItem.type index:i];
+        
+        LSChatEmotion* emotion = [[LSChatEmotion alloc] init];
+        emotion.text = emoItem.emoSign;
+        [self.advanEmotionList addObject:emotion];
     }
 }
 
 
-- (void)downLoadListEmotionWithItem:(ChatEmotionItem *)item andUrl:(NSString *)url emotionType:(EmoticonType)type{
+- (void)downLoadListEmotionWithItem:(ChatEmotionItem *)item andUrl:(NSString *)url emotionType:(EmoticonType)type index:(NSInteger)index {
     
     SDWebImageManager *manager = [SDWebImageManager sharedManager];
     [manager loadImageWithURL:[NSURL URLWithString:url] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         
     } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
         
-        if (image) {
+        if ( image ) {
 //            NSLog(@"LSChatEmotionManager::downLoadListEmotionWithUrl( emotionURL : %@ )", imageURL);
             
-            if (item) {
+            if ( item ) {
                 LSChatEmotion* emotion = [[LSChatEmotion alloc] initWithTextImage:item.emoSign image:image];
                 [self.imageNameArray addObject:emotion.text];
                 [self.emotionDict setObject:emotion forKey:emotion.text];
                 if (type == EMOTICONTYPE_STANDARD) {
                     
-                    [self.stanEmotionList addObject:emotion];
+                    for (LSChatEmotion *chatEmotion in self.stanEmotionList) {
+                        if ([chatEmotion.text isEqualToString:emotion.text]) {
+                            chatEmotion.image = emotion.image;
+                            
+                            if ( [self.delegate respondsToSelector:@selector(downLoadStanListFinshHandle:)] ) {
+                                [self.delegate downLoadStanListFinshHandle:index];
+                            }
+                        }
+                    }
                 } else {
-                    [self.advanEmotionList addObject:emotion];
+                    for (LSChatEmotion *chatEmotion in self.advanEmotionList) {
+                        if ([chatEmotion.text isEqualToString:emotion.text]) {
+                            chatEmotion.image = emotion.image;
+                            
+                            if ( [self.delegate respondsToSelector:@selector(downLoadAdvanListFinshHandle:)] ) {
+                                [self.delegate downLoadAdvanListFinshHandle:index];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -225,7 +249,7 @@
             LSChatEmotion* emotion = [self.emotionDict objectForKey:str];
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:emotion.image];
-            imageView.frame = CGRectMake(0, 0, 16, 16);
+            imageView.frame = CGRectMake(0, 0, 21, 21);
             // 生成表情富文本
             NSMutableAttributedString *imageString = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
             // 生成表情富文本
@@ -235,6 +259,24 @@
     return text;
 }
 
+- (UIImage *)image:(UIImage*)image byScalingToSize:(CGSize)targetSize {
+    UIImage *sourceImage = image;
+    UIImage *newImage = nil;
+    
+    UIGraphicsBeginImageContext(targetSize);
+    
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = CGPointZero;
+    thumbnailRect.size.width  = targetSize.width;
+    thumbnailRect.size.height = targetSize.height;
+    
+    [sourceImage drawInRect:thumbnailRect];
+    
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage ;
+}
 
 /*********************** 测试数据 ***************************/
 #pragma mark - 表情逻辑

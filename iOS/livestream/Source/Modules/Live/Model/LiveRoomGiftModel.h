@@ -19,7 +19,7 @@
  */
 @property (nonatomic, copy) NSString *giftId;
 @property (nonatomic, assign) BOOL isShow;
-
+@property (nonatomic, assign) BOOL isPromo;
 @property (nonatomic, strong) AllGiftItem *allItem;
 
 @end

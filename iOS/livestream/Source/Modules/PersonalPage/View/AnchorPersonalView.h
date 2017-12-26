@@ -8,6 +8,6 @@
 
 #import <WebKit/WebKit.h>
 
-@interface AnchorPersonalView : WKWebView
+@interface AnchorPersonalView : WKWebView <WKScriptMessageHandler>
 
 @end

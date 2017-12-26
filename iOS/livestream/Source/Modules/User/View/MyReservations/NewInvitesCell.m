@@ -54,10 +54,11 @@
         NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[NewInvitesCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
+        cell.haedTap.view.tag = row;
         cell.comfirmBtn.tag = row;
         cell.declineBtn.tag = row;
         cell.cancelBtn.tag = row;
+        cell.startNowTap.view.tag = row;
     }
 
     return cell;
@@ -81,6 +82,20 @@
 
     if ([self.delegate respondsToSelector:@selector(myReservationsCancelBtnDidForRow:)]) {
         [self.delegate myReservationsCancelBtnDidForRow:sender.tag];
+    }
+}
+
+- (IBAction)startNowDid:(UITapGestureRecognizer *)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(myReservationsStartNowDidForRow:)]) {
+        [self.delegate myReservationsStartNowDidForRow:sender.view.tag];
+    }
+}
+
+- (IBAction)headTap:(UITapGestureRecognizer *)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(myReservationsHeadDidForRow:)]) {
+        [self.delegate myReservationsHeadDidForRow:sender.view.tag];
     }
 }
 
@@ -128,9 +143,9 @@
     NSString *str_second = [NSString stringWithFormat:@"%d", (int)(seconds % 60)];
     //format of time
     NSString *format_time = [NSString stringWithFormat:@"%@-%@:%@:%@", str_day, str_hour, str_minute, str_second];
-    //180s内
-    if (seconds <= 180) {
-
+    //1s内
+    if (seconds <= 1) {
+        
         return [NSString stringWithFormat:@"%ld", (long)seconds];
     } else {
         //1小时内
@@ -146,7 +161,7 @@
                 format_time = [NSString stringWithFormat:@"%@h %@m", str_hour, str_minute];
             } else {
                 str_day = [NSString stringWithFormat:@"%ld", seconds / 3600 / 24];
-                str_hour = [NSString stringWithFormat:@"%ld", seconds / 3600];
+                str_hour = [NSString stringWithFormat:@"%ld", (seconds - [str_day integerValue] * 86400) / 3600];
                 format_time = [NSString stringWithFormat:@"%@d %@h", str_day, str_hour];
             }
         }
@@ -156,21 +171,25 @@
 }
 
 - (void)startCountdown:(NSInteger)time {
-    self.time = time;
-
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
+    
+    self.time = time + 180;
+    self.countdownTime = [[NSDate date] timeIntervalSince1970];
+    
+    [self countdown];
 }
 
 - (void)countdown {
-    self.countdownTime++;
+ 
+    CGFloat percent = self.scheduledTimeView.frame.size.width / 180.0;
 
-    CGFloat percent = self.scheduledTimeView.frame.size.width / self.time;
-
-    self.colorView.frame = CGRectMake(0, 0, self.countdownTime * percent, self.scheduledTimeView.frame.size.height);
-
+    NSInteger times = self.time - self.countdownTime;
+    
+    self.colorView.frame = CGRectMake(0, 0, (180 - times) * percent, self.scheduledTimeView.frame.size.height);
+    
     if (self.time == self.countdownTime) {
-        [self.timer invalidate];
-        self.timer = nil;
+        if ([self.delegate respondsToSelector:@selector(myReservationsCountdownEnd)]) {
+            [self.delegate myReservationsCountdownEnd];
+        }
     }
 }
 

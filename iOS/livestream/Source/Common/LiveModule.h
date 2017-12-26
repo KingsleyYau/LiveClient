@@ -8,18 +8,18 @@
 
 #import <Foundation/Foundation.h>
 
-#pragma mark - QN
 #import "IServiceManager.h"
 #import "IQNService.h"
 #import "IAnalyticsManager.h"
 
+#pragma mark - QNToken
 #define SAMSON_TOKEN @"Samson_iy5gL22gsTDJ"
 #define MAX_TOKEN @"Max_rklm7BZwcERW"
 #define RANDY_TOKEN @"Randy_7D9asnVphU5p"
 #define HUNTER_TOKEN @"Hunter_fZUUNpjlEO9o"
 #define HARRY_TOKEN @"Harry_HHeEoKeotNFp"
 #define ALEX_TOKEN @"Alex_Jd4i0p5A30aH"
-#define LVY_TOKEN @"ivy2_CMTS09553"
+#define IVY_TOKEN @"ivy2_CMTS09553"
 
 @class LiveModule;
 @protocol LiveModuleDelegate <NSObject>
@@ -39,12 +39,11 @@
  */
 - (void)moduleOnLogout:(LiveModule *)module kick:(BOOL)kick msg:(NSString *)msg;
 
-///**
-//  直播模块需要显示广告
-//
-// @param module 模块实例
-// @param adView 广告界面
-// */
+/**
+  直播模块需要显示广告
+
+ @param module 模块实例
+ */
 - (void)moduleOnAdViewController:(LiveModule *)module;
 
 /**
@@ -53,6 +52,20 @@
  @param module 模块实例
  */
 - (void)moduleOnNotification:(LiveModule *)module;
+
+/**
+ 直播模块需要消失浮窗
+
+ @param module 模块实例
+ */
+- (void)moduleOnNotificationDisappear:(LiveModule *)module;
+
+/**
+ 直播模块需要消失浮窗
+ 
+ @param module 模块实例
+ */
+- (void)moduleOnGetUnReadMsg:(LiveModule *)module unReadCount:(NSInteger)count;
 
 @end
 
@@ -78,13 +91,15 @@
  */
 @property (strong, readonly) UIViewController *adVc;
 
+/** 是否带有test参数 */
+@property (nonatomic, assign) BOOL isForTest;
 
 /**
  来源界面导航栏颜色
  */
-@property (copy, readonly) UIColor *tintColor;
-@property (copy, readonly) UIColor *barTintColor;
-@property (copy, readonly) NSDictionary *barTitleTextAttributes;
+@property (readonly) UIColor *tintColor;
+@property (readonly) UIColor *barTintColor;
+@property (readonly) NSDictionary *barTitleTextAttributes;
 
 /** 买点界面 */
 @property (nonatomic, strong) UIViewController* addCreditVc;
@@ -111,12 +126,27 @@
 @property (weak) id<IAnalyticsManager> analyticsManager;
 
 /**
+ 是否Debug模式
+ */
+@property (assign, nonatomic) BOOL debug;
+
+/**
+ 是否输出日志
+ */
+@property (assign, nonatomic) BOOL debugLog;
+
+/** 是否显示列表引导 */
+@property (assign, nonatomic) BOOL showListGuide;
+
+/** QN判断是否在直播间 */
+@property (copy, nonatomic) NSString *roomID;
+
+/**
  获取实例
 
  @return 实例
  */
 + (instancetype)module;
-
 
 /**
  设置同步配置服务器地址
@@ -138,4 +168,13 @@
  */
 - (void)stop;
 
+/**
+ 清除缓存
+ */
+- (void)cleanCache;
+
+/**
+ 获取未读信息
+ */
+- (void)getUnReadMsg;
 @end

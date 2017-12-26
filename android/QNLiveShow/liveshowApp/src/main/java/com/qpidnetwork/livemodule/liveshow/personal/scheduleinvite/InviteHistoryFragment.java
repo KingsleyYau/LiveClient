@@ -62,21 +62,29 @@ public class InviteHistoryFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_INVITE_HISTORY_CALLBACK:{
                 hideLoadingProcess();
                 if(response.isSuccess){
+                    //列表刷新成功，更新未读
+                    ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
+
                     if(!(msg.arg1 == 1)){
                         mInviteHistoryList.clear();
                     }
                     BookInviteItem[] bookInviteArray = (BookInviteItem[])response.data;
                     if(bookInviteArray != null) {
                         mInviteHistoryList.addAll(Arrays.asList(bookInviteArray));
-                        mAdapter.notifyDataSetChanged();
                     }
+                    mAdapter.notifyDataSetChanged();
                     //无数据
                     if(mInviteHistoryList == null || mInviteHistoryList.size() == 0){
                         showEmptyView();
+                    }else{
+                        hideNodataPage();
                     }
                 }else{
                     if(mInviteHistoryList.size()>0){
@@ -118,8 +126,10 @@ public class InviteHistoryFragment extends BaseListFragment{
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.history_empty_tips));
-        setDefaultEmptyButtonText(getResources().getString(R.string.invite_empty_hot_broadcasters));
+        if(null != getActivity()){
+            setDefaultEmptyMessage(getActivity().getResources().getString(R.string.history_empty_tips));
+            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
+        }
         showNodataPage();
     }
 
@@ -132,9 +142,11 @@ public class InviteHistoryFragment extends BaseListFragment{
         if(isLoadMore){
             start = mInviteHistoryList.size();
         }
-        LiveRequestOperator.getInstance().GetScheduleInviteList(RequstJniSchedule.ScheduleInviteType.History, start, Default_Step, new OnGetScheduleInviteListCallback() {
+        LiveRequestOperator.getInstance().GetScheduleInviteList(RequstJniSchedule.ScheduleInviteType.History,
+                start, Default_Step, new OnGetScheduleInviteListCallback() {
             @Override
-            public void onGetScheduleInviteList(boolean isSuccess, int errCode, String errMsg, int totel, BookInviteItem[] bookInviteList) {
+            public void onGetScheduleInviteList(boolean isSuccess, int errCode, String errMsg,
+                                                int totel, BookInviteItem[] bookInviteList) {
                 HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, bookInviteList);
                 Message msg = Message.obtain();
                 msg.what = GET_INVITE_HISTORY_CALLBACK;
@@ -154,8 +166,12 @@ public class InviteHistoryFragment extends BaseListFragment{
     @Override
     public void onPullUpToRefresh() {
         super.onPullUpToRefresh();
-        Log.i("hunter", "onPullUpToRefresh");
         queryInviteHistoryList(true);
     }
 
+    @Override
+    public void onReloadDataInEmptyView() {
+        super.onReloadDataInEmptyView();
+        queryInviteHistoryList(false);
+    }
 }

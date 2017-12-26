@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--corners - 边角弧度-->
+    <corners
+        android:topRightRadius="0dp"
+        android:topLeftRadius="0dp"
+        android:bottomRightRadius="5dp"
+        android:bottomLeftRadius="5dp"/>
+
+    <!--solid - 填充色-->
+    <solid
+        android:color="@color/list_gift_count_selected"/>
+</shape>

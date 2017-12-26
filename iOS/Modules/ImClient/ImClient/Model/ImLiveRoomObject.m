@@ -34,6 +34,9 @@
         self.maxFansiNum = [coder decodeIntForKey:@"maxFansiNum"];
         self.honorId = [coder decodeObjectForKey:@"honorId"];
         self.honorImg = [coder decodeObjectForKey:@"honorImg"];
+        self.popPrice = [coder decodeDoubleForKey:@"popPrice"];
+        self.useCoupon = [coder decodeIntForKey:@"useCoupon"];
+        self.shareLink = [coder decodeObjectForKey:@"shareLink"];
     }
     return self;
 }
@@ -61,6 +64,9 @@
     [coder encodeInt:self.maxFansiNum forKey:@"maxFansiNum"];
     [coder encodeObject:self.honorId forKey:@"honorId"];
     [coder encodeObject:self.honorImg forKey:@"honorImg"];
+    [coder encodeDouble:self.popPrice forKey:@"popPrice"];
+    [coder encodeInt:self.useCoupon forKey:@"useCoupon"];
+    [coder encodeObject:self.shareLink forKey:@"shareLink"];
 }
 
 

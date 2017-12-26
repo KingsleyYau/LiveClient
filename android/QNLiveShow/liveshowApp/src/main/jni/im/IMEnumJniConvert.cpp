@@ -91,6 +91,20 @@ int TalentInviteStatusToInt(TalentStatus talentInviteStatus)
 	return value;
 }
 
+int IMSystemTypeToInt(IMSystemType type)
+{
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(IMSystemTypeArray); i++)
+	{
+		if (type == IMSystemTypeArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
 IMControlType IntToIMControlType(int value){
 	return (IMControlType)(value < _countof(IMControlTypeArray) ? IMControlTypeArray[value] : IMControlTypeArray[0]);
 }
@@ -106,6 +120,39 @@ jobject getRebateItem(JNIEnv *env, const RebateInfoItem& item){
 					item.preCredit,
 					item.preTime
 					);
+	}
+	return jItem;
+}
+
+jobject getBookingReplyItem(JNIEnv *env, const BookingReplyItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_BOOKINGREPLY_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+
+		jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+		int jinviteReplyType = InviteReplyTypeToInt(item.replyType);
+		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+		jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+		jstring javatarImg = env->NewStringUTF(item.avatarImg.c_str());
+		jstring jmsg = env->NewStringUTF(item.msg.c_str());
+		jItem = env->NewObject(jItemCls, init,
+							   jinviteId,
+							   jinviteReplyType,
+							   jroomId,
+							   janchorId,
+							   jnickName,
+							   javatarImg,
+							   jmsg
+		);
+		env->DeleteLocalRef(jinviteId);
+		env->DeleteLocalRef(jroomId);
+		env->DeleteLocalRef(janchorId);
+		env->DeleteLocalRef(jnickName);
+		env->DeleteLocalRef(javatarImg);
+		env->DeleteLocalRef(jmsg);
 	}
 	return jItem;
 }
@@ -159,7 +206,7 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;IDZI[II";
 		signature += "L";
 		signature += IM_REBATE_ITEM_CLASS;
-		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;)V";
+		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;DI)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
 		//videoList转Java数组
@@ -203,7 +250,9 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 					item.manPushPrice,
 					item.maxFansiNum,
 					jhonorId,
-					jhonorImg
+					jhonorImg,
+					item.popPrice,
+                    item.useCoupon
 					);
 		env->DeleteLocalRef(juserId);
 		env->DeleteLocalRef(jnickName);
@@ -378,16 +427,23 @@ jobject getScheduleRoomItem(JNIEnv *env, const ScheduleRoomItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_LOGIN_SCHEDULE_ITEM_CLASS);
 	if (NULL != jItemCls){
-		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V");
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;)V");
+        jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+        jstring jnickname = env->NewStringUTF(item.nickName.c_str());
 		jstring janchorImg = env->NewStringUTF(item.anchorImg.c_str());
 		jstring janchorCoverImg = env->NewStringUTF(item.anchorCoverImg.c_str());
 		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
 		jItem = env->NewObject(jItemCls, init,
+                    janchorId,
+                    jnickname,
 					janchorImg,
 					janchorCoverImg,
 					item.canEnterTime,
+                    item.leftSeconds,
 					jroomId
 					);
+        env->DeleteLocalRef(janchorId);
+        env->DeleteLocalRef(jnickname);
         env->DeleteLocalRef(janchorImg);
         env->DeleteLocalRef(janchorCoverImg);
         env->DeleteLocalRef(jroomId);
@@ -410,13 +466,50 @@ jobjectArray getScheduleRoomArray(JNIEnv *env, const ScheduleRoomList& listItem)
 	return jItemArray;
 }
 
+jobject getLoginRoomItem(JNIEnv *env, const LSLoginRoomItem& item){
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_LOGIN_ROOM_ITEM_CLASS);
+	if (NULL != jItemCls){
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+		jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+		jItem = env->NewObject(jItemCls, init,
+							   jroomId,
+							   janchorId,
+							   jnickName
+		);
+		env->DeleteLocalRef(jroomId);
+		env->DeleteLocalRef(janchorId);
+		env->DeleteLocalRef(jnickName);
+	}
+	return jItem;
+}
+
+jobjectArray getLoginRoomArray(JNIEnv *env, const LSLoginRoomList& listItem){
+	jobjectArray jItemArray = NULL;
+	jclass jItemCls = GetJClass(env, IM_LOGIN_ROOM_ITEM_CLASS);
+	if(NULL != jItemCls &&  listItem.size() > 0 ){
+		jItemArray = env->NewObjectArray(listItem.size(), jItemCls, NULL);
+		int i = 0;
+		for(LSLoginRoomList::const_iterator itr = listItem.begin(); itr != listItem.end(); itr++, i++) {
+			jobject item = getLoginRoomItem(env, (*itr));
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	return jItemArray;
+}
 
 jobject getLoginItem(JNIEnv *env, const LoginReturnItem& item){
 	jobject jItem = NULL;
+
 	jclass jItemCls = GetJClass(env, IM_LOGIN_ITEM_CLASS);
 	if (NULL != jItemCls){
 		string signature = "(";
-		signature += "[Ljava/lang/String;";
+		signature += "[L";
+		signature += IM_LOGIN_ROOM_ITEM_CLASS;
+        signature += ";";
 		signature += "[L";
 		signature += IM_LOGIN_INVITE_ITEM_CLASS;
 		signature += ";";
@@ -425,13 +518,13 @@ jobject getLoginItem(JNIEnv *env, const LoginReturnItem& item){
 		signature += ";";
 		signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
-		jobjectArray jroomArray = getJavaStringArray(env, item.roomList);
+		jobjectArray jroomArray = getLoginRoomArray(env, item.roomList);
 		jobjectArray jinviteArray = getInviteArray(env, item.inviteList);
 		jobjectArray jscheduleRoomArray = getScheduleRoomArray(env, item.scheduleRoomList);
 		jItem = env->NewObject(jItemCls, init,
-					jroomArray,
-					jinviteArray,
-					jscheduleRoomArray
+                               jroomArray,
+                               jinviteArray,
+                               jscheduleRoomArray
 					);
 		if(NULL != jroomArray){
 			env->DeleteLocalRef(jroomArray);

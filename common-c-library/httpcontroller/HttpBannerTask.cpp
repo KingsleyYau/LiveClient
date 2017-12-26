@@ -27,7 +27,7 @@ void HttpBannerTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpBannerTask::SetParam( "
             "task : %p, "
             ")",
@@ -37,7 +37,7 @@ void HttpBannerTask::SetParam(
 
 
 bool HttpBannerTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpBannerTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -49,13 +49,14 @@ bool HttpBannerTask::ParseData(const string& url, bool bFlag, const char* buf, i
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpSubmitPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpSubmitPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
     }
     
     
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
+    string bannerName = "";
     string bannerImg = "";
     string bannerLink = "";
     
@@ -64,6 +65,9 @@ bool HttpBannerTask::ParseData(const string& url, bool bFlag, const char* buf, i
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             if (dataJson.isObject()) {
+                if (dataJson[LIVEROOM_BANNER_BANNERNAME].isString()) {
+                    bannerName = dataJson[LIVEROOM_BANNER_BANNERNAME].asString();
+                }
                 if (dataJson[LIVEROOM_BANNER_BANNERIMG].isString()) {
                     bannerImg = dataJson[LIVEROOM_BANNER_BANNERIMG].asString();
                 }
@@ -82,7 +86,7 @@ bool HttpBannerTask::ParseData(const string& url, bool bFlag, const char* buf, i
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnBanner(this, bParse, errnum, errmsg, bannerImg, bannerLink);
+        mpCallback->OnBanner(this, bParse, errnum, errmsg, bannerImg, bannerLink, bannerName);
     }
     
     return bParse;

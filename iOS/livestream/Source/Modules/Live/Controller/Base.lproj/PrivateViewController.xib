@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,9 +15,9 @@
                 <outlet property="bgImageView" destination="TOh-ki-9Hu" id="ymx-qB-nf3"/>
                 <outlet property="closeBtn" destination="23g-vX-uiz" id="4am-vW-ivB"/>
                 <outlet property="followBtn" destination="fk0-SF-hea" id="fKs-d5-jq0"/>
-                <outlet property="intimacyImageView" destination="5hV-9j-qBA" id="BMN-Vx-CBh"/>
+                <outlet property="intimacyImageView" destination="5hV-9j-qBA" id="0E4-hu-czl"/>
                 <outlet property="ladyHeadBgImageView" destination="No9-Vu-iO4" id="MeT-RV-aYq"/>
-                <outlet property="ladyHeadImageView" destination="247-sE-1hR" id="qwN-kN-zrJ"/>
+                <outlet property="ladyHeadImageView" destination="247-sE-1hR" id="jZg-YS-rdG"/>
                 <outlet property="manHeadBgImageView" destination="YuX-vM-1Qc" id="XtN-k1-uHM"/>
                 <outlet property="manHeadImageView" destination="GQc-Go-dDZ" id="TGW-a1-azE"/>
                 <outlet property="roomTypeImageView" destination="bFO-8q-Gng" id="GRD-ml-tW3"/>
@@ -39,7 +40,7 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Type" translatesAutoresizingMaskIntoConstraints="NO" id="bFO-8q-Gng" userLabel="Room Type ImageView" customClass="LSUITapImageView">
                     <rect key="frame" x="13" y="28" width="142" height="26"/>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Img_Intimacy_Head_1" translatesAutoresizingMaskIntoConstraints="NO" id="5hV-9j-qBA" userLabel="Intimacy ImageView">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Img_Intimacy_Head_0" translatesAutoresizingMaskIntoConstraints="NO" id="5hV-9j-qBA" userLabel="Intimacy ImageView" customClass="LSUITapImageView">
                     <rect key="frame" x="158.5" y="62" width="58" height="45"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Man_Head" translatesAutoresizingMaskIntoConstraints="NO" id="YuX-vM-1Qc" userLabel="Man Head Bg ImageView">
@@ -55,7 +56,7 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Lady_Head" translatesAutoresizingMaskIntoConstraints="NO" id="No9-Vu-iO4" userLabel="Lady Head Bg ImageView">
                     <rect key="frame" x="221.5" y="61.5" width="47" height="47"/>
                 </imageView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="247-sE-1hR" userLabel="Lady Head ImangeView">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="247-sE-1hR" userLabel="Lady Head ImangeView" customClass="LSUITapImageView">
                     <rect key="frame" x="222.5" y="70.5" width="37" height="37"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="37" id="8AY-ID-NLP"/>
@@ -122,7 +123,7 @@
         <image name="Live_Private_Bg_Title" width="375" height="90"/>
         <image name="Live_Private_Bg_Type" width="142" height="26"/>
         <image name="Live_Private_Btn_Follow" width="44" height="12"/>
-        <image name="Live_Private_Img_Intimacy_Head_1" width="58" height="45"/>
+        <image name="Live_Private_Img_Intimacy_Head_0" width="58" height="45"/>
         <image name="Live_Public_Btn_Close" width="16" height="16"/>
     </resources>
 </document>

@@ -32,13 +32,14 @@ typedef enum LiveRoomType {
 @property (strong, nonatomic) NSArray<NSString *> *publishUrlArray;
 @property (strong, readonly) NSString *publishUrl;
 
-@property (strong, readonly) NSString *photoUrl;
+@property (strong) NSString *photoUrl;
 @property (strong, readonly) NSString *roomPhotoUrl;
 
 @property (strong) LiveRoomInfoItemObject *httpLiveRoom;
 @property (strong) ImLiveRoomObject *imLiveRoom;
 
-@property (atomic, assign) double roomCredit;
+@property (nonatomic, weak) UIViewController *superController;
+@property (nonatomic, weak) UIView *superView;
 
 /**
  重置

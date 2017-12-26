@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/et_nickName"
+        android:layout_width="match_parent"
+        android:hint="wtf"
+        android:textColorLink="#3c3c3c"
+        android:layout_height="49dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:background="@android:color/transparent"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/personal_item_devide"/>
+
+    <TextView
+        android:id="@+id/tv_nickNameCharNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:text="10 / 18"
+        android:gravity="right"
+        android:paddingRight="13dp"
+        android:textColor="#bfbfbf"
+        android:textSize="12sp"/>
+</LinearLayout>

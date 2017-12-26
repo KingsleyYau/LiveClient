@@ -10,7 +10,8 @@
 #import "LiveBundle.h"
 
 @interface Dialog ()
-@property (strong) UIView *view;
+@property (weak) UIView* view;
+@property (weak) UIButton *backBtn;
 @property (strong) void (^actionBlock)();
 @end
 
@@ -19,50 +20,45 @@
 + (Dialog *)dialog {
     NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
     Dialog *view = [nibs objectAtIndex:0];
-
+    
+    view.tag = DialogTag;
     view.layer.cornerRadius = 10;
     view.layer.masksToBounds = YES;
-
+    view.okButton.layer.cornerRadius = 10;
+    
     return view;
 }
 
 - (void)showDialog:(UIView *)view actionBlock:(void (^)())actionBlock {
     self.actionBlock = actionBlock;
-
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    [window addSubview:self];
-    [window bringSubviewToFront:self];
     
-    self.view = view;
-//        self.view.userInteractionEnabled = NO;
+    //    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    UIButton *btn = [[UIButton alloc] init];
+    [btn setBackgroundColor:COLOR_WITH_16BAND_RGB_ALPHA(0x66000000)];
+    self.backBtn = btn;
+    [view addSubview:self.backBtn];
+    [view bringSubviewToFront:self.backBtn];
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
+    
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(window.mas_width).offset(-60);
-        make.centerY.equalTo(window.mas_centerY);
-        make.centerX.equalTo(window);
+        make.width.equalTo(view.mas_width).offset(-60);
+        make.center.equalTo(view);
     }];
-
-    [self sizeToFit];
+    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(view);
+    }];
     
-    // 2秒后消失
-    [self performSelector:@selector(hideDialog) withObject:self afterDelay:2];
+    [self sizeToFit];
 }
 
-- (void)hideDialog {
-    [UIView animateWithDuration:0.5
-        animations:^{
-            self.alpha = 0;
-        }
-        completion:^(BOOL finished) {
-            [self removeFromSuperview];
-        }];
-}
 
-- (IBAction)action:(id)sender {
-//    if (self.actionBlock) {
-//        self.actionBlock();
-//    }
-//    [self removeFromSuperview];
-//    self.view.userInteractionEnabled = YES;
+- (IBAction)actionOK:(id)sender {
+    if( self.actionBlock ) {
+        self.actionBlock();
+    }
+    [self.backBtn removeFromSuperview];
+    [self removeFromSuperview];
 }
 
 @end

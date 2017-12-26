@@ -28,7 +28,7 @@ void HttpGetRoomInfoTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetRoomInfoTask::SetParam( "
             "task : %p, "
             ")",
@@ -39,7 +39,7 @@ void HttpGetRoomInfoTask::SetParam(
 
 
 bool HttpGetRoomInfoTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetRoomInfoTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -51,7 +51,7 @@ bool HttpGetRoomInfoTask::ParseData(const string& url, bool bFlag, const char* b
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetRoomInfoTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetRoomInfoTask::ParseData( buf : %s )", buf);
     }
     
 

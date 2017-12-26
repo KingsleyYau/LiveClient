@@ -2,7 +2,13 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.livemodule.utils.Log;
 
 
 /**
@@ -28,15 +34,44 @@ public class AdvancePrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
     @Override
     public void initData() {
         super.initData();
-        //权限 add by Jagger 2017-10-25
-        checkPermission();
         //互动模块初始化
         initPublishData();
     }
 
     @Override
+    protected void addRebateGrantedMsg(double rebateGranted) {
+        super.addRebateGrantedMsg(rebateGranted);
+        //添加消息列表
+        IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
+                mIMManager.mMsgIdIndex.getAndIncrement(),"",
+                IMMessageItem.MessageType.SysNotice,
+                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,String.format ("%.2f", rebateGranted)),
+                        null, IMSysNoticeMessageContent.SysNoticeType.Normal));
+        Log.d(TAG,"addRebateGrantedMsg-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
+        sendMessageUpdateEvent(imMessageItem);
+    }
+
+    @Override
+    public void OnRecvSendSystemNotice(final IMMessageItem msgItem) {
+        if(!isCurrentRoom(msgItem.roomId)){
+            return;
+        }
+        super.OnRecvSendSystemNotice(msgItem);
+        if(null != msgItem && null != msgItem.sysNoticeContent
+                && msgItem.sysNoticeContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Warning){
+            if(!TextUtils.isEmpty(msgItem.sysNoticeContent.message)){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showWarningDialog(msgItem.sysNoticeContent.message);
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        uninitLPlayer();
     }
 }

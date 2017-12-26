@@ -10,7 +10,8 @@
 #import "LSEmotionCollectionViewCell.h"
 #import "LiveBundle.h"
 
-@interface LSLiveAdvancedEmotionView ()
+@interface LSLiveAdvancedEmotionView ()<LSChatEmotionManagerDelegate>
+
 @property (nonatomic, strong) LSChatEmotionManager *emotionManager;
 @end
 
@@ -27,6 +28,8 @@
     view.pageView.numberOfPages = 0;
     view.pageView.currentPage = 0;
     view.emotionManager = [LSChatEmotionManager emotionManager];
+    view.emotionManager.delegate = view;
+    
     return view;
 }
 
@@ -51,7 +54,12 @@
     if (self.emotionManager.advanEmotionList.count > 0) {
         for (LSChatEmotion *item in self.emotionManager.advanEmotionList) {
             if ([item.text isEqualToString:emotionItem.emoSign]) {
-                cell.imageView.image = item.image;
+                
+                if (item.image) {
+                    cell.imageView.image = item.image;
+                } else {
+                    cell.imageView.image = [UIImage imageNamed:@"Live_Emotion_Nomal"];
+                }
             }
         }
     }
@@ -78,6 +86,19 @@
         self.pageView.currentPage = layout.currentPage;
     }
     
+}
+
+#pragma mark - LSChatEmotionManagerDelegate
+- (void)downLoadAdvanListFinshHandle:(NSInteger)index {
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    NSIndexPath *lastPath = [[self.emotionCollectionView indexPathsForVisibleItems] lastObject];
+    if (lastPath.row > index) {
+        [self.emotionCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
+    }
+}
+
+- (void)downLoadStanListFinshHandle:(NSInteger)index {
 }
 
 - (void)friendlyIsImpove:(BOOL)isImpove {

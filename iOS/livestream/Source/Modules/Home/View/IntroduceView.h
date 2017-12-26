@@ -9,6 +9,20 @@
 #import <UIKit/UIKit.h>
 #import <WebKit/WebKit.h>
 
+@class IntroduceView;
+@protocol WebViewJSDelegate <NSObject>
+@optional
+// GA跟踪事件JS接口
+- (void)webViewJSCallbackAppGAEvent:(NSString *)event;
+// 关闭当前WebView的JS接口
+- (void)webViewJSCallbackAppCloseWebView;
+// Web通知App页面加载失败
+- (void)webViewJSCallbackWebReload:(NSString *)Errno;
+
+@end
+
 @interface IntroduceView : WKWebView
+
+@property (nonatomic, weak) id<WebViewJSDelegate> webViewJSDelegate;
 
 @end

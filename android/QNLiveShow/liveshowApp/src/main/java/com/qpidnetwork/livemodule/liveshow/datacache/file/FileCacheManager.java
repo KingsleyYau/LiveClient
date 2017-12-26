@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.utils.Log;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -26,6 +26,7 @@ public class FileCacheManager {
     private final String GIFT = "gift";                //本地礼物图片缓存路径
     private final String CAR = "car";                //本地座驾图片缓存路径
     private final String EMOTION = "emotion";                //本地表情图片缓存路径
+    private final String MEDAL = "medal";                //本地勋章图片缓存路径
 
     private static FileCacheManager gFileCacheManager;
 
@@ -44,7 +45,8 @@ public class FileCacheManager {
     }
 
     public FileCacheManager(Context context) {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + context.getResources().getString(R.string.app_name);
+//        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + context.getResources().getString(R.string.app_name);
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "QpidDating";
         changeMainPath(path);
     }
 
@@ -55,7 +57,7 @@ public class FileCacheManager {
      */
     private void changeMainPath(String path) {
         /* 创建主路径 */
-        mMainPath = path;
+        mMainPath = path + "/" + "live";
         if (!mMainPath.regionMatches(mMainPath.length() - 1, "/", 0, 1)) {
             mMainPath += "/";
         }
@@ -111,11 +113,12 @@ public class FileCacheManager {
      */
     public String getImagePath() {
 		/* 创建图片目录 */
-        String path = mMainPath + IMAGE_DIR + "/";
+        String path = mMainPath + IMAGE_DIR + File.separator;
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
         }
+        Log.d("FileCacheManager","getImagePath-path:"+path);
         return path;
     }
 
@@ -143,7 +146,7 @@ public class FileCacheManager {
     public String getGiftLocalPath(String giftId, String url){
         String localPath = getGiftPath();
         localPath += giftId;
-        localPath += parseGiftNameFromUrl(url);
+        localPath += parseFileNameFromUrl(url);
         return  localPath;
     }
 
@@ -152,7 +155,7 @@ public class FileCacheManager {
      * @param fileUrl
      * @return
      */
-    public String parseGiftNameFromUrl(String fileUrl){
+    public String parseFileNameFromUrl(String fileUrl){
         String fileName = null;
         if(!TextUtils.isEmpty(fileUrl)){
             fileName = fileUrl.substring(fileUrl.lastIndexOf(File.separator),fileUrl.length());
@@ -184,6 +187,22 @@ public class FileCacheManager {
     public String getLogPath() {
 		/* 创建log路径 */
         String path = mMainPath + LOG_DIR + "/";
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        return path;
+    }
+
+    /**
+     * 获取log目录路径
+     *
+     * @return
+     */
+    public String getIMLogPath() {
+		/* 创建log路径 */
+        String path = mMainPath + LOG_DIR + "/" + "IM" + "/";
         File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
@@ -225,6 +244,23 @@ public class FileCacheManager {
         String localPath = getEmotionImgRootPath();
         localPath += emotionId;
         localPath += emotionUrl.substring(emotionUrl.lastIndexOf(File.separator),emotionUrl.length());
+        return localPath;
+    }
+
+    private String getMedalImgRootPath(){
+         /* 创建medal路径 */
+        String path = mMainPath + MEDAL + File.separator;
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        return path;
+    }
+
+    public String parseHonorImgLocalPath(String honorUrl){
+        String localPath = getMedalImgRootPath();
+        localPath += honorUrl.substring(honorUrl.lastIndexOf(File.separator)+1,honorUrl.length());
         return localPath;
     }
 

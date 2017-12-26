@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 
 import com.qpidnetwork.livemodule.R;
@@ -15,6 +16,7 @@ import com.qpidnetwork.livemodule.httprequest.OnGetScheduleInviteListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
+import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -24,6 +26,8 @@ import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_NOTCAN_CANCEL_INVITATION;
 
 /**
  * 用户发起等待主播处理列表
@@ -71,18 +75,26 @@ public class PendingConfirmFragment extends BaseListFragment{
         super.handleUiMessage(msg);
         hideLoadingProcess();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         if(response.isSuccess){
+            //列表刷新成功，更新未读
+            ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
+
             if(!(msg.arg1 == 1)){
                 mNewInviteList.clear();
             }
             BookInviteItem[] bookInviteArray = (BookInviteItem[])response.data;
             if(bookInviteArray != null) {
                 mNewInviteList.addAll(Arrays.asList(bookInviteArray));
-                mAdapter.notifyDataSetChanged();
             }
+            mAdapter.notifyDataSetChanged();
             //无数据
             if(mNewInviteList == null || mNewInviteList.size() == 0){
                 showEmptyView();
+            }else{
+                hideNodataPage();
             }
         }else{
             if(mNewInviteList.size()>0){
@@ -121,8 +133,10 @@ public class PendingConfirmFragment extends BaseListFragment{
      * 显示无数据页
      */
     private void showEmptyView(){
-        setDefaultEmptyMessage(getResources().getString(R.string.sent_empty_tips));
-        setDefaultEmptyButtonText(getResources().getString(R.string.invite_empty_hot_broadcasters));
+        if(null != getActivity()){
+            setDefaultEmptyMessage(getActivity().getResources().getString(R.string.sent_empty_tips));
+            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.invite_empty_hot_broadcasters));
+        }
         showNodataPage();
     }
 
@@ -161,6 +175,12 @@ public class PendingConfirmFragment extends BaseListFragment{
         queryPendingComfirmList(true);
     }
 
+    @Override
+    public void onReloadDataInEmptyView() {
+        super.onReloadDataInEmptyView();
+        queryPendingComfirmList(false);
+    }
+
     /**
      * 取消已发出主播未确认的预约邀请
      * @param inviteId
@@ -168,7 +188,7 @@ public class PendingConfirmFragment extends BaseListFragment{
     private void cancelScheduledInvite(final String inviteId){
         if(null != mContext && mContext instanceof BaseFragmentActivity){
             BaseFragmentActivity mActivity = (BaseFragmentActivity)mContext;
-            mActivity.showSimpleTipsDialog(R.string.newinvite_cancel_tips,
+            mActivity.showSimpleTipsDialog(R.string.sent_cancel_tips,
                     R.string.live_inter_video_no,R.string.live_inter_video_yes,
                     new SimpleDoubleBtnTipsDialog.OnTipsDialogBtnClickListener() {
                         @Override
@@ -201,12 +221,18 @@ public class PendingConfirmFragment extends BaseListFragment{
                                 hideLoadingProcess();
                                 if(null != mContext && mContext instanceof BaseFragmentActivity) {
                                     BaseFragmentActivity mActivity = (BaseFragmentActivity) mContext;
-                                    if(errCode == 10036){
-                                        mActivity.showThreeSecondTips(mActivity.getResources().getString(
-                                                R.string.sent_cancel_failed_confirmed_tips), Gravity.CENTER);
+                                    if(!TextUtils.isEmpty(errMsg)){
+                                        mActivity.showThreeSecondTips(errMsg, Gravity.CENTER);
                                     }else{
-                                        mActivity.showToast(getResources().getString(R.string.sent_cancel_failed_tips));
+//                                        mActivity.showToast(getResources().getString(R.string.sent_cancel_failed_tips));
+                                        mActivity.showToast("");
                                     }
+//                                    if(IntToEnumUtils.intToHttpErrorType(errCode) == HTTP_LCC_ERR_NOTCAN_CANCEL_INVITATION){
+//                                        mActivity.showThreeSecondTips(mActivity.getResources().getString(
+//                                                R.string.sent_cancel_failed_confirmed_tips), Gravity.CENTER);
+//                                    }else{
+//                                        mActivity.showToast(getResources().getString(R.string.sent_cancel_failed_tips));
+//                                    }
                                 }
                             }
                         }

@@ -1,5 +1,9 @@
-
-
 "PUBLIV_TIP" = "Private broadcast is billed at ";
 "CREDIT_TIP" = " credit per minute.";
 "PUSH_TIPS" = "2-way video is billed at %@ credit per minute. Are you sure to turn it on?";
+
+"LOCAL_ERROR_NO_PUSH_URL" = "Oh no! A problem was encountered please try again.";
+
+"FOLLOW_FAIL" = "Failed to follow the broadcaster";
+
+"PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";

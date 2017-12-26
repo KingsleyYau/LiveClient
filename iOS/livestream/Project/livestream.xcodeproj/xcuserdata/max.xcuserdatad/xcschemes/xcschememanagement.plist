@@ -20,11 +20,15 @@
 		</dict>
 		<key>livestream_sdk.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
 		<key>livestream_sdk_combine.xcscheme</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>

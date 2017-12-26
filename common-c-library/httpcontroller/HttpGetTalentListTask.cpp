@@ -35,7 +35,7 @@ void HttpGetTalentListTask::SetParam(
         mRoomId = roomId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetTalentListTask::SetParam( "
             "task : %p, "
             ")",
@@ -52,7 +52,7 @@ const string& HttpGetTalentListTask::GetRoomId() {
 
 
 bool HttpGetTalentListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetTalentListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -64,7 +64,7 @@ bool HttpGetTalentListTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetTalentListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetTalentListTask::ParseData( buf : %s )", buf);
     }
     
 

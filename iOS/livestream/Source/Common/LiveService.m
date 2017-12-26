@@ -52,10 +52,23 @@ static LiveService *gService = nil;
     [LiveUrlHandler shareInstance].url = url;
     
     // 先跳转到主界面
-    UIViewController *vc = [LiveModule module].moduleVC;
-    LSNavigationController *nvc = (LSNavigationController *)fromVC.navigationController;
-    if (nvc) {
-        [nvc pushViewController:vc animated:YES gesture:NO];
+    UIViewController *moduleVC = [LiveModule module].moduleVC;
+    if ( !moduleVC.navigationController ) {
+        // 还没进入直播模块, 由外部进入
+        NSLog(@"LiveService::openUrl( [还没进入直播模块, 进入到主界面], url : %@, fromVC : %@ )", url, fromVC);
+        [fromVC.navigationController pushViewController:moduleVC animated:NO];
+        
+    } else {
+        // 已经进入直播模块
+        NSLog(@"LiveService::openUrl( [已经进入直播模块, 已经在主界面, 解析URL], url : %@, fromVC : %@ )", url, fromVC);
+        
+        // 弹出到直播主界面
+        UIViewController *vc = moduleVC.navigationController.topViewController;
+        [vc dismissViewControllerAnimated:NO completion:nil];
+        [moduleVC.navigationController popToViewController:moduleVC animated:NO];
+        
+        // 手动调用一次, 避免主界面viewWillAppear不调用
+        [[LiveUrlHandler shareInstance] handleOpenURL];
     }
 }
 

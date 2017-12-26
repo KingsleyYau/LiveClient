@@ -35,7 +35,7 @@
     // 设置公共属性
     _debug = NO;
     
-    NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil startImmediately:YES];
+//    NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil startImmediately:YES];
     // 初始化Crash Log捕捉
 //    [CrashLogManager manager];
     
@@ -53,10 +53,6 @@
 //    LSNavigationController *nvc = (LSNavigationController *)self.window.rootViewController;
 //    [nvc.navigationBar setTintColor:[UIColor whiteColor]];
     
-    // 设置接口管理类属性
-    [LSRequestManager setLogEnable:YES];
-    [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
-    
     // 设置接口请求环境
     // 如果调试模式, 直接进入正式环境
     [self setRequestHost:_debug];
@@ -69,16 +65,12 @@
     
     // 初始化支付管理器
 //    [PaymentManager manager];
-    [LiveUrlHandler shareInstance];
     
     // 清除webview的缓存
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     
     // 注册推送
     [self registerRemoteNotifications:application];
-
-    // 开启后台播放
-    [[LiveStreamSession session] activeSession];
 
     // 延长启动画面时间
     // usleep(1000 * 1000);

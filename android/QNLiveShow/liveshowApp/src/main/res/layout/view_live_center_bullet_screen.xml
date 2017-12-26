@@ -18,7 +18,7 @@
         />
 
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-        android:src="@drawable/circleimageview_hugh"
+        android:src="@drawable/ic_default_photo_man"
         android:id="@+id/civ_bullletIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -37,7 +37,6 @@
         android:textColor="#5d0186"
         android:singleLine="true"
         android:textSize="12sp"
-        android:text="Nice to meet you!"
         />
 
     <TextView
@@ -45,7 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="11sp"
-        android:text="QHJyjitp"
         style="@style/Text_Shadow"
         android:gravity="center_vertical"
         android:layout_marginLeft="7dp"

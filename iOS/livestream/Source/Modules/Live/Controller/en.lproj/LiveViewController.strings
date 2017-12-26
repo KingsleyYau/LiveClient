@@ -23,12 +23,17 @@
 
 "WATCHING_WILL_NO_MONEY" = "You are running out of credits. Please buy more credits to continue watching.";
 
-"Rebate_Tip" = "Rewarded Credits: ";
+"Rebate_Tip" = "Credit rebate: ";
 
-"Recv_Rebate" = "You have been granted";
+"Recv_Rebate" = "You have been given a rebate of";
 
 "Recv_Level_Up" = "Congratulations! You have upgraded to Level";
 
 "Recv_Love_Up" = "Congratulations! Your intimacy level with";
 
 "Love_Level_Up" = "has upgraded to Level";
+
+"Open_Permissions_Tip" = "Please open the camera and record permissions";
+
+"LIVE_VOUCHER_APPLIED" = "Live voucher is applied. The first %d minutes is free";
+

@@ -770,13 +770,14 @@ jobject getPackageGiftItem(JNIEnv *env, const HttpBackGiftItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, PACKAGE_GIFT_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;IIIZ)V";
+		string signature = "(Ljava/lang/String;IIIIZ)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		jstring jgiftId = env->NewStringUTF(item.giftId.c_str());
 		jItem = env->NewObject(jItemCls, init,
 					jgiftId,
 					item.num,
 					(int)item.grantedDate,
+					(int)item.startValidDate,
 					(int)item.expDate,
 					item.read
 					);
@@ -789,11 +790,12 @@ jobject getPackageVoucherItem(JNIEnv *env, const HttpVoucherItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, PACKAGE_VOUCHER_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II"
-				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIZ)V";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II"
+				"Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIZ)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		jstring jvoucherId = env->NewStringUTF(item.voucherId.c_str());
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+		jstring jphotoUrlMobile = env->NewStringUTF(item.photoUrlMobile.c_str());
 		jstring jdesc = env->NewStringUTF(item.desc.c_str());
 		jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
 		jstring janchorNcikName = env->NewStringUTF(item.anchorNcikName.c_str());
@@ -803,6 +805,7 @@ jobject getPackageVoucherItem(JNIEnv *env, const HttpVoucherItem& item){
 		jItem = env->NewObject(jItemCls, init,
 					janchorPhotoUrl,
 					jphotoUrl,
+                    jphotoUrlMobile,
 					jdesc,
 					juseRoomType,
 					janchorType,
@@ -810,11 +813,13 @@ jobject getPackageVoucherItem(JNIEnv *env, const HttpVoucherItem& item){
 					janchorNcikName,
 					janchorPhotoUrl,
 					(int)item.grantedDate,
+					(int)item.startValidDate,
 					(int)item.expDate,
 					item.read
 					);
 		env->DeleteLocalRef(jvoucherId);
 		env->DeleteLocalRef(jphotoUrl);
+        env->DeleteLocalRef(jphotoUrlMobile);
 		env->DeleteLocalRef(jdesc);
 		env->DeleteLocalRef(janchorId);
 		env->DeleteLocalRef(janchorNcikName);
@@ -827,7 +832,7 @@ jobject getPackageRideItem(JNIEnv *env, const HttpRideItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, PACKAGE_RIDE_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIZZ)V";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIIZZ)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		jstring jrideId = env->NewStringUTF(item.rideId.c_str());
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
@@ -837,6 +842,7 @@ jobject getPackageRideItem(JNIEnv *env, const HttpRideItem& item){
 					jphotoUrl,
 					jname,
 					(int)item.grantedDate,
+					(int)item.startValidDate,
 					(int)item.expDate,
 					item.read,
 					item.isUse
@@ -852,17 +858,29 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, OTHER_CONFIG_ITEM_CLASS);
 	if (NULL != jItemCls){
-		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
 		jstring jimServerUrl = env->NewStringUTF(item.imSvrUrl.c_str());
 		jstring jhttpServerUrl = env->NewStringUTF(item.httpSvrUrl.c_str());
 		jstring jaddCreditsUrl = env->NewStringUTF(item.addCreditsUrl.c_str());
+		jstring janchorPage = env->NewStringUTF(item.anchorPage.c_str());
+		jstring juserLevel = env->NewStringUTF(item.userLevel.c_str());
+		jstring jintimacy = env->NewStringUTF(item.intimacy.c_str());
+		jstring juserProtocol = env->NewStringUTF(item.userProtocol.c_str());
 		jItem = env->NewObject(jItemCls, init,
 				jimServerUrl,
 				jhttpServerUrl,
-				jaddCreditsUrl);
+				jaddCreditsUrl,
+				janchorPage,
+				juserLevel,
+				jintimacy,
+				juserProtocol);
         env->DeleteLocalRef(jimServerUrl);
         env->DeleteLocalRef(jhttpServerUrl);
         env->DeleteLocalRef(jaddCreditsUrl);
+        env->DeleteLocalRef(janchorPage);
+        env->DeleteLocalRef(juserLevel);
+        env->DeleteLocalRef(jintimacy);
+		env->DeleteLocalRef(juserProtocol);
 	}
 	return jItem;
 }
@@ -1077,6 +1095,9 @@ jobject getBookInviteConfigItem(JNIEnv *env, const HttpGetCreateBookingInfoItem&
 		if(NULL != jbookGiftArray){
 			env->DeleteLocalRef(jbookGiftArray);
 		}
+		if(jbookPhone != NULL){
+			env->DeleteLocalRef(jbookPhone);
+		}
 	}
 	return jItem;
 }
@@ -1158,4 +1179,48 @@ jobject getServerItem(JNIEnv *env, const HttpLoginItem::SvrItem& item) {
 	}
 	return jItem;
 
+}
+
+jobject getUserInfoItem(JNIEnv *env, const HttpUserInfoItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, OTHER_USERINFO_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;IZZD";
+		signature += "L";
+		signature += OTHER_ANCHORINFO_ITEM_CLASS;
+		signature += ";";
+		signature += ")V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring juserId = env->NewStringUTF(item.userId.c_str());
+		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
+		jstring jcountry = env->NewStringUTF(item.country.c_str());
+		jobject janchorInfo = getAnchorInfoItem(env, item.anchorInfo);
+		jItem = env->NewObject(jItemCls, init, juserId, jnickName, jphotoUrl, item.age, jcountry,
+                               item.userLevel, item.isOnline, item.isAnchor, item.leftCredit, janchorInfo);
+		env->DeleteLocalRef(juserId);
+		env->DeleteLocalRef(jnickName);
+		env->DeleteLocalRef(jphotoUrl);
+		env->DeleteLocalRef(jcountry);
+		if(janchorInfo != NULL){
+			env->DeleteLocalRef(janchorInfo);
+		}
+	}
+	return jItem;
+}
+
+jobject getAnchorInfoItem(JNIEnv *env, const HttpAnchorInfoItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, OTHER_ANCHORINFO_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string signature = "(Ljava/lang/String;IZLjava/lang/String;)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		jstring jaddress = env->NewStringUTF(item.address.c_str());
+		jstring jintroduction = env->NewStringUTF(item.introduction.c_str());
+		jint anchorType = AnchorLevelTypeToInt(item.anchorType);
+		jItem = env->NewObject(jItemCls, init, jaddress, anchorType, item.isLive, jintroduction);
+		env->DeleteLocalRef(jaddress);
+		env->DeleteLocalRef(jintroduction);
+	}
+	return jItem;
 }

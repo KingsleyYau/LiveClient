@@ -11,4 +11,5 @@
 
 @interface LSMyReservationsViewController : LSGoogleAnalyticsViewController
 
+- (void)getunreadCount;
 @end

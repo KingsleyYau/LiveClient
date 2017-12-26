@@ -263,7 +263,11 @@
             }
         } else {
 
-            if (loveLevel > self.loveLevel || manLevel > self.manLevel) {
+            if (manLevel > self.manLevel) {
+                if ([self.backpackDelegate respondsToSelector:@selector(backpackPresentViewdidSelectGiftLevel:loveLevel:canSend:)]) {
+                    [self.backpackDelegate backpackPresentViewdidSelectGiftLevel:manLevel loveLevel:loveLevel canSend:canSend];
+                }
+            } else if (loveLevel > self.loveLevel) {
                 if ([self.backpackDelegate respondsToSelector:@selector(backpackPresentViewdidSelectGiftLevel:loveLevel:canSend:)]) {
                     [self.backpackDelegate backpackPresentViewdidSelectGiftLevel:manLevel loveLevel:loveLevel canSend:canSend];
                 }

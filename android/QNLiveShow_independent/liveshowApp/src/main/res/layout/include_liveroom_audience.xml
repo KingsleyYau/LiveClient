@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_vedioBg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:background="#BFBFBF"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_live_room_vediobg"/>
+
+    <SurfaceView
+        android:id="@+id/sv_player"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/defaultVedioPlayerHeight"
+        android:visibility="visible"/>
+</RelativeLayout>

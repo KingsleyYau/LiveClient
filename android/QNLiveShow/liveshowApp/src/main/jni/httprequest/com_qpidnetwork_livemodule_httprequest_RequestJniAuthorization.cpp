@@ -16,7 +16,7 @@ class RequestLoginCallback : public IRequestLoginCallback{
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
-        FileLog("httprequest", "JNI::onRequestLogin( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::onRequestLogin( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
         /* turn object to java object here */
         jobject jItem = getLoginItem(env, item);
@@ -33,7 +33,7 @@ class RequestLoginCallback : public IRequestLoginCallback{
 			signature += ";";
 			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequestLogin", signature.c_str());
-			FileLog("httprequest", "JNI::onRequestLogin( callback : %p, signature : %s )",
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::onRequestLogin( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
@@ -63,7 +63,8 @@ RequestLoginCallback gRequestLoginCallback;
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
   (JNIEnv *env, jclass cls, jstring manId, jstring userSid, jstring deviceId, jstring model, jstring manufacturer, jobject callback){
-
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Login( manId : %s, userSid : %s )",
+            JString2String(env, manId).c_str(), JString2String(env, userSid).c_str());
     jlong taskId = -1;
 
     taskId = gHttpRequestController.Login(&gHttpRequestManager,
@@ -89,7 +90,7 @@ class RequestLogoutCallback : public IRequestLogoutCallback{
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
-        FileLog("httprequest", "JNI::OnLogout( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnLogout( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -98,7 +99,7 @@ class RequestLogoutCallback : public IRequestLogoutCallback{
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;)V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
-			FileLog("httprequest", "JNI::OnLogout( callback : %p, signature : %s )",
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnLogout( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
@@ -124,6 +125,7 @@ RequestLogoutCallback gRequestLogoutCallback;
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Logout
   (JNIEnv *env, jclass cls, jobject callback){
 
+    FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Logout()");
     jlong taskId = -1;
     taskId = gHttpRequestController.Logout(&gHttpRequestManager,
                                         &gRequestLogoutCallback);
@@ -143,7 +145,7 @@ class RequestUpdateTokenIdCallback : public IRequestUpdateTokenIdCallback{
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
-        FileLog("httprequest", "JNI::OnUpdateTokenId( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::::OnUpdateTokenId( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
@@ -152,7 +154,7 @@ class RequestUpdateTokenIdCallback : public IRequestUpdateTokenIdCallback{
 			jclass callBackCls = env->GetObjectClass(callBackObject);
 			string signature = "(ZILjava/lang/String;)V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
-			FileLog("httprequest", "JNI::OnUpdateTokenId( callback : %p, signature : %s )",
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpdateTokenId( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
@@ -177,7 +179,8 @@ RequestUpdateTokenIdCallback gRequestUpdateTokenIdCallback;
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_UploadPushTokenId
   (JNIEnv *env, jclass cls, jstring tokenId, jobject callback){
-
+    FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::UploadPushTokenId( tokenId : %s )",
+            JString2String(env, tokenId).c_str());
     jlong taskId = -1;
     taskId = gHttpRequestController.UpdateTokenId(&gHttpRequestManager,
                                         JString2String(env, tokenId),

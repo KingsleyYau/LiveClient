@@ -53,7 +53,7 @@ private:
     string          m_riderName;    // 座驾名称
     string          m_riderUrl;     // 座驾图片url
     int             m_fansNum;     // 观众人数
-
+    string          m_honorImg;     // 勋章图片url
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

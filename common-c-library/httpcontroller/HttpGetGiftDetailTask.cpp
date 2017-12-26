@@ -36,7 +36,7 @@ void HttpGetGiftDetailTask::SetParam(
         mGiftId = giftId;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetGiftDetailTask::SetParam( "
             "task : %p, "
             "giftId : %s"
@@ -52,7 +52,7 @@ const string& HttpGetGiftDetailTask::GetGiftId() {
 
 
 bool HttpGetGiftDetailTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetGiftDetailTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -64,7 +64,7 @@ bool HttpGetGiftDetailTask::ParseData(const string& url, bool bFlag, const char*
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetGiftDetailTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetGiftDetailTask::ParseData( buf : %s )", buf);
     }
     
     HttpGiftInfoItem item;

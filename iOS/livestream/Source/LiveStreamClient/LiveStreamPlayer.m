@@ -19,27 +19,24 @@
 
 #import "LiveStreamSession.h"
 
-@interface LiveStreamPlayer() <RtmpPlayerOCDelegate>
+@interface LiveStreamPlayer () <RtmpPlayerOCDelegate>
 #pragma mark - 传输处理
-@property (strong) RtmpPlayerOC* player;
+@property (strong) RtmpPlayerOC *player;
 
 /**
  显示界面
  */
 @property (nonatomic, strong) AVSampleBufferDisplayLayer *videoLayer;
 
-@property (nonatomic, strong) ImageCVPixelBufferInput* pixelBufferInput;
+@property (nonatomic, strong) ImageCVPixelBufferInput *pixelBufferInput;
 
-@property (strong) NSString * _Nonnull url;
-@property (strong) NSString * _Nonnull recordFilePath;
-@property (strong) NSString * _Nullable recordH264FilePath;
-@property (strong) NSString * _Nullable recordAACFilePath;
+@property (strong) NSString *_Nonnull url;
+@property (strong) NSString *_Nonnull recordFilePath;
+@property (strong) NSString *_Nullable recordH264FilePath;
+@property (strong) NSString *_Nullable recordAACFilePath;
 
 @property (assign) BOOL isStart;
 @property (assign) BOOL isConnected;
-
-#pragma mark - 重连线程
-@property (strong) dispatch_queue_t reconnect_queue;
 
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
@@ -55,180 +52,221 @@
 }
 
 - (instancetype)init {
-    if(self = [super init] ) {
-        NSLog(@"LiveStreamPlayer::init()");
-        
-        self.reconnect_queue = dispatch_queue_create("_reconnect_queue", NULL);
-        
+    if (self = [super init]) {
+        NSLog(@"LiveStreamPlayer::init( self : %p )", self);
+
         _isConnected = NO;
         _isStart = NO;
-        
+
         self.player = [RtmpPlayerOC instance];
         self.player.delegate = self;
-        
+
         self.pixelBufferInput = [[ImageCVPixelBufferInput alloc] init];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     }
-    
+
     return self;
 }
 
 - (void)dealloc {
-    NSLog(@"LiveStreamPlayer::dealloc()");
-    
-    [self stop];
-    
+    NSLog(@"LiveStreamPlayer::dealloc( self : %p )", self);
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    if (_isBackground == YES) {
+        _isBackground = NO;
+        
+        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+        dispatch_resume(videoProcessingQueue);
+    }
 }
 
 #pragma mark - 对外接口
-- (BOOL)playUrl:(NSString * _Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString * _Nullable)recordAACFilePath {
-    NSLog(@"LiveStreamPlayer::playUrl( url : %@, recordFilePath : %@, recordH264FilePath : %@ )", url, recordFilePath, recordH264FilePath);
-    
+- (BOOL)playUrl:(NSString *_Nonnull)url recordFilePath:(NSString *)recordFilePath recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *_Nullable)recordAACFilePath {
+    NSLog(@"LiveStreamPlayer::playUrl( self : %p, url : %@, recordFilePath : %@, recordH264FilePath : %@ )", self, url, recordFilePath, recordH264FilePath);
+
     BOOL bFlag = NO;
-    
+
     [self cancel];
-    
+
     self.url = url;
     self.recordFilePath = recordFilePath;
     self.recordH264FilePath = recordH264FilePath;
     self.recordAACFilePath = recordAACFilePath;
 
-    if( self.url.length > 0 ) {
+    if (self.url.length > 0) {
         [self run];
         bFlag = YES;
     }
-    
+
     return bFlag;
 }
 
 - (void)stop {
-    NSLog(@"LiveStreamPlayer::stop()");
-    
+    NSLog(@"LiveStreamPlayer::stop( self : %p )", self);
+
     [self cancel];
 }
 
 #pragma mark - 私有方法
 - (void)setPlayView:(GPUImageView *)playView {
-    if( _playView != playView ) {
+    if (_playView != playView) {
         _playView = playView;
-        
+
         [self.pixelBufferInput removeAllTargets];
         [self.pixelBufferInput addTarget:_playView];
     }
 }
 
 - (void)run {
-    NSLog(@"LiveStreamPlayer::run()");
-    
+    NSLog(@"LiveStreamPlayer::run( self : %p )", self);
+
     @synchronized (self) {
-        if( !self.isStart ) {
+        if (!self.isStart) {
             self.isStart = YES;
+            
+            // 开启音频服务
             [[LiveStreamSession session] startPlay];
+            
+            // 开始拉流
+            self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
         }
     }
     
-    // 开始拉流
-    [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+    NSLog(@"LiveStreamPlayer::run( [Finish], self : %p )", self);
 }
 
 - (void)cancel {
-    NSLog(@"LiveStreamPlayer::cancel()");
+    NSLog(@"LiveStreamPlayer::cancel( self : %p )", self);
+
+    BOOL bHandle = NO;
     
     @synchronized (self) {
-        if( self.isStart ) {
+        if (self.isStart) {
             self.isStart = NO;
-            
-            [[LiveStreamSession session] stopPlay];
+            bHandle = YES;
         }
     }
     
-    // 停止推流
-    [self.player stop];
+    if( bHandle ) {
+        // 停止拉流
+        [self.player stop];
+        
+        // 停止音频服务
+        [[LiveStreamSession session] stopPlay];
+    }
+
+    NSLog(@"LiveStreamPlayer::cancel( [Finish], self : %p )", self);
+}
+
+- (void)reconnect {
+    BOOL bHandle = NO;
+    
+    @synchronized (self) {
+        if (self.isStart && !self.isConnected && !_isBackground) {
+            // 1.已经手动开始, 2.连接还没连接上, 3.不在后台
+            bHandle = YES;
+        }
+    }
+    
+    if( bHandle ) {
+        NSLog(@"LiveStreamPlayer::reconnect( [Start], self : %p )", self);
+        
+        [self.player stop];
+        
+        // 是否需要切换URL
+        if ([self.delegate respondsToSelector:@selector(playerShouldChangeUrl:)]) {
+            self.url = [self.delegate playerShouldChangeUrl:self];
+        }
+        
+        @synchronized (self) {
+            self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+        }
+        
+        NSLog(@"LiveStreamPlayer::reconnect( [Finish], self : %p )", self);
+    }
 }
 
 #pragma mark - 视频接收处理
-- (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC * _Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
-    if( buffer ) {
-        @synchronized (self) {
-            if( !_isBackground ) {
-                // 这里显示视频
-                [self.pixelBufferInput processCVPixelBuffer:buffer];
-            }
-        }
+- (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC *_Nonnull)rtmpClient buffer:(CVPixelBufferRef _Nonnull)buffer {
+    if (buffer) {
+        // 这里显示视频
+        [self.pixelBufferInput processCVPixelBuffer:buffer];
     }
 }
 
-- (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)player {
-    NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect()");
-    
+- (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC *_Nonnull)player {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( self : %p )", self);
+
     @synchronized (self) {
         self.isConnected = NO;
-        
-        if( self.isStart ) {
-            // 断线重新拉流
-            dispatch_async(self.reconnect_queue, ^{
-                [self.player stop];
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), self.reconnect_queue, ^{
-                    NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Reconnect] )");
-                    
-                    // 是否需要切换URL
-                    if( [self.delegate respondsToSelector:@selector(playerShouldChangeUrl:)] ) {
-                        self.url = [self.delegate playerShouldChangeUrl:self];
-                    }
-                    
-                    [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
-                });
-            });
+        if (!self.isStart) {
+            // 停止拉流
+            NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Disconnect], self : %p )", self);
             
         } else {
-            // 停止推流
-            dispatch_async(self.reconnect_queue, ^{
-                NSLog(@"LiveStreamPlayer::rtmpPublisherOCOnDisconnect( [Disconnect] )");
-                [self.player stop];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 断线重新拉流
+                NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( [Delay Check], self : %p )", self);
+                
+                // 重连
+                [self reconnect];
             });
+
         }
     }
 }
 
-- (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
-    NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime()");
-    
-    @synchronized (self) {
-        // 断线重新拉流
-        dispatch_async(self.reconnect_queue, ^{
-            NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime( [Disconnect] )");
-            [self.player stop];
-        });
-    }
+- (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC *_Nonnull)rtmpPlayerOC {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnPlayerOnDelayMaxTime( self : %p )", self);
+
+    // 延迟导致断线
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.player stop];
+    });
 }
 
-#pragma mark - 视频采集后台
 #pragma mark - 视频采集后台
 - (void)willEnterBackground:(NSNotification *)notification {
+    BOOL bHandle = NO;
+    
     @synchronized (self) {
-        if( _isBackground == NO ) {
+        if (_isBackground == NO) {
             _isBackground = YES;
-            
-            dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-            dispatch_suspend(videoProcessingQueue);
-            glFinish();
+            bHandle = YES;
         }
+    }
+    
+    if( bHandle ) {
+        // 暂停OpenGL处理队列
+        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+        dispatch_suspend(videoProcessingQueue);
+        
+        // 直接断开连接
+        [self.player stop];
     }
 }
 
 - (void)willEnterForeground:(NSNotification *)notification {
+    BOOL bHandle = NO;
+    
     @synchronized (self) {
-        if( _isBackground == YES ) {
+        if (_isBackground == YES) {
             _isBackground = NO;
-            
-            dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
-            dispatch_resume(videoProcessingQueue);
+            bHandle = YES;
         }
+    }
+    
+    if( bHandle ) {
+        // 恢复OpenGL处理队列
+        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+        dispatch_resume(videoProcessingQueue);
+        
+        // 重连
+        [self reconnect];
     }
 }
 

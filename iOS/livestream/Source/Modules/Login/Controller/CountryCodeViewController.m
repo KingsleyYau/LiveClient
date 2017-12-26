@@ -21,12 +21,14 @@
     
     self.tableView.tableViewDelegate = self;
     
+    self.title = NSLocalizedStringFromSelf(@"Country_Code");
+    
     [self.tableView reloadData];
 }
 
-- (IBAction)backBtnDid:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//- (IBAction)backBtnDid:(UIButton *)sender {
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -35,7 +37,7 @@
 
 - (void)tableView:(CountryTableView *)tableView didSelectCountry:(Country *)item
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self.navigationController popViewControllerAnimated:YES];
     if ([self.delegate respondsToSelector:@selector(countryCode:)]) {
         [self.delegate countryCode:item];
     }

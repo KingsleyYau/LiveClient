@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1611" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -15,12 +15,16 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="70"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="69"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="69.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Live_PreLive_Img_Head_Default" translatesAutoresizingMaskIntoConstraints="NO" id="0sR-fb-fqG">
+                    <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Live_PreLive_Img_Head_Default" translatesAutoresizingMaskIntoConstraints="NO" id="0sR-fb-fqG">
                         <rect key="frame" x="13" y="9" width="51" height="51"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <gestureRecognizers/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="2Uj-Md-S1e" appends="YES" id="MVb-ZX-l69"/>
+                        </connections>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8KL-QK-N09">
                         <rect key="frame" x="72" y="16" width="150" height="17"/>
@@ -36,7 +40,7 @@
                         <color key="textColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.23529411759999999" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eK-FS-QVR">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eK-FS-QVR">
                         <rect key="frame" x="230" y="38" width="74" height="29"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.74901960784313726" alpha="1" colorSpace="calibratedRGB"/>
@@ -60,7 +64,7 @@
                             <action selector="cancelBtnDid:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="VqB-ks-xnO"/>
                         </connections>
                     </button>
-                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7O2-xP-JZe">
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7O2-xP-JZe">
                         <rect key="frame" x="230" y="3" width="74" height="29"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="0.34901960784313724" green="0.73725490196078436" blue="0.0039215686274509803" alpha="1" colorSpace="calibratedRGB"/>
@@ -75,13 +79,13 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSP-R0-NDb">
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qSP-R0-NDb">
                         <rect key="frame" x="235" y="2" width="77" height="64"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jr1-wO-hw2">
+                    <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Jr1-wO-hw2">
                         <rect key="frame" x="230" y="20" width="74" height="29"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                         <subviews>
@@ -93,12 +97,16 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Start Now" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HmR-qh-c73">
                                 <rect key="frame" x="0.0" y="0.0" width="74" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <gestureRecognizers/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.74901960779999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="KEl-GL-wqW" appends="YES" id="rUh-wG-pyp"/>
+                        </connections>
                     </view>
                 </subviews>
             </tableViewCellContentView>
@@ -107,15 +115,27 @@
                 <outlet property="colorView" destination="Eii-tR-Tg7" id="KyB-xm-GKh"/>
                 <outlet property="comfirmBtn" destination="7O2-xP-JZe" id="SKb-M9-3ey"/>
                 <outlet property="declineBtn" destination="8eK-FS-QVR" id="EZU-33-cjY"/>
+                <outlet property="haedTap" destination="2Uj-Md-S1e" id="h6k-kr-Byq"/>
                 <outlet property="headImage" destination="0sR-fb-fqG" id="RQl-gu-8ub"/>
                 <outlet property="historyLabel" destination="qSP-R0-NDb" id="8Ke-Nb-RLX"/>
                 <outlet property="nameLabel" destination="8KL-QK-N09" id="1ff-Dv-lDn"/>
                 <outlet property="redIcon" destination="qPc-gS-bg3" id="oqA-Sy-gxP"/>
                 <outlet property="scheduledTimeView" destination="Jr1-wO-hw2" id="6wh-Ce-Bbu"/>
+                <outlet property="startNowTap" destination="KEl-GL-wqW" id="RRh-al-Fwr"/>
                 <outlet property="subLabel" destination="Pba-UL-Mh0" id="SnJ-2l-FC2"/>
             </connections>
-            <point key="canvasLocation" x="-79" y="41"/>
+            <point key="canvasLocation" x="-71" y="43"/>
         </tableViewCell>
+        <tapGestureRecognizer id="KEl-GL-wqW">
+            <connections>
+                <action selector="startNowDid:" destination="KGk-i7-Jjw" id="4zh-RN-pLJ"/>
+            </connections>
+        </tapGestureRecognizer>
+        <tapGestureRecognizer id="2Uj-Md-S1e">
+            <connections>
+                <action selector="headTap:" destination="KGk-i7-Jjw" id="0c4-7R-CFk"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="Live_PreLive_Img_Head_Default" width="97" height="97"/>

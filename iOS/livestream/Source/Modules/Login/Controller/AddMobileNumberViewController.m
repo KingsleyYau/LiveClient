@@ -32,9 +32,19 @@
     
     self.sessionManager = [LSSessionRequestManager manager];
     
-    self.countryItem = [Country findPhoneCodeByCountry];
+   // self.countryItem = [Country findPhoneCodeByCountry];
+    
+    Country * country = [[Country alloc]init];
+    country.zipCode = @"001";
+    country.fullName = @"United States";
+    country.shortName = @"US";
+    self.countryItem = country;
     
     [self.countryCodeBtn setTitle:[NSString stringWithFormat:@"%@ (+%@)",self.countryItem.fullName,self.countryItem.zipCode] forState:UIControlStateNormal];
+    
+    self.sendBtn.userInteractionEnabled = NO;
+    self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+    self.infoLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(12)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -48,6 +58,7 @@
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter]removeObserver:self];
+    [self hideLoading];
 }
 
 - (void)textChange:(NSNotification *)notifi
@@ -64,7 +75,8 @@
 }
 
 - (void)initCustomParam {
-    self.backTitle = NSLocalizedString(@"", nil);
+//    self.backTitle = NSLocalizedString(@"", nil);
+    [super initCustomParam];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,11 +89,10 @@
     [self.view endEditing:YES];
 }
 
-
 - (IBAction)verifyCodeBtnDid:(UIButton *)sender {
     CountryCodeViewController * vc = [[CountryCodeViewController alloc]initWithNibName:nil bundle:nil];
     vc.delegate = self;
-    [self presentViewController:vc animated:YES completion:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)countryCode:(Country *)item
@@ -125,6 +136,8 @@
             {
                 [self showErrorMessage:errmsg];
             }
+            self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+            self.sendBtn.userInteractionEnabled = NO;
         });
         
     };

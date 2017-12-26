@@ -25,54 +25,37 @@
     
     self = [super init];
     if (self) {
-        self.firstInDic = [[NSMutableDictionary alloc] init];
         
-        RoomTypeFirst *public = [[RoomTypeFirst alloc] init];
-        public.type = LiveRoomType_Public;
-        public.haveComein = NO;
-        [self.firstInDic setObject:public forKey:[NSString stringWithFormat:@"%d",LiveRoomType_Public]];
-        
-        RoomTypeFirst *publicvip = [[RoomTypeFirst alloc] init];
-        publicvip.type = LiveRoomType_Public;
-        publicvip.haveComein = NO;
-        [self.firstInDic setObject:publicvip forKey:[NSString stringWithFormat:@"%d",LiveRoomType_Public_VIP]];
-        
-        RoomTypeFirst *private = [[RoomTypeFirst alloc] init];
-        private.type = LiveRoomType_Public;
-        private.haveComein = NO;
-        [self.firstInDic setObject:private forKey:[NSString stringWithFormat:@"%d",LiveRoomType_Private]];
-        
-        RoomTypeFirst *privatevip = [[RoomTypeFirst alloc] init];
-        privatevip.type = LiveRoomType_Public;
-        privatevip.haveComein = NO;
-        [self.firstInDic setObject:privatevip forKey:[NSString stringWithFormat:@"%d",LiveRoomType_Private_VIP]];
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        if (![userDefaults boolForKey:@"firstJoin"]) {
+            [userDefaults setBool:YES forKey:@"firstJoin"];
+            [userDefaults synchronize];
+            
+            [userDefaults setBool:NO forKey:@"Public_Join"];
+            [userDefaults synchronize];
+            
+            [userDefaults setBool:NO forKey:@"Public_VIP_Join"];
+            [userDefaults synchronize];
+            
+            [userDefaults setBool:NO forKey:@"Private_Join"];
+            [userDefaults synchronize];
+            
+            [userDefaults setBool:NO forKey:@"Private_VIP_Join"];
+            [userDefaults synchronize];
+        }
     }
     return self;
 }
 
-- (void)comeinLiveRoomWithType:(LiveRoomType)type HaveComein:(BOOL)haveComein {
-    
-    RoomTypeFirst *model = [self.firstInDic objectForKey:[NSString stringWithFormat:@"%d",type]];
-    model.haveComein = haveComein;
-    [self.firstInDic setObject:model forKey:[NSString stringWithFormat:@"%d",type]];
+- (void)comeinLiveRoomWithType:(NSString *)type HaveComein:(BOOL)haveComein {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setBool:haveComein forKey:type];
+    [userDefaults synchronize];
 }
 
-- (BOOL)getThisTypeHaveCome:(LiveRoomType)type {
-    RoomTypeFirst *model = [self.firstInDic objectForKey:[NSString stringWithFormat:@"%d",type]];
-    return model.haveComein;
-}
-
-@end
-
-
-
-@implementation RoomTypeFirst
-
-- (BOOL)isFirst {
-    if ( !_haveComein ) {
-        _haveComein = NO;
-    }
-    return _haveComein;
+- (BOOL)getThisTypeHaveCome:(NSString *)type {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    return [userDefaults boolForKey:type];
 }
 
 @end

@@ -36,7 +36,7 @@ void HttpGetAdAnchorListTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_GETADANCHORLIST_NUMBER, temp);
     mNumber = number;
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetAdAnchorListTask::SetParam( "
             "task : %p, "
             ")",
@@ -50,7 +50,7 @@ int HttpGetAdAnchorListTask::GetNumber(){
 
 
 bool HttpGetAdAnchorListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetAdAnchorListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -62,7 +62,7 @@ bool HttpGetAdAnchorListTask::ParseData(const string& url, bool bFlag, const cha
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetAdAnchorListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetAdAnchorListTask::ParseData( buf : %s )", buf);
     }
     
     

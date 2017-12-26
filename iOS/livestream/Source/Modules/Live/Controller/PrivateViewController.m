@@ -7,6 +7,8 @@
 //
 
 #import "PrivateViewController.h"
+#import "LiveWebViewController.h"
+#import "AnchorPersonalViewController.h"
 
 #import "LSImageViewLoader.h"
 
@@ -21,11 +23,10 @@
 
 #import "SetFavoriteRequest.h"
 
-#import "RoomTypeIsFirstManager.h"
-
 #import "RandomGiftModel.h"
 
-@interface PrivateViewController () <LiveViewControllerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate>
+
+@interface PrivateViewController () <LiveViewControllerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate,IMManagerDelegate>
 // IM管理器
 @property (nonatomic, strong) LSImManager *imManager;
 // 资费提示小时计时器
@@ -34,6 +35,8 @@
 @property (nonatomic, assign) BOOL isTipShow;
 // 接口管理器
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
+// 登录管理器
+@property (nonatomic, strong) LSLoginManager *loginManager;
 
 #pragma mark - 头像逻辑
 @property (atomic, strong) LSImageViewLoader *manImageViewLoader;
@@ -41,20 +44,24 @@
 @property (atomic, strong) LSImageViewLoader *manPreviewImageViewLoader;
 
 #pragma mark - 随机礼物控制
-@property (nonatomic, strong) dispatch_queue_t randomGiftQueue;
-@property (atomic, strong) NSRunLoop *randomGiftLoop;
-@property (atomic, strong) NSTimer *randomGiftTimer;
+@property (strong) LSTimer *randomGiftTimer;
 @property (atomic, strong) NSArray *giftArray;
 @property (atomic, assign) NSInteger randomGiftIndex;
 // 是否第一次随机礼物
 @property (nonatomic, assign) BOOL firstRandom;
+
+// 对话框控件
+@property (strong) DialogTip *dialogTipView;
+// 是否能推流
+@property (assign) BOOL canPublish;
+
+@property (strong) DialogChoose *dialogChoose;
+
 #pragma mark - 直播间管理器
 // 是否第一次进类型直播间管理器
 @property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
-// 对话框控件
-@property (nonatomic, strong) DialogTip *dialogTipView;
-// 是否能推流
-@property (assign) BOOL canPublish;
+// 买点
+@property (strong) DialogOK *dialogAddCredit;
 
 @end
 
@@ -62,33 +69,45 @@
 #pragma mark - 界面初始化
 - (void)initCustomParam {
     [super initCustomParam];
-    
-    NSLog(@"PrivateViewController::initCustomParam()");
-    
+    NSLog(@"PrivateViewController::initCustomParam( self : %p )", self);
+
     srand((unsigned)time(0));
-    
+
     self.isTipShow = NO;
     self.randomGiftIndex = -1;
 
     self.imManager = [LSImManager manager];
+    [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
 
     self.sessionManager = [LSSessionRequestManager manager];
     self.firstManager = [RoomTypeIsFirstManager manager];
+    self.loginManager = [LSLoginManager manager];
 
     self.manImageViewLoader = [LSImageViewLoader loader];
     self.ladyImageViewLoader = [LSImageViewLoader loader];
     self.manPreviewImageViewLoader = [LSImageViewLoader loader];
-    
+
     self.dialogTipView = [DialogTip dialogTip];
-    
+
     self.firstRandom = YES;
     self.canPublish = NO;
+
+    // 初始化计时器
+    self.randomGiftTimer = [[LSTimer alloc] init];
 }
 
 - (void)dealloc {
-    NSLog(@"PrivateViewController::dealloc()");
+    NSLog(@"PrivateViewController::dealloc( self : %p )", self);
 
+    if (self.dialogAddCredit) {
+        [self.dialogAddCredit removeFromSuperview];
+    }
+
+    if (self.dialogChoose) {
+        [self.dialogChoose removeFromSuperview];
+    }
+    [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
 }
 
@@ -99,28 +118,35 @@
     self.navigationController.navigationBar.hidden = YES;
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
+
+    self.liveRoom.superView = self.view;
+    self.liveRoom.superController = self;
+
+    // 初始化播放界面
+    [self setupPlayController];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     // 刷新头像控件
     [self reloadHeadImageView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
     // 开启随机礼物定时器
     [self startRandomGiftTimer];
-    
-    // 刷新双向视频状态
-    [self reloadVideoStatus];
+
+    // 第一次进入才发送
+    if (!self.viewDidAppearEver) {
+        // 刷新双向视频状态
+        [self reloadVideoStatus];
+    }
+    [super viewDidAppear:animated];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -133,11 +159,9 @@
 - (void)setupContainView {
     [super setupContainView];
 
-    // 初始化播放界面
-    [self setupPlayController];
     // 初始化头部界面
     [self setupHeaderImageView];
-    
+
     // 通知外部处理
     if ([self.delegate respondsToSelector:@selector(onSetupViewController:)]) {
         [self.delegate onSetupViewController:self];
@@ -150,6 +174,25 @@
     self.playVC.delegate = self;
     [self addChildViewController:self.playVC];
     self.playVC.liveRoom = self.liveRoom;
+    // 直播间风格
+    self.playVC.liveVC.roomStyleItem = [[RoomStyleItem alloc] init];
+    // 连击礼物
+    self.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Bg_Combo"];
+    // 弹幕
+    self.playVC.liveVC.roomStyleItem.barrageBgColor = Color(53, 75, 158, 0.9); //Color(83, 13, 120, 0.9);
+    // 消息列表界面
+    self.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0X0CD7DE);
+    self.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0XFF5ABB);
+    self.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XFFD205);
+    self.playVC.liveVC.roomStyleItem.chatStrColor = [UIColor whiteColor];
+    self.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
+    self.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
+    self.playVC.liveVC.roomStyleItem.warningStrColor = COLOR_WITH_16BAND_RGB(0x992926);
+
+    // 修改高级私密直播间样式
+    if ([self.delegate respondsToSelector:@selector(setUpLiveRoomType:)]) {
+        [self.delegate setUpLiveRoomType:self];
+    }
 
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -169,30 +212,15 @@
     self.playVC.randomGiftBtnBgWidth.constant = 36;
     self.playVC.randomGiftBtnWidth.constant = -12;
     self.playVC.randomGiftBtnTailing.constant = -10;
-    // 直播间风格
-    self.playVC.liveVC.roomStyleItem = [[RoomStyleItem alloc] init];
-    // 连击礼物
-    self.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Bg_Combo"];
-    // 弹幕
-    self.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(53, 75, 158, 0.9);//Color(83, 13, 120, 0.9);
-    // 消息列表界面
-    self.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0X0CD7DE);
-    self.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0XFF5ABB);
-    self.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XFFD205);
-    self.playVC.liveVC.roomStyleItem.chatStrColor = [UIColor whiteColor];
-    self.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
-    self.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
     // 返点界面
-    self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X293FA3);//Color(53, 75, 158, 1.0);
-    self.playVC.liveVC.rewardedBgView.hidden = NO;
-    self.playVC.liveVC.rewardedBtn.hidden = NO;
+    self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X293FA3); //Color(53, 75, 158, 1.0);
     // 视频播放界面
-//    self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
+    //    self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
     // 视频互动界面
     [self.playVC.liveVC showPreview];
     [self.playVC.liveVC.startVideoBtn addTarget:self action:@selector(startVideoAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.playVC.liveVC.stopVideoBtn addTarget:self action:@selector(stopVideoAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+
     // 随机礼物按钮
     [self.playVC.randomGiftBtn addTarget:self action:@selector(randomGiftAction:) forControlEvents:UIControlEventTouchUpInside];
     // 输入栏目
@@ -207,6 +235,9 @@
     self.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
     // 显示表情按钮
     self.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
+    
+    // 初始化推流
+    [self.playVC.liveVC initPublish];
 }
 
 - (void)setupHeaderImageView {
@@ -219,7 +250,7 @@
     [self.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
                               roomTip:NSLocalizedStringFromSelf(@"PUBLIV_TIP")
                            creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
-
+    self.tipView.hidden = YES;
     [self.view addSubview:self.tipView];
     [self.roomTypeImageView sizeToFit];
     [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -230,6 +261,10 @@
 
     // 图片点击事件
     WeakObject(self, weakSelf);
+    [self.intimacyImageView addTapBlock:^(id obj) {
+        [weakSelf clickIntimacyImage];
+    }];
+
     [self.roomTypeImageView addTapBlock:^(id obj) {
         if (!weakSelf.isTipShow) {
             weakSelf.hidenTimer = [NSTimer scheduledTimerWithTimeInterval:3.0
@@ -244,14 +279,12 @@
         }
     }];
 
-    // 是否第一次进入该类型直播间 显示资费提示
-    BOOL haveCome = [self.firstManager getThisTypeHaveCome:self.liveRoom.roomType];
-    if (haveCome) {
-        [self.tipView hiddenChardTip];
-
-    } else {
-        [self.firstManager comeinLiveRoomWithType:self.liveRoom.roomType HaveComein:YES];
-    }
+    [self.ladyHeadImageView addTapBlock:^(id obj) {
+        AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
+        listViewController.anchorId = weakSelf.liveRoom.userId;
+        listViewController.enterRoom = 0;
+        [weakSelf.navigationController pushViewController:listViewController animated:YES];
+    }];
 
     // 关注
     if (self.liveRoom.imLiveRoom.favorite) {
@@ -266,6 +299,16 @@
     self.playVC.liveVC.showBtn.enabled = start;
     self.playVC.liveVC.stopVideoBtn.hidden = YES;
     self.playVC.liveVC.muteBtn.hidden = YES;
+}
+
+#pragma mark - 点击亲密度
+- (void)clickIntimacyImage {
+
+    LiveWebViewController *webViewController = [[LiveWebViewController alloc] init];
+    webViewController.isIntimacy = YES;
+    webViewController.anchorId = self.liveRoom.userId;
+    webViewController.title = @"Intimacy Level";
+    [self.navigationController pushViewController:webViewController animated:YES];
 }
 
 #pragma mark - 按钮事件
@@ -291,42 +334,46 @@
 
 - (IBAction)randomGiftAction:(id)sender {
     // TODO:点击随机礼物
-    if( self.randomGiftIndex != -1 ) {
+    [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickRecommendGift eventCategory:EventCategoryBroadcast];
+    if (self.randomGiftIndex != -1) {
         RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
         [self.playVC.presentView randomSelect:gift.randomInteger];
     }
-    
+
     // 打开礼物界面
     [self.playVC giftAction:sender];
 }
 
 - (IBAction)startVideoAction:(id)sender {
     // TODO:点击开始视频互动
-    
+
     // 关闭所有输入
     [self.playVC closeAllInputView];
-    
+
     // 开始视频互动
-        if (![LSConfigManager manager].dontShow2WayVideoDialog) {
-        DialogChoose *dialogChoose = [DialogChoose dialog];
+    if (![LSConfigManager manager].dontShow2WayVideoDialog) {
+        if (self.dialogChoose) {
+            [self.dialogChoose removeFromSuperview];
+        }
+        self.dialogChoose = [DialogChoose dialog];
         NSString *price = [NSString stringWithFormat:@"%.2f", self.liveRoom.imLiveRoom.manPushPrice];
         NSString *tips = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_TIPS"), price];
-        dialogChoose.tipsLabel.text = tips;
+        self.dialogChoose.tipsLabel.text = tips;
         WeakObject(self, weakObj);
-        [dialogChoose showDialog:self.view
-                     cancelBlock:^{
-                         // 保存参数
-                         [LSConfigManager manager].dontShow2WayVideoDialog = dialogChoose.checkBox.on;
-                         [[LSConfigManager manager] saveConfigParam];
-                     }
-                     actionBlock:^{
-                         // 保存参数
-                         [LSConfigManager manager].dontShow2WayVideoDialog = dialogChoose.checkBox.on;
-                         [[LSConfigManager manager] saveConfigParam];
-                         
-                         // 开始视频互动
-                         [weakObj sendVideoControl:YES];
-                     }];
+        [self.dialogChoose showDialog:self.liveRoom.superView
+            cancelBlock:^{
+                // 保存参数
+                [LSConfigManager manager].dontShow2WayVideoDialog = weakObj.dialogChoose.checkBox.on;
+                [[LSConfigManager manager] saveConfigParam];
+            }
+            actionBlock:^{
+                // 保存参数
+                [LSConfigManager manager].dontShow2WayVideoDialog = weakObj.dialogChoose.checkBox.on;
+                [[LSConfigManager manager] saveConfigParam];
+
+                // 开始视频互动
+                [weakObj sendVideoControl:YES];
+            }];
     } else {
         // 开始视频互动
         [self sendVideoControl:YES];
@@ -335,13 +382,13 @@
 
 - (IBAction)stopVideoAction:(id)sender {
     // TODO:点击关闭视频互动
-    
+
     // 关闭所有输入
     [self.playVC closeAllInputView];
-    
+
     // 关闭视频互动
     [self sendVideoControl:NO];
-    
+
     // 隐藏按钮
     self.playVC.liveVC.stopVideoBtn.hidden = YES;
     self.playVC.liveVC.muteBtn.hidden = YES;
@@ -349,32 +396,32 @@
 
 #pragma mark - 数据逻辑
 - (void)reloadHeadImageView {
-    // TODO:刷新男士头像J
-    [self.manImageViewLoader loadImageWithImageView:self.manHeadImageView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    // TODO:刷新男士头像
+    [self.manImageViewLoader loadImageWithImageView:self.manHeadImageView options:0 imageUrl:self.loginManager.loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
     // 设置模糊
-    UIImage *manBlurImage = [[UIImage imageNamed:@"Default_Img_Man_Square"] blurImageWithRadius:5.0];
-    [self.manPreviewImageViewLoader loadImageWithImageView:self.playVC.liveVC.previewImageView options:0 imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:manBlurImage];
+    UIImage *manBlurImage = [UIImage imageNamed:@"Two_Video_icon"];
+    [self.playVC.liveVC.previewImageView setImage:manBlurImage];
     // TODO:刷新女士头像
     [self.ladyImageViewLoader loadImageWithImageView:self.ladyHeadImageView options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
     // TODO:刷新亲密度
     NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", self.liveRoom.imLiveRoom.loveLevel];
     UIImage *image = [UIImage imageNamed:imageName];
-    if( image ) {
+    if (image) {
         self.intimacyImageView.image = image;
     }
 }
 
 - (void)reloadVideoStatus {
     NSLog(@"PrivateViewController::reloadVideoStatus( publishUrl : %@ )", self.liveRoom.publishUrl);
-    
+
     if (self.liveRoom.publishUrl.length > 0) {
         // 已经有推流地址, 发送命令
         [self sendVideoControl:YES];
-        
+
     } else {
         // 停止推流
         [self.playVC.liveVC stopPublish];
-        
+
         // 刷新界面
         [self setupVideoPreview:NO];
     }
@@ -392,20 +439,20 @@
                                       dispatch_async(dispatch_get_main_queue(), ^{
                                           // 隐藏菊花
                                           self.playVC.liveVC.preActivityView.hidden = YES;
-                                          
+
                                           if (success) {
                                               BOOL bChange = YES;
                                               BOOL bSuccess = NO;
-                                              
+
                                               if (start) {
                                                   // 开启视频互动成功
                                                   if (manPushUrl.count > 0) {
                                                       bChange = YES;
                                                       bSuccess = YES;
-                                                      
+
                                                       // 开始推流
                                                       self.liveRoom.publishUrlArray = manPushUrl;
-                                                      
+
                                                   } else {
                                                       bChange = NO;
 
@@ -413,7 +460,8 @@
                                                       [self.imManager controlManPush:self.liveRoom.roomId control:IMCONTROLTYPE_CLOSE finishHandler:nil];
 
                                                       // 错误提示
-                                                      [self.dialogTipView showDialogTip:self.view tipText:@"发起视频互动失败(没有推流地址)"];
+                                                      NSLog(@"PrivateViewController::sendVideoControl( 发起视频互动失败(没有推流地址), errType : %d )", errType);
+                                                      [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"LOCAL_ERROR_NO_PUSH_URL")];
                                                   }
                                               } else {
                                                   // 关闭视频互动成功
@@ -422,14 +470,14 @@
                                               }
 
                                               // 改变界面状态
-                                              if( bSuccess ) {
+                                              if (bSuccess) {
                                                   // 开始推流
                                                   [self.playVC.liveVC publish];
                                               } else {
                                                   // 停止推流
                                                   [self.playVC.liveVC stopPublish];
                                               }
-                                              
+
                                               [self setupVideoPreview:bSuccess];
 //                                              if (bChange) {
 //                                                  self.playVC.liveVC.previewImageView.hidden = start;
@@ -440,12 +488,34 @@
 //
 //                                                  [self.playVC.liveVC.preActivityView stopAnimating];
 //                                              }
-                                              
 
                                           } else {
-                                              // 错误提示
                                               NSString *errStr = start ? @"开启视频互动失败" : @"关闭视频互动失败";
-                                              [self.dialogTipView showDialogTip:self.view tipText:errStr];
+                                              NSLog(@"PrivateViewController::sendVideoControl( %@, errType : %d )", errStr, errType);
+                                              if (start) {
+                                                  if (errType == LCC_ERR_NO_CREDIT) {
+                                                      // 没钱, 弹出充值
+                                                      if (self.dialogAddCredit) {
+                                                          [self.dialogAddCredit removeFromSuperview];
+                                                      }
+
+                                                      WeakObject(self, weakSelf);
+                                                      self.dialogAddCredit = [DialogOK dialog];
+                                                      self.dialogAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_ERR_ADD_CREDIT");
+                                                      [self.dialogAddCredit showDialog:self.view
+                                                                           actionBlock:^{
+                                                                               [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
+                                                                               [weakSelf.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+                                                                           }];
+
+                                                  } else {
+                                                      // 错误提示
+                                                      [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:errMsg];
+                                                  }
+                                              } else {
+                                                  // 错误提示
+                                                  [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:errMsg];
+                                              }
                                           }
                                       });
                                   }];
@@ -456,6 +526,7 @@
 }
 
 - (void)sendFollowRequest {
+    [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickFollow eventCategory:EventCategoryBroadcast];
     SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
     request.userId = self.liveRoom.userId;
     request.roomId = self.liveRoom.roomId;
@@ -464,21 +535,40 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 self.followBtn.hidden = YES;
-//                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
+                //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
+            } else {
+                // 错误提示
+                [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
             }
-
         });
     };
     [self.sessionManager sendRequest:request];
 }
 
+#pragma mark - IM回调
+- (void)onRecvLoveLevelUpNotice:(int)loveLevel {
+    NSLog(@"PrivateViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d )", loveLevel);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // TODO:刷新亲密度
+        NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", loveLevel];
+        UIImage *image = [UIImage imageNamed:imageName];
+        if (image) {
+            self.intimacyImageView.image = image;
+        }
+    });
+}
+
+#pragma mark - PlayViewControllerDelegate
+- (void)pushToAddCredit:(PlayViewController *)vc {
+    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+}
 
 #pragma mark - 播放界面回调
 - (void)onReEnterRoom:(PlayViewController *)vc {
     NSLog(@"PrivateViewController::onReEnterRoom()");
     // 清空旧的推流地址
     [self.liveRoom reset];
-    
+
     // 刷新双向视频状态
     [self reloadVideoStatus];
 }
@@ -488,22 +578,26 @@
     NSLog(@"PrivateViewController::onGetLiveRoomGiftList( count : %lu )", (unsigned long)array.count);
     // 更新礼物数组
     self.giftArray = array;
-    
+
     if (self.firstRandom) {
-        self.randomGiftIndex = 0;
+        int randValue = rand();
+        self.randomGiftIndex = randValue % self.giftArray.count;
         RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
         LiveRoomGiftModel *giftModel = gift.giftModel;
-        
+
         WeakObject(self, weakSelf);
-        [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:giftModel.allItem.infoItem.smallImgUrl] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-            
-        } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-            if (image) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
-                });
+        [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:giftModel.allItem.infoItem.smallImgUrl]
+            options:0
+            progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *_Nullable targetURL) {
+
             }
-        }];
+            completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
+                if (image) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
+                    });
+                }
+            }];
         self.firstRandom = NO;
     }
 }
@@ -518,11 +612,11 @@
         if (self.giftArray.count > 0) {
             int randValue = rand();
             self.randomGiftIndex = randValue % self.giftArray.count;
-            
+
             RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
             LiveRoomGiftModel *giftModel = gift.giftModel;
             NSString *url = [[LiveGiftDownloadManager manager] backMiddleImgUrlWithGiftID:giftModel.giftId];
-            
+
             WeakObject(self, weakSelf);
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
             [manager loadImageWithURL:[NSURL URLWithString:url]
@@ -546,39 +640,17 @@
 
 - (void)startRandomGiftTimer {
     NSLog(@"PrivateViewController::startRandomGiftTimer()");
-
-    if (!self.randomGiftQueue) {
-        self.randomGiftQueue = dispatch_queue_create("randomGiftQueue", DISPATCH_QUEUE_SERIAL);
-    }
     
-    dispatch_async(self.randomGiftQueue, ^{
-        self.randomGiftLoop = [NSRunLoop currentRunLoop];
-        @synchronized(self) {
-            if (!self.randomGiftTimer) {
-                self.randomGiftTimer = [NSTimer scheduledTimerWithTimeInterval:300
-                                                                            target:self
-                                                                          selector:@selector(randomGiftCountDown)
-                                                                          userInfo:nil
-                                                                           repeats:YES];
-                [[NSRunLoop currentRunLoop] addTimer:self.randomGiftTimer forMode:NSDefaultRunLoopMode];
-            }
-        }
-        [[NSRunLoop currentRunLoop] run];
-    });
+    WeakObject(self, weakSelf);
+    [self.randomGiftTimer startTimer:nil timeInterval:300.0 * NSEC_PER_SEC starNow:YES action:^{
+        [weakSelf randomGiftCountDown];
+    }];
 }
 
 - (void)stopRandomGiftTimer {
     NSLog(@"PrivateViewController::stopRandomGiftTimer()");
     
-    self.randomGiftQueue = nil;
-    
-    @synchronized(self) {
-        [self.randomGiftTimer invalidate];
-        self.randomGiftTimer = nil;
-    }
-    
-    if ([self.randomGiftLoop getCFRunLoop]) {
-        CFRunLoopStop([self.randomGiftLoop getCFRunLoop]);
-    }
+    [self.randomGiftTimer stopTimer];
 }
+
 @end

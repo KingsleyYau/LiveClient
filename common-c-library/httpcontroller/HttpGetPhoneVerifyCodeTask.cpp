@@ -50,7 +50,7 @@ void HttpGetPhoneVerifyCodeTask::SetParam(
         mPhoneNo = phoneNo;
     }
     
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetPhoneVerifyCodeTask::SetParam( "
             "task : %p, "
             ")",
@@ -72,7 +72,7 @@ const string& HttpGetPhoneVerifyCodeTask::GetPhoneNo() {
 
 
 bool HttpGetPhoneVerifyCodeTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetPhoneVerifyCodeTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -84,7 +84,7 @@ bool HttpGetPhoneVerifyCodeTask::ParseData(const string& url, bool bFlag, const 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetPhoneVerifyCodeTask::ParseData( buf : %s )", buf);
     }
     
     

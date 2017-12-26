@@ -10,5 +10,5 @@
 
 @interface LSHomePageViewController : LSGoogleAnalyticsViewController <LSPZPagingScrollViewDelegate>
 @property (weak) IBOutlet LSPZPagingScrollView *pagingScrollView;
-
+@property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 @end

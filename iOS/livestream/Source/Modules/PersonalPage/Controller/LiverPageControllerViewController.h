@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface LiverPageControllerViewController : UIViewController
+#import "LSGoogleAnalyticsViewController.h"
+@interface LiverPageControllerViewController :LSGoogleAnalyticsViewController
 
 @end

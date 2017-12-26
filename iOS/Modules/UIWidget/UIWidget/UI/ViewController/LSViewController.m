@@ -26,7 +26,7 @@
 }
 
 - (void)dealloc {
-
+    NSLog(@"LSViewController::dealloc( %@ )", NSStringFromClass([self class]));
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -77,7 +77,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-        
+    [self initialiseSubwidge];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -93,6 +93,12 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.viewDidAppearEver = YES;
+    self.viewIsAppear = YES;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    self.viewIsAppear = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -134,6 +140,8 @@
 }
 
 - (void)initCustomParam {
+    NSLog(@"LSViewController::initCustomParam( %@ )", NSStringFromClass([self class]));
+    
     self.backTitle = NSLocalizedString(@"", nil);
 //    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
@@ -147,6 +155,10 @@
 
 - (void)setupContainView {
 
+}
+
+- (void)initialiseSubwidge {
+    
 }
 
 - (void)setBackleftBarButtonItemOffset:(CGFloat)offset {
@@ -185,7 +197,7 @@
     [loadingActivity startAnimating];
     
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:loadActivityView];
-    [[UIApplication sharedApplication].keyWindow addSubview:loadActivityView];
+//    [[UIApplication sharedApplication].keyWindow addSubview:loadActivityView];
 }
 
 - (void)showLoading {

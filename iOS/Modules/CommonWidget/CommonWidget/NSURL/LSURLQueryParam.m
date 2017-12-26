@@ -21,7 +21,7 @@
 + (NSDictionary *)urlParameters:(NSURL *)url {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
-    NSString *query = [url query];
+    NSString *query = [LSURLQueryParam urlDecodedString:[url query]];
     NSArray *values = [query componentsSeparatedByString:@"&"];
 
     if (values == nil || values.count == 0)
@@ -36,5 +36,13 @@
 
     return parameters;
 }
+
++(NSString *)urlDecodedString:(NSString *)str
+{
+    NSString *decodedString=( NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL, (__bridge CFStringRef)str, CFSTR(""), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
+    
+    return decodedString;
+}
+
 
 @end

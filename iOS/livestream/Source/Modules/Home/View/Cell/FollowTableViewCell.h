@@ -22,6 +22,7 @@
 @interface FollowTableViewCell : UITableViewCell
 @property (nonatomic, weak) IBOutlet LSUIImageViewTopFit *imageViewHeader;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
+@property (weak, nonatomic) IBOutlet UIView *bottomView;
 
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;

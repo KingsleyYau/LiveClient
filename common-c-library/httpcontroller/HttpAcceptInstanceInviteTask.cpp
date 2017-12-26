@@ -42,7 +42,7 @@ void HttpAcceptInstanceInviteTask::SetParam(
     mHttpEntiy.AddContent(LIVEROOM_ACCEPTINSTACEINVITE_ISCONFIRM, temp);
     mIsConfirm = isConfirm;
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpAcceptInstanceInviteTask::SetParam( "
             "task : %p, "
             ")",
@@ -59,7 +59,7 @@ bool HttpAcceptInstanceInviteTask::GetIsConfirm() {
 }
 
 bool HttpAcceptInstanceInviteTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpAcceptInstanceInviteTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -71,7 +71,7 @@ bool HttpAcceptInstanceInviteTask::ParseData(const string& url, bool bFlag, cons
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpAcceptInstanceInviteTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpAcceptInstanceInviteTask::ParseData( buf : %s )", buf);
     }
     
 

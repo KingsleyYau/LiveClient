@@ -10,7 +10,8 @@
 #import "LSEmotionCollectionViewCell.h"
 #import "LiveBundle.h"
 
-@interface LSLiveStandardEmotionView()
+@interface LSLiveStandardEmotionView()<LSChatEmotionManagerDelegate>
+
 @property (nonatomic, strong) LSChatEmotionManager *emotionManager;
 @end
 
@@ -29,6 +30,7 @@
     
     view.tipView.hidden = YES;
     view.emotionManager = [LSChatEmotionManager emotionManager];
+    view.emotionManager.delegate = view;
     
     return view;
 }
@@ -61,8 +63,13 @@
     
     if (self.emotionManager.stanEmotionList.count > 0) {
         for (LSChatEmotion *item in self.emotionManager.stanEmotionList) {
-            if ([item.text isEqualToString:emotionItem.emoSign]) {
-                cell.imageView.image = item.image;
+            if ( [item.text isEqualToString:emotionItem.emoSign] ) {
+                
+                if (item.image) {
+                    cell.imageView.image = item.image;
+                } else {
+                    cell.imageView.image = [UIImage imageNamed:@"Live_Emotion_Nomal"];
+                }
             }
         }
     }
@@ -89,6 +96,16 @@
         self.pageView.currentPage = layout.currentPage;
     }
     
+}
+
+#pragma mark - LSChatEmotionManagerDelegate
+- (void)downLoadStanListFinshHandle:(NSInteger)index {
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+    [self.emotionCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
+}
+
+- (void)downLoadAdvanListFinshHandle:(NSInteger)index{
 }
 
 - (void)layoutSubviews {

@@ -77,8 +77,8 @@
  */
 @property (strong) dispatch_queue_t audio_capture_queue;
 
-#pragma mark - 重连线程
-@property (strong) dispatch_queue_t reconnect_queue;
+#pragma mark - 后台处理
+@property (nonatomic) BOOL isBackground;
 
 @end
 
@@ -93,9 +93,7 @@
 - (instancetype)init
 {
     if(self = [super init] ) {
-        NSLog(@"LiveStreamPublisher::init()");
-        
-        self.reconnect_queue = dispatch_queue_create("_reconnect_queue", NULL);
+        NSLog(@"LiveStreamPublisher::init( self : %p )", self);
         
         self.publisher = [RtmpPublisherOC instance:VIDEO_CAPTURE_WIDTH height:VIDEO_CAPTURE_HEIGHT];
         self.publisher.delegate = self;
@@ -104,8 +102,8 @@
         _isStart = NO;
         _beauty = YES;
         
-        [self initVideoCapture];
-        [self initAudioCapture];
+//        [self initVideoCapture];
+//        [self initAudioCapture];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -115,17 +113,23 @@
 }
 
 - (void)dealloc {
-    NSLog(@"LiveStreamPublisher::dealloc()");
+    NSLog(@"LiveStreamPublisher::dealloc( self : %p )",self);
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
     
-    [self stop];
 }
 
 #pragma mark - 对外接口
+- (void)initCapture {
+    NSLog(@"LiveStreamPublisher::initCapture( self : %p )", self);
+    
+    [self initVideoCapture];
+    [self initAudioCapture];
+}
+
 - (BOOL)pushlishUrl:(NSString * _Nonnull)url recordH264FilePath:(NSString *)recordH264FilePath recordAACFilePath:(NSString *)recordAACFilePath {
-    NSLog(@"LiveStreamPublisher::pushlishUrl( url : %@ )", url);
+    NSLog(@"LiveStreamPublisher::pushlishUrl( self : %p, url : %@ )", self, url);
     
     BOOL bFlag = YES;
     
@@ -140,7 +144,7 @@
 }
 
 - (void)stop {
-    NSLog(@"LiveStreamPublisher::stop()");
+    NSLog(@"LiveStreamPublisher::stop( self : %p )", self);
     
     [self cancel];
 }
@@ -245,126 +249,170 @@
 
 - (void)setMute:(BOOL)mute {
     // TODO:切换静音
+    NSLog(@"LiveStreamPublisher::setMute( mute : %@ )", BOOL2YES(mute));
+    
     if( self.publisher.mute != mute ) {
         self.publisher.mute = mute;
     }
 }
 
 - (void)run {
-    NSLog(@"LiveStreamPublisher::run()");
+    NSLog(@"LiveStreamPublisher::run( self : %p )", self);
     
     @synchronized (self) {
         if( !self.isStart ) {
             self.isStart = YES;
+            // 开启音频服务
             [[LiveStreamSession session] startCapture];
+            
+            // 开始采集音视频
+            [self startCapture];
+            
+            // 开始推流
+            self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
         }
     }
     
-    // 开始采集音视频
-    [self startCapture];
-    
-    // 开始推流
-    [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+    NSLog(@"LiveStreamPublisher::run( [Finish], self : %p )", self);
 }
 
 - (void)cancel {
-    NSLog(@"LiveStreamPublisher::cancel()");
+    NSLog(@"LiveStreamPublisher::cancel( self : %p )", self);
     
+    BOOL bHandle = NO;
     @synchronized (self) {
-        if( self.isStart ) {
+        if (self.isStart) {
             self.isStart = NO;
-            [[LiveStreamSession session] stopCapture];
+            bHandle = YES;
         }
     }
     
-    // 停止采集音视频
-    [self stopCapture];
+    if( bHandle ) {
+        // 停止采集音视频
+        [self stopCapture];
+        
+        // 停止推流
+        [self.publisher stop];
+        
+        // 停止音频服务
+        [[LiveStreamSession session] stopCapture];
+    }
     
-    // 停止推流
-    [self.publisher stop];
+    NSLog(@"LiveStreamPublisher::cancel( [Finish], self : %p )", self);
+}
+
+- (void)reconnect {
+    BOOL bHandle = NO;
+    
+    @synchronized (self) {
+        if (self.isStart && !self.isConnected && !_isBackground) {
+            // 1.已经手动开始, 2.连接还没连接上
+            bHandle = YES;
+        }
+    }
+    
+    if( bHandle ) {
+        NSLog(@"LiveStreamPublisher::reconnect( [Start], self : %p )", self);
+        
+        [self.publisher stop];
+        
+        // 是否需要切换URL
+        if( [self.delegate respondsToSelector:@selector(publisherShouldChangeUrl:)] ) {
+            self.url = [self.delegate publisherShouldChangeUrl:self];
+        }
+        
+        @synchronized (self) {
+            self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+        }
+        
+        NSLog(@"LiveStreamPublisher::reconnect( [Finish], self : %p )", self);
+    }
 }
 
 #pragma mark - 音视频采集
 - (void)initVideoCapture {
-    // 创建视频采集器
-    // TODO:1.设置前置摄像头
-    self.videoCaptureSession = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionFront];
-    // TODO:2.设置摄像头图像输出顺时针旋转90度
-    self.videoCaptureSession.outputImageOrientation = UIInterfaceOrientationPortrait;
-    // TODO:3.设置后置摄像头不水平反转
-    self.videoCaptureSession.horizontallyMirrorRearFacingCamera = NO;
-    // TODO:4.设置前置摄像头水平反转
-    self.videoCaptureSession.horizontallyMirrorFrontFacingCamera = YES;
-    // TODO:5.设置帧数
-    self.videoCaptureSession.frameRate = FPS;
-    
-    // TODO:6.创建输出处理
-    self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) resultsInBGRAFormat:YES];
-    
-    WeakObject(self, weakSelf);
-    WeakObject(self.output, weakOutput);
-    [self.output setNewFrameAvailableBlock:^{
-        [weakOutput lockFramebufferForReading];
+    if( !self.videoCaptureSession ) {
+        NSLog(@"LiveStreamPublisher::initVideoCapture( self : %p )", self);
         
-        GLubyte *outputBytes = [weakOutput rawBytesForImage];
-        NSInteger bytesPerRow = [weakOutput bytesPerRowInOutput];
+        // 创建视频采集器
+        // TODO:1.设置前置摄像头
+        self.videoCaptureSession = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionFront];
+        // TODO:2.设置摄像头图像输出顺时针旋转90度
+        self.videoCaptureSession.outputImageOrientation = UIInterfaceOrientationPortrait;
+        // TODO:3.设置后置摄像头不水平反转
+        self.videoCaptureSession.horizontallyMirrorRearFacingCamera = NO;
+        // TODO:4.设置前置摄像头水平反转
+        self.videoCaptureSession.horizontallyMirrorFrontFacingCamera = YES;
+        // TODO:5.设置帧数
+        self.videoCaptureSession.frameRate = FPS;
         
-        CVPixelBufferRef pixelBuffer = NULL;
-        CVReturn ret = kCVReturnSuccess;
+        // TODO:6.创建输出处理
+        self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT) resultsInBGRAFormat:YES];
         
-        ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
-        if( ret == kCVReturnSuccess ) {
-//            @synchronized(weakSelf) {
-//                if( weakSelf.isConnected ) {
-                    // 编码并发送视频帧
-                    [weakSelf.publisher pushVideoFrame:pixelBuffer];
-//                }
-//            }
-            CVPixelBufferRelease(pixelBuffer);
+        WeakObject(self, weakSelf);
+        WeakObject(self.output, weakOutput);
+        [self.output setNewFrameAvailableBlock:^{
+            [weakOutput lockFramebufferForReading];
             
-        } else {
-            NSLog(@"LiveStreamPublisher::initVideoCapture( [Fail] : %d )", ret);
-        }
+            GLubyte *outputBytes = [weakOutput rawBytesForImage];
+            NSInteger bytesPerRow = [weakOutput bytesPerRowInOutput];
+            
+            CVPixelBufferRef pixelBuffer = NULL;
+            CVReturn ret = kCVReturnSuccess;
+            
+            ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_CAPTURE_WIDTH, VIDEO_CAPTURE_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
+            if( ret == kCVReturnSuccess ) {
+                // 编码并发送视频帧
+                [weakSelf.publisher pushVideoFrame:pixelBuffer];
+                CVPixelBufferRelease(pixelBuffer);
+            } else {
+                NSLog(@"LiveStreamPublisher::initVideoCapture( [Fail], self : %p, error : %d )", weakSelf, ret);
+            }
+            
+            [weakOutput unlockFramebufferAfterReading];
+        }];
         
-        [weakOutput unlockFramebufferAfterReading];
-    }];
-    
-    // TODO:7.创建美颜滤镜
-    self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
-    self.beautyFilter.beautyLevel = 0.5;
-//    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
-    
-    if( _beauty ) {
-        [self.videoCaptureSession addTarget:self.beautyFilter];
-        [self.beautyFilter addTarget:self.output];
-    } else {
-        [self.videoCaptureSession addTarget:self.output];
+        // TODO:7.创建美颜滤镜
+        self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
+        self.beautyFilter.beautyLevel = 0.5;
+        //    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
+        
+        if( _beauty ) {
+            [self.videoCaptureSession addTarget:self.beautyFilter];
+            [self.beautyFilter addTarget:self.output];
+        } else {
+            [self.videoCaptureSession addTarget:self.output];
+        }
     }
 }
 
 - (void)initAudioCapture {
-    // TODO:1.创建音频采集队列
-    self.audio_capture_queue = dispatch_queue_create("_audio_capture_queue", NULL);
-    self.audioCaptureSession = [[AVCaptureSession alloc] init];
-    self.audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO;
-    
-    // TODO:2.获取音频设备
-    NSArray* audioDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio];
-    if( audioDevices.count > 0 ) {
-        self.audioCaptureDevice = [audioDevices lastObject];
+    if( !self.audioCaptureSession ) {
+        NSLog(@"LiveStreamPublisher::initAudioCapture( self : %p )", self);
         
-        // TODO:3.创建音频采集处理
-        self.audioCaptureInput = [[AVCaptureDeviceInput alloc] initWithDevice:self.audioCaptureDevice error:nil];
-        if( [self.audioCaptureSession canAddInput:self.audioCaptureInput] ) {
-            [self.audioCaptureSession addInput:self.audioCaptureInput];
-        }
+        // TODO:1.创建音频采集队列
+        self.audio_capture_queue = dispatch_queue_create("_audio_capture_queue", NULL);
+        self.audioCaptureSession = [[AVCaptureSession alloc] init];
+        self.audioCaptureSession.automaticallyConfiguresApplicationAudioSession = NO;
         
-        // TODO:4.创建音频输出处理
-        self.audioCaptureOutput = [[AVCaptureAudioDataOutput alloc] init];
-        if ([self.audioCaptureSession canAddOutput:self.audioCaptureOutput]) {
-            [self.audioCaptureSession addOutput:self.audioCaptureOutput];
+        // TODO:2.获取音频设备
+        NSArray* audioDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio];
+        if( audioDevices.count > 0 ) {
+            self.audioCaptureDevice = [audioDevices lastObject];
+            
+            // TODO:3.创建音频采集处理
+            self.audioCaptureInput = [[AVCaptureDeviceInput alloc] initWithDevice:self.audioCaptureDevice error:nil];
+            if( [self.audioCaptureSession canAddInput:self.audioCaptureInput] ) {
+                [self.audioCaptureSession addInput:self.audioCaptureInput];
+            }
+            
+            // TODO:4.创建音频输出处理
+            self.audioCaptureOutput = [[AVCaptureAudioDataOutput alloc] init];
+            if ([self.audioCaptureSession canAddOutput:self.audioCaptureOutput]) {
+                [self.audioCaptureSession addOutput:self.audioCaptureOutput];
+            }
+            [self.audioCaptureOutput setSampleBufferDelegate:self queue:self.audio_capture_queue];
         }
-        [self.audioCaptureOutput setSampleBufferDelegate:self queue:self.audio_capture_queue];
     }
 }
 
@@ -403,51 +451,68 @@
 
 #pragma mark - 视频接收处理
 - (void)rtmpPublisherOCOnConnect:(RtmpPublisherOC * _Nonnull)rtmpClient {
-    @synchronized (self) {
-        self.isConnected = YES;
-    }
+
 }
 
 - (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC * _Nonnull)rtmpClient {
+    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( self : %p )", self);
+    
     @synchronized (self) {
         self.isConnected = NO;
-        
-        if( self.isStart ) {
-            // 断线重新推流
-            dispatch_async(self.reconnect_queue, ^{
-                [self.publisher stop];
-                
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), self.reconnect_queue, ^{
-                    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Reconnect] )");
-                    
-                    // 是否需要切换URL
-                    if( [self.delegate respondsToSelector:@selector(publisherShouldChangeUrl:)] ) {
-                        self.url = [self.delegate publisherShouldChangeUrl:self];
-                    }
-                    
-                    [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
-                });
-            });
+        if (!self.isStart) {
+            // 停止拉流
+            NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Disconnect], self : %p )", self);
             
         } else {
-            // 停止推流
-            dispatch_async(self.reconnect_queue, ^{
-                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Disconnect] )");
-                [self.publisher stop];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 断线重新拉流
+                NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( [Delay Check], self : %p )", self);
+                
+                // 重连
+                [self reconnect];
             });
+            
         }
     }
 }
 
 #pragma mark - 视频采集后台
 - (void)willEnterBackground:(NSNotification *)notification {
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
-    [self.videoCaptureSession pauseCameraCapture];
+    BOOL bHandle = NO;
+    
+    @synchronized (self) {
+        if (_isBackground == NO) {
+            _isBackground = YES;
+            bHandle = YES;
+        }
+    }
+    
+    if( bHandle ) {
+        // 暂停摄像头采集队列
+        [self.videoCaptureSession pauseCameraCapture];
+        
+        // 直接断开连接
+        [self.publisher stop];
+    }
 }
 
 - (void)willEnterForeground:(NSNotification *)notification {
-    [UIApplication sharedApplication].idleTimerDisabled = YES;
-    [self.videoCaptureSession resumeCameraCapture];
+    BOOL bHandle = NO;
+    
+    @synchronized (self) {
+        if (_isBackground == YES) {
+            _isBackground = NO;
+            bHandle = YES;
+        }
+    }
+    
+    if( bHandle ) {
+        // 恢复摄像头采集队列
+        [self.videoCaptureSession resumeCameraCapture];
+        
+        // 重连
+        [self reconnect];
+    }
 }
 
 @end

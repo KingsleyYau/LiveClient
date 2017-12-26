@@ -40,7 +40,7 @@
 @property (assign, nonatomic) int loveLevel;
 
 // 随机可发送礼物下标数组 (NSNumber)
-@property (nonatomic, strong) NSMutableArray *canSendIndexArray;
+@property (nonatomic, strong) NSMutableArray *isPromoIndexArray;
 @property (nonatomic, strong) NSArray *giftIdArray;
 
 @property (nonatomic, assign) BOOL isCellSelect;

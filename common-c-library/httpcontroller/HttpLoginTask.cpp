@@ -66,8 +66,8 @@ void HttpLoginTask::SetParam(
         mManufacturer = manufacturer;
     }
 
-	FileLog("httpcontroller",
-            "HttpStreamLoginTask::SetParam( "
+	FileLog(LIVESHOW_HTTP_LOG,
+            "HttpLoginTask::SetParam( "
             "task : %p, "
             "manId : %s"
             "userSid : %s "
@@ -121,8 +121,8 @@ const string& HttpLoginTask::GetManufacturer() {
 
 
 bool HttpLoginTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
-            "HttpStreamLoginTask::ParseData( "
+    FileLog(LIVESHOW_HTTP_LOG,
+            "HttpLoginTask::ParseData( "
             "task : %p, "
             "url : %s, "
             "bFlag : %s "
@@ -133,7 +133,7 @@ bool HttpLoginTask::ParseData(const string& url, bool bFlag, const char* buf, in
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpStreamLoginTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpLoginTask::ParseData( buf : %s )", buf);
     }
     
     HttpLoginItem item;

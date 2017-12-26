@@ -89,7 +89,7 @@ bool HttpRequestTask::ParseCommon(const char* buf, int size, string &errnum, str
 	Json::Reader reader;
 
 	if( reader.parse(buf, root, false) ) {
-		FileLog("httpcontroller", "HttpRequestTask::ParseCommon( [Parse Json Finish], task : %p )", this);
+		FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseCommon( [Parse Json Finish], task : %p )", this);
 		if( root.isObject() ) {
 			if( root[COMMON_RESULT].isInt() && root[COMMON_RESULT].asInt() == 1 ) {
                 // 解析公共结果, 返回成功
@@ -129,7 +129,7 @@ bool HttpRequestTask::ParseCommon(const char* buf, int size, string &errnum, str
 
     mErrCode = errnum;
     
-	FileLog("httpcontroller", "HttpRequestTask::ParseCommon( [Handle Json %s], task : %p, errnum : %s )", bFlag?"Success":"Fail", this, errnum.c_str());
+	FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseCommon( [Handle Json %s], task : %p, errnum : %s )", bFlag?"Success":"Fail", this, errnum.c_str());
     
 	return bFlag;
 }
@@ -146,7 +146,7 @@ bool HttpRequestTask::ParseLiveCommon(const char* buf, int size, int &errnum, st
     Json::Reader reader;
     
     if( reader.parse(buf, root, false) ) {
-        FileLog("httpcontroller", "HttpRequestTask::ParseLiveCommon( [Parse Json Finish], task : %p )", this);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseLiveCommon( [Parse Json Finish], task : %p )", this);
         if( root.isObject() ) {
             if( root[COMMON_ERRNO].isInt()) {
                  // 解析公共结果, 返回成功
@@ -175,9 +175,39 @@ bool HttpRequestTask::ParseLiveCommon(const char* buf, int size, int &errnum, st
     }
     
     
-    FileLog("httpcontroller", "HttpRequestTask::ParseLiveCommon( [Handle Json %s], task : %p, errnum : %d )", bFlag?"Success":"Fail", this, errnum);
+    FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseLiveCommon( [Handle Json %s], task : %p, errnum : %d )", bFlag?"Success":"Fail", this, errnum);
     
     return bFlag;
+}
+
+// ios 支付的头部
+bool HttpRequestTask::ParseIOSPaid(const char* buf, int size, string &code, Json::Value *data) {
+    bool result = false;
+    
+    Json::Value root;
+    Json::Reader reader;
+    
+    string strBuf("");
+    strBuf.assign(buf, size);
+    if( reader.parse(strBuf, root, false) ) {
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseIOSPaid( parse Json finish )");
+        if( root.isObject() ) {
+            if( root[COMMON_IOSPAY_RESULT].isInt() && root[COMMON_IOSPAY_RESULT].asInt() == 1 ) {
+                code = "";
+                *data = root;
+                
+                result = true;
+            } else {
+                if( root[COMMON_IIOSPAY_CODE].isString() ) {
+                    code = root[COMMON_IIOSPAY_CODE].asString();
+                }
+                
+                result = false;
+            }
+        }
+    }
+    
+    return result;
 }
 
 

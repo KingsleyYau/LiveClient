@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -24,7 +25,10 @@
                     </connections>
                 </collectionView>
                 <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="nBb-3S-D76">
-                    <rect key="frame" x="290" y="183" width="39" height="37"/>
+                    <rect key="frame" x="290" y="199" width="39" height="23"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="23" id="JRK-0v-Xze"/>
+                    </constraints>
                     <color key="pageIndicatorTintColor" red="1" green="1" blue="1" alpha="0.29999999999999999" colorSpace="calibratedRGB"/>
                     <color key="currentPageIndicatorTintColor" red="1" green="1" blue="1" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
                 </pageControl>
@@ -61,7 +65,7 @@
                 <constraint firstAttribute="trailing" secondItem="HjR-gk-zRX" secondAttribute="trailing" id="ez9-T8-imS"/>
                 <constraint firstItem="Zyn-yM-WTb" firstAttribute="height" secondItem="iN0-l3-epB" secondAttribute="height" id="mTM-HE-pAI"/>
                 <constraint firstItem="HjR-gk-zRX" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="nAp-5a-uuM"/>
-                <constraint firstItem="nBb-3S-D76" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" constant="-2" id="qFB-99-vQ6"/>
+                <constraint firstItem="nBb-3S-D76" firstAttribute="bottom" secondItem="iN0-l3-epB" secondAttribute="bottom" id="qFB-99-vQ6"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

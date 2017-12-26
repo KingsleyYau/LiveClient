@@ -10,6 +10,8 @@
 #import "LSLoginManager.h"
 #import "UserInfoListCell.h"
 #import "LSUserUnreadCountManager.h"
+#import "UserInfoManager.h"
+#import "LSLoginManager.h"
 #import "LSMyReservationsViewController.h"
 #import "MyBackpackViewController.h"
 #import "MeLevelViewController.h"
@@ -19,6 +21,9 @@
 @property (nonatomic, strong) LSUserUnreadCountManager* unreadCountManager;
 @property (nonatomic, assign) int myReservationsCount;
 @property (nonatomic, assign) int myBackpackCount;
+#pragma mark - 用户信息管理器
+@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSLoginManager *loginManager;
 @end
 
 @implementation LSUserInfoListViewController
@@ -38,8 +43,13 @@
     
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
+    self.userInfoManager = [UserInfoManager manager];
+    self.loginManager = [LSLoginManager manager];
     
-    self.titleArray = @[@{@"title":@"My Reservations",@"icon":@"MyReservations_icon"},@{@"title":@"My Backpack",@"icon":@"MyBackpack_icon"},@{@"title":@"My Level",@"icon":@"MyLevel_icon"}];
+        self.titleArray = @[
+      @{@"title":NSLocalizedStringFromSelf(@"My Reservations"),@"icon":@"MyReservations_icon"},
+      @{@"title":NSLocalizedStringFromSelf(@"My Backpack"),@"icon":@"MyBackpack_icon"},
+      @{@"title":NSLocalizedStringFromSelf(@"My Level"),@"icon":@"MyLevel_icon"}];
     
     self.tableView.separatorColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
     
@@ -58,6 +68,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+    self.navigationController.navigationBar.translucent = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 
@@ -104,14 +117,11 @@
     
     cell.titleLabel.text = [[self.titleArray objectAtIndex:indexPath.row] objectForKey:@"title"];
     cell.titleIcon.image = [UIImage imageNamed:[[self.titleArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-    [cell.levelBtn setTitle:[NSString stringWithFormat:@"%d",[LSLoginManager manager].loginItem.level] forState:UIControlStateNormal];
-    
+    [cell updateLevel:[LSLoginManager manager].loginItem.level];
+    __block UserInfoListCell *blockCell = cell;
     switch (indexPath.row) {
         case 0:
-            cell.unread.hidden = self.myReservationsCount > 0?NO:YES;
-            if (!cell.unread.hidden) {
-                cell.unread.text =self.myReservationsCount>99?@"N":[NSString stringWithFormat:@"%d",self.myReservationsCount];
-            }
+            [cell updateCount:self.myReservationsCount];
             cell.levelBtn.hidden = YES;
             cell.unIcon.hidden = YES;
             break;
@@ -124,6 +134,11 @@
             cell.unread.hidden = YES;
             cell.levelBtn.hidden = NO;
             cell.unIcon.hidden = YES;
+            [self.userInfoManager requestUserInfo:self.loginManager.loginItem.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [blockCell updateLevel:item.userLevel];
+                });
+            }];
             break;
         default:
             break;

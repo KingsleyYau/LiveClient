@@ -408,7 +408,7 @@
 /* Define to 1 if you have the `ssl' library (-lssl). */
 /* #undef HAVE_LIBSSL */
 /* Add by Max for OpenSSL */
-/* #define HAVE_LIBSSL 1 */
+#define HAVE_LIBSSL 1
 
 /* if zlib is available */
 #define HAVE_LIBZ 1
@@ -467,7 +467,7 @@
 /* Define to 1 if you have the <openssl/crypto.h> header file. */
 /* #undef HAVE_OPENSSL_CRYPTO_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_CRYPTO_H 1 */
+#define HAVE_OPENSSL_CRYPTO_H 1
 
 /* Define to 1 if you have the <openssl/engine.h> header file. */
 /* #undef HAVE_OPENSSL_ENGINE_H */
@@ -475,32 +475,32 @@
 /* Define to 1 if you have the <openssl/err.h> header file. */
 /* #undef HAVE_OPENSSL_ERR_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_ERR_H 1 */
+#define HAVE_OPENSSL_ERR_H 1
 
 /* Define to 1 if you have the <openssl/pem.h> header file. */
 /* #undef HAVE_OPENSSL_PEM_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_PEM_H 1 */
+#define HAVE_OPENSSL_PEM_H 1
 
 /* Define to 1 if you have the <openssl/pkcs12.h> header file. */
 /* #undef HAVE_OPENSSL_PKCS12_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_PKCS12_H 1 */
+#define HAVE_OPENSSL_PKCS12_H 1
 
 /* Define to 1 if you have the <openssl/rsa.h> header file. */
 /* #undef HAVE_OPENSSL_RSA_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_RSA_H 1 */
+#define HAVE_OPENSSL_RSA_H 1
 
 /* Define to 1 if you have the <openssl/ssl.h> header file. */
 /* #undef HAVE_OPENSSL_SSL_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_SSL_H 1 */
+#define HAVE_OPENSSL_SSL_H 1
 
 /* Define to 1 if you have the <openssl/x509.h> header file. */
 /* #undef HAVE_OPENSSL_X509_H */
 /* Add by Max for OpenSSL */
-/* #define HAVE_OPENSSL_X509_H 1 */
+#define HAVE_OPENSSL_X509_H 1
 
 /* Define to 1 if you have the <pem.h> header file. */
 /* #undef HAVE_PEM_H */
@@ -965,7 +965,7 @@
 /* if OpenSSL is in use */
 /* #undef USE_OPENSSL */
 /* Add by Max for OpenSSL */
-/* #define USE_OPENSSL 1 */
+#define USE_OPENSSL 1
 
 /* if PolarSSL is enabled */
 /* #undef USE_POLARSSL */
@@ -976,7 +976,7 @@
 /* if SSL is enabled */
 /* #undef USE_SSLEAY */
 /* Add by Max for OpenSSL */
-/* #define USE_SSLEAY 1 */
+#define USE_SSLEAY 1
 
 /* if you want POSIX threaded DNS lookup */
 /* #undef USE_THREADS_POSIX */

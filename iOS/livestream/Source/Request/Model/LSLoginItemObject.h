@@ -30,6 +30,6 @@
 @property (nonatomic, assign) int experience;
 @property (nonatomic, strong) NSString* photoUrl;
 @property (nonatomic, assign) BOOL isPushAd;
-@property (nonatomic, strong) NSMutableArray<LSSvrItemObject *>* svrList;
+@property (nonatomic, strong) NSArray<LSSvrItemObject *>* svrList;
 @property (nonatomic, assign) UserType userType;
 @end

@@ -18,11 +18,14 @@
 @property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;
 @property (nonatomic, weak) IBOutlet UITextField* textFieldPublishAddress;
 
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint* playBottom;
+
 - (IBAction)publish:(id)sender;
 - (IBAction)play:(id)sender;
 - (IBAction)stop:(id)sender;
 - (IBAction)beauty:(id)sender;
 - (IBAction)mute:(id)sender;
+- (IBAction)roate:(id)sender;
 
 @end
 

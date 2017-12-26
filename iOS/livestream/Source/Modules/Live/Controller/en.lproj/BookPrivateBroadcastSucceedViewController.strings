@@ -1,14 +1,14 @@
 
-/* Class = "UILabel"; text = "BookPrivateBroadcast"; ObjectID = "Vyc-m0-jYs"; */
-"Vyc-m0-jYs.text" = "BookPrivateBroadcast";
+/* Class = "UILabel"; text = "Request Booking"; ObjectID = "Vyc-m0-jYs"; */
+"Vyc-m0-jYs.text" = "Request Booking";
 
-"BOOK_PRIVATE_TITLE" = "BookPrivateBroadcast";
+"BOOK_PRIVATE_TITLE" = "Request Booking";
 
 "BROAD_CASTER" = "Broadcaster";
 
-"RESER_TIME" = "Reservation Time";
+"RESER_TIME" = "Broadcast Time";
 
 "VIRTUAL_GIFT" = "Virtual Gift";
 
-"MY_RESER" = "My Reservations";
+"MY_RESER" = "My Bookings";
 

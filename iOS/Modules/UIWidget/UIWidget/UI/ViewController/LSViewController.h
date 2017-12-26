@@ -13,6 +13,7 @@
 @property (nonatomic, strong) NSString* backTitle;
 @property (nonatomic, strong) UIView *loadActivityView;
 @property (nonatomic, strong) NSString *navigationTitle;
+@property (nonatomic, assign) BOOL viewIsAppear;
 
 #pragma mark - 横屏切换
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;
@@ -33,9 +34,14 @@
  */
 - (void)setupNavigationBar;
 /**
- *  初始化界面
+ *  初始化界面约束
  */
 - (void)setupContainView;
+
+/**
+ *  初始化控件
+ */
+- (void)initialiseSubwidge;
 
 /**
  *  显示加载状态

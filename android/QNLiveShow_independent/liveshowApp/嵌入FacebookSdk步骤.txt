@@ -1,0 +1,39 @@
+1,facebook开发者控制台创建应用 https://developers.facebook.com/apps/
+
+2.下载aar资源包
+组件之间的相互依赖关系参考 https://developers.facebook.com/docs/android/componentsdks
+如我们目前接入的是fb的登录和分享功能，那么对应则下载拷贝:
+    facebook-common.aar
+    facebook-core.aar
+    facebook-login.aar
+    facebook-share.aar
+    cardview-v7-25.3.1.aar
+另外需要单独下载(fb需要，参考https://github.com/parse-community/ParseFacebookUtils-Android/issues/12)
+    bolts-applinks-1.4.0.jar
+
+3.项目app module下的build.gradle文件中，增加如上资源文件的引用
+dependencies {
+    //......
+    //FACEBOOK
+    compile(name: 'facebook-common', ext: 'aar')
+    compile(name: 'facebook-core', ext: 'aar')
+    compile(name: 'facebook-login', ext: 'aar')
+    compile(name: 'facebook-share', ext: 'aar')
+    //cardview
+    compile(name: 'cardview-v7-25.3.1', ext: 'aar')
+}
+
+以上为自行拷贝aar资源文件的方式
+
+4.后续工作参考https://developers.facebook.com/docs/facebook-login/android
+
+其中，生成开发密钥散列的命令需要用到的工具openssl可从http://gnuwin32.sourceforge.net/packages/openssl.htm下载
+harry-PC
+password:weihaitao
+开发密钥散列:a7bhysxUinuNBEx9z+VZMhzmNcA=
+或者根据com.wht.harry.facebookdemo.utils.AndroidSdkManager.logKeyHash来自动打印，之后补充到facebook控制台
+
+5.登录功能的接入，可以参考https://developers.facebook.com/apps/2065605210390455/fb-login/quickstart/
+6.分享功能的接入，可以参考https://developers.facebook.com/docs/sharing/android
+7.获取个人信息,可以参考https://developers.facebook.com/docs/android/graph
+

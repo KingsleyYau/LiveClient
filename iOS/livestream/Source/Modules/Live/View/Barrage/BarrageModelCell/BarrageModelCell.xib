@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -60,7 +61,6 @@
                 <constraint firstItem="agt-Fn-vaO" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="-30" id="he9-sb-m1t"/>
                 <constraint firstItem="XFi-u9-QOC" firstAttribute="bottom" secondItem="Khd-aR-nVk" secondAttribute="bottom" id="kO0-wm-FBZ"/>
                 <constraint firstItem="x7m-Gm-vmA" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="10" id="mtW-vH-iDH"/>
-                <constraint firstItem="XFi-u9-QOC" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="Khd-aR-nVk" secondAttribute="trailing" constant="-20" id="qoK-Sy-6mv"/>
                 <constraint firstItem="LPv-ng-f9Q" firstAttribute="height" secondItem="Khd-aR-nVk" secondAttribute="height" id="xQK-Qa-3uE"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

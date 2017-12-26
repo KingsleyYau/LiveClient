@@ -18,7 +18,7 @@ class HttpBannerTask;
 class IRequestBannerCallback {
 public:
 	virtual ~IRequestBannerCallback(){};
-	virtual void OnBanner(HttpBannerTask* task, bool success, int errnum, const string& errmsg, const string& bannerImg, const string& bannerLink) = 0;
+	virtual void OnBanner(HttpBannerTask* task, bool success, int errnum, const string& errmsg, const string& bannerImg, const string& bannerLink, const string& bannerName) = 0;
 };
       
 class HttpBannerTask : public HttpRequestTask {

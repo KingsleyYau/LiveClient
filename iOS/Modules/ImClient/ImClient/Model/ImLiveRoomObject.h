@@ -40,6 +40,9 @@
  * maxFansiNum		        最大人数限制
  * honorId                  勋章ID
  * honorImg                 勋章图片url
+ * popPrice                 直播间的POP消息资费
+ * useCoupon                试聊卷分钟数
+ * shareLink                默认分享链接
  */
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
@@ -63,5 +66,8 @@
 @property (nonatomic, assign) int maxFansiNum;
 @property (nonatomic, copy) NSString *_Nonnull honorId;
 @property (nonatomic, copy) NSString *_Nonnull honorImg;
+@property (nonatomic, assign) double popPrice;
+@property (nonatomic, assign) int useCoupon;
+@property (nonatomic, copy) NSString *_Nonnull shareLink;
 
 @end

@@ -53,7 +53,7 @@ public:
      @param recordFilePath flv录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath);
+    bool PlayUrl(const string& url, const string& recordFilePath);
     
     /**
      停止
@@ -169,6 +169,8 @@ private:
     int mPlayVideoAfterAudioDiff;
     // 视频开播时间戳
     bool mbVideoStartPlay;
+    // 音频开播时间戳
+    bool mbAudioStartPlay;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

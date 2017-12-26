@@ -33,6 +33,7 @@ public final class Permission {
     public static final String[] SENSORS;
     public static final String[] SMS;
     public static final String[] STORAGE;
+    public static final String[] AUDIO;
 
     static {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -45,6 +46,7 @@ public final class Permission {
             SENSORS = new String[]{};
             SMS = new String[]{};
             STORAGE = new String[]{};
+            AUDIO = new String[]{};
         } else {
             CALENDAR = new String[]{
                     Manifest.permission.READ_CALENDAR,
@@ -87,6 +89,10 @@ public final class Permission {
             STORAGE = new String[]{
                     Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+            AUDIO = new String[]{
+                    Manifest.permission.RECORD_AUDIO
+                    };
         }
     }
 

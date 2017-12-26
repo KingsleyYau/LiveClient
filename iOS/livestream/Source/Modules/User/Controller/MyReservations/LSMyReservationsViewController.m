@@ -9,25 +9,28 @@
 #import "LSMyReservationsViewController.h"
 #import "JDSegmentControl.h"
 #import "LSMyReservationsPageViewController.h"
-#import "LSUserUnreadCountManager.h"
-@interface LSMyReservationsViewController () <JTSegmentControlDelegate, JDSegmentControlDelegate, LSUserUnreadCountManagerDelegate, LSPZPagingScrollViewDelegate>
+#import "LSSessionRequestManager.h"
+#import "ManBookingUnreadUnhandleNumRequest.h"
+@interface LSMyReservationsViewController () <JTSegmentControlDelegate, JDSegmentControlDelegate, LSPZPagingScrollViewDelegate>
 @property (nonatomic, strong) LSPZPagingScrollView * pagingScrollView;
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 @property (nonatomic, assign) NSInteger curIndex;
 @property (weak, nonatomic) IBOutlet UIView *topView;
 @property (nonatomic, strong) JDSegmentControl *segment;
-@property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
+@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 @end
 
 @implementation LSMyReservationsViewController
 
 - (void)dealloc {
-    [self.unreadCountManager removeDelegate:self];
+    
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.sessionManager = [LSSessionRequestManager manager];
+    
     self.title = NSLocalizedStringFromSelf(@"MY_TITLE");
     NSArray *title = @[ NSLocalizedStringFromSelf(@"NEW"), NSLocalizedStringFromSelf(@"SEND"), NSLocalizedStringFromSelf(@"SCHED"), NSLocalizedStringFromSelf(@"HISTORY") ];
     self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES];
@@ -59,8 +62,6 @@
 
     self.viewControllers = [NSArray arrayWithObjects:vc1, vc2, vc3, vc4, nil];
 
-    self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
-    [self.unreadCountManager addDelegate:self];
     CGFloat bottom = self.topView.frame.origin.y + self.topView.frame.size.height;
     self.pagingScrollView = [[LSPZPagingScrollView alloc] initWithFrame:CGRectMake(0, bottom, SCREEN_WIDTH, SCREEN_HEIGHT - bottom)];
     self.pagingScrollView.pagingViewDelegate = self;
@@ -70,26 +71,34 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBar.hidden = NO;
+    self.navigationController.navigationBar.translucent = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 
-    [self.unreadCountManager getResevationsUnredCount];
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+}
+
+- (void)getunreadCount
+{
+    ManBookingUnreadUnhandleNumRequest * request = [[ManBookingUnreadUnhandleNumRequest alloc]init];
+    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * errmsg, BookingUnreadUnhandleNumItemObject * item) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *count = @[ [NSString stringWithFormat:@"%d", item.pendingNoReadNum],
+                                @"",
+                                [NSString stringWithFormat:@"%d", item.scheduledNoReadNum],
+                                [NSString stringWithFormat:@"%d", item.historyNoReadNum] ];
+            
+            [self.segment updateBtnUnreadCount:count];
+        });
+    };
+    
+    [self.sessionManager sendRequest:request];
 }
 
 - (void)segmentControlSelectedTag:(NSInteger)tag {
     self.curIndex = tag;
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
-    self.view.userInteractionEnabled = NO;
-    [self.unreadCountManager getResevationsUnredCount];
-}
-
-- (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject *)item {
-    self.view.userInteractionEnabled = YES;
-    NSArray *count = @[ [NSString stringWithFormat:@"%d", item.pendingNoReadNum],
-                        @"",
-                        [NSString stringWithFormat:@"%d", item.scheduledNoReadNum],
-                        [NSString stringWithFormat:@"%d", item.historyNoReadNum] ];
-
-    [self.segment updateBtnUnreadCount:count];
+    //self.view.userInteractionEnabled = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,6 +135,7 @@
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
     self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.curIndex = index;
+    [self reportDidShowPage:index];
     [self.segment selectButtonTag:self.curIndex];
 }
 

@@ -29,8 +29,8 @@ void HttpGetAllGiftListTask::SetParam(
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
 
-    FileLog("httpcontroller",
-            "HttpGetLiveRoomAllGiftListTask::SetParam( "
+    FileLog(LIVESHOW_HTTP_LOG,
+            "HttpGetAllGiftListTask::SetParam( "
             "task : %p, "
             ")",
             this
@@ -39,7 +39,7 @@ void HttpGetAllGiftListTask::SetParam(
 
 
 bool HttpGetAllGiftListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpGetAllGiftListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -51,7 +51,7 @@ bool HttpGetAllGiftListTask::ParseData(const string& url, bool bFlag, const char
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpGetAllGiftListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpGetAllGiftListTask::ParseData( buf : %s )", buf);
     }
     
     GiftItemList itemList;

@@ -12,7 +12,7 @@
 
 "CANT_REPEAT_TIP" = "Sorry. Can not send duplicated performance requests in a row";
 
-"SEND_TALENT_FAILED" = "Failed to send talent request.Please try again later.";
+"SEND_TALENT_FAILED" = "Failed to send the talent request.Please try again later.";
 
 "SEND_TALENT_SUCCESS" = "Your talent request \"%@\" has been sent successfully. Please wait for response.";
 
@@ -24,4 +24,4 @@
 
 "NO_TALENT_LIST" = "The broadcaster has not added any talent yet.";
 
-"SEND_TALENT_ERROR" = "Oops, can not send a performance request while the broadcast is closing.";
+"SEND_TALENT_ERROR" = "You cannot send a performance request while the broadcast is ending.";

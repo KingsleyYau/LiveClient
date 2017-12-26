@@ -21,7 +21,7 @@
 /**
  显示界面
  */
-@property (nonatomic, weak) GPUImageView* _Nullable publishView;
+@property (weak, nonatomic) GPUImageView* _Nullable publishView;
 
 /**
  委托
@@ -49,6 +49,11 @@
  *  @return 实例
  */
 + (instancetype _Nonnull)instance;
+
+/**
+ 初始化采集
+ */
+- (void)initCapture;
 
 /**
  发布流连接

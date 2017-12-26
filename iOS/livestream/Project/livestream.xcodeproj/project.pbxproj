@@ -14,6 +14,7 @@
 				506996881F90653A00535931 /* ShellScript */,
 			);
 			dependencies = (
+				502283111FDF5E470007752F /* PBXTargetDependency */,
 			);
 			name = livestream_sdk_combine;
 			productName = livestream_sdk_combine;
@@ -21,6 +22,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		25046DBB1FB18FB7001221AE /* AnchorPersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25046DBA1FB18FB7001221AE /* AnchorPersonalViewController.xib */; };
 		2508F16D1F5E7A7800CA2143 /* DriveView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2508F16C1F5E7A7800CA2143 /* DriveView.m */; };
 		2508F16F1F5E7A8000CA2143 /* DriveView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2508F16E1F5E7A8000CA2143 /* DriveView.xib */; };
 		2508F1721F5ED2A600CA2143 /* AudienceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2508F1711F5ED2A600CA2143 /* AudienceModel.m */; };
@@ -40,14 +42,11 @@
 		253009BB1F8DBD9E0077AD7A /* TalentOnDemandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253009BD1F8DBD9E0077AD7A /* TalentOnDemandViewController.xib */; };
 		2536DA8F1F7DF058004FD7C3 /* PublicVipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2536DA911F7DF058004FD7C3 /* PublicVipViewController.xib */; };
 		2536DAA11F7E3D1E004FD7C3 /* RewardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2536DAA01F7E3D1E004FD7C3 /* RewardView.m */; };
-		2536DAA31F7E3D2B004FD7C3 /* RewardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2536DAA21F7E3D2B004FD7C3 /* RewardView.xib */; };
 		2537ECF41FA2B8BD002D8065 /* LSInvitedToViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25E9B1B61FA07601008C3180 /* LSInvitedToViewController.xib */; };
 		2546A6731F90BA79004E6D61 /* AddMobileNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A6761F90BA79004E6D61 /* AddMobileNumberViewController.xib */; };
 		2546A6741F90BA79004E6D61 /* AddMobileNumberViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A6761F90BA79004E6D61 /* AddMobileNumberViewController.xib */; };
 		2546A6791F90BC67004E6D61 /* AddVirtualGiftsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A67C1F90BC67004E6D61 /* AddVirtualGiftsCell.xib */; };
 		2546A67A1F90BC67004E6D61 /* AddVirtualGiftsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A67C1F90BC67004E6D61 /* AddVirtualGiftsCell.xib */; };
-		2546A67F1F90BF17004E6D61 /* AnchorPersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A6821F90BF17004E6D61 /* AnchorPersonalViewController.xib */; };
-		2546A6801F90BF17004E6D61 /* AnchorPersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2546A6821F90BF17004E6D61 /* AnchorPersonalViewController.xib */; };
 		2547C0F31F6FB11D00CF220A /* AudienModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2547C0F21F6FB11D00CF220A /* AudienModel.m */; };
 		2550AEB11F96291B007B5731 /* LSYYAnimatedImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2550AEA81F96291B007B5731 /* LSYYAnimatedImageView.m */; };
 		2550AEB21F96291B007B5731 /* LSYYFrameImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2550AEAA1F96291B007B5731 /* LSYYFrameImage.m */; };
@@ -59,10 +58,19 @@
 		255974BD1F55910000B9D667 /* LiveRoomMsgManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 255974BC1F55910000B9D667 /* LiveRoomMsgManager.m */; };
 		255D9DA71F43E52600B954DD /* ChatEmotionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 255D9DA61F43E52600B954DD /* ChatEmotionItem.m */; };
 		255D9DAA1F43E5C300B954DD /* ChatEmotionListItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 255D9DA91F43E5C300B954DD /* ChatEmotionListItem.m */; };
+		256244981FCFFD470062B857 /* PushInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2562449B1FCFFD470062B857 /* PushInviteViewController.xib */; };
+		256244991FCFFD470062B857 /* PushInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2562449B1FCFFD470062B857 /* PushInviteViewController.xib */; };
+		2562449E1FD002A40062B857 /* PushBookingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256244A11FD002A40062B857 /* PushBookingViewController.xib */; };
+		2562449F1FD002A40062B857 /* PushBookingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256244A11FD002A40062B857 /* PushBookingViewController.xib */; };
 		256939DC1F56414F000CCE9E /* AudienceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 256939DA1F56414F000CCE9E /* AudienceCell.m */; };
 		256939DD1F56414F000CCE9E /* AudienceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 256939DB1F56414F000CCE9E /* AudienceCell.xib */; };
 		256CE1E41F5E2E920008D390 /* ChardTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 256CE1E31F5E2E920008D390 /* ChardTipView.m */; };
+		25700B7B1FB4719F0065CFF0 /* RewardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25700B7E1FB4719F0065CFF0 /* RewardView.xib */; };
+		25700B7C1FB4719F0065CFF0 /* RewardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25700B7E1FB4719F0065CFF0 /* RewardView.xib */; };
+		25721DB81FB146D9007E77F6 /* LSUrlParmItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25721DB71FB146D9007E77F6 /* LSUrlParmItem.m */; };
+		2573A3F01FA96AB900501D98 /* LSStreamSpeedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2573A3EF1FA96AB900501D98 /* LSStreamSpeedManager.m */; };
 		2574A4401FA02015006C2BF0 /* LSInvitedToViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2574A43E1FA02015006C2BF0 /* LSInvitedToViewController.m */; };
+		2574DFFF1FB2F01800EEDDE9 /* LSUrlParmItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25721DB71FB146D9007E77F6 /* LSUrlParmItem.m */; };
 		2576CF9A1F959C4000065908 /* LSLiveAdvancedEmotionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2576CF921F959C4000065908 /* LSLiveAdvancedEmotionView.m */; };
 		2576CF9B1F959C4000065908 /* LSLiveAdvancedEmotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2576CF931F959C4000065908 /* LSLiveAdvancedEmotionView.xib */; };
 		2576CF9C1F959C4000065908 /* LSLiveStandardEmotionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2576CF951F959C4000065908 /* LSLiveStandardEmotionView.m */; };
@@ -71,6 +79,9 @@
 		2576CF9F1F959C4000065908 /* LSPageChooseKeyboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2576CF991F959C4000065908 /* LSPageChooseKeyboardView.xib */; };
 		257934F11F67C8A500D785F8 /* CreditView.m in Sources */ = {isa = PBXBuildFile; fileRef = 257934F01F67C8A500D785F8 /* CreditView.m */; };
 		257934F31F67C8B600D785F8 /* CreditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257934F21F67C8B600D785F8 /* CreditView.xib */; };
+		257D78931FBE753D00262E80 /* LSUserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 257D78921FBE753D00262E80 /* LSUserInfoModel.m */; };
+		258076361FB03E0500D7B156 /* LSLiveWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258076341FB03E0500D7B156 /* LSLiveWKWebViewController.m */; };
+		2580763E1FB043DF00D7B156 /* LSLiveWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 258076341FB03E0500D7B156 /* LSLiveWKWebViewController.m */; };
 		2580D23B1F943B5F00171722 /* FollowingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2580D23E1F943B5F00171722 /* FollowingViewController.xib */; };
 		2580D23C1F943B5F00171722 /* FollowingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2580D23E1F943B5F00171722 /* FollowingViewController.xib */; };
 		2580D2411F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2580D2441F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib */; };
@@ -94,6 +105,7 @@
 		25895C391F88C54700FD6232 /* LiveFinshViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25895C3B1F88C54700FD6232 /* LiveFinshViewController.xib */; };
 		258BDBEE1F661CB7005E1F8F /* PublicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 258BDBEC1F661CB7005E1F8F /* PublicViewController.xib */; };
 		2595164F1F7902B8004A873B /* RandomGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2595164E1F7902B8004A873B /* RandomGiftModel.m */; };
+		259DD54C1FBE7A6D00DEB6D7 /* LSUserInfoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 257D78921FBE753D00262E80 /* LSUserInfoModel.m */; };
 		25A34B261F540B6900A86378 /* LiveSendBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A34B251F540B6900A86378 /* LiveSendBarView.m */; };
 		25A5AF191F668C1100F06F18 /* LiveRoomGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A5AF181F668C1100F06F18 /* LiveRoomGiftModel.m */; };
 		25E887311F57DA6E006E4639 /* RoomStyleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E887301F57DA6E006E4639 /* RoomStyleItem.m */; };
@@ -116,7 +128,6 @@
 		3E62CC151F7CCCFF0097F4FC /* BookPrivateBroadcastSucceedHeadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CC131F7CCCFF0097F4FC /* BookPrivateBroadcastSucceedHeadView.xib */; };
 		3E62CC2D1F7CF41E0097F4FC /* AddMobileNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CC2B1F7CF41E0097F4FC /* AddMobileNumberViewController.m */; };
 		3E62CC321F7CF8910097F4FC /* CountryCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CC301F7CF8910097F4FC /* CountryCodeViewController.m */; };
-		3E62CC331F7CF8910097F4FC /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CC311F7CF8910097F4FC /* CountryCodeViewController.xib */; };
 		3E631F011F7B93440042785F /* BookPrivateBroadcastSucceedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E631EFF1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.m */; };
 		3E645E5E1F8C764900D06467 /* LSUserUnreadCountManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E645E5D1F8C764900D06467 /* LSUserUnreadCountManager.m */; };
 		3E645E681F8C9FDE00D06467 /* NewInvitesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E645E661F8C9FDE00D06467 /* NewInvitesCell.m */; };
@@ -128,13 +139,10 @@
 		3E65CA301F946974005963C9 /* VouchersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA2B1F946974005963C9 /* VouchersCell.m */; };
 		3E65CA311F946974005963C9 /* VouchersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA2C1F946974005963C9 /* VouchersCell.xib */; };
 		3E65CA351F94697E005963C9 /* GiftListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA331F94697E005963C9 /* GiftListViewController.m */; };
-		3E65CA361F94697E005963C9 /* GiftListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA341F94697E005963C9 /* GiftListViewController.xib */; };
 		3E65CA3F1F9498D2005963C9 /* VouchersListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */; };
-		3E65CA401F9498D2005963C9 /* VouchersListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA3E1F9498D2005963C9 /* VouchersListViewController.xib */; };
 		3E65CA4B1F949AE3005963C9 /* MyRidesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA491F949AE3005963C9 /* MyRidesViewController.m */; };
 		3E65CA4F1F949B49005963C9 /* MyRidesWaterfallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA4E1F949B49005963C9 /* MyRidesWaterfallView.m */; };
 		3E65CA531F949B95005963C9 /* MyRidesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA511F949B95005963C9 /* MyRidesCell.m */; };
-		3E65CA541F949B95005963C9 /* MyRidesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA521F949B95005963C9 /* MyRidesCell.xib */; };
 		3E65CA551F94ABC8005963C9 /* MyRidesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */; };
 		3E74C6F71F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */; };
 		3E74C6F81F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */; };
@@ -142,8 +150,9 @@
 		3E7AA9D71F70AC02007C958F /* TalentOnDemandManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7AA9D61F70AC02007C958F /* TalentOnDemandManager.m */; };
 		3E7AA9E11F70E7F6007C958F /* TalentOnDemandCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7AA9DF1F70E7F6007C958F /* TalentOnDemandCell.m */; };
 		3E7AA9E21F70E7F6007C958F /* TalentOnDemandCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7AA9E01F70E7F6007C958F /* TalentOnDemandCell.xib */; };
+		3E7AC9731FA8279E00979A5B /* LiveADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7AC9711FA8279E00979A5B /* LiveADView.m */; };
+		3E7AC9751FA8297900979A5B /* LiveADView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7AC9711FA8279E00979A5B /* LiveADView.m */; };
 		3E7F6D851F8B14070003BC69 /* LSUserInfoListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7F6D811F8B14070003BC69 /* LSUserInfoListViewController.m */; };
-		3E7F6D861F8B14070003BC69 /* LSUserInfoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7F6D821F8B14070003BC69 /* LSUserInfoListViewController.xib */; };
 		3E7F6D901F8B17120003BC69 /* UserInfoListCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7F6D8E1F8B17120003BC69 /* UserInfoListCell.m */; };
 		3E7F6D911F8B17120003BC69 /* UserInfoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7F6D8F1F8B17120003BC69 /* UserInfoListCell.xib */; };
 		3E7F6DA41F8B56C50003BC69 /* MyBackpackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E7F6D9E1F8B56C50003BC69 /* MyBackpackViewController.m */; };
@@ -155,9 +164,18 @@
 		3E80760E1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8076111F90B91900315CF5 /* LSMyReservationsPageViewController.xib */; };
 		3E80760F1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8076111F90B91900315CF5 /* LSMyReservationsPageViewController.xib */; };
 		3E8688251F7DDACD00E17CDA /* VerifyMobileNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E8688231F7DDACD00E17CDA /* VerifyMobileNumberViewController.m */; };
+		3E8FF06E1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0711FB530F30012A212 /* LSUserInfoListViewController.xib */; };
+		3E8FF06F1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0711FB530F30012A212 /* LSUserInfoListViewController.xib */; };
+		3E8FF0741FB531F60012A212 /* GiftListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0771FB531F60012A212 /* GiftListViewController.xib */; };
+		3E8FF0751FB531F60012A212 /* GiftListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0771FB531F60012A212 /* GiftListViewController.xib */; };
+		3E8FF07A1FB532450012A212 /* VouchersListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */; };
+		3E8FF07B1FB532450012A212 /* VouchersListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */; };
+		3E8FF0801FB532DC0012A212 /* MyRidesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0831FB532DC0012A212 /* MyRidesCell.xib */; };
+		3E8FF0811FB532DC0012A212 /* MyRidesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E8FF0831FB532DC0012A212 /* MyRidesCell.xib */; };
+		3E9221041FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */; };
+		3E9221051FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */; };
 		5007B1D21ECAA72E00C2C17F /* LSRequestManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5007B1D11ECAA72E00C2C17F /* LSRequestManager.mm */; };
 		500CBB641F8CEBDA00A32F1F /* PushBookingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 500CBB621F8CEBDA00A32F1F /* PushBookingViewController.m */; };
-		500CBB651F8CEBDA00A32F1F /* PushBookingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 500CBB631F8CEBDA00A32F1F /* PushBookingViewController.xib */; };
 		50135B4A1F9D8E39003C6555 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50135B491F9D8E39003C6555 /* AppIcon.xcassets */; };
 		50135B501F9DBA52003C6555 /* LiveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 50135B4F1F9DBA52003C6555 /* LiveService.m */; };
 		50135B511F9DBEF7003C6555 /* LiveService.m in Sources */ = {isa = PBXBuildFile; fileRef = 50135B4F1F9DBA52003C6555 /* LiveService.m */; };
@@ -199,8 +217,6 @@
 		504D5FCF1F8F473400BBB037 /* LiveGobalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 504D5FCE1F8F473400BBB037 /* LiveGobalManager.m */; };
 		504D5FD01F8F478100BBB037 /* LiveModule.h in Headers */ = {isa = PBXBuildFile; fileRef = 50D657591F42885300FF49F6 /* LiveModule.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		504D5FD31F8F50DB00BBB037 /* LiveGobalManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 504D5FCE1F8F473400BBB037 /* LiveGobalManager.m */; };
-		504D60711F8F8F8C00BBB037 /* PushBookingViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 500CBB631F8CEBDA00A32F1F /* PushBookingViewController.xib */; };
-		504D60721F8F8F8C00BBB037 /* PushInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50A810A71F8CE44A00C7288A /* PushInviteViewController.xib */; };
 		504D60731F8F8F8C00BBB037 /* LiveWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 252E9CC91F72062E00D32DFF /* LiveWebViewController.xib */; };
 		504D60741F8F8F8C00BBB037 /* LSHomePageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910CC1EDF9F09003B6813 /* LSHomePageViewController.xib */; };
 		504D60751F8F8F8C00BBB037 /* LiveChannelAdViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5270F9E11F7202A600097D3E /* LiveChannelAdViewController.xib */; };
@@ -211,7 +227,6 @@
 		504D607A1F8F8F8C00BBB037 /* LiveChannelAdView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917CE1F6B7A8900C96398 /* LiveChannelAdView.xib */; };
 		504D607B1F8F8F8C00BBB037 /* LiveChannelTopCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917DA1F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.xib */; };
 		504D607C1F8F8F8C00BBB037 /* LiveChannelBottomCollectionReusableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */; };
-		504D60801F8F8F8C00BBB037 /* LSUserInfoListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7F6D821F8B14070003BC69 /* LSUserInfoListViewController.xib */; };
 		504D60821F8F8F8C00BBB037 /* UserInfoListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7F6D8F1F8B17120003BC69 /* UserInfoListCell.xib */; };
 		504D60911F8F8F8C00BBB037 /* DiscoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910DF1EDF9F25003B6813 /* DiscoverViewController.xib */; };
 		504D60931F8F8F8C00BBB037 /* HotViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 509910E21EDF9F25003B6813 /* HotViewController.xib */; };
@@ -231,7 +246,6 @@
 		504D60A31F8F8F8D00BBB037 /* PrivateVipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50B2ED5B1F74B3A900E71479 /* PrivateVipViewController.xib */; };
 		504D60A41F8F8F8D00BBB037 /* TalentOnDemandViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 253009BD1F8DBD9E0077AD7A /* TalentOnDemandViewController.xib */; };
 		504D60A51F8F8F8D00BBB037 /* BookPrivateBroadcastViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CA4B1F7A07AB009F79AA /* BookPrivateBroadcastViewController.xib */; };
-		504D60A71F8F8F8D00BBB037 /* RewardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2536DAA21F7E3D2B004FD7C3 /* RewardView.xib */; };
 		504D60A81F8F8F8D00BBB037 /* AddPhoneNumCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CA3E1F79FAA2009F79AA /* AddPhoneNumCell.xib */; };
 		504D60AA1F8F8F8D00BBB037 /* BookPrivateBroadcastSucceedHeadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CC131F7CCCFF0097F4FC /* BookPrivateBroadcastSucceedHeadView.xib */; };
 		504D60AB1F8F8F8D00BBB037 /* TalentOnDemandCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7AA9E01F70E7F6007C958F /* TalentOnDemandCell.xib */; };
@@ -252,7 +266,6 @@
 		504D60BD1F8F8F8D00BBB037 /* PresentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 251DB28B1F8A1576001000C8 /* PresentView.xib */; };
 		504D60BE1F8F8F8D00BBB037 /* CreditView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 257934F21F67C8B600D785F8 /* CreditView.xib */; };
 		504D60BF1F8F8F8D00BBB037 /* SelectCoverView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 505591A91EF3FD9E000AF03A /* SelectCoverView.xib */; };
-		504D60C01F8F8F8D00BBB037 /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E62CC311F7CF8910097F4FC /* CountryCodeViewController.xib */; };
 		504D60C31F8F8F8D00BBB037 /* CountryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5095E40F1ED6DD04004FFA3B /* CountryTableViewCell.xib */; };
 		504D60C51F8F8F8D00BBB037 /* LiverPageControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8F771F7B2EEE001E9CBF /* LiverPageControllerViewController.xib */; };
 		504D60C61F8F8F8D00BBB037 /* MeLevelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8F7A1F7B2EEE001E9CBF /* MeLevelViewController.xib */; };
@@ -262,9 +275,7 @@
 		504D60CA1F8F8F9B00BBB037 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 506D60651F0F14AD002CAD3C /* InfoPlist.strings */; };
 		504D60CB1F8F8F9B00BBB037 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 50F2A9E31ED9811400F7EA6D /* Localizable.strings */; };
 		5053078F1F7A689F00F2FECA /* UserInfoManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 5053078E1F7A689F00F2FECA /* UserInfoManager.m */; };
-		505307921F7A6A1400F2FECA /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 505307911F7A6A1400F2FECA /* UserInfo.m */; };
 		505591AA1EF3FD9E000AF03A /* BigGiftAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 505591981EF3FD9E000AF03A /* BigGiftAnimationView.m */; };
-		505591AB1EF3FD9E000AF03A /* gift.webp in Resources */ = {isa = PBXBuildFile; fileRef = 505591991EF3FD9E000AF03A /* gift.webp */; };
 		505591AC1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */; };
 		505591AD1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5055919D1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib */; };
 		505591AE1EF3FD9E000AF03A /* GiftItemLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 5055919F1EF3FD9E000AF03A /* GiftItemLayout.m */; };
@@ -279,7 +290,6 @@
 		505BBB6B1F9594D200D90843 /* MyRidesWaterfallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA4E1F949B49005963C9 /* MyRidesWaterfallView.m */; };
 		505BBB6C1F9594D200D90843 /* MyRidesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA511F949B95005963C9 /* MyRidesCell.m */; };
 		505BBB6D1F9594D900D90843 /* GiftListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA271F946974005963C9 /* GiftListCell.xib */; };
-		505BBB6E1F9594D900D90843 /* MyRidesCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA521F949B95005963C9 /* MyRidesCell.xib */; };
 		505D6DED1EC979E3007FF4C6 /* LSFileCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 505D6DE61EC979E3007FF4C6 /* LSFileCacheManager.m */; };
 		505D6DEE1EC979E3007FF4C6 /* LSImageViewLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 505D6DE81EC979E3007FF4C6 /* LSImageViewLoader.m */; };
 		505D6E181EC97E66007FF4C6 /* libCommonWidget.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 505D6DD21EC979B9007FF4C6 /* libCommonWidget.a */; };
@@ -380,7 +390,6 @@
 		5061414D1F8E066C00825358 /* SendGiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657841F428A3B00FF49F6 /* SendGiftItem.m */; };
 		5061414E1F8E066C00825358 /* AudienModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2547C0F21F6FB11D00CF220A /* AudienModel.m */; };
 		5061414F1F8E066C00825358 /* RandomGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2595164E1F7902B8004A873B /* RandomGiftModel.m */; };
-		506141501F8E066C00825358 /* UserInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 505307911F7A6A1400F2FECA /* UserInfo.m */; };
 		506141511F8E066C00825358 /* RewardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2536DAA01F7E3D1E004FD7C3 /* RewardView.m */; };
 		506141521F8E066C00825358 /* AddPhoneNumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CA3D1F79FAA2009F79AA /* AddPhoneNumCell.m */; };
 		506141531F8E066C00825358 /* AddVirtualGiftsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CA401F79FAA2009F79AA /* AddVirtualGiftsCell.m */; };
@@ -443,8 +452,6 @@
 		5061418E1F8E066C00825358 /* LiverPageControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F761F7B2EEE001E9CBF /* LiverPageControllerViewController.m */; };
 		5061418F1F8E066C00825358 /* MeLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F791F7B2EEE001E9CBF /* MeLevelViewController.m */; };
 		506141901F8E066C00825358 /* AnchorPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F9F1F7B8BD1001E9CBF /* AnchorPhotoViewController.m */; };
-		506141911F8E066C00825358 /* AnchorPersonalView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F7D1F7B2EEE001E9CBF /* AnchorPersonalView.m */; };
-		506141921F8E066C00825358 /* MeLevelView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F7F1F7B2EEE001E9CBF /* MeLevelView.m */; };
 		506141931F8E066C00825358 /* AcceptInstanceInviteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA53183D1F8DC43900110B6A /* AcceptInstanceInviteRequest.m */; };
 		506141941F8E066C00825358 /* GetPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B171F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m */; };
 		506141951F8E066C00825358 /* SubmitPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B191F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m */; };
@@ -513,7 +520,7 @@
 		506141D41F8E066D00825358 /* SetRideRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3261F59027F001C2962 /* SetRideRequest.m */; };
 		506141D51F8E066D00825358 /* UpdateTokenIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC3281F59027F001C2962 /* UpdateTokenIdRequest.m */; };
 		506141D61F8E066D00825358 /* VoucherListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 506BC32A1F59027F001C2962 /* VoucherListRequest.m */; };
-		5061423E1F8E09B600825358 /* LSUIWidgetBundle.bundle in CopyFiles */ = {isa = PBXBuildFile; fileRef = 505D6DDB1EC979C1007FF4C6 /* LSUIWidgetBundle.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5061423E1F8E09B600825358 /* LSUIWidgetBundle.bundle in Copy Files */ = {isa = PBXBuildFile; fileRef = 505D6DDB1EC979C1007FF4C6 /* LSUIWidgetBundle.bundle */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5061424A1F8E0DF400825358 /* common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 506142471F8E0DF400825358 /* common.xcconfig */; };
 		5063A3F61ECE99F200361942 /* HotTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063A3F21ECE99F100361942 /* HotTableViewCell.m */; };
 		5063A3F71ECE99F200361942 /* HotTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5063A3F31ECE99F100361942 /* HotTableViewCell.xib */; };
@@ -598,6 +605,8 @@
 		5079F3C01F95B06C0016C065 /* LSPageChooseKeyboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2576CF991F959C4000065908 /* LSPageChooseKeyboardView.xib */; };
 		508550941F5D2C1000BE4A9C /* PreLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 508550921F5D2C1000BE4A9C /* PreLiveViewController.m */; };
 		5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 5085509C1F5D32D800BE4A9C /* LiveRoom.m */; };
+		50866E1C1FAAADE100150673 /* LSStreamSpeedManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2573A3EF1FA96AB900501D98 /* LSStreamSpeedManager.m */; };
+		508C87321FB3F86800A078C3 /* AnchorPersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25046DBA1FB18FB7001221AE /* AnchorPersonalViewController.xib */; };
 		509198381EDEA32C00D26A7B /* BarrageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198351EDEA32C00D26A7B /* BarrageView.m */; };
 		509198391EDEA32C00D26A7B /* BarrageViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 509198371EDEA32C00D26A7B /* BarrageViewCell.m */; };
 		5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5091983C1EDEA37B00D26A7B /* MsgTableViewCell.m */; };
@@ -643,7 +652,6 @@
 		509A8DDF1ECC350C004720CF /* JTSegmentControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DDD1ECC350C004720CF /* JTSegmentControl.swift */; };
 		509A8DE01ECC350C004720CF /* JTSegmentPattern.swift in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DDE1ECC350C004720CF /* JTSegmentPattern.swift */; };
 		50A810A81F8CE44A00C7288A /* PushInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A810A61F8CE44A00C7288A /* PushInviteViewController.m */; };
-		50A810A91F8CE44A00C7288A /* PushInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50A810A71F8CE44A00C7288A /* PushInviteViewController.xib */; };
 		50A833901E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50A8338D1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.m */; };
 		50A98C571F949C0D00043448 /* VouchersCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA2C1F946974005963C9 /* VouchersCell.xib */; };
 		50A98C581F949C1500043448 /* VouchersCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA2B1F946974005963C9 /* VouchersCell.m */; };
@@ -655,10 +663,8 @@
 		50AE07371F973E49005CF8D2 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50D1BACE1E98D6A300088B9D /* libz.tbd */; };
 		50B094491F94BA0B007F2817 /* MyRidesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA491F949AE3005963C9 /* MyRidesViewController.m */; };
 		50B0944A1F94BA15007F2817 /* MyRidesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */; };
-		50B0944B1F94BA28007F2817 /* GiftListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA341F94697E005963C9 /* GiftListViewController.xib */; };
 		50B0944C1F94BA31007F2817 /* GiftListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA331F94697E005963C9 /* GiftListViewController.m */; };
 		50B0944D1F94BA40007F2817 /* VouchersListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */; };
-		50B0944E1F94BA44007F2817 /* VouchersListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA3E1F9498D2005963C9 /* VouchersListViewController.xib */; };
 		50B23CD31EC9A65B007A7262 /* LSGoogleAnalyticsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B23CCD1EC9A65B007A7262 /* LSGoogleAnalyticsViewController.m */; };
 		50B2ED5A1F74AF0800E71479 /* PrivateVipViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50B2ED591F74AF0800E71479 /* PrivateVipViewController.m */; };
 		50B2ED5D1F74B3A900E71479 /* PrivateVipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50B2ED5B1F74B3A900E71479 /* PrivateVipViewController.xib */; };
@@ -731,6 +737,7 @@
 		52D253261F67D2CA00C0C476 /* LiveChannelContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */; };
 		52D2532B1F67D49200C0C476 /* LiveChannelCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 52D253291F67D49200C0C476 /* LiveChannelCollectionViewCell.m */; };
 		52D2532C1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52D2532A1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib */; };
+		52E45E1B1FB578A000846ADE /* LiveApp.js in Resources */ = {isa = PBXBuildFile; fileRef = FAAB702C1FB54FDD00E442A8 /* LiveApp.js */; };
 		52F028D11F5E937F002F7FDC /* IntroduceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F028CF1F5E937F002F7FDC /* IntroduceViewController.m */; };
 		52F028D41F5E941B002F7FDC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F028D31F5E941B002F7FDC /* WebKit.framework */; };
 		52F028D71F5E9499002F7FDC /* IntroduceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F028D61F5E9499002F7FDC /* IntroduceView.m */; };
@@ -741,19 +748,24 @@
 		FA4C8F831F7B2EEE001E9CBF /* LiverPageControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8F771F7B2EEE001E9CBF /* LiverPageControllerViewController.xib */; };
 		FA4C8F841F7B2EEE001E9CBF /* MeLevelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F791F7B2EEE001E9CBF /* MeLevelViewController.m */; };
 		FA4C8F851F7B2EEE001E9CBF /* MeLevelViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8F7A1F7B2EEE001E9CBF /* MeLevelViewController.xib */; };
-		FA4C8F861F7B2EEE001E9CBF /* AnchorPersonalView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F7D1F7B2EEE001E9CBF /* AnchorPersonalView.m */; };
-		FA4C8F871F7B2EEE001E9CBF /* MeLevelView.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F7F1F7B2EEE001E9CBF /* MeLevelView.m */; };
 		FA4C8F8A1F7B340C001E9CBF /* LiveRoomCreditRebateManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F891F7B340C001E9CBF /* LiveRoomCreditRebateManager.m */; };
 		FA4C8F8D1F7B3BD7001E9CBF /* IMRebateItem.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F8C1F7B3BD7001E9CBF /* IMRebateItem.m */; };
 		FA4C8FA11F7B8BD1001E9CBF /* AnchorPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F9F1F7B8BD1001E9CBF /* AnchorPhotoViewController.m */; };
 		FA4C8FA21F7B8BD1001E9CBF /* AnchorPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8FA01F7B8BD1001E9CBF /* AnchorPhotoViewController.xib */; };
 		FA53183E1F8DC43900110B6A /* AcceptInstanceInviteRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA53183D1F8DC43900110B6A /* AcceptInstanceInviteRequest.m */; };
+		FA57B1A21FA976D50092EA2F /* LSAnchorInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B19F1FA976D50092EA2F /* LSAnchorInfoItemObject.m */; };
+		FA57B1A31FA976D50092EA2F /* LSUserInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B1A11FA976D50092EA2F /* LSUserInfoItemObject.m */; };
+		FA57B1A61FA97E620092EA2F /* LSGetUserInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B1A51FA97E620092EA2F /* LSGetUserInfoRequest.m */; };
+		FA57B1A71FA97E730092EA2F /* LSGetUserInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B1A51FA97E620092EA2F /* LSGetUserInfoRequest.m */; };
+		FA57B1A81FA97E7F0092EA2F /* LSUserInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B1A11FA976D50092EA2F /* LSUserInfoItemObject.m */; };
+		FA57B1A91FA97E850092EA2F /* LSAnchorInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA57B19F1FA976D50092EA2F /* LSAnchorInfoItemObject.m */; };
 		FA5D06B31F6BC9570035B530 /* GetAdAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06B21F6BC9560035B530 /* GetAdAnchorListRequest.m */; };
 		FA5D06BC1F6BCDDC0035B530 /* CloseAdAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06BB1F6BCDDC0035B530 /* CloseAdAnchorListRequest.m */; };
 		FA5F7B1A1F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B171F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m */; };
 		FA5F7B1B1F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B191F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m */; };
 		FA5F7B211F78B1970031CCE9 /* BookPhoneItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B201F78B1970031CCE9 /* BookPhoneItemObject.m */; };
 		FA8A86051F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A86041F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m */; };
+		FAAB702D1FB54FDE00E442A8 /* LiveApp.js in Resources */ = {isa = PBXBuildFile; fileRef = FAAB702C1FB54FDD00E442A8 /* LiveApp.js */; };
 		FAB694121F5E9748008A64B6 /* GetPromoAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */; };
 		FAEB02B31F9D808B00C724AC /* LSSvrItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEB02B21F9D808B00C724AC /* LSSvrItemObject.m */; };
 		FAEB02B81F9D852400C724AC /* LSBannerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEB02B51F9D852400C724AC /* LSBannerRequest.m */; };
@@ -764,6 +776,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		502283101FDF5E470007752F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50BF28EB1E98976E00B8ED5D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 506140CC1F8E061B00825358;
+			remoteInfo = livestream_sdk;
+		};
 		505D6DD11EC979B9007FF4C6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 505D6DCD1EC979B9007FF4C6 /* CommonWidget.xcodeproj */;
@@ -893,14 +912,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		5061423D1F8E09B100825358 /* CopyFiles */ = {
+		5061423D1F8E09B100825358 /* Copy Files */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				5061423E1F8E09B600825358 /* LSUIWidgetBundle.bundle in CopyFiles */,
+				5061423E1F8E09B600825358 /* LSUIWidgetBundle.bundle in Copy Files */,
 			);
+			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		5063A4041ECECA2B00361942 /* CopyFiles */ = {
@@ -930,6 +950,7 @@
 		15ADCCF2A5B6C1A9F67FD35A /* Pods-livestream.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-livestream.debug.xcconfig"; path = "Pods/Target Support Files/Pods-livestream/Pods-livestream.debug.xcconfig"; sourceTree = "<group>"; };
 		16F3A11DB57A4E45F0657C0A /* Pods-livestream.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-livestream.release.xcconfig"; path = "Pods/Target Support Files/Pods-livestream/Pods-livestream.release.xcconfig"; sourceTree = "<group>"; };
 		1B89AE7C48B52819C1DDF301 /* libPods-livestream.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-livestream.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		25046DBA1FB18FB7001221AE /* AnchorPersonalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AnchorPersonalViewController.xib; sourceTree = "<group>"; };
 		2508F16B1F5E7A7800CA2143 /* DriveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DriveView.h; sourceTree = "<group>"; };
 		2508F16C1F5E7A7800CA2143 /* DriveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DriveView.m; sourceTree = "<group>"; };
 		2508F16E1F5E7A8000CA2143 /* DriveView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DriveView.xib; sourceTree = "<group>"; };
@@ -965,13 +986,10 @@
 		2536DA931F7DF05C004FD7C3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PublicVipViewController.strings; sourceTree = "<group>"; };
 		2536DA9F1F7E3D1E004FD7C3 /* RewardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RewardView.h; sourceTree = "<group>"; };
 		2536DAA01F7E3D1E004FD7C3 /* RewardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RewardView.m; sourceTree = "<group>"; };
-		2536DAA21F7E3D2B004FD7C3 /* RewardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RewardView.xib; sourceTree = "<group>"; };
 		2546A6751F90BA79004E6D61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AddMobileNumberViewController.xib; sourceTree = "<group>"; };
 		2546A6781F90BA7B004E6D61 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AddMobileNumberViewController.strings; sourceTree = "<group>"; };
 		2546A67B1F90BC67004E6D61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AddVirtualGiftsCell.xib; sourceTree = "<group>"; };
 		2546A67E1F90BC69004E6D61 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AddVirtualGiftsCell.strings; sourceTree = "<group>"; };
-		2546A6811F90BF17004E6D61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/AnchorPersonalViewController.xib; sourceTree = "<group>"; };
-		2546A6841F90BF1A004E6D61 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/AnchorPersonalViewController.strings; sourceTree = "<group>"; };
 		2547C0F11F6FB11D00CF220A /* AudienModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudienModel.h; sourceTree = "<group>"; };
 		2547C0F21F6FB11D00CF220A /* AudienModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudienModel.m; sourceTree = "<group>"; };
 		2550AEA71F96291B007B5731 /* LSYYAnimatedImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSYYAnimatedImageView.h; sourceTree = "<group>"; };
@@ -994,11 +1012,21 @@
 		255D9DA61F43E52600B954DD /* ChatEmotionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatEmotionItem.m; sourceTree = "<group>"; };
 		255D9DA81F43E5C300B954DD /* ChatEmotionListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatEmotionListItem.h; sourceTree = "<group>"; };
 		255D9DA91F43E5C300B954DD /* ChatEmotionListItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatEmotionListItem.m; sourceTree = "<group>"; };
+		2562449A1FCFFD470062B857 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PushInviteViewController.xib; sourceTree = "<group>"; };
+		2562449D1FCFFD490062B857 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PushInviteViewController.strings; sourceTree = "<group>"; };
+		256244A01FD002A40062B857 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PushBookingViewController.xib; sourceTree = "<group>"; };
+		256244A31FD002A70062B857 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PushBookingViewController.strings; sourceTree = "<group>"; };
 		256939D91F56414F000CCE9E /* AudienceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudienceCell.h; sourceTree = "<group>"; };
 		256939DA1F56414F000CCE9E /* AudienceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudienceCell.m; sourceTree = "<group>"; };
 		256939DB1F56414F000CCE9E /* AudienceCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AudienceCell.xib; sourceTree = "<group>"; };
 		256CE1E21F5E2E920008D390 /* ChardTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChardTipView.h; sourceTree = "<group>"; };
 		256CE1E31F5E2E920008D390 /* ChardTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChardTipView.m; sourceTree = "<group>"; };
+		25700B7D1FB4719F0065CFF0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/RewardView.xib; sourceTree = "<group>"; };
+		25700B801FB471A20065CFF0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/RewardView.strings; sourceTree = "<group>"; };
+		25721DB61FB146D9007E77F6 /* LSUrlParmItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUrlParmItem.h; sourceTree = "<group>"; };
+		25721DB71FB146D9007E77F6 /* LSUrlParmItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUrlParmItem.m; sourceTree = "<group>"; };
+		2573A3EE1FA96AB900501D98 /* LSStreamSpeedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSStreamSpeedManager.h; sourceTree = "<group>"; };
+		2573A3EF1FA96AB900501D98 /* LSStreamSpeedManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSStreamSpeedManager.m; sourceTree = "<group>"; };
 		2574A43D1FA02015006C2BF0 /* LSInvitedToViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSInvitedToViewController.h; sourceTree = "<group>"; };
 		2574A43E1FA02015006C2BF0 /* LSInvitedToViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSInvitedToViewController.m; sourceTree = "<group>"; };
 		2576CF911F959C4000065908 /* LSLiveAdvancedEmotionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLiveAdvancedEmotionView.h; sourceTree = "<group>"; };
@@ -1013,6 +1041,10 @@
 		257934EF1F67C8A500D785F8 /* CreditView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreditView.h; sourceTree = "<group>"; };
 		257934F01F67C8A500D785F8 /* CreditView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreditView.m; sourceTree = "<group>"; };
 		257934F21F67C8B600D785F8 /* CreditView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CreditView.xib; sourceTree = "<group>"; };
+		257D78911FBE753D00262E80 /* LSUserInfoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUserInfoModel.h; sourceTree = "<group>"; };
+		257D78921FBE753D00262E80 /* LSUserInfoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUserInfoModel.m; sourceTree = "<group>"; };
+		258076331FB03E0500D7B156 /* LSLiveWKWebViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSLiveWKWebViewController.h; sourceTree = "<group>"; };
+		258076341FB03E0500D7B156 /* LSLiveWKWebViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSLiveWKWebViewController.m; sourceTree = "<group>"; };
 		2580D23D1F943B5F00171722 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/FollowingViewController.xib; sourceTree = "<group>"; };
 		2580D2401F943B6100171722 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/FollowingViewController.strings; sourceTree = "<group>"; };
 		2580D2431F94422200171722 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/BookPrivateBroadcastSucceedViewController.xib; sourceTree = "<group>"; };
@@ -1080,7 +1112,6 @@
 		3E62CC2B1F7CF41E0097F4FC /* AddMobileNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddMobileNumberViewController.m; sourceTree = "<group>"; };
 		3E62CC2F1F7CF8910097F4FC /* CountryCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CountryCodeViewController.h; sourceTree = "<group>"; };
 		3E62CC301F7CF8910097F4FC /* CountryCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CountryCodeViewController.m; sourceTree = "<group>"; };
-		3E62CC311F7CF8910097F4FC /* CountryCodeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CountryCodeViewController.xib; sourceTree = "<group>"; };
 		3E631EFE1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookPrivateBroadcastSucceedViewController.h; sourceTree = "<group>"; };
 		3E631EFF1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookPrivateBroadcastSucceedViewController.m; sourceTree = "<group>"; };
 		3E645E5C1F8C764900D06467 /* LSUserUnreadCountManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserUnreadCountManager.h; sourceTree = "<group>"; };
@@ -1100,17 +1131,14 @@
 		3E65CA2C1F946974005963C9 /* VouchersCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VouchersCell.xib; sourceTree = "<group>"; };
 		3E65CA321F94697E005963C9 /* GiftListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftListViewController.h; sourceTree = "<group>"; };
 		3E65CA331F94697E005963C9 /* GiftListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftListViewController.m; sourceTree = "<group>"; };
-		3E65CA341F94697E005963C9 /* GiftListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GiftListViewController.xib; sourceTree = "<group>"; };
 		3E65CA3C1F9498D2005963C9 /* VouchersListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VouchersListViewController.h; sourceTree = "<group>"; };
 		3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VouchersListViewController.m; sourceTree = "<group>"; };
-		3E65CA3E1F9498D2005963C9 /* VouchersListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VouchersListViewController.xib; sourceTree = "<group>"; };
 		3E65CA481F949AE3005963C9 /* MyRidesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyRidesViewController.h; sourceTree = "<group>"; };
 		3E65CA491F949AE3005963C9 /* MyRidesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyRidesViewController.m; sourceTree = "<group>"; };
 		3E65CA4D1F949B49005963C9 /* MyRidesWaterfallView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyRidesWaterfallView.h; sourceTree = "<group>"; };
 		3E65CA4E1F949B49005963C9 /* MyRidesWaterfallView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyRidesWaterfallView.m; sourceTree = "<group>"; };
 		3E65CA501F949B95005963C9 /* MyRidesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyRidesCell.h; sourceTree = "<group>"; };
 		3E65CA511F949B95005963C9 /* MyRidesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyRidesCell.m; sourceTree = "<group>"; };
-		3E65CA521F949B95005963C9 /* MyRidesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyRidesCell.xib; sourceTree = "<group>"; };
 		3E65CA561F94ABC8005963C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyRidesViewController.xib; sourceTree = "<group>"; };
 		3E65CA591F94ABCB005963C9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyRidesViewController.strings; sourceTree = "<group>"; };
 		3E74C6F91F95E18E0099C1EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyBackpackViewController.xib; sourceTree = "<group>"; };
@@ -1123,9 +1151,10 @@
 		3E7AA9DE1F70E7F6007C958F /* TalentOnDemandCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalentOnDemandCell.h; sourceTree = "<group>"; };
 		3E7AA9DF1F70E7F6007C958F /* TalentOnDemandCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalentOnDemandCell.m; sourceTree = "<group>"; };
 		3E7AA9E01F70E7F6007C958F /* TalentOnDemandCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TalentOnDemandCell.xib; sourceTree = "<group>"; };
+		3E7AC9701FA8279E00979A5B /* LiveADView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveADView.h; sourceTree = "<group>"; };
+		3E7AC9711FA8279E00979A5B /* LiveADView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveADView.m; sourceTree = "<group>"; };
 		3E7F6D801F8B14070003BC69 /* LSUserInfoListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserInfoListViewController.h; sourceTree = "<group>"; };
 		3E7F6D811F8B14070003BC69 /* LSUserInfoListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserInfoListViewController.m; sourceTree = "<group>"; };
-		3E7F6D821F8B14070003BC69 /* LSUserInfoListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LSUserInfoListViewController.xib; sourceTree = "<group>"; };
 		3E7F6D8D1F8B17120003BC69 /* UserInfoListCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoListCell.h; sourceTree = "<group>"; };
 		3E7F6D8E1F8B17120003BC69 /* UserInfoListCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoListCell.m; sourceTree = "<group>"; };
 		3E7F6D8F1F8B17120003BC69 /* UserInfoListCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UserInfoListCell.xib; sourceTree = "<group>"; };
@@ -1140,11 +1169,20 @@
 		3E8076131F90B91F00315CF5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSMyReservationsPageViewController.strings; sourceTree = "<group>"; };
 		3E8688221F7DDACD00E17CDA /* VerifyMobileNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VerifyMobileNumberViewController.h; sourceTree = "<group>"; };
 		3E8688231F7DDACD00E17CDA /* VerifyMobileNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VerifyMobileNumberViewController.m; sourceTree = "<group>"; };
+		3E8FF0701FB530F30012A212 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSUserInfoListViewController.xib; sourceTree = "<group>"; };
+		3E8FF0731FB530F60012A212 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LSUserInfoListViewController.strings; sourceTree = "<group>"; };
+		3E8FF0761FB531F60012A212 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/GiftListViewController.xib; sourceTree = "<group>"; };
+		3E8FF0791FB531F80012A212 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/GiftListViewController.strings; sourceTree = "<group>"; };
+		3E8FF07C1FB532450012A212 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/VouchersListViewController.xib; sourceTree = "<group>"; };
+		3E8FF07F1FB532470012A212 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VouchersListViewController.strings; sourceTree = "<group>"; };
+		3E8FF0821FB532DC0012A212 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyRidesCell.xib; sourceTree = "<group>"; };
+		3E8FF0851FB532DE0012A212 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyRidesCell.strings; sourceTree = "<group>"; };
+		3E9221061FC2BDD9006AE088 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/CountryCodeViewController.xib; sourceTree = "<group>"; };
+		3E9221091FC2BDDC006AE088 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CountryCodeViewController.strings; sourceTree = "<group>"; };
 		5007B1D01ECAA72E00C2C17F /* LSRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRequestManager.h; sourceTree = "<group>"; };
 		5007B1D11ECAA72E00C2C17F /* LSRequestManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LSRequestManager.mm; sourceTree = "<group>"; };
 		500CBB611F8CEBDA00A32F1F /* PushBookingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushBookingViewController.h; sourceTree = "<group>"; };
 		500CBB621F8CEBDA00A32F1F /* PushBookingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushBookingViewController.m; sourceTree = "<group>"; };
-		500CBB631F8CEBDA00A32F1F /* PushBookingViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushBookingViewController.xib; sourceTree = "<group>"; };
 		50135B491F9D8E39003C6555 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
 		50135B4E1F9DBA52003C6555 /* LiveService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveService.h; sourceTree = "<group>"; };
 		50135B4F1F9DBA52003C6555 /* LiveService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveService.m; sourceTree = "<group>"; };
@@ -1186,12 +1224,9 @@
 		504D5FD41F8F556B00BBB037 /* livestream-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "livestream-PrefixHeader.pch"; path = "livestream/livestream-PrefixHeader.pch"; sourceTree = SOURCE_ROOT; };
 		5053078D1F7A689F00F2FECA /* UserInfoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoManager.h; sourceTree = "<group>"; };
 		5053078E1F7A689F00F2FECA /* UserInfoManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoManager.m; sourceTree = "<group>"; };
-		505307901F7A6A1400F2FECA /* UserInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfo.h; sourceTree = "<group>"; };
-		505307911F7A6A1400F2FECA /* UserInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfo.m; sourceTree = "<group>"; };
 		505591941EF3F12E000AF03A /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebP.framework; path = ../../Modules/UIWidget/Extern/WebP.framework; sourceTree = "<group>"; };
 		505591971EF3FD9E000AF03A /* BigGiftAnimationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigGiftAnimationView.h; sourceTree = "<group>"; };
 		505591981EF3FD9E000AF03A /* BigGiftAnimationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigGiftAnimationView.m; sourceTree = "<group>"; };
-		505591991EF3FD9E000AF03A /* gift.webp */ = {isa = PBXFileReference; lastKnownFileType = file; path = gift.webp; sourceTree = "<group>"; };
 		5055919B1EF3FD9E000AF03A /* GiftItemCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GiftItemCollectionViewCell.h; sourceTree = "<group>"; };
 		5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GiftItemCollectionViewCell.m; sourceTree = "<group>"; };
 		5055919D1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GiftItemCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -1441,7 +1476,6 @@
 		509A8DDE1ECC350C004720CF /* JTSegmentPattern.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JTSegmentPattern.swift; sourceTree = "<group>"; };
 		50A810A51F8CE44A00C7288A /* PushInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushInviteViewController.h; sourceTree = "<group>"; };
 		50A810A61F8CE44A00C7288A /* PushInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PushInviteViewController.m; sourceTree = "<group>"; };
-		50A810A71F8CE44A00C7288A /* PushInviteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PushInviteViewController.xib; sourceTree = "<group>"; };
 		50A810AC1F8CE50100C7288A /* CommonDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonDefine.h; sourceTree = "<group>"; };
 		50A810AE1F8CE50100C7288A /* LocalErrorCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalErrorCode.h; sourceTree = "<group>"; };
 		50A8338C1E9DFCD6000CB3AC /* LFGPUImageBeautyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGPUImageBeautyFilter.h; sourceTree = "<group>"; };
@@ -1557,6 +1591,7 @@
 		52C917DD1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelBottomCollectionReusableView.h; sourceTree = "<group>"; };
 		52C917DE1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelBottomCollectionReusableView.m; sourceTree = "<group>"; };
 		52C917DF1F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LiveChannelBottomCollectionReusableView.xib; sourceTree = "<group>"; };
+		52D1E3F91FB2E508007598D8 /* LSGoogleAnalyticsAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSGoogleAnalyticsAction.h; sourceTree = "<group>"; };
 		52D253241F67D2CA00C0C476 /* LiveChannelContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelContentView.h; sourceTree = "<group>"; };
 		52D253251F67D2CA00C0C476 /* LiveChannelContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChannelContentView.m; sourceTree = "<group>"; };
 		52D253281F67D49200C0C476 /* LiveChannelCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveChannelCollectionViewCell.h; sourceTree = "<group>"; };
@@ -1575,10 +1610,6 @@
 		FA4C8F781F7B2EEE001E9CBF /* MeLevelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeLevelViewController.h; sourceTree = "<group>"; };
 		FA4C8F791F7B2EEE001E9CBF /* MeLevelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeLevelViewController.m; sourceTree = "<group>"; };
 		FA4C8F7A1F7B2EEE001E9CBF /* MeLevelViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MeLevelViewController.xib; sourceTree = "<group>"; };
-		FA4C8F7C1F7B2EEE001E9CBF /* AnchorPersonalView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnchorPersonalView.h; sourceTree = "<group>"; };
-		FA4C8F7D1F7B2EEE001E9CBF /* AnchorPersonalView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnchorPersonalView.m; sourceTree = "<group>"; };
-		FA4C8F7E1F7B2EEE001E9CBF /* MeLevelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeLevelView.h; sourceTree = "<group>"; };
-		FA4C8F7F1F7B2EEE001E9CBF /* MeLevelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MeLevelView.m; sourceTree = "<group>"; };
 		FA4C8F881F7B340C001E9CBF /* LiveRoomCreditRebateManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomCreditRebateManager.h; sourceTree = "<group>"; };
 		FA4C8F891F7B340C001E9CBF /* LiveRoomCreditRebateManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomCreditRebateManager.m; sourceTree = "<group>"; };
 		FA4C8F8B1F7B3BD7001E9CBF /* IMRebateItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMRebateItem.h; sourceTree = "<group>"; };
@@ -1588,6 +1619,12 @@
 		FA4C8FA01F7B8BD1001E9CBF /* AnchorPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AnchorPhotoViewController.xib; sourceTree = "<group>"; };
 		FA53183C1F8DC43900110B6A /* AcceptInstanceInviteRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AcceptInstanceInviteRequest.h; sourceTree = "<group>"; };
 		FA53183D1F8DC43900110B6A /* AcceptInstanceInviteRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AcceptInstanceInviteRequest.m; sourceTree = "<group>"; };
+		FA57B19E1FA976D50092EA2F /* LSAnchorInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSAnchorInfoItemObject.h; sourceTree = "<group>"; };
+		FA57B19F1FA976D50092EA2F /* LSAnchorInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSAnchorInfoItemObject.m; sourceTree = "<group>"; };
+		FA57B1A01FA976D50092EA2F /* LSUserInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUserInfoItemObject.h; sourceTree = "<group>"; };
+		FA57B1A11FA976D50092EA2F /* LSUserInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUserInfoItemObject.m; sourceTree = "<group>"; };
+		FA57B1A41FA97E620092EA2F /* LSGetUserInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetUserInfoRequest.h; sourceTree = "<group>"; };
+		FA57B1A51FA97E620092EA2F /* LSGetUserInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetUserInfoRequest.m; sourceTree = "<group>"; };
 		FA5D06B11F6BC9560035B530 /* GetAdAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetAdAnchorListRequest.h; sourceTree = "<group>"; };
 		FA5D06B21F6BC9560035B530 /* GetAdAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetAdAnchorListRequest.m; sourceTree = "<group>"; };
 		FA5D06BA1F6BCDDC0035B530 /* CloseAdAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CloseAdAnchorListRequest.h; sourceTree = "<group>"; };
@@ -1600,6 +1637,7 @@
 		FA5F7B201F78B1970031CCE9 /* BookPhoneItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookPhoneItemObject.m; sourceTree = "<group>"; };
 		FA8A86031F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AcceptInstanceInviteItemObject.h; sourceTree = "<group>"; };
 		FA8A86041F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AcceptInstanceInviteItemObject.m; sourceTree = "<group>"; };
+		FAAB702C1FB54FDD00E442A8 /* LiveApp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = LiveApp.js; sourceTree = "<group>"; };
 		FAB694101F5E9748008A64B6 /* GetPromoAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPromoAnchorListRequest.h; sourceTree = "<group>"; };
 		FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPromoAnchorListRequest.m; sourceTree = "<group>"; };
 		FAEB02B11F9D808B00C724AC /* LSSvrItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSvrItemObject.h; sourceTree = "<group>"; };
@@ -1666,7 +1704,7 @@
 			children = (
 				2536DA9F1F7E3D1E004FD7C3 /* RewardView.h */,
 				2536DAA01F7E3D1E004FD7C3 /* RewardView.m */,
-				2536DAA21F7E3D2B004FD7C3 /* RewardView.xib */,
+				25700B7E1FB4719F0065CFF0 /* RewardView.xib */,
 			);
 			path = RewardView;
 			sourceTree = "<group>";
@@ -1711,6 +1749,39 @@
 				251A5A041F7D1B330065D46E /* VIPAudienceView.m */,
 			);
 			path = AudienceView;
+			sourceTree = "<group>";
+		};
+		256C3E681FDE114F0069A0DD /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				505591A01EF3FD9E000AF03A /* PresentSendView.h */,
+				505591A11EF3FD9E000AF03A /* PresentSendView.m */,
+				505591A21EF3FD9E000AF03A /* PresentSendView.xib */,
+				50FCE0EC1F0E2588002CEF6A /* SelectNumButton.h */,
+				50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */,
+				502E073F1F0A3EA600A4CFCD /* CountTimeButton.h */,
+				502E07401F0A3EA600A4CFCD /* CountTimeButton.m */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
+		256C3E691FDE11500069A0DD /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				5055919B1EF3FD9E000AF03A /* GiftItemCollectionViewCell.h */,
+				5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */,
+				5055919D1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		256C3E6A1FDE11510069A0DD /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				5055919E1EF3FD9E000AF03A /* GiftItemLayout.h */,
+				5055919F1EF3FD9E000AF03A /* GiftItemLayout.m */,
+			);
+			path = Layout;
 			sourceTree = "<group>";
 		};
 		256CE1E11F5E2E7C0008D390 /* ChardTipView */ = {
@@ -1822,7 +1893,7 @@
 				3E65CA4E1F949B49005963C9 /* MyRidesWaterfallView.m */,
 				3E65CA501F949B95005963C9 /* MyRidesCell.h */,
 				3E65CA511F949B95005963C9 /* MyRidesCell.m */,
-				3E65CA521F949B95005963C9 /* MyRidesCell.xib */,
+				3E8FF0831FB532DC0012A212 /* MyRidesCell.xib */,
 			);
 			path = MyBackpack;
 			sourceTree = "<group>";
@@ -1858,7 +1929,7 @@
 				3E7F6DA01F8B56C50003BC69 /* MyReservations */,
 				3E7F6D801F8B14070003BC69 /* LSUserInfoListViewController.h */,
 				3E7F6D811F8B14070003BC69 /* LSUserInfoListViewController.m */,
-				3E7F6D821F8B14070003BC69 /* LSUserInfoListViewController.xib */,
+				3E8FF0711FB530F30012A212 /* LSUserInfoListViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -1903,10 +1974,10 @@
 				3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */,
 				3E65CA3C1F9498D2005963C9 /* VouchersListViewController.h */,
 				3E65CA3D1F9498D2005963C9 /* VouchersListViewController.m */,
-				3E65CA3E1F9498D2005963C9 /* VouchersListViewController.xib */,
+				3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */,
 				3E65CA321F94697E005963C9 /* GiftListViewController.h */,
 				3E65CA331F94697E005963C9 /* GiftListViewController.m */,
-				3E65CA341F94697E005963C9 /* GiftListViewController.xib */,
+				3E8FF0771FB531F60012A212 /* GiftListViewController.xib */,
 				3E7F6D9D1F8B56C50003BC69 /* MyBackpackViewController.h */,
 				3E7F6D9E1F8B56C50003BC69 /* MyBackpackViewController.m */,
 				3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */,
@@ -1952,7 +2023,6 @@
 			children = (
 				505591971EF3FD9E000AF03A /* BigGiftAnimationView.h */,
 				505591981EF3FD9E000AF03A /* BigGiftAnimationView.m */,
-				505591991EF3FD9E000AF03A /* gift.webp */,
 			);
 			path = BigGiftAnimationView;
 			sourceTree = "<group>";
@@ -1960,18 +2030,9 @@
 		5055919A1EF3FD9E000AF03A /* PresentView */ = {
 			isa = PBXGroup;
 			children = (
-				50FCE0EC1F0E2588002CEF6A /* SelectNumButton.h */,
-				50FCE0ED1F0E2588002CEF6A /* SelectNumButton.m */,
-				502E073F1F0A3EA600A4CFCD /* CountTimeButton.h */,
-				502E07401F0A3EA600A4CFCD /* CountTimeButton.m */,
-				5055919B1EF3FD9E000AF03A /* GiftItemCollectionViewCell.h */,
-				5055919C1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m */,
-				5055919D1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib */,
-				5055919E1EF3FD9E000AF03A /* GiftItemLayout.h */,
-				5055919F1EF3FD9E000AF03A /* GiftItemLayout.m */,
-				505591A01EF3FD9E000AF03A /* PresentSendView.h */,
-				505591A11EF3FD9E000AF03A /* PresentSendView.m */,
-				505591A21EF3FD9E000AF03A /* PresentSendView.xib */,
+				256C3E681FDE114F0069A0DD /* Button */,
+				256C3E691FDE11500069A0DD /* Cell */,
+				256C3E6A1FDE11510069A0DD /* Layout */,
 				505591A31EF3FD9E000AF03A /* PresentView.h */,
 				505591A41EF3FD9E000AF03A /* PresentView.m */,
 				251DB28B1F8A1576001000C8 /* PresentView.xib */,
@@ -2041,6 +2102,8 @@
 				5007B1D11ECAA72E00C2C17F /* LSRequestManager.mm */,
 				5270F9E41F72115300097D3E /* LiveUrlHandler.h */,
 				5270F9E51F72115300097D3E /* LiveUrlHandler.m */,
+				25721DB61FB146D9007E77F6 /* LSUrlParmItem.h */,
+				25721DB71FB146D9007E77F6 /* LSUrlParmItem.m */,
 				252E9CC71F72062E00D32DFF /* LiveWebViewController.h */,
 				252E9CC81F72062E00D32DFF /* LiveWebViewController.m */,
 				252E9CC91F72062E00D32DFF /* LiveWebViewController.xib */,
@@ -2050,6 +2113,8 @@
 				5069967E1F904D0400535931 /* LiveBundle.m */,
 				50135B4E1F9DBA52003C6555 /* LiveService.h */,
 				50135B4F1F9DBA52003C6555 /* LiveService.m */,
+				258076331FB03E0500D7B156 /* LSLiveWKWebViewController.h */,
+				258076341FB03E0500D7B156 /* LSLiveWKWebViewController.m */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -2076,6 +2141,7 @@
 		5063A3EF1ECE99F100361942 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				FAAB702C1FB54FDD00E442A8 /* LiveApp.js */,
 				5063A3F01ECE99F100361942 /* Cell */,
 				509911451EDFF6F1003B6813 /* DiscoverCollectionView.h */,
 				509911461EDFF6F1003B6813 /* DiscoverCollectionView.m */,
@@ -2092,6 +2158,8 @@
 				52F028D61F5E9499002F7FDC /* IntroduceView.m */,
 				52C2ECB31F623FEC006779A1 /* FollowTableView.h */,
 				52C2ECB41F623FED006779A1 /* FollowTableView.m */,
+				3E7AC9701FA8279E00979A5B /* LiveADView.h */,
+				3E7AC9711FA8279E00979A5B /* LiveADView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2141,6 +2209,10 @@
 		506BC38C1F590AC5001C2962 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FA57B19E1FA976D50092EA2F /* LSAnchorInfoItemObject.h */,
+				FA57B19F1FA976D50092EA2F /* LSAnchorInfoItemObject.m */,
+				FA57B1A01FA976D50092EA2F /* LSUserInfoItemObject.h */,
+				FA57B1A11FA976D50092EA2F /* LSUserInfoItemObject.m */,
 				FAEB02B11F9D808B00C724AC /* LSSvrItemObject.h */,
 				FAEB02B21F9D808B00C724AC /* LSSvrItemObject.m */,
 				FA5F7B1F1F78B1970031CCE9 /* BookPhoneItemObject.h */,
@@ -2247,8 +2319,17 @@
 				502E07431F0A3EC000A4CFCD /* UserHeadUrlManager.m */,
 				5053078D1F7A689F00F2FECA /* UserInfoManager.h */,
 				5053078E1F7A689F00F2FECA /* UserInfoManager.m */,
+				2573A3EE1FA96AB900501D98 /* LSStreamSpeedManager.h */,
+				2573A3EF1FA96AB900501D98 /* LSStreamSpeedManager.m */,
 			);
 			path = Manager;
+			sourceTree = "<group>";
+		};
+		508C87251FB3E06A00A078C3 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Test;
 			sourceTree = "<group>";
 		};
 		509198321EDEA32C00D26A7B /* Barrage */ = {
@@ -2357,8 +2438,8 @@
 				2547C0F21F6FB11D00CF220A /* AudienModel.m */,
 				2595164D1F7902B8004A873B /* RandomGiftModel.h */,
 				2595164E1F7902B8004A873B /* RandomGiftModel.m */,
-				505307901F7A6A1400F2FECA /* UserInfo.h */,
-				505307911F7A6A1400F2FECA /* UserInfo.m */,
+				257D78911FBE753D00262E80 /* LSUserInfoModel.h */,
+				257D78921FBE753D00262E80 /* LSUserInfoModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -2398,6 +2479,8 @@
 		5095E4191ED6DE9B004FFA3B /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				FA57B1A41FA97E620092EA2F /* LSGetUserInfoRequest.h */,
+				FA57B1A51FA97E620092EA2F /* LSGetUserInfoRequest.m */,
 				FAEB02B41F9D852400C724AC /* LSBannerRequest.h */,
 				FAEB02B51F9D852400C724AC /* LSBannerRequest.m */,
 				FAEB02B61F9D852400C724AC /* LSServerSpeedRequest.h */,
@@ -2483,12 +2566,12 @@
 		509910C91EDF9F09003B6813 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				509910CA1EDF9F09003B6813 /* LSHomePageViewController.h */,
-				509910CB1EDF9F09003B6813 /* LSHomePageViewController.m */,
-				509910CC1EDF9F09003B6813 /* LSHomePageViewController.xib */,
 				5270F9DF1F7202A600097D3E /* LiveChannelAdViewController.h */,
 				5270F9E01F7202A600097D3E /* LiveChannelAdViewController.m */,
 				5270F9E11F7202A600097D3E /* LiveChannelAdViewController.xib */,
+				509910CA1EDF9F09003B6813 /* LSHomePageViewController.h */,
+				509910CB1EDF9F09003B6813 /* LSHomePageViewController.m */,
+				509910CC1EDF9F09003B6813 /* LSHomePageViewController.xib */,
 				509910CD1EDF9F09003B6813 /* LSMainViewController.h */,
 				509910CE1EDF9F09003B6813 /* LSMainViewController.m */,
 				509910CF1EDF9F09003B6813 /* LSMainViewController.xib */,
@@ -2574,7 +2657,7 @@
 				5099110C1EDFA107003B6813 /* LSLoginManager.m */,
 				3E62CC2F1F7CF8910097F4FC /* CountryCodeViewController.h */,
 				3E62CC301F7CF8910097F4FC /* CountryCodeViewController.m */,
-				3E62CC311F7CF8910097F4FC /* CountryCodeViewController.xib */,
+				3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */,
 				3E62CC2A1F7CF41E0097F4FC /* AddMobileNumberViewController.h */,
 				3E62CC2B1F7CF41E0097F4FC /* AddMobileNumberViewController.m */,
 				2546A6761F90BA79004E6D61 /* AddMobileNumberViewController.xib */,
@@ -2698,10 +2781,10 @@
 			children = (
 				500CBB611F8CEBDA00A32F1F /* PushBookingViewController.h */,
 				500CBB621F8CEBDA00A32F1F /* PushBookingViewController.m */,
-				500CBB631F8CEBDA00A32F1F /* PushBookingViewController.xib */,
+				256244A11FD002A40062B857 /* PushBookingViewController.xib */,
 				50A810A51F8CE44A00C7288A /* PushInviteViewController.h */,
 				50A810A61F8CE44A00C7288A /* PushInviteViewController.m */,
-				50A810A71F8CE44A00C7288A /* PushInviteViewController.xib */,
+				2562449B1FCFFD470062B857 /* PushInviteViewController.xib */,
 			);
 			path = Push;
 			sourceTree = "<group>";
@@ -2712,6 +2795,7 @@
 				50A810AC1F8CE50100C7288A /* CommonDefine.h */,
 				50A810AE1F8CE50100C7288A /* LocalErrorCode.h */,
 				507E85571F9F149200525BB9 /* Config.h */,
+				52D1E3F91FB2E508007598D8 /* LSGoogleAnalyticsAction.h */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -2806,6 +2890,7 @@
 				509A8DB21ECBFC4C004720CF /* Main */,
 				509A8DC61ECC2158004720CF /* Modules */,
 				5095E4191ED6DE9B004FFA3B /* Request */,
+				508C87251FB3E06A00A078C3 /* Test */,
 			);
 			name = Source;
 			path = ../../Source;
@@ -2998,15 +3083,15 @@
 			children = (
 				FA4C8F721F7B2EEE001E9CBF /* AnchorPersonalViewController.h */,
 				FA4C8F731F7B2EEE001E9CBF /* AnchorPersonalViewController.m */,
-				2546A6821F90BF17004E6D61 /* AnchorPersonalViewController.xib */,
+				25046DBA1FB18FB7001221AE /* AnchorPersonalViewController.xib */,
 				FA4C8F751F7B2EEE001E9CBF /* LiverPageControllerViewController.h */,
 				FA4C8F761F7B2EEE001E9CBF /* LiverPageControllerViewController.m */,
 				FA4C8F771F7B2EEE001E9CBF /* LiverPageControllerViewController.xib */,
 				FA4C8F781F7B2EEE001E9CBF /* MeLevelViewController.h */,
 				FA4C8F791F7B2EEE001E9CBF /* MeLevelViewController.m */,
-				FA4C8F7A1F7B2EEE001E9CBF /* MeLevelViewController.xib */,
 				FA4C8F9E1F7B8BD1001E9CBF /* AnchorPhotoViewController.h */,
 				FA4C8F9F1F7B8BD1001E9CBF /* AnchorPhotoViewController.m */,
+				FA4C8F7A1F7B2EEE001E9CBF /* MeLevelViewController.xib */,
 				FA4C8FA01F7B8BD1001E9CBF /* AnchorPhotoViewController.xib */,
 			);
 			path = Controller;
@@ -3015,10 +3100,6 @@
 		FA4C8F7B1F7B2EEE001E9CBF /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FA4C8F7C1F7B2EEE001E9CBF /* AnchorPersonalView.h */,
-				FA4C8F7D1F7B2EEE001E9CBF /* AnchorPersonalView.m */,
-				FA4C8F7E1F7B2EEE001E9CBF /* MeLevelView.h */,
-				FA4C8F7F1F7B2EEE001E9CBF /* MeLevelView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -3051,7 +3132,7 @@
 				506140C91F8E061B00825358 /* Frameworks */,
 				506140CA1F8E061B00825358 /* Headers */,
 				506140CB1F8E061B00825358 /* Resources */,
-				5061423D1F8E09B100825358 /* CopyFiles */,
+				5061423D1F8E09B100825358 /* Copy Files */,
 				2C294DA1987959B03BEB40E2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
@@ -3221,6 +3302,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				508C87321FB3F86800A078C3 /* AnchorPersonalViewController.xib in Resources */,
 				2537ECF41FA2B8BD002D8065 /* LSInvitedToViewController.xib in Resources */,
 				506453AF1FA1E8A400409229 /* Country.plist in Resources */,
 				25F14B231F95B2FC009453D9 /* LSEmotionCollectionViewCell.xib in Resources */,
@@ -3228,9 +3310,9 @@
 				5079F3BD1F95B0580016C065 /* LSLiveStandardEmotionView.xib in Resources */,
 				5079F3BC1F95B0440016C065 /* LSLiveAdvancedEmotionView.xib in Resources */,
 				505BBB6D1F9594D900D90843 /* GiftListCell.xib in Resources */,
-				505BBB6E1F9594D900D90843 /* MyRidesCell.xib in Resources */,
-				50B0944E1F94BA44007F2817 /* VouchersListViewController.xib in Resources */,
-				50B0944B1F94BA28007F2817 /* GiftListViewController.xib in Resources */,
+				3E8FF0811FB532DC0012A212 /* MyRidesCell.xib in Resources */,
+				3E8FF07B1FB532450012A212 /* VouchersListViewController.xib in Resources */,
+				3E8FF0751FB531F60012A212 /* GiftListViewController.xib in Resources */,
 				50B0944A1F94BA15007F2817 /* MyRidesViewController.xib in Resources */,
 				50A98C571F949C0D00043448 /* VouchersCell.xib in Resources */,
 				3E8076081F90995600315CF5 /* JDAlertView.xib in Resources */,
@@ -3238,8 +3320,8 @@
 				504D60CA1F8F8F9B00BBB037 /* InfoPlist.strings in Resources */,
 				504D60CB1F8F8F9B00BBB037 /* Localizable.strings in Resources */,
 				504D60C81F8F8F9400BBB037 /* Live.xcassets in Resources */,
-				504D60711F8F8F8C00BBB037 /* PushBookingViewController.xib in Resources */,
-				504D60721F8F8F8C00BBB037 /* PushInviteViewController.xib in Resources */,
+				2562449F1FD002A40062B857 /* PushBookingViewController.xib in Resources */,
+				256244991FCFFD470062B857 /* PushInviteViewController.xib in Resources */,
 				504D60731F8F8F8C00BBB037 /* LiveWebViewController.xib in Resources */,
 				504D60741F8F8F8C00BBB037 /* LSHomePageViewController.xib in Resources */,
 				504D60751F8F8F8C00BBB037 /* LiveChannelAdViewController.xib in Resources */,
@@ -3253,7 +3335,7 @@
 				3E74C6F81F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */,
 				2580D24E1F944BEA00171722 /* LSMyReservationsViewController.xib in Resources */,
 				3E80760F1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */,
-				504D60801F8F8F8C00BBB037 /* LSUserInfoListViewController.xib in Resources */,
+				3E8FF06F1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */,
 				2580D2541F944D1400171722 /* NewInvitesCell.xib in Resources */,
 				504D60821F8F8F8C00BBB037 /* UserInfoListCell.xib in Resources */,
 				504D60911F8F8F8C00BBB037 /* DiscoverViewController.xib in Resources */,
@@ -3278,7 +3360,7 @@
 				504D60A41F8F8F8D00BBB037 /* TalentOnDemandViewController.xib in Resources */,
 				504D60A51F8F8F8D00BBB037 /* BookPrivateBroadcastViewController.xib in Resources */,
 				2580D2421F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib in Resources */,
-				504D60A71F8F8F8D00BBB037 /* RewardView.xib in Resources */,
+				25700B7C1FB4719F0065CFF0 /* RewardView.xib in Resources */,
 				504D60A81F8F8F8D00BBB037 /* AddPhoneNumCell.xib in Resources */,
 				5271ACBC1F95D75600E65C99 /* LSLiveGuideViewController.xib in Resources */,
 				2546A67A1F90BC67004E6D61 /* AddVirtualGiftsCell.xib in Resources */,
@@ -3299,13 +3381,13 @@
 				504D60BB1F8F8F8D00BBB037 /* GiftItemCollectionViewCell.xib in Resources */,
 				504D60BC1F8F8F8D00BBB037 /* PresentSendView.xib in Resources */,
 				504D60BD1F8F8F8D00BBB037 /* PresentView.xib in Resources */,
+				52E45E1B1FB578A000846ADE /* LiveApp.js in Resources */,
 				504D60BE1F8F8F8D00BBB037 /* CreditView.xib in Resources */,
 				504D60BF1F8F8F8D00BBB037 /* SelectCoverView.xib in Resources */,
-				504D60C01F8F8F8D00BBB037 /* CountryCodeViewController.xib in Resources */,
+				3E9221051FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */,
 				2546A6741F90BA79004E6D61 /* AddMobileNumberViewController.xib in Resources */,
 				2580D2601F9457BE00171722 /* VerifyMobileNumberViewController.xib in Resources */,
 				504D60C31F8F8F8D00BBB037 /* CountryTableViewCell.xib in Resources */,
-				2546A6801F90BF17004E6D61 /* AnchorPersonalViewController.xib in Resources */,
 				504D60C51F8F8F8D00BBB037 /* LiverPageControllerViewController.xib in Resources */,
 				504D60C61F8F8F8D00BBB037 /* MeLevelViewController.xib in Resources */,
 				504D60C71F8F8F8D00BBB037 /* AnchorPhotoViewController.xib in Resources */,
@@ -3335,7 +3417,7 @@
 				50BF29031E98976E00B8ED5D /* Live.xcassets in Resources */,
 				3E656EF81F736B25007AD95D /* TalentTipView.xib in Resources */,
 				25E9B1B41FA07601008C3180 /* LSInvitedToViewController.xib in Resources */,
-				3E65CA401F9498D2005963C9 /* VouchersListViewController.xib in Resources */,
+				3E8FF07A1FB532450012A212 /* VouchersListViewController.xib in Resources */,
 				50F2A9E51ED9811400F7EA6D /* Localizable.strings in Resources */,
 				509910D41EDF9F09003B6813 /* LSHomePageViewController.xib in Resources */,
 				50BF29011E98976E00B8ED5D /* Main.storyboard in Resources */,
@@ -3348,19 +3430,19 @@
 				3E62CC151F7CCCFF0097F4FC /* BookPrivateBroadcastSucceedHeadView.xib in Resources */,
 				504D5FC41F8F384D00BBB037 /* Pods-livestream_sdk.debug.xcconfig in Resources */,
 				3E74C6F71F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */,
-				2546A67F1F90BF17004E6D61 /* AnchorPersonalViewController.xib in Resources */,
 				257934F31F67C8B600D785F8 /* CreditView.xib in Resources */,
 				5061424A1F8E0DF400825358 /* common.xcconfig in Resources */,
 				504B57C31F67E1B2008101C0 /* PrivateViewController.xib in Resources */,
-				505591AB1EF3FD9E000AF03A /* gift.webp in Resources */,
 				5271ACBA1F95D73E00E65C99 /* LSLiveGuideViewController.xib in Resources */,
 				3E65CA551F94ABC8005963C9 /* MyRidesViewController.xib in Resources */,
+				FAAB702D1FB54FDE00E442A8 /* LiveApp.js in Resources */,
 				5095E4151ED6DD04004FFA3B /* Country.plist in Resources */,
 				50B2ED5D1F74B3A900E71479 /* PrivateVipViewController.xib in Resources */,
 				25F14B171F95B03A009453D9 /* LSEmotionCollectionViewCell.xib in Resources */,
-				3E65CA361F94697E005963C9 /* GiftListViewController.xib in Resources */,
+				3E8FF0741FB531F60012A212 /* GiftListViewController.xib in Resources */,
 				505591AD1EF3FD9E000AF03A /* GiftItemCollectionViewCell.xib in Resources */,
-				3E62CC331F7CF8910097F4FC /* CountryCodeViewController.xib in Resources */,
+				3E9221041FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */,
+				25046DBB1FB18FB7001221AE /* AnchorPersonalViewController.xib in Resources */,
 				FA4C8F831F7B2EEE001E9CBF /* LiverPageControllerViewController.xib in Resources */,
 				509910E61EDF9F25003B6813 /* DiscoverViewController.xib in Resources */,
 				509910D61EDF9F09003B6813 /* LSMainViewController.xib in Resources */,
@@ -3381,9 +3463,9 @@
 				509910E81EDF9F25003B6813 /* HotViewController.xib in Resources */,
 				50F978DF1F61332D009B22D1 /* RecommandCollectionViewCell.xib in Resources */,
 				52C917CF1F6B7A8900C96398 /* LiveChannelAdView.xib in Resources */,
-				3E65CA541F949B95005963C9 /* MyRidesCell.xib in Resources */,
-				3E7F6D861F8B14070003BC69 /* LSUserInfoListViewController.xib in Resources */,
-				50A810A91F8CE44A00C7288A /* PushInviteViewController.xib in Resources */,
+				3E8FF0801FB532DC0012A212 /* MyRidesCell.xib in Resources */,
+				3E8FF06E1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */,
+				256244981FCFFD470062B857 /* PushInviteViewController.xib in Resources */,
 				251DB2891F8A1576001000C8 /* PresentView.xib in Resources */,
 				5063A3F71ECE99F200361942 /* HotTableViewCell.xib in Resources */,
 				2580D2411F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib in Resources */,
@@ -3398,7 +3480,7 @@
 				50E44F991F7F8BF900DEDD9C /* LocalizableErrorCode.strings in Resources */,
 				509911391EDFB8FA003B6813 /* GiftComboView.xib in Resources */,
 				2580D2591F94511A00171722 /* SearchViewController.xib in Resources */,
-				500CBB651F8CEBDA00A32F1F /* PushBookingViewController.xib in Resources */,
+				2562449E1FD002A40062B857 /* PushBookingViewController.xib in Resources */,
 				251DB28E1F8A1757001000C8 /* BackpackPresentView.xib in Resources */,
 				2576CF9F1F959C4000065908 /* LSPageChooseKeyboardView.xib in Resources */,
 				50135B4A1F9D8E39003C6555 /* AppIcon.xcassets in Resources */,
@@ -3410,7 +3492,7 @@
 				2580D23B1F943B5F00171722 /* FollowingViewController.xib in Resources */,
 				3E80760E1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */,
 				5069F09F1F667650003C8AFE /* DialogOK.xib in Resources */,
-				2536DAA31F7E3D2B004FD7C3 /* RewardView.xib in Resources */,
+				25700B7B1FB4719F0065CFF0 /* RewardView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3488,7 +3570,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}_sdk\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/../Products/${FMK_NAME}.framework\n# Working dir will be deleted after the framework creation.\nDEVICE_DIR=${BUILD_ROOT}/${CONFIGURATION}-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#open \"${INSTALL_DIR}\"";
+			shellScript = "# Sets the target folders and the final framework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}_sdk\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/../Products/${CONFIGURATION}/${FMK_NAME}.framework\n# Working dir will be deleted after the framework creation.\nDEVICE_DIR=${BUILD_ROOT}/${CONFIGURATION}-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\n#lipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#open \"${INSTALL_DIR}\"\n";
 		};
 		8D2F1FC70F0F577C4167E28C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3512,6 +3594,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				259DD54C1FBE7A6D00DEB6D7 /* LSUserInfoModel.m in Sources */,
+				2574DFFF1FB2F01800EEDDE9 /* LSUrlParmItem.m in Sources */,
+				2580763E1FB043DF00D7B156 /* LSLiveWKWebViewController.m in Sources */,
+				50866E1C1FAAADE100150673 /* LSStreamSpeedManager.m in Sources */,
+				3E7AC9751FA8297900979A5B /* LiveADView.m in Sources */,
 				50D27BA41FA17ABE00E60C1E /* LSInvitedToViewController.m in Sources */,
 				50135B511F9DBEF7003C6555 /* LiveService.m in Sources */,
 				50AE07321F973C06005CF8D2 /* LSYYAnimatedImageView.m in Sources */,
@@ -3576,6 +3663,7 @@
 				506141171F8E066C00825358 /* HotViewController.m in Sources */,
 				506141181F8E066C00825358 /* SearchViewController.m in Sources */,
 				506141191F8E066C00825358 /* IntroduceViewController.m in Sources */,
+				FA57B1A81FA97E7F0092EA2F /* LSUserInfoItemObject.m in Sources */,
 				5061411A1F8E066C00825358 /* DiscoverListItemObject.m in Sources */,
 				5061411B1F8E066C00825358 /* FollowListItemObject.m in Sources */,
 				5061411C1F8E066C00825358 /* SearchListObject.m in Sources */,
@@ -3621,6 +3709,7 @@
 				506141431F8E066C00825358 /* BackpackGiftItem.m in Sources */,
 				506141441F8E066C00825358 /* RoomBackGiftItem.m in Sources */,
 				506141451F8E066C00825358 /* ChatEmotionItem.m in Sources */,
+				FA57B1A71FA97E730092EA2F /* LSGetUserInfoRequest.m in Sources */,
 				506141461F8E066C00825358 /* ChatEmotionListItem.m in Sources */,
 				FAEB02BC1F9D863D00C724AC /* LSSvrItemObject.m in Sources */,
 				506141471F8E066C00825358 /* GiftItem.m in Sources */,
@@ -3632,7 +3721,6 @@
 				5061414D1F8E066C00825358 /* SendGiftItem.m in Sources */,
 				5061414E1F8E066C00825358 /* AudienModel.m in Sources */,
 				5061414F1F8E066C00825358 /* RandomGiftModel.m in Sources */,
-				506141501F8E066C00825358 /* UserInfo.m in Sources */,
 				506141511F8E066C00825358 /* RewardView.m in Sources */,
 				506141521F8E066C00825358 /* AddPhoneNumCell.m in Sources */,
 				506141531F8E066C00825358 /* AddVirtualGiftsCell.m in Sources */,
@@ -3695,8 +3783,6 @@
 				5061418E1F8E066C00825358 /* LiverPageControllerViewController.m in Sources */,
 				5061418F1F8E066C00825358 /* MeLevelViewController.m in Sources */,
 				506141901F8E066C00825358 /* AnchorPhotoViewController.m in Sources */,
-				506141911F8E066C00825358 /* AnchorPersonalView.m in Sources */,
-				506141921F8E066C00825358 /* MeLevelView.m in Sources */,
 				506141931F8E066C00825358 /* AcceptInstanceInviteRequest.m in Sources */,
 				506141941F8E066C00825358 /* GetPhoneVerifyCodeRequest.m in Sources */,
 				506141951F8E066C00825358 /* SubmitPhoneVerifyCodeRequest.m in Sources */,
@@ -3743,6 +3829,7 @@
 				506141BE1F8E066C00825358 /* GetTalentItemObject.m in Sources */,
 				506141BF1F8E066C00825358 /* GetTalentStatusItemObject.m in Sources */,
 				506141C01F8E066C00825358 /* GiftInfoItemObject.m in Sources */,
+				FA57B1A91FA97E850092EA2F /* LSAnchorInfoItemObject.m in Sources */,
 				506141C11F8E066C00825358 /* LSGiftItemObject.m in Sources */,
 				506141C21F8E066C00825358 /* GiftNumItemObject.m in Sources */,
 				506141C31F8E066C00825358 /* GiftWithIdItemObject.m in Sources */,
@@ -3779,6 +3866,7 @@
 				50F383A61EE68B96003D2765 /* LSImManager.mm in Sources */,
 				2550AEB11F96291B007B5731 /* LSYYAnimatedImageView.m in Sources */,
 				50F978DE1F61332D009B22D1 /* RecommandCollectionViewCell.m in Sources */,
+				3E7AC9731FA8279E00979A5B /* LiveADView.m in Sources */,
 				5099114D1EDFF6F1003B6813 /* DiscoverHeaderView.m in Sources */,
 				505591B11EF3FD9E000AF03A /* PresentView.m in Sources */,
 				509910D31EDF9F09003B6813 /* LSHomePageViewController.m in Sources */,
@@ -3805,6 +3893,7 @@
 				5063A3F61ECE99F200361942 /* HotTableViewCell.m in Sources */,
 				FA4C8F8D1F7B3BD7001E9CBF /* IMRebateItem.m in Sources */,
 				252E9CCA1F72062E00D32DFF /* LiveWebViewController.m in Sources */,
+				258076361FB03E0500D7B156 /* LSLiveWKWebViewController.m in Sources */,
 				506BC3E41F590AC6001C2962 /* RoomItemObject.m in Sources */,
 				252BD7C11F74B09000AAF24F /* RoomTypeIsFirstManager.m in Sources */,
 				52C917E01F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m in Sources */,
@@ -3830,6 +3919,7 @@
 				509910E51EDF9F25003B6813 /* DiscoverViewController.m in Sources */,
 				505591B31EF3FD9E000AF03A /* SelectCoverView.m in Sources */,
 				509198471EDEA59300D26A7B /* BarrageModel.m in Sources */,
+				257D78931FBE753D00262E80 /* LSUserInfoModel.m in Sources */,
 				5069967F1F904D0400535931 /* LiveBundle.m in Sources */,
 				50D649961EE4F04C00D71AAF /* SearchTableViewCell.m in Sources */,
 				50CD622D1F17282F0083E0FF /* TableSuperView.m in Sources */,
@@ -3867,7 +3957,6 @@
 				5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */,
 				506BC3E51F590AC6001C2962 /* ViewerFansItemObject.m in Sources */,
 				25A5AF191F668C1100F06F18 /* LiveRoomGiftModel.m in Sources */,
-				FA4C8F861F7B2EEE001E9CBF /* AnchorPersonalView.m in Sources */,
 				3E7AA9E11F70E7F6007C958F /* TalentOnDemandCell.m in Sources */,
 				2550AEB31F96291B007B5731 /* LSYYImage.m in Sources */,
 				506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */,
@@ -3890,6 +3979,7 @@
 				50A810A81F8CE44A00C7288A /* PushInviteViewController.m in Sources */,
 				25890A591F429A600067CC29 /* LSChatEmotionManager.m in Sources */,
 				506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */,
+				FA57B1A61FA97E620092EA2F /* LSGetUserInfoRequest.m in Sources */,
 				506BC3CA1F590AC5001C2962 /* BookingPrivateInviteItemObject.m in Sources */,
 				506BC3CE1F590AC6001C2962 /* ConfigItemObject.m in Sources */,
 				3E65CA4B1F949AE3005963C9 /* MyRidesViewController.m in Sources */,
@@ -3910,8 +4000,8 @@
 				505591AC1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m in Sources */,
 				52F028D11F5E937F002F7FDC /* IntroduceViewController.m in Sources */,
 				3E62CA441F79FAA2009F79AA /* AddPhoneNumCell.m in Sources */,
-				505307921F7A6A1400F2FECA /* UserInfo.m in Sources */,
 				25F14B181F95B03A009453D9 /* LSEmotionCollectionViewLayout.m in Sources */,
+				2573A3F01FA96AB900501D98 /* LSStreamSpeedManager.m in Sources */,
 				FAEB02B31F9D808B00C724AC /* LSSvrItemObject.m in Sources */,
 				506BC3D21F590AC6001C2962 /* FollowItemObject.m in Sources */,
 				52C2ECBC1F62476F006779A1 /* FollowTableViewCell.m in Sources */,
@@ -3984,6 +4074,7 @@
 				506BC3CD1F590AC6001C2962 /* BookTimeItemObject.m in Sources */,
 				506BC32E1F59027F001C2962 /* GetAnchorListRequest.m in Sources */,
 				509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */,
+				FA57B1A31FA976D50092EA2F /* LSUserInfoItemObject.m in Sources */,
 				3E65CA3F1F9498D2005963C9 /* VouchersListViewController.m in Sources */,
 				502E07441F0A3EC000A4CFCD /* UserHeadUrlManager.m in Sources */,
 				252AD3C91F6BBD1900FD9565 /* DialogTip.m in Sources */,
@@ -3994,7 +4085,6 @@
 				506BC3DC1F590AC6001C2962 /* InviteIdItemObject.m in Sources */,
 				255D9DA71F43E52600B954DD /* ChatEmotionItem.m in Sources */,
 				2595164F1F7902B8004A873B /* RandomGiftModel.m in Sources */,
-				FA4C8F871F7B2EEE001E9CBF /* MeLevelView.m in Sources */,
 				509295AF1ECD992200111128 /* MsgItem.m in Sources */,
 				3E5E5E641F72102400A8163A /* TalentOnDemandViewController.m in Sources */,
 				505591AA1EF3FD9E000AF03A /* BigGiftAnimationView.m in Sources */,
@@ -4002,6 +4092,7 @@
 				5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */,
 				509911561EDFF724003B6813 /* FollowListItemObject.m in Sources */,
 				52C917CD1F6B7A7E00C96398 /* LiveChannelAdView.m in Sources */,
+				25721DB81FB146D9007E77F6 /* LSUrlParmItem.m in Sources */,
 				50D6498F1EE4F03E00D71AAF /* SearchListObject.m in Sources */,
 				FA5D06B31F6BC9570035B530 /* GetAdAnchorListRequest.m in Sources */,
 				256939DC1F56414F000CCE9E /* AudienceCell.m in Sources */,
@@ -4009,6 +4100,7 @@
 				52D253261F67D2CA00C0C476 /* LiveChannelContentView.m in Sources */,
 				255974BD1F55910000B9D667 /* LiveRoomMsgManager.m in Sources */,
 				506BC3301F59027F001C2962 /* GetConfigRequest.m in Sources */,
+				FA57B1A21FA976D50092EA2F /* LSAnchorInfoItemObject.m in Sources */,
 				25890A551F4299D60067CC29 /* BackpackPresentView.m in Sources */,
 				2574A4401FA02015006C2BF0 /* LSInvitedToViewController.m in Sources */,
 				3E62CA461F79FAA2009F79AA /* AddVirtualGiftsCell.m in Sources */,
@@ -4041,6 +4133,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		502283111FDF5E470007752F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 506140CC1F8E061B00825358 /* livestream_sdk */;
+			targetProxy = 502283101FDF5E470007752F /* PBXContainerItemProxy */;
+		};
 		505D6DDD1EC979D6007FF4C6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = CommonWidget;
@@ -4158,15 +4255,6 @@
 			name = AddVirtualGiftsCell.xib;
 			sourceTree = "<group>";
 		};
-		2546A6821F90BF17004E6D61 /* AnchorPersonalViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2546A6811F90BF17004E6D61 /* Base */,
-				2546A6841F90BF1A004E6D61 /* en */,
-			);
-			name = AnchorPersonalViewController.xib;
-			sourceTree = "<group>";
-		};
 		255974A41F55475100B9D667 /* LiveSendBarView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4174,6 +4262,33 @@
 				255974A71F55477200B9D667 /* en */,
 			);
 			name = LiveSendBarView.xib;
+			sourceTree = "<group>";
+		};
+		2562449B1FCFFD470062B857 /* PushInviteViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2562449A1FCFFD470062B857 /* Base */,
+				2562449D1FCFFD490062B857 /* en */,
+			);
+			name = PushInviteViewController.xib;
+			sourceTree = "<group>";
+		};
+		256244A11FD002A40062B857 /* PushBookingViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				256244A01FD002A40062B857 /* Base */,
+				256244A31FD002A70062B857 /* en */,
+			);
+			name = PushBookingViewController.xib;
+			sourceTree = "<group>";
+		};
+		25700B7E1FB4719F0065CFF0 /* RewardView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				25700B7D1FB4719F0065CFF0 /* Base */,
+				25700B801FB471A20065CFF0 /* en */,
+			);
+			name = RewardView.xib;
 			sourceTree = "<group>";
 		};
 		2580D23E1F943B5F00171722 /* FollowingViewController.xib */ = {
@@ -4302,6 +4417,51 @@
 			name = LSMyReservationsPageViewController.xib;
 			sourceTree = "<group>";
 		};
+		3E8FF0711FB530F30012A212 /* LSUserInfoListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E8FF0701FB530F30012A212 /* Base */,
+				3E8FF0731FB530F60012A212 /* en */,
+			);
+			name = LSUserInfoListViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E8FF0771FB531F60012A212 /* GiftListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E8FF0761FB531F60012A212 /* Base */,
+				3E8FF0791FB531F80012A212 /* en */,
+			);
+			name = GiftListViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E8FF07D1FB532450012A212 /* VouchersListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E8FF07C1FB532450012A212 /* Base */,
+				3E8FF07F1FB532470012A212 /* en */,
+			);
+			name = VouchersListViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E8FF0831FB532DC0012A212 /* MyRidesCell.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E8FF0821FB532DC0012A212 /* Base */,
+				3E8FF0851FB532DE0012A212 /* en */,
+			);
+			name = MyRidesCell.xib;
+			sourceTree = "<group>";
+		};
+		3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E9221061FC2BDD9006AE088 /* Base */,
+				3E9221091FC2BDDC006AE088 /* en */,
+			);
+			name = CountryCodeViewController.xib;
+			sourceTree = "<group>";
+		};
 		504B57C11F67E1B2008101C0 /* PrivateViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4412,6 +4572,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = (
 					"$(inherited)",
 					"-isystem",
@@ -4436,6 +4597,7 @@
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SYSTEM_HEADER_SEARCH_PATHS = "";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -4486,6 +4648,7 @@
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SYSTEM_HEADER_SEARCH_PATHS = "";
 				USER_HEADER_SEARCH_PATHS = "$(inherited)";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -4512,6 +4675,7 @@
 			baseConfigurationReference = 506142471F8E0DF400825358 /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4561,6 +4725,7 @@
 			baseConfigurationReference = 506142471F8E0DF400825358 /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -4606,9 +4771,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				COMMON_C_LBRARY_CURL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/curl/${PLATFORM_NAME}/";
 				COMMON_C_LBRARY_ROOT = "${MODULES_ROOT}/Common-C-Library/Common-C-Library";
-				COMMON_C_LIBRARY_OPENSSL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/openssl/${PLATFORM_NAME}/";
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
@@ -4645,7 +4808,6 @@
 					"${COMMON_C_LBRARY_CURL_ROOT}/lib",
 					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/lib",
 					"${THIRD_PARTY_FFMPEG_ROOT}/lib",
-					"${EXTERN_ROOT}/voicelib",
 				);
 				MODULES_ROOT = "${SRCROOT}/../../Modules";
 				OTHER_LDFLAGS = (
@@ -4722,6 +4884,7 @@
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
 				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "";
 			};
 			name = Debug;
@@ -4732,9 +4895,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				COMMON_C_LBRARY_CURL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/curl/${PLATFORM_NAME}/";
 				COMMON_C_LBRARY_ROOT = "${MODULES_ROOT}/Common-C-Library/Common-C-Library";
-				COMMON_C_LIBRARY_OPENSSL_ROOT = "${COMMON_C_LBRARY_ROOT}/third-party/openssl/${PLATFORM_NAME}/";
 				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
 				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
 				COMMON_WIDGET_ROOT = "${MODULES_ROOT}/CommonWidget/CommonWidget";
@@ -4771,7 +4932,6 @@
 					"${COMMON_C_LBRARY_CURL_ROOT}/lib",
 					"${COMMON_C_LIBRARY_OPENSSL_ROOT}/lib",
 					"${THIRD_PARTY_FFMPEG_ROOT}/lib",
-					"${EXTERN_ROOT}/voicelib",
 				);
 				MODULES_ROOT = "${SRCROOT}/../../Modules";
 				OTHER_LDFLAGS = (
@@ -4848,6 +5008,7 @@
 				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
 				UI_WIDGET_ROOT = "${MODULES_ROOT}/UIWidget/UIWidget";
 				USER_HEADER_SEARCH_PATHS = "$(inherited) \"$(SRCROOT)/../Source/Header\" ${UI_WIDGET_ROOT}/** ${COMMON_WIDGET_ROOT}/** \"${UI_WIDGET_ROOT)/Extern\"/**";
+				VALID_ARCHS = "arm64 armv7 armv7s";
 				WARNING_CFLAGS = "";
 			};
 			name = Release;

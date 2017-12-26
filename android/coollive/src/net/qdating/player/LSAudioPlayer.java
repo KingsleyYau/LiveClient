@@ -3,7 +3,7 @@ package net.qdating.player;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
-import android.util.Log;
+import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
 /***

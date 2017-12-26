@@ -49,7 +49,7 @@ void HttpLiveFansListTask::SetParam(
     mStep = step;
 
 
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpLiveFansListTask::SetParam( "
             "task : %p, "
             "liveRoomId : %s, "
@@ -77,7 +77,7 @@ int HttpLiveFansListTask::GetStep() {
 }
 
 bool HttpLiveFansListTask::ParseData(const string& url, bool bFlag, const char* buf, int size) {
-    FileLog("httpcontroller",
+    FileLog(LIVESHOW_HTTP_LOG,
             "HttpLiveFansListTask::ParseData( "
             "task : %p, "
             "url : %s, "
@@ -89,7 +89,7 @@ bool HttpLiveFansListTask::ParseData(const string& url, bool bFlag, const char* 
             );
     
     if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog("httpcontroller", "HttpLiveFansListTask::ParseData( buf : %s )", buf);
+        FileLog(LIVESHOW_HTTP_LOG, "HttpLiveFansListTask::ParseData( buf : %s )", buf);
     }
     
 

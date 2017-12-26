@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/feedback_edit_area"
+        android:orientation="vertical"
+        android:paddingTop="66dp"
+        android:paddingBottom="18dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/about_us_version_code"
+            android:textColor="@color/about_us_version"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_termsOfUse"
+        android:layout_width="match_parent"
+        android:text="@string/live_webview_user_terms_title"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="13dp"
+        android:drawableRight="@drawable/ic_right_arrow"
+        android:paddingRight="13dp"
+        android:layout_height="49dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+
+    <TextView
+        android:id="@+id/tv_privacyPolicy"
+        android:layout_width="match_parent"
+        android:text="@string/about_us_privacy_policy"
+        android:gravity="center_vertical|left"
+        android:paddingLeft="13dp"
+        android:drawableRight="@drawable/ic_right_arrow"
+        android:paddingRight="13dp"
+        android:layout_height="49dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:background="@color/personal_item_devide"/>
+</LinearLayout>

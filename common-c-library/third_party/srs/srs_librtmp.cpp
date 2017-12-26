@@ -6903,6 +6903,12 @@ public:
      *       connect-app => FMLE publish
      */
     virtual int fmle_publish(std::string stream, int& stream_id);
+    /**
+     * add by Samson 2017-11-07
+     * start publish stream. send @setDataFrame and onMetaData: 
+     *       publish-stream => send @setDataFrame and onMetaData
+     */
+    virtual int set_data_frame(std::string stream, int stream_id, int width, int height);
 public:
     /**
      * expect a specified message, drop others util got specified one.
@@ -12646,8 +12652,9 @@ bool SrsStream::empty()
 bool SrsStream::require(int required_size)
 {
     srs_assert(required_size >= 0);
-    
-    return required_size <= nb_bytes - (p - bytes);
+    int offset = pos();
+    return required_size <= nb_bytes - offset;
+//    return required_size <= nb_bytes - (p - bytes);
 }
 
 void SrsStream::skip(int size)
@@ -24292,6 +24299,27 @@ int SrsRtmpClient::fmle_publish(string stream, int& stream_id)
     return ret;
 }
 
+// add by Samson 2017-11-07
+int SrsRtmpClient::set_data_frame(string stream, int stream_id, int width, int height)
+{
+    int ret = ERROR_SUCCESS;
+    
+    // send @setDataFrame and onMetaData
+    if (true) {
+        SrsOnMetaDataPacket* pkt = new SrsOnMetaDataPacket();
+        pkt->metadata->set("width", SrsAmf0Any::number(width));
+        pkt->metadata->set("height", SrsAmf0Any::number(height));
+        
+        if ((ret = protocol->send_and_free_packet(pkt, stream_id)) != ERROR_SUCCESS) {
+            srs_error("send meta data failed. "
+                "stream=%s, stream_id=%d, ret=%d", stream.c_str(), stream_id, ret);
+            return ret;
+        }
+    }
+    
+    return ret;
+}
+
 SrsRtmpServer::SrsRtmpServer(ISrsProtocolReaderWriter* skt)
 {
     io = skt;
@@ -26892,7 +26920,7 @@ int SrsOnMetaDataPacket::get_message_type()
 
 int SrsOnMetaDataPacket::get_size()
 {
-    return SrsAmf0Size::str(name) + SrsAmf0Size::object(metadata);
+    return SrsAmf0Size::str(name) + SrsAmf0Size::str(SRS_CONSTS_RTMP_SET_DATAFRAME) + SrsAmf0Size::object(metadata);
 }
 
 int SrsOnMetaDataPacket::encode_packet(SrsStream* stream)
@@ -26904,6 +26932,16 @@ int SrsOnMetaDataPacket::encode_packet(SrsStream* stream)
         return ret;
     }
     srs_verbose("encode name success.");
+    
+    // add by Samson 2017-11-07
+    // ----------------------------------
+    // add @setDataFrame to stream
+    if ((ret = srs_amf0_write_string(stream, SRS_CONSTS_RTMP_SET_DATAFRAME)) != ERROR_SUCCESS) {
+        srs_error("encode SRS_CONSTS_RTMP_SET_DATAFRAME failed. ret=%d", ret);
+        return ret;
+    }
+    srs_verbose("encode SRS_CONSTS_RTMP_SET_DATAFRAME success.");
+    // ----------------------------------
     
     if ((ret = metadata->write(stream)) != ERROR_SUCCESS) {
         srs_error("encode metadata failed. ret=%d", ret);
@@ -33797,6 +33835,21 @@ int srs_rtmp_publish_stream(srs_rtmp_t rtmp)
     Context* context = (Context*)rtmp;
     
     if ((ret = context->rtmp->fmle_publish(context->stream, context->stream_id)) != ERROR_SUCCESS) {
+        return ret;
+    }
+    
+    return ret;
+}
+
+// add by Samson 2017-11-07 for send @setDataFrame() and onMetaData
+int srs_rtmp_set_data_frame(srs_rtmp_t rtmp, int width, int height)
+{
+    int ret = ERROR_SUCCESS;
+    
+    srs_assert(rtmp != NULL);
+    Context* context = (Context*)rtmp;
+    
+    if ((ret = context->rtmp->set_data_frame(context->stream, context->stream_id, width, height)) != ERROR_SUCCESS) {
         return ret;
     }
     

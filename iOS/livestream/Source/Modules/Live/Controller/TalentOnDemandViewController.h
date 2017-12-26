@@ -14,6 +14,7 @@
 - (void)talentOnDemandVCCancelButtonDid;
 
 - (void)onSendtalentOnDemandMessage:(NSAttributedString *)message;
+- (void)pushToRechargeCredit;
 
 @end
 

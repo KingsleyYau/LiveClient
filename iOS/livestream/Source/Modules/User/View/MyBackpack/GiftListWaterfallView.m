@@ -49,9 +49,16 @@
     if (self.items.count > 0) {
         BackGiftItemObject * obj = [self.items objectAtIndex:indexPath.row];
         cell.unreadView.hidden = obj.read;
-        cell.numLabel.text = [NSString stringWithFormat:@"%d",obj.num];
+        if (obj.num > 999) {
+            cell.numLabel.text = @"x999+";
+        }
+        else
+        {
+         cell.numLabel.text = [NSString stringWithFormat:@"x %d",obj.num];
+        }
         
-        cell.timeLabel.text = [NSString stringWithFormat:@"Use by:%@",[cell getTime:obj.expDate]];
+        
+        cell.timeLabel.text = [NSString stringWithFormat:@"%@:\n%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
         
        AllGiftItem *giftItem = [self.giftDownloadManager backGiftItemWithGiftID:obj.giftId];
         
@@ -61,7 +68,7 @@
         if (!cell.imageViewLoader) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-        [cell.imageViewLoader loadImageWithImageView:cell.giftImageView options:0 imageUrl:giftItem.infoItem.smallImgUrl placeholderImage:nil];
+        [cell.imageViewLoader loadImageWithImageView:cell.giftImageView options:0 imageUrl:giftItem.infoItem.bigImgUrl placeholderImage:nil];
         
     }
     
@@ -79,8 +86,8 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat w = (screenSize.width - 50)/3.0;
-    return CGSizeMake(w, w);
+    CGFloat w = (screenSize.width - 30)/2.0;
+    return CGSizeMake(w, w * 0.78);
 }
 
 @end

@@ -12,11 +12,16 @@
     <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
     <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
     <dimen name="coverphoto_corner_radiu">3dp</dimen>
+
+    <dimen name="liveroom_rebate_tips_margintop">7dip</dimen>
+
     <dimen name="liveroom_bullet_height">46dp</dimen>
 
     <!--消息列表礼物大小处理-->
     <dimen name="liveroom_messagelist_gift_width">16dp</dimen>
     <dimen name="liveroom_messagelist_gift_height">16dp</dimen>
+    <dimen name="liveroom_messagelist_medal_width">14dp</dimen>
+    <dimen name="liveroom_messagelist_medal_height">14dp</dimen>
     <dimen name="defaultVedioPlayerHeight">270dp</dimen>
     <dimen name="imButtomMargin">56dp</dimen>
     <dimen name="liveroom_mulitgift_width">142dp</dimen>
@@ -24,6 +29,8 @@
 
     <dimen name="liveroom_car_default_topmargin">8dp</dimen>
     <dimen name="liveroom_car_default_rightmargin">42dp</dimen>
+    <dimen name="liveroom_car_default_width">57dp</dimen>
+    <dimen name="liveroom_car_default_height">57dp</dimen>
 
     <!--actionBar 设置-->
     <dimen name="actionbar_height">56dp</dimen>
@@ -66,13 +73,20 @@
     <dimen name="live_buttomrecommgift_leftmargin_normalprv">15dp</dimen>
     <dimen name="live_buttomrecommgift_leftmargin_advanceprv">11dp</dimen>
 
+    <!--直播间表情-->
+    <dimen name="live_emoji_width">29dp</dimen>
+    <dimen name="live_emoji_height">29dp</dimen>
+
     <!-- swicht -->
     <dimen name="live_swicth_book_height">24dp</dimen>
     <dimen name="live_swicth_book_radius">20dp</dimen>
 
     <!-- 公用 -->
+    <dimen name="live_size_10sp">10sp</dimen>
+    <dimen name="live_size_12sp">12sp</dimen>
     <dimen name="live_size_14sp">14sp</dimen>
     <dimen name="live_size_16sp">16sp</dimen>
+    <dimen name="live_size_18sp">18sp</dimen>
 
     <dimen name="live_size_8dp">8dp</dimen>
     <dimen name="live_size_14dp">14dp</dimen>
@@ -86,6 +100,8 @@
     <dimen name="live_size_140dp">140dp</dimen>
     <dimen name="live_size_180dp">180dp</dimen>
     <dimen name="live_size_200dp">200dp</dimen>
+    <dimen name="live_size_210dp">210dp</dimen>
+    <dimen name="live_size_220dp">220dp</dimen>
 
     <!-- progressButton -->
     <dimen name="corner_radius">8dp</dimen>

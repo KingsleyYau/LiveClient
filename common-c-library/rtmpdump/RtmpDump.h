@@ -58,7 +58,20 @@ public:
     RtmpDump();
     ~RtmpDump();
 
+    /**
+     设置回调
+
+     @param callback 回调
+     */
     void SetCallback(RtmpDumpCallback* callback);
+    
+    /**
+     设置推流视频参数
+
+     @param width 视频宽
+     @param height 视频高
+     */
+    void SetVideoParam(int width, int height);
     
     /**
      播放流连接
@@ -67,23 +80,23 @@ public:
      @param recordFilePath flv录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordAACFilePath);
+    bool PlayUrl(const string& url, const string& recordFilePath);
     
     /**
      发布流连接
 
      @param url 连接
-     @param recordAACFilePath AAC录制路径
      @return 成功／失败
      */
-    bool PublishUrl(const string& url, const string& recordAACFilePath);
+    bool PublishUrl(const string& url);
     
     /**
      发送原始h264视频帧
 
-     @param frame <#frame description#>
-     @param frame_size <#frame_size description#>
-     @return <#return value description#>
+     @param frame 视频帧
+     @param frame_size 视频帧大小
+     @param timestamp 视频帧时间戳
+     @return 成功失败
      */
     bool SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp);
     void AddVideoTimestamp(u_int32_t timestamp);
@@ -91,13 +104,13 @@ public:
     /**
      发送原始音频帧
 
-     @param sound_format <#sound_format description#>
-     @param sound_rate <#sound_rate description#>
-     @param sound_size <#sound_size description#>
-     @param sound_type <#sound_type description#>
-     @param frame <#frame description#>
-     @param frame_size <#frame_size description#>
-     @return <#return value description#>
+     @param sound_format 音频帧格式
+     @param sound_rate 音频帧采样率
+     @param sound_size 音频帧精度
+     @param sound_type 音频帧声道数
+     @param frame 音频帧
+     @param frame_size 音频帧大小
+     @return 成功失败
      */
     bool SendAudioFrame(AudioFrameFormat sound_format,
                         AudioFrameSoundRate sound_rate,
@@ -172,6 +185,10 @@ private:
     // 是否已经连接
     KMutex mConnectedMutex;
     bool mIsConnected;
+    
+    // 推流视频参数
+    int mWidth;
+    int mHeight;
 };
 
 }

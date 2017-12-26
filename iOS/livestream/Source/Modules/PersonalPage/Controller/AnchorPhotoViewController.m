@@ -11,7 +11,7 @@
 #import <objc/runtime.h>
 #import "LSFileCacheManager.h"
 
-@interface AnchorPhotoViewController () <LSPZPagingScrollViewDelegate, ImageViewLoaderDelegate, LSPZPhotoViewDelegate>
+@interface AnchorPhotoViewController () <LSPZPagingScrollViewDelegate, LSPZPhotoViewDelegate>
 
 @end
 
@@ -20,6 +20,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    
+    self.pagingScrollView.pagingViewDelegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -30,8 +32,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.navigationController.navigationBarHidden = YES;
+    self.navigationController.navigationBar.hidden = YES;
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    
+    [self.pagingScrollView displayPagingViewAtIndex:self.photoIndex animated:YES];
     
 }
 
@@ -106,14 +110,19 @@
         imageViewLoader = [LSImageViewLoader loader];
         objc_setAssociatedObject(pageView, &imageViewLoaderKey, imageViewLoader, OBJC_ASSOCIATION_RETAIN);
         
-        // 加载图片
-        imageViewLoader.delegate = self;
-        imageViewLoader.view = photoView;
-        imageViewLoader.url = url;
-        imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:imageViewLoader.url];
-        
         [self showLoading];
-        [imageViewLoader loadImage];
+        
+        // 加载图片
+        [imageViewLoader sdWebImageLoadView:photoView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
+            [self hideAndResetLoading];
+        }];
+        
+//        imageViewLoader.delegate = self;
+//        imageViewLoader.view = photoView;
+//        imageViewLoader.url = url;
+//        imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:imageViewLoader.url];
+//        [imageViewLoader loadImage];
+
     }
 }
 
@@ -151,36 +160,6 @@
     
 }
 
-#pragma mark - 下载完成回调
-- (void)loadImageFinish:(LSImageViewLoader *)LSImageViewLoader success:(BOOL)success {
-    [self hideAndResetLoading];
-    if (success) {
-        
-    }else {
-        
-//        RetryLabel * label = [[RetryLabel alloc] init];
-//        label.imageUrl = LSImageViewLoader.url;
-//        label.numberOfLines = 0;
-//        label.font = [UIFont systemFontOfSize:14];
-//        label.textColor = [UIColor whiteColor];
-//        label.text = @"Photo load failed. Reload";
-//        [label sizeToFit];
-//        label.center = self.view.center;
-//        
-//        NSMutableAttributedString *richText = [[NSMutableAttributedString alloc] initWithString:label.text];
-//        [richText addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[label.text rangeOfString:@"Reload"]];//设置下划线
-//        [richText addAttribute:NSForegroundColorAttributeName value:[UIColor colorWithIntRGB:0 green:102 blue:255 alpha:255] range:[label.text rangeOfString:@"Reload"]];
-//        label.attributedText = richText;
-//        
-//        [LSImageViewLoader.view addSubview:label];
-//        label.userInteractionEnabled = YES;
-//        [label addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(retryLabelTap:)]];
-    }
-    
-}
-
-
-
 - (void)retryLabelTap:(UITapGestureRecognizer *)gesture {
 //    RetryLabel * label = (RetryLabel *)gesture.view;
 //    // 停止旧的
@@ -199,7 +178,6 @@
 //    [gesture.view removeFromSuperview];
 //    [LSImageViewLoader loadImage];
 }
-
 
 - (void)lockPhotoViewDidClick:(UITapGestureRecognizer *)gesture {
     [self dismissViewControllerAnimated:NO completion:nil];

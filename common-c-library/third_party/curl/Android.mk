@@ -25,9 +25,9 @@ LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)/openssl/include
 
 LOCAL_CFLAGS += $(common_CFLAGS)
 
-#LOCAL_LDFLAGS += -L$(LOCAL_PATH)/../openssl/lib/$(TARGET_ARCH)
+LOCAL_LDFLAGS += -L$(LOCAL_PATH)/../openssl/lib/$(TARGET_ARCH)
 
-#LOCAL_LDLIBS += -lz -lssl -lcrypto
+LOCAL_LDLIBS += -lz -lssl -lcrypto
 
 LOCAL_MODULE:= http
 LOCAL_MODULE_TAGS := optional

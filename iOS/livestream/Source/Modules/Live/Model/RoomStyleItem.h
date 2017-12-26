@@ -27,6 +27,10 @@
 @property (nonatomic, strong) UIColor *followStrColor;
 
 /**
+ 警告提示颜色
+ */
+@property (nonatomic, strong) UIColor *warningStrColor;
+/**
  公告提示颜色
  */
 @property (nonatomic, strong) UIColor *announceStrColor;

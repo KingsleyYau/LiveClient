@@ -43,6 +43,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self showLoading];
     [self getMyRidesData];
 }
 
@@ -62,25 +63,34 @@
 
 - (void)getMyRidesData
 {
-    [self showLoading];
+    self.infoView.hidden = YES;
+    //self.myRidesWaterfallView.hidden = NO;
     RideListRequest * request = [[RideListRequest alloc]init];
     request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *> * _Nullable array, int totalCount) {
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             [self.myRidesWaterfallView finishPullDown:YES];
+            [self.mainVC getunreadCount];
+            
+            self.myRidesWaterfallView.items = array;
             if (success) {
-                self.myRidesWaterfallView.items = array;
-                [self.myRidesWaterfallView reloadData];
-                
+
                 if (self.myRidesWaterfallView.items.count == 0) {
-                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Rides")];
+                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Rides") hiddenBtn:YES];
                 }
             }
             else
             {
-                [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed_Msg")];
+                if (array.count == 0) {
+                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
+                }
+                else
+                {
+                    [self.dialogTipView showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
+                }
             }
+            [self.myRidesWaterfallView reloadData];
         });
         
     };
@@ -88,11 +98,19 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)showInfoViewMsg:(NSString *)msg
+- (void)showInfoViewMsg:(NSString *)msg hiddenBtn:(BOOL)hidden
 {
     self.infoView.hidden = NO;
-    self.infoBtn.hidden = YES;
+    self.infoBtn.layer.cornerRadius = 5;
+    self.infoBtn.layer.masksToBounds = YES;
     self.infoLabel.text = msg;
+    self.infoBtn.hidden = hidden;
+    //self.myRidesWaterfallView.hidden = YES;
+}
+
+- (IBAction)reloadBtnDid:(UIButton *)sender {
+    [self showLoading];
+    [self getMyRidesData];
 }
 
 - (void)myRidesWaterfallViewDidRiesId:(NSString *)riesId

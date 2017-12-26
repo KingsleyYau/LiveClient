@@ -25,6 +25,8 @@ public:
     ~AudioRendererImp();
     
     void RenderAudioFrame(void* _Nullable audioFrame);
+    bool Start();
+    void Stop();
     void Reset();
     
 private:

@@ -11,6 +11,7 @@
 
 @interface DialogOK ()
 @property (weak) UIView* view;
+@property (weak) UIButton *backBtn;
 @property (strong) void(^actionBlock)();
 @end
 
@@ -21,25 +22,30 @@
     
     view.layer.cornerRadius = 10;
     view.layer.masksToBounds = YES;
-    
+    view.tag = DialogTag;
     view.okButton.layer.cornerRadius = 10;
-    
     return view;
 }
 
 - (void)showDialog:(UIView *)view actionBlock:(void(^)())actionBlock {
     self.actionBlock = actionBlock;
     
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-    [window addSubview:self];
-    [window bringSubviewToFront:self];
+//    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    UIButton *btn = [[UIButton alloc] init];
+    [btn setBackgroundColor:COLOR_WITH_16BAND_RGB_ALPHA(0x66000000)];
+    self.backBtn = btn;
+    [view addSubview:self.backBtn];
+    [view bringSubviewToFront:self.backBtn];
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
     
-    self.view = view;
-    self.view.userInteractionEnabled = NO;
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(window.mas_width).offset(-60);
-        make.centerY.equalTo(window.mas_centerY);
-        make.centerX.equalTo(window);
+        make.width.equalTo(view.mas_width).offset(-60);
+        make.centerY.equalTo(view.mas_centerY);
+        make.centerX.equalTo(view);
+    }];
+    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(view);
     }];
     
     [self sizeToFit];
@@ -49,11 +55,13 @@
     if( self.actionBlock ) {
         self.actionBlock();
     }
+    [self.backBtn removeFromSuperview];
+    [self removeFromSuperview];
 }
 
 - (IBAction)closeAction:(id)sender {
+    [self.backBtn removeFromSuperview];
     [self removeFromSuperview];
-    self.view.userInteractionEnabled = YES;
 }
 
 

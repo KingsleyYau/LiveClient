@@ -49,7 +49,7 @@
         [self.collectionView registerNib:nib forCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier]];
         self.collectionView.delegate = self;
 
-        self.canSendIndexArray = [[NSMutableArray alloc] init];
+        self.isPromoIndexArray = [[NSMutableArray alloc] init];
 
         self.requestFailView.hidden = YES;
 
@@ -103,6 +103,7 @@
 }
 
 - (IBAction)reloadGiftList:(id)sender {
+    self.isFirstCreate = YES;
     if (self.presentDelegate && [self.presentDelegate respondsToSelector:@selector(presentViewReloadList:)]) {
         [self.presentDelegate presentViewReloadList:self];
     }
@@ -150,26 +151,34 @@
 
 - (void)reloadData {
 
-    [self.canSendIndexArray removeAllObjects];
+    [self.isPromoIndexArray removeAllObjects];
     [self.collectionView reloadData];
 }
 
 - (void)setGiftIdArray:(NSArray *)giftIdArray {
 
-    [self.canSendIndexArray removeAllObjects];
+    [self.isPromoIndexArray removeAllObjects];
     _giftIdArray = giftIdArray;
 
     // 筛选可发送礼物 添加到随机礼物列表
+    RandomGiftModel *randomModel = [[RandomGiftModel alloc] init];
     for (LiveRoomGiftModel *item in giftIdArray) {
 
         if (!(self.loveLevel < item.allItem.infoItem.loveLevel || self.manLevel < item.allItem.infoItem.level)) {
             RandomGiftModel *model = [[RandomGiftModel alloc] init];
             model.randomInteger = [giftIdArray indexOfObject:item];
             model.giftModel = item;
-            [self.canSendIndexArray addObject:model];
+            randomModel = model;
+            if (item.isPromo == YES) {
+                [self.isPromoIndexArray addObject:model];
+            }
         }
     }
-
+    // 如果没有推荐礼物则随机显示可发送礼物
+    if (self.isPromoIndexArray.count < 1) {
+        [self.isPromoIndexArray addObject:randomModel];
+    }
+    
     [self.collectionView reloadData];
 
     // 防止cell有加载滑动动画
@@ -280,7 +289,11 @@
         // 用户等级或亲密度不够
         int loveLevel = model.allItem.infoItem.loveLevel;
         int manLevel = model.allItem.infoItem.level;
-        if (loveLevel > self.loveLevel || manLevel > self.manLevel) {
+        if (manLevel > self.manLevel) {
+            if ([self.presentDelegate respondsToSelector:@selector(presentViewdidSelectGiftLevel:loveLevel:)]) {
+                [self.presentDelegate presentViewdidSelectGiftLevel:manLevel loveLevel:loveLevel];
+            }
+        } else if (loveLevel > self.loveLevel) {
             if ([self.presentDelegate respondsToSelector:@selector(presentViewdidSelectGiftLevel:loveLevel:)]) {
                 [self.presentDelegate presentViewdidSelectGiftLevel:manLevel loveLevel:loveLevel];
             }
@@ -311,12 +324,11 @@
 - (void)randomSelect:(NSInteger)integer {
 
     // 滑动到指定页面
-    int num = (int)(integer /
-                    8);
-    self.collectionView.contentOffset = CGPointMake(num * self.collectionView.frame.size.width, 0);
+    int num = (int)(integer / 8);
+    self.collectionView.contentOffset = CGPointMake(num * SCREEN_WIDTH, 0);
     // 刷新分页控件
     self.pageView.currentPage = num;
-
+    self.isFirstCreate = YES;
     self.indextPathRow = integer;
     [self.collectionView reloadData];
 }
@@ -367,13 +379,10 @@
             [firstNumBtn setSelected:NO];
         }
         [items addObject:firstNumBtn];
-
-        if (i == sendNumList.count - 1) {
-            self.buttonBar.items = items;
-            [self.buttonBar reloadData:YES];
-            self.buttonBarHeight = 45 * (int)sendNumList.count;
-        }
     }
+    self.buttonBar.items = items;
+    [self.buttonBar reloadData:YES];
+    self.buttonBarHeight = 45 * (int)sendNumList.count;
 }
 
 - (void)selectFirstNum:(id)sender {

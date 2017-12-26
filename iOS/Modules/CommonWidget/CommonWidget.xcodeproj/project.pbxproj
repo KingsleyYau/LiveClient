@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		50662A141FC7C62C00254F17 /* LSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50662A121FC7C62B00254F17 /* LSTimer.m */; };
 		50AB7A521F94406900D23FB3 /* LSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A4E1F94406900D23FB3 /* LSDateFormatter.m */; };
 		50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A511F94406900D23FB3 /* LSStringEncoder.m */; };
 		50AB7A571F9440F500D23FB3 /* LSURLQueryParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A561F9440F500D23FB3 /* LSURLQueryParam.m */; };
@@ -29,6 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		50662A121FC7C62B00254F17 /* LSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSTimer.m; sourceTree = "<group>"; };
+		50662A131FC7C62C00254F17 /* LSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSTimer.h; sourceTree = "<group>"; };
 		5069B41B1C7070B4006ABC92 /* CommonWidget-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CommonWidget-Prefix.pch"; sourceTree = "<group>"; };
 		50AB7A4D1F94406900D23FB3 /* LSDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDateFormatter.h; sourceTree = "<group>"; };
 		50AB7A4E1F94406900D23FB3 /* LSDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDateFormatter.m; sourceTree = "<group>"; };
@@ -54,6 +57,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		50662A0E1FC7BF3E00254F17 /* Timer */ = {
+			isa = PBXGroup;
+			children = (
+				50662A131FC7C62C00254F17 /* LSTimer.h */,
+				50662A121FC7C62B00254F17 /* LSTimer.m */,
+			);
+			path = Timer;
+			sourceTree = "<group>";
+		};
 		50AB7A4B1F94406900D23FB3 /* NSData */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +128,7 @@
 				50AB7A4C1F94406900D23FB3 /* NSDate */,
 				50AB7A4F1F94406900D23FB3 /* NSString */,
 				50AB7A541F9440F400D23FB3 /* NSURL */,
+				50662A0E1FC7BF3E00254F17 /* Timer */,
 			);
 			path = CommonWidget;
 			sourceTree = "<group>";
@@ -171,6 +184,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50662A141FC7C62C00254F17 /* LSTimer.m in Sources */,
 				50AB7A521F94406900D23FB3 /* LSDateFormatter.m in Sources */,
 				50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */,
 				CA23B715172127DC00458560 /* LSCommonWidget.m in Sources */,
@@ -216,7 +230,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -247,6 +261,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

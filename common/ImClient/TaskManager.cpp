@@ -141,6 +141,12 @@ void CTaskManager::OnConnect(bool success)
 	}
 	FileLog("ImClient", "CTaskManager::OnConnect() end");
 }
+
+// 断开连接callback（先回调OnDisconnect()再回调OnDisconnect(const TaskList& list)）
+void CTaskManager::OnDisconnect()
+{
+	m_mgrListener->OnDisconnect();
+}
 	
 // 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop才能停止）
 void CTaskManager::OnDisconnect(const TaskList& listUnsentTask)

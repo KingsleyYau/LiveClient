@@ -11,6 +11,15 @@
 #import "ChatEmotionItem.h"
 #import "ChatEmotionListItem.h"
 
+@class LSChatEmotionManager;
+@protocol LSChatEmotionManagerDelegate <NSObject>
+
+- (void)downLoadStanListFinshHandle:(NSInteger)index;
+
+- (void)downLoadAdvanListFinshHandle:(NSInteger)index;
+
+@end
+
 @interface LSChatEmotionManager : NSObject
 
 /** 单例实例 */
@@ -29,6 +38,9 @@
 /** 表情Item */
 @property (nonatomic, retain) ChatEmotionListItem *stanListItem;
 @property (nonatomic, retain) ChatEmotionListItem *advanListItem;
+
+
+@property (nonatomic, weak) id<LSChatEmotionManagerDelegate> delegate;
 
 /** 加载普通表情 */
 - (void)reloadEmotion;

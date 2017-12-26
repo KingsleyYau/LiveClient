@@ -11,3 +11,5 @@
 "VIP_PUBLIC_TIP" = "VIP Public Broadcast is billed at ";
 
 "CREDIT_TIP" = " credit per minute.";
+
+"FOLLOW_FAIL" = "Failed to follow the broadcaster";

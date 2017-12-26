@@ -18,6 +18,7 @@ typedef enum MsgType {
     MsgType_Join,
     MsgType_RiderJoin,
     MsgType_Follow,
+    MsgType_Warning
 } MsgType;
 
 @interface MsgItem : NSObject

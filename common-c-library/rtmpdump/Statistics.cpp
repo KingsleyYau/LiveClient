@@ -110,7 +110,7 @@ bool Statistics::CanRecvVideo() {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_STAT,
                  "Statistics::CanRecvVideo( "
                  "videoFrameCount : %d "
                  ")",
@@ -130,7 +130,7 @@ bool Statistics::CanRecvAudio() {
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_STAT,
                  "Statistics::CanRecvAudio( "
                  "audioFrameCount : %d "
                  ")",
