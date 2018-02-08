@@ -168,10 +168,10 @@ bool CTransportDataHandler::Stop()
 	bool result = false;
 
 	FileLog("ImClient", "CTransportDataHandler::Stop() begin");
-	m_startLock->Lock();
+//    m_startLock->Lock();
 	DisconnectProc();
 	result = true;
-	m_startLock->Unlock();
+//    m_startLock->Unlock();
 	FileLog("ImClient", "CTransportDataHandler::Stop() end");
 
 	return result;
@@ -384,8 +384,7 @@ void CTransportDataHandler::DisconnectProc()
 {
 	FileLog("ImClient", "CTransportDataHandler::DisconnectProc()");
 
-	m_bStart = false;
-
+    m_bStart = false;
     if (NULL != m_client) {
         m_client->Disconnect();
     }

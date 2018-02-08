@@ -148,10 +148,12 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath) {
                  KLog::LOG_MSG,
                  "RtmpDump::PlayUrl( "
                  "this : %p, "
-                 "url : %s "
+                 "url : %s, "
+                 "recordFilePath : %s "
                  ")",
                  this,
-                 url.c_str()
+                 url.c_str(),
+                 recordFilePath.c_str()
                  );
     
     mClientMutex.lock();
@@ -169,25 +171,9 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath) {
             mpFlv = srs_flv_open_write(mRecordFlvFilePath.c_str());
             
             if( mpFlv ) {
-                // flv header
-                char header[9];
-                // 3bytes, signature, "FLV",
-                header[0] = 'F';
-                header[1] = 'L';
-                header[2] = 'V';
-                // 1bytes, version, 0x01,
-                header[3] = 0x01;
-                // 1bytes, flags, UB[5] 0, UB[1] audio present, UB[1] 0, UB[1] video present.
-                header[4] = 0x03; // audio + video.
-                // 4bytes, dataoffset
-                header[5] = 0x00;
-                header[6] = 0x00;
-                header[7] = 0x00;
-                header[8] = 0x09;
-                bFlag &= (0 == srs_flv_write_header(mpFlv, header));
-                
+                FileLog("rtmpdump", "RtmpDump::PlayUrl( [Create record file success], recordFilePath : %s )", mRecordFlvFilePath.c_str());
             } else {
-                FileLog("rtmpdump", "RtmpDump::PlayUrl( [Write flv file header fail], recordFilePath : %s )", mRecordFlvFilePath.c_str());
+                FileLog("rtmpdump", "RtmpDump::PlayUrl( [Create record file fail], recordFilePath : %s )", mRecordFlvFilePath.c_str());
                 
             }
         }

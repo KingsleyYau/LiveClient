@@ -127,6 +127,19 @@ inline PageNameType GetPageNameType(int value) {
     return PAGENAMETYPE_BEGIN <= value && value <= PAGENAMETYPE_END ? (PageNameType)value : PAGENAMETYPE_UNKNOW;
 }
 
+// 验证类型（1：token，2：cookice）
+typedef enum {
+    LOGINVERIFYTYPE_UNKNOW = 0,         // 未知
+    LOGINVERIFYTYPE_TOKEN = 1,       // token登录
+    LOGINVERIFYTYPE_COOKICE = 2,       // cookice登录
+    LOGINVERIFYTYPE_BEGIN = LOGINVERIFYTYPE_UNKNOW,
+    LOGINVERIFYTYPE_END = LOGINVERIFYTYPE_COOKICE
+} LoginVerifyType;
+// int 转换 PageNameType
+inline LoginVerifyType GetLoginVerifyType(int value) {
+    return LOGINVERIFYTYPE_BEGIN < value && value <= LOGINVERIFYTYPE_END ? (LoginVerifyType)value : LOGINVERIFYTYPE_UNKNOW;
+}
+
 typedef enum {
     ROOMTYPE_NOLIVEROOM = 0,            // 没有直播间
     ROOMTYPE_FREEPUBLICLIVEROOM = 1,    // 免费公开直播间

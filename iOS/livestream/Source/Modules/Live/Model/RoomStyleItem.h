@@ -10,15 +10,31 @@
 
 @interface RoomStyleItem : NSObject
 /**
- 聊天列表名字颜色
+ 聊天列表本人名字颜色
  */
-@property (nonatomic, strong) UIColor *nameColor;
+@property (nonatomic, strong) UIColor *myNameColor;
+
+/**
+ 聊天列表用户名字颜色
+ */
+@property (nonatomic, strong) UIColor *userNameColor;
+
+/**
+ 聊天列表主播名字颜色
+ */
+@property (nonatomic, strong) UIColor *liverNameColor;
+
+/**
+ 聊天列表主播标签图片
+ */
+@property (nonatomic, strong) UIImage *liverTypeImage;
+
 /**
  聊天列表接收文本颜色
  */
 @property (nonatomic, strong) UIColor *chatStrColor;
 /**
- 聊天列表发送文本颜色
+ 聊天列表发送礼物文本颜色
  */
 @property (nonatomic, strong) UIColor *sendStrColor;
 /**
@@ -36,9 +52,25 @@
 @property (nonatomic, strong) UIColor *announceStrColor;
 
 /**
+ 送礼文本底部背景
+ */
+@property (nonatomic, strong) UIColor *textBackgroundViewColor;
+
+/**
  座驾入场提示颜色
  */
 @property (nonatomic, strong) UIColor *riderStrColor;
+
+/**
+ 座驾背景颜色
+ */
+@property (nonatomic, strong) UIColor *riderBgColor;
+
+/**
+ 座驾文本颜色
+ */
+@property (nonatomic, strong) UIColor *driverStrColor;
+
 /**
  连击礼物背景
  */

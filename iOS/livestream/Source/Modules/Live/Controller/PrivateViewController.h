@@ -42,15 +42,26 @@
 #pragma mark - 标题栏
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
+
+#pragma mark - 直播间资费提醒(暂时不用)
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chargeTipImageWidth;
 @property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 @property (strong, nonatomic) ChardTipView *tipView;
 
-#pragma mark - 男女士头像
-@property (weak, nonatomic) IBOutlet UIImageView *manHeadBgImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *manHeadImageView;
-@property (weak, nonatomic) IBOutlet UIImageView *ladyHeadBgImageView;
-@property (weak, nonatomic) IBOutlet LSUITapImageView *ladyHeadImageView;
+#pragma mark - 标题栏背景
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleBgImageTop;
+
+#pragma mark - 女士头像(控件)
+@property (weak, nonatomic) IBOutlet UIView *ladyHeadView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *ladyImageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *followBtnWidth;
+@property (weak, nonatomic) IBOutlet UILabel *laddyNameLabel;
+
+
+#pragma mark - 亲密度控件
+@property (weak, nonatomic) IBOutlet UIView *intimacyHeadView;
+@property (weak, nonatomic) IBOutlet UIImageView *intimacyManImageView;
+@property (weak, nonatomic) IBOutlet LSUITapImageView *intimacyLadyImageView;
 @property (weak, nonatomic) IBOutlet LSUITapImageView *intimacyImageView;
 
 #pragma mark - 按钮

@@ -16,6 +16,12 @@
 @end
 
 @implementation DialogOK
+
+- (void)dealloc {
+    [self removeFromSuperview];
+    [self.backBtn removeFromSuperview];
+}
+
 + (DialogOK *)dialog {
     NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:NSStringFromClass([self class]) owner:nil options:nil];
     DialogOK* view = [nibs objectAtIndex:0];

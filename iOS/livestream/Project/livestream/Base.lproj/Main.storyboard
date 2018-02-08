@@ -32,8 +32,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="QTm-p6-7AD">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <color key="barTintColor" red="0.094117647060000004" green="0.53333333329999999" blue="0.90196078430000004" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Rus-My-Ooj" kind="relationship" relationship="rootViewController" id="fGr-5p-wBd"/>

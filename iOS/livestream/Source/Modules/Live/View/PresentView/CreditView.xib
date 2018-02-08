@@ -16,7 +16,7 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="234"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Man_Head_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="gB8-RO-OH8">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="gB8-RO-OH8">
                     <rect key="frame" x="145" y="18" width="84" height="84"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="84" id="btY-HE-wrU"/>
@@ -24,7 +24,7 @@
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hq9-Da-eJO" userLabel="Name ID LV View">
-                    <rect key="frame" x="117.5" y="116" width="140.5" height="24"/>
+                    <rect key="frame" x="118" y="116" width="139.5" height="24"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Brady" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MKS-L0-i6l">
                             <rect key="frame" x="0.0" y="3.5" width="38" height="17"/>
@@ -38,8 +38,8 @@
                             <color key="textColor" red="0.1764705882352941" green="0.1764705882352941" blue="0.1764705882352941" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="live_level_balance" translatesAutoresizingMaskIntoConstraints="NO" id="gRn-8k-ULb">
-                            <rect key="frame" x="113.5" y="6.5" width="27" height="11"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="User_leave_1" translatesAutoresizingMaskIntoConstraints="NO" id="gRn-8k-ULb">
+                            <rect key="frame" x="113.5" y="6.5" width="26" height="11"/>
                         </imageView>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -125,8 +125,8 @@
         </view>
     </objects>
     <resources>
+        <image name="Default_Img_Man_Circyle" width="100" height="100"/>
         <image name="Live_Credit_BackBtn" width="6" height="11"/>
-        <image name="Man_Head_Nomal" width="100" height="100"/>
-        <image name="live_level_balance" width="27" height="11"/>
+        <image name="User_leave_1" width="26" height="11"/>
     </resources>
 </document>

@@ -90,10 +90,12 @@ static LSLoginManager* gManager = nil;
                 }
                 
                 // 登陆回调
-                LoginFinishHandler loginFinishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LSLoginItemObject * _Nonnull item) {
+                LoginFinishHandler loginFinishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSLoginItemObject * _Nonnull item) {
                     @synchronized(self) {
                         if( success && _status == LOGINING ) {
                             // 登陆成功
+                            NSLog(@"LSLoginManager::login( [Http登录, 登陆成功], userId : %@, token : %@ )", item.userId, item.token);
+                            
                             _status = LOGINED;
                             
                             _manId = manId;
@@ -110,7 +112,13 @@ static LSLoginManager* gManager = nil;
                             // 登陆失败
                             _status = NONE;
                             
-                            if( errnum == LOGIN_BY_OTHER_DEVICE ) {
+//                            if( errnum == LOGIN_BY_OTHER_DEVICE ) {
+//                                // 账号已经在其他设备登录
+//                                // 标记不能自动重
+//                                self.isAutoLogin = NO;
+//                            }
+                            
+                            if( errnum == HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE ) {
                                 // 账号已经在其他设备登录
                                 // 标记不能自动重
                                 self.isAutoLogin = NO;
@@ -119,14 +127,14 @@ static LSLoginManager* gManager = nil;
                     }
                     
                     __block BOOL blockSuccess = success;
-                    __block NSInteger blockErrnum = errnum;
+                    __block HTTP_LCC_ERR_TYPE blockErrnum = errnum;
                     __block NSString* blockErrmsg = errmsg;
                     
                     // 回调
                     [self callbackLoginStatus:blockSuccess errnum:blockErrnum errmsg:blockErrmsg];
                 };
                 
-                GetConfigFinishHandler synConfigFinishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item) {
+                GetConfigFinishHandler synConfigFinishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item) {
                     if( success ) {
                         NSLog(@"LSLoginManager::login( [Http登录, 同步Http服务器地址], url : %@ )", item.httpSvrUrl);
 
@@ -150,7 +158,7 @@ static LSLoginManager* gManager = nil;
                     } else {
                         // 同步配置失败, 导致登陆失败
                         __block BOOL blockSuccess = success;
-                        __block NSInteger blockErrnum = errnum;
+                        __block HTTP_LCC_ERR_TYPE blockErrnum = errnum;
                         __block NSString* blockErrmsg = errmsg;
                         
                         @synchronized(self) {
@@ -260,7 +268,7 @@ static LSLoginManager* gManager = nil;
     }
 }
 
-- (void)callbackLoginStatus:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)callbackLoginStatus:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     NSLog(@"LSLoginManager::login( [Http登录, %@], manId : %@, token : %@ )", success?@"成功":@"失败", self.manId, self.token);
     
     @synchronized(self) {

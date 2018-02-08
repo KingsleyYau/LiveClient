@@ -20,9 +20,10 @@ HttpOwnFackBookLoginTask::HttpOwnFackBookLoginTask() {
     mEmail = "";
     mPassWord = "";
     mBirthDay = "";
+    mNickName = "";
     mInviteCode = "";
-    mVersionCode = "";
     mUtmReferrer = "";
+    mGender = GENDERTYPE_MAN;
     
 }
 
@@ -43,8 +44,9 @@ void HttpOwnFackBookLoginTask::SetParam(
                                         string passWord,
                                         string birthDay,
                                         string inviteCode,
-                                        string versionCode,
-                                        string utmReferrer
+                                        string nickName,
+                                        string utmReferrer,
+                                        GenderType gender
                                    ) {
     
     //	char temp[16];
@@ -91,15 +93,23 @@ void HttpOwnFackBookLoginTask::SetParam(
         mInviteCode = inviteCode;
     }
     
-    if (versionCode.length() > 0) {
-        mHttpEntiy.AddContent(OWN_FACKBOOK_LOGIN_VERSIONCODE, versionCode.c_str());
-        mVersionCode = versionCode;
+    if (nickName.length() > 0) {
+        mHttpEntiy.AddContent(OWN_FACKBOOK_LOGIN_NICKNAME, nickName.c_str());
+        mNickName = nickName;
     }
     
     if (utmReferrer.length() > 0) {
         mHttpEntiy.AddContent(OWN_FACKBOOK_LOGIN_UTMREFERRER, utmReferrer.c_str());
         mUtmReferrer = utmReferrer;
     }
+    
+    if (gender > GENDERTYPE_UNKNOW && gender <= GENDERTYPE_LADY) {
+        char temp[16];
+        snprintf(temp, sizeof(temp), "%c", gender == GENDERTYPE_LADY ? 'F' : 'M');
+        mHttpEntiy.AddContent(OWN_FACKBOOK_LOGIN_GENDER, temp);
+        mGender = gender;
+    }
+
 
 	FileLog(LIVESHOW_HTTP_LOG,
             "HttpOwnFackBookLoginTask::SetParam( "
@@ -112,8 +122,9 @@ void HttpOwnFackBookLoginTask::SetParam(
             "passWord : %s "
             "birthDay : %s "
             "inviteCode : %s "
-            "versionCode : %s "
+            "nickName : %s "
             "utmReferrer : %s "
+            "gender : %d"
             ")",
             this,
             fToken.c_str(),
@@ -124,8 +135,9 @@ void HttpOwnFackBookLoginTask::SetParam(
             passWord.c_str(),
             birthDay.c_str(),
             inviteCode.c_str(),
-            versionCode.c_str(),
-            utmReferrer.c_str()
+            nickName.c_str(),
+            utmReferrer.c_str(),
+            gender
             );
 }
 
@@ -146,7 +158,7 @@ bool HttpOwnFackBookLoginTask::ParseData(const string& url, bool bFlag, const ch
         FileLog(LIVESHOW_HTTP_LOG, "HttpOwnFackBookLoginTask::ParseData( buf : %s )", buf);
     }
     
-    string sessionId = "alex123";
+    string sessionId = "";
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
@@ -162,22 +174,11 @@ bool HttpOwnFackBookLoginTask::ParseData(const string& url, bool bFlag, const ch
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-         // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
-        
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-        
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+
     }
     
     if( mpCallback != NULL ) {

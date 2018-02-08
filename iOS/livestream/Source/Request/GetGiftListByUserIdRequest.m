@@ -24,7 +24,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getGiftListByUserId:self.roomId finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftWithIdItemObject *> * _Nullable array) {
+        NSInteger request = [self.manager getGiftListByUserId:self.roomId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<GiftWithIdItemObject *> * _Nullable array) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -43,7 +43,7 @@
     return NO;
 }
 
-- (void)callRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg {
+- (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
         NSArray* items = [NSArray array];
         self.finishHandler(NO, errnum, errmsg, items);

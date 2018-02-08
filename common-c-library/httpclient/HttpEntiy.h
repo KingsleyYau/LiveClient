@@ -35,6 +35,7 @@ public:
 	void SetAuthorization(string user, string password);
 	void SetGetMethod(bool isGetMethod);
 	void SetSaveCookie(bool isSaveCookie);
+    void SetConnectTimeout(unsigned int connectTimeout); 
     void SetDownloadTimeout(double downloadTimeout); // downloadTimeout=1.0 is 1 second.
 
 	void AddContent(string key, string value);
@@ -50,6 +51,7 @@ private:
 	bool mIsGetMethod;
 	bool mbSaveCookie;
     double mDownloadTimeout;
+    unsigned int mConnectTimeout;
 };
 
 #endif

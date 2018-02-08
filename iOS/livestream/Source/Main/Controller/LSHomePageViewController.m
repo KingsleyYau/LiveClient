@@ -10,8 +10,7 @@
 
 #import "FollowingViewController.h"
 #import "HotViewController.h"
-#import "DiscoverViewController.h"
-#import "SearchViewController.h"
+
 #import "LSUserInfoListViewController.h"
 #import "LSUserUnreadCountManager.h"
 #import "LSImManager.h"
@@ -104,7 +103,7 @@
     [self addChildViewController:hotVc];
 
     FollowingViewController *flVc = [[FollowingViewController alloc] initWithNibName:nil bundle:nil];
-    flVc.homePageVC = self;
+//    flVc.homePageVC = self;
     [self addChildViewController:flVc];
 
     //    DiscoverViewController* vc3 = [[DiscoverViewController alloc] initWithNibName:nil bundle:nil];
@@ -166,10 +165,6 @@
 
 #pragma mark - 界面事件
 - (IBAction)searchAction:(id)sender {
-
-    //    SearchViewController *searchController = [[SearchViewController alloc]init];
-    //    [self.navigationController pushViewController:searchController animated:YES];
-
     //    ChatListViewController *listViewController = [[ChatListViewController alloc]init];
     //    [self.navigationController pushViewController:listViewController animated:YES];
 

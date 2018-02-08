@@ -1,0 +1,13 @@
+Twitter
+https://developer.twitter.com/
+# Guide
+https://dev.twitter.com/twitterkit/ios/installation 
+https://dev.twitter.com/twitterkit/android/installation
+
+Facebook
+https://developers.facebook.com/
+# Guide
+https://developers.facebook.com/docs/accountkit/ios
+https://developers.facebook.com/docs/accountkit/android
+# Api
+https://developers.facebook.com/docs/graph-api/reference/user/picture/

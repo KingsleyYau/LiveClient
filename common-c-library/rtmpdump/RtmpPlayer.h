@@ -171,6 +171,10 @@ private:
     bool mbVideoStartPlay;
     // 音频开播时间戳
     bool mbAudioStartPlay;
+    // 当前播放的视频时间戳
+    int mVideoPlayTimestamp;
+    // 当前播放的音频时间戳
+    int mAudioPlayTimestamp;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

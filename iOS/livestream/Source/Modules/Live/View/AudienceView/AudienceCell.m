@@ -32,14 +32,15 @@
 - (void)updateHeadImageWith:(AudienModel *)audienModel isVip:(BOOL)isVip {
     
     if (isVip) {
-        self.headImageView.layer.cornerRadius = 13;
+        self.headImageView.layer.cornerRadius = 12;
     } else {
         self.headImageView.layer.cornerRadius = 12.5;
     }
     self.headImageView.layer.masksToBounds = YES;
     
     [self.imageLoader stop];
-    [self.imageLoader loadImageWithImageView:self.headImageView options:0 imageUrl:audienModel.photoUrl placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"]];
+    [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
+                        placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
 }
 
 - (void)setCornerRadius:(CGFloat)radius{

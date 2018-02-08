@@ -72,8 +72,8 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    [self.navigationController setNavigationBarHidden:NO];
-        self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
+    self.navigationController.navigationBar.hidden = NO;
     if (!self.viewDidAppearEver) {
         self.urlController.liveWKWebView = self.introduceView;
         self.urlController.controller = self;
@@ -86,11 +86,14 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self hideAndResetLoading];
-//    [self.navigationController setNavigationBarHidden:NO];
-    
-        self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
+    self.navigationController.navigationBar.hidden = NO;
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+}
 
 
 @end

@@ -1,0 +1,12 @@
+platform :ios, '8.0'
+
+#使用动态连接
+#use_frameworks!
+
+def shared_pods
+	pod 'SDWebImage', '4.1.0'
+end
+
+target 'AccountSDKTest' do
+	shared_pods
+end

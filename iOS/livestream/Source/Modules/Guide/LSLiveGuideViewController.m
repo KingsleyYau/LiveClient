@@ -25,7 +25,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-  
     self.tipInfo.delegate = self;
     self.tipInfo.editable = NO;
     self.tipInfo.dataDetectorTypes = UIDataDetectorTypeLink;
@@ -41,17 +40,18 @@
     self.tipInfo.linkTextAttributes = @{NSForegroundColorAttributeName :[UIColor whiteColor]};
     switch ([LSLoginManager manager].loginItem.userType) {
         case USERTYPEA1:{
+            // A1会员
             if (self.listGuide) {
-                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_List_Fee",@"LiveGuide_List_Fee_1",@"LiveGuide_List_All_2",@"LiveGuide_List_All_3", nil];
-
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_List_Fee",@"LiveGuide_List_All_1",@"LiveGuide_List_All_2",@"LiveGuide_List_All_3", nil];
             }else {
-                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_Person_Fee",@"LiveGuide_Person_Fee_1",@"LiveGuide_Person_All_2",@"LiveGuide_Person_All_3", nil];
+                self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_Person_Fee",@"LiveGuide_Person_All_1",@"LiveGuide_Person_All_2",@"LiveGuide_Person_All_3", nil];
 
             }
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstLaunch"];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }break;
         case USERTYPEA2:{
+            // A2会员
             if (self.listGuide) {
                 self.guideListArray = [NSArray arrayWithObjects:@"LiveGuide_List_All",@"LiveGuide_List_All_1",@"LiveGuide_List_All_2",@"LiveGuide_List_All_3", nil];
 
@@ -67,42 +67,34 @@
         default:
             break;
     }
-    
-    
-    
 }
 
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-//      self.navigationController.navigationBarHidden = YES;
-    self.navigationController.navigationBar.hidden = YES;
+    // 隐藏状态栏在隐藏导航栏之前,放在之后可能会导致计算位置少了状态栏的高度
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
-
+    self.navigationController.navigationBar.hidden = YES;
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
+    self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
 
 }
 
 - (void)setupContainView {
     [super setupContainView];
-    
     [self setupScrollView];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    //testData
     [self reloadData:YES dataArray:self.guideListArray];
-    
-
 }
-
-
 
 - (void)setupScrollView {
     self.guideScrollView.delegate = self;
@@ -138,13 +130,8 @@
     [scrollView setContentOffset:offsetofScrollView];
 }
 
-
-
-
 #pragma mark - 数据逻辑
 - (void)reloadData:(BOOL)isReloadView dataArray:(NSArray *)array{
-    
-    
     if( isReloadView ) {
         // 刷新指示器
         self.pageControl.numberOfPages = array.count;
@@ -168,7 +155,8 @@
                     [guideView addGestureRecognizer:tap];
                     tap.view.tag = i + 1;
                 }
-                guideView.contentMode = UIViewContentModeScaleAspectFill;
+                guideView.contentMode = UIViewContentModeScaleToFill;
+                guideView.clipsToBounds = YES;
                 
                 [self.guideScrollView addSubview:guideView];
             }
@@ -179,17 +167,9 @@
 }
 
 - (void)closeGuide:(UIGestureRecognizer *)gesture {
-//    LSNavigationController *nvc = (LSNavigationController *)[UIApplication sharedApplication].keyWindow.rootViewController;
-//    UIViewController* vc = [LiveModule module].moduleVC;
-////    [nvc pushViewController:vc animated:YES gesture:NO];
-//    //    [self dismissViewControllerAnimated:NO completion:nil];
-//    [self dismissViewControllerAnimated:YES completion:nil];
     if ([self.guideDelegate respondsToSelector:@selector(lsLiveGuideViewControllerDidFinishGuide:)]) {
         [self.guideDelegate lsLiveGuideViewControllerDidFinishGuide:self];
     }
-    
-
-    
 }
 
 
@@ -205,30 +185,32 @@
     
     NSString *str = [NSString stringWithFormat:@"%@", allStr];
     
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str]; // assume string exists
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:str]; 
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
     
     paragraphStyle.lineSpacing = 0;
     NSRange allRange = [str rangeOfString:allStr];
     NSRange urlRange = [str rangeOfString:changeStr];
+    // 修改整体字体的颜色
     [string addAttribute:NSForegroundColorAttributeName
                    value:[UIColor whiteColor]
                    range:allRange];
+    // 添加指定位置的下划线
     [string addAttribute:NSUnderlineStyleAttributeName
                    value:@(style)
                    range:urlRange];
+    // 添加链接跳转
     [string addAttribute:NSLinkAttributeName
                    value:changeStr
                    range:urlRange];
-
+    // 添加链接跳转文字颜色
     [string addAttribute:NSForegroundColorAttributeName
                    value:changeStrColor
                    range:urlRange];
 
     
     [string addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, string.length)];
-    
     [string addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, string.length)];
     [string endEditing];
     
@@ -240,12 +222,12 @@
 
 - (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 跳转用户
         NSString *url = [LSConfigManager manager].item.userProtocol;
         LiveWebViewController *webViewController = [[LiveWebViewController alloc] init];
         webViewController.url = url;
-    
-//        webViewController.url = @"https://www.baidu.com/";
         self.navigationController.navigationBar.hidden = NO;
+        [self.navigationController setNavigationBarHidden:NO];
         [self.navigationController pushViewController:webViewController animated:YES];
         
     });

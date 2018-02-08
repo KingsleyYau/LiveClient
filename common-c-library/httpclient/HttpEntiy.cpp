@@ -8,11 +8,12 @@
 
 #include "HttpEntiy.h"
 
-#include <curl/include/curl/curl.h>
+#include <curl/curl.h>
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
 #define DWONLOAD_TIMEOUT 30.0
+#define CONNECT_TIMEOUT 20
 
 HttpEntiy::HttpEntiy() {
 	// TODO Auto-generated constructor stub
@@ -20,6 +21,7 @@ HttpEntiy::HttpEntiy() {
 	mIsGetMethod = false;
 	mbSaveCookie = false;
     mDownloadTimeout = DWONLOAD_TIMEOUT;
+    mConnectTimeout = CONNECT_TIMEOUT;
 }
 
 HttpEntiy::~HttpEntiy() {
@@ -61,6 +63,10 @@ void HttpEntiy::SetSaveCookie(bool isSaveCookie) {
 
 void HttpEntiy::SetDownloadTimeout(double downloadTimeout) {
     mDownloadTimeout = downloadTimeout;
+}
+
+void HttpEntiy::SetConnectTimeout(unsigned int connectTimeout) {
+    mConnectTimeout = connectTimeout;
 }
 
 void HttpEntiy::AddContent(string key, string value) {

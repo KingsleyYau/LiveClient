@@ -43,7 +43,7 @@
                     <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </tableView>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.92941176470588238" green="0.92549019607843142" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Ot5-SV-BFO" secondAttribute="bottom" id="AuB-Rt-xpi"/>
                 <constraint firstAttribute="trailing" secondItem="Ot5-SV-BFO" secondAttribute="trailing" id="DZl-bf-ARg"/>

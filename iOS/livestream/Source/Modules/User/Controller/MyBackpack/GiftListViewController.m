@@ -30,6 +30,11 @@
     [self.giftListWaterfallView initPullRefresh:self pullDown:YES pullUp:NO];
 }
 
+
+- (void)dealloc {
+    [self.giftListWaterfallView unInitPullRefresh];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -77,7 +82,7 @@
     self.infoView.hidden = YES;
     //self.giftListWaterfallView.hidden = NO;
     GiftListRequest * request = [[GiftListRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 [self.giftListWaterfallView finishPullDown:YES];

@@ -53,7 +53,7 @@
 
     GetGiftListByUserIdRequest *request = [[GetGiftListByUserIdRequest alloc] init];
     request.roomId = roomId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg,
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg,
                               NSArray<GiftWithIdItemObject *> *_Nullable array) {
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -75,10 +75,13 @@
                         if (model.isShow) {
                             [self.showGiftArray addObject:model];
                         }
-                        if (i == array.count - 1) {
-                            finshHandler(success, self.showGiftArray, self.liveGiftArray);
+                        // 查询所有礼物列表中是否有该礼物
+                        AllGiftItem *allItem = [[LiveGiftDownloadManager manager].giftDictionary valueForKey:model.giftId];
+                        if (!allItem) {
+                            [self getGiftDetailWithGiftid:model.giftId];
                         }
                     }
+                    finshHandler(success, self.showGiftArray, self.liveGiftArray);
                 }
             } else {
                 finshHandler(success, nil, nil);
@@ -92,7 +95,7 @@
 - (void)getGiftDetailWithGiftid:(NSString *)giftId {
     GetGiftDetailRequest *request = [[GetGiftDetailRequest alloc] init];
     request.giftId = giftId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, GiftInfoItemObject *_Nullable item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, GiftInfoItemObject *_Nullable item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             // 添加新礼物到本地
             if (success) {

@@ -60,6 +60,15 @@
 #pragma mark - 连击控件
 @property (nonatomic, weak) IBOutlet UIView *giftView;
 
+#pragma mark - 邀请私密直播控件
+@property (weak, nonatomic) IBOutlet UIView *startOneView;
+@property (weak, nonatomic) IBOutlet UIButton *startOneBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneViewHeigh;
+
+#pragma mark - 倒计时关闭直播间控件
+@property (weak, nonatomic) IBOutlet UIView *countdownView;
+@property (weak, nonatomic) IBOutlet UILabel *countdownLabel;
+
 #pragma mark - 弹幕控件
 @property (nonatomic, weak) IBOutlet BarrageView *barrageView;
 
@@ -76,8 +85,6 @@
 @property (weak, nonatomic) IBOutlet UIView *liveBottomView;
 // 直播间字体
 @property (nonatomic, strong) RoomStyleItem *roomStyleItem;
-// 直播间底部界面背景图
-@property (weak, nonatomic) IBOutlet UIImageView *liveBottomGroundView;
 
 #pragma mark - 未读消息控件
 // 未读消息提示view
@@ -86,11 +93,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *msgTipsLabel;
 // 未读消息数量
 @property (assign) NSInteger unReadMsgCount;
-
-#pragma mark - 邀请私密直播按钮
-@property (weak, nonatomic) IBOutlet UIButton *cameraBtn;
-
-@property (weak, nonatomic) IBOutlet UILabel *countdownLabel;
 
 #pragma mark - 视频控件
 @property (weak, nonatomic) IBOutlet UIImageView *videoBgImageView;
@@ -157,7 +159,7 @@
 /**
  增加连击
 
- @param giftItem <#giftItem description#>
+ @param giftItem 礼物object
  */
 - (void)addCombo:(GiftItem *)giftItem;
 
@@ -176,7 +178,7 @@
 /**
  置顶子View
 
- @param view <#view description#>
+ @param view 视图
  */
 - (void)bringSubviewToFrontFromView:(UIView *)view;
 

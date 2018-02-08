@@ -78,8 +78,10 @@
     [super viewWillAppear:animated];
     // 显示导航栏
     self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
+     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
+//    self.edgesForExtendedLayout = UIRectEdgeNone;
 
     if (!self.viewDidAppearEver) {
         self.urlController.liveWKWebView = self.webView;

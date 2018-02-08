@@ -22,7 +22,8 @@
 
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
-@property (nonatomic, strong) LSImageViewLoader *imageLoader;
+@property (nonatomic, strong) LSImageViewLoader *ladyImageLoader;
+@property (nonatomic, strong) LSImageViewLoader *backgroundImageloader;
 
 @end
 
@@ -43,7 +44,8 @@
     self.viewHotBtn.hidden = YES;
     self.addCreditBtn.hidden = YES;
     self.recommandView.hidden = YES;
-    self.imageLoader = [LSImageViewLoader loader];
+    self.ladyImageLoader = [LSImageViewLoader loader];
+    self.backgroundImageloader = [LSImageViewLoader loader];
     self.sessionManager = [LSSessionRequestManager manager];
 }
 
@@ -61,11 +63,10 @@
 - (void)updateControlDataSource {
     self.headImageView.layer.cornerRadius = 49;
     self.headImageView.layer.masksToBounds = YES;
-        
-    [self.imageLoader loadImageWithImageView:self.headImageView options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:
-     [UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
     
-    [self.imageLoader loadImageWithImageView:self.backgroundImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:
+    [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    
+    [self.backgroundImageloader loadImageWithImageView:self.backgroundImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:
      nil];
     
     self.nameLabel.text = self.liveRoom.userName;
@@ -169,7 +170,7 @@
     request.number = 2;
     request.type = PROMOANCHORTYPE_LIVEROOM;
     request.userId = self.liveRoom.userId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         NSLog(@"LiveFinshViewController::getAdvisementList [请求推荐列表返回] success : %@, errmsg : %@, promoNum : %lu",success ? @"成功" : @"失败", errmsg, array.count);
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -200,10 +201,10 @@
 
     cell.imageView.image = nil;
     [cell.imageViewLoader stop];
-    [cell.imageViewLoader loadImageWithImageView:cell.imageView
-                                         options:0
+    [cell.imageViewLoader refreshCachedImage:cell.imageView
+                                         options:SDWebImageRefreshCached
                                         imageUrl:item.photoUrl
-                                placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
+                                placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
 
     cell.nameLabel.text = item.nickName;
 

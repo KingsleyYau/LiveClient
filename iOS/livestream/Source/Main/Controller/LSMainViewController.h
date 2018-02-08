@@ -23,4 +23,6 @@
  */
 @property (weak) IBOutlet UITabBar* tabBar;
 
+@property (weak) IBOutlet NSLayoutConstraint* tabBarHeight;
+
 @end

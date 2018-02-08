@@ -77,22 +77,12 @@ bool HttpSetShareSucTask::ParseData(const string& url, bool bFlag, const char* b
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-        
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+
     }
     
     if( mpCallback != NULL ) {

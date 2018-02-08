@@ -159,7 +159,7 @@
 
     [self.isPromoIndexArray removeAllObjects];
     _giftIdArray = giftIdArray;
-
+    
     // 筛选可发送礼物 添加到随机礼物列表
     RandomGiftModel *randomModel = [[RandomGiftModel alloc] init];
     for (LiveRoomGiftModel *item in giftIdArray) {
@@ -214,13 +214,8 @@
 
     LiveRoomGiftModel *model = self.giftIdArray[indexPath.row];
     AllGiftItem *item = [self.loadManager backGiftItemWithGiftID:model.giftId];
-    // 如果所有礼物列表没有该礼物 请求该礼物详情
-    if (!item.infoItem.giftId) {
-        [self.loadManager requestListnotGiftID:model.giftId];
-    }
-
     [cell updataCellViewItem:item manLV:self.manLevel loveLV:self.loveLevel];
-
+    
     BOOL isIndexPath = NO;
     if (self.indextPathRow == indexPath.row) {
         isIndexPath = YES;

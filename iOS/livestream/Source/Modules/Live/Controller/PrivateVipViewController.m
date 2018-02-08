@@ -47,13 +47,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
-    self.talentVC.liveRoom = self.liveRoom;
-    self.talentVC.delegate = self;
-    
-    self.liveRoom.superView = self.view;
-    self.liveRoom.superController = self;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -72,6 +66,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.liveRoom.superView = self.view;
+    self.liveRoom.superController = self;
+    
+    self.talentVC.liveRoom = self.liveRoom;
+    self.talentVC.delegate = self;
 }
 
 - (void)setupContainView {
@@ -106,31 +106,37 @@
 - (void)setUpLiveRoomType:(PrivateViewController *)vc {
     // 连击礼物
     self.vc.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Vip_Bg_Combo"];
+    // 座驾背景
+    self.vc.playVC.liveVC.roomStyleItem.riderBgColor = Color(255, 109, 0, 0.7);
+    self.vc.playVC.liveVC.roomStyleItem.driverStrColor = Color(255, 255, 255, 1);
     // 弹幕
-    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(61, 51, 44, 0.9);//Color(83, 13, 120, 0.9);
+    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(37, 37, 37, 0.9);//Color(83, 13, 120, 0.9);
     // 消息列表界面
-    self.vc.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0Xffd205);
-    self.vc.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0XFF5ABB);
-    self.vc.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XFFD205);
-    self.vc.playVC.liveVC.roomStyleItem.chatStrColor = [UIColor whiteColor];
-    self.vc.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
-    self.vc.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
-    self.vc.playVC.liveVC.roomStyleItem.warningStrColor = COLOR_WITH_16BAND_RGB(0x992926);
+    self.vc.playVC.liveVC.roomStyleItem.myNameColor = Color(255, 109, 0, 1);
+    self.vc.playVC.liveVC.roomStyleItem.liverNameColor = Color(92, 222, 126, 1);
+    self.vc.playVC.liveVC.roomStyleItem.liverTypeImage = [UIImage imageNamed:@"Live_Private_Vip_Broadcaster"];
+    self.vc.playVC.liveVC.roomStyleItem.followStrColor = Color(249, 231, 132, 1);
+    self.vc.playVC.liveVC.roomStyleItem.sendStrColor = Color(255, 210, 5, 1);
+    self.vc.playVC.liveVC.roomStyleItem.chatStrColor = Color(255, 255, 255, 1);
+    self.vc.playVC.liveVC.roomStyleItem.announceStrColor = Color(255, 109, 0, 1);
+    self.vc.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 109, 0, 1);
+    self.vc.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
+    self.vc.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
 }
 
 - (void)onSetupViewController:(PrivateViewController *)vc {
-    // 标题背景
-    self.vc.bgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Bottom"];
-    // 房间类型
-    self.vc.roomTypeImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Type"];
-    [self.vc.roomTypeImageView sizeToFit];
     // 底部背景
-    self.vc.titleBackGroundView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Title"];
-    // 头像背景
-    self.vc.manHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Man_Head"];
-    self.vc.ladyHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Lady_Head"];
-    // 关注按钮
-    [self.vc.followBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Follow"] forState:UIControlStateNormal];
+//    self.vc.bgImageView.image = nil;//[UIImage imageNamed:@"Live_Private_Vip_Bg_Bottom"];
+    // 房间类型
+//    self.vc.roomTypeImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Type"];
+//    [self.vc.roomTypeImageView sizeToFit];
+    // 标题背景
+//    self.vc.titleBackGroundView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Title"];
+//    // 头像背景
+//    self.vc.manHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Man_Head"];
+//    self.vc.ladyHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Lady_Head"];
+//    // 关注按钮
+//    [self.vc.followBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Follow"] forState:UIControlStateNormal];
     // 返点界面
     self.vc.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X644C3B);//Color(61, 51, 44, 1.0);
     // 才艺点播
@@ -142,13 +148,16 @@
     // 输入栏目
     [self.vc.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Chat"]];
     // 房间类型提示
-    self.vc.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0X5D0E86);
-    [self.vc.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
-                                 roomTip:NSLocalizedStringFromSelf(@"VIP_PRIVATE_TIP")
-                              creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
-    [self.vc.tipView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(@(self.vc.roomTypeImageView.frame.size.width));
-    }];
+//    self.vc.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0X5D0E86);
+//    [self.vc.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
+//                                 roomTip:NSLocalizedStringFromSelf(@"VIP_PRIVATE_TIP")
+//                              creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
+//    [self.vc.tipView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.width.equalTo(@(self.vc.roomTypeImageView.frame.size.width * 1.5));
+//    }];
+    
+    // 隐藏立即私密邀请控件
+    self.vc.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     
     // 聊天输入框
     [self.vc.playVC.liveSendBarView.sendBtn setImage:[UIImage imageNamed:@"Privatevip_Send_Btn"] forState:UIControlStateNormal];

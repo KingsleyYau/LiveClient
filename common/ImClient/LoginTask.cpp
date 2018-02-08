@@ -16,6 +16,7 @@
 // 请求参数定义
 #define TOKEN_PARAM         "token"     // 统一身份验证标识
 #define PAGENAME_PARAM      "page_name"  // socket所在的页面
+#define TYPE_PARAM          "type"       // 验证类型（1：token，2：cookice）（整型）
 
 LoginTask::LoginTask(void)
 {
@@ -27,6 +28,7 @@ LoginTask::LoginTask(void)
 
 	m_token = "";
     m_pageName = PAGENAMETYPE_UNKNOW;
+    m_type = LOGINVERIFYTYPE_TOKEN;
 }
 
 LoginTask::~LoginTask(void)
@@ -99,6 +101,7 @@ bool LoginTask::GetSendData(Json::Value& data)
         Json::Value value;
         value[TOKEN_PARAM] = m_token;
         value[PAGENAME_PARAM] = m_pageName;
+        value[TYPE_PARAM] = m_type;
         data = value;
     }
     result = true;
@@ -140,7 +143,7 @@ void LoginTask::GetHandleResult(LCC_ERR_TYPE& errType, string& errMsg)
 }
 
 // 初始化参数
-bool LoginTask::InitParam(const string& token, PageNameType pageName)
+bool LoginTask::InitParam(const string& token, PageNameType pageName, LoginVerifyType type)
 {
 	bool result = false;
 	if (!token.empty()
@@ -148,6 +151,7 @@ bool LoginTask::InitParam(const string& token, PageNameType pageName)
 	{
         m_token = token;
         m_pageName = pageName;
+        m_type = type;
 
 		result = true;
 	}

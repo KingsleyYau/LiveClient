@@ -42,7 +42,7 @@
 {
     GetTalentListRequest * request = [[GetTalentListRequest alloc]init];
     request.roomId = roomId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * errmsg, NSArray<GetTalentItemObject *> * array)
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * errmsg, NSArray<GetTalentItemObject *> * array)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -59,7 +59,7 @@
     GetTalentStatusRequest * request = [[GetTalentStatusRequest alloc]init];
     request.roomId = roomId;
     request.talentInviteId = talentId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject * _Nonnull item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (success) {

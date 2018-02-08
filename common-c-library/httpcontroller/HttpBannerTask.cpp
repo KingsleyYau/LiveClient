@@ -81,7 +81,7 @@ bool HttpBannerTask::ParseData(const string& url, bool bFlag, const char* buf, i
         
     } else {
         // 超时
-        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
         errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
     }
     

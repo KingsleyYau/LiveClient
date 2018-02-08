@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E87B74E2007512C0028DF55 /* NSDate+ToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E87B74C2007512C0028DF55 /* NSDate+ToString.m */; };
 		50662A141FC7C62C00254F17 /* LSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50662A121FC7C62B00254F17 /* LSTimer.m */; };
 		50AB7A521F94406900D23FB3 /* LSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A4E1F94406900D23FB3 /* LSDateFormatter.m */; };
 		50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A511F94406900D23FB3 /* LSStringEncoder.m */; };
 		50AB7A571F9440F500D23FB3 /* LSURLQueryParam.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A561F9440F500D23FB3 /* LSURLQueryParam.m */; };
 		50AB7A5A1F9442F500D23FB3 /* LSURLFileAttribute.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A591F9442F500D23FB3 /* LSURLFileAttribute.m */; };
+		50DCE68820205A9500ED28A3 /* LSDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DCE68720205A9500ED28A3 /* LSDevice.m */; };
 		CA23B713172127DC00458560 /* LSCommonWidget.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = CA23B712172127DC00458560 /* LSCommonWidget.h */; };
 		CA23B715172127DC00458560 /* LSCommonWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = CA23B714172127DC00458560 /* LSCommonWidget.m */; };
 /* End PBXBuildFile section */
@@ -30,6 +32,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3E87B74C2007512C0028DF55 /* NSDate+ToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+ToString.m"; sourceTree = "<group>"; };
+		3E87B74D2007512C0028DF55 /* NSDate+ToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+ToString.h"; sourceTree = "<group>"; };
 		50662A121FC7C62B00254F17 /* LSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSTimer.m; sourceTree = "<group>"; };
 		50662A131FC7C62C00254F17 /* LSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSTimer.h; sourceTree = "<group>"; };
 		5069B41B1C7070B4006ABC92 /* CommonWidget-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CommonWidget-Prefix.pch"; sourceTree = "<group>"; };
@@ -41,6 +45,8 @@
 		50AB7A561F9440F500D23FB3 /* LSURLQueryParam.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSURLQueryParam.m; sourceTree = "<group>"; };
 		50AB7A581F9442F500D23FB3 /* LSURLFileAttribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSURLFileAttribute.h; sourceTree = "<group>"; };
 		50AB7A591F9442F500D23FB3 /* LSURLFileAttribute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSURLFileAttribute.m; sourceTree = "<group>"; };
+		50DCE68620205A9500ED28A3 /* LSDevice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSDevice.h; sourceTree = "<group>"; };
+		50DCE68720205A9500ED28A3 /* LSDevice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSDevice.m; sourceTree = "<group>"; };
 		CA23B70A172127DB00458560 /* libCommonWidget.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libCommonWidget.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA23B712172127DC00458560 /* LSCommonWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSCommonWidget.h; sourceTree = "<group>"; };
 		CA23B714172127DC00458560 /* LSCommonWidget.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSCommonWidget.m; sourceTree = "<group>"; };
@@ -76,6 +82,8 @@
 		50AB7A4C1F94406900D23FB3 /* NSDate */ = {
 			isa = PBXGroup;
 			children = (
+				3E87B74D2007512C0028DF55 /* NSDate+ToString.h */,
+				3E87B74C2007512C0028DF55 /* NSDate+ToString.m */,
 				50AB7A4D1F94406900D23FB3 /* LSDateFormatter.h */,
 				50AB7A4E1F94406900D23FB3 /* LSDateFormatter.m */,
 			);
@@ -100,6 +108,15 @@
 				50AB7A561F9440F500D23FB3 /* LSURLQueryParam.m */,
 			);
 			path = NSURL;
+			sourceTree = "<group>";
+		};
+		50DCE68520205A7500ED28A3 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				50DCE68620205A9500ED28A3 /* LSDevice.h */,
+				50DCE68720205A9500ED28A3 /* LSDevice.m */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		CA23B701172127DB00458560 = {
@@ -129,6 +146,7 @@
 				50AB7A4F1F94406900D23FB3 /* NSString */,
 				50AB7A541F9440F400D23FB3 /* NSURL */,
 				50662A0E1FC7BF3E00254F17 /* Timer */,
+				50DCE68520205A7500ED28A3 /* Util */,
 			);
 			path = CommonWidget;
 			sourceTree = "<group>";
@@ -185,8 +203,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				50662A141FC7C62C00254F17 /* LSTimer.m in Sources */,
+				3E87B74E2007512C0028DF55 /* NSDate+ToString.m in Sources */,
 				50AB7A521F94406900D23FB3 /* LSDateFormatter.m in Sources */,
 				50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */,
+				50DCE68820205A9500ED28A3 /* LSDevice.m in Sources */,
 				CA23B715172127DC00458560 /* LSCommonWidget.m in Sources */,
 				50AB7A571F9440F500D23FB3 /* LSURLQueryParam.m in Sources */,
 				50AB7A5A1F9442F500D23FB3 /* LSURLFileAttribute.m in Sources */,

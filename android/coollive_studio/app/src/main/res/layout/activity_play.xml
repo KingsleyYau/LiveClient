@@ -1,0 +1,130 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_floating_material_dark">
+
+    <SurfaceView
+   	    android:id="@+id/surfaceViewPublish"
+	    android:layout_width="120dp"
+	    android:layout_height="160dp"
+	   	android:layout_above="@+id/layoutPublish"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginRight="10dp"
+	    android:layout_marginBottom="10dp"
+	    /> 
+ 	<SurfaceView
+		android:id="@+id/surfaceView"
+	    android:layout_width="match_parent"
+	    android:layout_height="320dp"
+	    android:layout_above="@+id/editTextPublish"
+	    android:layout_alignParentTop="true"
+	    />
+	
+ 	<LinearLayout 
+ 	    android:id="@+id/layoutPublish"
+ 	    android:layout_above="@+id/layout"
+	 	android:layout_alignParentLeft="true"
+	 	android:layout_alignParentRight="true"
+	 	android:layout_width="match_parent"
+	 	android:layout_height="30dp" 
+	 	android:paddingLeft="3dp"
+	 	android:paddingRight="3dp"
+	 	android:background="@null"
+	 	>
+	 	<EditText 
+		    android:id="@+id/editTextPublishLabel"
+		    android:layout_width="wrap_content"
+	 	    android:layout_height="match_parent" 
+	 	    android:text="publish - "
+	 	    android:textSize="15dp"
+	 	    android:textColor="#FF0000"
+	 	    android:background="@null"
+	 	    android:editable="false"
+		    /> 
+	    <EditText 
+		    android:id="@+id/editTextPublish"
+		    android:layout_width="match_parent"
+	 	    android:layout_height="match_parent" 
+	 	    android:lines="1"
+	 	    android:textSize="15dp"
+	 	    android:textColor="#FFFFFF"
+	 	    android:background="@null"
+	 	    android:editable="true"
+		    /> 
+ 	</LinearLayout>
+
+	<LinearLayout
+	    android:id="@+id/layout"
+	    android:layout_above="@+id/layoutButtons"
+ 	 	android:layout_width="match_parent"
+	 	android:layout_height="30dp" 
+	 	android:paddingLeft="3dp"
+	 	android:paddingRight="3dp"	
+	 	android:layout_alignParentLeft="true"
+	 	android:layout_alignParentRight="true"
+	 	android:background="@null"
+	    >
+	    <EditText 
+		    android:id="@+id/editTextLabel"
+		    android:layout_width="wrap_content"
+	 	    android:layout_height="match_parent" 
+	 	    android:text="play - "
+	 	    android:textSize="15dp"
+	 	    android:textColor="#FF0000"
+	 	    android:background="@null"
+	 	    android:editable="false"
+		    /> 
+	    <EditText 
+		    android:id="@+id/editText"
+	 	    android:layout_width="match_parent"
+	 	    android:layout_height="match_parent" 
+	 	    android:lines="1"
+	 	    android:textColor="#FFFFFF"
+	 	    android:textSize="15dp"
+	 	    android:background="@null"
+	 	    android:editable="true"
+		    />
+	</LinearLayout>
+	    
+ 	<LinearLayout
+ 	    android:id="@+id/layoutButtons"
+ 	    android:layout_alignParentBottom="true"
+ 	    android:layout_width="match_parent"
+ 	    android:layout_height="wrap_content" 
+ 	    android:gravity="center_vertical"
+ 	    >
+
+		<Button
+		    android:id="@+id/button1"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Play" 
+		    android:layout_weight="1"
+		    />
+		
+ 	    <Button
+ 	        android:id="@+id/button2"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:layout_weight="1"
+ 	        android:minHeight="48dp"
+ 	        android:text="Publish" />
+ 	    
+ 	    <Button
+ 	        android:id="@+id/button3"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:text="Mute" 
+ 	        android:layout_weight="1"
+ 	        />
+ 	    
+ 	    <Button
+ 	        android:id="@+id/button4"
+ 	        android:layout_width="wrap_content"
+ 	        android:layout_height="wrap_content"
+ 	        android:text="Stop" 
+ 	        android:layout_weight="1"
+ 	        />
+ 	</LinearLayout>
+</RelativeLayout>

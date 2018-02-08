@@ -59,7 +59,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
 - (void)getResevationsUnredCount
 {
     ManBookingUnreadUnhandleNumRequest * request = [[ManBookingUnreadUnhandleNumRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * errmsg, BookingUnreadUnhandleNumItemObject * item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * errmsg, BookingUnreadUnhandleNumItemObject * item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @synchronized(self.delegates) {
                 for(NSValue* value in self.delegates) {
@@ -82,7 +82,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
 {
     GetBackpackUnreadNumRequest * request = [[GetBackpackUnreadNumRequest alloc]init];
     
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetBackPackUnreadNumItemObject * _Nonnull item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetBackPackUnreadNumItemObject * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             @synchronized(self.delegates) {

@@ -34,8 +34,10 @@ void HttpUploadPhotoTask::SetParam(
     mHttpEntiy.SetSaveCookie(true);
 
     if( photoName.length() > 0 ) {
-        mHttpEntiy.AddFile(OWN_UPLOAD_PHOTO_PHOTONAME, photoName.c_str());
+       mHttpEntiy.AddFile(OWN_UPLOAD_PHOTO_PHOTONAME, photoName.c_str());
+        //mHttpEntiy.AddFile(OWN_UPLOAD_PHOTO_PHOTONAME, "/Users/alex/Documents/headPhoto.jpg");
         mPhotoName = photoName;
+        mHttpEntiy.SetConnectTimeout(60);
     }
     
 	FileLog(LIVESHOW_HTTP_LOG,
@@ -67,7 +69,7 @@ bool HttpUploadPhotoTask::ParseData(const string& url, bool bFlag, const char* b
     
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    string photoUrl = "alex456";
+    string photoUrl = "";
     bool bParse = false;
 
     if ( bFlag ) {
@@ -81,22 +83,12 @@ bool HttpUploadPhotoTask::ParseData(const string& url, bool bFlag, const char* b
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
     }
     
     if( mpCallback != NULL ) {

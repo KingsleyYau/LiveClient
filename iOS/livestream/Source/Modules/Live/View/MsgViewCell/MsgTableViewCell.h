@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MsgItem.h"
+#import "RoomStyleItem.h"
 
 @class MsgTableViewCell;
 @protocol MsgTableViewCellDelegate <NSObject>
@@ -31,6 +32,8 @@
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight:(CGFloat)width detailString:(NSAttributedString *)detailString;
 + (NSString *)textPreDetail;
+
+- (void)setTextBackgroundViewColor:(RoomStyleItem *)item;
 
 - (void)changeMessageLabelWidth:(CGFloat)width;
 

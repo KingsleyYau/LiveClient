@@ -17,14 +17,9 @@ LOCAL_MODULE_FILENAME := libhttpcontroller
 
 LOCAL_C_INCLUDES := $(COMMON_C_LIBRARY_PATH)
 LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)
-LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)/curl/include
+LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)/curl/android/include
 
 LOCAL_CFLAGS = -fpermissive -Wno-write-strings
-
-LOCAL_LDLIBS += -llog
-
-#LOCAL_LDFLAGS += -L$(LOCAL_PATH)/../third_party/openssl/lib/$(TARGET_ARCH)
-#LOCAL_LDLIBS += -lssl -lcrypto#-lz 
 
 LOCAL_STATIC_LIBRARIES += zip
 LOCAL_STATIC_LIBRARIES += common

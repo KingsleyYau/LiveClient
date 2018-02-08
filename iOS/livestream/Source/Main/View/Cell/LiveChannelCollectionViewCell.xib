@@ -21,8 +21,8 @@
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="guP-aO-ijt">
                         <rect key="frame" x="0.0" y="0.0" width="293" height="206"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_RoomTypePrivateLive" translatesAutoresizingMaskIntoConstraints="NO" id="Gua-jh-2Qn" customClass="LSUITapImageView">
-                        <rect key="frame" x="0.0" y="10" width="90" height="17"/>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Premium_Public" translatesAutoresizingMaskIntoConstraints="NO" id="Gua-jh-2Qn" customClass="LSUITapImageView">
+                        <rect key="frame" x="0.0" y="10" width="109" height="18"/>
                     </imageView>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3QD-CU-6sH">
                         <rect key="frame" x="114.5" y="182" width="12" height="12"/>
@@ -37,17 +37,17 @@
                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_RoomTypePublicLive" translatesAutoresizingMaskIntoConstraints="NO" id="J7L-QQ-BML">
-                        <rect key="frame" x="0.0" y="10" width="85" height="17"/>
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Premium_Public" translatesAutoresizingMaskIntoConstraints="NO" id="J7L-QQ-BML">
+                        <rect key="frame" x="0.0" y="10" width="109" height="18"/>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LDe-Vv-PUo">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="interest_2" translatesAutoresizingMaskIntoConstraints="NO" id="LDe-Vv-PUo">
                         <rect key="frame" x="263" y="10" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="Brc-3N-1Zr"/>
                             <constraint firstAttribute="width" constant="20" id="VDS-pH-BXs"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Mem-Ja-YAe">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="interest_1" translatesAutoresizingMaskIntoConstraints="NO" id="Mem-Ja-YAe">
                         <rect key="frame" x="238" y="10" width="20" height="20"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="20" id="3D1-cG-vVr"/>
@@ -90,7 +90,8 @@
     </objects>
     <resources>
         <image name="Home_HotAndFollow_ImageView_Placeholder" width="360" height="360"/>
-        <image name="Home_HotAndFollow_ImageView_RoomTypePrivateLive" width="90" height="17"/>
-        <image name="Home_HotAndFollow_ImageView_RoomTypePublicLive" width="85" height="17"/>
+        <image name="Home_HotAndFollow_ImageView_Premium_Public" width="109" height="18"/>
+        <image name="interest_1" width="24" height="24"/>
+        <image name="interest_2" width="24" height="24"/>
     </resources>
 </document>

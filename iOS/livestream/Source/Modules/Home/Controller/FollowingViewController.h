@@ -7,14 +7,17 @@
 //
 
 #import "LSGoogleAnalyticsViewController.h"
-#import "FollowCollectionView.h"
 #import "LSHomePageViewController.h"
-#import "FollowTableView.h"
 #import "HotTableView.h"
 
-@interface FollowingViewController : LSGoogleAnalyticsViewController
-@property (weak, nonatomic) IBOutlet FollowCollectionView *collectionView;
-@property (weak, nonatomic) IBOutlet HotTableView *tableView;
+/**
+ * Add by Max 2018/01/25
+ */
+@protocol FollowingViewControllerDelegate
+- (void)followingVCBrowseToHot;
+@end
 
-@property (nonatomic, weak) LSHomePageViewController* homePageVC;
+@interface FollowingViewController : LSGoogleAnalyticsViewController
+@property (weak, nonatomic) IBOutlet HotTableView *tableView;
+@property (weak, nonatomic) id<FollowingViewControllerDelegate> followVCDelegate;
 @end

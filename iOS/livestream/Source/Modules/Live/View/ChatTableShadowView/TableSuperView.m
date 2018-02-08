@@ -17,6 +17,7 @@
     if (self) {
         
         self.backgroundColor = [UIColor clearColor];
+        self.clipsToBounds = YES;
     }
     return self;
 }

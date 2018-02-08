@@ -66,33 +66,17 @@ bool HttpGetManBaseInfoTask::ParseData(const string& url, bool bFlag, const char
         // 公共解析
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+            item.Parse(dataJson);
             bParse = true;
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-            item.userId = "alexuserId";
-            item.nickName = "alex";
-            item.nickNameStatus = NICKNAMEVERIFYSTATUS_HANDLDING;
-            item.photoUrl = "1235";
-            item.photoStatus = PHOTOVERIFYSTATUS_HANDLDING;
-            item.birthday = "19870201";
-            item.userlevel = 0;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-        
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+
     }
     
     if( mpCallback != NULL ) {

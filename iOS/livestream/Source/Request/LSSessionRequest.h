@@ -46,7 +46,7 @@
  *  @param errnum 错误码
  *  @param errmsg 错误提示
  */
-- (void)callRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg;
+- (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg;
 
 - (void)finishRequest;
 @end

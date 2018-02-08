@@ -14,6 +14,15 @@
 
 #define BACKGROUND_TIMEOUT 60
 
+@class LiveGobalManager;
+@protocol LiveGobalManagerDelegate <NSObject>
+@optional
+
+- (void)enterBackgroundTimeOut:(NSDate * _Nullable)time;
+
+@end
+
+
 @interface LiveGobalManager : NSObject
 
 /**
@@ -57,5 +66,19 @@
  @param canShowInvite 能否立即显示邀请
  */
 - (void)setCanShowInvite:(BOOL)canShowInvite;
+
+/**
+ *  增加监听器
+ *
+ *  @param delegate 监听器
+ */
+- (void)addDelegate:(id<LiveGobalManagerDelegate> _Nonnull)delegate;
+
+/**
+ *  移除监听器
+ *
+ *  @param delegate 监听器
+ */
+- (void)removeDelegate:(id<LiveGobalManagerDelegate> _Nonnull)delegate;
 
 @end

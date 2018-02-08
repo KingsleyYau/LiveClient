@@ -36,10 +36,18 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
     Json::Value root;
     root[ROOT_ID] = task->GetSeq();
     root[ROOT_CMD] = task->GetCmdCode();
-	if (!req_data.isNull()) {
-		root[ROOT_REQ] = req_data;
-	}
+//    // 如果是回复服务器主动请求， 使用的是root_res
+//    if (!IsRequestCmd(task->GetCmdCode())) {
+//        root[ROOT_RES] = req_data;
+//    } else {
+//        if (!req_data.isNull()) {
+//            root[ROOT_REQ] = req_data;
+//        }
+//    }
     
+    if (!req_data.isNull()) {
+        root[ROOT_REQ] = req_data;
+    }
     // json转为字符串
     Json::FastWriter writer;
     string strData = writer.write(root);
@@ -67,8 +75,6 @@ bool CTransportPacketHandler::Packet(ITask* task, void* data, size_t dataSize, s
 UNPACKET_RESULT_TYPE CTransportPacketHandler::Unpacket(const void* data, size_t dataLen, TransportProtocol& tp)
 {
 	UNPACKET_RESULT_TYPE result = UNPACKET_FAIL;
-    FileLog("ImClient", "CTransportPacketHandler::Unpacket() %s begin", data);
-    
     Json::Value root;
     Json::Reader reader;
     if (reader.parse((const char*)data, (const char*)data+dataLen, root))

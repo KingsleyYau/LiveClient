@@ -103,6 +103,10 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
         mVideoRecorderH264.Start(recordH264FilePath);
         mAudioRecorderAAC.Start(recordAACFilePath);
     }
+    if( bFlag ) {
+        // 开始连接
+        bFlag = mRtmpDump.PlayUrl(url, recordFilePath);
+    }
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -128,8 +132,8 @@ void PlayerController::Stop() {
     
     // 停止分析
     mStatistics.Stop();
-    // 停止播放
-    mRtmpPlayer.Stop();
+    // 停止网络
+    mRtmpDump.Stop();
     // 停止解码
     if( mpVideoDecoder ) {
         mpVideoDecoder->Pause();
@@ -137,6 +141,8 @@ void PlayerController::Stop() {
     if( mpAudioDecoder ) {
         mpAudioDecoder->Pause();
     }
+    // 停止播放
+    mRtmpPlayer.Stop();
     // 停止录制
     mVideoRecorderH264.Stop();
     mAudioRecorderAAC.Stop();

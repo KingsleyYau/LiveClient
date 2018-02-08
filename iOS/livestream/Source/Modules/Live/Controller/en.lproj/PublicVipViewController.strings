@@ -2,14 +2,16 @@
 /* Class = "UIButton"; normalTitle = "Marry LeeLee"; ObjectID = "QdY-wA-qdz"; */
 "QdY-wA-qdz.normalTitle" = "Marry LeeLee";
 
-/* Class = "UILabel"; text = "VIP Guest"; ObjectID = "ioe-kp-dlj"; */
-"ioe-kp-dlj.text" = "VIP Guest";
+/* Class = "UILabel"; text = "Viewers"; ObjectID = "ioe-kp-dlj"; */
+"ioe-kp-dlj.text" = "Viewers";
 
 /* Class = "UILabel"; text = "(4/6)"; ObjectID = "x5g-IZ-heY"; */
 "x5g-IZ-heY.text" = "(4/6)";
 
-"VIP_PUBLIC_TIP" = "VIP Public Broadcast is billed at ";
+"VIP_PUBLIC_TIP" = "Premium Public Broadcast is billed at ";
 
 "CREDIT_TIP" = " credit per minute.";
 
 "FOLLOW_FAIL" = "Failed to follow the broadcaster";
+
+"EXIT_LIVEROOM_TIP" = "Are you sure to leave the broadcast room?";

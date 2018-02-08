@@ -127,12 +127,17 @@
     @synchronized (self) {
         if (!self.isStart) {
             self.isStart = YES;
-            
+
             // 开启音频服务
             [[LiveStreamSession session] startPlay];
             
-            // 开始拉流
-            self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            // 仅在前台才运行
+            if( !_isBackground ) {
+                // 开始拉流
+                self.isConnected = [self.player playUrl:self.url recordFilePath:self.recordFilePath recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            } else {
+                NSLog(@"LiveStreamPlayer::run( [Player is in background], self : %p )", self);
+            }
         }
     }
     

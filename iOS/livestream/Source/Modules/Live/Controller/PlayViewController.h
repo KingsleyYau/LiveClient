@@ -35,7 +35,7 @@
 
 @interface PlayViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, weak) id<PlayViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<PlayViewControllerDelegate> playDelegate;
 
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
@@ -110,6 +110,9 @@
 
 // balanceView
 @property (nonatomic, strong) CreditView *creditView;
+
+// 当前选中礼物下标
+@property (nonatomic, assign) NSInteger presentRow;
 
 #pragma mark - 界面事件
 

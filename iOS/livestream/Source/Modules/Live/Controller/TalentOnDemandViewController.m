@@ -112,7 +112,7 @@
 }
 
 #pragma mark 才艺点播列表数据回调
-- (void)onGetTalentListSuccess:(BOOL)success Data:(NSArray<GetTalentItemObject *> *)array errMsg:(NSString *)errMsg errNum:(NSInteger)errnum {
+- (void)onGetTalentListSuccess:(BOOL)success Data:(NSArray<GetTalentItemObject *> *)array errMsg:(NSString *)errMsg errNum:(HTTP_LCC_ERR_TYPE)errnum {
     if (success) {
         if (array.count) {
             self.tableView.hidden = NO;

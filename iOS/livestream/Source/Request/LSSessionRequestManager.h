@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#include <httpcontroller/HttpRequestEnum.h>
 
 @class LSSessionRequest;
 
@@ -20,7 +21,7 @@
  *
  *  @return YES:已经处理/NO:没有处理
  */
-- (BOOL)request:(LSSessionRequest* _Nonnull)request handleRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg;
+- (BOOL)request:(LSSessionRequest* _Nonnull)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg;
 
 /**
  *  请求处理完成

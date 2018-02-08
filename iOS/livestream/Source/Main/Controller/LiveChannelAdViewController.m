@@ -83,7 +83,7 @@
     request.number = 4;
     
     // 调用接口
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"livechannel::getAdList( [%@], count : %ld )", BOOL2SUCCESS(success), (long)array.count);
             NSMutableArray *dataArray = [NSMutableArray array];
@@ -187,7 +187,7 @@
     
     [[LiveModule module].analyticsManager reportActionEvent:LiveChannelCloseAd eventCategory:EventCategoryQN];
     CloseAdAnchorListRequest *request = [[CloseAdAnchorListRequest alloc] init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.adView hideAnimation];
             [self.view removeFromSuperview];

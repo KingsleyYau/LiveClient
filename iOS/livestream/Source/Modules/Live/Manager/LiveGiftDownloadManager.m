@@ -54,6 +54,7 @@
         [self.loginManager addDelegate:self];
         self.sessionManager = [LSSessionRequestManager manager];
         self.fileNameDictionary = [[NSMutableDictionary alloc] init];
+        self.giftDictionary = [[NSMutableDictionary alloc] init];
         self.giftMuArray = [[NSMutableArray alloc] init];
         self.bigGiftDownloadDic = [[NSMutableDictionary alloc] init];
         self.bigGiftDataDictionary = [[NSMutableDictionary alloc] init];
@@ -64,7 +65,7 @@
 }
 
 // 监听HTTP登录
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
 
@@ -88,13 +89,14 @@
     } else {
 
         GetAllGiftListRequest *request = [[GetAllGiftListRequest alloc] init];
-        request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<GiftInfoItemObject *> *_Nullable array) {
+        request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<GiftInfoItemObject *> *_Nullable array) {
             dispatch_async(dispatch_get_main_queue(), ^{
 
                 NSLog(@"LiveGiftDownloadManager::GetAllGiftListRequest( [发送获取所有礼物列表请求结果], success : %d, errnum : %ld, errmsg : %@, count : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
                 if (success) {
                     // 清空旧数据
                     [self.giftMuArray removeAllObjects];
+                    [self.giftDictionary removeAllObjects];
                     
                     if (array != nil && array.count) {
                         for (GiftInfoItemObject *object in array) {
@@ -104,6 +106,7 @@
                                 self.giftMuArray = [[NSMutableArray alloc] init];
                             }
                             [self.giftMuArray addObject:item];
+                            [self.giftDictionary setValue:item forKey:item.infoItem.giftId];
                         }
                         // 下载大礼物动画
                         [self downLoadSrcImage];
@@ -470,7 +473,7 @@
 
     GetGiftDetailRequest *request = [[GetGiftDetailRequest alloc] init];
     request.giftId = giftId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, GiftInfoItemObject *_Nullable item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, GiftInfoItemObject *_Nullable item) {
         dispatch_async(dispatch_get_main_queue(), ^{
 
             if (success) {
@@ -481,6 +484,7 @@
                     AllGiftItem *model = self.giftMuArray[i];
                     if (![model.infoItem.giftId isEqualToString:item.giftId] && i == self.giftMuArray.count - 1) {
                         [self.giftMuArray addObject:allItem];
+                        [self.giftDictionary setValue:allItem forKey:allItem.infoItem.giftId];
                     }
                 }
                 // 下载礼物

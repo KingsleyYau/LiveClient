@@ -79,7 +79,7 @@
     if (level > 10) {
         level = 10;
     }
-    UIImage * image = [UIImage imageNamed:[NSString stringWithFormat:@"Level_icon_%ld",level]];
+    UIImage * image = [UIImage imageNamed:[NSString stringWithFormat:@"User_leave_%ld",level]];
     [self.levelBtn setBackgroundImage:image forState:UIControlStateNormal];
 }
 

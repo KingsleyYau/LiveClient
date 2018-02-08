@@ -33,14 +33,17 @@
     LSConfigManager *config = [LSConfigManager manager];
 
     config.item = [[ConfigItemObject alloc] init];
-    //    config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
-    //    config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
+//        config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
+//        config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
     config.item.httpSvrUrl = @"http://172.25.32.17:8817";
     config.item.imSvrUrl = @"ws://172.25.32.17:8816";
+//    config.item.httpSvrUrl = @"http://192.168.88.17:8817";
+//    config.item.imSvrUrl = @"ws://192.168.88.17:8816";
 
     [[LiveModule module] setServiceManager:nil];
     [LiveModule module].delegate = self;
     [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8817"];
+//    [[LiveModule module] setConfigUrl:@"http://192.168.88.17:8817"];
 //    [[LiveModule module] setConfigUrl:@"https://demo-live.charmdate.com:446"];
 }
 
@@ -115,7 +118,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     _token = [userDefaults stringForKey:@"QNToken"];
     if (!_token || _token.length == 0) {
-        _token = MAX_TOKEN;
+        _token = RANDY_TOKEN;
     }
 }
 
@@ -130,7 +133,7 @@
 
         // 推进界面
         LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-        [nvc pushViewController:vc animated:YES gesture:NO];
+        [nvc pushViewController:vc animated:NO gesture:NO];
 
     });
 }

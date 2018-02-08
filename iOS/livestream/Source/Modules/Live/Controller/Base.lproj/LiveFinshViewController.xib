@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_0" orientation="portrait">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -27,19 +27,19 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8gc-mu-wNH" userLabel="Finsh Cover ImageView">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
                 <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lS3-dB-erL" userLabel="Mask View">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xyq-d1-hUe" userLabel="Cancel Button">
-                    <rect key="frame" x="260" y="25" width="40" height="40"/>
+                    <rect key="frame" x="315" y="25" width="40" height="40"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="xyq-d1-hUe" secondAttribute="height" multiplier="1:1" id="RH0-tV-aIV"/>
                         <constraint firstAttribute="width" constant="40" id="kHd-yz-Lqo"/>
@@ -50,33 +50,33 @@
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="zXJ-bM-bMb" userLabel="Liver Head ImageView">
-                    <rect key="frame" x="111" y="80" width="98" height="98"/>
+                    <rect key="frame" x="138.5" y="80" width="98" height="98"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="98" id="AzB-vT-KR7"/>
                         <constraint firstAttribute="width" secondItem="zXJ-bM-bMb" secondAttribute="height" multiplier="1:1" id="xbn-kV-2kH"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KJf-OI-eXV" userLabel="Liver Name Label">
-                    <rect key="frame" x="15" y="194" width="290" height="0.0"/>
+                    <rect key="frame" x="15" y="194" width="345" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.76078431372549016" green="0.76078431372549016" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast has been ended.   Please come again later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUq-oa-6Jg" userLabel="Tip Label">
-                    <rect key="frame" x="30" y="226" width="260" height="36"/>
+                    <rect key="frame" x="30" y="226" width="315" height="36"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gR2-qW-xtL" userLabel="Book Private Button">
-                    <rect key="frame" x="53.5" y="302" width="213" height="35"/>
-                    <state key="normal" image="Live_PreLive_Btn_Book"/>
+                    <rect key="frame" x="84" y="302" width="207" height="35"/>
+                    <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
                     <connections>
                         <action selector="bookPrivateAction:" destination="-1" eventType="touchUpInside" id="QcV-wW-pVb"/>
                     </connections>
                 </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Esa-m9-V4q" userLabel="Recommand View">
-                    <rect key="frame" x="60" y="390" width="200" height="130"/>
+                    <rect key="frame" x="87.5" y="390" width="200" height="130"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recommanded Performers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eSP-gf-u6p" userLabel="Recommand Label">
                             <rect key="frame" x="-3" y="0.0" width="206" height="21"/>
@@ -112,14 +112,14 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DKC-mw-Vbw" userLabel="View Hot Button">
-                    <rect key="frame" x="54.5" y="303" width="211" height="33"/>
+                    <rect key="frame" x="82" y="303" width="211" height="33"/>
                     <state key="normal" image="Live_PreLive_Btn_Boardcast"/>
                     <connections>
                         <action selector="viewHotAction:" destination="-1" eventType="touchUpInside" id="uKt-tR-RjY"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6de-AZ-7B6" userLabel="Add Credit Button">
-                    <rect key="frame" x="94.5" y="303" width="131" height="33"/>
+                    <rect key="frame" x="122" y="303" width="131" height="33"/>
                     <state key="normal" image="Live_PreLive_Btn_AddCredit"/>
                     <connections>
                         <action selector="addCreditAction:" destination="-1" eventType="touchUpInside" id="dHO-7L-avn"/>
@@ -163,9 +163,9 @@
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="207" height="35"/>
         <image name="Live_PreLive_Btn_AddCredit" width="131" height="33"/>
         <image name="Live_PreLive_Btn_Boardcast" width="211" height="33"/>
-        <image name="Live_PreLive_Btn_Book" width="213" height="35"/>
         <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
     </resources>
 </document>

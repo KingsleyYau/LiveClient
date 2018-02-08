@@ -29,7 +29,7 @@
     return self;
 }
 
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     if (success) {
         NSArray *svrList = loginItem.svrList;
         for (LSSvrItemObject *object in svrList) {
@@ -61,7 +61,7 @@
     LSServerSpeedRequest *request = [[LSServerSpeedRequest alloc] init];
     request.sid = svrID;
     request.res = res;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         NSLog(@"LSStreamSpeedManager::requestSpeedResult( success : %s, errnum : %d, svrID : %@ )", success ? "true" : "false", (int)errnum, svrID);
     };
     [self.sessionManager sendRequest:request];

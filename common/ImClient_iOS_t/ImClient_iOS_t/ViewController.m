@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "ImClientOC.h"
+#include <sys/time.h>
 
 @interface ViewController () <IMLiveRoomManagerDelegate>
 @property (nonatomic, strong) ImClientOC* client;
@@ -21,6 +22,10 @@
 - (IBAction)vRoomIn:(id)sender;
 - (IBAction)vRoomOut:(id)sender;
 - (IBAction)sendRoomMsg:(id)sender;
+
+// for test
+@property (nonatomic, strong) NSThread* loginProcThread;
+- (void)loginProc;
 @end
 
 @implementation ViewController
@@ -28,7 +33,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.token = @"RBQP2A17";
+    self.token = @"CMTS09975#uid#PWBU3AME_1517899662271";
     self.userId = @"17";
     self.roomid = @"208";
 }
@@ -56,17 +61,61 @@
 - (IBAction)initAction:(id)sender {
     if (nil != self.client) {
         NSMutableArray<NSString*>* urls = [NSMutableArray array];
-        //[urls addObject:@"ws://192.168.88.17:3006"];
-        [urls addObject:@"ws://172.25.32.17:3006"];
+        //[urls addObject:@"ws://192.168.88.17:8816"];
+        [urls addObject:@"ws://172.25.32.17:8816"];
         [self.client initClient:urls];
     }
 }
 
 - (IBAction)loginAction:(id)sender {
     if (nil != self.client) {
-        //[self.client login:@"17" token:@"L4T9W75Q"];
-         [self.client login:self.token pageName:PAGENAMETYPE_HOMEPAGE];
+//        [self.client login:self.token pageName:PAGENAMETYPE_MOVEPAGE];
+        
+        if (nil == self.loginProcThread) {
+            self.loginProcThread = [[NSThread alloc] initWithTarget:self selector:@selector(loginProc) object:nil];
+            [self.loginProcThread start];
+        }
     }
+}
+
+- (void)loginProc {
+    int iTimes = 0;
+    const int MAX_TIMES = 100;
+    int waitTime = 0;
+    _STRUCT_TIMEVAL time;
+    gettimeofday(&time, NULL);
+    srand((unsigned int)(time.tv_sec + time.tv_usec));
+    
+    _STRUCT_TIMEVAL begin;
+    gettimeofday(&begin, NULL);
+    
+    for (iTimes = 0; iTimes < MAX_TIMES; iTimes++) {
+        _STRUCT_TIMEVAL theTimeBegin;
+        gettimeofday(&theTimeBegin, NULL);
+
+        NSLog(@"ViewController::loginProc() login ----------------");
+        [self.client login:self.token pageName:PAGENAMETYPE_HOMEPAGE];
+        
+//        waitTime = rand()%1000;
+        waitTime = 300;
+        usleep(waitTime * 1000);
+        NSLog(@"ViewController::loginProc() logout");
+        [self.client logout];
+        
+//        waitTime = rand()%1000;
+        waitTime = 300;
+        usleep(waitTime * 1000);
+        
+        _STRUCT_TIMEVAL theTimeEnd;
+        gettimeofday(&theTimeEnd, NULL);
+        NSLog(@"ViewController::loginProc() login test end, time:%ld.%d", theTimeEnd.tv_sec - theTimeBegin.tv_sec, theTimeEnd.tv_usec >= theTimeBegin.tv_usec ? theTimeEnd.tv_usec - theTimeBegin.tv_usec : 1000*1000 - theTimeBegin.tv_usec + theTimeEnd.tv_usec);
+    }
+    self.loginProcThread = nil;
+    
+    _STRUCT_TIMEVAL end;
+    gettimeofday(&end, NULL);
+    NSLog(@"ViewController::loginProc() login test finish ----------");
+    NSLog(@"ViewController::loginProc() login test finish, time:%ld.%d", end.tv_sec - begin.tv_sec, end.tv_usec >= begin.tv_usec ? end.tv_usec - begin.tv_usec : 1000*1000 - begin.tv_usec + end.tv_usec);
 }
 
 - (IBAction)logoutAction:(id)sender {
@@ -111,8 +160,8 @@
     }
 }
 
-- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {
-    NSLog(@"ViewController::onLogin()");
+- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ImLoginReturnObject* _Nonnull)item {
+    NSLog(@"ViewController::onLogin() errType:%d, errMsg:%@", errType, errmsg);
 }
 
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg {

@@ -16,6 +16,7 @@
 #import "LiveADView.h"
 #import "LiveModule.h"
 #import "AnchorPersonalViewController.h"
+#import "HomeVouchersManager.h"
 #define PageSize 10
 
 @interface FollowingViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate,LiveADViewDelegate,LSListViewControllerDelegate>
@@ -36,6 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    // 初始化主播列表
+    [self setupTableView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -47,21 +50,28 @@
     [super initCustomParam];
     self.items = [NSMutableArray array];
 
+    // Items for tab
+    LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
+    self.tabBarItem = tabBarItem;
+    self.tabBarItem.title = @"Follow";
+    self.tabBarItem.image = [[UIImage imageNamed:@"TabBarFollow"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarFollow-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    NSDictionary *normalColor = [NSDictionary dictionaryWithObject:Color(51, 51, 51, 1) forKey:NSForegroundColorAttributeName];
+    NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
+    [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
+    [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
+    
     self.sessionManager = [LSSessionRequestManager manager];
     
     self.delegate = self;
 }
 
 - (void)dealloc {
+    [self.tableView unInitPullRefresh];
 }
 
 - (void)setupContainView {
     [super setupContainView];
-
-    //    [self setupCollectionView];
-
-    // 初始化主播列表
-    [self setupTableView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -73,15 +83,28 @@
     }
 }
 
-- (void)setupCollectionView {
-    //    UIView *vc = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 414, 100)];
-    //    vc.backgroundColor = [UIColor cyanColor];
-    //
-    //    UIButton *btn = [UIButton buttonWithType:UIButtonTypeContactAdd];
-    //    btn.center = vc.center;
-    //    [vc addSubview: btn];
-    //
-    //    [btn addTarget:self action:@selector(btnClick:) forControlEvents:UIControlEventTouchUpInside];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    __weak typeof(self) weakSelf = self;
+    UIApplication *app = [UIApplication sharedApplication];
+    [[NSNotificationCenter defaultCenter]addObserverForName:UIApplicationWillEnterForegroundNotification  object:app queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [weakSelf.tableView startPullDown:YES];
+    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableViewVouchersData) name:@"updateTableViewVouchersData" object:nil];
+    [[HomeVouchersManager manager] getVouchersData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateTableViewVouchersData" object:nil];
+}
+
+- (void)updateTableViewVouchersData
+{
+    [self.tableView reloadData];
 }
 
 - (void)setupTableView {
@@ -92,7 +115,7 @@
     self.tableView.backgroundColor = [UIColor clearColor];
 
 
-    LiveADView * adView = [[LiveADView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 100)];
+    LiveADView * adView = [[LiveADView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 80)];
     adView.delegate = self;
     self.adView = adView;
     [self.tableView setTableHeaderView:adView];
@@ -153,30 +176,10 @@
 - (void)reloadData:(BOOL)isReloadView {
     // 数据填充
     if (isReloadView) {
-        
-        
         self.tableView.items = self.items;
-
         [self.tableView reloadData];
-
-        //        UITableViewCell* cell = [self.tableView visibleCells].firstObject;
-        //        NSIndexPath *index = [self.tableView indexPathForCell:cell];
-        //        NSInteger row = index.row;
-        //
-        //        if( self.items.count > 0) {
-        //            if( row < self.items.count ) {
-        //                NSIndexPath* nextLadyIndex = [NSIndexPath indexPathForRow:row inSection:0];
-        //                [self.tableView scrollToRowAtIndexPath:nextLadyIndex atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        //            }
-        //        }
     }
 }
-
-//- (void)followTableView:(FollowTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-//    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
-//    listViewController.anchorId = item.userId;
-//    [self.navigationController pushViewController:listViewController animated:YES];
-//}
 
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
@@ -203,7 +206,7 @@
 
 #pragma mark 数据逻辑
 - (BOOL)getListRequest:(BOOL)loadMore {
-    NSLog(@"HotViewController::getListRequest( loadMore : %@ )", BOOL2YES(loadMore));
+    NSLog(@"FollowingViewController::getListRequest( loadMore : %@ )", BOOL2YES(loadMore));
 
     BOOL bFlag = NO;
 
@@ -224,10 +227,11 @@
     request.step = PageSize;
 
     // 调用接口
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<FollowItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<FollowItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"HotViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
+            NSLog(@"FollowingViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
+                [[HomeVouchersManager manager] getVouchersData];
                 [self.tableView.tableHeaderView setHidden:NO];
                 self.failView.hidden = YES;
                 if (!loadMore) {
@@ -340,21 +344,10 @@
     [self.tableView startPullDown:YES];
 }
 
-
-//- (void)reloadData:(BOOL)isReloadView {
-//    // 数据填充
-//    if( isReloadView ) {
-//        self.collectionView.items = self.items;
-//        [self.collectionView reloadData];
-//    }
-//}
-
 - (void)BrowseToHotAction:(id)sender {
-    //    [self initTestData];
     [self hideTipsContent];
-    [self.homePageVC.pagingScrollView displayPagingViewAtIndex:0 animated:YES];
-
-    //    [self reloadData:YES];
+//    [self.homePageVC.pagingScrollView displayPagingViewAtIndex:0 animated:YES];
+    [self.followVCDelegate followingVCBrowseToHot];
 }
 - (IBAction)reloadBtnClickAction:(id)sender {
     [self hideTipsContent];
@@ -362,84 +355,6 @@
 }
 
 #pragma mark - 免费公开直播间
-///** 免费的公开直播间 */
-//- (void)tableView:(FollowTableView *)tableView didPublicViewFreeBroadcast:(NSInteger)index {
-//    // TODO:点击立即免费公开
-//        [[LiveModule module].analyticsManager reportActionEvent:EventCategoryenterBroadcast eventCategory:EventCategoryenterBroadcast];
-//    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-//    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-//    liveRoom.roomType = LiveRoomType_Public;
-//    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-//    liveRoom.httpLiveRoom = item;
-//    vc.liveRoom = liveRoom;
-//
-//    [self navgationControllerPresent:vc];
-//}
-//
-///** 付费的公开直播间 */
-//- (void)tableView:(FollowTableView *)tableView didPublicViewVipFeeBroadcast:(NSInteger)index {
-//    // TODO:点击立即付费公开
-//     [[LiveModule module].analyticsManager reportActionEvent:EnterVipBroadcast eventCategory:EventCategoryenterBroadcast];
-//    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-//    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-//    liveRoom.roomType = LiveRoomType_Public_VIP;
-//    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-//    liveRoom.httpLiveRoom = item;
-//    vc.liveRoom = liveRoom;
-//
-//    [self navgationControllerPresent:vc];
-//}
-//
-///** 普通的私密直播间 */
-//- (void)tableView:(FollowTableView *)tableView didPrivateStartBroadcast:(NSInteger)index {
-//    // TODO:点击立即付费私密
-//    [[LiveModule module].analyticsManager reportActionEvent:EnterPrivateBroadcast eventCategory:EventCategoryenterBroadcast];
-//    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-//    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-//    liveRoom.roomType = LiveRoomType_Private;
-//    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-//    liveRoom.httpLiveRoom = item;
-//    vc.liveRoom = liveRoom;
-//
-//    [self navgationControllerPresent:vc];
-//}
-///** 豪华的私密直播间 */
-//- (void)tableView:(FollowTableView *)tableView didStartVipPrivteBroadcast:(NSInteger)index {
-//    // TODO:点击立即付费豪华私密
-//    [[LiveModule module].analyticsManager reportActionEvent:EnterVipPrivateBroadcast eventCategory:EventCategoryenterBroadcast];
-//    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-//    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-//    liveRoom.roomType = LiveRoomType_Private;
-//    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-//    liveRoom.httpLiveRoom = item;
-//    vc.liveRoom = liveRoom;
-//
-//    [self navgationControllerPresent:vc];
-//}
-//
-//- (void)navgationControllerPresent:(UIViewController *)controller {
-//    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
-//    nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
-//    nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
-//    nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-//    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,nil];
-//    [nvc.navigationBar setTitleTextAttributes:attributes];
-//    [nvc.navigationItem setHidesBackButton:YES];
-//    [self.navigationController presentViewController:nvc animated:YES completion:nil];
-//}
-//
-///** 预约的私密直播间 */
-//- (void)tableView:(FollowTableView *)tableView didBookPrivateBroadcast:(NSInteger)index {
-//    // TODO:预约的私密直播间
-//      [[LiveModule module].analyticsManager reportActionEvent:SendRequestBooking eventCategory:EventCategoryenterBroadcast];
-//    LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-//    BookPrivateBroadcastViewController * vc = [[BookPrivateBroadcastViewController alloc]initWithNibName:nil bundle:nil];
-//    vc.userId = item.userId;
-//    vc.userName = item.nickName;
-//     [self.navigationController pushViewController:vc animated:YES];
-//}
-
-
 /** 免费的公开直播间 */
 - (void)tableView:(HotTableView *)tableView didPublicViewFreeBroadcast:(NSInteger)index {
     // TODO:点击立即免费公开
@@ -500,7 +415,7 @@
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,nil];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName,nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];

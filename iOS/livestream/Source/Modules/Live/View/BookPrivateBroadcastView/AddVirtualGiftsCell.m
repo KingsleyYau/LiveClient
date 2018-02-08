@@ -73,7 +73,7 @@
             cell = [nib objectAtIndex:0];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-        CalvinSwitch *vgSwitch = [[CalvinSwitch alloc] initWithFrame:CGRectMake(0, 0, cell.switchBGView.frame.size.width, cell.switchBGView.frame.size.height) onColor:COLOR_WITH_16BAND_RGB(0x5d0e86) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
+        CalvinSwitch *vgSwitch = [[CalvinSwitch alloc] initWithFrame:CGRectMake(0, 0, cell.switchBGView.frame.size.width, cell.switchBGView.frame.size.height) onColor:COLOR_WITH_16BAND_RGB(0x297AF3) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
         vgSwitch.on = YES;
         [cell.switchBGView addSubview:vgSwitch];
         [vgSwitch addTarget:cell action:@selector(switchOn:) forControlEvents:UIControlEventValueChanged];
@@ -90,7 +90,7 @@
             cell.textLabel.text = NSLocalizedStringFromSelf(@"ADD_CIETUAL_GIFT");
         }
 
-        CalvinSwitch *vgSwitch = [[CalvinSwitch alloc] initWithFrame:CGRectMake(tableView.frame.size.width - 44 - 15, 15, 44, 20) onColor:COLOR_WITH_16BAND_RGB(0x5d0e86) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
+        CalvinSwitch *vgSwitch = [[CalvinSwitch alloc] initWithFrame:CGRectMake(tableView.frame.size.width - 44 - 15, 15, 44, 20) onColor:COLOR_WITH_16BAND_RGB(0x297AF3) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
         vgSwitch.on = NO;
         [cell addSubview:vgSwitch];
         [vgSwitch addTarget:cell action:@selector(switchOn:) forControlEvents:UIControlEventValueChanged];
@@ -152,7 +152,7 @@
             self.oldNumButton = button;
             [self.numBtn setTitle:[NSString stringWithFormat:@"%ld", (long)self.num] forState:UIControlStateNormal];
 
-            [button setBackgroundColor:COLOR_WITH_16BAND_RGB(0xf7cd3a)];
+            [button setBackgroundColor:COLOR_WITH_16BAND_RGB(0x297AF3)];
 
             self.credit = giftItem.infoItem.credit;
             CGFloat priceNum = self.credit * self.num;
@@ -192,7 +192,7 @@
     [self.numBtn setTitle:str forState:UIControlStateNormal];
 
     [self.oldNumButton setBackgroundColor:[UIColor whiteColor]];
-    [button setBackgroundColor:COLOR_WITH_16BAND_RGB(0xf7cd3a)];
+    [button setBackgroundColor:COLOR_WITH_16BAND_RGB(0x297AF3)];
     self.oldNumButton = button;
 
     self.num = [str integerValue];
@@ -206,16 +206,17 @@
         [self.delegate addVirtualGiftsCellSelectGiftId:self.giftId andNum:self.num];
     }
 
-    NSString *priceStr = [NSString stringWithFormat:@"%@  %0.2f %@", NSLocalizedStringFromSelf(@"TOTAL_PRICE"), num, NSLocalizedStringFromSelf(@"CRDITS")];
-    NSMutableAttributedString *mAttStr = [[NSMutableAttributedString alloc] initWithString:priceStr];
-
-    NSRange priceRange = [priceStr rangeOfString:[NSString stringWithFormat:@"%0.2f", num]];
-    [mAttStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:priceRange];
-    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:priceRange];
-    NSRange crditsRange = [priceStr rangeOfString:NSLocalizedStringFromSelf(@"CRDITS")];
-    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xF7CD3A) range:crditsRange];
-
-    self.priceLabel.attributedText = mAttStr;
+    NSString *priceStr = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"TOTAL_PRICE"),num];
+    self.priceLabel.text = priceStr;
+//    NSMutableAttributedString *mAttStr = [[NSMutableAttributedString alloc] initWithString:priceStr];
+//
+//    NSRange priceRange = [priceStr rangeOfString:[NSString stringWithFormat:@"%0.2f", num]];
+//    [mAttStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:20] range:priceRange];
+//    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x297AF3) range:priceRange];
+//    NSRange crditsRange = [priceStr rangeOfString:NSLocalizedStringFromSelf(@"CRDITS")];
+//    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x297AF3) range:crditsRange];
+//
+//    self.priceLabel.attributedText = mAttStr;
 }
 
 - (void)switchOn:(CalvinSwitch *)vgSwitch {

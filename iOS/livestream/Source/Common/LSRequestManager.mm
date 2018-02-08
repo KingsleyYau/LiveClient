@@ -17,6 +17,71 @@
 
 #include <httpcontroller/HttpRequestDefine.h>
 
+/*直播间状态转换*/
+static const int HTTPErrorTypeArray[] = {
+    HTTP_LCC_ERR_SUCCESS,           // 成功
+    HTTP_LCC_ERR_FAIL,                 // 服务器返回失败结果
+    
+    // 客户端定义的错误
+    HTTP_LCC_ERR_PROTOCOLFAIL,       // 协议解析失败（服务器返回的格式不正确）
+    HTTP_LCC_ERR_CONNECTFAIL,        // 连接服务器失败/断开连接
+    HTTP_LCC_ERR_CHECKVERFAIL,       // 检测版本号失败（可能由于版本过低导致）
+    
+    HTTP_LCC_ERR_SVRBREAK,           // 服务器踢下线
+    HTTP_LCC_ERR_INVITE_TIMEOUT,     // 邀请超时
+    // 服务器返回错误
+    HTTP_LCC_ERR_ROOM_FULL,           // 房间人满
+    HTTP_LCC_ERR_NO_CREDIT,           // 信用点不足
+    /* IM公用错误码 */
+    HTTP_LCC_ERR_NO_LOGIN,           // 未登录
+    HTTP_LCC_ERR_SYSTEM,             // 系统错误
+    HTTP_LCC_ERR_TOKEN_EXPIRE,         // Token 过期了
+    HTTP_LCC_ERR_NOT_FOUND_ROOM,     // 进入房间失败 找不到房间信息or房间关闭
+    HTTP_LCC_ERR_CREDIT_FAIL,         // 远程扣费接口调用失败
+    HTTP_LCC_ERR_ROOM_CLOSE,          // 房间已经关闭
+    HTTP_LCC_ERR_KICKOFF,             // 被挤掉线 默认通知内容
+    HTTP_LCC_ERR_NO_AUTHORIZED,     // 不能操作 不是对应的userid
+    HTTP_LCC_ERR_LIVEROOM_NO_EXIST, // 直播间不存在
+    HTTP_LCC_ERR_LIVEROOM_CLOSED,     // 直播间已关闭
+    HTTP_LCC_ERR_ANCHORID_INCONSISTENT,     // 主播id与直播场次的主播id不合
+    HTTP_LCC_ERR_CLOSELIVE_DATA_FAIL,         // 关闭直播场次,数据表操作出错
+    HTTP_LCC_ERR_CLOSELIVE_LACK_CODITION,     // 主播立即关闭私密直播间, 不满足关闭条件
+    /* 其它错误码*/
+    HTTP_LCC_ERR_USED_OUTLOG,                 // 退出登录 (用户主动退出登录)
+    HTTP_LCC_ERR_NOTCAN_CANCEL_INVITATION,     // 取消立即私密邀请失败 状态不是带确认 /*important*/
+    HTTP_LCC_ERR_NOT_FIND_ANCHOR,             // 主播机构信息找不到
+    HTTP_LCC_ERR_NOTCAN_REFUND,             // 立即私密退点失败，已经定时扣费不能退点
+    HTTP_LCC_ERR_NOT_FIND_PRICE_INFO,         // 找不到price_setting表信息
+    HTTP_LCC_ERR_ANCHOR_BUSY,                  // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
+    HTTP_LCC_ERR_CHOOSE_TIME_ERR,             // 预约时间错误 /*important*/
+    HTTP_LCC_ERR_BOOK_EXIST,                 // 用户预约时间段已经存在预约 /*important*/
+    HTTP_LCC_ERR_BIND_PHONE,                 // 手机号码已绑定
+    HTTP_LCC_ERR_RETRY_PHONE,                 // 请稍后再重试
+    HTTP_LCC_ERR_MORE_TWENTY_PHONE,         // 60分钟内验证超过20次，请24小时后再试
+    HTTP_LCC_ERR_UPDATE_PHONE_FAIL,         // 更新失败
+    HTTP_LCC_ERR_ANCHOR_OFFLIVE,            // 主播不在线，不能操作
+    HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING,     // 观众已同意预约
+    HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING,     // 预约邀请已超时（当观众拒绝时）
+    HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING,       // 预约邀请已超时（当观众同意时）
+    HTTP_LCC_ERR_FACEBOOK_NO_MAILBOX,     // Facebook没有邮箱（需要提交邮箱）
+    HTTP_LCC_ERR_FACEBOOK_EXIST_QN_MAILBOX, // Facebook邮箱已在QN注册（需要换邮箱）
+    HTTP_LCC_ERR_FACEBOOK_EXIST_LS_MAILBOX,  // Facebook邮箱已在直播独立站注册（需要输入密码）
+    HTTP_LCC_ERR_FACEBOOK_TOKEN_INVALID,     // Facebook token无效登录失败
+    HTTP_LCC_ERR_FACEBOOK_PARAMETER_FAIL,    // 参数错误
+    HTTP_LCC_ERR_FACEBOOK_ALREADY_REGISTER,  // Facebook帐号已在QN注册（提示错误）
+    HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX,          // 邮箱已在QN注册
+    HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX,          // 邮箱已在直播独立站注册
+    HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN,        // 年龄小于18岁
+    HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL,            // 参数错误
+    HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT,           // 密码不正确
+    HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL,              // 邮箱未注册
+    HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL,           // 邮箱未注册
+    HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG,        // 验证码错误
+    HTTP_LCC_ERR_FORCED_TO_UPDATE,                       // 强制更新，这里时本地返回的，仅用于ios
+    HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE,                 // 其他设备登录，这里时本地返回的，仅用于ios
+    HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN,         // 其他设备登录，这里时本地返回的，仅用于ios
+};
+
 static LSRequestManager *gManager = nil;
 @interface LSRequestManager () {
     HttpRequestManager mHttpRequestManager;
@@ -53,7 +118,7 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_MSG);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -91,7 +156,6 @@ static LSRequestManager *gManager = nil;
         [properties setObject:[NSString stringWithUTF8String:item.m_symbol.c_str()] forKey:NSHTTPCookiePath];
         [properties setObject:[NSString stringWithUTF8String:item.m_cName.c_str()] forKey:NSHTTPCookieName];
         [properties setObject:[NSString stringWithUTF8String:item.m_value.c_str()] forKey:NSHTTPCookieValue];
-        [properties setObject:[NSString stringWithUTF8String:item.m_expiresTime.c_str()] forKey:NSHTTPCookieMaximumAge];
         
         NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:properties];
         [cookies addObject:cookie];
@@ -116,6 +180,22 @@ static LSRequestManager *gManager = nil;
 - (NSInteger)invalidRequestId {
     return HTTPREQUEST_INVALIDREQUESTID;
 }
+
+//oc层转底层枚举
+-(HTTP_LCC_ERR_TYPE)intToHttpLccErrType:(int)errType {
+    // 默认是HTTP_LCC_ERR_FAIL，当服务器返回未知的错误码时
+    HTTP_LCC_ERR_TYPE value = HTTP_LCC_ERR_FAIL;
+    int i = 0;
+    for (i = 0; i < _countof(HTTPErrorTypeArray); i++)
+    {
+        if (errType == HTTPErrorTypeArray[i]) {
+            value = (HTTP_LCC_ERR_TYPE)HTTPErrorTypeArray[i];
+            break;
+        }
+    }
+    return value;
+}
+
 
 #pragma mark - 登陆认证模块
 
@@ -152,7 +232,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -217,7 +297,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -251,7 +331,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -310,7 +390,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -368,7 +448,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -431,7 +511,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], Obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], Obj);
         }
     }
 };
@@ -475,7 +555,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -536,7 +616,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -576,7 +656,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -630,7 +710,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], gift);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], gift);
         }
     }
 };
@@ -683,7 +763,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -728,7 +808,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], item);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], item);
         }
     }
 };
@@ -768,7 +848,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -807,7 +887,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -847,7 +927,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -885,7 +965,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], nsUploadUrls);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], nsUploadUrls);
         }
     }
 };
@@ -938,7 +1018,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -1000,7 +1080,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], item);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], item);
         }
     }
 };
@@ -1034,7 +1114,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1067,7 +1147,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1105,7 +1185,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -1170,7 +1250,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -1202,7 +1282,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1243,7 +1323,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -1290,7 +1370,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
@@ -1340,7 +1420,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
@@ -1385,7 +1465,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array, totalCount);
         }
     }
 };
@@ -1415,7 +1495,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1452,13 +1532,64 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
 RequestGetBackpackUnreadNumCallbackImp gRequestGetBackpackUnreadNumCallbackImp;
 - (NSInteger)getBackpackUnreadNum:(GetBackpackUnreadNumFinishHandler _Nullable)finishHandler {
     NSInteger request = (NSInteger)mHttpRequestController.GetBackpackUnreadNum(&mHttpRequestManager, &gRequestGetBackpackUnreadNumCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@(request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetVoucherAvailableInfoCallbackImp : public IRequestGetVoucherAvailableInfoCallback {
+public:
+    RequestGetVoucherAvailableInfoCallbackImp(){};
+    ~RequestGetVoucherAvailableInfoCallbackImp(){};
+    void OnGetVoucherAvailableInfo(HttpGetVoucherAvailableInfoTask* task, bool success, int errnum, const string& errmsg, const HttpVoucherInfoItem& item) {
+        NSLog(@"LSRequestManager::OnGetVoucherAvailableInfo( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+        LSVoucherAvailableInfoItemObject *obj = [[LSVoucherAvailableInfoItemObject alloc] init];
+        obj.onlypublicExpTime = item.onlypublicExpTime;
+        obj.onlyprivateExpTime = item.onlyprivateExpTime;
+        NSMutableArray *array = [NSMutableArray array];
+        for (HttpVoucherInfoItem::BindAnchorList::const_iterator iter = item.bindAnchor.begin(); iter != item.bindAnchor.end(); iter++) {
+            LSBindAnchorItemObject *item = [[LSBindAnchorItemObject alloc] init];
+            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+            item.useRoomType = (*iter).useRoomType;
+            item.expTime = (*iter).expTime;
+            [array addObject:item];
+        }
+        obj.bindAnchor = array;
+        obj.onlypublicNewExpTime = item.onlypublicNewExpTime;
+        obj.onlyprivateNewExpTime = item.onlyprivateNewExpTime;
+        NSMutableArray *arrayAnchor = [NSMutableArray array];
+        for (WatchAnchorList::const_iterator iter = item.watchedAnchor.begin(); iter != item.watchedAnchor.end(); iter++) {
+            NSString *anchorId = [NSString stringWithUTF8String:(*iter).c_str()];
+            [arrayAnchor addObject:anchorId];
+        }
+        obj.watchedAnchor = arrayAnchor;
+        
+        GetVoucherAvailableInfoFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
+        }
+    }
+};
+RequestGetVoucherAvailableInfoCallbackImp gRequestGetVoucherAvailableInfoCallbackImp;
+- (NSInteger)getVoucherAvailableInfo:(GetVoucherAvailableInfoFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetVoucherAvailableInfo(&mHttpRequestManager, &gRequestGetVoucherAvailableInfoCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@(request)];
@@ -1494,7 +1625,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], obj);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
     }
 };
@@ -1526,7 +1657,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], credit);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], credit);
         }
     }
 };
@@ -1557,7 +1688,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1615,7 +1746,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], array);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
     }
 };
@@ -1647,7 +1778,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1678,7 +1809,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1712,7 +1843,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1747,7 +1878,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
         }
     }
 };
@@ -1780,7 +1911,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:bannerImg.c_str()], [NSString stringWithUTF8String:bannerLink.c_str()], [NSString stringWithUTF8String:bannerName.c_str()]);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:bannerImg.c_str()], [NSString stringWithUTF8String:bannerLink.c_str()], [NSString stringWithUTF8String:bannerName.c_str()]);
         }
     }
 };
@@ -1828,7 +1959,7 @@ public:
         }
         
         if (handler) {
-            handler(success, errnum, [NSString stringWithUTF8String:errmsg.c_str()], item);
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], item);
         }
     }
 };

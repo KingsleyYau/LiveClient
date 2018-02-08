@@ -51,7 +51,7 @@
 }
 
 // 监听HTTP登录
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 请求背包礼物列表
@@ -65,7 +65,7 @@
 - (void)getBackpackListRequest:(RequestRoomGiftBlock)callBack {
     
     GiftListRequest *request = [[GiftListRequest alloc] init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg,
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg,
                               NSArray<BackGiftItemObject *> * _Nullable array, int totalCount) {
         
         NSLog(@"BackpackSendGiftManager::GiftListRequest( [发送获取背包礼物列表请求结果], success : %d, errnum : %ld, errmsg : %@, totalCount : %d )", success, (long)errnum, errmsg, totalCount);

@@ -34568,6 +34568,31 @@ struct FlvContext
     SrsFlvDecoder dec;
 };
 
+int srs_flv_write_default_header(srs_flv_t flv)
+{
+    int ret = ERROR_SUCCESS;
+    
+    // flv header
+    char header[9];
+    // 3bytes, signature, "FLV",
+    header[0] = 'F';
+    header[1] = 'L';
+    header[2] = 'V';
+    // 1bytes, version, 0x01,
+    header[3] = 0x01;
+    // 1bytes, flags, UB[5] 0, UB[1] audio present, UB[1] 0, UB[1] video present.
+    header[4] = 0x03; // audio + video.
+    // 4bytes, dataoffset
+    header[5] = 0x00;
+    header[6] = 0x00;
+    header[7] = 0x00;
+    header[8] = 0x09;
+    
+    ret = srs_flv_write_header(flv, header);
+    
+    return ret;
+}
+    
 srs_flv_t srs_flv_open_read(const char* file)
 {
     int ret = ERROR_SUCCESS;
@@ -34593,19 +34618,40 @@ srs_flv_t srs_flv_open_write(const char* file)
     
     FlvContext* flv = new FlvContext();
     
-    if ((ret = flv->writer.open(file)) != ERROR_SUCCESS) {
-        srs_freep(flv);
-        return NULL;
+    /////////////////////////////////////////////////////////////////
+    // Modify by Max 2018/02/06
+//    if ((ret = flv->writer.open(file)) != ERROR_SUCCESS) {
+//        srs_freep(flv);
+//        return NULL;
+//    }
+    
+    bool bNewFile = false;
+    if ((ret = flv->writer.open_append(file)) != ERROR_SUCCESS) {
+        if ((ret = flv->writer.open(file)) != ERROR_SUCCESS) {
+            srs_freep(flv);
+            return NULL;
+        } else {
+            bNewFile = true;
+        }
     }
+    /////////////////////////////////////////////////////////////////
     
     if ((ret = flv->enc.initialize(&flv->writer)) != ERROR_SUCCESS) {
         srs_freep(flv);
         return NULL;
     }
     
+    /////////////////////////////////////////////////////////////////
+    // Modify by Max 2018/02/06
+    if( bNewFile ) {
+        // Create new file, write default flv header
+        srs_flv_write_default_header(flv);
+    }
+    /////////////////////////////////////////////////////////////////
+    
     return flv;
 }
-
+    
 void srs_flv_close(srs_flv_t flv)
 {
     FlvContext* context = (FlvContext*)flv;

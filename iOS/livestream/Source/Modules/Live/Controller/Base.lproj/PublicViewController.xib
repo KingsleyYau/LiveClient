@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,6 +22,7 @@
                 <outlet property="peopleNumBtn" destination="n2h-99-NjX" id="LFF-FZ-fGu"/>
                 <outlet property="roomTypeImageView" destination="bFO-8q-Gng" id="TeS-OM-u9k"/>
                 <outlet property="titleBackGroundView" destination="jaE-2b-OdZ" id="QjX-Hy-KJF"/>
+                <outlet property="titleBgImageTop" destination="ZuC-FP-s3S" id="hZo-WM-ylb"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -45,7 +46,7 @@
                     <rect key="frame" x="265" y="646" width="81" height="90"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Bg_Type" translatesAutoresizingMaskIntoConstraints="NO" id="bFO-8q-Gng" userLabel="Free Public View" customClass="LSUITapImageView">
-                    <rect key="frame" x="13" y="28" width="128" height="26"/>
+                    <rect key="frame" x="13" y="28" width="128" height="25"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IzL-NQ-Tpx">
                     <rect key="frame" x="13" y="68" width="103" height="26"/>
@@ -164,7 +165,7 @@
         <image name="Live_Public_Bg_Bottom" width="640" height="52"/>
         <image name="Live_Public_Bg_Bottom_People" width="81" height="90"/>
         <image name="Live_Public_Bg_Title" width="414" height="82"/>
-        <image name="Live_Public_Bg_Type" width="128" height="26"/>
+        <image name="Live_Public_Bg_Type" width="128" height="25"/>
         <image name="Live_Public_Btn_Close" width="16" height="16"/>
         <image name="Live_Public_Btn_Follow" width="23" height="23"/>
         <image name="Live_Public_Img_People" width="11" height="11"/>

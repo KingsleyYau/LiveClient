@@ -57,9 +57,9 @@ static LSConfigManager* gManager = nil;
             return YES;
             
         } else {
-            self.requestId = [[LSRequestManager manager] getConfig:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject * _Nonnull item) {
+            self.requestId = [[LSRequestManager manager] getConfig:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ConfigItemObject * _Nonnull item) {
                 // 接口返回
-                __block NSInteger blockErrnum = errnum;
+                __block HTTP_LCC_ERR_TYPE blockErrnum = errnum;
                 __block NSString* blockErrmsg = errmsg;
                 __block BOOL blockSuccess = success;
                 
@@ -86,7 +86,7 @@ static LSConfigManager* gManager = nil;
     return NO;
 }
 
-- (void)callbackConfigStatus:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)callbackConfigStatus:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     for(GetConfigFinishHandler handler in self.finishHandlers) {
         handler(success, errnum, errmsg, self.item);
     }

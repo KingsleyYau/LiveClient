@@ -105,7 +105,7 @@
 
     NSRange timeRange = [timeStr rangeOfString:time];
     [mAttStr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:timeRange];
-    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0xfe59fe) range:timeRange];
+    [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x297AF3) range:timeRange];
 
     NSRange strRange = [timeStr rangeOfString:NSLocalizedStringFromSelf(@"START_IN")];
     [mAttStr addAttribute:NSForegroundColorAttributeName value:COLOR_WITH_16BAND_RGB(0x3c3c3c) range:strRange];

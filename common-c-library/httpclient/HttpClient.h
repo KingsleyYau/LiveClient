@@ -10,7 +10,7 @@
 #define HttpClient_H_
 
 #include "HttpEntiy.h"
-#include <curl/curl.h>
+
 #include <list>
 #include "CookiesItem.h"
 
@@ -29,7 +29,8 @@ public:
 	static void Init();
 	static void SetLogEnable(bool enable);
 	static void SetLogDirectory(string directory);
-
+    static void SetProxy(string proxyUrl, int proxyPort);
+    
 	// 设置cookies路径
 	static void SetCookiesDirectory(string directory);
 	// 清除所有域名cookies
@@ -64,12 +65,8 @@ public:
 	double GetDownloadDataLength() const;
 
 private:
-	static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param);
 	static size_t CurlHandle(void *buffer, size_t size, size_t nmemb, void *data);
 	void HttpHandle(void *buffer, size_t size, size_t nmemb);
-    
-    static void Curl_Lock(CURL *handle, curl_lock_data data, curl_lock_access access, void *useptr);
-    static void Curl_Unlock(CURL *handle, curl_lock_data data, void *useptr);
     
 	static size_t CurlProgress(
 			void *data,
@@ -87,7 +84,7 @@ private:
 
 	IHttpClientCallback *mpIHttpClientCallback;
 
-	CURL *mpCURL;
+	void *mpCURL;
 	string mUrl;
 	string mContentType;
 	double mContentLength;
@@ -103,6 +100,7 @@ private:
 	double mdDownloadLast;
 	double mdDownloadLastTime;
     double mdDownloadTimeout;
+    
 };
 
 #endif /* HttpClient_H_ */

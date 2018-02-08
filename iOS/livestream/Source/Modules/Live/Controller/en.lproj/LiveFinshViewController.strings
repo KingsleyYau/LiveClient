@@ -3,9 +3,8 @@
 "KJf-OI-eXV.text" = "MengQi D Luffy";
 
 /* Class = "UILabel"; text = "Broadcast has ended.
-  Please check back later."; ObjectID = "RUq-oa-6Jg"; */
-"RUq-oa-6Jg.text" = "Broadcast has ended.
-  Please check back later.";
+ Please check back later."; ObjectID = "RUq-oa-6Jg"; */
+"RUq-oa-6Jg.text" = "Broadcast has ended.\nPlease check back later.";
 
 /* Class = "UILabel"; text = "Recommanded Performers"; ObjectID = "eSP-gf-u6p"; */
 "eSP-gf-u6p.text" = "Recommended Broadcasters";

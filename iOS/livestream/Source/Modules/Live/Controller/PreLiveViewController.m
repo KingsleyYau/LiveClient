@@ -45,7 +45,7 @@ typedef enum PreLiveStatus {
     PreLiveStatus_Error,
 } PreLiveStatus;
 
-@interface PreLiveViewController () <IMLiveRoomManagerDelegate, IMManagerDelegate, UICollectionViewDataSource, UICollectionViewDelegate>
+@interface PreLiveViewController () <IMLiveRoomManagerDelegate, IMManagerDelegate, UICollectionViewDataSource, UICollectionViewDelegate,LiveGobalManagerDelegate>
 // 当前状态
 @property (nonatomic, assign) PreLiveStatus status;
 // IM管理器
@@ -90,6 +90,14 @@ typedef enum PreLiveStatus {
 #pragma mark - 充值处理
 @property (nonatomic) BOOL isAddCredit;
 
+@property (nonatomic, assign) NSTimeInterval enterRoomTimeInterval;
+
+//  是否进入直播间
+@property (nonatomic, assign) BOOL isEnterRoom;
+
+// 是否退入后台超时
+@property (nonatomic, assign) BOOL isTimeOut;
+
 @end
 
 @implementation PreLiveViewController
@@ -104,6 +112,9 @@ typedef enum PreLiveStatus {
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
 
+    // 初始化后台管理器
+    [[LiveGobalManager manager] addDelegate:self];
+    
     self.sessionManager = [LSSessionRequestManager manager];
 
     self.imageViewLoader = [LSImageViewLoader loader];
@@ -123,13 +134,29 @@ typedef enum PreLiveStatus {
     
     // 初始化开播前倒数
     self.enterRoomLeftSecond = 0;
+    
+    // 初始化进入后台时间
+    self.enterRoomTimeInterval = 0;
+    
+    // 初始化是否进入直播间
+    self.isEnterRoom = NO;
+    
+    // 初始化是否超时
+    self.isTimeOut = NO;
 }
 
 - (void)dealloc {
     NSLog(@"PreLiveViewController::dealloc()");
 
+    [[LiveGobalManager manager] removeDelegate:self];
+    
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
+    
+    // 赋值到全局变量, 用于前台计时
+    [LiveGobalManager manager].liveRoom = nil;
+    [LiveGobalManager manager].player = nil;
+    [LiveGobalManager manager].publisher = nil;
     
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
@@ -151,39 +178,39 @@ typedef enum PreLiveStatus {
     // 禁止导航栏后退手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
+    // 刷新女士名字
     if ( self.liveRoom.userName.length > 0 ) {
-        // 刷新女士名字
         self.ladyNameLabel.text = self.liveRoom.userName;
     }
-    if ( self.liveRoom.photoUrl.length > 0 ) {
-        // 刷新女士头像
-        [self.imageViewLoader loadImageWithImageView:self.ladyImageView options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
-    }
+    
+    // 刷新背景
     if ( self.liveRoom.roomPhotoUrl.length > 0 ) {
-        // 刷新背景
         [self.imageViewLoaderBg loadImageWithImageView:self.bgImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:nil];
     }
-    // 从服务器获取信息
-    [[UserInfoManager manager] getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // 刷新女士头像
-            self.liveRoom.photoUrl = item.photoUrl;
-            [self.imageViewLoader loadImageWithImageView:self.ladyImageView options:0 imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
-            // 刷新女士名字
-            self.liveRoom.userName = item.nickName;
-            self.ladyNameLabel.text = item.nickName;
-        });
-    }];
+    
+    // 刷新女士头像
+    if ( self.liveRoom.photoUrl.length > 0 ) {
+        [self.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+    } else {
+        // 请求并缓存主播信息
+        WeakObject(self, weakSelf);
+        [[UserInfoManager manager] getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 刷新女士头像
+                weakSelf.liveRoom.photoUrl = item.photoUrl;
+                [weakSelf.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                // 刷新女士名字
+                weakSelf.liveRoom.userName = item.nickName;
+                weakSelf.ladyNameLabel.text = item.nickName;
+            });
+        }];
+    }
     
     // 设置不允许显示立即邀请
     [[LiveGobalManager manager] setCanShowInvite:NO];
     // 清除浮窗
     [[LiveModule module].notificationVC.view removeFromSuperview];
     [[LiveModule module].notificationVC removeFromParentViewController];
-    
-    if (self.liveRoom.userId.length > 0) {
-        [self showPrivate];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -191,7 +218,7 @@ typedef enum PreLiveStatus {
 
     // 隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
-    
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -204,9 +231,12 @@ typedef enum PreLiveStatus {
     if( !self.viewDidAppearEver || self.isAddCredit ) {
         self.isAddCredit = NO;
         
+//        self.liveRoom.roomId = @"1";
+//        self.liveRoom.roomType = LiveRoomType_Private_VIP;
+//        [self enterPrivateVipRoom];
         // 开始计时
         [self startHandleTimer];
-        
+
         // 发起请求
         [self startRequest];
     }
@@ -385,7 +415,7 @@ typedef enum PreLiveStatus {
     request.number = 2;
     request.type = PROMOANCHORTYPE_LIVEROOM;
     request.userId = self.liveRoom.userId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 
@@ -508,7 +538,7 @@ typedef enum PreLiveStatus {
             if (errMsg.length > 0) {
                 tip = errMsg;
             } else {
-                tip = NSLocalizedStringFromErrorCode(@"SERVER_ERROR_TIP");
+                tip = NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP");
             }
             self.tipsLabel.text = tip;
             
@@ -583,10 +613,19 @@ typedef enum PreLiveStatus {
         if( self.status != PreLiveStatus_Error ) {
             if (success) {
                 // 请求进入成功
+                // 更新本地登录信息
+                [LSLoginManager manager].loginItem.level = roomItem.manLevel;
                 self.liveRoom.imLiveRoom = roomItem;
                 if (roomItem.photoUrl.length > 0) {
                     self.liveRoom.photoUrl = roomItem.photoUrl;
                 }
+                
+                // 更新并缓存主播信息
+                LSUserInfoModel *item = [[LSUserInfoModel alloc] init];
+                item.userId = roomItem.userId;
+                item.nickName = roomItem.nickName;
+                item.photoUrl = roomItem.photoUrl;
+                [[UserInfoManager manager] setLiverInfoDic:item];
                 
                 // 进入成功不能显示退出按钮
                 self.canShowExitButton = NO;
@@ -602,6 +641,9 @@ typedef enum PreLiveStatus {
                     self.statusLabel.text = DEBUG_STRING([NSString stringWithFormat:@"进入直播间成功, 准备跳转..."]);
                     if (roomItem.leftSeconds > 0) {
                         self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_TIPS_BOARDCAST_ACCEPT");
+                        
+                        // 停止180s倒数
+                        [self stopHandleTimer];
                         
                         // 更新流地址
                         [self.liveRoom reset];
@@ -652,37 +694,39 @@ typedef enum PreLiveStatus {
     // 如果在后台记录进入时间
     if( self.isBackground ) {
         [LiveGobalManager manager].enterRoomBackgroundTime = [NSDate date];
-    }
-    
-    // TODO:根据服务器返回的直播间类型进入
-    if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_FREEPUBLICLIVEROOM) {
-        // 免费公开直播间
-        self.liveRoom.roomType = LiveRoomType_Public;
-        [self enterPublicRoom];
-
-    } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_CHARGEPUBLICLIVEROOM) {
-        // 付费公开直播间
-        self.liveRoom.roomType = LiveRoomType_Public_VIP;
-        [self enterPublicVipRoom];
-
-    } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_COMMONPRIVATELIVEROOM) {
-        // 普通私密直播间
-//        self.liveRoom.roomType = LiveRoomType_Private;
-//        [self enterPrivateRoom];
-        self.liveRoom.roomType = LiveRoomType_Private_VIP;
-        [self enterPrivateVipRoom];
-
-    } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_LUXURYPRIVATELIVEROOM) {
-        // 豪华私密直播间
-        self.liveRoom.roomType = LiveRoomType_Private_VIP;
-        [self enterPrivateVipRoom];
+        [LiveGobalManager manager].liveRoom = self.liveRoom;
     } else {
-        [self handleError:LCC_ERR_FAIL errMsg:@"Unknow room type."];
+        // TODO:根据服务器返回的直播间类型进入
+        if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_FREEPUBLICLIVEROOM) {
+            // 免费公开直播间
+            self.liveRoom.roomType = LiveRoomType_Public;
+            [self enterPublicRoom];
+            
+        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_CHARGEPUBLICLIVEROOM) {
+            // 付费公开直播间
+            self.liveRoom.roomType = LiveRoomType_Public_VIP;
+            [self enterPublicVipRoom];
+            
+        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_COMMONPRIVATELIVEROOM) {
+            // 普通私密直播间
+            //        self.liveRoom.roomType = LiveRoomType_Private;
+            //        [self enterPrivateRoom];
+            self.liveRoom.roomType = LiveRoomType_Private_VIP;
+            [self enterPrivateVipRoom];
+            
+        } else if (self.liveRoom.imLiveRoom.roomType == ROOMTYPE_LUXURYPRIVATELIVEROOM) {
+            // 豪华私密直播间
+            self.liveRoom.roomType = LiveRoomType_Private_VIP;
+            [self enterPrivateVipRoom];
+        } else {
+            [self handleError:LCC_ERR_FAIL errMsg:NSLocalizedStringFromSelf(@"UNKNOW_ROOM_TYPE")];
+        }
     }
 }
 
 - (void)enterPublicRoom {
     // TODO:进入免费公开直播间界面
+    self.isEnterRoom = YES;
     PublicViewController *vc = [[PublicViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
@@ -691,6 +735,7 @@ typedef enum PreLiveStatus {
 
 - (void)enterPublicVipRoom {
     // TODO:进入付费公开直播间界面
+    self.isEnterRoom = YES;
     PublicVipViewController *vc = [[PublicVipViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
@@ -699,6 +744,7 @@ typedef enum PreLiveStatus {
 
 - (void)enterPrivateRoom {
     // TODO:进入私密直播间界面
+    self.isEnterRoom = YES;
     PrivateViewController *vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
@@ -707,6 +753,7 @@ typedef enum PreLiveStatus {
 
 - (void)enterPrivateVipRoom {
     // TODO:进入豪华私密直播间界面
+    self.isEnterRoom = YES;
     PrivateVipViewController *vc = [[PrivateVipViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
@@ -734,26 +781,6 @@ typedef enum PreLiveStatus {
         self.bookButtonTop.constant = 15;
         self.bookButtonHeight.constant = 35;
     }
-}
-
-// 显示私密直播按钮
-- (void)showPrivate {
-    LSGetUserInfoRequest *request = [[LSGetUserInfoRequest alloc] init];
-    request.userId = self.liveRoom.userId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LSUserInfoItemObject * _Nullable userInfoItem) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) {
-                if ( userInfoItem.anchorInfo.anchorType == ANCHORTYPE_APPOINTANCHOR ) {
-                    [self.vipStartButton setImage:[UIImage imageNamed:@"Live_PreLive_Btn_Start"] forState:UIControlStateNormal];
-                    
-                } else if ( userInfoItem.anchorInfo.anchorType == ANCHORLEVELTYPE_GOLD ) {
-                    [self.vipStartButton setImage:[UIImage imageNamed:@"Live_VIPPreLive_Btn_Start"] forState:UIControlStateNormal];
-                }
-            }
-        });
-    };
-    [self.sessionManager sendRequest:request];
 }
 
 #pragma mark - 点击事件
@@ -874,6 +901,13 @@ typedef enum PreLiveStatus {
 
 - (IBAction)startVipPrivate:(id)sender {
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastTransitionClickStartVip eventCategory:EventCategoryTransition];
+    // 重置参数
+    [self reset];
+    
+    // 开始计时
+    [self stopHandleTimer];
+    [self startHandleTimer];
+    
     [self startRequest];
 }
 
@@ -890,6 +924,9 @@ typedef enum PreLiveStatus {
                 if (self.status == PreLiveStatus_WaitingEnterRoom) {
                     self.statusLabel.text = DEBUG_STRING(@"主播已经进入直播间, 开始倒数...");
                     self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_TIPS_BOARDCAST_ACCEPT");
+                    
+                    // 停止180s倒数
+                    [self stopHandleTimer];
                     
                     // 更新流地址
                     [self.liveRoom reset];
@@ -1164,8 +1201,9 @@ typedef enum PreLiveStatus {
     RecommandCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[RecommandCollectionViewCell cellIdentifier] forIndexPath:indexPath];
     LiveRoomInfoItemObject *item = [self.recommandItems objectAtIndex:indexPath.row];
     
-    [cell.imageViewLoader loadImageWithImageView:cell.imageView
-                                         options:0 imageUrl:item.photoUrl
+    [cell.imageViewLoader refreshCachedImage:cell.imageView
+                                         options:SDWebImageRefreshCached
+                                        imageUrl:item.photoUrl
                                 placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
     
     cell.nameLabel.text = item.nickName;
@@ -1189,6 +1227,7 @@ typedef enum PreLiveStatus {
         // 如果已经进入直播间成功, 更新切换后台时间
         if( self.status == PreLiveStatus_EnterRoomAlready ) {
             [LiveGobalManager manager].enterRoomBackgroundTime = [NSDate date];
+            [LiveGobalManager manager].liveRoom = self.liveRoom;
         } else {
             [LiveGobalManager manager].enterRoomBackgroundTime = nil;
         }
@@ -1200,42 +1239,48 @@ typedef enum PreLiveStatus {
     if( _isBackground == YES ) {
         _isBackground = NO;
         
-        NSDate* now = [NSDate date];
-        NSTimeInterval enterRoomTimeInterval = 0;
-        if( [LiveGobalManager manager].enterRoomBackgroundTime ) {
-            enterRoomTimeInterval = [now timeIntervalSinceDate:[LiveGobalManager manager].enterRoomBackgroundTime];
+        if ( self.enterRoomTimeInterval < BACKGROUND_TIMEOUT && !self.enterRoomLeftSecond
+            && self.status == PreLiveStatus_EnterRoomAlready && !self.isEnterRoom ) {
+            [self enterRoom];
         }
-        NSUInteger enterRoomBgTime = enterRoomTimeInterval;
         
-        NSLog(@"PreLiveViewController::willEnterForeground( enterRoomBgTime : %lu )", (unsigned long)enterRoomBgTime);
-        
-        // 后台超过60秒
-        if( enterRoomBgTime > BACKGROUND_TIMEOUT ) {
-            if( self.status == PreLiveStatus_EnterRoomAlready ) {
-                self.status = PreLiveStatus_Error;
+        if (self.isTimeOut) {
+            // 退出直播间
+            [self.navigationController popToRootViewControllerAnimated:NO];
+            if (self.liveRoom) {
+                NSLog(@"PreLiveViewController::willEnterForeground ( [接收后台关闭直播间]  IsTimeOut : %@ )",(self.isTimeOut == YES) ? @"Yes" : @"No");
                 
-                // 退出直播间
-                [self.navigationController popToRootViewControllerAnimated:NO];
-                if (self.liveRoom) {
-                    NSLog(@"PreLiveViewController::willEnterForeground  [发送退出直播间:%@]",self.liveRoom.roomId);
-                    // 发送退出直播间
-                    [self.imManager leaveRoom:self.liveRoom.roomId];
-                    
-                    // 弹出直播间关闭界面
-                    LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
-                    finshController.liveRoom = self.liveRoom;
-                    finshController.errType = LCC_ERR_BACKGROUND_TIMEOUT;
-                    
-                    [self addChildViewController:finshController];
-                    [self.view addSubview:finshController.view];
-                    [finshController.view bringSubviewToFront:self.view];
-                    [finshController.view mas_makeConstraints:^(MASConstraintMaker *make) {
-                        make.edges.equalTo(self.view);
-                    }];
-                }
+                // 弹出直播间关闭界面
+                LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
+                finshController.liveRoom = self.liveRoom;
+                finshController.errType = LCC_ERR_BACKGROUND_TIMEOUT;
+                
+                [self addChildViewController:finshController];
+                [self.view addSubview:finshController.view];
+                [finshController.view bringSubviewToFront:self.view];
+                [finshController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.edges.equalTo(self.view);
+                }];
+                
+                self.liveRoom = nil;
             }
-
         }
+    }
+}
+
+#pragma mark - LiveGobalManagerDelegate
+- (void)enterBackgroundTimeOut:(NSDate * _Nullable)time {
+    
+    NSDate* now = [NSDate date];
+    if( [LiveGobalManager manager].enterRoomBackgroundTime ) {
+        self.enterRoomTimeInterval = [now timeIntervalSinceDate:time];
+    }
+    
+    if( self.status == PreLiveStatus_EnterRoomAlready ) {
+        self.status = PreLiveStatus_Error;
+        
+        // 已超时
+        self.isTimeOut = YES;
     }
 }
 

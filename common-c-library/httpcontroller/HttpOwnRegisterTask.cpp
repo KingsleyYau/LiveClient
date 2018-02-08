@@ -78,11 +78,11 @@ void HttpOwnRegisterTask::SetParam(
     
     char temp[16];
     snprintf(temp, sizeof(temp), "%c", gender == GENDERTYPE_LADY ? 'F' : 'M');
-    mHttpEntiy.AddContent(LIVEROOM_SUBMITSERVERVELOMETER_RES, temp);
+    mHttpEntiy.AddContent(OWN_REGISTER_GENDER, temp);
     mGender = gender;
     
     if (nickName.length() > 0) {
-        mHttpEntiy.AddContent(OWN_REGISTER_NICKNAME, birthDay.c_str());
+        mHttpEntiy.AddContent(OWN_REGISTER_NICKNAME, nickName.c_str());
         mNickName = nickName;
     }
     
@@ -146,7 +146,7 @@ bool HttpOwnRegisterTask::ParseData(const string& url, bool bFlag, const char* b
         FileLog(LIVESHOW_HTTP_LOG, "HttpOwnRegisterTask::ParseData( buf : %s )", buf);
     }
     
-    string sessionId = "alex123";
+    string sessionId = "";
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
@@ -162,22 +162,12 @@ bool HttpOwnRegisterTask::ParseData(const string& url, bool bFlag, const char* b
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
     }
     
     if( mpCallback != NULL ) {

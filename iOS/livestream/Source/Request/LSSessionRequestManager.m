@@ -61,11 +61,12 @@ static LSSessionRequestManager* gManager = nil;
     return bFlag;
 }
 
-- (BOOL)request:(LSSessionRequest* _Nonnull)request handleRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg {
+- (BOOL)request:(LSSessionRequest* _Nonnull)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     BOOL bFlag = NO;
     if( !success ) {
         // 判断错误码
-        if( errnum == SESSION_TIMEOUT ) {
+        if( errnum == HTTP_LCC_ERR_TOKEN_EXPIRE ||
+           errnum == HTTP_LCC_ERR_NO_LOGIN) {
             // session超时
             // 插入待处理队列
             @synchronized(self) {
@@ -75,19 +76,20 @@ static LSSessionRequestManager* gManager = nil;
             dispatch_async(dispatch_get_main_queue(), ^{
                 if( self.loginManager.status == LOGINED ) {
                     // 已经登陆状态, 注销
-                    NSLog(@"LSSessionRequestManager::handleRespond( [已经登陆状态, 注销] )");
+                    NSLog(@"LSSessionRequestManager::handleRespond( [已经登陆状态, 注销], self.array.size : %lu )", (unsigned long)self.array.count);
                     [self.loginManager logout:NO msg:@""];
                 } else if ( self.loginManager.status == LOGINING ) {
                     // 正在登陆, 等待
-                    NSLog(@"LSSessionRequestManager::handleRespond( [正在登陆状态, 等待] )");
+                    NSLog(@"LSSessionRequestManager::handleRespond( [正在登陆状态, 等待], self.array.size : %lu )", (unsigned long)self.array.count);
                 } else if( self.loginManager.status == NONE ) {
                     // 注销状态, 返回失败
-                    NSLog(@"LSSessionRequestManager::handleRespond( [注销状态, 返回失败] )");
+                    NSLog(@"LSSessionRequestManager::handleRespond( [注销状态, 返回失败], self.array.size : %lu )", (unsigned long)self.array.count);
                     @synchronized (self) {
                         // 回调失败   注释掉回调所有请求，改为回调当前的请求就可以了
 //                        for(LSSessionRequest* request in self.array) {
 //                            if( request ) {
-                                [request callRespond:success errnum:(NSInteger)SESSION_REQUEST_WITHOUT_LOGIN errmsg:@"Send session request without login"];
+                               // [request callRespond:success errnum:(NSInteger)SESSION_REQUEST_WITHOUT_LOGIN errmsg:@"Send session request without login"];
+                                [request callRespond:success errnum:HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN errmsg:@"Send session request without login"];
 //                            }
 //                        }
                         [self.array removeObject:request];
@@ -98,7 +100,7 @@ static LSSessionRequestManager* gManager = nil;
             bFlag = YES;
             
         }
-//        else if ( errnum == LOGIN_BY_OTHER_DEVICE ) {
+//        else if ( errnum == HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE ) {
 //            // 主线程被踢(其他设备登录)
 //            dispatch_async(dispatch_get_main_queue(), ^{
 //                [self.loginManager logout:YES msg:@""];
@@ -116,7 +118,7 @@ static LSSessionRequestManager* gManager = nil;
 }
 
 #pragma mark - 登陆回调处理
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         @synchronized(self) {
             if( success ) {

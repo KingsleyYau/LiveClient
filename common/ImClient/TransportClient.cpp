@@ -55,13 +55,21 @@ bool TransportClient::Connect(const char* url)
             struct mg_connect_opts opt = {0};
             opt.user_data = (void*)this;
             m_conn = mg_connect_ws_opt(&m_mgr, ev_handler, opt, m_url.c_str(), "", NULL);
-            if (NULL != m_conn) {
+            if (NULL != m_conn && m_conn->err == 0) {
                 m_connState = CONNECTING;
                 result = true;
             }
-            else {
-				// 释放mgr
-                ReleaseMgrProc();
+            
+            // 连接失败
+            if (!result) {
+                if (NULL != m_conn) {
+                    // 释放mgr
+                    ReleaseMgrProc();
+                }
+                else {
+                    // 仅重置标志
+                    m_isInitMgr = false;
+                }
             }
         }
         m_connStateLock->Unlock();

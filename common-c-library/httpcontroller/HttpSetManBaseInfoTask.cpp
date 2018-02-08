@@ -3,7 +3,7 @@
  *
  *  Created on: 2017-12-23
  *      Author: Alex
- *        desc: 6.13.提交Feedback（仅独立）
+ *        desc: 6.15.设置个人信息（仅独立）
  */
 
 #include "HttpSetManBaseInfoTask.h"
@@ -77,22 +77,11 @@ bool HttpSetManBaseInfoTask::ParseData(const string& url, bool bFlag, const char
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
-        
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
     }
     
     if( mpCallback != NULL ) {

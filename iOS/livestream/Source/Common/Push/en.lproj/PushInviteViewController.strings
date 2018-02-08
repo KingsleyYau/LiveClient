@@ -5,7 +5,7 @@
 /* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "XmC-V2-J46"; */
 "XmC-V2-J46.normalTitle" = "Accept";
 
-/* Class = "UILabel"; text = "Private broadcast with Karen will be started soon."; ObjectID = "gm0-Sp-0V5"; */
-"gm0-Sp-0V5.text" = "Karen is inviting you to start a private broadcast.";
+/* Class = "UILabel"; text = "One-on-One broadcast with Karen will be started soon."; ObjectID = "gm0-Sp-0V5"; */
+"gm0-Sp-0V5.text" = "Karen is inviting you to start a One-on-One.";
 
-"PUSH_INVITE_TIP" = "%@ is inviting you to start a private broadcast.";
+"PUSH_INVITE_TIP" = "%@ is inviting you to start a One-on-One.";

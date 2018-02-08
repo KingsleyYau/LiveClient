@@ -8,8 +8,6 @@
 
 #import "LiveGobalManager.h"
 #import "LSImManager.h"
-#import "LiveModule.h"
-
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
     BOOL _canShowInvite;
@@ -20,7 +18,7 @@ static LiveGobalManager *gManager = nil;
 @property (strong) NSDate *startTime;
 @property (strong) dispatch_queue_t backgroundQueue;
 @property (assign) UIBackgroundTaskIdentifier bgTask;
-
+@property (nonatomic, strong) NSMutableArray* delegates;
 @end
 ;
 
@@ -40,7 +38,9 @@ static LiveGobalManager *gManager = nil;
         if (!self.backgroundQueue) {
             self.backgroundQueue = dispatch_queue_create("liveBackgroundQueue", DISPATCH_QUEUE_SERIAL);
         }
-
+        
+        self.delegates = [NSMutableArray array];
+        
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
@@ -53,10 +53,28 @@ static LiveGobalManager *gManager = nil;
 
 - (void)dealloc {
     NSLog(@"LiveGobalManager::dealloc()");
-
+    
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+}
+
+- (void)addDelegate:(id<LiveGobalManagerDelegate>)delegate {
+    @synchronized(self) {
+        [self.delegates addObject:[NSValue valueWithNonretainedObject:delegate]];
+    }
+}
+
+- (void)removeDelegate:(id<LiveGobalManagerDelegate>)delegate {
+    @synchronized(self) {
+        for(NSValue* value in self.delegates) {
+            id<LiveGobalManagerDelegate> item = (id<LiveGobalManagerDelegate>)value.nonretainedObjectValue;
+            if( item == delegate ) {
+                [self.delegates removeObject:value];
+                break;
+            }
+        }
+    }
 }
 
 - (BOOL)canShowInvite:(NSString *)uesrId {
@@ -150,6 +168,8 @@ static LiveGobalManager *gManager = nil;
     if (_isBackground == YES) {
         _isBackground = NO;
 
+        self.enterRoomBackgroundTime = nil;
+        
         NSLog(@"LiveGobalManager::willEnterForeground()");
     }
 }
@@ -157,7 +177,17 @@ static LiveGobalManager *gManager = nil;
 - (void)stopLive {
     @synchronized(self) {
         if (self.liveRoom) {
-            NSLog(@"LiveGobalManager::stopLive  [发送退出直播间:%@]",self.liveRoom.roomId);
+            NSLog(@"LiveGobalManager::stopLive( [发送退出直播间:%@] )",self.liveRoom.roomId);
+            
+            @synchronized(self) {
+                for(NSValue* value in self.delegates) {
+                    id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
+                    if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
+                        [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
+                    }
+                }
+            }
+            
             // 发送IM退出直播间命令
             [[LSImManager manager] leaveRoom:self.liveRoom.roomId];
             self.liveRoom = nil;

@@ -52,7 +52,7 @@
 }
 
 // 监听HTTP登录
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 请求账号余额
@@ -109,14 +109,14 @@
 - (void)getLeftCreditRequest {
 
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, double credit) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit) {
 
         NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
 
         dispatch_async(dispatch_get_main_queue(), ^{
 
             if (success) {
-                self.mCredit = credit;
+                [self setCredit:credit];
             } else {
             }
         });

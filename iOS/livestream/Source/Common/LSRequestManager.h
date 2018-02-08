@@ -32,6 +32,7 @@
 #import "GetBackPackUnreadNumItemObject.h"
 #import "AcceptInstanceInviteItemObject.h"
 #import "LSUserInfoItemObject.h"
+#import "LSVoucherAvailableInfoItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -72,7 +73,7 @@
 /**
  *  设置同步配置接口服务器域名
  *
- *  @param configWebSite 服务器域名
+ *  @param webSite 服务器域名
  */
 - (void)setConfigWebSite:(NSString * _Nonnull)webSite;
 
@@ -83,12 +84,6 @@
  */
 - (void)setWebSite:(NSString * _Nonnull)webSite;
 
-/**
- *  设置同步配置接口服务器域名
- *
- *  @param webSite 服务器域名
- */
-- (void)setConfigWebSite:(NSString * _Nonnull)webSite;
 
 /**
  *  设置接口服务器用户认证
@@ -140,7 +135,7 @@
  *  @param errmsg         错误提示
  *  @param isRegistered   是否已注册
  */
-typedef void (^RegisterCheckPhoneFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, int isRegistered);
+typedef void (^RegisterCheckPhoneFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int isRegistered);
 
 
 
@@ -151,7 +146,7 @@ typedef void (^RegisterCheckPhoneFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^LoginFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LSLoginItemObject * _Nonnull item);
+typedef void (^LoginFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSLoginItemObject * _Nonnull item);
 
 /**
  *  2.1.登陆接口
@@ -178,7 +173,7 @@ typedef void (^LoginFinishHandler)(BOOL success, NSInteger errnum, NSString * _N
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^LogoutFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^LogoutFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  2.2.注销接口
@@ -196,7 +191,7 @@ typedef void (^LogoutFinishHandler)(BOOL success, NSInteger errnum, NSString * _
  *  @param errnum     错误码
  *  @param errmsg     错误提示
  */
-typedef void (^UpdateTokenIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^UpdateTokenIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  2.3.上传tokenid接口
@@ -218,7 +213,7 @@ typedef void (^UpdateTokenIdFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param array   热门列表
  */
-typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
+typedef void (^GetAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
 
 /**
  *  3.1.获取Hot列表接口
@@ -245,7 +240,7 @@ typedef void (^GetAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param array   热门列表
  */
-typedef void (^GetFollowListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<FollowItemObject *>* _Nullable array);
+typedef void (^GetFollowListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<FollowItemObject *>* _Nullable array);
 
 /**
  *  3.2.获取Following列表接口
@@ -268,7 +263,7 @@ typedef void (^GetFollowListFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param array   热门列表
  */
-typedef void (^GetRoomInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, RoomInfoItemObject* _Nullable array);
+typedef void (^GetRoomInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, RoomInfoItemObject* _Nullable array);
 
 /**
  *  3.3.获取本人有效直播间或邀请信息接口(已废弃)
@@ -287,7 +282,7 @@ typedef void (^GetRoomInfoFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param errmsg  错误提示
  *  @param array   观众列表
  */
-typedef void (^LiveFansListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *>* _Nullable array);
+typedef void (^LiveFansListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ViewerFansItemObject *>* _Nullable array);
 
 /**
  *  3.4.获取直播间观众头像列表接口
@@ -312,7 +307,7 @@ typedef void (^LiveFansListFinishHandler)(BOOL success, NSInteger errnum, NSStri
  *  @param errmsg  错误提示
  *  @param array   封面图列表
  */
-typedef void (^GetAllGiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftInfoItemObject *>* _Nullable array);
+typedef void (^GetAllGiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<GiftInfoItemObject *>* _Nullable array);
 
 /**
  *  3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表)接口
@@ -331,7 +326,7 @@ typedef void (^GetAllGiftListFinishHandler)(BOOL success, NSInteger errnum, NSSt
  *  @param errmsg  错误提示
  *  @param array   封面图列表
  */
-typedef void (^GetGiftListByUserIdFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GiftWithIdItemObject *>* _Nullable array);
+typedef void (^GetGiftListByUserIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<GiftWithIdItemObject *>* _Nullable array);
 
 /**
  *  3.6.获取直播间可发送的礼物列表（观众端/主播端获取直播间的可发送的礼物列表, 包括背包礼物）接口
@@ -352,7 +347,7 @@ typedef void (^GetGiftListByUserIdFinishHandler)(BOOL success, NSInteger errnum,
  *  @param errmsg  错误提示
  *  @param item    指定礼物详情
  */
-typedef void (^GetGiftDetailFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GiftInfoItemObject * _Nullable item);
+typedef void (^GetGiftDetailFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GiftInfoItemObject * _Nullable item);
 
 /**
  *  3.7.获取指定礼物详情（用于观众端／主播端在直播间收到《获取礼物列表》没有礼物时，获取指定礼物详情来显示）接口
@@ -373,7 +368,7 @@ typedef void (^GetGiftDetailFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param item    指定礼物详情
  */
-typedef void (^GetEmoticonListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<EmoticonItemObject*>* _Nullable item);
+typedef void (^GetEmoticonListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<EmoticonItemObject*>* _Nullable item);
 
 /**
  *  3.8.获取文本表情列表（用于观众端/主播端获取文本聊天礼物列表）接口
@@ -392,7 +387,7 @@ typedef void (^GetEmoticonListFinishHandler)(BOOL success, NSInteger errnum, NSS
  *  @param errmsg  错误提示
  *  @param item    邀请信息
  */
-typedef void (^GetInviteInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, InviteIdItemObject * _Nonnull item);
+typedef void (^GetInviteInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, InviteIdItemObject * _Nonnull item);
 
 /**
  *  3.9.获取指定立即私密邀请信息接口(已废弃)
@@ -413,7 +408,7 @@ typedef void (^GetInviteInfoFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param array   邀请信息
  */
-typedef void (^GetTalentListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<GetTalentItemObject*> * _Nonnull array);
+typedef void (^GetTalentListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<GetTalentItemObject*> * _Nonnull array);
 
 /**
  *  3.10.获取才艺点播列表接口
@@ -434,7 +429,7 @@ typedef void (^GetTalentListFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errmsg  错误提示
  *  @param item   邀请信息
  */
-typedef void (^GetTalentStatusFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject* _Nonnull item);
+typedef void (^GetTalentStatusFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject* _Nonnull item);
 
 /**
  *  3.11.获取才艺点播邀请状态接口
@@ -457,7 +452,7 @@ typedef void (^GetTalentStatusFinishHandler)(BOOL success, NSInteger errnum, NSS
  *  @param errmsg  错误提示
  *  @param item   邀请信息
  */
-typedef void (^GetNewFansBaseInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetNewFansBaseInfoItemObject* _Nonnull item);
+typedef void (^GetNewFansBaseInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetNewFansBaseInfoItemObject* _Nonnull item);
 
 /**
  *  3.12.获取指定观众信息接口
@@ -477,7 +472,7 @@ typedef void (^GetNewFansBaseInfoFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^ControlManPushFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSMutableArray<NSString*>* _Nonnull manPushUrl);
+typedef void (^ControlManPushFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSMutableArray<NSString*>* _Nonnull manPushUrl);
 
 /**
  *  3.13.观众开始／结束视频互动接口（废弃）
@@ -499,7 +494,7 @@ typedef void (^ControlManPushFinishHandler)(BOOL success, NSInteger errnum, NSSt
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
+typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
 
 /**
  *  3.14.获取推荐主播列表接口
@@ -526,7 +521,7 @@ typedef void (^GetPromoAnchorListFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param errmsg  错误提示
  *  @param item    邀请信息
  */
-typedef void (^ManHandleBookingListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, BookingPrivateInviteListObject * _Nonnull item);
+typedef void (^ManHandleBookingListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, BookingPrivateInviteListObject * _Nonnull item);
 
 /**
  *  4.1.观众待处理的预约邀请列表接口
@@ -550,7 +545,7 @@ typedef void (^ManHandleBookingListFinishHandler)(BOOL success, NSInteger errnum
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^HandleBookingFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^HandleBookingFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  4.2.观众处理预约邀请接口
@@ -572,7 +567,7 @@ typedef void (^HandleBookingFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^SendCancelPrivateLiveInviteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^SendCancelPrivateLiveInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  4.3.取消预约邀请接口
@@ -592,7 +587,7 @@ typedef void (^SendCancelPrivateLiveInviteFinishHandler)(BOOL success, NSInteger
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^ManBookingUnreadUnhandleNumFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, BookingUnreadUnhandleNumItemObject * _Nonnull item);
+typedef void (^ManBookingUnreadUnhandleNumFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, BookingUnreadUnhandleNumItemObject * _Nonnull item);
 
 /**
  *  4.4.获取预约邀请未读或待处理数量接口
@@ -610,7 +605,7 @@ typedef void (^ManBookingUnreadUnhandleNumFinishHandler)(BOOL success, NSInteger
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^GetCreateBookingInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetCreateBookingInfoItemObject * _Nonnull item);
+typedef void (^GetCreateBookingInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetCreateBookingInfoItemObject * _Nonnull item);
 
 /**
  *  4.5.获取新建预约邀请信息接口
@@ -630,7 +625,7 @@ typedef void (^GetCreateBookingInfoFinishHandler)(BOOL success, NSInteger errnum
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^SendBookingRequestFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^SendBookingRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  4.6.新建预约邀请接口
@@ -660,7 +655,7 @@ typedef void (^SendBookingRequestFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^AcceptInstanceInviteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, AcceptInstanceInviteItemObject *   _Nonnull item);
+typedef void (^AcceptInstanceInviteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, AcceptInstanceInviteItemObject *   _Nonnull item);
 
 /**
  *  4.7.观众处理立即私密邀请接口
@@ -686,7 +681,7 @@ typedef void (^AcceptInstanceInviteFinishHandler)(BOOL success, NSInteger errnum
  *  @param array        背包礼物列表
  *  @param totalCount   列表总数
  */
-typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *>* _Nullable array, int totalCount);
+typedef void (^GiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<BackGiftItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.1.获取背包礼物列表接口
@@ -706,7 +701,7 @@ typedef void (^GiftListFinishHandler)(BOOL success, NSInteger errnum, NSString *
  *  @param array        使用卷列表
  *  @param totalCount   列表总数
  */
-typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *>* _Nullable array, int totalCount);
+typedef void (^VoucherListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.2.获取使用劵列表接口
@@ -726,7 +721,7 @@ typedef void (^VoucherListFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param array        座驾列表
  *  @param totalCount   列表总数
  */
-typedef void (^RideListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *>* _Nullable array, int totalCount);
+typedef void (^RideListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *>* _Nullable array, int totalCount);
 
 /**
  *  5.3.获取座驾列表接口
@@ -744,7 +739,7 @@ typedef void (^RideListFinishHandler)(BOOL success, NSInteger errnum, NSString *
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^SetRideFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^SetRideFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  5.4.使用／取消座驾接口
@@ -763,7 +758,7 @@ typedef void (^SetRideFinishHandler)(BOOL success, NSInteger errnum, NSString * 
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^GetBackpackUnreadNumFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetBackPackUnreadNumItemObject * _Nonnull item);
+typedef void (^GetBackpackUnreadNumFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetBackPackUnreadNumItemObject * _Nonnull item);
 
 /**
  *  5.5.获取背包未读数量接口
@@ -773,6 +768,23 @@ typedef void (^GetBackpackUnreadNumFinishHandler)(BOOL success, NSInteger errnum
  */
 - (NSInteger)getBackpackUnreadNum:(GetBackpackUnreadNumFinishHandler _Nullable)finishHandler;
 
+/**
+ *  5.6.获取试用券可用信息接口回调
+ *
+ *  @param success 成功失败
+ *  @param errnum  错误码
+ *  @param errmsg  错误提示
+ */
+typedef void (^GetVoucherAvailableInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSVoucherAvailableInfoItemObject * _Nonnull item);
+
+/**
+ *  5.6.获取试用券可用信息接口
+ *
+ *  @param finishHandler       接口回调
+ *  @return 成功请求Id
+ */
+- (NSInteger)getVoucherAvailableInfo:(GetVoucherAvailableInfoFinishHandler _Nullable)finishHandler;
+
 #pragma mark - 其它
 /**
  *  6.1.同步配置接口回调
@@ -781,7 +793,7 @@ typedef void (^GetBackpackUnreadNumFinishHandler)(BOOL success, NSInteger errnum
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^GetConfigFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item);
+typedef void (^GetConfigFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ConfigItemObject *_Nullable item);
 
 /**
  *  6.1.同步配置接口
@@ -799,7 +811,7 @@ typedef void (^GetConfigFinishHandler)(BOOL success, NSInteger errnum, NSString 
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^GetLeftCreditFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, double credit);
+typedef void (^GetLeftCreditFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, double credit);
 
 /**
  *  6.2.获取账号余额接口
@@ -817,7 +829,7 @@ typedef void (^GetLeftCreditFinishHandler)(BOOL success, NSInteger errnum, NSStr
  *  @param errnum  错误码
  *  @param errmsg  错误提示
  */
-typedef void (^SetFavoriteFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^SetFavoriteFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  6.3.添加／取消收藏接口
@@ -842,7 +854,7 @@ typedef void (^SetFavoriteFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param errmsg   错误提示
  *  @param array    直播间列表
  */
-typedef void (^GetAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
+typedef void (^GetAdAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LiveRoomInfoItemObject *>* _Nullable array);
 
 /**
  *  6.4.获取QN广告列表接口
@@ -862,7 +874,7 @@ typedef void (^GetAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSS
  *  @param errnum   错误码
  *  @param errmsg   错误提示
  */
-typedef void (^CloseAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^CloseAdAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  6.5.关闭QN广告列表接口
@@ -882,7 +894,7 @@ typedef void (^CloseAdAnchorListFinishHandler)(BOOL success, NSInteger errnum, N
  *  @param errnum   错误码
  *  @param errmsg   错误提示
  */
-typedef void (^GetPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^GetPhoneVerifyCodeFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  6.6.获取手机验证码接口
@@ -906,7 +918,7 @@ typedef void (^GetPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnum, 
  *  @param errnum   错误码
  *  @param errmsg   错误提示
  */
-typedef void (^SubmitPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^SubmitPhoneVerifyCodeFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  6.7.提交手机验证码接口
@@ -932,7 +944,7 @@ typedef void (^SubmitPhoneVerifyCodeFinishHandler)(BOOL success, NSInteger errnu
  *  @param errnum   错误码
  *  @param errmsg   错误提示
  */
-typedef void (^ServerSpeedFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg);
+typedef void (^ServerSpeedFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 /**
  *  6.8.提交流媒体服务器测速结果接口
@@ -957,7 +969,7 @@ typedef void (^ServerSpeedFinishHandler)(BOOL success, NSInteger errnum, NSStrin
  *  @param bannerLink 广告点击进入的Web页面url
  *  @param bannerName 广告名称，用于App Webview加载网页时，在Navigation显示的title
  */
-typedef void (^BannerFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName);
+typedef void (^BannerFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName);
 
 /**
  *  6.9.获取Hot/Following列表头部广告接口
@@ -976,7 +988,7 @@ typedef void (^BannerFinishHandler)(BOOL success, NSInteger errnum, NSString * _
  *  @param errmsg       错误提示
  *  @param userInfoItem 观众/主播信息
  */
-typedef void (^GetUserInfoFinishHandler)(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, LSUserInfoItemObject * _Nullable userInfoItem);
+typedef void (^GetUserInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSUserInfoItemObject * _Nullable userInfoItem);
 
 /**
  *  6.10.获取主播/观众信息接口

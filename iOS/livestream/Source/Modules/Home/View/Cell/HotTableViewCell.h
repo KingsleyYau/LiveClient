@@ -28,11 +28,7 @@
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
-@property (weak, nonatomic) IBOutlet UIImageView *roomType;
-@property (weak, nonatomic) IBOutlet UIView *onlineView;
-@property (weak, nonatomic) IBOutlet UIImageView *interest1;
-@property (weak, nonatomic) IBOutlet UIImageView *interest2;
-@property (weak, nonatomic) IBOutlet UIImageView *interest3;
+@property (weak, nonatomic) IBOutlet UIImageView *liveStatus;
 /** 普通私密直播间  */
 @property (weak, nonatomic) IBOutlet UIButton *normalPrivateBtn;
 /** 免费公开直播间 */
@@ -46,10 +42,11 @@
 /** 播放数组 */
 @property (nonatomic, strong) NSMutableArray *animationArray;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPrivateCenterX;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPrivateCenterX;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *vipPublicCenterX;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPublicCenterX;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *viewBtnTopDistance;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
+
+@property (weak, nonatomic) IBOutlet UIImageView *onlineIcon;
+@property (weak, nonatomic) IBOutlet UIImageView *roomType;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;

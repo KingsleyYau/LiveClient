@@ -20,6 +20,7 @@
 		503A70541EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A704E1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m */; };
 		503A70551EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A70501EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m */; };
 		503A70561EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */; };
+		504B17B8201ABBD4007D5B8B /* LSUITabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */; };
 		50511F461F9450D0009E4C88 /* LSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F451F9450D0009E4C88 /* LSColor.m */; };
 		50511F521F945A9C009E4C88 /* NSBundle+DeviceFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F4F1F945A9C009E4C88 /* NSBundle+DeviceFamily.m */; };
 		50511F531F945A9C009E4C88 /* LSUIWidgetBundle.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F511F945A9C009E4C88 /* LSUIWidgetBundle.m */; };
@@ -85,6 +86,8 @@
 		503A70501EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
 		503A70511EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
 		503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
+		504B17B6201ABBD4007D5B8B /* LSUITabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUITabBarItem.h; sourceTree = "<group>"; };
+		504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUITabBarItem.m; sourceTree = "<group>"; };
 		50511F441F9450D0009E4C88 /* LSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSColor.h; sourceTree = "<group>"; };
 		50511F451F9450D0009E4C88 /* LSColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSColor.m; sourceTree = "<group>"; };
 		50511F4E1F945A9C009E4C88 /* NSBundle+DeviceFamily.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+DeviceFamily.h"; sourceTree = "<group>"; };
@@ -187,6 +190,15 @@
 				503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */,
 			);
 			path = TableViewCategory;
+			sourceTree = "<group>";
+		};
+		504B17B5201ABBA2007D5B8B /* Tabbar */ = {
+			isa = PBXGroup;
+			children = (
+				504B17B6201ABBD4007D5B8B /* LSUITabBarItem.h */,
+				504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */,
+			);
+			path = Tabbar;
 			sourceTree = "<group>";
 		};
 		50511F4D1F945A6D009E4C88 /* Bundle */ = {
@@ -314,6 +326,7 @@
 				CAF537ED171FDB70005DCB49 /* Control */,
 				CAF537CA171FDB70005DCB49 /* Navigation */,
 				CAF537F6171FDB70005DCB49 /* PhotoZoom */,
+				504B17B5201ABBA2007D5B8B /* Tabbar */,
 				50A6112C1D10E86C00498C7C /* TableView */,
 				503A704A1EEF6F9A00BA8FF8 /* TableViewCategory */,
 				CAF53808171FDB71005DCB49 /* TextView */,
@@ -513,6 +526,7 @@
 				50EAD27F1D17C2B7008B8F76 /* LSPullRefreshView.m in Sources */,
 				50511F531F945A9C009E4C88 /* LSUIWidgetBundle.m in Sources */,
 				50EAD2851D17CA04008B8F76 /* UIScrollView+PullRefresh.m in Sources */,
+				504B17B8201ABBD4007D5B8B /* LSUITabBarItem.m in Sources */,
 				CAF53823171FDB71005DCB49 /* LSNavigationController.m in Sources */,
 				CAF5382F171FDB71005DCB49 /* LSBadgeButton.m in Sources */,
 				529DA2EB1F78AC7E00651318 /* LSListViewController.m in Sources */,

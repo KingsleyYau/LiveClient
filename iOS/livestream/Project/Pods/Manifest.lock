@@ -14,6 +14,9 @@ PODS:
   - AFNetworking/Serialization (3.0.4)
   - AFNetworking/UIKit (3.0.4):
     - AFNetworking/NSURLSession
+  - GCDWebServer/Core (3.4.2)
+  - GCDWebServer/WebDAV (3.4.2):
+    - GCDWebServer/Core
   - GPUImage (0.1.7)
   - libwebp (0.6.0):
     - libwebp/core (= 0.6.0)
@@ -40,30 +43,32 @@ PODS:
     - libwebp/core
   - libwebp/webp (0.6.0)
   - Masonry (0.6.4)
-  - SDWebImage (4.1.0):
-    - SDWebImage/Core (= 4.1.0)
-  - SDWebImage/Core (4.1.0)
-  - SDWebImage/WebP (4.1.0):
-    - libwebp
+  - SDWebImage (4.3.0):
+    - SDWebImage/Core (= 4.3.0)
+  - SDWebImage/Core (4.3.0)
+  - SDWebImage/WebP (4.3.0):
+    - libwebp (~> 0.5)
     - SDWebImage/Core
   - YYText (1.0.7)
 
 DEPENDENCIES:
   - AFNetworking (= 3.0.4)
+  - GCDWebServer/WebDAV (~> 3.0)
   - GPUImage (= 0.1.7)
   - Masonry (= 0.6.4)
-  - SDWebImage (= 4.1.0)
+  - SDWebImage (= 4.3.0)
   - SDWebImage/WebP
   - YYText (= 1.0.7)
 
 SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
+  GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
-  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
+  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
-PODFILE CHECKSUM: 44ca10f1f0b2e69665306f37254b57193272885b
+PODFILE CHECKSUM: 76054be733ae4b6bb7d7965a5dc3a3464938880d
 
 COCOAPODS: 1.1.1

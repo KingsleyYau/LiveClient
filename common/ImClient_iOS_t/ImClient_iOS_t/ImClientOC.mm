@@ -1140,8 +1140,8 @@ class ImClientCallback : public IImClientListener {
     NSString *nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
     ImLoginReturnObject* obj = [[ImLoginReturnObject alloc] init];
     NSMutableArray *nsRoomList = [NSMutableArray array];
-    for (list<string>::const_iterator iter = item.roomList.begin(); iter != item.roomList.end(); iter++) {
-        string strRoomId = (*iter);
+    for (list<LSLoginRoomItem>::const_iterator iter = item.roomList.begin(); iter != item.roomList.end(); iter++) {
+        string strRoomId = (*iter).roomId;
         NSString *nsRoomId = [NSString stringWithUTF8String:strRoomId.c_str()];
         [nsRoomList addObject:nsRoomId];
     }
@@ -1180,7 +1180,7 @@ class ImClientCallback : public IImClientListener {
     @synchronized(self.delegates) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onLogin:errMsg:)]) {
+            if ([delegate respondsToSelector:@selector(onLogin:errMsg:item:)]) {
                 [delegate onLogin:errType errMsg:nsErrMsg item:obj];
             }
         }

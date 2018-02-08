@@ -120,6 +120,6 @@ typedef enum {
 
 - (NSURL * _Nonnull)createUrlToLookLadyAnchorId:(NSString * _Nullable)anchorId;
 #pragma mark - 解析URL
-- (LSUrlParmItem *)parseUrlParms:(NSURL *)url ;
+- (LSUrlParmItem * _Nullable)parseUrlParms:(NSURL * _Nullable)url ;
 
 @end

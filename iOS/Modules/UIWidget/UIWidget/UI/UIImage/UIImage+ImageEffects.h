@@ -178,4 +178,11 @@
  */
 - (UIImage *)croppedImageAtFrame:(CGRect)frame;
 
+
+/**
+ 缩放图片到指定Size
+ */
+- (UIImage *)scaleImageWithSize:(CGSize)size;
+// 调整镜头方向
+- (UIImage *)fixOrientation ;
 @end

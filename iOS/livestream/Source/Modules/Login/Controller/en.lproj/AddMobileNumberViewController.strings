@@ -12,7 +12,7 @@
 "hIP-GW-jYE.normalTitle" = "Send Verify Code";
 
 /* Class = "UILabel"; text = "Country code:"; ObjectID = "jER-cK-Xli"; */
-"jER-cK-Xli.text" = "Country code:";
+"jER-cK-Xli.text" = "Country code";
 
 /* Class = "UILabel"; text = "Please enter a valid phone number."; ObjectID = "nHl-Me-6b6"; */
 "nHl-Me-6b6.text" = "Please enter a valid phone number.";
@@ -20,3 +20,4 @@
 "ADD_MOBILE_NUMBER" = "Add Mobile Number";
 
 "ENTER_PHONE_NUMBER" = "Please enter a valid phone number.";
+

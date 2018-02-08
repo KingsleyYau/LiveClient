@@ -59,8 +59,12 @@
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
 
+    
     CGFloat bottom = self.topView.frame.origin.y + self.topView.frame.size.height;
-    self.pagingScrollView = [[LSPZPagingScrollView alloc] initWithFrame:CGRectMake(0, bottom, SCREEN_WIDTH, SCREEN_HEIGHT - bottom)];
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, bottom, SCREEN_WIDTH, 1)];
+    lineView.backgroundColor =COLOR_WITH_16BAND_RGB(0xE4E4E4);
+    [self.view addSubview:lineView];
+    self.pagingScrollView = [[LSPZPagingScrollView alloc] initWithFrame:CGRectMake(0, bottom + 1, SCREEN_WIDTH, SCREEN_HEIGHT - bottom - 1)];
     self.pagingScrollView.pagingViewDelegate = self;
     self.pagingScrollView.bounces = NO;
     [self.view addSubview:self.pagingScrollView];
@@ -69,9 +73,10 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    
+    [self hideNavgationBarBottomLine:YES];
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
 }
 

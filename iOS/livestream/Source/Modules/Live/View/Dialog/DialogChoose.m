@@ -14,6 +14,7 @@
 @property (weak) UIButton *backBtn;
 @property (strong) void(^cancelBlock)();
 @property (strong) void(^actionBlock)();
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *noBtnTop;
 
 @end
 
@@ -38,6 +39,12 @@
     view.cancelButton.layer.cornerRadius = 10;
     
     return view;
+}
+
+- (void)hiddenCheckView {
+    self.checkBox.hidden = YES;
+    self.checkLabel.hidden = YES;
+    self.noBtnTop.constant = -16;
 }
 
 - (void)showDialog:(UIView *)view cancelBlock:(void(^)())cancelBlock actionBlock:(void(^)())actionBlock {
@@ -71,8 +78,8 @@
 }
 
 - (IBAction)cancelCancel:(id)sender {
-    if( self.actionBlock ) {
-        self.actionBlock();
+    if( self.cancelBlock ) {
+        self.cancelBlock();
     }
     [self.backBtn removeFromSuperview];
     [self removeFromSuperview];
@@ -80,8 +87,8 @@
 }
 
 - (IBAction)actionOK:(id)sender {
-    if( self.cancelBlock ) {
-        self.cancelBlock();
+    if( self.actionBlock ) {
+        self.actionBlock();
     }
     [self.backBtn removeFromSuperview];
     [self removeFromSuperview];

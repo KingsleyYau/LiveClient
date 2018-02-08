@@ -39,7 +39,7 @@ public:
     
     // --------- 登录/注销 ---------
 	// 2.1.登录
-	bool Login(const string& token, PageNameType pageName) override;
+	bool Login(const string& token, PageNameType pageName, LoginVerifyType type = LOGINVERIFYTYPE_TOKEN) override;
 	// 2.2.注销
 	bool Logout() override;
     // 获取login状态
@@ -216,6 +216,7 @@ private:
     ClientType      m_clientType;   // 客户端类型
     string          m_token;        // 直播系统不同服务器的统一验证身份标识
     PageNameType    m_pageName;     // socket所在的页面
+    LoginVerifyType m_type;         // 验证类型（LOGINVERIFYTYPE_TOKEN：token，LOGINVERIFYTYPE_COOKICE：cookice）（整型）
     
     IAutoLock*      m_loginStatusLock;  // 登录状态锁
     LoginStatus     m_loginStatus;  // 登录状态

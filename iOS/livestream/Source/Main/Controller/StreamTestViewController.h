@@ -13,6 +13,8 @@
 
 @interface StreamTestViewController : LSGoogleAnalyticsViewController
 
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *previewTop;
+
 @property (nonatomic, weak) IBOutlet GPUImageView* previewView;
 @property (nonatomic, weak) IBOutlet GPUImageView* previewPublishView;
 @property (nonatomic, weak) IBOutlet UITextField* textFieldAddress;

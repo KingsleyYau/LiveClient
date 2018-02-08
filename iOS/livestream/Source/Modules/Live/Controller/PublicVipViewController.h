@@ -27,28 +27,43 @@
 @property (nonatomic, strong) PlayViewController *playVC;
 
 #pragma mark - 界面控件
+/**
+ 女士头像
+ */
+@property (weak, nonatomic) IBOutlet UIImageView *laddyHeadImageView;
 
+/**
+ 女士姓名
+ */
+@property (weak, nonatomic) IBOutlet UILabel *laddyNameLabel;
+
+/**
+ 女士头部背景
+ */
+@property (weak, nonatomic) IBOutlet UIView *headBackgroundView;
+
+/**
+ 底部背景
+ */
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
-
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleBgImageTop;
+/**
+ 直播间类型资费提示(暂时不用)
+ */
 @property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 
-@property (weak, nonatomic) IBOutlet UIView *followAndHomepageView;
-
-@property (weak, nonatomic) IBOutlet UIButton *homePageBtn;
-
+/**
+ 关注按钮
+ */
 @property (weak, nonatomic) IBOutlet UIButton *followBtn;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *followBtnWidth;
 
-@property (weak, nonatomic) IBOutlet UIView *audienceSuperView;
-
-@property (weak, nonatomic) IBOutlet UIView *audienceNumView;
-
-@property (weak, nonatomic) IBOutlet UILabel *audienNumLabel;
-
-@property (weak, nonatomic) IBOutlet UIButton *audienNumBtn;
-
+/**
+ 观众席
+ */
 @property (weak, nonatomic) IBOutlet VIPAudienceView *audienceView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *audienceViewWidth;
 
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
@@ -59,8 +74,6 @@
 - (IBAction)pushLiveHomePage:(id)sender;
 
 - (IBAction)followLiverAction:(id)sender;
-
-- (IBAction)showAudienceDetail:(id)sender;
 
 - (IBAction)closeAction:(id)sender;
 

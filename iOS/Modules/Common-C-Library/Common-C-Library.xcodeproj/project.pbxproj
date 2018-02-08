@@ -95,6 +95,7 @@
 		509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */; };
 		50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50AE07211F96FCF6005CF8D2 /* LSCommon_C_Library.mm */; };
 		50F383991EE688AC003D2765 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 50F383971EE688AC003D2765 /* mongoose.c */; };
+		FA0F73A4201829E900711670 /* HttpGetVoucherAvailableInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA0F73A2201829E900711670 /* HttpGetVoucherAvailableInfoTask.cpp */; };
 		FA2564B61FEB9D4D00C3DD93 /* HttpOwnEmailLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2564AA1FEB9D4B00C3DD93 /* HttpOwnEmailLoginTask.cpp */; };
 		FA2564B71FEB9D4D00C3DD93 /* HttpOwnFackBookLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2564AC1FEB9D4C00C3DD93 /* HttpOwnFackBookLoginTask.cpp */; };
 		FA2564B81FEB9D4D00C3DD93 /* HttpOwnRegisterTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2564AE1FEB9D4C00C3DD93 /* HttpOwnRegisterTask.cpp */; };
@@ -107,6 +108,7 @@
 		FA57B1911FA955F70092EA2F /* HttpGetUserInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA57B18F1FA955F70092EA2F /* HttpGetUserInfoTask.cpp */; };
 		FA5D06B01F6BC1930035B530 /* HttpGetAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06AE1F6BC1930035B530 /* HttpGetAdAnchorListTask.cpp */; };
 		FA5D06B91F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5D06B71F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp */; };
+		FA5F1F0A200738AD001C18F1 /* HttpCrashFileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5F1F08200738AD001C18F1 /* HttpCrashFileTask.cpp */; };
 		FA5F7B061F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B041F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp */; };
 		FA5F7B0C1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B0A1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp */; };
 		FA86E4BF1FECF3AE0062735C /* HttpPremiumMembershipTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA86E4BD1FECF3AD0062735C /* HttpPremiumMembershipTask.cpp */; };
@@ -349,6 +351,9 @@
 		50F383971EE688AC003D2765 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
 		50F383981EE688AC003D2765 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		D180B77A1D3CD25D00DCFBA5 /* DeviceTypeDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTypeDef.h; sourceTree = "<group>"; };
+		FA0F73A2201829E900711670 /* HttpGetVoucherAvailableInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetVoucherAvailableInfoTask.cpp; sourceTree = "<group>"; };
+		FA0F73A3201829E900711670 /* HttpGetVoucherAvailableInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetVoucherAvailableInfoTask.h; sourceTree = "<group>"; };
+		FA0F73A520182CC400711670 /* HttpVoucherInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpVoucherInfoItem.h; sourceTree = "<group>"; };
 		FA2564A61FEB9D4B00C3DD93 /* HttpOwnCheckMailRegistrationTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpOwnCheckMailRegistrationTask.h; sourceTree = "<group>"; };
 		FA2564A71FEB9D4B00C3DD93 /* HttpOwnEmailLoginTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpOwnEmailLoginTask.h; sourceTree = "<group>"; };
 		FA2564A81FEB9D4B00C3DD93 /* HttpGetShareLinkTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetShareLinkTask.h; sourceTree = "<group>"; };
@@ -375,6 +380,8 @@
 		FA5D06AF1F6BC1930035B530 /* HttpGetAdAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetAdAnchorListTask.h; sourceTree = "<group>"; };
 		FA5D06B71F6BCA660035B530 /* HttpCloseAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseAdAnchorListTask.cpp; sourceTree = "<group>"; };
 		FA5D06B81F6BCA660035B530 /* HttpCloseAdAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCloseAdAnchorListTask.h; sourceTree = "<group>"; };
+		FA5F1F08200738AD001C18F1 /* HttpCrashFileTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCrashFileTask.cpp; sourceTree = "<group>"; };
+		FA5F1F09200738AD001C18F1 /* HttpCrashFileTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCrashFileTask.h; sourceTree = "<group>"; };
 		FA5F7B041F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetPhoneVerifyCodeTask.cpp; sourceTree = "<group>"; };
 		FA5F7B051F7892B70031CCE9 /* HttpGetPhoneVerifyCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPhoneVerifyCodeTask.h; sourceTree = "<group>"; };
 		FA5F7B0A1F789B140031CCE9 /* HttpSubmitPhoneVerifyCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSubmitPhoneVerifyCodeTask.cpp; sourceTree = "<group>"; };
@@ -422,6 +429,10 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				FA0F73A2201829E900711670 /* HttpGetVoucherAvailableInfoTask.cpp */,
+				FA0F73A3201829E900711670 /* HttpGetVoucherAvailableInfoTask.h */,
+				FA5F1F08200738AD001C18F1 /* HttpCrashFileTask.cpp */,
+				FA5F1F09200738AD001C18F1 /* HttpCrashFileTask.h */,
 				FAF074CE1FEE35D9009B863F /* HttpGetVerificationCodeTask.cpp */,
 				FAF074CD1FEE35D9009B863F /* HttpGetVerificationCodeTask.h */,
 				FAF074C81FEE0D73009B863F /* HttpSetManBaseInfoTask.cpp */,
@@ -549,6 +560,7 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FA0F73A520182CC400711670 /* HttpVoucherInfoItem.h */,
 				FAF074C01FEE034D009B863F /* HttpManBaseInfoItem.h */,
 				FA86E4C51FECFB650062735C /* HttpOrderProductItem.h */,
 				FA86E4C01FECF4D30062735C /* HttpProductItem.h */,
@@ -961,6 +973,7 @@
 				FA2564B91FEB9D4D00C3DD93 /* HttpSetShareSucTask.cpp in Sources */,
 				504CDA481C7FDB0500DBB429 /* HttpRequest.cpp in Sources */,
 				504CD9FF1C7FD6AF00DBB429 /* pngmem.c in Sources */,
+				FA0F73A4201829E900711670 /* HttpGetVoucherAvailableInfoTask.cpp in Sources */,
 				501BF3CC1C7F00400052C59F /* zip.c in Sources */,
 				FA2564BD1FEB9D4D00C3DD93 /* HttpOwnFindPasswordTask.cpp in Sources */,
 				FA2564B71FEB9D4D00C3DD93 /* HttpOwnFackBookLoginTask.cpp in Sources */,
@@ -1002,6 +1015,7 @@
 				504CDA011C7FD6AF00DBB429 /* pngread.c in Sources */,
 				501BF3C71C7F00400052C59F /* ioapi.c in Sources */,
 				506BC2CE1F590201001C2962 /* HttpGetInviteInfoTask.cpp in Sources */,
+				FA5F1F0A200738AD001C18F1 /* HttpCrashFileTask.cpp in Sources */,
 				FAF074CF1FEE35DA009B863F /* HttpGetVerificationCodeTask.cpp in Sources */,
 				FA2564BB1FEB9D4D00C3DD93 /* HttpUploadPhotoTask.cpp in Sources */,
 				504CDA2A1C7FDA2D00DBB429 /* tinyxml.cpp in Sources */,

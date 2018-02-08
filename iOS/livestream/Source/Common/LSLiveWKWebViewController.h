@@ -45,7 +45,4 @@
 // 发送请求
 - (void)requestWebview;
 
-// 普通HTTP请求
-- (void)requestHttpWithUrl;
-
 @end

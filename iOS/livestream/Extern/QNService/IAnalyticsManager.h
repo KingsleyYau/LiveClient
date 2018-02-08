@@ -46,6 +46,14 @@
  */
 - (void)reportDidShowPage:(UIViewController* _Nonnull)viewController pageIndex:(NSUInteger)pageIndex;
 
+
+/**
+ 跟踪用户点击事件
+
+ @param action 事件操作
+ @param category 类型
+ */
+- (void)reportActionEvent:(NSString * _Nonnull)action eventCategory:(NSString * _Nonnull)category;
 /**
  *  跟踪App被打开
  *

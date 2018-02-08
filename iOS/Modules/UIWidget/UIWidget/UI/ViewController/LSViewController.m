@@ -26,7 +26,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"LSViewController::dealloc( %@ )", NSStringFromClass([self class]));
+    
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -131,7 +131,7 @@
     UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithTitle:backTitle style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
     item.backBarButtonItem = barButtonItem;
     
-    item.backBarButtonItem.tintColor = [UIColor whiteColor];
+//    item.backBarButtonItem.tintColor = [UIColor colorWithRed:0 green:122.0 / 255.0 blue:1 alpha:1];
 }
 
 - (void)setNavigationTitle:(NSString *)navigationTitle{
@@ -144,13 +144,12 @@
     
     self.backTitle = NSLocalizedString(@"", nil);
 //    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
     // 设置导航栏返回按钮
-    [self setBackleftBarButtonItemOffset:15];
+//    [self setBackleftBarButtonItemOffset:15];
 }
 
 - (void)setupNavigationBar {
-    
+    [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
 }
 
 - (void)setupContainView {
@@ -214,9 +213,9 @@
     }
 }
 
-- (void)hideNavgationBarBottomLine {
+- (void)hideNavgationBarBottomLine:(BOOL)isHide {
     UIImageView* blackLineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
-    blackLineImageView.hidden = YES;
+    blackLineImageView.hidden = isHide;
 }
 
 - (UIImageView *)findHairlineImageViewUnder:(UIView *)view
@@ -237,23 +236,26 @@
 /**
  *  重设和隐藏加载状态
  */
--(void)hideAndResetLoading;
+-(void)hideAndResetLoading
 {
-    self.loadingCount = 0;
-    if( self.loadingCount <= 0 ) {
-        self.loadActivityView.hidden = YES;
-        self.view.userInteractionEnabled = YES;
-    }
+    self.loadActivityView.hidden = YES;
+    self.view.userInteractionEnabled = YES;
+     self.loadingCount = 0;
 
 }
 
 
-- (void)showAndResetLoading;
+- (void)showAndResetLoading
 {
     self.loadingCount = 0;
     self.loadingCount++;
     self.loadActivityView.hidden = NO;
     self.view.userInteractionEnabled = NO;
+}
+
+#pragma mark - 隐藏iPhoneX主按键
+- (BOOL)prefersHomeIndicatorAutoHidden {
+    return YES;
 }
 
 @end

@@ -86,7 +86,7 @@
     AcceptInstanceInviteRequest *request = [[AcceptInstanceInviteRequest alloc] init];
     request.inviteId = self.inviteId;
     request.isConfirm = NO;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, AcceptInstanceInviteItemObject * _Nonnull item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, AcceptInstanceInviteItemObject * _Nonnull item) {
         NSLog(@"PushInviteViewController::rejectInviteRequest : [拒绝应邀 %@]",BOOL2SUCCESS(success));
         if (success) {
         
@@ -100,7 +100,7 @@
     [self.userInfoManager getUserInfo:userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.tipsLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_INVITE_TIP"),item.nickName];
-            [weakSelf.imageViewLoader loadImageWithImageView:weakSelf.ladyImageView options:0 imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+            [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
         });
     }];
 }

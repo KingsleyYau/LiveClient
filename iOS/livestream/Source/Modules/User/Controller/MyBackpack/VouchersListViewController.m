@@ -69,31 +69,31 @@
     self.infoView.hidden = YES;
     //self.tableView.hidden = NO;
     VoucherListRequest * request = [[VoucherListRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *> * _Nullable array, int totalCount) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self hideLoading];
-                [self.tableView finishPullDown:YES];
-                [self.mainVC getunreadCount];
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<VoucherItemObject *> * _Nullable array, int totalCount) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideLoading];
+            [self.tableView finishPullDown:YES];
+            [self.mainVC getunreadCount];
+            
+            self.array = array;
+            if (success) {
                 
-                self.array = array;
-                if (success) {
-                    
-                    if (self.array.count == 0) {
-                       [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Vouchers") hiddenBtn:YES];
-                    }
+                if (self.array.count == 0) {
+                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"No Vouchers") hiddenBtn:YES];
+                }
+            }
+            else
+            {
+                if (array.count == 0) {
+                    [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
                 }
                 else
                 {
-                    if (array.count == 0) {
-                        [self showInfoViewMsg:NSLocalizedStringFromSelf(@"Failed to load") hiddenBtn:NO];
-                    }
-                    else
-                    {
-                        [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
-                    }
+                    [[DialogTip dialogTip] showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
                 }
-                [self.tableView reloadData];
-            });
+            }
+            [self.tableView reloadData];
+        });
     };
     
     [self.sessionManager sendRequest:request];
@@ -132,7 +132,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
- 
+    
     VouchersCell *result = nil;
     VouchersCell * cell = [VouchersCell getUITableViewCell:tableView];
     result = cell;
@@ -160,12 +160,8 @@
             cell.allLadyView.hidden = YES;
             
             cell.nameLabel.text = obj.anchorNcikName;
-
-//            [cell.imageViewLoader loadImageWithImageView:cell.ladyHeadView options:0 imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"]];
-
-            [[LSImageViewLoader loader] sdWebImageLoadView:cell.ladyHeadView options:0 imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Live_PreLive_Img_Head_Default"] finishHandler:^(UIImage *image) {
-                cell.ladyHeadView.image = image;
-            }];
+            
+            [[LSImageViewLoader loader] refreshCachedImage:cell.ladyHeadView options:SDWebImageRefreshCached imageUrl:obj.anchorPhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
             
             cell.ladyLabel.text = NSLocalizedStringFromSelf(@"Only_broadcaster");
             // 公开
@@ -176,11 +172,11 @@
             //私密
             else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
             {
-               cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
+                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
             }
             else
             {
-               cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"No_limit");
+                cell.onlyLadyLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
             }
         }
         // 不限和没看过直播的主播
@@ -189,27 +185,28 @@
             cell.oneLadyView.hidden = YES;
             cell.allLadyView.hidden = NO;
             
+            //没看过直播的主播
             if (obj.anchorType == ANCHORTYPE_NOSEEANCHOR) {
-              cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"New broadcasters");
+                cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"New broadcasters");
             }
             else
             {
-              cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"No_limit");
+                cell.ladyTypeLabel.text =NSLocalizedStringFromSelf(@"No_limit");
             }
             
             // 公开
             if (obj.useRoomType == USEROOMTYPE_PUBLIC)
             {
-                cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
+                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Public");
             }
             //私密
             else if (obj.useRoomType == USEROOMTYPE_PRIVATE)
             {
-               cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
+                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"Only_Private");
             }
             else
             {
-               cell.ladyTypeLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
+                cell.liveTypeLabel.text = NSLocalizedStringFromSelf(@"No limit sessions");
             }
         }
     }
@@ -218,3 +215,4 @@
 }
 
 @end
+

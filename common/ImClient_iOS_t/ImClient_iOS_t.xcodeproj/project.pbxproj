@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D16D2DCE20295F38000F5A76 /* ControlManPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16D2DC620295F34000F5A76 /* ControlManPushTask.cpp */; };
+		D16D2DCF20295F38000F5A76 /* SendInstantInviteUserReportTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16D2DC820295F35000F5A76 /* SendInstantInviteUserReportTask.cpp */; };
+		D16D2DD020295F38000F5A76 /* GetInviteInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16D2DCB20295F36000F5A76 /* GetInviteInfoTask.cpp */; };
+		D16D2DD120295F38000F5A76 /* RecvGetHonorNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D16D2DCC20295F37000F5A76 /* RecvGetHonorNoticeTask.cpp */; };
 		D17799231ED9199A00835F3A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D17799221ED9199A00835F3A /* main.m */; };
 		D17799261ED9199A00835F3A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D17799251ED9199A00835F3A /* AppDelegate.m */; };
 		D17799291ED9199A00835F3A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D17799281ED9199A00835F3A /* ViewController.m */; };
@@ -98,6 +102,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D16D2DC620295F34000F5A76 /* ControlManPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlManPushTask.cpp; sourceTree = "<group>"; };
+		D16D2DC720295F34000F5A76 /* GetInviteInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetInviteInfoTask.h; sourceTree = "<group>"; };
+		D16D2DC820295F35000F5A76 /* SendInstantInviteUserReportTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendInstantInviteUserReportTask.cpp; sourceTree = "<group>"; };
+		D16D2DC920295F36000F5A76 /* SendInstantInviteUserReportTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInstantInviteUserReportTask.h; sourceTree = "<group>"; };
+		D16D2DCA20295F36000F5A76 /* ControlManPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlManPushTask.h; sourceTree = "<group>"; };
+		D16D2DCB20295F36000F5A76 /* GetInviteInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GetInviteInfoTask.cpp; sourceTree = "<group>"; };
+		D16D2DCC20295F37000F5A76 /* RecvGetHonorNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvGetHonorNoticeTask.cpp; sourceTree = "<group>"; };
+		D16D2DCD20295F37000F5A76 /* RecvGetHonorNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvGetHonorNoticeTask.h; sourceTree = "<group>"; };
 		D177991E1ED9199A00835F3A /* ImClient_iOS_t.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImClient_iOS_t.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D17799221ED9199A00835F3A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D17799241ED9199A00835F3A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -483,6 +495,14 @@
 		D17799921ED91A0E00835F3A /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				D16D2DC620295F34000F5A76 /* ControlManPushTask.cpp */,
+				D16D2DCA20295F36000F5A76 /* ControlManPushTask.h */,
+				D16D2DCB20295F36000F5A76 /* GetInviteInfoTask.cpp */,
+				D16D2DC720295F34000F5A76 /* GetInviteInfoTask.h */,
+				D16D2DCC20295F37000F5A76 /* RecvGetHonorNoticeTask.cpp */,
+				D16D2DCD20295F37000F5A76 /* RecvGetHonorNoticeTask.h */,
+				D16D2DC820295F35000F5A76 /* SendInstantInviteUserReportTask.cpp */,
+				D16D2DC920295F36000F5A76 /* SendInstantInviteUserReportTask.h */,
 				FA84AF3E1F5FA9EF00D91411 /* PublicRoomInTask.cpp */,
 				FA84AF3F1F5FA9EF00D91411 /* PublicRoomInTask.h */,
 				FA84AF401F5FA9EF00D91411 /* RecvSendSystemNoticeTask.cpp */,
@@ -689,6 +709,7 @@
 				FA0584BF1F5571B400956552 /* RecvBackpackUpdateNoticeTask.cpp in Sources */,
 				FA0584B91F556D2B00956552 /* RecvLevelUpNoticeTask.cpp in Sources */,
 				D17799BA1ED91A0E00835F3A /* IImClient.cpp in Sources */,
+				D16D2DD020295F38000F5A76 /* GetInviteInfoTask.cpp in Sources */,
 				D17799C31ED91A0E00835F3A /* TaskMapManager.cpp in Sources */,
 				FA0584AA1F55569900956552 /* RecvSendBookingReplyNoticeTask.cpp in Sources */,
 				FA0584B01F555D2200956552 /* RecvBookingNoticeTask.cpp in Sources */,
@@ -713,7 +734,9 @@
 				D17799881ED919FD00835F3A /* IAutoLock.cpp in Sources */,
 				FA7AB6931EEE632300C5F24D /* KickOffTask.cpp in Sources */,
 				FA7126411F427DF5005A9F3C /* RebateInfoObject.m in Sources */,
+				D16D2DCF20295F38000F5A76 /* SendInstantInviteUserReportTask.cpp in Sources */,
 				FA23107C1F46D58100E8D389 /* SendCancelPrivateLiveInviteTask.cpp in Sources */,
+				D16D2DCE20295F38000F5A76 /* ControlManPushTask.cpp in Sources */,
 				D17799531ED919ED00835F3A /* json_value.cpp in Sources */,
 				D17799C11ED91A0E00835F3A /* LoginTask.cpp in Sources */,
 				FA7FB8D21EEF734900B79F0A /* SendGiftTask.cpp in Sources */,
@@ -721,6 +744,7 @@
 				D17799261ED9199A00835F3A /* AppDelegate.m in Sources */,
 				FA0584BC1F556F9400956552 /* RecvLoveLevelUpNoticeTask.cpp in Sources */,
 				D17799861ED919FD00835F3A /* command.cpp in Sources */,
+				D16D2DD120295F38000F5A76 /* RecvGetHonorNoticeTask.cpp in Sources */,
 				FA902BFB1F57FDD8007B0B16 /* RideInfoObject.m in Sources */,
 				FA71FEAB1F5653B000C8A85B /* RecvChangeVideoUrlTask.cpp in Sources */,
 				D177998D1ED919FD00835F3A /* KThread.cpp in Sources */,

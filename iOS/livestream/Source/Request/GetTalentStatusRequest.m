@@ -25,7 +25,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getTalentStatus:self.roomId talentInviteId:self.talentInviteId finishHandler:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject * _Nonnull item) {
+        NSInteger request = [self.manager getTalentStatus:self.roomId talentInviteId:self.talentInviteId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, GetTalentStatusItemObject * _Nonnull item) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -44,7 +44,7 @@
     return NO;
 }
 
-- (void)callRespond:(BOOL)success errnum:(NSInteger)errnum errmsg:(NSString* _Nullable)errmsg {
+- (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
         GetTalentStatusItemObject *item = [[GetTalentStatusItemObject alloc] init];
         self.finishHandler(NO, errnum, errmsg, item);

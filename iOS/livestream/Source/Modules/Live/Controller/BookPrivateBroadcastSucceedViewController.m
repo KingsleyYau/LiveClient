@@ -38,7 +38,6 @@
     
     [self setTableHeadView];
     [self setTableFooterView];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView reloadData];
 }
 
@@ -57,11 +56,16 @@
     UIView * footerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 300)];
     footerView.backgroundColor = [UIColor clearColor];
     UIButton * okBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    okBtn.frame = CGRectMake(footerView.frame.size.width/2 - 201/2, 24, 201, 35);
+    okBtn.frame = CGRectMake(20, 24, SCREEN_WIDTH - 40, 35);
+    okBtn.titleLabel.font = [UIFont systemFontOfSize:15];
     [okBtn setTitle:NSLocalizedString(@"OK", @"OK") forState:UIControlStateNormal];
-    okBtn.layer.cornerRadius = 5;
-    okBtn.layer.masksToBounds = YES;
-    okBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xf94ceb);
+    okBtn.layer.cornerRadius = okBtn.frame.size.height/2;
+    okBtn.layer.masksToBounds = NO;
+    okBtn.layer.shadowOffset = CGSizeMake(3, 3);
+    okBtn.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    okBtn.layer.shadowRadius = 2;
+    okBtn.layer.shadowOpacity = 0.8;
+    okBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x297AF3);
     [okBtn addTarget:self action:@selector(backBtnDid:) forControlEvents:UIControlEventTouchUpInside];
     [footerView addSubview:okBtn];
     
@@ -126,11 +130,11 @@
         cell.textLabel.font = [UIFont systemFontOfSize:14];
         cell.textLabel.textColor = COLOR_WITH_16BAND_RGB(0x3c3c3c);
         cell.detailTextLabel.font = [UIFont systemFontOfSize:14];
-        cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        cell.detailTextLabel.textColor = COLOR_WITH_16BAND_RGB(0x666666);
         
-        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(10, 0, screenSize.width - 20, 0.5)];
-        lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
-        [cell addSubview:lineView];
+//        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(10, 0, screenSize.width - 20, 0.5)];
+//        lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
+//        [cell addSubview:lineView];
         
         cell.textLabel.text = [self.titleArray objectAtIndex:indexPath.row];
         

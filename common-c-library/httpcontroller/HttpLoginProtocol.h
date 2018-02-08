@@ -66,7 +66,7 @@
 
 /* 2.4.Facebook注册及登录接口（仅独立） */
 /* 接口路径 */
-#define OWN_FACKBOOK_LOGIN_PATH                   "/member/facebooklogin"
+#define OWN_FACKBOOK_LOGIN_PATH                   "/App/member/facebooklogin"
 
 /**
  * 请求
@@ -74,9 +74,10 @@
 #define OWN_FACKBOOK_LOGIN_FTOKEN                   "ftoken"
 #define OWN_FACKBOOK_LOGIN_EMAIL                    "email"
 #define OWN_FACKBOOK_LOGIN_PASSWORD                 "password"
+#define OWN_FACKBOOK_LOGIN_GENDER                   "gender"
+#define OWN_FACKBOOK_LOGIN_NICKNAME                 "nick_name"
 #define OWN_FACKBOOK_LOGIN_BIRTHDAY                 "birthday"
 #define OWN_FACKBOOK_LOGIN_INVITECODE               "invite_code"
-#define OWN_FACKBOOK_LOGIN_VERSIONCODE              "versioncode"
 #define OWN_FACKBOOK_LOGIN_DEVICEID                 "deviceId"
 #define OWN_FACKBOOK_LOGIN_MODEL                    "model"
 #define OWN_FACKBOOK_LOGIN_MANUFACTURER             "manufacturer"
@@ -87,7 +88,7 @@
 
 /* 2.5.邮箱注册（仅独立） */
 /* 接口路径 */
-#define OWN_REGISTER_PATH                   "/member/joincheck"
+#define OWN_REGISTER_PATH                   "/App/member/joincheck"
 
 /**
  * 请求
@@ -108,7 +109,7 @@
 
 /* 2.6.邮箱登录（仅独立） */
 /* 接口路径 */
-#define OWN_EMAIL_LOGIN_PATH                   "/member/logincheck"
+#define OWN_EMAIL_LOGIN_PATH                   "/App/member/logincheck"
 
 /**
  * 请求
@@ -126,7 +127,7 @@
 
 /* 2.7.找回密码（仅独立） */
 /* 接口路径 */
-#define OWN_FIND_PASSWORD_PATH                   "/member/find_pw"
+#define OWN_FIND_PASSWORD_PATH                   "/App/member/find_pw"
 
 /**
  * 请求
@@ -136,7 +137,7 @@
 
 /* 2.8.检测邮箱注册状态（仅独立）） */
 /* 接口路径 */
-#define OWN_CHECK_MAIL_PATH                   "/member/checkmail"
+#define OWN_CHECK_MAIL_PATH                   "/App/member/checkmail"
 
 /**
  * 请求
@@ -145,7 +146,7 @@
 
 /* 2.9.提交用户头像接口（仅独立）） */
 /* 接口路径 */
-#define OWN_UPLOAD_PHOTO_PATH                   "/member/uploadphoto"
+#define OWN_UPLOAD_PHOTO_PATH                   "/App/member/uploadphoto"
 
 /**
  * 请求
@@ -158,13 +159,17 @@
 
 /* 2.10.获取验证码（仅独立）） */
 /* 接口路径 */
-#define OWN_GIFAUTH_PATH                   "/member/gifAuth"
+#define OWN_GIFAUTH_PATH                   "/App/member/gifAuth"
 
 /**
  * 请求
  */
 #define OWN_GIFAUTH_ID                      "id"
 #define OWN_GIFAUTH_USECODE                 "usecode"
+
+/* 2.11.显示用户头像（仅独立）） */
+/* 接口路径 */
+#define OWN_SHOWPHOTO_PATH                   "/App/member/showphoto"
 
 /* ########################	直播间 模块  ######################## */
 /* 直播间公共部分 */
@@ -654,6 +659,24 @@
 #define LIVEROOM_GETBACKPACKUNREADNUM_GIFTUNREADNUM                  "gift_unread_num"
 #define LIVEROOM_GETBACKPACKUNREADNUM_RIDEUNREADNUM                  "ride_unread_num"
 
+/* 5.6.获取试用券可用信息 */
+/* 接口路径 */
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO                  "/share/v1/getVoucherAvailableInfo"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICEXPTIME                          "onlypublic_exp_time"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATEEXPTIME                         "onlyprivate_exp_time"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR                                 "bind_anchor"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_ANCHORID                                    "anchor_id"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_USEROOMTYPE                                 "use_room_type"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_EXPTIME                                     "exp_time"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPUBLICNEWANCHOREXPTIME                  "onlypublic_new_anchor_exp_time"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_ONLYPRIVATENEWANCHOREXPTIME                 "onlyprivate_new_anchor_exp_time"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_WATCHEDANCHOR                               "watched_anchor"
+#define LIVEROOM_GETVOUCHERAVAILABLEINFO_WATCHEDANCHOR_ANCHORID                                 "anchor_id"
+
 
 /* ########################	其它 模块  ######################## */
 
@@ -671,7 +694,16 @@
 #define LIVEROOM_USER_LEVEL                     "user_level"
 #define LIVEROOM_INTIMACY                       "intimacy"
 #define LIVEROOM_USERPROTOCOL                   "user_protocol"
-
+#define LIVEROOM_TERMSOFUSE                     "terms_of_use"
+#define LIVEROOM_PRIVACYPOLICY                  "privacy_policy"
+#define LIVEROOM_MINAVAILABLEVER                "min_available_ver"
+#define LIVEROOM_MINAVAILABLEMSG                "min_available_msg"
+#define LIVEROOM_NEWEST_VER                     "newest_ver"
+#define LIVEROOM_NEWEST_MSG                     "newest_msg"
+#define LIVEROOM_DOWNLOADAPPURL_MSG             "download_app_url"
+#define LIVEROOM_SVRLIST                        "svr_list"
+#define LIVEROOM_SVRLIST_SVRID                                  "svrid"
+#define LIVEROOM_SVRLIST_TURL                                   "turl"
 /* 6.2.获取账号余额 */
 /* 接口路径 */
 #define LIVEROOM_GET_LEFTCREDIT                       "/share/v1/getLeftCredit"
@@ -828,6 +860,9 @@
 #define LIVEROOM_GETMANBASEINFO_PHOTOSTATUS                     "photo_status"
 #define LIVEROOM_GETMANBASEINFO_BIRTHDAY                        "birthday"
 #define LIVEROOM_GETMANBASEINFO_USERLEVEL                       "user_level"
+#define LIVEROOM_GETMANBASEINFO_GENDER                          "gender"
+#define LIVEROOM_GETMANBASEINFO_USERTYPE                        "user_type"
+#define LIVEROOM_GETMANBASEINFO_GAUID                           "ga_uid"
 
 /* 6.15.设置个人信息（仅独立） */
 /* 接口路径 */
@@ -837,6 +872,17 @@
  *  请求
  */
 #define LIVEROOM_SETMANBASEINFO_NICKNAME                          "nickname"
+
+
+/* 6.16.提交crash dump文件（仅独立提交） */
+/* 接口路径 */
+#define LIVEROOM_CRASHFILE                                 "/App/other/crash_file"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CRASHFILE_DEVICEID                          "deviceId"
+#define LIVEROOM_CRASHFILE_CRASHFILE                         "crashfile"
 
 
 /* ########################   支付 模块  ######################## */
@@ -854,12 +900,11 @@
 /**
  *  返回
  */
-#define LIVEROOM_PREMIUM_MEMBERSHIP_TITLE                           "title"
-#define LIVEROOM_PREMIUM_MEMBERSHIP_SUBTITLE                        "subtitle"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS                        "products"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_ID                             "id"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_NAME                           "name"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_PRICE                          "price"
+#define LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_ICON                           "icon"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_DESC                            "desc"
 #define LIVEROOM_PREMIUM_MEMBERSHIP_MORE                            "more"
 

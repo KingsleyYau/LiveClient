@@ -88,27 +88,24 @@ bool HttpGetVerificationCodeTask::ParseData(const string& url, bool bFlag, const
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
-        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+        // 数据只有二进制图片，不需要解析
+//        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+//            //bParse = true;
+//        }
+        if (mpRequest->GetContentType().compare("image/png") == 0 )
+        {
             bParse = true;
-        }
-        bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
-        
-        // LSalextest
-        if (bParse == false) {
             errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
             errmsg = "";
-            bParse = true;
         }
         
-    } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+       // bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
+    } else {
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+
     }
     
     if( mpCallback != NULL ) {

@@ -8,8 +8,9 @@
 
 #import "JDSegmentControl.h"
 
-#define kSelectedColor      COLOR_WITH_16BAND_RGB(0x5d0e86)
-#define kNormalColor        COLOR_WITH_16BAND_RGB(0x3c3c3c)
+#define kSelectedColor      COLOR_WITH_16BAND_RGB(0x297AF3)
+#define kTextSelectedColor  COLOR_WITH_16BAND_RGB(0x1A1A1A)
+#define kNormalColor        COLOR_WITH_16BAND_RGB(0x666666)
 #define kLineNormalColor    [UIColor whiteColor]
 #define kSpacing SCREEN_WIDTH==320?5:SCREEN_WIDTH==375?15:20
 
@@ -108,7 +109,7 @@
            
             // 默认选中第一个 设置状态
             if (i == 0) {
-                [button setTitleColor:kSelectedColor forState:UIControlStateNormal];
+                [button setTitleColor:kTextSelectedColor forState:UIControlStateNormal];
                 button.lineView.backgroundColor = kSelectedColor;
                 // 保留为上次选择中的button
                 _lastClickButton = button;
@@ -150,7 +151,7 @@
     // 连续点击同一个不响应回调
     if (_lastClickButton != button) {
         // 设置状态
-        [button setTitleColor:kSelectedColor forState:UIControlStateNormal];
+        [button setTitleColor:kTextSelectedColor forState:UIControlStateNormal];
         button.lineView.backgroundColor = kSelectedColor;
         [_lastClickButton setTitleColor:kNormalColor forState:UIControlStateNormal];
         _lastClickButton.lineView.backgroundColor = kLineNormalColor;

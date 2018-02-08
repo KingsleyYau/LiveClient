@@ -110,7 +110,7 @@
         self.failBtn.layer.cornerRadius = 8.0f;
         self.failBtn.layer.masksToBounds = YES;
         
-        self.failBtn.backgroundColor = [UIColor colorWithRed:93.0 / 255.0 green:14.0 / 255.0 blue:134.0 / 255.0 alpha:1];
+        self.failBtn.backgroundColor = [UIColor colorWithRed:41.0 / 255.0 green:122.0 / 255.0 blue:243.0 / 255.0 alpha:1];
         
 //        [self.failBtn addTarget:self action:self.delegateSelect forControlEvents:UIControlEventTouchUpInside];
            [self.failBtn addTarget:self.delegate action:@selector(btnActionClick:) forControlEvents:UIControlEventTouchUpInside];

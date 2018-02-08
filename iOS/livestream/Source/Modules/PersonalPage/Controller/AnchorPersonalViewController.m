@@ -76,16 +76,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    if (!self.viewDidAppearEver) {
-        self.navigationController.navigationBar.hidden = NO;
-        self.navigationController.navigationBar.translucent = NO;
-        self.edgesForExtendedLayout = UIRectEdgeNone;
-    }
-    
-    if (!self.navigationController.navigationBar.hidden) {
-        self.navigationController.navigationBar.hidden = YES;
-    }
+
+//    if (!self.viewDidAppearEver) {
+//        self.navigationController.navigationBar.hidden = NO;
+//        [self.navigationController setNavigationBarHidden:NO];
+//        self.navigationController.navigationBar.translucent = NO;
+//        self.edgesForExtendedLayout = UIRectEdgeNone;
+//    }
+//
+//    if (!self.navigationController.navigationBar.hidden) {
+//        self.navigationController.navigationBar.hidden = YES;
+//        [self.navigationController setNavigationBarHidden:YES];
+//    }
     //    else {
     //
     //    }
@@ -97,30 +99,39 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
-        LSLiveGuideViewController *guide =  [[LSLiveGuideViewController alloc] initWithNibName:nil bundle:nil];
-        guide.listGuide = NO;
-        guide.guideDelegate = self;
-        [self addChildViewController:guide];
-        [self.view addSubview:guide.view];
-        [guide.view mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.view);
-            make.left.equalTo(self.view);
-            make.width.equalTo(self.view);
-            make.height.equalTo(self.view);
-        }];
-        // 使约束生效
-        [guide.view layoutSubviews];
-        [self hideAndResetLoading];
-    }else{
+    // 出现新手引导不加载webview,防止进入新手引导页会出现加载loading的状态
+    // 屏蔽新手引导功能
+//    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
+//        LSLiveGuideViewController *guide =  [[LSLiveGuideViewController alloc] initWithNibName:nil bundle:nil];
+//        guide.listGuide = NO;
+//        guide.guideDelegate = self;
+//        [self addChildViewController:guide];
+//        [self.view addSubview:guide.view];
+//        [guide.view mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.top.equalTo(self.view);
+//            make.left.equalTo(self.view);
+//            make.width.equalTo(self.view);
+//            make.height.equalTo(self.view);
+//        }];
+//        // 使约束生效
+//        [guide.view layoutSubviews];
+//        [self hideAndResetLoading];
+//    }else{
         if (!self.viewDidAppearEver) {
             self.urlController.liveWKWebView = self.personalView;
             self.urlController.controller = self;
             self.urlController.isShowTaBar = NO;
             self.urlController.isRequestWeb = YES;
+            // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
+            [self.navigationController setNavigationBarHidden:NO];
+            self.navigationController.navigationBar.hidden = NO;
             [self.urlController requestWebview];
+        } else {
+            // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
+            [self.navigationController setNavigationBarHidden:YES];
+            self.navigationController.navigationBar.hidden = YES;
         }
-    }
+//    }
     
     [super viewDidAppear:animated];
 }
@@ -128,16 +139,19 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self hideAndResetLoading];
-//    [self.navigationController setNavigationBarHidden:NO];
-    
-        self.navigationController.navigationBar.hidden = NO;
+    [self.navigationController setNavigationBarHidden:NO];
+    self.navigationController.navigationBar.hidden = NO;
 }
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+}
+
 
 - (void)lsLiveGuideViewControllerDidFinishGuide:(LSLiveGuideViewController *)guideViewController {
     //TODO:新手引导页退出导航栏操作
     //    self.navigationController.navigationBar.hidden = YES;
-    
-    
     if (@available(iOS 11, *)) {
         self.personalView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }else {

@@ -40,10 +40,18 @@
     
     self.changeBtn.layer.cornerRadius = 5;
     self.changeBtn.layer.masksToBounds = YES;
-    self.verifyBtn.layer.cornerRadius = 5;
-    self.verifyBtn.layer.masksToBounds = YES;
-    self.resendBtn.layer.cornerRadius = 5;
+    self.verifyBtn.layer.cornerRadius = self.verifyBtn.frame.size.height/2;
+    self.verifyBtn.layer.masksToBounds = NO;
+    self.verifyBtn.layer.shadowOffset = CGSizeMake(3, 3);
+    self.verifyBtn.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    self.verifyBtn.layer.shadowRadius = 2;
+    self.verifyBtn.layer.shadowOpacity = 0.8;
+    
+    self.resendBtn.layer.cornerRadius = self.resendBtn.frame.size.height/2;
+    
     self.resendBtn.layer.masksToBounds = YES;
+    self.resendBtn.layer.borderColor = COLOR_WITH_16BAND_RGB(0x666666).CGColor;
+    self.resendBtn.layer.borderWidth = 1;
     
     CGRect rect = self.codeTextField.frame;
     rect.size.width = screenSize.width - self.resendBtn.frame.size.width - 50;
@@ -89,7 +97,7 @@
 - (void)textChange:(NSNotification *)notifi
 {
     if (self.codeTextField.text.length > 0) {
-        self.verifyBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        self.verifyBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x297AF3);
         self.verifyBtn.userInteractionEnabled = YES;
     }
     else
@@ -103,13 +111,18 @@
 {
     self.time -= [self.timer timeInterval];
     NSString *times = [NSString stringWithFormat:@"%d",self.time];
-    [self.resendBtn setTitle:[NSString stringWithFormat:@"%@s",times] forState:UIControlStateNormal];
-    self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xbfbfbf);
+    [self.resendBtn setTitle:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"RESEND_IN"),times] forState:UIControlStateNormal];
+    [self.resendBtn setTitleColor:COLOR_WITH_16BAND_RGB(0x666666) forState:UIControlStateNormal];
+    self.resendBtn.backgroundColor = [UIColor whiteColor];
+    self.resendBtn.layer.borderColor = COLOR_WITH_16BAND_RGB(0x666666).CGColor;
+    self.resendBtn.layer.borderWidth = 1;
     self.resendBtn.userInteractionEnabled = NO;
     if (self.time <= 0.0f) {
-        [self.resendBtn setTitle:@"Resend" forState:UIControlStateNormal];
-        self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        [self.resendBtn setTitle:NSLocalizedStringFromSelf(@"RESEND_END") forState:UIControlStateNormal];
+        [self.resendBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.resendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x297AF3);
         self.resendBtn.userInteractionEnabled = YES;
+        self.resendBtn.layer.borderWidth = 0;
         [self.timer invalidate];
         self.timer = nil;
         self.time = 30;
@@ -130,7 +143,7 @@
     request.areaCode = self.country.zipCode;
     request.phoneNo = self.phoneStr;
     
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self hideLoading];
@@ -168,7 +181,7 @@
         request.country = self.country.shortName;
         request.areaCode = self.country.zipCode;
         request.verifyCode = self.codeTextField.text;
-        request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+        request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 if (success) {
@@ -180,7 +193,7 @@
                 }
                 else
                 {
-                    if (errnum == 10066) {
+                    if (errnum == HTTP_LCC_ERR_MORE_TWENTY_PHONE) {
                         self.errorView.hidden = NO;
                     }
                     else

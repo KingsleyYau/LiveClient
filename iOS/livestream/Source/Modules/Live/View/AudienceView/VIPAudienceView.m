@@ -24,9 +24,9 @@
     if (self) {
 
         UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-        layout.itemSize = CGSizeMake(26, 26);
+        layout.itemSize = CGSizeMake(24, 24);
         //        layout.minimumInteritemSpacing = 0;
-        layout.minimumLineSpacing = 5;
+        layout.minimumLineSpacing = 4;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         self.collectionView.dataSource = self;

@@ -34,21 +34,24 @@
     return view;
 }
 
-- (void)updateUserBalanceCredit:(double)credit headImage:(NSString *)imgUrl level:(int)lv {
+- (void)updateUserBalanceCredit:(double)credit userInfo:(LSUserInfoModel *)userInfo {
     
-    LSLoginManager *loginManager = [LSLoginManager manager];
-    
-    NSString * name = loginManager.loginItem.nickName;
+    NSString * name = userInfo.nickName;
     if (name.length > 20) {
         name = [name substringToIndex:17];
         name = [NSString stringWithFormat:@"%@...",name];
     }
     self.nameLabel.text = name;
-    self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",loginManager.loginItem.userId];
+    if (userInfo.userId.length) {
+        self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",userInfo.userId];
+    } else {
+        self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",[LSLoginManager manager].loginItem.userId];
+    }
     
-    [self.imageLoader loadImageWithImageView:self.userHeadImageView options:0 imageUrl:imgUrl placeholderImage:[UIImage imageNamed:@"Man_Head_Nomal"]];
+    [self.imageLoader refreshCachedImage:self.userHeadImageView options:SDWebImageRefreshCached imageUrl:userInfo.photoUrl
+                        placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
     
-    NSString *imageName = [NSString stringWithFormat:@"User_leave_%d",lv];
+    NSString *imageName = [NSString stringWithFormat:@"User_leave_%d",[LSLoginManager manager].loginItem.level];
     self.userLVImageView.image = [UIImage imageNamed:imageName];
     
     NSMutableAttributedString *attribuStr = [[NSMutableAttributedString alloc] init];

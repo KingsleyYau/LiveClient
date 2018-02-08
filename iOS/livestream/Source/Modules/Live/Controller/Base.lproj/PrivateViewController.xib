@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -14,67 +14,141 @@
             <connections>
                 <outlet property="bgImageView" destination="TOh-ki-9Hu" id="ymx-qB-nf3"/>
                 <outlet property="closeBtn" destination="23g-vX-uiz" id="4am-vW-ivB"/>
-                <outlet property="followBtn" destination="fk0-SF-hea" id="fKs-d5-jq0"/>
+                <outlet property="followBtn" destination="XxR-vI-fte" id="JQp-UR-5BS"/>
+                <outlet property="followBtnWidth" destination="g0L-e9-Juv" id="Gcy-Ca-OEL"/>
+                <outlet property="intimacyHeadView" destination="Iwf-Rl-g11" id="nK2-J9-inP"/>
                 <outlet property="intimacyImageView" destination="5hV-9j-qBA" id="0E4-hu-czl"/>
-                <outlet property="ladyHeadBgImageView" destination="No9-Vu-iO4" id="MeT-RV-aYq"/>
-                <outlet property="ladyHeadImageView" destination="247-sE-1hR" id="jZg-YS-rdG"/>
-                <outlet property="manHeadBgImageView" destination="YuX-vM-1Qc" id="XtN-k1-uHM"/>
-                <outlet property="manHeadImageView" destination="GQc-Go-dDZ" id="TGW-a1-azE"/>
-                <outlet property="roomTypeImageView" destination="bFO-8q-Gng" id="GRD-ml-tW3"/>
+                <outlet property="intimacyLadyImageView" destination="PW0-vW-nfX" id="2r3-Em-wje"/>
+                <outlet property="intimacyManImageView" destination="BOw-Qb-RXw" id="Yry-hC-JQh"/>
+                <outlet property="laddyNameLabel" destination="jl5-eC-38s" id="Hcb-Ls-DgS"/>
+                <outlet property="ladyHeadView" destination="0Lr-s9-7i7" id="gDz-Tx-WyG"/>
+                <outlet property="ladyImageView" destination="QKZ-4l-Nu0" id="JH7-43-nSp"/>
                 <outlet property="titleBackGroundView" destination="jaE-2b-OdZ" id="QjX-Hy-KJF"/>
+                <outlet property="titleBgImageTop" destination="mtK-dx-kZQ" id="Hxa-Xs-JDN"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Bottom" translatesAutoresizingMaskIntoConstraints="NO" id="TOh-ki-9Hu" userLabel="Bg Image View">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TOh-ki-9Hu" userLabel="Bg Image View">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <color key="backgroundColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Title" translatesAutoresizingMaskIntoConstraints="NO" id="jaE-2b-OdZ" userLabel="Title Bg ImageView">
-                    <rect key="frame" x="0.0" y="20" width="375" height="90"/>
+                <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jaE-2b-OdZ" userLabel="Title Bg ImageView">
+                    <rect key="frame" x="0.0" y="20" width="414" height="60"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Type" translatesAutoresizingMaskIntoConstraints="NO" id="bFO-8q-Gng" userLabel="Room Type ImageView" customClass="LSUITapImageView">
-                    <rect key="frame" x="13" y="28" width="142" height="26"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Img_Intimacy_Head_0" translatesAutoresizingMaskIntoConstraints="NO" id="5hV-9j-qBA" userLabel="Intimacy ImageView" customClass="LSUITapImageView">
-                    <rect key="frame" x="158.5" y="62" width="58" height="45"/>
-                </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Man_Head" translatesAutoresizingMaskIntoConstraints="NO" id="YuX-vM-1Qc" userLabel="Man Head Bg ImageView">
-                    <rect key="frame" x="106.5" y="61.5" width="47" height="47"/>
-                </imageView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="GQc-Go-dDZ" userLabel="Man Head ImangeView">
-                    <rect key="frame" x="115.5" y="70.5" width="37" height="37"/>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="GQc-Go-dDZ" secondAttribute="height" multiplier="1:1" id="5Iv-Rq-I8M"/>
-                        <constraint firstAttribute="width" constant="37" id="Lwk-ot-YQY"/>
+                        <constraint firstAttribute="height" constant="60" id="9sN-i0-FDQ"/>
                     </constraints>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Bg_Lady_Head" translatesAutoresizingMaskIntoConstraints="NO" id="No9-Vu-iO4" userLabel="Lady Head Bg ImageView">
-                    <rect key="frame" x="221.5" y="61.5" width="47" height="47"/>
-                </imageView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="247-sE-1hR" userLabel="Lady Head ImangeView" customClass="LSUITapImageView">
-                    <rect key="frame" x="222.5" y="70.5" width="37" height="37"/>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-s9-7i7" userLabel="Lady Head View">
+                    <rect key="frame" x="10" y="28" width="168.66666666666666" height="45"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="QKZ-4l-Nu0" userLabel="Lady ImangeView" customClass="LSUITapImageView">
+                            <rect key="frame" x="2" y="2" width="41" height="41"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="QKZ-4l-Nu0" secondAttribute="height" multiplier="1:1" id="eNX-3o-FL5"/>
+                                <constraint firstAttribute="width" constant="41" id="rZ8-vt-sgp"/>
+                            </constraints>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XxR-vI-fte" userLabel="Follow Button">
+                            <rect key="frame" x="129.66666666666666" y="6.6666666666666643" width="32" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="XxR-vI-fte" secondAttribute="height" multiplier="1:1" id="IG6-9o-mc5"/>
+                                <constraint firstAttribute="width" constant="32" id="g0L-e9-Juv"/>
+                            </constraints>
+                            <state key="normal" image="Live_Private_Vip_Btn_Follow"/>
+                            <connections>
+                                <action selector="followAction:" destination="-1" eventType="touchUpInside" id="Im9-Gi-s07"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jl5-eC-38s" userLabel="Laddy Name Label">
+                            <rect key="frame" x="51.000000000000007" y="6.0000000000000009" width="71.666666666666686" height="14.333333333333336"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One-on-One" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0qe-sQ-nib" userLabel="Live Room Type Label">
+                            <rect key="frame" x="51.000000000000007" y="25.333333333333332" width="71.666666666666686" height="14.333333333333332"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PzM-a5-E3r" userLabel="Liver Homepage Btn">
+                            <rect key="frame" x="0.0" y="0.0" width="122.66666666666667" height="45"/>
+                            <connections>
+                                <action selector="pushToAnchorPersonal:" destination="-1" eventType="touchUpInside" id="Sjl-fw-Nn1"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.39956121579999998" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="37" id="8AY-ID-NLP"/>
-                        <constraint firstAttribute="width" secondItem="247-sE-1hR" secondAttribute="height" multiplier="1:1" id="sYf-Sb-mbj"/>
+                        <constraint firstItem="0qe-sQ-nib" firstAttribute="trailing" secondItem="jl5-eC-38s" secondAttribute="trailing" id="AQ9-Zv-25m"/>
+                        <constraint firstItem="jl5-eC-38s" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" constant="6" id="E3w-zD-OMd"/>
+                        <constraint firstAttribute="bottom" secondItem="PzM-a5-E3r" secondAttribute="bottom" id="KRh-YE-A56"/>
+                        <constraint firstItem="XxR-vI-fte" firstAttribute="trailing" secondItem="0Lr-s9-7i7" secondAttribute="trailing" constant="-7" id="M45-Dl-Pca"/>
+                        <constraint firstAttribute="bottom" secondItem="QKZ-4l-Nu0" secondAttribute="bottom" constant="2" id="Mfw-dz-5jB"/>
+                        <constraint firstItem="jl5-eC-38s" firstAttribute="leading" secondItem="QKZ-4l-Nu0" secondAttribute="trailing" constant="8" id="NhJ-Wa-jan"/>
+                        <constraint firstItem="0qe-sQ-nib" firstAttribute="leading" secondItem="jl5-eC-38s" secondAttribute="leading" id="RaM-8c-Oxa"/>
+                        <constraint firstItem="PzM-a5-E3r" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" id="S5G-g1-4fB"/>
+                        <constraint firstItem="jl5-eC-38s" firstAttribute="trailing" secondItem="PzM-a5-E3r" secondAttribute="trailing" id="USj-TV-dbF"/>
+                        <constraint firstItem="XxR-vI-fte" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="bfF-xI-5aO"/>
+                        <constraint firstItem="QKZ-4l-Nu0" firstAttribute="leading" secondItem="0Lr-s9-7i7" secondAttribute="leading" constant="2" id="eLH-uu-TB3"/>
+                        <constraint firstItem="0qe-sQ-nib" firstAttribute="top" secondItem="jl5-eC-38s" secondAttribute="bottom" constant="5" id="ixD-P0-vnJ"/>
+                        <constraint firstItem="XxR-vI-fte" firstAttribute="leading" secondItem="jl5-eC-38s" secondAttribute="trailing" constant="7" id="jnj-HH-sRd"/>
+                        <constraint firstItem="QKZ-4l-Nu0" firstAttribute="top" secondItem="0Lr-s9-7i7" secondAttribute="top" constant="2" id="oTR-SD-SGM"/>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" constant="185" id="sUN-MY-4My"/>
+                        <constraint firstItem="PzM-a5-E3r" firstAttribute="leading" secondItem="0Lr-s9-7i7" secondAttribute="leading" id="vmH-qR-Rtl"/>
                     </constraints>
-                </imageView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fk0-SF-hea" userLabel="Follow Button">
-                    <rect key="frame" x="222.5" y="95.5" width="37" height="13"/>
+                </view>
+                <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iwf-Rl-g11" userLabel="Intimacy Head View">
+                    <rect key="frame" x="186.66666666666666" y="36" width="90.999999999999972" height="30"/>
+                    <subviews>
+                        <view alpha="0.28000000000000003" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZJD-8v-j31" userLabel="Intimacy Bg View">
+                            <rect key="frame" x="0.0" y="0.0" width="91" height="30"/>
+                            <color key="backgroundColor" red="0.38431372549019605" green="0.38431372549019605" blue="0.38431372549019605" alpha="1" colorSpace="calibratedRGB"/>
+                        </view>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="PW0-vW-nfX" userLabel="Intimacy Lady ImangeView" customClass="LSUITapImageView">
+                            <rect key="frame" x="5" y="3" width="18" height="18"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="18" id="UeR-Rq-I3k"/>
+                                <constraint firstAttribute="width" secondItem="PW0-vW-nfX" secondAttribute="height" multiplier="1:1" id="qO0-Ic-okc"/>
+                            </constraints>
+                        </imageView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="BOw-Qb-RXw" userLabel="Intimacy Man ImangeView">
+                            <rect key="frame" x="18" y="9" width="18" height="18"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="18" id="CE2-gr-K7k"/>
+                                <constraint firstAttribute="width" secondItem="BOw-Qb-RXw" secondAttribute="height" multiplier="1:1" id="CE7-dg-epB"/>
+                            </constraints>
+                        </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Private_Img_Intimacy_Head_0" translatesAutoresizingMaskIntoConstraints="NO" id="5hV-9j-qBA" userLabel="Intimacy ImageView" customClass="LSUITapImageView">
+                            <rect key="frame" x="41" y="0.0" width="42" height="30"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="13" id="FNP-DC-cGX"/>
+                        <constraint firstItem="ZJD-8v-j31" firstAttribute="width" secondItem="Iwf-Rl-g11" secondAttribute="width" id="E0Y-za-YM8"/>
+                        <constraint firstItem="5hV-9j-qBA" firstAttribute="top" secondItem="Iwf-Rl-g11" secondAttribute="top" id="Eot-mu-Td2"/>
+                        <constraint firstItem="ZJD-8v-j31" firstAttribute="leading" secondItem="Iwf-Rl-g11" secondAttribute="leading" id="PS4-Zr-Hhl"/>
+                        <constraint firstItem="PW0-vW-nfX" firstAttribute="leading" secondItem="Iwf-Rl-g11" secondAttribute="leading" constant="5" id="U8Q-54-anG"/>
+                        <constraint firstItem="5hV-9j-qBA" firstAttribute="leading" secondItem="BOw-Qb-RXw" secondAttribute="trailing" constant="5" id="VfN-Tg-UVF"/>
+                        <constraint firstItem="ZJD-8v-j31" firstAttribute="top" secondItem="Iwf-Rl-g11" secondAttribute="top" id="W44-oi-fV7"/>
+                        <constraint firstAttribute="width" constant="91" id="X02-b1-cHj"/>
+                        <constraint firstItem="BOw-Qb-RXw" firstAttribute="leading" secondItem="Iwf-Rl-g11" secondAttribute="leading" constant="18" id="XhJ-lI-PHv"/>
+                        <constraint firstAttribute="height" constant="30" id="b1k-f4-jxd"/>
+                        <constraint firstItem="5hV-9j-qBA" firstAttribute="bottom" secondItem="Iwf-Rl-g11" secondAttribute="bottom" id="kmd-Br-e0H"/>
+                        <constraint firstItem="5hV-9j-qBA" firstAttribute="trailing" secondItem="Iwf-Rl-g11" secondAttribute="trailing" constant="-8" id="mdS-lz-vHZ"/>
+                        <constraint firstItem="ZJD-8v-j31" firstAttribute="height" secondItem="Iwf-Rl-g11" secondAttribute="height" id="ukx-Te-pXq"/>
+                        <constraint firstItem="BOw-Qb-RXw" firstAttribute="bottom" secondItem="Iwf-Rl-g11" secondAttribute="bottom" constant="-3" id="ylu-Xi-9fd"/>
+                        <constraint firstItem="PW0-vW-nfX" firstAttribute="top" secondItem="Iwf-Rl-g11" secondAttribute="top" constant="3" id="zcT-3Q-9M3"/>
                     </constraints>
-                    <state key="normal" image="Live_Private_Btn_Follow"/>
-                    <connections>
-                        <action selector="followAction:" destination="-1" eventType="touchUpInside" id="BW7-sY-6bl"/>
-                    </connections>
-                </button>
+                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="23g-vX-uiz" userLabel="Cancel Btn">
-                    <rect key="frame" x="330" y="28" width="35" height="35"/>
+                    <rect key="frame" x="369" y="33.333333333333336" width="35" height="35.000000000000007"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="35" id="27j-yB-YOd"/>
                         <constraint firstAttribute="width" secondItem="23g-vX-uiz" secondAttribute="height" multiplier="1:1" id="a7U-bp-gCb"/>
@@ -87,29 +161,19 @@
             </subviews>
             <color key="backgroundColor" red="0.36470588235294116" green="0.36078431372549019" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="No9-Vu-iO4" firstAttribute="leading" secondItem="5hV-9j-qBA" secondAttribute="trailing" constant="5" id="0BE-fc-mu6"/>
-                <constraint firstItem="No9-Vu-iO4" firstAttribute="centerY" secondItem="5hV-9j-qBA" secondAttribute="centerY" id="2HF-v6-Pjt"/>
-                <constraint firstItem="YuX-vM-1Qc" firstAttribute="centerY" secondItem="5hV-9j-qBA" secondAttribute="centerY" id="9Mp-M8-xoR"/>
-                <constraint firstItem="YuX-vM-1Qc" firstAttribute="trailing" secondItem="5hV-9j-qBA" secondAttribute="leading" constant="-5" id="CNO-bx-uUB"/>
+                <constraint firstItem="Iwf-Rl-g11" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="0UW-ho-AFy"/>
+                <constraint firstItem="jaE-2b-OdZ" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="7N4-ew-giK"/>
                 <constraint firstItem="TOh-ki-9Hu" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="CwV-Qd-8Et"/>
                 <constraint firstItem="23g-vX-uiz" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="DXc-cj-KaJ"/>
                 <constraint firstItem="TOh-ki-9Hu" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="EJD-8d-znB"/>
-                <constraint firstItem="5hV-9j-qBA" firstAttribute="bottom" secondItem="jaE-2b-OdZ" secondAttribute="bottom" constant="-3" id="Ewa-PJ-HuU"/>
-                <constraint firstItem="bFO-8q-Gng" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="13" id="Hec-hz-yeq"/>
-                <constraint firstItem="fk0-SF-hea" firstAttribute="centerX" secondItem="247-sE-1hR" secondAttribute="centerX" id="JRx-6H-9sF"/>
-                <constraint firstItem="247-sE-1hR" firstAttribute="bottom" secondItem="No9-Vu-iO4" secondAttribute="bottom" constant="-1" id="Ke6-Wf-ojQ"/>
-                <constraint firstItem="5hV-9j-qBA" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Nd0-Xo-ph0"/>
-                <constraint firstItem="GQc-Go-dDZ" firstAttribute="trailing" secondItem="YuX-vM-1Qc" secondAttribute="trailing" constant="-1" id="OGP-6U-7Rd"/>
                 <constraint firstItem="TOh-ki-9Hu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Oe4-AZ-MIA"/>
                 <constraint firstItem="TOh-ki-9Hu" firstAttribute="height" secondItem="i5M-Pr-FkT" secondAttribute="height" id="PVd-sO-L4H"/>
-                <constraint firstItem="GQc-Go-dDZ" firstAttribute="bottom" secondItem="YuX-vM-1Qc" secondAttribute="bottom" constant="-1" id="T9C-jT-BFN"/>
-                <constraint firstItem="jaE-2b-OdZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="ZuC-FP-s3S"/>
-                <constraint firstItem="23g-vX-uiz" firstAttribute="top" secondItem="jaE-2b-OdZ" secondAttribute="top" constant="8" id="avP-AZ-HbK"/>
-                <constraint firstItem="bFO-8q-Gng" firstAttribute="top" secondItem="jaE-2b-OdZ" secondAttribute="top" constant="8" id="bi8-Pq-dZK"/>
-                <constraint firstItem="247-sE-1hR" firstAttribute="leading" secondItem="No9-Vu-iO4" secondAttribute="leading" constant="1" id="cYX-VQ-ZEx"/>
+                <constraint firstItem="Iwf-Rl-g11" firstAttribute="leading" secondItem="0Lr-s9-7i7" secondAttribute="trailing" constant="8" id="UcR-WK-Qfn"/>
+                <constraint firstItem="23g-vX-uiz" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="g6e-YV-DP5"/>
+                <constraint firstItem="0Lr-s9-7i7" firstAttribute="bottom" secondItem="jaE-2b-OdZ" secondAttribute="bottom" constant="-7" id="k4e-Od-nbt"/>
                 <constraint firstItem="jaE-2b-OdZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kpL-3k-Ga1"/>
-                <constraint firstItem="fk0-SF-hea" firstAttribute="bottom" secondItem="247-sE-1hR" secondAttribute="bottom" constant="1" id="rWE-O8-zeq"/>
-                <constraint firstItem="fk0-SF-hea" firstAttribute="width" secondItem="247-sE-1hR" secondAttribute="width" id="vGD-Hw-ahA"/>
+                <constraint firstItem="jaE-2b-OdZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="mtK-dx-kZQ"/>
+                <constraint firstItem="0Lr-s9-7i7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="t3S-g1-4XQ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
         </view>
@@ -117,13 +181,8 @@
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
         <image name="Default_Img_Man_Circyle" width="100" height="100"/>
-        <image name="Live_Private_Bg_Bottom" width="640" height="750"/>
-        <image name="Live_Private_Bg_Lady_Head" width="47" height="47"/>
-        <image name="Live_Private_Bg_Man_Head" width="47" height="47"/>
-        <image name="Live_Private_Bg_Title" width="375" height="90"/>
-        <image name="Live_Private_Bg_Type" width="142" height="26"/>
-        <image name="Live_Private_Btn_Follow" width="44" height="12"/>
         <image name="Live_Private_Img_Intimacy_Head_0" width="58" height="45"/>
+        <image name="Live_Private_Vip_Btn_Follow" width="31" height="31"/>
         <image name="Live_Public_Btn_Close" width="16" height="16"/>
     </resources>
 </document>

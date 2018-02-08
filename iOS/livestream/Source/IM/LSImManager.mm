@@ -10,6 +10,7 @@
 
 #import "LSConfigManager.h"
 #import "LSLoginManager.h"
+#import "UserInfoManager.h"
 #import "LSSessionRequestManager.h"
 
 @interface LSImManager () <IMLiveRoomManagerDelegate, LoginManagerDelegate>
@@ -67,7 +68,6 @@ static LSImManager *gManager = nil;
     NSLog(@"LSImManager::dealloc()");
     
     [self.client removeDelegate:self];
-
     [self.loginManager removeDelegate:self];
 }
 
@@ -130,11 +130,11 @@ static LSImManager *gManager = nil;
 }
 
 #pragma mark - HTTP登录回调
-- (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString *_Nonnull)errmsg {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nonnull)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 获取同步配置的IM服务器地址
-            [[LSConfigManager manager] synConfig:^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, ConfigItemObject * _Nullable item) {
+            [[LSConfigManager manager] synConfig:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ConfigItemObject * _Nullable item) {
                 if( success ) {
                     NSLog(@"LSImManager::onLogin( [IM登陆, 同步Im服务器地址], url : %@ )", item.imSvrUrl);
                     
@@ -151,10 +151,11 @@ static LSImManager *gManager = nil;
     });
 }
 
-- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(BOOL)kick {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(BOOL)kick msg:(NSString * _Nullable)msg {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 注销IM
-        [self.client logout];
+        NSLog(@"LSImManager::onLogout( [注销IM], kick : %@ )", BOOL2YES(kick));
+        [self logout];
     });
 }
 
@@ -165,6 +166,12 @@ static LSImManager *gManager = nil;
     if (errType == LCC_ERR_SUCCESS) {
         // IM登陆成功
         @synchronized(self) {
+            
+            // IM登录成功,同步用户本地Level
+            [[UserInfoManager manager] getLiverInfo:self.loginManager.loginItem.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+                
+            }];
+            
             // 标记IM登陆成功
             self.isIMLogin = YES;
 
@@ -172,13 +179,17 @@ static LSImManager *gManager = nil;
             if (self.isFirstLogin) {
                 self.isFirstLogin = NO;
 
-                // 处理是否在直播间中
-                if (![self handleLoginRoomList:item.roomList]) {
-                    // 处理是否在邀请中
-                    if (![self handleLoginInviteList:item.inviteList]) {
-                        // 不需要处理
-                    }
-                }
+                /*
+                 * Mark by Max 2018/02/02
+                 * deprecated
+                 */
+//                // 处理是否在直播间中
+//                if (![self handleLoginRoomList:item.roomList]) {
+//                    // 处理是否在邀请中
+//                    if (![self handleLoginInviteList:item.inviteList]) {
+//                        // 不需要处理
+//                    }
+//                }
 
                 // 处理预约
                 [self handleLoginScheduleRoomList:item.scheduleRoomList];

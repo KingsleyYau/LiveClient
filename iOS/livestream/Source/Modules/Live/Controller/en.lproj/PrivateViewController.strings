@@ -1,4 +1,4 @@
-"PUBLIV_TIP" = "Private broadcast is billed at ";
+"PUBLIV_TIP" = "One-on-One broadcast is billed at ";
 "CREDIT_TIP" = " credit per minute.";
 "PUSH_TIPS" = "2-way video is billed at %@ credit per minute. Are you sure to turn it on?";
 
@@ -7,3 +7,7 @@
 "FOLLOW_FAIL" = "Failed to follow the broadcaster";
 
 "PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"EXIT_LIVEROOM_TIP" = "Are you sure to leave the broadcast room?";
+
+

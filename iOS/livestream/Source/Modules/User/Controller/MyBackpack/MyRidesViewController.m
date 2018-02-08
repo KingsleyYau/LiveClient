@@ -35,6 +35,11 @@
     self.dialogTipView = [DialogTip dialogTip];
 }
 
+- (void)dealloc {
+    [self.myRidesWaterfallView unInitPullRefresh];
+}
+
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -66,7 +71,7 @@
     self.infoView.hidden = YES;
     //self.myRidesWaterfallView.hidden = NO;
     RideListRequest * request = [[RideListRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *> * _Nullable array, int totalCount) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<RideItemObject *> * _Nullable array, int totalCount) {
 
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
@@ -119,7 +124,7 @@
     
     SetRideRequest * request = [[SetRideRequest alloc]init];
     request.rideId = riesId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             if (success) {

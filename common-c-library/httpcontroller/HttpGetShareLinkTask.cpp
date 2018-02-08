@@ -94,8 +94,8 @@ bool HttpGetShareLinkTask::ParseData(const string& url, bool bFlag, const char* 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
-    string shareId = "alexHttpGetShareLinkTask";
-    string shareLink = "alex";
+    string shareId = "";
+    string shareLink = "";
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
@@ -110,22 +110,12 @@ bool HttpGetShareLinkTask::ParseData(const string& url, bool bFlag, const char* 
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
     }
     
     if( mpCallback != NULL ) {

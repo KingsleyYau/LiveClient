@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <YYText.h>
 
+typedef enum UsersType {
+    UsersType_Me,
+    UsersType_Audience,
+    UsersType_Liver
+} UsersType;
+
 typedef enum MsgType {
     MsgType_Chat,
     MsgType_Gift,
@@ -17,13 +23,14 @@ typedef enum MsgType {
     MsgType_Share,
     MsgType_Join,
     MsgType_RiderJoin,
-    MsgType_Follow,
-    MsgType_Warning
+    MsgType_Warning,
+//    MsgType_Follow,
 } MsgType;
 
 @interface MsgItem : NSObject
 
-@property (assign) MsgType type;
+@property (assign) MsgType msgType;
+@property (assign) UsersType usersType;
 @property (assign) NSInteger level;
 @property (strong) NSString* name;
 @property (strong) NSString *giftName;

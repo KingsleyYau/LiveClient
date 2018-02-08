@@ -572,7 +572,7 @@ public:
     
     // --------- 登录/注销 ---------
 	// 2.1.登录
-	virtual bool Login(const string& token, PageNameType pageName) = 0;
+	virtual bool Login(const string& token, PageNameType pageName, LoginVerifyType type = LOGINVERIFYTYPE_TOKEN) = 0;
 	// 2.2.注销
 	virtual bool Logout() = 0;
     // 获取login状态

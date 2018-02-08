@@ -20,6 +20,7 @@
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
 #import "LiveRoomCreditRebateManager.h"
+#import "UserInfoManager.h"
 #import "DialogTip.h"
 
 #define PageSize 10
@@ -106,17 +107,28 @@
     [super viewDidDisappear:animated];
 }
 
+- (void)initialiseSubwidge {
+    [super initialiseSubwidge];
+    
+    // 请求观众头像
+    [self setupAudienView];
+}
+
 - (void)setupContainView {
     [super setupContainView];
 
     // 初始化头部界面
     [self setupHeaderImageView];
-
-    // 请求观众席列表
-    [self setupAudienView];
 }
 
 - (void)setupHeaderImageView {
+    // 计算StatusBar高度
+    if ([LSDevice iPhoneXStyle]) {
+        self.titleBgImageTop.constant = 44;
+    } else {
+        self.titleBgImageTop.constant = 20;
+    }
+    
     // 初始化收藏 观众人数
     self.numShaowView.layer.cornerRadius = 10;
     self.followAndHomepageView.layer.cornerRadius = 13;
@@ -134,8 +146,8 @@
     [self.roomTypeImageView sizeToFit];
     [self.tipView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.roomTypeImageView.mas_bottom).offset(2);
-        make.width.equalTo(@(self.roomTypeImageView.frame.size.width));
-        make.left.equalTo(@13);
+        make.width.equalTo(@(self.roomTypeImageView.frame.size.width * 1.5));
+        make.left.equalTo(@0);
     }];
 
     // 图片点击事件
@@ -169,24 +181,31 @@
 - (void)setupPlayController {
     // 输入栏
     self.playVC = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
-    self.playVC.delegate = self;
+    self.playVC.playDelegate = self;
     [self addChildViewController:self.playVC];
     self.playVC.liveRoom = self.liveRoom;
     // 直播间风格
     self.playVC.liveVC.roomStyleItem = [[RoomStyleItem alloc] init];
     // 连击礼物
     self.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Public_Bg_Combo"];
+    // 座驾背景
+    self.playVC.liveVC.roomStyleItem.riderBgColor = Color(8, 68, 158, 0.58);
+    self.playVC.liveVC.roomStyleItem.driverStrColor = Color(255, 210, 5, 1);
     // 弹幕
     self.playVC.liveVC.roomStyleItem.barrageBgColor = Color(255, 255, 255, 0.9);
     // 聊天列表
-    self.playVC.liveVC.roomStyleItem.nameColor = COLOR_WITH_16BAND_RGB(0XEC0212);
-    self.playVC.liveVC.roomStyleItem.followStrColor = COLOR_WITH_16BAND_RGB(0X0CD7DE);
-    self.playVC.liveVC.roomStyleItem.sendStrColor = COLOR_WITH_16BAND_RGB(0XDF3CE9);
-    self.playVC.liveVC.roomStyleItem.chatStrColor = COLOR_WITH_16BAND_RGB(0x3c3c3c);
-    self.playVC.liveVC.roomStyleItem.announceStrColor = COLOR_WITH_16BAND_RGB(0x0cd7de);
-    self.playVC.liveVC.roomStyleItem.riderStrColor = COLOR_WITH_16BAND_RGB(0xffd205);
-    self.playVC.liveVC.roomStyleItem.warningStrColor = COLOR_WITH_16BAND_RGB(0x992926);
-
+    self.playVC.liveVC.roomStyleItem.myNameColor = Color(41, 122, 243, 1);
+    self.playVC.liveVC.roomStyleItem.liverNameColor = Color(0, 153, 39, 1);
+    self.playVC.liveVC.roomStyleItem.userNameColor = Color(255, 135, 0, 1);
+    self.playVC.liveVC.roomStyleItem.liverTypeImage = [UIImage imageNamed:@"Live_Public_Vip_Broadcaster"];
+    self.playVC.liveVC.roomStyleItem.followStrColor = Color(255, 135, 0, 1);
+    self.playVC.liveVC.roomStyleItem.sendStrColor = Color(41, 122, 243, 1);
+    self.playVC.liveVC.roomStyleItem.chatStrColor = Color(0, 0, 0, 1);
+    self.playVC.liveVC.roomStyleItem.announceStrColor = Color(41, 122, 243, 1);
+    self.playVC.liveVC.roomStyleItem.riderStrColor = Color(255, 135, 0, 1);
+    self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
+    self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(181, 181, 181, 0.49);
+    
     [self.view addSubview:self.playVC.view];
     [self.playVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
@@ -201,12 +220,17 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
+    // 设置邀请私密按钮
+    self.playVC.liveVC.startOneViewHeigh.constant = 40;
+    self.playVC.liveVC.startOneBtn.hidden = NO;
+    self.playVC.liveVC.startOneView.hidden = NO;
+    
     //    self.playVC.chooseGiftListView.frame.origin = CGPointMake(self.playVC.chooseGiftListView.frame.origin.x, SCREEN_HEIGHT);
     // 立即私密按钮
-    self.playVC.liveVC.cameraBtn.hidden = NO;
+//    self.playVC.liveVC.cameraBtn.hidden = NO;
     //    [self.playVC.liveVC.cameraBtn addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
     // 邀请按钮
-    [self.playVC.liveVC.cameraBtn setImage:[UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"] forState:UIControlStateNormal];
+//    [self.playVC.liveVC.cameraBtn setImage:[UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"] forState:UIControlStateNormal];
 
     // 返点界面
     self.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0x5D0E86);
@@ -231,13 +255,14 @@
     LiveFansListRequest *request = [[LiveFansListRequest alloc] init];
     request.roomId = self.liveRoom.roomId;
     request.start = 0;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg,
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg,
                               NSArray<ViewerFansItemObject *> *_Nullable array) {
 
         NSLog(@"PublicViewController::LiveFansListRequest( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.audienceArray removeAllObjects];
+                // 遍历，更新观众列表
                 for (ViewerFansItemObject *item in array) {
                     AudienModel *model = [[AudienModel alloc] init];
                     model.userId = item.userId;
@@ -247,7 +272,17 @@
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
                     [self.audienceArray addObject:model];
-
+                    
+                    // 更新并缓存本地观众数据
+                    LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
+                    infoItem.userId = item.userId;
+                    infoItem.nickName = item.nickName;
+                    infoItem.photoUrl = item.photoUrl;
+                    infoItem.riderId = item.mountId;
+                    infoItem.riderName = item.mountUrl;
+                    infoItem.userLevel = item.level;
+                    infoItem.isAnchor = 0;
+                    [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
                 
                 self.audienceView.audienceArray = self.audienceArray;
@@ -293,7 +328,7 @@
     request.userId = self.liveRoom.userId;
     request.roomId = self.liveRoom.roomId;
     request.isFav = YES;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 self.followBtnWidth.constant = 0;
@@ -327,6 +362,17 @@
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg {
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
     dispatch_async(dispatch_get_main_queue(), ^{
+        // 更新并缓存本地观众数据
+        LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
+        infoItem.userId = userId;
+        infoItem.nickName = nickName;
+        infoItem.photoUrl = photoUrl;
+        infoItem.riderId = riderId;
+        infoItem.riderName = riderName;
+        infoItem.riderUrl = riderUrl;
+        infoItem.isAnchor = 0;
+        [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
+        
         // 刷观众列表
         [self setupAudienView];
     });

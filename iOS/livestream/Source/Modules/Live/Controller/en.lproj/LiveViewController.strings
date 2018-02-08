@@ -37,3 +37,5 @@
 
 "LIVE_VOUCHER_APPLIED" = "Live voucher is applied. The first %d minutes is free";
 
+"LIVE_NOT_ROOM" = "Broadcast has ended.\nPlease check back later.";
+

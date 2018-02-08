@@ -92,79 +92,10 @@ static NSString *footerViewIdentifier = @"footerView";
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.item];
 
     // 房间名
-//    cell.nameLabel.text = item.userId;
-        cell.nameLabel.text = item.nickName;
+    cell.nameLabel.text = item.nickName;
     cell.nameLabel.textColor = [UIColor whiteColor];
-    // 国家
-    //    cell.labelCountry.text = item.country;
-
-    if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-        cell.onlineImageView.backgroundColor = COLOR_WITH_16BAND_RGB(0xb5b5b5);
-    } else {
-        cell.onlineImageView.backgroundColor = COLOR_WITH_16BAND_RGB(0x8edb2b);
-    }
-
-    switch (item.roomType) {
-        // 没有直播间
-        case HTTPROOMTYPE_NOLIVEROOM: {
-            cell.roomTpyePublic.hidden = YES;
-            cell.roomTypeImageView.hidden = YES;
-
-        } break;
-        // 免费公开直播间
-        case HTTPROOMTYPE_FREEPUBLICLIVEROOM: {
-            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-                cell.roomTpyePublic.hidden = YES;
-                cell.roomTypeImageView.hidden = YES;
-
-            } else {
-                cell.roomTpyePublic.hidden = NO;
-                cell.roomTypeImageView.hidden = YES;
-            }
-
-        } break;
-        // 付费公开直播间
-        case HTTPROOMTYPE_CHARGEPUBLICLIVEROOM: {
-            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-                [cell.roomTypeImageView setImage:nil];
-                cell.roomTpyePublic.hidden = YES;
-                cell.roomTypeImageView.hidden = YES;
-
-            } else {
-                cell.roomTpyePublic.hidden = NO;
-                cell.roomTypeImageView.hidden = YES;
-            }
-
-        } break;
-        // 普通私密直播间
-        case HTTPROOMTYPE_COMMONPRIVATELIVEROOM: {
-            if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-                cell.roomTpyePublic.hidden = YES;
-                cell.roomTypeImageView.hidden = YES;
-
-            } else {
-                cell.roomTpyePublic.hidden = YES;
-                cell.roomTypeImageView.hidden = NO;
-            }
-            break;
-            // 豪华私密直播间
-            case HTTPROOMTYPE_LUXURYPRIVATELIVEROOM: {
-                if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-                    cell.roomTpyePublic.hidden = YES;
-                    cell.roomTypeImageView.hidden = YES;
-
-                } else {
-                    cell.roomTpyePublic.hidden = YES;
-                    cell.roomTypeImageView.hidden = NO;
-                }
-
-            } break;
-
-            default:
-                break;
-        }
-    }
-
+    
+    
     if (item.interest.count > 0) {
         
         if (item.interest.count == 1) {

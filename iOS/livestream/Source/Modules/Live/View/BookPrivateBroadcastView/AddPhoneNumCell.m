@@ -47,7 +47,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     cell.isHavePhoneNum = isHaveNumber;
-    CalvinSwitch * vgSwitch = [[CalvinSwitch alloc]initWithFrame:CGRectMake(0, 0, cell.switchBGView.frame.size.width, cell.switchBGView.frame.size.height) onColor:COLOR_WITH_16BAND_RGB(0x5d0e86) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
+    CalvinSwitch * vgSwitch = [[CalvinSwitch alloc]initWithFrame:CGRectMake(0, 0, cell.switchBGView.frame.size.width, cell.switchBGView.frame.size.height) onColor:COLOR_WITH_16BAND_RGB(0x297AF3) offColor:COLOR_WITH_16BAND_RGB(0xb5b5b5) font:[UIFont systemFontOfSize:14] ballSize:16];
     vgSwitch.on = isOpen;
     [cell.switchBGView addSubview:vgSwitch];
     [vgSwitch addTarget:cell action:@selector(switchOn:) forControlEvents:UIControlEventValueChanged];

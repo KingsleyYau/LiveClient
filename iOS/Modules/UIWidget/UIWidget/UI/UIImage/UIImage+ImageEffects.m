@@ -1,7 +1,7 @@
 /*
-     File: UIImage+ImageEffects.m
+ File: UIImage+ImageEffects.m
  Abstract: This is a category of UIImage that adds methods to apply blur and tint effects to an image. This is the code you’ll want to look out to find out how to use vImage to efficiently calculate a blur.
-  Version: 1.0
+ Version: 1.0
  
  Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
  Inc. ("Apple") in consideration of your agreement to the following
@@ -202,7 +202,7 @@
         NSLog (@"*** error: maskImage must be backed by a CGImage: %@", maskImage);
         return nil;
     }
-
+    
     CGRect   imageRect   = { CGPointZero, self.size };
     UIImage *effectImage = self;
     
@@ -215,13 +215,13 @@
         CGContextScaleCTM(effectInContext, 1.0, -1.0);
         CGContextTranslateCTM(effectInContext, 0, -self.size.height);
         CGContextDrawImage(effectInContext, imageRect, self.CGImage);
-
+        
         vImage_Buffer effectInBuffer;
         effectInBuffer.data     = CGBitmapContextGetData(effectInContext);
         effectInBuffer.width    = CGBitmapContextGetWidth(effectInContext);
         effectInBuffer.height   = CGBitmapContextGetHeight(effectInContext);
         effectInBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectInContext);
-    
+        
         UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
         CGContextRef effectOutContext = UIGraphicsGetCurrentContext();
         vImage_Buffer effectOutBuffer;
@@ -229,21 +229,21 @@
         effectOutBuffer.width    = CGBitmapContextGetWidth(effectOutContext);
         effectOutBuffer.height   = CGBitmapContextGetHeight(effectOutContext);
         effectOutBuffer.rowBytes = CGBitmapContextGetBytesPerRow(effectOutContext);
-
+        
         if (hasBlur) {
             
             // A description of how to compute the box kernel width from the Gaussian
             // radius (aka standard deviation) appears in the SVG spec:
             // http://www.w3.org/TR/SVG/filters.html#feGaussianBlurElement
-            // 
+            //
             // For larger values of 's' (s >= 2.0), an approximation can be used: Three
             // successive box-blurs build a piece-wise quadratic convolution kernel, which
             // approximates the Gaussian kernel to within roughly 3%.
             //
             // let d = floor(s * 3*sqrt(2*pi)/4 + 0.5)
-            // 
+            //
             // ... if d is odd, use three box-blurs of size 'd', centered on the output pixel.
-            // 
+            //
             CGFloat inputRadius = blurRadius * [[UIScreen mainScreen] scale];
             NSUInteger radius = floor(inputRadius * 3. * sqrt(2 * M_PI) / 4 + 0.5);
             if (radius % 2 != 1) {
@@ -264,7 +264,7 @@
                 0.0722 + 0.9278 * s,  0.0722 - 0.0722 * s,  0.0722 - 0.0722 * s,  0,
                 0.7152 - 0.7152 * s,  0.7152 + 0.2848 * s,  0.7152 - 0.7152 * s,  0,
                 0.2126 - 0.2126 * s,  0.2126 - 0.2126 * s,  0.2126 + 0.7873 * s,  0,
-                                  0,                    0,                    0,  1,
+                0,                    0,                    0,  1,
             };
             const int32_t divisor = 256;
             NSUInteger matrixSize = sizeof(floatingPointSaturationMatrix)/sizeof(floatingPointSaturationMatrix[0]);
@@ -292,7 +292,7 @@
         }
         
         UIGraphicsEndImageContext();
-
+        
         if (effectImageBuffersAreSwapped) {
             
             effectImage = UIGraphicsGetImageFromCurrentImageContext();
@@ -300,16 +300,16 @@
         
         UIGraphicsEndImageContext();
     }
-
+    
     // Set up output context.
     UIGraphicsBeginImageContextWithOptions(self.size, NO, [[UIScreen mainScreen] scale]);
     CGContextRef outputContext = UIGraphicsGetCurrentContext();
     CGContextScaleCTM(outputContext, 1.0, -1.0);
     CGContextTranslateCTM(outputContext, 0, -self.size.height);
-
+    
     // Draw base image.
     CGContextDrawImage(outputContext, imageRect, self.CGImage);
-
+    
     // Draw effect image.
     if (hasBlur) {
         
@@ -323,7 +323,7 @@
         CGContextDrawImage(outputContext, imageRect, effectImage.CGImage);
         CGContextRestoreGState(outputContext);
     }
-
+    
     // Add in color tint.
     if (tintColor) {
         
@@ -332,11 +332,11 @@
         CGContextFillRect(outputContext, imageRect);
         CGContextRestoreGState(outputContext);
     }
-
+    
     // Output image is ready.
     UIImage *outputImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-
+    
     return outputImage;
 }
 
@@ -486,5 +486,156 @@
     
     return [self addImageToImage:blurredFrame atRect:frame];
 }
+
+
+
+- (UIImage *)scaleImageWithSize:(CGSize)size {
+    UIGraphicsBeginImageContextWithOptions(size, YES, self.scale);
+    [self drawInRect:CGRectMake(0, 0, size.width, size.height)];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
+
+#pragma mark 调整图片分辨率/尺寸（等比例缩放）
+- (UIImage *)squareImageSize:(CGSize)size {
+    
+    UIImage *cropped;
+    if (self.size.height > self.size.width){
+        
+        CGFloat ypos = (self.size.height - self.size.width) / 2;
+        cropped = [self cropImage:self x:0 y:ypos width:self.size.width height:self.size.width];
+        
+    } else {
+        
+        CGFloat xpos = (self.size.width - self.size.height) / 2;
+        
+        cropped = [self cropImage:self x:xpos y:0 width:self.size.height height:self.size.height];
+    }
+    
+    UIImage *resized = [self resizeImage:cropped width:size.width height:size.height];
+    
+    
+    return resized;
+    
+}
+
+// 把图片剪切成指定大小的图片
+- (UIImage *)resizeImage:(UIImage *)image width:(CGFloat)width height:(CGFloat)height {
+    
+    CGSize size = CGSizeMake(width, height);
+    
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 1.0);
+    
+    [image drawInRect:rect];
+    
+    UIImage *resized = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return resized;
+    
+}
+
+
+
+
+// 从指定位置，尺寸修改图片
+- (UIImage *)cropImage:(UIImage *)image x:(CGFloat)x y:(CGFloat)y width:(CGFloat)width height:(CGFloat)height{
+    
+    CGRect rect = CGRectMake(x, y, width, height);
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
+    
+    
+    UIImage *cropped = [UIImage imageWithCGImage:imageRef scale:1.0 orientation:image.imageOrientation];
+    
+    CGImageRelease(imageRef);
+    
+    return cropped;
+    
+}
+
+- (UIImage *)fixOrientation {
+    // No-op if the orientation is already correct
+    if (self.imageOrientation == UIImageOrientationUp)
+        return self;
+    
+    // We need to calculate the proper transformation to make the image upright.
+    // We do it in 2 steps: Rotate if Left/Right/Down, and then flip if Mirrored.
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    
+    switch (self.imageOrientation) {
+        case UIImageOrientationDown:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, self.size.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+            
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformRotate(transform, M_PI_2);
+            break;
+            
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, 0, self.size.height);
+            transform = CGAffineTransformRotate(transform, -M_PI_2);
+            break;
+        default:
+            break;
+    }
+    
+    switch (self.imageOrientation) {
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.width, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            transform = CGAffineTransformTranslate(transform, self.size.height, 0);
+            transform = CGAffineTransformScale(transform, -1, 1);
+            break;
+        default:
+            break;
+    }
+    
+    // Now we draw the underlying CGImage into a new context, applying the transform
+    // calculated above.
+    CGContextRef ctx = CGBitmapContextCreate(NULL, self.size.width, self.size.height,
+                                             CGImageGetBitsPerComponent(self.CGImage), 0,
+                                             CGImageGetColorSpace(self.CGImage),
+                                             CGImageGetBitmapInfo(self.CGImage));
+    CGContextConcatCTM(ctx, transform);
+    switch (self.imageOrientation) {
+        case UIImageOrientationLeft:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRight:
+        case UIImageOrientationRightMirrored:
+            // Grr...
+            CGContextDrawImage(ctx, CGRectMake(0,0,self.size.height,self.size.width), self.CGImage);
+            break;
+            
+        default:
+            CGContextDrawImage(ctx, CGRectMake(0,0,self.size.width,self.size.height), self.CGImage);
+            break;
+    }
+    
+    // And now we just create a new UIImage from the drawing context
+    CGImageRef cgimg = CGBitmapContextCreateImage(ctx);
+    UIImage *img = [UIImage imageWithCGImage:cgimg];
+    CGContextRelease(ctx);
+    CGImageRelease(cgimg);
+    
+    return img;
+}
+
 
 @end

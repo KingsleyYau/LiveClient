@@ -93,7 +93,10 @@ static CGFloat headerHeight = 0;
 
                 }
                 completion:^(BOOL finished) {
-                    id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
+                    id<UIScrollViewRefreshDelegate> delegate;
+                    if (self) {
+                      delegate = objc_getAssociatedObject(self, &delegateKey);
+                    }
                     if ([delegate respondsToSelector:@selector(pullDownRefresh:)]) {
                         [delegate pullDownRefresh:self];
                     }
@@ -105,7 +108,10 @@ static CGFloat headerHeight = 0;
             [self setContentOffset:CGPointMake(0, -pullRefreshView.frame.size.height) animated:NO];
             self.contentInset = UIEdgeInsetsMake(pullRefreshView.frame.size.height, 0, 0, 0);
 
-            id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
+            id<UIScrollViewRefreshDelegate> delegate;
+            if (self) {
+                delegate = objc_getAssociatedObject(self, &delegateKey);
+            }
             if ([delegate respondsToSelector:@selector(pullDownRefresh:)]) {
                 [delegate pullDownRefresh:self];
             }
@@ -161,8 +167,10 @@ static CGFloat headerHeight = 0;
 
                 }
                 completion:^(BOOL finished) {
-
-                    id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
+                    id<UIScrollViewRefreshDelegate> delegate;
+                    if (self) {
+                        delegate = objc_getAssociatedObject(self, &delegateKey);
+                    }
                     if ([delegate respondsToSelector:@selector(pullUpRefresh:)]) {
                         [delegate pullUpRefresh:self];
                     }
@@ -171,8 +179,10 @@ static CGFloat headerHeight = 0;
         } else {
             [self setContentOffset:CGPointMake(0, self.contentSize.height + pullRefreshView.frame.size.height - self.frame.size.height) animated:NO];
             self.contentInset = UIEdgeInsetsMake(0, 0, pullRefreshView.frame.size.height, 0);
-
-            id<UIScrollViewRefreshDelegate> delegate = objc_getAssociatedObject(self, &delegateKey);
+            id<UIScrollViewRefreshDelegate> delegate;
+            if (self) {
+                delegate = objc_getAssociatedObject(self, &delegateKey);
+            }
             if ([delegate respondsToSelector:@selector(pullUpRefresh:)]) {
                 [delegate pullUpRefresh:self];
             }

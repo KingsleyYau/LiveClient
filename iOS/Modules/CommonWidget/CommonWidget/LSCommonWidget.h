@@ -15,6 +15,9 @@
 #import "LSURLQueryParam.h"
 
 #import "LSTimer.h"
+#import "NSDate+ToString.h"
+
+#import "LSDevice.h"
 
 @interface LSCommonWidget : NSObject
 

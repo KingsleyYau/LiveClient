@@ -47,10 +47,10 @@
     self.palyer = [LiveStreamPlayer instance];
     self.palyer.playView = self.previewView;
 
-//    self.url = @"rtmp://172.25.32.17:8899/live/max";
-    self.url = @"rtmp://172.25.32.184:1935/live/max";
+//    self.url = @"rtmp://52.196.96.7:7474/test_flash/max";
+    self.url = @"rtmp://172.25.32.230:1935/live/max";
     
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@_mv", self.url, nil];
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", self.url, nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@_i", self.url, nil];
     
 //    self.textFieldAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
@@ -59,6 +59,13 @@
 //    self.textFieldPublishAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
 //    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:7474/test_flash/test";
 //    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:4000/cdn_standard/fansi_CM42137154_6507";
+    
+    // 计算StatusBar高度
+    if ([LSDevice iPhoneXStyle]) {
+        self.previewTop.constant = 44;
+    } else {
+        self.previewTop.constant = 20;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -159,7 +166,9 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
+//    NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
+//    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 

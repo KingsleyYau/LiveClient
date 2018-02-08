@@ -177,4 +177,9 @@
  获取未读信息
  */
 - (void)getUnReadMsg;
+
+#pragma mark - Application
+- (void)applicationDidEnterBackground:(UIApplication *)application;
+- (void)applicationWillEnterForeground:(UIApplication *)application;
+
 @end

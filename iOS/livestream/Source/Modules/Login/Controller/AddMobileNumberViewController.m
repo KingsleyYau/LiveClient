@@ -27,8 +27,12 @@
 
     self.title = NSLocalizedStringFromSelf(@"ADD_MOBILE_NUMBER");
     
-    self.sendBtn.layer.cornerRadius = 5;
-    self.sendBtn.layer.masksToBounds = YES;
+    self.sendBtn.layer.cornerRadius = self.sendBtn.frame.size.height/2;
+    self.sendBtn.layer.masksToBounds = NO;
+    self.sendBtn.layer.shadowOffset = CGSizeMake(3, 3);
+    self.sendBtn.layer.shadowColor = [UIColor lightGrayColor].CGColor;
+    self.sendBtn.layer.shadowRadius = 2;
+    self.sendBtn.layer.shadowOpacity = 0.8;
     
     self.sessionManager = [LSSessionRequestManager manager];
     
@@ -64,7 +68,7 @@
 - (void)textChange:(NSNotification *)notifi
 {
     if (self.phoneTextField.text.length > 0) {
-        self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x5d0e86);
+        self.sendBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x297AF3);
         self.sendBtn.userInteractionEnabled = YES;
     }
     else
@@ -122,7 +126,7 @@
     request.areaCode = self.countryItem.zipCode;
     request.phoneNo = phone;
     
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
     
         dispatch_sync(dispatch_get_main_queue(), ^{
             [self hideLoading];

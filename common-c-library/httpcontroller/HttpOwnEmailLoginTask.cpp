@@ -14,12 +14,10 @@ HttpOwnEmailLoginTask::HttpOwnEmailLoginTask() {
     // TODO Auto-generated constructor stub
     mPath = OWN_EMAIL_LOGIN_PATH;
     mDeviceId = "";
-    mVersionCode = "";
     mModel = "";
     mManufacturer = "";
     mEmail = "";
     mPassWord = "";
-    mCheckCode = "";
     
 }
 
@@ -34,11 +32,9 @@ void HttpOwnEmailLoginTask::SetCallback(IRequestOwnEmailLoginCallback* callback)
 void HttpOwnEmailLoginTask::SetParam(
                                      string email,
                                      string passWord,
-                                     string versionCode,
                                      string model,
                                      string deviceid,
-                                     string manufacturer,
-                                     string checkCode
+                                     string manufacturer
                                    ) {
     
     //	char temp[16];
@@ -62,6 +58,7 @@ void HttpOwnEmailLoginTask::SetParam(
     
     if (email.length() > 0) {
         mHttpEntiy.AddContent(OWN_EMAIL_LOGIN_EMAIL, email.c_str());
+        //mHttpEntiy.AddContent(OWN_EMAIL_LOGIN_EMAIL, "CMTS09585");
         mEmail = email;
     }
     
@@ -70,33 +67,21 @@ void HttpOwnEmailLoginTask::SetParam(
         mPassWord = passWord;
     }
     
-    if (versionCode.length() > 0) {
-        mHttpEntiy.AddContent(OWN_EMAIL_LOGIN_VERSIONCODE, versionCode.c_str());
-        mVersionCode = versionCode;
-    }
-    if (checkCode.length() > 0) {
-        mHttpEntiy.AddContent(OWN_EMAIL_LOGIN_CHECKCODE, checkCode.c_str());
-        mCheckCode = checkCode;
-    }
 	FileLog(LIVESHOW_HTTP_LOG,
             "HttpOwnEmailLoginTask::SetParam( "
             "task : %p, "
             "email : %s "
             "password : %s "
-            "versionCode : %s "
             "deviceid : %s "
             "model : %s "
             "manufacturer : %s "
-            "checkCode: %s"
             ")",
             this,
             email.c_str(),
             passWord.c_str(),
-            versionCode.c_str(),
             deviceid.c_str(),
             model.c_str(),
-            manufacturer.c_str(),
-            checkCode.c_str()
+            manufacturer.c_str()
             );
 }
 
@@ -117,7 +102,7 @@ bool HttpOwnEmailLoginTask::ParseData(const string& url, bool bFlag, const char*
         FileLog(LIVESHOW_HTTP_LOG, "HttpOwnEmailLoginTask::ParseData( buf : %s )", buf);
     }
     
-    string sessionId = "alex123";
+    string sessionId = "";
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
@@ -133,22 +118,11 @@ bool HttpOwnEmailLoginTask::ParseData(const string& url, bool bFlag, const char*
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
-        // LSalextest
-        if (bParse == false) {
-            errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errnum = LOCAL_LIVE_ERROR_CODE_TIMEOUT;
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-        
-        // LSalextest
-        errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
-        errmsg = "";
-        bParse = true;
+        // 超时
+        errnum = HTTP_LCC_ERR_CONNECTFAIL;
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
     }
     

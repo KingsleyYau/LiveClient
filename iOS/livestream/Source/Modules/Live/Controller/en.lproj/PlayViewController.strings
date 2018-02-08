@@ -28,4 +28,6 @@
 
 "BIG_GIFT_SEND_FAIL" = "Failed to send %@. Please try again.";
 
+"COPY_LINK_SUCCESS" = "The link has been copied to pasteboard";
 
+"SPEAK_TOO_FAST" = "Please do not send repeatedly";

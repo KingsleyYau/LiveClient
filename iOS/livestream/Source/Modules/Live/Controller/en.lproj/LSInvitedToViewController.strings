@@ -25,7 +25,7 @@
 // 应邀接收成功
 "PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
 // 应邀接收成功，等待30秒
-"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nPrivate broadcast will start in";
+"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nOne-on-One broadcast will start in";
 
 
 /************** 接受发送成功错误提示 *****************/
@@ -36,4 +36,5 @@
 // 服务器统一错误
 "SERVER_BACK_ERROR" = "A problem occur while communicating with the server.";
 
+"INVITE_NO_RESPOND" = "Trouble connecting to the server, please try again later.";
 

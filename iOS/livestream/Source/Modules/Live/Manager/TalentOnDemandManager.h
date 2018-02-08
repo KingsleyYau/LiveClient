@@ -11,7 +11,7 @@
 #import "GetTalentStatusRequest.h"
 @protocol TalentOnDemandManagerDelegate <NSObject>
 @optional;
-- (void)onGetTalentListSuccess:(BOOL)success Data:(NSArray<GetTalentItemObject *> *)array errMsg:(NSString *)errMsg errNum:(NSInteger)errnum;
+- (void)onGetTalentListSuccess:(BOOL)success Data:(NSArray<GetTalentItemObject *> *)array errMsg:(NSString *)errMsg errNum:(HTTP_LCC_ERR_TYPE)errnum;
 
 - (void)onGetTalentStatus:(GetTalentStatusItemObject *)statusItemObject;
 

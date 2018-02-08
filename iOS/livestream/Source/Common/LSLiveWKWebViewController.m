@@ -159,6 +159,7 @@
         // 隐藏导航栏
 //        [self.controller.navigationController setNavigationBarHidden:YES];
         self.controller.navigationController.navigationBar.hidden = YES;
+        [self.controller.navigationController setNavigationBarHidden:YES];
         self.controller.navigationController.navigationBar.translucent = YES;
         self.controller.edgesForExtendedLayout = UIRectEdgeNone;
         //self.controller.navigationController.navigationBar.barTintColor = [UIColor greenColor];
@@ -186,6 +187,7 @@
     NSLog(@"LSLiveWKWebViewController::didFailProvisionalNavigation() error:%@",error);
     [self.controller hideLoading];
     self.controller.navigationController.navigationBar.hidden = NO;
+    [self.controller.navigationController setNavigationBarHidden:NO];
     self.controller.navigationController.navigationBar.translucent = NO;
     self.controller.edgesForExtendedLayout = UIRectEdgeNone;
     [self showFailView];
@@ -250,8 +252,7 @@
             }
             if ([item.roomTypeString isEqualToString:@"0"]) {
                 liveRoom.roomType = LiveRoomType_Public;
-            }
-            if ([item.roomTypeString isEqualToString:@"1"]) {
+            } else {
                 liveRoom.roomType = LiveRoomType_Private;
             }
             vc.liveRoom = liveRoom;
@@ -416,7 +417,7 @@
     request.step = 10;
     request.hasWatch = NO;
     // 调用接口
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 [self.controller hideLoading];
@@ -429,7 +430,7 @@
 }
 
 // 登录回调
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.controller hideLoading];
         if (success) {

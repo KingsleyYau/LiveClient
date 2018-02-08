@@ -139,7 +139,7 @@ long long HttpRequestController::UpdateTokenId(
 long long HttpRequestController::OwnFackBookLogin(
                                                   HttpRequestManager *pHttpRequestManager,
                                                   const string& fToken,
-                                                  const string& versionCode,
+                                                  const string& nickName,
                                                   const string& utmReferrer,
                                                   const string& model,
                                                   const string& deviceId,
@@ -147,14 +147,15 @@ long long HttpRequestController::OwnFackBookLogin(
                                                   const string& inviteCode,
                                                   const string& email,
                                                   const string& passWord,
-                                                  const string& birthDay,
+                                                  const string& birthDay ,
+                                                  GenderType gender,
                                                   IRequestOwnFackBookLoginCallback* callback
                                                   ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnFackBookLoginTask* task = new HttpOwnFackBookLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(model, deviceId, manufacturer, fToken, email, passWord, birthDay, inviteCode, versionCode, utmReferrer);
+    task->SetParam(model, deviceId, manufacturer, fToken, email, passWord, birthDay, inviteCode, nickName, utmReferrer, gender);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -220,18 +221,16 @@ long long HttpRequestController::OwnEmailLogin(
                                                HttpRequestManager *pHttpRequestManager,
                                                const string email,
                                                const string passWord,
-                                               const string versionCode,
                                                const string model,
                                                const string deviceid,
                                                const string manufacturer,
-                                               const string checkCode,
                                                IRequestOwnEmailLoginCallback* callback
                                                ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpOwnEmailLoginTask* task = new HttpOwnEmailLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(email, passWord, versionCode, model, deviceid, manufacturer, checkCode);
+    task->SetParam(email, passWord, model, deviceid, manufacturer);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     
@@ -1201,6 +1200,36 @@ long long HttpRequestController::GetBackpackUnreadNum(
     return requestId;
 }
 
+long long HttpRequestController::GetVoucherAvailableInfo(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         IRequestGetVoucherAvailableInfoCallback* callback
+                                                         ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetVoucherAvailableInfoTask* task = new HttpGetVoucherAvailableInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetConfig(
                                            HttpRequestManager *pHttpRequestManager,
                                            IRequestGetConfigCallback* callback
@@ -1653,6 +1682,38 @@ long long HttpRequestController::SetManBaseInfo(
     HttpSetManBaseInfoTask* task = new HttpSetManBaseInfoTask();
     task->Init(pHttpRequestManager);
     task->SetParam(nickName);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        mRequestMap.Lock();
+        mRequestMap.Erase(task);
+        mRequestMap.Unlock();
+        
+        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::CrashFile(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            const string& deviceId,
+                                            const string& crashFile,
+                                            IRequestCrashFileCallback* callback
+                                            ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpCrashFileTask* task = new HttpCrashFileTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(deviceId, crashFile );
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

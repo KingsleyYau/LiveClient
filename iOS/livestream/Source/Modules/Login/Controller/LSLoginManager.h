@@ -24,7 +24,7 @@
  *  @param errnum  登陆失败错误码
  *  @param errmsg 登陆失败错误提示
  */
-- (void)manager:(LSLoginManager * _Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject * _Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString * _Nonnull)errmsg;
+- (void)manager:(LSLoginManager * _Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject * _Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString * _Nonnull)errmsg;
 
 /**
  *  注销回调

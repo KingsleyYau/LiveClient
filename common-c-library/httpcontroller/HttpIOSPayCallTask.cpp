@@ -112,20 +112,12 @@ bool HttpIOSPayCallTask::ParseData(const string& url, bool bFlag, const char* bu
         // 买点的字段不同
         if ((bParse = ParseIOSPaid(buf, size, code, &dataJson))) {
         }
-        
-        // LSalextest
-        if (bParse == false) {
-            errmsg = "";
-            bParse = true;
-        }
+         
         
     } else {
-//        // 超时
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+        // 超时
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
         
-        // LSalextest
-        errmsg = "";
-        bParse = true;
     }
     
     if( mpCallback != NULL ) {

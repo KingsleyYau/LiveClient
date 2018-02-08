@@ -32,6 +32,10 @@ public:
             if (root[LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_PRICE].isString()) {
                 price = root[LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_PRICE].asString();
             }
+            /* icon */
+            if (root[LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_ICON].isString()) {
+                icon = root[LIVEROOM_PREMIUM_MEMBERSHIP_PRODUCTS_ICON].asString();
+            }
             result = true;
         }
 
@@ -42,6 +46,7 @@ public:
         productId = "";
         name = "";
         price = "";
+        icon  = "";
 
     }
     
@@ -54,10 +59,12 @@ public:
      * productId               产品ID
      * name                    名称
      * price                   价格
+     * icon                    图标URL
      */
     string      productId;
     string      name;
     string      price;
+    string      icon;
 
 };
 

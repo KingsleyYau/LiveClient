@@ -27,9 +27,11 @@
  */
 @property (nonatomic, strong) PlayViewController *playVC;
 
-#pragma mark - 界面控件
+#pragma mark - 标题栏背景
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *titleBgImageTop;
 @property (weak, nonatomic) IBOutlet UIImageView *titleBackGroundView;
 
+#pragma mark - 界面控件
 @property (weak, nonatomic) IBOutlet LSUITapImageView *roomTypeImageView;
 
 @property (weak, nonatomic) IBOutlet YMAudienceView *audienceView;

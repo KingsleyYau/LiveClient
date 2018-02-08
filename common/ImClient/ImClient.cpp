@@ -57,6 +57,8 @@ ImClient::ImClient()
     m_clientType = CLIENTTYPE_UNKNOW;
     m_token = "";
     m_pageName = PAGENAMETYPE_UNKNOW;
+    
+    m_type = LOGINVERIFYTYPE_TOKEN;
 }
 
 ImClient::~ImClient()
@@ -227,10 +229,14 @@ void ImClient::OnTaskDone(ITask* task)
 }
 
 // 登录
-bool ImClient::Login(const string& token, PageNameType pageName) {
+bool ImClient::Login(const string& token, PageNameType pageName, LoginVerifyType type) {
 
 	bool result = false;
 
+//    char* a = NULL;
+//    char b = *a;
+    
+    
     FileLevelLog("ImClient", KLog::LOG_WARNING ,"ImClient::Login() begin");
     
     m_loginStatusLock->Lock();
@@ -247,6 +253,7 @@ bool ImClient::Login(const string& token, PageNameType pageName) {
         {
             m_token = token;
             m_pageName = pageName;
+            m_type = type;
             
             if (ConnectServer()) {
                 m_loginStatusLock->Lock();
@@ -291,6 +298,8 @@ bool ImClient::Logout()
             
             m_token = "";
             m_pageName = PAGENAMETYPE_UNKNOW;
+            
+            m_type = LOGINVERIFYTYPE_TOKEN;
 		}
 	}
 
@@ -378,7 +387,7 @@ bool ImClient::LoginProc()
     LoginTask* task = new LoginTask();
     if (NULL != task) {
         task->Init(this);
-        task->InitParam(m_token, m_pageName);
+        task->InitParam(m_token, m_pageName, m_type);
         
         SEQ_T seq = m_seqCounter.GetAndIncrement();
         task->SetSeq(seq);

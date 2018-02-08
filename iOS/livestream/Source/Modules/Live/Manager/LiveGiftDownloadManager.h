@@ -44,6 +44,9 @@ typedef void (^RequestFinshtBlock)(BOOL success,NSMutableArray *liveRoomGiftList
 // 所有礼物对象数组
 @property (nonatomic, strong) NSMutableArray<AllGiftItem *> *giftMuArray;
 
+// 查找礼物字典
+@property (nonatomic, strong) NSMutableDictionary *giftDictionary;
+
 @property (nonatomic, strong) NSMutableDictionary *bigGiftDataDictionary;
 
 + (instancetype)manager;

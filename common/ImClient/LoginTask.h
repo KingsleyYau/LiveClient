@@ -42,7 +42,7 @@ public:
 
 public:
 	// 初始化参数
-	bool InitParam(const string& token, PageNameType pageName);
+	bool InitParam(const string& token, PageNameType pageName, LoginVerifyType type = LOGINVERIFYTYPE_TOKEN);
 
 private:
 	IImClientListener*	m_listener;
@@ -51,6 +51,8 @@ private:
 
 	string			m_token;	// 统一验证身份标识
     PageNameType    m_pageName; // socket所在的页面
+    LoginVerifyType m_type;       // 验证类型（1：token，2：cookice）（整型）
+    
 
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

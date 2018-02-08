@@ -95,8 +95,8 @@ bool HttpGetIOSPayTask::ParseData(const string& url, bool bFlag, const char* buf
     //int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     string code = "";
-    string orderNo = "alextestOrderNo";
-    string productId = "alextestProductId";
+    string orderNo = "";
+    string productId = "";
     bool bParse = false;
     if ( bFlag ) {
         // 公共解析
@@ -111,19 +111,11 @@ bool HttpGetIOSPayTask::ParseData(const string& url, bool bFlag, const char* buf
             }
         }
         
-        // LSalextest
-        if (bParse == false) {
-            errmsg = "";
-            bParse = true;
-        }
         
     } else {
-//        // 超时
-//        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
-        
-        // LSalextest
-        errmsg = "";
-        bParse = true;
+        // 超时
+        errmsg = LOCAL_ERROR_CODE_TIMEOUT_DESC;
+
     }
     
     if( mpCallback != NULL ) {

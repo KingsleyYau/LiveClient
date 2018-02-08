@@ -1,0 +1,12 @@
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "78T-ZH-DG2"; */
+"78T-ZH-DG2.normalTitle" = "Add";
+
+/* Class = "UIButton"; normalTitle = "Change"; ObjectID = "F8i-Yt-ald"; */
+"F8i-Yt-ald.normalTitle" = "Change";
+
+/* Class = "UILabel"; text = "Notify me with SMS"; ObjectID = "M8n-cU-0Yj"; */
+"M8n-cU-0Yj.text" = "Notify me with SMS";
+
+/* Class = "UILabel"; text = "Mobile Number"; ObjectID = "OwN-Oz-Tn2"; */
+"OwN-Oz-Tn2.text" = "Mobile Number";

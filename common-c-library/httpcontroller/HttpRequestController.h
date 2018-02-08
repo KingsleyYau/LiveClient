@@ -63,6 +63,8 @@
 #include "HttpGetManBaseInfoTask.h"
 #include "HttpSetManBaseInfoTask.h"
 #include "HttpGetVerificationCodeTask.h"
+#include "HttpCrashFileTask.h"
+#include "HttpGetVoucherAvailableInfoTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -139,7 +141,7 @@ public:
      *
      * @param pHttpRequestManager           http管理器
      * @param fToken                              Facebook登录返回的accessToken
-     * @param versionCode                         客户端内部版本号
+     * @param nickName                            昵称
      * @param utmReferrer                         APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
      * @param model                               设备型号
      * @param deviceId                            设备唯一标识
@@ -148,6 +150,7 @@ public:
      * @param email                               用户注册的邮箱（可无）
      * @param passWord                            登录密码（可无）
      * @param birthDay                            出生日期（可无，但未绑定时必须提交，格式为：2015-02-20）
+     * @param gender;                               性别（M：男，F：女）
      
      * @param callback                      接口回调
      *
@@ -156,7 +159,7 @@ public:
     long long OwnFackBookLogin(
                                HttpRequestManager *pHttpRequestManager,
                                const string& fToken,
-                               const string& versionCode,
+                               const string& nickName,
                                const string& utmReferrer,
                                const string& model,
                                const string& deviceId,
@@ -165,6 +168,7 @@ public:
                                const string& email = "",
                                const string& passWord = "",
                                const string& birthDay = "",
+                               GenderType gender = GENDERTYPE_MAN,
                                IRequestOwnFackBookLoginCallback* callback = NULL
                             );
     
@@ -209,11 +213,9 @@ public:
      * @param pHttpRequestManager           http管理器
      * @param email                         用户的email或id
      * @param passWord                      登录密码
-     * @param versionCode                   客户端内部版本号
      * @param model                         设备型号（格式：设备型号-系统版本号-API版本号-分辨率）
      * @param deviceid                      设备唯一标识
      * @param manufacturer                  制造厂商
-     * @param checkCode                     验证码
      
      * @param callback                      接口回调
      *
@@ -223,11 +225,9 @@ public:
                           HttpRequestManager *pHttpRequestManager,
                           const string email,
                           const string passWord,
-                          const string versionCode,
                           const string model,
                           const string deviceid,
                           const string manufacturer,
-                          const string checkCode,
                           IRequestOwnEmailLoginCallback* callback = NULL
                           );
     
@@ -299,6 +299,7 @@ public:
                                   IRequestGetVerificationCodeCallback* callback = NULL
                                   );
     
+
     /**
      *  3.1.获取Hot列表接口
      *
@@ -710,6 +711,19 @@ public:
                                    );
     
     /**
+     *  5.6.获取试用券可用信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetVoucherAvailableInfo(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   IRequestGetVoucherAvailableInfoCallback* callback = NULL
+                                   );
+    
+    /**
      *  6.1.同步配置
      *
      * @param pHttpRequestManager           http管理器
@@ -946,6 +960,23 @@ public:
                              HttpRequestManager *pHttpRequestManager,
                              const string& nickName,
                              IRequestSetManBaseInfoCallback* callback = NULL
+                             );
+    
+    /**
+     * 6.16.提交crash dump文件（仅独立）
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param deviceId                      设备唯一标识
+     * @param crashFile                     crash dump文件zip包二进制流（zip密钥：Qpid_Dating）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CrashFile(
+                             HttpRequestManager *pHttpRequestManager,
+                             const string& deviceId,
+                             const string& crashFile,
+                             IRequestCrashFileCallback* callback = NULL
                              );
     
     /**

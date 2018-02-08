@@ -9,21 +9,20 @@
 #import "HotViewController.h"
 #import "PlayViewController.h"
 #import "PreLiveViewController.h"
-
 #import "LSSessionRequestManager.h"
 #import "PublicViewController.h"
 #import "GetAnchorListRequest.h"
 #import "IntroduceViewController.h"
 #import "GetAnchorListRequest.h"
-#import "FollowCollectionView.h"
 #import "LSLoginManager.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "AnchorPersonalViewController.h"
 #import "LiveADView.h"
 #import "LiveModule.h"
+#import "HomeVouchersManager.h"
 #define PageSize 50
 #define DefaultSize 16
-@interface HotViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate,LiveADViewDelegate,LSListViewControllerDelegate>
+@interface HotViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate, LiveADViewDelegate, LSListViewControllerDelegate>
 
 /**
  *  接口管理器
@@ -36,7 +35,7 @@
 @property (nonatomic, strong) NSMutableArray *items;
 
 /** 广告banner */
-@property (nonatomic, strong) LiveADView* adView;
+@property (nonatomic, strong) LiveADView *adView;
 
 @end
 
@@ -44,46 +43,47 @@
 
 - (void)initCustomParam {
     [super initCustomParam];
+
+    // Items for tab
+    LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
+    self.tabBarItem = tabBarItem;
+    self.tabBarItem.title = @"Discover";
+    self.tabBarItem.image = [[UIImage imageNamed:@"TabBarHot"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarHot-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    NSDictionary *normalColor = [NSDictionary dictionaryWithObject:Color(51, 51, 51, 1) forKey:NSForegroundColorAttributeName];
+    NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
+    [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
+    [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
     
     self.items = [NSMutableArray array];
-    
+
     self.sessionManager = [LSSessionRequestManager manager];
-    
+
     // 设置失败页属性
-    self.failTipsText = NSLocalizedString(@"List_FailTips",@"List_FailTips");
-    
-    self.failBtnText = NSLocalizedString(@"List_Reload",@"List_Reload");
-    
-//    self.delegateSelect = @selector(reloadBtnClick:);
+    self.failTipsText = NSLocalizedString(@"List_FailTips", @"List_FailTips");
+
+    self.failBtnText = NSLocalizedString(@"List_Reload", @"List_Reload");
+
+    //    self.delegateSelect = @selector(reloadBtnClick:);
     self.delegate = self;
-	
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showNavigationBar) name:@"showNavigationBar" object:nil];
-}
-
-- (void)showNavigationBar {
-    self.navigationController.navigationBar.hidden = NO;
-    self.navigationController.navigationBar.translucent = NO;
-    self.edgesForExtendedLayout = UIRectEdgeNone;
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-
-
 }
 
 - (void)lsListViewController:(LSListViewController *)listView didClick:(UIButton *)sender {
     [self reloadBtnClick:sender];
 }
 
-
 - (void)dealloc {
     NSLog(@"%s", __func__);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-
+    [self.tableView unInitPullRefresh];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
 
+    // 初始化主播列表
+    [self setupTableView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -94,7 +94,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    if (self.items.count == 0 && !self.viewDidAppearEver) {
+    if (@available(iOS 11, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    } else {
+        self.automaticallyAdjustsScrollViewInsets = NO;
+    }
+    if (self.items.count == 0 ) {
         // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
         [self.tableView startPullDown:YES];
     }
@@ -102,41 +107,58 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+
+    __weak typeof(self) weakSelf = self;
+    UIApplication *app = [UIApplication sharedApplication];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationWillEnterForegroundNotification
+                                                      object:app
+                                                       queue:[NSOperationQueue mainQueue]
+                                                  usingBlock:^(NSNotification *note) {
+                                                      [weakSelf.tableView startPullDown:YES];
+                                                  }];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableViewVouchersData) name:@"updateTableViewVouchersData" object:nil];
+    [[HomeVouchersManager manager] getVouchersData];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateTableViewVouchersData" object:nil];
+}
+
+- (void)updateTableViewVouchersData {
+    [self.tableView reloadData];
 }
 
 - (void)setupContainView {
     [super setupContainView];
-    
-    // 初始化主播列表
-    [self setupTableView];
-
 }
-
 
 - (void)setupTableView {
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-    
+
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
+
     
-    LiveADView * adView = [[LiveADView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 100)];
+    LiveADView *adView = [[LiveADView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 80)];
     adView.delegate = self;
     self.adView = adView;
     [self.tableView setTableHeaderView:adView];
-    
+
     if (self.items.count > 0) {
         [self.tableView.tableHeaderView setHidden:NO];
-    }else {
+    } else {
         [self.tableView.tableHeaderView setHidden:YES];
     }
-    
+
     self.tableView.tableViewDelegate = self;
 }
 
 #pragma mark banner点击事件
-- (void)liveADViewBannerURL:(NSString *)url title:(NSString *)title
-{
+- (void)liveADViewBannerURL:(NSString *)url title:(NSString *)title {
     IntroduceViewController *introduceVc = [[IntroduceViewController alloc] initWithNibName:nil bundle:nil];
     introduceVc.bannerUrl = url;
     introduceVc.titleStr = title;
@@ -145,32 +167,18 @@
 
 #pragma mark - 数据逻辑
 
-- (void) reloadData:(BOOL)isReloadView {
+- (void)reloadData:(BOOL)isReloadView {
     NSLog(@"HotViewController::reloadData( isReloadView : %@ )", BOOL2YES(isReloadView));
-    
+
     // 数据填充
     if (isReloadView) {
-        
-        // 排重
-
         self.tableView.items = self.items;
         [self.tableView reloadData];
-        
-        //        UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-        //        NSIndexPath *index = [self.tableView indexPathForCell:cell];
-        //        NSInteger row = index.row;
-        //
-        //        if (self.items.count > 0) {
-        //            if (row < self.items.count) {
-        //                NSIndexPath *nextLadyIndex = [NSIndexPath indexPathForRow:row inSection:0];
-        //            [self.tableView scrollToRowAtIndexPath:nextLadyIndex atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        //            }
-        //        }
     }
 }
 
 - (void)tableView:(HotTableView *)tableView didSelectItem:(LiveRoomInfoItemObject *)item {
-    
+
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
     listViewController.anchorId = item.userId;
     listViewController.enterRoom = 1;
@@ -180,10 +188,6 @@
 #pragma mark - 上下拉
 - (void)pullDownRefresh {
     self.view.userInteractionEnabled = NO;
-    
-    //    [self getListRequest:NO];
-    //    [self initTestData];
-    
     [self getListRequest:NO];
 }
 
@@ -197,7 +201,6 @@
     [self.adView loadAD];
     // 下拉刷新回调
     [self pullDownRefresh];
-    
 }
 
 - (void)pullUpRefresh:(UIScrollView *)scrollView {
@@ -208,68 +211,64 @@
 #pragma mark 数据逻辑
 - (BOOL)getListRequest:(BOOL)loadMore {
     NSLog(@"HotViewController::getListRequest( loadMore : %@ )", BOOL2YES(loadMore));
-    
+
     BOOL bFlag = NO;
-    
+
     GetAnchorListRequest *request = [[GetAnchorListRequest alloc] init];
-    
+
     int start = 0;
     if (!loadMore) {
         // 刷最新
         start = 0;
-        
+
     } else {
         // 刷更多
         start = self.items ? ((int)self.items.count) : 0;
     }
-    
+
     // 每页最大纪录数
     request.start = start;
-//    if (start == 0) {
-//         request.step = DefaultSize;
-//    }else {
-        request.step = PageSize;
-//    }
+    request.step = PageSize;
     request.isForTest = [LiveModule module].isForTest;
     request.hasWatch = NO;
-    
+
     // 调用接口
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"HotViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
+                self.failView.hidden = YES;
+                [[HomeVouchersManager manager] getVouchersData];
                 [self.tableView.tableHeaderView setHidden:NO];
                 if (!loadMore) {
                     // 停止头部
                     [self.tableView finishPullDown:YES];
                     // 清空列表
                     [self.items removeAllObjects];
-                    
+
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
                 }
                 //排重
-//                for (LiveRoomInfoItemObject *item in array) {
-//                    [self addItemIfNotExist:item];
-//                }
+                //                for (LiveRoomInfoItemObject *item in array) {
+                //                    [self addItemIfNotExist:item];
+                //                }
                 for (LiveRoomInfoItemObject *item in array) {
                     [self.items addObject:item];
                 }
-                
+
                 // 没有数据隐藏banner
                 if (!(self.items.count > 0)) {
                     [self.tableView.tableHeaderView setHidden:YES];
                 }
-                
+
                 [self reloadData:YES];
-                
+
                 if (!loadMore) {
                     if (self.items.count > 0) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
                             // 拉到最顶
-                            //                            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-                            //                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
                             [self.tableView scrollsToTop];
                         });
                     }
@@ -283,7 +282,7 @@
                             NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
                             [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
                         }
-                        
+
                     });
                 }
             } else {
@@ -293,28 +292,28 @@
                     [self.items removeAllObjects];
                     [self.tableView.tableHeaderView setHidden:YES];
                     self.failView.hidden = NO;
-                    
+
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
                 }
-                
+
                 [self reloadData:YES];
             }
             self.view.userInteractionEnabled = YES;
-            
+
         });
-        
+
     };
-    
+
     bFlag = [self.sessionManager sendRequest:request];
-    
+
     return bFlag;
 }
 
 - (void)addItemIfNotExist:(LiveRoomInfoItemObject *_Nonnull)itemNew {
     bool bFlag = NO;
-    
+
     for (LiveRoomInfoItemObject *item in self.items) {
         if ([item.userId isEqualToString:itemNew.userId]) {
             // 已经存在
@@ -322,7 +321,7 @@
             break;
         }
     }
-    
+
     if (!bFlag) {
         // 不存在
         [self.items addObject:itemNew];
@@ -332,7 +331,6 @@
 - (void)reloadBtnClick:(id)sender {
     self.failView.hidden = YES;
     // 已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-    //    [self getListRequest:YES];
     [self.tableView startPullDown:YES];
 }
 
@@ -396,7 +394,7 @@
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,nil];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor], NSForegroundColorAttributeName, nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];

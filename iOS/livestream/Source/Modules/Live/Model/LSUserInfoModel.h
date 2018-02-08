@@ -24,6 +24,9 @@
  * leftCredit       观众剩余信用点
  * userLevel        观众/主播等级
  * anchorInfo       主播信息
+ * riderId          座驾ID
+ * riderName        座驾名称
+ * riderUrl         座驾url
  */
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *nickName;

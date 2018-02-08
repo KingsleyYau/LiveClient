@@ -28,7 +28,8 @@
         self.adView.image = [UIImage imageNamed:@"Home_HotAndFollow_TableViewHeader_Banner"];
         self.adView.userInteractionEnabled = YES;
         [self.adView addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(bannerDid:)]];
-        self.adView.contentMode = UIViewContentModeScaleToFill;
+        self.adView.contentMode = UIViewContentModeScaleAspectFill;
+        self.adView.clipsToBounds = YES;
         [self addSubview:self.adView];
         [self loadAD];
     }
@@ -38,7 +39,7 @@
 - (void)loadAD
 {
     LSBannerRequest * request = [[LSBannerRequest alloc]init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName)
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull bannerImg, NSString * _Nonnull bannerLink, NSString * _Nonnull bannerName)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {

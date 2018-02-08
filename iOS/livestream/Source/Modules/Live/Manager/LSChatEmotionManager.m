@@ -53,7 +53,7 @@
 }
 
 // 监听HTTP登录
-- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(NSInteger)errnum errmsg:(NSString *)errmsg {
+- (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             
@@ -67,7 +67,7 @@
 // 请求聊天表情
 - (void)requestEmotionList {
     GetEmoticonListRequest *request = [[GetEmoticonListRequest alloc] init];
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString * _Nonnull errmsg,
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg,
                               NSArray<EmoticonItemObject *> * _Nullable item) {
         dispatch_async(dispatch_get_main_queue(), ^{
            

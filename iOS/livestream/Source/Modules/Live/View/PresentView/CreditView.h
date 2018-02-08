@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LiveRoom.h"
+#import "LSUserInfoModel.h"
 
 @class CreditView;
 @protocol CreditViewDelegate <NSObject>
@@ -34,7 +35,7 @@
 
 + (CreditView *) creditView;
 
-- (void)updateUserBalanceCredit:(double)credit headImage:(NSString *)imgUrl level:(int)lv;
+- (void)updateUserBalanceCredit:(double)credit userInfo:(LSUserInfoModel *)userInfo;
 
 - (void)userLevelUp:(int)level;
 - (void)userCreditChange:(double)credit;

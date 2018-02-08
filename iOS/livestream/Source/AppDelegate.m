@@ -18,6 +18,12 @@
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
 
+#import "GCDWebDAVServer.h"
+
+@interface AppDelegate ()
+@property (strong) GCDWebServer *httpServer;
+@end
+
 @implementation AppDelegate
 @synthesize demo = _demo;
 
@@ -74,6 +80,12 @@
 
     // 延长启动画面时间
     // usleep(1000 * 1000);
+    
+    // 启动Http服务
+//    self.httpServer = [[GCDWebServer alloc] init];
+//    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+//    [self.httpServer addGETHandlerForBasePath:@"/" directoryPath:documentsPath indexFilename:nil cacheAge:3600 allowRangeRequests:YES];
+//    [self.httpServer start];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {

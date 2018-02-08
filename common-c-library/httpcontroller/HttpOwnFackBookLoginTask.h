@@ -42,8 +42,9 @@ public:
      * passWord;           // 登录密码（可无）
      * birthDay;           // 出生日期（可无，但未绑定时必须提交，格式为：2015-02-20）
      * inviteCode;         // 推荐码（可无）
-     * versionCode;        // 客户端内部版本号
+     * nickName;           // 昵称
      * utmReferrer;        // APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
+     * gender;              // 性别（M：男，F：女）
      */
     void SetParam(
                   string model,
@@ -54,8 +55,9 @@ public:
                   string passWord,
                   string birthDay,
                   string inviteCode,
-                  string versionCode,
-                  string utmReferrer
+                  string nickName,
+                  string utmReferrer,
+                  GenderType gender
                   );
     
     bool ParseData(const string& url, bool bFlag, const char* buf, int size);
@@ -69,8 +71,9 @@ protected:
     string mEmail;              // 用户注册的邮箱（可无）
     string mPassWord;           // 登录密码（可无）
     string mBirthDay;           // 出生日期（可无，但未绑定时必须提交，格式为：2015-02-20）
-    string mInviteCode;         // 推荐码（可无）
-    string mVersionCode;        // 客户端内部版本号
+    GenderType mGender;         // 性别（M：男，F：女）
+    string mInviteCode;           // 昵称
+    string mNickName;        // 客户端内部版本号
     string mUtmReferrer;        // APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
 };
 

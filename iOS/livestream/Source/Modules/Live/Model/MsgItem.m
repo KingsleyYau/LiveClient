@@ -12,7 +12,7 @@
 
 - (id)init {
     if( self = [super init] ) {
-        self.type = MsgType_Chat;
+        self.msgType = MsgType_Chat;
     }
     return self;
 }

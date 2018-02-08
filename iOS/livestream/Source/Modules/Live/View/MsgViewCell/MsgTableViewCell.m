@@ -16,7 +16,7 @@
 @property (nonatomic, strong) YYTextLayout *layout;
 @property (nonatomic, strong) UIButton *tapBtn;
 @property (nonatomic, copy) NSString *linkUrl;
-
+@property (nonatomic, strong) UIView *textBackgroundView;
 @end
 
 
@@ -50,11 +50,22 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     
     if (self) {
+        self.textBackgroundView = [[UIView alloc] init];
+        self.textBackgroundView.hidden = YES;
+        self.textBackgroundView.clipsToBounds = YES;
+        [self addSubview:self.textBackgroundView];
         
         self.messageLabel = [YYLabel new];
         self.messageLabel.frame = CGRectMake(0, 0, SCREEN_WIDTH - 165, 0);
         self.messageLabel.displaysAsynchronously = YES;
         [self addSubview:self.messageLabel];
+        
+        [self.textBackgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.mas_left);
+            make.right.equalTo(self.messageLabel.mas_right).offset(4);
+            make.top.equalTo(@1);
+            make.bottom.equalTo(@(-1));
+        }];
         
         self.tapBtn = [[UIButton alloc] init];
         self.tapBtn.backgroundColor = [UIColor clearColor];
@@ -76,6 +87,10 @@
     return self;
 }
 
+- (void)setTextBackgroundViewColor:(RoomStyleItem *)item {
+    self.textBackgroundView.backgroundColor = item.textBackgroundViewColor;
+}
+
 - (void)changeMessageLabelWidth:(CGFloat)width {
     
     self.tableViewWidth = width;
@@ -85,12 +100,31 @@
     self.container.size = CGSizeMake(width, CGFLOAT_MAX);
 }
 
-- (void)updataChatMessage:(MsgItem *)item{
+- (void)updataChatMessage:(MsgItem *)item {
+    // 礼物label重算frame值
+    CGSize size = self.container.size;
+    if (item.msgType == MsgType_Gift) {
+        size.width = size.width - 3;
+    }
+    self.container.size = size;
+    
     // 生成排版结果
     self.tapBtn.hidden = YES;
     YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
     CGRect frame = self.messageLabel.frame;
     frame.size = layout.textBoundingSize;
+    
+    // 礼物label重算frame值
+    CGRect giftFrame = frame;
+    if (item.msgType == MsgType_Gift) {
+        self.textBackgroundView.hidden = NO;
+        giftFrame.origin.x = 3;
+    } else {
+        self.textBackgroundView.hidden = YES;
+        giftFrame.origin.x = 0;
+    }
+    frame = giftFrame;
+    
     self.messageLabel.frame = frame;
     self.messageLabel.textLayout = layout;
     self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
@@ -99,7 +133,7 @@
     self.messageLabelWidth = self.messageLabel.frame.size.width;
     self.messageLabelHeight = self.messageLabel.frame.size.height;
     
-    if (item.type == MsgType_Link) {
+    if (item.msgType == MsgType_Link) {
         self.tapBtn.hidden = NO;
         [self.tapBtn mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(@(self.messageLabelWidth));
@@ -134,6 +168,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    self.textBackgroundView.layer.cornerRadius = 5;
 }
 
 

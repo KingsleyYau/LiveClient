@@ -43,6 +43,7 @@
     if (self.dialogReservationAddCredit) {
         [self.dialogReservationAddCredit removeFromSuperview];
     }
+        [self.tableView unInitPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -50,11 +51,11 @@
 
     [self.tableView setTableFooterView:[UIView new]];
     self.sessionManager = [LSSessionRequestManager manager];
-    self.infoBtn.layer.cornerRadius = 5;
+    self.infoBtn.layer.cornerRadius = self.infoBtn.frame.size.height/2;
     self.infoBtn.layer.masksToBounds = YES;
     self.data = [NSMutableArray array];
     self.dialogTipView = [DialogTip dialogTip];
-
+    [self hideNavgationBarBottomLine:YES];
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
     
 }
@@ -69,7 +70,15 @@
     }
     else
     {
-       [self getListDataIsLoadMore:NO];
+//       [self getListDataIsLoadMore:NO];
+        // 没有数据时候执行下拉刷新,隐藏提示信息view lance motify
+        if (self.data.count == 0) {
+            [self hideInfoView];
+            [self.tableView startPullDown:YES];
+        } else {
+            [self getListDataIsLoadMore:NO];
+        }
+     
     }
 }
 
@@ -78,7 +87,14 @@
     [self.loadtimer invalidate];
     self.loadtimer = nil;
     if (self.isRequstData) {
-       [self getListDataIsLoadMore:NO];
+//       [self getListDataIsLoadMore:NO];
+        // 没有数据时候执行下拉刷新,隐藏提示信息view lance motify
+        if (self.data.count == 0) {
+            [self hideInfoView];
+            [self.tableView startPullDown:YES];
+        } else {
+            [self getListDataIsLoadMore:NO];
+        }
     }
 }
 
@@ -134,7 +150,7 @@
     request.type = self.type;
     request.start = self.page;
     request.step = MAXNum;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg, BookingPrivateInviteListObject *_Nonnull item) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, BookingPrivateInviteListObject *_Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self hideLoading];
            // self.mainVC.view.userInteractionEnabled = YES;
@@ -272,8 +288,10 @@
 //        cell.imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
 //        cell.imageViewLoader.view = cell.headImage;
 //        [cell.imageViewLoader loadImage];
-        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
+//        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
 
+        [cell.imageViewLoader refreshCachedImage:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
         } else {
@@ -341,7 +359,7 @@
                 cell.historyLabel.text = NSLocalizedStringFromSelf(@"History_Msg_4");
             }
             if (obj.replyType == 8) {
-                cell.historyLabel.textColor = COLOR_WITH_16BAND_RGB(0x3c3c3c);
+                cell.historyLabel.textColor = COLOR_WITH_16BAND_RGB(0x9d9d9d);
                 cell.historyLabel.text = NSLocalizedStringFromSelf(@"History_Msg_5");
             }
             if (obj.replyType == 5) {
@@ -430,7 +448,7 @@
     HandleBookingRequest *request = [[HandleBookingRequest alloc] init];
     request.inviteId = inviteId;
     request.isConfirm = isComfirm;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
 
@@ -440,7 +458,7 @@
 
                 [self showDialog:message];
             } else {
-                if (errnum == 10025) {
+                if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
 
                     if (self.dialogReservationAddCredit) {
                         [self.dialogReservationAddCredit removeFromSuperview];
@@ -490,7 +508,7 @@
     [self showLoading];
     CancelPrivateRequest *request = [[CancelPrivateRequest alloc] init];
     request.invitationId = invitationId;
-    request.finishHandler = ^(BOOL success, NSInteger errnum, NSString *_Nonnull errmsg) {
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
 
@@ -520,7 +538,7 @@
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor],NSForegroundColorAttributeName,nil];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName,nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];

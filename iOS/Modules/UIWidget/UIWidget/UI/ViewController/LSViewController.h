@@ -52,15 +52,15 @@
  */
 - (void)hideLoading;
 
-- (void)hideNavgationBarBottomLine;
+- (void)hideNavgationBarBottomLine:(BOOL)isHide;
 
 /**
- *  重设和隐藏加载状态
+ *  重设和隐藏加载状态(为了防止之前的showLoading 和 hideLoading 没有一一对应，重新设置)
  */
 -(void)hideAndResetLoading;
 
 /**
- *  重设和显示加载状态
+ *  重设和显示加载状态(为了防止之前的showLoading 和 hideLoading 没有一一对应，重新设置)
  */
 - (void)showAndResetLoading;
 
@@ -68,5 +68,7 @@
  *  设置导航栏返回按钮样式
  */
 - (void)setBackleftBarButtonItemOffset:(CGFloat)offset;
+
+- (void)backAction:(id)sender;
 
 @end

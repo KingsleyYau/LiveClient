@@ -36,10 +36,10 @@
                     <rect key="frame" x="48" y="18" width="59.5" height="20"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                    <color key="textColor" red="0.36470588235294116" green="0.0039215686274509803" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.36862745098039218" green="0.36862745098039218" blue="0.36862745098039218" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Man_Head_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q" customClass="LSUIImageViewTopFit">
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q" customClass="LSUIImageViewTopFit">
                     <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
                     <color key="backgroundColor" red="0.049599532500000001" green="0.5141839051" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -75,6 +75,6 @@
         </view>
     </objects>
     <resources>
-        <image name="Man_Head_Nomal" width="100" height="100"/>
+        <image name="Default_Img_Man_Circyle" width="100" height="100"/>
     </resources>
 </document>

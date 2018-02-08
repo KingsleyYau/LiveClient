@@ -101,6 +101,28 @@
     }
 }
 
+- (void)refreshCachedImage:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)image {
+    self.view = view;
+    [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:url] options:option progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+
+    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
+        NSLog(@"LSImageViewLoader::refreshCachedImage( imageURL : %@, error : %@ )", imageURL, error);
+
+        if (image) {
+            [self displayImage:image];
+        }
+    }];
+//    UIImageView *headView = (UIImageView *)view;
+//    [headView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:image options:SDWebImageRefreshCached progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+//
+//    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+//
+//        NSLog(@"LSImageViewLoader::refreshCachedImage( imageURL : %@, error : %@ , view : %p, image : %@)", imageURL, error, view, image);
+//    }];
+    
+}
+
+
 //- (BOOL)loadImage {
 //    //    NSLog(@"LSImageViewLoader::loadImage( tid : %d, %@, view : %@ )", tid, self, self.view);
 //    if (self.image) {

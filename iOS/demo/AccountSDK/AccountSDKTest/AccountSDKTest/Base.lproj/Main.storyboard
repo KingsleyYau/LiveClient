@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gOb-0c-Ipd"/>
+                        <viewControllerLayoutGuide type="bottom" id="XFJ-9A-oTO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account type" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZQO-e1-54C" userLabel="Account Type Label">
+                                <rect key="frame" x="136" y="30" width="102" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Token1234567890" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="amc-4G-JPt" userLabel="Account Token Label">
+                                <rect key="frame" x="10" y="61" width="355" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TPV-ve-QK2" userLabel="Head Image View">
+                                <rect key="frame" x="112" y="92" width="150" height="150"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="TPV-ve-QK2" secondAttribute="height" multiplier="1:1" id="hog-0A-ezB"/>
+                                    <constraint firstAttribute="width" constant="150" id="uq5-XB-Gd1"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xbC-Rr-X9b" userLabel="Name Label">
+                                <rect key="frame" x="145.5" y="292" width="83" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocP-pv-IDJ" userLabel="Logout Button">
+                                <rect key="frame" x="123" y="312.5" width="129" height="34"/>
+                                <state key="normal" title="Account Logout"/>
+                                <connections>
+                                    <action selector="logoutAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eGb-sX-q4P"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WZH-xS-oQD" userLabel="Facebook Login Button">
+                                <rect key="frame" x="123" y="346.5" width="128" height="34"/>
+                                <state key="normal" title="Facebook Login"/>
+                                <connections>
+                                    <action selector="facebookLoginAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Rcc-8y-83A"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZXj-5w-IGz" userLabel="Facebook Share Button">
+                                <rect key="frame" x="121.5" y="380.5" width="131" height="34"/>
+                                <state key="normal" title="Facebook Share"/>
+                                <connections>
+                                    <action selector="facebookShareAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9up-Td-7QG"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="geu-KY-kEN" userLabel="Twitter Login Button">
+                                <rect key="frame" x="134.5" y="414.5" width="105" height="34"/>
+                                <state key="normal" title="Twitter Login"/>
+                                <connections>
+                                    <action selector="twitterLoginAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hUn-BA-z4E"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PeZ-2v-J50" userLabel="Twitter Share Button">
+                                <rect key="frame" x="133.5" y="448.5" width="108" height="34"/>
+                                <state key="normal" title="Twitter Share"/>
+                                <connections>
+                                    <action selector="twitterShareAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="5Zg-GT-MOr"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account SDK" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fe1-9K-HtC" userLabel="Tips Label">
+                                <rect key="frame" x="10" y="626.5" width="355" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="fHe-gk-M2R">
+                                <rect key="frame" x="169" y="315" width="37" height="37"/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gener" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QHv-I7-pUt">
+                                <rect key="frame" x="163.5" y="261" width="47" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qqh-fB-amI">
+                                <rect key="frame" x="126.5" y="487.5" width="121" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Systems Share">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="systemsShareAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6uh-Oy-TNc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KY1-B1-kBK">
+                                <rect key="frame" x="147" y="526.5" width="81" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="Copy Link">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="copyLink:" destination="BYZ-38-t0r" eventType="touchUpInside" id="phz-XZ-nog"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="0.36470588240000001" green="0.054901960780000002" blue="0.52549019610000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="xbC-Rr-X9b" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0Fe-qW-PO1"/>
+                            <constraint firstItem="fHe-gk-M2R" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6UY-Le-eit"/>
+                            <constraint firstItem="qqh-fB-amI" firstAttribute="top" secondItem="PeZ-2v-J50" secondAttribute="bottom" constant="5" id="9wV-qw-Jaf"/>
+                            <constraint firstItem="WZH-xS-oQD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FRp-yt-vuQ"/>
+                            <constraint firstItem="qqh-fB-amI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HXh-jE-KvU"/>
+                            <constraint firstItem="PeZ-2v-J50" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Jum-y2-vDC"/>
+                            <constraint firstItem="fe1-9K-HtC" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" constant="-10" id="Nd7-yz-ruf"/>
+                            <constraint firstItem="fe1-9K-HtC" firstAttribute="bottom" secondItem="XFJ-9A-oTO" secondAttribute="top" constant="-20" id="O4L-oH-UV7"/>
+                            <constraint firstItem="geu-KY-kEN" firstAttribute="top" secondItem="ZXj-5w-IGz" secondAttribute="bottom" id="PH2-Zy-f9v"/>
+                            <constraint firstItem="ZXj-5w-IGz" firstAttribute="top" secondItem="WZH-xS-oQD" secondAttribute="bottom" id="SbP-Y8-4e3"/>
+                            <constraint firstItem="TPV-ve-QK2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TPp-Og-lmN"/>
+                            <constraint firstItem="QHv-I7-pUt" firstAttribute="top" secondItem="TPV-ve-QK2" secondAttribute="bottom" constant="19" id="UJv-Og-exS"/>
+                            <constraint firstItem="geu-KY-kEN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VKl-Mk-m0H"/>
+                            <constraint firstItem="fe1-9K-HtC" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="Y1Q-F3-dzH"/>
+                            <constraint firstItem="KY1-B1-kBK" firstAttribute="top" secondItem="qqh-fB-amI" secondAttribute="bottom" constant="5" id="bkq-y3-aAT"/>
+                            <constraint firstItem="ocP-pv-IDJ" firstAttribute="top" secondItem="xbC-Rr-X9b" secondAttribute="bottom" id="bp0-dr-6bW"/>
+                            <constraint firstItem="ZQO-e1-54C" firstAttribute="top" secondItem="gOb-0c-Ipd" secondAttribute="bottom" constant="10" id="f2O-CB-6LJ"/>
+                            <constraint firstItem="KY1-B1-kBK" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="gcy-Oe-C1i"/>
+                            <constraint firstItem="ZXj-5w-IGz" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kuq-eU-48z"/>
+                            <constraint firstItem="TPV-ve-QK2" firstAttribute="top" secondItem="amc-4G-JPt" secondAttribute="bottom" constant="10" id="lWl-FB-4tv"/>
+                            <constraint firstItem="xbC-Rr-X9b" firstAttribute="top" secondItem="QHv-I7-pUt" secondAttribute="bottom" constant="10" id="laS-pL-ro4"/>
+                            <constraint firstItem="PeZ-2v-J50" firstAttribute="top" secondItem="geu-KY-kEN" secondAttribute="bottom" id="nMQ-Ww-BEW"/>
+                            <constraint firstItem="fHe-gk-M2R" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="qgc-qD-Ecf"/>
+                            <constraint firstItem="ZQO-e1-54C" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rRU-ze-uTv"/>
+                            <constraint firstItem="WZH-xS-oQD" firstAttribute="top" secondItem="ocP-pv-IDJ" secondAttribute="bottom" id="ryE-0v-lNl"/>
+                            <constraint firstItem="QHv-I7-pUt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tGh-0w-sb1"/>
+                            <constraint firstItem="amc-4G-JPt" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" constant="-10" id="v7W-wS-MOz"/>
+                            <constraint firstItem="ocP-pv-IDJ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="vb2-Be-g7h"/>
+                            <constraint firstItem="amc-4G-JPt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="voQ-ou-GJm"/>
+                            <constraint firstItem="amc-4G-JPt" firstAttribute="top" secondItem="ZQO-e1-54C" secondAttribute="bottom" constant="10" id="zQk-LV-xhU"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="generLabel" destination="QHv-I7-pUt" id="Vk9-Id-Wqh"/>
+                        <outlet property="imageViewHead" destination="TPV-ve-QK2" id="GI9-q2-3hI"/>
+                        <outlet property="labelName" destination="xbC-Rr-X9b" id="3R7-fs-ZeD"/>
+                        <outlet property="labelTips" destination="fe1-9K-HtC" id="dVq-HR-uR2"/>
+                        <outlet property="labelToken" destination="amc-4G-JPt" id="Jcq-9b-Zwa"/>
+                        <outlet property="labelType" destination="ZQO-e1-54C" id="e1f-Ty-ekA"/>
+                        <outlet property="loadingView" destination="fHe-gk-M2R" id="Drs-8S-TvO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="118.29085457271366"/>
+        </scene>
+    </scenes>
+</document>

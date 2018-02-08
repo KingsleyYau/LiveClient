@@ -255,7 +255,7 @@ static LiveModule *gModule = nil;
 
 
 #pragma mark - HTTP登录回调
-- (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(NSInteger)errnum errmsg:(NSString *_Nonnull)errmsg {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nonnull)errmsg {
     if (success) {
         if (loginItem.isPushAd) {
             // 调用QN弹出广告
@@ -344,6 +344,11 @@ static LiveModule *gModule = nil;
                 if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
                     [self.delegate moduleOnNotification:self];
                 }
+            } else {
+                // 无法显示主播立即私密邀请
+                [self.imManager InstantInviteUserReport:inviteId isShow:NO finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg) {
+                    NSLog(@"LiveModule::InstantInviteUserReport( [当前主播私密邀请无法显示], success : %d, errtype : %d, errmsg : %@ )", success, errType, errMsg);
+                }];
             }
         }
     });
@@ -362,8 +367,6 @@ static LiveModule *gModule = nil;
         vc.userId = userId;
         _notificationVC = vc;
         
-
-    
         if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
             [self.delegate moduleOnNotification:self];
         }
@@ -378,15 +381,26 @@ static LiveModule *gModule = nil;
 
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
-        NSInteger count = self.unreadCount + item.total;
-        if ([self.delegate respondsToSelector:@selector(moduleOnGetUnReadMsg:unReadCount:)]) {
-            [self.delegate moduleOnGetUnReadMsg:self unReadCount:count];
-        }
+    NSInteger count = self.unreadCount + item.total;
+    if ([self.delegate respondsToSelector:@selector(moduleOnGetUnReadMsg:unReadCount:)]) {
+        [self.delegate moduleOnGetUnReadMsg:self unReadCount:count];
+    }
 }
 
 - (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject *)item {
     self.unreadCount = item.totalNoReadNum;
     [self.unReadManager getBackpackUnreadCount];
+}
+
+#pragma mark - Application
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+    NSLog(@"LiveModule::applicationDidEnterBackground()");
+    
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    NSLog(@"LiveModule::applicationWillEnterForeground()");
+    [LiveGobalManager manager].enterRoomBackgroundTime = nil;
 }
 
 @end

@@ -21,6 +21,8 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *bgImageView;
 
+@property (nonatomic, weak) IBOutlet UILabel* handleCountDownLabel;
+
 @property (weak, nonatomic) IBOutlet UIImageView *liverHeadImageView;
 
 @property (weak, nonatomic) IBOutlet UILabel *liverNameLabel;

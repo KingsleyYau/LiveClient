@@ -40,14 +40,16 @@
 - (void)setRidesBtnBG:(BOOL)isRides
 {
     if (isRides) {
-        self.ridesBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0xf7cd3a);
+        self.ridesBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0x297AF3);
         [self.ridesBtn setTitle:NSLocalizedStringFromSelf(@"Riding") forState:UIControlStateNormal];
+        [self.ridesBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     }
     else
     {
         self.ridesBtn.backgroundColor = [UIColor whiteColor];
         [self.ridesBtn setTitle:NSLocalizedStringFromSelf(@"Ride") forState:UIControlStateNormal];
-        self.ridesBtn.layer.borderColor = COLOR_WITH_16BAND_RGB(0xf7cd3a).CGColor;
+        [self.ridesBtn setTitleColor:COLOR_WITH_16BAND_RGB(0x3C3C3C) forState:UIControlStateNormal];
+        self.ridesBtn.layer.borderColor = COLOR_WITH_16BAND_RGB(0x297AF3).CGColor;
         self.ridesBtn.layer.borderWidth = 1;
     }
 }

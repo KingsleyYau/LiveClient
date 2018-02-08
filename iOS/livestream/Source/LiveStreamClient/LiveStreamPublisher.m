@@ -268,8 +268,13 @@
             // 开始采集音视频
             [self startCapture];
             
-            // 开始推流
-            self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            // 仅在前台才运行
+            if( !_isBackground ) {
+                // 开始推流
+                self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
+            } else {
+                NSLog(@"LiveStreamPublisher::run( [Publisher is in background], self : %p )", self);
+            }
         }
     }
     

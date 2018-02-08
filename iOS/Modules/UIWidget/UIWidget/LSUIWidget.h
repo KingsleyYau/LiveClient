@@ -36,6 +36,9 @@
 #import "LSPZPagingScrollView.h"
 #import "LSPZPhotoView.h"
 
+#pragma mark - Tabbar
+#import "LSUITabBarItem.h"
+
 #pragma mark - TableView
 #import "UIScrollView+PullRefresh.h"
 #import "UITableView+FDTemplateLayoutCell.h"
