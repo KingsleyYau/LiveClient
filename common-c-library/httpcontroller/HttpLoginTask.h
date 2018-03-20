@@ -38,13 +38,15 @@ public:
      * @param deviceid		    设备唯一标识
      * @param model				设备型号（格式：设备型号－系统版本号）
      * @param manufacturer		制造厂商
+     * @param regionId          站点ID
      */
     void SetParam(
                   string manId,
                   string userSid,
                   string deviceid,
                   string model,
-                  string manufacturer
+                  string manufacturer,
+                  RegionIdType regionId
                   );
 
     /**
@@ -81,7 +83,7 @@ protected:
     string mManufacturer;    // 制造厂商
     string mManId;           // QN会员ID
     string mUserSid;         // QN系统登录验证返回的标识
-    
+    RegionIdType mRegionId;   // 站点ID
 };
 
 #endif /* HttpLoginTask_H_ */

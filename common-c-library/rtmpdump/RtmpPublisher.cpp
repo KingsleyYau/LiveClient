@@ -38,13 +38,13 @@ private:
 RtmpPublisher::RtmpPublisher()
     :mClientMutex(KMutex::MutexType_Recursive)
     {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::RtmpPublisher( publisher : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::RtmpPublisher( this : %p )", this);
     
     Init();
 }
 
 RtmpPublisher::~RtmpPublisher() {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::~RtmpPublisher( publisher : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "RtmpPublisher::~RtmpPublisher( this : %p )", this);
     
     Stop();
     
@@ -60,8 +60,10 @@ bool RtmpPublisher::PublishUrl(const string& url) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::PublishUrl( "
+                 "this : %p, "
                  "url : %s "
                  ")",
+                 this,
                  url.c_str()
                  );
     
@@ -88,9 +90,11 @@ bool RtmpPublisher::PublishUrl(const string& url) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::PublishUrl( "
+                 "this : %p, "
                  "[%s], "
                  "url : %s "
                  ")",
+                 this,
                  bFlag?"Success":"Fail",
                  url.c_str()
                  );
@@ -173,8 +177,8 @@ void RtmpPublisher::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Success] "
                  ")",
                  this
                  );
@@ -197,10 +201,12 @@ void RtmpPublisher::SendVideoFrame(char* data, int size, u_int32_t timestamp) {
 //                         );
             
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_WARNING,
                          "RtmpPublisher::SendVideoFrame( "
+                         "this : %p, "
                          "[Cache Video buffer is full, droped] "
-                         ")"
+                         ")",
+                         this
                          );
         }
         
@@ -242,10 +248,12 @@ void RtmpPublisher::SendAudioFrame(
 //                         audioFrame
 //                         );
             FileLevelLog("rtmpdump",
-                         KLog::LOG_MSG,
+                         KLog::LOG_WARNING,
                          "RtmpPublisher::SendAudioFrame( "
+                         "this : %p, "
                          "[Cache Audio buffer is full, droped] "
-                         ")"
+                         ")",
+                         this
                          );
         }
         
@@ -289,11 +297,13 @@ void RtmpPublisher::PublishHandle() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
                          "RtmpPublisher::PublishHandle( "
+                         "this : %p, "
                          "[Send Video Frame], "
                          "frame : %p, "
                          "timestamp : %u, "
                          "frameType : 0x%x "
                          ")",
+                         this,
                          videoFrame,
                          videoFrame->mTimestamp,
                          videoFrame->GetBuffer()[0]
@@ -307,9 +317,11 @@ void RtmpPublisher::PublishHandle() {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_MSG,
                             "RtmpPublisher::PublishHandle( "
+                            "this : %p, "
                             "[Delete Video frame], "
                             "videoFrame : %p "
                             ")",
+                            this,
                             videoFrame
                             );
                 delete videoFrame;
@@ -329,10 +341,12 @@ void RtmpPublisher::PublishHandle() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
                          "RtmpPublisher::PublishHandle( "
+                         "this : %p, "
                          "[Send Audio Frame], "
                          "frame : %p, "
                          "timestamp : %u "
                          ")",
+                         this,
                          audioFrame,
                          audioFrame->mTimestamp
                          );
@@ -352,11 +366,13 @@ void RtmpPublisher::PublishHandle() {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_WARNING,
                              "RtmpPublisher::PublishHandle( "
-                            "[Delete Audio frame], "
-                            "audioFrame : %p "
-                            ")",
-                            audioFrame
-                            );
+                             "this : %p, "
+                             "[Delete Audio frame], "
+                             "audioFrame : %p "
+                             ")",
+                             this,
+                             audioFrame
+                             );
                 delete audioFrame;
             }
         }

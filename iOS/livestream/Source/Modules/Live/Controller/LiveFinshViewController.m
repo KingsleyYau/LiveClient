@@ -15,6 +15,7 @@
 #import "LiveBundle.h"
 #import "LiveModule.h"
 #import "AnchorPersonalViewController.h"
+#import "LiveUrlHandler.h"
 
 @interface LiveFinshViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
 #pragma mark - 推荐逻辑
@@ -239,8 +240,13 @@
 
 - (IBAction)viewHotAction:(id)sender {
     // 回到Hot列表
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+//    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
+    
     [self.navigationController dismissViewControllerAnimated:NO completion:nil];
-    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:1];
+    [LiveUrlHandler shareInstance].url = url;
+    [[LiveUrlHandler shareInstance] handleOpenURL];
 }
 
 

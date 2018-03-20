@@ -527,12 +527,14 @@
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 预约列表页], bookType : %i )", bookType);
     // TODO:收到通知进入预约列表页
     LSMyReservationsViewController *reservation = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
+    reservation.curIndex = bookType - 1;
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:reservation];
     [self.navigationController presentViewController:nvc animated:NO completion:nil];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBackpackList:(int)BackpackType {
     MyBackpackViewController *backPack = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
+    backPack.curIndex = BackpackType - 1;
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:backPack];
     [self.navigationController presentViewController:nvc animated:NO completion:nil];
 }

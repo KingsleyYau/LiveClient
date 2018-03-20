@@ -1,0 +1,12 @@
+// 图像顶点着色器
+// 纹理坐标(输入)
+attribute vec4 aPosition;
+// 自定义屏幕坐标(输入)
+attribute vec4 aTextureCoordinate;
+// 片段着色器(输出)
+varying vec2 vTextureCoordinate;	
+
+void main() {
+	vTextureCoordinate = aTextureCoordinate.xy;
+	gl_Position = aPosition;
+}

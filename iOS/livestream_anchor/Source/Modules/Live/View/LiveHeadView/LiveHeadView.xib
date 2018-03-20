@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveHeadView">
+            <connections>
+                <outlet property="cameraBtn" destination="RoW-ya-URO" id="RhN-t9-wL9"/>
+                <outlet property="closeBtn" destination="uFk-qw-5z8" id="FbB-e6-pNb"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="NDm-Ta-p7E" userLabel="Live Head View">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_LiveHead_Shaow" translatesAutoresizingMaskIntoConstraints="NO" id="WC6-VY-WY6" userLabel="LiveHead Shaow">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uFk-qw-5z8">
+                    <rect key="frame" x="5" y="10" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="I53-eK-rQX"/>
+                        <constraint firstAttribute="width" secondItem="uFk-qw-5z8" secondAttribute="height" multiplier="1:1" id="WO4-ps-BaM"/>
+                    </constraints>
+                    <state key="normal" image="Live_Btn_Cancel"/>
+                    <connections>
+                        <action selector="closeLiveRoomAction:" destination="-1" eventType="touchUpInside" id="dAl-Xw-iPk"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoW-ya-URO">
+                    <rect key="frame" x="345" y="12.5" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="RoW-ya-URO" secondAttribute="height" multiplier="1:1" id="1BL-EE-e9O"/>
+                        <constraint firstAttribute="height" constant="20" id="4Oc-Qv-Dj0"/>
+                    </constraints>
+                    <state key="normal" image="Live_Change_Camera"/>
+                    <connections>
+                        <action selector="changeCameraAction:" destination="-1" eventType="touchUpInside" id="e7K-fk-o1i"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="WC6-VY-WY6" firstAttribute="top" secondItem="NDm-Ta-p7E" secondAttribute="top" id="0VS-H5-QRG"/>
+                <constraint firstItem="uFk-qw-5z8" firstAttribute="leading" secondItem="NDm-Ta-p7E" secondAttribute="leading" constant="5" id="1Vx-c7-tfG"/>
+                <constraint firstAttribute="trailing" secondItem="WC6-VY-WY6" secondAttribute="trailing" id="DtU-hb-t4a"/>
+                <constraint firstItem="uFk-qw-5z8" firstAttribute="top" secondItem="NDm-Ta-p7E" secondAttribute="top" constant="10" id="IsL-8f-Uet"/>
+                <constraint firstAttribute="trailing" secondItem="RoW-ya-URO" secondAttribute="trailing" constant="10" id="K2w-ib-Cmz"/>
+                <constraint firstItem="RoW-ya-URO" firstAttribute="centerY" secondItem="uFk-qw-5z8" secondAttribute="centerY" id="Ufs-xF-zK1"/>
+                <constraint firstAttribute="bottom" secondItem="WC6-VY-WY6" secondAttribute="bottom" id="Vxu-nO-4Km"/>
+                <constraint firstItem="WC6-VY-WY6" firstAttribute="leading" secondItem="NDm-Ta-p7E" secondAttribute="leading" id="iti-bo-W9J"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="5" y="-20"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Btn_Cancel" width="17" height="17"/>
+        <image name="Live_Change_Camera" width="21" height="17"/>
+        <image name="Live_LiveHead_Shaow" width="360" height="83"/>
+    </resources>
+</document>

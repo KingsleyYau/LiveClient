@@ -1,0 +1,44 @@
+
+/* Class = "UIButton"; normalTitle = "Hot Broadcasters"; ObjectID = "oOu-Vi-CxX"; */
+"oOu-Vi-CxX.normalTitle" = "Hot Broadcasters";
+
+
+"Coins_Tip" = "You have insufficient coins to confirm this booking. Please add more coins to continue.";
+
+"Cancel_Reservation" = "50% of booking fee will be refunded to your account if you cancel the booking. Do you wish to cancel the booking?";
+
+"Decline_Reservation" = "Are you sure you wish to decline this booking?";
+
+"Cancel_Reservation" = "Are you sure you wish to cancel this booking?";
+
+"Cancel_Success" = "Your booking has been canceled successfully";
+
+"Comfirm_Success" = "Booking has been confirmed successfully";
+
+"Decline_Success" = "Booking has been declined successfully";
+
+
+"NoData_Tip_1" = "No new bookings pending your action.\nGo to request a booking now.";
+"NoData_Tip_2" = "No unconfirmed bookings.\nGo to request a booking now.";
+"NoData_Tip_3" = "No scheduled bookings.\nGo to request a booking now.";
+"NoData_Tip_4" = "No booking history.\nGo to browse live broadcasts now.";
+
+"Reservation_Time" = "Broadcast Time:";
+
+"Failed_Message" = "Failed to load.";
+"Hot_Broadcasters" = "Hot Broadcasters";
+"Reload" = "Reload";
+
+"PRELIVE_ERR_ADD_COINS" = "You don't have enough coins, please buy more.";
+
+"CANCELED_RESERVATION_SUCCESS" = "Your booking has been canceled successfully";
+
+"History_Msg_1" = "Booking Declined";
+"History_Msg_2" = "Broadcast Viewer\nNo-Show";
+"History_Msg_3" = "Broadcast Broadcaster\nNo-Show";
+"History_Msg_4" = "Booking Unconfirmed";
+"History_Msg_5" = "Broadcast Completed";
+"History_Msg_6" = "Booking Canceled";
+
+"YES" = "YES";
+"NO" = "NO";

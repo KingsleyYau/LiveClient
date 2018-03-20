@@ -11,7 +11,7 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	private static final String TAG = "coollive";
 	static {
 		System.loadLibrary("lsplayer");
-		Log.i(TAG, "LSPlayerJni Load Library");
+		Log.i(TAG, "LSPlayerJni::static( Load Library )");
 	}
 	
 	/**

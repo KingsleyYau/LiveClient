@@ -89,6 +89,7 @@
     
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -166,9 +167,9 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-//    NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
+    NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
 //    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@", recordDir, @"play.flv"];
+    NSString *recordFilePath = @"";
     NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
     NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 

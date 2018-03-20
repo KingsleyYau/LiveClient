@@ -88,13 +88,13 @@
     // 房间名
     cell.labelRoomTitle.text = item.nickName;
     
-    if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_offline_icon"]];
-    }
-    else
-    {
-        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_online_icon"]];
-    }
+//    if (item.onlineStatus != ONLINE_STATUS_LIVE) {
+//        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_offline_icon"]];
+//    }
+//    else
+//    {
+//        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_online_icon"]];
+//    }
     
     cell.hotCellDelegate = self;
     switch (item.roomType) {
@@ -109,10 +109,12 @@
                 cell.bookPrivateBtn.hidden = NO;
                 cell.normalPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = YES;
+                cell.onlineStatus.hidden = YES;
             } else {
                 cell.bookPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = NO;
                 cell.normalPrivateBtn.hidden = YES;
+                cell.onlineStatus.hidden = NO;
                 if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                     //显示Free
                     [cell.vipPrivateBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition_Free"] forState:UIControlStateNormal];
@@ -132,6 +134,7 @@
             
             //设置直播间类型显示图片
             cell.roomType.hidden = YES;
+            cell.onlineStatus.hidden = YES;
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = YES;
@@ -163,6 +166,7 @@
         } break;
             // 付费公开直播间
         case HTTPROOMTYPE_CHARGEPUBLICLIVEROOM: {
+            cell.onlineStatus.hidden = YES;
             //设置直播间类型显示图片
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 cell.viewPublicFreeBtn.hidden = YES;
@@ -209,6 +213,7 @@
             // 豪华私密直播间
         case HTTPROOMTYPE_LUXURYPRIVATELIVEROOM: {
             cell.normalPrivateCenterX.constant = 0;
+            cell.onlineStatus.hidden = YES;
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = YES;

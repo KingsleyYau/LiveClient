@@ -78,8 +78,10 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::PlayUrl( "
+                 "this : %p, "
                  "url : %s "
                  ")",
+                 this,
                  url.c_str()
                  );
     
@@ -111,9 +113,11 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::PlayUrl( "
+                 "this : %p, "
                  "[%s], "
                  "url : %s "
                  ")",
+                 this,
                  bFlag?"Success":"Fail",
                  url.c_str()
                  );
@@ -152,8 +156,8 @@ void PlayerController::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Success] "
                  ")",
                  this
                  );
@@ -163,14 +167,20 @@ void PlayerController::Stop() {
 void PlayerController::OnConnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PlayerController::OnConnect()"
+                 "PlayerController::OnConnect( "
+                 "this : %p "
+                 ")",
+                 this
                  );
 }
     
 void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PlayerController::OnDisconnect()"
+                 "PlayerController::OnDisconnect( "
+                 "this : %p "
+                 ")",
+                 this
                  );
     if( mpPlayerStatusCallback ) {
         mpPlayerStatusCallback->OnPlayerDisconnect(this);
@@ -181,10 +191,12 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::OnChangeVideoSpsPps( "
+                 "this : %p, "
                  "sps_size : %d, "
                  "pps_size : %d, "
                  "nalUnitHeaderLength : %d "
                  ")",
+                 this,
                  sps_size,
                  pps_size,
                  nalUnitHeaderLength
@@ -202,10 +214,12 @@ void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, in
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PlayerController::OnRecvVideoFrame( "
+                 "this : %p, "
                  "timestamp : %u, "
                  "size : %d, "
                  "video_type : %d "
                  ")",
+                 this,
                  timestamp,
                  size,
                  video_type
@@ -231,11 +245,13 @@ void PlayerController::OnChangeAudioFormat(RtmpDump* rtmpDump,
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PlayerController::OnChangeAudioFormat( "
+                 "this : %p, "
                  "format : %d, "
                  "sound_rate : %d, "
                  "sound_size : %d, "
                  "sound_type : %d "
                  ")",
+                 this,
                  format,
                  sound_rate,
                  sound_size,
@@ -263,9 +279,11 @@ void PlayerController::OnRecvAudioFrame(
     FileLevelLog("rtmpdump",
                 KLog::LOG_MSG,
                 "PlayerController::OnRecvAudioFrame( "
+                "this : %p, "
                 "timestamp : %u, "
                 "size : %d "
                 ")",
+                this,
                 timestamp,
                 size
                 );
@@ -356,8 +374,10 @@ void PlayerController::OnResetVideoStream(RtmpPlayer* player) {
 void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PlayerController::OnResetAudioStream("
-                 ")"
+                 "PlayerController::OnResetAudioStream( "
+                 "this : %p "
+                 ")",
+                 this
                  );
     
     if( mpAudioRenderer ) {
@@ -369,7 +389,9 @@ void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::OnDelayMaxTime( "
-                 ")"
+                 "this : %p "
+                 ")",
+                 this
                  );
     
     // 可以断开连接

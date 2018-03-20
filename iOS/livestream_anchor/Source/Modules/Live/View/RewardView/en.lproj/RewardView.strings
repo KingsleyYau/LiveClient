@@ -1,0 +1,16 @@
+
+/* Class = "UILabel"; text = "0s"; ObjectID = "Bsc-RA-etg"; */
+"Bsc-RA-etg.text" = "0s";
+
+/* Class = "UILabel"; text = "0.62"; ObjectID = "CzU-Kj-KH4"; */
+"CzU-Kj-KH4.text" = "0.62";
+
+/* Class = "UILabel"; text = "Rewarded credits: "; ObjectID = "Oox-6M-bdq"; */
+"Oox-6M-bdq.text" = "Credit rebate: ";
+
+/* Class = "UILabel"; text = "You will receive a rebate after watching a paid broadcast for a certain amount of time. You can use these credits to send gifts, pop-up messages and request talent shows in the same broadcast session. "; ObjectID = "eRZ-DY-sV9"; */
+"eRZ-DY-sV9.text" = "Rules:\nYou will receive a rebate after watching a paid broadcast for a certain amount of time. You can use these credits to send gifts, pop-up messages and request talent shows in the same broadcast session.";
+
+/* Class = "UILabel"; text = "Generated in: "; ObjectID = "x0O-Bp-zCi"; */
+"x0O-Bp-zCi.text" = "Generated in: ";
+

@@ -10,10 +10,9 @@ import net.qdating.player.ILSVideoRendererJni;
  *
  */
 public class LSPublisherJni implements ILSPublisherCallbackJni {
-	private static final String TAG = "coollive";
 	static {
 		System.loadLibrary("lspublisher");
-		Log.i(TAG, "LSPublisherJni Load Library");
+		Log.i(LSConfig.TAG, "LSPublisherJni::static( Load Library )");
 	}
 	
 	/**
@@ -101,6 +100,26 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	}
 	private native void PushVideoFrame(long client, byte[] data, int size, int width, int height);
 	
+	/**
+	 * 暂停推送视频
+	 */
+	public void PausePushVideo() {
+		if( client != INVALID_CLIENT ) {
+			PausePushVideo(client);
+		}
+	}
+	private native void PausePushVideo(long client);
+
+	/**
+	 * 恢复推送视频
+	 */
+	public void ResumePushVideo() {
+		if( client != INVALID_CLIENT ) {
+			ResumePushVideo(client);
+		}
+	}
+	private native void ResumePushVideo(long client);
+		
 	/**
 	 * 发送音频帧
 	 * @param data

@@ -1,0 +1,6 @@
+framework module AccountSDK {
+  umbrella header "AccountSDK.h"
+
+  export *
+  module * { export * }
+}

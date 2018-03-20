@@ -47,11 +47,29 @@ class PublisherStatusCallbackImp;
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
 @property (nonatomic, strong) NSDate* enterBackgroundTime;
+// 开始推流时间
 @property (nonatomic, strong) NSDate* startTime;
 
 #pragma mark - 视频参数
+// 宽
 @property (assign) int width;
+// 高
 @property (assign) int height;
+// 第一次处理帧时间
+@property (assign) long long videoFrameStartPushTime;
+@property (assign) long long videoFrameLastPushTime;
+// 由帧率得出的每帧间隔(ms)
+@property (assign) int videoFrameInterval;
+// 总处理帧数
+@property (assign) int videoFrameIndex;
+
+#pragma mark - 视频暂停控制
+// 视频是否暂停采集
+@property (assign) BOOL videoPause;
+// 视频是否已经恢复采集
+@property (assign) BOOL videoResume;
+// 视频总暂停时长
+@property (assign) long long videoFramePauseTime;
 
 #pragma mark - 音频控制
 @property (assign) EncodeDecodeBuffer* mpMuteBuffer;
@@ -98,6 +116,15 @@ private:
         _width = (int)width;
         _height = (int)height;
         _mute = NO;
+        
+        self.videoFrameLastPushTime = 0;
+        self.videoFrameStartPushTime = 0;
+        self.videoFrameIndex = 0;
+        self.videoFrameInterval = 1000.0 / FPS;
+        
+        self.videoPause = NO;
+        self.videoResume = YES;
+        self.videoFramePauseTime = 0;
         
         self.startTime = [NSDate date];
         
@@ -166,28 +193,106 @@ recordH264FilePath:(NSString *)recordH264FilePath
     
     NSLog(@"RtmpPublisherOC::pushlishUrl( url : %@ )", url);
     
-    self.startTime = [NSDate date];
-    bFlag = self.publisher->PublishUrl([url UTF8String], [recordH264FilePath UTF8String], [recordAACFilePath UTF8String]);
-    if( bFlag ) {
+    @synchronized(self) {
+        self.videoPause = NO;
     }
-    
+    self.startTime = [NSDate date];
+    // 开始推流连接
+    bFlag = self.publisher->PublishUrl([url UTF8String], [recordH264FilePath UTF8String], [recordAACFilePath UTF8String]);
+
     return bFlag;
 }
 
 - (void)stop {
     NSLog(@"RtmpPublisherOC::stop()");
     
+    // 停止推流
     self.publisher->Stop();
+    
+    // 复位帧率控制
+    self.videoFrameStartPushTime = 0;
+    self.videoFrameIndex = 0;
+    self.videoFramePauseTime = 0;
+    self.videoFrameLastPushTime = 0;
+    @synchronized(self) {
+        self.videoResume = YES;
+    }
 }
 
 - (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer {
-    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    @synchronized(self) {
+        // 视频是否暂停录制
+        if( !self.videoPause ) {
+            long long now = getCurrentTime();
+            
+            // 视频是否恢复
+            if( !self.videoResume ) {
+                // 视频未恢复
+                self.videoResume = YES;
+                // 更新上次暂停导致的时间差
+                long long videoFrameDiffTime = now - self.videoFrameLastPushTime;
+                videoFrameDiffTime -= self.videoFrameInterval;
+                NSLog(@"RtmpPublisherOC::pushVideoFrame( [Video capture is resume], videoFrameDiffTime : %lld )", videoFrameDiffTime);
+                self.publisher->AddVideoTimestamp((unsigned int)videoFrameDiffTime);
+                self.videoFramePauseTime += videoFrameDiffTime;
+            }
+            
+            // 控制帧率
+            if( self.videoFrameStartPushTime == 0 ) {
+                self.videoFrameStartPushTime = now;
+            }
+            long long diffTime = now - self.videoFrameStartPushTime;
+            diffTime -= self.videoFramePauseTime;
+            long long videoFrameInterval = diffTime - (self.videoFrameIndex * self.videoFrameInterval);
+            
+            if( videoFrameInterval >= 0 ) {
+//                FileLevelLog(
+//                             "rtmpdump",
+//                             KLog::LOG_MSG,
+//                             "RtmpPublisherOC::pushVideoFrame( "
+//                             "[Video frame can be pushed], "
+//                             "videoFrameInterval : %lld, "
+//                             "diffTime : %lld, "
+//                             "videoFrameIndex : %d "
+//                             ")",
+//                             videoFrameInterval,
+//                             diffTime,
+//                             self.videoFrameIndex
+//                             );
+                
+                // 放到推流器
+                CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+                char* data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+                int size = (int)CVPixelBufferGetDataSize(pixelBuffer);
+                self.publisher->PushVideoFrame(data, size, (void *)pixelBuffer);
+                CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+                
+                // 更新最后处理帧数目
+                self.videoFrameIndex++;
+                // 更新最后处理时间
+                self.videoFrameLastPushTime = now;
+            }
+        } else {
+           NSLog(@"RtmpPublisherOC::pushVideoFrame( [Video capture is pausing] )");
+        }
+    }
+}
+
+- (void)pausePushVideo {
+    NSLog(@"RtmpPublisherOC::pausePushVideo()");
     
-    char* data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
-    int size = (int)CVPixelBufferGetDataSize(pixelBuffer);
-    self.publisher->PushVideoFrame(data, size, (void *)pixelBuffer);
+    @synchronized(self) {
+        self.videoPause = YES;
+        self.videoResume = NO;
+    }
+}
+
+- (void)resumePushVideo {
+    NSLog(@"RtmpPublisherOC::resumePushVideo()");
     
-    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
+    @synchronized(self) {
+        self.videoPause = NO;
+    }
 }
 
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer {
@@ -227,7 +332,7 @@ recordH264FilePath:(NSString *)recordH264FilePath
         // 销毁硬编码器
         self.videoEncoder->Pause();
         
-        self.enterBackgroundTime = [NSDate date];
+//        self.enterBackgroundTime = [NSDate date];
     }
 }
 
@@ -238,14 +343,14 @@ recordH264FilePath:(NSString *)recordH264FilePath
         // 重置视频编码器
         self.videoEncoder->Reset();
         
-        if( (self.startTime == [self.enterBackgroundTime earlierDate:self.startTime]) ) {
-            // 开始时间比进入后台时间要早, 增加在后台的时间到视频的时间戳
-            NSDate* now = [NSDate date];
-            NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
-            NSUInteger timestamp = timeInterval * 1000;
-            
-            self.publisher->AddVideoBackgroundTime((unsigned int)timestamp);
-        }
+//        if( (self.startTime == [self.enterBackgroundTime earlierDate:self.startTime]) ) {
+//            // 开始时间比进入后台时间要早, 增加在后台的时间到视频的时间戳
+//            NSDate* now = [NSDate date];
+//            NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
+//            NSUInteger timestamp = timeInterval * 1000;
+//
+//            self.publisher->AddVideoTimestamp((unsigned int)timestamp);
+//        }
 
     }
 }

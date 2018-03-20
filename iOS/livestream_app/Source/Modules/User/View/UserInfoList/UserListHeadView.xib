@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="UserListHeadView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="UserHead_bg" translatesAutoresizingMaskIntoConstraints="NO" id="wp0-ma-UrB">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="HeadViewTop" translatesAutoresizingMaskIntoConstraints="NO" id="eSM-J9-1T4">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="59"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="HeadViewBottom" translatesAutoresizingMaskIntoConstraints="NO" id="6Y5-Fi-g41">
+                    <rect key="frame" x="0.0" y="315" width="375" height="60"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7p-1z-PEO">
+                    <rect key="frame" x="242" y="345" width="117" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zpz-f5-SYo">
+                    <rect key="frame" x="16" y="344" width="57" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="User_leave_1" translatesAutoresizingMaskIntoConstraints="NO" id="91g-HE-DIX">
+                    <rect key="frame" x="89" y="353" width="26" height="11"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ehW-TR-31y">
+                    <rect key="frame" x="325" y="25" width="50" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="Edit_icon"/>
+                    <connections>
+                        <action selector="editBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="LMp-3A-sYC"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwX-uV-1i1">
+                    <rect key="frame" x="0.0" y="25" width="50" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="nav_back_icon"/>
+                    <connections>
+                        <action selector="backBtnDid:" destination="i5M-Pr-FkT" eventType="touchUpInside" id="xtZ-qd-GOA"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="backBtn" destination="TwX-uV-1i1" id="8nX-SQ-0PA"/>
+                <outlet property="editBtn" destination="ehW-TR-31y" id="vh9-oz-2Bk"/>
+                <outlet property="headImage" destination="wp0-ma-UrB" id="NwO-dD-rKm"/>
+                <outlet property="idLabel" destination="n7p-1z-PEO" id="xPj-hn-W5h"/>
+                <outlet property="levelImage" destination="91g-HE-DIX" id="7VB-aH-aTp"/>
+                <outlet property="nameLabel" destination="zpz-f5-SYo" id="p1W-ZV-rQd"/>
+            </connections>
+            <point key="canvasLocation" x="-78.5" y="-54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Edit_icon" width="17" height="17"/>
+        <image name="HeadViewBottom" width="375" height="60"/>
+        <image name="HeadViewTop" width="375" height="59"/>
+        <image name="UserHead_bg" width="375" height="375"/>
+        <image name="User_leave_1" width="26" height="11"/>
+        <image name="nav_back_icon" width="8" height="14"/>
+    </resources>
+</document>

@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "We have send you a warning e-mail ,please chech to reset your password"; ObjectID = "Kgw-2y-QHg"; */
+"Kgw-2y-QHg.text" = "This is update message";
+
+/* Class = "UILabel"; text = "Update Notice\n"; ObjectID = "NWs-vy-bAI"; */
+"NWs-vy-bAI.text" = "Update Notice";
+
+/* Class = "UIButton"; normalTitle = "Update Now"; ObjectID = "Tud-ZL-JbM"; */
+"Tud-ZL-JbM.normalTitle" = "Update Now";

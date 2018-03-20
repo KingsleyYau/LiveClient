@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "Quantity:"; ObjectID = "7mf-yC-Ofy"; */
+"7mf-yC-Ofy.text" = "Quantity:";
+
+/* Class = "UILabel"; text = "Add virtual gifts"; ObjectID = "Wp0-Sq-R5N"; */
+"Wp0-Sq-R5N.text" = "Add a virtual gifts";
+
+/* Class = "UIButton"; normalTitle = "1"; ObjectID = "wd8-oz-i9w"; */
+"wd8-oz-i9w.normalTitle" = "1";
+
+"ADD_CIETUAL_GIFT" =  "Add a virtual gifts";
+
+"TOTAL_PRICE" = "Total Price: %0.2f credits";
+
+

@@ -47,6 +47,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *onlineIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *roomType;
+@property (weak, nonatomic) IBOutlet UIImageView *onlineStatus;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;

@@ -1,0 +1,9 @@
+/* 
+  LocalizableError.strings
+  dating
+
+  Created by Max on 16/8/23.
+  Copyright © 2016年 qpidnetwork. All rights reserved.
+*/
+
+"LOCAL_ERROR_CODE_TIMEOUT" = "Trouble connecting to the server, please try again later.";

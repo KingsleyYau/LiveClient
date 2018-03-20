@@ -33,6 +33,7 @@
 #define LOGIN_DEVICEID		    "deviceid"
 #define LOGIN_MODEL		        "model"
 #define LOGIN_MANUFACTURER		"manufacturer"
+#define LOGIN_REGIONID          "region_id"
 
 /**
  * 返回

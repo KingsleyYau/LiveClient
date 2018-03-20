@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PresentSendView">
+            <connections>
+                <outlet property="arrowImageView" destination="YAz-EM-lfg" id="b0u-H1-FlR"/>
+                <outlet property="containerView" destination="i1k-ho-qxp" id="OhH-YE-QsK"/>
+                <outlet property="selectBtn" destination="PNw-bT-4vz" id="cVJ-AP-6lV"/>
+                <outlet property="selectNumLabel" destination="1Cl-Tm-Pkq" id="gYu-dw-Du6"/>
+                <outlet property="sendBtn" destination="Sk9-wL-3iN" id="DBn-dH-iSd"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="i1k-ho-qxp">
+            <rect key="frame" x="0.0" y="0.0" width="125" height="30"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rD3-kJ-Tk2">
+                    <rect key="frame" x="63" y="0.0" width="62" height="30"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sk9-wL-3iN">
+                            <rect key="frame" x="0.0" y="0.0" width="62" height="30"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                            <state key="normal" title="Send">
+                                <color key="titleColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Sk9-wL-3iN" secondAttribute="trailing" id="SJE-FL-eqk"/>
+                        <constraint firstItem="Sk9-wL-3iN" firstAttribute="top" secondItem="rD3-kJ-Tk2" secondAttribute="top" id="V4i-U4-5nE"/>
+                        <constraint firstItem="Sk9-wL-3iN" firstAttribute="leading" secondItem="rD3-kJ-Tk2" secondAttribute="leading" id="Wxt-cx-U6T"/>
+                        <constraint firstAttribute="width" constant="62" id="vZp-Pt-eYw"/>
+                        <constraint firstAttribute="bottom" secondItem="Sk9-wL-3iN" secondAttribute="bottom" id="zhO-yk-pqk"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PNw-bT-4vz" customClass="LSCheckButton">
+                    <rect key="frame" x="0.0" y="0.0" width="63" height="30"/>
+                    <state key="normal">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_selectNum_up" translatesAutoresizingMaskIntoConstraints="NO" id="YAz-EM-lfg">
+                    <rect key="frame" x="41" y="12" width="12" height="7"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="12" id="YVS-Vu-KIa"/>
+                        <constraint firstAttribute="height" constant="7" id="heN-I1-wh0"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Cl-Tm-Pkq">
+                    <rect key="frame" x="5" y="5" width="31" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <constraints>
+                <constraint firstItem="YAz-EM-lfg" firstAttribute="centerY" secondItem="i1k-ho-qxp" secondAttribute="centerY" id="72f-qV-z7b"/>
+                <constraint firstItem="PNw-bT-4vz" firstAttribute="leading" secondItem="i1k-ho-qxp" secondAttribute="leading" id="8ma-fu-pzt"/>
+                <constraint firstAttribute="bottom" secondItem="rD3-kJ-Tk2" secondAttribute="bottom" id="Hi9-yz-Zdh"/>
+                <constraint firstItem="1Cl-Tm-Pkq" firstAttribute="leading" secondItem="i1k-ho-qxp" secondAttribute="leading" constant="5" id="Krm-zb-X5F"/>
+                <constraint firstAttribute="bottom" secondItem="PNw-bT-4vz" secondAttribute="bottom" id="L3z-Dt-T0q"/>
+                <constraint firstItem="1Cl-Tm-Pkq" firstAttribute="centerY" secondItem="i1k-ho-qxp" secondAttribute="centerY" id="Lkq-l2-h4F"/>
+                <constraint firstItem="rD3-kJ-Tk2" firstAttribute="leading" secondItem="YAz-EM-lfg" secondAttribute="trailing" constant="10" id="ceS-E8-mkU"/>
+                <constraint firstItem="rD3-kJ-Tk2" firstAttribute="leading" secondItem="PNw-bT-4vz" secondAttribute="trailing" id="jaS-ER-tTl"/>
+                <constraint firstAttribute="trailing" secondItem="rD3-kJ-Tk2" secondAttribute="trailing" id="lDP-Z2-glO"/>
+                <constraint firstItem="YAz-EM-lfg" firstAttribute="leading" relation="lessThanOrEqual" secondItem="1Cl-Tm-Pkq" secondAttribute="trailing" constant="5" id="nkU-lK-n6G"/>
+                <constraint firstItem="rD3-kJ-Tk2" firstAttribute="top" secondItem="i1k-ho-qxp" secondAttribute="top" id="odw-2z-jo7"/>
+                <constraint firstItem="PNw-bT-4vz" firstAttribute="top" secondItem="i1k-ho-qxp" secondAttribute="top" id="t21-lG-vkN"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-23.5" y="-71"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_selectNum_up" width="12" height="7"/>
+    </resources>
+</document>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainViewController">
+            <connections>
+                <outlet property="tabBar" destination="ll1-tM-o72" id="xlf-Wn-UAs"/>
+                <outlet property="tabContainView" destination="ElZ-yr-txH" id="AKp-ky-ggV"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ElZ-yr-txH" userLabel="TabContainView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <tabBar hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ll1-tM-o72">
+                    <rect key="frame" x="0.0" y="618" width="375" height="49"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <items/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="9xr-4Z-1ze"/>
+                    </connections>
+                </tabBar>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="ll1-tM-o72" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="1TS-Mc-cQS"/>
+                <constraint firstItem="ElZ-yr-txH" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="1iQ-T9-rnO"/>
+                <constraint firstItem="ElZ-yr-txH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="937-kw-Z6f"/>
+                <constraint firstItem="ll1-tM-o72" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="H5N-B3-ICA"/>
+                <constraint firstItem="ll1-tM-o72" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="eJ7-nQ-qrB"/>
+                <constraint firstItem="ElZ-yr-txH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="res-fh-HSv"/>
+                <constraint firstItem="ElZ-yr-txH" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="uKH-kq-lEH"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

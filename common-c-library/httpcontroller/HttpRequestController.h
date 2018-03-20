@@ -93,6 +93,7 @@ public:
      * @param deviceid                      设备唯一标识
      * @param model                         设备型号（格式：设备型号－系统版本号）
      * @param manufacturer                  制造厂商
+     * @param regionId                      站点ID（REGIONIDTYPE_CD：CD、REGIONIDTYPE_LD：LD、REGIONIDTYPE_AME6：AME）（整型）（可无，无则默认为4）
      *  @param callback                     接口回调
      *
      *  @return                             成功请求Id
@@ -104,6 +105,7 @@ public:
                         const string& deviceid,
                         const string& model,
                         const string& manufacturer,
+                        RegionIdType regionId = REGIONIDTYPE_CD,
                         IRequestLoginCallback* callback = NULL
                         );
     

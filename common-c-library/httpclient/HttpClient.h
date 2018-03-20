@@ -29,7 +29,7 @@ public:
 	static void Init();
 	static void SetLogEnable(bool enable);
 	static void SetLogDirectory(string directory);
-    static void SetProxy(string proxyUrl, int proxyPort);
+    static void SetProxy(string proxyUrl);
     
 	// 设置cookies路径
 	static void SetCookiesDirectory(string directory);

@@ -18,6 +18,7 @@ namespace coollive {
         VIDEO_FORMATE_RGB565  = 4,
         VIDEO_FORMATE_RGB24   = 5,
         VIDEO_FORMATE_BGRA    = 6,
+        VIDEO_FORMATE_RGBA    = 7,
     } VIDEO_FORMATE_TYPE;
     
     typedef enum VideoFrameFormat {

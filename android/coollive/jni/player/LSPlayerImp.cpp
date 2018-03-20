@@ -122,7 +122,8 @@ void LSPlayerImp::CreateDecoders() {
 	} else {
 		// 软解码
 		VideoDecoderH264* videoDecoder = new VideoDecoderH264();
-		videoDecoder->SetDecoderVideoFormat(VIDEO_FORMATE_RGB565);
+//		videoDecoder->SetDecoderVideoFormat(VIDEO_FORMATE_RGB565);
+		videoDecoder->SetDecoderVideoFormat(VIDEO_FORMATE_RGBA);
 		mpVideoDecoder = videoDecoder;
 		mpAudioDecoder = new AudioDecoderAAC();
 

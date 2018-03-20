@@ -161,6 +161,9 @@ typedef enum PreLiveStatus {
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    // 关闭锁屏
+    [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
 
 - (void)viewDidLoad {
@@ -211,6 +214,9 @@ typedef enum PreLiveStatus {
     // 清除浮窗
     [[LiveModule module].notificationVC.view removeFromSuperview];
     [[LiveModule module].notificationVC removeFromParentViewController];
+    
+    // 禁止锁屏
+    [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

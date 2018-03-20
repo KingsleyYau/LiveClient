@@ -1,0 +1,11 @@
+
+/* Class = "UIButton"; normalTitle = "Go Live"; ObjectID = "CIV-eF-DbB"; */
+"CIV-eF-DbB.normalTitle" = "Go Live";
+
+/* Class = "UIButton"; normalTitle = "X"; ObjectID = "dmP-Ho-NBf"; */
+"dmP-Ho-NBf.normalTitle" = "X";
+
+/* Class = "UITextField"; placeholder = "Add Title"; ObjectID = "uu6-BQ-bdY"; */
+"uu6-BQ-bdY.placeholder" = "Add Title";
+
+"ERROR_INPUT_TOO_MORE" = "ERROR_INPUT_TOO_MORE"

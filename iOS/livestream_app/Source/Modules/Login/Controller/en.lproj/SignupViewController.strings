@@ -1,0 +1,20 @@
+
+/* Class = "UIButton"; normalTitle = "Sign up"; ObjectID = "ALd-bK-KUA"; */
+"ALd-bK-KUA.normalTitle" = "Sign up";
+
+/* Class = "UITextField"; placeholder = "Create a password"; ObjectID = "SGp-q2-2e4"; */
+"SGp-q2-2e4.placeholder" = "Create a password";
+
+/* Class = "UILabel"; text = "4 - 12 characters. Numbers and English letters only."; ObjectID = "XBR-Hb-vsH"; */
+"XBR-Hb-vsH.text" = "4 - 12 characters. Numbers and English letters only.";
+
+/* Class = "UITextField"; placeholder = "Enter your email address"; ObjectID = "bQu-yI-Ggh"; */
+"bQu-yI-Ggh.placeholder" = "Enter your email address";
+
+"EMAIL_SIGNUP_TITLE" = "Sign up with Email";
+
+"EMAIL_HAS_REGISTER" = "This account has already been registered, please use another email address.";
+
+"EMAIL_FORMAT_ERROR" = "Please enter a valid email address";
+
+"PASSWORD_TYPE_ERROR" = "Your password cannot contain spaces or special characters.";

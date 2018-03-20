@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "If the broadcaster don't accept, your credits would be returned."; ObjectID = "QSk-HX-muq"; */
+"QSk-HX-muq.text" = "If the broadcaster don't accept, your coins would be returned.";
+
+/* Class = "UIButton"; normalTitle = "Requst"; ObjectID = "RcM-xw-iU1"; */
+"RcM-xw-iU1.normalTitle" = "Requst";
+
+/* Class = "UILabel"; text = "Talent："; ObjectID = "iGC-Eh-Ixn"; */
+"iGC-Eh-Ixn.text" = "Talent：";
+
+/* Class = "UILabel"; text = "Price:"; ObjectID = "nn0-cP-emF"; */
+"nn0-cP-emF.text" = "Price:";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "z5C-EO-wpW"; */
+"z5C-EO-wpW.normalTitle" = "Cancel";

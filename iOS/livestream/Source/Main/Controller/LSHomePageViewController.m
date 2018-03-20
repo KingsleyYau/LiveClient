@@ -155,7 +155,7 @@
     if (self.unreadCount == 0 && item.total > 0) {
         //显示红点
         self.navRightButton.badgeValue = nil;
-        self.navRightButton.unreadCont = [NSString stringWithFormat:@"%d",item.total];
+        self.navRightButton.unreadCount = [NSString stringWithFormat:@"%d",item.total];
     }
     else
     {
@@ -189,7 +189,7 @@
  *  刷新未读消息
  */
 - (void)reloadUnreadMessage {
-     self.navRightButton.unreadCont = nil;
+    self.navRightButton.unreadCount = nil;
     if (self.unreadCount == 0) {
         self.navRightButton.badgeValue = nil;
     } else {

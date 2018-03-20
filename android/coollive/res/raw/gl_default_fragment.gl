@@ -1,0 +1,8 @@
+// 图像颜色着色器
+uniform sampler2D uInputTexture;
+// 片段着色器(输入)
+varying highp vec2 vTextureCoordinate;
+
+void main(){
+    gl_FragColor = texture2D(uInputTexture, vTextureCoordinate);
+}

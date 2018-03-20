@@ -130,6 +130,18 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushVideoFrame
 	env->ReleaseByteArrayElements(data, frame, 0);
 }
 
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PausePushVideo
+  (JNIEnv *env, jobject thiz, jlong jpublisher) {
+	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
+	publisher->PausePushVideo();
+}
+
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_ResumePushVideo
+  (JNIEnv *env, jobject thiz, jlong jpublisher) {
+	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
+	publisher->ResumePushVideo();
+}
+
 JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushAudioFrame
   (JNIEnv *env, jobject thiz, jlong jpublisher, jbyteArray data, jint size) {
 	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;

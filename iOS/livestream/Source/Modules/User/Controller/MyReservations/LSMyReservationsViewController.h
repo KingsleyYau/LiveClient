@@ -10,6 +10,6 @@
 #import "LSGoogleAnalyticsViewController.h"
 
 @interface LSMyReservationsViewController : LSGoogleAnalyticsViewController
-
+@property (nonatomic, assign) NSInteger curIndex;
 - (void)getunreadCount;
 @end

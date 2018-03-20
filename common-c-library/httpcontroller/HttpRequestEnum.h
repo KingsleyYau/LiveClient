@@ -317,4 +317,12 @@ typedef enum {
     VERIFYCODETYPE_FINDPW = 1                             // “findpw”：找回密码
 }VerifyCodeType;
 
+
+typedef enum {
+    REGIONIDTYPE_UNKNOW = 0,
+    REGIONIDTYPE_CD = 4,
+    REGIONIDTYPE_LD = 5,
+    REGIONIDTYPE_AME = 6
+}RegionIdType;
+
 #endif

@@ -58,6 +58,9 @@
 #import "LSViewController.h"
 #import "LSListViewController.h"
 
+#pragma mark - progress
+#import "LSProgressView.h"
+
 @interface LSUIWidget : NSObject
 
 @end

@@ -1,0 +1,19 @@
+
+/* Class = "UILabel"; text = "Book One-on-One"; ObjectID = "FCw-ox-yok"; */
+"FCw-ox-yok.text" = "Book One-on-One";
+
+"Coins_Iofo" = " coins will be deducted as deposit for the first 5 minutes of the broadcast. The deposit will be returned to your account if:\n\n- The broadcaster does not accept your request.\n- The broadcaster does not show up during the booking period.";
+
+"BOOKPRIVATE_ERR_ADD_CREDIT" = "You don't have enough coins, please buy more.";
+
+"BOOKING_SCHEDULE_ERR" = "Sorry, this broadcaster does not offer a booking schedule at the moment.";
+
+"BOOK_NOW" = "BOOK NOW";
+
+"WHEN_STAR_PRIVATE" = "When do you want to start the One-on-One broadcast?";
+
+"NOTE" = "Note:";
+
+"Book_Private_Broadcast" = "Book One-on-One";
+
+"Add_First_Mobile" = "Please add a mobile number first.";

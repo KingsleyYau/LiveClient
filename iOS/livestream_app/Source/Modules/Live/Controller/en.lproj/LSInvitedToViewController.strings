@@ -1,0 +1,40 @@
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Ff8-Xt-k9P"; */
+"Ff8-Xt-k9P.text" = "Label";
+
+/* Class = "UILabel"; text = "30 s"; ObjectID = "LZm-JT-vzK"; */
+"LZm-JT-vzK.text" = "30 s";
+
+/* Class = "UILabel"; text = "Malinla"; ObjectID = "OjW-T5-DOg"; */
+"OjW-T5-DOg.text" = "Malinla";
+
+/* Class = "UILabel"; text = "Failed to accept the invitation.\nPlease try again."; ObjectID = "c1g-oJ-bRc"; */
+"c1g-oJ-bRc.text" = "Failed to accept the invitation.\nPlease try again.";
+
+
+/************** 应邀错误提示 *****************/
+// 网络问题，“接受”发送失败，则提示是否重试
+"EMBRACE_REQUEST_FAIL" = "Failed to accept the invitation.\nPlease try again.";
+// 接受邀请时信用点不足
+"PRELIVE_ERR_ADD_CREDIT" = "You don't have enough coins, please buy more.";
+// 接受邀请时，主播不在线
+"PRELIVE_ERR_BOARDCAST_OFFLINE" = "The broadcaster offline, please check back later.";
+
+
+/************** 接受发送成功状态提示 *****************/
+// 应邀接收成功
+"PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
+// 应邀接收成功，等待30秒
+"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nOne-on-One broadcast will start in";
+
+
+/************** 接受发送成功错误提示 *****************/
+// 主播已拒绝、无回复或缺席
+"PRELIVE_ERR_INVITE_NO_RESPONE" = "The broadcaster is not responding.\nPlease try again later.";
+// 主播已拒绝有留言
+"PRELIVE_ERR_INVITE_REJECT" = "Sorry, the broadcaster has declined your invitation and left you a message as below:\n%@";
+// 服务器统一错误
+"SERVER_BACK_ERROR" = "A problem occur while communicating with the server.";
+
+"INVITE_NO_RESPOND" = "Trouble connecting to the server, please try again later.";
+

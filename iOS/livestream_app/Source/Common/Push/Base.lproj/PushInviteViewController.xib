@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PushInviteViewController">
+            <connections>
+                <outlet property="ladyImageView" destination="Hg7-eh-fe7" id="kaT-mU-ST5"/>
+                <outlet property="tipsLabel" destination="gm0-Sp-0V5" id="wtZ-kK-2eQ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Push_BackGround_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="7p9-Oo-Hys" userLabel="Back Ground View">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Hg7-eh-fe7" userLabel="Lady Image View">
+                    <rect key="frame" x="10" y="5" width="46" height="46"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Hg7-eh-fe7" secondAttribute="height" multiplier="1:1" id="xEM-YE-f2T"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Karen is inviting you to start a private broadcast." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gm0-Sp-0V5" userLabel="Tips Label">
+                    <rect key="frame" x="61" y="5" width="195" height="46"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XmC-V2-J46" userLabel="Accept Button">
+                    <rect key="frame" x="262" y="5" width="78" height="46"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="78" id="YaU-9C-S4k"/>
+                    </constraints>
+                    <state key="normal" image="Push_Accept_Btn"/>
+                    <connections>
+                        <action selector="acceptAction:" destination="-1" eventType="touchUpInside" id="z6t-sh-xOe"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TlJ-Pa-Dqk" userLabel="Cancel Button">
+                    <rect key="frame" x="345" y="2" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="25" id="P4i-3q-4Xs"/>
+                        <constraint firstAttribute="width" secondItem="TlJ-Pa-Dqk" secondAttribute="height" multiplier="1:1" id="e3C-3h-0ty"/>
+                    </constraints>
+                    <state key="normal" image="Live_Preview_Btn_Cancel"/>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="1V2-wW-5Bi"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="0.0" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="1kQ-Hc-5aE"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="trailing" secondItem="TlJ-Pa-Dqk" secondAttribute="leading" constant="-5" id="3aG-ay-jY6"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="top" secondItem="Hg7-eh-fe7" secondAttribute="top" id="A1Q-8F-VF0"/>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="5" id="CwD-LR-WXs"/>
+                <constraint firstItem="7p9-Oo-Hys" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="GS3-L1-uhL"/>
+                <constraint firstItem="Hg7-eh-fe7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="IqW-5N-eym"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="trailing" secondItem="XmC-V2-J46" secondAttribute="leading" constant="-6" id="JSa-PV-Ur8"/>
+                <constraint firstItem="TlJ-Pa-Dqk" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="2" id="Tes-vc-Ed6"/>
+                <constraint firstItem="7p9-Oo-Hys" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Uxa-Az-suA"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="bottom" secondItem="Hg7-eh-fe7" secondAttribute="bottom" id="eJl-K2-fBd"/>
+                <constraint firstAttribute="trailing" secondItem="7p9-Oo-Hys" secondAttribute="trailing" id="eKC-Jk-CLD"/>
+                <constraint firstItem="TlJ-Pa-Dqk" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-5" id="hVk-9Z-v4Z"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="leading" secondItem="Hg7-eh-fe7" secondAttribute="trailing" constant="5" id="ibQ-sr-hbG"/>
+                <constraint firstItem="gm0-Sp-0V5" firstAttribute="bottom" secondItem="Hg7-eh-fe7" secondAttribute="bottom" id="rSN-ia-xYx"/>
+                <constraint firstItem="XmC-V2-J46" firstAttribute="top" secondItem="Hg7-eh-fe7" secondAttribute="top" id="xWX-cs-FLG"/>
+                <constraint firstAttribute="bottom" secondItem="7p9-Oo-Hys" secondAttribute="bottom" id="z5I-4m-7Hz"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="35.5" y="56"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+        <image name="Push_Accept_Btn" width="70" height="26"/>
+        <image name="Push_BackGround_Icon" width="365" height="80"/>
+    </resources>
+</document>

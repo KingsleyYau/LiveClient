@@ -13,11 +13,11 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 // FPS
-#define FPS 10
+#define FPS 15
 // 关键帧间隔(每KEY_FRAME_INTERVAL帧就有一个关键帧)
 #define KEY_FRAME_INTERVAL FPS
 // 视频码率
-#define BIT_RATE 400 * 1000
+#define BIT_RATE 1000 * 1000
 
 // 音频码率
 //#define BIT_RATE 600 * 1000
@@ -72,6 +72,16 @@ recordH264FilePath:(NSString * _Nullable)recordH264FilePath
  @param pixelBuffer 视频数据
  */
 - (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer;
+
+/**
+ 暂停推送视频
+ */
+- (void)pausePushVideo;
+
+/**
+ 恢复推送视频
+ */
+- (void)resumePushVideo;
 
 /**
  发送音频帧

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ShareView"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Invite friends to get rewards" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0n-04-W7d">
+                    <rect key="frame" x="91.5" y="11" width="191.5" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Szv-HU-OeF" userLabel="Copy Link Button">
+                    <rect key="frame" x="168" y="44" width="39" height="39"/>
+                    <state key="normal" image="Live_Public_Share_CopyLink"/>
+                    <connections>
+                        <action selector="copyLinkAction:" destination="-1" eventType="touchUpInside" id="tPC-T8-DHw"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MA6-2P-t9d" userLabel="More Button">
+                    <rect key="frame" x="286" y="44" width="39" height="39"/>
+                    <state key="normal" image="Live_Public_Share_More"/>
+                    <connections>
+                        <action selector="moreAction:" destination="-1" eventType="touchUpInside" id="erP-15-bcH"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mzp-ch-UK2" userLabel="Facebook Button">
+                    <rect key="frame" x="50" y="44" width="39" height="39"/>
+                    <state key="normal" image="Live_Public_Share_Facebook"/>
+                    <connections>
+                        <action selector="facebookAction:" destination="-1" eventType="touchUpInside" id="CSL-1s-SYs"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Facebook" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aTC-Xs-PhC">
+                    <rect key="frame" x="36" y="88" width="67" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copy Link" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uqq-vZ-DPp">
+                    <rect key="frame" x="153" y="88" width="68" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="More" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdt-3d-Wed">
+                    <rect key="frame" x="288" y="88" width="35.5" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="f0n-04-W7d" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="2VX-7r-Dq8"/>
+                <constraint firstItem="Szv-HU-OeF" firstAttribute="centerY" secondItem="Mzp-ch-UK2" secondAttribute="centerY" id="6VQ-uB-d5W"/>
+                <constraint firstItem="aTC-Xs-PhC" firstAttribute="top" secondItem="Mzp-ch-UK2" secondAttribute="bottom" constant="5" id="AMX-VI-aq4"/>
+                <constraint firstItem="kdt-3d-Wed" firstAttribute="centerX" secondItem="MA6-2P-t9d" secondAttribute="centerX" id="EEY-Dj-BjA"/>
+                <constraint firstAttribute="trailing" secondItem="MA6-2P-t9d" secondAttribute="trailing" constant="50" id="Eyk-05-3ZZ"/>
+                <constraint firstItem="f0n-04-W7d" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="11" id="Fdb-Sk-dAW"/>
+                <constraint firstItem="Szv-HU-OeF" firstAttribute="top" secondItem="f0n-04-W7d" secondAttribute="bottom" constant="15" id="KUN-0B-g5T"/>
+                <constraint firstItem="aTC-Xs-PhC" firstAttribute="centerX" secondItem="Mzp-ch-UK2" secondAttribute="centerX" id="a8z-aW-4Qp"/>
+                <constraint firstItem="Uqq-vZ-DPp" firstAttribute="centerX" secondItem="Szv-HU-OeF" secondAttribute="centerX" id="gdT-f7-dSs"/>
+                <constraint firstItem="Uqq-vZ-DPp" firstAttribute="top" secondItem="Szv-HU-OeF" secondAttribute="bottom" constant="5" id="hZa-tJ-1d3"/>
+                <constraint firstItem="Mzp-ch-UK2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="50" id="jU9-cR-768"/>
+                <constraint firstItem="MA6-2P-t9d" firstAttribute="centerY" secondItem="Szv-HU-OeF" secondAttribute="centerY" id="la4-31-EL8"/>
+                <constraint firstItem="Szv-HU-OeF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="mX7-iK-568"/>
+                <constraint firstItem="kdt-3d-Wed" firstAttribute="top" secondItem="MA6-2P-t9d" secondAttribute="bottom" constant="5" id="whr-6P-rB0"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Public_Share_CopyLink" width="39" height="39"/>
+        <image name="Live_Public_Share_Facebook" width="39" height="39"/>
+        <image name="Live_Public_Share_More" width="39" height="39"/>
+    </resources>
+</document>

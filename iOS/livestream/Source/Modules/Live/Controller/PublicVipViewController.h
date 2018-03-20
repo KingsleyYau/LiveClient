@@ -63,7 +63,6 @@
  观众席
  */
 @property (weak, nonatomic) IBOutlet VIPAudienceView *audienceView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *audienceViewWidth;
 
 @property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 

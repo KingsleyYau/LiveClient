@@ -191,13 +191,13 @@ bool RtmpDump::PlayUrl(const string& url, const string& recordFilePath) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::PlayUrl( "
-                 "[%s], "
                  "this : %p, "
+                 "[%s], "
                  "url : %s, "
                  "mpRtmp : %p "
                  ")",
-                 bFlag?"Success":"Fail",
                  this,
+                 bFlag?"Success":"Fail",
                  url.c_str(),
                  mpRtmp
                  );
@@ -240,13 +240,13 @@ bool RtmpDump::PublishUrl(const string& url) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::PublishUrl( "
-                 "[%s], "
                  "this : %p, "
+                 "[%s], "
                  "url : %s, "
                  "mpRtmp : %p "
                  ")",
-                 bFlag?"Success":"Fail",
                  this,
+                 bFlag?"Success":"Fail",
                  url.c_str(),
                  mpRtmp
                  );
@@ -268,8 +268,8 @@ void RtmpDump::RecvRunnableHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::RecvRunnableHandle( "
-                 "[Start], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Start] "
                  ")",
                  this
                  );
@@ -283,21 +283,44 @@ void RtmpDump::RecvRunnableHandle() {
             if( mIsPlay ) {
                 bFlag = (0 == srs_rtmp_play_stream(mpRtmp));
                 if( !bFlag ) {
-                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_play_stream fail] )");
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_ERR_USER,
+                                 "RtmpDump::RecvRunnableHandle( "
+                                 "this : %p, "
+                                 "[srs_rtmp_play_stream fail] "
+                                 ")",
+                                 this
+                                 );
                 }
             } else {
                 bFlag = (0 == srs_rtmp_publish_stream(mpRtmp));
                 if( !bFlag ) {
-                    FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_publish_stream fail] )");
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_ERR_USER,
+                                 "RtmpDump::RecvRunnableHandle( "
+                                 "this : %p, "
+                                 "[srs_rtmp_publish_stream fail] "
+                                 ")",
+                                 this);
                 }
                 // 发送支持Flash播放的视频分辨率
                 srs_rtmp_set_data_frame(mpRtmp, mWidth, mHeight);
             }
         } else {
-            FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_connect_app fail] )");
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_ERR_USER,
+                         "RtmpDump::RecvRunnableHandle( "
+                         "this : %p, "
+                         "[srs_rtmp_connect_app fail]"
+                         ")",
+                         this);
         }
     } else {
-        FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( [srs_rtmp_handshake fail] )");
+        FileLevelLog("rtmpdump", KLog::LOG_ERR_USER, "RtmpDump::RecvRunnableHandle( "
+                     "this : %p, "
+                     "[srs_rtmp_handshake fail] "
+                     ")",
+                     this);
     }
     
     // 标记为已经连接上服务器
@@ -312,7 +335,11 @@ void RtmpDump::RecvRunnableHandle() {
         
         FileLevelLog("rtmpdump",
                      KLog::LOG_MSG,
-                     "RtmpDump::RecvRunnableHandle( [Connected] )"
+                     "RtmpDump::RecvRunnableHandle( "
+                     "this : %p, "
+                     "[Connected] "
+                     ")",
+                     this
                      );
         
         if( mpRtmpDumpCallback ) {
@@ -372,8 +399,8 @@ void RtmpDump::RecvRunnableHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::RecvRunnableHandle( "
-                 "[Exit], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Exit] "
                  ")",
                  this
                  );
@@ -427,7 +454,7 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp) 
         mEncodeVideoTimestamp = timestamp;
         
         // 因为没有B帧, 所以dts和pts一样就可以
-        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( timestamp : %u, size : %d, frameType : 0x%x )", mSendVideoFrameTimestamp, sendSize, sendFrame[0]);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, timestamp : %u, size : %d, frameType : 0x%x )", this, mSendVideoFrameTimestamp, sendSize, sendFrame[0]);
         ret = srs_h264_write_raw_frame_without_startcode(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
 //        ret = srs_h264_write_raw_frames(mpRtmp, sendFrame, sendSize, mSendVideoFrameTimestamp, mSendVideoFrameTimestamp);
         if (ret != 0) {
@@ -437,10 +464,10 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp) 
 //                FileLog("rtmpdump", "RtmpDump::SendVideoFrame( ignore drop video error, code=%d )", ret);
                 
             } else if (srs_h264_is_duplicated_sps_error(ret)) {
-                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( Ignore duplicated sps, ret : %d )", ret);
+                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Ignore duplicated sps, ret : %d )", this, ret);
                 
             } else if (srs_h264_is_duplicated_pps_error(ret)) {
-                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( Ignore duplicated pps, ret : %d )", ret);
+                FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendVideoFrame( this : %p, Ignore duplicated pps, ret : %d )", this, ret);
                 
             } else {
                 bFlag = false;
@@ -457,7 +484,7 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp) 
     if( !bFlag ) {
         mConnectedMutex.lock();
         if( mIsConnected ) {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendVideoFrame( Send h264 raw data failed, ret : %d )", ret);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendVideoFrame( this : %p, Send h264 raw data failed, ret : %d )", this, ret);
             
             srs_rtmp_shutdown(mpRtmp);
         }
@@ -477,6 +504,16 @@ bool RtmpDump::SendVideoFrame(char* frame, int frame_size, u_int32_t timestamp) 
 }
 
 void RtmpDump::AddVideoTimestamp(u_int32_t timestamp) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "RtmpDump::AddVideoTimestamp( "
+                 "this : %p, "
+                 "timestamp : %u "
+                 ")",
+                 this,
+                 timestamp
+                 );
+    
     mConnectedMutex.lock();
     if( mIsConnected ) {
         mSendVideoFrameTimestamp += timestamp;
@@ -516,7 +553,7 @@ bool RtmpDump::SendAudioFrame(
         mSendAudioFrameTimestamp += sendTimestamp;
         mEncodeAudioTimestamp = timestamp;
         
-        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( timestamp : %u, size : %d )", mSendAudioFrameTimestamp, frame_size);
+        FileLevelLog("rtmpdump", KLog::LOG_MSG, "RtmpDump::SendAudioFrame( this : %p, timestamp : %u, size : %d )", this, mSendAudioFrameTimestamp, frame_size);
         if( (ret = srs_audio_write_raw_frame(mpRtmp, sound_format, sound_rate, sound_size, sound_type, frame, frame_size, mSendAudioFrameTimestamp)) == 0 ) {
             bFlag = true;
         }
@@ -527,7 +564,7 @@ bool RtmpDump::SendAudioFrame(
     if( !bFlag ) {
         mConnectedMutex.lock();
         if( mIsConnected ) {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( [send audio raw data failed. ret=%d], timestamp : %u )", ret, mSendAudioFrameTimestamp);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
             
             srs_rtmp_shutdown(mpRtmp);
         }
@@ -578,8 +615,8 @@ void RtmpDump::Stop() {
                  "rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Success] "
                  ")",
                  this
                  );
@@ -859,8 +896,8 @@ void RtmpDump::CheckConnectRunnableHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::CheckConnectRunnableHandle( "
-                 "[Start], "
-                 "this : %p "
+                 "this : %p, "
+                 "[Start] "
                  ")",
                  this
                  );
@@ -879,8 +916,8 @@ void RtmpDump::CheckConnectRunnableHandle() {
                 FileLevelLog("rtmpdump",
                              KLog::LOG_WARNING,
                              "RtmpDump::CheckConnectRunnableHandle( "
-                             "[Shutdown for connect timeout], "
-                             "this : %p "
+                             "this : %p, "
+                             "[Shutdown for connect timeout] "
                              ")",
                              this
                              );
@@ -904,8 +941,8 @@ void RtmpDump::CheckConnectRunnableHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::CheckConnectRunnableHandle( "
-                 "[Exit], "
                  "this : %p "
+                 "[Exit] ",
                  ")",
                  this
                  );

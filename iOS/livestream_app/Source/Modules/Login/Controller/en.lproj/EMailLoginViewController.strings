@@ -1,0 +1,25 @@
+
+/* Class = "UIButton"; normalTitle = "Forgotten Password?"; ObjectID = "ATs-LS-6Jl"; */
+"ATs-LS-6Jl.normalTitle" = "Forgotten Password?";
+
+/* Class = "UIButton"; normalTitle = "Sign Up"; ObjectID = "FcV-aT-AJc"; */
+"FcV-aT-AJc.normalTitle" = "Sign Up";
+
+/* Class = "UITextField"; placeholder = "Enter your password"; ObjectID = "Fjr-gd-CMH"; */
+"Fjr-gd-CMH.placeholder" = "Enter your password";
+
+/* Class = "UITextField"; placeholder = "Enter your email address / member ID"; ObjectID = "Vz7-Z9-1y7"; */
+"Vz7-Z9-1y7.placeholder" = "Enter your email address / member ID";
+
+/* Class = "UIButton"; normalTitle = "Sign in"; ObjectID = "drU-Hl-i3h"; */
+"drU-Hl-i3h.normalTitle" = "Sign in";
+
+"EMAIL_LOGIN_TITLE" = "Sign in with Email";
+
+"EMAIL_NOT_EXISTENT" = "User does not exist";
+
+"PASSWORD_IS_NOT" = "Incorrect password";
+
+"MAX_TRY_FIVE" = "You have signed in too many times. Please try again in 10 minutes";
+
+"EMAIL_FORMAT_ERROR" = "Please enter a valid email address";

@@ -49,8 +49,7 @@ protected:
     // 客户段需要获取的数量
     int mNumber;
 
-
-
+ 
 };
 
 #endif /* HttpGetAdAnchorListTask_H_ */

@@ -1,0 +1,54 @@
+/* 
+  LSGoogleAnalyticsScreenName.strings
+  livestream
+
+  Created by test on 2018/1/8.
+  Copyright © 2018年 net.qdating. All rights reserved.
+*/
+
+
+"LSLoginViewController" = "Login";
+"EMailLoginViewController" = "EmailLogin";
+"SignupViewController" = "EmailSignup";
+"ForgotPasswordViewController" = "ForgotPassword";
+"FackBookLoginViewController_0" = "FacebookLogin.EmailRegisterd";
+"FackBookLoginViewController_1" = "FacebookLogin.AddEmail";
+"CompleteInformationViewController" = "CompleteProfile";
+
+
+//"LSMainViewController" = "Home";
+"HotViewController" = "HotList";
+"FollowingViewController" = "FollowingList";
+"LSUserInfoListViewController" = "PersonalCenter";
+"LSProfileViewController" = "PersonalCenter.EditProfile";
+"EditProFileViewController" = "PersonalCenter.EditNickname";
+"LSMyCoinViewController" = "PersonalCenter.MyCoins";
+"LSSettingViewController" = "PersonalCenter.Settings";
+"LSFeedBackViewController" = "PersonalCenter.Feedback";
+"LSAboutUsViewController" = "PersonalCenter.AboutUs";
+
+
+
+"LSMyReservationsViewController_0" = "MySchedules.New";
+"LSMyReservationsViewController_1"= "MySchedules.Sent";
+"LSMyReservationsViewController_2" = "MySchedules.Scheduled";
+"LSMyReservationsViewController_3" = "MySchedules.History";
+
+"VouchersListViewController" = "MyBackpack.Voucher";
+"GiftListViewController" = "MyBackpack.Gift";
+"MyRidesViewController" = "MyBackpack.Ride";
+"AnchorPersonalViewController" = "BroadcasterProfile";
+
+"PublicViewController" = "PublicBroadcast";
+"PublicVipViewController" = "VIPPublicBroadcast";
+"PrivateViewController" = "PrivateBroadcast";
+"PrivateVipViewController" = "VIPPrivateBroadcast";
+"PreLiveViewController" = "BroadcastTransition";
+
+"LiveFinshViewController" = "BroadcastEnd";
+"BookPrivateBroadcastViewController" = "RequestBooking";
+"BookPrivateBroadcastSucceedViewController" = "RequestBooking.Success";
+
+
+"AddMobileNumberViewController" = "InputMobileNumber";
+"VerifyMobileNumberViewController" = "VerifyMobileNumber";

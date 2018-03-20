@@ -1,0 +1,14 @@
+
+/* Class = "UIButton"; normalTitle = "Comfirm"; ObjectID = "7O2-xP-JZe"; */
+"7O2-xP-JZe.normalTitle" = "Confirm";
+
+/* Class = "UIButton"; normalTitle = "Decline"; ObjectID = "8eK-FS-QVR"; */
+"8eK-FS-QVR.normalTitle" = "Decline";
+
+/* Class = "UILabel"; text = "Start Now"; ObjectID = "HmR-qh-c73"; */
+"HmR-qh-c73.text" = "Start Now";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "Imb-eQ-sAo"; */
+"Imb-eQ-sAo.normalTitle" = "Cancel";
+
+"START_IN" = "Starting in";

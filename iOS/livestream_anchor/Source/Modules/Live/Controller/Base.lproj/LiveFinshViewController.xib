@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveFinshViewController">
+            <connections>
+                <outlet property="backgroundImageView" destination="8gc-mu-wNH" id="C7U-Ie-maE"/>
+                <outlet property="headImageView" destination="zXJ-bM-bMb" id="DMg-9I-AQV"/>
+                <outlet property="tipLabel" destination="RUq-oa-6Jg" id="6fh-Zi-R8d"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="viewHotBtn" destination="DKC-mw-Vbw" id="1jE-An-yS9"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8gc-mu-wNH" userLabel="Finsh Cover ImageView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lS3-dB-erL" userLabel="Mask View">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="zXJ-bM-bMb" userLabel="Liver Head ImageView">
+                    <rect key="frame" x="126" y="80" width="123" height="123"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="123" id="AzB-vT-KR7"/>
+                        <constraint firstAttribute="width" secondItem="zXJ-bM-bMb" secondAttribute="height" multiplier="1:1" id="xbn-kV-2kH"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast has been ended.   Please come again later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUq-oa-6Jg" userLabel="Tip Label">
+                    <rect key="frame" x="30" y="225" width="315" height="36"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DKC-mw-Vbw" userLabel="View Hot Button">
+                    <rect key="frame" x="98.5" y="297" width="178" height="35"/>
+                    <color key="backgroundColor" red="0.16078431372549018" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="178" id="EwU-Wd-Y84"/>
+                        <constraint firstAttribute="height" constant="35" id="MF3-fG-zfX"/>
+                    </constraints>
+                    <state key="normal" title="Close"/>
+                    <connections>
+                        <action selector="viewHotAction:" destination="-1" eventType="touchUpInside" id="uKt-tR-RjY"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="DKC-mw-Vbw" firstAttribute="top" secondItem="RUq-oa-6Jg" secondAttribute="bottom" constant="36" id="5Ed-yC-3C0"/>
+                <constraint firstItem="8gc-mu-wNH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="D7C-ac-1cs"/>
+                <constraint firstItem="lS3-dB-erL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="DHS-LS-KXO"/>
+                <constraint firstItem="8gc-mu-wNH" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="DYW-Gg-590"/>
+                <constraint firstItem="DKC-mw-Vbw" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="H8m-CS-rIL"/>
+                <constraint firstItem="8gc-mu-wNH" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="HEG-zm-2ug"/>
+                <constraint firstAttribute="trailing" secondItem="lS3-dB-erL" secondAttribute="trailing" id="PLQ-FM-u4M"/>
+                <constraint firstAttribute="bottom" secondItem="lS3-dB-erL" secondAttribute="bottom" id="TFN-jf-yiS"/>
+                <constraint firstItem="lS3-dB-erL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TfG-F8-qxe"/>
+                <constraint firstItem="RUq-oa-6Jg" firstAttribute="top" secondItem="zXJ-bM-bMb" secondAttribute="bottom" constant="22" id="Tga-el-z4d"/>
+                <constraint firstItem="zXJ-bM-bMb" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VRR-eG-trv"/>
+                <constraint firstItem="RUq-oa-6Jg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ZA9-PK-uDF"/>
+                <constraint firstItem="8gc-mu-wNH" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="cGu-Wg-0Dg"/>
+                <constraint firstItem="zXJ-bM-bMb" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="dEZ-aH-giC"/>
+                <constraint firstItem="zXJ-bM-bMb" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="jKb-jm-lXr"/>
+                <constraint firstItem="8gc-mu-wNH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="pUL-St-dld"/>
+                <constraint firstAttribute="trailing" secondItem="RUq-oa-6Jg" secondAttribute="trailing" constant="30" id="s2w-qi-RsD"/>
+            </constraints>
+            <point key="canvasLocation" x="35.5" y="54.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+    </resources>
+</document>

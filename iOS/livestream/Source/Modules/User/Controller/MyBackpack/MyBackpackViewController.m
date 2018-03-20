@@ -17,7 +17,6 @@
 @property (weak, nonatomic) IBOutlet UIView *topView;
 @property (nonatomic, strong) JDSegmentControl *segment;
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
-@property (nonatomic, assign) NSInteger curIndex;
 @property (nonatomic, strong) LSPZPagingScrollView *pagingScrollView;
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
 @end

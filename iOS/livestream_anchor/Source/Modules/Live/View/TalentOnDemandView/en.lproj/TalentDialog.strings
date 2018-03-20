@@ -1,0 +1,14 @@
+
+/* Class = "UIButton"; normalTitle = "Talent Request"; ObjectID = "S1X-bw-YDs"; */
+"S1X-bw-YDs.normalTitle" = "Talent Request";
+
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "YXp-Si-1LX"; */
+"YXp-Si-1LX.normalTitle" = "Accept";
+
+/* Class = "UIButton"; normalTitle = "Decline"; ObjectID = "g2y-HG-m5H"; */
+"g2y-HG-m5H.normalTitle" = "Decline";
+
+/* Class = "UILabel"; text = "Micheal has sent you a performance request: \"Drink Water\""; ObjectID = "gC0-4M-AGC"; */
+"gC0-4M-AGC.text" = "";
+
+"Talent_Msg" = "%@ has sent you a performance request: %@";

@@ -1,0 +1,32 @@
+
+/* Class = "UILabel"; text = "4 - 12 characters. Numbers and English letters only."; ObjectID = "1bF-g0-9cE"; */
+"1bF-g0-9cE.text" = "4 - 12 characters. Numbers and English letters only.";
+
+/* Class = "UILabel"; text = "To protect and secure your account, please add your email address to continue."; ObjectID = "H7z-hI-wMK"; */
+"H7z-hI-wMK.text" = "To protect and secure your account, please add your email address to continue.";
+
+/* Class = "UIButton"; normalTitle = "Next"; ObjectID = "ffJ-M4-LSY"; */
+"ffJ-M4-LSY.normalTitle" = "Next";
+
+/* Class = "UITextField"; placeholder = "Enter your email address"; ObjectID = "nJL-7C-pPD"; */
+"nJL-7C-pPD.placeholder" = "Enter your email address";
+
+/* Class = "UIButton"; normalTitle = "Sign in"; ObjectID = "rph-gM-umJ"; */
+"rph-gM-umJ.normalTitle" = "Sign in";
+
+/* Class = "UITextField"; placeholder = "Enter your email address"; ObjectID = "vBZ-oQ-S0V"; */
+"vBZ-oQ-S0V.placeholder" = "Enter your email address";
+
+"LOGIN_FACEBOOK_TITLE" = "Sign in with Facebook";
+
+"EMAIL_REGISTER_TIP" = "Your email: %@ has been registered. Please enter password to continue.";
+
+"PASSWORD_IS_NOT" = "Incorrect password";
+
+"MAX_TRY_FIVE" = "You have signed in too many times. Please try again in 10 minutes";
+
+"EMAIL_HAS_REGISTER" = "This account has already been registered, please use another email address.";
+
+"EMAIL_REGISTER_SUCCESS" = "Signed up success. We have sent a password to your email.";
+
+"EMAIL_FORMAT_ERROR" = "Please enter a valid email address";

@@ -41,6 +41,7 @@
 		50F125411D1BE4FA00435C12 /* LSUIImageViewTopFit.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F125401D1BE4FA00435C12 /* LSUIImageViewTopFit.m */; };
 		52702C041F79DFF5009AAE55 /* Fail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52702C031F79DFF5009AAE55 /* Fail@2x.png */; };
 		529DA2EB1F78AC7E00651318 /* LSListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529DA2EA1F78AC7E00651318 /* LSListViewController.m */; };
+		52F65B762044F174007DA957 /* LSProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F65B742044F174007DA957 /* LSProgressView.m */; };
 		CA799B64171F98700043B352 /* LSUIWidget.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = CA799B63171F98700043B352 /* LSUIWidget.h */; };
 		CA799B66171F98700043B352 /* LSUIWidget.m in Sources */ = {isa = PBXBuildFile; fileRef = CA799B65171F98700043B352 /* LSUIWidget.m */; };
 		CAF53823171FDB71005DCB49 /* LSNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAF537CD171FDB70005DCB49 /* LSNavigationController.m */; };
@@ -121,6 +122,8 @@
 		52702C031F79DFF5009AAE55 /* Fail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fail@2x.png"; sourceTree = "<group>"; };
 		529DA2E91F78AC7E00651318 /* LSListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSListViewController.h; sourceTree = "<group>"; };
 		529DA2EA1F78AC7E00651318 /* LSListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSListViewController.m; sourceTree = "<group>"; };
+		52F65B742044F174007DA957 /* LSProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSProgressView.m; sourceTree = "<group>"; };
+		52F65B752044F174007DA957 /* LSProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSProgressView.h; sourceTree = "<group>"; };
 		CA799B5B171F98700043B352 /* libUIWidget.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUIWidget.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA799B62171F98700043B352 /* UIWidget-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIWidget-Prefix.pch"; sourceTree = "<group>"; };
 		CA799B63171F98700043B352 /* LSUIWidget.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUIWidget.h; sourceTree = "<group>"; };
@@ -285,6 +288,15 @@
 			path = UIImage;
 			sourceTree = "<group>";
 		};
+		52F65B6D2044EC6E007DA957 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				52F65B752044F174007DA957 /* LSProgressView.h */,
+				52F65B742044F174007DA957 /* LSProgressView.m */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
 		CA799B52171F98700043B352 = {
 			isa = PBXGroup;
 			children = (
@@ -319,6 +331,7 @@
 		CAF537C9171FDB70005DCB49 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				52F65B6D2044EC6E007DA957 /* Progress */,
 				50511F4D1F945A6D009E4C88 /* Bundle */,
 				CAF537E8171FDB70005DCB49 /* Button */,
 				CAF5381C171FDB71005DCB49 /* Common */,
@@ -534,6 +547,7 @@
 				50A98C4F1F9488D700043448 /* UIImage+ImageEffects.m in Sources */,
 				CAF53835171FDB71005DCB49 /* LSPZPagingScrollView.m in Sources */,
 				25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */,
+				52F65B762044F174007DA957 /* LSProgressView.m in Sources */,
 				503A70541EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				CAF53836171FDB71005DCB49 /* LSPZPhotoView.m in Sources */,
 				50DA55451C76A75F001E1D98 /* LSButtonBar.m in Sources */,

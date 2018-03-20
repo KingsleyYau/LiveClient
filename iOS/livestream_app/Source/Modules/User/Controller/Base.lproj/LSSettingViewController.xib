@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSSettingViewController">
+            <connections>
+                <outlet property="logoutBtn" destination="xRL-rY-eVj" id="VGf-12-fIg"/>
+                <outlet property="tableView" destination="pe8-2U-MBk" id="lj0-fe-voZ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pe8-2U-MBk">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="200"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="200" id="0OR-Ze-D7y"/>
+                    </constraints>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="pmf-Df-zBj"/>
+                        <outlet property="delegate" destination="-1" id="7Mq-15-6Pc"/>
+                    </connections>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xRL-rY-eVj">
+                    <rect key="frame" x="137" y="527" width="100" height="40"/>
+                    <color key="backgroundColor" red="0.36470588240000001" green="0.054901960780000002" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="bAE-53-gw4"/>
+                        <constraint firstAttribute="width" constant="100" id="gqf-VX-QBj"/>
+                    </constraints>
+                    <state key="normal" title="Log out"/>
+                    <connections>
+                        <action selector="logoutActionClick:" destination="-1" eventType="touchUpInside" id="iHn-h3-pdB"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="xRL-rY-eVj" secondAttribute="bottom" constant="100" id="KLG-bM-FrN"/>
+                <constraint firstItem="pe8-2U-MBk" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="XPu-AM-QMv"/>
+                <constraint firstItem="xRL-rY-eVj" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="aSl-EO-czj"/>
+                <constraint firstItem="pe8-2U-MBk" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="hcU-bc-K44"/>
+                <constraint firstAttribute="trailing" secondItem="pe8-2U-MBk" secondAttribute="trailing" id="nEv-yq-eKj"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

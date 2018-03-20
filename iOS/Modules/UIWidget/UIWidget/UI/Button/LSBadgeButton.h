@@ -13,5 +13,6 @@
 }
 @property (nonatomic, copy) NSString *badgeValue;
 @property (nonatomic, strong) UIImage* imageBadge;
-@property (nonatomic, copy) NSString * unreadCont;
+@property (nonatomic, copy) NSString * unreadCount;
+@property (nonatomic, copy) NSString* contentTitle;
 @end

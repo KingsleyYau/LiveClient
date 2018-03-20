@@ -1,0 +1,51 @@
+
+/* Class = "UILabel"; text = "13 unread messages"; ObjectID = "Loy-y3-J0X"; */
+"Loy-y3-J0X.text" = "13 unread messages";
+
+/* Class = "UILabel"; text = "Karen"; ObjectID = "q2E-SK-0uL"; */
+"q2E-SK-0uL.text" = "Karen";
+
+/* Class = "UILabel"; text = "21324123"; ObjectID = "u6a-zE-hBx"; */
+"u6a-zE-hBx.text" = "21324123";
+
+/* Class = "UILabel"; text = "1250"; ObjectID = "zIe-Bp-dFc"; */
+"zIe-Bp-dFc.text" = "1250";
+
+"UnRead_Messages" = "unread messages";
+
+"Member_Share" = "has shared the broadcast";
+
+"Member_ThumbUp" = "likes this stream";
+
+"Msg_Type_Rider" = "Car";
+
+"SENDTOSAT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"WATCHING_WILL_NO_MONEY" = "You are running out of credits. Please buy more credits to continue watching.";
+
+"Rebate_Tip" = "Credit rebate: ";
+
+"Recv_Rebate" = "You have been given a rebate of";
+
+"Recv_Level_Up" = "Congratulations! You have upgraded to Level";
+
+"Recv_Love_Up" = "Congratulations! Your intimacy level with";
+
+"Love_Level_Up" = "has upgraded to Level";
+
+"Open_Permissions_Tip" = "Please open the camera and record permissions";
+
+"LIVE_VOUCHER_APPLIED" = "Live voucher is applied. The first %d minutes is free";
+
+"LIVE_NOT_ROOM" = "Broadcast has ended.\nPlease check back later.";
+
+"LIVE_WILL_END" = "Live will end in ";
+
+"LIVE_INVITE_FAIL" = "No response from %@，please try again later";
+
+"LIVE_INVITE_ING" = "Inviting %@ to One-on-One...";
+
+"LIVE_INVITE_HAS_ACCEPT" = "%@ has accepted";
+
+
+

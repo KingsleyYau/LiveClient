@@ -2,10 +2,11 @@ package net.qdating;
 
 import java.io.File;
 
+import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.view.SurfaceView;
+import net.qdating.LSConfig.FillMode;
 import net.qdating.player.ILSPlayerCallback;
 import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSAudioPlayer;
@@ -17,7 +18,6 @@ import net.qdating.utils.Log;
 /**
  * RTMP流播放器
  * @author max
- * @version 1.0.0
  */
 public class LSPlayer implements ILSPlayerCallback {
 	/**
@@ -71,7 +71,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @param statusCallback 状态回调接口
 	 * @return true:成功/false:失败
 	 */
-	public boolean init(SurfaceView surfaceView, ILSPlayerStatusCallback statusCallback) {
+	public boolean init(GLSurfaceView surfaceView, FillMode fillMode, ILSPlayerStatusCallback statusCallback) {
 		boolean bFlag = false;
 		
 		File path = Environment.getExternalStorageDirectory();
@@ -85,7 +85,7 @@ public class LSPlayer implements ILSPlayerCallback {
 //		videoDecoder.init();
 		
 		// 初始化视频播放器
-		videoPlayer.init(surfaceView.getHolder(), LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+		videoPlayer.init(surfaceView, fillMode);
 		
 		// 初始化播放器
 		bFlag = player.Create(this, videoPlayer, audioPlayer, videoDecoder);
@@ -121,7 +121,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
 				+ "[%s] "
 				+ ")", 
-				bFlag?"Suucess":"Fail"
+				bFlag?"Success":"Fail"
 				)
 				);
 		

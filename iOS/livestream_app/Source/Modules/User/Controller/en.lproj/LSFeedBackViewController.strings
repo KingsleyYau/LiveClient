@@ -1,0 +1,13 @@
+
+/* Class = "UIButton"; normalTitle = "Submit"; ObjectID = "WR9-Rp-H6C"; */
+"WR9-Rp-H6C.normalTitle" = "Submit";
+
+"EMAIL_FORMAT_ERROR" = "Please enter a valid email address";
+"SUBMIT_SUCCESS" = "Thanks for your feedback!";
+"SUBMIT_FAIL" = "Trouble connecting to the server, please try again later.";
+
+"TextView_Tip" = "Please enter your details";
+
+"Address_Tip" = "Enter your email address";
+
+"Feedback" = "Feedback";

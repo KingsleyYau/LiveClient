@@ -1,0 +1,20 @@
+
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "0JX-hq-EZM"; */
+"0JX-hq-EZM.normalTitle" = "Login";
+
+/* Class = "UITextField"; placeholder = "Secure Code"; ObjectID = "E44-1V-6G9"; */
+"E44-1V-6G9.placeholder" = "Secure Code";
+
+/* Class = "UITextField"; placeholder = "Login Email"; ObjectID = "Ka0-9c-evW"; */
+"Ka0-9c-evW.placeholder" = "Login Email";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "PWQ-en-vfc"; */
+"PWQ-en-vfc.placeholder" = "Password";
+
+/* Class = "UIButton"; normalTitle = "Sign Up"; ObjectID = "E8d-W8-Asf"; */
+"E8d-W8-Asf.normalTitle" = "Sign Up";
+
+
+"Tips_RegisterMessage_Email" = "Please enter your login email.";
+"Tips_RegisterMessage_Password" = "Please enter your login password.";
+"OK" = "OK";

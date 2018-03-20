@@ -71,19 +71,28 @@
         //        CGRect frameLabel;
         //        frameLabel.origin = CGPointMake(badgeView.center.x - badgeLabel.frame.size.width / 2, badgeView.center.y - badgeLabel.frame.size.height / 2);
         badgeLabel.frame = frameLabel;
+        
+        if (self.contentTitle.length > 0 ) {
+            UILabel *contentLabel = [[UILabel alloc] initWithFrame: CGRectMake(0, self.frame.size.height, self.frame.size.width, 15)];
+            contentLabel.textColor = [UIColor blackColor];
+            contentLabel.font = [UIFont boldSystemFontOfSize:11.0f];
+            contentLabel.text = self.contentTitle;
+            contentLabel.textAlignment = NSTextAlignmentCenter;
+            [self addSubview:contentLabel];
+        }
+        
 
     } else {
         [badgeView removeFromSuperview];
     }
 }
 
-- (void)setUnreadCont:(NSString *)unreadCont
+- (void)setUnreadCount:(NSString *)unreadCont
 {
-    _unreadCont = unreadCont;
+    _unreadCount = unreadCont;
      UIView *badgeView = [self viewWithTag:BADGE_TAG];
-    if (self.unreadCont) {
+    if (self.unreadCount) {
         if (!badgeView) {
-  
             badgeView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - 4, self.frame.size.height - 8, 8, 8)];
             badgeView.tag = BADGE_TAG;
             badgeView.backgroundColor = [UIColor redColor];

@@ -39,7 +39,7 @@ public:
             }
             /* oppositeId */
             if (root[OPPOSITEID_PARAM].isString()) {
-                oppositeId = root[OPPOSITEID_PARAM].isString();
+                oppositeId = root[OPPOSITEID_PARAM].asString();
             }
             /* oppositeNickName */
             if (root[OPPOSITENICKNAME_PARAM].isString()) {

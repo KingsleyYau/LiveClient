@@ -1,0 +1,34 @@
+
+/* Class = "UITextField"; placeholder = "Invite Code"; ObjectID = "6Sm-FB-dkq"; */
+"6Sm-FB-dkq.placeholder" = "Invite Code";
+
+/* Class = "UITextField"; placeholder = "Date of birth"; ObjectID = "BQD-ny-45M"; */
+"BQD-ny-45M.placeholder" = "Date of birth";
+
+/* Class = "UILabel"; text = "Welcome to CharmLive"; ObjectID = "EXi-FR-yJ5"; */
+"EXi-FR-yJ5.text" = "Welcome to CharmLive";
+
+/* Class = "UIButton"; normalTitle = "Enjoy Now"; ObjectID = "bHS-hl-9AT"; */
+"bHS-hl-9AT.normalTitle" = "Enjoy Now";
+
+/* Class = "UITextField"; placeholder = "Name"; ObjectID = "c8S-CL-fGt"; */
+"c8S-CL-fGt.placeholder" = "Name";
+
+/* Class = "UILabel"; text = "Complete your profile to enjoy our service."; ObjectID = "iWw-jk-qa2"; */
+"iWw-jk-qa2.text" = "Complete your profile to enjoy our service.";
+
+/* Class = "UIButton"; normalTitle = "?"; ObjectID = "uQg-7p-TcP"; */
+"uQg-7p-TcP.normalTitle" = "?";
+
+"Photo_Type_Choose" = "Choose personal photo";
+"PHOTO_LIBRARY" = "Choose from album";
+"PHOTO_TAKING" = "Take a Photo";
+"Cancel" = "Cancel";
+
+"TIPS_INVITE_CODE" = "An invite code is shared by our members/broadcasters. If you enter this code when registering as our new member, they will receive benefits.\n\nPlease enter if you have an invite code.";
+
+"Name_Error_tip1" = "Nickname should be at least 2 characters";
+
+"Name_Error_tip2" = "Only English character allowed for name";
+
+"Name_Error_tip3" = "Spaces and line breaks are not allowed for nickname.";

@@ -72,7 +72,7 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
 		if( jniRendererCls != NULL ) {
 			// 发射方法
-			string signure = "([BII)V";
+			string signure = "([BIII)V";
 			jmethodID jMethodID = env->GetMethodID(
 					jniRendererCls,
 					"renderVideoFrame",
@@ -100,7 +100,7 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 
 			// 回调
 			if( jMethodID ) {
-				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, videoFrame->mWidth, videoFrame->mHeight);
+				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, videoFrame->mBufferLen, videoFrame->mWidth, videoFrame->mHeight);
 			}
 
 			env->DeleteLocalRef(jniRendererCls);

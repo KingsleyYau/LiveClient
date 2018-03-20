@@ -1,0 +1,10 @@
+#extension GL_OES_EGL_image_external : require
+precision mediump float;
+// 外设颜色着色器
+uniform samplerExternalOES uInputTexture;	
+// 片段着色器(输入)
+varying vec2 vTextureCoordinate;	
+
+void main(){
+	gl_FragColor = texture2D(uInputTexture, vTextureCoordinate);
+}

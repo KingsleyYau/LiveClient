@@ -41,6 +41,22 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushVideoFrame
 
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
+ * Method:    PausePushVideo
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PausePushVideo
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     net_qdating_publisher_LSPublisherJni
+ * Method:    ResumePushVideo
+ * Signature: (J)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_ResumePushVideo
+  (JNIEnv *, jobject, jlong);
+
+/*
+ * Class:     net_qdating_publisher_LSPublisherJni
  * Method:    PushAudioFrame
  * Signature: (J[BI)V
  */

@@ -38,9 +38,13 @@
     }
     self.headImageView.layer.masksToBounds = YES;
     
-    [self.imageLoader stop];
-    [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
-                        placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    if (!audienModel.photoUrl.length) {
+        [self.headImageView setImage:audienModel.image];
+    } else {
+        [self.imageLoader stop];
+        [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
+                            placeholderImage:audienModel.image];
+    }
 }
 
 - (void)setCornerRadius:(CGFloat)radius{

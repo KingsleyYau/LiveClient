@@ -49,6 +49,7 @@
 #pragma mark - Public Method
 - (void)setAudienceArray:(NSMutableArray *)audienceArray {
     _audienceArray = audienceArray;
+    
     [self.collectionView reloadData];
 }
 

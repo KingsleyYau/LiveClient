@@ -22,6 +22,7 @@
 #include <common/KMutex.h>
 #include <common/CheckMemoryLeak.h>
 
+
 #define DEVICE_ANDROID_TYPE "dev-type: 30"
 #define DEVICE_IPHONE_TYPE "dev-type: 31"
 #ifdef IOS  /* IOS */
@@ -31,14 +32,15 @@
 #endif
 #define USER_AGENT	"Mozil1a/4.0 (compatible; MS1E 7.0; Windows NT 6.1; WOW64; )"
 
+// 增加头是否时主播
+
+
 #define INVALID_DOWNLOAD 0
 #define INVALID_DOWNLOADLASTTIME 0
 CURLSH *sh;
 string COOKIES_FILE = "/sdcard/qpidnetwork/cookie";
 
 static string gProxyUrl = "";
-#define INVALID_PROXY_PROT -1
-static int gProxyPort = INVALID_PROXY_PROT;
 
 static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param)
 {
@@ -50,7 +52,7 @@ static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param)
 	const char *mypem = /* www.cacert.org */
 			"-----BEGIN CERTIFICATE-----\n"\
 			"MIIHPTCCBSWgAwIBAgIBADANBgkqhkiG9w0BAQQFADB5MRAwDgYDVQQKEwdSb290\n"\
-			"IENBMR4wHAYDVQQLExVodHRwOi8vd3d3LmNhY2VydC5vcmcxIjAgBgNVBAMTGUNB\n"\
+		"IENBMR4wHAYDVQQLExVodHRwOi8vd3d3LmNhY2VydC5vcmcxIjAgBgNVBAMTGUNB\n"\
 			"IENlcnQgU2lnbmluZyBBdXRob3JpdHkxITAfBgkqhkiG9w0BCQEWEnN1cHBvcnRA\n"\
 			"Y2FjZXJ0Lm9yZzAeFw0wMzAzMzAxMjI5NDlaFw0zMzAzMjkxMjI5NDlaMHkxEDAO\n"\
 			"BgNVBAoTB1Jvb3QgQ0ExHjAcBgNVBAsTFWh0dHA6Ly93d3cuY2FjZXJ0Lm9yZzEi\n"\
@@ -164,9 +166,8 @@ void HttpClient::SetLogEnable(bool enable) {
 	KLog::SetLogEnable(enable);
 }
 
-void HttpClient::SetProxy(string proxyUrl, int proxyPort) {
+void HttpClient::SetProxy(string proxyUrl) {
     gProxyUrl = proxyUrl;
-    gProxyPort = proxyPort;
 }
 
 HttpClient::HttpClient() {
@@ -525,14 +526,12 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 		mpCURL = curl_easy_init();
 	}
 
+
 	curl_easy_setopt(mpCURL, CURLOPT_URL, mUrl.c_str());
 	curl_easy_setopt(mpCURL, CURLOPT_SHARE, sh);
 
     if( gProxyUrl.length() > 0 ) {
         curl_easy_setopt(mpCURL, CURLOPT_PROXY, gProxyUrl.c_str());
-        if( gProxyPort != INVALID_PROXY_PROT ) {
-            curl_easy_setopt(mpCURL, CURLOPT_PROXYPORT, gProxyPort);
-        }
     }
     
     // 支持重定向
@@ -564,14 +563,14 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 	// Send cookies
 //    curl_easy_setopt(mpCURL, CURLOPT_COOKIEFILE, COOKIES_FILE.c_str());
 
-	//	curl_easy_setopt(mpCURL, CURLOPT_FOLLOWLOCATION, 1);
-	// 设置连接超时(如果是上传文件需要设置时间，默认是20秒)
     /*
      * May be cause crash when call curl_easy_cleanup
+     * Add by Max 2018/02/08
      * @description
      * https://curl.haxx.se/libcurl/c/CURLOPT_CONNECTTIMEOUT.html
      * https://curl.haxx.se/libcurl/c/CURLOPT_NOSIGNAL.html
      */
+    // 设置连接超时(如果是上传文件需要设置时间，默认是20秒)
 	curl_easy_setopt(mpCURL, CURLOPT_CONNECTTIMEOUT, entiy->mConnectTimeout);
 //	// 设置执行超时
 //	curl_easy_setopt(mpCURL, CURLOPT_TIMEOUT, 30L);
@@ -595,7 +594,6 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 //				entiy->mIsGetMethod?"true":"false", entiy->mbSaveCookie?"true":"false");
 
 	}
-
 	// 处理https
     // 不检查服务器证书
     curl_easy_setopt(mpCURL, CURLOPT_SSL_VERIFYPEER, 0L);

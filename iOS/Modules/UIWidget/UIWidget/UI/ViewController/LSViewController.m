@@ -150,6 +150,8 @@
 
 - (void)setupNavigationBar {
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
+    self.navigationController.navigationBar.translucent = NO;
+    self.edgesForExtendedLayout = UIRectEdgeNone;
 }
 
 - (void)setupContainView {

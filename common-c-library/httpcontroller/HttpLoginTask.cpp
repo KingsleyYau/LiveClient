@@ -18,6 +18,7 @@ HttpLoginTask::HttpLoginTask() {
     mDeviceId = "";
     mModel = "";
     mManufacturer = "";
+    mRegionId = REGIONIDTYPE_CD;
 }
 
 HttpLoginTask::~HttpLoginTask() {
@@ -33,7 +34,8 @@ void HttpLoginTask::SetParam(
                                     string userSid,
                                     string deviceid,
                                     string model,
-                                    string manufacturer
+                                    string manufacturer,
+                                    RegionIdType regionId
                                    ) {
     
     //	char temp[16];
@@ -65,7 +67,16 @@ void HttpLoginTask::SetParam(
         mHttpEntiy.AddContent(LOGIN_MANUFACTURER, manufacturer.c_str());
         mManufacturer = manufacturer;
     }
-
+    
+    if (regionId < REGIONIDTYPE_CD || regionId > REGIONIDTYPE_AME) {
+        regionId = REGIONIDTYPE_CD;
+    }
+    
+    char temp[16];
+    snprintf(temp, sizeof(temp), "%d", regionId);
+    mHttpEntiy.AddContent(LOGIN_REGIONID, temp);
+    mRegionId = regionId;
+    
 	FileLog(LIVESHOW_HTTP_LOG,
             "HttpLoginTask::SetParam( "
             "task : %p, "
@@ -74,13 +85,15 @@ void HttpLoginTask::SetParam(
             "deviceid : %s "
             "model : %s "
             "manufacturer : %s "
+            "regionId: %d "
             ")",
             this,
             manId.c_str(),
             userSid.c_str(),
             deviceid.c_str(),
             model.c_str(),
-            manufacturer.c_str()
+            manufacturer.c_str(),
+            regionId
             );
 }
 

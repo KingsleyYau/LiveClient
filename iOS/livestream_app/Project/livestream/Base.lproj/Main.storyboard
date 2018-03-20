@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="irJ-k4-1uv">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main View Controller-->
+        <scene sceneID="lvk-0g-MyF">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="dQg-tF-urY" customClass="LSMainViewController" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" id="DBZ-jw-QVq"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="fT4-U4-gui">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EK1-2b-gOp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3334" y="-2782"/>
+        </scene>
+        <!--程序入口Navigation Controller-->
+        <scene sceneID="KYb-IJ-UnT">
+            <objects>
+                <navigationController storyboardIdentifier="LSNavigationController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="irJ-k4-1uv" userLabel="程序入口Navigation Controller" customClass="LSNavigationController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="QTm-p6-7AD">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.36470588235294116" green="0.054901960784313725" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="fdc-NT-gw4" kind="relationship" relationship="rootViewController" id="lSf-Bz-A5r"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Snr-cw-nUW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4644" y="-2393"/>
+        </scene>
+        <!--Login View Controller-->
+        <scene sceneID="1pP-RZ-PLz">
+            <objects>
+                <viewController storyboardIdentifier="LSLoginViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fdc-NT-gw4" customClass="LSLoginViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="c7B-eH-out"/>
+                        <viewControllerLayoutGuide type="bottom" id="Ciy-CK-JZi"/>
+                    </layoutGuides>
+                    <view key="view" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="MJb-3k-HOZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IHg-e6-g6d">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AuS-vr-HRg" customClass="LSYYAnimatedImageView">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uP8-ro-6pI">
+                                        <rect key="frame" x="45" y="445" width="285" height="56"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" red="0.1215686275" green="0.30588235289999999" blue="0.58823529409999997" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="140" maxY="0.0"/>
+                                        <state key="normal" title="Facebook"/>
+                                        <connections>
+                                            <action selector="fbLoginBtnDid:" destination="fdc-NT-gw4" eventType="touchUpInside" id="qsn-60-5G6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z1Y-3r-x20">
+                                        <rect key="frame" x="45" y="527" width="285" height="56"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" red="0.97647058819999999" green="0.53725490200000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="160" maxY="0.0"/>
+                                        <state key="normal" title="Email"/>
+                                        <connections>
+                                            <action selector="emailLoginBtnDid:" destination="fdc-NT-gw4" eventType="touchUpInside" id="vdd-yS-Vu8"/>
+                                        </connections>
+                                    </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="FB_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="8mh-JV-OOb">
+                                        <rect key="frame" x="59" y="461" width="24" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Email_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="a2l-Ql-vCA">
+                                        <rect key="frame" x="61" y="543" width="24" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    </imageView>
+                                    <textView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" text="By logging in,you agree to our Terms and Conditions and Privacy Policy" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3QS-3G-xkf">
+                                        <rect key="frame" x="8" y="628" width="359" height="39"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="fdc-NT-gw4" id="TcE-9e-f9n"/>
+                                        </connections>
+                                    </textView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Charm-Live" translatesAutoresizingMaskIntoConstraints="NO" id="jh3-2e-85b">
+                                        <rect key="frame" x="111" y="109" width="153" height="69"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="wOh-8D-2c0"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="backgroundImageView" destination="AuS-vr-HRg" id="g6w-8P-Vhd"/>
+                        <outlet property="fbLoginBtn" destination="uP8-ro-6pI" id="5wv-90-ekD"/>
+                        <outlet property="infoView" destination="3QS-3G-xkf" id="pGh-NI-Q0F"/>
+                        <outlet property="mailLoginBtn" destination="Z1Y-3r-x20" id="TMT-yH-tgI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m3W-ug-ugZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3941.5999999999999" y="-1978.56071964018"/>
+        </scene>
+        <!--LSTestViewController-->
+        <scene sceneID="MUP-dp-ZgU">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Rus-My-Ooj" userLabel="LSTestViewController" customClass="LSTestViewController" sceneMemberID="viewController">
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Login Test" id="N2g-e5-pj8"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSb-qO-gmb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3302" y="-1976"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Charm-Live" width="153" height="69"/>
+        <image name="Email_Icon" width="24" height="25"/>
+        <image name="FB_Icon" width="24" height="25"/>
+    </resources>
+</document>

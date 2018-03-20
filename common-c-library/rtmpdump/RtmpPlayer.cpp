@@ -135,9 +135,11 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath) {
     FileLevelLog("rtmpdump",
             KLog::LOG_WARNING,
             "RtmpPlayer::PlayUrl( "
+            "this : %p, "
             "[%s], "
             "url : %s "
             ")",
+            this,
             bFlag?"Success":"Fail",
             url.c_str()
             );
@@ -260,8 +262,8 @@ void RtmpPlayer::Stop() {
     FileLevelLog("rtmpdump",
                 KLog::LOG_WARNING,
                 "RtmpPlayer::Stop( "
-                "[Finish], "
-                "this : %p "
+                 "this : %p, "
+                "[Finish] "
                 ")",
                 this
                 );
@@ -439,10 +441,12 @@ bool RtmpPlayer::IsCacheEnough() {
                              "rtmpdump",
                              KLog::LOG_WARNING,
                              "RtmpPlayer::IsCacheEnough( "
+                             "this : %p, "
                              "[Pop Extra Video Frame], "
                              "videoFrameFront->mTimestamp : %u, "
                              "videoFrameBack->mTimestamp : %u "
                              ")",
+                             this,
                              videoFrame->mTimestamp,
                              mVideoBufferList.back()->mTimestamp
                              );
@@ -482,10 +486,12 @@ bool RtmpPlayer::IsCacheEnough() {
                              "rtmpdump",
                              KLog::LOG_MSG,
                              "RtmpPlayer::IsCacheEnough( "
+                             "this : %p, "
                              "[Pop Extra Audio Frame], "
                              "audioFrameFront->mTimestamp : %u, "
                              "audioFrameBack->mTimestamp : %u "
                              ")",
+                             this,
                              audioFrame->mTimestamp,
                              mAudioBufferList.back()->mTimestamp
                              );
@@ -530,6 +536,7 @@ bool RtmpPlayer::IsCacheEnough() {
                     "rtmpdump",
                     KLog::LOG_MSG,
                     "RtmpPlayer::IsCacheEnough( "
+                    "this : %p, "
                     "startVideoTimestamp : %d, "
                     "endVideoTimestamp : %d, "
                     "startAudioTimestamp : %d, "
@@ -540,6 +547,7 @@ bool RtmpPlayer::IsCacheEnough() {
                     "mVideoBufferList.size() : %d, "
                     "mAudioBufferList.size() : %d "
                     ")",
+                    this,
                     startVideoTimestamp,
                     endVideoTimestamp,
                     startAudioTimestamp,
@@ -623,10 +631,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_STAT,
                                      "RtmpPlayer::IsPlay( "
+                                     "this : %p, "
                                      "[Sync Audio], "
                                      "audioTimestamp : %d, "
                                      "videoTimestamp : %d "
                                      ")",
+                                     this,
                                      audioTimestamp,
                                      videoTimestamp
                                      );
@@ -636,10 +646,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
+                                         "this : %p, "
                                          "[Sync Audio to drop], "
                                          "audioTimestamp : %d, "
                                          "videoTimestamp : %d "
                                          ")",
+                                         this,
                                          audioTimestamp,
                                          videoTimestamp
                                          );
@@ -652,9 +664,11 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                 // 归还失败，释放Buffer
                                 FileLog("rtmpdump",
                                         "RtmpPlayer::IsPlay( "
+                                        "this : %p, "
                                         "[Delete Audio frame], "
                                         "frame : %p "
                                         ")",
+                                        this,
                                         audioFrame
                                         );
                                 delete audioFrame;
@@ -665,10 +679,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
+                                         "this : %p, "
                                          "[Sync Audio to play], "
                                          "audioTimestamp : %d, "
                                          "videoTimestamp : %d "
                                          ")",
+                                         this,
                                          audioTimestamp,
                                          videoTimestamp
                                          );
@@ -683,8 +699,10 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "RtmpPlayer::IsPlay( "
+                                 "this : %p, "
                                  "[Sync Audio to play for NO Video frame] "
-                                 ")"
+                                 ")",
+                                 this
                                  );
                     bFlag = true;
                     mbAudioStartPlay = true;
@@ -715,10 +733,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                         FileLevelLog("rtmpdump",
                                      KLog::LOG_STAT,
                                      "RtmpPlayer::IsPlay( "
+                                     "this : %p, "
                                      "[Sync Video], "
                                      "audioTimestamp : %d, "
                                      "videoTimestamp : %d "
                                      ")",
+                                     this,
                                      audioTimestamp,
                                      videoTimestamp
                                      );
@@ -728,10 +748,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
+                                         "this : %p, "
                                          "[Sync Video to drop], "
                                          "audioTimestamp : %d, "
                                          "videoTimestamp : %d "
                                          ")",
+                                         this,
                                          audioTimestamp,
                                          videoTimestamp
                                          );
@@ -744,9 +766,11 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                                 // 归还失败，释放Buffer
                                 FileLog("rtmpdump",
                                         "RtmpPlayer::IsPlay( "
+                                        "this : %p, "
                                         "[Delete Video frame], "
                                         "videoFrame : %p "
                                         ")",
+                                        this,
                                         videoFrame
                                         );
                                 delete videoFrame;
@@ -757,10 +781,12 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                             FileLevelLog("rtmpdump",
                                          KLog::LOG_WARNING,
                                          "RtmpPlayer::IsPlay( "
+                                         "this : %p, "
                                          "[Sync Video to play], "
                                          "audioTimestamp : %d, "
                                          "videoTimestamp : %d "
                                          ")",
+                                         this,
                                          audioTimestamp,
                                          videoTimestamp
                                          );
@@ -774,8 +800,10 @@ bool RtmpPlayer::IsPlay(bool isAudio) {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "RtmpPlayer::IsPlay( "
+                                 "this : %p, "
                                  "[Sync Video to play for NO Audio frame] "
-                                 ")"
+                                 ")",
+                                 this
                                  );
                     
                     bFlag = true;
@@ -802,8 +830,10 @@ void RtmpPlayer::NoCacheFrame() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "RtmpPlayer::NoCacheFrame( "
+                         "this : %p, "
                          "mCacheMS : %u "
                          ")",
+                         this,
                          mCacheMS
                          );
             mbShowNoCacheLog = true;
@@ -858,12 +888,14 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
     			FileLevelLog("rtmpdump",
                             KLog::LOG_WARNING,
                             "RtmpPlayer::PlayFrame( "
+                            "this : %p, "
                             "[Cache %s enough], "
                             "mCacheMS : %u, "
                             "mStartPlayTime : %lld, "
                             "mPlayVideoAfterAudioDiff : %d, "
                             "bufferListSize : %u "
                             ")",
+                            this,
                             isAudio?"Audio":"Video",
                             mCacheMS,
                             mStartPlayTime,
@@ -894,12 +926,14 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                     FileLevelLog("rtmpdump",
                                  KLog::LOG_WARNING,
                                  "RtmpPlayer::PlayFrame( "
+                                 "this : %p, "
                                  "[Reset %s Start Timestamp], "
                                  "startTime : %lld, "
                                  "frame->mTimestamp : %u, "
                                  "preTimestamp : %u, "
                                  "bufferListSize : %u "
                                  ")",
+                                 this,
                                  isAudio?"Audio":"Video",
                                  startTime,
                                  frame->mTimestamp,
@@ -937,11 +971,13 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                             FileLevelLog("rtmpdump",
                                         KLog::LOG_WARNING,
                                         "RtmpPlayer::PlayFrame( "
+                                        "this : %p, "
                                         "[Start Play %s], "
                                         "startTime : %lld, "
                                         "startTimestamp : %u, "
                                         "bufferListSize : %u "
                                         ")",
+                                        this,
                                         isAudio?"Audio":"Video",
                                         startTime,
                                         startTimestamp,
@@ -1061,6 +1097,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                 FileLevelLog("rtmpdump",
                                             KLog::LOG_MSG,
                                             "RtmpPlayer::PlayFrame( "
+                                            "this : %p, "
                                             "[Play %s Frame], "
                                             "handleTime : %d, "
                                             "diffTime : %d, "
@@ -1071,6 +1108,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                             "diffTotalms : %d, "
                                             "bufferListSize : %d "
                                             ")",
+                                            this,
                                             isAudio?"Audio":"Video",
                                             handleTime,
                                             diffTime,
@@ -1086,6 +1124,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                 FileLevelLog("rtmpdump",
                                             KLog::LOG_WARNING,
                                             "RtmpPlayer::PlayFrame( "
+                                            "this : %p, "
                                             "[Drop %s Frame], "
                                             "handleTime : %d, "
                                             "diffTime : %d, "
@@ -1096,6 +1135,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                             "diffTotalms : %d, "
                                             "bufferListSize : %d "
                                             ")",
+                                            this,
                                             isAudio?"Audio":"Video",
                                             handleTime,
                                             diffTime,
@@ -1135,9 +1175,11 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                 // 归还失败，释放Buffer
                                 FileLog("rtmpdump",
                                         "RtmpPlayer::PlayFrame( "
+                                        "this : %p, "
                                         "[Delete %s frame], "
                                         "frame : %p "
                                         ")",
+                                        this,
                                         isAudio?"Audio":"Video",
                                         frame
                                         );

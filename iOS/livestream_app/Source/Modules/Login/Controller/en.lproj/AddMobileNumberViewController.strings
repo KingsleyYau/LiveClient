@@ -1,0 +1,22 @@
+
+/* Class = "UIButton"; normalTitle = "China（+86）"; ObjectID = "20z-Ar-yB8"; */
+"20z-Ar-yB8.normalTitle" = "China（+86）";
+
+/* Class = "UILabel"; text = "Mobile Number"; ObjectID = "PiV-O4-XJa"; */
+"PiV-O4-XJa.text" = "Mobile Number";
+
+/* Class = "UITextField"; placeholder = "Enter your mobile number"; ObjectID = "Yjn-EZ-faK"; */
+"Yjn-EZ-faK.placeholder" = "Enter your mobile number";
+
+/* Class = "UIButton"; normalTitle = "Send Verify Code"; ObjectID = "hIP-GW-jYE"; */
+"hIP-GW-jYE.normalTitle" = "Send Verify Code";
+
+/* Class = "UILabel"; text = "Country code:"; ObjectID = "jER-cK-Xli"; */
+"jER-cK-Xli.text" = "Country code:";
+
+/* Class = "UILabel"; text = "Please enter a valid phone number."; ObjectID = "nHl-Me-6b6"; */
+"nHl-Me-6b6.text" = "Please enter a valid phone number.";
+
+"ADD_MOBILE_NUMBER" = "Add Mobile Number";
+
+"ENTER_PHONE_NUMBER" = "Please enter a valid phone number.";

@@ -1,0 +1,9 @@
+
+/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "uI2-qY-iJb"; */
+"uI2-qY-iJb.normalTitle" = "Reload";
+
+"SetRideMsg" = "Failed to ride/cancel riding. Please try again later.";
+
+"No Rides" = "No rides";
+
+"Failed_Msg" = "Failed to load";

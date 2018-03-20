@@ -1,0 +1,14 @@
+// 外设顶点着色器
+// 矩阵转换(输入)	
+uniform mat4 uTextureMatrix;
+// 纹理坐标(输入)
+attribute vec4 aPosition;
+// 自定义屏幕坐标(输入)
+attribute vec4 aTextureCoordinate;
+// 片段着色器(输出)
+varying vec2 vTextureCoordinate;	
+
+void main() {
+	vTextureCoordinate = (uTextureMatrix * aTextureCoordinate).xy;
+	gl_Position = aPosition;
+}

@@ -518,7 +518,7 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
     
     NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = [LiveModule module].debug?[NSString stringWithFormat:@"%@/%@_%@_%@.flv", recordDir, self.loginManager.loginItem.userId, self.liveRoom.userId, dateString]:@"";
+    NSString *recordFilePath = [LiveModule module].debug?[NSString stringWithFormat:@"%@/%@_%@.flv", recordDir, self.liveRoom.userId, dateString]:@"";
     NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
     NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
     

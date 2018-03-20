@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Khd-aR-nVk" customClass="BarrageModelCell">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="38"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Calvin" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x7m-Gm-vmA" userLabel="Name Label">
+                    <rect key="frame" x="48" y="1" width="152" height="15"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="15" id="pXX-6u-Ptd"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="1" green="0.82352941176470584" blue="0.019607843137254902" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <color key="shadowColor" red="0.0" green="0.0" blue="0.0" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
+                    <size key="shadowOffset" width="0.0" height="0.5"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agt-Fn-vaO" userLabel="Message Background View">
+                    <rect key="frame" x="8" y="18" width="114.5" height="20"/>
+                    <color key="backgroundColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="453453" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XFi-u9-QOC" userLabel="Message Label">
+                    <rect key="frame" x="48" y="18" width="59.5" height="20"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                    <color key="textColor" red="0.36470588235294116" green="0.0039215686274509803" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q" customClass="LSUIImageViewTopFit">
+                    <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
+                    <color key="backgroundColor" red="0.049599532500000001" green="0.5141839051" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="LPv-ng-f9Q" secondAttribute="height" multiplier="1:1" id="4RY-tU-CpA"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="XFi-u9-QOC" firstAttribute="top" secondItem="agt-Fn-vaO" secondAttribute="top" id="5qK-ei-2up"/>
+                <constraint firstItem="agt-Fn-vaO" firstAttribute="top" secondItem="x7m-Gm-vmA" secondAttribute="bottom" constant="2" id="EhW-HC-QOY"/>
+                <constraint firstItem="XFi-u9-QOC" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="10" id="HWG-ax-lP5"/>
+                <constraint firstItem="LPv-ng-f9Q" firstAttribute="leading" secondItem="Khd-aR-nVk" secondAttribute="leading" id="HrT-0d-QM1"/>
+                <constraint firstItem="agt-Fn-vaO" firstAttribute="trailing" secondItem="XFi-u9-QOC" secondAttribute="trailing" constant="15" id="TSI-AL-1pR"/>
+                <constraint firstItem="x7m-Gm-vmA" firstAttribute="top" secondItem="Khd-aR-nVk" secondAttribute="top" constant="1" id="b58-J9-3Ll"/>
+                <constraint firstItem="LPv-ng-f9Q" firstAttribute="top" secondItem="Khd-aR-nVk" secondAttribute="top" id="edE-aE-YKH"/>
+                <constraint firstItem="agt-Fn-vaO" firstAttribute="bottom" secondItem="Khd-aR-nVk" secondAttribute="bottom" id="fbs-du-NMr"/>
+                <constraint firstItem="x7m-Gm-vmA" firstAttribute="trailing" secondItem="Khd-aR-nVk" secondAttribute="trailing" id="gPm-sr-jR6"/>
+                <constraint firstItem="agt-Fn-vaO" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="-30" id="he9-sb-m1t"/>
+                <constraint firstItem="XFi-u9-QOC" firstAttribute="bottom" secondItem="Khd-aR-nVk" secondAttribute="bottom" id="kO0-wm-FBZ"/>
+                <constraint firstItem="x7m-Gm-vmA" firstAttribute="leading" secondItem="LPv-ng-f9Q" secondAttribute="trailing" constant="10" id="mtW-vH-iDH"/>
+                <constraint firstItem="LPv-ng-f9Q" firstAttribute="height" secondItem="Khd-aR-nVk" secondAttribute="height" id="xQK-Qa-3uE"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="imageViewHeader" destination="LPv-ng-f9Q" id="MYT-mz-xBg"/>
+                <outlet property="labelMessage" destination="XFi-u9-QOC" id="t8D-05-AiJ"/>
+                <outlet property="labelMessageBackgroundView" destination="agt-Fn-vaO" id="ASz-au-czI"/>
+                <outlet property="labelName" destination="x7m-Gm-vmA" id="Vc0-B8-eU0"/>
+            </connections>
+            <point key="canvasLocation" x="-198" y="-87"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Man_Circyle" width="100" height="100"/>
+    </resources>
+</document>

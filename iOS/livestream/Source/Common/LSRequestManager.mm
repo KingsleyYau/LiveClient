@@ -110,6 +110,7 @@ static LSRequestManager *gManager = nil;
         
         mHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
         mConfigHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, [self.versionCode UTF8String]);
+        
     }
     return self;
 }
@@ -118,13 +119,17 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_WARNING);
+    KLog::SetLogLevel(KLog::LOG_STAT);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
-    KLog::SetLogDirectory([directory UTF8String]);
-    HttpClient::SetCookiesDirectory([directory UTF8String]);
+    KLog::SetLogDirectory(directory?[directory UTF8String]:"");
+    HttpClient::SetCookiesDirectory(directory?[directory UTF8String]:"");
 //    CleanDir([directory UTF8String]);
+}
+
++ (void)setProxy:(NSString * _Nullable)proxyUrl {
+    HttpClient::SetProxy(proxyUrl?[proxyUrl UTF8String]:"");
 }
 
 - (void)setConfigWebSite:(NSString * _Nonnull)webSite {
@@ -270,7 +275,7 @@ RequestLoginCallbackImp gRequestLoginCallbackImp;
         strManufacturer = [manufacturer UTF8String];
     }
     
-    NSInteger request = (NSInteger)mHttpRequestController.Login(&mHttpRequestManager, strManId, strUserSid, strDeviceid, strModel, strManufacturer, &gRequestLoginCallbackImp);
+    NSInteger request = (NSInteger)mHttpRequestController.Login(&mHttpRequestManager, strManId, strUserSid, strDeviceid, strModel, strManufacturer, REGIONIDTYPE_CD, &gRequestLoginCallbackImp);
     
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -1753,13 +1758,14 @@ public:
 RequestGetAdAnchorListCallbackImp gRequestGetAdAnchorListCallbackImp;
 - (NSInteger)getAdAnchorList:(int)number
                finishHandler:(GetAdAnchorListFinishHandler _Nullable)finishHandler {
+
     NSInteger request = (NSInteger)mHttpRequestController.GetAdAnchorList(&mHttpRequestManager, number, &gRequestGetAdAnchorListCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
             [self.delegateDictionary setObject:finishHandler forKey:@(request)];
         }
     }
-    
+
     return request;
 }
 

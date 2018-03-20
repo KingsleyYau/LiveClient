@@ -120,17 +120,17 @@ void PublisherController::Stop() {
 }
    
 void PublisherController::PushVideoFrame(void* data, int size, void* frame) {
-//    FileLevelLog("rtmpdump",
-//                 KLog::LOG_MSG,
-//                 "PublisherController::PushVideoFrame( "
-//                 "data : %p, "
-//                 "size : %d, "
-//                 "frame : %p "
-//                 ")",
-//                 data,
-//                 size,
-//                 frame
-//                 );
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "PublisherController::PushVideoFrame( "
+                 "frame : %p, "
+                 "data : %p, "
+                 "size : %d "
+                 ")",
+                 frame,
+                 data,
+                 size
+                 );
     
     if( mpVideoEncoder ) {
         mpVideoEncoder->EncodeVideoFrame(data, size, frame);
@@ -138,27 +138,27 @@ void PublisherController::PushVideoFrame(void* data, int size, void* frame) {
 }
 
 void PublisherController::PushAudioFrame(void* data, int size, void* frame) {
-//    FileLevelLog("rtmpdump",
-//                 KLog::LOG_MSG,
-//                 "PublisherController::PushAudioFrame( "
-//                 "data : %p, "
-//                 "size : %d, "
-//                 "frame : %p "
-//                 ")",
-//                 data,
-//                 size,
-//                 frame
-//                 );
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "PublisherController::PushAudioFrame( "
+                 "frame : %p, "
+                 "data : %p, "
+                 "size : %d "
+                 ")",
+                 frame,
+                 data,
+                 size
+                 );
     
     if( mpAudioEncoder ) {
         mpAudioEncoder->EncodeAudioFrame(data, size, frame);
     }
 }
 
-void PublisherController::AddVideoBackgroundTime(u_int32_t timestamp) {
+void PublisherController::AddVideoTimestamp(u_int32_t timestamp) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PublisherController::AddVideoBackgroundTime( "
+                 "PublisherController::AddVideoTimestamp( "
                  "timestamp : %u "
                  ")",
                  timestamp
@@ -172,13 +172,13 @@ void PublisherController::OnEncodeVideoFrame(VideoEncoder* encoder, char* data, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeVideoFrame( "
+                 "frameType : 0x%02x, "
                  "timestamp : %u, "
-                 "size : %d, "
-                 "frameType : 0x%x "
+                 "size : %d "
                  ")",
+                 data[0],
                  timestamp,
-                 size,
-                 data[0]
+                 size
                  );
     
     // 录制视频帧

@@ -1,4 +1,4 @@
-//
+              //
 //  HttpRequestController.cpp
 //  Common-C-Library
 //
@@ -46,13 +46,14 @@ long long HttpRequestController::Login(
                                        const string& deviceid,
                                        const string& model,
                                        const string& manufacturer,
+                                       RegionIdType regionId,
                                        IRequestLoginCallback* callback
                                        ) {
     long long requestId = HTTPREQUEST_INVALIDREQUESTID;
     
     HttpLoginTask* task = new HttpLoginTask();
     task->Init(pHttpRequestManager);
-    task->SetParam(manId, userSid, deviceid, model, manufacturer);
+    task->SetParam(manId, userSid, deviceid, model, manufacturer, regionId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

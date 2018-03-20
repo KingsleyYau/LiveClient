@@ -95,6 +95,11 @@
 @property (nonatomic, assign) BOOL isForTest;
 
 /**
+ Http代理
+ */
+@property (nonatomic, strong) NSString *httpProxy;
+
+/**
  来源界面导航栏颜色
  */
 @property (readonly) UIColor *tintColor;

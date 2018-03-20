@@ -93,11 +93,11 @@ public:
     void PushAudioFrame(void* data, int size, void* frame = NULL);
     
     /**
-     增加切换到后台时间造成的timesatmp
+     增加采集视频卡顿造成的时间
      
-     @param timestamp <#timestamp description#>
+     @param timestamp 采集视频卡顿造成的时间
      */
-    void AddVideoBackgroundTime(u_int32_t timestamp);
+    void AddVideoTimestamp(u_int32_t timestamp);
     
 private:
     // 编码器回调

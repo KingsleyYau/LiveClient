@@ -78,9 +78,6 @@
     
     // 更新头部直播间数据
     [self setupHeadViewInfo];
-
-    // 请求观众席列表
-    [self setupAudienView];
 }
 
 - (void)dealloc {
@@ -119,6 +116,9 @@
     
     // 初始化播放界面
     [self setupPlayController];
+
+    // 请求观众席列表
+    [self setupAudienView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -288,6 +288,7 @@
                     model.mountId = item.mountId;
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
+                    model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
                     [self.audienceArray addObject:model];
                     
                     // 更新并缓存本地观众数据
@@ -301,8 +302,17 @@
                     infoItem.isAnchor = 0;
                     [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
+                
+                // 默认六个头像
+                if (self.audienceArray.count < 6) {
+                    NSUInteger count = 6 - self.audienceArray.count;
+                    for (NSUInteger num = 0; num < count; num++) {
+                        AudienModel *model = [[AudienModel alloc] init];
+                        model.image = [UIImage imageNamed:@"Default_Img_Noman_Circyle"];
+                        [self.audienceArray addObject:model];
+                    }
+                }
                 self.audienceView.audienceArray = self.audienceArray;
-                self.audienceViewWidth.constant = self.audienceView.audienceArray.count * 28;
             }
         });
     };

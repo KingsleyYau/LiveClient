@@ -34,7 +34,7 @@
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_offline_icon" translatesAutoresizingMaskIntoConstraints="NO" id="fqf-nX-YTa">
+                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="home_offline_icon" translatesAutoresizingMaskIntoConstraints="NO" id="fqf-nX-YTa">
                         <rect key="frame" x="116" y="245.5" width="14" height="14"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="14" id="azI-9J-6Lx"/>
@@ -80,6 +80,9 @@
                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Premium_Public" translatesAutoresizingMaskIntoConstraints="NO" id="fuk-dI-1Kd">
                         <rect key="frame" x="211" y="13" width="109" height="18"/>
                     </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_OnLine" translatesAutoresizingMaskIntoConstraints="NO" id="zae-cO-nfk">
+                        <rect key="frame" x="0.0" y="13" width="70" height="21"/>
+                    </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 <constraints>
@@ -88,6 +91,7 @@
                     <constraint firstItem="nK9-2S-OJq" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="2jJ-jZ-d1S"/>
                     <constraint firstItem="0Zy-aq-O5U" firstAttribute="top" secondItem="QWp-yv-M5I" secondAttribute="top" constant="13" id="6qq-Mw-hRF"/>
                     <constraint firstItem="fqf-nX-YTa" firstAttribute="centerY" secondItem="57y-9Q-pMd" secondAttribute="centerY" constant="2" id="6se-Tk-yJV"/>
+                    <constraint firstItem="zae-cO-nfk" firstAttribute="leading" secondItem="QWp-yv-M5I" secondAttribute="leading" id="7Cy-4b-mdO"/>
                     <constraint firstItem="0Fl-SM-fA8" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" id="7ZX-Rz-P1n"/>
                     <constraint firstItem="TMN-wZ-hyV" firstAttribute="leading" secondItem="QWp-yv-M5I" secondAttribute="leading" id="87X-Z2-zj6"/>
                     <constraint firstItem="TMN-wZ-hyV" firstAttribute="trailing" secondItem="QWp-yv-M5I" secondAttribute="trailing" id="8Uw-es-w2q"/>
@@ -98,6 +102,7 @@
                     <constraint firstItem="pT6-2d-JV2" firstAttribute="top" secondItem="2VE-ln-Oie" secondAttribute="top" id="Iw5-tB-iDe"/>
                     <constraint firstItem="hpf-jw-cB7" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="L8v-hG-4Kt"/>
                     <constraint firstItem="2VE-ln-Oie" firstAttribute="centerX" secondItem="57y-9Q-pMd" secondAttribute="centerX" id="Pfh-cL-IoY"/>
+                    <constraint firstItem="zae-cO-nfk" firstAttribute="top" secondItem="QWp-yv-M5I" secondAttribute="top" constant="13" id="SgI-6j-9Lj"/>
                     <constraint firstItem="hpf-jw-cB7" firstAttribute="centerX" secondItem="57y-9Q-pMd" secondAttribute="centerX" id="URo-b9-wTc"/>
                     <constraint firstItem="pT6-2d-JV2" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" constant="-13" id="Wcv-bt-Shz"/>
                     <constraint firstItem="GJ5-xQ-cdu" firstAttribute="centerX" secondItem="57y-9Q-pMd" secondAttribute="centerX" id="XQX-Ro-I4c"/>
@@ -130,6 +135,7 @@
                 <outlet property="normalPrivateBtn" destination="pT6-2d-JV2" id="z0P-1p-ZQs"/>
                 <outlet property="normalPrivateCenterX" destination="0Ch-qC-AED" id="i9L-aS-FpM"/>
                 <outlet property="onlineIcon" destination="fqf-nX-YTa" id="Cgi-rg-Apu"/>
+                <outlet property="onlineStatus" destination="zae-cO-nfk" id="HoW-3L-DBk"/>
                 <outlet property="roomType" destination="fuk-dI-1Kd" id="fGj-6d-2mm"/>
                 <outlet property="viewBtnTopDistance" destination="jY4-qH-3yM" id="Ji9-pi-EXy"/>
                 <outlet property="viewPublicFeeBtn" destination="2VE-ln-Oie" id="BLO-X1-Ct1"/>
@@ -145,6 +151,7 @@
         <image name="Home_HotAndFollow_Btn_ViewNow" width="207" height="35"/>
         <image name="Home_HotAndFollow_ImageView_Live1" width="70" height="21"/>
         <image name="Home_HotAndFollow_ImageView_Premium_Public" width="109" height="18"/>
+        <image name="Home_HotAndFollow_OnLine" width="70" height="21"/>
         <image name="home_offline_icon" width="14" height="14"/>
     </resources>
 </document>

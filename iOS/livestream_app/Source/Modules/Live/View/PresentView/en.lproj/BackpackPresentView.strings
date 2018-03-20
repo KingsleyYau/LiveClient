@@ -1,0 +1,14 @@
+
+/* Class = "UILabel"; text = "My Balance"; ObjectID = "Yrv-OE-EpZ"; */
+"Yrv-OE-EpZ.text" = "My Balance";
+
+/* Class = "UILabel"; text = "Your backpack is empty."; ObjectID = "ZSU-hM-miz"; */
+"ZSU-hM-miz.text" = "Your backpack is empty.";
+
+/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "glh-ot-J3n"; */
+"glh-ot-J3n.normalTitle" = "Reload";
+
+"REQUEST_FAIL_TIP" = "Failed to load";
+
+"NO_LIST_TIP" = "Your backpack is empty.";
+

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="PreStartPublicHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4cS-GM-98M" customClass="GPUImageView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S28-O3-jat">
+                    <rect key="frame" x="13" y="17" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="25" id="gnG-hi-ChA"/>
+                        <constraint firstAttribute="height" constant="25" id="hEF-V9-O6E"/>
+                    </constraints>
+                    <state key="normal" image="Live_Public_Btn_Close"/>
+                    <connections>
+                        <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="ZjX-jQ-os3"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="4cS-GM-98M" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="GOS-pb-wDG"/>
+                <constraint firstAttribute="trailing" secondItem="4cS-GM-98M" secondAttribute="trailing" id="QD1-GE-FRX"/>
+                <constraint firstAttribute="bottom" secondItem="4cS-GM-98M" secondAttribute="bottom" id="hNp-9j-c5b"/>
+                <constraint firstItem="S28-O3-jat" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="17" id="ji7-oj-Tip"/>
+                <constraint firstItem="4cS-GM-98M" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="uOl-f3-rjB"/>
+                <constraint firstItem="S28-O3-jat" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="13" id="yHY-yk-xc3"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="closeBtn" destination="S28-O3-jat" id="yIS-WB-gfs"/>
+                <outlet property="videoView" destination="4cS-GM-98M" id="UUG-Ec-ne6"/>
+            </connections>
+            <point key="canvasLocation" x="-43" y="-54"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Public_Btn_Close" width="16" height="16"/>
+    </resources>
+</document>

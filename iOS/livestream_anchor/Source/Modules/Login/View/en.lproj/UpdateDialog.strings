@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "This is update message"; ObjectID = "Kgw-2y-QHg"; */
+"Kgw-2y-QHg.text" = "This is update message";
+
+/* Class = "UILabel"; text = "Charm Live Update Notice"; ObjectID = "NWs-vy-bAI"; */
+"NWs-vy-bAI.text" = "Charm Live Update Notice";
+
+/* Class = "UIButton"; normalTitle = "Not Now"; ObjectID = "Ous-Gb-eGM"; */
+"Ous-Gb-eGM.normalTitle" = "Not Now";
+
+/* Class = "UIButton"; normalTitle = "Update Now"; ObjectID = "Tud-ZL-JbM"; */
+"Tud-ZL-JbM.normalTitle" = "Update Now";
+
+/* Class = "UIButton"; normalTitle = "Update"; ObjectID = "Twr-70-4ek"; */
+"Twr-70-4ek.normalTitle" = "Update";

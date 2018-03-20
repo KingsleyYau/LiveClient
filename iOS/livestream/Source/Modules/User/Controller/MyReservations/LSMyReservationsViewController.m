@@ -15,7 +15,6 @@
 @interface LSMyReservationsViewController () <JTSegmentControlDelegate, JDSegmentControlDelegate, LSPZPagingScrollViewDelegate,IMLiveRoomManagerDelegate>
 @property (nonatomic, strong) LSPZPagingScrollView * pagingScrollView;
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
-@property (nonatomic, assign) NSInteger curIndex;
 @property (weak, nonatomic) IBOutlet UIView *topView;
 @property (nonatomic, strong) JDSegmentControl *segment;
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
