@@ -19,6 +19,15 @@ AudioRendererImp::AudioRendererImp(jobject jniRenderer) {
 	mJniRenderer = NULL;
 	if( jniRenderer ) {
 		mJniRenderer = env->NewGlobalRef(jniRenderer);
+		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
+		// 反射方法
+		string signure = "([BIII)V";
+		jmethodID jMethodID = env->GetMethodID(
+				jniRendererCls,
+				"renderAudioFrame",
+				signure.c_str()
+				);
+		mJniRendererMethodID = jMethodID;
 	}
 
 	dataByteArray = NULL;
@@ -58,19 +67,8 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
 	// 回调图像
-	if( mJniRenderer != NULL ) {
-		// 反射类
-		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
-
-		if( jniRendererCls != NULL ) {
-			// 发射方法
-			string signure = "([BIII)V";
-			jmethodID jMethodID = env->GetMethodID(
-					jniRendererCls,
-					"renderAudioFrame",
-					signure.c_str()
-					);
-
+	if( mJniRenderer ) {
+		if( mJniRendererMethodID ) {
 			// 创建新Buffer
 			if( dataByteArray != NULL ) {
 				int oldLen = env->GetArrayLength(dataByteArray);
@@ -90,43 +88,37 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
 				env->SetByteArrayRegion(dataByteArray, 0, audioFrame->mBufferLen, (const jbyte*)audioFrame->GetBuffer());
 			}
 
-			// 回调
-			if( jMethodID ) {
-				int sampleRate = -1;
-
-				switch( audioFrame->mSoundRate ) {
-				case AFSR_KHZ_44: {
-					sampleRate = 44100;
-				}break;
-				default:break;
-				}
-
-				int channelPerFrame = -1;
-				switch( audioFrame->mSoundType ) {
-				case AFST_MONO:{
-					channelPerFrame = 1;
-				}break;
-				case AFST_STEREO:{
-					channelPerFrame = 2;
-				}break;
-				default:break;
-				}
-
-				int bitPerSample = -1;
-				switch( audioFrame->mSoundSize ) {
-				case AFSS_BIT_8:{
-					bitPerSample = 8;
-				}break;
-				case AFSS_BIT_16:{
-					bitPerSample = 16;
-				}break;
-				default:break;
-				}
-
-				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, sampleRate, channelPerFrame, bitPerSample);
+			int sampleRate = -1;
+			switch( audioFrame->mSoundRate ) {
+			case AFSR_KHZ_44: {
+				sampleRate = 44100;
+			}break;
+			default:break;
 			}
 
-			env->DeleteLocalRef(jniRendererCls);
+			int channelPerFrame = -1;
+			switch( audioFrame->mSoundType ) {
+			case AFST_MONO:{
+				channelPerFrame = 1;
+			}break;
+			case AFST_STEREO:{
+				channelPerFrame = 2;
+			}break;
+			default:break;
+			}
+
+			int bitPerSample = -1;
+			switch( audioFrame->mSoundSize ) {
+			case AFSS_BIT_8:{
+				bitPerSample = 8;
+			}break;
+			case AFSS_BIT_16:{
+				bitPerSample = 16;
+			}break;
+			default:break;
+			}
+
+			env->CallVoidMethod(mJniRenderer, mJniRendererMethodID, dataByteArray, sampleRate, channelPerFrame, bitPerSample);
 		}
 	}
 

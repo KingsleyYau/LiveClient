@@ -31,6 +31,8 @@ public:
 	void Stop();
 	void SetUseHardEncoder(bool useHardEncoder);
     void PushVideoFrame(void* data, int size, int width, int height);
+    void PausePushVideo();
+    void ResumePushVideo();
     void PushAudioFrame(void* data, int size);
     void ChangeVideoRotate(int rotate);
 
@@ -68,12 +70,6 @@ private:
 	VideoFormatConverter mVideoFormatConverter;
 	VideoFrame mPreViewFrame;
 
-	// 第一次处理帧时间
-	long long mFrameStartTime;
-	// 由帧率得出的帧间隔(ms)
-	int mFrameInterval;
-	int mFrameIndex;
-
     // 视频参数
     int mWidth;
     int mHeight;
@@ -81,11 +77,26 @@ private:
     int mKeyFrameInterval;
     int mFPS;
 
+	// 视频控制
+	// 第一次处理帧时间
+    long long mVideoFrameStartPushTime;
+    long long mVideoFrameLastPushTime;
+	// 由帧率得出的帧间隔(ms)
+	int mVideoFrameInterval;
+	int mVideoFrameIndex;
+    // 视频是否暂停采集
+    bool mVideoPause;
+    // 视频是否已经恢复采集
+    bool mVideoResume;
+    // 视频总暂停时长
+    long long mVideoFramePauseTime;
+
     // 音频参数
     int mSampleRate;
     int mChannelsPerFrame;
     int mBitPerSample;
 
+    KMutex mPublisherMutex;
 };
 
 #endif /* COOLLIVE_LSPUBLISHERIMP_H_ */

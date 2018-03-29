@@ -2,22 +2,24 @@ package net.qdating;
 
 import java.io.File;
 
+import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.view.SurfaceView;
+import net.qdating.LSConfig.EncodeDecodeMode;
+import net.qdating.LSConfig.FillMode;
 import net.qdating.player.ILSPlayerCallback;
 import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSAudioPlayer;
 import net.qdating.player.LSPlayerJni;
-import net.qdating.player.LSVideoDecoder;
+import net.qdating.player.LSVideoHardDecoder;
+import net.qdating.player.LSVideoHardPlayer;
 import net.qdating.player.LSVideoPlayer;
 import net.qdating.utils.Log;
 
 /**
  * RTMP流播放器
  * @author max
- * @version 1.0.0
  */
 public class LSPlayer implements ILSPlayerCallback {
 	/**
@@ -33,9 +35,13 @@ public class LSPlayer implements ILSPlayerCallback {
 	 */
 	private LSAudioPlayer audioPlayer = new LSAudioPlayer();
 	/**
-	 * 视频解码器
+	 * 视频硬解码器
 	 */
-	private LSVideoDecoder videoDecoder = new LSVideoDecoder();
+	private LSVideoHardDecoder videoHardDecoder = new LSVideoHardDecoder();
+	/**
+	 * 视频硬渲染器
+	 */
+	private LSVideoHardPlayer videoHardPlayer = new LSVideoHardPlayer();
 	/**
 	 * 状态回调接口
 	 */
@@ -64,6 +70,14 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * AAC录制绝对路径
 	 */
 	private String recordAACFilePath; 
+	/**
+	 * 是否使用硬解码
+	 */
+	private boolean useHardDecoder = false;
+	
+	// 消息定义
+	private final int MSG_RECONNECT = 0;
+	private final int MSG_DISCONNECT = 1;
 	
 	/***
 	 * 初始化流播放器
@@ -71,59 +85,110 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @param statusCallback 状态回调接口
 	 * @return true:成功/false:失败
 	 */
-	public boolean init(SurfaceView surfaceView, ILSPlayerStatusCallback statusCallback) {
-		boolean bFlag = false;
+	public boolean init(GLSurfaceView surfaceView, FillMode fillMode, ILSPlayerStatusCallback statusCallback) {
+		boolean bFlag = true;
 		
 		File path = Environment.getExternalStorageDirectory();
 		String filePath = path.getAbsolutePath() + "/" + LSConfig.TAG + "/";
 		Log.initFileLog(filePath);
 		Log.setWriteFileLog(true);
 		
+		Log.i(LSConfig.TAG, String.format("LSPlayer::init( this : 0x%x )", hashCode()));
+		
 		this.statusCallback = statusCallback;
 		
-//		// 初始化硬解码器
-//		videoDecoder.init();
+		if( LSConfig.encodeDecodeMode == EncodeDecodeMode.EncodeDecodeModeAuto ) {
+			if( LSVideoHardDecoder.supportHardDecoder() ) {
+				// 判断可以使用硬解码
+				useHardDecoder = true;
+			}
+		} else if( LSConfig.encodeDecodeMode == EncodeDecodeMode.EncodeDecodeModeHard ) {
+			// 强制使用硬解码
+			useHardDecoder = true;
+		}
 		
-		// 初始化视频播放器
-		videoPlayer.init(surfaceView.getHolder(), LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+		if( useHardDecoder ) {
+			// 初始化视频硬解码器
+			bFlag = videoHardDecoder.init();
+			// 初始化视频硬渲染器
+			videoHardPlayer.init(surfaceView, fillMode);
+		} else {
+			// 初始化视频播放器
+			videoPlayer.init(surfaceView, fillMode);
+		}
 		
-		// 初始化播放器
-		bFlag = player.Create(this, videoPlayer, audioPlayer, videoDecoder);
-		
-		handler = new Handler() {
-			@Override
-			public void handleMessage(Message msg) {      
-				Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
-						+ "[Connect], "
-						+ "isRuning : %s "
-						+ ")", 
-						isRuning?"true":"false"
-						)
-						);
-				synchronized (this) {
-					if( isRuning ) {
-						// 非手动停止, 准备重连
-						boolean bFlag = start();
-						if( !bFlag ) {
-							// 重连失败, 1秒后重连
-							Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
-									+ "[Connect Fail, Reconnect After %d Seconds] ",
-									LSConfig.RECONNECT_SECOND
-									)
-									);
-							handler.sendEmptyMessageDelayed(0, LSConfig.RECONNECT_SECOND);
+		if( bFlag ) {
+			// 初始化播放器
+			bFlag = player.Create(this, useHardDecoder, videoPlayer, audioPlayer, videoHardDecoder, videoHardPlayer);
+			// 断线重连处理
+			handler = new Handler() {
+				@Override
+				public void handleMessage(Message msg) {      
+					switch (msg.what) {
+					case MSG_RECONNECT:{
+						Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
+								+ "this : 0x%x, "
+								+ "[Reconnect player], "
+								+ "isRuning : %s "
+								+ ")", 
+								hashCode(),
+								isRuning?"true":"false"
+								)
+								);
+						synchronized (this) {
+							if( isRuning ) {
+								// 非手动停止, 准备重连
+								boolean bFlag = start();
+								if( !bFlag ) {
+									// 重连失败, 1秒后重连
+									Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
+											+ "ththis : 0x%x"
+											+ "[Connect fail, reconnect after %d seconds] "
+											+ ")",
+											hashCode(),
+											LSConfig.RECONNECT_SECOND
+											)
+											);
+									handler.sendEmptyMessageDelayed(0, LSConfig.RECONNECT_SECOND);
+								}
+							}
 						}
+					}break;
+					case MSG_DISCONNECT:{
+						// 主动断开流
+						Log.i(LSConfig.TAG, String.format("LSPlayer::handleMessage( "
+								+ "this : 0x%x, "
+								+ "[Disconnect player] "
+								+ ")",
+								hashCode()
+								)
+								);
+				    	player.Stop();
+					}break;
+					default:
+						break;
 					}
 				}
-			}
-		};
+			};
+		}
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
-				+ "[%s] "
-				+ ")", 
-				bFlag?"Suucess":"Fail"
-				)
-				);
+		if( bFlag ) {
+			Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
+					+ "this : 0x%x, "
+					+ "[Success] "
+					+ ")",
+					hashCode()
+					)
+					);
+		} else {
+			Log.e(LSConfig.TAG, String.format("LSPlayer::init( "
+					+ "this : 0x%x, "
+					+ "[Fail] "
+					+ ")",
+					hashCode()
+					)
+					);
+		}
 		
 		return bFlag;
 	}
@@ -133,15 +198,24 @@ public class LSPlayer implements ILSPlayerCallback {
 	 */
 	public void uninit() {
 		Log.i(LSConfig.TAG, String.format("LSPlayer::uninit( "
-				+ ")"
+				+ "this : 0x%x "
+				+ ")",
+				hashCode()
 				)
 				);
+		
 		// 销毁播放器
 		player.Destroy();
-//		// 销毁解码器
-//		videoDecoder.uninit();
-		// 销毁视频播放器
-		videoPlayer.uninit();
+		
+		if( useHardDecoder ) {
+			// 销毁视频硬解码器
+			videoHardDecoder.uninit();
+			// 销毁视频硬渲染器
+			videoHardDecoder.uninit();
+		} else {
+			// 销毁视渲染放器
+			videoPlayer.uninit();
+		}
 	}
 	
 	/**
@@ -157,8 +231,10 @@ public class LSPlayer implements ILSPlayerCallback {
 		boolean bFlag = false;
 		
 		Log.d(LSConfig.TAG, String.format("LSPlayer::playUrl( "
+				+ "this : 0x%x, "
 				+ "url : %s "
 				+ ")",
+				hashCode(),
 				url
 				)
 				);
@@ -186,9 +262,11 @@ public class LSPlayer implements ILSPlayerCallback {
 	    }
 	    
 		Log.i(LSConfig.TAG, String.format("LSPlayer::playUrl( "
+				+ "this : 0x%x, "
 				+ "[%s], "
 				+ "url : %s "
 				+ ")",
+				hashCode(),
 				bFlag?"Success":"Fail",
 				url
 				)
@@ -202,7 +280,11 @@ public class LSPlayer implements ILSPlayerCallback {
 	 * @see	主线程调用
 	 */
 	public void stop() {
-		Log.d(LSConfig.TAG, String.format("LSPlayer::stop()"));
+		Log.d(LSConfig.TAG, String.format("LSPlayer::stop( "
+				+ "this : 0x%x "
+				+ ")",
+				hashCode()
+				));
 		
 		synchronized(this) {
 			isRuning = false;
@@ -215,7 +297,11 @@ public class LSPlayer implements ILSPlayerCallback {
 		// 停止音频播放
 		audioPlayer.stop();
 		
-		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( [Success] )"));
+		Log.i(LSConfig.TAG, String.format("LSPlayer::stop( "
+				+ "this : 0x%x, "
+				+ "[Success] )",
+				hashCode()
+				));
 	}
 
 	/**
@@ -227,8 +313,10 @@ public class LSPlayer implements ILSPlayerCallback {
 		boolean bFlag = true;
 		
 		Log.d(LSConfig.TAG, String.format("LSPlayer::start( "
+				+ "this : 0x%x, "
 				+ "url : %s "
 				+ ")",
+				hashCode(),
 				url
 				)
 				);
@@ -239,9 +327,11 @@ public class LSPlayer implements ILSPlayerCallback {
 		}
 		
 		Log.i(LSConfig.TAG, String.format("LSPlayer::start( "
+				+ "this : 0x%x, "
 				+ "[%s], "
 				+ "url : %s "
 				+ ")",
+				hashCode(),
 				bFlag?"Success":"Fail",
 				url
 				)
@@ -251,9 +341,28 @@ public class LSPlayer implements ILSPlayerCallback {
 	}
 	
 	@Override
+	public void onConnect(LSPlayerJni player) {
+		// TODO Auto-generated method stub
+		Log.i(LSConfig.TAG, String.format("LSPlayer::onConnect( "
+				+ "this : 0x%x "
+				+ ")",
+				hashCode()
+				));
+		
+		// 通知外部监听
+		if( statusCallback != null ) {
+			statusCallback.onConnect(this);
+		}
+	}
+	
+	@Override
 	public void onDisconnect(LSPlayerJni player) {
 		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, String.format("LSPlayer::onDisconnect()"));
+		Log.i(LSConfig.TAG, String.format("LSPlayer::onDisconnect( "
+				+ "this : 0x%x "
+				+ ")",
+				hashCode()
+				));
 		
 		// 通知外部监听
 		if( statusCallback != null ) {
@@ -263,8 +372,26 @@ public class LSPlayer implements ILSPlayerCallback {
 		synchronized (this) {
 			if( isRuning ) {
 				// 非手动断开, 发送重连消息
-				handler.sendEmptyMessageDelayed(0, LSConfig.RECONNECT_SECOND);
+				handler.sendEmptyMessageDelayed(MSG_RECONNECT, LSConfig.RECONNECT_SECOND);
 			}
 		}
 	}
+
+	@Override
+	public void onPlayerOnDelayMaxTime(LSPlayerJni player) {
+		// TODO Auto-generated method stub
+		Log.i(LSConfig.TAG, String.format("LSPlayer::onPlayerOnDelayMaxTime( "
+				+ "this : 0x%x "
+				+ ")",
+				hashCode()
+				));
+		
+		synchronized (this) {
+			if( isRuning ) {
+				// 断开连接
+				handler.sendEmptyMessageDelayed(MSG_DISCONNECT, 0);
+			}
+		}
+	}
+
 }

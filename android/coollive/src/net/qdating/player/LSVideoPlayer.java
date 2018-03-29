@@ -73,7 +73,7 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
     	if( this.width != width || this.height != height ) {
     		Log.d(LSConfig.TAG, String.format("LSVideoPlayer::drawBitmap( [Change image size], "
     				+ "oldWidth : %d, oldHeight : %d, "
-    				+ "newWidth : %d, newHeight : %d, "
+    				+ "newWidth : %d, newHeight : %d "
     				+ ")", 
     				this.width, this.height,
     				width, height

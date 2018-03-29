@@ -8,8 +8,9 @@
 
 #include <net_qdating_publisher_LSPublisherJni.h>
 
+#include "../LSVersion.h"
+
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	FileLog("rtmpdump", "JNI_OnLoad( lspublisher )");
 	gJavaVM = vm;
 
 	// Get JNI
@@ -22,6 +23,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 	KLog::SetLogDirectory("/sdcard/coollive");
 	KLog::SetLogLevel(KLog::LOG_WARNING);
+
+	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
 
 	jobject jLSVideoFrameItem;
 	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);

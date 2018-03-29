@@ -6,8 +6,16 @@
  */
 
 #include <LSPlayerImp.h>
+#include "../LSVersion.h"
 
-LSPlayerImp::LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject jniAudioRenderer, jobject jniVideoDecoder) {
+LSPlayerImp::LSPlayerImp(
+		jobject jniCallback,
+		jboolean useHardDecoder,
+		jobject jniVideoRenderer,
+		jobject jniAudioRenderer,
+		jobject jniVideoHardDecoder,
+		jobject jniVideoHardRenderer
+		) {
 	// TODO Auto-generated constructor stub
 	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPlayerImp::LSPlayerImp( this : %p )", this);
 
@@ -30,12 +38,17 @@ LSPlayerImp::LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject 
 		mJniAudioRenderer = env->NewGlobalRef(jniAudioRenderer);
 	}
 
-	mJniVideoDecoder = NULL;
-	if( jniVideoDecoder ) {
-		mJniVideoDecoder = env->NewGlobalRef(jniVideoDecoder);
+	mJniVideoHardDecoder = NULL;
+	if( jniVideoHardDecoder ) {
+		mJniVideoHardDecoder = env->NewGlobalRef(jniVideoHardDecoder);
 	}
 
-	mUseHardDecoder = false;
+	mJniVideoHardRenderer = NULL;
+	if( jniVideoHardRenderer ) {
+		mJniVideoHardRenderer = env->NewGlobalRef(jniVideoHardRenderer);
+	}
+
+	mUseHardDecoder = useHardDecoder;
 
 	mPlayer.SetStatusCallback(this);
 
@@ -71,9 +84,14 @@ LSPlayerImp::~LSPlayerImp() {
 		mJniAudioRenderer = NULL;
 	}
 
-	if( mJniVideoDecoder ) {
-		env->DeleteGlobalRef(mJniVideoDecoder);
-		mJniVideoDecoder = NULL;
+	if( mJniVideoHardDecoder ) {
+		env->DeleteGlobalRef(mJniVideoHardDecoder);
+		mJniVideoHardDecoder = NULL;
+	}
+
+	if( mJniVideoHardRenderer ) {
+		env->DeleteGlobalRef(mJniVideoHardRenderer);
+		mJniVideoHardRenderer = NULL;
 	}
 
 	if( bFlag ) {
@@ -111,12 +129,12 @@ void LSPlayerImp::CreateDecoders() {
 
 	if( mUseHardDecoder ) {
 		// 硬解码
-		VideoHardDecoder* videoDecoder = new VideoHardDecoder(mJniVideoDecoder);
+		VideoHardDecoder* videoDecoder = new VideoHardDecoder(mJniVideoHardDecoder);
 		mpVideoDecoder = videoDecoder;
 		mpAudioDecoder = new AudioDecoderAAC();
 
 		// 硬渲染
-		mpVideoRenderer = new VideoRendererImp(mJniVideoRenderer);
+		mpVideoRenderer = new VideoHardRendererImp(mJniVideoHardRenderer);
 		mpAudioRenderer = new AudioRendererImp(mJniAudioRenderer);
 
 	} else {
@@ -187,8 +205,49 @@ void LSPlayerImp::DestroyDecoders() {
 	}
 }
 
+void LSPlayerImp::OnPlayerConnect(PlayerController* pc) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_WARNING,
+			"LSPlayerImp::OnPlayerConnect( "
+			"player : %p "
+			")",
+			this
+			);
+
+	JNIEnv* env;
+	bool isAttachThread;
+	bool bFlag = GetEnv(&env, &isAttachThread);
+
+	if( mJniCallback != NULL ) {
+		// 反射类
+		jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
+
+		if( jniCallbackCls != NULL ) {
+			// 发射方法
+			string signure = "()V";
+			jmethodID jMethodID = env->GetMethodID(
+					jniCallbackCls,
+					"onConnect",
+					signure.c_str()
+					);
+
+			// 回调
+			if( jMethodID ) {
+				env->CallVoidMethod(mJniCallback, jMethodID);
+			}
+		}
+	}
+
+	if( bFlag ) {
+		ReleaseEnv(isAttachThread);
+	}
+}
+
 void LSPlayerImp::OnPlayerDisconnect(PlayerController* pc) {
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_WARNING,
 			"LSPlayerImp::OnPlayerDisconnect( "
 			"player : %p "
 			")",
@@ -225,5 +284,40 @@ void LSPlayerImp::OnPlayerDisconnect(PlayerController* pc) {
 }
 
 void LSPlayerImp::OnPlayerOnDelayMaxTime(PlayerController* pc) {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_MSG,
+			"LSPlayerImp::OnPlayerOnDelayMaxTime( "
+			"player : %p "
+			")",
+			this
+			);
 
+	JNIEnv* env;
+	bool isAttachThread;
+	bool bFlag = GetEnv(&env, &isAttachThread);
+
+	if( mJniCallback != NULL ) {
+		// 反射类
+		jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
+
+		if( jniCallbackCls != NULL ) {
+			// 发射方法
+			string signure = "()V";
+			jmethodID jMethodID = env->GetMethodID(
+					jniCallbackCls,
+					"onPlayerOnDelayMaxTime",
+					signure.c_str()
+					);
+
+			// 回调
+			if( jMethodID ) {
+				env->CallVoidMethod(mJniCallback, jMethodID);
+			}
+		}
+	}
+
+	if( bFlag ) {
+		ReleaseEnv(isAttachThread);
+	}
 }

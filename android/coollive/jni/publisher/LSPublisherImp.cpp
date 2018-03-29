@@ -331,7 +331,7 @@ void LSPublisherImp::DestroyEncoders() {
 void LSPublisherImp::OnPublisherConnect(PublisherController* pc) {
 	FileLevelLog(
 			"rtmpdump",
-			KLog::LOG_STAT,
+			KLog::LOG_WARNING,
 			"LSPublisherImp::OnPublisherConnect( "
 			"this : %p "
 			")",
@@ -342,25 +342,25 @@ void LSPublisherImp::OnPublisherConnect(PublisherController* pc) {
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
-//	if( mJniCallback != NULL ) {
-//		// 反射类
-//		jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
-//
-//		if( jniCallbackCls != NULL ) {
-//			// 发射方法
-//			string signure = "()V";
-//			jmethodID jMethodID = env->GetMethodID(
-//					jniCallbackCls,
-//					"onDisconnect",
-//					signure.c_str()
-//					);
-//
-//			// 回调
-//			if( jMethodID ) {
-//				env->CallVoidMethod(mJniCallback, jMethodID);
-//			}
-//		}
-//	}
+	if( mJniCallback != NULL ) {
+		// 反射类
+		jclass jniCallbackCls = env->GetObjectClass(mJniCallback);
+
+		if( jniCallbackCls != NULL ) {
+			// 发射方法
+			string signure = "()V";
+			jmethodID jMethodID = env->GetMethodID(
+					jniCallbackCls,
+					"onConnect",
+					signure.c_str()
+					);
+
+			// 回调
+			if( jMethodID ) {
+				env->CallVoidMethod(mJniCallback, jMethodID);
+			}
+		}
+	}
 
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
@@ -370,7 +370,7 @@ void LSPublisherImp::OnPublisherConnect(PublisherController* pc) {
 void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
 	FileLevelLog(
 			"rtmpdump",
-			KLog::LOG_STAT,
+			KLog::LOG_WARNING,
 			"LSPublisherImp::OnPublisherConnect( "
 			"this : %p "
 			")",

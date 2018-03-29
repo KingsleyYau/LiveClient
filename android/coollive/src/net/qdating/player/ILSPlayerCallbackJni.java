@@ -6,5 +6,7 @@ package net.qdating.player;
  *
  */
 public interface ILSPlayerCallbackJni {
+	public void onConnect();
 	public void onDisconnect();
+	public void onPlayerOnDelayMaxTime();
 }

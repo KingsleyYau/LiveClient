@@ -16,8 +16,8 @@
 
 // 播放休眠
 #define PLAY_SLEEP_TIME 1
-// 帧延迟丢弃值(MS)
-#define PLAY_DELAY_DROP_TIME 500
+// 帧延迟丢弃值(MS), 如果由于CPU卡顿, 可能导致音视频不同步的差距值
+#define PLAY_DELAY_DROP_TIME 300
 // 帧延迟断开值(MS)
 #define PLAY_DELAY_DISCONNECT_TIME 5000
 // 无效的Timestamp
@@ -1007,6 +1007,7 @@ void RtmpPlayer::PlayFrame(bool isAudio) {
                                     // 播放延迟, 或者通知服务器降低发送帧率(允许每帧处理播放时间变长)，或者降低分辨率(减少每帧处理数据)
                                     if( delay > PLAY_DELAY_DROP_TIME ) {
                                         // 播放延迟总延迟大于允许值, 丢弃
+                                        // 这里可能会
                                         bDropFrame = true;
                                     }
                                     

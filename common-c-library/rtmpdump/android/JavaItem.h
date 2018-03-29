@@ -9,6 +9,6 @@
 #ifndef JAVAITEM_H_
 #define JAVAITEM_H_
 
-#define LS_VIDEO_ITEM_CLASS 				"net/qdating/LSVideoFrame"
+#define LS_VIDEO_ITEM_CLASS 				"net/qdating/player/LSVideoHardDecoderFrame"
 
 #endif /* JAVAITEM_H_ */

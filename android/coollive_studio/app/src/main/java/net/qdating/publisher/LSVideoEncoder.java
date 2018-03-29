@@ -13,7 +13,7 @@ import android.media.MediaFormat;
 import android.os.Build;
 import android.util.Log;
 import net.qdating.LSConfig;
-import net.qdating.LSVideoFrame;
+import net.qdating.player.LSVideoHardDecoderFrame;
 
 /**
  * 视频硬解码器
@@ -30,8 +30,8 @@ public class LSVideoEncoder implements ILSVideoEncoderJni {
 	private MediaFormat videoMediaFormat = null;
 	
 	public MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
-	private LSVideoFrame unvalidVideoFrame = new LSVideoFrame();
-	private LSVideoFrame videoFrames[] = new LSVideoFrame[LSVIDEOFRAME_SZIE];
+	private LSVideoHardDecoderFrame unvalidVideoFrame = new LSVideoHardDecoderFrame();
+	private LSVideoHardDecoderFrame videoFrames[] = new LSVideoHardDecoderFrame[LSVIDEOFRAME_SZIE];
 	
 	/**
 	 * h264 start code
@@ -72,7 +72,7 @@ public class LSVideoEncoder implements ILSVideoEncoderJni {
 	
 	public LSVideoEncoder() {
 		for(int i = 0; i < LSVIDEOFRAME_SZIE; i++) {
-			videoFrames[i] = new LSVideoFrame();
+			videoFrames[i] = new LSVideoHardDecoderFrame();
 		}
 	}
 
@@ -172,7 +172,7 @@ public class LSVideoEncoder implements ILSVideoEncoderJni {
 	}
 	
 	@Override
-	public LSVideoFrame getEncodeVideoFrame() {
+	public LSVideoHardDecoderFrame getEncodeVideoFrame() {
 		Log.i(LSConfig.TAG, 
 				String.format("LSVideoEncoder::getDecodeVideoFrame("
 				+ ")"
@@ -180,7 +180,7 @@ public class LSVideoEncoder implements ILSVideoEncoderJni {
 				);
 		
     	// 获取编码数据
-		LSVideoFrame videoFrame = unvalidVideoFrame;
+		LSVideoHardDecoderFrame videoFrame = unvalidVideoFrame;
 		int outIndex = -1;
 				
 		try {
@@ -223,20 +223,20 @@ public class LSVideoEncoder implements ILSVideoEncoderJni {
 	            		)
 	            		);
 	            
-	            videoFrame = videoFrames[outIndex];
-	            videoFrame.bufferIndex = outIndex;
+//	            videoFrame = videoFrames[outIndex];
+//	            videoFrame.bufferIndex = outIndex;
 	            videoFrame.timestamp = (int)bufferInfo.presentationTimeUs;
 	            videoFrame.width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
 	            videoFrame.height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
 	            
-	            if( videoFrame.data != null && byteBuffer.remaining() > videoFrame.data.length ) {
-	            	videoFrame.data = new byte[byteBuffer.remaining()];
-	            } else if( videoFrame.data == null ){
-	            	videoFrame.data = new byte[byteBuffer.remaining()];
-	            }
-	            
-	            videoFrame.size = byteBuffer.remaining();
-	            byteBuffer.get(videoFrame.data, 0, byteBuffer.remaining());
+//	            if( videoFrame.data != null && byteBuffer.remaining() > videoFrame.data.length ) {
+//	            	videoFrame.data = new byte[byteBuffer.remaining()];
+//	            } else if( videoFrame.data == null ){
+//	            	videoFrame.data = new byte[byteBuffer.remaining()];
+//	            }
+//	            
+//	            videoFrame.size = byteBuffer.remaining();
+//	            byteBuffer.get(videoFrame.data, 0, byteBuffer.remaining());
 	            
 	        } else {
 	    		Log.i(LSConfig.TAG, String.format("LSVideoEncoder::getEncodeVideoFrame( "

@@ -1,5 +1,5 @@
 # Copyright (C) 2014 The QpidNetwork Project
-# HttpRequest Module Makefile
+# LSPublisher Module Makefile
 #
 # Created on: 2014/10/27
 # Author: Max.Chiu
@@ -21,8 +21,8 @@ LOCAL_C_INCLUDES += $(LIBRARY_THIRDY_PARTY_PATH)
 LOCAL_CFLAGS = -fpermissive -Wno-write-strings
 LOCAL_CFLAGS += -D__STDC_CONSTANT_MACROS
 
-#LOCAL_LDLIBS := -llog -lz
-LOCAL_LDFLAGS := -L$(LIBRARY_THIRDY_PARTY_PATH)/ffmpeg/android/lib/$(TARGET_ARCH_ABI)/lib \
+LOCAL_LDLIBS := -llog -lz
+LOCAL_LDFLAGS += -L$(LIBRARY_THIRDY_PARTY_PATH)/ffmpeg/android/lib/$(TARGET_ARCH_ABI)/lib \
 					-lavfilter \
 					-lavformat \
 					-lavdevice \

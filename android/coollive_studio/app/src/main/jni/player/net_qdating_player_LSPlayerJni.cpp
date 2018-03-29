@@ -8,8 +8,9 @@
 
 #include <net_qdating_player_LSPlayerJni.h>
 
+#include "../LSVersion.h"
+
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-	FileLog("rtmpdump", "JNI_OnLoad( lsplayer )");
 	gJavaVM = vm;
 
 	// Get JNI
@@ -23,6 +24,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	KLog::SetLogDirectory("/sdcard/coollive");
 	KLog::SetLogLevel(KLog::LOG_WARNING);
 
+	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lsplayer, version : %s )", LS_VERSION);
+
 	jobject jLSVideoFrameItem;
 	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);
 
@@ -30,19 +33,21 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 }
 
 JNIEXPORT jlong JNICALL Java_net_qdating_player_LSPlayerJni_Create
-  (JNIEnv *env, jobject thiz, jobject callback, jobject videoRenderer, jobject audioRenderer, jobject videoDecoder) {
+  (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardDecoder, jobject videoRenderer, jobject audioRenderer, jobject videoHardDecoder, jobject videoHardRenderer) {
 	// RTMP播放器
-	LSPlayerImp* player = new LSPlayerImp(callback, videoRenderer, audioRenderer, videoDecoder);
+	LSPlayerImp* player = new LSPlayerImp(callback, useHardDecoder, videoRenderer, audioRenderer, videoHardDecoder, videoHardRenderer);
 
 	FileLevelLog(
 			"rtmpdump",
 			KLog::LOG_WARNING,
 			"LSPlayerJni::Create( "
 			"player : %p, "
-			"callback : %p "
+			"callback : %p, "
+			"useHardDecoder : %s "
 			")",
 			player,
-			callback
+			callback,
+			useHardDecoder?"true":"false"
 			);
 
 	return (long long)player;

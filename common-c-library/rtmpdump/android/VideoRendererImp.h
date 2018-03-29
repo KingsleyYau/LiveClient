@@ -25,6 +25,7 @@ public:
 
 private:
     jobject mJniRenderer;
+    jmethodID mJniRendererMethodID;
     jbyteArray dataByteArray;
 };
 }

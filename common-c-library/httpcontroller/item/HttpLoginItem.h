@@ -106,6 +106,21 @@ public:
                 userType = (UserType)root[LOGIN_USERTYPE].asInt();
             }
             
+            /* qnMainAdUrl */
+            if( root[LOGIN_QNMAINADURL].isString() ) {
+                qnMainAdUrl = root[LOGIN_QNMAINADURL].asString();
+            }
+            
+            /* qnMainAdTitle */
+            if( root[LOGIN_QNMAINADTITLE].isString() ) {
+                qnMainAdTitle = root[LOGIN_QNMAINADTITLE].asString();
+            }
+            
+            /* qnMainAdId */
+            if( root[LOGIN_QNMAINADID].isString() ) {
+                qnMainAdId = root[LOGIN_QNMAINADID].asString();
+            }
+            
         }
         
     }
@@ -119,6 +134,9 @@ public:
         photoUrl = "";
         isPushAd = false;
         userType = USERTYPEA1;
+        qnMainAdUrl = "";
+        qnMainAdTitle = "";
+        qnMainAdId = "";
     }
     
     virtual ~HttpLoginItem() {
@@ -135,6 +153,9 @@ public:
      * isPushAd		    是否打开广告（0:否 1:是）
      * svrList          流媒体服务器ID
      * userType         观众用户类型（1:A1类型 2:A2类型）（A1类型：仅可看付费公开及豪华私密直播间，A2类型：可看所有直播间）
+     * qnMainAdUrl      QN主界面广告浮层的URL（可无，无则表示不弹广告）
+     * qnMainAdTitle    QN主界面广告浮层的标题（可无）
+     * qnMainAdId       QN主界面广告浮层的ID（可无，无则表示不弹广告）
      */
     string userId;
     string token;
@@ -145,6 +166,9 @@ public:
     bool isPushAd;
     SvrList svrList;
     UserType userType;
+    string qnMainAdUrl;
+    string qnMainAdTitle;
+    string qnMainAdId;
 };
 
 #endif /* LOGINITEM_H_ */

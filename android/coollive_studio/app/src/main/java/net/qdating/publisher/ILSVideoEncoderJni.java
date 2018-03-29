@@ -1,6 +1,6 @@
 package net.qdating.publisher;
 
-import net.qdating.LSVideoFrame;
+import net.qdating.player.LSVideoHardDecoderFrame;
 
 /**
  * 视频解码接口JNI
@@ -36,7 +36,7 @@ public interface ILSVideoEncoderJni {
 	 * 获取一个已经编码的视频帧
 	 * @return
 	 */
-	public LSVideoFrame getEncodeVideoFrame();
+	public LSVideoHardDecoderFrame getEncodeVideoFrame();
 	
 	/**
 	 * 释放已经编码的帧

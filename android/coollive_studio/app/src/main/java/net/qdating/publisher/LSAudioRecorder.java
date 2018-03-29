@@ -20,6 +20,8 @@ public class LSAudioRecorder {
 	public boolean init(ILSAudioRecorderCallback callback) {
 		boolean bFlag = false;
 		
+		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::init()"));
+		
 		this.recorderCallback = callback;
 		
         int sampleRateInHz = LSConfig.SAMPLE_RATE;
@@ -41,8 +43,6 @@ public class LSAudioRecorder {
     			bFlag = true;
     		}
         }
-		
-		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::init( [%s] )", bFlag?"Success":"Fail"));
 		
 		return bFlag;
 	}

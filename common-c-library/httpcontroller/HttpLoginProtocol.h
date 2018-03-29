@@ -49,6 +49,9 @@
 #define LOGIN_SVRLIST_SVRID                 "svrid"
 #define LOGIN_SVRLIST_TURL                  "turl"
 #define LOGIN_USERTYPE          "user_type"
+#define LOGIN_QNMAINADURL       "qn_main_ad_url"
+#define LOGIN_QNMAINADTITLE     "qn_main_ad_title"
+#define LOGIN_QNMAINADID        "qn_main_ad_id"
 
 
 /* 2.2.注销 */

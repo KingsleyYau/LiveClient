@@ -24,6 +24,8 @@ PlayerController::PlayerController() {
     mUseHardDecoder = false;
     mbSkipDelayFrame = true;
     
+    mbNeedResetAudioRenderer = false;
+    
     mRtmpDump.SetCallback(this);
     mRtmpPlayer.SetRtmpDump(&mRtmpDump);
     mRtmpPlayer.SetCallback(this);
@@ -152,6 +154,8 @@ void PlayerController::Stop() {
     mAudioRecorderAAC.Stop();
     // 停止音频播放
     mpAudioRenderer->Stop();
+    // 重置参数
+    mbNeedResetAudioRenderer = false;
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -172,6 +176,9 @@ void PlayerController::OnConnect(RtmpDump* rtmpDump) {
                  ")",
                  this
                  );
+    if( mpPlayerStatusCallback ) {
+        mpPlayerStatusCallback->OnPlayerConnect(this);
+    }
 }
     
 void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
@@ -212,7 +219,7 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_MSG,
+                 KLog::LOG_STAT,
                  "PlayerController::OnRecvVideoFrame( "
                  "this : %p, "
                  "timestamp : %u, "
@@ -277,7 +284,7 @@ void PlayerController::OnRecvAudioFrame(
                                   u_int32_t timestamp
                                   ) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_MSG,
+                KLog::LOG_STAT,
                 "PlayerController::OnRecvAudioFrame( "
                 "this : %p, "
                 "timestamp : %u, "
@@ -344,6 +351,13 @@ void PlayerController::OnDropVideoFrame(RtmpPlayer* player, void* frame) {
 }
     
 void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
+    if( mbNeedResetAudioRenderer ) {
+        if( mpAudioRenderer ) {
+            mpAudioRenderer->Reset();
+        }
+        mbNeedResetAudioRenderer = false;
+    }
+    
     if( mpAudioRenderer ) {
         mpAudioRenderer->RenderAudioFrame(frame);
     }
@@ -356,9 +370,8 @@ void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
 }
     
 void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
-    if( mpAudioRenderer ) {
-        mpAudioRenderer->Reset();
-    }
+    // 标记需要重置
+    mbNeedResetAudioRenderer = true;
     
     // 释放内存
     mpAudioDecoder->ReleaseAudioFrame(frame);
@@ -368,7 +381,13 @@ void PlayerController::OnDropAudioFrame(RtmpPlayer* player, void* frame) {
 }
     
 void PlayerController::OnResetVideoStream(RtmpPlayer* player) {
-    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "PlayerController::OnResetVideoStream( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
 }
     
 void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
@@ -380,9 +399,11 @@ void PlayerController::OnResetAudioStream(RtmpPlayer* player) {
                  this
                  );
     
-    if( mpAudioRenderer ) {
-        mpAudioRenderer->Reset();
-    }
+    // 标记需要重置
+    mbNeedResetAudioRenderer = true;
+//    if( mpAudioRenderer ) {
+//        mpAudioRenderer->Reset();
+//    }
 }
 
 void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {

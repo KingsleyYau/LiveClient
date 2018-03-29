@@ -22,7 +22,7 @@
 using namespace coollive;
 class LSPlayerImp : public PlayerStatusCallback {
 public:
-	LSPlayerImp(jobject jniCallback, jobject jniVideoRenderer, jobject jniAudioRenderer, jobject jniVideoDecoder);
+	LSPlayerImp(jobject jniCallback, jboolean useHardDecoder, jobject jniVideoRenderer, jobject jniAudioRenderer, jobject jniVideoHardDecoder, jobject jniVideoHardRenderer);
 	virtual ~LSPlayerImp();
 
 	void Destroy();
@@ -31,6 +31,7 @@ public:
 	void SetUseHardDecoder(bool useHardDecoder);
 
 private:
+	void OnPlayerConnect(PlayerController* pc);
 	void OnPlayerDisconnect(PlayerController* pc);
 	void OnPlayerOnDelayMaxTime(PlayerController* pc);
 
@@ -48,7 +49,8 @@ private:
 	jobject mJniCallback;
 	jobject mJniVideoRenderer;
 	jobject mJniAudioRenderer;
-	jobject mJniVideoDecoder;
+	jobject mJniVideoHardDecoder;
+	jobject mJniVideoHardRenderer;
 
 	bool mUseHardDecoder;
 };

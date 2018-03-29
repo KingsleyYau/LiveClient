@@ -1,6 +1,7 @@
 package net.qdating.view;
 
 import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -9,6 +10,7 @@ import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
 import net.qdating.LSPublisher;
 import net.qdating.R;
+import net.qdating.LSConfig.FillMode;
 
 public class TestActivity extends Activity {
 	private String url = "rtmp://172.25.32.17:8899/live/max";
@@ -28,17 +30,17 @@ public class TestActivity extends Activity {
 		
 		SurfaceView surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
 		surfaceView.setKeepScreenOn(true);
-		SurfaceView surfaceViewPublish = (SurfaceView) this.findViewById(R.id.surfaceViewPublish);
+		GLSurfaceView surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
 		surfaceViewPublish.setKeepScreenOn(true);
 		
 		// 播放相关
-		player.init(surfaceView, null);
+//		player.init(surfaceView, null);
 		player.playUrl(String.format("%s_mv", url), "", "", "");
 		
 		// 推送相关
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
-		publisher.init(surfaceViewPublish, rotation, null);
+		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
 		publisher.publisherUrl(String.format("%s_a", url), "", "");
 		
 		handler.postDelayed(new Runnable() {

@@ -61,8 +61,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		this.captureCallback = callback;
 		this.rotation = rotation;
 		
-		// 开启默认摄像头
-		bFlag = openCamera();
+		bFlag = true;
 		
 		return bFlag;
 	}
@@ -70,12 +69,10 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::uninit()"));
 		
-		// 停止预览
-		stopCapture();
-		
-		if( mCamera != null ) {
-			mCamera.release();
-			mCamera = null;
+		if( previewRunning ) {
+			// 停止预览
+			stopCapture();
+			previewRunning = false;
 		}
 		
 		previewRenderer.uninit();
@@ -105,7 +102,6 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		if( previewRunning ) {
 			// 停止预览
 			stopCapture();
-			
 			previewRunning = false;
 		}
 	}
@@ -114,23 +110,18 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	 * 切换前后摄像头
 	 */
 	public boolean rotateCamera() {
-		boolean bFlag = false;
+		boolean bFlag = true;
 		
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera()"));
+		
+		// 切换前后摄像头
+		frontCamera = !frontCamera;
 		
 		if( previewRunning ) {
 			// 停止预览
 			stopCapture();
-		}
-		
-		// 切换前后摄像头
-		frontCamera = !frontCamera;
-		// 开启新的摄像头
-		bFlag = openCamera();
-		if( bFlag ) {
-			if( previewRunning ) {
-				startCapture();
-			}
+			// 重新开始预览
+			bFlag = startCapture();
 		}
 		
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera( [%s] )", bFlag?"Success":"Fail"));
@@ -145,10 +136,10 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		Log.i(LSConfig.TAG, String.format("LSVideoCapture::openCamera()"));
 		
 		synchronized (this) {
-			if( mCamera != null ) {
-				mCamera.release();
-				mCamera = null;
-			}
+//			if( mCamera != null ) {
+//				mCamera.release();
+//				mCamera = null;
+//			}
 			
 			if( mCamera == null ) {
 				int cameraIndex = getCamera(frontCamera);
@@ -234,10 +225,16 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::startCapture()"));
 		
 		boolean bFlag = false;
-		if( mCamera != null ) {
+
+		if( mCamera == null ) {
+			bFlag = openCamera();
+		}
+		
+		if( bFlag && mCamera != null ) {
 			mCamera.startPreview();
 			bFlag = true;
 		}
+		
 		return bFlag;
 	}
 	
@@ -248,6 +245,8 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		if( mCamera != null ) {
 			// 停止预览
 			mCamera.stopPreview();
+			mCamera.release();
+			mCamera = null;
 			bFlag = true;
 		}
 		return bFlag;

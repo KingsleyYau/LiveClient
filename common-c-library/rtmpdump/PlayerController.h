@@ -30,6 +30,7 @@ class PlayerController;
 class PlayerStatusCallback {
 public:
     virtual ~PlayerStatusCallback() {};
+    virtual void OnPlayerConnect(PlayerController* pc) = 0;
     virtual void OnPlayerDisconnect(PlayerController* pc) = 0;
     virtual void OnPlayerOnDelayMaxTime(PlayerController* pc) = 0;
 };
@@ -156,6 +157,8 @@ private:
     AudioRecorderAAC mAudioRecorderAAC;
     // 分析模块
     Statistics mStatistics;
+    // 是否需要重置音频播放
+    bool mbNeedResetAudioRenderer;
 };
 }
 

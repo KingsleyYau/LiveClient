@@ -229,6 +229,7 @@ bool RtmpDump::PublishUrl(const string& url) {
     if( mpRtmp ) {
         mbRunning = true;
         mRecvThread.Start(mpRecvRunnable);
+        mCheckConnectThread.Start(mpCheckConnectRunnable);
         bFlag = true;
         
     } else {

@@ -22,13 +22,10 @@ public:
     ~VideoHardRendererImp();
     
     void RenderVideoFrame(void* frame);
-    
-private:
-    void DrawBitmap(char* data, int size, int width, int height);
 
 private:
     jobject mJniRenderer;
-    jbyteArray dataByteArray;
+    jmethodID mJniRendererMethodID;
 };
 }
 #endif /* VideoHardRendererImp_h */

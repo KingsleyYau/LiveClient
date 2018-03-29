@@ -9,6 +9,12 @@ import net.qdating.LSPlayer;
  */
 public interface ILSPlayerStatusCallback {
 	/***
+	 * 连接成功回调
+	 * @param player 播放器
+	 */
+	public void onConnect(LSPlayer player);
+	
+	/***
 	 * 断线回调
 	 * @param player 播放器
 	 */

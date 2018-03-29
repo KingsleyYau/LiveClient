@@ -1,6 +1,7 @@
 package net.qdating.player;
 
 import android.util.Log;
+import net.qdating.LSConfig;
 
 /**
  * 音视频播放器JNI
@@ -8,10 +9,9 @@ import android.util.Log;
  *
  */
 public class LSPlayerJni implements ILSPlayerCallbackJni {
-	private static final String TAG = "coollive";
 	static {
 		System.loadLibrary("lsplayer");
-		Log.i(TAG, "LSPlayerJni::static( Load Library )");
+		Log.i(LSConfig.TAG, String.format("LSPlayerJni::static( Load Library, version : %s )", LSConfig.VERSION));
 	}
 	
 	/**
@@ -31,38 +31,46 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	
 	/**
 	 * 初始化实例
-	 * @param playerCallback	状态回调
-	 * @param videoRenderer		视频渲染器
-	 * @param audioRenderer		音频渲染器
-	 * @param videoDecoder		视频解码器
+	 * @param playerCallback		状态回调
+	 * @param useHardDecoder 		是否使用硬解码器
+	 * @param videoRenderer			视频渲染器
+	 * @param audioRenderer			音频渲染器
+	 * @param videoHardDecoder		视频硬解码器
 	 * @return 成功失败
 	 */
 	public boolean Create(
 			ILSPlayerCallback playerCallback, 
+			boolean useHardDecoder,
 			ILSVideoRendererJni videoRenderer, 
 			ILSAudioRendererJni audioRenderer, 
-			ILSVideoDecoderJni videoDecoder
+			ILSVideoHardDecoderJni videoHardDecoder,
+			ILSVideoHardRendererJni videoHardRenderer
 			) {
 		// 状态回调
 		this.playerCallback = playerCallback;
 			
-		client = Create(this, videoRenderer, audioRenderer, videoDecoder);	
+		client = Create(this, useHardDecoder, videoRenderer, audioRenderer, videoHardDecoder, videoHardRenderer);	
 		return client != INVALID_CLIENT;
 	}
 	
 	/**
 	 * 创建实例
-	 * @param playerCallback	状态回调
-	 * @param videoRenderer		视频渲染器
-	 * @param audioRenderer		音频渲染器
-	 * @param videoDecoder		视频解码器
+	 * @param playerCallback		状态回调
+	 * @param useHardDecoder 		是否使用硬解码器
+	 * @param videoRenderer			视频渲染器
+	 * @param audioRenderer			音频渲染器
+	 * @param videoHardDecoder		视频硬解码器
+	 * @param videoHardRenderer		视频硬渲染器
 	 * @return	实例指针
 	 */
 	private native long Create(
 			ILSPlayerCallbackJni playerCallback, 
+			boolean useHardDecoder,
 			ILSVideoRendererJni videoRenderer, 
 			ILSAudioRendererJni audioRenderer, 
-			ILSVideoDecoderJni videoDecoder);
+			ILSVideoHardDecoderJni videoHardDecoder,
+			ILSVideoHardRendererJni videoHardRenderer
+			);
 	
 	/**
 	 * 销毁实例
@@ -106,10 +114,26 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	private native void Stop(long client);
 
 	@Override
+	public void onConnect() {
+		// TODO Auto-generated method stub
+		if( playerCallback != null ) {
+			playerCallback.onConnect(this);
+		}
+	}
+	
+	@Override
 	public void onDisconnect() {
 		// TODO Auto-generated method stub
 		if( playerCallback != null ) {
 			playerCallback.onDisconnect(this);
+		}
+	}
+	
+	@Override
+	public void onPlayerOnDelayMaxTime() {
+		// TODO Auto-generated method stub
+		if( playerCallback != null ) {
+			playerCallback.onPlayerOnDelayMaxTime(this);
 		}
 	}
 }

@@ -5,7 +5,7 @@
     android:background="@color/background_floating_material_dark"
     tools:context="${relativePackage}.${activityClass}" >
 
-    <SurfaceView
+    <GLSurfaceView
    	    android:id="@+id/surfaceViewPublish"
 	    android:layout_width="120dp"
 	    android:layout_height="160dp"

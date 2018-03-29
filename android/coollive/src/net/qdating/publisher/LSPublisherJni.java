@@ -12,7 +12,7 @@ import net.qdating.player.ILSVideoRendererJni;
 public class LSPublisherJni implements ILSPublisherCallbackJni {
 	static {
 		System.loadLibrary("lspublisher");
-		Log.i(LSConfig.TAG, "LSPublisherJni::static( Load Library )");
+		Log.i(LSConfig.TAG, String.format("LSPublisherJni::static( Load Library, version : %s )", LSConfig.VERSION));
 	}
 	
 	/**
@@ -153,10 +153,19 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	private native void Stop(long client);
 
 	@Override
+	public void onConnect() {
+		// TODO Auto-generated method stub
+		if( publisherCallback != null ) {
+			publisherCallback.onConnect(this);
+		}
+	}
+	
+	@Override
 	public void onDisconnect() {
 		// TODO Auto-generated method stub
 		if( publisherCallback != null ) {
 			publisherCallback.onDisconnect(this);
 		}
 	}
+
 }

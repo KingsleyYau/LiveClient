@@ -106,18 +106,18 @@ VideoDecoderH264::~VideoDecoderH264() {
 }
 
 bool VideoDecoderH264::Create(VideoDecoderCallback* callback) {
-	FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::Create( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoDecoderH264::Create( this : %p )", this);
 
     mpCallback = callback;
 
     bool bFlag = true;
     
     FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::Create( "
-                 "[%s], "
-                 "this : %p "
+    			 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+				 this,
+                 bFlag?"Success":"Fail"
                  );
     
 	return bFlag;
@@ -137,11 +137,11 @@ bool VideoDecoderH264::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoDecoderH264::Reset( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+				 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+				 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -149,13 +149,23 @@ bool VideoDecoderH264::Reset() {
 
 void VideoDecoderH264::Pause() {
 	FileLevelLog("rtmpdump",
-                KLog::LOG_WARNING,
+                KLog::LOG_MSG,
                 "VideoDecoderH264::Pause( "
                 "this : %p "
                 ")",
                 this
                 );
+
     Stop();
+
+	FileLevelLog("rtmpdump",
+                KLog::LOG_WARNING,
+                "VideoDecoderH264::Pause( "
+                "this : %p, "
+                "Success "
+                ")",
+                this
+                );
 }
 
 void VideoDecoderH264::ResetStream() {
@@ -178,7 +188,7 @@ bool VideoDecoderH264::Start() {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoDecoderH264::Start( "
                  "this : %p "
                  ")",
@@ -216,11 +226,11 @@ bool VideoDecoderH264::Start() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+				 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -299,8 +309,8 @@ void VideoDecoderH264::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoDecoderH264::Stop( "
-                 "[Success], "
-                 "this : %p "
+				 "this : %p, "
+                 "[Success] "
                  ")",
                  this
                  );
@@ -320,8 +330,8 @@ bool VideoDecoderH264::CreateContext() {
     			"rtmpdump",
 				KLog::LOG_ERR_SYS,
                 "VideoDecoderH264::CreateContext( "
-                "[Codec not found], "
-                "this : %p "
+				"this : %p, "
+                "[Codec not found] "
                 ")",
                 this
                 );
@@ -343,8 +353,8 @@ bool VideoDecoderH264::CreateContext() {
         			"rtmpdump",
 					KLog::LOG_MSG,
                     "VideoDecoderH264::CreateContext( "
-                    "[Codec opened], "
-                    "this : %p "
+					"this : %p, "
+                    "[Codec opened] "
                     ")",
                     this
                     );
@@ -353,8 +363,8 @@ bool VideoDecoderH264::CreateContext() {
         			"rtmpdump",
 					KLog::LOG_ERR_SYS,
                     "VideoDecoderH264::CreateContext( "
-                    "[Could not open codec], "
-                    "this : %p "
+					"this : %p, "
+                    "[Could not open codec] "
                     ")",
                     this
                     );
@@ -368,8 +378,8 @@ bool VideoDecoderH264::CreateContext() {
         FileLevelLog("rtmpdump",
                     KLog::LOG_ERR_SYS,
                     "VideoDecoderH264::CreateContext( "
-                    "[Fail], "
-                    "this : %p "
+					"this : %p, "
+                    "[Fail] "
                     ")",
                     this
                     );
@@ -427,9 +437,11 @@ void VideoDecoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
 void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
 	FileLog("rtmpdump",
 			"VideoDecoderH264::DecodeVideoKeyFrame( "
+			"this : %p, "
 			"sps_size : %d, "
 			"pps_size : %d "
 			")",
+			this,
 			sps_size,
 			pps_size
 			);
@@ -469,11 +481,13 @@ void VideoDecoderH264::DecodeVideoFrame(const char* data, int size, u_int32_t ti
         FileLevelLog("rtmpdump",
                      KLog::LOG_STAT,
                      "VideoDecoderH264::DecodeVideoFrame( "
+					 "this : %p, "
                      "[Got Nalu Array], "
                      "timestamp : %u, "
                      "size : %d, "
                      "naluArraySize : %d "
                      ")",
+					 this,
                      timestamp,
                      size,
                      naluArraySize
@@ -487,11 +501,13 @@ void VideoDecoderH264::DecodeVideoFrame(const char* data, int size, u_int32_t ti
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
                          "VideoDecoderH264::DecodeVideoFrame( "
+						 "this : %p,"
                          "[Got Nalu], "
                          "naluSize : %d, "
                          "naluBodySize : %d, "
                          "frameType : %d "
                          ")",
+						 this,
                          nalu->GetNaluSize(),
                          nalu->GetNaluBodySize(),
                          nalu->GetNaluType()
@@ -541,8 +557,8 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame* videoFrame, VideoFrame* newV
 
             FileLog("rtmpdump",
                     "VideoDecoderH264::DecodeVideoFrame( "
+            		"this : %p, "
                     "[Got Key Frame], "
-                    "this : %p, "
                     "timestamp : %u, "
                     "frameSize : %d "
                     ")",
@@ -623,8 +639,8 @@ bool VideoDecoderH264::DecodeVideoFrame(VideoFrame* videoFrame, VideoFrame* newV
 	                 "rtmpdump",
 	                 KLog::LOG_STAT,
 	                 "VideoDecoderH264::DecodeVideoFrame( "
+					 "this : %p, "
 	                 "[Decode Frame], "
-	                 "this : %p, "
 	                 "srcFrame : %p, "
 	                 "dstFrame : %p, "
 	                 "timestamp : %u, "
@@ -672,8 +688,8 @@ void VideoDecoderH264::DecodeVideoHandle() {
     FileLevelLog("rtmpdump",
                 KLog::LOG_MSG,
                 "VideoDecoderH264::DecodeVideoHandle( "
-                "[Start], "
-                "this : %p "
+				"this : %p, "
+                "[Start] "
                 ")",
                 this
                 );
@@ -722,8 +738,8 @@ void VideoDecoderH264::DecodeVideoHandle() {
                 if( preTimestamp == 0 || preTimestamp >= videoFrame->mTimestamp ) {
                     FileLog("rtmpdump",
                             "VideoDecoderH264::DecodeVideoHandle( "
+                    		"this : %p, "
                             "[Reset Start Timestamp], "
-                            "this : %p, "
                             "startDecodeTime : %lld, "
                             "startTimestamp : %u, "
                             "preTimestamp : %u, "
@@ -857,8 +873,8 @@ void VideoDecoderH264::DecodeVideoHandle() {
                     // 直接丢帧
                     FileLog("rtmpdump",
                             "VideoDecoderH264::DecodeVideoHandle( "
+                    		"this : %p, "
                             "[Drop Frame], "
-                            "this : %p, "
                             "timestamp : %u, "
                             "decodeTime : %lld, "
                             "decodeTotalTime : %lld, "
@@ -904,8 +920,8 @@ void VideoDecoderH264::DecodeVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "VideoDecoderH264::DecodeVideoHandle( "
-                "[Exit], "
-                "this : %p "
+				"this : %,p "
+                "[Exit] "
                 ")",
                 this
                 );
@@ -915,8 +931,8 @@ void VideoDecoderH264::ConvertVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "VideoDecoderH264::ConvertVideoHandle( "
-                "[Start], "
-                "this : %p "
+				"this : %p, "
+                "[Start] "
                 ")",
                 this
                 );
@@ -997,11 +1013,11 @@ void VideoDecoderH264::ConvertVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoDecoderH264::ConvertVideoHandle( "
-                "[Exit], "
-                "this : %p "
-                ")",
-                this
-                );
+				 "this : %p, "
+                 "[Exit] "
+				 ")",
+				 this
+				 );
 }
 
 }

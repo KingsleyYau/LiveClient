@@ -26,23 +26,30 @@ import net.qdating.utils.CrashHandler;
 
 public class PlayActivity extends Activity {
 	String filePath = "/sdcard";
-	private String playH264File = "";//"/sdcard/coollive/play.h264";
-	private String playAACFile = "";//"/sdcard/coollive/play.aac";
+	private String[] playH264File = {
+			"",//"/sdcard/coollive/play0.h264",
+			"",//"/sdcard/coollive/play1.h264",
+			"",//"/sdcard/coollive/play2.h264",
+	};
+	private String[] playAACFile = {
+			"",//"/sdcard/coollive/play0.aac",
+			"",//"/sdcard/coollive/play1.aac",
+			"",//"/sdcard/coollive/play2.aac",
+	};
 	
 	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
 	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
 	
 	// 播放相关
-	private int playerCount = 3;
 	private String[] playerUrls = {
 		"rtmp://172.25.32.17:19351/live/max0",
 		"rtmp://172.25.32.17:19351/live/max1",
-		"rtmp://172.25.32.17:19351/live/maxi",
+		"rtmp://172.25.32.17:19351/live/max2",
 	};
 //	private String[] playerUrls = {
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
-//		"rtmp://172.25.32.133:7474/test_flash/samson_other",
+//		"rtmp://172.25.32.133:7474/test_flash/samson",
 //	};
 	private LSPlayer[] players = null;
 	private GLSurfaceView[] surfaceViews = null;
@@ -54,6 +61,7 @@ public class PlayActivity extends Activity {
 	// 推送相关
 	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
 //	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/samson_publish";
+//	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/samson_user";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
@@ -82,13 +90,13 @@ public class PlayActivity extends Activity {
 		editTextPublish.setText(publishUrl);
 		
 		// 播放相关
-		players = new LSPlayer[playerCount];
-		surfaceViewsScale = new boolean[playerCount];
-		surfaceViews = new GLSurfaceView[playerCount];
+		surfaceViews = new GLSurfaceView[3];
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
 		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
 		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
-		for(int i = 0; i < playerCount; i++) {
+		surfaceViewsScale = new boolean[surfaceViews.length];
+		players = new LSPlayer[surfaceViews.length];
+		for(int i = 0; i < surfaceViews.length; i++) {
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
 			
@@ -112,8 +120,8 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				for(int i = 0; i < playerCount; i++) {
-					players[i].playUrl(playerUrls[i], "", playH264File, playAACFile);
+				for(int i = 0; i < players.length; i++) {
+					players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 				}
 			}
 		});
@@ -133,8 +141,8 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				playerRunningCount = playerCount;
-				for(int i = 0; i < playerCount; i++) {
+				playerRunningCount = players.length;
+				for(int i = 0; i < players.length; i++) {
 					final int index = i;
 					new Thread(new Runnable() {
 						@Override
@@ -327,7 +335,7 @@ public class PlayActivity extends Activity {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		
-		for(int i = 0; i < playerCount; i++) {
+		for(int i = 0; i < players.length; i++) {
 			players[i].stop();
 			players[i].uninit();
 		}

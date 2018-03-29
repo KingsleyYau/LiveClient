@@ -78,7 +78,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	public boolean init(Context context, GLSurfaceView surfaceView, int rotation, FillMode fillMode, ILSPublisherStatusCallback statusCallback) {
 		boolean bFlag = true;
 		
-		Log.i(LSConfig.TAG, String.format("LSPublisher::init()"));
+		Log.i(LSConfig.TAG, String.format("LSPublisher::init( version : %s )", LSConfig.VERSION));
 		
 		File path = Environment.getExternalStorageDirectory();
 		String filePath = path.getAbsolutePath() + "/" + LSConfig.TAG + "/";
@@ -215,10 +215,6 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		// 取消事件
 		handler.removeMessages(0);
 		
-    	// 停止流推送器
-		if( publisher != null ) {
-			publisher.Stop();
-		}
 		// 停止视频采集
 		if( videoCapture != null ) {
 			videoCapture.stop();
@@ -227,7 +223,11 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		if( audioRecorder != null ) {
 			audioRecorder.stop();
 		}
-    	
+		
+    	// 停止流推送器
+		if( publisher != null ) {
+			publisher.Stop();
+		}
 	}
 
 	/**
@@ -260,10 +260,12 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	public void startPreview() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::startPreview()"));
 		videoCapture.start();
+		publisher.ResumePushVideo();
 	}
 	
 	public void stopPreview() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::stopPreview()"));
+		publisher.PausePushVideo();
 		videoCapture.stop();
 	}
 	
@@ -289,6 +291,18 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		return bFlag;
 	}
 	
+
+	@Override
+	public void onConnect(LSPublisherJni publisher) {
+		// TODO Auto-generated method stub
+		Log.i(LSConfig.TAG, String.format("LSPublisher::onConnect()"));
+		
+		// 通知外部监听
+		if( statusCallback != null ) {
+			statusCallback.onConnect(this);
+		}
+	}
+	
 	@Override
 	public void onDisconnect(LSPublisherJni publisher) {
 		// TODO Auto-generated method stub
@@ -310,25 +324,22 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	@Override
 	public void onVideoCapture(byte[] data, int size, int width, int height) {
 		// TODO Auto-generated method stub
-		synchronized (this) {
-	    	if( isRuning ) {
-	    		publisher.PushVideoFrame(data, size, width, height);
-	    	}
-		}
+		// 不需要准, 不要锁
+    	if( isRuning ) {
+    		publisher.PushVideoFrame(data, size, width, height);
+    	}
 	}
 
 	@Override
 	public void onAudioRecord(byte[] data, int size) {
 		// TODO Auto-generated method stub
-		synchronized (this) {
-			if( isRuning ) {
-				if( isMute ) {
-					Arrays.fill(data, (byte)0);
-				}
-				publisher.PushAudioFrame(data, size);
+		// 不需要准, 不要锁
+		if( isRuning ) {
+			if( isMute ) {
+				Arrays.fill(data, (byte)0);
 			}
+			publisher.PushAudioFrame(data, size);
 		}
-
 	}
 
 	@Override

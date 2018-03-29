@@ -35,14 +35,11 @@ public:
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
-    void SetRecordFilePath(const string& recordH264FilePath);
     
 protected:
     void Init();
+    bool Start();
     void Stop();
-    void ReleaseBuffer(VideoFrame* videoFrame);
-    void HandleVideoFrame(JNIEnv* env, jclass jniDecoderCls, jobject jVideoFrame);
-    void TransYUV_NV21_RGB_8888(char* inputYUV, int width, int height, char* outputRGB);
 
 private:
     // 解码线程实现体
@@ -52,6 +49,10 @@ private:
 private:
     VideoDecoderCallback* mpCallback;
     jobject mJniDecoder;
+    jmethodID mJniDecoderMethodID;
+    jmethodID mJniDecoderReleaseMethodID;
+
+    jfieldID mJniVideoFrameTimestampMethodID;
 
     // 解码器变量
     char* mpSps;

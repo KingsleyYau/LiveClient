@@ -350,7 +350,7 @@
 
 /* 5.4.提交crash dump文件 */
 /* 接口路径 */
-#define UPLOADCRASHDUMP_PATH                                 "/lady/v1/uploadCrashDump"
+#define UPLOADCRASHDUMP_PATH                                 "/api/index.php?act=uploadCrashFile"
 
 /**
  *  请求

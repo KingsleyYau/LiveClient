@@ -19,6 +19,15 @@ VideoRendererImp::VideoRendererImp(jobject jniRenderer) {
 	mJniRenderer = NULL;
 	if( jniRenderer ) {
 		mJniRenderer = env->NewGlobalRef(jniRenderer);
+		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
+		// 反射方法
+		string signure = "([BIII)V";
+		jmethodID jMethodID = env->GetMethodID(
+				jniRendererCls,
+				"renderVideoFrame",
+				signure.c_str()
+				);
+		mJniRendererMethodID = jMethodID;
 	}
 
 	dataByteArray = NULL;
@@ -67,18 +76,8 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
 	// 回调图像
-	if( mJniRenderer != NULL ) {
-		// 反射类
-		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
-		if( jniRendererCls != NULL ) {
-			// 发射方法
-			string signure = "([BIII)V";
-			jmethodID jMethodID = env->GetMethodID(
-					jniRendererCls,
-					"renderVideoFrame",
-					signure.c_str()
-					);
-
+	if( mJniRenderer) {
+		if( mJniRendererMethodID ) {
 			// 创建新Buffer
 			if( dataByteArray != NULL ) {
 				int oldLen = env->GetArrayLength(dataByteArray);
@@ -99,11 +98,7 @@ void VideoRendererImp::RenderVideoFrame(void* frame) {
 			}
 
 			// 回调
-			if( jMethodID ) {
-				env->CallVoidMethod(mJniRenderer, jMethodID, dataByteArray, videoFrame->mBufferLen, videoFrame->mWidth, videoFrame->mHeight);
-			}
-
-			env->DeleteLocalRef(jniRendererCls);
+			env->CallVoidMethod(mJniRenderer, mJniRendererMethodID, dataByteArray, videoFrame->mBufferLen, videoFrame->mWidth, videoFrame->mHeight);
 		}
 	}
 
