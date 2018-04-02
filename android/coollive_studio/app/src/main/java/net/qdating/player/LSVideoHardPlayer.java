@@ -54,12 +54,15 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
     	// 更新滤镜输入大小
     	if( width != videoFrame.width || height != videoFrame.height ) {
     		Log.d(LSConfig.TAG, 
-    				String.format("LSVideoHardPlayer::renderVideoFrame( [Change image size], "
-    				+ "oldWidth : %d, oldHeight : %d, "
-    				+ "newWidth : %d, newHeight : %d "
-    				+ ")", 
-    				width, height,
-    				videoFrame.width, videoFrame.height
+    				String.format("LSVideoHardPlayer::renderVideoFrame( "
+									+ "this : 0x%x, "
+									+ "[Change image size], "
+									+ "oldWidth : %d, oldHeight : %d, "
+									+ "newWidth : %d, newHeight : %d "
+									+ ")",
+							hashCode(),
+							width, height,
+							videoFrame.width, videoFrame.height
     				));
     		
     		width = videoFrame.height;

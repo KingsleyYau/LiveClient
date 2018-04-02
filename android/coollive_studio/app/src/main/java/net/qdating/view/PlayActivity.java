@@ -7,6 +7,7 @@ import com.qpidnetwork.tool.CrashHandlerJni;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
@@ -367,9 +368,9 @@ public class PlayActivity extends Activity {
 //			public void run() {
 //				// TODO Auto-generated method stub
 //		        Intent intent = new Intent();
-//		        intent.setClass(PlayActivity.this, TestActivity.class); 
+//		        intent.setClass(PlayActivity.this, TestActivity.class);
 //		        startActivity(intent);
 //			}
-//		}, 10000);    
+//		}, 10000);
     }
 }

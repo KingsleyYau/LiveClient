@@ -38,14 +38,9 @@ private:
      * 初始化
      */
     void Init();
-    /**
-     * 停止
-     */
+    bool Start();
     void Stop();
-    /**
-     * 处理一个编码帧
-     */
-    void HandleVideoFrame(JNIEnv* env, jclass jniEncoderCls, jobject jVideoFrame);
+    char* FindNalu(char* start, int size, int& startCodeSize);
 
 private:
     // 编码线程实现体
@@ -55,6 +50,15 @@ private:
 private:
     VideoEncoderCallback* mpCallback;
     jobject mJniEncoder;
+    jmethodID mJniEncoderResetMethodID;
+    jmethodID mJniEncoderPauseMethodID;
+    jmethodID mJniEncoderGetEncodeVideoMethodID;
+    jmethodID mJniEncoderEncodeVideoMethodID;
+    jmethodID mJniEncoderReleaseMethodID;
+
+    jfieldID mJniVideoFrameTimestampMethodID;
+    jfieldID mJniVideoFrameDataMethodID;
+    jfieldID mJniVideoFrameSizeMethodID;
 
     // 编码器变量
     int mWidth;

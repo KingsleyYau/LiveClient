@@ -54,16 +54,54 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 		// 解码器Java引用
 		mJniDecoder = env->NewGlobalRef(jniDecoder);
 		jclass jniDecoderCls = env->GetObjectClass(mJniDecoder);
-		// 反射方法
-		string signure = "()L" LS_VIDEO_ITEM_CLASS ";";
-		jmethodID jMethodID = env->GetMethodID(
+
+		string signure = "";
+		jmethodID jMethodID = 0;
+
+		// 重置编码器
+		signure = "()Z";
+		jMethodID = env->GetMethodID(
+				jniDecoderCls,
+				"reset",
+				signure.c_str()
+				);
+		mJniDecoderResetMethodID = jMethodID;
+
+		// 暂停编码器
+		signure = "()V";
+		jMethodID = env->GetMethodID(
+				jniDecoderCls,
+				"pause",
+				signure.c_str()
+				);
+		mJniDecoderPauseMethodID = jMethodID;
+
+		// 获取解码视频帧
+		signure = "()L" LS_DECODE_VIDEO_ITEM_CLASS ";";
+		jMethodID = env->GetMethodID(
 				jniDecoderCls,
 				"getDecodeVideoFrame",
 				signure.c_str()
 				);
-		mJniDecoderMethodID = jMethodID;
+		mJniDecoderGetDecodeVideoMethodID = jMethodID;
 
-		signure = "(L" LS_VIDEO_ITEM_CLASS ";)V";
+		signure = "([BI[BII)Z";
+		jMethodID = env->GetMethodID(
+				jniDecoderCls,
+				"decodeVideoKeyFrame",
+				signure.c_str()
+				);
+		mJniDecoderDecodeKeyMethodID = jMethodID;
+
+		signure = "([BII)Z";
+		jMethodID = env->GetMethodID(
+				jniDecoderCls,
+				"decodeVideoFrame",
+				signure.c_str()
+				);
+		mJniDecoderDecodeVideoMethodID = jMethodID;
+
+		signure = "(L" LS_DECODE_VIDEO_ITEM_CLASS ";)V";
 		jMethodID = env->GetMethodID(
 				jniDecoderCls,
 				"releaseVideoFrame",
@@ -73,7 +111,7 @@ VideoHardDecoder::VideoHardDecoder(jobject jniDecoder)
 
 		// 解码帧Java引用
 		jobject jVideoFrameItem;
-		InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jVideoFrameItem);
+		InitClassHelper(env, LS_DECODE_VIDEO_ITEM_CLASS, &jVideoFrameItem);
 		jclass jniVideoFrameCls = env->GetObjectClass(jVideoFrameItem);
 		env->DeleteGlobalRef(jVideoFrameItem);
 		mJniVideoFrameTimestampMethodID = env->GetFieldID(jniVideoFrameCls, "timestamp", "I");
@@ -122,7 +160,7 @@ VideoHardDecoder::~VideoHardDecoder() {
 bool VideoHardDecoder::Create(VideoDecoderCallback* callback) {
 	FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardDecoder::Create( this : %p )", this);
 
-    bool result = true;
+    bool bFlag = true;
 
     mpCallback = callback;
 
@@ -130,12 +168,13 @@ bool VideoHardDecoder::Create(VideoDecoderCallback* callback) {
     		KLog::LOG_WARNING,
     		"VideoHardDecoder::Create( "
     		"this : %p, "
-    		"[Success] "
+			"[%s] "
     		")",
-			this
+			this,
+			bFlag?"Success":"Fail"
 			);
 
-    return result;
+    return bFlag;
 }
 
 bool VideoHardDecoder::Reset() {
@@ -147,7 +186,23 @@ bool VideoHardDecoder::Reset() {
                 this
                 );
 
-	bool bFlag = Start();
+    bool bFlag = false;
+
+	JNIEnv* env;
+	bool isAttachThread;
+	bool bAttatch = GetEnv(&env, &isAttachThread);
+
+	if( mJniDecoder && mJniDecoderResetMethodID ) {
+		bFlag = env->CallBooleanMethod(mJniDecoder, mJniDecoderResetMethodID);
+	}
+
+	if( bAttatch ) {
+		ReleaseEnv(isAttachThread);
+	}
+
+	if( bFlag ) {
+		bFlag = Start();
+	}
 
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
@@ -172,6 +227,18 @@ void VideoHardDecoder::Pause() {
                 );
 
 	Stop();
+
+	JNIEnv* env;
+	bool isAttachThread;
+	bool bAttatch = GetEnv(&env, &isAttachThread);
+
+	if( mJniDecoder && mJniDecoderPauseMethodID ) {
+		env->CallVoidMethod(mJniDecoder, mJniDecoderPauseMethodID);
+	}
+
+	if( bAttatch ) {
+		ReleaseEnv(isAttachThread);
+	}
 }
 
 bool VideoHardDecoder::Start() {
@@ -312,61 +379,46 @@ void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 	bool isAttachThread;
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
-		// 创建新SPS
-		if( spsByteArray != NULL ) {
-			int oldLen = env->GetArrayLength(spsByteArray);
-			if( oldLen < mSpSize ) {
-				env->DeleteGlobalRef(spsByteArray);
-				spsByteArray = NULL;
-			}
+	// 创建新SPS
+	if( spsByteArray != NULL ) {
+		int oldLen = env->GetArrayLength(spsByteArray);
+		if( oldLen < mSpSize ) {
+			env->DeleteGlobalRef(spsByteArray);
+			spsByteArray = NULL;
 		}
+	}
 
-		if( spsByteArray == NULL ) {
-			jbyteArray localDataByteArray = env->NewByteArray(mSpSize);
-			spsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-			env->DeleteLocalRef(localDataByteArray);
+	if( spsByteArray == NULL ) {
+		jbyteArray localDataByteArray = env->NewByteArray(mSpSize);
+		spsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+		env->DeleteLocalRef(localDataByteArray);
+	}
+
+	if( spsByteArray != NULL ) {
+		env->SetByteArrayRegion(spsByteArray, 0, mSpSize, (const jbyte*)mpSps);
+	}
+
+	// 创建新PPS
+	if( ppsByteArray != NULL ) {
+		int oldLen = env->GetArrayLength(ppsByteArray);
+		if( oldLen < mPpsSize ) {
+			env->DeleteGlobalRef(ppsByteArray);
+			ppsByteArray = NULL;
 		}
+	}
 
-		if( spsByteArray != NULL ) {
-			env->SetByteArrayRegion(spsByteArray, 0, mSpSize, (const jbyte*)mpSps);
-		}
+	if( ppsByteArray == NULL ) {
+		jbyteArray localDataByteArray = env->NewByteArray(mPpsSize);
+		ppsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+		env->DeleteLocalRef(localDataByteArray);
+	}
 
-		// 创建新PPS
-		if( ppsByteArray != NULL ) {
-			int oldLen = env->GetArrayLength(ppsByteArray);
-			if( oldLen < mPpsSize ) {
-				env->DeleteGlobalRef(ppsByteArray);
-				ppsByteArray = NULL;
-			}
-		}
+	if( ppsByteArray != NULL ) {
+		env->SetByteArrayRegion(ppsByteArray, 0, mPpsSize, (const jbyte*)mpPps);
+	}
 
-		if( ppsByteArray == NULL ) {
-			jbyteArray localDataByteArray = env->NewByteArray(mPpsSize);
-			ppsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-			env->DeleteLocalRef(localDataByteArray);
-		}
-
-		if( ppsByteArray != NULL ) {
-			env->SetByteArrayRegion(ppsByteArray, 0, mPpsSize, (const jbyte*)mpPps);
-		}
-
-	// 反射类
-	jclass jniDecoderCls = env->GetObjectClass(mJniDecoder);
-	if( jniDecoderCls != NULL ) {
-		// 反射方法
-		string signure = "([BI[BII)Z";
-		jmethodID jMethodID = env->GetMethodID(
-				jniDecoderCls,
-				"decodeVideoKeyFrame",
-				signure.c_str()
-				);
-
-		// 回调
-		if( jMethodID ) {
-			env->CallBooleanMethod(mJniDecoder, jMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNalUnitHeaderLength);
-		}
-
-		env->DeleteLocalRef(jniDecoderCls);
+	if( mJniDecoder && mJniDecoderDecodeKeyMethodID ) {
+		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNalUnitHeaderLength);
 	}
 
 	if( bFlag ) {
@@ -411,22 +463,8 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 	}
 
 	// 反射类
-	jclass jniDecoderCls = env->GetObjectClass(mJniDecoder);
-	if( jniDecoderCls != NULL ) {
-		// 发射方法
-		string signure = "([BII)Z";
-		jmethodID jMethodID = env->GetMethodID(
-				jniDecoderCls,
-				"decodeVideoFrame",
-				signure.c_str()
-				);
-
-		// 回调
-		if( jMethodID ) {
-			env->CallBooleanMethod(mJniDecoder, jMethodID, dataByteArray, size, timestamp);
-		}
-
-		env->DeleteLocalRef(jniDecoderCls);
+	if( mJniDecoder && mJniDecoderDecodeVideoMethodID ) {
+		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeVideoMethodID, dataByteArray, size, timestamp);
 	}
 
 	if( bFlag ) {
@@ -460,7 +498,7 @@ void VideoHardDecoder::ReleaseVideoFrame(void* frame) {
 	jobject jVideoFrame = (jobject)frame;
 
 	// 反射类
-	if( mJniDecoder ) {
+	if( mJniDecoder && mJniDecoderReleaseMethodID ) {
 		// 回调
 		if( mJniDecoderReleaseMethodID ) {
 			env->CallVoidMethod(mJniDecoder, mJniDecoderReleaseMethodID, jVideoFrame);
@@ -497,8 +535,8 @@ void VideoHardDecoder::DecodeVideoHandle() {
 
     while ( mbRunning ) {
 		if( mJniDecoder ) {
-			if( mJniDecoderMethodID ) {
-				jobject jVideoFrame = env->CallObjectMethod(mJniDecoder, mJniDecoderMethodID);
+			if( mJniDecoderGetDecodeVideoMethodID ) {
+				jobject jVideoFrame = env->CallObjectMethod(mJniDecoder, mJniDecoderGetDecodeVideoMethodID);
 				if( jVideoFrame ) {
 					int timestamp = env->GetIntField(jVideoFrame, mJniVideoFrameTimestampMethodID);
 

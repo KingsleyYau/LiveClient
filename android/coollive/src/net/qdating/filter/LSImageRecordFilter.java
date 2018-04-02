@@ -50,7 +50,7 @@ public class LSImageRecordFilter extends LSImageBufferFilter {
 	/**
 	 * 输出的图像Buffer
 	 */
-	private ByteBuffer pixelBuffer = null;
+	private byte[] pixelBufferArray = null;
 	private int pixelBufferSize = 0;
 	
 	/**
@@ -140,10 +140,7 @@ public class LSImageRecordFilter extends LSImageBufferFilter {
 	
 	private void createPixelBuffer(int newPixelBufferSize) {
 		pixelBufferSize = newPixelBufferSize;
-		if( pixelBuffer != null ) {
-			pixelBuffer.clear();
-		}
-		pixelBuffer = ByteBuffer.allocateDirect(pixelBufferSize);
+		pixelBufferArray = new byte[pixelBufferSize];
 		Log.d(LSConfig.TAG, String.format("LSImageRecordFilter::createPixelBuffer( pixelBufferSize : %d )", pixelBufferSize));
 	}
 	
@@ -182,6 +179,7 @@ public class LSImageRecordFilter extends LSImageBufferFilter {
 	private void recordFrame() {
 		// 用GLES20的直接读取Piexl非常慢
 //		GLES20.glReadPixels(0, 0, outputWidth, outputHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, pixelBuffer);
+		// 在魅蓝大概占用5%CPU
 		if( glPBOBuffers != null ) {
 			// 绑定PBO
 			GLES30.glBindBuffer(GLES30.GL_PIXEL_PACK_BUFFER, glPBOBuffers[glPBOIndex]);
@@ -195,13 +193,13 @@ public class LSImageRecordFilter extends LSImageBufferFilter {
 			
 			glPBOIndex = (glPBOIndex + 1) % 2;
 			glPBONextIndex = (glPBONextIndex + 1) % 2;
-			
+
 			if( callback != null ) {
-				if( pixelBuffer != null ) {
+				if( byteBuffer != null ) {
 					// 回调已经处理过的视频帧
-					pixelBuffer.put(byteBuffer);
-					pixelBuffer.rewind();
-					callback.onRecordFrame(pixelBuffer.array(), pixelBuffer.array().length, viewPointWidth, viewPointHeight);
+					int size = byteBuffer.remaining();
+					byteBuffer.get(pixelBufferArray, 0, size);
+					callback.onRecordFrame(pixelBufferArray, size, viewPointWidth, viewPointHeight);
 				}
 			}
 		}

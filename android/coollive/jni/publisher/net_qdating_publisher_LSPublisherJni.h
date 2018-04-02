@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
  * Method:    Create
- * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;Lnet/qdating/publisher/ILSVideoEncoderJni;Lnet/qdating/player/ILSVideoRendererJni;IIIII)J
+ * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;ZLnet/qdating/publisher/ILSVideoEncoderJni;IIIII)J
  */
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
-  (JNIEnv *, jobject, jobject, jobject, jobject, jint, jint, jint, jint, jint);
+  (JNIEnv *, jobject, jobject, jboolean, jobject, jint, jint, jint, jint, jint);
 
 /*
  * Class:     net_qdating_publisher_LSPublisherJni

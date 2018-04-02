@@ -49,11 +49,11 @@ public class LSVideoPlayerRenderer implements Renderer {
 	}
 	
 	public void init() {
-		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::init()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::init( this : 0x%x )", hashCode()));
 	}
 	
 	public void uninit() {
-		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::uninit()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::uninit( this : 0x%x )",  hashCode()));
 	}
 	
 	public void updateBmpFrame(Bitmap bitmap) {
@@ -63,7 +63,7 @@ public class LSVideoPlayerRenderer implements Renderer {
 	}
 	
 	public void setOriginalSize(int width, int height) {
-		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::setOriginalSize( originalWidth : %d, originalHeight : %d )", width, height));
+		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::setOriginalSize( this : 0x%x, originalWidth : %d, originalHeight : %d )", hashCode(), width, height));
 		
 		originalWidth = width;
 		originalHeight = height;
@@ -75,7 +75,8 @@ public class LSVideoPlayerRenderer implements Renderer {
 //		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::onDrawFrame()"));
 		
 		// 重绘背景
-		gl.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		synchronized (this) {
 			bmpFilter.draw(glTextureId[0], originalWidth, originalHeight);
@@ -85,8 +86,17 @@ public class LSVideoPlayerRenderer implements Renderer {
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// TODO Auto-generated method stub
-        Log.i(LSConfig.TAG, String.format("LSVideoPlayerRenderer::onSurfaceChanged( width : %d, height : %d ) ", 
-        		width, height, originalWidth, originalHeight));
+        Log.i(LSConfig.TAG,
+				String.format("LSVideoPlayerRenderer::onSurfaceChanged( "
+								+ "this : 0x%x, "
+								+ "width : %d, "
+								+ "height : %d "
+								+ ")",
+						hashCode(),
+						width,
+						height
+				)
+		);
         
         previewWidth = width;
         previewHeight = height;
@@ -97,7 +107,7 @@ public class LSVideoPlayerRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO Auto-generated method stub
-        Log.i(LSConfig.TAG, String.format("LSVideoPlayerRenderer::onSurfaceCreated()"));
+        Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::onSurfaceCreated( this : 0x%x )", hashCode()));
 		
 		// 创建纹理
 		glTextureId = LSImageFilter.genPixelTexture();

@@ -16,7 +16,7 @@
 
 // 播放休眠
 #define PLAY_SLEEP_TIME 1
-// 帧延迟丢弃值(MS), 如果由于CPU卡顿, 可能导致音视频不同步的差距值
+// 帧延迟丢弃值(MS), 如果由于CPU卡顿, 可能导致音视频不同步的差距值(音频延迟)
 #define PLAY_DELAY_DROP_TIME 300
 // 帧延迟断开值(MS)
 #define PLAY_DELAY_DISCONNECT_TIME 5000
@@ -263,7 +263,7 @@ void RtmpPlayer::Stop() {
                 KLog::LOG_WARNING,
                 "RtmpPlayer::Stop( "
                  "this : %p, "
-                "[Finish] "
+                "[Success] "
                 ")",
                 this
                 );

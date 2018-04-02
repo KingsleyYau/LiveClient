@@ -72,7 +72,7 @@ AudioDecoderAAC::~AudioDecoderAAC() {
 }
 
 bool AudioDecoderAAC::Create(AudioDecoderCallback* callback) {
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioDecoderAAC::Create( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::Create( this : %p )", this);
     
     mpCallback = callback;
     
@@ -97,11 +97,11 @@ bool AudioDecoderAAC::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioDecoderAAC::Reset( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+				 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -151,11 +151,11 @@ bool AudioDecoderAAC::Start() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Start( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+				 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -211,8 +211,8 @@ void AudioDecoderAAC::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+				 "[Success] "
                  ")",
                  this
                  );
@@ -230,8 +230,8 @@ bool AudioDecoderAAC::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioDecoderAAC::CreateContext( "
-                     "[Codec not found], "
-                     "this : %p "
+					 "this : %p, "
+                     "[Codec not found] "
                      ")",
                      this
                      );
@@ -247,8 +247,8 @@ bool AudioDecoderAAC::CreateContext() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_MSG,
                          "AudioDecoderAAC::CreateContext( "
+						 "this : %p, "
                          "[Codec opened], "
-                         "this : %p, "
                          "sample_fmt : %d, "
                          "sample_rate : %d, "
                          "channel_layout : %d, "
@@ -273,8 +273,8 @@ bool AudioDecoderAAC::CreateContext() {
             FileLevelLog("rtmpdump",
                          KLog::LOG_ERR_SYS,
                          "AudioDecoderAAC::CreateContext( "
+						 "this : %p, "
                          "[Codec could not open], "
-                         "this : %p, "
                          "ret : %d "
                          ")",
                          this,
@@ -287,8 +287,8 @@ bool AudioDecoderAAC::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_MSG,
                      "AudioDecoderAAC::CreateContext( "
-                     "[Success], "
-                     "this : %p "
+					 "this : %p, "
+                     "[Success] "
                      ")",
                      this
                      );
@@ -296,8 +296,8 @@ bool AudioDecoderAAC::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioDecoderAAC::CreateContext( "
-                     "[Fail], "
-                     "this : %p "
+					 "this : %p, "
+                     "[Fail] "
                      ")",
                      this
                      );
@@ -455,8 +455,8 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAu
                      "rtmpdump",
                      KLog::LOG_STAT,
                      "AudioDecoderAAC::DecodeAudioFrame( "
+					 "this : %p, "
                      "[Decode Frame], "
-                     "this : %p, "
                      "ret : %d, "
                      "timestamp : %u, "
                      "handleTime : %lld, "
@@ -483,8 +483,8 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAu
                              "rtmpdump",
                              KLog::LOG_STAT,
                              "AudioDecoderAAC::DecodeAudioFrame( "
+							 "this : %p, "
                              "[Got Audio Frame], "
-                             "this : %p, "
                              "bufferSize : %d, "
                              "sample_fmt : %d, "
                              "sample_rate : %d, "
@@ -515,8 +515,8 @@ bool AudioDecoderAAC::DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAu
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "AudioDecoderAAC::DecodeAudioFrame( "
+						 "this : %p, "
                          "[Fail], "
-                         "this : %p, "
                          "ret : %d, "
                          "errbuf : %s "
                          ")",
@@ -535,8 +535,8 @@ void AudioDecoderAAC::DecodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DecodeAudioHandle( "
-                 "[Start], "
-                 "this : %p "
+				 "this : %p "
+                 "[Start] "
                  ")",
                  this
                  );
@@ -595,8 +595,8 @@ void AudioDecoderAAC::DecodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DecodeAudioHandle( "
-                 "[Exit], "
-                 "this : %p "
+				 "this : %p. "
+                 "[Exit] "
                  ")",
                  this
                  );

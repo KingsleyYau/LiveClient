@@ -73,14 +73,14 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	}
 	
 	public void init() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init( this : 0x%x )", hashCode()));
 		
 		cameraFilter.setFilter(previewFilter);
 		previewFilter.setFilter(recordFilter);
 	}
 	
 	public void uninit() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::uninit()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::uninit( this : 0x%x )", hashCode()));
 		
 		cameraFilter.uninit();
 		previewFilter.uninit();
@@ -88,7 +88,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	}
 	
 	public void setOriginalSize(int width, int height) {
-		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::setOriginalSize( originalWidth : %d, originalHeight : %d )", width, height));
+		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::setOriginalSize( this : 0x%x, originalWidth : %d, originalHeight : %d )", hashCode(), width, height));
 		
 		originalWidth = width;
 		originalHeight = height;
@@ -101,7 +101,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	private void createSurfaceTexture() {
 		if( surfaceTexture == null ) {
 			if( glCameraTextureId != null ) {
-				Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::createSurfaceTexture()"));
+				Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::createSurfaceTexture( this : 0x%x )", hashCode()));
 				
 				// 绑定纹理到处理流
 				surfaceTexture = new SurfaceTexture(glCameraTextureId[0]);
@@ -109,8 +109,6 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 					@Override
 					public void onFrameAvailable(SurfaceTexture surfaceTexture) {
 						// TODO Auto-generated method stub
-//						Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onFrameAvailable() "));
-						
 						callback.onFrameAvailable(surfaceTexture);
 					}
 				});
@@ -124,8 +122,6 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		// TODO Auto-generated method stub
-//		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onDrawFrame()"));
-		
         // 创建流输入, 只能在这里创建, 因为要保证GL的创建和渲染在同一个线程
 		createSurfaceTexture();
 		
@@ -135,7 +131,8 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		surfaceTexture.getTransformMatrix(transformMatrix);
 		
 		// 重绘背景
-		GLES20.glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 				
 		// 绘制
 		if( glCameraTextureId != null ) {
@@ -147,22 +144,31 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// TODO Auto-generated method stub
-        Log.i(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onSurfaceChanged( width : %d, height : %d, originalWidth : %d, originalHeight : %d ) ", 
-        		width, height, originalWidth, originalHeight));
+        Log.i(LSConfig.TAG,
+				String.format("LSVideoCaptureRenderer::onSurfaceChanged( " +
+								"this : 0x%x, " +
+								"width : %d, " +
+								"height : %d " +
+								")",
+						hashCode(),
+						width,
+						height
+				)
+		);
         
         previewWidth = width;
         previewHeight = height;
         
-		// 改变预览滤镜展现大小
-//        cameraFilter.changeViewPointSize(previewWidth, previewHeight);
+		// 改变预览滤镜大小
 		previewFilter.changeViewPointSize(previewWidth, previewHeight);
+		// 改变录制滤镜大小
 		recordFilter.changeViewPointSize(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO Auto-generated method stub
-        Log.i(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onSurfaceCreated()"));
+        Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onSurfaceCreated( this : 0x%x )", hashCode()));
         
         // 摄像头滤镜
 		cameraFilter.init();

@@ -31,27 +31,35 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	ILSPublisherCallback publisherCallback = null;
 	
 	/**
-	 * 初始化实例
-	 * @param videoEncoder		视频编码器
+	 * 创建实例
+	 * @param publisherCallback		状态回调
+	 * @param useHardDecoder		是否使用硬编码器
+	 * @param videoHardEncoder		视频硬编码器
 	 * @return 成功失败
 	 */
-	public boolean Create(ILSPublisherCallback publisherCallback, ILSVideoEncoderJni videoEncoder, ILSVideoRendererJni videoRenderer) {
+	public boolean Create(
+			ILSPublisherCallback publisherCallback, 
+			boolean useHardDecoder,
+			ILSVideoHardEncoderJni videoHardEncoder
+			) {
 		// 状态回调
 		this.publisherCallback = publisherCallback;
 		
-		client = Create(this, videoEncoder, videoRenderer, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT, LSConfig.VIDEO_BITRATE, LSConfig.VIDEO_KEYFRAMEINTERVAL, LSConfig.VIDEO_FPS);	
+		client = Create(this, useHardDecoder, videoHardEncoder, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT, LSConfig.VIDEO_BITRATE, LSConfig.VIDEO_KEYFRAMEINTERVAL, LSConfig.VIDEO_FPS);	
 		return client != INVALID_CLIENT;
 	}
 	
 	/**
 	 * 创建实例
-	 * @param videoEncoder		视频编码器
-	 * @return	实例指针
+	 * @param publisherCallback		状态回调
+	 * @param useHardDecoder		是否使用硬编码器
+	 * @param videoHardEncoder		视频硬编码器
+	 * @return 实例指针
 	 */
 	private native long Create(
 			ILSPublisherCallbackJni publisherCallback, 
-			ILSVideoEncoderJni videoEncoder, 
-			ILSVideoRendererJni videoRenderer,
+			boolean useHardDecoder,
+			ILSVideoHardEncoderJni videoEncoder, 
 			int width,
 			int height,
 			int bitRate,
@@ -67,6 +75,7 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 			Destroy(client);
 		}
 	}
+	
 	/**
 	 * 销毁实例
 	 * @param client	实例指针

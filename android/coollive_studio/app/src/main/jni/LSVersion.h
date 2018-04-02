@@ -8,6 +8,6 @@
 #ifndef LSVERSION_H_
 #define LSVERSION_H_
 
-#define LS_VERSION "1.0.4"
+#define LS_VERSION "1.0.5"
 
 #endif /* LSVERSION_H_ */

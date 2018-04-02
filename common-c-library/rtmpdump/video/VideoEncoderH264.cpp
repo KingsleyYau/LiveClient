@@ -124,7 +124,7 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
     bool bFlag = true;
     
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "VideoEncoderH264::Create( "
                  "this : %p, "
                  "width : %d, "
@@ -156,11 +156,23 @@ bool VideoEncoderH264::Create(int width, int height, int bitRate, int keyFrameIn
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoEncoderH264::Create( "
+				 "this : %p "
                  "[%s], "
-                 "this : %p "
+                 "width : %d, "
+                 "height : %d, "
+                 "bitRate : %d, "
+                 "keyFrameInterval : %d, "
+                 "fps : %d, "
+                 "type : %d "
                  ")",
+				 this,
 				 bFlag?"Success":"Fail",
-                 this
+                 width,
+                 height,
+                 bitRate,
+                 keyFrameInterval,
+                 fps,
+				 type
                  );
     
     return bFlag;
@@ -184,11 +196,11 @@ bool VideoEncoderH264::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoEncoderH264::Reset( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-				 bFlag?"Success":"Fail",
-                 this
+				 this,
+				 bFlag?"Success":"Fail"
                  );
 
     return bFlag;
@@ -278,11 +290,11 @@ bool VideoEncoderH264::Start() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Start( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-				 bFlag?"Success":"Fail",
-                 this
+				 this,
+				 bFlag?"Success":"Fail"
                  );
 
 	return bFlag;
@@ -429,8 +441,8 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFra
                  "rtmpdump",
                  KLog::LOG_STAT,
                  "VideoEncoderH264::EncodeVideoFrame( "
-                 "[Encode Frame], "
                  "this : %p, "
+				 "[Encode Frame], "
                  "srcFrame : %p, "
                  "dstFrame : %p, "
                  "timestamp : %u, "
@@ -451,8 +463,8 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFra
                      "rtmpdump",
                      KLog::LOG_STAT,
                      "VideoEncoderH264::EncodeVideoFrame( "
+					 "this : %p, "
                      "[Got Video Frame], "
-                     "this : %p, "
                      "srcFrame : %p, "
                      "dstFrame : %p, "
                      "timestamp : %u, "
@@ -488,11 +500,11 @@ bool VideoEncoderH264::CreateContext() {
         		"rtmpdump",
 				 KLog::LOG_ERR_SYS,
 				 "VideoDecoderH264::CreateContext( "
-				"[Codec not found], "
-				"this : %p "
-				")",
-				this
-				);
+				 "this : %p "
+				 "[Codec not found], "
+				 ")",
+				 this
+				 );
         
         bFlag = false;
     }
@@ -546,8 +558,8 @@ bool VideoEncoderH264::CreateContext() {
             		"rtmpdump",
 					KLog::LOG_MSG,
                     "VideoEncoderH264::CreateContext( "
+					"this : %p "
                     "[Codec opened], "
-                    "this : %p "
                     ")",
                     this
                     );
@@ -555,8 +567,8 @@ bool VideoEncoderH264::CreateContext() {
             FileLevelLog("rtmpdump",
                         KLog::LOG_ERR_SYS,
                         "VideoEncoderH264::CreateContext( "
+						"this : %p, "
                         "[Could not open codec], "
-                        "this : %p, "
                         "ret : %d "
                         ")",
                         this,
@@ -572,8 +584,8 @@ bool VideoEncoderH264::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "VideoEncoderH264::CreateContext( "
-                     "[Fail], "
-                     "this : %p "
+					 "this : %p, "
+                     "[Fail] "
                      ")",
                      this
                      );
@@ -633,8 +645,8 @@ void VideoEncoderH264::ConvertVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::ConvertVideoHandle( "
-                 "[Start], "
-                 "this : %p "
+				 "this : %p, "
+                 "[Start] "
                  ")",
                  this
                  );
@@ -697,8 +709,8 @@ void VideoEncoderH264::ConvertVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "VideoEncoderH264::ConvertVideoHandle( "
-                "[Exit], "
-                "this : %p "
+                "this : %p, "
+				"[Exit] "
                 ")",
                 this
                 );

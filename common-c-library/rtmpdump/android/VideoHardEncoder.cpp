@@ -53,7 +53,66 @@ VideoHardEncoder::VideoHardEncoder(jobject jniEncoder)
 
 	mJniEncoder = NULL;
 	if( jniEncoder ) {
+		// 编码器Java引用
 		mJniEncoder = env->NewGlobalRef(jniEncoder);
+		jclass jniEncoderCls = env->GetObjectClass(mJniEncoder);
+
+		string signure = "";
+		jmethodID jMethodID = 0;
+
+		// 重置编码器
+		signure = "(IIIII)Z";
+		jMethodID = env->GetMethodID(
+				jniEncoderCls,
+				"reset",
+				signure.c_str()
+				);
+		mJniEncoderResetMethodID = jMethodID;
+
+		// 暂停编码器
+		signure = "()V";
+		jMethodID = env->GetMethodID(
+				jniEncoderCls,
+				"pause",
+				signure.c_str()
+				);
+		mJniEncoderPauseMethodID = jMethodID;
+
+		// 获取编码视频帧
+		signure = "()L" LS_ENCODE_VIDEO_ITEM_CLASS ";";
+		jMethodID = env->GetMethodID(
+				jniEncoderCls,
+				"getEncodeVideoFrame",
+				signure.c_str()
+				);
+		mJniEncoderGetEncodeVideoMethodID = jMethodID;
+
+		// 编码视频帧
+		signure = "([BI)Z";
+		jMethodID = env->GetMethodID(
+				jniEncoderCls,
+				"encodeVideoFrame",
+				signure.c_str()
+				);
+		mJniEncoderEncodeVideoMethodID = jMethodID;
+
+		// 释放视频帧
+		signure = "(L" LS_ENCODE_VIDEO_ITEM_CLASS ";)V";
+		jMethodID = env->GetMethodID(
+				jniEncoderCls,
+				"releaseVideoFrame",
+				signure.c_str()
+				);
+		mJniEncoderReleaseMethodID = jMethodID;
+
+		// 编码帧Java引用
+		jobject jVideoFrameItem;
+		InitClassHelper(env, LS_ENCODE_VIDEO_ITEM_CLASS, &jVideoFrameItem);
+		jclass jniVideoFrameCls = env->GetObjectClass(jVideoFrameItem);
+		env->DeleteGlobalRef(jVideoFrameItem);
+		mJniVideoFrameTimestampMethodID = env->GetFieldID(jniVideoFrameCls, "timestamp", "I");
+		mJniVideoFrameDataMethodID = env->GetFieldID(jniVideoFrameCls, "data", "[B");
+		mJniVideoFrameSizeMethodID = env->GetFieldID(jniVideoFrameCls, "size", "I");
 	}
 
 	if( bFlag ) {
@@ -104,51 +163,18 @@ void VideoHardEncoder::Init() {
 
     mJniEncoder = NULL;
     dataByteArray = NULL;
+    mJniEncoderResetMethodID = 0;
+    mJniEncoderPauseMethodID = 0;
+    mJniEncoderGetEncodeVideoMethodID = 0;
+    mJniEncoderEncodeVideoMethodID = 0;
+    mJniEncoderReleaseMethodID = 0;
+
+    mJniVideoFrameTimestampMethodID = 0;
+    mJniVideoFrameDataMethodID = 0;
+    mJniVideoFrameSizeMethodID = 0;
 
     mbRunning = false;
     mpEncodeVideoRunnable = new EncodeVideoHardRunnable(this);
-}
-
-void VideoHardEncoder::Stop() {
-	FileLevelLog("rtmpdump",
-				KLog::LOG_WARNING,
-				"VideoHardEncoder::Stop( "
-				"this : %p "
-				")",
-				this
-				);
-
-    mRuningMutex.lock();
-    if( mbRunning ) {
-        mbRunning = false;
-
-        // 停止编码线程
-        mEncodeVideoThread.Stop();
-
-        VideoFrame* frame = NULL;
-
-        // 释放空闲Buffer
-        mFreeBufferList.lock();
-        while( !mFreeBufferList.empty() ) {
-            frame = (VideoFrame* )mFreeBufferList.front();
-            mFreeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mFreeBufferList.unlock();
-    }
-    mRuningMutex.unlock();
-
-    FileLog("rtmpdump",
-            "VideoHardEncoder::Stop( "
-            "[Success], "
-            "this : %p "
-            ")",
-            this
-            );
 }
 
 bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameInterval, int fps, VIDEO_FORMATE_TYPE type) {
@@ -165,12 +191,12 @@ bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameIn
     		"keyFrameInterval : %d, "
     		"fps : %d "
     		" )",
+			this,
 			width,
 			height,
 			bitRate,
 			keyFrameInterval,
-			fps,
-			this
+			fps
 			);
 
     mWidth = width;
@@ -179,19 +205,15 @@ bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameIn
     mBitRate = bitRate;
     mFPS = fps;
 
-    Pause();
-    bFlag = Reset();
-
     FileLevelLog(
     		"rtmpdump",
     		KLog::LOG_WARNING,
 			"VideoHardEncoder::Create( "
-			"[Finish], "
 			"this : %p, "
-			"bFlag : %s "
+			"[%s] "
 			")",
 			this,
-			bFlag?"true":"false"
+			bFlag?"Success":"Fail"
 			);
 
     return bFlag;
@@ -204,40 +226,42 @@ void VideoHardEncoder::SetCallback(VideoEncoderCallback* callback) {
 bool VideoHardEncoder::Reset() {
     FileLevelLog(
     		"rtmpdump",
-			KLog::LOG_WARNING,
+			KLog::LOG_MSG,
 			"VideoHardEncoder::Reset( "
 			"this : %p "
 			")",
 			this
 			);
 
-    // 重置编码器
+    bool bFlag = false;
+
 	JNIEnv* env;
 	bool isAttachThread;
-	bool bFlag = GetEnv(&env, &isAttachThread);
+	bool bAttatch = GetEnv(&env, &isAttachThread);
 
-	// 反射类
-	jclass jniEncoderCls = env->GetObjectClass(mJniEncoder);
-	if( jniEncoderCls != NULL ) {
-		// 发射方法
-		string signure = "(IIIII)Z";
-		jmethodID jMethodID = env->GetMethodID(
-				jniEncoderCls,
-				"reset",
-				signure.c_str()
-				);
-
-		// 回调
-		if( jMethodID ) {
-			env->CallBooleanMethod(mJniEncoder, jMethodID, mWidth, mHeight, mKeyFrameInterval, mBitRate, mFPS);
-		}
+	if( mJniEncoder && mJniEncoderResetMethodID ) {
+		bFlag = env->CallBooleanMethod(mJniEncoder, mJniEncoderResetMethodID, mWidth, mHeight, mBitRate, mKeyFrameInterval, mFPS);
 	}
 
-	if( bFlag ) {
+	if( bAttatch ) {
 		ReleaseEnv(isAttachThread);
 	}
 
-    return true;
+	if( bFlag ) {
+		bFlag = Start();
+	}
+
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_WARNING,
+                 "VideoEncoderH264::Reset( "
+                 "[%s], "
+                 "this : %p "
+                 ")",
+				 bFlag?"Success":"Fail",
+                 this
+                 );
+
+    return bFlag;
 }
 
 void VideoHardEncoder::Pause() {
@@ -250,100 +274,158 @@ void VideoHardEncoder::Pause() {
 			this
 			);
 
-    // 暂停编码器
+	Stop();
+
 	JNIEnv* env;
 	bool isAttachThread;
-	bool bFlag = GetEnv(&env, &isAttachThread);
+	bool bAttatch = GetEnv(&env, &isAttachThread);
 
-	// 反射类
-	jclass jniEncoderCls = env->GetObjectClass(mJniEncoder);
-	if( jniEncoderCls != NULL ) {
-		// 发射方法
-		string signure = "()V";
-		jmethodID jMethodID = env->GetMethodID(
-				jniEncoderCls,
-				"pause",
-				signure.c_str()
-				);
-
-		// 回调
-		if( jMethodID ) {
-			env->CallVoidMethod(mJniEncoder, jMethodID);
-		}
+	if( mJniEncoder && mJniEncoderPauseMethodID ) {
+		env->CallVoidMethod(mJniEncoder, mJniEncoderPauseMethodID);
 	}
 
-	if( bFlag ) {
+	if( bAttatch ) {
 		ReleaseEnv(isAttachThread);
 	}
+
+}
+
+bool VideoHardEncoder::Start() {
+    bool bFlag = false;
+
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardEncoder::Start( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
+
+    mRuningMutex.lock();
+    if( mbRunning ) {
+        Stop();
+    }
+
+    mbRunning = true;
+
+	// 开启解码线程
+    mEncodeVideoThread.Start(mpEncodeVideoRunnable);
+
+	bFlag = true;
+
+    mRuningMutex.unlock();
+
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardEncoder::Start( "
+				 "this : %p, "
+                 "[%s] "
+                 ")",
+				 this,
+                 bFlag?"Success":"Fail"
+                 );
+
+    return bFlag;
+}
+
+void VideoHardEncoder::Stop() {
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_MSG,
+			"VideoHardEncoder::Stop( "
+			"this : %p "
+			")",
+			this
+			);
+
+    mRuningMutex.lock();
+    if( mbRunning ) {
+        mbRunning = false;
+
+        // 停止编码线程
+        mEncodeVideoThread.Stop();
+    }
+    mRuningMutex.unlock();
+
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardEncoder::Stop( "
+                 "this : %p, "
+				 "[Success] "
+                 ")",
+                 this
+                 );
 }
 
 void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
 	FileLog("rtmpdump",
 			"VideoHardEncoder::EncodeVideoFrame( "
+			"this : %p, "
 			"size : %d "
 			")",
+			this,
 			size
 			);
 
-    // 编码视频
-	JNIEnv* env;
-	bool isAttachThread;
-	bool bFlag = GetEnv(&env, &isAttachThread);
+	bool bFlag = false;
 
-	// 创建新DataBuffer
-	if( dataByteArray != NULL ) {
-		int oldLen = env->GetArrayLength(dataByteArray);
-		if( oldLen < size ) {
-			env->DeleteGlobalRef(dataByteArray);
-			dataByteArray = NULL;
-		}
-	}
+    mRuningMutex.lock();
+    if( mbRunning ) {
+        // 编码视频
+    	JNIEnv* env;
+    	bool isAttachThread;
+    	bool bFlag = GetEnv(&env, &isAttachThread);
 
-	if( dataByteArray == NULL ) {
-		jbyteArray localDataByteArray = env->NewByteArray(size);
-		dataByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-		env->DeleteLocalRef(localDataByteArray);
-	}
+    	// 创建新DataBuffer
+    	if( dataByteArray != NULL ) {
+    		int oldLen = env->GetArrayLength(dataByteArray);
+    		if( oldLen < size ) {
+    			env->DeleteGlobalRef(dataByteArray);
+    			dataByteArray = NULL;
+    		}
+    	}
 
-	if( dataByteArray != NULL ) {
-		env->SetByteArrayRegion(dataByteArray, 0, size, (const jbyte*)data);
-	}
+    	if( dataByteArray == NULL ) {
+    		jbyteArray localDataByteArray = env->NewByteArray(size);
+    		dataByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+    		env->DeleteLocalRef(localDataByteArray);
+    	}
 
-	// 反射类
-	jclass jniEncoderCls = env->GetObjectClass(mJniEncoder);
-	if( jniEncoderCls != NULL ) {
-		// 发射方法
-		string signure = "([BI)Z";
-		jmethodID jMethodID = env->GetMethodID(
-				jniEncoderCls,
-				"encodeVideoFrame",
-				signure.c_str()
-				);
+    	if( dataByteArray != NULL ) {
+    		env->SetByteArrayRegion(dataByteArray, 0, size, (const jbyte*)data);
+    	}
 
-		// 回调
-		if( jMethodID ) {
-			env->CallBooleanMethod(mJniEncoder, jMethodID, dataByteArray, size);
-		}
-	}
+    	if( mJniEncoder && mJniEncoderEncodeVideoMethodID ) {
+    		env->CallBooleanMethod(mJniEncoder, mJniEncoderEncodeVideoMethodID, dataByteArray, size);
+    	}
 
-	if( bFlag ) {
-		ReleaseEnv(isAttachThread);
-	}
+    	if( bFlag ) {
+    		ReleaseEnv(isAttachThread);
+    	}
+
+    	bFlag = true;
+    }
+    mRuningMutex.unlock();
 
 	FileLog("rtmpdump",
 			"VideoHardEncoder::EncodeVideoFrame( "
-			"[Success], "
+			"this : %p, "
+			"[%s], "
 			"size : %d "
 			")",
+			this,
+			bFlag?"Success":"Fail",
 			size
 			);
 }
 
 void VideoHardEncoder::EncodeVideoHandle() {
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_MSG,
 			"VideoHardEncoder::EncodeVideoHandle( "
-			"[Start], "
 			"this : %p, "
+			"[Start], "
 			"mJniEncoder : %p "
 			")",
 			this,
@@ -355,43 +437,115 @@ void VideoHardEncoder::EncodeVideoHandle() {
 	bool bFlag = GetEnv(&env, &isAttachThread);
 
     while ( mbRunning ) {
-		if( mJniEncoder ) {
-			// 反射类
-			jclass jniEncoderCls = env->GetObjectClass(mJniEncoder);
-			if( jniEncoderCls != NULL ) {
-				// 反射方法
-				string signure = "()L" LS_VIDEO_ITEM_CLASS;
-				jmethodID jMethodID = env->GetMethodID(
-						jniEncoderCls,
-						"getEncodeVideoFrame",
-						signure.c_str()
+		if( mJniEncoder && mJniEncoderGetEncodeVideoMethodID ) {
+			jobject jVideoFrame = env->CallObjectMethod(mJniEncoder, mJniEncoderGetEncodeVideoMethodID);
+			if( jVideoFrame ) {
+				int timestamp = env->GetIntField(jVideoFrame, mJniVideoFrameTimestampMethodID);
+				int size = env->GetIntField(jVideoFrame, mJniVideoFrameSizeMethodID);
+				jbyteArray data = (jbyteArray)env->GetObjectField(jVideoFrame, mJniVideoFrameDataMethodID);
+				jbyte* frame = env->GetByteArrayElements(data, 0);
+
+				FileLevelLog(
+						"rtmpdump",
+						KLog::LOG_STAT,
+						"VideoHardDecoder::EncodeVideoHandle( "
+						"this : %p, "
+						"[Get decode frame], "
+						"jVideoFrame : %p, "
+						"timestamp : %d "
+						")",
+						this,
+						jVideoFrame,
+						timestamp
 						);
 
-				if( jMethodID ) {
-					jobject jVideoFrame = env->CallObjectMethod(mJniEncoder, jMethodID);
-					if( jVideoFrame ) {
-						HandleVideoFrame(env, jniEncoderCls, jVideoFrame);
+                // 分离Nalu
+                bool bFinish = false;
+                char* buffer = (char *)frame;
+                int leftSize = size;
+                int naluSize = 0;
 
-						env->DeleteLocalRef(jVideoFrame);
-					}
-				}
+                char* naluStart = NULL;
+                char* naluEnd = NULL;
 
-				env->DeleteLocalRef(jniEncoderCls);
+                int startCodeSize = 0;
+
+                // 找到第一帧
+                naluStart = FindNalu(buffer, size, startCodeSize);
+                if( naluStart ) {
+                	naluStart += startCodeSize;
+                    leftSize -= (int)(naluStart - buffer);
+                }
+
+                while( naluStart ) {
+                    naluSize = 0;
+
+                    // 寻找Nalu
+                    naluEnd = FindNalu(naluStart, leftSize, startCodeSize);
+                    if( naluEnd != NULL ) {
+                        // 找到Nalu
+                        naluSize = (int)(naluEnd - naluStart);
+
+                    } else {
+                        // 最后一个Nalu
+                        naluSize = leftSize;
+
+                        bFinish = true;
+                    }
+
+                    FileLevelLog("rtmpdump",
+                                 KLog::LOG_STAT,
+                                 "VideoHardEncoder::EncodeVideoHandle( "
+                                 "[Got Nalu], "
+                                 "this : %p, "
+                                 "frameType : 0x%x, "
+                                 "naluSize : %d, "
+                                 "leftSize : %d, "
+                                 "bFinish : %s "
+                                 ")",
+                                 this,
+                                 (*naluStart & 0x1f),
+                                 naluSize,
+                                 leftSize,
+                                 bFinish?"true":"false"
+                                 );
+
+                    // 回调编码成功
+                    if (NULL != mpCallback) {
+                        mpCallback->OnEncodeVideoFrame(this, naluStart, naluSize, timestamp);
+                    }
+
+                    // 数据下标偏移
+                    naluStart = naluEnd + startCodeSize;
+                    leftSize -= naluSize;
+
+                    if( bFinish ) {
+                        break;
+                    }
+                }
+
+				// 释放Java帧
+				env->CallVoidMethod(mJniEncoder, mJniEncoderReleaseMethodID, jVideoFrame);
+
+				env->ReleaseByteArrayElements(data, frame, 0);
+				env->DeleteLocalRef(data);
+				env->DeleteLocalRef(jVideoFrame);
 			}
 		}
 
-		Sleep(1);
+		Sleep(10);
     }
-
 
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
 
-	FileLog("rtmpdump",
+	FileLevelLog(
+			"rtmpdump",
+			KLog::LOG_MSG,
 			"VideoHardEncoder::EncodeVideoHandle( "
-			"[Exit], "
 			"this : %p, "
+			"[Exit] "
 			"mJniEncoder : %p "
 			")",
 			this,
@@ -399,74 +553,33 @@ void VideoHardEncoder::EncodeVideoHandle() {
 			);
 }
 
-void VideoHardEncoder::HandleVideoFrame(JNIEnv* env, jclass jniEncoderCls, jobject jVideoFrame) {
-	int bufferIndex = -1;
-	int timestamp = 0;
-	int size = 0;
-	int width = 0;
-	int height = 0;
+char* VideoHardEncoder::FindNalu(char* start, int size, int& startCodeSize) {
+    static const char naluStartCode[] = {0x00, 0x00, 0x00, 0x01};
+    static const char sliceStartCode[] = {0x00, 0x00, 0x01};
+    startCodeSize = 0;
+    char* nalu = NULL;
+    char frameType = *start & 0x1F;
 
-	jclass jniVideoFrameCls = env->GetObjectClass(jVideoFrame);
-	if( jniVideoFrameCls != NULL ) {
-		jfieldID jfBufferIndex = env->GetFieldID(jniVideoFrameCls, "bufferIndex", "I");
-		bufferIndex = env->GetIntField(jVideoFrame, jfBufferIndex);
+    for(int i = 0; i < size; i++) {
+        // Only SPS or PPS need to seperate by slice start code
+        if( frameType == 0x07 || frameType == 0x08 ) {
+            if( i + sizeof(sliceStartCode) < size &&
+               memcmp(start + i, sliceStartCode, sizeof(sliceStartCode)) == 0 ) {
+            	startCodeSize = sizeof(sliceStartCode);
+                nalu = start + i;
+                break;
+            }
+        }
 
-		jfieldID jfTimestamp = env->GetFieldID(jniVideoFrameCls, "timestamp", "I");
-		timestamp = env->GetIntField(jVideoFrame, jfTimestamp);
+        if ( i + sizeof(naluStartCode) < size &&
+            memcmp(start + i, naluStartCode, sizeof(naluStartCode)) == 0 ) {
+        	startCodeSize = sizeof(naluStartCode);
+            nalu = start + i;
+            break;
+        }
+    }
 
-		jfieldID jfSize = env->GetFieldID(jniVideoFrameCls, "size", "I");
-		size = env->GetIntField(jVideoFrame, jfSize);
-
-		jfieldID jfWidth = env->GetFieldID(jniVideoFrameCls, "width", "I");
-		width = env->GetIntField(jVideoFrame, jfWidth);
-
-		jfieldID jfHeight = env->GetFieldID(jniVideoFrameCls, "height", "I");
-		height = env->GetIntField(jVideoFrame, jfHeight);
-
-		if( bufferIndex != -1 ) {
-			FileLog("rtmpdump",
-					"VideoHardEncoder::EncodeVideoHandle( "
-					"[Get Encoded Video Frame], "
-					"bufferIndex : %d, "
-					"timestamp : %d, "
-					"size : %d, "
-					"width : %d, "
-					"height : %d "
-					")",
-					bufferIndex,
-					timestamp,
-					size,
-					width,
-					height
-					);
-
-			jfieldID jfData = env->GetFieldID(jniVideoFrameCls, "data", "[B");
-			jbyteArray jByteArray = (jbyteArray)env->GetObjectField(jVideoFrame, jfData);
-			jbyte* data = env->GetByteArrayElements(jByteArray, 0);
-
-			if( mpCallback ) {
-				// 回调编码成功
-				mpCallback->OnEncodeVideoFrame(this, (char*)data, size, timestamp);
-			}
-
-			env->ReleaseByteArrayElements(jByteArray, data, 0);
-			env->DeleteLocalRef(jByteArray);
-
-			// 反射方法
-			string signure = "(I)V";
-			jmethodID jMethodID = env->GetMethodID(
-					jniEncoderCls,
-					"releaseVideoFrame",
-					signure.c_str()
-					);
-
-			// 回调
-			if( jMethodID ) {
-				env->CallVoidMethod(mJniEncoder, jMethodID, bufferIndex);
-			}
-		}
-
-		env->DeleteLocalRef(jniVideoFrameCls);
-	}
+    return nalu;
 }
+
 }

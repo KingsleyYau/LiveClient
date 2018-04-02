@@ -24,18 +24,18 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	KLog::SetLogDirectory("/sdcard/coollive");
 	KLog::SetLogLevel(KLog::LOG_WARNING);
 
-	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
+	jobject jLSHardEncodeVideoFrameItem;
+	InitClassHelper(env, LS_ENCODE_VIDEO_ITEM_CLASS, &jLSHardEncodeVideoFrameItem);
 
-	jobject jLSVideoFrameItem;
-	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);
+	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
 
 	return JNI_VERSION_1_4;
 }
 
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
-  (JNIEnv *env, jobject thiz, jobject callback, jobject videoEncoder, jobject videoRenderer, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {
+  (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardEncoder, jobject videoEncoder, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {
 	// RTMP推送器
-	LSPublisherImp* publisher = new LSPublisherImp(callback, videoEncoder, videoRenderer, width, height, bitRate, keyFrameInterval, fps);
+	LSPublisherImp* publisher = new LSPublisherImp(callback, useHardEncoder, videoEncoder, width, height, bitRate, keyFrameInterval, fps);
 
 	FileLevelLog(
 			"rtmpdump",
@@ -97,8 +97,8 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_publisher_LSPublisherJni_PublishUrl
 				"rtmpdump",
 				KLog::LOG_WARNING,
 				"LSPublisherJni::PublishUrl( "
-				"[Success], "
 				"publisher : %p, "
+				"[Success], "
 				"url : %s "
 				")",
 				publisher,
@@ -109,8 +109,8 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_publisher_LSPublisherJni_PublishUrl
 				"rtmpdump",
 				KLog::LOG_WARNING,
 				"LSPublisherJni::PublishUrl( "
-				"[Fail], "
 				"publisher : %p, "
+				"[Fail], "
 				"url : %s "
 				")",
 				publisher,
@@ -126,10 +126,7 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushVideoFrame
 	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
 
 	jbyte* frame = env->GetByteArrayElements(data, 0);
-//	int size = env->GetArrayLength(data);
-
 	publisher->PushVideoFrame((char *)frame, size, width, height);
-
 	env->ReleaseByteArrayElements(data, frame, 0);
 }
 
@@ -150,9 +147,7 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_PushAudioFrame
 	LSPublisherImp* publisher = (LSPublisherImp *)jpublisher;
 
 	jbyte* frame = env->GetByteArrayElements(data, 0);
-
 	publisher->PushAudioFrame((char *)frame, size);
-
 	env->ReleaseByteArrayElements(data, frame, 0);
 }
 

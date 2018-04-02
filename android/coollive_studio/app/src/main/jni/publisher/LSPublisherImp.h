@@ -21,9 +21,9 @@
 #include <rtmpdump/video/VideoRotateFilter.h>
 
 using namespace coollive;
-class LSPublisherImp : public PublisherStatusCallback, public VideoFiltersCallback {
+class LSPublisherImp : public PublisherStatusCallback {
 public:
-	LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, jobject jniVideoRenderer, int width, int height, int bitRate, int keyFrameInterval, int fps);
+	LSPublisherImp(jobject jniCallback, jboolean useHardEncoder, jobject jniVideoEncoder, int width, int height, int bitRate, int keyFrameInterval, int fps);
 	virtual ~LSPublisherImp();
 
 	void Destroy();
@@ -51,24 +51,12 @@ private:
 	PublisherController mPublisher;
 	VideoEncoder* mpVideoEncoder;
 	AudioEncoder* mpAudioEncoder;
-	VideoRenderer* mpVideoRenderer;
 
 	jobject mJniCallback;
 	jobject mJniVideoEncoder;
-	jobject mJniVideoRenderer;
 
-	/**
-	 * 是否使用硬编码
-	 */
+	// 是否使用硬编码
 	bool mUseHardEncoder;
-
-	// 过滤器
-	VideoRotateFilter mVideoRotateFilter;
-	VideoFilters mVideoFilters;
-
-	// 预览重采样
-	VideoFormatConverter mVideoFormatConverter;
-	VideoFrame mPreViewFrame;
 
     // 视频参数
     int mWidth;

@@ -35,7 +35,9 @@ public class LSVideoHardDecoderFrame {
 
 	}
 	
-	public void updateImage(Image image) {
+	public void updateImage(Image image, int timestamp) {
+		this.timestamp = timestamp;
+
 		format = image.getFormat();
 		width = image.getWidth();
 		height = image.getHeight();

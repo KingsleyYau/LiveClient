@@ -15,8 +15,17 @@
 #include <rtmpdump/android/VideoHardEncoder.h>
 #include <rtmpdump/android/VideoRendererImp.h>
 
-LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, jobject jniVideoRenderer, int width, int height, int bitRate, int keyFrameInterval, int fps)
-:mVideoRotateFilter(fps), mPublisherMutex(KMutex::MutexType_Recursive)
+LSPublisherImp::LSPublisherImp(
+		jobject jniCallback,
+		jboolean useHardEncoder,
+		jobject jniVideoEncoder,
+		int width,
+		int height,
+		int bitRate,
+		int keyFrameInterval,
+		int fps
+		)
+:mPublisherMutex(KMutex::MutexType_Recursive)
 {
 	// TODO Auto-generated constructor stub
 	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPublisherImp::LSPublisherImp( this : %p )", this);
@@ -59,12 +68,6 @@ LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, job
 		mJniVideoEncoder = env->NewGlobalRef(jniVideoEncoder);
 	}
 
-	mJniVideoRenderer = NULL;
-	if( jniVideoRenderer ) {
-		mJniVideoRenderer = env->NewGlobalRef(jniVideoRenderer);
-	}
-
-	mUseHardEncoder = false;
 	mpVideoEncoder = NULL;
 	mpAudioEncoder = NULL;
 
@@ -72,12 +75,7 @@ LSPublisherImp::LSPublisherImp(jobject jniCallback, jobject jniVideoEncoder, job
 	mPublisher.SetVideoParam(width, height);
 //	mPublisher.SetAudioParam(44100, 1, 16);
 
-//	// 滤镜
-//	mVideoFilters.SetFiltersCallback(this);
-//	// 增加旋转滤镜
-//	mVideoFilters.AddFilter(&mVideoRotateFilter);
-//	// 预览格式
-//	mVideoFormatConverter.SetDstFormat(VIDEO_FORMATE_RGB565);
+	mUseHardEncoder = useHardEncoder;
 
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
@@ -104,11 +102,6 @@ LSPublisherImp::~LSPublisherImp() {
 	if( mJniVideoEncoder ) {
 		env->DeleteGlobalRef(mJniVideoEncoder);
 		mJniVideoEncoder = NULL;
-	}
-
-	if( mJniVideoRenderer ) {
-		env->DeleteGlobalRef(mJniVideoRenderer);
-		mJniVideoRenderer = NULL;
 	}
 
 	if( bFlag ) {
@@ -181,8 +174,6 @@ void LSPublisherImp::PushVideoFrame(void* data, int size, int width, int height)
         long long videoFrameInterval = diffTime - (mVideoFrameIndex * mVideoFrameInterval);
 
         if( videoFrameInterval >= 0 ) {
-            // 放到过滤器
-//        	mVideoFilters.FilterFrame(data, size, width, height, VIDEO_FORMATE_NV21);
         	// 放到推流器
         	mPublisher.PushVideoFrame(data, size, NULL);
 
@@ -251,7 +242,7 @@ void LSPublisherImp::ChangeVideoRotate(int rotate) {
 			rotate
 			);
 
-	mVideoRotateFilter.ChangeRotate(rotate);
+//	mVideoRotateFilter.ChangeRotate(rotate);
 }
 
 void LSPublisherImp::CreateEncoders() {
@@ -266,7 +257,7 @@ void LSPublisherImp::CreateEncoders() {
 
 	if( mUseHardEncoder ) {
 		// 硬编码
-		mpVideoEncoder = new VideoHardEncoder(mJniVideoEncoder);;
+		mpVideoEncoder = new VideoHardEncoder(mJniVideoEncoder);
 		mpAudioEncoder = new AudioEncoderAAC();
 
 	} else {
@@ -274,9 +265,6 @@ void LSPublisherImp::CreateEncoders() {
 		mpVideoEncoder = new VideoEncoderH264();
 		mpAudioEncoder = new AudioEncoderAAC();
 	}
-
-	// 渲染
-	mpVideoRenderer = new VideoRendererImp(mJniVideoRenderer);
 
     // 替换编码器
 //	mpVideoEncoder->Create(mWidth, mHeight, mBitRate, mKeyFrameInterval, mFPS, VIDEO_FORMATE_NV21);
@@ -320,11 +308,6 @@ void LSPublisherImp::DestroyEncoders() {
 	if( mpAudioEncoder ) {
 		delete mpAudioEncoder;
 		mpAudioEncoder = NULL;
-	}
-
-	if( mpVideoRenderer ) {
-		delete mpVideoRenderer;
-		mpVideoRenderer = NULL;
 	}
 }
 
@@ -404,26 +387,4 @@ void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
-}
-
-void LSPublisherImp::OnFilterVideoFrame(VideoFilters* filters, VideoFrame* videoFrame) {
-	FileLevelLog(
-			"rtmpdump",
-			KLog::LOG_STAT,
-			"LSPublisherImp::OnFilterVideoFrame( "
-			"this : %p, "
-			"width : %d, "
-			"height : %d "
-			")",
-			this,
-			videoFrame->mWidth,
-			videoFrame->mHeight
-			);
-
-//	// 回调预览, 非常耗时, 需要另外处理
-//	mVideoFormatConverter.ConvertFrame(videoFrame, &mPreViewFrame);
-//	mpVideoRenderer->RenderVideoFrame(&mPreViewFrame);
-
-	// 放到推流器
-	mPublisher.PushVideoFrame(videoFrame->GetBuffer(), videoFrame->mBufferLen, NULL);
 }

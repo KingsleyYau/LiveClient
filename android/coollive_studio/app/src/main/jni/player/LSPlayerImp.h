@@ -52,6 +52,7 @@ private:
 	jobject mJniVideoHardDecoder;
 	jobject mJniVideoHardRenderer;
 
+	// 是否使用硬解码
 	bool mUseHardDecoder;
 };
 

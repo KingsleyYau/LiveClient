@@ -26,7 +26,7 @@ VideoHardRendererImp::VideoHardRendererImp(jobject jniRenderer) {
 		mJniRenderer = env->NewGlobalRef(jniRenderer);
 		jclass jniRendererCls = env->GetObjectClass(mJniRenderer);
 		// 反射方法
-		string signure = "(L" LS_VIDEO_ITEM_CLASS ";)V";
+		string signure = "(L" LS_DECODE_VIDEO_ITEM_CLASS ";)V";
 		jmethodID jMethodID = env->GetMethodID(
 				jniRendererCls,
 				"renderVideoFrame",

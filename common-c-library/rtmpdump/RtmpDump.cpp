@@ -81,6 +81,9 @@ RtmpDump::RtmpDump()
     
     mNaluHeaderSize = 0;
     
+    mWidth = 0;
+    mHeight = 0;
+
     mEncodeVideoTimestamp = 0;
     mEncodeAudioTimestamp = 0;
     mSendVideoFrameTimestamp = 0;
@@ -942,8 +945,8 @@ void RtmpDump::CheckConnectRunnableHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "RtmpDump::CheckConnectRunnableHandle( "
-                 "this : %p "
-                 "[Exit] ",
+                 "this : %p, "
+                 "[Exit] "
                  ")",
                  this
                  );

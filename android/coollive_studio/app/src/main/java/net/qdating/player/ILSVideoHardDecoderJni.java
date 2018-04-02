@@ -7,6 +7,17 @@ package net.qdating.player;
  */
 public interface ILSVideoHardDecoderJni {
 	/**
+	 * 重置解码器
+	 * @return
+	 */
+	public boolean reset();
+	
+	/**
+	 * 暂停解码器
+	 */
+	public void pause();
+	
+	/**
 	 * 解码视频关键帧
 	 * @param sps
 	 * @param sps_size

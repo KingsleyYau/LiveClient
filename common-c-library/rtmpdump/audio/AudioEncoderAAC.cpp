@@ -83,7 +83,7 @@ bool AudioEncoderAAC::Create(int sampleRate, int channelsPerFrame, int bitPerSam
 	bool bFlag = true;
 
     FileLevelLog("rtmpdump",
-                 KLog::LOG_WARNING,
+                 KLog::LOG_MSG,
                  "AudioEncoderAAC::Create( "
                  "this : %p, "
                  "sampleRate : %d, "
@@ -106,11 +106,17 @@ bool AudioEncoderAAC::Create(int sampleRate, int channelsPerFrame, int bitPerSam
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioEncoderAAC::Create( "
+				 "this : %p, "
                  "[%s], "
-                 "this : %p "
+                 "sampleRate : %d, "
+                 "channelsPerFrame : %d, "
+                 "bitPerSample : %d "
                  ")",
+                 this,
 				 bFlag?"Success":"Fail",
-                 this
+				 sampleRate,
+				 channelsPerFrame,
+				 bitPerSample
                  );
 
     return bFlag;
@@ -134,11 +140,11 @@ bool AudioEncoderAAC::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "AudioEncoderAAC::Reset( "
-                 "[%s], "
-                 "this : %p "
+				 "this : %p, "
+                 "[%s] "
                  ")",
-				 bFlag?"Succcess":"Fail",
-                 this
+                 this,
+				 bFlag?"Succcess":"Fail"
                  );
 
 	return bFlag;
@@ -149,7 +155,7 @@ void AudioEncoderAAC::Pause() {
 
 	Stop();
     
-    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioEncoderAAC::Pause( [Success], this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_WARNING, "AudioEncoderAAC::Pause( this : %p, [Success] )", this);
 }
 
 void AudioEncoderAAC::EncodeAudioFrame(void* data, int size, void* frame) {

@@ -356,10 +356,10 @@ void PlayerController::OnPlayAudioFrame(RtmpPlayer* player, void* frame) {
             mpAudioRenderer->Reset();
         }
         mbNeedResetAudioRenderer = false;
-    }
-    
-    if( mpAudioRenderer ) {
-        mpAudioRenderer->RenderAudioFrame(frame);
+    } else {
+        if( mpAudioRenderer ) {
+            mpAudioRenderer->RenderAudioFrame(frame);
+        }
     }
     
     // 释放内存

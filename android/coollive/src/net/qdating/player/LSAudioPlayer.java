@@ -28,13 +28,21 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
+				if (audioTrack != null) {
+					audioTrack.pause();
+					audioTrack.flush();
+					audioTrack.play();
+				}
+
+				Log.d(LSConfig.TAG, String.format("LSAudioPlayer:handleMessage( " +
+								"this : 0x%x, " +
+								"[Reset success] " +
+								")",
+						(msg.obj!=null)?msg.obj.hashCode():0
+				));
+
 				synchronized (statusLock) {
-					if (audioTrack != null) {
-						audioTrack.pause();
-						audioTrack.flush();
-						audioTrack.play();
-						isRunning = true;
-					}
+					isRunning = true;
 				}
 			}
 		};
@@ -49,46 +57,52 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	 */
 	public boolean changeAudioFormat(int sampleRate, int channelPerFrame, int bitPerSample) {
 		boolean bFlag = false;
-		synchronized (statusLock) {
-			if (audioTrack == null) {
-				int sampleRateInHz = sampleRate;
-				int channelConfig = (channelPerFrame == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
-				int audioFormat = (bitPerSample == 16) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT;
-				int bufferSizeInBytes = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
 
-				Log.d(LSConfig.TAG,
-						String.format("LSAudioPlayer:changeAudioFormat( "
-										+ "sampleRateInHz : %d, "
-										+ "channelPerFrame : %d, "
-										+ "channelConfig : %d, "
-										+ "bitPerSample : %d, "
-										+ "audioFormat : %d, "
-										+ "bufferSizeInBytes : %d "
-										+ ")",
-								sampleRateInHz,
-								channelPerFrame,
-								channelConfig,
-								bitPerSample,
-								audioFormat,
-								bufferSizeInBytes
-						)
-				);
+		if (audioTrack == null) {
+			int sampleRateInHz = sampleRate;
+			int channelConfig = (channelPerFrame == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
+			int audioFormat = (bitPerSample == 16) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT;
+			int bufferSizeInBytes = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
 
-				audioTrack = new AudioTrack(
-						AudioManager.STREAM_MUSIC,
-						sampleRateInHz,
-						channelConfig,
-						audioFormat,
-						bufferSizeInBytes,
-						AudioTrack.MODE_STREAM
-				);
+			Log.d(LSConfig.TAG,
+					String.format("LSAudioPlayer:changeAudioFormat( "
+									+ "this : 0x%x, "
+									+ "sampleRateInHz : %d, "
+									+ "channelPerFrame : %d, "
+									+ "channelConfig : %d, "
+									+ "bitPerSample : %d, "
+									+ "audioFormat : %d, "
+									+ "bufferSizeInBytes : %d "
+									+ ")",
+							hashCode(),
+							sampleRateInHz,
+							channelPerFrame,
+							channelConfig,
+							bitPerSample,
+							audioFormat,
+							bufferSizeInBytes
+					)
+			);
 
-				if (audioTrack != null) {
-					audioTrack.play();
+			audioTrack = new AudioTrack(
+					AudioManager.STREAM_MUSIC,
+					sampleRateInHz,
+					channelConfig,
+					audioFormat,
+					bufferSizeInBytes,
+					AudioTrack.MODE_STREAM
+			);
+
+			if (audioTrack != null) {
+				audioTrack.play();
+
+				synchronized (statusLock) {
 					isRunning = true;
 				}
 			}
+
 		}
+
 		return bFlag;
 	}
 	
@@ -96,11 +110,10 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	 * 停止播放
 	 */
 	public void stop() {
-		synchronized (statusLock) {
-			if (audioTrack != null) {
-				audioTrack.stop();
-				audioTrack = null;
-			}
+		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:stop( this : 0x%x )", hashCode()));
+		if (audioTrack != null) {
+			audioTrack.stop();
+			audioTrack = null;
 		}
 	}
 	
@@ -111,7 +124,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	public void playAudioFrame(byte[] data) {
 //		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:playAudioFrame( size : %d )", data.length));
 		synchronized (statusLock) {
-			if( audioTrack != null && isRunning ) {
+			if( isRunning ) {
 				audioTrack.write(data, 0, data.length);
 			}
 		}
@@ -127,10 +140,14 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-//		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:reset()"));
+		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:reset( this : 0x%x )", hashCode()));
 		synchronized (statusLock) {
-			isRunning = false;
-			handler.sendEmptyMessage(0);
+			if( isRunning ) {
+				isRunning = false;
+				Message msg = Message.obtain();
+				msg.obj = this;
+				handler.sendMessage(msg);
+			}
 		}
 	}
 	

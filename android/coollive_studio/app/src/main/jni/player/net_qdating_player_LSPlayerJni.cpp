@@ -26,8 +26,8 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 
 	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lsplayer, version : %s )", LS_VERSION);
 
-	jobject jLSVideoFrameItem;
-	InitClassHelper(env, LS_VIDEO_ITEM_CLASS, &jLSVideoFrameItem);
+	jobject jLSHardDecodeVideoFrameItem;
+	InitClassHelper(env, LS_DECODE_VIDEO_ITEM_CLASS, &jLSHardDecodeVideoFrameItem);
 
 	return JNI_VERSION_1_4;
 }
@@ -98,8 +98,8 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_player_LSPlayerJni_PlayUrl
 				"rtmpdump",
 				KLog::LOG_WARNING,
 				"LSPlayerJni::PlayUrl( "
-				"[Success], "
 				"player : %p, "
+				"[Success], "
 				"url : %s "
 				")",
 				player,
@@ -110,8 +110,8 @@ JNIEXPORT jboolean JNICALL Java_net_qdating_player_LSPlayerJni_PlayUrl
 				"rtmpdump",
 				KLog::LOG_WARNING,
 				"LSPlayerJni::PlayUrl( "
-				"[Fail], "
 				"player : %p, "
+				"[Fail], "
 				"url : %s "
 				")",
 				player,
@@ -141,8 +141,8 @@ JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_Stop
 			"rtmpdump",
 			KLog::LOG_WARNING,
 			"LSPlayerJni::Stop( "
-			"[Success], "
-			"player : %p "
+			"player : %p, "
+			"[Success] "
 			")",
 			player
 			);

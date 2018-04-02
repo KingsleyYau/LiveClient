@@ -30,7 +30,7 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	ILSPlayerCallback playerCallback = null;
 	
 	/**
-	 * 初始化实例
+	 * 创建实例
 	 * @param playerCallback		状态回调
 	 * @param useHardDecoder 		是否使用硬解码器
 	 * @param videoRenderer			视频渲染器
@@ -61,7 +61,7 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	 * @param audioRenderer			音频渲染器
 	 * @param videoHardDecoder		视频硬解码器
 	 * @param videoHardRenderer		视频硬渲染器
-	 * @return	实例指针
+	 * @return 实例指针
 	 */
 	private native long Create(
 			ILSPlayerCallbackJni playerCallback, 

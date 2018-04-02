@@ -49,7 +49,11 @@ private:
 private:
     VideoDecoderCallback* mpCallback;
     jobject mJniDecoder;
-    jmethodID mJniDecoderMethodID;
+    jmethodID mJniDecoderResetMethodID;
+    jmethodID mJniDecoderPauseMethodID;
+    jmethodID mJniDecoderGetDecodeVideoMethodID;
+    jmethodID mJniDecoderDecodeKeyMethodID;
+    jmethodID mJniDecoderDecodeVideoMethodID;
     jmethodID mJniDecoderReleaseMethodID;
 
     jfieldID mJniVideoFrameTimestampMethodID;

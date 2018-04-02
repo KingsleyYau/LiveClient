@@ -6,8 +6,6 @@ import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageRawYuvFilter;
 import net.qdating.utils.Log;
 
-import java.nio.Buffer;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -50,11 +48,11 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	}
 	
 	public void init() {
-		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::init()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::init( this : 0x%x )", hashCode()));
 	}
 	
 	public void uninit() {
-		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::uninit()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::uninit( this : 0x%x )", hashCode()));
 	}
 	
 	public void updateYuvFrame(
@@ -68,7 +66,17 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	}
 	
 	public void setOriginalSize(int width, int height) {
-		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::setOriginalSize( originalWidth : %d, originalHeight : %d )", width, height));
+		Log.d(LSConfig.TAG,
+				String.format("LSVideoHardPlayerRenderer::setOriginalSize( "
+								+ "this : 0x%x, "
+								+ "originalWidth : %d, "
+								+ "originalHeight : %d "
+								+ ")",
+						hashCode(),
+						width,
+						height
+				)
+		);
 		
 		originalWidth = width;
 		originalHeight = height;
@@ -90,8 +98,17 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
 		// TODO Auto-generated method stub
-        Log.i(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::onSurfaceChanged( width : %d, height : %d ) ", 
-        		width, height, originalWidth, originalHeight));
+        Log.i(LSConfig.TAG,
+				String.format("LSVideoHardPlayerRenderer::onSurfaceChanged( "
+								+ "this : 0x%x, "
+								+ "width : %d, "
+								+ "height : %d "
+								+ ") ",
+						hashCode(),
+						width,
+						height
+				)
+		);
         
         previewWidth = width;
         previewHeight = height;
@@ -102,7 +119,7 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO Auto-generated method stub
-        Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::onSurfaceCreated()"));
+        Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::onSurfaceCreated( this : 0x%x )", hashCode()));
 		
 		// 创建纹理
 		glTextureId = LSImageFilter.genPixelTexture();

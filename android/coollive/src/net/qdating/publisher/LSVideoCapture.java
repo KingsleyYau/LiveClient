@@ -136,11 +136,6 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		Log.i(LSConfig.TAG, String.format("LSVideoCapture::openCamera()"));
 		
 		synchronized (this) {
-//			if( mCamera != null ) {
-//				mCamera.release();
-//				mCamera = null;
-//			}
-			
 			if( mCamera == null ) {
 				int cameraIndex = getCamera(frontCamera);
 				if( cameraIndex != -1 ) {
@@ -392,13 +387,13 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	@Override
 	public void onCreateTexture(SurfaceTexture surfaceTexture) {
 		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture()"));
 		synchronized (this) {
 			if( mCamera != null ) {
 				try {
 					mCamera.setPreviewTexture(surfaceTexture);
 					if( previewRunning ) {
-						Log.i(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture( [Camera Start Preview] )"));
+						Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture( [Camera start preview] )"));
 						mCamera.startPreview();
 					}
 					

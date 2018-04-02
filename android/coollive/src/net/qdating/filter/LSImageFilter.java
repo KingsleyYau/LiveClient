@@ -283,7 +283,7 @@ public abstract class LSImageFilter {
 			
 			bFlag = true;
 			
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeInputSize( inputWidth : %d, inputHeight : %d, className : [%s] )", inputWidth, inputHeight, getClass().getName()));
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeInputSize( this : 0x%x, inputWidth : %d, inputHeight : %d, className : [%s] )", hashCode(), inputWidth, inputHeight, getClass().getName()));
 		}
 		
 		imageSize.bChange = bFlag;
@@ -411,9 +411,22 @@ public abstract class LSImageFilter {
 			glVertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, vertexShaderString);
 			glFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderString);
 			
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::initGLShader( "
-					+ "glProgram : %d, glVertexShader : %d, glFragmentShader : %d, className : [%s] )", 
-					glProgram, glVertexShader, glFragmentShader, getClass().getName()));
+			Log.d(LSConfig.TAG,
+					String.format("LSImageFilter::initGLShader( "
+									+ "this : 0x%x, "
+									+ "glProgram : %d, "
+									+ "glVertexShader : %d, "
+									+ "glFragmentShader : %d, "
+									+ "className : [%s] " +
+									")",
+							hashCode(),
+							glProgram,
+							glVertexShader,
+							glFragmentShader,
+							getClass().getName()
+					)
+			);
+
 			if( glVertexShader != INVALID_SHADER && 
 					glFragmentShader != INVALID_SHADER ) {
 				// 链接着色器程序
@@ -426,7 +439,7 @@ public abstract class LSImageFilter {
 		}
 		
 		if( !bInit ) {
-			Log.e(LSConfig.TAG, String.format("LSImageFilter::initGLShader( [Fail], glProgram : %d, glError : %d, className : [%s] )", GLES20.glGetError(), getClass().getName()));
+			Log.e(LSConfig.TAG, String.format("LSImageFilter::initGLShader( this : 0x%x, [Fail], glProgram : %d, glError : %d, className : [%s] )", hashCode(), GLES20.glGetError(), getClass().getName()));
 			uninitGLShader();
 		}
 	}
@@ -468,14 +481,14 @@ public abstract class LSImageFilter {
 			int[] compiled = new int[1];
 			GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
 	        if ( compiled[0] == 0 ) {
-	        	Log.e(LSConfig.TAG, String.format("LSImageFilter::loadGLShader( [Compile Shader Failed] : %s, shaderString : %s )", GLES20.glGetShaderInfoLog(shader), shaderString));
+	        	Log.e(LSConfig.TAG, String.format("LSImageFilter::loadGLShader( this : 0x%x, [Compile Shader Failed] : %s, shaderString : %s )", hashCode(), GLES20.glGetShaderInfoLog(shader), shaderString));
 	        	shader = -1;
 	        } else {
 //	        	Log.d(LSConfig.TAG, String.format("LSImageFilter::loadShader(\n%s\n) ", shaderString));
 			}
 	        
 		} else {
-			Log.e(LSConfig.TAG, String.format("LSImageFilter::loadGLShader( [Load Shader String Failed] )"));
+			Log.e(LSConfig.TAG, String.format("LSImageFilter::loadGLShader( this : 0x%x, [Load Shader String Failed] )", hashCode()));
 		}
 
 		return shader;

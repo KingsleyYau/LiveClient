@@ -13,7 +13,7 @@ import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
 public class TestActivity extends Activity {
-	private String url = "rtmp://172.25.32.17:8899/live/max";
+	private String url = "rtmp://172.25.32.17:19351/live/max0";
 	
 	String filePath = "/sdcard";
 	
@@ -27,21 +27,21 @@ public class TestActivity extends Activity {
 		setContentView(R.layout.activity_test);
 		
 		Log.i(LSConfig.TAG, String.format("TestActivity::onCreate()"));
-		
-		SurfaceView surfaceView = (SurfaceView) this.findViewById(R.id.surfaceView);
+
+		GLSurfaceView surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView);
 		surfaceView.setKeepScreenOn(true);
 		GLSurfaceView surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
 		surfaceViewPublish.setKeepScreenOn(true);
 		
 		// 播放相关
-//		player.init(surfaceView, null);
-		player.playUrl(String.format("%s_mv", url), "", "", "");
+		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
+		player.playUrl(String.format("%s", url), "", "", "");
 		
 		// 推送相关
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
 		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
-		publisher.publisherUrl(String.format("%s_a", url), "", "");
+		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
 		
 		handler.postDelayed(new Runnable() {
 			@Override

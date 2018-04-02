@@ -3,10 +3,10 @@ package net.qdating;
 /**
  * 推拉流模块初始化配置
  * @author max
- * @version 1.0.3
+ * @version 1.0.5
  */
 public class LSConfig {
-	final public static String VERSION = "1.0.4";
+	final public static String VERSION = "1.0.5";
 	/**
 	 * 日志TAG
 	 */
@@ -24,6 +24,10 @@ public class LSConfig {
 	 * 总量 = 缓存时间 * FPS
 	 */
 	public static int VIDEO_DECODE_FRAME_COUNT = 30;
+	/**
+	 * 初始化编码缓存推流器参数)
+	 */
+	public static int VIDEO_ENCODE_FRAME_COUNT = 10;
 	/**
 	 * 视频宽度(摄像头参数)
 	 */
@@ -52,10 +56,6 @@ public class LSConfig {
 	 * 视频关键帧间隔(推流参数)
 	 */
 	public static int VIDEO_KEYFRAMEINTERVAL = VIDEO_FPS;
-	/**
-	 * 视频采集临时Buffer, 数值越大, 效率越高, 占用内存越大(推流参数)
-	 */
-	public static int VIDEO_CAPTURE_BUFFER_COUNT = 30 + VIDEO_FPS;
 	/**
 	 * 音频PCM采样率
 	 */
