@@ -42,6 +42,72 @@ string COOKIES_FILE = "/sdcard/qpidnetwork/cookie";
 
 static string gProxyUrl = "";
 
+
+#ifdef _HTTPS_SUPPORT
+//alextest ssl 多线程的锁, openssl 在多线程有时会crash（难重现， curl_easy_cleanup 或 curl_easy_perform）
+#define NUMT 4
+
+/* we have this global to let the callback get easy access to it */
+static pthread_mutex_t *lockarray;
+
+static bool isSSlLock = false;
+
+static void lock_callback(int mode, int type, const char *file, int line)
+{
+    (void)file;
+    (void)line;
+    if(mode & CRYPTO_LOCK) {
+        pthread_mutex_lock(&(lockarray[type]));
+    }
+    else {
+        pthread_mutex_unlock(&(lockarray[type]));
+    }
+}
+
+static unsigned long thread_id(void)
+{
+    unsigned long ret;
+    
+    ret=(unsigned long)pthread_self();
+    return ret;
+}
+
+static void init_locks(void)
+{
+    if (isSSlLock == false) {
+        int i;
+        
+        lockarray=(pthread_mutex_t *)OPENSSL_malloc(CRYPTO_num_locks() *
+                                                    sizeof(pthread_mutex_t));
+        for(i=0; i<CRYPTO_num_locks(); i++) {
+            pthread_mutex_init(&(lockarray[i]), NULL);
+        }
+        
+        CRYPTO_set_id_callback((unsigned long (*)())thread_id);
+        CRYPTO_set_locking_callback(lock_callback);
+        
+        isSSlLock = true;
+    }
+    
+}
+
+static void kill_locks(void)
+{
+    if (isSSlLock == true) {
+        int i;
+        
+        CRYPTO_set_locking_callback(NULL);
+        for(i=0; i<CRYPTO_num_locks(); i++)
+            pthread_mutex_destroy(&(lockarray[i]));
+        
+        OPENSSL_free(lockarray);
+        
+         isSSlLock = false;
+    }
+}
+
+#endif
+
 static CURLcode Curl_SSL_Handle(CURL *curl, void *sslctx, void *param)
 {
 #ifdef _HTTPS_SUPPORT
@@ -142,9 +208,15 @@ void HttpClient::Init() {
 	}
 
 	sh = curl_share_init();
+    #ifdef _HTTPS_SUPPORT
+    //alextest ssl 多线程的锁
+    kill_locks();
+    init_locks();
+    #endif
 	curl_share_setopt(sh, CURLSHOPT_SHARE, CURL_LOCK_DATA_COOKIE);
     curl_share_setopt(sh, CURLSHOPT_LOCKFUNC, Curl_Lock);
     curl_share_setopt(sh, CURLSHOPT_UNLOCKFUNC, Curl_Unlock);
+    
 }
 
 void HttpClient::SetLogDirectory(string directory) {
@@ -522,9 +594,11 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 	mdDownloadLastTime = INVALID_DOWNLOADLASTTIME;
     mdDownloadTimeout = entiy->mDownloadTimeout;
 
+    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Request( start, mpCURL : %p )", mpCURL);
 	if( mpCURL == NULL ) {
 		mpCURL = curl_easy_init();
 	}
+    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Request( init success, mpCURL : %p )", mpCURL);
 
 
 	curl_easy_setopt(mpCURL, CURLOPT_URL, mUrl.c_str());
@@ -699,7 +773,7 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
     
     long http_code;
     curl_easy_getinfo(mpCURL, CURLINFO_HTTP_CODE, &http_code);
-    FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Request( this : %p, http_code : %ld )", this, http_code);
+    FileLevelLog(LIVESHOW_HTTP_LOG, KLog::LOG_STAT, "HttpClient::Request( this : %p, mpCURL : %p, http_code : %ld )", this, mpCURL, http_code);
     
 	if( mpCURL != NULL ) {
 		curl_easy_cleanup(mpCURL);

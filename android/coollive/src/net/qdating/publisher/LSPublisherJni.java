@@ -73,6 +73,7 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	public void Destroy() {
 		if( client != INVALID_CLIENT ) {
 			Destroy(client);
+			client = INVALID_CLIENT;
 		}
 	}
 	

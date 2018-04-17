@@ -2,11 +2,15 @@ package net.qdating.publisher;
 
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
-import net.qdating.filter.LSImageCameraFilter;
+import net.qdating.filter.LSImageInputCameraFilter;
+import net.qdating.filter.LSImageCropFilter;
 import net.qdating.filter.LSImageFilter;
-import net.qdating.filter.LSImageRawTextureFilter;
+import net.qdating.filter.LSImageFlipFilter;
+import net.qdating.filter.LSImageOutputFilter;
 import net.qdating.filter.LSImageRecordFilter;
 import net.qdating.filter.LSImageRecordFilterCallback;
+import net.qdating.filter.LSImageRecordYuvFilter;
+import net.qdating.filter.LSImageUtil;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -14,6 +18,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
+import android.media.MediaCodecInfo;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 
@@ -56,42 +61,88 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	 * 输入流Texture
 	 */
 	private SurfaceTexture surfaceTexture = null;
-	
 	/**
 	 * 滤镜
 	 */
-	private LSImageCameraFilter cameraFilter = new LSImageCameraFilter();
-	private LSImageRawTextureFilter previewFilter = new LSImageRawTextureFilter();
-	private LSImageRecordFilter recordFilter = new LSImageRecordFilter(this);
-	
-	public LSVideoCaptureRenderer(ILSVideoPreviewCallback callback, FillMode fillMode) {
+	private LSImageInputCameraFilter cameraFilter = null;
+	private LSImageCropFilter cropFilter = null;
+	private LSImageOutputFilter outputFilter = null;
+	private LSImageFlipFilter flipFilter = null;
+	private LSImageFilter recordFilter = null;
+
+	public LSVideoCaptureRenderer(ILSVideoPreviewCallback callback, FillMode fillMode, boolean useHardEncoder) {
 		this.callback = callback;
-		
-		cameraFilter.fillMode = fillMode;
-		previewFilter.fillMode = fillMode;
-		recordFilter.fillMode = fillMode;
+
+		cameraFilter = new LSImageInputCameraFilter();
+		cropFilter = new LSImageCropFilter();
+		outputFilter = new LSImageOutputFilter();
+		flipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
+
+		if( useHardEncoder ) {
+			// 硬编码录制滤镜
+			if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888 ) {
+				recordFilter = new LSImageRecordFilter(this);
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ) {
+				recordFilter = new LSImageRecordYuvFilter(this, LSImageUtil.ColorFormat.ColorFormat_YUV420P);
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar ) {
+				recordFilter = new LSImageRecordYuvFilter(this, LSImageUtil.ColorFormat.ColorFormat_YUV420SP);
+			} else {
+				Log.e(LSConfig.TAG, String.format("LSVideoCaptureRenderer::LSVideoCaptureRenderer( this : 0x%x, [Not supported color format] )", hashCode()));
+			}
+		} else {
+			// 软编码录制滤镜
+			recordFilter = new LSImageRecordFilter(this);
+		}
+
+		// 设置渲染模式
+		outputFilter.fillMode = fillMode;
 	}
-	
+
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init( this : 0x%x )", hashCode()));
-		
-		cameraFilter.setFilter(previewFilter);
-		previewFilter.setFilter(recordFilter);
+
+		cameraFilter.setFilter(cropFilter);
+		cropFilter.setFilter(outputFilter);
+		outputFilter.setFilter(flipFilter);
+		flipFilter.setFilter(recordFilter);
 	}
-	
+
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::uninit( this : 0x%x )", hashCode()));
-		
-		cameraFilter.uninit();
-		previewFilter.uninit();
-		recordFilter.uninit();
 	}
 	
 	public void setOriginalSize(int width, int height) {
-		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::setOriginalSize( this : 0x%x, originalWidth : %d, originalHeight : %d )", hashCode(), width, height));
-		
 		originalWidth = width;
 		originalHeight = height;
+
+		// 目标比例
+		float radioPreview = 1.0f * LSConfig.VIDEO_WIDTH / LSConfig.VIDEO_HEIGHT;
+		// 源比例
+		float radioImage = 1.0f * originalWidth / originalHeight;
+
+		Log.d(LSConfig.TAG,
+				String.format("LSVideoCaptureRenderer::setOriginalSize( "
+						+ "this : 0x%x, "
+						+ "originalWidth : %d, "
+						+ "originalHeight : %d, "
+						+ "radioPreview : %f, "
+						+ "radioImage : %f "
+						+ " )",
+						hashCode(),
+						originalWidth,
+						originalHeight,
+						radioPreview,
+						radioImage
+				)
+		);
+
+		if( radioPreview < radioImage ) {
+			// 剪裁左右
+			cropFilter.setCropRect((1 - radioImage) / 2, 0, radioImage, 1);
+		} else {
+			// 剪裁上下
+			cropFilter.setCropRect(0, (1 - radioImage) / 2, 1, radioImage);
+		}
 	}
 	
 	public SurfaceTexture getSurfaceTexture() {
@@ -115,7 +166,6 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 				
 				callback.onCreateTexture(surfaceTexture);
 			}
-
 		}
 	}
 	
@@ -131,9 +181,9 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		surfaceTexture.getTransformMatrix(transformMatrix);
 		
 		// 重绘背景
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-				
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
 		// 绘制
 		if( glCameraTextureId != null ) {
 			cameraFilter.updateMatrix(transformMatrix);
@@ -158,27 +208,36 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
         
         previewWidth = width;
         previewHeight = height;
-        
+
 		// 改变预览滤镜大小
-		previewFilter.changeViewPointSize(previewWidth, previewHeight);
+		outputFilter.changeViewPointSize(previewWidth, previewHeight);
+
 		// 改变录制滤镜大小
-		recordFilter.changeViewPointSize(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+		if( recordFilter != null ) {
+			recordFilter.changeViewPointSize(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+		}
 	}
 
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		// TODO Auto-generated method stub
         Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::onSurfaceCreated( this : 0x%x )", hashCode()));
-        
-        // 摄像头滤镜
-		cameraFilter.init();
-		// 录制
-		recordFilter.init();
-		// 预览滤镜
-		previewFilter.init();
-		
+
 		// 创建摄像头纹理
-        glCameraTextureId = LSImageFilter.genCameraTexture();
+		glCameraTextureId = LSImageFilter.genCameraTexture();
+
+        // 摄像头
+		cameraFilter.init();
+		// 裁剪
+		cropFilter.init();
+		// 预览
+		outputFilter.init();
+		// 垂直翻转
+		flipFilter.init();
+		// 录制
+		if( recordFilter != null ) {
+			recordFilter.init();
+		}
 	}
 
 	@Override

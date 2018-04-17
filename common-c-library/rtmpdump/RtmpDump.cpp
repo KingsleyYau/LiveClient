@@ -865,33 +865,6 @@ u_int32_t RtmpDump::GetCurrentTime() {
     gettimeofday(&tv, 0);
     return (u_int32_t)(tv.tv_sec * 1000) + (u_int32_t)(tv.tv_usec / 1000);
 }
-
-bool RtmpDump::GetADTS(int packetSize, char* header, int headerSize) {
-    bool bFlag = false;
-    
-    if( header != NULL && headerSize >= ADTS_HEADER_SIZE && headerSize > 0 ) {
-        // Variables Recycled by addADTStoPacket
-        int profile = 2;  //AAC LC
-        
-        // 39=MediaCodecInfo.CodecProfileLevel.AACObjectELD;
-        int freqIdx = 4;  //44.1KHz
-        int chanCfg = 1;  //MPEG-4 Audio Channel Configuration. 1 Channel front-center
-        int fullSize = ADTS_HEADER_SIZE + packetSize;
-        
-        // Fill in ADTS data
-        header[0] = (char)0xFF; // 11111111     = syncword
-        header[1] = (char)0xF9; // 1111 1 00 1  = syncword MPEG-2 Layer CRC
-        header[2] = (char)(((profile - 1) << 6 ) + (freqIdx << 2) + (chanCfg >> 2));
-        header[3] = (char)(((chanCfg & 3) << 6) + (fullSize >> 11));
-        header[4] = (char)((fullSize & 0x7FF) >> 3);
-        header[5] = (char)(((fullSize & 7) << 5) + 0x1F);
-        header[6] = (char)0xFC;
-        
-        bFlag = true;
-    }
-
-    return bFlag;
-}
     
 void RtmpDump::CheckConnectRunnableHandle() {
     bool bBreak = false;

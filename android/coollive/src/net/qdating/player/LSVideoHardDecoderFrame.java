@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.Image.Plane;
+import android.media.MediaCodecInfo;
 import android.util.Log;
 import net.qdating.LSConfig;
 import net.qdating.filter.LSImageUtil;
@@ -30,21 +31,129 @@ public class LSVideoHardDecoderFrame {
 	public int byteSizeU = 0;
 	public byte[] byteBufferV = null;
 	public int byteSizeV = 0;
+	public byte[] byteBufferUV = null;
+	public int byteSizeUV = 0;
 	
 	public LSVideoHardDecoderFrame() {
 
 	}
-	
+
+	/**
+	 * 只支持YUV420Planar
+	 * @see android.media.MediaCodecInfo.CodecCapabilities
+	 * COLOR_FormatYUV420Planar		= 19/0x13
+	 * COLOR_FormatYUV420SemiPlanar	= 21/0x15
+	 * @param byteBuffer
+	 * @param timestamp
+	 * @param format
+	 * @param width
+	 * @param height
+	 */
+	public void updateImage(ByteBuffer byteBuffer, int timestamp, int format, int width, int height) {
+		this.timestamp = timestamp;
+		this.format = format;
+		this.width = width;
+		this.height = height;
+
+//		if( LSConfig.DEBUG ) {
+//			Log.d(LSConfig.TAG,
+//					String.format("LSVideoFrame::updateImage( "
+//									+ "this : 0x%x, "
+//									+ "[Image info], "
+//									+ "format : 0x%x, "
+//									+ "width : %d, "
+//									+ "height : %d, "
+//									+ "timestamp : %d "
+//									+ ")",
+//							hashCode(),
+//							format,
+//							width,
+//							height,
+//							timestamp
+//					)
+//			);
+//		}
+
+		byteBuffer.position(0);
+		int size = width * height;
+		byteSizeY = size;
+		if( byteBufferY == null || byteBufferY.length < byteSizeY ) {
+			byteBufferY = new byte[byteSizeY];
+		}
+		byteBuffer.get(byteBufferY, 0, byteSizeY);
+
+		switch ( format ) {
+			case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
+				// YYYY UUVV
+				byteSizeU = size / 4;
+				if( byteBufferU == null || byteBufferU.length < byteSizeU ) {
+					byteBufferU = new byte[byteSizeU];
+				}
+				byteBuffer.get(byteBufferU, 0, byteSizeU);
+
+				byteSizeV = size / 4;
+				if( byteBufferV == null || byteBufferV.length < byteSizeV ) {
+					byteBufferV = new byte[byteSizeV];
+				}
+				byteBuffer.get(byteBufferV, 0, byteSizeV);
+
+//				if( LSConfig.DEBUG ) {
+//					Log.d(LSConfig.TAG,
+//							String.format("LSVideoDecoder::updateImage( "
+//											+ "this : 0x%x, "
+//											+ "[Image data 420P], "
+//											+ "[Y] : "
+//											+ "size : %d, "
+//											+ "[U] : "
+//											+ "size : %d, "
+//											+ "[V] : "
+//											+ "size : %d "
+//											+ ")",
+//									hashCode(),
+//									byteSizeY,
+//									byteSizeU,
+//									byteSizeV
+//									)
+//					);
+//				}
+			}break;
+			case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar: {
+				// YYYY UVUV
+				byteSizeUV = size / 2;
+				if( byteBufferUV == null || byteBufferUV.length < byteSizeUV ) {
+					byteBufferUV = new byte[byteSizeUV];
+				}
+				byteBuffer.get(byteBufferUV, 0, byteSizeUV);
+
+//				if( LSConfig.DEBUG ) {
+//					Log.d(LSConfig.TAG,
+//							String.format("LSVideoDecoder::updateImage( "
+//											+ "this : 0x%x, "
+//											+ "[Image data 420SP], "
+//											+ "[Y] : "
+//											+ "size : %d, "
+//											+ "[UV] : "
+//											+ "size : %d "
+//											+ ")",
+//									hashCode(),
+//									byteSizeY,
+//									byteSizeUV
+//									)
+//					);
+//				}
+			}
+		}
+	}
+
 	public void updateImage(Image image, int timestamp) {
 		this.timestamp = timestamp;
+		this.format = image.getFormat();
+		this.width = image.getWidth();
+		this.height = image.getHeight();
 
-		format = image.getFormat();
-		width = image.getWidth();
-		height = image.getHeight();
-		
 		Plane[] plane = image.getPlanes();
 		
-		if( LSConfig.debug ) {
+		if( LSConfig.DEBUG ) {
 			/**
 			 * @see android.graphics.ImageFormat
 			 */
@@ -64,9 +173,10 @@ public class LSVideoHardDecoderFrame {
 	        				+ "cropTop : %d, "
 	        				+ "cropWidth : %d, "
 	        				+ "cropHeight : %d, "
-	        				+ "bitPerPixel : %d "
+	        				+ "bitPerPixel : %d, "
+							+ "timestamp : %d "
 	        				+ ")",
-	        				this.hashCode(),
+	        				hashCode(),
 	        				format,
 	        				width,
 	        				height,
@@ -74,7 +184,8 @@ public class LSVideoHardDecoderFrame {
 	        				cropTop,
 	        				cropWidth,
 	        				cropHeight,
-	        				bitPerPixel
+	        				bitPerPixel,
+							timestamp
 	        				)
 	        		);
 	        // Dump yuv data to file
@@ -100,7 +211,7 @@ public class LSVideoHardDecoderFrame {
 		ByteBuffer uBuffer = plane[1].getBuffer();
 		uBuffer.position(0);
 		byteSizeU = uBuffer.limit();
-		if( byteBufferU == null || byteBufferU.length < uBuffer.limit() ) {
+		if( byteBufferU == null || byteBufferU.length < byteSizeU ) {
 			byteBufferU = new byte[byteSizeU];
 		}
 		uBuffer.get(byteBufferU, 0, byteSizeU);
@@ -117,7 +228,7 @@ public class LSVideoHardDecoderFrame {
 		}
 		vBuffer.get(byteBufferV, 0, byteSizeV);
 		
-		if( LSConfig.debug ) {
+		if( LSConfig.DEBUG ) {
 	        Log.d(LSConfig.TAG,
 	        		String.format("LSVideoDecoder::updateImage( "
 	        				+ "this : 0x%x, "
@@ -167,8 +278,9 @@ public class LSVideoHardDecoderFrame {
         offset += planes[0].getBuffer().remaining();
         planes[1].getBuffer().get(yuvBuffer, offset, planes[1].getBuffer().remaining());
         offset += planes[1].getBuffer().remaining();
-        planes[2].getBuffer().get(yuvBuffer, offset, planes[2].getBuffer().remaining()); 
-        LSImageUtil.saveYuvToFile("yuv", yuvBuffer);
+        planes[2].getBuffer().get(yuvBuffer, offset, planes[2].getBuffer().remaining());
+		offset += planes[2].getBuffer().remaining();
+        LSImageUtil.saveYuvToFile("yuv", yuvBuffer, offset);
         
         planes[0].getBuffer().rewind();
         planes[1].getBuffer().rewind();

@@ -1,11 +1,12 @@
 package net.qdating.view;
 
 import android.app.Activity;
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.SurfaceView;
+
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
 import net.qdating.LSPublisher;
@@ -17,10 +18,15 @@ public class TestActivity extends Activity {
 	
 	String filePath = "/sdcard";
 	
-	private LSPlayer player = new LSPlayer();
-	private LSPublisher publisher = new LSPublisher();
+	private LSPlayer player;
+	private LSPublisher publisher;
+
+	private GLSurfaceView surfaceView;
+	private GLSurfaceView surfaceViewPublish;
 	private Handler handler = new Handler();
-	
+	private Context context = this;
+	private boolean test = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,28 +34,32 @@ public class TestActivity extends Activity {
 		
 		Log.i(LSConfig.TAG, String.format("TestActivity::onCreate()"));
 
-		GLSurfaceView surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView);
+		surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView);
 		surfaceView.setKeepScreenOn(true);
-		GLSurfaceView surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
+		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
 		surfaceViewPublish.setKeepScreenOn(true);
 		
 		// 播放相关
+		player = new LSPlayer();
 		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
 		player.playUrl(String.format("%s", url), "", "", "");
 		
 		// 推送相关
-		int rotation = getWindowManager().getDefaultDisplay()
+		final int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
-		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
+		publisher = new LSPublisher();
+		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
 		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
-		
-		handler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				finish();
-			}
-		}, 15000);
+
+//		handler.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				// TODO Auto-generated method stub
+//				Log.i(LSConfig.TAG, String.format("TestActivity::handler( time up )"));
+//				test = true;
+//				finish();
+//			}
+//		}, 10000);
 	}
 	
 	@Override
@@ -58,21 +68,47 @@ public class TestActivity extends Activity {
 		super.onDestroy();
 		
 		Log.i(LSConfig.TAG, String.format("TestActivity::onDestroy()"));
-		
-		player.stop();
-		player.uninit();
-		
-		publisher.stop();
-		publisher.uninit();
-	}
-	
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
+		if( player != null ) {
+			player.stop();
+			player.uninit();
+			player = null;
+		}
+
+		if( publisher != null ) {
+			publisher.stop();
+			publisher.uninit();
+			publisher = null;
+		}
+
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+
+//		surfaceViewPublish.onResume();
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+
+//		surfaceViewPublish.onPause();
+	}
+
+//	@Override
+//    protected void onPause() {
+//		super.onPause();
+//
+//
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//		super.onResume();
+//		if( test ) {
+////			finish();
+//		}
+//    }
 }

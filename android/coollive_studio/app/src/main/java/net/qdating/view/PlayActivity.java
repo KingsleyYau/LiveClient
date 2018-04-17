@@ -38,7 +38,7 @@ public class PlayActivity extends Activity {
 			"",//"/sdcard/coollive/play2.aac",
 	};
 	
-	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
+	private String publishH264File = "/sdcard/coollive/publish.h264";
 	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
 	
 	// 播放相关
@@ -62,7 +62,7 @@ public class PlayActivity extends Activity {
 	// 推送相关
 	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
 //	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/samson_publish";
-//	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/samson_user";
+//	private String publishUrl = "rtmp://172.25.32.17:1937/speex/maxbb";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
 	private EditText editTextPublish = null;
@@ -73,9 +73,11 @@ public class PlayActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
-		
+
+		LSConfig.LOG_LEVEL = Log.DEBUG;
+
 		File path = Environment.getExternalStorageDirectory();
-		filePath = path.getAbsolutePath() + "/" + LSConfig.TAG;
+		filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR;
 		File logDir = new File(filePath);
 		deleteAllFiles(logDir);
 
@@ -91,18 +93,19 @@ public class PlayActivity extends Activity {
 		editTextPublish.setText(publishUrl);
 		
 		// 播放相关
-		surfaceViews = new GLSurfaceView[3];
+		surfaceViews = new GLSurfaceView[1];
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
-		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
+//		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
+//		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 		players = new LSPlayer[surfaceViews.length];
 		for(int i = 0; i < surfaceViews.length; i++) {
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
-			
-			players[i] = new LSPlayer();
-			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, null);
+
+//			players[i] = new LSPlayer();
+//			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, null);
+//			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
 		
 		// 推送相关
@@ -110,9 +113,10 @@ public class PlayActivity extends Activity {
 		surfaceViewPublish.setKeepScreenOn(true);
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
-		publisher = new LSPublisher();
-		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
-		
+//		publisher = new LSPublisher();
+//		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
+//		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+
 		// 初始化界面缩放
 		initAnimation();
 		
@@ -122,7 +126,9 @@ public class PlayActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				for(int i = 0; i < players.length; i++) {
-					players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
+					if( players[i] != null ) {
+						players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
+					}
 				}
 			}
 		});
@@ -132,8 +138,10 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String publishUrl = editTextPublish.getText().toString();
-				publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+				if( publisher != null ) {
+					String publishUrl = editTextPublish.getText().toString();
+					publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+				}
 			}
 		});
 
@@ -149,7 +157,10 @@ public class PlayActivity extends Activity {
 						@Override
 						public void run() {
 							// TODO Auto-generated method stub
-							players[index].stop();
+							if( players[index] != null ) {
+								players[index].stop();
+							}
+
 							synchronized (playerRunningCountLock) {
 								playerRunningCount--;
 								Log.d(LSConfig.TAG, String.format("PlayActivity::stop( [Notify], playerRunningCount : %d )", playerRunningCount));
@@ -178,7 +189,9 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				publisher.stop();
+				if( publisher != null ) {
+					publisher.stop();
+				}
 			}
 		});
 		
@@ -187,7 +200,9 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				publisher.setMute(!publisher.getMute());
+				if( publisher != null ) {
+					publisher.setMute(!publisher.getMute());
+				}
 			}
 		});
 
@@ -196,7 +211,9 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				publisher.rotateCamera();
+				if( publisher != null ) {
+					publisher.rotateCamera();
+				}
 			}
 		});
 		
@@ -205,7 +222,9 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				publisher.startPreview();
+				if( publisher != null ) {
+					publisher.startPreview();
+				}
 			}
 		});
 		
@@ -214,7 +233,20 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				publisher.stopPreview();
+				if( publisher != null ) {
+					publisher.stopPreview();
+				}
+			}
+		});
+
+		Button testButton = (Button) this.findViewById(R.id.button9);
+		testButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent();
+				intent.setClass(PlayActivity.this, TestActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -337,8 +369,11 @@ public class PlayActivity extends Activity {
 		super.onDestroy();
 		
 		for(int i = 0; i < players.length; i++) {
-			players[i].stop();
-			players[i].uninit();
+			if( players[i] != null ) {
+				players[i].stop();
+				players[i].uninit();
+			}
+
 		}
 
 		if( publisher != null ) {
@@ -371,6 +406,6 @@ public class PlayActivity extends Activity {
 //		        intent.setClass(PlayActivity.this, TestActivity.class);
 //		        startActivity(intent);
 //			}
-//		}, 10000);
+//		}, 5000);
     }
 }

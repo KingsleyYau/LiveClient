@@ -3,7 +3,8 @@ package net.qdating.player;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
-import net.qdating.filter.LSImageRawBmpFilter;
+import net.qdating.filter.LSImageBmpFilter;
+import net.qdating.filter.LSImageOutputFilter;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -42,14 +43,19 @@ public class LSVideoPlayerRenderer implements Renderer {
 	/**
 	 * 显示原始图片滤镜
 	 */
-	private LSImageRawBmpFilter bmpFilter = new LSImageRawBmpFilter();
-	
+	private LSImageBmpFilter bmpFilter = null;
+	private LSImageOutputFilter outputFilter = null;
+
 	public LSVideoPlayerRenderer(FillMode fillMode) {
-		bmpFilter.fillMode = fillMode;
+		bmpFilter = new LSImageBmpFilter();
+		outputFilter = new LSImageOutputFilter();
+		outputFilter.fillMode = fillMode;
 	}
 	
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::init( this : 0x%x )", hashCode()));
+
+		bmpFilter.setFilter(outputFilter);
 	}
 	
 	public void uninit() {
@@ -72,8 +78,6 @@ public class LSVideoPlayerRenderer implements Renderer {
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		// TODO Auto-generated method stub
-//		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::onDrawFrame()"));
-		
 		// 重绘背景
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
@@ -101,7 +105,7 @@ public class LSVideoPlayerRenderer implements Renderer {
         previewWidth = width;
         previewHeight = height;
         
-        bmpFilter.changeViewPointSize(previewWidth, previewHeight);
+        outputFilter.changeViewPointSize(previewWidth, previewHeight);
 	}
 
 	@Override
@@ -113,6 +117,7 @@ public class LSVideoPlayerRenderer implements Renderer {
 		glTextureId = LSImageFilter.genPixelTexture();
         
 		bmpFilter.init();
+		outputFilter.init();
 	}
 
 }

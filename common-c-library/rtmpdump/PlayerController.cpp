@@ -219,7 +219,7 @@ void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, 
 
 void PlayerController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) {
     FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
+                 KLog::LOG_MSG,
                  "PlayerController::OnRecvVideoFrame( "
                  "this : %p, "
                  "timestamp : %u, "
@@ -284,7 +284,7 @@ void PlayerController::OnRecvAudioFrame(
                                   u_int32_t timestamp
                                   ) {
     FileLevelLog("rtmpdump",
-                KLog::LOG_STAT,
+                KLog::LOG_MSG,
                 "PlayerController::OnRecvAudioFrame( "
                 "this : %p, "
                 "timestamp : %u, "

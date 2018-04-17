@@ -34,9 +34,8 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 	
 	/**
 	 * 绑定界面元素
-	 * @param view
-	 * @param viewWidth
-	 * @param viewHeight
+	 * @param surfaceView
+	 * @param fillMode
 	 */
 	public void init(GLSurfaceView surfaceView, FillMode fillMode) {
 		// 创建预览渲染器

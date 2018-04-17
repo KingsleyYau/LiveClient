@@ -85,10 +85,20 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	public boolean init(Context context, GLSurfaceView surfaceView, int rotation, FillMode fillMode, ILSPublisherStatusCallback statusCallback) {
 		boolean bFlag = true;
 		
-		Log.i(LSConfig.TAG, String.format("LSPublisher::init( this : 0x%x )", hashCode()));
+		Log.i(LSConfig.TAG,
+				String.format("LSPublisher::init( "
+								+ "this : 0x%x, "
+								+ "rotation : %d, "
+								+ "fillMode : %d "
+								+ ")",
+						hashCode(),
+						rotation,
+						fillMode.ordinal()
+				)
+		);
 		
 		File path = Environment.getExternalStorageDirectory();
-		String filePath = path.getAbsolutePath() + "/" + LSConfig.TAG + "/";
+		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
 		Log.initFileLog(filePath);
 		Log.setWriteFileLog(true);
 		
@@ -112,7 +122,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		
 		// 初始化视频采集
 		if( bFlag ) {
-			bFlag = videoCapture.init(surfaceView, this, rotation, fillMode);
+			bFlag = videoCapture.init(surfaceView, this, rotation, fillMode, useHardEncoder);
 		}
 		
 		// 初始化音频录制
@@ -151,7 +161,8 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 														LSConfig.RECONNECT_SECOND
 												)
 										);
-										handler.sendMessageDelayed(msg, LSConfig.RECONNECT_SECOND);
+										Message newMsg = Message.obtain(msg);
+										handler.sendMessageDelayed(newMsg, LSConfig.RECONNECT_SECOND);
 									}
 								}
 							}
@@ -302,17 +313,23 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	/**
 	 * 切换前后摄像头
 	 */
-	public void rotateCamera() {
+	public boolean rotateCamera() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::rotateCamera( this : 0x%x )", hashCode()));
 		publisher.PausePushVideo();
-		videoCapture.rotateCamera();
-		publisher.ResumePushVideo();
+		boolean bFlag = videoCapture.rotateCamera();
+		if( bFlag ) {
+			publisher.ResumePushVideo();
+		}
+		return bFlag;
 	}
 	
-	public void startPreview() {
+	public boolean startPreview() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::startPreview( this : 0x%x )", hashCode()));
-		videoCapture.start();
-		publisher.ResumePushVideo();
+		boolean bFlag = videoCapture.start();
+		if( bFlag ) {
+			publisher.ResumePushVideo();
+		}
+		return bFlag;
 	}
 	
 	public void stopPreview() {

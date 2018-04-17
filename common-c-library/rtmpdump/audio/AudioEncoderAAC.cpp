@@ -272,7 +272,7 @@ void AudioEncoderAAC::Stop() {
             frame = (AudioFrame* )mEncodeBufferList.front();
             mEncodeBufferList.pop_front();
             if( frame != NULL ) {
-                ReleaseAudioFrame(frame);
+            	delete frame;
             } else {
                 break;
             }

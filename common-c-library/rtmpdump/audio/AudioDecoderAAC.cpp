@@ -184,7 +184,7 @@ void AudioDecoderAAC::Stop() {
             frame = (AudioFrame* )mDecodeBufferList.front();
             mDecodeBufferList.pop_front();
             if( frame != NULL ) {
-                ReleaseAudioFrame(frame);
+            	delete frame;
             } else {
                 break;
             }

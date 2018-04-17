@@ -138,7 +138,6 @@ private:
     bool Flv2Audio(char* frame, int frame_size, u_int32_t timestamp);
     bool Flv2Video(char* frame, int frame_size, u_int32_t timestamp);
     bool FlvVideo2H264(char* frame, int frame_size, u_int32_t timestamp);
-    bool GetADTS(int packetSize, char* header, int headerSize);
     u_int32_t GetCurrentTime();
     
     RtmpDumpCallback* mpRtmpDumpCallback;

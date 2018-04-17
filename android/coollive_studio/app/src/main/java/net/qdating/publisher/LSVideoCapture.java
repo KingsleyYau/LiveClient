@@ -42,13 +42,13 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	}
 	
 	@SuppressLint("NewApi") 
-	public boolean init(GLSurfaceView surfaceView, ILSVideoCaptureCallback callback, int rotation, FillMode fillMode) {
+	public boolean init(GLSurfaceView surfaceView, ILSVideoCaptureCallback callback, int rotation, FillMode fillMode, boolean useHardEncoder) {
 		boolean bFlag = false;
 		
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::init()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::init( this : 0x%x )", hashCode()));
 		
 		// 创建预览渲染器
-		this.previewRenderer = new LSVideoCaptureRenderer(this, fillMode);
+		this.previewRenderer = new LSVideoCaptureRenderer(this, fillMode, useHardEncoder);
 		this.previewRenderer.init();
 		
 		// 设置GL预览界面, 按照顺序调用, 否则crash
@@ -67,21 +67,23 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	}
 	
 	public void uninit() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::uninit()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::uninit( this : 0x%x )", hashCode()));
 		
 		if( previewRunning ) {
 			// 停止预览
 			stopCapture();
 			previewRunning = false;
 		}
-		
-		previewRenderer.uninit();
+
+		if( previewRenderer != null ) {
+			previewRenderer.uninit();
+		}
 	}
 	
 	public boolean start() {
 		boolean bFlag = true;
 		
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::start()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::start( this : 0x%x )", hashCode()));
 		
 		if( !previewRunning ) {
 			bFlag = startCapture();
@@ -89,7 +91,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		}
 		
 		if( !bFlag ) {
-			Log.e(LSConfig.TAG, String.format("LSVideoCapture::start( [Fail] )"));
+			Log.e(LSConfig.TAG, String.format("LSVideoCapture::start( this : 0x%x, [Fail] )", hashCode()));
 		}
 		
 		return bFlag;
@@ -97,7 +99,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	
 	@SuppressLint("NewApi") 
 	public void stop() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::stop()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::stop( this : 0x%x )", hashCode()));
 		
 		if( previewRunning ) {
 			// 停止预览
@@ -112,7 +114,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	public boolean rotateCamera() {
 		boolean bFlag = true;
 		
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera( this : 0x%x )", hashCode()));
 		
 		// 切换前后摄像头
 		frontCamera = !frontCamera;
@@ -124,7 +126,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 			bFlag = startCapture();
 		}
 		
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera( [%s] )", bFlag?"Success":"Fail"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::rotateCamera( this : 0x%x, [%s] )", hashCode(), bFlag?"Success":"Fail"));
 		
 		return bFlag;
 	}
@@ -133,80 +135,79 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	private boolean openCamera() {
 		boolean bFlag = false;
 		
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::openCamera()"));
-		
-		synchronized (this) {
-			if( mCamera == null ) {
-				int cameraIndex = getCamera(frontCamera);
-				if( cameraIndex != -1 ) {
-					try {
-						// 打开摄像头
-						mCamera = Camera.open(cameraIndex);
-						if( mCamera != null ) {
-							if( previewRenderer.getSurfaceTexture() != null ) {
-								mCamera.setPreviewTexture(previewRenderer.getSurfaceTexture());
-							}
-							
-							bFlag = true;
-							
-							// 获取采集参数
-							Camera.Parameters parameters = mCamera.getParameters();
-							
-							// 设置采集的格式
+		Log.i(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x )", hashCode()));
+
+		if( mCamera == null ) {
+			int cameraIndex = getCamera(frontCamera);
+			if( cameraIndex != -1 ) {
+				try {
+					// 打开摄像头
+					mCamera = Camera.open(cameraIndex);
+					if( mCamera != null ) {
+						if( previewRenderer.getSurfaceTexture() != null ) {
+							mCamera.setPreviewTexture(previewRenderer.getSurfaceTexture());
+						}
+
+						bFlag = true;
+
+						// 获取采集参数
+						Camera.Parameters parameters = mCamera.getParameters();
+
+						// 设置采集的格式
 //							int[] formats = getCameraPreviewFormats(mCamera);
 //							parameters.setPreviewFormat(formats[0]);
-							parameters.setPreviewFormat(ImageFormat.NV21);
-							
-							// 设置采集分辨率
-							Size bestSize = getBestSuppportPreviewSize(mCamera);
-							if( bestSize != null ) {
-								parameters.setPreviewSize(bestSize.width, bestSize.height);
-							} else {
-								bFlag = false;
-							}
-							
-							// 设置采集帧率
-							int fps = getBestCameraPreviewFrameRate(mCamera);
-							if( fps != INVALID_FRAMERATE ) {
-								parameters.setPreviewFrameRate(fps);
-//								parameters.setPreviewFpsRange(fps, fps);
-							} else {
-								bFlag = false;
-							}
-							
-							// 设置采集参数
-							mCamera.setParameters(parameters);
-							
-							int degree = getDegree();
-							
-							int result;
-							Camera.CameraInfo info = new Camera.CameraInfo();
-						    Camera.getCameraInfo(cameraIndex, info);
-						    if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-						    	result = (info.orientation + degree) % 360;
-						    	result = (360 - result) % 360;  // compensate the mirror
-						    } else {  // back-facing
-						    	result = (info.orientation - degree + 360) % 360;
-						    }
-						    
-						    previewRotation = result;
-						    mCamera.setDisplayOrientation(previewRotation);
-						    
-							if( captureCallback != null ) {
-								captureCallback.onChangeRotation(previewRotation);
-							}
+						parameters.setPreviewFormat(ImageFormat.NV21);
+
+						// 设置采集分辨率
+						Size bestSize = getBestSuppportPreviewSize(mCamera);
+						if( bestSize != null ) {
+							parameters.setPreviewSize(bestSize.width, bestSize.height);
+						} else {
+							bFlag = false;
 						}
-					}  catch (Exception e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( [Exception], e : %s )", e.toString()));
+
+						// 设置采集帧率
+						int fps = getBestCameraPreviewFrameRate(mCamera);
+						if( fps != INVALID_FRAMERATE ) {
+							parameters.setPreviewFrameRate(fps);
+//								parameters.setPreviewFpsRange(fps, fps);
+						} else {
+							bFlag = false;
+						}
+
+						// 设置采集参数
+						mCamera.setParameters(parameters);
+
+						int degree = getDegree();
+
+						int result;
+						Camera.CameraInfo info = new Camera.CameraInfo();
+						Camera.getCameraInfo(cameraIndex, info);
+						if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+							result = (info.orientation + degree) % 360;
+							result = (360 - result) % 360;  // compensate the mirror
+						} else {  // back-facing
+							result = (info.orientation - degree + 360) % 360;
+						}
+
+						previewRotation = result;
+						mCamera.setDisplayOrientation(previewRotation);
+
+						if( captureCallback != null ) {
+							captureCallback.onChangeRotation(previewRotation);
+						}
 					}
+				}  catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x, [Exception], e : %s )", hashCode(), e.toString()));
 				}
 			}
 		}
+
 		
 		if( !bFlag ) {
-			Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( [Fail] )"));
+			Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x, [Fail] )", hashCode()));
 		}
 		
 		return bFlag;
@@ -217,33 +218,39 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	 * @param holder
 	 */
 	private boolean startCapture() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::startCapture()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::startCapture( this : 0x%x )", hashCode()));
 		
 		boolean bFlag = false;
 
-		if( mCamera == null ) {
-			bFlag = openCamera();
-		}
-		
-		if( bFlag && mCamera != null ) {
-			mCamera.startPreview();
-			bFlag = true;
+		synchronized (this) {
+			if (mCamera == null) {
+				bFlag = openCamera();
+			}
+
+			if (bFlag && mCamera != null) {
+				mCamera.startPreview();
+				bFlag = true;
+			}
 		}
 		
 		return bFlag;
 	}
 	
 	private boolean stopCapture() {
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::stopCapture()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::stopCapture( this : 0x%x )", hashCode()));
 		
 		boolean bFlag = false;
-		if( mCamera != null ) {
-			// 停止预览
-			mCamera.stopPreview();
-			mCamera.release();
-			mCamera = null;
-			bFlag = true;
+
+		synchronized (this) {
+			if (mCamera != null) {
+				// 停止预览
+				mCamera.stopPreview();
+				mCamera.release();
+				mCamera = null;
+				bFlag = true;
+			}
 		}
+
 		return bFlag;
 	}
 	
@@ -264,7 +271,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 			}
 		}
 
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getCamera( cameraIndex : %d )", cameraIndex));
+		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getCamera( this : 0x%x, cameraIndex : %d )", hashCode(), cameraIndex));
 		
 		return cameraIndex;
 	}
@@ -296,7 +303,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		}
 		
 		if( bestSize != null ) {
-			Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( bestWidth : %d, bestHeight : %d )", bestSize.width, bestSize.height));
+			Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( this : 0x%x, bestWidth : %d, bestHeight : %d )", hashCode(), bestSize.width, bestSize.height));
 			// 是否宽高互换
 			if( isSwitchFrame() ) {
 				previewRenderer.setOriginalSize(bestSize.height, bestSize.width);
@@ -305,7 +312,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 			}
 			
 		} else {
-			Log.e(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( [Fail] )"));
+			Log.e(LSConfig.TAG, String.format("LSVideoCapture::getBestSuppportPreviewSize( this : 0x%x, [Fail] )", hashCode()));
 		}
 		
 		return bestSize;
@@ -328,7 +335,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 //			}
 		}
 		
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestCameraPreviewFrameRate( bestFrameRate : %d )", bestFrameRate));
+		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getBestCameraPreviewFrameRate( this : 0x%x, bestFrameRate : %d )", hashCode(), bestFrameRate));
 		
 		return bestFrameRate;
 	}
@@ -353,7 +360,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 				degree = 270; 
 			}break;
 		}
-		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getDegree( degree : %d )", degree));
+		Log.i(LSConfig.TAG, String.format("LSVideoCapture::getDegree( this : 0x%x, degree : %d )", hashCode(), degree));
 		return degree;
 	}
 	
@@ -387,13 +394,13 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	@Override
 	public void onCreateTexture(SurfaceTexture surfaceTexture) {
 		// TODO Auto-generated method stub
-		Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture( this : 0x%x )", hashCode()));
 		synchronized (this) {
 			if( mCamera != null ) {
 				try {
 					mCamera.setPreviewTexture(surfaceTexture);
 					if( previewRunning ) {
-						Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture( [Camera start preview] )"));
+						Log.d(LSConfig.TAG, String.format("LSVideoCapture::onCreateTexture( this : 0x%x, [Camera start preview] )", hashCode()));
 						mCamera.startPreview();
 					}
 					

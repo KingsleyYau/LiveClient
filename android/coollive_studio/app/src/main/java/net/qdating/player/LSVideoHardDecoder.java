@@ -2,7 +2,9 @@ package net.qdating.player;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.Stack;
+import java.util.Vector;
 
 import android.annotation.SuppressLint;
 import android.media.Image;
@@ -29,7 +31,11 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	
 	public MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 	private Stack<LSVideoHardDecoderFrame> videoFrameStack = null;
-	
+
+	// 输入源的采样格式
+	private static final int INVALID_COLOR_FORMAT = 0xFFFFFFFF;
+	private static int outputColorFormat = INVALID_COLOR_FORMAT;
+
 	/**
 	 * h264 start code
 	 */
@@ -40,12 +46,24 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	 */
 	private int naluHeaderSize = 4;
 
+	/**
+	 * 获取支持的硬解码采样格式
+	 * @return
+	 */
+	static public int supportHardDecoderFormat() {
+		if( outputColorFormat == INVALID_COLOR_FORMAT ) {
+			// 尝试获取采样格式
+			supportHardDecoder();
+		}
+		return outputColorFormat;
+	}
+
 	@SuppressLint("NewApi")  
 	/**
 	 * 判断是否支持硬解码
 	 * @return
 	 */
-	static public boolean supportHardDecoder() {  
+    public static boolean supportHardDecoder() {
 		boolean bFlag = false;
 		String codecName = "";
 		String codecType = "";
@@ -54,14 +72,17 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
         if( Build.VERSION.SDK_INT >= 21 ) {
         	MediaCodecList codecList = new MediaCodecList(MediaCodecList.REGULAR_CODECS);
         	MediaCodecInfo[] codecInfos = codecList.getCodecInfos();
-        	for(int i = 0; i < codecInfos.length; i++) {  
+			int count = codecInfos.length;
+//            int count = MediaCodecList.getCodecCount();
+        	for(int i = 0; i < count; i++) {
         		MediaCodecInfo codecInfo = codecInfos[i];
-        		String[] supportTypes = codecInfo.getSupportedTypes();  
+//                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
+        		String[] supportTypes = codecInfo.getSupportedTypes();
         		for (int j = 0; j < supportTypes.length; j++) {
-        			if( LSConfig.debug ) {
+        			if( LSConfig.DEBUG ) {
 	        			Log.d(LSConfig.TAG,
 								String.format("LSVideoHardDecoder::supportHardDecoder( "
-												+ "[Find video codec], "
+												+ "[Check video codec], "
 												+ "codecName : [%s], "
 												+ "codecType : [%s] "
 												+ ")",
@@ -88,20 +109,32 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 							if( videoCodec != null ) {
 								MediaCodecInfo.CodecCapabilities caps = videoCodec.getCodecInfo().getCapabilitiesForType(MIME_TYPE);
 								for (int k = 0; k < caps.colorFormats.length; k++) {
-									if( LSConfig.debug ) {
-										Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( [Check color format], colorFormat : 0x%x )", caps.colorFormats[k]));
+									if( LSConfig.DEBUG ) {
+										Log.d(LSConfig.TAG,
+												String.format("LSVideoHardDecoder::supportHardDecoder( "
+														+ "[Check color format], "
+														+ "codecName : %s, "
+														+ "colorFormat : 0x%x "
+														+ ")",
+														codecName,
+														caps.colorFormats[k]
+												)
+										);
 									}
-									
-									if( caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ) {
+
+									if( (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
+											|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+											) {
 										codecName = codecInfo.getName();
 										codecType = supportTypes[j];
 										colorFormat = caps.colorFormats[k];
+										outputColorFormat = caps.colorFormats[k];
 
 										bFlag = true;
 
 										Log.i(LSConfig.TAG,
 												String.format("LSVideoHardDecoder::supportHardDecoder( "
-														+ "[Find video hard decoder], "
+														+ "[Video hard decoder found], "
 														+ "codecName : %s, "
 														+ "codecType : %s, "
 														+ "colorFormat : 0x%x "
@@ -117,16 +150,17 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 								}
 
 								if( !bFlag ) {
-									if( LSConfig.debug ) {
-										Log.d(LSConfig.TAG, String.format("LSVideoHardEncoder::supportHardDecoder( [Color format not found] )"));
+									if( LSConfig.DEBUG ) {
+										Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( [Color format not found] )"));
 									}
 								}
+
 								videoCodec.release();
 							}
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							Log.d(LSConfig.TAG, String.format("LSVideoHardEncoder::supportHardDecoder( e : %s )", e.toString()));
+							Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( e : %s )", e.toString()));
 						}
 
         				break;
@@ -139,7 +173,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
         }  
         
 		if( !bFlag ) {
-			Log.e(LSConfig.TAG, String.format("LSVideoHardEncoder::supportHardDecoder( [Video hard decoder not found] )"));
+			Log.e(LSConfig.TAG, String.format("LSVideoHardDecoder::supportHardDecoder( [Video hard decoder not found], SDK_VERSION : %d )", Build.VERSION.SDK_INT));
 		}
 		
         return bFlag;  
@@ -158,17 +192,18 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 
 		Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::reset( this : 0x%x )", hashCode()));
 
-		if( videoCodec == null ) {
+		if( videoCodec == null && outputColorFormat != INVALID_COLOR_FORMAT ) {
 	        try {
 				videoCodec = MediaCodec.createDecoderByType(MIME_TYPE);
 				if( videoCodec != null ) {
 					videoMediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
-			        videoMediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar);
+			        videoMediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, outputColorFormat);
 			        
 					videoCodec.configure(videoMediaFormat, null, null, 0);
 					videoCodec.start();
+
 					bFlag = true;
-					Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::reset( codecName : %s, mimeType : %s )", videoCodec.getName(), MIME_TYPE));
+					Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::reset( this : 0x%x, [Success], codecName : %s, mimeType : %s )", hashCode(), videoCodec.getName(), MIME_TYPE));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -184,7 +219,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	}
 	
 	public void pause() {
-		Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::pause()"));
+		Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::pause( this : 0x%x )", hashCode()));
 
 		if( videoCodec != null ) {
 			videoCodec.stop();
@@ -216,10 +251,10 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		
 		// Maybe cause getDecodeVideoFrame exception, ignore it. 
 		// if not flush codec, it will cause crash when video size is increased
-		videoCodec.flush();
+//		videoCodec.flush();
 		
-        bFlag = decodeFrame(sps, 0, sps_size, 0);
-        bFlag = bFlag && decodeFrame(pps, 0, pps_size, 0);
+        bFlag = decodeVideoFrame(sps, 0, sps_size, 0);
+        bFlag = bFlag && decodeVideoFrame(pps, 0, pps_size, 0);
 		
         return bFlag;
 	}
@@ -229,31 +264,32 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		// TODO Auto-generated method stub
 		
 		// 放到解码队列
-		return decodeFrame(data, this.naluHeaderSize, size, timestamp);
+		return decodeVideoFrame(data, this.naluHeaderSize, size, timestamp);
 	}
 
-	private boolean decodeFrame(byte[] data, int offset, int size, int timestamp) {
+	private boolean decodeVideoFrame(byte[] data, int offset, int size, int timestamp) {
 		boolean bFlag = false;
 		
 		if( videoCodec != null ) {
 			// 阻塞等待
 			int inIndex = -1;
 	        inIndex = videoCodec.dequeueInputBuffer(-1);
-	        if( LSConfig.debug ) {
-	    		Log.d(LSConfig.TAG,
-	    				String.format("LSVideoHardDecoder::decodeFrame( "
-										+ "this : 0x%x, "
-										+ "inIndex : %d, "
-										+ "size : %d, "
-										+ "timestamp : %d "
-										+ ")",
-								hashCode(),
-								inIndex,
-								size,
-								timestamp
-						)
-	            );
-	        }
+
+//	        if( LSConfig.DEBUG ) {
+//	    		Log.d(LSConfig.TAG,
+//	    				String.format("LSVideoHardDecoder::decodeVideoFrame( "
+//										+ "this : 0x%x, "
+//										+ "inIndex : %d, "
+//										+ "size : %d, "
+//										+ "timestamp : %d "
+//										+ ")",
+//								hashCode(),
+//								inIndex,
+//								size,
+//								timestamp
+//						)
+//	            );
+//	        }
 			
 	        if ( inIndex >= 0 ) {
 	        	ByteBuffer[] inputBuffers = videoCodec.getInputBuffers();
@@ -336,22 +372,59 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 			            }
 					}
 
-		            Image image = videoCodec.getOutputImage(bufferIndex);
-		            if( image != null ) {
-						videoFrame.updateImage(image, (int)bufferInfo.presentationTimeUs);
-						bFlag = true;
-					} else {
-						Log.e(LSConfig.TAG,
-								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
-												+ "this : 0x%x, "
-												+ "[Fail, image is null], "
-												+ "bufferIndex : %d "
-												+ ")",
-										hashCode(),
-										bufferIndex
-								)
-						);
-					}
+//					if( LSConfig.DEBUG ) {
+//						Log.d(LSConfig.TAG,
+//								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+//												+ "this : 0x%x, "
+//												+ "bufferIndex : %d, "
+//												+ "timestamp : %d "
+//												+ ")",
+//										hashCode(),
+//										bufferIndex,
+//										(int) bufferInfo.presentationTimeUs
+//								)
+//						);
+//					}
+
+					// API 16
+					ByteBuffer byteBuffer = videoCodec.getOutputBuffer(bufferIndex);
+		        	if( byteBuffer != null ) {
+		        	    int width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
+                        int height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
+                        int format = videoMediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT);
+                        videoFrame.updateImage(byteBuffer, (int)bufferInfo.presentationTimeUs, format, width, height);
+                        bFlag = true;
+                    } else {
+                        Log.e(LSConfig.TAG,
+                                String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+                                                + "this : 0x%x, "
+                                                + "[Fail, byteBuffer is null], "
+                                                + "bufferIndex : %d "
+                                                + ")",
+                                        hashCode(),
+                                        bufferIndex
+                                )
+                        );
+                    }
+
+                    // API 21
+//		            Image image = videoCodec.getOutputImage(bufferIndex);
+//		            if( image != null ) {
+//						videoFrame.updateImage(image, (int)bufferInfo.presentationTimeUs);
+//						bFlag = true;
+//					} else {
+//						Log.e(LSConfig.TAG,
+//								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+//												+ "this : 0x%x, "
+//												+ "[Fail, image is null], "
+//												+ "bufferIndex : %d "
+//												+ ")",
+//										hashCode(),
+//										bufferIndex
+//								)
+//						);
+//					}
+
 	                videoCodec.releaseOutputBuffer(bufferIndex, false);
 
 		        } else {

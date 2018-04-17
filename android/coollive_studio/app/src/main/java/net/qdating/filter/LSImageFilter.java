@@ -15,7 +15,7 @@ public abstract class LSImageFilter {
 	/**
 	 * 渲染模式
 	 */
-	public FillMode fillMode = FillMode.FillModeAspectRatioFill;
+	public FillMode fillMode = FillMode.FillModeStretch;
 	
 	/**
 	 * 没有纹理
@@ -78,54 +78,81 @@ public abstract class LSImageFilter {
 	 * 预览高
 	 */
 	protected int viewPointHeight = 0;
-	
+
+	/**
+	 * 预览X坐标
+	 */
+	protected int viewPointX = 0;
+	/**
+	 * 预览Y坐标
+	 */
+	protected int viewPointY = 0;
+
 	protected class ImageSize {
 		public boolean bChange;
 		public int width;
 		public int height;
 		
 		public ImageSize() {
-			
+
 		}
 	}
 	
 	/**
-	 * 创建纹理
-	 * @return
+	 * 创建2D纹理
+	 * 不能在非EGL环境外调用
+	 * @return 纹理句柄
 	 */
-	public static int[] genPixelTexture() {
+	public static synchronized int[] genPixelTexture() {
 		// 创建新纹理
 		int textureId[] = new int[1];
 		GLES20.glGenTextures(1, textureId, 0);
 		
 	    // 绑定纹理
 	    GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId[0]);
-	    
+
+		/**
+		 * GL_LINEAR 不失真, 但会模糊
+		 * GL_NEAREST 失真, 但不会模糊
+		 *
+		 * GL_REPEAT 平铺
+		 * GL_MIRRORED_REPEAT 镜像平铺
+		 * GL_CLAMP_TO_EDGE 超出部分变为条纹
+		 * GL_CLAMP_TO_BORDER 居中
+		 */
 	    // 设置纹理参数
+		GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
+				GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
                 GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR);
+                GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
         GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
-        GLES20.glTexParameterf(GLES20.GL_TEXTURE_2D,
-                GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+                GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
         
         // 解除纹理绑定
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
-        
+
         Log.d(LSConfig.TAG, String.format("LSImageFilter::genPixelTexture( textureId : %d )", textureId[0]));
-        
+
+        String method = String.format("genPixelTexture( textureId : %d )", textureId[0]);
+		checkGLError(method, null);
+
 	    return textureId;
 	}
-	
-	public static int[] genCameraTexture() {
+
+	/**
+	 * 创建OES纹理
+	 * 不能在非EGL环境外调用
+	 * @return 纹理句柄
+	 */
+	public static synchronized int[] genCameraTexture() {
 		// 创建新纹理
 		int textureId[] = new int[1];
 	    GLES20.glGenTextures(1, textureId, 0);
         // 开始绑定纹理
 	    GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId[0]);
-	    
+
 	    /**
 	     * GL_LINEAR 不失真, 但会模糊
 	     * GL_NEAREST 失真, 但不会模糊
@@ -145,17 +172,24 @@ public abstract class LSImageFilter {
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         
         Log.d(LSConfig.TAG, String.format("LSImageFilter::genCameraTexture( textureId : %d )", textureId[0]));
-        
+
+		String method = String.format("genCameraTexture( textureId : %d )", textureId[0]);
+		checkGLError(method, null);
+
 	    return textureId;
 	}
 	
 	/**
 	 * 销毁纹理
+	 * 不能在非EGL环境外调用
+	 * 利用GLSurface::onPause会回收资源, 不需要显示调用
 	 */
-	public static void deleteTexture(int[] textureId) {
+	public static synchronized void deleteTexture(int[] textureId) {
 		if( textureId != null ) {
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::deleteTexture( textureId : %d )", textureId[0]));
 			GLES20.glDeleteTextures(1, textureId, 0);
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::deleteTexture( textureId : %d )", textureId[0]));
+			String method = String.format("deleteTexture( textureId : %d )", textureId[0]);
+			checkGLError(method, null);
 		}
 	}
 	
@@ -174,17 +208,20 @@ public abstract class LSImageFilter {
 	
 	/**
 	 * 初始化滤镜
-	 * @return 返回纹理Id
+	 * 不能在非EGL环境外调用
 	 */
 	public void init() {
-		// 加载着色器
+		Log.d(LSConfig.TAG, String.format("LSImageFilter::init( this : 0x%x, className : [%s] )", hashCode(), getClass().getName()));
 		initGLShader(vertexShaderString, fragmentShaderString);
 	}
 	
 	/**
 	 * 销毁滤镜
+	 * 不能在非EGL环境外调用
+	 * 如果利用GLSurface::onPause会回收资源, 不需要显式调用
 	 */
 	public void uninit() {
+		Log.d(LSConfig.TAG, String.format("LSImageFilter::uninit( this : 0x%x, className : [%s] )", hashCode(), getClass().getName()));
 		uninitGLShader();
 	}
 	
@@ -197,8 +234,8 @@ public abstract class LSImageFilter {
 	
 	/**
 	 * 改变滤镜输出大小
-	 * @param inputWidth
-	 * @param inputHeight
+	 * @param viewPointWidth
+	 * @param viewPointHeight
 	 * @return 是否改变
 	 */
 	public boolean changeViewPointSize(int viewPointWidth, int viewPointHeight) {
@@ -208,7 +245,19 @@ public abstract class LSImageFilter {
 			this.viewPointHeight = viewPointHeight;
 			bFlag = true;
 			
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPointSize( viewPointWidth : %d, viewPointHeight : %d, className : [%s] )", viewPointWidth, viewPointHeight, getClass().getName()));
+			Log.d(LSConfig.TAG,
+					String.format("LSImageFilter::changeViewPointSize( "
+									+ "this : 0x%x, "
+									+ "viewPointWidth : %d, "
+									+ "viewPointHeight : %d, "
+									+ "className : [%s] "
+									+ ")",
+							hashCode(),
+							viewPointWidth,
+							viewPointHeight,
+							getClass().getName()
+					)
+			);
 		}
 		return bFlag;
 	}
@@ -218,9 +267,9 @@ public abstract class LSImageFilter {
 	 * @param textureId
 	 */
 	public void draw(int textureId, int width, int height) {
-//		if( LSConfig.debug ) {
-//			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( textureId : %d, glProgram : %d, className : [%s] )", textureId, glProgram, getClass().getName()));
-//		}
+		if( LSConfig.DEBUG ) {
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
+		}
 		
 		GLES20.glUseProgram(glProgram);
 		
@@ -261,7 +310,11 @@ public abstract class LSImageFilter {
 	 * @param textureId
 	 */
 	protected abstract void onDrawFinish(int textureId);
-	
+
+	protected void onDrawRecyle(int textureId) {
+
+	}
+
 	/**
 	 * 改变滤镜输入大小
 	 * @param inputWidth
@@ -275,15 +328,15 @@ public abstract class LSImageFilter {
 		if( this.inputWidth != inputWidth || this.inputHeight != inputHeight ) {
 			this.inputWidth = inputWidth;
 			this.inputHeight = inputHeight;
-			
+
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeInputSize( this : 0x%x, inputWidth : %d, inputHeight : %d, className : [%s] )", hashCode(), inputWidth, inputHeight, getClass().getName()));
+
 			// 设置默认的视觉
 			if( viewPointWidth == 0 || viewPointHeight == 0 ) {
 				changeViewPointSize(inputWidth, inputHeight);
 			}
 			
 			bFlag = true;
-			
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::changeInputSize( this : 0x%x, inputWidth : %d, inputHeight : %d, className : [%s] )", hashCode(), inputWidth, inputHeight, getClass().getName()));
 		}
 		
 		imageSize.bChange = bFlag;
@@ -305,7 +358,7 @@ public abstract class LSImageFilter {
         
         int outputWidth = viewWidth;
         int outputHeight = viewHeight;
-        
+
         if( fillMode == FillMode.FillModeAspectRatioFill ) {
         	// 长边填满
         	if( inputHeight > 0 && outputHeight > 0 ) {
@@ -319,10 +372,10 @@ public abstract class LSImageFilter {
             		coordinateWidth = (int)(outputHeight * radioImage);
     		        coordinateX = (outputWidth - coordinateWidth) / 2;
     		        
-//    		        if( LSConfig.debug ) {
+//    		        if( LSConfig.DEBUG ) {
 //    	                Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
-//    	                		+ "[剪裁左右], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f ) ", 
-//    	                		coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview));
+//    	                		+ "[剪裁左右], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
+//    	                		coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
 //    		        }
                     
             	} else {
@@ -331,10 +384,10 @@ public abstract class LSImageFilter {
             		coordinateHeight = (int)(1.0 * outputWidth / radioImage);
     		        coordinateY = (outputHeight - coordinateHeight) / 2;
     		        
-//    		        if( LSConfig.debug ) {
+//    		        if( LSConfig.DEBUG ) {
 //    	                Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
-//    	                		+ "[剪裁上下], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f ) ", 
-//    	                		coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview));
+//    	                		+ "[剪裁上下], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
+//    	                		coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
 //    		        }
             	}
         	}
@@ -350,11 +403,24 @@ public abstract class LSImageFilter {
             		coordinateWidth = outputWidth;
             		coordinateHeight = (int)(1.0 * outputWidth / radioImage);
             		coordinateY = (outputHeight - coordinateHeight) / 2;
+
+//					if( LSConfig.DEBUG ) {
+//						Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
+//										+ "[上下留黑], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
+//								coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
+//					}
+
             	} else {
             		// 左右留黑
             		coordinateHeight = outputHeight;
             		coordinateWidth = (int)(outputHeight * radioImage);
     		        coordinateX = (outputWidth - coordinateWidth) / 2;
+
+//					if( LSConfig.DEBUG ) {
+//						Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
+//										+ "[左右留黑], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, radioImage : %f, radioPreview : %f, className : [%s] ) ",
+//								coordinateX, coordinateY, coordinateWidth, coordinateHeight, radioImage, radioPreview, getClass().getName()));
+//					}
             	}
         	}
         	
@@ -362,24 +428,47 @@ public abstract class LSImageFilter {
         	// 拉伸填满
         	coordinateWidth = outputWidth;
         	coordinateHeight = outputHeight;
+
+			if( LSConfig.DEBUG ) {
+//				Log.d(LSConfig.TAG, String.format("LSImageFilter::changeViewPoint( "
+//								+ "[拉伸填满], x : %d, y : %d, coordinateWidth : %d, coordinateHeight : %d, className : [%s] ) ",
+//						coordinateX, coordinateY, coordinateWidth, coordinateHeight, getClass().getName()));
+			}
         }
-        
+
+        // 记录预览起始坐标
+		viewPointX = coordinateX;
+		viewPointY = coordinateY;
+
         // 开始设定视觉
     	GLES20.glViewport(coordinateX, coordinateY, coordinateWidth, coordinateHeight);
 	}
-	
+
+	/**
+	 * 获取这色器程序句柄
+	 * @return
+	 */
 	protected int getProgram() {
 		return glProgram;
 	}
-	
+
+	/**
+	 * 更新着色器顶点坐标
+	 * @param filterVertex 顶点坐标
+	 */
 	protected void updateVertexBuffer(float filterVertex[]) {
 		if( filterVertex != null ) {
 		    // 创建着色器内存
-			glVertexBuffer.position(0);
+			glVertexBuffer.clear();
 			glVertexBuffer.put(filterVertex, 0, filterVertex.length);
+			glVertexBuffer.position(0);
 		}
 	}
-	
+
+	/**
+	 * 获取着色器顶点坐标Buffer
+	 * @return 顶点坐标Buffer
+	 */
 	protected FloatBuffer getVertexBuffer() {
 		return glVertexBuffer;
 	}
@@ -398,9 +487,10 @@ public abstract class LSImageFilter {
 			glVertexBuffer.position(0);
 		}
 	}
-	
+
 	/**
 	 * 加载着色器
+	 * 不能在非EGL环境外调用
 	 * @param vertexShaderString 顶点着色器
 	 * @param fragmentShaderString 颜色着色器
 	 */
@@ -410,7 +500,7 @@ public abstract class LSImageFilter {
 			// 加载着色器
 			glVertexShader = loadGLShader(GLES20.GL_VERTEX_SHADER, vertexShaderString);
 			glFragmentShader = loadGLShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderString);
-			
+
 			Log.d(LSConfig.TAG,
 					String.format("LSImageFilter::initGLShader( "
 									+ "this : 0x%x, "
@@ -439,35 +529,73 @@ public abstract class LSImageFilter {
 		}
 		
 		if( !bInit ) {
-			Log.e(LSConfig.TAG, String.format("LSImageFilter::initGLShader( this : 0x%x, [Fail], glProgram : %d, glError : %d, className : [%s] )", hashCode(), GLES20.glGetError(), getClass().getName()));
+			Log.e(LSConfig.TAG, String.format("LSImageFilter::initGLShader( this : 0x%x, [Fail], glProgram : %d, glError : 0x%x, className : [%s] )", hashCode(), GLES20.glGetError(), getClass().getName()));
 			uninitGLShader();
 		}
 	}
 	 
 	/**
 	 * 销毁着色器
+	 * 不能在非EGL环境外调用
 	 */
 	private void uninitGLShader() {
+		Log.d(LSConfig.TAG,
+				String.format("LSImageFilter::uninitGLShader( "
+								+ "this : 0x%x, "
+								+ "glProgram : %d, "
+								+ "glVertexShader : %d, "
+								+ "glFragmentShader : %d, "
+								+ "className : [%s] " +
+								")",
+						hashCode(),
+						glProgram,
+						glVertexShader,
+						glFragmentShader,
+						getClass().getName()
+				)
+		);
+
 		if( glProgram != INVALID_PROGRAM ) {
+			// 卸载着色器
+			if( glVertexShader != INVALID_SHADER ) {
+				GLES20.glDetachShader(glProgram, glVertexShader);
+				String method = String.format("glDetachShader( glVertexShader : %d )", glVertexShader);
+				checkGLError(method, this);
+			}
+			if( glFragmentShader != INVALID_SHADER ) {
+				GLES20.glDetachShader(glProgram, glFragmentShader);
+				String method = String.format("glDetachShader( glFragmentShader : %d )", glFragmentShader);
+				checkGLError(method, this);
+			}
+
+			// 销毁着色器程序
 			GLES20.glDeleteProgram(glProgram);
+			String method = String.format("glDeleteProgram( glProgram : %d )", glProgram);
+			checkGLError(method, this);
 			glProgram = INVALID_PROGRAM;
 		}
+
 		if( glVertexShader != INVALID_SHADER ) {
 			GLES20.glDeleteShader(glVertexShader);
+			String method = String.format("glDeleteShader( glVertexShader : %d )", glVertexShader);
+			checkGLError(method, this);
 			glVertexShader = INVALID_SHADER;
 		}
 		
 		if( glFragmentShader != INVALID_SHADER ) {
 			GLES20.glDeleteShader(glFragmentShader);
+			String method = String.format("glDeleteShader( glFragmentShader : %d )", glFragmentShader);
+			checkGLError(method, this);
 			glFragmentShader = INVALID_SHADER;
 		}
 	}
 	
 	/**
 	 * 编译着色器
+	 * 不能在非EGL环境外调用
 	 * @param type 类型(GLES20.GL_VERTEX_SHADER / GLES20.GL_FRAGMENT_SHADER)
 	 * @param shaderString 源码
-	 * @return
+	 * @return 着色器
 	 */
 	private int loadGLShader(int type, String shaderString) {
 		int shader = INVALID_SHADER;
@@ -492,5 +620,36 @@ public abstract class LSImageFilter {
 		}
 
 		return shader;
+	}
+
+	static protected void checkGLError(String method, Object obj) {
+		int glError = GLES20.glGetError();
+		if( glError != 0 ) {
+			String logString = "";
+			String className = "";
+			if( obj != null ) {
+				className = obj.getClass().getName();
+				logString = String.format("LSImageFilter::checkGLError( "
+								+ "this : 0x%x, "
+								+ "method : [%s], "
+								+ "glError : 0x%x, "
+								+ "className : [%s] "
+								+ ")",
+						obj.hashCode(),
+						method,
+						glError,
+						className
+				);
+			} else {
+				logString = String.format("LSImageFilter::checkGLError( "
+								+ "method : [%s], "
+								+ "glError : 0x%x "
+								+ ")",
+						method,
+						glError
+				);
+			}
+			Log.e(LSConfig.TAG, logString);
+		}
 	}
 }

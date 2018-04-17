@@ -20,7 +20,7 @@ public class LSAudioRecorder {
 	public boolean init(ILSAudioRecorderCallback callback) {
 		boolean bFlag = false;
 		
-		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::init()"));
+		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::init( this : 0x%x )", hashCode()));
 		
 		this.recorderCallback = callback;
 		
@@ -48,7 +48,12 @@ public class LSAudioRecorder {
 	}
 	
 	public void uninit() {
-		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::uninit()"));
+		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::uninit( this : 0x%x )", hashCode()));
+
+		if( audioRecorder != null ) {
+			audioRecorder.release();
+			audioRecorder = null;
+		}
 	}
 	
 	public boolean start() {
@@ -81,13 +86,13 @@ public class LSAudioRecorder {
 			bFlag = true;
 		}
 
-		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::start( [%s] )", bFlag?"Success":"Fail"));
+		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::start( this : 0x%x, [%s] )", hashCode(), bFlag?"Success":"Fail"));
 		
 		return bFlag;
 	}
 	
 	public void stop() {
-		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::stop()"));
+		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::stop( this : 0x%x )", hashCode()));
 		
 		recording = false;
 		

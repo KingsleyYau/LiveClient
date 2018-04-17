@@ -165,16 +165,16 @@ private:
 
     // 开始播放的时间, 用于音视频同步
     long long mStartPlayTime;
-    // 音视频开始播放时间差
-    int mPlayVideoAfterAudioDiff;
     // 视频开播时间戳
     bool mbVideoStartPlay;
     // 音频开播时间戳
     bool mbAudioStartPlay;
-    // 当前播放的视频时间戳
-    int mVideoPlayTimestamp;
-    // 当前播放的音频时间戳
-    int mAudioPlayTimestamp;
+    // 当前缓存的视频时间戳
+    int mVideoFrontTimestamp;
+    int mVideoBackTimestamp;
+    // 当前缓存的音频时间戳
+    int mAudioFrontTimestamp;
+    int mAudioBackTimestamp;
     
     // 是否第一次不够缓存
     bool mbShowNoCacheLog;

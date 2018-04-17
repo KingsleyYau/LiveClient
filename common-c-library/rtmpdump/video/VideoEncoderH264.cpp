@@ -326,7 +326,7 @@ void VideoEncoderH264::Stop() {
             frame = (VideoFrame* )mConvertBufferList.front();
             mConvertBufferList.pop_front();
             if( frame != NULL ) {
-                ReleaseVideoFrame(frame);
+                delete frame;
             } else {
                 break;
             }
@@ -339,7 +339,7 @@ void VideoEncoderH264::Stop() {
             frame = (VideoFrame* )mEncodeBufferList.front();
             mEncodeBufferList.pop_front();
             if( frame != NULL ) {
-                ReleaseVideoFrame(frame);
+                delete frame;
             } else {
                 break;
             }

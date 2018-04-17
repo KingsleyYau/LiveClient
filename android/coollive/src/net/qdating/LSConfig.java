@@ -1,20 +1,39 @@
 package net.qdating;
 
+import net.qdating.utils.Log;
+
 /**
  * 推拉流模块初始化配置
  * @author max
- * @version 1.0.5
+ * @version 1.1.0
  */
 public class LSConfig {
-	final public static String VERSION = "1.0.5";
+	/**
+	 * 版本号
+	 */
+	final public static String VERSION = "1.1.0";
 	/**
 	 * 日志TAG
 	 */
 	public static String TAG = "coollive";
 	/**
+	 * 日志路径
+	 * 如 /sdcard/LOGDIR, 空则不创建目录
+	 */
+	public static String LOGDIR = "coollive";
+	/**
 	 * 是否调试模式
 	 */
-	public static boolean debug = false;
+	public static boolean DEBUG = false;
+	/**
+	 * 设置日志等级
+	 * {@link android.util.Log#VERBOSE}
+	 * {@link android.util.Log#DEBUG}
+	 * {@link android.util.Log#INFO}
+	 * {@link android.util.Log#WARN}
+	 * {@link android.util.Log#ERROR}
+	 */
+	public static int LOG_LEVEL = android.util.Log.ERROR;
 	/**
 	 * 重连时间
 	 */

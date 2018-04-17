@@ -2,13 +2,16 @@ package net.qdating.filter;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.util.Log;
+
+import net.qdating.LSConfig;
 
 /**
  * 摄像头输出滤镜
  * @author max
  *
  */
-public class LSImageCameraFilter extends LSImageBufferFilter {
+public class LSImageInputCameraFilter extends LSImageBufferFilter {
 	private static String vertexShaderString = ""
 			+ "// 摄像头顶点着色器\n"
 			+ "// 摄像头矩阵转换(输入)\n"
@@ -43,11 +46,14 @@ public class LSImageCameraFilter extends LSImageBufferFilter {
 	private int aPosition;
 	private int aTextureCoordinate;
 	private int uInputTexture;
-	
-	public LSImageCameraFilter() {
+
+	private float width = 1f;
+	private float height = 1f;
+
+	public LSImageInputCameraFilter() {
 		super(vertexShaderString, fragmentShaderString, LSImageVertex.filterVertex_0);
 	}
-	
+
 	public void updateMatrix(float[] transformMatrix) {
 		this.transformMatrix = transformMatrix;
 	}
@@ -60,7 +66,7 @@ public class LSImageCameraFilter extends LSImageBufferFilter {
 	@Override
 	protected void onDrawStart(int textureId) {
 		super.onDrawStart(textureId);
-		
+
 		// 激活纹理单元GL_TEXTURE0
 		GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 		// 绑定外部纹理到纹理单元GL_TEXTURE0

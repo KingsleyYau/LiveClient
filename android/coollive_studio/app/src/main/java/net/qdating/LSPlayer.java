@@ -89,7 +89,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		boolean bFlag = true;
 		
 		File path = Environment.getExternalStorageDirectory();
-		String filePath = path.getAbsolutePath() + "/" + LSConfig.TAG + "/";
+		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
 		Log.initFileLog(filePath);
 		Log.setWriteFileLog(true);
 		
@@ -149,7 +149,8 @@ public class LSPlayer implements ILSPlayerCallback {
 													LSConfig.RECONNECT_SECOND
 											)
 									);
-									handler.sendMessageDelayed(msg, LSConfig.RECONNECT_SECOND);
+									Message newMsg = Message.obtain(msg);
+									handler.sendMessageDelayed(newMsg, LSConfig.RECONNECT_SECOND);
 								}
 							}
 						}

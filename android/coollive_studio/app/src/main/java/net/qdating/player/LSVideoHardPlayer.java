@@ -72,11 +72,7 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
     	}
 		
 		// 更新滤镜输入
-		playerHardRenderer.updateYuvFrame(
-				videoFrame.byteBufferY, videoFrame.byteSizeY, 
-				videoFrame.byteBufferU, videoFrame.byteSizeU, 
-				videoFrame.byteBufferV, videoFrame.byteSizeV
-				);
+		playerHardRenderer.updateDecodeFrame(videoFrame);
 		
 		// 通知界面刷新
 		playerSurfaceView.requestRender();

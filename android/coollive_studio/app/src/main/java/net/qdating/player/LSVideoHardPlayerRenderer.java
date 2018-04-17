@@ -3,12 +3,15 @@ package net.qdating.player;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
-import net.qdating.filter.LSImageRawYuvFilter;
+import net.qdating.filter.LSImageInputYuvFilter;
+import net.qdating.filter.LSImageOutputFilter;
+import net.qdating.filter.LSImageOutputYuvFilter;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.media.MediaCodecInfo;
 import android.opengl.GLSurfaceView.Renderer;
 
 /**
@@ -41,27 +44,41 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	/**
 	 * 显示原始图片滤镜
 	 */
-	private LSImageRawYuvFilter yuvFilter = new LSImageRawYuvFilter();
-	
+	private LSImageInputYuvFilter inputYuvFilter = null;
+	private LSImageOutputFilter outputFilter = null;
+	private LSImageOutputYuvFilter outputYuvFilter = null;
+
 	public LSVideoHardPlayerRenderer(FillMode fillMode) {
-		yuvFilter.fillMode = fillMode;
+//        inputYuvFilter = new LSImageInputYuvFilter();
+//		outputFilter = new LSImageOutputFilter();
+//		outputFilter.fillMode = fillMode;
+
+		outputYuvFilter = new LSImageOutputYuvFilter();
+		outputYuvFilter.fillMode = fillMode;
 	}
 	
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::init( this : 0x%x )", hashCode()));
+
+//		inputYuvFilter.setFilter(outputFilter);
 	}
 	
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::uninit( this : 0x%x )", hashCode()));
 	}
-	
-	public void updateYuvFrame(
-			byte [] byteArrayY, int byteSizeY,
-			byte [] byteArrayU, int byteSizeU,
-			byte [] byteArrayV, int byteSizeV
-			) {
+
+	public void updateDecodeFrame(LSVideoHardDecoderFrame videoFrame) {
 		synchronized (this) {
-			yuvFilter.updateYuvFrame(byteArrayY, byteSizeY, byteArrayU, byteSizeU, byteArrayV, byteSizeV);
+			switch ( videoFrame.format ) {
+				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
+//					inputYuvFilter.updateYuv420PFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferU, videoFrame.byteSizeU, videoFrame.byteBufferV, videoFrame.byteSizeV);
+					outputYuvFilter.updateYuv420PFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferU, videoFrame.byteSizeU, videoFrame.byteBufferV, videoFrame.byteSizeV);
+				}break;
+				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar: {
+//					inputYuvFilter.updateYuv420SPFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferUV, videoFrame.byteSizeUV);
+					outputYuvFilter.updateYuv420SPFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferUV, videoFrame.byteSizeUV);
+				}break;
+			}
 		}
 	}
 	
@@ -88,10 +105,11 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 		
 		// 重绘背景为黑色
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT );
 		    
 		synchronized (this) {
-			yuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
+//			inputYuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
+			outputYuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
 		}
 	}
 
@@ -112,8 +130,9 @@ public class LSVideoHardPlayerRenderer implements Renderer {
         
         previewWidth = width;
         previewHeight = height;
-        
-        yuvFilter.changeViewPointSize(previewWidth, previewHeight);
+
+//		outputFilter.changeViewPointSize(previewWidth, previewHeight);
+		outputYuvFilter.changeViewPointSize(previewWidth, previewHeight);
 	}
 
 	@Override
@@ -124,7 +143,9 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 		// 创建纹理
 		glTextureId = LSImageFilter.genPixelTexture();
         
-		yuvFilter.init();
+//		inputYuvFilter.init();
+//		outputFilter.init();
+		outputYuvFilter.init();
 	}
 
 }

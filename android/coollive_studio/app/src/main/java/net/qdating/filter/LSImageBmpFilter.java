@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
-public class LSImageRawBmpFilter extends LSImageRawTextureFilter {
+/**
+ * BMP渲染滤镜
+ */
+public class LSImageBmpFilter extends LSImageInputFilter {
 	private Bitmap bitmap = null;
-	public LSImageRawBmpFilter() {
-		
+	public LSImageBmpFilter() {
+		updateVertexBuffer(LSImageVertex.filterVertex_180);
 	}
-	
+
 	public void updateBmpFrame(Bitmap bitmap) {
 		this.bitmap = bitmap;
 	}
