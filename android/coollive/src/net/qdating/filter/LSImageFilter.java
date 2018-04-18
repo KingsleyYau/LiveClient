@@ -267,9 +267,9 @@ public abstract class LSImageFilter {
 	 * @param textureId
 	 */
 	public void draw(int textureId, int width, int height) {
-		if( LSConfig.DEBUG ) {
-			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
-		}
+//		if( LSConfig.DEBUG ) {
+//			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
+//		}
 		
 		GLES20.glUseProgram(glProgram);
 		

@@ -14,9 +14,8 @@ import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
 public class TestActivity extends Activity {
+	private String playH264File = "/sdcard/coollive/play0.h264" ;
 	private String url = "rtmp://172.25.32.17:19351/live/max0";
-	
-	String filePath = "/sdcard";
 	
 	private LSPlayer player;
 	private LSPublisher publisher;
@@ -42,7 +41,7 @@ public class TestActivity extends Activity {
 		// 播放相关
 		player = new LSPlayer();
 		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
-		player.playUrl(String.format("%s", url), "", "", "");
+		player.playUrl(String.format("%s", url), "", playH264File, "");
 		
 		// 推送相关
 		final int rotation = getWindowManager().getDefaultDisplay()

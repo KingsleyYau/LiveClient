@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * 推拉流模块初始化配置
  * @author max
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	final public static String VERSION = "1.1.0";
+	final public static String VERSION = "1.1.1";
 	/**
 	 * 日志TAG
 	 */

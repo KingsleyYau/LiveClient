@@ -47,7 +47,7 @@ void VideoRecorderH264::Stop() {
     }
 }
    
-bool VideoRecorderH264::RecordVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+bool VideoRecorderH264::RecordVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
     bool bFlag = false;
     
     // Write to H264 file
@@ -66,7 +66,7 @@ bool VideoRecorderH264::RecordVideoKeyFrame(const char* sps, int sps_size, const
         
         fflush(mpFile);
         
-        mNaluHeaderSize = nalUnitHeaderLength;
+        mNaluHeaderSize = naluHeaderSize;
 
         bFlag = true;
     }

@@ -65,7 +65,7 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 							videoFrame.width, videoFrame.height
     				));
     		
-    		width = videoFrame.height;
+    		width = videoFrame.width;
     		height = videoFrame.height;
     		
     		playerHardRenderer.setOriginalSize(videoFrame.width, videoFrame.height);

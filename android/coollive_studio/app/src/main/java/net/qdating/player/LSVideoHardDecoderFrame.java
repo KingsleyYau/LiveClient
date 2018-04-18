@@ -39,7 +39,7 @@ public class LSVideoHardDecoderFrame {
 	}
 
 	/**
-	 * 只支持YUV420Planar
+	 * 只支持以下格式
 	 * @see android.media.MediaCodecInfo.CodecCapabilities
 	 * COLOR_FormatYUV420Planar		= 19/0x13
 	 * COLOR_FormatYUV420SemiPlanar	= 21/0x15
@@ -49,38 +49,52 @@ public class LSVideoHardDecoderFrame {
 	 * @param width
 	 * @param height
 	 */
-	public void updateImage(ByteBuffer byteBuffer, int timestamp, int format, int width, int height) {
+	public void updateImage(ByteBuffer byteBuffer, int timestamp, int format, int width, int height, int stride) {
 		this.timestamp = timestamp;
 		this.format = format;
 		this.width = width;
 		this.height = height;
 
-//		if( LSConfig.DEBUG ) {
-//			Log.d(LSConfig.TAG,
-//					String.format("LSVideoFrame::updateImage( "
-//									+ "this : 0x%x, "
-//									+ "[Image info], "
-//									+ "format : 0x%x, "
-//									+ "width : %d, "
-//									+ "height : %d, "
-//									+ "timestamp : %d "
-//									+ ")",
-//							hashCode(),
-//							format,
-//							width,
-//							height,
-//							timestamp
-//					)
-//			);
-//		}
+		if( LSConfig.DEBUG ) {
+			Log.d(LSConfig.TAG,
+					String.format("LSVideoFrame::updateImage( "
+									+ "this : 0x%x, "
+									+ "[Image info], "
+									+ "format : 0x%x, "
+									+ "width : %d, "
+									+ "height : %d, "
+									+ "stride : %d, "
+									+ "timestamp : %d "
+									+ ")",
+							hashCode(),
+							format,
+							width,
+							height,
+							stride,
+							timestamp
+					)
+			);
+		}
 
-		byteBuffer.position(0);
+        byteBuffer.position(0);
 		int size = width * height;
 		byteSizeY = size;
 		if( byteBufferY == null || byteBufferY.length < byteSizeY ) {
 			byteBufferY = new byte[byteSizeY];
 		}
-		byteBuffer.get(byteBufferY, 0, byteSizeY);
+
+		if( stride == 0 ) {
+			// 不需要字节对齐
+			byteBuffer.get(byteBufferY, 0, byteSizeY);
+		} else {
+			// 需要字节对齐
+			int position = 0;
+			for(int i = 0; i < height; i++) {
+				byteBuffer.get(byteBufferY, position, width);
+				byteBuffer.position(byteBuffer.position() + stride);
+				position += width;
+			}
+		}
 
 		switch ( format ) {
 			case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
@@ -89,13 +103,37 @@ public class LSVideoHardDecoderFrame {
 				if( byteBufferU == null || byteBufferU.length < byteSizeU ) {
 					byteBufferU = new byte[byteSizeU];
 				}
-				byteBuffer.get(byteBufferU, 0, byteSizeU);
+
+				if( stride == 0 ) {
+					// 不需要字节对齐
+					byteBuffer.get(byteBufferU, 0, byteSizeU);
+				} else {
+					// 需要字节对齐
+					int position = 0;
+					for(int i = 0; i < height / 4; i++) {
+						byteBuffer.get(byteBufferU, position, width);
+						byteBuffer.position(byteBuffer.position() + stride);
+						position += width;
+					}
+				}
 
 				byteSizeV = size / 4;
 				if( byteBufferV == null || byteBufferV.length < byteSizeV ) {
 					byteBufferV = new byte[byteSizeV];
 				}
-				byteBuffer.get(byteBufferV, 0, byteSizeV);
+
+				if( stride == 0 ) {
+					// 不需要字节对齐
+					byteBuffer.get(byteBufferV, 0, byteSizeV);
+				} else {
+					// 需要字节对齐
+					int position = 0;
+					for(int i = 0; i < height / 4; i++) {
+						byteBuffer.get(byteBufferV, position, width);
+						byteBuffer.position(byteBuffer.position() + stride);
+						position += width;
+					}
+				}
 
 //				if( LSConfig.DEBUG ) {
 //					Log.d(LSConfig.TAG,
@@ -123,7 +161,19 @@ public class LSVideoHardDecoderFrame {
 				if( byteBufferUV == null || byteBufferUV.length < byteSizeUV ) {
 					byteBufferUV = new byte[byteSizeUV];
 				}
-				byteBuffer.get(byteBufferUV, 0, byteSizeUV);
+
+				if( stride == 0 ) {
+					// 不需要字节对齐
+					byteBuffer.get(byteBufferUV, 0, byteSizeUV);
+				} else {
+					// 需要字节对齐
+					int position = 0;
+					for(int i = 0; i < height / 2; i++) {
+						byteBuffer.get(byteBufferUV, position, width);
+						byteBuffer.position(byteBuffer.position() + stride);
+						position += width;
+					}
+				}
 
 //				if( LSConfig.DEBUG ) {
 //					Log.d(LSConfig.TAG,

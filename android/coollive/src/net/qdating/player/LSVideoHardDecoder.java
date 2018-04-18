@@ -47,6 +47,23 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	private int naluHeaderSize = 4;
 
 	/**
+	 * 解码输出宽
+	 */
+	private int width = 0;
+	/**
+	 * 解码输出高
+	 */
+	private int height = 0;
+	/**
+	 * 解码输出格式
+	 */
+	private int format = 0;
+	/**
+	 * 解码输出行对齐
+	 */
+	private int stride = 0;
+
+	/**
 	 * 获取支持的硬解码采样格式
 	 * @return
 	 */
@@ -343,16 +360,26 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		        } else if (bufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
 		            // this happens before the first frame is returned
 		        	videoMediaFormat = videoCodec.getOutputFormat();
-		        	Log.i(LSConfig.TAG, 
-		        			String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+					width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
+					height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
+					format = videoMediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT);
+
+					int strideMod = width % 16;
+					stride = (strideMod == 0)?0:(((width / 16) + 1) * 16 - width);
+
+					Log.i(LSConfig.TAG,
+							String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 											+ "this : 0x%x, "
 											+ "[INFO_OUTPUT_FORMAT_CHANGED], "
+											+ "stride : %d, "
 											+ "videoMediaFormat : %s "
 											+ ")",
 									hashCode(),
+									stride,
 									videoMediaFormat.toString()
-		        					)
-		        			);
+							)
+					);
+
 		        } else if( bufferIndex >= 0 ) {	
 		        	synchronized (this) {
 			            if( videoFrameStack.isEmpty() ) {
@@ -377,10 +404,12 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 //								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 //												+ "this : 0x%x, "
 //												+ "bufferIndex : %d, "
+//												+ "size : %d, "
 //												+ "timestamp : %d "
 //												+ ")",
 //										hashCode(),
 //										bufferIndex,
+//										bufferInfo.size,
 //										(int) bufferInfo.presentationTimeUs
 //								)
 //						);
@@ -392,7 +421,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		        	    int width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
                         int height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
                         int format = videoMediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT);
-                        videoFrame.updateImage(byteBuffer, (int)bufferInfo.presentationTimeUs, format, width, height);
+                        videoFrame.updateImage(byteBuffer, (int)bufferInfo.presentationTimeUs, format, width, height, stride);
                         bFlag = true;
                     } else {
                         Log.e(LSConfig.TAG,

@@ -238,17 +238,17 @@ void PublisherController::OnDisconnect(RtmpDump* rtmpDump) {
     }
 }
     
-void PublisherController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+void PublisherController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::OnChangeVideoSpsPps( "
                  "sps_size : %d, "
                  "pps_size : %d, "
-                 "nalUnitHeaderLength : %d "
+                 "naluHeaderSize : %d "
                  ")",
                  sps_size,
                  pps_size,
-                 nalUnitHeaderLength
+                 naluHeaderSize
                  );
 }
 

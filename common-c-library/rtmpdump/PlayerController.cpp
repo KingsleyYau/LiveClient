@@ -194,26 +194,26 @@ void PlayerController::OnDisconnect(RtmpDump* rtmpDump) {
     }
 }
 
-void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+void PlayerController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PlayerController::OnChangeVideoSpsPps( "
                  "this : %p, "
                  "sps_size : %d, "
                  "pps_size : %d, "
-                 "nalUnitHeaderLength : %d "
+                 "naluHeaderSize : %d "
                  ")",
                  this,
                  sps_size,
                  pps_size,
-                 nalUnitHeaderLength
+                 naluHeaderSize
                  );
     // 录制视频帧
-    mVideoRecorderH264.RecordVideoKeyFrame(sps, sps_size, pps, pps_size, nalUnitHeaderLength);
+    mVideoRecorderH264.RecordVideoKeyFrame(sps, sps_size, pps, pps_size, naluHeaderSize);
     
     // 解码视频帧
     if( mpVideoDecoder ) {
-        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, nalUnitHeaderLength);
+        mpVideoDecoder->DecodeVideoKeyFrame(sps, sps_size, pps, pps_size, naluHeaderSize);
     }
 }
 

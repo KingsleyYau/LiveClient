@@ -29,7 +29,7 @@ public:
     virtual ~RtmpDumpCallback(){};
     virtual void OnConnect(RtmpDump* rtmpDump) = 0;
     virtual void OnDisconnect(RtmpDump* rtmpDump) = 0;
-    virtual void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) = 0;
+    virtual void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) = 0;
     virtual void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
     virtual void OnChangeAudioFormat(RtmpDump* rtmpDump,
                                      AudioFrameFormat format,

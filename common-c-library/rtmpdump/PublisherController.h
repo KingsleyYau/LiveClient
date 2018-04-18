@@ -116,7 +116,7 @@ private:
     // 传输器回调
     void OnConnect(RtmpDump* rtmpDump);
     void OnDisconnect(RtmpDump* rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
+    void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
     void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void OnChangeAudioFormat(RtmpDump* rtmpDump,
                              AudioFrameFormat format,

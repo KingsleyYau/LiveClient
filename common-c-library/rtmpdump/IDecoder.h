@@ -35,7 +35,7 @@ public:
     virtual bool Reset() = 0;
     virtual void Pause() = 0;
     virtual void ResetStream() = 0;
-    virtual void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) = 0;
+    virtual void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) = 0;
     virtual void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
     virtual void ReleaseVideoFrame(void* frame) = 0;
     virtual void StartDropFrame() = 0;

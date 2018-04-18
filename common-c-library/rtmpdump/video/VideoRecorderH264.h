@@ -25,7 +25,7 @@ public:
     bool Start(const string& filePath);
     void Stop();
     
-    bool RecordVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
+    bool RecordVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
     bool RecordVideoFrame(const char* data, int size);
     bool RecordVideoNaluFrame(const char* data, int size);
     

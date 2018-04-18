@@ -434,7 +434,7 @@ void VideoDecoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
 	mFreeBufferList.unlock();
 }
 
-void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
 	FileLog("rtmpdump",
 			"VideoDecoderH264::DecodeVideoKeyFrame( "
 			"this : %p, "
@@ -446,7 +446,7 @@ void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const 
 			pps_size
 			);
 
-	mNaluHeaderSize = nalUnitHeaderLength;
+	mNaluHeaderSize = naluHeaderSize;
 
 	mSPS_PPS_IDR.SetBuffer(sync_bytes, sizeof(sync_bytes));
 	mSPS_PPS_IDR.AddBuffer((const unsigned char*)sps, sps_size);

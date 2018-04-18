@@ -93,9 +93,9 @@ public class PlayActivity extends Activity {
 		editTextPublish.setText(publishUrl);
 		
 		// 播放相关
-		surfaceViews = new GLSurfaceView[1];
+		surfaceViews = new GLSurfaceView[2];
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
-//		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
+		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
 //		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 		players = new LSPlayer[surfaceViews.length];
@@ -103,9 +103,9 @@ public class PlayActivity extends Activity {
 			surfaceViewsScale[i] = false;
 			surfaceViews[i].setKeepScreenOn(true);
 
-//			players[i] = new LSPlayer();
-//			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, null);
-//			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
+			players[i] = new LSPlayer();
+			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, null);
+			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
 		
 		// 推送相关
@@ -113,8 +113,8 @@ public class PlayActivity extends Activity {
 		surfaceViewPublish.setKeepScreenOn(true);
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
-//		publisher = new LSPublisher();
-//		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
+		publisher = new LSPublisher();
+		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
 //		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 
 		// 初始化界面缩放

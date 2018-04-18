@@ -188,7 +188,7 @@ void VideoDecoderImp::ReleaseBuffer(VideoFrame* videoFrame) {
 	mFreeBufferList.unlock();
 }
 
-void VideoDecoderImp::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+void VideoDecoderImp::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
 	FileLog("rtmpdump",
 			"VideoDecoderImp::DecodeVideoKeyFrame( "
 			"sps_size : %d, "

@@ -145,16 +145,6 @@ VideoHardDecoder::~VideoHardDecoder() {
 	if( bFlag ) {
 		ReleaseEnv(isAttachThread);
 	}
-    
-    if( mpSps ) {
-        delete[] mpSps;
-        mpSps = NULL;
-    }
-    
-    if( mpPps ) {
-        delete[] mpPps;
-        mpPps = NULL;
-    }
 }
 
 bool VideoHardDecoder::Create(VideoDecoderCallback* callback) {
@@ -297,6 +287,18 @@ void VideoHardDecoder::Stop() {
     }
     mRuningMutex.unlock();
 
+    if( mpSps ) {
+        delete[] mpSps;
+        mpSps = NULL;
+        mSpSize = 0;
+    }
+
+    if( mpPps ) {
+        delete[] mpPps;
+        mpPps = NULL;
+        mPpsSize = 0;
+    }
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoHardDecoder::Stop( "
@@ -330,7 +332,7 @@ void VideoHardDecoder::Init() {
     mSpSize = 0;
     mpPps = NULL;
     mPpsSize = 0;
-    mNalUnitHeaderLength = 0;
+    mNaluHeaderSize = 0;
 
     mJniDecoder = NULL;
     spsByteArray = NULL;
@@ -341,88 +343,98 @@ void VideoHardDecoder::Init() {
     mpDecodeVideoRunnable = new DecodeVideoHardRunnable(this);
 }
 
-void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength) {
+void VideoHardDecoder::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoKeyFrame( "
 			"this : %p, "
 			"sps_size : %d, "
 			"pps_size : %d, "
-			"nalUnitHeaderLength : %d "
+			"naluHeaderSize : %d "
 			")",
 			this,
 			sps_size,
 			pps_size,
-			nalUnitHeaderLength
+			naluHeaderSize
 			);
 
-    // 重新设置解码器变量
-	mSpSize = sps_size;
-	if( mpSps ) {
-		delete[] mpSps;
-		mpSps = NULL;
+	bool bChange = false;
+
+	if( mSpSize != sps_size || memcmp(mpSps, sps, sps_size) != 0 ) {
+		bChange = true;
+	} else if( mPpsSize != pps_size || memcmp(mpPps, pps, pps_size) != 0 ) {
+		bChange = true;
 	}
-	mpSps = new char[mSpSize];
-	memcpy(mpSps, sps, mSpSize);
 
-	mPpsSize = pps_size;
-	if( mpPps ) {
-		delete[] mpPps;
-		mpPps = NULL;
-	}
-	mpPps = new char[mPpsSize];
-	memcpy(mpPps, pps, mPpsSize);
-
-    mNalUnitHeaderLength = nalUnitHeaderLength;
-
-    // 解码视频
-	JNIEnv* env;
-	bool isAttachThread;
-	bool bFlag = GetEnv(&env, &isAttachThread);
-
-	// 创建新SPS
-	if( spsByteArray != NULL ) {
-		int oldLen = env->GetArrayLength(spsByteArray);
-		if( oldLen < mSpSize ) {
-			env->DeleteGlobalRef(spsByteArray);
-			spsByteArray = NULL;
+	if( bChange ) {
+		// 重新设置解码器变量
+		mSpSize = sps_size;
+		if( mpSps ) {
+			delete[] mpSps;
+			mpSps = NULL;
 		}
-	}
+		mpSps = new char[mSpSize];
+		memcpy(mpSps, sps, mSpSize);
 
-	if( spsByteArray == NULL ) {
-		jbyteArray localDataByteArray = env->NewByteArray(mSpSize);
-		spsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-		env->DeleteLocalRef(localDataByteArray);
-	}
-
-	if( spsByteArray != NULL ) {
-		env->SetByteArrayRegion(spsByteArray, 0, mSpSize, (const jbyte*)mpSps);
-	}
-
-	// 创建新PPS
-	if( ppsByteArray != NULL ) {
-		int oldLen = env->GetArrayLength(ppsByteArray);
-		if( oldLen < mPpsSize ) {
-			env->DeleteGlobalRef(ppsByteArray);
-			ppsByteArray = NULL;
+		mPpsSize = pps_size;
+		if( mpPps ) {
+			delete[] mpPps;
+			mpPps = NULL;
 		}
-	}
+		mpPps = new char[mPpsSize];
+		memcpy(mpPps, pps, mPpsSize);
 
-	if( ppsByteArray == NULL ) {
-		jbyteArray localDataByteArray = env->NewByteArray(mPpsSize);
-		ppsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-		env->DeleteLocalRef(localDataByteArray);
-	}
+		mNaluHeaderSize = naluHeaderSize;
 
-	if( ppsByteArray != NULL ) {
-		env->SetByteArrayRegion(ppsByteArray, 0, mPpsSize, (const jbyte*)mpPps);
-	}
+		// 解码视频
+		JNIEnv* env;
+		bool isAttachThread;
+		bool bFlag = GetEnv(&env, &isAttachThread);
 
-	if( mJniDecoder && mJniDecoderDecodeKeyMethodID ) {
-		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNalUnitHeaderLength);
-	}
+		// 创建新SPS
+		if( spsByteArray != NULL ) {
+			int oldLen = env->GetArrayLength(spsByteArray);
+			if( oldLen < mSpSize ) {
+				env->DeleteGlobalRef(spsByteArray);
+				spsByteArray = NULL;
+			}
+		}
 
-	if( bFlag ) {
-		ReleaseEnv(isAttachThread);
+		if( spsByteArray == NULL ) {
+			jbyteArray localDataByteArray = env->NewByteArray(mSpSize);
+			spsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+			env->DeleteLocalRef(localDataByteArray);
+		}
+
+		if( spsByteArray != NULL ) {
+			env->SetByteArrayRegion(spsByteArray, 0, mSpSize, (const jbyte*)mpSps);
+		}
+
+		// 创建新PPS
+		if( ppsByteArray != NULL ) {
+			int oldLen = env->GetArrayLength(ppsByteArray);
+			if( oldLen < mPpsSize ) {
+				env->DeleteGlobalRef(ppsByteArray);
+				ppsByteArray = NULL;
+			}
+		}
+
+		if( ppsByteArray == NULL ) {
+			jbyteArray localDataByteArray = env->NewByteArray(mPpsSize);
+			ppsByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+			env->DeleteLocalRef(localDataByteArray);
+		}
+
+		if( ppsByteArray != NULL ) {
+			env->SetByteArrayRegion(ppsByteArray, 0, mPpsSize, (const jbyte*)mpPps);
+		}
+
+		if( mJniDecoder && mJniDecoderDecodeKeyMethodID ) {
+			env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeKeyMethodID, spsByteArray, mSpSize, ppsByteArray, mPpsSize, mNaluHeaderSize);
+		}
+
+		if( bFlag ) {
+			ReleaseEnv(isAttachThread);
+		}
 	}
 }
 
@@ -436,40 +448,90 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 			timestamp
 			);
 
-	void* frame = NULL;
+	bool bDecode = false;
+    // Mux
+    Nalu naluArray[16];
+    int naluArraySize = _countof(naluArray);
+    bool bFlag = mVideoMuxer.GetNalus(data, size, mNaluHeaderSize, naluArray, naluArraySize);
+    if( bFlag && naluArraySize > 0 ) {
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_STAT,
+                     "VideoHardDecoder::DecodeVideoFrame( "
+					 "this : %p, "
+                     "[Got Nalu Array], "
+                     "timestamp : %u, "
+                     "size : %d, "
+                     "naluArraySize : %d "
+                     ")",
+					 this,
+                     timestamp,
+                     size,
+                     naluArraySize
+                     );
 
-    // 解码视频
-	JNIEnv* env;
-	bool isAttachThread;
-	bool bFlag = GetEnv(&env, &isAttachThread);
+        mVideoFrame.ResetFrame();
 
-	// 创建新DataBuffer
-	if( dataByteArray != NULL ) {
-		int oldLen = env->GetArrayLength(dataByteArray);
-		if( oldLen < size ) {
-			env->DeleteGlobalRef(dataByteArray);
-			dataByteArray = NULL;
-		}
-	}
+        int naluIndex = 0;
+        while( naluIndex < naluArraySize ) {
+            Nalu* nalu = naluArray + naluIndex;
+            naluIndex++;
 
-	if( dataByteArray == NULL ) {
-		jbyteArray localDataByteArray = env->NewByteArray(size);
-		dataByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
-		env->DeleteLocalRef(localDataByteArray);
-	}
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_STAT,
+                         "VideoDecoderH264::DecodeVideoFrame( "
+						 "this : %p,"
+                         "[Got Nalu], "
+                         "naluSize : %d, "
+                         "naluBodySize : %d, "
+                         "frameType : %d "
+                         ")",
+						 this,
+                         nalu->GetNaluSize(),
+                         nalu->GetNaluBodySize(),
+                         nalu->GetNaluType()
+                         );
 
-	if( dataByteArray != NULL ) {
-		env->SetByteArrayRegion(dataByteArray, 0, size, (const jbyte*)data);
-	}
+            mVideoFrame.AddBuffer(sync_bytes, sizeof(sync_bytes));
+            mVideoFrame.AddBuffer((const unsigned char*)nalu->GetNaluBody(), nalu->GetNaluBodySize());
+        }
 
-	// 反射类
-	if( mJniDecoder && mJniDecoderDecodeVideoMethodID ) {
-		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeVideoMethodID, dataByteArray, size, timestamp);
-	}
+        bDecode = true;
+    }
 
-	if( bFlag ) {
-		ReleaseEnv(isAttachThread);
-	}
+    if( bDecode ) {
+    	JNIEnv* env;
+    	bool isAttachThread;
+    	bool bFlag = GetEnv(&env, &isAttachThread);
+    	int newSize = mVideoFrame.mBufferLen;
+
+    	// 创建新DataBuffer
+    	if( dataByteArray != NULL ) {
+    		int oldLen = env->GetArrayLength(dataByteArray);
+    		if( oldLen < newSize ) {
+    			env->DeleteGlobalRef(dataByteArray);
+    			dataByteArray = NULL;
+    		}
+    	}
+
+    	if( dataByteArray == NULL ) {
+    		jbyteArray localDataByteArray = env->NewByteArray(newSize);
+    		dataByteArray = (jbyteArray)env->NewGlobalRef(localDataByteArray);
+    		env->DeleteLocalRef(localDataByteArray);
+    	}
+
+    	if( dataByteArray != NULL ) {
+    		env->SetByteArrayRegion(dataByteArray, 0, newSize, (const jbyte*)mVideoFrame.GetBuffer());
+    	}
+
+    	// 反射类
+    	if( mJniDecoder && mJniDecoderDecodeVideoMethodID ) {
+    		env->CallBooleanMethod(mJniDecoder, mJniDecoderDecodeVideoMethodID, dataByteArray, newSize, timestamp);
+    	}
+
+    	if( bFlag ) {
+    		ReleaseEnv(isAttachThread);
+    	}
+    }
 
 	FileLog("rtmpdump",
 			"VideoHardDecoder::DecodeVideoFrame( "

@@ -11,6 +11,7 @@
 
 #include <rtmpdump/IDecoder.h>
 #include <rtmpdump/video/VideoFrame.h>
+#include <rtmpdump/video/VideoMuxer.h>
 #include <rtmpdump/util/EncodeDecodeBuffer.h>
 
 #include <AndroidCommon/JniCommonFunc.h>
@@ -31,7 +32,7 @@ public:
     bool Reset();
     void Pause();
     void ResetStream();
-    void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int nalUnitHeaderLength);
+    void DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
@@ -63,11 +64,12 @@ private:
     int mSpSize;
     char* mpPps;
     int mPpsSize;
-    int mNalUnitHeaderLength;
+    int mNaluHeaderSize;
 
     jbyteArray spsByteArray;
     jbyteArray ppsByteArray;
     jbyteArray dataByteArray;
+    VideoFrame mVideoFrame;
 
     // 解码线程
     KThread mDecodeVideoThread;
@@ -75,9 +77,10 @@ private:
     // 状态锁
     KMutex mRuningMutex;
     bool mbRunning;
-
     // 空闲Buffer
     EncodeDecodeBufferList mFreeBufferList;
+    // H264格式转换器
+    VideoMuxer mVideoMuxer;
 };
 }
 
