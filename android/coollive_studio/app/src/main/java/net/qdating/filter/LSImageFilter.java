@@ -133,7 +133,7 @@ public abstract class LSImageFilter {
         // 解除纹理绑定
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 
-        Log.d(LSConfig.TAG, String.format("LSImageFilter::genPixelTexture( textureId : %d )", textureId[0]));
+//        Log.d(LSConfig.TAG, String.format("LSImageFilter::genPixelTexture( textureId : %d )", textureId[0]));
 
         String method = String.format("genPixelTexture( textureId : %d )", textureId[0]);
 		checkGLError(method, null);
@@ -171,7 +171,7 @@ public abstract class LSImageFilter {
 	    // 解除纹理绑定
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         
-        Log.d(LSConfig.TAG, String.format("LSImageFilter::genCameraTexture( textureId : %d )", textureId[0]));
+//        Log.d(LSConfig.TAG, String.format("LSImageFilter::genCameraTexture( textureId : %d )", textureId[0]));
 
 		String method = String.format("genCameraTexture( textureId : %d )", textureId[0]);
 		checkGLError(method, null);

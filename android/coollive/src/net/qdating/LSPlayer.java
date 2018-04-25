@@ -142,7 +142,7 @@ public class LSPlayer implements ILSPlayerCallback {
 									// 重连失败, 1秒后重连
 									Log.i(LSConfig.TAG,
 											String.format("LSPlayer::handleMessage( "
-															+ "this : 0x%x"
+															+ "this : 0x%x, "
 															+ "[Connect fail, reconnect after %d seconds] "
 															+ ")",
 													(msg.obj!=null)?msg.obj.hashCode():0,

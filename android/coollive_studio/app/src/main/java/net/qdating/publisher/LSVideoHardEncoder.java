@@ -24,11 +24,12 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	// 输入源的采样格式
 	private static final int INVALID_COLOR_FORMAT = 0xFFFFFFFF;
 	private static int inputColorFormat = INVALID_COLOR_FORMAT;
+	private static MediaCodecInfo.VideoCapabilities inputVideoCaps = null;
 
 	// 视频解码器
 	private MediaCodec videoCodec = null;
 	private MediaFormat videoMediaFormat = null;
-	
+
 	public MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
 	private Stack<LSVideoHardEncoderFrame> videoFrameStack = null;
 
@@ -67,18 +68,18 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 //                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
 				String[] supportTypes = codecInfo.getSupportedTypes();
 				for (int j = 0; j < supportTypes.length; j++) {
-					if( LSConfig.DEBUG ) {
-						Log.d(LSConfig.TAG,
-								String.format("LSVideoHardEncoder::supportHardEncoder( "
-										+ "[Check video codec], "
-										+ "codecName : [%s], "
-										+ "codecType : [%s] "
-										+ ")",
-										codecInfo.getName(),
-										supportTypes[j]
-								)
-						);
-					}
+//					if( LSConfig.DEBUG ) {
+//						Log.d(LSConfig.TAG,
+//								String.format("LSVideoHardEncoder::supportHardEncoder( "
+//										+ "[Check video codec], "
+//										+ "codecName : [%s], "
+//										+ "codecType : [%s] "
+//										+ ")",
+//										codecInfo.getName(),
+//										supportTypes[j]
+//								)
+//						);
+//					}
 
 					if( codecInfo.isEncoder() && supportTypes[j].equalsIgnoreCase(MIME_TYPE) ) {
 						Log.i(LSConfig.TAG,
@@ -98,14 +99,35 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 							if( videoCodec != null ) {
 								MediaCodecInfo.CodecCapabilities caps = videoCodec.getCodecInfo().getCapabilitiesForType(MIME_TYPE);
 								for (int k = 0; k < caps.colorFormats.length; k++) {
+									inputVideoCaps = caps.getVideoCapabilities();
 									if( LSConfig.DEBUG ) {
-										Log.d(LSConfig.TAG, String.format("LSVideoHardEncoder::supportHardEncoder( [Check color format], colorFormat : 0x%x )", caps.colorFormats[k]));
+										Log.d(LSConfig.TAG,
+												String.format("LSVideoHardEncoder::supportHardEncoder( " +
+														"[Check color format], " +
+														"colorFormat : 0x%x, " +
+														"width : [%d - %d], " +
+														"height : [%d - %d], " +
+														"widthAlignment : %d, " +
+														"heightAlignment : %d " +
+														")",
+														caps.colorFormats[k],
+														inputVideoCaps.getSupportedWidths().getLower(),
+														inputVideoCaps.getSupportedWidths().getUpper(),
+														inputVideoCaps.getSupportedHeights().getLower(),
+														inputVideoCaps.getSupportedHeights().getUpper(),
+														inputVideoCaps.getWidthAlignment(),
+														inputVideoCaps.getHeightAlignment()
+												)
+										);
 									}
 									
 									if(
-											(caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888)
-											|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
-											|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+											inputVideoCaps.isSizeSupported(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT) &&
+													(
+															(caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888)
+																	|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
+																	|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar)
+													)
 											) {
 										codecName = codecInfo.getName();
 										codecType = supportTypes[j];
@@ -116,7 +138,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 
 										Log.i(LSConfig.TAG,
 												String.format("LSVideoHardEncoder::supportHardEncoder( "
-														+ "[Video hard encoder Found], "
+														+ "[Video hard encoder found], "
 														+ "codecName : %s, "
 														+ "codecType : %s, "
 														+ "colorFormat : 0x%x "
@@ -180,7 +202,6 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 				if( videoCodec != null ) {
 					// 基本参数
 					videoMediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, width, height);
-			        videoMediaFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 0);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, inputColorFormat);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, fps);

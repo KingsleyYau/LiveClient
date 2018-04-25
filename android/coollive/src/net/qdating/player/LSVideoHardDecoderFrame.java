@@ -55,26 +55,26 @@ public class LSVideoHardDecoderFrame {
 		this.width = width;
 		this.height = height;
 
-		if( LSConfig.DEBUG ) {
-			Log.d(LSConfig.TAG,
-					String.format("LSVideoFrame::updateImage( "
-									+ "this : 0x%x, "
-									+ "[Image info], "
-									+ "format : 0x%x, "
-									+ "width : %d, "
-									+ "height : %d, "
-									+ "stride : %d, "
-									+ "timestamp : %d "
-									+ ")",
-							hashCode(),
-							format,
-							width,
-							height,
-							stride,
-							timestamp
-					)
-			);
-		}
+//		if( LSConfig.DEBUG ) {
+//			Log.d(LSConfig.TAG,
+//					String.format("LSVideoFrame::updateImage( "
+//									+ "this : 0x%x, "
+//									+ "[Image info], "
+//									+ "format : 0x%x, "
+//									+ "width : %d, "
+//									+ "height : %d, "
+//									+ "stride : %d, "
+//									+ "timestamp : %d "
+//									+ ")",
+//							hashCode(),
+//							format,
+//							width,
+//							height,
+//							stride,
+//							timestamp
+//					)
+//			);
+//		}
 
         byteBuffer.position(0);
 		int size = width * height;
@@ -203,44 +203,44 @@ public class LSVideoHardDecoderFrame {
 
 		Plane[] plane = image.getPlanes();
 		
-		if( LSConfig.DEBUG ) {
-			/**
-			 * @see android.graphics.ImageFormat
-			 */
-			int cropLeft = image.getCropRect().left;
-			int cropTop = image.getCropRect().top;
-			int cropWidth = image.getCropRect().width();
-			int cropHeight = image.getCropRect().height();
-			int bitPerPixel = ImageFormat.getBitsPerPixel(format);
-	        Log.d(LSConfig.TAG,
-	        		String.format("LSVideoFrame::updateImage( "
-	        				+ "this : 0x%x, "
-	        				+ "[Image info], "
-	        				+ "format : 0x%x, "
-	        				+ "width : %d, "
-	        				+ "height : %d, "
-	        				+ "cropLeft : %d, "
-	        				+ "cropTop : %d, "
-	        				+ "cropWidth : %d, "
-	        				+ "cropHeight : %d, "
-	        				+ "bitPerPixel : %d, "
-							+ "timestamp : %d "
-	        				+ ")",
-	        				hashCode(),
-	        				format,
-	        				width,
-	        				height,
-	        				cropLeft,
-	        				cropTop,
-	        				cropWidth,
-	        				cropHeight,
-	        				bitPerPixel,
-							timestamp
-	        				)
-	        		);
-	        // Dump yuv data to file
-//	        dumpYuvData(image);
-		}
+//		if( LSConfig.DEBUG ) {
+//			/**
+//			 * @see android.graphics.ImageFormat
+//			 */
+//			int cropLeft = image.getCropRect().left;
+//			int cropTop = image.getCropRect().top;
+//			int cropWidth = image.getCropRect().width();
+//			int cropHeight = image.getCropRect().height();
+//			int bitPerPixel = ImageFormat.getBitsPerPixel(format);
+//	        Log.d(LSConfig.TAG,
+//	        		String.format("LSVideoFrame::updateImage( "
+//	        				+ "this : 0x%x, "
+//	        				+ "[Image info], "
+//	        				+ "format : 0x%x, "
+//	        				+ "width : %d, "
+//	        				+ "height : %d, "
+//	        				+ "cropLeft : %d, "
+//	        				+ "cropTop : %d, "
+//	        				+ "cropWidth : %d, "
+//	        				+ "cropHeight : %d, "
+//	        				+ "bitPerPixel : %d, "
+//							+ "timestamp : %d "
+//	        				+ ")",
+//	        				hashCode(),
+//	        				format,
+//	        				width,
+//	        				height,
+//	        				cropLeft,
+//	        				cropTop,
+//	        				cropWidth,
+//	        				cropHeight,
+//	        				bitPerPixel,
+//							timestamp
+//	        				)
+//	        		);
+//	        // Dump yuv data to file
+////	        dumpYuvData(image);
+//		}
 		
 		// Get Y
         int rowStrideY = plane[0].getRowStride();
@@ -278,37 +278,37 @@ public class LSVideoHardDecoderFrame {
 		}
 		vBuffer.get(byteBufferV, 0, byteSizeV);
 		
-		if( LSConfig.DEBUG ) {
-	        Log.d(LSConfig.TAG,
-	        		String.format("LSVideoDecoder::updateImage( "
-	        				+ "this : 0x%x, "
-	        				+ "[Image data], "
-	        				+ "[Y] : "
-	        				+ "rowStride : %d, "
-	        				+ "pixelStride : %d, "
-	        				+ "size : %d, "
-	        				+ "[U] : "
-	        				+ "rowStride : %d, "
-	        				+ "pixelStride : %d, "
-	        				+ "size : %d, "
-	        				+ "[V] : "
-	        				+ "rowStride : %d, "
-	        				+ "pixelStride : %d, "
-	        				+ "size : %d "
-	        				+ ")",
-	        				this.hashCode(),
-	        				rowStrideY,
-	        				pixelStrideY,
-	        				byteSizeY,
-	        				rowStrideU,
-	        				pixelStrideU,
-	        				byteSizeU,
-	        				rowStrideV,
-	        				pixelStrideV,
-	        				byteSizeV
-	        				)
-	        		);
-		}
+//		if( LSConfig.DEBUG ) {
+//	        Log.d(LSConfig.TAG,
+//	        		String.format("LSVideoDecoder::updateImage( "
+//	        				+ "this : 0x%x, "
+//	        				+ "[Image data], "
+//	        				+ "[Y] : "
+//	        				+ "rowStride : %d, "
+//	        				+ "pixelStride : %d, "
+//	        				+ "size : %d, "
+//	        				+ "[U] : "
+//	        				+ "rowStride : %d, "
+//	        				+ "pixelStride : %d, "
+//	        				+ "size : %d, "
+//	        				+ "[V] : "
+//	        				+ "rowStride : %d, "
+//	        				+ "pixelStride : %d, "
+//	        				+ "size : %d "
+//	        				+ ")",
+//	        				this.hashCode(),
+//	        				rowStrideY,
+//	        				pixelStrideY,
+//	        				byteSizeY,
+//	        				rowStrideU,
+//	        				pixelStrideU,
+//	        				byteSizeU,
+//	        				rowStrideV,
+//	        				pixelStrideV,
+//	        				byteSizeV
+//	        				)
+//	        		);
+//		}
 	}
 	
 	private void dumpYuvData(Image image) {

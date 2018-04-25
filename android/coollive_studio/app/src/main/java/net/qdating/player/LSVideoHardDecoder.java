@@ -96,17 +96,17 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 //                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
         		String[] supportTypes = codecInfo.getSupportedTypes();
         		for (int j = 0; j < supportTypes.length; j++) {
-        			if( LSConfig.DEBUG ) {
-	        			Log.d(LSConfig.TAG,
-								String.format("LSVideoHardDecoder::supportHardDecoder( "
-												+ "[Check video codec], "
-												+ "codecName : [%s], "
-												+ "codecType : [%s] "
-												+ ")",
-										codecInfo.getName(),
-	        							supportTypes[j])
-	        					);
-        			}
+//        			if( LSConfig.DEBUG ) {
+//	        			Log.d(LSConfig.TAG,
+//								String.format("LSVideoHardDecoder::supportHardDecoder( "
+//												+ "[Check video codec], "
+//												+ "codecName : [%s], "
+//												+ "codecType : [%s] "
+//												+ ")",
+//										codecInfo.getName(),
+//	        							supportTypes[j])
+//	        					);
+//        			}
         			
         			if( !codecInfo.isEncoder() && supportTypes[j].equalsIgnoreCase(MIME_TYPE) ) {
                         Log.i(LSConfig.TAG,

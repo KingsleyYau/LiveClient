@@ -38,14 +38,14 @@ public class PlayActivity extends Activity {
 			"",//"/sdcard/coollive/play2.aac",
 	};
 	
-	private String publishH264File = "/sdcard/coollive/publish.h264";
+	private String publishH264File = "";//"/sdcard/coollive/publish.h264";
 	private String publishAACFile = "";//"/sdcard/coollive/publish.aac";
 	
 	// 播放相关
 	private String[] playerUrls = {
 		"rtmp://172.25.32.17:19351/live/max0",
-		"rtmp://172.25.32.17:19351/live/max1",
-		"rtmp://172.25.32.17:19351/live/max2",
+		"rtmp://172.25.32.17:19351/live/maxi",
+		"rtmp://172.25.32.17:19351/live/maxf",
 	};
 //	private String[] playerUrls = {
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
@@ -61,7 +61,7 @@ public class PlayActivity extends Activity {
 	
 	// 推送相关
 	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
-//	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/samson_publish";
+//	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/max";
 //	private String publishUrl = "rtmp://172.25.32.17:1937/speex/maxbb";
 	private LSPublisher publisher = null;
 	private GLSurfaceView surfaceViewPublish = null;
@@ -93,10 +93,10 @@ public class PlayActivity extends Activity {
 		editTextPublish.setText(publishUrl);
 		
 		// 播放相关
-		surfaceViews = new GLSurfaceView[2];
+		surfaceViews = new GLSurfaceView[3];
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
 		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-//		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
+		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 		players = new LSPlayer[surfaceViews.length];
 		for(int i = 0; i < surfaceViews.length; i++) {
@@ -115,7 +115,7 @@ public class PlayActivity extends Activity {
 	             .getRotation();
 		publisher = new LSPublisher();
 		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
-//		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 
 		// 初始化界面缩放
 		initAnimation();

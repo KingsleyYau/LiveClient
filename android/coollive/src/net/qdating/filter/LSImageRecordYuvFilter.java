@@ -53,8 +53,10 @@ public class LSImageRecordYuvFilter extends LSImageBufferFilter {
 			+ "		return (rgb.r * 0.439) + (rgb.g * -0.368) + (rgb.b * -0.071) + 0.5; \n"
 			+ "} \n"
 			+ "vec2 getSamplePos(float step, float xShift, float yStart) { \n"
-			+ "		vec2 pos = vec2((uWidth * vTextureCoordinate.x), (uHeight * yStart)); \n"
-			+ "		return vec2(mod(pos.x * xShift, uWidth), (pos.y * xShift + (pos.x * xShift / uWidth)) * step); \n"
+			+ "		float inputX = vTextureCoordinate.x + 1. / uWidth; \n"
+			+ "		float inputY = yStart; \n"
+			+ "		vec2 pos = vec2(floor(inputX * uWidth), (inputY * uHeight)); \n"
+			+ "		return vec2((mod(pos.x * xShift, uWidth)), ((pos.y * xShift + (pos.x * xShift / uWidth)) * step)); \n"
 			+"} \n"
 
 			+ "// 生成填充点颜色值 \n"

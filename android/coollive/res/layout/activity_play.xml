@@ -39,7 +39,7 @@
 	        android:layout_width="180dp"
 	        android:layout_height="180dp"
 	        android:layout_alignParentLeft="true"
-			android:visibility="invisible"
+			android:visibility="visible"
         />
         <android.opengl.GLSurfaceView
 	        android:id="@+id/surfaceViewPublish"

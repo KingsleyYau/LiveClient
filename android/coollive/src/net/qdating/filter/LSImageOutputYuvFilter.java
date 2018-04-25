@@ -64,7 +64,7 @@ public class LSImageOutputYuvFilter extends LSImageFilter {
             + "			 	   ) * yuv; \n"
 			+ "		gl_FragColor = vec4(rgb, 1.0); \n"
 			+ "		// 输出采样格式 \n"
-			+ "		ledChar(uFormat, 0.0, 0.07, 0.9, 0.1, vTextureCoordinate); \n"
+			+ "		ledChar(uFormat, 0.46, 0.07, 0.45, 0.1, vTextureCoordinate); \n"
 //			+ " 	if( uFormat == 1 ) { \n"
 //			+ "			ledChar(4, 0.0, 0.07, 0.9, 0.1, vTextureCoordinate); \n"
 //			+ "			ledChar(2, 0.08, 0.07, 0.9, 0.1, vTextureCoordinate); \n"

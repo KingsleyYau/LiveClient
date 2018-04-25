@@ -287,6 +287,20 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 		List<Size> previewSizes = parameters.getSupportedPreviewSizes();
 		if( previewSizes != null ) {
 			for (Size size : previewSizes) {
+				if( LSConfig.DEBUG ) {
+					Log.i(LSConfig.TAG,
+							String.format("LSVideoCapture::getBestSuppportPreviewSize( " +
+									"this : 0x%x, " +
+									"width : %d, " +
+									"height : %d " +
+									")",
+									hashCode(),
+									size.width,
+									size.height
+							)
+					);
+				}
+
 				// 是否宽高互换
 				if( isSwitchFrame() ) {
 					if (size.width == LSConfig.VIDEO_CAPTURE_HEIGHT && size.height == LSConfig.VIDEO_CAPTURE_WIDTH) {
