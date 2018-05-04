@@ -316,12 +316,12 @@ void VideoHardDecoder::DecodeOutputCallback (
                                          )
 {
     if( status == noErr ) {
-        FileLevelLog("rtmpdump",
-                     KLog::LOG_STAT,
-                     "VideoHardDecoder::DecodeOutputCallback( "
-                     "[Decode Video Success] "
-                     ")"
-                     );
+//        FileLevelLog("rtmpdump",
+//                     KLog::LOG_STAT,
+//                     "VideoHardDecoder::DecodeOutputCallback( "
+//                     "[Decode Video Success] "
+//                     ")"
+//                     );
         
         if( imageBuffer != NULL && sourceFrameRefCon != NULL ) {
             DecodeItem* item = (DecodeItem*)sourceFrameRefCon;

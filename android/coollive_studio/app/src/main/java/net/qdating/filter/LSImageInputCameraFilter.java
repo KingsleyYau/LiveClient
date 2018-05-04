@@ -2,7 +2,7 @@ package net.qdating.filter;
 
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
-import android.util.Log;
+import net.qdating.utils.Log;
 
 import net.qdating.LSConfig;
 

@@ -7,10 +7,13 @@ import java.util.Stack;
 import android.annotation.SuppressLint;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
+import android.media.MediaCodecInfo.EncoderCapabilities;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.os.Build;
-import android.util.Log;
+import android.os.Bundle;
+
+import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
 /**
@@ -37,7 +40,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	 * 获取支持的硬编码采样格式
 	 * @return
 	 */
-	static public int supportHardEncoderFormat() {
+	static public synchronized int supportHardEncoderFormat() {
 		if( inputColorFormat == INVALID_COLOR_FORMAT ) {
 			// 尝试获取采样格式
 			supportHardEncoder();
@@ -50,7 +53,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	 * 判断是否支持硬解码
 	 * @return
 	 */
-	static public boolean supportHardEncoder() {
+	static public synchronized boolean supportHardEncoder() {
 		boolean bFlag = false;
 		String codecName = "";
 		String codecType = "";
@@ -68,23 +71,23 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 //                MediaCodecInfo codecInfo = MediaCodecList.getCodecInfoAt(i);
 				String[] supportTypes = codecInfo.getSupportedTypes();
 				for (int j = 0; j < supportTypes.length; j++) {
-//					if( LSConfig.DEBUG ) {
-//						Log.d(LSConfig.TAG,
-//								String.format("LSVideoHardEncoder::supportHardEncoder( "
-//										+ "[Check video codec], "
-//										+ "codecName : [%s], "
-//										+ "codecType : [%s] "
-//										+ ")",
-//										codecInfo.getName(),
-//										supportTypes[j]
-//								)
-//						);
-//					}
+					if( LSConfig.DEBUG ) {
+						Log.d(LSConfig.TAG,
+								String.format("LSVideoHardEncoder::supportHardEncoder( "
+										+ "[Check video codec], "
+										+ "codecName : [%s], "
+										+ "codecType : [%s] "
+										+ ")",
+										codecInfo.getName(),
+										supportTypes[j]
+								)
+						);
+					}
 
 					if( codecInfo.isEncoder() && supportTypes[j].equalsIgnoreCase(MIME_TYPE) ) {
 						Log.i(LSConfig.TAG,
 								String.format("LSVideoHardEncoder::supportHardEncoder( "
-												+ "[Find video codec], "
+												+ "[Check video codec matched], "
 												+ "codecName : [%s], "
 												+ "codecType : [%s] "
 												+ ")",
@@ -104,19 +107,9 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 										Log.d(LSConfig.TAG,
 												String.format("LSVideoHardEncoder::supportHardEncoder( " +
 														"[Check color format], " +
-														"colorFormat : 0x%x, " +
-														"width : [%d - %d], " +
-														"height : [%d - %d], " +
-														"widthAlignment : %d, " +
-														"heightAlignment : %d " +
+														"colorFormat : 0x%x " +
 														")",
-														caps.colorFormats[k],
-														inputVideoCaps.getSupportedWidths().getLower(),
-														inputVideoCaps.getSupportedWidths().getUpper(),
-														inputVideoCaps.getSupportedHeights().getLower(),
-														inputVideoCaps.getSupportedHeights().getUpper(),
-														inputVideoCaps.getWidthAlignment(),
-														inputVideoCaps.getHeightAlignment()
+														caps.colorFormats[k]
 												)
 										);
 									}
@@ -137,15 +130,25 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 										bFlag = true;
 
 										Log.i(LSConfig.TAG,
-												String.format("LSVideoHardEncoder::supportHardEncoder( "
-														+ "[Video hard encoder found], "
-														+ "codecName : %s, "
-														+ "codecType : %s, "
-														+ "colorFormat : 0x%x "
-														+ ")",
+												String.format("LSVideoHardEncoder::supportHardEncoder( " +
+																"[Video hard encoder found], " +
+																"codecName : [%s], " +
+																"codecType : %s, " +
+																"colorFormat : 0x%x, " +
+																"width : [%d - %d], " +
+																"height : [%d - %d], " +
+																"widthAlignment : %d, " +
+																"heightAlignment : %d " +
+																")",
 														codecName,
 														codecType,
-														colorFormat
+														colorFormat,
+														inputVideoCaps.getSupportedWidths().getLower(),
+														inputVideoCaps.getSupportedWidths().getUpper(),
+														inputVideoCaps.getSupportedHeights().getLower(),
+														inputVideoCaps.getSupportedHeights().getUpper(),
+														inputVideoCaps.getWidthAlignment(),
+														inputVideoCaps.getHeightAlignment()
 												)
 										);
 
@@ -192,7 +195,23 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	}
 
 	public boolean reset(int width, int height, int bitRate, int keyFrameInterval, int fps) {
-		Log.i(LSConfig.TAG, String.format("LSVideoHardEncoder::reset( this : 0x%x )", hashCode()));
+		Log.i(LSConfig.TAG,
+				String.format("LSVideoHardEncoder::reset( " +
+								"this : 0x%x, " +
+								"width : %d, " +
+								"height : %d, " +
+								"bitrate : %d, " +
+								"keyFrameInterval : %d, " +
+								"fps : %d " +
+								")",
+						hashCode(),
+						width,
+						height,
+						bitRate,
+						keyFrameInterval,
+						fps
+				)
+		);
 		
 		boolean bFlag = false;
 		
@@ -206,30 +225,47 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 			        videoMediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, fps);
 			        // Android 25后才可以使用浮点
-			        videoMediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, keyFrameInterval / fps);
-
+					int seconds = LSConfig.VIDEO_KEYFRAMEINTERVAL / LSConfig.VIDEO_FPS;
+			        videoMediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, seconds);
+					videoMediaFormat.setInteger(MediaFormat.KEY_CAPTURE_RATE, fps);
 					/**
-					 * 在SAMSUNG的机器必须选用BITRATE_MODE_CQ(质量优先), 否则某些机器编码后图像会越来越模糊
+					 * 设置使用CQ模式, 否则某些机器编码后图像会越来越模糊
 					 */
-					videoMediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ);
-					/**
-					 * 不能开, 否则在魅族的机器会Crash
-					 * android.media.MediaCodec$CodecException: Error 0x80001001
-					 */
-//					videoMediaFormat.setInteger(MediaFormat.KEY_PROFILE, MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline);
-//					videoMediaFormat.setInteger(MediaFormat.KEY_LEVEL, MediaCodecInfo.CodecProfileLevel.AVCLevel3);
-
-					videoCodec.configure(videoMediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
-					videoCodec.start();
-					
-					bFlag = true;
 					Log.d(LSConfig.TAG,
 							String.format("LSVideoHardEncoder::reset( "
 											+ "this : 0x%x, "
-											+ "codecName : %s, "
-											+ "codecType : %s, "
-											+ "colorFormat : 0x%x "
+											+ "setInteger [KEY_BITRATE_MODE : BITRATE_MODE_CQ] "
 											+ ")",
+									hashCode()
+							)
+					);
+					videoMediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ);
+					/**
+					 * 设置为实时流编码方式
+					 */
+					Log.d(LSConfig.TAG,
+							String.format("LSVideoHardEncoder::reset( "
+											+ "this : 0x%x, "
+											+ "setInteger [KEY_PRIORITY : 0] "
+											+ ")",
+									hashCode()
+							)
+					);
+					videoMediaFormat.setInteger(MediaFormat.KEY_PRIORITY, 0);
+
+					videoCodec.configure(videoMediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+					videoCodec.start();
+
+					bFlag = true;
+
+					Log.d(LSConfig.TAG,
+							String.format("LSVideoHardEncoder::reset( " +
+											"this : 0x%x, " +
+											"[Success], " +
+											"codecName : [%s], " +
+											"codecType : %s, " +
+											"colorFormat : 0x%x " +
+											")",
 									hashCode(),
 									videoCodec.getName(),
 									MIME_TYPE,
@@ -238,11 +274,8 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 					);
 				}
 
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
 				Log.e(LSConfig.TAG, String.format("LSVideoHardEncoder::reset( this : 0x%x, [Fail], error : %s )", hashCode(), e.toString()));
-
 				bFlag = false;
 			}
 		}
@@ -251,7 +284,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	}
 
 	public void pause() {
-		Log.i(LSConfig.TAG, String.format("LSVideoHardEncoder::pause()"));
+		Log.i(LSConfig.TAG, String.format("LSVideoHardEncoder::pause( this : 0x%x )", hashCode()));
 		
 		if( videoCodec != null ) {
 			videoCodec.stop();
@@ -267,6 +300,11 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 		boolean bFlag = false;
 		
 		if( videoCodec != null ) {
+			// 每次编码之前都强制更新码率
+			Bundle param = new Bundle();
+			param.putInt(MediaCodec.PARAMETER_KEY_VIDEO_BITRATE, LSConfig.VIDEO_BITRATE);
+			videoCodec.setParameters(param);
+
 			// 阻塞等待
 			int inIndex = -1;
 	        inIndex = videoCodec.dequeueInputBuffer(-1);
@@ -295,7 +333,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	            
 	            // 放进硬编码器
 	            videoCodec.queueInputBuffer(inIndex, 0, size, timestamp, 0/*MediaCodec.BUFFER_FLAG_CODEC_CONFIG*/);
-	            
+
 	            bFlag = true;
 	        }
 		}

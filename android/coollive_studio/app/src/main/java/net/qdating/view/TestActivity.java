@@ -5,7 +5,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import net.qdating.utils.Log;
 
 import net.qdating.LSConfig;
 import net.qdating.LSPlayer;

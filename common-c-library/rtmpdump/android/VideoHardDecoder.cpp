@@ -478,7 +478,7 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 
             FileLevelLog("rtmpdump",
                          KLog::LOG_STAT,
-                         "VideoDecoderH264::DecodeVideoFrame( "
+                         "VideoHardDecoder::DecodeVideoFrame( "
 						 "this : %p,"
                          "[Got Nalu], "
                          "naluSize : %d, "

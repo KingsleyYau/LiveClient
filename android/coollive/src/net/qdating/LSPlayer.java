@@ -127,31 +127,17 @@ public class LSPlayer implements ILSPlayerCallback {
 						Log.i(LSConfig.TAG,
 								String.format("LSPlayer::handleMessage( "
 												+ "this : 0x%x, "
-												+ "[Connect player], "
+												+ "[MSG_CONNECT], "
 												+ "isRuning : %s "
 												+ ")",
-										hashCode(),
+										(msg.obj!=null)?msg.obj.hashCode():0,
 										isRuning?"true":"false"
 								)
 						);
 						synchronized (this) {
 							if( isRuning ) {
 								// 非手动停止, 准备重连
-								boolean bFlag = start();
-								if( !bFlag ) {
-									// 重连失败, 1秒后重连
-									Log.i(LSConfig.TAG,
-											String.format("LSPlayer::handleMessage( "
-															+ "this : 0x%x, "
-															+ "[Connect fail, reconnect after %d seconds] "
-															+ ")",
-													(msg.obj!=null)?msg.obj.hashCode():0,
-													LSConfig.RECONNECT_SECOND
-											)
-									);
-									Message newMsg = Message.obtain(msg);
-									handler.sendMessageDelayed(newMsg, LSConfig.RECONNECT_SECOND);
-								}
+								start();
 							}
 						}
 					}break;
@@ -176,10 +162,11 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		if( bFlag ) {
 			Log.i(LSConfig.TAG, String.format("LSPlayer::init( "
-					+ "this : 0x%x, "
-					+ "[Success] "
-					+ ")",
-					hashCode()
+							+ "this : 0x%x, "
+							+ "[Success with %s] "
+							+ ")",
+					hashCode(),
+					useHardDecoder?"hard decoder":"soft decoder"
 					)
 					);
 		} else {

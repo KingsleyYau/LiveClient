@@ -84,7 +84,12 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	 */
 	public boolean init(Context context, GLSurfaceView surfaceView, int rotation, FillMode fillMode, ILSPublisherStatusCallback statusCallback) {
 		boolean bFlag = true;
-		
+
+		File path = Environment.getExternalStorageDirectory();
+		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
+		Log.initFileLog(filePath);
+		Log.setWriteFileLog(true);
+
 		Log.i(LSConfig.TAG,
 				String.format("LSPublisher::init( "
 								+ "this : 0x%x, "
@@ -96,24 +101,19 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 						fillMode.ordinal()
 				)
 		);
-		
-		File path = Environment.getExternalStorageDirectory();
-		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
-		Log.initFileLog(filePath);
-		Log.setWriteFileLog(true);
-		
+
 		// 初始化状态回调
 		this.statusCallback = statusCallback;
 
-        if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeAuto ) {
-            if( LSVideoHardEncoder.supportHardEncoder() ) {
-                // 判断可以使用硬解码
-                useHardEncoder = true;
-            }
-        } else if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeHard ) {
-            // 强制使用硬解码
-            useHardEncoder = true;
-        }
+//        if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeAuto ) {
+//            if( LSVideoHardEncoder.supportHardEncoder() ) {
+//                // 判断可以使用硬解码
+//                useHardEncoder = true;
+//            }
+//        } else if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeHard ) {
+//            // 强制使用硬解码
+//            useHardEncoder = true;
+//        }
 
 		// 初始化推流器
 		if( bFlag ) {
@@ -139,31 +139,17 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 							Log.i(LSConfig.TAG,
 									String.format("LSPublisher::handleMessage( "
 													+ "this : 0x%x, "
-													+ "[Connect player], "
+													+ "[MSG_CONNECT], "
 													+ "isRuning : %s "
 													+ ")",
-											hashCode(),
+											(msg.obj!=null)?msg.obj.hashCode():0,
 											isRuning?"true":"false"
 									)
 							);
 							synchronized (this) {
 								if( isRuning ) {
 									// 非手动停止, 准备重连
-									boolean bFlag = start();
-									if( !bFlag ) {
-										// 重连失败, 1秒后重连
-										Log.i(LSConfig.TAG,
-												String.format("LSPublisher::handleMessage( "
-																+ "this : 0x%x"
-																+ "[Connect fail, reconnect after %d seconds] "
-																+ ")",
-														(msg.obj!=null)?msg.obj.hashCode():0,
-														LSConfig.RECONNECT_SECOND
-												)
-										);
-										Message newMsg = Message.obtain(msg);
-										handler.sendMessageDelayed(newMsg, LSConfig.RECONNECT_SECOND);
-									}
+									start();
 								}
 							}
 						}break;
@@ -177,9 +163,10 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		if( bFlag ) {
 			Log.i(LSConfig.TAG, String.format("LSPublisher::init( "
 					+ "this : 0x%x, "
-					+ "[Success] "
+					+ "[Success with %s] "
 					+ ")",
-					hashCode()
+					hashCode(),
+					useHardEncoder?"hard encoder":"soft encoder"
 					)
 					);
 		} else {

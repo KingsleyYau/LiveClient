@@ -12,7 +12,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
+import net.qdating.utils.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -44,8 +44,8 @@ public class PlayActivity extends Activity {
 	// 播放相关
 	private String[] playerUrls = {
 		"rtmp://172.25.32.17:19351/live/max0",
-		"rtmp://172.25.32.17:19351/live/maxi",
-		"rtmp://172.25.32.17:19351/live/maxf",
+		"rtmp://172.25.32.17:19351/live/max1",
+		"rtmp://172.25.32.17:19351/live/max2",
 	};
 //	private String[] playerUrls = {
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
@@ -58,7 +58,7 @@ public class PlayActivity extends Activity {
 	private EditText editText = null;
 	private int playerRunningCount = 0;
 	private Object playerRunningCountLock = new Object();
-	
+
 	// 推送相关
 	private String publishUrl = "rtmp://172.25.32.17:19351/live/maxa";
 //	private String publishUrl = "rtmp://172.25.32.133:7474/test_flash/max";
@@ -74,7 +74,7 @@ public class PlayActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
-		LSConfig.LOG_LEVEL = Log.DEBUG;
+		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
 
 		File path = Environment.getExternalStorageDirectory();
 		filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR;

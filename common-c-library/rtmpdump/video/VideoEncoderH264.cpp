@@ -522,8 +522,10 @@ bool VideoEncoderH264::CreateContext() {
          防止编码延迟
          */
         av_opt_set(mContext->priv_data, "tune", "zerolatency", 0);
-        // 设置不分片
-//        av_opt_set(mContext->priv_data, "x264-params", "sliced-threads=0", 0);
+        /**
+         * 设置不分片
+         */
+        av_opt_set(mContext->priv_data, "x264-params", "sliced-threads=0", 0);
 
         /**
          @description https://trac.ffmpeg.org/wiki/Encode/H.264

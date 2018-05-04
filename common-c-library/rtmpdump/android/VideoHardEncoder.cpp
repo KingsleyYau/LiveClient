@@ -268,7 +268,7 @@ void VideoHardEncoder::Pause() {
 	FileLevelLog(
 			"rtmpdump",
 			KLog::LOG_WARNING,
-			"VideoHardDecoder::Pause( "
+			"VideoHardEncoder::Pause( "
 			"this : %p "
 			")",
 			this
@@ -448,9 +448,9 @@ void VideoHardEncoder::EncodeVideoHandle() {
 				FileLevelLog(
 						"rtmpdump",
 						KLog::LOG_STAT,
-						"VideoHardDecoder::EncodeVideoHandle( "
+						"VideoHardEncoder::EncodeVideoHandle( "
 						"this : %p, "
-						"[Get decode frame], "
+						"[Get encode frame], "
 						"jVideoFrame : %p, "
 						"timestamp : %d "
 						")",

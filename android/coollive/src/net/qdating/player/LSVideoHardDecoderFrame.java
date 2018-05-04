@@ -6,7 +6,7 @@ import android.graphics.ImageFormat;
 import android.media.Image;
 import android.media.Image.Plane;
 import android.media.MediaCodecInfo;
-import android.util.Log;
+import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 import net.qdating.filter.LSImageUtil;
 
@@ -57,7 +57,7 @@ public class LSVideoHardDecoderFrame {
 
 //		if( LSConfig.DEBUG ) {
 //			Log.d(LSConfig.TAG,
-//					String.format("LSVideoFrame::updateImage( "
+//					String.format("LSVideoHardDecoderFrame::updateImage( "
 //									+ "this : 0x%x, "
 //									+ "[Image info], "
 //									+ "format : 0x%x, "
@@ -137,7 +137,7 @@ public class LSVideoHardDecoderFrame {
 
 //				if( LSConfig.DEBUG ) {
 //					Log.d(LSConfig.TAG,
-//							String.format("LSVideoDecoder::updateImage( "
+//							String.format("LSVideoHardDecoderFrame::updateImage( "
 //											+ "this : 0x%x, "
 //											+ "[Image data 420P], "
 //											+ "[Y] : "
@@ -177,7 +177,7 @@ public class LSVideoHardDecoderFrame {
 
 //				if( LSConfig.DEBUG ) {
 //					Log.d(LSConfig.TAG,
-//							String.format("LSVideoDecoder::updateImage( "
+//							String.format("LSVideoHardDecoderFrame::updateImage( "
 //											+ "this : 0x%x, "
 //											+ "[Image data 420SP], "
 //											+ "[Y] : "

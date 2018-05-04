@@ -310,7 +310,7 @@ public class LSImageInputYuvFilter extends LSImageBufferFilter {
 	    // 解除纹理绑定
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 		
-		Log.d(LSConfig.TAG, String.format("LSImageInputYuvFilter::createGLTexture( textureIdY : %d, textureIdU : %d, textureIdV : %d, , textureIdUV : %d ) ", textureIdY[0], textureIdU[0], textureIdV[0], textureIdUV[0]));
+		Log.d(LSConfig.TAG, String.format("LSImageInputYuvFilter::createGLTexture( textureIdY : %d, textureIdU : %d, textureIdV : %d, textureIdUV : %d ) ", textureIdY[0], textureIdU[0], textureIdV[0], textureIdUV[0]));
 	}
 	
 	/**

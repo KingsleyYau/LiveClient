@@ -13,7 +13,7 @@ import android.media.MediaCodecInfo;
 import android.media.MediaCodecList;
 import android.media.MediaFormat;
 import android.os.Build;
-import android.util.Log;
+import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
 /**
@@ -111,7 +111,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
         			if( !codecInfo.isEncoder() && supportTypes[j].equalsIgnoreCase(MIME_TYPE) ) {
                         Log.i(LSConfig.TAG,
                                 String.format("LSVideoHardDecoder::supportHardDecoder( "
-                                                + "[Find video codec], "
+                                                + "[Check video codec matched], "
                                                 + "codecName : [%s], "
                                                 + "codecType : [%s] "
                                                 + ")",
@@ -130,10 +130,10 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 										Log.d(LSConfig.TAG,
 												String.format("LSVideoHardDecoder::supportHardDecoder( "
 														+ "[Check color format], "
-														+ "codecName : %s, "
+														+ "codecName : [%s], "
 														+ "colorFormat : 0x%x "
 														+ ")",
-														codecName,
+														codecInfo.getName(),
 														caps.colorFormats[k]
 												)
 										);
@@ -152,7 +152,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 										Log.i(LSConfig.TAG,
 												String.format("LSVideoHardDecoder::supportHardDecoder( "
 														+ "[Video hard decoder found], "
-														+ "codecName : %s, "
+														+ "codecName : [%s], "
 														+ "codecType : %s, "
 														+ "colorFormat : 0x%x "
 														+ ")",
@@ -307,14 +307,14 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 //						)
 //	            );
 //	        }
-			
+
 	        if ( inIndex >= 0 ) {
 	        	ByteBuffer[] inputBuffers = videoCodec.getInputBuffers();
 	            ByteBuffer buffer = inputBuffers[inIndex];
 	            buffer.clear();
 	            buffer.put(sync_bytes);
 	            buffer.put(data, offset, size - offset);
-	            
+
 	            // 放进硬解码器
 	            videoCodec.queueInputBuffer(inIndex, 0, buffer.position(), timestamp, 0/*MediaCodec.BUFFER_FLAG_CODEC_CONFIG*/);
 
@@ -347,7 +347,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 			try {
 				long timeoutUs = 500 * 1000;
 		    	bufferIndex = videoCodec.dequeueOutputBuffer(bufferInfo, timeoutUs);
-		    	
+
 		        if (bufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER) {
 		            // no output available yet
 		        } else if (bufferIndex == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED) {
@@ -356,7 +356,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		            // lead to a native crash.
 //		        	Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::getDecodeVideoFrame( [INFO_OUTPUT_BUFFERS_CHANGED] )"));
 //		        	outputBuffers = videoCodec.getOutputBuffers();
-		        					
+
 		        } else if (bufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
 		            // this happens before the first frame is returned
 		        	videoMediaFormat = videoCodec.getOutputFormat();
@@ -380,7 +380,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 							)
 					);
 
-		        } else if( bufferIndex >= 0 ) {	
+		        } else if( bufferIndex >= 0 ) {
 		        	synchronized (this) {
 			            if( videoFrameStack.isEmpty() ) {
 			            	videoFrame = new LSVideoHardDecoderFrame();
@@ -468,7 +468,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	                        )
 	                );
 		        }
-		        
+
 			} catch(Exception e) {
 				Log.d(LSConfig.TAG,
 	                    String.format("LSVideoHardDecoder::getDecodeVideoFrame( "

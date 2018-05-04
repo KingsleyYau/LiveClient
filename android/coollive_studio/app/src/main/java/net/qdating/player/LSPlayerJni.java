@@ -1,6 +1,6 @@
 package net.qdating.player;
 
-import android.util.Log;
+import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
 /**

@@ -24,7 +24,7 @@ public class LSConfig {
 	/**
 	 * 是否调试模式
 	 */
-	public static boolean DEBUG = true;
+	public static boolean DEBUG = false;
 	/**
 	 * 设置日志等级
 	 * {@link android.util.Log#VERBOSE}
@@ -50,11 +50,11 @@ public class LSConfig {
 	/**
 	 * 视频宽度(摄像头参数)
 	 */
-	public static int VIDEO_CAPTURE_WIDTH = 1080;
+	public static int VIDEO_CAPTURE_WIDTH = 480;
 	/**
 	 * 视频高度(摄像头参数)
 	 */
-	public static int VIDEO_CAPTURE_HEIGHT = 1920;
+	public static int VIDEO_CAPTURE_HEIGHT = 640;
 	/**
 	 * 视频宽度(推流参数)
 	 * 大部分硬编码器要求是4的倍数, 有些要求其他, 但都是2的指数

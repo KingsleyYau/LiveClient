@@ -228,19 +228,17 @@ void VideoHardEncoder::VideoCompressionOutputCallback(
             }
             // 填充帧数据
             encoder->mVideoEncodeFrame.AddBuffer((unsigned char *)data, nalUnitLength);
-//            FileLevelLog("rtmpdump",
-//                         KLog::LOG_MSG,
-//                         "VideoHardEncoder::VideoCompressionOutputCallback( "
-//                         "[Encoded Data], "
-//                         "timestamp : %u, "
-//                         "frameType : 0x%x, "
-//                         "size : %d "
-//                         ")",
-//                         timestamp,
-//                         data[0],
-//                         nalUnitLength
-//                         );
-//            encoder->mpCallback->OnEncodeVideoFrame(encoder, (char *)data, nalUnitLength, timestamp);
+            
+            FileLevelLog("rtmpdump",
+                         KLog::LOG_STAT,
+                         "VideoHardEncoder::VideoCompressionOutputCallback( "
+                         "[Encoded Data Slice], "
+                         "timestamp : %u, "
+                         "size : %d "
+                         ")",
+                         timestamp,
+                         nalUnitLength
+                         );
             
             // Move to the next NALU in the block buffer
             bufferOffset += avccHeaderLength + nalUnitLength;
