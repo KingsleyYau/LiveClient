@@ -17,48 +17,22 @@
 /* Class = "UILabel"; text = "180 s"; ObjectID = "wdp-1g-dpL"; */
 "wdp-1g-dpL.text" = "180 s";
 
-/************** 发送即时邀请错误提示 *****************/
-// 主播已拒绝、无回复或缺席
-"PRELIVE_ERR_INVITE_NO_RESPONE" = "The broadcaster is not responding.\nPlease try again later.";
-// 主播已拒绝有留言
-"PRELIVE_ERR_INVITE_REJECT" = "Sorry, the broadcaster has declined your invitation and left you a message as below:\n%@";
-// 邀请发送失败(网络问题)
-"PRELIVE_ERR_INVITE_FAIL" = "Failed to send a One-on-One broadcast invitation, please try again.";
-// 信用点不足
-"PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
-// 若主播私密直播中，是否确认邀请并推荐主播
-"PRELIVE_ERR_BOARDCAST_LIVING" = "This broadcaster is in a One-on-One broadcast. Do you still wish to send the invitation?";
-// 主播不在线
-"PRELIVE_ERR_BOARDCAST_OFFLINE" = "The broadcaster offline, please check back later.";
-// 若用户断线，不断重连，但180秒后连接失败，则提示
-"RECONNECTION_TIMEOUT" = "Failed to connect.Please try again later.";
+/************** 发送即时邀请提示 *****************/
+"INVITING_VIEWR_START" = "Inviting the viewer to start One-on-One broadcast...";
+"INVITE_BEING_CANCEL" = "The invitation is being cancelled";
+
+/************** 正在进入直播间提示 *****************/
+"LIVE_ENTER_ROOM" = "Is being enter room";
+
+/************** 接受立即邀请提示 *****************/
+"LIVE_ACCEPT_INVITE" = "Is being accept invite";
+
+/************** 过渡页错误提示 *****************/
+"VIEWER_NOT_REPLY" = "Could not connect to the viewer.The viewer is not responding.";
+"CONNECTION_SERVER_FAILED" = "Trouble connecting to the server please try again later.";
+"INVITING_TO_CANCEL" = "The invitation is being cancelled.";
+"FAILED_TO_CANCEL" = "Failed to cancel. The invitation has been accepted.";
 
 
-/************** 发送即时私密邀请状态提示 *****************/
-// 邀请发送成功，等待主播确认
-"PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";
-// 主播已确认提示
-"PRELIVE_TIPS_BOARDCAST_ACCEPT" = "The broadcaster is getting prepared.\nOne-on-One broadcast will start in";
-
-
-/************** 进入直播间通用错误提示 *****************/
-// 进入直播间超时
-"COMEIN_LIVEROOM_TIMEOUT" = "Failed to enter the broadcast room, please try again later.";
-// 服务器返回错误
-"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";
-
-
-/************** 进入付费公开直播间通用错误提示 *****************/
-// 房间满人
-"LIVE_ROOM_FULL" = "Broadcast room is full. \nPlease check back later.";
-// 网络中断(公共错误)
-//"LOCAL_ERROR_CODE_TIMEOUT" = "Failed to send a One-on-One broadcast invitation, please try again.";
-
-
-/************** 预约直播开始错误提示 *****************/
-// 统一提示
-"BOOKING_ERROR_TREATING" = "Could not connect to the broadcaster. Please try again later.";
-
-"UNKNOW_ROOM_TYPE" = "Unknow room type.";
-
+"CLOSE_LIVE_SHOW" = "You scheduled show will be started soon. Are you sure you wish to close this page?";
 

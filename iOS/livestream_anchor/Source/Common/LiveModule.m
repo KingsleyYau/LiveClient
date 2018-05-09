@@ -34,7 +34,7 @@
 #import "LSUserUnreadCountManager.h"
 
 #pragma mark - IM
-#import "ZBLSImManager.h"
+#import "LSAnchorImManager.h"
 
 #pragma mark - 流媒体
 #import "LiveGobalManager.h"
@@ -61,7 +61,7 @@ static LiveModule *gModule = nil;
 @property (strong, nonatomic) NSString *token;
 @property (strong, nonatomic) LSSessionRequestManager *sessionManager;
 @property (strong, nonatomic) LSLoginManager *loginManager;
-@property (strong, nonatomic) ZBLSImManager *imManager;
+@property (strong, nonatomic) LSAnchorImManager *imManager;
 @property (strong, nonatomic) LiveGobalManager *liveGobalManager;
 @property (strong, nonatomic) LiveGiftListManager *giftListManager;
 @property (strong, nonatomic) LiveGiftDownloadManager *giftDownloadManager;
@@ -115,7 +115,7 @@ static LiveModule *gModule = nil;
         self.loginManager = [LSLoginManager manager];
         //[self.loginManager addDelegate:self];
         // 初始化IM管理器
-        self.imManager = [ZBLSImManager manager];
+        self.imManager = [LSAnchorImManager manager];
         [self.imManager addDelegate:self];
         [self.imManager.client addDelegate:self];
 
@@ -179,7 +179,7 @@ static LiveModule *gModule = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.loginManager login:self.manId userSid:self.token];
+        //[self.loginManager login:self.manId userSid:self.token];
     });
 
     return bFlag;
@@ -310,12 +310,13 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:invitationId anchorId:self.loginManager.loginItem.userId nickName:self.loginManager.loginItem.nickName];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:invitationId anchorId:userId nickName:nickName];
         // 调用QN弹出通知
         PushInviteViewController *vc = [[PushInviteViewController alloc] initWithNibName:nil bundle:nil];
         vc.url = url;
         vc.inviteId = invitationId;
-        vc.anchorId = userId;
+        vc.userId = userId;
+        vc.userName = nickName;
         _notificationVC = vc;
         
         if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
@@ -330,11 +331,12 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:self.loginManager.loginItem.userId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
         // 调用QN弹出通知
         PushBookingViewController *vc = [[PushBookingViewController alloc] initWithNibName:nil bundle:nil];
         vc.url = url;
         vc.userId = userId;
+        vc.userName = nickName;
         _notificationVC = vc;
 
         if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
@@ -342,7 +344,26 @@ static LiveModule *gModule = nil;
         }
     });
 }
- 
+
+- (void)onZBHandleLoginSchedule:(NSArray<ZBImScheduleRoomObject *> *)scheduleRoomList
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 生成直播间跳转的URL
+        
+        ZBImScheduleRoomObject * obj = [scheduleRoomList objectAtIndex:0];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:obj.roomId userId:obj.anchorId roomType:LiveRoomType_Private];
+        // 调用QN弹出通知
+        PushBookingViewController *vc = [[PushBookingViewController alloc] initWithNibName:nil bundle:nil];
+        vc.url = url;
+        vc.userId = obj.anchorId;
+        vc.userName = obj.nickName;
+        _notificationVC = vc;
+        
+        if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
+            [self.delegate moduleOnNotification:self];
+        }
+    });
+}
 
 #pragma mark 获取用户中心未读数
 - (void)getUnReadMsg {

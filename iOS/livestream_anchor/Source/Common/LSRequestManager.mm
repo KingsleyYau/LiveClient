@@ -119,7 +119,7 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_WARNING);
+    KLog::SetLogLevel(KLog::LOG_MSG);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -229,6 +229,9 @@ public:
         }
         obj.svrList = array;
         obj.userType = item.userType;
+        obj.qnMainAdUrl = [NSString stringWithUTF8String:item.qnMainAdUrl.c_str()];
+        obj.qnMainAdTitle = [NSString stringWithUTF8String:item.qnMainAdTitle.c_str()];
+        obj.qnMainAdId = [NSString stringWithUTF8String:item.qnMainAdId.c_str()];
         
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {
@@ -366,15 +369,15 @@ public:
         NSMutableArray *array = [NSMutableArray array];
         for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
-            item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
-            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
-            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
-            item.onlineStatus = (*iter).onlineStatus;
-            item.roomType = (*iter).roomType;
+            item.userId = [NSString stringWithUTF8String:(*iter)->userId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter)->nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter)->photoUrl.c_str()];
+            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter)->roomPhotoUrl.c_str()];
+            item.onlineStatus = (*iter)->onlineStatus;
+            item.roomType = (*iter)->roomType;
             NSMutableArray *nsInterest = [NSMutableArray array];
             //int i = 0;
-            for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+            for (InterestList::const_iterator itr = (*iter)->interest.begin(); itr != (*iter)->interest.end(); itr++) {
                 //NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
                 int num = (*itr);
                 NSNumber *numInterest = [NSNumber numberWithInt:num];
@@ -383,7 +386,7 @@ public:
                 //i++;
             }
             item.interest = nsInterest;
-            item.anchorType = (*iter).anchorType;
+            item.anchorType = (*iter)->anchorType;
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetAnchorList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
         }
@@ -426,22 +429,22 @@ public:
         NSMutableArray *array = [NSMutableArray array];
         for (FollowItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             FollowItemObject *item = [[FollowItemObject alloc] init];
-            item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
-            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
-            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
-            item.onlineStatus = (*iter).onlineStatus;
-            item.roomType = (*iter).roomType;
-            item.loveLevel = (*iter).loveLevel;
-            item.addDate = (*iter).addDate;
+            item.userId = [NSString stringWithUTF8String:(*iter)->userId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter)->nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter)->photoUrl.c_str()];
+            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter)->roomPhotoUrl.c_str()];
+            item.onlineStatus = (*iter)->onlineStatus;
+            item.roomType = (*iter)->roomType;
+            item.loveLevel = (*iter)->loveLevel;
+            item.addDate = (*iter)->addDate;
             NSMutableArray *nsInterest = [NSMutableArray array];
-            for (FollowInterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+            for (FollowInterestList::const_iterator itr = (*iter)->interest.begin(); itr != (*iter)->interest.end(); itr++) {
                 int num = (*itr);
                 NSNumber *numInterest = [NSNumber numberWithInt:num];
                 [nsInterest addObject:numInterest];
             }
             item.interest = nsInterest;
-            item.anchorType = (*iter).anchorType;
+            item.anchorType = (*iter)->anchorType;
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetFollowList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
         }
@@ -992,11 +995,11 @@ class RequestGetPromoAnchorListCallbackImp : public IRequestGetPromoAnchorListCa
 public:
     RequestGetPromoAnchorListCallbackImp(){};
     ~RequestGetPromoAnchorListCallbackImp(){};
-    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &listItem) {
+    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask *task, bool success, int errnum, const string &errmsg, const AdItemList &listItem) {
         NSLog(@"LSRequestManager::OnGetPromoAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         NSMutableArray *array = [NSMutableArray array];
-        for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
+        for (AdItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
@@ -1716,11 +1719,11 @@ class RequestGetAdAnchorListCallbackImp : public IRequestGetAdAnchorListCallback
 public:
     RequestGetAdAnchorListCallbackImp(){};
     ~RequestGetAdAnchorListCallbackImp(){};
-    void OnGetAdAnchorList(HttpGetAdAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &list) {
+    void OnGetAdAnchorList(HttpGetAdAnchorListTask *task, bool success, int errnum, const string &errmsg, const AdItemList &list) {
         NSLog(@"LSRequestManager::OnGetAdAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         NSMutableArray *array = [NSMutableArray array];
-        for (HotItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+        for (AdItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];

@@ -76,7 +76,7 @@ bool SendInstantInviteUserReportTask::Handle(const TransportProtocol& tp)
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
         m_listener->OnSendInstantInviteUserReport(GetSeq(), success, m_errType, m_errMsg);
-		FileLog("ImClient", "SendInstantInviteUserReportTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "SendInstantInviteUserReportTask::Handle() callback end, result:%d", success);
 	}
 	
 	FileLog("ImClient", "SendGiftTask::Handle() end");

@@ -181,7 +181,7 @@
 
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
     listViewController.anchorId = item.userId;
-    listViewController.enterRoom = 1;
+    listViewController.showInvite = 1;
     [self.navigationController pushViewController:listViewController animated:YES];
 }
 

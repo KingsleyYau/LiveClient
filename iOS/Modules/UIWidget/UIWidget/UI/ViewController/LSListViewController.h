@@ -36,4 +36,5 @@
 @property (nonatomic, assign) SEL delegateSelect;
 - (void)reloadFailViewContent;
 
+- (void)lsListViewControllerDidClick:(UIButton *)sender;
 @end

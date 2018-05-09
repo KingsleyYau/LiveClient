@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <httpcontroller/HttpRequestEnum.h>
+#import "LSProgramItemObject.h"
 
 @interface FollowItemObject : NSObject
 /**
@@ -22,6 +23,7 @@
  * addDate           添加收藏时间（1970年起的秒数）
  * interest          爱好ID列表
  * anchorType        主播类型（1:白银 2:黄金）
+ * showInfo          节目信息
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* nickName;
@@ -37,5 +39,9 @@
 @property (nonatomic, strong) NSMutableArray<NSNumber*>* interest;
 // 主播类型（1:白银 2:黄金）
 @property (nonatomic, assign) AnchorLevelType anchorType;
+
+// 节目信息
+@property (nonatomic, strong) LSProgramItemObject* showInfo;
+
 
 @end

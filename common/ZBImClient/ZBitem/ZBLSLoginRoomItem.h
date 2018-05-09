@@ -25,13 +25,7 @@ public:
             if (root[ROOMLIST_ROOMID_PARAM].isString()) {
                 roomId = root[ROOMLIST_ROOMID_PARAM].asString();
             }
-//            // alextest
-//            if (root[ROOMLIST_ROOMID_PARAM].isNumeric()) {
-//                //roomId = root[ROOMLIST_ROOMID_PARAM].asString();
-//                char temp[16];
-//                snprintf(temp, sizeof(temp), "%d",  root[ROOMLIST_ROOMID_PARAM].asInt());
-//                roomId =  temp;
-//            }
+
             
             /* roomType */
             if (root[ROOMLIST_ROOMTYPE_PARAM].isNumeric()) {

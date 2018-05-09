@@ -25,6 +25,8 @@ public:
     bool Start();
     void Stop();
     void Reset();
+    bool GetMute();
+    void SetMute(bool isMute);
 
 private:
     jobject mJniRenderer;

@@ -16,15 +16,15 @@
 #import "LiveModule.h"
 #import "AnchorPersonalViewController.h"
 #import "LiveUrlHandler.h"
+#import "LSLoginManager.h"
+#import "LiveGobalManager.h"
+#import "UserInfoManager.h"
 
 @interface LiveFinshViewController ()
 #pragma mark - 推荐逻辑
-@property (atomic, strong) NSArray *recommandItems;
-
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-
 @property (nonatomic, strong) LSImageViewLoader *ladyImageLoader;
 @property (nonatomic, strong) LSImageViewLoader *backgroundImageloader;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *headImageTop;
 
 @end
 
@@ -45,7 +45,6 @@
     
     self.ladyImageLoader = [LSImageViewLoader loader];
     self.backgroundImageloader = [LSImageViewLoader loader];
-    self.sessionManager = [LSSessionRequestManager manager];
 }
 
 - (void)setupContainView {
@@ -62,10 +61,19 @@
     self.viewHotBtn.layer.cornerRadius = 10;
     self.viewHotBtn.layer.masksToBounds = YES;
     
-    [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
-    
-    [self.backgroundImageloader loadImageWithImageView:self.backgroundImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:
-     nil];
+    if (self.liveRoom.userId.length) {
+        WeakObject(self, weakSelf);
+        [[UserInfoManager manager] getFansBaseInfo:self.liveRoom.userId finishHandler:^(AudienModel * _Nonnull item) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.liveRoom.photoUrl = item.photoUrl;
+                [weakSelf.ladyImageLoader refreshCachedImage:weakSelf.headImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl
+                    placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+            });
+        }];
+        
+    } else {
+        [self.ladyImageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:[LSLoginManager manager].loginItem.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
+    }
 }
 
 #pragma mark - 根据错误码显示界面
@@ -118,7 +126,7 @@
 //            self.tipLabel.text = self.errMsg;
 //        } break;
 //    }
-    
+    self.tipLabel.text = errMsg;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -129,10 +137,16 @@
     self.navigationController.navigationBarHidden = YES;
     
     [self handleError:self.errType errMsg:self.errMsg];
+    
+    if ([LSDevice iPhoneXStyle]) {
+        self.headImageTop.constant = 125;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    [LiveGobalManager manager].liveRoom = nil;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -143,20 +157,12 @@
     [super viewDidDisappear:animated];
 }
 
-- (void)setupBgImageView {
-    // 设置模糊
-    UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
-    UIVisualEffectView *visualView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
-    visualView.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    [self.backgroundImageView addSubview:visualView];
-}
-
-
-
 - (IBAction)viewHotAction:(id)sender {
-
-    [self  dismissViewControllerAnimated:YES completion:nil];
-
+//    [self.view removeFromSuperview];
+    [self.navigationController dismissViewControllerAnimated:YES
+                                                  completion:^{
+                                                      
+                                                  }];
 }
 
 

@@ -9,7 +9,7 @@
 #import "LSChatEmotionManager.h"
 #import "LiveBundle.h"
 #import "LSLoginManager.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "ZBEmoticonInfoItemObject.h"
 #import <YYText.h>
 
@@ -63,7 +63,7 @@
 
 // 请求聊天表情
 - (void)requestEmotionList {
-    [[ZBLSRequestManager manager] anchorGetEmoticonList:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBEmoticonItemObject *> * _Nullable item) {
+    [[LSAnchorRequestManager manager] anchorGetEmoticonList:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBEmoticonItemObject *> * _Nullable item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (success) {

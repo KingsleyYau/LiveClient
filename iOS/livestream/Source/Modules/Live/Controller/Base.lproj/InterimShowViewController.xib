@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="InterimShowViewController">
+            <connections>
+                <outlet property="addBtn" destination="UcZ-bM-k6r" id="66n-BI-lBV"/>
+                <outlet property="bookBtn" destination="IOQ-fd-xIn" id="phJ-o8-1wJ"/>
+                <outlet property="closeBtn" destination="QLQ-Wb-do2" id="5eA-iP-Epi"/>
+                <outlet property="headImage" destination="V1q-GF-JSS" id="yOD-yF-UBl"/>
+                <outlet property="loading" destination="Tk9-i8-Hb7" id="tfA-Zg-Aex"/>
+                <outlet property="nameLabel" destination="4Zg-HP-xoB" id="iXa-JG-DNd"/>
+                <outlet property="reloadBtn" destination="UcZ-bM-k6r" id="j34-i7-8hH"/>
+                <outlet property="showView" destination="jCA-TO-FHI" id="62b-yw-I5X"/>
+                <outlet property="tipsLabel" destination="NUy-l2-1bb" id="wqP-wB-cLR"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="V1q-GF-JSS" userLabel="Lady Photo ImageView">
+                    <rect key="frame" x="126" y="59" width="123" height="123"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Malinla" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Zg-HP-xoB" userLabel="Lady Name Label">
+                    <rect key="frame" x="40" y="205" width="295" height="21"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLQ-Wb-do2" userLabel="Cancel Button">
+                    <rect key="frame" x="320" y="20" width="40" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="Live_Preview_Btn_Cancel"/>
+                    <connections>
+                        <action selector="closeBtnDid:" destination="-1" eventType="touchUpInside" id="Rxs-fN-pev"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Tips" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NUy-l2-1bb" userLabel="Tips Label">
+                    <rect key="frame" x="40" y="246" width="295" height="54"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="diC-0C-rpT" userLabel="Try Again Button">
+                    <rect key="frame" x="82" y="321" width="211" height="33"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="Live_PreLive_Btn_Retry"/>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IOQ-fd-xIn" userLabel="Book Private Button">
+                    <rect key="frame" x="84" y="320" width="207" height="35"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
+                    <connections>
+                        <action selector="bookBtnDid:" destination="-1" eventType="touchUpInside" id="Rjv-iT-0SM"/>
+                        <action selector="reloadBtnDid:" destination="-1" eventType="touchUpInside" id="oM1-do-wD0"/>
+                    </connections>
+                </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcZ-bM-k6r" userLabel="Add Credit Button">
+                    <rect key="frame" x="122" y="321" width="131" height="33"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="Live_PreLive_Btn_AddCredit"/>
+                    <connections>
+                        <action selector="addBtnDid:" destination="-1" eventType="touchUpInside" id="8Nb-lx-w05"/>
+                    </connections>
+                </button>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Tk9-i8-Hb7">
+                    <rect key="frame" x="177" y="324" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                </activityIndicatorView>
+                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jCA-TO-FHI" customClass="ShowListView">
+                    <rect key="frame" x="16" y="456" width="344" height="180"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <point key="canvasLocation" x="-6.5" y="-9.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="207" height="35"/>
+        <image name="Live_PreLive_Btn_AddCredit" width="131" height="33"/>
+        <image name="Live_PreLive_Btn_Retry" width="211" height="33"/>
+        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+    </resources>
+</document>

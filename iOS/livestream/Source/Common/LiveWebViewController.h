@@ -16,4 +16,7 @@
 
 @property (nonatomic, copy) NSString *anchorId;
 
+/** 是否协议 */
+@property (nonatomic, assign) BOOL isUserProtocol;
+
 @end

@@ -22,7 +22,7 @@
 - (void)dealloc {
     NSLog(@"IntroduceViewController::dealloc()");
     [self.introduceView stopLoading];
-    [self.introduceView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    [self.introduceView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
 }
 
 - (void)viewDidLoad {

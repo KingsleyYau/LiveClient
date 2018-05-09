@@ -20,6 +20,9 @@
 #define AVATARIMG_PARAM       "avatar_img"
 #define MSG_PARAM             "msg"
 
+// 返回
+#define ISSHOW_PARAM          "is_show"
+
 
 RecvInstantInviteUserNoticeTask::RecvInstantInviteUserNoticeTask(void)
 {
@@ -109,7 +112,17 @@ bool RecvInstantInviteUserNoticeTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvInstantInviteUserNoticeTask::GetSendData() begin");
     {
-
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        Json::Value valueDate;
+        // 写死时观众端是弹出邀请（应该没用，在7.8.接口会有一个发送请求的）
+        valueDate[ISSHOW_PARAM] = 1;
+        value[ROOT_DATA] = valueDate;
+        data = value;
     }
 
     result = true;

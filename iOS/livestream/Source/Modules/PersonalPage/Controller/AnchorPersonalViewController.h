@@ -17,5 +17,6 @@
 
 @property (nonatomic, copy) NSString *anchorId;
 @property (nonatomic, assign) int enterRoom;
-
+//0:Album 1:MyCalender 2:Profile
+@property (nonatomic, assign) NSInteger tabType;
 @end

@@ -14,6 +14,7 @@ import net.qdating.publisher.ILSPublisherCallback;
 import net.qdating.publisher.ILSPublisherStatusCallback;
 import net.qdating.publisher.ILSVideoCaptureCallback;
 import net.qdating.publisher.LSAudioRecorder;
+import net.qdating.publisher.LSPublishConfig;
 import net.qdating.publisher.LSPublisherJni;
 import net.qdating.publisher.LSVideoCapture;
 import net.qdating.publisher.LSVideoHardEncoder;
@@ -80,9 +81,23 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	 * 初始化流推送器
 	 * @param surfaceView	显示界面
 	 * @param statusCallback 状态回调接口
+	 * @param statusCallback 状态回调接口
+	 * @param videoConfigType 视频配置
+	 * @param fps 帧率(12)
+	 * @param keyFrameInterval 关键帧间隔(12)
+	 * @param videoBitrate 视频码率(500 * 1000)
 	 * @return true:成功/false:失败
 	 */
-	public boolean init(Context context, GLSurfaceView surfaceView, int rotation, FillMode fillMode, ILSPublisherStatusCallback statusCallback) {
+	public boolean init(Context context,
+						GLSurfaceView surfaceView,
+						int rotation,
+						FillMode fillMode,
+						ILSPublisherStatusCallback statusCallback,
+						LSConfig.VideoConfigType videoConfigType,
+						int fps,
+						int keyFrameInterval,
+						int videoBitrate
+	) {
 		boolean bFlag = true;
 
 		File path = Environment.getExternalStorageDirectory();
@@ -94,40 +109,52 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 				String.format("LSPublisher::init( "
 								+ "this : 0x%x, "
 								+ "rotation : %d, "
-								+ "fillMode : %d "
+								+ "fillMode : %d, "
+								+ "videoConfigType : %d "
+								+ "fps : %d "
+								+ "keyFrameInterval : %d "
+								+ "videoBitrate : %d "
 								+ ")",
 						hashCode(),
 						rotation,
-						fillMode.ordinal()
+						fillMode.ordinal(),
+						videoConfigType.ordinal(),
+						fps,
+						keyFrameInterval,
+						videoBitrate
 				)
 		);
 
 		// 初始化状态回调
 		this.statusCallback = statusCallback;
 
-//        if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeAuto ) {
-//            if( LSVideoHardEncoder.supportHardEncoder() ) {
+		// 创建推流视频配置
+		LSPublishConfig publishConfig = new LSPublishConfig();
+		bFlag = publishConfig.updateVideoConfig(videoConfigType, fps, keyFrameInterval, videoBitrate);
+
+//        if( LSConfig.encodeMode == LSConfig.EncodeMode.EncodeModeAuto ) {
+//            if( LSVideoHardEncoder.supportHardEncoder(publishConfig) ) {
 //                // 判断可以使用硬解码
 //                useHardEncoder = true;
 //            }
-//        } else if( LSConfig.encodeDecodeMode == LSConfig.EncodeDecodeMode.EncodeDecodeModeHard ) {
+//        } else if( LSConfig.encodeMode == LSConfig.EncodeMode.EncodeModeHard ) {
 //            // 强制使用硬解码
 //            useHardEncoder = true;
 //        }
 
 		// 初始化推流器
 		if( bFlag ) {
-			bFlag = publisher.Create(this, useHardEncoder, videoHardEncoder);
+			bFlag = publisher.Create(this, useHardEncoder, videoHardEncoder, publishConfig);
 		}
 		
 		// 初始化视频采集
 		if( bFlag ) {
-			bFlag = videoCapture.init(surfaceView, this, rotation, fillMode, useHardEncoder);
+			bFlag = videoCapture.init(surfaceView, this, rotation, fillMode, useHardEncoder, publishConfig);
 		}
 		
 		// 初始化音频录制
 		if( bFlag ) {
-			bFlag = audioRecorder.init(this);
+			bFlag = audioRecorder.init(this, publishConfig);
 		}
 
 		if( bFlag ) {

@@ -44,6 +44,12 @@
  */
 - (void)onHandleLoginSchedule:(NSArray<ImScheduleRoomObject*> * _Nonnull)scheduleRoomList;
 
+/**
+ 第一次登陆成功, 显示可以进入的节目
+ 
+ @param ongoingShowList 显示可以进入的节目
+ */
+- (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject*> * _Nullable) ongoingShowList;
 @end
 
 @interface LSImManager : NSObject
@@ -202,5 +208,45 @@ typedef void (^ControlManPushHandler)(BOOL success, LCC_ERR_TYPE errType, NSStri
  @return YES:成功/NO:失败
  */
 -(BOOL)controlManPush:(NSString *_Nonnull)roomId control:(IMControlType)control finishHandler:(ControlManPushHandler _Nullable )finishHandler;
+
+// ------------- 多人互动 -------------
+typedef void (^EnterHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, IMHangoutRoomItemObject *_Nonnull Item);
+/**
+ *  10.3.观众新建/进入多人互动直播间接口
+ *
+ *  @param roomId           直播间ID
+ *
+ */
+- (BOOL)enterHangoutRoom:(NSString* _Nonnull)roomId finishHandler:(EnterHangoutRoomHandler _Nullable)finishHandler;
+
+typedef void (^LeaveHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg);
+/**
+ *  10.4.退出多人互动直播间接口
+ *
+ *  @param roomId           直播间ID
+ *
+ */
+- (BOOL)leaveHangoutRoom:(NSString* _Nonnull)roomId finishHandler:(LeaveHangoutRoomHandler _Nullable)finishHandler;
+
+typedef void (^SendHangoutGiftHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg);
+/**
+ *  10.7.发送多人互动直播间礼物消息接口
+ *
+ * @roomId              直播间ID
+ * @nickName            发送人昵称
+ * @toUid               接收者ID
+ * @giftId              礼物ID
+ * @giftName            礼物名称
+ * @isBackPack          是否背包礼物（1：是，0：否）
+ * @giftNum             本次发送礼物的数量
+ * @isMultiClick        是否连击礼物（1：是，0：否）
+ * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
+ * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
+ * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
+ * @isPrivate           是否私密发送（1：是，0：否）
+ *
+ */
+- (BOOL)sendHangoutGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName toUid:(NSString* _Nonnull)toUid giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate finishHandler:(SendHangoutGiftHandler _Nullable)finishHandler;
+
 
 @end

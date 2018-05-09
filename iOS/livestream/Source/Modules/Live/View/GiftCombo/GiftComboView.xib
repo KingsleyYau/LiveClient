@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -23,10 +23,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fLN-w4-HmG">
                     <rect key="frame" x="0.0" y="0.0" width="160" height="48"/>
                     <subviews>
-                        <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Bg_Combo" translatesAutoresizingMaskIntoConstraints="NO" id="9FX-dS-BHe">
-                            <rect key="frame" x="0.0" y="0.0" width="160" height="48"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="7Rg-Hs-zQe" userLabel="Icon Image View" customClass="LSUIImageViewTopFit">
                             <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
                             <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -57,21 +53,17 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="9PK-0x-akL" firstAttribute="trailing" secondItem="vQY-GG-YEP" secondAttribute="leading" constant="-5" id="0Jg-1O-TqN"/>
-                        <constraint firstItem="9FX-dS-BHe" firstAttribute="width" secondItem="fLN-w4-HmG" secondAttribute="width" id="34q-2j-rOC"/>
                         <constraint firstItem="ZYd-aB-m6p" firstAttribute="trailing" secondItem="9PK-0x-akL" secondAttribute="trailing" id="6OL-Y9-F6a"/>
                         <constraint firstItem="ZYd-aB-m6p" firstAttribute="bottom" secondItem="fLN-w4-HmG" secondAttribute="bottom" constant="-8" id="95r-lg-uaF"/>
                         <constraint firstAttribute="width" constant="160" id="AT3-Bw-sZS"/>
                         <constraint firstItem="9PK-0x-akL" firstAttribute="leading" secondItem="7Rg-Hs-zQe" secondAttribute="trailing" constant="7" id="AuQ-Yx-DHz"/>
                         <constraint firstItem="vQY-GG-YEP" firstAttribute="bottom" secondItem="fLN-w4-HmG" secondAttribute="bottom" constant="-10" id="Cyg-e2-jfH"/>
-                        <constraint firstItem="9FX-dS-BHe" firstAttribute="height" secondItem="fLN-w4-HmG" secondAttribute="height" id="Exh-GH-QJj"/>
                         <constraint firstItem="vQY-GG-YEP" firstAttribute="trailing" secondItem="fLN-w4-HmG" secondAttribute="trailing" constant="-20" id="NcL-so-pOI"/>
-                        <constraint firstItem="9FX-dS-BHe" firstAttribute="leading" secondItem="fLN-w4-HmG" secondAttribute="leading" id="O8c-O6-ery"/>
                         <constraint firstItem="ZYd-aB-m6p" firstAttribute="leading" secondItem="9PK-0x-akL" secondAttribute="leading" id="SY2-7T-pZA"/>
                         <constraint firstItem="7Rg-Hs-zQe" firstAttribute="leading" secondItem="fLN-w4-HmG" secondAttribute="leading" id="XBy-pY-s2I"/>
                         <constraint firstItem="7Rg-Hs-zQe" firstAttribute="height" secondItem="fLN-w4-HmG" secondAttribute="height" id="b4S-4N-WIj"/>
                         <constraint firstItem="vQY-GG-YEP" firstAttribute="top" secondItem="fLN-w4-HmG" secondAttribute="top" constant="10" id="gMN-x6-jah"/>
                         <constraint firstItem="7Rg-Hs-zQe" firstAttribute="top" secondItem="fLN-w4-HmG" secondAttribute="top" id="lrh-HJ-Z2J"/>
-                        <constraint firstItem="9FX-dS-BHe" firstAttribute="top" secondItem="fLN-w4-HmG" secondAttribute="top" id="w1o-7C-t6P"/>
                         <constraint firstItem="9PK-0x-akL" firstAttribute="top" secondItem="fLN-w4-HmG" secondAttribute="top" constant="8" id="xn0-aT-uYN"/>
                     </constraints>
                 </view>

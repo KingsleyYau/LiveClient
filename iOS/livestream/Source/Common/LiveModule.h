@@ -20,6 +20,9 @@
 #define HARRY_TOKEN @"Harry_HHeEoKeotNFp"
 #define ALEX_TOKEN @"Alex_Jd4i0p5A30aH"
 #define IVY_TOKEN @"ivy2_CMTS09553"
+#define CALVIN_TOKEN @"Calvin_CMTS09563"
+#define LANCE_TOKEN @"Lance_CMTS09562"
+#define JAGGER_TOKEN @"Jagger_CMTS09564"
 
 @class LiveModule;
 @protocol LiveModuleDelegate <NSObject>
@@ -145,7 +148,14 @@
 
 /** QN判断是否在直播间 */
 @property (copy, nonatomic) NSString *roomID;
-
+/** 广告id */
+@property (nonatomic, copy) NSString *qnMainAdId;
+/** 广告链接 */
+@property (nonatomic, copy) NSString *qnMainAdUrl;
+/** 广告标题 */
+@property (nonatomic, copy) NSString *qnMainAdTitle;
+/** app版本号 */
+@property (nonatomic, copy) NSString *appVerCode;
 /**
  获取实例
 

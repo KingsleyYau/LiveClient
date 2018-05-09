@@ -12,12 +12,12 @@
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
 
-// FPS
-#define FPS 15
-// 关键帧间隔(每KEY_FRAME_INTERVAL帧就有一个关键帧)
-#define KEY_FRAME_INTERVAL FPS
+//// FPS
+//#define FPS 12
+//// 关键帧间隔(每KEY_FRAME_INTERVAL帧就有一个关键帧)
+//#define KEY_FRAME_INTERVAL FPS
 // 视频码率
-#define BIT_RATE 1000 * 1000
+//#define BIT_RATE 500 * 1000
 
 // 音频码率
 //#define BIT_RATE 600 * 1000
@@ -47,7 +47,7 @@
  @param height 视频高
  @return 实例
  */
-+ (instancetype _Nonnull)instance:(NSInteger)width height:(NSInteger)height;
++ (instancetype _Nonnull)instance:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate;
 
 /**
  发布流连接

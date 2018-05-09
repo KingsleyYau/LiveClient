@@ -21,6 +21,7 @@
         self.mountName = [coder decodeObjectForKey:@"mountName"];
         self.mountUrl = [coder decodeObjectForKey:@"mountUrl"];
         self.level = [coder decodeIntForKey:@"level"];
+        self.isHasTicket = [coder decodeBoolForKey:@"isHasTicket"];
     }
     return self;
 }
@@ -33,6 +34,7 @@
     [coder encodeObject:self.mountName forKey:@"mountName"];
     [coder encodeObject:self.mountUrl forKey:@"mountUrl"];
     [coder encodeInt:self.level forKey:@"level"];
+    [coder encodeBool:self.isHasTicket forKey:@"isHasTicket"];
 }
 
 @end

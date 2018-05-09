@@ -1,18 +1,21 @@
 
-/* Class = "UILabel"; text = "Broadcaster Login"; ObjectID = "81G-vY-rGf"; */
-"81G-vY-rGf.text" = "Broadcaster Login";
+/* Class = "UITextField"; placeholder = "VERIFICATION CODE"; ObjectID = "9At-Fu-khD"; */
+"9At-Fu-khD.placeholder" = "VERIFICATION CODE";
+
+/* Class = "UITextField"; placeholder = "YOUE LOGIN ID"; ObjectID = "Aa4-D6-Qxa"; */
+"Aa4-D6-Qxa.placeholder" = "YOUR LOGIN ID";
 
 /* Class = "UINavigationItem"; title = "Login Test"; ObjectID = "N2g-e5-pj8"; */
 "N2g-e5-pj8.title" = "Login Test";
 
-/* Class = "UILabel"; text = "Charm Live"; ObjectID = "QVw-Gz-BZh"; */
-"QVw-Gz-BZh.text" = "Charm Live";
+/* Class = "UIButton"; normalTitle = "观众登录"; ObjectID = "Qc9-19-4Ab"; */
+"Qc9-19-4Ab.normalTitle" = "观众登录";
 
-/* Class = "UITextView"; text = "By using our service,you agree to our Terms and Policies"; ObjectID = "oUp-vG-ENK"; */
-"oUp-vG-ENK.text" = "By using our service,you agree to our Terms and Policies";
+/* Class = "UITextField"; placeholder = "PASSWORD"; ObjectID = "gio-NI-WGi"; */
+"gio-NI-WGi.placeholder" = "PASSWORD";
 
 /* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "r1X-qb-t8b"; */
 "r1X-qb-t8b.normalTitle" = "Reload";
 
 /* Class = "UIButton"; normalTitle = "Login"; ObjectID = "u6U-s4-jry"; */
-"u6U-s4-jry.normalTitle" = "Login";
+"u6U-s4-jry.normalTitle" = "LOGIN";

@@ -43,7 +43,7 @@
     [view bringSubviewToFront:self];
 
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(view.mas_width).offset(-DESGIN_TRANSFORM_3X(100));
+        make.width.equalTo(view.mas_width).offset(-100);
         make.centerY.equalTo(view.mas_centerY);
         make.centerX.equalTo(view);
     }];

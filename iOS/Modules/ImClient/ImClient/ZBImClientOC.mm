@@ -56,7 +56,7 @@ class ZBImClientCallback;
 
 #pragma mark - 直播间主动操作回调
 /**
- *  3.1.观众进入直播间回调
+ *  3.2.观众进入直播间回调
  *
  *  @param success     操作是否成功
  *  @param reqId       请求序列号
@@ -98,9 +98,10 @@ class ZBImClientCallback;
  *  @param riderName   座驾名称
  *  @param riderUrl    座驾图片url
  *  @param fansNum     观众人数
+ *  @param isHasTicket 是否已购票
  *
  */
-- (void)onZBRecvEnterRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl riderId:(const string &)riderId riderName:(const string &)riderName riderUrl:(const string &)riderUrl fansNum:(int)fansNum;
+- (void)onZBRecvEnterRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl riderId:(const string &)riderId riderName:(const string &)riderName riderUrl:(const string &)riderUrl fansNum:(int)fansNum isHasTicket:(bool)isHasTicket;
 
 /**
  *  3.7.接收观众退出直播间通知回调
@@ -125,6 +126,15 @@ class ZBImClientCallback;
 - (void)onZBRecvLeavingPublicRoomNotice:(const string &)roomId leftSeconds:(int)leftSeconds err:(ZBLCC_ERR_TYPE)err errMsg:(const string &)errMsg;
 
 /**
+ *  3.9.接收主播退出直播间通知回调
+ *
+ *  @param roomId       直播间ID
+ *  @param anchorId     退出直播间的主播ID
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(const string &)roomId anchorId:(const string &)anchorId;
+
+/**
  *  3.5.接收踢出直播间通知回调
  *
  *  @param roomId     直播间ID
@@ -135,56 +145,6 @@ class ZBImClientCallback;
  */
 - (void)onZBRecvRoomKickoffNotice:(const string &)roomId errType:(ZBLCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
 
-///**
-// *  3.9.接收充值通知回调
-// *
-// *  @param roomId     直播间ID
-// *  @param msg        充值提示
-// *  @param credit     信用点
-// *
-// */
-//- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit;
-//
-///**
-// *  3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）回调
-// *
-// *  @param roomId     直播间ID
-// *  @param credit     信用点
-// *
-// */
-//- (void)onRecvCreditNotice:(const string &)roomId credit:(double)credit;
-//
-///**
-// *  3.11.直播间开播通知 回调
-// *
-// *  @param roomId       直播间ID
-// *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
-// *
-// */
-//- (void)onRecvWaitStartOverNotice:(const StartOverRoomItem &)item;
-//
-///**
-// *  3.12.接收观众／主播切换视频流通知接口 回调
-// *
-// *  @param roomId       房间ID
-// *  @param isAnchor     是否是主播推流（1:是 0:否）
-// *  @param playUrl      播放url
-// *
-// */
-//- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl;
-//
-
-//
-///**
-// *  3.14.观众开始／结束视频互动接口 回调
-// *
-// *  @param success          操作是否成功
-// *  @param reqId            请求序列号
-// *  @param errMsg           结果描述
-// *  @param manPushUrl       观众视频流url
-// *
-// */
-//- (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg manPushUrl:(const list<string> &)manPushUrl;
 
 
 #pragma mark - 直播间文本消息信息
@@ -279,7 +239,7 @@ class ZBImClientCallback;
  *  @param Item            互动切换
  *
  */
-- (void)onZBRecvControlManPushNotice:(const ZBControlPushItem&)Item;
+- (void)onZBRecvControlManPushNotice:(const ZBControlPushItem&)item;
 
 
 
@@ -298,19 +258,6 @@ class ZBImClientCallback;
  *
  */
 - (void)onZBSendImmediatePrivateInvite:(BOOL)success reqId:(SEQ_T)reqId err:(ZBLCC_ERR_TYPE)err errMsg:(const string &)errMsg invitationId:(const string &)invitationId timeOut:(int)timeOut roomId:(const string &)roomId;
-//
-///**
-// *  7.2.观众取消立即私密邀请 回调
-// *
-// *  @param success       操作是否成功
-// *  @param reqId         请求序列号
-// *  @param err           结果类型
-// *  @param errMsg        结果描述
-// *  @param roomId        直播间ID
-// *
-// */
-//- (void)onSendCancelPrivateLiveInvite:(bool)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg roomId:(const string &)roomId;
-
 /**
  *  9.2.接收立即私密邀请回复通知 回调
  *
@@ -334,26 +281,7 @@ class ZBImClientCallback;
  *
  */
 - (void)onZBRecvInstantInviteUserNotice:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl invitationId:(const string &)invitationId;
-//
-///**
-// *  7.5.接收主播预约私密邀请通知 回调
-// *
-// *  @param inviteId     邀请ID
-// *  @param anchorId     主播ID
-// *  @param nickName     主播昵称
-// *  @param avatarImg    主播头像url
-// *  @param msg          提示文字
-// *
-// */
-//- (void)onRecvScheduledInviteUserNotice:(const string &)inviteId anchorId:(const string &)anchorId nickName:(const string &)nickName avatarImg:(const string &)avatarImg msg:(const string &)msg;
-//
-///**
-// *  7.6.接收预约私密邀请回复通知 回调
-// *
-// *  @param item     预约私密邀请回复知结构体
-// *
-// */
-//- (void)onRecvSendBookingReplyNotice:(const BookingReplyItem &)item;
+
 
 /**
  *  9.4.接收预约开始倒数通知 回调
@@ -389,6 +317,146 @@ class ZBImClientCallback;
  *  @param bookTime         预约时间（1970年起的秒数）
  */
 - (void)onZBRecvInvitationAcceptNotice:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl invitationId:(const string &)invitationId bookTime:(long)bookTime;
+
+#pragma mark - 多人互动直播间
+// ------------- 多人互动直播间 -------------
+/**
+ *  10.1.进入多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *  @param item        进入多人互动直播间信息
+ *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+ *
+ */
+- (void)onAnchorEnterHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg item:(const AnchorHangoutRoomItem&)item expire:(int)expire;
+
+/**
+ *  10.2.退出多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *
+ */
+- (void)onAnchorLeaveHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg;
+
+/**
+ *  10.3.收观众邀请多人互动通知接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg       结果描述
+ *  @param item         观众邀请多人互动信息
+ */
+- (void)onRecvAnchorInvitationHangoutNotice:(const AnchorHangoutInviteItem&)item;
+
+/**
+ *  10.4.接收推荐好友通知接口 回调
+ *
+ *  @param item         主播端接收自己推荐好友给观众的信息
+ *
+ */
+- (void)onRecvAnchorRecommendHangoutNotice:(const IMAnchorRecommendHangoutItem&)item;
+
+/**
+ *  10.5.接收敲门回复通知接口 回调
+ *
+ *  @param item         接收敲门回复信息
+ *
+ */
+- (void)onRecvAnchorDealKnockRequestNotice:(const IMAnchorKnockRequestItem&)item;
+
+/**
+ *  10.6.接收观众邀请其它主播加入多人互动通知接口 回调
+ *
+ *  @param item         接收观众邀请其它主播加入多人互动信息
+ *
+ */
+- (void)onRecvAnchorOtherInviteNotice:(const IMAnchorRecvOtherInviteItem&)item;
+
+/**
+ *  10.7.接收主播回复观众多人互动邀请通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorDealInviteNotice:(const IMAnchorRecvDealInviteItem&)item;
+
+/**
+ *  10.8.观众端/主播端接收观众/主播进入多人互动直播间通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorEnterRoomNotice:(const IMAnchorRecvEnterRoomItem&)item;
+
+/**
+ *  10.9.接收观众/主播退出多人互动直播间通知接口 回调
+ *
+ *  @param item         接收观众/主播退出多人互动直播间信息
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(const IMAnchorRecvLeaveRoomItem&)item;
+
+/**
+ *  10.10.接收观众/主播多人互动直播间视频切换通知接口 回调
+ *
+ *  @param roomId         直播间ID
+ *  @param isAnchor       是否主播（0：否，1：是）
+ *  @param userId         观众/主播ID
+ *  @param playUrl        视频流url（字符串数组）（访问视频URL的协议参考《 “视频URL”协议描述》）
+ *
+ */
+- (void)onRecvAnchorChangeVideoUrl:(const string&)roomId isAnchor:(bool)isAnchor userId:(const string&)userId playUrl:(const list<string>&)playUrl;
+
+/**
+ *  10.11.发送多人互动直播间礼物消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendAnchorHangoutGift:(SEQ_T)reqId success:(bool)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg;
+
+/**
+ *  10.12.接收多人互动直播间礼物通知接口 回调
+ *
+ *  @param item         接收多人互动直播间礼物信息
+ *
+ */
+- (void)onRecvAnchorGiftNotice:(const IMAnchorRecvGiftItem&)item;
+
+#pragma mark - 节目
+// ------------- 节目 -------------
+/**
+ *  11.1.接收节目开播通知接口 回调
+ *
+ *  @param item         节目信息
+ *  @param msg          消息提示文字
+ *
+ */
+- (void)onRecvAnchorProgramPlayNotice:(const IMAnchorProgramInfoItem&)item msg:(const string&)msg;
+
+/**
+ *  11.2.接收节目状态改变通知接口 回调
+ *
+ *  @param item         节目信息
+ *
+ */
+- (void)onRecvAnchorChangeStatusNotice:(const IMAnchorProgramInfoItem&)item;
+
+/**
+ *  11.3.接收无操作的提示通知接口 回调
+ *
+ *  @param backgroundUrl    背景图url
+ *  @param msg           描述
+ *
+ */
+- (void)onRecvAnchorShowMsgNotice:(const string&)backgroundUrl msg:(const string&)msg;
+
 @end
 
 class ZBImClientCallback : public IZBImClientListener {
@@ -439,9 +507,9 @@ class ZBImClientCallback : public IZBImClientListener {
     }
     
  // 3.6.接收观众进入直播间通知
-    virtual void OnZBRecvEnterRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, const string &riderId, const string &riderName, const string &riderUrl, int fansNum) {
+    virtual void OnZBRecvEnterRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, const string &riderId, const string &riderName, const string &riderUrl, int fansNum, bool isHasTicket) {
         if (nil != clientOC) {
-            [clientOC onZBRecvEnterRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl riderId:riderId riderName:riderName riderUrl:riderUrl fansNum:fansNum];
+            [clientOC onZBRecvEnterRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl riderId:riderId riderName:riderName riderUrl:riderUrl fansNum:fansNum isHasTicket:isHasTicket];
         }
     }
     // 3.7.接收观众退出直播间通知
@@ -451,12 +519,6 @@ class ZBImClientCallback : public IZBImClientListener {
         }
     }
 
-//    virtual void OnRecvRebateInfoNotice(const string &roomId, const RebateInfoItem &item) {
-//        if (nil != clientOC) {
-//            [clientOC onRecvRebateInfoNotice:roomId rebateInfo:item];
-//        }
-//    }
-//
     // 3.8.接收关闭直播间倒数通知
     virtual void OnZBRecvLeavingPublicRoomNotice(const string &roomId, int leftSeconds, ZBLCC_ERR_TYPE err, const string &errMsg) {
         if (nil != clientOC) {
@@ -470,48 +532,19 @@ class ZBImClientCallback : public IZBImClientListener {
         }
     }
 
-//    // 3.9.接收充值通知
-//    virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit) {
-//        if (nil != clientOC) {
-//            [clientOC onRecvLackOfCreditNotice:roomId msg:msg credit:credit];
-//        }
-//    }
-//
-//    // 3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）
-//    virtual void OnRecvCreditNotice(const string &roomId, double credit) {
-//        if (nil != clientOC) {
-//            [clientOC onRecvCreditNotice:roomId credit:credit];
-//        }
-//    }
-//
-//    /**
-//     *  3.11.直播间开播通知 回调
-//     *
-//     *  @param roomId       直播间ID
-//     *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
-//     *
-//     */
-//    virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem &item) {
-//        //        NSLog(@"ImClientCallback::OnRecvWaitStartOverNotice() roomId:%s leftSeconds;%d", roomId.c_str(), leftSeconds);
-//        if (nil != clientOC) {
-//            [clientOC onRecvWaitStartOverNotice:item];
-//        }
-//    }
-//
-//    /**
-//     *  3.12.接收观众／主播切换视频流通知接口 回调
-//     *
-//     *  @param roomId       房间ID
-//     *  @param isAnchor     是否是主播推流（1:是 0:否）
-//     *  @param playUrl      播放url
-//     *
-//     */
-//    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const list<string> &playUrl) {
-//        if (nil != clientOC) {
-//            [clientOC onRecvChangeVideoUrl:roomId isAnchor:isAnchor playUrl:playUrl];
-//        }
-//    };
-//
+    /**
+     *  3.9.接收主播退出直播间通知回调
+     *
+     *  @param roomId       直播间ID
+     *  @param anchorId     退出直播间的主播ID
+     *
+     */
+    virtual void OnRecvAnchorLeaveRoomNotice(const string& roomId, const string& anchorId) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorLeaveRoomNotice:roomId anchorId:anchorId];
+        }
+    }
+
     /**
      *  3.1.新建/进入公开直播间接口 回调
      *
@@ -546,21 +579,6 @@ class ZBImClientCallback : public IZBImClientListener {
             [clientOC onZBRecvSendSystemNotice:roomId msg:msg link:link type:type];
         }
     }
-
-//    /**
-//     *  3.14.观众开始／结束视频互动接口 回调
-//     *
-//     *  @param success          操作是否成功
-//     *  @param reqId            请求序列号
-//     *  @param errMsg           结果描述
-//     *  @param manPushUrl       直播间信息
-//     *
-//     */
-//    virtual void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const list<string> &manPushUrl) {
-//        if (nil != clientOC) {
-//            [clientOC onControlManPush:reqId success:success err:err errMsg:errMsg manPushUrl:manPushUrl];
-//        }
-//    };
 
 
     // ------------- 直播间点赞 -------------
@@ -606,9 +624,9 @@ class ZBImClientCallback : public IZBImClientListener {
      *  @param Item            互动切换
      *
      */
-    virtual void OnZBRecvControlManPushNotice(const ZBControlPushItem Item) {
+    virtual void OnZBRecvControlManPushNotice(const ZBControlPushItem item) {
         if (nil != clientOC) {
-            [clientOC onZBRecvControlManPushNotice:Item];
+            [clientOC onZBRecvControlManPushNotice:item];
         }
     }
     
@@ -711,6 +729,201 @@ class ZBImClientCallback : public IZBImClientListener {
         }
     };
 
+    // ------------- 多人互动直播间 -------------
+    /**
+     *  10.1.进入多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *  @param item        进入多人互动直播间信息
+     *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+     *
+     */
+    virtual void OnAnchorEnterHangoutRoom(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const AnchorHangoutRoomItem& item, int expire) {
+        if (nil != clientOC) {
+            [clientOC onAnchorEnterHangoutRoom:reqId success:success err:err errMsg:errMsg item:item expire:expire];
+        }
+    };
+
+    /**
+     *  10.2.退出多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *  @param item        进入多人互动直播间信息
+     *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+     *
+     */
+    virtual void OnAnchorLeaveHangoutRoom(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) {
+        if (nil != clientOC) {
+            [clientOC onAnchorLeaveHangoutRoom:reqId success:success err:err errMsg:errMsg];
+        }
+    };
+
+    /**
+     *  10.3.接收观众邀请多人互动通知接口 回调
+     *
+     *  @param item         观众邀请多人互动信息
+     *
+     */
+    virtual void OnRecvAnchorInvitationHangoutNotice(const AnchorHangoutInviteItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorInvitationHangoutNotice:item];
+        }
+    };
+
+    /**
+     *  10.4.接收推荐好友通知接口 回调
+     *
+     *  @param item         主播端接收自己推荐好友给观众的信息
+     *
+     */
+    virtual void OnRecvAnchorRecommendHangoutNotice(const IMAnchorRecommendHangoutItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorRecommendHangoutNotice:item];
+        }
+    };
+
+    /**
+     *  10.5.接收敲门回复通知接口 回调
+     *
+     *  @param item         接收敲门回复信息
+     *
+     */
+    virtual void OnRecvAnchorDealKnockRequestNotice(const IMAnchorKnockRequestItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorDealKnockRequestNotice:item];
+        }
+    };
+
+    /**
+     *  10.6.接收观众邀请其它主播加入多人互动通知接口 回调
+     *
+     *  @param item         接收观众邀请其它主播加入多人互动信息
+     *
+     */
+    virtual void OnRecvAnchorOtherInviteNotice(const IMAnchorRecvOtherInviteItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorOtherInviteNotice:item];
+        }
+    };
+
+    /**
+     *  10.7.接收主播回复观众多人互动邀请通知接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    virtual void OnRecvAnchorDealInviteNotice(const IMAnchorRecvDealInviteItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorDealInviteNotice:item];
+        }
+    };
+
+    /**
+     *  10.8.观众端/主播端接收观众/主播进入多人互动直播间通知接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    virtual void OnRecvAnchorEnterRoomNotice(const IMAnchorRecvEnterRoomItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorEnterRoomNotice:item];
+        }
+    };
+
+    /**
+     *  10.9.接收观众/主播退出多人互动直播间通知接口 回调
+     *
+     *  @param item         接收观众/主播退出多人互动直播间信息
+     *
+     */
+    virtual void OnRecvAnchorLeaveRoomNotice(const IMAnchorRecvLeaveRoomItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorLeaveRoomNotice:item];
+        }
+    };
+
+    /**
+     *  10.10.接收观众/主播多人互动直播间视频切换通知接口 回调
+     *
+     *  @param roomId         直播间ID
+     *  @param isAnchor       是否主播（0：否，1：是）
+     *  @param userId         观众/主播ID
+     *  @param playUrl        视频流url（字符串数组）（访问视频URL的协议参考《 “视频URL”协议描述》）
+     *
+     */
+    virtual void OnRecvAnchorChangeVideoUrl(const string& roomId, bool isAnchor, const string& userId, const list<string>& playUrl) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorChangeVideoUrl:roomId isAnchor:isAnchor userId:userId playUrl:playUrl];
+        }
+    };
+
+    /**
+     *  10.11.发送多人互动直播间礼物消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    virtual void OnSendAnchorHangoutGift(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) {
+        if (nil != clientOC) {
+            [clientOC onSendAnchorHangoutGift:reqId success:success err:err errMsg:errMsg];
+        }
+    };
+
+    /**
+     *  10.12.接收多人互动直播间礼物通知接口 回调
+     *
+     *  @param item         接收多人互动直播间礼物信息
+     *
+     */
+    virtual void OnRecvAnchorGiftNotice(const IMAnchorRecvGiftItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorGiftNotice:item];
+        }
+    };
+    
+    // ------------- 节目 -------------
+    /**
+     *  11.1.接收节目开播通知接口 回调
+     *
+     *  @param item         节目信息
+     *
+     */
+    virtual void OnRecvAnchorProgramPlayNotice(const IMAnchorProgramInfoItem& item, const string& msg) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorProgramPlayNotice:item msg:msg];
+        }
+    };
+    
+    /**
+     *  11.2.接收节目状态改变通知接口 回调
+     *
+     *  @param item         节目信息
+     *
+     */
+    virtual void OnRecvAnchorChangeStatusNotice(const IMAnchorProgramInfoItem& item) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorChangeStatusNotice:item];
+        }
+    };
+    
+    /**
+     *  11.3.接收无操作的提示通知接口 回调
+     *
+     *  @param backgroundUrl    背景图url
+     *  @param msg              描述
+     *
+     */
+    virtual void OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const string& msg) {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorShowMsgNotice:backgroundUrl msg:msg];
+        }
+    };
 
   private:
     __weak typeof(ZBImClientOC *) clientOC;
@@ -752,14 +965,14 @@ class ZBImClientCallback : public IZBImClientListener {
 
 - (BOOL)addDelegate:(id<ZBIMLiveRoomManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
-    NSLog(@"ImClientOC::addDelegate( delegate : %@ )", delegate);
+    NSLog(@"ZBZBImClientOC::addDelegate( delegate : %@ )", delegate);
 
     @synchronized(self) {
         // 查找是否已存在
         for (NSValue *value in self.delegates) {
             id<ZBIMLiveRoomManagerDelegate> item = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if (item == delegate) {
-                NSLog(@"ImClientOC::addDelegate() add again, delegate:<%@>", delegate);
+                NSLog(@"ZBImClientOC::addDelegate() add again, delegate:<%@>", delegate);
                 result = YES;
                 break;
             }
@@ -778,7 +991,7 @@ class ZBImClientCallback : public IZBImClientListener {
 - (BOOL)removeDelegate:(id<ZBIMLiveRoomManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
 
-    NSLog(@"ImClientOC::removeDelegate( delegate : %@ )", delegate);
+    NSLog(@"ZBImClientOC::removeDelegate( delegate : %@ )", delegate);
 
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
@@ -793,7 +1006,7 @@ class ZBImClientCallback : public IZBImClientListener {
 
     // log
     if (!result) {
-        NSLog(@"ZBImClientOC::removeDelegate() fail, delegate:<%@>", delegate);
+        NSLog(@"ZBZBImClientOC::removeDelegate() fail, delegate:<%@>", delegate);
     }
 
     return result;
@@ -879,22 +1092,6 @@ class ZBImClientCallback : public IZBImClientListener {
     }
     return result;
 }
-//
-//- (BOOL)controlManPush:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId control:(IMControlType)control {
-//    BOOL result = NO;
-//    if (NULL != self.client) {
-//
-//        string strRoomId;
-//        if (nil != roomId) {
-//            strRoomId = [roomId UTF8String];
-//        }
-//
-//        result = self.client->ControlManPush(reqId, strRoomId, control);
-//    }
-//    return result;
-//}
-//
-
 
 - (BOOL)anchorSendLiveChat:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at {
     BOOL result = NO;
@@ -953,30 +1150,6 @@ class ZBImClientCallback : public IZBImClientListener {
     return result;
 }
 
-//- (BOOL)sendToast:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg {
-//    BOOL result = NO;
-//    if (NULL != self.client) {
-//
-//        string strRoomId;
-//        if (nil != roomId) {
-//            strRoomId = [roomId UTF8String];
-//        }
-//
-//        string strNickName;
-//        if (nil != nickName) {
-//            strNickName = [nickName UTF8String];
-//        }
-//
-//        string strMsg;
-//        if (nil != msg) {
-//            strMsg = [msg UTF8String];
-//        }
-//
-//        result = self.client->SendToast(reqId, strRoomId, strNickName, strMsg);
-//    }
-//    return result;
-//}
-//
 - (BOOL)anchorSendImmediatePrivateInvite:(SEQ_T)reqId userId:(NSString *)userId {
     BOOL result = NO;
     if (NULL != self.client) {
@@ -1006,56 +1179,64 @@ class ZBImClientCallback : public IZBImClientListener {
     return result;
 }
 
-//- (BOOL)sendCancelPrivateLiveInvite:(SEQ_T)reqId inviteId:(NSString *_Nonnull)inviteId {
-//    BOOL result = NO;
-//    if (NULL != self.client) {
-//
-//        string strInviteId;
-//        if (nil != inviteId) {
-//            strInviteId = [inviteId UTF8String];
-//        }
-//
-//        result = self.client->SendCancelPrivateLiveInvite(reqId, strInviteId);
-//    }
-//
-//    return result;
-//}
-//
-//- (BOOL)sendInstantInviteUserReport:(SEQ_T)reqId inviteId:(NSString *_Nonnull)inviteId isShow:(BOOL)isShow {
-//    BOOL result = NO;
-//    if (NULL != self.client) {
-//
-//        string strInviteId;
-//        if (nil != inviteId) {
-//            strInviteId = [inviteId UTF8String];
-//        }
-//
-//        result = self.client->SendInstantInviteUserReport(reqId, strInviteId, isShow);
-//    }
-//
-//    return result;
-//}
-//
-//- (BOOL)sendTalent:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId talentId:(NSString *_Nonnull)talentId {
-//    BOOL result = NO;
-//    if (NULL != self.client) {
-//
-//        string strRoomId;
-//        if (nil != roomId) {
-//            strRoomId = [roomId UTF8String];
-//        }
-//
-//        string strTalentId;
-//        if (nil != talentId) {
-//            strTalentId = [talentId UTF8String];
-//        }
-//
-//        result = self.client->SendTalent(reqId, strRoomId, strTalentId);
-//    }
-//
-//    return result;
-//}
-//
+
+-(BOOL)anchorEnterHangoutRoom:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId {
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        result = self.client->AnchorEnterHangoutRoom(reqId, strRoomId);
+    }
+    return result;
+}
+
+-(BOOL)anchorLeaveHangoutRoom:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId {
+    BOOL result = NO;
+    if (NULL != self.client) {
+        
+        string strRoomId;
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        
+        result = self.client->AnchorLeaveHangoutRoom(reqId, strRoomId);
+    }
+    return result;
+}
+
+-(BOOL)anchorSendHangoutGift:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName toUid:(NSString *_Nonnull)toUid giftId:(NSString *_Nonnull)giftId giftName:(NSString *_Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate{
+    BOOL result = NO;
+    if (NULL != self.client) {
+        string strRoomId = "";
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        string strNickName = "";
+        if (nil != nickName) {
+            strNickName = [nickName UTF8String];
+        }
+        string strToUid = "";
+        if (nil != toUid) {
+            strToUid = [toUid UTF8String];
+        }
+        string strGiftId = "";
+        if (nil != giftId) {
+            strGiftId = [giftId UTF8String];
+        }
+        string strGiftName = "";
+        if (nil != giftName) {
+            strGiftName = [giftName UTF8String];
+        }
+        
+        result = self.client->SendAnchorHangoutGift(reqId, strRoomId, strNickName, strToUid, strGiftId, strGiftName, isBackPack, giftNum, isMultiClick, multiClickStart, multiClickEnd, multiClickId, isPrivate);
+    }
+    return result;
+}
+
 #pragma mark - 登录/注销回调
 
 - (void)onZBLogin:(ZBLCC_ERR_TYPE)errType errMsg:(const string &)errmsg item:(const ZBLoginReturnItem &)item {
@@ -1138,14 +1319,13 @@ class ZBImClientCallback : public IZBImClientListener {
 }
 
 //#pragma mark - 直播间主动操作回调
-
-
 - (void)onZBPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string &)errMsg item:(const ZBRoomInfoItem &)item {
         NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
         ZBImLiveRoomObject *obj = [[ZBImLiveRoomObject alloc] init];
         obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
         obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
         obj.roomType = item.roomType;
+        obj.liveShowType = item.liveShowType;
         NSMutableArray *nsManPushUrl = [NSMutableArray array];
         for (list<string>::const_iterator iter = item.pushUrl.begin(); iter != item.pushUrl.end(); iter++) {
             string strUrl = (*iter);
@@ -1155,7 +1335,7 @@ class ZBImClientCallback : public IZBImClientListener {
         obj.pushUrl = nsManPushUrl;
         obj.leftSeconds = item.leftSeconds;
         obj.maxFansiNum = item.maxFansiNum;
-    
+        obj.status = item.status;
         @synchronized(self) {
             for (NSValue *value in self.delegates) {
                 id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
@@ -1173,6 +1353,7 @@ class ZBImClientCallback : public IZBImClientListener {
     obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
     obj.roomType = item.roomType;
+    obj.liveShowType = item.liveShowType;
     NSMutableArray *nsManPushUrl = [NSMutableArray array];
     for (list<string>::const_iterator iter = item.pushUrl.begin(); iter != item.pushUrl.end(); iter++) {
         string strUrl = (*iter);
@@ -1181,6 +1362,7 @@ class ZBImClientCallback : public IZBImClientListener {
     }
     obj.pushUrl = nsManPushUrl;
     obj.leftSeconds = item.leftSeconds;
+    
     obj.maxFansiNum = item.maxFansiNum;
     NSMutableArray *nsManPullUrl = [NSMutableArray array];
     for (list<string>::const_iterator iter = item.pullUrl.begin(); iter != item.pullUrl.end(); iter++) {
@@ -1189,6 +1371,7 @@ class ZBImClientCallback : public IZBImClientListener {
         [nsManPushUrl addObject:pullUrl];
     }
     obj.pullUrl = nsManPullUrl;
+    obj.status = item.status;
     
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
@@ -1212,90 +1395,6 @@ class ZBImClientCallback : public IZBImClientListener {
     }
 }
 
-//- (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg item:(const RoomInfoItem &)item {
-//    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
-//    ImLiveRoomObject *obj = [[ImLiveRoomObject alloc] init];
-//    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
-//    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
-//    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
-//    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
-//    //NSString* nsManPushUrl = [NSString stringWithUTF8String:manPushUrl.c_str()];
-//
-//    NSMutableArray *nsVideoUrls = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = item.videoUrl.begin(); iter != item.videoUrl.end(); iter++) {
-//        string nsVideoUrl = (*iter);
-//        NSString *videoUrl = [NSString stringWithUTF8String:nsVideoUrl.c_str()];
-//        [nsVideoUrls addObject:videoUrl];
-//    }
-//    obj.videoUrls = nsVideoUrls;
-//    obj.roomType = item.roomType;
-//    obj.credit = item.credit;
-//    obj.usedVoucher = item.usedVoucher;
-//    obj.fansNum = item.fansNum;
-//    NSMutableArray *numArrayEmo = [NSMutableArray array];
-//    for (list<int>::const_iterator iter = item.emoTypeList.begin(); iter != item.emoTypeList.end(); iter++) {
-//        int num = (*iter);
-//        NSNumber *numEmo = [NSNumber numberWithInt:num];
-//        [numArrayEmo addObject:numEmo];
-//    }
-//    obj.emoTypeList = numArrayEmo;
-//    obj.loveLevel = item.loveLevel;
-//
-//    RebateInfoObject *itemObject = [RebateInfoObject alloc];
-//    itemObject.curCredit = item.rebateInfo.curCredit;
-//    itemObject.curTime = item.rebateInfo.curTime;
-//    itemObject.preCredit = item.rebateInfo.preCredit;
-//    itemObject.preTime = item.rebateInfo.preTime;
-//    obj.rebateInfo = itemObject;
-//    obj.favorite = item.favorite;
-//    obj.leftSeconds = item.leftSeconds;
-//    obj.waitStart = item.waitStart;
-//
-//    NSMutableArray *nsManPushUrl = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = item.manPushUrl.begin(); iter != item.manPushUrl.end(); iter++) {
-//        string strUrl = (*iter);
-//        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
-//        [nsManPushUrl addObject:pushUrl];
-//    }
-//    obj.manPushUrl = nsManPushUrl;
-//    obj.roomPrice = item.roomPrice;
-//    obj.manPushPrice = item.manPushPrice;
-//    obj.maxFansiNum = item.maxFansiNum;
-//    obj.manLevel = item.manlevel;
-//    obj.honorId = [NSString stringWithUTF8String:item.honorId.c_str()];
-//    obj.honorImg = [NSString stringWithUTF8String:item.honorImg.c_str()];
-//    obj.popPrice = item.popPrice;
-//    obj.useCoupon = item.useCoupon;
-//    obj.shareLink = [NSString stringWithUTF8String:item.shareLink.c_str()];
-//
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onPublicRoomIn:success:err:errMsg:item:)]) {
-//                [delegate onPublicRoomIn:reqId success:success err:err errMsg:nsErrMsg item:obj];
-//            }
-//        }
-//    }
-//}
-//
-//- (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg manPushUrl:(const list<string> &)manPushUrl {
-//    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
-//    NSMutableArray *nsManPushUrl = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = manPushUrl.begin(); iter != manPushUrl.end(); iter++) {
-//        string strUrl = (*iter);
-//        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
-//        [nsManPushUrl addObject:pushUrl];
-//    }
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onControlManPush:success:err:errMsg:manPushUrl:)]) {
-//                [delegate onControlManPush:reqId success:success err:err errMsg:nsErrMsg manPushUrl:nsManPushUrl];
-//            }
-//        }
-//    }
-//}
-
 
 #pragma mark - 直播间接收操作回调
 
@@ -1312,7 +1411,7 @@ class ZBImClientCallback : public IZBImClientListener {
     }
 }
 
-- (void)onZBRecvEnterRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl riderId:(const string &)riderId riderName:(const string &)riderName riderUrl:(const string &)riderUrl fansNum:(int)fansNum{
+- (void)onZBRecvEnterRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl riderId:(const string &)riderId riderName:(const string &)riderName riderUrl:(const string &)riderUrl fansNum:(int)fansNum isHasTicket:(bool)isHasTicket {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
     NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
     NSString *nsNickName = [NSString stringWithUTF8String:nickName.c_str()];
@@ -1323,8 +1422,8 @@ class ZBImClientCallback : public IZBImClientListener {
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onZBRecvEnterRoomNotice:userId:nickName:photoUrl:riderId:riderName:riderUrl:fansNum:)]) {
-                [delegate onZBRecvEnterRoomNotice:nsRoomId userId:nsUserId nickName:nsNickName photoUrl:nsPhotoUrl riderId:nsRiderId riderName:nsRiderName riderUrl:nsRiderUrl fansNum:fansNum];
+            if ([delegate respondsToSelector:@selector(onZBRecvEnterRoomNotice:userId:nickName:photoUrl:riderId:riderName:riderUrl:fansNum:isHasTicket:)]) {
+                [delegate onZBRecvEnterRoomNotice:nsRoomId userId:nsUserId nickName:nsNickName photoUrl:nsPhotoUrl riderId:nsRiderId riderName:nsRiderName riderUrl:nsRiderUrl fansNum:fansNum isHasTicket:isHasTicket];
             }
         }
     }
@@ -1345,24 +1444,6 @@ class ZBImClientCallback : public IZBImClientListener {
     }
 }
 
-//- (void)onRecvRebateInfoNotice:(const string &)roomId rebateInfo:(const RebateInfoItem &)rebateInfo {
-//    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-//
-//    RebateInfoObject *itemObject = [RebateInfoObject alloc];
-//    itemObject.curCredit = rebateInfo.curCredit;
-//    itemObject.curTime = rebateInfo.curTime;
-//    itemObject.preCredit = rebateInfo.preCredit;
-//    itemObject.preTime = rebateInfo.preTime;
-//
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvRebateInfoNotice:rebateInfo:)]) {
-//                [delegate onRecvRebateInfoNotice:nsRoomId rebateInfo:itemObject];
-//            }
-//        }
-//    }
-//}
 // 3.8.接收关闭直播间倒数通知
 - (void)onZBRecvLeavingPublicRoomNotice:(const string &)roomId leftSeconds:(int)leftSeconds err:(ZBLCC_ERR_TYPE)err errMsg:(const string &)errMsg {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
@@ -1373,6 +1454,27 @@ class ZBImClientCallback : public IZBImClientListener {
             id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(onZBRecvLeavingPublicRoomNotice:leftSeconds:err:errMsg:)]) {
                 [delegate onZBRecvLeavingPublicRoomNotice:nsRoomId leftSeconds:leftSeconds err:err errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+/**
+ *  3.9.接收主播退出直播间通知回调
+ *
+ *  @param roomId       直播间ID
+ *  @param anchorId     退出直播间的主播ID
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(const string &)roomId anchorId:(const string &)anchorId {
+    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString *nsAnchorId = [NSString stringWithUTF8String:anchorId.c_str()];
+    
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorLeaveRoomNotice:anchorId:)]) {
+                [delegate onRecvAnchorLeaveRoomNotice:nsRoomId anchorId:nsAnchorId];
             }
         }
     }
@@ -1392,77 +1494,6 @@ class ZBImClientCallback : public IZBImClientListener {
     }
 }
 
-//- (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit {
-//    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-//    NSString *nsMsg = [NSString stringWithUTF8String:msg.c_str()];
-//
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvLackOfCreditNotice:msg:credit:)]) {
-//                [delegate onRecvLackOfCreditNotice:nsRoomId msg:nsMsg credit:credit];
-//            }
-//        }
-//    }
-//}
-//
-//- (void)onRecvCreditNotice:(const string &)roomId credit:(double)credit {
-//    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-//
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvCreditNotice:credit:)]) {
-//                [delegate onRecvCreditNotice:nsRoomId credit:credit];
-//            }
-//        }
-//    }
-//}
-//
-//- (void)onRecvWaitStartOverNotice:(const StartOverRoomItem &)item {
-//    ImStartOverRoomObject *obj = [[ImStartOverRoomObject alloc] init];
-//    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
-//    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
-//    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
-//    obj.avatarImg = [NSString stringWithUTF8String:item.avatarImg.c_str()];
-//    obj.leftSeconds = item.leftSeconds;
-//    NSMutableArray *nsPlayUrl = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = item.playUrl.begin(); iter != item.playUrl.end(); iter++) {
-//        string strUrl = (*iter);
-//        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
-//        [nsPlayUrl addObject:pushUrl];
-//    }
-//    obj.playUrl = nsPlayUrl;
-//
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvWaitStartOverNotice:)]) {
-//                [delegate onRecvWaitStartOverNotice:obj];
-//            }
-//        }
-//    }
-//}
-//
-//- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl {
-//    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-//    //NSString *nsPlayUrl = [NSString stringWithUTF8String:playUrl.c_str()];
-//    NSMutableArray *nsPlayUrl = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = playUrl.begin(); iter != playUrl.end(); iter++) {
-//        string strUrl = (*iter);
-//        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
-//        [nsPlayUrl addObject:pushUrl];
-//    }
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvChangeVideoUrl:isAnchor:playUrl:)]) {
-//                [delegate onRecvChangeVideoUrl:nsRoomId isAnchor:isAnchor playUrl:nsPlayUrl];
-//            }
-//        }
-//    }
-//}
-//
 #pragma mark - 直播间文本消息信息
 - (void)onZBSendLiveChat:(BOOL)success reqId:(SEQ_T)reqId errType:(ZBLCC_ERR_TYPE)errType errMsg:(const string &)errmsg {
     NSString *nsErrMsg = [NSString stringWithUTF8String:errmsg.c_str()];
@@ -1586,16 +1617,16 @@ class ZBImClientCallback : public IZBImClientListener {
  *  @param Item            互动切换
  *
  */
-- (void)onZBRecvControlManPushNotice:(const ZBControlPushItem&)Item {
+- (void)onZBRecvControlManPushNotice:(const ZBControlPushItem&)item {
     ZBImControlPushItemObject * obj = [[ZBImControlPushItemObject alloc] init];
-    obj.roomId = [NSString stringWithUTF8String:Item.roomId.c_str()];
-    obj.userId = [NSString stringWithUTF8String:Item.userId.c_str()];
-    obj.nickName = [NSString stringWithUTF8String:Item.nickName.c_str()];
-    obj.avatarImg = [NSString stringWithUTF8String:Item.avatarImg.c_str()];
-    obj.control = Item.control;
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.avatarImg = [NSString stringWithUTF8String:item.avatarImg.c_str()];
+    obj.control = item.control;
     
     NSMutableArray *nsManVideoUrl = [NSMutableArray array];
-    for (list<string>::const_iterator iter = Item.manVideoUrl.begin(); iter != Item.manVideoUrl.end(); iter++) {
+    for (list<string>::const_iterator iter = item.manVideoUrl.begin(); iter != item.manVideoUrl.end(); iter++) {
         string strUrl = (*iter);
         NSString *pullUrl = [NSString stringWithUTF8String:strUrl.c_str()];
         [nsManVideoUrl addObject:pullUrl];
@@ -1741,5 +1772,482 @@ class ZBImClientCallback : public IZBImClientListener {
             }
         }
 }
+
+// ------------- 多人互动直播间 -------------
+
+/**
+ *  10.1.进入多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *  @param item        进入多人互动直播间信息
+ *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+ *
+ */
+- (void)onAnchorEnterHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg item:(const AnchorHangoutRoomItem&)item expire:(int)expire {
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    AnchorHangoutRoomItemObject *obj = [[AnchorHangoutRoomItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.roomType = item.roomType;
+    obj.manId = [NSString stringWithUTF8String:item.manId.c_str()];
+    obj.manNickName = [NSString stringWithUTF8String:item.manNickName.c_str()];
+    obj.manPhotoUrl = [NSString stringWithUTF8String:item.manPhotoUrl.c_str()];
+    obj.manLevel = item.manLevel;
+
+    NSMutableArray *nsManVideoUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = item.manVideoUrl.begin(); iter != item.manVideoUrl.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *manVideoUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsManVideoUrl addObject:manVideoUrl];
+    }
+    obj.manVideoUrl = nsManVideoUrl;
+
+    NSMutableArray *nsPushUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = item.pushUrl.begin(); iter != item.pushUrl.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *pullUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsPushUrl addObject:pullUrl];
+    }
+    obj.pushUrl = nsPushUrl;
+
+    NSMutableArray *nsOtherAnchorList = [NSMutableArray array];
+    for (OtherAnchorItemList::const_iterator iter = item.otherAnchorList.begin(); iter != item.otherAnchorList.end(); iter++) {
+        OtherAnchorItemObject *otherObject = [[OtherAnchorItemObject alloc] init];
+        otherObject.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+        otherObject.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
+        otherObject.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
+        otherObject.anchorStatus = (*iter).anchorStatus;
+        otherObject.leftSeconds = (*iter).leftSeconds;
+        otherObject.loveLevel = (*iter).loveLevel;
+        NSMutableArray *nsVideoUrl = [NSMutableArray array];
+        for (list<string>::const_iterator iter1 = (*iter).videoUrl.begin(); iter1 != (*iter).videoUrl.end(); iter1++) {
+            string strUrl = (*iter1);
+            NSString *videoUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+            [nsVideoUrl addObject:videoUrl];
+        }
+        otherObject.videoUrl = nsVideoUrl;
+        [nsOtherAnchorList addObject:otherObject];
+    }
+    obj.otherAnchorList = nsOtherAnchorList;
+
+    NSMutableArray *nsBuyforList = [NSMutableArray array];
+    for (AnchorRecvGiftList::const_iterator iter = item.buyforList.begin(); iter != item.buyforList.end(); iter++) {
+        AnchorRecvGiftItemObject *buyforObj = [[AnchorRecvGiftItemObject alloc] init];
+        buyforObj.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
+        NSMutableArray *nsNumList = [NSMutableArray array];
+        for (AnchorGiftNumList::const_iterator iter1 = (*iter).buyforList.begin(); iter1 != (*iter).buyforList.end(); iter1++) {
+            AnchorGiftNumItemObject *numObj = [[AnchorGiftNumItemObject alloc] init];
+            numObj.giftId = [NSString stringWithUTF8String:(*iter1).giftId.c_str()];
+            numObj.giftNum = numObj.giftNum;
+            [nsNumList addObject:numObj];
+        }
+        [nsBuyforList addObject:buyforObj];
+    }
+    obj.buyforList = nsBuyforList;
+
+
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onAnchorEnterHangoutRoom:success:err:errMsg:item:expire:)]) {
+                [delegate onAnchorEnterHangoutRoom:reqId success:success err:err errMsg:nsErrMsg item:obj expire:expire];
+            }
+        }
+    }
+}
+
+/**
+ *  10.2.退出多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *
+ */
+- (void)onAnchorLeaveHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg {
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onAnchorLeaveHangoutRoom:success:err:errMsg:)]) {
+                [delegate onAnchorLeaveHangoutRoom:reqId success:success err:err errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+/**
+ *  10.3.收观众邀请多人互动通知接口 回调
+ *
+ *  @param item         观众邀请多人互动信息
+ */
+- (void)onRecvAnchorInvitationHangoutNotice:(const AnchorHangoutInviteItem&)item {
+    AnchorHangoutInviteItemObject* obj = [[AnchorHangoutInviteItemObject alloc] init];
+    obj.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
+    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    NSMutableArray *nsList = [NSMutableArray array];
+    for (AnchorItemList::const_iterator iter = item.anchorList.begin(); iter != item.anchorList.end(); iter++) {
+        IMAnchorItemObject *anchorObject = [[IMAnchorItemObject alloc] init];
+        anchorObject.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+        anchorObject.anchorNickName = [NSString stringWithUTF8String:(*iter).anchorNickName.c_str()];
+        anchorObject.anchorPhotoUrl = [NSString stringWithUTF8String:(*iter).anchorPhotoUrl.c_str()];
+        [nsList addObject:anchorObject];
+    }
+    obj.anchorList = nsList;
+    obj.expire = item.expire;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorInvitationHangoutNotice:)]) {
+                [delegate onRecvAnchorInvitationHangoutNotice:obj];
+            }
+        }
+    }
+
+}
+
+
+/**
+ *  10.4.接收推荐好友通知接口 回调
+ *
+ *  @param item         主播端接收自己推荐好友给观众的信息
+ *
+ */
+- (void)onRecvAnchorRecommendHangoutNotice:(const IMAnchorRecommendHangoutItem&)item {
+    IMAnchorRecommendHangoutItemObject* obj = [[IMAnchorRecommendHangoutItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    obj.friendId = [NSString stringWithUTF8String:item.friendId.c_str()];
+    obj.friendNickName = [NSString stringWithUTF8String:item.friendNickName.c_str()];
+    obj.friendPhotoUrl = [NSString stringWithUTF8String:item.friendPhotoUrl.c_str()];
+    obj.friendAge = item.friendAge;
+    obj.friendCountry = [NSString stringWithUTF8String:item.friendCountry.c_str()];
+    obj.recommendId = [NSString stringWithUTF8String:item.recommendId.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorRecommendHangoutNotice:)]) {
+                [delegate onRecvAnchorRecommendHangoutNotice:obj];
+            }
+        }
+    }
+
+}
+
+/**
+ *  10.5.接收敲门回复通知接口 回调
+ *
+ *  @param item         接收敲门回复信息
+ *
+ */
+- (void)onRecvAnchorDealKnockRequestNotice:(const IMAnchorKnockRequestItem&)item {
+    IMAnchorKnockRequestItemObject* obj = [[IMAnchorKnockRequestItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    obj.knockId = [NSString stringWithUTF8String:item.knockId.c_str()];
+    obj.type = item.type;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorDealKnockRequestNotice:)]) {
+                [delegate onRecvAnchorDealKnockRequestNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  10.6.接收观众邀请其它主播加入多人互动通知接口 回调
+ *
+ *  @param item         接收观众邀请其它主播加入多人互动信息
+ *
+ */
+- (void)onRecvAnchorOtherInviteNotice:(const IMAnchorRecvOtherInviteItem&)item {
+    IMAnchorRecvOtherInviteItemObject* obj = [[IMAnchorRecvOtherInviteItemObject alloc] init];
+    obj.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    obj.expire = item.expire;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorOtherInviteNotice:)]) {
+                [delegate onRecvAnchorOtherInviteNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  10.7.接收主播回复观众多人互动邀请通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorDealInviteNotice:(const IMAnchorRecvDealInviteItem&)item {
+    IMAnchorRecvDealInviteItemObject* obj = [[IMAnchorRecvDealInviteItemObject alloc] init];
+    obj.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    obj.type = item.type;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorDealInviteNotice:)]) {
+                [delegate onRecvAnchorDealInviteNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  10.8.观众端/主播端接收观众/主播进入多人互动直播间通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorEnterRoomNotice:(const IMAnchorRecvEnterRoomItem&)item {
+    IMAnchorRecvEnterRoomItemObject* obj = [[IMAnchorRecvEnterRoomItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.isAnchor = item.isAnchor;
+    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    IMAnchorUserInfoItemObject *userInfo = [[IMAnchorUserInfoItemObject alloc] init];
+    userInfo.riderId = [NSString stringWithUTF8String:item.userInfo.riderId.c_str()];
+    userInfo.riderName = [NSString stringWithUTF8String:item.userInfo.riderName.c_str()];
+    userInfo.riderUrl = [NSString stringWithUTF8String:item.userInfo.riderUrl.c_str()];
+    userInfo.honorImg = [NSString stringWithUTF8String:item.userInfo.honorImg.c_str()];
+    obj.userInfo = userInfo;
+    NSMutableArray *nsPullUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = item.pullUrl.begin(); iter != item.pullUrl.end(); iter++) {
+        NSString *pullUrl = [NSString stringWithUTF8String:(*iter).c_str()];
+        [nsPullUrl addObject:pullUrl];
+    }
+    obj.pullUrl = nsPullUrl;
+    NSMutableArray *nsNumList = [NSMutableArray array];
+    for (AnchorGiftNumList::const_iterator iter1 = item.bugForList.begin(); iter1 != item.bugForList.end(); iter1++) {
+        AnchorGiftNumItemObject *numObj = [[AnchorGiftNumItemObject alloc] init];
+        numObj.giftId = [NSString stringWithUTF8String:(*iter1).giftId.c_str()];
+        numObj.giftNum = numObj.giftNum;
+        [nsNumList addObject:numObj];
+    }
+   obj.bugForList = nsNumList;
+
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorEnterRoomNotice:)]) {
+                [delegate onRecvAnchorEnterRoomNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  10.9.接收观众/主播退出多人互动直播间通知接口 回调
+ *
+ *  @param item         接收观众/主播退出多人互动直播间信息
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(const IMAnchorRecvLeaveRoomItem&)item {
+    IMAnchorRecvLeaveRoomItemObject* obj = [[IMAnchorRecvLeaveRoomItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.isAnchor = item.isAnchor;
+    obj.userId = [NSString stringWithUTF8String:item.userId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
+    obj.errNo = item.errNo;
+    obj.errMsg = [NSString stringWithUTF8String:item.errMsg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorLeaveRoomNotice:)]) {
+                [delegate onRecvAnchorLeaveRoomNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  10.10.接收观众/主播多人互动直播间视频切换通知接口 回调
+ *
+ *  @param roomId         直播间ID
+ *  @param isAnchor       是否主播（0：否，1：是）
+ *  @param userId         观众/主播ID
+ *  @param playUrl        视频流url（字符串数组）（访问视频URL的协议参考《 “视频URL”协议描述》）
+ *
+ */
+- (void)onRecvAnchorChangeVideoUrl:(const string&)roomId isAnchor:(bool)isAnchor userId:(const string&)userId playUrl:(const list<string>&)playUrl {
+    NSString* strRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* strUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSMutableArray *nsPlayUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = playUrl.begin(); iter != playUrl.end(); iter++) {
+        NSString *playUrl = [NSString stringWithUTF8String:(*iter).c_str()];
+        [nsPlayUrl addObject:playUrl];
+    }
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorChangeVideoUrl:isAnchor:userId:playUrl:)]) {
+                [delegate onRecvAnchorChangeVideoUrl:strRoomId isAnchor:isAnchor userId:strUserId playUrl:nsPlayUrl];
+            }
+        }
+    }
+}
+
+/**
+ *  10.11.发送多人互动直播间礼物消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendAnchorHangoutGift:(SEQ_T)reqId success:(bool)success err:(ZBLCC_ERR_TYPE)err errMsg:(const string&)errMsg{
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onSendAnchorHangoutGift:success:err:errMsg:)]) {
+                [delegate onSendAnchorHangoutGift:reqId success:success err:err errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+/**
+ *  10.12.接收多人互动直播间礼物通知接口 回调
+ *
+ *  @param item         接收多人互动直播间礼物信息
+ *
+ */
+- (void)onRecvAnchorGiftNotice:(const IMAnchorRecvGiftItem&)item {
+    IMAnchorRecvGiftItemObject* obj = [[IMAnchorRecvGiftItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.fromId = [NSString stringWithUTF8String:item.fromId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.toUid = [NSString stringWithUTF8String:item.toUid.c_str()];
+    obj.giftId = [NSString stringWithUTF8String:item.giftId.c_str()];
+    obj.giftName = [NSString stringWithUTF8String:item.giftName.c_str()];
+    obj.giftNum = item.giftNum;
+    obj.isMultiClick = item.isMultiClick;
+    obj.multiClickStart = item.multiClickStart;
+    obj.multiClickEnd = item.multiClickEnd;
+    obj.multiClickId = item.multiClickId;
+    obj.isPrivate = item.isPrivate;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorGiftNotice:)]) {
+                [delegate onRecvAnchorGiftNotice:obj];
+            }
+        }
+    }
+}
+
+#pragma mark - 节目
+// ------------- 节目 -------------
+/**
+ *  11.1.接收节目开播通知接口 回调
+ *
+ *  @param item         节目信息
+ *  @param msg          消息提示文字
+ *
+ */
+- (void)onRecvAnchorProgramPlayNotice:(const IMAnchorProgramInfoItem&)item msg:(const string&)msg{
+    IMAnchorProgramItemObject* obj = [[IMAnchorProgramItemObject alloc] init];
+    obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.showTitle = [NSString stringWithUTF8String:item.showTitle.c_str()];
+    obj.showIntroduce = [NSString stringWithUTF8String:item.showIntroduce.c_str()];
+    obj.cover = [NSString stringWithUTF8String:item.cover.c_str()];
+    obj.approveTime = item.approveTime;
+    obj.startTime = item.startTime;
+    obj.duration = item.duration;
+    obj.leftSecToStart = item.leftSecToStart;
+    obj.leftSecToEnter = item.leftSecToEnter;
+    obj.price = item.price;
+    obj.status = item.status;
+    obj.ticketNum = item.ticketNum;
+    obj.followNum = item.followNum;
+    obj.isTicketFull = item.isTicketFull;
+    
+    NSString* strMsg = [NSString stringWithUTF8String:msg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorProgramPlayNotice:msg:)]) {
+                [delegate onRecvAnchorProgramPlayNotice:obj msg:strMsg];
+            }
+        }
+    }
+}
+
+/**
+ *  11.2.接收节目状态改变通知接口 回调
+ *
+ *  @param item         节目信息
+ *
+ */
+- (void)onRecvAnchorChangeStatusNotice:(const IMAnchorProgramInfoItem&)item {
+    IMAnchorProgramItemObject* obj = [[IMAnchorProgramItemObject alloc] init];
+    obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
+    obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+    obj.showTitle = [NSString stringWithUTF8String:item.showTitle.c_str()];
+    obj.showIntroduce = [NSString stringWithUTF8String:item.showIntroduce.c_str()];
+    obj.cover = [NSString stringWithUTF8String:item.cover.c_str()];
+    obj.approveTime = item.approveTime;
+    obj.startTime = item.startTime;
+    obj.duration = item.duration;
+    obj.leftSecToStart = item.leftSecToStart;
+    obj.leftSecToEnter = item.leftSecToEnter;
+    obj.price = item.price;
+    obj.status = item.status;
+    obj.ticketNum = item.ticketNum;
+    obj.followNum = item.followNum;
+    obj.isTicketFull = item.isTicketFull;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorChangeStatusNotice:)]) {
+                [delegate onRecvAnchorChangeStatusNotice:obj];
+            }
+        }
+    }
+}
+
+/**
+ *  11.3.接收无操作的提示通知接口 回调
+ *
+ *  @param backgroundUrl     背景图url
+ *  @param msg               描述
+ *
+ */
+- (void)onRecvAnchorShowMsgNotice:(const string&)backgroundUrl msg:(const string&)msg {
+    NSString* strBackgroundUrl = [NSString stringWithUTF8String:backgroundUrl.c_str()];
+    NSString* strMsg = [NSString stringWithUTF8String:msg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<ZBIMLiveRoomManagerDelegate> delegate = (id<ZBIMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorShowMsgNotice:msg:)]) {
+                [delegate onRecvAnchorShowMsgNotice:strBackgroundUrl msg:strMsg];
+            }
+        }
+    }
+}
+
 
 @end

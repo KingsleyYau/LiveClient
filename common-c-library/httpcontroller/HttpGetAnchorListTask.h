@@ -69,6 +69,8 @@ protected:
     bool mHasWatch;
     // 是否可看到测试主播（0：否，1：是）（整型）（可无，无则默认为0）
     bool mIsForTest;
+    
+    HotItemList mItemList;
 };
 
 #endif /* HttpGetAnchorListTask_H_ */

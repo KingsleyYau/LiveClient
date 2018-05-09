@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,10 +16,11 @@
                 <outlet property="backgroundImageView" destination="8gc-mu-wNH" id="C7U-Ie-maE"/>
                 <outlet property="bookPrivateBtn" destination="gR2-qW-xtL" id="Fab-1h-Qyx"/>
                 <outlet property="headImageView" destination="zXJ-bM-bMb" id="DMg-9I-AQV"/>
-                <outlet property="nameLabel" destination="KJf-OI-eXV" id="GOF-wB-RE4"/>
+                <outlet property="nameLabel" destination="4aa-PC-1me" id="hdb-MG-2GK"/>
                 <outlet property="recommandCollectionView" destination="a1U-mm-Yze" id="Xsf-Lk-XzB"/>
                 <outlet property="recommandView" destination="Esa-m9-V4q" id="MTB-aq-R1V"/>
                 <outlet property="recommandViewWidth" destination="wSV-JK-kqM" id="BQs-FE-jkc"/>
+                <outlet property="showView" destination="nzR-pD-YU3" id="gOG-35-tNu"/>
                 <outlet property="tipLabel" destination="RUq-oa-6Jg" id="6fh-Zi-R8d"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewHotBtn" destination="DKC-mw-Vbw" id="1jE-An-yS9"/>
@@ -36,6 +37,15 @@
                 </imageView>
                 <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lS3-dB-erL" userLabel="Mask View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4aa-PC-1me">
+                            <rect key="frame" x="8" y="192" width="359" height="21"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xyq-d1-hUe" userLabel="Cancel Button">
@@ -125,6 +135,15 @@
                         <action selector="addCreditAction:" destination="-1" eventType="touchUpInside" id="dHO-7L-avn"/>
                     </connections>
                 </button>
+                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nzR-pD-YU3" customClass="ShowListView">
+                    <rect key="frame" x="16" y="367" width="344" height="180"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <gestureRecognizers/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="Os2-U9-XRF" appends="YES" id="SA5-Wd-KEJ"/>
+                    </connections>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -159,7 +178,13 @@
                 <constraint firstAttribute="trailing" secondItem="RUq-oa-6Jg" secondAttribute="trailing" constant="30" id="s2w-qi-RsD"/>
                 <constraint firstItem="DKC-mw-Vbw" firstAttribute="centerY" secondItem="gR2-qW-xtL" secondAttribute="centerY" id="xoF-K4-s6N"/>
             </constraints>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
         </view>
+        <tapGestureRecognizer id="Os2-U9-XRF">
+            <connections>
+                <action selector="pushShowDetailVC:" destination="-1" id="2Ib-X7-fad"/>
+            </connections>
+        </tapGestureRecognizer>
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>

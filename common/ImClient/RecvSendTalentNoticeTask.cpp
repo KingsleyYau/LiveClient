@@ -13,6 +13,9 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
+// 返回
+#define RECVTALENTINVITEID_PARAM          "talent_inviteid"
+
 
 RecvSendTalentNoticeTask::RecvSendTalentNoticeTask(void)
 {
@@ -21,6 +24,7 @@ RecvSendTalentNoticeTask::RecvSendTalentNoticeTask(void)
 	m_seq = 0;
 	m_errType = LCC_ERR_FAIL;
 	m_errMsg = "";
+    m_talentInviteId = "";
     
 }
 
@@ -61,6 +65,7 @@ bool RecvSendTalentNoticeTask::Handle(const TransportProtocol& tp)
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
         item.Parse(tp.m_data);
+        m_talentInviteId = item.talentInviteId;
     }
     
     // 协议解析失败
@@ -89,7 +94,16 @@ bool RecvSendTalentNoticeTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvSendTalentNoticeTask::GetSendData() begin");
     {
-
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        Json::Value valueDate;
+        valueDate[RECVTALENTINVITEID_PARAM] = m_talentInviteId;
+        value[ROOT_DATA] = valueDate;
+        data = value;
     }
 
     result = true;

@@ -24,6 +24,7 @@
  * photoUrl                 主播头像url
  * videoUrls                 视频流url
  * roomType                 直播间类型
+ * liveShowType             公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
  * credit                   信用点
  * usedVoucher              是否使用使用劵（0:否 1:是）
  * fansNum                  观众人数
@@ -50,6 +51,7 @@
 @property (nonatomic, copy) NSString *_Nonnull photoUrl;
 @property (nonatomic, strong) NSArray<NSString *> *_Nonnull videoUrls;
 @property (nonatomic, assign) RoomType roomType;
+@property (nonatomic, assign) IMPublicRoomType liveShowType;
 @property (nonatomic, assign) double credit;
 @property (nonatomic, assign) BOOL usedVoucher;
 @property (nonatomic, assign) int fansNum;
@@ -69,5 +71,6 @@
 @property (nonatomic, assign) double popPrice;
 @property (nonatomic, assign) int useCoupon;
 @property (nonatomic, copy) NSString *_Nonnull shareLink;
+
 
 @end

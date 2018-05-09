@@ -169,4 +169,12 @@ void AudioRendererImp::Reset() {
 	}
 }
 
+bool AudioRendererImp::GetMute() {
+	return false;
+}
+
+void AudioRendererImp::SetMute(bool isMute) {
+
+}
+
 }

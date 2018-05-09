@@ -35,6 +35,7 @@
     self.imManager = [LSImManager manager];
     [self.imManager.client addDelegate:self];
     
+
     self.title = NSLocalizedStringFromSelf(@"MY_TITLE");
     NSArray *title = @[ NSLocalizedStringFromSelf(@"NEW"), NSLocalizedStringFromSelf(@"SEND"), NSLocalizedStringFromSelf(@"SCHED"), NSLocalizedStringFromSelf(@"HISTORY") ];
     self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES];
@@ -66,6 +67,9 @@
 
     self.viewControllers = [NSArray arrayWithObjects:vc1, vc2, vc3, vc4, nil];
 
+    // 跟踪用户行为
+    [self reportDidShowPage:self.curIndex];
+    
     CGFloat bottom = self.topView.frame.origin.y + self.topView.frame.size.height;
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, bottom, SCREEN_WIDTH, 1)];
     lineView.backgroundColor =COLOR_WITH_16BAND_RGB(0xE4E4E4);

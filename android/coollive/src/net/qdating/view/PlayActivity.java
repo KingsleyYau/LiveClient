@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import net.qdating.LSConfig;
+import net.qdating.LSConfig.VideoConfigType;
 import net.qdating.LSPlayer;
 import net.qdating.LSPublisher;
 import net.qdating.R;
@@ -114,11 +115,23 @@ public class PlayActivity extends Activity {
 		int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
 		publisher = new LSPublisher();
-		publisher.init(this, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
-		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+		publisher.init(
+				this,
+				surfaceViewPublish,
+				rotation,
+				FillMode.FillModeAspectRatioFill,
+				null,
+				LSConfig.VideoConfigType.VideoConfigType240x240,
+				12,
+				12,
+				500 * 1000
+		);
+//		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 
 		// 初始化界面缩放
 		initAnimation();
+		// 初始化静音按钮
+		initItemButtons();
 		
 		Button playButton = (Button) this.findViewById(R.id.button1);
 		playButton.setOnClickListener(new OnClickListener() {
@@ -194,29 +207,7 @@ public class PlayActivity extends Activity {
 				}
 			}
 		});
-		
-		Button muteButton = (Button) this.findViewById(R.id.button5);
-		muteButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if( publisher != null ) {
-					publisher.setMute(!publisher.getMute());
-				}
-			}
-		});
 
-		Button rotateButton = (Button) this.findViewById(R.id.button6);
-		rotateButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				if( publisher != null ) {
-					publisher.rotateCamera();
-				}
-			}
-		});
-		
 		Button startCamButton = (Button) this.findViewById(R.id.button7);
 		startCamButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -247,6 +238,63 @@ public class PlayActivity extends Activity {
 				Intent intent = new Intent();
 				intent.setClass(PlayActivity.this, TestActivity.class);
 				startActivity(intent);
+			}
+		});
+	}
+
+	private void initItemButtons() {
+		Button muteButton100 = (Button) this.findViewById(R.id.button100);
+		muteButton100.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( players[0] != null ) {
+					players[0].setMute(!players[0].getMute());
+				}
+			}
+		});
+
+		Button muteButton200 = (Button) this.findViewById(R.id.button200);
+		muteButton200.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( players[1] != null ) {
+					players[1].setMute(!players[1].getMute());
+				}
+			}
+		});
+
+		Button muteButton300 = (Button) this.findViewById(R.id.button300);
+		muteButton300.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( players[2] != null ) {
+					players[2].setMute(!players[2].getMute());
+				}
+			}
+		});
+
+		Button muteButton400 = (Button) this.findViewById(R.id.button400);
+		muteButton400.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( publisher != null ) {
+					publisher.setMute(!publisher.getMute());
+				}
+			}
+		});
+
+		Button rotateButton401 = (Button) this.findViewById(R.id.button401);
+		rotateButton401.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if( publisher != null ) {
+					publisher.rotateCamera();
+				}
 			}
 		});
 	}

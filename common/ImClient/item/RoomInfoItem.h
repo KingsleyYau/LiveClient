@@ -20,6 +20,7 @@ using namespace std;
 #define VIDEOURL_PARAM         "videourl"
 #define ROOMID_PARAM		   "roomid"
 #define ROOMTYPE_PARAM         "room_type"
+#define LIVESHOWTYPE_PARAM     "live_show_type"
 #define CREDIT_PARAM           "credit"
 #define USEDVOUCHER_PARAM      "used_voucher"
 #define FANSNUM_PARAM          "fansnum"
@@ -157,6 +158,10 @@ public:
             if (root[SHARELINK_PARAM].isString()) {
                 shareLink = root[SHARELINK_PARAM].asString();
             }
+            
+            if (root[LIVESHOWTYPE_PARAM].isNumeric()) {
+                liveShowType = GetIMPublicRoomType(root[LIVESHOWTYPE_PARAM].asInt());
+            }
         }
 
         result = true;
@@ -186,6 +191,7 @@ public:
         popPrice = 0.0;
         useCoupon = 0;
         shareLink = "";
+        liveShowType = IMPUBLICROOMTYPE_COMMON;
     }
     
     virtual ~RoomInfoItem() {
@@ -219,6 +225,7 @@ public:
      * popPrice                 直播间的POP消息资费
      * useCoupon                试聊卷分钟数
      * shareLink                默认分享链接
+     * liveShowType             公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
      */
     string          userId;
     string          nickName;
@@ -226,6 +233,7 @@ public:
     list<string>    videoUrl;
     string          roomId;
     RoomType        roomType;
+    
     double          credit;
     bool            usedVoucher;
     int             fansNum;
@@ -245,6 +253,7 @@ public:
     double          popPrice;
     int             useCoupon;
     string          shareLink;
+    IMPublicRoomType liveShowType;
 };
 
 

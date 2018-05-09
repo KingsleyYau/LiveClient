@@ -173,6 +173,8 @@ static LiveUrlHandler *gInstance = nil;
     item.roomType = LiveRoomType_Public;
     item.roomTypeString = [LSURLQueryParam urlParamForKey:@"roomtype" url:url];
     item.userName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
+    item.opentype = [LSURLQueryParam urlParamForKey:@"opentype" url:url];
+    item.apptitle = [LSURLQueryParam urlParamForKey:@"apptitle" url:url];
 
     return item;
 }

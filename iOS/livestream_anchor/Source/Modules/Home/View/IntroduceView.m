@@ -8,7 +8,7 @@
 
 #import "IntroduceView.h"
 // js调用OC的类名
-#define LIVEAPP_JS @"LiveApp"
+#define LIVEAPP_JS @"LiveAnchorApp"
 // js回调的函数名
 #define LVIEAPP_CALLBACK @"CallBack"
 // js回调的函数名是callbackAppGAEvent
@@ -19,6 +19,20 @@
 // js回调的函数名是callbackWebReload
 #define LIVEAPP_CALLBACK_WEBRELOAD @"callbackWebReload"
 #define LIVEAPP_CALLBACK_WEBRELOAD_ERROR @"Errno"
+// js回调的函数名是callbackInvite
+#define LIVEAPP_CALLBACK_INVITE @"callbackInvite"
+#define LIVEAPP_CALLBACK_WEBRELOAD_USERID @"userid"
+#define LIVEAPP_CALLBACK_WEBRELOAD_NAME @"name"
+#define LIVEAPP_CALLBACK_WEBRELOAD_PHOTOURL @"photoUrl"
+// js回调的函数名是callbackWebAuthExpired
+#define LIVEAPP_CALLBACK_AUTHEXPIRED @"callbackWebAuthExpired"
+#define LIVEAPP_CALLBACK_ERRMSG @"errmsg"
+
+
+@interface IntroduceView()<WKScriptMessageHandler>
+
+@end
+
 @implementation IntroduceView
 
 
@@ -84,6 +98,18 @@
             NSString *Errno = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackWebReload:)]) {
                 [self.webViewJSDelegate webViewJSCallbackWebReload:Errno];
+            }
+        }else if ([methodName isEqualToString:LIVEAPP_CALLBACK_INVITE]) {
+            NSString *userid = message.body[LIVEAPP_CALLBACK_WEBRELOAD_USERID];
+            NSString *name = message.body[LIVEAPP_CALLBACK_WEBRELOAD_NAME];
+            NSString *photoUrl = message.body[LIVEAPP_CALLBACK_WEBRELOAD_PHOTOURL];
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackInvite:nickName:photo:)]) {
+                [self.webViewJSDelegate webViewJSCallbackInvite:userid nickName:name photo:photoUrl];
+            }
+        }else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTHEXPIRED]) {
+                 NSString *errmsg = message.body[LIVEAPP_CALLBACK_ERRMSG];
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackWebAuthExpired:)]) {
+                [self.webViewJSDelegate webViewJSCallbackWebAuthExpired:errmsg];
             }
         }
     }

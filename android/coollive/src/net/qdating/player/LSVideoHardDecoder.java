@@ -213,14 +213,14 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	        try {
 				videoCodec = MediaCodec.createDecoderByType(MIME_TYPE);
 				if( videoCodec != null ) {
-					videoMediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+					videoMediaFormat = MediaFormat.createVideoFormat(MIME_TYPE, 360, 240);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, outputColorFormat);
 			        
 					videoCodec.configure(videoMediaFormat, null, null, 0);
 					videoCodec.start();
 
 					bFlag = true;
-					Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::reset( this : 0x%x, [Success], codecName : %s, mimeType : %s )", hashCode(), videoCodec.getName(), MIME_TYPE));
+					Log.d(LSConfig.TAG, String.format("LSVideoHardDecoder::reset( this : 0x%x, [Success], codecName : [%s], mimeType : %s )", hashCode(), videoCodec.getName(), MIME_TYPE));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

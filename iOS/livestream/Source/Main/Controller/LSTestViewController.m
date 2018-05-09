@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *_Nullable token;
 @property (nonatomic, strong) NSString *_Nullable isShowGuide;
 @property (strong, nonatomic) UIWindow *window;
+
 @end
 
 @implementation LSTestViewController
@@ -118,7 +119,7 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     _token = [userDefaults stringForKey:@"QNToken"];
     if (!_token || _token.length == 0) {
-        _token = RANDY_TOKEN;
+        _token = MAX_TOKEN;
     }
 }
 
@@ -158,7 +159,6 @@
 
 - (void)moduleOnNotification:(LiveModule *)module {
     NSLog(@"LSTestViewController::moduleOnNotification()");
-
     dispatch_async(dispatch_get_main_queue(), ^{
         UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
         

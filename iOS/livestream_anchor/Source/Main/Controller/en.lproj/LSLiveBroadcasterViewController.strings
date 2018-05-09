@@ -1,0 +1,14 @@
+
+/* Class = "UILabel"; text = "Coins this month"; ObjectID = "IaN-lD-B4r"; */
+"IaN-lD-B4r.text" = "Coins this month";
+
+/* Class = "UILabel"; text = "Monthly Task Progress"; ObjectID = "YoT-iE-iSB"; */
+"YoT-iE-iSB.text" = "Monthly Task Progress";
+
+/* Class = "UILabel"; text = "Scheduled bookings"; ObjectID = "hkn-Io-gfk"; */
+"hkn-Io-gfk.text" = "Scheduled bookings";
+
+/* Class = "UILabel"; text = "Broadcast day:"; ObjectID = "lfQ-ZS-Zfr"; */
+"lfQ-ZS-Zfr.text" = "Broadcast day:";
+
+"Dashboard" = "Dashboard";

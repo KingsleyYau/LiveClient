@@ -171,7 +171,11 @@
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
-        make.bottom.equalTo(self.view);
+        if ([LSDevice iPhoneXStyle]) {
+            make.bottom.equalTo(self.view).offset(-35);
+        } else {
+            make.bottom.equalTo(self.view);
+        }
     }];
 
     [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
@@ -254,6 +258,13 @@
 
 // 更新头部直播间数据
 - (void)setupHeadViewInfo {
+    // 计算StatusBar高度
+    if ([LSDevice iPhoneXStyle]) {
+        self.titleBgImageTop.constant = 44;
+    } else {
+        self.titleBgImageTop.constant = 20;
+    }
+    
     if (self.liveRoom.userName.length > 0) {
         self.laddyNameLabel.text = [NSString stringWithFormat:@"%@’s",self.liveRoom.userName];
     } else {
@@ -281,6 +292,7 @@
 
                 [self.audienceArray removeAllObjects];
                 for (ViewerFansItemObject *item in array) {
+             
                     AudienModel *model = [[AudienModel alloc] init];
                     model.userId = item.userId;
                     model.nickName = item.nickName;
@@ -289,6 +301,7 @@
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
                     model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
+                    model.isHasTicket = item.isHasTicket;
                     [self.audienceArray addObject:model];
                     
                     // 更新并缓存本地观众数据
@@ -300,12 +313,13 @@
                     infoItem.riderName = item.mountUrl;
                     infoItem.userLevel = item.level;
                     infoItem.isAnchor = 0;
+                    infoItem.isHasTicket = item.isHasTicket;
                     [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
                 
-                // 默认六个头像
-                if (self.audienceArray.count < 6) {
-                    NSUInteger count = 6 - self.audienceArray.count;
+                // 显示最大人数默认头像
+                if (self.audienceArray.count < self.liveRoom.imLiveRoom.maxFansiNum) {
+                    NSUInteger count = self.liveRoom.imLiveRoom.maxFansiNum - self.audienceArray.count;
                     for (NSUInteger num = 0; num < count; num++) {
                         AudienModel *model = [[AudienModel alloc] init];
                         model.image = [UIImage imageNamed:@"Default_Img_Noman_Circyle"];
@@ -326,7 +340,7 @@
 
 #pragma mark - IM回调
 
-- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg {
+- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新并缓存本地观众数据

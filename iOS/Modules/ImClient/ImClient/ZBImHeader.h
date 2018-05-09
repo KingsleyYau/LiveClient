@@ -11,15 +11,20 @@
 
 #include "IZBImClientDef.h"
 
-//#import "Model/RoomTopFanItemObject.h"
-//#import "Model/RebateInfoObject.h"
-//#import "Model/BackpackInfoObject.h"
 #import "ZBModel/ZBImLiveRoomObject.h"
 #import "ZBModel/ZBImLoginReturnObject.h"
 #import "ZBModel/ZBImTalentRequestObject.h"
 #import "ZBModel/ZBImControlPushItemObject.h"
-//#import "Model/ImStartOverRoomObject.h"
-//#import "Model/ImBookingReplyObject.h"
-//#import "Model/ImTalentReplyObject.h"
+#import "ZBModel/AnchorHangoutRoomItemObject.h"
+#import "ZBModel/AnchorHangoutInviteItemObject.h"
+#import "ZBModel/IMAnchorRecommendHangoutItemObject.h"
+#import "ZBModel/IMAnchorKnockRequestItemObject.h"
+#import "ZBModel/IMAnchorRecvOtherInviteItemObject.h"
+#import "ZBModel/IMAnchorRecvDealInviteItemObject.h"
+#import "ZBModel/IMAnchorRecvEnterRoomItemObject.h"
+#import "ZBModel/IMAnchorRecvLeaveRoomItemObject.h"
+#import "ZBModel/IMAnchorRecvGiftItemObject.h"
+
+#import "ZBModel/IMAnchorProgramItemObject.h"
 
 #endif /* ZBImHeader_h */

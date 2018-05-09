@@ -16,9 +16,27 @@ callbackWebReload:function(params){
     var message;
     message = {'CallBack':"callbackWebReload",'Errno':params};
     window.webkit.messageHandlers.LiveApp.postMessage(message);
-}
+},
     
+callbackWebAuthExpired:function(params){
+    var message;
+    message = {'CallBack':"callbackWebAuthExpired",'Errno':params};
+    window.webkit.messageHandlers.LiveApp.postMessage(message);
+},
+    
+callbackWebRechange:function(params){
+    var message;
+    message = {'CallBack':"callbackWebRechange",'Errno':params};
+    window.webkit.messageHandlers.LiveApp.postMessage(message);
+},
+    
+callbackAppPublicGAEvent:function(params){
+    var message;
+    message = {'CallBack':"callbackAppPublicGAEvent",'Errno':params};
+    window.webkit.messageHandlers.LiveApp.postMessage(message);
+}
 };
+
 
 
 

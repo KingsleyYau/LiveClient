@@ -23,6 +23,7 @@ AudioRendererImp::AudioRendererImp() {
                  this
                  );
     mAudioQueue = NULL;
+    mIsMute = false;
     
     Create();
 }
@@ -74,7 +75,11 @@ void AudioRendererImp::RenderAudioFrame(void* frame) {
         if( status == noErr && audioBuffer != NULL ) {
             // 复制内容
             audioBuffer->mAudioDataByteSize = audioFrame->mBufferLen;
-            memcpy(audioBuffer->mAudioData, (const char *)audioFrame->GetBuffer(), audioFrame->mBufferLen);
+            if( !mIsMute ) {
+                memcpy(audioBuffer->mAudioData, (const char *)audioFrame->GetBuffer(), audioFrame->mBufferLen);
+            } else {
+                memset(audioBuffer->mAudioData, 0, audioFrame->mBufferLen);
+            }
             
             // 放入音频包
             // https://developer.apple.com/library/content/qa/qa1718/_index.html#//apple_ref/doc/uid/DTS40010356
@@ -153,6 +158,14 @@ void AudioRendererImp::Reset() {
         AudioQueueReset(mAudioQueue);
         AudioQueueFlush(mAudioQueue);
     }
+}
+
+bool AudioRendererImp::GetMute() {
+    return mIsMute;
+}
+
+void AudioRendererImp::SetMute(bool isMute) {
+    mIsMute = isMute;
 }
 
 bool AudioRendererImp::Create() {

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LSLoginItemObject.h"
 #import "LSRegisterItemObject.h"
 #import "LiveModule.h"
@@ -103,8 +103,6 @@ typedef enum {
  *  @return 是否进入登陆中状态
  */
 - (LoginStatus)login:(NSString * _Nullable)user password:(NSString * _Nullable)password checkcode:(NSString * _Nullable)checkcode;
-
-- (LoginStatus)login:(NSString * _Nonnull)manId userSid:(NSString * _Nonnull)userSid;
 /**
  *  注销接口
  *

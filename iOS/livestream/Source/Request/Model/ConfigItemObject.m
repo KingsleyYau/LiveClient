@@ -22,6 +22,8 @@
         self.userLevel = @"";
         self.intimacy = @"";
         self.userProtocol = @"";
+        self.showDetailPage = @"";
+        self.showDescription = @"";
     }
     return self;
 }
@@ -35,6 +37,8 @@
         self.userLevel = [coder decodeObjectForKey:@"userLevel"];
         self.intimacy = [coder decodeObjectForKey:@"intimacy"];
         self.userProtocol = [coder decodeObjectForKey:@"userProtocol"];
+        self.showDetailPage = [coder decodeObjectForKey:@"showDetailPage"];
+        self.showDescription = [coder decodeObjectForKey:@"showDescription"];
     }
     return self;
 }
@@ -47,6 +51,8 @@
     [coder encodeObject:self.userLevel forKey:@"userLevel"];
     [coder encodeObject:self.intimacy forKey:@"intimacy"];
     [coder encodeObject:self.userProtocol forKey:@"userProtocol"];
+    [coder encodeObject:self.showDetailPage forKey:@"showDetailPage"];
+    [coder encodeObject:self.showDescription forKey:@"showDescription"];
 
 }
 

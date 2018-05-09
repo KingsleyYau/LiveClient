@@ -49,10 +49,11 @@ private:
     string          m_userId;      // 观众ID
     string          m_nickName;    // 观众昵称
     string          m_photourl;    // 观众头像url
-    string          m_riderId;      // 座驾ID
-    string          m_riderName;    // 座驾名称
-    string          m_riderUrl;     // 座驾图片url
+    string          m_riderId;     // 座驾ID
+    string          m_riderName;   // 座驾名称
+    string          m_riderUrl;    // 座驾图片url
     int             m_fansNum;     // 观众人数
+    bool          m_hasTicket;   // 是否已购票（0：否，1：是）
 
 	ZBLCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述

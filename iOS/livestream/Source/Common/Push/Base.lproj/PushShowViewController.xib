@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PushShowViewController">
+            <connections>
+                <outlet property="ladyImageView" destination="Xpp-gS-29c" id="4Wc-ww-1UB"/>
+                <outlet property="tipsLabel" destination="tGI-qB-Hj0" id="Xjo-y3-lEm"/>
+                <outlet property="view" destination="IIS-Gc-xMZ" id="kNR-Wn-4zV"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="IIS-Gc-xMZ">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="73"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Push_BackGround_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="bh2-z6-baX" userLabel="Back Ground View">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="73"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Xpp-gS-29c" userLabel="Lady Image View">
+                    <rect key="frame" x="10" y="11" width="50" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="Xpp-gS-29c" secondAttribute="height" multiplier="1:1" id="W7h-TQ-Vpb"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tGI-qB-Hj0" userLabel="Tips Label">
+                    <rect key="frame" x="78" y="5" width="259" height="63"/>
+                    <gestureRecognizers/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                    <connections>
+                        <outletCollection property="gestureRecognizers" destination="mDU-4B-FB3" appends="YES" id="kHe-6o-OCP"/>
+                    </connections>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5be-4u-ha0" userLabel="Cancel Button">
+                    <rect key="frame" x="345" y="2" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="5be-4u-ha0" secondAttribute="height" multiplier="1:1" id="S71-fb-ILz"/>
+                        <constraint firstAttribute="width" constant="25" id="Xgh-Zb-wkR"/>
+                    </constraints>
+                    <state key="normal" image="Liveend_Close_btn"/>
+                    <connections>
+                        <action selector="cancelAction:" destination="-1" eventType="touchUpInside" id="26E-me-8CJ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="0.0" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="5be-4u-ha0" firstAttribute="trailing" secondItem="IIS-Gc-xMZ" secondAttribute="trailing" constant="-5" id="0L3-Ge-Idc"/>
+                <constraint firstItem="bh2-z6-baX" firstAttribute="top" secondItem="IIS-Gc-xMZ" secondAttribute="top" id="1AM-Wv-aEs"/>
+                <constraint firstItem="Xpp-gS-29c" firstAttribute="leading" secondItem="IIS-Gc-xMZ" secondAttribute="leading" constant="10" id="4Vk-Ab-0cE"/>
+                <constraint firstItem="5be-4u-ha0" firstAttribute="leading" secondItem="tGI-qB-Hj0" secondAttribute="trailing" constant="8" symbolic="YES" id="6ir-ew-xHc"/>
+                <constraint firstItem="tGI-qB-Hj0" firstAttribute="bottom" secondItem="Xpp-gS-29c" secondAttribute="bottom" constant="7" id="CDV-79-lxq"/>
+                <constraint firstItem="Xpp-gS-29c" firstAttribute="bottom" secondItem="IIS-Gc-xMZ" secondAttribute="bottom" constant="-12" id="iC7-QD-Ayh"/>
+                <constraint firstItem="tGI-qB-Hj0" firstAttribute="top" secondItem="Xpp-gS-29c" secondAttribute="top" constant="-6" id="mVB-1Z-QAy"/>
+                <constraint firstAttribute="trailing" secondItem="bh2-z6-baX" secondAttribute="trailing" id="o02-hT-zxq"/>
+                <constraint firstItem="bh2-z6-baX" firstAttribute="leading" secondItem="IIS-Gc-xMZ" secondAttribute="leading" id="o4L-GX-5HF"/>
+                <constraint firstItem="5be-4u-ha0" firstAttribute="top" secondItem="IIS-Gc-xMZ" secondAttribute="top" constant="2" id="oMF-RZ-pCy"/>
+                <constraint firstItem="tGI-qB-Hj0" firstAttribute="leading" secondItem="Xpp-gS-29c" secondAttribute="trailing" constant="18" id="qwu-ZY-F9q"/>
+                <constraint firstAttribute="bottom" secondItem="bh2-z6-baX" secondAttribute="bottom" id="rJA-LE-y8W"/>
+                <constraint firstItem="Xpp-gS-29c" firstAttribute="top" secondItem="IIS-Gc-xMZ" secondAttribute="top" constant="11" id="vhF-pu-H3E"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="35.5" y="56"/>
+        </view>
+        <tapGestureRecognizer id="mDU-4B-FB3">
+            <connections>
+                <action selector="tipTap:" destination="-1" id="CG0-Bq-hvN"/>
+            </connections>
+        </tapGestureRecognizer>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Liveend_Close_btn" width="22" height="22"/>
+        <image name="Push_BackGround_Icon" width="365" height="80"/>
+    </resources>
+</document>

@@ -119,7 +119,7 @@ static LSRequestManager *gManager = nil;
 + (void)setLogEnable:(BOOL)enable {
     KLog::SetLogEnable(enable);
     KLog::SetLogFileEnable(YES);
-    KLog::SetLogLevel(KLog::LOG_STAT);
+    KLog::SetLogLevel(KLog::LOG_WARNING);
 }
 
 + (void)setLogDirectory:(NSString *)directory {
@@ -209,7 +209,7 @@ public:
     RequestLoginCallbackImp(){};
     ~RequestLoginCallbackImp(){};
     void OnLogin(HttpLoginTask *task, bool success, int errnum, const string &errmsg, const HttpLoginItem &item) {
-        NSLog(@"LSRequestManager::onLogin( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSLog(@"LSRequestManager::onLogin( task : %p, success : %s, errnum : %d, errmsg : %s, qnMainAdUrl:%s qnMainAdTitle:%s qnMainAdId:%s)", task, success ? "true" : "false", errnum, errmsg.c_str(), item.qnMainAdUrl.c_str(), item.qnMainAdTitle.c_str(), item.qnMainAdId.c_str());
         
         LoginFinishHandler handler = nil;
         LSLoginItemObject *obj = [[LSLoginItemObject alloc] init];
@@ -229,6 +229,9 @@ public:
         }
         obj.svrList = array;
         obj.userType = item.userType;
+        obj.qnMainAdUrl = [NSString stringWithUTF8String:item.qnMainAdUrl.c_str()];
+        obj.qnMainAdTitle = [NSString stringWithUTF8String:item.qnMainAdTitle.c_str()];
+        obj.qnMainAdId = [NSString stringWithUTF8String:item.qnMainAdId.c_str()];
         
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {
@@ -366,15 +369,15 @@ public:
         NSMutableArray *array = [NSMutableArray array];
         for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
-            item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
-            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
-            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
-            item.onlineStatus = (*iter).onlineStatus;
-            item.roomType = (*iter).roomType;
+            item.userId = [NSString stringWithUTF8String:(*iter)->userId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter)->nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter)->photoUrl.c_str()];
+            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter)->roomPhotoUrl.c_str()];
+            item.onlineStatus = (*iter)->onlineStatus;
+            item.roomType = (*iter)->roomType;
             NSMutableArray *nsInterest = [NSMutableArray array];
             //int i = 0;
-            for (InterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+            for (InterestList::const_iterator itr = (*iter)->interest.begin(); itr != (*iter)->interest.end(); itr++) {
                 //NSString* strInterest = [NSString stringWithUTF8String:(*itr).c_str()];
                 int num = (*itr);
                 NSNumber *numInterest = [NSNumber numberWithInt:num];
@@ -383,7 +386,31 @@ public:
                 //i++;
             }
             item.interest = nsInterest;
-            item.anchorType = (*iter).anchorType;
+            item.anchorType = (*iter)->anchorType;
+            
+            if ((*iter)->showInfo != NULL) {
+                LSProgramItemObject* programItem = [[LSProgramItemObject alloc] init];
+                programItem.showLiveId = [NSString stringWithUTF8String:(*iter)->showInfo->showLiveId.c_str()];
+                programItem.anchorId = [NSString stringWithUTF8String:(*iter)->showInfo->anchorId.c_str()];
+                programItem.anchorNickName = [NSString stringWithUTF8String:(*iter)->showInfo->anchorNickName.c_str()];
+                programItem.anchorAvatar = [NSString stringWithUTF8String:(*iter)->showInfo->anchorAvatar.c_str()];
+                programItem.showTitle = [NSString stringWithUTF8String:(*iter)->showInfo->showTitle.c_str()];
+                programItem.showIntroduce = [NSString stringWithUTF8String:(*iter)->showInfo->showIntroduce.c_str()];
+                programItem.cover = [NSString stringWithUTF8String:(*iter)->showInfo->cover.c_str()];
+                programItem.approveTime = (*iter)->showInfo->approveTime;
+                programItem.startTime = (*iter)->showInfo->startTime;
+                programItem.duration = (*iter)->showInfo->duration;
+                programItem.leftSecToStart = (*iter)->showInfo->leftSecToStart;
+                programItem.leftSecToEnter = (*iter)->showInfo->leftSecToEnter;
+                programItem.price = (*iter)->showInfo->price;
+                programItem.status = (*iter)->showInfo->status;
+                programItem.ticketStatus = (*iter)->showInfo->ticketStatus;
+                programItem.isHasFollow = (*iter)->showInfo->isHasFollow;
+                programItem.isTicketFull = (*iter)->showInfo->isTicketFull;
+            
+                item.showInfo = programItem;
+            }
+            
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetAnchorList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
         }
@@ -426,22 +453,45 @@ public:
         NSMutableArray *array = [NSMutableArray array];
         for (FollowItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             FollowItemObject *item = [[FollowItemObject alloc] init];
-            item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
-            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
-            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
-            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter).roomPhotoUrl.c_str()];
-            item.onlineStatus = (*iter).onlineStatus;
-            item.roomType = (*iter).roomType;
-            item.loveLevel = (*iter).loveLevel;
-            item.addDate = (*iter).addDate;
+            item.userId = [NSString stringWithUTF8String:(*iter)->userId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter)->nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter)->photoUrl.c_str()];
+            item.roomPhotoUrl = [NSString stringWithUTF8String:(*iter)->roomPhotoUrl.c_str()];
+            item.onlineStatus = (*iter)->onlineStatus;
+            item.roomType = (*iter)->roomType;
+            item.loveLevel = (*iter)->loveLevel;
+            item.addDate = (*iter)->addDate;
             NSMutableArray *nsInterest = [NSMutableArray array];
-            for (FollowInterestList::const_iterator itr = (*iter).interest.begin(); itr != (*iter).interest.end(); itr++) {
+            for (FollowInterestList::const_iterator itr = (*iter)->interest.begin(); itr != (*iter)->interest.end(); itr++) {
                 int num = (*itr);
                 NSNumber *numInterest = [NSNumber numberWithInt:num];
                 [nsInterest addObject:numInterest];
             }
             item.interest = nsInterest;
-            item.anchorType = (*iter).anchorType;
+            item.anchorType = (*iter)->anchorType;
+            if ((*iter)->showInfo != NULL) {
+                LSProgramItemObject* programItem = [[LSProgramItemObject alloc] init];
+                programItem.showLiveId = [NSString stringWithUTF8String:(*iter)->showInfo->showLiveId.c_str()];
+                programItem.anchorId = [NSString stringWithUTF8String:(*iter)->showInfo->anchorId.c_str()];
+                programItem.anchorNickName = [NSString stringWithUTF8String:(*iter)->showInfo->anchorNickName.c_str()];
+                programItem.anchorAvatar = [NSString stringWithUTF8String:(*iter)->showInfo->anchorAvatar.c_str()];
+                programItem.showTitle = [NSString stringWithUTF8String:(*iter)->showInfo->showTitle.c_str()];
+                programItem.showIntroduce = [NSString stringWithUTF8String:(*iter)->showInfo->showIntroduce.c_str()];
+                programItem.cover = [NSString stringWithUTF8String:(*iter)->showInfo->cover.c_str()];
+                programItem.approveTime = (*iter)->showInfo->approveTime;
+                programItem.startTime = (*iter)->showInfo->startTime;
+                                           programItem.duration = (*iter)->showInfo->duration;
+                                           programItem.leftSecToStart = (*iter)->showInfo->leftSecToStart;
+                programItem.leftSecToEnter = (*iter)->showInfo->leftSecToEnter;
+                programItem.price = (*iter)->showInfo->price;
+                programItem.status = (*iter)->showInfo->status;
+                programItem.ticketStatus = (*iter)->showInfo->ticketStatus;
+                programItem.isHasFollow = (*iter)->showInfo->isHasFollow;
+                programItem.isTicketFull = (*iter)->showInfo->isTicketFull;
+                item.showInfo = programItem;
+            }
+
+            
             [array addObject:item];
             //            NSLog(@"LSRequestManager::OnGetFollowList( task : %p, userId : %@, nickName : %@, onlineStatus : %d, roomType : %d )", task, item.userId, item.nickName, item.onlineStatus, item.roomType);
         }
@@ -549,6 +599,7 @@ public:
             item.mountId = [NSString stringWithUTF8String:(*iter).mountId.c_str()];
             item.mountUrl = [NSString stringWithUTF8String:(*iter).mountUrl.c_str()];
             item.level = (*iter).level;
+            item.isHasTicket = (*iter).isHasTicket;
             [array addObject:item];
             NSLog(@"LSRequestManager::OnGetLiveRoomFansList( task : %p, userId : %@, nickName : %@, photoUrl : %@ )", task, item.userId, item.nickName, item.photoUrl);
         }
@@ -992,11 +1043,11 @@ class RequestGetPromoAnchorListCallbackImp : public IRequestGetPromoAnchorListCa
 public:
     RequestGetPromoAnchorListCallbackImp(){};
     ~RequestGetPromoAnchorListCallbackImp(){};
-    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &listItem) {
+    void OnGetPromoAnchorList(HttpGetPromoAnchorListTask *task, bool success, int errnum, const string &errmsg, const AdItemList &listItem) {
         NSLog(@"LSRequestManager::OnGetPromoAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         NSMutableArray *array = [NSMutableArray array];
-        for (HotItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
+        for (AdItemList::const_iterator iter = listItem.begin(); iter != listItem.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
@@ -1621,6 +1672,8 @@ public:
         obj.userLevel = [NSString stringWithUTF8String:configItem.userLevel.c_str()];
         obj.intimacy = [NSString stringWithUTF8String:configItem.intimacy.c_str()];
         obj.userProtocol = [NSString stringWithUTF8String:configItem.userProtocol.c_str()];
+        obj.showDetailPage  = [NSString stringWithUTF8String:configItem.showDetailPage.c_str()];
+        obj.showDescription  = [NSString stringWithUTF8String:configItem.showDescription.c_str()];
         
         GetConfigFinishHandler handler = nil;
         LSRequestManager *manager = [LSRequestManager manager];
@@ -1716,11 +1769,11 @@ class RequestGetAdAnchorListCallbackImp : public IRequestGetAdAnchorListCallback
 public:
     RequestGetAdAnchorListCallbackImp(){};
     ~RequestGetAdAnchorListCallbackImp(){};
-    void OnGetAdAnchorList(HttpGetAdAnchorListTask *task, bool success, int errnum, const string &errmsg, const HotItemList &list) {
+    void OnGetAdAnchorList(HttpGetAdAnchorListTask *task, bool success, int errnum, const string &errmsg, const AdItemList &list) {
         NSLog(@"LSRequestManager::OnGetAdAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         NSMutableArray *array = [NSMutableArray array];
-        for (HotItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+        for (AdItemList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
             LiveRoomInfoItemObject *item = [[LiveRoomInfoItemObject alloc] init];
             item.userId = [NSString stringWithUTF8String:(*iter).userId.c_str()];
             item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
@@ -1982,6 +2035,465 @@ RequestGetUserInfoCallbackImp gRequestGetUserInfoCallbackImp;
     
     return request;
 }
+
+#pragma mark - 多人互动
+class RequestGetCanHangoutAnchorListCallbackImp : public IRequestGetCanHangoutAnchorListCallback {
+public:
+    RequestGetCanHangoutAnchorListCallbackImp(){};
+    ~RequestGetCanHangoutAnchorListCallbackImp(){};
+    void OnGetCanHangoutAnchorList(HttpGetCanHangoutAnchorListTask* task, bool success, int errnum, const string& errmsg, const HangoutAnchorList& list) {
+        NSLog(@"LSRequestManager::OnGetCanHangoutAnchorList( task : %p, success : %s, errnum : %d, errmsg : %s )", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSMutableArray* array = [NSMutableArray array];
+        for(HangoutAnchorList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSHangoutAnchorItemObject* item = [[LSHangoutAnchorItemObject alloc] init];
+            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+            item.nickName = [NSString stringWithUTF8String:(*iter).nickName.c_str()];
+            item.photoUrl = [NSString stringWithUTF8String:(*iter).photoUrl.c_str()];
+            item.age = (*iter).age;
+            item.country = [NSString stringWithUTF8String:(*iter).country.c_str()];
+            [array addObject:item];
+        }
+        
+        GetCanHangoutAnchorListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetCanHangoutAnchorListCallbackImp gRequestGetCanHangoutAnchorListCallbackImp;
+- (NSInteger)getCanHangoutAnchorList:(HangoutAnchorListType)type
+                            anchorId:(NSString *_Nullable)anchorId
+                               start:(int)start
+                                step:(int)step
+                       finishHandler:(GetCanHangoutAnchorListFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetCanHangoutAnchorList(&mHttpRequestManager, type, [anchorId UTF8String], start, step, &gRequestGetCanHangoutAnchorListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestSendInvitationHangoutCallbackImp : public IRequestSendInvitationHangoutCallback {
+public:
+    RequestSendInvitationHangoutCallbackImp(){};
+    ~RequestSendInvitationHangoutCallbackImp(){};
+    void OnSendInvitationHangout(HttpSendInvitationHangoutTask* task, bool success, int errnum, const string& errmsg, const string& roomId, const string& inviteId, int expire) {
+        NSLog(@"LSRequestManager::OnSendInvitationHangout( task : %p, success : %s, errnum : %d, errmsg : %s roomId:%s inviteId:%s, expire:%d)", task, success ? "true" : "false", errnum, errmsg.c_str(), roomId.c_str(), inviteId.c_str(), expire);
+
+        SendInvitationHangoutFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:roomId.c_str()], [NSString stringWithUTF8String:inviteId.c_str()], expire);
+        }
+    }
+};
+RequestSendInvitationHangoutCallbackImp gRequestSendInvitationHangoutCallbackImp;
+- (NSInteger)sendInvitationHangout:(NSString *_Nullable)roomId
+                          anchorId:(NSString *_Nullable)anchorId
+                       recommendId:(NSString *_Nullable)recommendId
+                     finishHandler:(SendInvitationHangoutFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.SendInvitationHangout(&mHttpRequestManager, [roomId UTF8String], [anchorId UTF8String], [recommendId UTF8String], &gRequestSendInvitationHangoutCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestCancelInviteHangoutCallbackImp : public IRequestCancelInviteHangoutCallback {
+public:
+    RequestCancelInviteHangoutCallbackImp(){};
+    ~RequestCancelInviteHangoutCallbackImp(){};
+    void OnCancelInviteHangout(HttpCancelInviteHangoutTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"LSRequestManager::OnCancelInviteHangout( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        CancelInviteHangoutFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestCancelInviteHangoutCallbackImp gRequestCancelInviteHangoutCallbackImp;
+- (NSInteger)cancelInviteHangout:(NSString *_Nullable)inviteId
+                   finishHandler:(CancelInviteHangoutFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.CancelInviteHangout(&mHttpRequestManager, [inviteId UTF8String], &gRequestCancelInviteHangoutCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetHangoutInvitStatusCallbackImp : public IRequestGetHangoutInvitStatusCallback {
+public:
+    RequestGetHangoutInvitStatusCallbackImp(){};
+    ~RequestGetHangoutInvitStatusCallbackImp(){};
+    void OnGetHangoutInvitStatus(HttpGetHangoutInvitStatusTask* task, bool success, int errnum, const string& errmsg, HangoutInviteStatus status, const string& roomId, int expire) {
+        NSLog(@"LSRequestManager::OnCancelInviteHangout( task : %p, success : %s, errnum : %d, errmsg : %s, status:%d, roomId;%s, expire:%d)", task, success ? "true" : "false", errnum, errmsg.c_str(), status, roomId.c_str(), expire);
+        
+        GetHangoutInvitStatusFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], status, [NSString stringWithUTF8String:roomId.c_str()], expire);
+        }
+    }
+};
+RequestGetHangoutInvitStatusCallbackImp gRequestGetHangoutInvitStatusCallbackImp;
+- (NSInteger)getHangoutInvitStatus:(NSString *_Nullable)inviteId
+                     finishHandler:(GetHangoutInvitStatusFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetHangoutInvitStatus(&mHttpRequestManager, [inviteId UTF8String], &gRequestGetHangoutInvitStatusCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestDealKnockRequestCallbackImp : public IRequestDealKnockRequestCallback {
+public:
+    RequestDealKnockRequestCallbackImp(){};
+    ~RequestDealKnockRequestCallbackImp(){};
+    void OnDealKnockRequest(HttpDealKnockRequestTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"LSRequestManager::OnCancelInviteHangout( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        DealKnockRequestFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestDealKnockRequestCallbackImp gRequestDealKnockRequestCallbackImp;
+- (NSInteger)dealKnockRequest:(NSString *_Nullable)knockId
+                finishHandler:(DealKnockRequestFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.DealKnockRequest(&mHttpRequestManager, [knockId UTF8String], &gRequestDealKnockRequestCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestGetNoReadNumProgramCallbackImp : public IRequestGetNoReadNumProgramCallback {
+public:
+    RequestGetNoReadNumProgramCallbackImp(){};
+    ~RequestGetNoReadNumProgramCallbackImp(){};
+    void OnGetNoReadNumProgram(HttpGetNoReadNumProgramTask* task, bool success, int errnum, const string& errmsg, int num) {
+        NSLog(@"LSRequestManager::OnGetNoReadNumProgram( task : %p, success : %s, errnum : %d, errmsg : %s, num : %d)", task, success ? "true" : "false", errnum, errmsg.c_str(), num);
+        
+        GetNoReadNumProgramFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], num);
+        }
+    }
+};
+RequestGetNoReadNumProgramCallbackImp gRequestGetNoReadNumProgramCallbackImp;
+- (NSInteger)getNoReadNumProgram:(GetNoReadNumProgramFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetNoReadNumProgram(&mHttpRequestManager, &gRequestGetNoReadNumProgramCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestGetProgramListCallbackImp : public IRequestGetProgramListCallback {
+public:
+    RequestGetProgramListCallbackImp(){};
+    ~RequestGetProgramListCallbackImp(){};
+    void OnGetProgramList(HttpGetProgramListTask* task, bool success, int errnum, const string& errmsg, const ProgramInfoList& list) {
+        NSLog(@"LSRequestManager::OnGetProgramList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(ProgramInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSProgramItemObject* item = [[LSProgramItemObject alloc] init];
+            item.showLiveId = [NSString stringWithUTF8String:(*iter).showLiveId.c_str()];
+            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+            item.anchorNickName = [NSString stringWithUTF8String:(*iter).anchorNickName.c_str()];
+            item.anchorAvatar = [NSString stringWithUTF8String:(*iter).anchorAvatar.c_str()];
+            item.showTitle = [NSString stringWithUTF8String:(*iter).showTitle.c_str()];
+            item.showIntroduce = [NSString stringWithUTF8String:(*iter).showIntroduce.c_str()];
+            item.cover = [NSString stringWithUTF8String:(*iter).cover.c_str()];
+            item.approveTime = (*iter).approveTime;
+            item.startTime = (*iter).startTime;
+            item.duration = (*iter).duration;
+            item.leftSecToStart = (*iter).leftSecToStart;
+            item.leftSecToEnter = (*iter).leftSecToEnter;
+            item.price = (*iter).price;
+            item.status = (*iter).status;
+            item.ticketStatus = (*iter).ticketStatus;
+            item.isHasFollow = (*iter).isHasFollow;
+            item.isTicketFull = (*iter).isTicketFull;
+            [array addObject:item];
+        }
+        
+        
+        GetProgramListFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestGetProgramListCallbackImp gRequestGetProgramListCallbackImp;
+- (NSInteger)getProgramListProgram:(ProgramListType)sortType
+                           start:(int)start
+                            step:(int)step
+                   finishHandler:(GetProgramListFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetProgramList(&mHttpRequestManager, sortType, start, step, &gRequestGetProgramListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestBuyProgramCallbackImp : public IRequestBuyProgramCallback {
+public:
+    RequestBuyProgramCallbackImp(){};
+    ~RequestBuyProgramCallbackImp(){};
+    void OnBuyProgram(HttpBuyProgramTask* task, bool success, int errnum, const string& errmsg, double leftCredit) {
+        NSLog(@"LSRequestManager::OnBuyProgram( task : %p, success : %s, errnum : %d, errmsg : %s, leftCredit;%f)", task, success ? "true" : "false", errnum, errmsg.c_str(), leftCredit);
+        
+        BuyProgramFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], leftCredit);
+        }
+    }
+};
+RequestBuyProgramCallbackImp gRequestBuyProgramCallbackImp;
+- (NSInteger)buyProgram:(NSString *_Nullable)liveShowId
+          finishHandler:(BuyProgramFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.BuyProgram(&mHttpRequestManager, [liveShowId UTF8String], &gRequestBuyProgramCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+
+class RequestChangeFavouriteCallbackImp : public IRequestChangeFavouriteCallback {
+public:
+    RequestChangeFavouriteCallbackImp(){};
+    ~RequestChangeFavouriteCallbackImp(){};
+    void OnFollowShow(HttpChangeFavouriteTask* task, bool success, int errnum, const string& errmsg) {
+        NSLog(@"LSRequestManager::OnCancelInviteHangout( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        FollowShowFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()]);
+        }
+    }
+};
+RequestChangeFavouriteCallbackImp gRequestChangeFavouriteCallbackImp;
+
+- (NSInteger)followShow:(NSString *_Nullable)liveShowId
+               isCancle:(BOOL)isCancle
+          finishHandler:(FollowShowFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.FollowShow(&mHttpRequestManager, [liveShowId UTF8String], isCancle, &gRequestChangeFavouriteCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+//- (NSInteger)followShow:(NSString *_Nullable)liveShowId
+//                isCancel:(BOOL)isCancel
+//           finishHandler:(FollowShowFinishHandler _Nullable)finishHandler {
+//    NSInteger request = (NSInteger)mHttpRequestController.FollowShow(&mHttpRequestManager, [liveShowId UTF8String], isCancel, &gRequestChangeFavouriteCallbackImp);
+//    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+//        @synchronized(self.delegateDictionary) {
+//            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+//        }
+//    }
+//
+//    return request;
+//}
+
+class RequestGetShowRoomInfoCallbackImp : public IRequestGetShowRoomInfoCallback {
+public:
+    RequestGetShowRoomInfoCallbackImp(){};
+    ~RequestGetShowRoomInfoCallbackImp(){};
+    void OnGetShowRoomInfo(HttpGetShowRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpProgramInfoItem& item, const string& roomId) {
+        NSLog(@"LSRequestManager::OnGetShowRoomInfo( task : %p, success : %s, errnum : %d, errmsg : %s, roomId:%s)", task, success ? "true" : "false", errnum, errmsg.c_str(), roomId.c_str());
+            LSProgramItemObject* obj = [[LSProgramItemObject alloc] init];
+            obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
+            obj.anchorId = [NSString stringWithUTF8String:item.anchorId.c_str()];
+            obj.anchorNickName = [NSString stringWithUTF8String:item.anchorNickName.c_str()];
+            obj.anchorAvatar = [NSString stringWithUTF8String:item.anchorAvatar.c_str()];
+            obj.showTitle = [NSString stringWithUTF8String:item.showTitle.c_str()];
+            obj.showIntroduce = [NSString stringWithUTF8String:item.showIntroduce.c_str()];
+            obj.cover = [NSString stringWithUTF8String:item.cover.c_str()];
+            obj.approveTime = item.approveTime;
+            obj.startTime = item.startTime;
+            obj.duration = item.duration;
+            obj.leftSecToStart = item.leftSecToStart;
+            obj.leftSecToEnter = item.leftSecToEnter;
+            obj.price = item.price;
+            obj.status = item.status;
+            obj.ticketStatus = item.ticketStatus;
+            obj.isHasFollow = item.isHasFollow;
+            obj.isTicketFull = item.isTicketFull;
+    
+        NSString* strRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+        
+        GetShowRoomInfoFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj, strRoomId);
+        }
+    }
+};
+RequestGetShowRoomInfoCallbackImp gRequestGetShowRoomInfoCallbackImp;
+- (NSInteger)getShowRoomInfo:(NSString *_Nullable)liveShowId
+               finishHandler:(GetShowRoomInfoFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.GetShowRoomInfo(&mHttpRequestManager, [liveShowId UTF8String], &gRequestGetShowRoomInfoCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
+class RequestShowListWithAnchorIdTCallbackImp : public IRequestShowListWithAnchorIdTCallback {
+public:
+    RequestShowListWithAnchorIdTCallbackImp(){};
+    ~RequestShowListWithAnchorIdTCallbackImp(){};
+    void OnShowListWithAnchorId(HttpShowListWithAnchorIdTask* task, bool success, int errnum, const string& errmsg, const ProgramInfoList& list) {
+        NSLog(@"LSRequestManager::OnGetProgramList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        
+        NSMutableArray* array = [NSMutableArray array];
+        for(ProgramInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
+            LSProgramItemObject* item = [[LSProgramItemObject alloc] init];
+            item.showLiveId = [NSString stringWithUTF8String:(*iter).showLiveId.c_str()];
+            item.anchorId = [NSString stringWithUTF8String:(*iter).anchorId.c_str()];
+            item.anchorNickName = [NSString stringWithUTF8String:(*iter).anchorNickName.c_str()];
+            item.anchorAvatar = [NSString stringWithUTF8String:(*iter).anchorAvatar.c_str()];
+            item.showTitle = [NSString stringWithUTF8String:(*iter).showTitle.c_str()];
+            item.showIntroduce = [NSString stringWithUTF8String:(*iter).showIntroduce.c_str()];
+            item.cover = [NSString stringWithUTF8String:(*iter).cover.c_str()];
+            item.approveTime = (*iter).approveTime;
+            item.startTime = (*iter).startTime;
+            item.duration = (*iter).duration;
+            item.leftSecToStart = (*iter).leftSecToStart;
+            item.leftSecToEnter = (*iter).leftSecToEnter;
+            item.price = (*iter).price;
+            item.status = (*iter).status;
+            item.ticketStatus = (*iter).ticketStatus;
+            item.isHasFollow = (*iter).isHasFollow;
+            item.isTicketFull = (*iter).isTicketFull;
+            [array addObject:item];
+        }
+        
+        
+        ShowListWithAnchorIdFinishHandler handler = nil;
+        LSRequestManager *manager = [LSRequestManager manager];
+        @synchronized(manager.delegateDictionary) {
+            handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
+            [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
+        }
+        
+        if (handler) {
+            handler(success, [[LSRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
+        }
+    }
+};
+RequestShowListWithAnchorIdTCallbackImp gRequestShowListWithAnchorIdTCallbackImp;
+- (NSInteger)showListWithAnchorId:(NSString *_Nullable)anchorId
+                            start:(int)start
+                             step:(int)step
+                         sortType:(ShowRecommendListType)sortType
+                    finishHandler:(ShowListWithAnchorIdFinishHandler _Nullable)finishHandler {
+    NSInteger request = (NSInteger)mHttpRequestController.ShowListWithAnchorId(&mHttpRequestManager, [anchorId UTF8String], start, step, sortType, &gRequestShowListWithAnchorIdTCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@((NSInteger)request)];
+        }
+    }
+    
+    return request;
+}
+
 
 @end
 

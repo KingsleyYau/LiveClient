@@ -1,0 +1,10 @@
+
+/* Class = "UIButton"; normalTitle = "Say something..."; ObjectID = "CKa-LU-Lzo"; */
+"CKa-LU-Lzo.normalTitle" = "Say something...";
+
+/* Class = "UILabel"; text = "@ All"; ObjectID = "xAm-O2-N9I"; */
+"xAm-O2-N9I.text" = "@ All";
+
+"CHAT_AUDIENCE_ALL" = "All";
+
+"INPUT_PLACEHOLDER" = "Say something...";

@@ -115,8 +115,33 @@
 		25F14B231F95B2FC009453D9 /* LSEmotionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 25F14B121F95B03A009453D9 /* LSEmotionCollectionViewCell.xib */; };
 		25F14B241F95B30D009453D9 /* LSEmotionCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F14B111F95B03A009453D9 /* LSEmotionCollectionViewCell.m */; };
 		25F14B251F95B30D009453D9 /* LSEmotionCollectionViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 25F14B151F95B03A009453D9 /* LSEmotionCollectionViewLayout.m */; };
+		3E06BAB620883C8C009CFF37 /* ShowTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E06BAB520883C8C009CFF37 /* ShowTipView.m */; };
+		3E1331B7208DB3E200D6AA55 /* MyTicketsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */; };
+		3E1331B9208DB3E600D6AA55 /* MyTicketsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */; };
+		3E1331BB208DB48500D6AA55 /* ShowListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EA6BCFE208D73CB006E0558 /* ShowListView.xib */; };
+		3E1331BC208DB48800D6AA55 /* ShowListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6BCFD208D73CB006E0558 /* ShowListView.m */; };
+		3E1331BE208DB49200D6AA55 /* ShowAddCreditsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857E820874AC00095D7CA /* ShowAddCreditsView.m */; };
+		3E1331BF208DB49600D6AA55 /* ShowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EE857E42087309D0095D7CA /* ShowCell.xib */; };
+		3E1331C0208DB49900D6AA55 /* ShowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857E32087309D0095D7CA /* ShowCell.m */; };
+		3E1331C1208DB49D00D6AA55 /* ShowTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E06BAB520883C8C009CFF37 /* ShowTipView.m */; };
+		3E1331C5208DB5FC00D6AA55 /* MyTicketPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331C3208DB5FC00D6AA55 /* MyTicketPageViewController.m */; };
+		3E1331C7208DB60000D6AA55 /* MyTicketPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331C3208DB5FC00D6AA55 /* MyTicketPageViewController.m */; };
+		3E1331C9208DB65B00D6AA55 /* MyTicketPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331CC208DB65B00D6AA55 /* MyTicketPageViewController.xib */; };
+		3E1331CA208DB65B00D6AA55 /* MyTicketPageViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331CC208DB65B00D6AA55 /* MyTicketPageViewController.xib */; };
+		3E1331D2208DBDF200D6AA55 /* ShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331D0208DBDF200D6AA55 /* ShowDetailViewController.m */; };
+		3E1331D3208DBDF200D6AA55 /* ShowDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331D1208DBDF200D6AA55 /* ShowDetailViewController.xib */; };
+		3E1331D4208DBDFE00D6AA55 /* ShowDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331D1208DBDF200D6AA55 /* ShowDetailViewController.xib */; };
+		3E1331D5208DBE0000D6AA55 /* ShowDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331D0208DBDF200D6AA55 /* ShowDetailViewController.m */; };
+		3E1331DE208DF2BE00D6AA55 /* PushShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331DC208DF2BE00D6AA55 /* PushShowViewController.m */; };
+		3E1331E1208DFC4700D6AA55 /* PushShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E1331DC208DF2BE00D6AA55 /* PushShowViewController.m */; };
+		3E1331E2208DFC4F00D6AA55 /* PushShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331E5208DFC4F00D6AA55 /* PushShowViewController.xib */; };
+		3E1331E3208DFC4F00D6AA55 /* PushShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E1331E5208DFC4F00D6AA55 /* PushShowViewController.xib */; };
 		3E4F12AC1F8B651E00444343 /* JDSegmentControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E4F12AB1F8B651E00444343 /* JDSegmentControl.m */; };
 		3E5E5E641F72102400A8163A /* TalentOnDemandViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E5E5E621F72102400A8163A /* TalentOnDemandViewController.m */; };
+		3E5E605920916C030023B9C0 /* ShowListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E605C20916C030023B9C0 /* ShowListViewController.xib */; };
+		3E5E605A20916C030023B9C0 /* ShowListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E605C20916C030023B9C0 /* ShowListViewController.xib */; };
+		3E5E605F20916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */; };
+		3E5E606020916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */; };
 		3E6128DD1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E6128DB1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.m */; };
 		3E62CA441F79FAA2009F79AA /* AddPhoneNumCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CA3D1F79FAA2009F79AA /* AddPhoneNumCell.m */; };
 		3E62CA461F79FAA2009F79AA /* AddVirtualGiftsCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E62CA401F79FAA2009F79AA /* AddVirtualGiftsCell.m */; };
@@ -140,6 +165,8 @@
 		3E65CA4F1F949B49005963C9 /* MyRidesWaterfallView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA4E1F949B49005963C9 /* MyRidesWaterfallView.m */; };
 		3E65CA531F949B95005963C9 /* MyRidesCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E65CA511F949B95005963C9 /* MyRidesCell.m */; };
 		3E65CA551F94ABC8005963C9 /* MyRidesViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E65CA571F94ABC8005963C9 /* MyRidesViewController.xib */; };
+		3E7491342091B6F800391151 /* ShowAddCreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7491372091B6F800391151 /* ShowAddCreditsView.xib */; };
+		3E7491352091B6F800391151 /* ShowAddCreditsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E7491372091B6F800391151 /* ShowAddCreditsView.xib */; };
 		3E74C6F71F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */; };
 		3E74C6F81F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */; };
 		3E78EFB11F788EFB0056A96F /* BookPrivateBroadcastViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E78EFAF1F788EFB0056A96F /* BookPrivateBroadcastViewController.m */; };
@@ -179,6 +206,43 @@
 		3E9221041FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */; };
 		3E9221051FC2BDD9006AE088 /* CountryCodeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3E9221071FC2BDD9006AE088 /* CountryCodeViewController.xib */; };
 		3E99D047201E9FB2000BC3B3 /* HomeVouchersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E99D046201E9FB2000BC3B3 /* HomeVouchersManager.m */; };
+		3EA6BCFF208D73CB006E0558 /* ShowListView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA6BCFD208D73CB006E0558 /* ShowListView.m */; };
+		3EA6BD00208D73CB006E0558 /* ShowListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EA6BCFE208D73CB006E0558 /* ShowListView.xib */; };
+		3EAA505320994CE100729AFC /* ShowLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EAA505120994CE100729AFC /* ShowLiveViewController.m */; };
+		3EAA505D2099D8F900729AFC /* InterimShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EAA505B2099D8F900729AFC /* InterimShowViewController.m */; };
+		3EAA5064209A944900729AFC /* InterimShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EAA5066209A944900729AFC /* InterimShowViewController.xib */; };
+		3EAA5067209A944A00729AFC /* InterimShowViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EAA5066209A944900729AFC /* InterimShowViewController.xib */; };
+		3EAA506A209A944E00729AFC /* InterimShowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EAA505B2099D8F900729AFC /* InterimShowViewController.m */; };
+		3EAA506C209B389600729AFC /* ShowLiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EAA506F209B389600729AFC /* ShowLiveViewController.xib */; };
+		3EAA506D209B389600729AFC /* ShowLiveViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EAA506F209B389600729AFC /* ShowLiveViewController.xib */; };
+		3EAA5072209B389D00729AFC /* ShowLiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EAA505120994CE100729AFC /* ShowLiveViewController.m */; };
+		3EAA5081209D85CC00729AFC /* HangOutPreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57981FE520995B2A00F7FD91 /* HangOutPreViewController.m */; };
+		3EAA5082209D85CF00729AFC /* HangOutPreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57981FE620995B2A00F7FD91 /* HangOutPreViewController.xib */; };
+		3EAA5083209D85D200729AFC /* HangOutLiverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57440E35208EE232000B49E6 /* HangOutLiverViewController.m */; };
+		3EAA5084209D85D500729AFC /* HangOutLiverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A20CD2091634B00FDD58F /* HangOutLiverViewController.xib */; };
+		3EAA5085209D85DB00729AFC /* HangOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57981FEA20996A7400F7FD91 /* HangOutViewController.m */; };
+		3EAA5086209D85E100729AFC /* HangOutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5739FB1C209C4DD30037ECBC /* HangOutViewController.xib */; };
+		3EAA5088209D872900729AFC /* GiftStatisticsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A20F1209201CA00FDD58F /* GiftStatisticsViewCell.m */; };
+		3EAA5089209D872900729AFC /* GiftStatisticsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A20ED2092017700FDD58F /* GiftStatisticsView.m */; };
+		3EAA508A209D872900729AFC /* GiftComboView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911351EDFB8FA003B6813 /* GiftComboView.m */; };
+		3EAA508B209D872900729AFC /* LSCancelInviteHangoutRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F22C209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m */; };
+		3EAA508C209D872900729AFC /* LSDealKnockRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F228209AB5D70074A8F6 /* LSDealKnockRequest.m */; };
+		3EAA508D209D872900729AFC /* LSGetCanHangoutAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F229209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.m */; };
+		3EAA508E209D872900729AFC /* LSGetHangoutInvitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F226209AB5D60074A8F6 /* LSGetHangoutInvitStatusRequest.m */; };
+		3EAA508F209D872900729AFC /* LSSendinvitationHangoutRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F22D209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m */; };
+		3EAA5090209D872900729AFC /* LSShowListWithAnchorIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA43DEEE2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.m */; };
+		3EAA5091209D872900729AFC /* LSGetShowRoomInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C94208DADEC00901BBD /* LSGetShowRoomInfoRequest.m */; };
+		3EAA5092209D872900729AFC /* LSBuyProgramRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143520874C6A004F8B92 /* LSBuyProgramRequest.m */; };
+		3EAA5093209D872900729AFC /* LSFollowShowRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143E20874C6C004F8B92 /* LSFollowShowRequest.m */; };
+		3EAA5094209D872900729AFC /* LSGetNoReadNumProgramRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143D20874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m */; };
+		3EAA5095209D872900729AFC /* LSGetProgramListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143C20874C6C004F8B92 /* LSGetProgramListRequest.m */; };
+		3EAA5096209D872900729AFC /* LSProgramItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C7C208D7E8400901BBD /* LSProgramItemObject.m */; };
+		3EAA5097209D872900729AFC /* LSHangoutAnchorItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC004FD207F61A100B73174 /* LSHangoutAnchorItemObject.m */; };
+		3EE857DA208727120095D7CA /* ShowListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857D8208727120095D7CA /* ShowListViewController.m */; };
+		3EE857DD208727240095D7CA /* ShowListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857D8208727120095D7CA /* ShowListViewController.m */; };
+		3EE857E52087309D0095D7CA /* ShowCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857E32087309D0095D7CA /* ShowCell.m */; };
+		3EE857E62087309D0095D7CA /* ShowCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3EE857E42087309D0095D7CA /* ShowCell.xib */; };
+		3EE857EA20874AC00095D7CA /* ShowAddCreditsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EE857E820874AC00095D7CA /* ShowAddCreditsView.m */; };
 		5007B1D21ECAA72E00C2C17F /* LSRequestManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5007B1D11ECAA72E00C2C17F /* LSRequestManager.mm */; };
 		500CBB641F8CEBDA00A32F1F /* PushBookingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 500CBB621F8CEBDA00A32F1F /* PushBookingViewController.m */; };
 		50135B4A1F9D8E39003C6555 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50135B491F9D8E39003C6555 /* AppIcon.xcassets */; };
@@ -368,7 +432,6 @@
 		5061414A1F8E066C00825358 /* LiveRoomGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 25A5AF181F668C1100F06F18 /* LiveRoomGiftModel.m */; };
 		5061414B1F8E066C00825358 /* MsgItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 509295AE1ECD992200111128 /* MsgItem.m */; };
 		5061414C1F8E066C00825358 /* RoomStyleItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E887301F57DA6E006E4639 /* RoomStyleItem.m */; };
-		5061414D1F8E066C00825358 /* SendGiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657841F428A3B00FF49F6 /* SendGiftItem.m */; };
 		5061414E1F8E066C00825358 /* AudienModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2547C0F21F6FB11D00CF220A /* AudienModel.m */; };
 		5061414F1F8E066C00825358 /* RandomGiftModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2595164E1F7902B8004A873B /* RandomGiftModel.m */; };
 		506141511F8E066C00825358 /* RewardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2536DAA01F7E3D1E004FD7C3 /* RewardView.m */; };
@@ -405,7 +468,6 @@
 		506141711F8E066C00825358 /* LSChatTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657701F4289E000FF49F6 /* LSChatTextView.m */; };
 		506141721F8E066C00825358 /* DeleteTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5027D5AF1EF9060F00EE3B0E /* DeleteTipView.m */; };
 		506141731F8E066C00825358 /* GiftComboNumView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911331EDFB8FA003B6813 /* GiftComboNumView.m */; };
-		506141741F8E066C00825358 /* GiftComboView.m in Sources */ = {isa = PBXBuildFile; fileRef = 509911351EDFB8FA003B6813 /* GiftComboView.m */; };
 		506141751F8E066C00825358 /* LikeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 507315C11EE9346E005D1C0B /* LikeView.m */; };
 		506141761F8E066C00825358 /* LiveChatTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657771F428A0400FF49F6 /* LiveChatTextView.m */; };
 		506141771F8E066C00825358 /* LiveRoomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D6577A1F428A0400FF49F6 /* LiveRoomTextField.m */; };
@@ -670,7 +732,6 @@
 		50D657741F4289E000FF49F6 /* LSChatTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657701F4289E000FF49F6 /* LSChatTextView.m */; };
 		50D6577B1F428A0400FF49F6 /* LiveChatTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657771F428A0400FF49F6 /* LiveChatTextView.m */; };
 		50D6577C1F428A0400FF49F6 /* LiveRoomTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D6577A1F428A0400FF49F6 /* LiveRoomTextField.m */; };
-		50D657851F428A3B00FF49F6 /* SendGiftItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657841F428A3B00FF49F6 /* SendGiftItem.m */; };
 		50D657881F428A5700FF49F6 /* SendGiftTheQueueManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 50D657871F428A5700FF49F6 /* SendGiftTheQueueManager.m */; };
 		50DCE69620206F9A00ED28A3 /* LSMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DCE69920206F9A00ED28A3 /* LSMainViewController.xib */; };
 		50DCE69720206F9A00ED28A3 /* LSMainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DCE69920206F9A00ED28A3 /* LSMainViewController.xib */; };
@@ -708,11 +769,24 @@
 		52F028D11F5E937F002F7FDC /* IntroduceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F028CF1F5E937F002F7FDC /* IntroduceViewController.m */; };
 		52F028D41F5E941B002F7FDC /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52F028D31F5E941B002F7FDC /* WebKit.framework */; };
 		52F028D71F5E9499002F7FDC /* IntroduceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F028D61F5E9499002F7FDC /* IntroduceView.m */; };
+		5739FB1A209C4DD30037ECBC /* HangOutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5739FB1C209C4DD30037ECBC /* HangOutViewController.xib */; };
+		57440E37208EE232000B49E6 /* HangOutLiverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57440E35208EE232000B49E6 /* HangOutLiverViewController.m */; };
+		577A20CB2091634B00FDD58F /* HangOutLiverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A20CD2091634B00FDD58F /* HangOutLiverViewController.xib */; };
+		577A20EE2092017700FDD58F /* GiftStatisticsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A20ED2092017700FDD58F /* GiftStatisticsView.m */; };
+		577A20F3209201CA00FDD58F /* GiftStatisticsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 577A20F1209201CA00FDD58F /* GiftStatisticsViewCell.m */; };
+		577A20F4209201CA00FDD58F /* GiftStatisticsViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 577A20F2209201CA00FDD58F /* GiftStatisticsViewCell.xib */; };
+		57981FE720995B2A00F7FD91 /* HangOutPreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57981FE520995B2A00F7FD91 /* HangOutPreViewController.m */; };
+		57981FE820995B2A00F7FD91 /* HangOutPreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57981FE620995B2A00F7FD91 /* HangOutPreViewController.xib */; };
+		57981FEC20996A7400F7FD91 /* HangOutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57981FEA20996A7400F7FD91 /* HangOutViewController.m */; };
+		57A4B929209FE97100E7D502 /* HangOutUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 57A4B927209FE97100E7D502 /* HangOutUserViewController.m */; };
+		57A4B92A209FE97100E7D502 /* HangOutUserViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57A4B928209FE97100E7D502 /* HangOutUserViewController.xib */; };
+		57DF061020907ED800A97097 /* GiftComboNewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57DF060F20907ED800A97097 /* GiftComboNewView.xib */; };
 		AD128CFCD82753CEBA8F9C96 /* libPods-livestream.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1B89AE7C48B52819C1DDF301 /* libPods-livestream.a */; };
 		BCED8534952E95ACFB8D1ED5 /* libPods-livestream_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 15881F09D5D2D2CCD377C17D /* libPods-livestream_sdk.a */; };
 		FA0F73B62018736C00711670 /* LSGetVoucherAvailableInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0F73B42018736A00711670 /* LSGetVoucherAvailableInfoRequest.m */; };
 		FA0F73B92018737B00711670 /* LSVoucherAvailableInfoItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0F73B82018737A00711670 /* LSVoucherAvailableInfoItemObject.m */; };
 		FA0F73C6201875DC00711670 /* LSBindAnchorItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA0F73C5201875DC00711670 /* LSBindAnchorItemObject.m */; };
+		FA43DEEF2092B41F00BE5F6C /* LSShowListWithAnchorIdRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA43DEEE2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.m */; };
 		FA4C8F801F7B2EEE001E9CBF /* AnchorPersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F731F7B2EEE001E9CBF /* AnchorPersonalViewController.m */; };
 		FA4C8F821F7B2EEE001E9CBF /* LiverPageControllerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FA4C8F761F7B2EEE001E9CBF /* LiverPageControllerViewController.m */; };
 		FA4C8F831F7B2EEE001E9CBF /* LiverPageControllerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FA4C8F771F7B2EEE001E9CBF /* LiverPageControllerViewController.xib */; };
@@ -734,9 +808,21 @@
 		FA5F7B1A1F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B171F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m */; };
 		FA5F7B1B1F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B191F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m */; };
 		FA5F7B211F78B1970031CCE9 /* BookPhoneItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5F7B201F78B1970031CCE9 /* BookPhoneItemObject.m */; };
+		FA6E143F20874C6C004F8B92 /* LSBuyProgramRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143520874C6A004F8B92 /* LSBuyProgramRequest.m */; };
+		FA6E144120874C6C004F8B92 /* LSGetProgramListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143C20874C6C004F8B92 /* LSGetProgramListRequest.m */; };
+		FA6E144220874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143D20874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m */; };
+		FA6E144320874C6C004F8B92 /* LSFollowShowRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6E143E20874C6C004F8B92 /* LSFollowShowRequest.m */; };
 		FA8A86051F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA8A86041F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m */; };
+		FAA0F230209AB5D80074A8F6 /* LSGetHangoutInvitStatusRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F226209AB5D60074A8F6 /* LSGetHangoutInvitStatusRequest.m */; };
+		FAA0F231209AB5D80074A8F6 /* LSDealKnockRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F228209AB5D70074A8F6 /* LSDealKnockRequest.m */; };
+		FAA0F232209AB5D80074A8F6 /* LSGetCanHangoutAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F229209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.m */; };
+		FAA0F233209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F22C209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m */; };
+		FAA0F234209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA0F22D209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m */; };
 		FAAB702D1FB54FDE00E442A8 /* LiveApp.js in Resources */ = {isa = PBXBuildFile; fileRef = FAAB702C1FB54FDD00E442A8 /* LiveApp.js */; };
+		FAB60C7D208D7E8400901BBD /* LSProgramItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C7C208D7E8400901BBD /* LSProgramItemObject.m */; };
+		FAB60C95208DADED00901BBD /* LSGetShowRoomInfoRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C94208DADEC00901BBD /* LSGetShowRoomInfoRequest.m */; };
 		FAB694121F5E9748008A64B6 /* GetPromoAnchorListRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */; };
+		FAC004FF207F61A100B73174 /* LSHangoutAnchorItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC004FD207F61A100B73174 /* LSHangoutAnchorItemObject.m */; };
 		FAEB02B31F9D808B00C724AC /* LSSvrItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEB02B21F9D808B00C724AC /* LSSvrItemObject.m */; };
 		FAEB02B81F9D852400C724AC /* LSBannerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEB02B51F9D852400C724AC /* LSBannerRequest.m */; };
 		FAEB02B91F9D852400C724AC /* LSServerSpeedRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = FAEB02B71F9D852400C724AC /* LSServerSpeedRequest.m */; };
@@ -1057,11 +1143,30 @@
 		25F14B121F95B03A009453D9 /* LSEmotionCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LSEmotionCollectionViewCell.xib; sourceTree = "<group>"; };
 		25F14B141F95B03A009453D9 /* LSEmotionCollectionViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSEmotionCollectionViewLayout.h; sourceTree = "<group>"; };
 		25F14B151F95B03A009453D9 /* LSEmotionCollectionViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSEmotionCollectionViewLayout.m; sourceTree = "<group>"; };
+		3E06BAB420883C8C009CFF37 /* ShowTipView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowTipView.h; sourceTree = "<group>"; };
+		3E06BAB520883C8C009CFF37 /* ShowTipView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowTipView.m; sourceTree = "<group>"; };
+		3E1331B4208DB3E200D6AA55 /* MyTicketsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyTicketsViewController.h; sourceTree = "<group>"; };
+		3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyTicketsViewController.m; sourceTree = "<group>"; };
+		3E1331C2208DB5FC00D6AA55 /* MyTicketPageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyTicketPageViewController.h; sourceTree = "<group>"; };
+		3E1331C3208DB5FC00D6AA55 /* MyTicketPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyTicketPageViewController.m; sourceTree = "<group>"; };
+		3E1331CB208DB65B00D6AA55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyTicketPageViewController.xib; sourceTree = "<group>"; };
+		3E1331CE208DB65D00D6AA55 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyTicketPageViewController.strings; sourceTree = "<group>"; };
+		3E1331CF208DBDF200D6AA55 /* ShowDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowDetailViewController.h; sourceTree = "<group>"; };
+		3E1331D0208DBDF200D6AA55 /* ShowDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowDetailViewController.m; sourceTree = "<group>"; };
+		3E1331D1208DBDF200D6AA55 /* ShowDetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShowDetailViewController.xib; sourceTree = "<group>"; };
+		3E1331DB208DF2BE00D6AA55 /* PushShowViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PushShowViewController.h; sourceTree = "<group>"; };
+		3E1331DC208DF2BE00D6AA55 /* PushShowViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PushShowViewController.m; sourceTree = "<group>"; };
+		3E1331E4208DFC4F00D6AA55 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PushShowViewController.xib; sourceTree = "<group>"; };
+		3E1331E7208DFC5200D6AA55 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/PushShowViewController.strings; sourceTree = "<group>"; };
 		3E261EE2202838030063CBB7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/VerifyMobileNumberViewController.strings; sourceTree = "<group>"; };
 		3E4F12AA1F8B651E00444343 /* JDSegmentControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDSegmentControl.h; sourceTree = "<group>"; };
 		3E4F12AB1F8B651E00444343 /* JDSegmentControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDSegmentControl.m; sourceTree = "<group>"; };
 		3E5E5E611F72102400A8163A /* TalentOnDemandViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TalentOnDemandViewController.h; sourceTree = "<group>"; };
 		3E5E5E621F72102400A8163A /* TalentOnDemandViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TalentOnDemandViewController.m; sourceTree = "<group>"; };
+		3E5E605B20916C030023B9C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShowListViewController.xib; sourceTree = "<group>"; };
+		3E5E605E20916C050023B9C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShowListViewController.strings; sourceTree = "<group>"; };
+		3E5E606120916C9B0023B9C0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyTicketsViewController.xib; sourceTree = "<group>"; };
+		3E5E606420916C9D0023B9C0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyTicketsViewController.strings; sourceTree = "<group>"; };
 		3E6128DA1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSMyReservationsPageViewController.h; sourceTree = "<group>"; };
 		3E6128DB1F8DACF7000AB8D0 /* LSMyReservationsPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSMyReservationsPageViewController.m; sourceTree = "<group>"; };
 		3E62CA3C1F79FAA2009F79AA /* AddPhoneNumCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddPhoneNumCell.h; sourceTree = "<group>"; };
@@ -1106,6 +1211,8 @@
 		3E65CA511F949B95005963C9 /* MyRidesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyRidesCell.m; sourceTree = "<group>"; };
 		3E65CA561F94ABC8005963C9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyRidesViewController.xib; sourceTree = "<group>"; };
 		3E65CA591F94ABCB005963C9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyRidesViewController.strings; sourceTree = "<group>"; };
+		3E7491362091B6F800391151 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShowAddCreditsView.xib; sourceTree = "<group>"; };
+		3E7491392091B6FA00391151 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShowAddCreditsView.strings; sourceTree = "<group>"; };
 		3E74C6F91F95E18E0099C1EE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MyBackpackViewController.xib; sourceTree = "<group>"; };
 		3E74C6FC1F95E1900099C1EE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MyBackpackViewController.strings; sourceTree = "<group>"; };
 		3E7562291F975C2E00C7C906 /* IAnalyticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAnalyticsManager.h; sourceTree = "<group>"; };
@@ -1154,6 +1261,24 @@
 		3E9221091FC2BDDC006AE088 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/CountryCodeViewController.strings; sourceTree = "<group>"; };
 		3E99D045201E9FB1000BC3B3 /* HomeVouchersManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeVouchersManager.h; sourceTree = "<group>"; };
 		3E99D046201E9FB2000BC3B3 /* HomeVouchersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeVouchersManager.m; sourceTree = "<group>"; };
+		3EA6BCFC208D73CB006E0558 /* ShowListView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowListView.h; sourceTree = "<group>"; };
+		3EA6BCFD208D73CB006E0558 /* ShowListView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowListView.m; sourceTree = "<group>"; };
+		3EA6BCFE208D73CB006E0558 /* ShowListView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShowListView.xib; sourceTree = "<group>"; };
+		3EAA505020994CE100729AFC /* ShowLiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowLiveViewController.h; sourceTree = "<group>"; };
+		3EAA505120994CE100729AFC /* ShowLiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowLiveViewController.m; sourceTree = "<group>"; };
+		3EAA505A2099D8F900729AFC /* InterimShowViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InterimShowViewController.h; sourceTree = "<group>"; };
+		3EAA505B2099D8F900729AFC /* InterimShowViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InterimShowViewController.m; sourceTree = "<group>"; };
+		3EAA5065209A944900729AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/InterimShowViewController.xib; sourceTree = "<group>"; };
+		3EAA5069209A944C00729AFC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InterimShowViewController.strings; sourceTree = "<group>"; };
+		3EAA506E209B389600729AFC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/ShowLiveViewController.xib; sourceTree = "<group>"; };
+		3EAA5071209B389800729AFC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShowLiveViewController.strings; sourceTree = "<group>"; };
+		3EE857D7208727120095D7CA /* ShowListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowListViewController.h; sourceTree = "<group>"; };
+		3EE857D8208727120095D7CA /* ShowListViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowListViewController.m; sourceTree = "<group>"; };
+		3EE857E22087309D0095D7CA /* ShowCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowCell.h; sourceTree = "<group>"; };
+		3EE857E32087309D0095D7CA /* ShowCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowCell.m; sourceTree = "<group>"; };
+		3EE857E42087309D0095D7CA /* ShowCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ShowCell.xib; sourceTree = "<group>"; };
+		3EE857E720874AC00095D7CA /* ShowAddCreditsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShowAddCreditsView.h; sourceTree = "<group>"; };
+		3EE857E820874AC00095D7CA /* ShowAddCreditsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShowAddCreditsView.m; sourceTree = "<group>"; };
 		5007B1D01ECAA72E00C2C17F /* LSRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSRequestManager.h; sourceTree = "<group>"; };
 		5007B1D11ECAA72E00C2C17F /* LSRequestManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LSRequestManager.mm; sourceTree = "<group>"; };
 		500CBB611F8CEBDA00A32F1F /* PushBookingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushBookingViewController.h; sourceTree = "<group>"; };
@@ -1492,8 +1617,6 @@
 		50D657771F428A0400FF49F6 /* LiveChatTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveChatTextView.m; sourceTree = "<group>"; };
 		50D657791F428A0400FF49F6 /* LiveRoomTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveRoomTextField.h; sourceTree = "<group>"; };
 		50D6577A1F428A0400FF49F6 /* LiveRoomTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveRoomTextField.m; sourceTree = "<group>"; };
-		50D657831F428A3B00FF49F6 /* SendGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendGiftItem.h; sourceTree = "<group>"; };
-		50D657841F428A3B00FF49F6 /* SendGiftItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendGiftItem.m; sourceTree = "<group>"; };
 		50D657861F428A5700FF49F6 /* SendGiftTheQueueManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendGiftTheQueueManager.h; sourceTree = "<group>"; };
 		50D657871F428A5700FF49F6 /* SendGiftTheQueueManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SendGiftTheQueueManager.m; sourceTree = "<group>"; };
 		50DCE69820206F9A00ED28A3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LSMainViewController.xib; sourceTree = "<group>"; };
@@ -1547,12 +1670,34 @@
 		52F028D31F5E941B002F7FDC /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		52F028D51F5E9499002F7FDC /* IntroduceView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IntroduceView.h; sourceTree = "<group>"; };
 		52F028D61F5E9499002F7FDC /* IntroduceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IntroduceView.m; sourceTree = "<group>"; };
+		5739FB1B209C4DD30037ECBC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HangOutViewController.xib; sourceTree = "<group>"; };
+		5739FB1E209C4DD70037ECBC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HangOutViewController.strings; sourceTree = "<group>"; };
+		57440E34208EE232000B49E6 /* HangOutLiverViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangOutLiverViewController.h; sourceTree = "<group>"; };
+		57440E35208EE232000B49E6 /* HangOutLiverViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangOutLiverViewController.m; sourceTree = "<group>"; };
+		577A20CC2091634B00FDD58F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HangOutLiverViewController.xib; sourceTree = "<group>"; };
+		577A20CF2091635200FDD58F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HangOutLiverViewController.strings; sourceTree = "<group>"; };
+		577A20EC2092017700FDD58F /* GiftStatisticsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiftStatisticsView.h; sourceTree = "<group>"; };
+		577A20ED2092017700FDD58F /* GiftStatisticsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiftStatisticsView.m; sourceTree = "<group>"; };
+		577A20F0209201CA00FDD58F /* GiftStatisticsViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiftStatisticsViewCell.h; sourceTree = "<group>"; };
+		577A20F1209201CA00FDD58F /* GiftStatisticsViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GiftStatisticsViewCell.m; sourceTree = "<group>"; };
+		577A20F2209201CA00FDD58F /* GiftStatisticsViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GiftStatisticsViewCell.xib; sourceTree = "<group>"; };
+		57981FE420995B2A00F7FD91 /* HangOutPreViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangOutPreViewController.h; sourceTree = "<group>"; };
+		57981FE520995B2A00F7FD91 /* HangOutPreViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangOutPreViewController.m; sourceTree = "<group>"; };
+		57981FE620995B2A00F7FD91 /* HangOutPreViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HangOutPreViewController.xib; sourceTree = "<group>"; };
+		57981FE920996A7400F7FD91 /* HangOutViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangOutViewController.h; sourceTree = "<group>"; };
+		57981FEA20996A7400F7FD91 /* HangOutViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangOutViewController.m; sourceTree = "<group>"; };
+		57A4B926209FE97100E7D502 /* HangOutUserViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HangOutUserViewController.h; sourceTree = "<group>"; };
+		57A4B927209FE97100E7D502 /* HangOutUserViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HangOutUserViewController.m; sourceTree = "<group>"; };
+		57A4B928209FE97100E7D502 /* HangOutUserViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HangOutUserViewController.xib; sourceTree = "<group>"; };
+		57DF060F20907ED800A97097 /* GiftComboNewView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GiftComboNewView.xib; sourceTree = "<group>"; };
 		FA0F73B42018736A00711670 /* LSGetVoucherAvailableInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetVoucherAvailableInfoRequest.m; sourceTree = "<group>"; };
 		FA0F73B52018736B00711670 /* LSGetVoucherAvailableInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetVoucherAvailableInfoRequest.h; sourceTree = "<group>"; };
 		FA0F73B72018737A00711670 /* LSVoucherAvailableInfoItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSVoucherAvailableInfoItemObject.h; sourceTree = "<group>"; };
 		FA0F73B82018737A00711670 /* LSVoucherAvailableInfoItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSVoucherAvailableInfoItemObject.m; sourceTree = "<group>"; };
 		FA0F73C4201875DB00711670 /* LSBindAnchorItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBindAnchorItemObject.h; sourceTree = "<group>"; };
 		FA0F73C5201875DC00711670 /* LSBindAnchorItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBindAnchorItemObject.m; sourceTree = "<group>"; };
+		FA43DEED2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSShowListWithAnchorIdRequest.h; sourceTree = "<group>"; };
+		FA43DEEE2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSShowListWithAnchorIdRequest.m; sourceTree = "<group>"; };
 		FA4C8F721F7B2EEE001E9CBF /* AnchorPersonalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnchorPersonalViewController.h; sourceTree = "<group>"; };
 		FA4C8F731F7B2EEE001E9CBF /* AnchorPersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnchorPersonalViewController.m; sourceTree = "<group>"; };
 		FA4C8F751F7B2EEE001E9CBF /* LiverPageControllerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiverPageControllerViewController.h; sourceTree = "<group>"; };
@@ -1586,11 +1731,35 @@
 		FA5F7B191F78B18C0031CCE9 /* SubmitPhoneVerifyCodeRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubmitPhoneVerifyCodeRequest.m; sourceTree = "<group>"; };
 		FA5F7B1F1F78B1970031CCE9 /* BookPhoneItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BookPhoneItemObject.h; sourceTree = "<group>"; };
 		FA5F7B201F78B1970031CCE9 /* BookPhoneItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BookPhoneItemObject.m; sourceTree = "<group>"; };
+		FA6E143520874C6A004F8B92 /* LSBuyProgramRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSBuyProgramRequest.m; sourceTree = "<group>"; };
+		FA6E143720874C6B004F8B92 /* LSFollowShowRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSFollowShowRequest.h; sourceTree = "<group>"; };
+		FA6E143820874C6B004F8B92 /* LSGetProgramListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetProgramListRequest.h; sourceTree = "<group>"; };
+		FA6E143920874C6B004F8B92 /* LSBuyProgramRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBuyProgramRequest.h; sourceTree = "<group>"; };
+		FA6E143A20874C6B004F8B92 /* LSGetNoReadNumProgramRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetNoReadNumProgramRequest.h; sourceTree = "<group>"; };
+		FA6E143C20874C6C004F8B92 /* LSGetProgramListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetProgramListRequest.m; sourceTree = "<group>"; };
+		FA6E143D20874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetNoReadNumProgramRequest.m; sourceTree = "<group>"; };
+		FA6E143E20874C6C004F8B92 /* LSFollowShowRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSFollowShowRequest.m; sourceTree = "<group>"; };
 		FA8A86031F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AcceptInstanceInviteItemObject.h; sourceTree = "<group>"; };
 		FA8A86041F67BB5C0003EA17 /* AcceptInstanceInviteItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AcceptInstanceInviteItemObject.m; sourceTree = "<group>"; };
+		FAA0F226209AB5D60074A8F6 /* LSGetHangoutInvitStatusRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetHangoutInvitStatusRequest.m; sourceTree = "<group>"; };
+		FAA0F227209AB5D70074A8F6 /* LSGetHangoutInvitStatusRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetHangoutInvitStatusRequest.h; sourceTree = "<group>"; };
+		FAA0F228209AB5D70074A8F6 /* LSDealKnockRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSDealKnockRequest.m; sourceTree = "<group>"; };
+		FAA0F229209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetCanHangoutAnchorListRequest.m; sourceTree = "<group>"; };
+		FAA0F22A209AB5D70074A8F6 /* LSDealKnockRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSDealKnockRequest.h; sourceTree = "<group>"; };
+		FAA0F22B209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetCanHangoutAnchorListRequest.h; sourceTree = "<group>"; };
+		FAA0F22C209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSCancelInviteHangoutRequest.m; sourceTree = "<group>"; };
+		FAA0F22D209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSendinvitationHangoutRequest.m; sourceTree = "<group>"; };
+		FAA0F22E209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSCancelInviteHangoutRequest.h; sourceTree = "<group>"; };
+		FAA0F22F209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSendinvitationHangoutRequest.h; sourceTree = "<group>"; };
 		FAAB702C1FB54FDD00E442A8 /* LiveApp.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = LiveApp.js; sourceTree = "<group>"; };
+		FAB60C7B208D7E8300901BBD /* LSProgramItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSProgramItemObject.h; sourceTree = "<group>"; };
+		FAB60C7C208D7E8400901BBD /* LSProgramItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSProgramItemObject.m; sourceTree = "<group>"; };
+		FAB60C93208DADEC00901BBD /* LSGetShowRoomInfoRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSGetShowRoomInfoRequest.h; sourceTree = "<group>"; };
+		FAB60C94208DADEC00901BBD /* LSGetShowRoomInfoRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSGetShowRoomInfoRequest.m; sourceTree = "<group>"; };
 		FAB694101F5E9748008A64B6 /* GetPromoAnchorListRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetPromoAnchorListRequest.h; sourceTree = "<group>"; };
 		FAB694111F5E9748008A64B6 /* GetPromoAnchorListRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetPromoAnchorListRequest.m; sourceTree = "<group>"; };
+		FAC004FD207F61A100B73174 /* LSHangoutAnchorItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSHangoutAnchorItemObject.m; sourceTree = "<group>"; };
+		FAC004FE207F61A100B73174 /* LSHangoutAnchorItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSHangoutAnchorItemObject.h; sourceTree = "<group>"; };
 		FAEB02B11F9D808B00C724AC /* LSSvrItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSSvrItemObject.h; sourceTree = "<group>"; };
 		FAEB02B21F9D808B00C724AC /* LSSvrItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSSvrItemObject.m; sourceTree = "<group>"; };
 		FAEB02B41F9D852400C724AC /* LSBannerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSBannerRequest.h; sourceTree = "<group>"; };
@@ -1691,11 +1860,9 @@
 		255974B41F5571FE00B9D667 /* AudienceView */ = {
 			isa = PBXGroup;
 			children = (
+				577A20E42091FE2200FDD58F /* Cell */,
 				255974B71F5571FE00B9D667 /* YMAudienceView.h */,
 				255974B81F5571FE00B9D667 /* YMAudienceView.m */,
-				256939D91F56414F000CCE9E /* AudienceCell.h */,
-				256939DA1F56414F000CCE9E /* AudienceCell.m */,
-				256939DB1F56414F000CCE9E /* AudienceCell.xib */,
 				251A5A031F7D1B330065D46E /* VIPAudienceView.h */,
 				251A5A041F7D1B330065D46E /* VIPAudienceView.m */,
 			);
@@ -1949,6 +2116,52 @@
 			path = MyReservations;
 			sourceTree = "<group>";
 		};
+		3EE857D6208726E50095D7CA /* Show */ = {
+			isa = PBXGroup;
+			children = (
+				3EE857E02087306D0095D7CA /* Controller */,
+				3EE857E1208730860095D7CA /* View */,
+			);
+			path = Show;
+			sourceTree = "<group>";
+		};
+		3EE857E02087306D0095D7CA /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				3EE857D7208727120095D7CA /* ShowListViewController.h */,
+				3EE857D8208727120095D7CA /* ShowListViewController.m */,
+				3E5E605C20916C030023B9C0 /* ShowListViewController.xib */,
+				3E1331B4208DB3E200D6AA55 /* MyTicketsViewController.h */,
+				3E1331B5208DB3E200D6AA55 /* MyTicketsViewController.m */,
+				3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */,
+				3E1331C2208DB5FC00D6AA55 /* MyTicketPageViewController.h */,
+				3E1331C3208DB5FC00D6AA55 /* MyTicketPageViewController.m */,
+				3E1331CC208DB65B00D6AA55 /* MyTicketPageViewController.xib */,
+				3E1331CF208DBDF200D6AA55 /* ShowDetailViewController.h */,
+				3E1331D0208DBDF200D6AA55 /* ShowDetailViewController.m */,
+				3E1331D1208DBDF200D6AA55 /* ShowDetailViewController.xib */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		3EE857E1208730860095D7CA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3E06BAB420883C8C009CFF37 /* ShowTipView.h */,
+				3E06BAB520883C8C009CFF37 /* ShowTipView.m */,
+				3EE857E22087309D0095D7CA /* ShowCell.h */,
+				3EE857E32087309D0095D7CA /* ShowCell.m */,
+				3EE857E42087309D0095D7CA /* ShowCell.xib */,
+				3EE857E720874AC00095D7CA /* ShowAddCreditsView.h */,
+				3EE857E820874AC00095D7CA /* ShowAddCreditsView.m */,
+				3E7491372091B6F800391151 /* ShowAddCreditsView.xib */,
+				3EA6BCFC208D73CB006E0558 /* ShowListView.h */,
+				3EA6BCFD208D73CB006E0558 /* ShowListView.m */,
+				3EA6BCFE208D73CB006E0558 /* ShowListView.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		5027D5AD1EF9060F00EE3B0E /* DeleteTipView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2137,6 +2350,10 @@
 		506BC38C1F590AC5001C2962 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FAB60C7B208D7E8300901BBD /* LSProgramItemObject.h */,
+				FAB60C7C208D7E8400901BBD /* LSProgramItemObject.m */,
+				FAC004FE207F61A100B73174 /* LSHangoutAnchorItemObject.h */,
+				FAC004FD207F61A100B73174 /* LSHangoutAnchorItemObject.m */,
 				FA0F73C4201875DB00711670 /* LSBindAnchorItemObject.h */,
 				FA0F73C5201875DC00711670 /* LSBindAnchorItemObject.m */,
 				FA0F73B72018737A00711670 /* LSVoucherAvailableInfoItemObject.h */,
@@ -2306,6 +2523,7 @@
 		5092959B1ECD6CA500111128 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				577A20EA209200D200FDD58F /* GiftStatisticsView */,
 				2576CF901F959C4000065908 /* LSEmotionView */,
 				2536DA9E1F7E3D11004FD7C3 /* RewardView */,
 				3E62CA3B1F79FAA2009F79AA /* BookPrivateBroadcastView */,
@@ -2362,8 +2580,6 @@
 				509295AE1ECD992200111128 /* MsgItem.m */,
 				25E8872F1F57DA6E006E4639 /* RoomStyleItem.h */,
 				25E887301F57DA6E006E4639 /* RoomStyleItem.m */,
-				50D657831F428A3B00FF49F6 /* SendGiftItem.h */,
-				50D657841F428A3B00FF49F6 /* SendGiftItem.m */,
 				2547C0F11F6FB11D00CF220A /* AudienModel.h */,
 				2547C0F21F6FB11D00CF220A /* AudienModel.m */,
 				2595164D1F7902B8004A873B /* RandomGiftModel.h */,
@@ -2409,6 +2625,28 @@
 		5095E4191ED6DE9B004FFA3B /* Request */ = {
 			isa = PBXGroup;
 			children = (
+				FAA0F22E209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.h */,
+				FAA0F22C209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m */,
+				FAA0F22A209AB5D70074A8F6 /* LSDealKnockRequest.h */,
+				FAA0F228209AB5D70074A8F6 /* LSDealKnockRequest.m */,
+				FAA0F22B209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.h */,
+				FAA0F229209AB5D70074A8F6 /* LSGetCanHangoutAnchorListRequest.m */,
+				FAA0F227209AB5D70074A8F6 /* LSGetHangoutInvitStatusRequest.h */,
+				FAA0F226209AB5D60074A8F6 /* LSGetHangoutInvitStatusRequest.m */,
+				FAA0F22F209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.h */,
+				FAA0F22D209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m */,
+				FA43DEED2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.h */,
+				FA43DEEE2092B41E00BE5F6C /* LSShowListWithAnchorIdRequest.m */,
+				FAB60C93208DADEC00901BBD /* LSGetShowRoomInfoRequest.h */,
+				FAB60C94208DADEC00901BBD /* LSGetShowRoomInfoRequest.m */,
+				FA6E143920874C6B004F8B92 /* LSBuyProgramRequest.h */,
+				FA6E143520874C6A004F8B92 /* LSBuyProgramRequest.m */,
+				FA6E143720874C6B004F8B92 /* LSFollowShowRequest.h */,
+				FA6E143E20874C6C004F8B92 /* LSFollowShowRequest.m */,
+				FA6E143A20874C6B004F8B92 /* LSGetNoReadNumProgramRequest.h */,
+				FA6E143D20874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m */,
+				FA6E143820874C6B004F8B92 /* LSGetProgramListRequest.h */,
+				FA6E143C20874C6C004F8B92 /* LSGetProgramListRequest.m */,
 				FA0F73B52018736B00711670 /* LSGetVoucherAvailableInfoRequest.h */,
 				FA0F73B42018736A00711670 /* LSGetVoucherAvailableInfoRequest.m */,
 				FA57B1A41FA97E620092EA2F /* LSGetUserInfoRequest.h */,
@@ -2538,42 +2776,60 @@
 		509910E91EDF9F50003B6813 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				3E631EFE1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.h */,
+				3E631EFF1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.m */,
+				2580D2441F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib */,
+				3E78EFAE1F788EFB0056A96F /* BookPrivateBroadcastViewController.h */,
+				3E78EFAF1F788EFB0056A96F /* BookPrivateBroadcastViewController.m */,
+				3E62CA4B1F7A07AB009F79AA /* BookPrivateBroadcastViewController.xib */,
+				57440E34208EE232000B49E6 /* HangOutLiverViewController.h */,
+				57440E35208EE232000B49E6 /* HangOutLiverViewController.m */,
+				577A20CD2091634B00FDD58F /* HangOutLiverViewController.xib */,
+				57981FE420995B2A00F7FD91 /* HangOutPreViewController.h */,
+				57981FE520995B2A00F7FD91 /* HangOutPreViewController.m */,
+				57981FE620995B2A00F7FD91 /* HangOutPreViewController.xib */,
+				57A4B926209FE97100E7D502 /* HangOutUserViewController.h */,
+				57A4B927209FE97100E7D502 /* HangOutUserViewController.m */,
+				57A4B928209FE97100E7D502 /* HangOutUserViewController.xib */,
+				57981FE920996A7400F7FD91 /* HangOutViewController.h */,
+				57981FEA20996A7400F7FD91 /* HangOutViewController.m */,
+				5739FB1C209C4DD30037ECBC /* HangOutViewController.xib */,
+				3EAA505A2099D8F900729AFC /* InterimShowViewController.h */,
+				3EAA505B2099D8F900729AFC /* InterimShowViewController.m */,
+				3EAA5066209A944900729AFC /* InterimShowViewController.xib */,
 				252E9CCC1F726D8800D32DFF /* LiveFinshViewController.h */,
 				252E9CCD1F726D8800D32DFF /* LiveFinshViewController.m */,
 				25895C3B1F88C54700FD6232 /* LiveFinshViewController.xib */,
 				509910EA1EDF9F50003B6813 /* LiveViewController.h */,
 				509910EB1EDF9F50003B6813 /* LiveViewController.m */,
 				50F3100E1EEA3D6C008CA70D /* LiveViewController.xib */,
+				2574A43D1FA02015006C2BF0 /* LSInvitedToViewController.h */,
+				2574A43E1FA02015006C2BF0 /* LSInvitedToViewController.m */,
+				25E9B1B61FA07601008C3180 /* LSInvitedToViewController.xib */,
 				509910F01EDF9F50003B6813 /* PlayViewController.h */,
 				509910F11EDF9F50003B6813 /* PlayViewController.m */,
 				50D649A51EE54BEB00D71AAF /* PlayViewController.xib */,
 				508550911F5D2C1000BE4A9C /* PreLiveViewController.h */,
 				508550921F5D2C1000BE4A9C /* PreLiveViewController.m */,
 				5069F0941F6661BE003C8AFE /* PreLiveViewController.xib */,
-				25856B691F5CE62100DC47D9 /* PublicViewController.h */,
-				25856B6A1F5CE62100DC47D9 /* PublicViewController.m */,
-				258BDBEC1F661CB7005E1F8F /* PublicViewController.xib */,
-				252562FE1F61282B00A2AAD3 /* PublicVipViewController.h */,
-				252562FF1F61282B00A2AAD3 /* PublicVipViewController.m */,
-				2536DA911F7DF058004FD7C3 /* PublicVipViewController.xib */,
 				504B57C41F67E1BA008101C0 /* PrivateViewController.h */,
 				504B57C51F67E1BA008101C0 /* PrivateViewController.m */,
 				504B57C11F67E1B2008101C0 /* PrivateViewController.xib */,
 				50B2ED581F74AF0800E71479 /* PrivateVipViewController.h */,
 				50B2ED591F74AF0800E71479 /* PrivateVipViewController.m */,
 				50B2ED5B1F74B3A900E71479 /* PrivateVipViewController.xib */,
+				25856B691F5CE62100DC47D9 /* PublicViewController.h */,
+				25856B6A1F5CE62100DC47D9 /* PublicViewController.m */,
+				258BDBEC1F661CB7005E1F8F /* PublicViewController.xib */,
+				252562FE1F61282B00A2AAD3 /* PublicVipViewController.h */,
+				252562FF1F61282B00A2AAD3 /* PublicVipViewController.m */,
+				2536DA911F7DF058004FD7C3 /* PublicVipViewController.xib */,
+				3EAA505020994CE100729AFC /* ShowLiveViewController.h */,
+				3EAA505120994CE100729AFC /* ShowLiveViewController.m */,
+				3EAA506F209B389600729AFC /* ShowLiveViewController.xib */,
 				3E5E5E611F72102400A8163A /* TalentOnDemandViewController.h */,
 				3E5E5E621F72102400A8163A /* TalentOnDemandViewController.m */,
 				253009BD1F8DBD9E0077AD7A /* TalentOnDemandViewController.xib */,
-				3E78EFAE1F788EFB0056A96F /* BookPrivateBroadcastViewController.h */,
-				3E78EFAF1F788EFB0056A96F /* BookPrivateBroadcastViewController.m */,
-				3E62CA4B1F7A07AB009F79AA /* BookPrivateBroadcastViewController.xib */,
-				3E631EFE1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.h */,
-				3E631EFF1F7B93440042785F /* BookPrivateBroadcastSucceedViewController.m */,
-				2580D2441F94422200171722 /* BookPrivateBroadcastSucceedViewController.xib */,
-				2574A43D1FA02015006C2BF0 /* LSInvitedToViewController.h */,
-				2574A43E1FA02015006C2BF0 /* LSInvitedToViewController.m */,
-				25E9B1B61FA07601008C3180 /* LSInvitedToViewController.xib */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -2603,6 +2859,7 @@
 				509911331EDFB8FA003B6813 /* GiftComboNumView.m */,
 				509911341EDFB8FA003B6813 /* GiftComboView.h */,
 				509911351EDFB8FA003B6813 /* GiftComboView.m */,
+				57DF060F20907ED800A97097 /* GiftComboNewView.xib */,
 				509911361EDFB8FA003B6813 /* GiftComboView.xib */,
 			);
 			path = GiftCombo;
@@ -2634,12 +2891,13 @@
 			isa = PBXGroup;
 			children = (
 				5271ACB51F95D73E00E65C99 /* Guide */,
-				3E7F6D791F8B10D80003BC69 /* User */,
 				509A8DC71ECC2158004720CF /* Home */,
 				509A8DD51ECC2ABD004720CF /* Live */,
 				509A8DF11ECC4F56004720CF /* Login */,
 				509295951ECD3A4200111128 /* Member */,
 				FA4C8F701F7B2EEE001E9CBF /* PersonalPage */,
+				3EE857D6208726E50095D7CA /* Show */,
+				3E7F6D791F8B10D80003BC69 /* User */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -2713,6 +2971,9 @@
 				50A810A51F8CE44A00C7288A /* PushInviteViewController.h */,
 				50A810A61F8CE44A00C7288A /* PushInviteViewController.m */,
 				2562449B1FCFFD470062B857 /* PushInviteViewController.xib */,
+				3E1331DB208DF2BE00D6AA55 /* PushShowViewController.h */,
+				3E1331DC208DF2BE00D6AA55 /* PushShowViewController.m */,
+				3E1331E5208DFC4F00D6AA55 /* PushShowViewController.xib */,
 			);
 			path = Push;
 			sourceTree = "<group>";
@@ -2986,6 +3247,36 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
+		577A20E42091FE2200FDD58F /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				256939D91F56414F000CCE9E /* AudienceCell.h */,
+				256939DA1F56414F000CCE9E /* AudienceCell.m */,
+				256939DB1F56414F000CCE9E /* AudienceCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		577A20EA209200D200FDD58F /* GiftStatisticsView */ = {
+			isa = PBXGroup;
+			children = (
+				577A20EF2092019D00FDD58F /* Cell */,
+				577A20EC2092017700FDD58F /* GiftStatisticsView.h */,
+				577A20ED2092017700FDD58F /* GiftStatisticsView.m */,
+			);
+			path = GiftStatisticsView;
+			sourceTree = "<group>";
+		};
+		577A20EF2092019D00FDD58F /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				577A20F0209201CA00FDD58F /* GiftStatisticsViewCell.h */,
+				577A20F1209201CA00FDD58F /* GiftStatisticsViewCell.m */,
+				577A20F2209201CA00FDD58F /* GiftStatisticsViewCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
 		6B5FF0B7A1444866CEED899E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -3233,6 +3524,7 @@
 				508C87321FB3F86800A078C3 /* AnchorPersonalViewController.xib in Resources */,
 				2537ECF41FA2B8BD002D8065 /* LSInvitedToViewController.xib in Resources */,
 				506453AF1FA1E8A400409229 /* Country.plist in Resources */,
+				3E1331E3208DFC4F00D6AA55 /* PushShowViewController.xib in Resources */,
 				25F14B231F95B2FC009453D9 /* LSEmotionCollectionViewCell.xib in Resources */,
 				5079F3C01F95B06C0016C065 /* LSPageChooseKeyboardView.xib in Resources */,
 				5079F3BD1F95B0580016C065 /* LSLiveStandardEmotionView.xib in Resources */,
@@ -3259,11 +3551,14 @@
 				504D60791F8F8F8C00BBB037 /* LiveChannelCollectionViewCell.xib in Resources */,
 				504D607A1F8F8F8C00BBB037 /* LiveChannelAdView.xib in Resources */,
 				3E88F7662000B9C2008F0B08 /* LiveChannelTopCollectionReusableView.xib in Resources */,
+				3E1331D4208DBDFE00D6AA55 /* ShowDetailViewController.xib in Resources */,
 				504D607C1F8F8F8C00BBB037 /* LiveChannelBottomCollectionReusableView.xib in Resources */,
 				3E74C6F81F95E18E0099C1EE /* MyBackpackViewController.xib in Resources */,
 				2580D24E1F944BEA00171722 /* LSMyReservationsViewController.xib in Resources */,
 				3E80760F1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */,
+				3EAA506D209B389600729AFC /* ShowLiveViewController.xib in Resources */,
 				3E8FF06F1FB530F30012A212 /* LSUserInfoListViewController.xib in Resources */,
+				3EAA5086209D85E100729AFC /* HangOutViewController.xib in Resources */,
 				2580D2541F944D1400171722 /* NewInvitesCell.xib in Resources */,
 				504D60821F8F8F8C00BBB037 /* UserInfoListCell.xib in Resources */,
 				2580D23C1F943B5F00171722 /* FollowingViewController.xib in Resources */,
@@ -3273,6 +3568,7 @@
 				504D609C1F8F8F8D00BBB037 /* LiveFinshViewController.xib in Resources */,
 				504D609D1F8F8F8D00BBB037 /* LiveViewController.xib in Resources */,
 				504D609E1F8F8F8D00BBB037 /* PlayViewController.xib in Resources */,
+				3EAA5084209D85D500729AFC /* HangOutLiverViewController.xib in Resources */,
 				504D609F1F8F8F8D00BBB037 /* PreLiveViewController.xib in Resources */,
 				504D60A01F8F8F8D00BBB037 /* PublicViewController.xib in Resources */,
 				504D60A11F8F8F8D00BBB037 /* PublicVipViewController.xib in Resources */,
@@ -3286,18 +3582,26 @@
 				5271ACBC1F95D75600E65C99 /* LSLiveGuideViewController.xib in Resources */,
 				2546A67A1F90BC67004E6D61 /* AddVirtualGiftsCell.xib in Resources */,
 				3E88F7722000BB16008F0B08 /* BookPrivateBroadcastSucceedHeadView.xib in Resources */,
+				3E5E606020916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */,
+				3E1331BF208DB49600D6AA55 /* ShowCell.xib in Resources */,
 				504D60AB1F8F8F8D00BBB037 /* TalentOnDemandCell.xib in Resources */,
 				3E88F7782000BB4F008F0B08 /* TalentTipView.xib in Resources */,
 				504D60AD1F8F8F8D00BBB037 /* DialogOK.xib in Resources */,
+				3EAA5082209D85CF00729AFC /* HangOutPreViewController.xib in Resources */,
+				3E1331BB208DB48500D6AA55 /* ShowListView.xib in Resources */,
 				504D60AE1F8F8F8D00BBB037 /* DialogChoose.xib in Resources */,
 				504D60AF1F8F8F8D00BBB037 /* Dialog.xib in Resources */,
 				504D60B01F8F8F8D00BBB037 /* DialogTip.xib in Resources */,
+				3E5E605A20916C030023B9C0 /* ShowListViewController.xib in Resources */,
 				504D60B11F8F8F8D00BBB037 /* RecommandCollectionViewCell.xib in Resources */,
+				3E7491352091B6F800391151 /* ShowAddCreditsView.xib in Resources */,
 				504D60B21F8F8F8D00BBB037 /* DriveView.xib in Resources */,
+				3E1331CA208DB65B00D6AA55 /* MyTicketPageViewController.xib in Resources */,
 				504D60B31F8F8F8D00BBB037 /* AudienceCell.xib in Resources */,
 				504D60B41F8F8F8D00BBB037 /* LiveSendBarView.xib in Resources */,
 				504D60B61F8F8F8D00BBB037 /* BarrageModelCell.xib in Resources */,
 				504D60B71F8F8F8D00BBB037 /* GiftComboView.xib in Resources */,
+				3EAA5067209A944A00729AFC /* InterimShowViewController.xib in Resources */,
 				504D60BA1F8F8F8D00BBB037 /* BackpackPresentView.xib in Resources */,
 				504D60BB1F8F8F8D00BBB037 /* GiftItemCollectionViewCell.xib in Resources */,
 				504D60BC1F8F8F8D00BBB037 /* PresentSendView.xib in Resources */,
@@ -3319,13 +3623,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EE857E62087309D0095D7CA /* ShowCell.xib in Resources */,
+				57DF061020907ED800A97097 /* GiftComboNewView.xib in Resources */,
 				253009BB1F8DBD9E0077AD7A /* TalentOnDemandViewController.xib in Resources */,
 				2576CF9B1F959C4000065908 /* LSLiveAdvancedEmotionView.xib in Resources */,
 				506D60671F0F14AD002CAD3C /* InfoPlist.strings in Resources */,
 				5095E4141ED6DD04004FFA3B /* CountryTableViewCell.xib in Resources */,
 				505591B41EF3FD9E000AF03A /* SelectCoverView.xib in Resources */,
+				3E5E605920916C030023B9C0 /* ShowListViewController.xib in Resources */,
 				3E8075FC1F90587A00315CF5 /* JDAlertView.xib in Resources */,
 				FA4C8F851F7B2EEE001E9CBF /* MeLevelViewController.xib in Resources */,
+				57A4B92A209FE97100E7D502 /* HangOutUserViewController.xib in Resources */,
 				3E88F7652000B9C2008F0B08 /* LiveChannelTopCollectionReusableView.xib in Resources */,
 				504D5FC51F8F384D00BBB037 /* Pods-livestream_sdk.release.xcconfig in Resources */,
 				509910D81EDF9F09003B6813 /* StreamTestViewController.xib in Resources */,
@@ -3343,6 +3651,7 @@
 				3E88F76B2000BAF3008F0B08 /* AddPhoneNumCell.xib in Resources */,
 				2536DA8F1F7DF058004FD7C3 /* PublicVipViewController.xib in Resources */,
 				25895C391F88C54700FD6232 /* LiveFinshViewController.xib in Resources */,
+				3E1331D3208DBDF200D6AA55 /* ShowDetailViewController.xib in Resources */,
 				5069F0921F6661BE003C8AFE /* PreLiveViewController.xib in Resources */,
 				2546A6731F90BA79004E6D61 /* AddMobileNumberViewController.xib in Resources */,
 				3E88F7712000BB16008F0B08 /* BookPrivateBroadcastSucceedHeadView.xib in Resources */,
@@ -3351,9 +3660,11 @@
 				257934F31F67C8B600D785F8 /* CreditView.xib in Resources */,
 				5061424A1F8E0DF400825358 /* common.xcconfig in Resources */,
 				504B57C31F67E1B2008101C0 /* PrivateViewController.xib in Resources */,
+				577A20CB2091634B00FDD58F /* HangOutLiverViewController.xib in Resources */,
 				5271ACBA1F95D73E00E65C99 /* LSLiveGuideViewController.xib in Resources */,
 				3E65CA551F94ABC8005963C9 /* MyRidesViewController.xib in Resources */,
 				FAAB702D1FB54FDE00E442A8 /* LiveApp.js in Resources */,
+				3EA6BD00208D73CB006E0558 /* ShowListView.xib in Resources */,
 				5095E4151ED6DD04004FFA3B /* Country.plist in Resources */,
 				50B2ED5D1F74B3A900E71479 /* PrivateVipViewController.xib in Resources */,
 				25F14B171F95B03A009453D9 /* LSEmotionCollectionViewCell.xib in Resources */,
@@ -3366,11 +3677,13 @@
 				504347451F67B73A002E4F37 /* Dialog.xib in Resources */,
 				52C917E11F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.xib in Resources */,
 				50F3100C1EEA3D6C008CA70D /* LiveViewController.xib in Resources */,
+				57981FE820995B2A00F7FD91 /* HangOutPreViewController.xib in Resources */,
 				2580D2471F94493900171722 /* IntroduceViewController.xib in Resources */,
 				256939DD1F56414F000CCE9E /* AudienceCell.xib in Resources */,
 				3E62CA491F7A07AB009F79AA /* BookPrivateBroadcastViewController.xib in Resources */,
 				2576CF9D1F959C4000065908 /* LSLiveStandardEmotionView.xib in Resources */,
 				3E65CA311F946974005963C9 /* VouchersCell.xib in Resources */,
+				3E1331C9208DB65B00D6AA55 /* MyTicketPageViewController.xib in Resources */,
 				52D2532C1F67D49200C0C476 /* LiveChannelCollectionViewCell.xib in Resources */,
 				5069F0A41F668145003C8AFE /* DialogChoose.xib in Resources */,
 				FA4C8FA21F7B8BD1001E9CBF /* AnchorPhotoViewController.xib in Resources */,
@@ -3389,21 +3702,28 @@
 				501BF0EE1F7B5513006395B9 /* LSTestViewController.xib in Resources */,
 				509198491EDEA59300D26A7B /* BarrageModelCell.xib in Resources */,
 				3E7AA9E21F70E7F6007C958F /* TalentOnDemandCell.xib in Resources */,
+				3E1331E2208DFC4F00D6AA55 /* PushShowViewController.xib in Resources */,
 				255974A21F55475100B9D667 /* LiveSendBarView.xib in Resources */,
 				5270F9E31F7202A600097D3E /* LiveChannelAdViewController.xib in Resources */,
 				2580D2531F944D1400171722 /* NewInvitesCell.xib in Resources */,
 				50E44F991F7F8BF900DEDD9C /* LocalizableErrorCode.strings in Resources */,
 				509911391EDFB8FA003B6813 /* GiftComboView.xib in Resources */,
 				2562449E1FD002A40062B857 /* PushBookingViewController.xib in Resources */,
+				5739FB1A209C4DD30037ECBC /* HangOutViewController.xib in Resources */,
+				3EAA506C209B389600729AFC /* ShowLiveViewController.xib in Resources */,
 				251DB28E1F8A1757001000C8 /* BackpackPresentView.xib in Resources */,
 				2576CF9F1F959C4000065908 /* LSPageChooseKeyboardView.xib in Resources */,
 				50135B4A1F9D8E39003C6555 /* AppIcon.xcassets in Resources */,
 				252AD3CB1F6BBD2800FD9565 /* DialogTip.xib in Resources */,
 				252E9CCB1F72062E00D32DFF /* LiveWebViewController.xib in Resources */,
 				3E65CA2E1F946974005963C9 /* GiftListCell.xib in Resources */,
+				577A20F4209201CA00FDD58F /* GiftStatisticsViewCell.xib in Resources */,
 				258BDBEE1F661CB7005E1F8F /* PublicViewController.xib in Resources */,
+				3E7491342091B6F800391151 /* ShowAddCreditsView.xib in Resources */,
 				50D649A31EE54BEB00D71AAF /* PlayViewController.xib in Resources */,
+				3EAA5064209A944900729AFC /* InterimShowViewController.xib in Resources */,
 				2580D23B1F943B5F00171722 /* FollowingViewController.xib in Resources */,
+				3E5E605F20916C9B0023B9C0 /* MyTicketsViewController.xib in Resources */,
 				3E80760E1F90B91900315CF5 /* LSMyReservationsPageViewController.xib in Resources */,
 				5069F09F1F667650003C8AFE /* DialogOK.xib in Resources */,
 				25700B7B1FB4719F0065CFF0 /* RewardView.xib in Resources */,
@@ -3484,7 +3804,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Sets the target folders and the final framework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}_sdk\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/../Products/${CONFIGURATION}/${FMK_NAME}.framework\n# Working dir will be deleted after the framework creation.\nDEVICE_DIR=${BUILD_ROOT}/${CONFIGURATION}-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\n#lipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#open \"${INSTALL_DIR}\"\n";
+			shellScript = "# Sets the target folders and the final framework product.\n# 如果工程名称和Framework的Target名称不一样的话，要自定义FMKNAME\n# 例如: FMK_NAME = \"MyFramework\"\nFMK_NAME=${PROJECT_NAME}_sdk\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/../Products/${CONFIGURATION}/${FMK_NAME}.framework\n# Working dir will be deleted after the framework creation.\nDEVICE_DIR=${BUILD_ROOT}/${CONFIGURATION}-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${BUILD_DIR}/${CONFIGURATION}-iphonesimulator/${FMK_NAME}.framework\n# -configuration ${CONFIGURATION}\n# Clean and Building both architectures.\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos build\n#xcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator build\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\nmkdir -p \"${INSTALL_DIR}\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/\"\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#lipo -create \"${DEVICE_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/${FMK_NAME}\"\n#open \"${INSTALL_DIR}\"\n";
 		};
 		8D2F1FC70F0F577C4167E28C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3508,6 +3828,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EAA5088209D872900729AFC /* GiftStatisticsViewCell.m in Sources */,
+				3EAA5089209D872900729AFC /* GiftStatisticsView.m in Sources */,
+				3EAA508A209D872900729AFC /* GiftComboView.m in Sources */,
+				3EAA508B209D872900729AFC /* LSCancelInviteHangoutRequest.m in Sources */,
+				3EAA508C209D872900729AFC /* LSDealKnockRequest.m in Sources */,
+				3EAA508D209D872900729AFC /* LSGetCanHangoutAnchorListRequest.m in Sources */,
+				3EAA508E209D872900729AFC /* LSGetHangoutInvitStatusRequest.m in Sources */,
+				3EAA508F209D872900729AFC /* LSSendinvitationHangoutRequest.m in Sources */,
+				3EAA5090209D872900729AFC /* LSShowListWithAnchorIdRequest.m in Sources */,
+				3EAA5091209D872900729AFC /* LSGetShowRoomInfoRequest.m in Sources */,
+				3EAA5092209D872900729AFC /* LSBuyProgramRequest.m in Sources */,
+				3EAA5093209D872900729AFC /* LSFollowShowRequest.m in Sources */,
+				3EAA5094209D872900729AFC /* LSGetNoReadNumProgramRequest.m in Sources */,
+				3EAA5095209D872900729AFC /* LSGetProgramListRequest.m in Sources */,
+				3EAA5096209D872900729AFC /* LSProgramItemObject.m in Sources */,
+				3EAA5097209D872900729AFC /* LSHangoutAnchorItemObject.m in Sources */,
 				257B3754201EB1FB00261ED2 /* HomeVouchersManager.m in Sources */,
 				50B7BB3620196EEB00E76645 /* LSGetVoucherAvailableInfoRequest.m in Sources */,
 				50B7BB3720196EEB00E76645 /* LSBindAnchorItemObject.m in Sources */,
@@ -3524,6 +3860,7 @@
 				50AE07341F973C07005CF8D2 /* LSYYImage.m in Sources */,
 				50AE07351F973C07005CF8D2 /* LSYYImageCoder.m in Sources */,
 				50AE07361F973C07005CF8D2 /* LSYYSpriteSheetImage.m in Sources */,
+				3E1331B9208DB3E600D6AA55 /* MyTicketsViewController.m in Sources */,
 				25F14B241F95B30D009453D9 /* LSEmotionCollectionViewCell.m in Sources */,
 				25F14B251F95B30D009453D9 /* LSEmotionCollectionViewLayout.m in Sources */,
 				5079F3BF1F95B0670016C065 /* LSPageChooseKeyboardView.m in Sources */,
@@ -3552,11 +3889,13 @@
 				506140E91F8E066C00825358 /* LiveWebViewController.m in Sources */,
 				506140EA1F8E066C00825358 /* LSImManager.mm in Sources */,
 				506140EB1F8E066C00825358 /* GPUImageBeautifyFilter.m in Sources */,
+				3E1331C0208DB49900D6AA55 /* ShowCell.m in Sources */,
 				506140EC1F8E066C00825358 /* ImageCVPixelBufferInput.m in Sources */,
 				5271ACBB1F95D74400E65C99 /* LSLiveGuideViewController.m in Sources */,
 				506140ED1F8E066C00825358 /* LFGPUImageBeautyFilter.m in Sources */,
 				506140EE1F8E066C00825358 /* LiveStreamPlayer.m in Sources */,
 				506140EF1F8E066C00825358 /* LiveStreamPublisher.m in Sources */,
+				3E1331BE208DB49200D6AA55 /* ShowAddCreditsView.m in Sources */,
 				506140F01F8E066C00825358 /* LiveStreamSession.m in Sources */,
 				506140F11F8E066C00825358 /* LSHomePageViewController.m in Sources */,
 				506140F21F8E066C00825358 /* LiveChannelAdViewController.m in Sources */,
@@ -3606,6 +3945,7 @@
 				506141391F8E066C00825358 /* LiveGiftListManager.m in Sources */,
 				5061413A1F8E066C00825358 /* LiveRoomMsgManager.m in Sources */,
 				5061413B1F8E066C00825358 /* RoomTypeIsFirstManager.m in Sources */,
+				3EAA5083209D85D200729AFC /* HangOutLiverViewController.m in Sources */,
 				5061413C1F8E066C00825358 /* SendGiftTheQueueManager.m in Sources */,
 				5061413D1F8E066C00825358 /* TalentOnDemandManager.m in Sources */,
 				5061413F1F8E066C00825358 /* UserInfoManager.m in Sources */,
@@ -3613,6 +3953,7 @@
 				506141411F8E066C00825358 /* AllGiftItem.m in Sources */,
 				506141421F8E066C00825358 /* AudienceModel.m in Sources */,
 				506141431F8E066C00825358 /* BackpackGiftItem.m in Sources */,
+				3EE857DD208727240095D7CA /* ShowListViewController.m in Sources */,
 				506141441F8E066C00825358 /* RoomBackGiftItem.m in Sources */,
 				506141451F8E066C00825358 /* ChatEmotionItem.m in Sources */,
 				FA57B1A71FA97E730092EA2F /* LSGetUserInfoRequest.m in Sources */,
@@ -3623,14 +3964,15 @@
 				506141491F8E066C00825358 /* LiveRoom.m in Sources */,
 				5061414A1F8E066C00825358 /* LiveRoomGiftModel.m in Sources */,
 				5061414B1F8E066C00825358 /* MsgItem.m in Sources */,
+				3E1331BC208DB48800D6AA55 /* ShowListView.m in Sources */,
 				5061414C1F8E066C00825358 /* RoomStyleItem.m in Sources */,
-				5061414D1F8E066C00825358 /* SendGiftItem.m in Sources */,
 				5061414E1F8E066C00825358 /* AudienModel.m in Sources */,
 				5061414F1F8E066C00825358 /* RandomGiftModel.m in Sources */,
 				506141511F8E066C00825358 /* RewardView.m in Sources */,
 				506141521F8E066C00825358 /* AddPhoneNumCell.m in Sources */,
 				506141531F8E066C00825358 /* AddVirtualGiftsCell.m in Sources */,
 				506141541F8E066C00825358 /* CalvinSwitch.m in Sources */,
+				3E1331E1208DFC4700D6AA55 /* PushShowViewController.m in Sources */,
 				506141551F8E066C00825358 /* BookPrivateBroadcastSucceedHeadView.m in Sources */,
 				506141561F8E066C00825358 /* TalentOnDemandCell.m in Sources */,
 				506141571F8E066C00825358 /* TalentTipView.m in Sources */,
@@ -3641,12 +3983,14 @@
 				5061415C1F8E066C00825358 /* DialogOK.m in Sources */,
 				5061415D1F8E066C00825358 /* DialogChoose.m in Sources */,
 				5061415E1F8E066C00825358 /* Dialog.m in Sources */,
+				3EAA5072209B389D00729AFC /* ShowLiveViewController.m in Sources */,
 				5061415F1F8E066C00825358 /* DialogTip.m in Sources */,
 				506141601F8E066C00825358 /* RecommandCollectionViewCell.m in Sources */,
 				506141611F8E066C00825358 /* DriveView.m in Sources */,
 				506141621F8E066C00825358 /* ChardTipView.m in Sources */,
 				506141631F8E066C00825358 /* YMAudienceView.m in Sources */,
 				506141641F8E066C00825358 /* AudienceCell.m in Sources */,
+				3EAA5081209D85CC00729AFC /* HangOutPreViewController.m in Sources */,
 				506141651F8E066C00825358 /* VIPAudienceView.m in Sources */,
 				506141661F8E066C00825358 /* LiveSendBarView.m in Sources */,
 				506141681F8E066C00825358 /* BarrageModel.m in Sources */,
@@ -3659,9 +4003,11 @@
 				5061416F1F8E066C00825358 /* LSChatMessageObject.m in Sources */,
 				506141701F8E066C00825358 /* LSChatTextAttachment.m in Sources */,
 				506141711F8E066C00825358 /* LSChatTextView.m in Sources */,
+				3EAA5085209D85DB00729AFC /* HangOutViewController.m in Sources */,
+				3E1331D5208DBE0000D6AA55 /* ShowDetailViewController.m in Sources */,
 				506141721F8E066C00825358 /* DeleteTipView.m in Sources */,
+				3E1331C7208DB60000D6AA55 /* MyTicketPageViewController.m in Sources */,
 				506141731F8E066C00825358 /* GiftComboNumView.m in Sources */,
-				506141741F8E066C00825358 /* GiftComboView.m in Sources */,
 				506141751F8E066C00825358 /* LikeView.m in Sources */,
 				506141761F8E066C00825358 /* LiveChatTextView.m in Sources */,
 				506141771F8E066C00825358 /* LiveRoomTextField.m in Sources */,
@@ -3694,8 +4040,10 @@
 				506141951F8E066C00825358 /* SubmitPhoneVerifyCodeRequest.m in Sources */,
 				506141961F8E066C00825358 /* CloseAdAnchorListRequest.m in Sources */,
 				506141971F8E066C00825358 /* GetAdAnchorListRequest.m in Sources */,
+				3EAA506A209A944E00729AFC /* InterimShowViewController.m in Sources */,
 				506141981F8E066C00825358 /* GetPromoAnchorListRequest.m in Sources */,
 				506141991F8E066C00825358 /* CancelPrivateRequest.m in Sources */,
+				3E1331C1208DB49D00D6AA55 /* ShowTipView.m in Sources */,
 				5061419A1F8E066C00825358 /* ControlManPushRequest.m in Sources */,
 				5061419B1F8E066C00825358 /* GetAllGiftListRequest.m in Sources */,
 				5061419C1F8E066C00825358 /* GetAnchorListRequest.m in Sources */,
@@ -3774,6 +4122,7 @@
 				50F978DE1F61332D009B22D1 /* RecommandCollectionViewCell.m in Sources */,
 				3E7AC9731FA8279E00979A5B /* LiveADView.m in Sources */,
 				505591B11EF3FD9E000AF03A /* PresentView.m in Sources */,
+				FAA0F230209AB5D80074A8F6 /* LSGetHangoutInvitStatusRequest.m in Sources */,
 				509910D31EDF9F09003B6813 /* LSHomePageViewController.m in Sources */,
 				3E7F6D901F8B17120003BC69 /* UserInfoListCell.m in Sources */,
 				506BC3431F59027F001C2962 /* SetFavoriteRequest.m in Sources */,
@@ -3786,6 +4135,8 @@
 				25856B751F5CECBA00DC47D9 /* AllGiftItem.m in Sources */,
 				509781681F580F0300659204 /* LSConfigManager.m in Sources */,
 				FAB694121F5E9748008A64B6 /* GetPromoAnchorListRequest.m in Sources */,
+				FAA0F234209AB5D80074A8F6 /* LSSendinvitationHangoutRequest.m in Sources */,
+				3EAA505D2099D8F900729AFC /* InterimShowViewController.m in Sources */,
 				50D6577B1F428A0400FF49F6 /* LiveChatTextView.m in Sources */,
 				506BC3361F59027F001C2962 /* GetInviteInfoRequest.m in Sources */,
 				508550941F5D2C1000BE4A9C /* PreLiveViewController.m in Sources */,
@@ -3803,15 +4154,17 @@
 				506BC3E41F590AC6001C2962 /* RoomItemObject.m in Sources */,
 				252BD7C11F74B09000AAF24F /* RoomTypeIsFirstManager.m in Sources */,
 				52C917E01F6BC2F200C96398 /* LiveChannelBottomCollectionReusableView.m in Sources */,
+				FA6E143F20874C6C004F8B92 /* LSBuyProgramRequest.m in Sources */,
 				500CBB641F8CEBDA00A32F1F /* PushBookingViewController.m in Sources */,
 				507315C61EE944F6005D1C0B /* GiftComboManager.m in Sources */,
-				50D657851F428A3B00FF49F6 /* SendGiftItem.m in Sources */,
 				5007B1D21ECAA72E00C2C17F /* LSRequestManager.mm in Sources */,
 				3E62CC321F7CF8910097F4FC /* CountryCodeViewController.m in Sources */,
+				57A4B929209FE97100E7D502 /* HangOutUserViewController.m in Sources */,
 				509910D51EDF9F09003B6813 /* LSMainViewController.m in Sources */,
 				50B2ED5A1F74AF0800E71479 /* PrivateVipViewController.m in Sources */,
 				506BC3311F59027F001C2962 /* GetCreateBookingInfoRequest.m in Sources */,
 				509198391EDEA32C00D26A7B /* BarrageViewCell.m in Sources */,
+				FA6E144320874C6C004F8B92 /* LSFollowShowRequest.m in Sources */,
 				3E656EF71F736B25007AD95D /* TalentTipView.m in Sources */,
 				5095E4091ED6DCFC004FFA3B /* Country.m in Sources */,
 				506BC3E21F590AC6001C2962 /* RideItemObject.m in Sources */,
@@ -3819,6 +4172,9 @@
 				52C917DB1F6BC2E000C96398 /* LiveChannelTopCollectionReusableView.m in Sources */,
 				509A8DE01ECC350C004720CF /* JTSegmentPattern.swift in Sources */,
 				506BC3D51F590AC6001C2962 /* GetNewFansBaseInfoItemObject.m in Sources */,
+				3E1331B7208DB3E200D6AA55 /* MyTicketsViewController.m in Sources */,
+				FA43DEEF2092B41F00BE5F6C /* LSShowListWithAnchorIdRequest.m in Sources */,
+				3E1331DE208DF2BE00D6AA55 /* PushShowViewController.m in Sources */,
 				5027D5B01EF9060F00EE3B0E /* DeleteTipView.m in Sources */,
 				506BC3411F59027F001C2962 /* RideListRequest.m in Sources */,
 				505591B31EF3FD9E000AF03A /* SelectCoverView.m in Sources */,
@@ -3832,6 +4188,7 @@
 				506BC3381F59027F001C2962 /* GetNewFansBaseInfoRequest.m in Sources */,
 				3E65CA4F1F949B49005963C9 /* MyRidesWaterfallView.m in Sources */,
 				506BC3E01F590AC6001C2962 /* LSLoginItemObject.m in Sources */,
+				3E1331D2208DBDF200D6AA55 /* ShowDetailViewController.m in Sources */,
 				506BC3DA1F590AC6001C2962 /* GiftNumItemObject.m in Sources */,
 				252E9CCF1F726D8800D32DFF /* LiveFinshViewController.m in Sources */,
 				5063A3F81ECE99F200361942 /* HotTableView.m in Sources */,
@@ -3849,14 +4206,17 @@
 				50135B501F9DBA52003C6555 /* LiveService.m in Sources */,
 				506BC3D61F590AC6001C2962 /* GetTalentItemObject.m in Sources */,
 				3E78EFB11F788EFB0056A96F /* BookPrivateBroadcastViewController.m in Sources */,
+				3EE857EA20874AC00095D7CA /* ShowAddCreditsView.m in Sources */,
 				506BC3441F59027F001C2962 /* SetRideRequest.m in Sources */,
 				3E65CA351F94697E005963C9 /* GiftListViewController.m in Sources */,
 				506BC3371F59027F001C2962 /* GetLeftCreditRequest.m in Sources */,
 				505D6DED1EC979E3007FF4C6 /* LSFileCacheManager.m in Sources */,
+				FAB60C7D208D7E8400901BBD /* LSProgramItemObject.m in Sources */,
 				505591AE1EF3FD9E000AF03A /* GiftItemLayout.m in Sources */,
 				5091983E1EDEA37B00D26A7B /* MsgTableViewCell.m in Sources */,
 				506BC3E51F590AC6001C2962 /* ViewerFansItemObject.m in Sources */,
 				25A5AF191F668C1100F06F18 /* LiveRoomGiftModel.m in Sources */,
+				3E1331C5208DB5FC00D6AA55 /* MyTicketPageViewController.m in Sources */,
 				3E7AA9E11F70E7F6007C958F /* TalentOnDemandCell.m in Sources */,
 				2550AEB31F96291B007B5731 /* LSYYImage.m in Sources */,
 				506E41701F0B276E0041FBEE /* LiveGiftDownloadManager.m in Sources */,
@@ -3873,9 +4233,11 @@
 				506B52FD1EE1135700803BD2 /* GiftItem.m in Sources */,
 				2576CF9E1F959C4000065908 /* LSPageChooseKeyboardView.m in Sources */,
 				50D657881F428A5700FF49F6 /* SendGiftTheQueueManager.m in Sources */,
+				FAA0F232209AB5D80074A8F6 /* LSGetCanHangoutAnchorListRequest.m in Sources */,
 				3E65CA2D1F946974005963C9 /* GiftListCell.m in Sources */,
 				3E65CA531F949B95005963C9 /* MyRidesCell.m in Sources */,
 				FA4C8FA11F7B8BD1001E9CBF /* AnchorPhotoViewController.m in Sources */,
+				57981FEC20996A7400F7FD91 /* HangOutViewController.m in Sources */,
 				50A810A81F8CE44A00C7288A /* PushInviteViewController.m in Sources */,
 				25890A591F429A600067CC29 /* LSChatEmotionManager.m in Sources */,
 				506BC32F1F59027F001C2962 /* GetBackpackUnreadNumRequest.m in Sources */,
@@ -3885,9 +4247,11 @@
 				3E65CA4B1F949AE3005963C9 /* MyRidesViewController.m in Sources */,
 				3E62CC2D1F7CF41E0097F4FC /* AddMobileNumberViewController.m in Sources */,
 				509911381EDFB8FA003B6813 /* GiftComboView.m in Sources */,
+				3EE857E52087309D0095D7CA /* ShowCell.m in Sources */,
 				50C5AA441F565567002EDCAA /* LiveStreamSession.m in Sources */,
 				509911371EDFB8FA003B6813 /* GiftComboNumView.m in Sources */,
 				506BC3CB1F590AC5001C2962 /* BookingPrivateInviteListObject.m in Sources */,
+				FA6E144120874C6C004F8B92 /* LSGetProgramListRequest.m in Sources */,
 				50D1BADF1E98EA0300088B9D /* GPUImageBeautifyFilter.m in Sources */,
 				506BC33B1F59027F001C2962 /* GetTalentStatusRequest.m in Sources */,
 				50D649A21EE5482C00D71AAF /* PromptView.m in Sources */,
@@ -3898,6 +4262,7 @@
 				506BC3DE1F590AC6001C2962 /* LiveRoomInfoItemObject.m in Sources */,
 				506BC32C1F59027F001C2962 /* ControlManPushRequest.m in Sources */,
 				505591AC1EF3FD9E000AF03A /* GiftItemCollectionViewCell.m in Sources */,
+				3EAA505320994CE100729AFC /* ShowLiveViewController.m in Sources */,
 				52F028D11F5E937F002F7FDC /* IntroduceViewController.m in Sources */,
 				3E62CA441F79FAA2009F79AA /* AddPhoneNumCell.m in Sources */,
 				25F14B181F95B03A009453D9 /* LSEmotionCollectionViewLayout.m in Sources */,
@@ -3919,6 +4284,7 @@
 				506BC33F1F59027F001C2962 /* ManBookingUnreadUnhandleNumRequest.m in Sources */,
 				507315C21EE9346E005D1C0B /* LikeView.m in Sources */,
 				509910F91EDF9F50003B6813 /* LiveViewController.m in Sources */,
+				57440E37208EE232000B49E6 /* HangOutLiverViewController.m in Sources */,
 				506BC3E61F590AC6001C2962 /* VoucherItemObject.m in Sources */,
 				506BC3DD1F590AC6001C2962 /* LiveRoomConfigItemObject.m in Sources */,
 				506BC3E11F590AC6001C2962 /* LSRegisterItemObject.m in Sources */,
@@ -3949,10 +4315,13 @@
 				5053078F1F7A689F00F2FECA /* UserInfoManager.m in Sources */,
 				50BF28F81E98976E00B8ED5D /* main.m in Sources */,
 				504B57C61F67E1BA008101C0 /* PrivateViewController.m in Sources */,
+				FAB60C95208DADED00901BBD /* LSGetShowRoomInfoRequest.m in Sources */,
 				509910D71EDF9F09003B6813 /* StreamTestViewController.m in Sources */,
 				506BC3401F59027F001C2962 /* ManHandleBookingListRequest.m in Sources */,
+				FAA0F233209AB5D80074A8F6 /* LSCancelInviteHangoutRequest.m in Sources */,
 				506BC3D41F590AC6001C2962 /* GetCreateBookingInfoItemObject.m in Sources */,
 				5095E4131ED6DD04004FFA3B /* CountryTableViewCell.m in Sources */,
+				FA6E144220874C6C004F8B92 /* LSGetNoReadNumProgramRequest.m in Sources */,
 				FAEB02B91F9D852400C724AC /* LSServerSpeedRequest.m in Sources */,
 				255D9DAA1F43E5C300B954DD /* ChatEmotionListItem.m in Sources */,
 				52D2532B1F67D49200C0C476 /* LiveChannelCollectionViewCell.m in Sources */,
@@ -3960,6 +4329,8 @@
 				509911551EDFF724003B6813 /* DiscoverListItemObject.m in Sources */,
 				2508F1721F5ED2A600CA2143 /* AudienceModel.m in Sources */,
 				FAEB02B81F9D852400C724AC /* LSBannerRequest.m in Sources */,
+				3E06BAB620883C8C009CFF37 /* ShowTipView.m in Sources */,
+				3EE857DA208727120095D7CA /* ShowListViewController.m in Sources */,
 				509910E71EDF9F25003B6813 /* HotViewController.m in Sources */,
 				FA53183E1F8DC43900110B6A /* AcceptInstanceInviteRequest.m in Sources */,
 				FA5F7B1A1F78B18C0031CCE9 /* GetPhoneVerifyCodeRequest.m in Sources */,
@@ -3968,9 +4339,11 @@
 				509198381EDEA32C00D26A7B /* BarrageView.m in Sources */,
 				506BC32D1F59027F001C2962 /* GetAllGiftListRequest.m in Sources */,
 				2576CF9C1F959C4000065908 /* LSLiveStandardEmotionView.m in Sources */,
+				FAA0F231209AB5D80074A8F6 /* LSDealKnockRequest.m in Sources */,
 				3E645E5E1F8C764900D06467 /* LSUserUnreadCountManager.m in Sources */,
 				506BC3CD1F590AC6001C2962 /* BookTimeItemObject.m in Sources */,
 				506BC32E1F59027F001C2962 /* GetAnchorListRequest.m in Sources */,
+				FAC004FF207F61A100B73174 /* LSHangoutAnchorItemObject.m in Sources */,
 				509910FD1EDF9F50003B6813 /* PlayViewController.m in Sources */,
 				FA57B1A31FA976D50092EA2F /* LSUserInfoItemObject.m in Sources */,
 				3E65CA3F1F9498D2005963C9 /* VouchersListViewController.m in Sources */,
@@ -3982,9 +4355,11 @@
 				3E99D047201E9FB2000BC3B3 /* HomeVouchersManager.m in Sources */,
 				506BC3DC1F590AC6001C2962 /* InviteIdItemObject.m in Sources */,
 				255D9DA71F43E52600B954DD /* ChatEmotionItem.m in Sources */,
+				577A20EE2092017700FDD58F /* GiftStatisticsView.m in Sources */,
 				2595164F1F7902B8004A873B /* RandomGiftModel.m in Sources */,
 				509295AF1ECD992200111128 /* MsgItem.m in Sources */,
 				3E5E5E641F72102400A8163A /* TalentOnDemandViewController.m in Sources */,
+				3EA6BCFF208D73CB006E0558 /* ShowListView.m in Sources */,
 				505591AA1EF3FD9E000AF03A /* BigGiftAnimationView.m in Sources */,
 				252563011F61282B00A2AAD3 /* PublicVipViewController.m in Sources */,
 				5085509D1F5D32D800BE4A9C /* LiveRoom.m in Sources */,
@@ -4004,6 +4379,7 @@
 				3E645E681F8C9FDE00D06467 /* NewInvitesCell.m in Sources */,
 				3E7F6DA61F8B56C50003BC69 /* LSMyReservationsViewController.m in Sources */,
 				FA4C8F821F7B2EEE001E9CBF /* LiverPageControllerViewController.m in Sources */,
+				57981FE720995B2A00F7FD91 /* HangOutPreViewController.m in Sources */,
 				25F14B161F95B03A009453D9 /* LSEmotionCollectionViewCell.m in Sources */,
 				50B5A57A1F67862B00CADD36 /* BEMCheckBox.m in Sources */,
 				3E62CA481F79FAA2009F79AA /* CalvinSwitch.m in Sources */,
@@ -4023,6 +4399,7 @@
 				505D6DEE1EC979E3007FF4C6 /* LSImageViewLoader.m in Sources */,
 				2550AEB41F96291B007B5731 /* LSYYImageCoder.m in Sources */,
 				FA5F7B211F78B1970031CCE9 /* BookPhoneItemObject.m in Sources */,
+				577A20F3209201CA00FDD58F /* GiftStatisticsViewCell.m in Sources */,
 				506BC3451F59027F001C2962 /* UpdateTokenIdRequest.m in Sources */,
 				256CE1E41F5E2E920008D390 /* ChardTipView.m in Sources */,
 			);
@@ -4270,6 +4647,42 @@
 			name = LSInvitedToViewController.xib;
 			sourceTree = "<group>";
 		};
+		3E1331CC208DB65B00D6AA55 /* MyTicketPageViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E1331CB208DB65B00D6AA55 /* Base */,
+				3E1331CE208DB65D00D6AA55 /* en */,
+			);
+			name = MyTicketPageViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E1331E5208DFC4F00D6AA55 /* PushShowViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E1331E4208DFC4F00D6AA55 /* Base */,
+				3E1331E7208DFC5200D6AA55 /* en */,
+			);
+			name = PushShowViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E5E605C20916C030023B9C0 /* ShowListViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E5E605B20916C030023B9C0 /* Base */,
+				3E5E605E20916C050023B9C0 /* en */,
+			);
+			name = ShowListViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E5E606220916C9B0023B9C0 /* MyTicketsViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E5E606120916C9B0023B9C0 /* Base */,
+				3E5E606420916C9D0023B9C0 /* en */,
+			);
+			name = MyTicketsViewController.xib;
+			sourceTree = "<group>";
+		};
 		3E62CA4B1F7A07AB009F79AA /* BookPrivateBroadcastViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4286,6 +4699,15 @@
 				3E65CA591F94ABCB005963C9 /* en */,
 			);
 			name = MyRidesViewController.xib;
+			sourceTree = "<group>";
+		};
+		3E7491372091B6F800391151 /* ShowAddCreditsView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3E7491362091B6F800391151 /* Base */,
+				3E7491392091B6FA00391151 /* en */,
+			);
+			name = ShowAddCreditsView.xib;
 			sourceTree = "<group>";
 		};
 		3E74C6FA1F95E18E0099C1EE /* MyBackpackViewController.xib */ = {
@@ -4387,6 +4809,24 @@
 			name = CountryCodeViewController.xib;
 			sourceTree = "<group>";
 		};
+		3EAA5066209A944900729AFC /* InterimShowViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3EAA5065209A944900729AFC /* Base */,
+				3EAA5069209A944C00729AFC /* en */,
+			);
+			name = InterimShowViewController.xib;
+			sourceTree = "<group>";
+		};
+		3EAA506F209B389600729AFC /* ShowLiveViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3EAA506E209B389600729AFC /* Base */,
+				3EAA5071209B389800729AFC /* en */,
+			);
+			name = ShowLiveViewController.xib;
+			sourceTree = "<group>";
+		};
 		504B57C11F67E1B2008101C0 /* PrivateViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -4480,6 +4920,24 @@
 				50F310101EEA3D6D008CA70D /* en */,
 			);
 			name = LiveViewController.xib;
+			sourceTree = "<group>";
+		};
+		5739FB1C209C4DD30037ECBC /* HangOutViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5739FB1B209C4DD30037ECBC /* Base */,
+				5739FB1E209C4DD70037ECBC /* en */,
+			);
+			name = HangOutViewController.xib;
+			sourceTree = "<group>";
+		};
+		577A20CD2091634B00FDD58F /* HangOutLiverViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				577A20CC2091634B00FDD58F /* Base */,
+				577A20CF2091635200FDD58F /* en */,
+			);
+			name = HangOutLiverViewController.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

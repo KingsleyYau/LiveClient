@@ -18,6 +18,7 @@
  * mountName        座驾名称
  * mountUrl         坐驾图片url
  * level            用户等级
+ * isHasTicket      是否已购票
  */
 @property (nonatomic, copy) NSString* userId;
 @property (nonatomic, copy) NSString* nickName;
@@ -26,4 +27,5 @@
 @property (nonatomic, copy) NSString* mountName;
 @property (nonatomic, copy) NSString* mountUrl;
 @property (nonatomic, assign) int level;
+@property (nonatomic, assign) BOOL isHasTicket;
 @end

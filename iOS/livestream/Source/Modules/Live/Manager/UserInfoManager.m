@@ -140,6 +140,7 @@ static UserInfoManager *gManager = nil;
                     info.riderId = item.riderId;
                     info.riderName = item.riderName;
                     info.riderUrl = item.riderUrl;
+                    
                     @synchronized (self) {
                         [self.userDictionary setObject:info forKey:userId];
                     }

@@ -17,7 +17,7 @@ class HttpGetPromoAnchorListTask;
 class IRequestGetPromoAnchorListCallback {
 public:
 	virtual ~IRequestGetPromoAnchorListCallback(){};
-	virtual void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& listItem) = 0;
+	virtual void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const AdItemList& listItem) = 0;
 };
       
 class HttpGetPromoAnchorListTask : public HttpRequestTask {

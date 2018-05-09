@@ -19,4 +19,6 @@
 - (void)showDialog:(UIView *)view declineBlock:(void(^)())declineBlock acceptBlock:(void(^)())acceptBlock;
 
 - (void)setTalentName:(NSString *)name andRequestName:(NSString *)request;
+
+- (void)hidenDialog;
 @end

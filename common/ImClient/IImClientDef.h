@@ -140,12 +140,14 @@ inline LoginVerifyType GetLoginVerifyType(int value) {
     return LOGINVERIFYTYPE_BEGIN < value && value <= LOGINVERIFYTYPE_END ? (LoginVerifyType)value : LOGINVERIFYTYPE_UNKNOW;
 }
 
+
 typedef enum {
     ROOMTYPE_NOLIVEROOM = 0,            // 没有直播间
     ROOMTYPE_FREEPUBLICLIVEROOM = 1,    // 免费公开直播间
     ROOMTYPE_COMMONPRIVATELIVEROOM = 2, // 普通私密直播间
     ROOMTYPE_CHARGEPUBLICLIVEROOM = 3,  // 付费公开直播间
     ROOMTYPE_LUXURYPRIVATELIVEROOM = 4, // 豪华私密直播间
+    ROOMTYPE_HANGOUTROOM = 5,           // 多人互动直播间
     ROOMTYPE_UNKNOW,
     ROOMTYPE_BEGIN = ROOMTYPE_NOLIVEROOM,
     ROOMTYPE_END = ROOMTYPE_UNKNOW
@@ -257,3 +259,102 @@ typedef enum {
 inline IMSystemType GetIMSystemType(int value) {
     return IMSYSTEMTYPE_COMMON <= value && value <= IMSYSTEMTYPE_WARN ? (IMSystemType)value : IMSYSTEMTYPE_COMMON;
 }
+
+// 邀请回复
+typedef enum {
+    IMREPLYINVITETYPE_UNKNOWN = 0,          // 未知
+    IMREPLYINVITETYPE_AGREE = 2,            // 接受
+    IMREPLYINVITETYPE_REJECT = 3,           // 拒绝
+    IMREPLYINVITETYPEE_OUTTIME = 4,         // 邀请超时
+    IMREPLYINVITETYPE_CANCEL = 5,           // 观众取消邀请
+    IMREPLYINVITETYPE_BEGIN = IMREPLYINVITETYPE_AGREE,
+    IMREPLYINVITETYPE_END = IMREPLYINVITETYPE_CANCEL
+} IMReplyInviteType;
+
+// int 转换 IMReplyInviteType
+inline IMReplyInviteType GetIMReplyInviteType(int value) {
+    return IMREPLYINVITETYPE_BEGIN <= value && value <= IMREPLYINVITETYPE_END ? (IMReplyInviteType)value : IMREPLYINVITETYPE_UNKNOWN;
+}
+
+// 主播状态
+typedef enum {
+    LIVEANCHORSTATUS_INVITATION = 0,        // 邀请中
+    LIVEANCHORSTATUS_INVITECONFIRM = 1,     // 邀请已确认
+    LIVEANCHORSTATUS_KNOCKCONFIRM = 2,      // 敲门已确认
+    LIVEANCHORSTATUS_RECIPROCALENTER = 3,   // 倒数进入中
+    LIVEANCHORSTATUS_ONLINE = 4,            // 在线
+    LIVEANCHORSTATUS_UNKNOW,
+    LIVEANCHORSTATUS_BEGIN = LIVEANCHORSTATUS_INVITATION,
+    LIVEANCHORSTATUS_END = LIVEANCHORSTATUS_UNKNOW
+} LiveAnchorStatus;
+
+// int 转换 AnchorStatus
+inline LiveAnchorStatus GetLiveAnchorStatus(int value) {
+    return LIVEANCHORSTATUS_BEGIN <= value && value < LIVEANCHORSTATUS_END ? (LiveAnchorStatus)value : LIVEANCHORSTATUS_UNKNOW;
+}
+
+// 通知类型
+typedef  enum {
+    IMPROGRAMNOTICETYPE_UNKNOW = 0,                     // 未知
+    IMPROGRAMNOTICETYPE_BUYTICKET = 1,                  // 已购票的开播通知
+    IMPROGRAMNOTICETYPE_FOLLOW = 2,                     // 仅关注通知
+    IMPROGRAMNOTICETYPE_BEGIN = IMPROGRAMNOTICETYPE_UNKNOW,
+    IMPROGRAMNOTICETYPE_END = IMPROGRAMNOTICETYPE_FOLLOW
+}IMProgramNoticeType;
+
+// int 转换 ProgramNoticeType
+inline IMProgramNoticeType GetIMProgramNoticeType(int value) {
+    return IMPROGRAMNOTICETYPE_BEGIN < value && value <= IMPROGRAMNOTICETYPE_END ? (IMProgramNoticeType)value : IMPROGRAMNOTICETYPE_UNKNOW;
+}
+
+typedef enum {
+    IMPROGRAMSTATUS_UNKNOW = -1,              // 未知
+    IMPROGRAMSTATUS_UNVERIFY = 0,             // 未审核
+    IMPROGRAMSTATUS_VERIFYPASS = 1,           // 审核通过
+    IMPROGRAMSTATUS_VERIFYREJECT = 2,         // 审核被拒
+    IMPROGRAMSTATUS_PROGRAMEND = 3,           // 节目正常结束
+    IMPROGRAMSTATUS_OUTTIME = 4,              // 节目已超时
+    IMPROGRAMSTATUS_PROGRAMCALCEL = 5,        // 节目已取消
+    IMPROGRAMSTATUS_BEGIN = IMPROGRAMSTATUS_UNKNOW,
+    IMPROGRAMSTATUS_END = IMPROGRAMSTATUS_PROGRAMCALCEL
+    
+}IMProgramStatus;
+
+
+// int 转换 ProgramNoticeType
+inline IMProgramStatus GetIMProgramStatus(int value) {
+    return IMPROGRAMSTATUS_BEGIN < value && value <= IMPROGRAMSTATUS_END ? (IMProgramStatus)value : IMPROGRAMSTATUS_UNKNOW;
+}
+
+typedef enum {
+    IMPUBLICROOMTYPE_UNKNOW = -1,              // 未知
+    IMPUBLICROOMTYPE_COMMON = 0,              // 普通公开
+    IMPUBLICROOMTYPE_PROGRAM = 1,              // 节目
+    IMPUBLICROOMTYPE_BEGIN = IMPUBLICROOMTYPE_UNKNOW,
+    IMPUBLICROOMTYPE_END = IMPUBLICROOMTYPE_PROGRAM
+    
+}IMPublicRoomType;
+
+// int 转换 IMPublicRoomType
+inline IMPublicRoomType GetIMPublicRoomType(int value) {
+    return IMPUBLICROOMTYPE_BEGIN < value && value <= IMPUBLICROOMTYPE_END ? (IMPublicRoomType)value : IMPUBLICROOMTYPE_UNKNOW;
+}
+
+typedef enum {
+    IMPROGRAMTICKETSTATUS_UNKNOW = -1,     // 未知
+    IMPROGRAMTICKETSTATUS_NOBUY = 0,       // 未购票
+    IMPROGRAMTICKETSTATUSS_BUYED = 1,      // 已购票
+    IMPROGRAMTICKETSTATUS_OUT = 2,         // 已退票
+    IMPROGRAMTICKETSTATUS_BEGIN = IMPROGRAMTICKETSTATUS_UNKNOW,
+    IMPROGRAMTICKETSTATUS_END = IMPROGRAMTICKETSTATUS_OUT
+    
+}IMProgramTicketStatus;
+
+
+// int 转换 ProgramNoticeType
+inline IMProgramTicketStatus GetIMProgramTicketStatus(int value) {
+    return IMPROGRAMTICKETSTATUS_BEGIN < value && value <= IMPROGRAMTICKETSTATUS_END ? (IMProgramTicketStatus)value : IMPROGRAMTICKETSTATUS_UNKNOW;
+}
+
+
+

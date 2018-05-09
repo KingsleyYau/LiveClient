@@ -24,8 +24,23 @@
 #include "ZBRecvInstantInviteUserNoticeTask.h"
 #include "ZBRecvBookingNoticeTask.h"
 #include "ZBRecvSendSystemNoticeTask.h"
+#include "RecvAnchorLeaveRoomNoticeTask.h"
 #include "IZBImClientDef.h"
 #include "ZBRecvInvitationAcceptNoticeTask.h"
+#include "RecvAnchorInvitationHangoutNoticeTask.h"
+#include "RecvAnchorRecommendHangoutNoticeTask.h"
+#include "RecvAnchorDealKnockRequestNoticeTask.h"
+#include "RecvAnchorOtherInviteHangoutNoticeTask.h"
+#include "RecvAnchorDealInviteHangoutNoticeTask.h"
+#include "RecvAnchorEnterHangoutRoomNoticeTask.h"
+#include "RecvAnchorLeaveHangoutRoomNoticeTask.h"
+#include "RecvAnchorChangeVideoUrlTask.h"
+#include "RecvAnchorGiftHangoutNoticeTask.h"
+
+#include "RecvAnchorProgramPlayNoticeTask.h"
+#include "RecvAnchorChangeStatusNoticeTask.h"
+#include "RecvAnchorShowMsgNoticeTask.h"
+
 
 
 // 根据 cmd 创建 task
@@ -51,6 +66,10 @@ IZBTask* IZBTask::CreateTaskWithCmd(const string& cmd)
     else if (cmd == ZB_CMD_RECVLEAVINGPUBLICROOMNOTICE) {
         // 3.8.接收关闭直播间倒数通知
         task = new ZBRecvLeavingPublicRoomNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECVANCHORLEAVEROOMNOTICE) {
+        // 3.9.接收关闭直播间倒数通知
+        task = new RecvAnchorLeaveRoomNoticeTask();
     }
     else if (cmd == ZB_CMD_RECVROOMKICKOFFNOTICE) {
         // 3.5.接收踢出直播间通知
@@ -95,6 +114,55 @@ IZBTask* IZBTask::CreateTaskWithCmd(const string& cmd)
     else if (cmd == ZB_CMD_RECVINVITATIONACCEPTNOTICE) {
         // 9.6.接收观众接受预约通知
         task = new ZBRecvInvitationAcceptNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECEIVEINVITATIONHANGOUTNOTICE) {
+        // 10.3.接收观众邀请多人互动通知
+        task = new RecvAnchorInvitationHangoutNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECEIVERECOMMENDHANGOUTNOTICE) {
+        // 10.4.接收推荐好友通知
+        task = new RecvAnchorRecommendHangoutNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECEIVEDEALKNOCKREQUESTNOTICE) {
+        // 10.5.接收敲门回复通知
+        task = new RecvAnchorDealKnockRequestNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECEIVEOTHERINVITHANGOUTNOTICE) {
+        // 10.6.接收观众邀请其它主播加入多人互动通知
+        task = new RecvAnchorOtherInviteHangoutNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECEIVEDEALINVITATIONHANGOUTNOTICE) {
+        // 10.7.接收主播回复观众多人互动邀请通知
+        task = new RecvAnchorDealInviteHangoutNoticeTask();
+    }
+    else if (cmd == ZB_CMD_ENTERHANGOUTROOMNOTICE) {
+        // 10.8.接收主播回复观众多人互动邀请通知
+        task = new RecvAnchorEnterHangoutRoomNoticeTask();
+    }
+    else if (cmd == ZB_CMD_LEAVEHANGOUTROOMNOTICE) {
+         // 10.9.接收观众/主播退出多人互动直播间通知
+        task = new RecvAnchorLeaveHangoutRoomNoticeTask();
+    }
+    else if (cmd == ZB_CMD_CHANGEVIDEOURL) {
+        // 10.10.接收观众/主播多人互动直播间视频切换通知
+        task = new RecvAnchorChangeVideoUrlTask();
+    }
+    else if (cmd == ZB_CMD_SENDGIFTNOTICE) {
+        // 10.12.接收多人互动直播间礼物通知
+        task = new RecvAnchorGiftHangoutNoticeTask();
+    }
+    
+    else if (cmd == ZB_CMD_RECVANCHORPROGRAMPLAYNOTICE) {
+        // 11.1.节目开播通知
+        task = new RecvAnchorProgramPlayNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECVANCHORSTATUSCHANGENOTICE) {
+        // 11.2.节目取消通知
+        task = new RecvAnchorChangeStatusNoticeTask();
+    }
+    else if (cmd == ZB_CMD_RECVSHOWMSGNOTICE) {
+        // 11.3.接收无操作的提示通知
+        task = new RecvAnchorShowMsgNoticeTask();
     }
 
     return task;

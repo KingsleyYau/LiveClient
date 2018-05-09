@@ -24,7 +24,8 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	private ILSVideoCaptureCallback captureCallback;
 	private int rotation;
 	private int previewRotation;
-	
+	private LSPublishConfig publishConfig;
+
 	/**
 	 * 是否使用前置摄像头
 	 */
@@ -42,13 +43,15 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	}
 	
 	@SuppressLint("NewApi") 
-	public boolean init(GLSurfaceView surfaceView, ILSVideoCaptureCallback callback, int rotation, FillMode fillMode, boolean useHardEncoder) {
+	public boolean init(GLSurfaceView surfaceView, ILSVideoCaptureCallback callback, int rotation, FillMode fillMode, boolean useHardEncoder, LSPublishConfig publishConfig) {
 		boolean bFlag = false;
 		
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::init( this : 0x%x )", hashCode()));
-		
+
+		this.publishConfig = publishConfig;
+
 		// 创建预览渲染器
-		this.previewRenderer = new LSVideoCaptureRenderer(this, fillMode, useHardEncoder);
+		this.previewRenderer = new LSVideoCaptureRenderer(this, fillMode, useHardEncoder, publishConfig);
 		this.previewRenderer.init();
 		
 		// 设置GL预览界面, 按照顺序调用, 否则crash
@@ -215,7 +218,7 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 	
 	/**
 	 * 开启实时预览
-	 * @param holder
+	 * @param
 	 */
 	private boolean startCapture() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCapture::startCapture( this : 0x%x )", hashCode()));
@@ -303,12 +306,12 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 
 				// 是否宽高互换
 				if( isSwitchFrame() ) {
-					if (size.width == LSConfig.VIDEO_CAPTURE_HEIGHT && size.height == LSConfig.VIDEO_CAPTURE_WIDTH) {
+					if (size.width == publishConfig.videoCaptureHeight && size.height == publishConfig.videoCaptureWidth) {
 						bestSize = size;
 						break;
 					}
 				} else {
-					if (size.width == LSConfig.VIDEO_CAPTURE_WIDTH && size.height == LSConfig.VIDEO_CAPTURE_HEIGHT) {
+					if (size.width == publishConfig.videoCaptureWidth && size.height == publishConfig.videoCaptureHeight) {
 						bestSize = size;
 						break;
 					}

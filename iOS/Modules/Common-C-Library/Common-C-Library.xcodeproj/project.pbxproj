@@ -65,33 +65,56 @@
 		509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 509A8DA71ECBE6C1004720CF /* HttpRequestController.cpp */; };
 		50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50AE07211F96FCF6005CF8D2 /* LSCommon_C_Library.mm */; };
 		50F383991EE688AC003D2765 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = 50F383971EE688AC003D2765 /* mongoose.c */; };
-		FA938EB120521D3E00B764CB /* ZBHttpSetAutoPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA938EAF20521D3E00B764CB /* ZBHttpSetAutoPushTask.cpp */; };
-		FA938EC02052359600B764CB /* ZBHttpSetRoomCountDownTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA938EBE2052359600B764CB /* ZBHttpSetRoomCountDownTask.cpp */; };
-		FABB26392047A334005EDF51 /* ZBHttpDealTalentRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26072047A329005EDF51 /* ZBHttpDealTalentRequestTask.cpp */; };
-		FABB263A2047A334005EDF51 /* ZBHttpGetTodayCreditTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB260A2047A329005EDF51 /* ZBHttpGetTodayCreditTask.cpp */; };
-		FABB263B2047A334005EDF51 /* ZBHttpManHandleBookingListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB260B2047A329005EDF51 /* ZBHttpManHandleBookingListTask.cpp */; };
-		FABB263C2047A334005EDF51 /* ZBHttpRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB260C2047A329005EDF51 /* ZBHttpRequestTask.cpp */; };
-		FABB263D2047A334005EDF51 /* ZBHttpLiveFansListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB260F2047A32A005EDF51 /* ZBHttpLiveFansListTask.cpp */; };
-		FABB263E2047A334005EDF51 /* ZBHttpBaseTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26102047A32A005EDF51 /* ZBHttpBaseTask.cpp */; };
-		FABB263F2047A334005EDF51 /* ZBHttpServerSpeedTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26112047A32A005EDF51 /* ZBHttpServerSpeedTask.cpp */; };
-		FABB26402047A334005EDF51 /* ZBHttpAcceptInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26122047A32A005EDF51 /* ZBHttpAcceptInstanceInviteTask.cpp */; };
-		FABB26412047A334005EDF51 /* ZBHttpRejectInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26132047A32A005EDF51 /* ZBHttpRejectInstanceInviteTask.cpp */; };
-		FABB26422047A334005EDF51 /* ZBHttpGetAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26162047A32B005EDF51 /* ZBHttpGetAllGiftListTask.cpp */; };
-		FABB26432047A334005EDF51 /* ZBHttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB261F2047A32D005EDF51 /* ZBHttpRequestController.cpp */; };
-		FABB26442047A334005EDF51 /* ZBHttpGetNewFansBaseInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26202047A32D005EDF51 /* ZBHttpGetNewFansBaseInfoTask.cpp */; };
-		FABB26452047A334005EDF51 /* ZBHttpGetVerificationCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26222047A32D005EDF51 /* ZBHttpGetVerificationCodeTask.cpp */; };
-		FABB26462047A334005EDF51 /* ZBHttpGetGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26232047A32D005EDF51 /* ZBHttpGetGiftDetailTask.cpp */; };
-		FABB26472047A334005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26242047A32E005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */; };
-		FABB26482047A334005EDF51 /* ZBHttpUpdateTokenIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26252047A32E005EDF51 /* ZBHttpUpdateTokenIdTask.cpp */; };
-		FABB26492047A334005EDF51 /* ZBHttpGetEmoticonListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26282047A32F005EDF51 /* ZBHttpGetEmoticonListTask.cpp */; };
-		FABB264A2047A334005EDF51 /* ZBHttpGetScheduledAcceptNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26292047A32F005EDF51 /* ZBHttpGetScheduledAcceptNumTask.cpp */; };
-		FABB264B2047A334005EDF51 /* ZBHttpAcceptScheduledInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB262F2047A330005EDF51 /* ZBHttpAcceptScheduledInviteTask.cpp */; };
-		FABB264C2047A334005EDF51 /* ZBHttpRejectScheduledInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26332047A331005EDF51 /* ZBHttpRejectScheduledInviteTask.cpp */; };
-		FABB264D2047A334005EDF51 /* ZBHttpGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26342047A331005EDF51 /* ZBHttpGiftListTask.cpp */; };
-		FABB264E2047A334005EDF51 /* ZBHttpLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26362047A332005EDF51 /* ZBHttpLoginTask.cpp */; };
-		FABB264F2047A334005EDF51 /* ZBHttpGetConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26382047A332005EDF51 /* ZBHttpGetConfigTask.cpp */; };
-		FABB26522047B2EA005EDF51 /* ZBHttpCrashFileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26502047B2E9005EDF51 /* ZBHttpCrashFileTask.cpp */; };
-		FABB26552047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FABB26532047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.cpp */; };
+		FA031FBA209B015E00BC39B2 /* HttpGetCanHangoutAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB1209B015800BC39B2 /* HttpGetCanHangoutAnchorListTask.cpp */; };
+		FA031FBB209B015E00BC39B2 /* HttpDealKnockRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB4209B015C00BC39B2 /* HttpDealKnockRequestTask.cpp */; };
+		FA031FBC209B015E00BC39B2 /* HttpSendInvitationHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB5209B015D00BC39B2 /* HttpSendInvitationHangoutTask.cpp */; };
+		FA031FBE209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA031FB9209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp */; };
+		FA075CCC209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */; };
+		FA3A97B82060E1FF0004F85A /* ZBHttpDealTalentRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A977E2060E1F40004F85A /* ZBHttpDealTalentRequestTask.cpp */; };
+		FA3A97B92060E1FF0004F85A /* ZBHttpGetConfigTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97812060E1F40004F85A /* ZBHttpGetConfigTask.cpp */; };
+		FA3A97BA2060E1FF0004F85A /* ZBHttpSetAutoPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97822060E1F50004F85A /* ZBHttpSetAutoPushTask.cpp */; };
+		FA3A97BB2060E1FF0004F85A /* ZBHttpManHandleBookingListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97832060E1F50004F85A /* ZBHttpManHandleBookingListTask.cpp */; };
+		FA3A97BC2060E1FF0004F85A /* ZBHttpRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97842060E1F50004F85A /* ZBHttpRequestTask.cpp */; };
+		FA3A97BD2060E1FF0004F85A /* ZBHttpLiveFansListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97872060E1F50004F85A /* ZBHttpLiveFansListTask.cpp */; };
+		FA3A97BE2060E1FF0004F85A /* ZBHttpBaseTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97882060E1F50004F85A /* ZBHttpBaseTask.cpp */; };
+		FA3A97BF2060E1FF0004F85A /* ZBHttpServerSpeedTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97892060E1F60004F85A /* ZBHttpServerSpeedTask.cpp */; };
+		FA3A97C02060E1FF0004F85A /* ZBHttpAcceptInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A978B2060E1F60004F85A /* ZBHttpAcceptInstanceInviteTask.cpp */; };
+		FA3A97C12060E1FF0004F85A /* ZBHttpRejectInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A978D2060E1F70004F85A /* ZBHttpRejectInstanceInviteTask.cpp */; };
+		FA3A97C22060E1FF0004F85A /* ZBHttpCancelInstantInviteUserTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97902060E1F70004F85A /* ZBHttpCancelInstantInviteUserTask.cpp */; };
+		FA3A97C32060E1FF0004F85A /* ZBHttpGetAllGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97912060E1F70004F85A /* ZBHttpGetAllGiftListTask.cpp */; };
+		FA3A97C42060E1FF0004F85A /* ZBHttpSetRoomCountDownTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97962060E1F80004F85A /* ZBHttpSetRoomCountDownTask.cpp */; };
+		FA3A97C52060E1FF0004F85A /* ZBHttpRequestController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A979C2060E1F90004F85A /* ZBHttpRequestController.cpp */; };
+		FA3A97C62060E1FF0004F85A /* ZBHttpGetNewFansBaseInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A979D2060E1FA0004F85A /* ZBHttpGetNewFansBaseInfoTask.cpp */; };
+		FA3A97C72060E1FF0004F85A /* ZBHttpGetVerificationCodeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A979F2060E1FA0004F85A /* ZBHttpGetVerificationCodeTask.cpp */; };
+		FA3A97C82060E1FF0004F85A /* ZBHttpGetGiftDetailTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97A02060E1FA0004F85A /* ZBHttpGetGiftDetailTask.cpp */; };
+		FA3A97C92060E1FF0004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97A12060E1FA0004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */; };
+		FA3A97CA2060E1FF0004F85A /* ZBHttpUpdateTokenIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97A22060E1FB0004F85A /* ZBHttpUpdateTokenIdTask.cpp */; };
+		FA3A97CB2060E1FF0004F85A /* ZBHttpGetEmoticonListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97A52060E1FB0004F85A /* ZBHttpGetEmoticonListTask.cpp */; };
+		FA3A97CC2060E1FF0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97A62060E1FB0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp */; };
+		FA3A97CD2060E1FF0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97AD2060E1FD0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp */; };
+		FA3A97CE2060E1FF0004F85A /* ZBHttpRejectScheduledInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97B12060E1FE0004F85A /* ZBHttpRejectScheduledInviteTask.cpp */; };
+		FA3A97CF2060E1FF0004F85A /* ZBHttpCrashFileTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97B22060E1FE0004F85A /* ZBHttpCrashFileTask.cpp */; };
+		FA3A97D02060E1FF0004F85A /* ZBHttpGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97B32060E1FE0004F85A /* ZBHttpGiftListTask.cpp */; };
+		FA3A97D12060E1FF0004F85A /* ZBHttpLoginTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97B52060E1FE0004F85A /* ZBHttpLoginTask.cpp */; };
+		FA3A97D22060E1FF0004F85A /* ZBHttpGetTodayCreditTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3A97B72060E1FF0004F85A /* ZBHttpGetTodayCreditTask.cpp */; };
+		FA43DEEC2092A7BE00BE5F6C /* HttpShowListWithAnchorIdTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA43DEEA2092A7BD00BE5F6C /* HttpShowListWithAnchorIdTask.cpp */; };
+		FA6E14042086F3BE004F8B92 /* HttpGetNoReadNumProgramTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E14022086F3BD004F8B92 /* HttpGetNoReadNumProgramTask.cpp */; };
+		FA6E141B208726AF004F8B92 /* HttpGetProgramListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E1419208726AE004F8B92 /* HttpGetProgramListTask.cpp */; };
+		FA6E142120872A79004F8B92 /* HttpBuyProgramTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */; };
+		FA6E142420872B16004F8B92 /* HttpChangeFavouriteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E142220872B15004F8B92 /* HttpChangeFavouriteTask.cpp */; };
+		FA7C1DBB208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DBA208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp */; };
+		FA7C1DBE208EDEB500FE5A7B /* HttpAnchorGetNoReadNumProgramTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DBD208EDEB400FE5A7B /* HttpAnchorGetNoReadNumProgramTask.cpp */; };
+		FA7C1DC1208EDF4700FE5A7B /* HttpAnchorCheckIsPlayProgramTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DBF208EDF4600FE5A7B /* HttpAnchorCheckIsPlayProgramTask.cpp */; };
+		FA7C1DC4208EFD4800FE5A7B /* HttpAnchorGetShowRoomInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DC3208EFD4800FE5A7B /* HttpAnchorGetShowRoomInfoTask.cpp */; };
+		FAAB2E222091691C0048E8B1 /* HttpAnchorHangoutGiftListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E14209169170048E8B1 /* HttpAnchorHangoutGiftListTask.cpp */; };
+		FAAB2E232091691C0048E8B1 /* HttpAnchorDealInvitationHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E17209169180048E8B1 /* HttpAnchorDealInvitationHangoutTask.cpp */; };
+		FAAB2E242091691C0048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E18209169190048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp */; };
+		FAAB2E252091691C0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1A2091691A0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.cpp */; };
+		FAAB2E262091691C0048E8B1 /* HttpAnchorSendKnockRequestTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1B2091691A0048E8B1 /* HttpAnchorSendKnockRequestTask.cpp */; };
+		FAAB2E272091691C0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1C2091691A0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp */; };
+		FAAB2E282091691C0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1D2091691A0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp */; };
+		FAAB2E292091691C0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAAB2E1E2091691B0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp */; };
+		FAB60C92208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C90208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp */; };
 		FACE54862044F7CC00CC3B45 /* HttpCloseAdAnchorListTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */; };
 		FACE54872044F7CC00CC3B45 /* HttpBannerTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54842044F7CC00CC3B45 /* HttpBannerTask.cpp */; };
 		FACE54882044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FACE54852044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp */; };
@@ -316,18 +339,126 @@
 		50F383971EE688AC003D2765 /* mongoose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongoose.c; sourceTree = "<group>"; };
 		50F383981EE688AC003D2765 /* mongoose.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongoose.h; sourceTree = "<group>"; };
 		D180B77A1D3CD25D00DCFBA5 /* DeviceTypeDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceTypeDef.h; sourceTree = "<group>"; };
+		FA031FB0209B015800BC39B2 /* HttpDealKnockRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpDealKnockRequestTask.h; sourceTree = "<group>"; };
+		FA031FB1209B015800BC39B2 /* HttpGetCanHangoutAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetCanHangoutAnchorListTask.cpp; sourceTree = "<group>"; };
+		FA031FB2209B015900BC39B2 /* HttpSendInvitationHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpSendInvitationHangoutTask.h; sourceTree = "<group>"; };
+		FA031FB3209B015900BC39B2 /* HttpGetHangoutInvitStatusTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetHangoutInvitStatusTask.h; sourceTree = "<group>"; };
+		FA031FB4209B015C00BC39B2 /* HttpDealKnockRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpDealKnockRequestTask.cpp; sourceTree = "<group>"; };
+		FA031FB5209B015D00BC39B2 /* HttpSendInvitationHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpSendInvitationHangoutTask.cpp; sourceTree = "<group>"; };
+		FA031FB8209B015E00BC39B2 /* HttpGetCanHangoutAnchorListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetCanHangoutAnchorListTask.h; sourceTree = "<group>"; };
+		FA031FB9209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetHangoutInvitStatusTask.cpp; sourceTree = "<group>"; };
+		FA031FBF209B016A00BC39B2 /* HttpHangoutAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpHangoutAnchorItem.h; sourceTree = "<group>"; };
+		FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCancelInviteHangoutTask.cpp; sourceTree = "<group>"; };
+		FA075CCB209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpCancelInviteHangoutTask.h; sourceTree = "<group>"; };
 		FA0F73A520182CC400711670 /* HttpVoucherInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpVoucherInfoItem.h; sourceTree = "<group>"; };
+		FA3A977E2060E1F40004F85A /* ZBHttpDealTalentRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpDealTalentRequestTask.cpp; sourceTree = "<group>"; };
+		FA3A977F2060E1F40004F85A /* ZBHttpGetConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetConfigTask.h; sourceTree = "<group>"; };
+		FA3A97802060E1F40004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpManBookingUnreadUnhandleNumTask.h; sourceTree = "<group>"; };
+		FA3A97812060E1F40004F85A /* ZBHttpGetConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetConfigTask.cpp; sourceTree = "<group>"; };
+		FA3A97822060E1F50004F85A /* ZBHttpSetAutoPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpSetAutoPushTask.cpp; sourceTree = "<group>"; };
+		FA3A97832060E1F50004F85A /* ZBHttpManHandleBookingListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpManHandleBookingListTask.cpp; sourceTree = "<group>"; };
+		FA3A97842060E1F50004F85A /* ZBHttpRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRequestTask.cpp; sourceTree = "<group>"; };
+		FA3A97852060E1F50004F85A /* ZBHttpDealTalentRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpDealTalentRequestTask.h; sourceTree = "<group>"; };
+		FA3A97862060E1F50004F85A /* ZBHttpBaseTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBaseTask.h; sourceTree = "<group>"; };
+		FA3A97872060E1F50004F85A /* ZBHttpLiveFansListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpLiveFansListTask.cpp; sourceTree = "<group>"; };
+		FA3A97882060E1F50004F85A /* ZBHttpBaseTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpBaseTask.cpp; sourceTree = "<group>"; };
+		FA3A97892060E1F60004F85A /* ZBHttpServerSpeedTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpServerSpeedTask.cpp; sourceTree = "<group>"; };
+		FA3A978A2060E1F60004F85A /* ZBHttpSetAutoPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpSetAutoPushTask.h; sourceTree = "<group>"; };
+		FA3A978B2060E1F60004F85A /* ZBHttpAcceptInstanceInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpAcceptInstanceInviteTask.cpp; sourceTree = "<group>"; };
+		FA3A978C2060E1F60004F85A /* ZBHttpCancelInstantInviteUserTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpCancelInstantInviteUserTask.h; sourceTree = "<group>"; };
+		FA3A978D2060E1F70004F85A /* ZBHttpRejectInstanceInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRejectInstanceInviteTask.cpp; sourceTree = "<group>"; };
+		FA3A978E2060E1F70004F85A /* ZBHttpRejectInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRejectInstanceInviteTask.h; sourceTree = "<group>"; };
+		FA3A978F2060E1F70004F85A /* ZBHttpLoginProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLoginProtocol.h; sourceTree = "<group>"; };
+		FA3A97902060E1F70004F85A /* ZBHttpCancelInstantInviteUserTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpCancelInstantInviteUserTask.cpp; sourceTree = "<group>"; };
+		FA3A97912060E1F70004F85A /* ZBHttpGetAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetAllGiftListTask.cpp; sourceTree = "<group>"; };
+		FA3A97922060E1F70004F85A /* ZBHttpGetVerificationCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetVerificationCodeTask.h; sourceTree = "<group>"; };
+		FA3A97932060E1F80004F85A /* ZBHttpRejectScheduledInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRejectScheduledInviteTask.h; sourceTree = "<group>"; };
+		FA3A97942060E1F80004F85A /* ZBHttpRequestDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestDefine.h; sourceTree = "<group>"; };
+		FA3A97952060E1F80004F85A /* ZBHttpGetTodayCreditTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetTodayCreditTask.h; sourceTree = "<group>"; };
+		FA3A97962060E1F80004F85A /* ZBHttpSetRoomCountDownTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpSetRoomCountDownTask.cpp; sourceTree = "<group>"; };
+		FA3A97972060E1F80004F85A /* ZBHttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
+		FA3A97982060E1F90004F85A /* ZBHttpGetScheduledAcceptNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetScheduledAcceptNumTask.h; sourceTree = "<group>"; };
+		FA3A97992060E1F90004F85A /* ZBHttpServerSpeedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpServerSpeedTask.h; sourceTree = "<group>"; };
+		FA3A979A2060E1F90004F85A /* ZBHttpSetRoomCountDownTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpSetRoomCountDownTask.h; sourceTree = "<group>"; };
+		FA3A979B2060E1F90004F85A /* ZBHttpRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestTask.h; sourceTree = "<group>"; };
+		FA3A979C2060E1F90004F85A /* ZBHttpRequestController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRequestController.cpp; sourceTree = "<group>"; };
+		FA3A979D2060E1FA0004F85A /* ZBHttpGetNewFansBaseInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetNewFansBaseInfoTask.cpp; sourceTree = "<group>"; };
+		FA3A979E2060E1FA0004F85A /* ZBHttpLiveFansListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLiveFansListTask.h; sourceTree = "<group>"; };
+		FA3A979F2060E1FA0004F85A /* ZBHttpGetVerificationCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetVerificationCodeTask.cpp; sourceTree = "<group>"; };
+		FA3A97A02060E1FA0004F85A /* ZBHttpGetGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetGiftDetailTask.cpp; sourceTree = "<group>"; };
+		FA3A97A12060E1FA0004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpManBookingUnreadUnhandleNumTask.cpp; sourceTree = "<group>"; };
+		FA3A97A22060E1FB0004F85A /* ZBHttpUpdateTokenIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpUpdateTokenIdTask.cpp; sourceTree = "<group>"; };
+		FA3A97A32060E1FB0004F85A /* IZBHttpTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IZBHttpTask.h; sourceTree = "<group>"; };
+		FA3A97A42060E1FB0004F85A /* ZBHttpManHandleBookingListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpManHandleBookingListTask.h; sourceTree = "<group>"; };
+		FA3A97A52060E1FB0004F85A /* ZBHttpGetEmoticonListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetEmoticonListTask.cpp; sourceTree = "<group>"; };
+		FA3A97A62060E1FB0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetScheduledAcceptNumTask.cpp; sourceTree = "<group>"; };
+		FA3A97A72060E1FC0004F85A /* ZBHttpAcceptScheduledInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpAcceptScheduledInviteTask.h; sourceTree = "<group>"; };
+		FA3A97A82060E1FC0004F85A /* ZBHttpGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGiftListTask.h; sourceTree = "<group>"; };
+		FA3A97A92060E1FC0004F85A /* ZBHttpRequestEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestEnum.h; sourceTree = "<group>"; };
+		FA3A97AA2060E1FC0004F85A /* ZBHttpCrashFileTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpCrashFileTask.h; sourceTree = "<group>"; };
+		FA3A97AB2060E1FC0004F85A /* ZBHttpGetNewFansBaseInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetNewFansBaseInfoTask.h; sourceTree = "<group>"; };
+		FA3A97AC2060E1FD0004F85A /* ZBHttpGetAllGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetAllGiftListTask.h; sourceTree = "<group>"; };
+		FA3A97AD2060E1FD0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpAcceptScheduledInviteTask.cpp; sourceTree = "<group>"; };
+		FA3A97AE2060E1FD0004F85A /* ZBHttpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestController.h; sourceTree = "<group>"; };
+		FA3A97AF2060E1FD0004F85A /* ZBHttpLoginTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLoginTask.h; sourceTree = "<group>"; };
+		FA3A97B02060E1FD0004F85A /* ZBHttpUpdateTokenIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpUpdateTokenIdTask.h; sourceTree = "<group>"; };
+		FA3A97B12060E1FE0004F85A /* ZBHttpRejectScheduledInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRejectScheduledInviteTask.cpp; sourceTree = "<group>"; };
+		FA3A97B22060E1FE0004F85A /* ZBHttpCrashFileTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpCrashFileTask.cpp; sourceTree = "<group>"; };
+		FA3A97B32060E1FE0004F85A /* ZBHttpGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGiftListTask.cpp; sourceTree = "<group>"; };
+		FA3A97B42060E1FE0004F85A /* ZBHttpGetGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetGiftDetailTask.h; sourceTree = "<group>"; };
+		FA3A97B52060E1FE0004F85A /* ZBHttpLoginTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpLoginTask.cpp; sourceTree = "<group>"; };
+		FA3A97B62060E1FF0004F85A /* ZBHttpGetEmoticonListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetEmoticonListTask.h; sourceTree = "<group>"; };
+		FA3A97B72060E1FF0004F85A /* ZBHttpGetTodayCreditTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetTodayCreditTask.cpp; sourceTree = "<group>"; };
+		FA43DEEA2092A7BD00BE5F6C /* HttpShowListWithAnchorIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpShowListWithAnchorIdTask.cpp; sourceTree = "<group>"; };
+		FA43DEEB2092A7BE00BE5F6C /* HttpShowListWithAnchorIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpShowListWithAnchorIdTask.h; sourceTree = "<group>"; };
 		FA57B1921FA966A60092EA2F /* HttpAnchorInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorInfoItem.h; sourceTree = "<group>"; };
 		FA57B1931FA966A60092EA2F /* HttpUserInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpUserInfoItem.h; sourceTree = "<group>"; };
+		FA6E14022086F3BD004F8B92 /* HttpGetNoReadNumProgramTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetNoReadNumProgramTask.cpp; sourceTree = "<group>"; };
+		FA6E14032086F3BD004F8B92 /* HttpGetNoReadNumProgramTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetNoReadNumProgramTask.h; sourceTree = "<group>"; };
+		FA6E1419208726AE004F8B92 /* HttpGetProgramListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetProgramListTask.cpp; sourceTree = "<group>"; };
+		FA6E141A208726AF004F8B92 /* HttpGetProgramListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetProgramListTask.h; sourceTree = "<group>"; };
+		FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpBuyProgramTask.cpp; sourceTree = "<group>"; };
+		FA6E142020872A79004F8B92 /* HttpBuyProgramTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBuyProgramTask.h; sourceTree = "<group>"; };
+		FA6E142220872B15004F8B92 /* HttpChangeFavouriteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpChangeFavouriteTask.cpp; sourceTree = "<group>"; };
+		FA6E142320872B15004F8B92 /* HttpChangeFavouriteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpChangeFavouriteTask.h; sourceTree = "<group>"; };
+		FA6E142F208740BE004F8B92 /* HttpProgramInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpProgramInfoItem.h; sourceTree = "<group>"; };
+		FA7C1DAA208EC0AE00FE5A7B /* HttpAnchorProgramInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorProgramInfoItem.h; sourceTree = "<group>"; };
+		FA7C1DB9208EDB6300FE5A7B /* HttpAnchorGetProgramListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetProgramListTask.h; sourceTree = "<group>"; };
+		FA7C1DBA208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetProgramListTask.cpp; sourceTree = "<group>"; };
+		FA7C1DBC208EDEB400FE5A7B /* HttpAnchorGetNoReadNumProgramTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetNoReadNumProgramTask.h; sourceTree = "<group>"; };
+		FA7C1DBD208EDEB400FE5A7B /* HttpAnchorGetNoReadNumProgramTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetNoReadNumProgramTask.cpp; sourceTree = "<group>"; };
+		FA7C1DBF208EDF4600FE5A7B /* HttpAnchorCheckIsPlayProgramTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorCheckIsPlayProgramTask.cpp; sourceTree = "<group>"; };
+		FA7C1DC0208EDF4700FE5A7B /* HttpAnchorCheckIsPlayProgramTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorCheckIsPlayProgramTask.h; sourceTree = "<group>"; };
+		FA7C1DC2208EFD4700FE5A7B /* HttpAnchorGetShowRoomInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetShowRoomInfoTask.h; sourceTree = "<group>"; };
+		FA7C1DC3208EFD4800FE5A7B /* HttpAnchorGetShowRoomInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetShowRoomInfoTask.cpp; sourceTree = "<group>"; };
 		FA86E4C01FECF4D30062735C /* HttpProductItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpProductItem.h; sourceTree = "<group>"; };
 		FA86E4C51FECFB650062735C /* HttpOrderProductItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpOrderProductItem.h; sourceTree = "<group>"; };
 		FA92A5A41F6694AB004F239F /* HttpAcceptInstanceInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteItem.h; sourceTree = "<group>"; };
-		FA938EAF20521D3E00B764CB /* ZBHttpSetAutoPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpSetAutoPushTask.cpp; sourceTree = "<group>"; };
-		FA938EB020521D3E00B764CB /* ZBHttpSetAutoPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpSetAutoPushTask.h; sourceTree = "<group>"; };
-		FA938EBE2052359600B764CB /* ZBHttpSetRoomCountDownTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpSetRoomCountDownTask.cpp; sourceTree = "<group>"; };
-		FA938EBF2052359600B764CB /* ZBHttpSetRoomCountDownTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpSetRoomCountDownTask.h; sourceTree = "<group>"; };
 		FA9C1A0A1F7492E7007241E1 /* HttpLiveFansInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveFansInfoItem.h; sourceTree = "<group>"; };
 		FA9D925D1FCCF69C007630D1 /* HttpLiveShowLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpLiveShowLog.h; sourceTree = "<group>"; };
+		FAAB2E12209169160048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorRecommendFriendJoinHangoutTask.h; sourceTree = "<group>"; };
+		FAAB2E13209169170048E8B1 /* HttpAnchorDealInvitationHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorDealInvitationHangoutTask.h; sourceTree = "<group>"; };
+		FAAB2E14209169170048E8B1 /* HttpAnchorHangoutGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorHangoutGiftListTask.cpp; sourceTree = "<group>"; };
+		FAAB2E15209169170048E8B1 /* HttpAnchorHangoutGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorHangoutGiftListTask.h; sourceTree = "<group>"; };
+		FAAB2E16209169170048E8B1 /* HttpAnchorGetOngoingHangoutListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetOngoingHangoutListTask.h; sourceTree = "<group>"; };
+		FAAB2E17209169180048E8B1 /* HttpAnchorDealInvitationHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorDealInvitationHangoutTask.cpp; sourceTree = "<group>"; };
+		FAAB2E18209169190048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorCancelHangoutKnockTask.cpp; sourceTree = "<group>"; };
+		FAAB2E192091691A0048E8B1 /* HttpAnchorCancelHangoutKnockTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorCancelHangoutKnockTask.h; sourceTree = "<group>"; };
+		FAAB2E1A2091691A0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetHangoutKnockStatusTask.cpp; sourceTree = "<group>"; };
+		FAAB2E1B2091691A0048E8B1 /* HttpAnchorSendKnockRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorSendKnockRequestTask.cpp; sourceTree = "<group>"; };
+		FAAB2E1C2091691A0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetOngoingHangoutListTask.cpp; sourceTree = "<group>"; };
+		FAAB2E1D2091691A0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorGetCanRecommendFriendListTask.cpp; sourceTree = "<group>"; };
+		FAAB2E1E2091691B0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpAnchorRecommendFriendJoinHangoutTask.cpp; sourceTree = "<group>"; };
+		FAAB2E1F2091691B0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetHangoutKnockStatusTask.h; sourceTree = "<group>"; };
+		FAAB2E202091691C0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGetCanRecommendFriendListTask.h; sourceTree = "<group>"; };
+		FAAB2E212091691C0048E8B1 /* HttpAnchorSendKnockRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorSendKnockRequestTask.h; sourceTree = "<group>"; };
+		FAAB2E2A209169260048E8B1 /* HttpAnchorHangoutItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorHangoutItem.h; sourceTree = "<group>"; };
+		FAAB2E2B209169260048E8B1 /* HttpAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorItem.h; sourceTree = "<group>"; };
+		FAAB2E2C209169260048E8B1 /* HttpAnchorBaseInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorBaseInfoItem.h; sourceTree = "<group>"; };
+		FAAB2E2D209169260048E8B1 /* HttpAnchorHangoutGiftListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorHangoutGiftListItem.h; sourceTree = "<group>"; };
+		FAAB2E2E209169260048E8B1 /* HttpAnchorGiftNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAnchorGiftNumItem.h; sourceTree = "<group>"; };
+		FAB60C90208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpGetShowRoomInfoTask.cpp; sourceTree = "<group>"; };
+		FAB60C91208DA9D800901BBD /* HttpGetShowRoomInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetShowRoomInfoTask.h; sourceTree = "<group>"; };
 		FAB6940C1F5E90B0008A64B6 /* HttpGetPromoAnchorItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpGetPromoAnchorItem.h; sourceTree = "<group>"; };
 		FABB25FA2047A31F005EDF51 /* ZBHttpBookingPrivateInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBookingPrivateInviteItem.h; sourceTree = "<group>"; };
 		FABB25FB2047A31F005EDF51 /* ZBHttpGiftLimitNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGiftLimitNumItem.h; sourceTree = "<group>"; };
@@ -342,60 +473,6 @@
 		FABB26042047A320005EDF51 /* ZBHttpEmoticonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpEmoticonItem.h; sourceTree = "<group>"; };
 		FABB26052047A320005EDF51 /* ZBHttpSvrItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpSvrItem.h; sourceTree = "<group>"; };
 		FABB26062047A320005EDF51 /* ZBHttpBookingInviteListItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBookingInviteListItem.h; sourceTree = "<group>"; };
-		FABB26072047A329005EDF51 /* ZBHttpDealTalentRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpDealTalentRequestTask.cpp; sourceTree = "<group>"; };
-		FABB26082047A329005EDF51 /* ZBHttpGetConfigTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetConfigTask.h; sourceTree = "<group>"; };
-		FABB26092047A329005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpManBookingUnreadUnhandleNumTask.h; sourceTree = "<group>"; };
-		FABB260A2047A329005EDF51 /* ZBHttpGetTodayCreditTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetTodayCreditTask.cpp; sourceTree = "<group>"; };
-		FABB260B2047A329005EDF51 /* ZBHttpManHandleBookingListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpManHandleBookingListTask.cpp; sourceTree = "<group>"; };
-		FABB260C2047A329005EDF51 /* ZBHttpRequestTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRequestTask.cpp; sourceTree = "<group>"; };
-		FABB260D2047A329005EDF51 /* ZBHttpDealTalentRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpDealTalentRequestTask.h; sourceTree = "<group>"; };
-		FABB260E2047A329005EDF51 /* ZBHttpBaseTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpBaseTask.h; sourceTree = "<group>"; };
-		FABB260F2047A32A005EDF51 /* ZBHttpLiveFansListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpLiveFansListTask.cpp; sourceTree = "<group>"; };
-		FABB26102047A32A005EDF51 /* ZBHttpBaseTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpBaseTask.cpp; sourceTree = "<group>"; };
-		FABB26112047A32A005EDF51 /* ZBHttpServerSpeedTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpServerSpeedTask.cpp; sourceTree = "<group>"; };
-		FABB26122047A32A005EDF51 /* ZBHttpAcceptInstanceInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpAcceptInstanceInviteTask.cpp; sourceTree = "<group>"; };
-		FABB26132047A32A005EDF51 /* ZBHttpRejectInstanceInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRejectInstanceInviteTask.cpp; sourceTree = "<group>"; };
-		FABB26142047A32A005EDF51 /* ZBHttpRejectInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRejectInstanceInviteTask.h; sourceTree = "<group>"; };
-		FABB26152047A32B005EDF51 /* ZBHttpLoginProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLoginProtocol.h; sourceTree = "<group>"; };
-		FABB26162047A32B005EDF51 /* ZBHttpGetAllGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetAllGiftListTask.cpp; sourceTree = "<group>"; };
-		FABB26172047A32B005EDF51 /* ZBHttpGetVerificationCodeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetVerificationCodeTask.h; sourceTree = "<group>"; };
-		FABB26182047A32B005EDF51 /* ZBHttpRejectScheduledInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRejectScheduledInviteTask.h; sourceTree = "<group>"; };
-		FABB26192047A32B005EDF51 /* ZBHttpGetTodayCreditTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetTodayCreditTask.h; sourceTree = "<group>"; };
-		FABB261A2047A32C005EDF51 /* ZBHttpRequestDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestDefine.h; sourceTree = "<group>"; };
-		FABB261B2047A32C005EDF51 /* ZBHttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
-		FABB261C2047A32C005EDF51 /* ZBHttpGetScheduledAcceptNumTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetScheduledAcceptNumTask.h; sourceTree = "<group>"; };
-		FABB261D2047A32C005EDF51 /* ZBHttpServerSpeedTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpServerSpeedTask.h; sourceTree = "<group>"; };
-		FABB261E2047A32C005EDF51 /* ZBHttpRequestTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestTask.h; sourceTree = "<group>"; };
-		FABB261F2047A32D005EDF51 /* ZBHttpRequestController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRequestController.cpp; sourceTree = "<group>"; };
-		FABB26202047A32D005EDF51 /* ZBHttpGetNewFansBaseInfoTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetNewFansBaseInfoTask.cpp; sourceTree = "<group>"; };
-		FABB26212047A32D005EDF51 /* ZBHttpLiveFansListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLiveFansListTask.h; sourceTree = "<group>"; };
-		FABB26222047A32D005EDF51 /* ZBHttpGetVerificationCodeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetVerificationCodeTask.cpp; sourceTree = "<group>"; };
-		FABB26232047A32D005EDF51 /* ZBHttpGetGiftDetailTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetGiftDetailTask.cpp; sourceTree = "<group>"; };
-		FABB26242047A32E005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpManBookingUnreadUnhandleNumTask.cpp; sourceTree = "<group>"; };
-		FABB26252047A32E005EDF51 /* ZBHttpUpdateTokenIdTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpUpdateTokenIdTask.cpp; sourceTree = "<group>"; };
-		FABB26262047A32E005EDF51 /* IZBHttpTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IZBHttpTask.h; sourceTree = "<group>"; };
-		FABB26272047A32E005EDF51 /* ZBHttpManHandleBookingListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpManHandleBookingListTask.h; sourceTree = "<group>"; };
-		FABB26282047A32F005EDF51 /* ZBHttpGetEmoticonListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetEmoticonListTask.cpp; sourceTree = "<group>"; };
-		FABB26292047A32F005EDF51 /* ZBHttpGetScheduledAcceptNumTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetScheduledAcceptNumTask.cpp; sourceTree = "<group>"; };
-		FABB262A2047A32F005EDF51 /* ZBHttpAcceptScheduledInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpAcceptScheduledInviteTask.h; sourceTree = "<group>"; };
-		FABB262B2047A32F005EDF51 /* ZBHttpGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGiftListTask.h; sourceTree = "<group>"; };
-		FABB262C2047A32F005EDF51 /* ZBHttpRequestEnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestEnum.h; sourceTree = "<group>"; };
-		FABB262D2047A330005EDF51 /* ZBHttpGetNewFansBaseInfoTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetNewFansBaseInfoTask.h; sourceTree = "<group>"; };
-		FABB262E2047A330005EDF51 /* ZBHttpGetAllGiftListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetAllGiftListTask.h; sourceTree = "<group>"; };
-		FABB262F2047A330005EDF51 /* ZBHttpAcceptScheduledInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpAcceptScheduledInviteTask.cpp; sourceTree = "<group>"; };
-		FABB26302047A330005EDF51 /* ZBHttpRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpRequestController.h; sourceTree = "<group>"; };
-		FABB26312047A331005EDF51 /* ZBHttpLoginTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpLoginTask.h; sourceTree = "<group>"; };
-		FABB26322047A331005EDF51 /* ZBHttpUpdateTokenIdTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpUpdateTokenIdTask.h; sourceTree = "<group>"; };
-		FABB26332047A331005EDF51 /* ZBHttpRejectScheduledInviteTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpRejectScheduledInviteTask.cpp; sourceTree = "<group>"; };
-		FABB26342047A331005EDF51 /* ZBHttpGiftListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGiftListTask.cpp; sourceTree = "<group>"; };
-		FABB26352047A332005EDF51 /* ZBHttpGetGiftDetailTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetGiftDetailTask.h; sourceTree = "<group>"; };
-		FABB26362047A332005EDF51 /* ZBHttpLoginTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpLoginTask.cpp; sourceTree = "<group>"; };
-		FABB26372047A332005EDF51 /* ZBHttpGetEmoticonListTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpGetEmoticonListTask.h; sourceTree = "<group>"; };
-		FABB26382047A332005EDF51 /* ZBHttpGetConfigTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpGetConfigTask.cpp; sourceTree = "<group>"; };
-		FABB26502047B2E9005EDF51 /* ZBHttpCrashFileTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpCrashFileTask.cpp; sourceTree = "<group>"; };
-		FABB26512047B2E9005EDF51 /* ZBHttpCrashFileTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpCrashFileTask.h; sourceTree = "<group>"; };
-		FABB26532047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZBHttpCancelInstantInviteUserTask.cpp; sourceTree = "<group>"; };
-		FABB26542047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBHttpCancelInstantInviteUserTask.h; sourceTree = "<group>"; };
 		FACE54812044F7CB00CC3B45 /* HttpBannerTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpBannerTask.h; sourceTree = "<group>"; };
 		FACE54822044F7CB00CC3B45 /* HttpCloseAdAnchorListTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpCloseAdAnchorListTask.cpp; sourceTree = "<group>"; };
 		FACE54832044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpAcceptInstanceInviteTask.h; sourceTree = "<group>"; };
@@ -526,6 +603,28 @@
 		5007B1D81ECAA9F000C2C17F /* httpcontroller */ = {
 			isa = PBXGroup;
 			children = (
+				FA075CCA209C51F900AF2E04 /* HttpCancelInviteHangoutTask.cpp */,
+				FA075CCB209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.h */,
+				FA031FB4209B015C00BC39B2 /* HttpDealKnockRequestTask.cpp */,
+				FA031FB0209B015800BC39B2 /* HttpDealKnockRequestTask.h */,
+				FA031FB1209B015800BC39B2 /* HttpGetCanHangoutAnchorListTask.cpp */,
+				FA031FB8209B015E00BC39B2 /* HttpGetCanHangoutAnchorListTask.h */,
+				FA031FB9209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp */,
+				FA031FB3209B015900BC39B2 /* HttpGetHangoutInvitStatusTask.h */,
+				FA031FB5209B015D00BC39B2 /* HttpSendInvitationHangoutTask.cpp */,
+				FA031FB2209B015900BC39B2 /* HttpSendInvitationHangoutTask.h */,
+				FA43DEEA2092A7BD00BE5F6C /* HttpShowListWithAnchorIdTask.cpp */,
+				FA43DEEB2092A7BE00BE5F6C /* HttpShowListWithAnchorIdTask.h */,
+				FAB60C90208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp */,
+				FAB60C91208DA9D800901BBD /* HttpGetShowRoomInfoTask.h */,
+				FA6E142220872B15004F8B92 /* HttpChangeFavouriteTask.cpp */,
+				FA6E142320872B15004F8B92 /* HttpChangeFavouriteTask.h */,
+				FA6E141F20872A79004F8B92 /* HttpBuyProgramTask.cpp */,
+				FA6E142020872A79004F8B92 /* HttpBuyProgramTask.h */,
+				FA6E1419208726AE004F8B92 /* HttpGetProgramListTask.cpp */,
+				FA6E141A208726AF004F8B92 /* HttpGetProgramListTask.h */,
+				FA6E14022086F3BD004F8B92 /* HttpGetNoReadNumProgramTask.cpp */,
+				FA6E14032086F3BD004F8B92 /* HttpGetNoReadNumProgramTask.h */,
 				FACE54B32044F7E500CC3B45 /* HttpCloseAdAnchorListTask.h */,
 				FACE54E62044F7EF00CC3B45 /* HttpControlManPushTask.cpp */,
 				FACE54DC2044F7ED00CC3B45 /* HttpControlManPushTask.h */,
@@ -657,6 +756,8 @@
 		5007B1E41ECAB05700C2C17F /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FA031FBF209B016A00BC39B2 /* HttpHangoutAnchorItem.h */,
+				FA6E142F208740BE004F8B92 /* HttpProgramInfoItem.h */,
 				FA0F73A520182CC400711670 /* HttpVoucherInfoItem.h */,
 				FAF074C01FEE034D009B863F /* HttpManBaseInfoItem.h */,
 				FA86E4C51FECFB650062735C /* HttpOrderProductItem.h */,
@@ -948,64 +1049,88 @@
 		FABB254B20479DDA005EDF51 /* anchorhttpcontroller */ = {
 			isa = PBXGroup;
 			children = (
-				FA938EBE2052359600B764CB /* ZBHttpSetRoomCountDownTask.cpp */,
-				FA938EBF2052359600B764CB /* ZBHttpSetRoomCountDownTask.h */,
-				FA938EAF20521D3E00B764CB /* ZBHttpSetAutoPushTask.cpp */,
-				FA938EB020521D3E00B764CB /* ZBHttpSetAutoPushTask.h */,
-				FABB26532047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.cpp */,
-				FABB26542047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.h */,
-				FABB26502047B2E9005EDF51 /* ZBHttpCrashFileTask.cpp */,
-				FABB26512047B2E9005EDF51 /* ZBHttpCrashFileTask.h */,
-				FABB26262047A32E005EDF51 /* IZBHttpTask.h */,
-				FABB26122047A32A005EDF51 /* ZBHttpAcceptInstanceInviteTask.cpp */,
-				FABB261B2047A32C005EDF51 /* ZBHttpAcceptInstanceInviteTask.h */,
-				FABB262F2047A330005EDF51 /* ZBHttpAcceptScheduledInviteTask.cpp */,
-				FABB262A2047A32F005EDF51 /* ZBHttpAcceptScheduledInviteTask.h */,
-				FABB26102047A32A005EDF51 /* ZBHttpBaseTask.cpp */,
-				FABB260E2047A329005EDF51 /* ZBHttpBaseTask.h */,
-				FABB26072047A329005EDF51 /* ZBHttpDealTalentRequestTask.cpp */,
-				FABB260D2047A329005EDF51 /* ZBHttpDealTalentRequestTask.h */,
-				FABB26162047A32B005EDF51 /* ZBHttpGetAllGiftListTask.cpp */,
-				FABB262E2047A330005EDF51 /* ZBHttpGetAllGiftListTask.h */,
-				FABB26382047A332005EDF51 /* ZBHttpGetConfigTask.cpp */,
-				FABB26082047A329005EDF51 /* ZBHttpGetConfigTask.h */,
-				FABB26282047A32F005EDF51 /* ZBHttpGetEmoticonListTask.cpp */,
-				FABB26372047A332005EDF51 /* ZBHttpGetEmoticonListTask.h */,
-				FABB26232047A32D005EDF51 /* ZBHttpGetGiftDetailTask.cpp */,
-				FABB26352047A332005EDF51 /* ZBHttpGetGiftDetailTask.h */,
-				FABB26202047A32D005EDF51 /* ZBHttpGetNewFansBaseInfoTask.cpp */,
-				FABB262D2047A330005EDF51 /* ZBHttpGetNewFansBaseInfoTask.h */,
-				FABB26292047A32F005EDF51 /* ZBHttpGetScheduledAcceptNumTask.cpp */,
-				FABB261C2047A32C005EDF51 /* ZBHttpGetScheduledAcceptNumTask.h */,
-				FABB260A2047A329005EDF51 /* ZBHttpGetTodayCreditTask.cpp */,
-				FABB26192047A32B005EDF51 /* ZBHttpGetTodayCreditTask.h */,
-				FABB26222047A32D005EDF51 /* ZBHttpGetVerificationCodeTask.cpp */,
-				FABB26172047A32B005EDF51 /* ZBHttpGetVerificationCodeTask.h */,
-				FABB26342047A331005EDF51 /* ZBHttpGiftListTask.cpp */,
-				FABB262B2047A32F005EDF51 /* ZBHttpGiftListTask.h */,
-				FABB260F2047A32A005EDF51 /* ZBHttpLiveFansListTask.cpp */,
-				FABB26212047A32D005EDF51 /* ZBHttpLiveFansListTask.h */,
-				FABB26152047A32B005EDF51 /* ZBHttpLoginProtocol.h */,
-				FABB26362047A332005EDF51 /* ZBHttpLoginTask.cpp */,
-				FABB26312047A331005EDF51 /* ZBHttpLoginTask.h */,
-				FABB26242047A32E005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */,
-				FABB26092047A329005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.h */,
-				FABB260B2047A329005EDF51 /* ZBHttpManHandleBookingListTask.cpp */,
-				FABB26272047A32E005EDF51 /* ZBHttpManHandleBookingListTask.h */,
-				FABB26132047A32A005EDF51 /* ZBHttpRejectInstanceInviteTask.cpp */,
-				FABB26142047A32A005EDF51 /* ZBHttpRejectInstanceInviteTask.h */,
-				FABB26332047A331005EDF51 /* ZBHttpRejectScheduledInviteTask.cpp */,
-				FABB26182047A32B005EDF51 /* ZBHttpRejectScheduledInviteTask.h */,
-				FABB261F2047A32D005EDF51 /* ZBHttpRequestController.cpp */,
-				FABB26302047A330005EDF51 /* ZBHttpRequestController.h */,
-				FABB261A2047A32C005EDF51 /* ZBHttpRequestDefine.h */,
-				FABB262C2047A32F005EDF51 /* ZBHttpRequestEnum.h */,
-				FABB260C2047A329005EDF51 /* ZBHttpRequestTask.cpp */,
-				FABB261E2047A32C005EDF51 /* ZBHttpRequestTask.h */,
-				FABB26112047A32A005EDF51 /* ZBHttpServerSpeedTask.cpp */,
-				FABB261D2047A32C005EDF51 /* ZBHttpServerSpeedTask.h */,
-				FABB26252047A32E005EDF51 /* ZBHttpUpdateTokenIdTask.cpp */,
-				FABB26322047A331005EDF51 /* ZBHttpUpdateTokenIdTask.h */,
+				FAAB2E18209169190048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp */,
+				FAAB2E192091691A0048E8B1 /* HttpAnchorCancelHangoutKnockTask.h */,
+				FAAB2E17209169180048E8B1 /* HttpAnchorDealInvitationHangoutTask.cpp */,
+				FAAB2E13209169170048E8B1 /* HttpAnchorDealInvitationHangoutTask.h */,
+				FAAB2E1D2091691A0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp */,
+				FAAB2E202091691C0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.h */,
+				FAAB2E1A2091691A0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.cpp */,
+				FAAB2E1F2091691B0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.h */,
+				FAAB2E1C2091691A0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp */,
+				FAAB2E16209169170048E8B1 /* HttpAnchorGetOngoingHangoutListTask.h */,
+				FAAB2E14209169170048E8B1 /* HttpAnchorHangoutGiftListTask.cpp */,
+				FAAB2E15209169170048E8B1 /* HttpAnchorHangoutGiftListTask.h */,
+				FAAB2E1E2091691B0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp */,
+				FAAB2E12209169160048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.h */,
+				FAAB2E1B2091691A0048E8B1 /* HttpAnchorSendKnockRequestTask.cpp */,
+				FAAB2E212091691C0048E8B1 /* HttpAnchorSendKnockRequestTask.h */,
+				FA7C1DC3208EFD4800FE5A7B /* HttpAnchorGetShowRoomInfoTask.cpp */,
+				FA7C1DC2208EFD4700FE5A7B /* HttpAnchorGetShowRoomInfoTask.h */,
+				FA7C1DBF208EDF4600FE5A7B /* HttpAnchorCheckIsPlayProgramTask.cpp */,
+				FA7C1DC0208EDF4700FE5A7B /* HttpAnchorCheckIsPlayProgramTask.h */,
+				FA7C1DBD208EDEB400FE5A7B /* HttpAnchorGetNoReadNumProgramTask.cpp */,
+				FA7C1DBC208EDEB400FE5A7B /* HttpAnchorGetNoReadNumProgramTask.h */,
+				FA7C1DBA208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp */,
+				FA7C1DB9208EDB6300FE5A7B /* HttpAnchorGetProgramListTask.h */,
+				FA3A97A32060E1FB0004F85A /* IZBHttpTask.h */,
+				FA3A978B2060E1F60004F85A /* ZBHttpAcceptInstanceInviteTask.cpp */,
+				FA3A97972060E1F80004F85A /* ZBHttpAcceptInstanceInviteTask.h */,
+				FA3A97AD2060E1FD0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp */,
+				FA3A97A72060E1FC0004F85A /* ZBHttpAcceptScheduledInviteTask.h */,
+				FA3A97882060E1F50004F85A /* ZBHttpBaseTask.cpp */,
+				FA3A97862060E1F50004F85A /* ZBHttpBaseTask.h */,
+				FA3A97902060E1F70004F85A /* ZBHttpCancelInstantInviteUserTask.cpp */,
+				FA3A978C2060E1F60004F85A /* ZBHttpCancelInstantInviteUserTask.h */,
+				FA3A97B22060E1FE0004F85A /* ZBHttpCrashFileTask.cpp */,
+				FA3A97AA2060E1FC0004F85A /* ZBHttpCrashFileTask.h */,
+				FA3A977E2060E1F40004F85A /* ZBHttpDealTalentRequestTask.cpp */,
+				FA3A97852060E1F50004F85A /* ZBHttpDealTalentRequestTask.h */,
+				FA3A97912060E1F70004F85A /* ZBHttpGetAllGiftListTask.cpp */,
+				FA3A97AC2060E1FD0004F85A /* ZBHttpGetAllGiftListTask.h */,
+				FA3A97812060E1F40004F85A /* ZBHttpGetConfigTask.cpp */,
+				FA3A977F2060E1F40004F85A /* ZBHttpGetConfigTask.h */,
+				FA3A97A52060E1FB0004F85A /* ZBHttpGetEmoticonListTask.cpp */,
+				FA3A97B62060E1FF0004F85A /* ZBHttpGetEmoticonListTask.h */,
+				FA3A97A02060E1FA0004F85A /* ZBHttpGetGiftDetailTask.cpp */,
+				FA3A97B42060E1FE0004F85A /* ZBHttpGetGiftDetailTask.h */,
+				FA3A979D2060E1FA0004F85A /* ZBHttpGetNewFansBaseInfoTask.cpp */,
+				FA3A97AB2060E1FC0004F85A /* ZBHttpGetNewFansBaseInfoTask.h */,
+				FA3A97A62060E1FB0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp */,
+				FA3A97982060E1F90004F85A /* ZBHttpGetScheduledAcceptNumTask.h */,
+				FA3A97B72060E1FF0004F85A /* ZBHttpGetTodayCreditTask.cpp */,
+				FA3A97952060E1F80004F85A /* ZBHttpGetTodayCreditTask.h */,
+				FA3A979F2060E1FA0004F85A /* ZBHttpGetVerificationCodeTask.cpp */,
+				FA3A97922060E1F70004F85A /* ZBHttpGetVerificationCodeTask.h */,
+				FA3A97B32060E1FE0004F85A /* ZBHttpGiftListTask.cpp */,
+				FA3A97A82060E1FC0004F85A /* ZBHttpGiftListTask.h */,
+				FA3A97872060E1F50004F85A /* ZBHttpLiveFansListTask.cpp */,
+				FA3A979E2060E1FA0004F85A /* ZBHttpLiveFansListTask.h */,
+				FA3A978F2060E1F70004F85A /* ZBHttpLoginProtocol.h */,
+				FA3A97B52060E1FE0004F85A /* ZBHttpLoginTask.cpp */,
+				FA3A97AF2060E1FD0004F85A /* ZBHttpLoginTask.h */,
+				FA3A97A12060E1FA0004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.cpp */,
+				FA3A97802060E1F40004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.h */,
+				FA3A97832060E1F50004F85A /* ZBHttpManHandleBookingListTask.cpp */,
+				FA3A97A42060E1FB0004F85A /* ZBHttpManHandleBookingListTask.h */,
+				FA3A978D2060E1F70004F85A /* ZBHttpRejectInstanceInviteTask.cpp */,
+				FA3A978E2060E1F70004F85A /* ZBHttpRejectInstanceInviteTask.h */,
+				FA3A97B12060E1FE0004F85A /* ZBHttpRejectScheduledInviteTask.cpp */,
+				FA3A97932060E1F80004F85A /* ZBHttpRejectScheduledInviteTask.h */,
+				FA3A979C2060E1F90004F85A /* ZBHttpRequestController.cpp */,
+				FA3A97AE2060E1FD0004F85A /* ZBHttpRequestController.h */,
+				FA3A97942060E1F80004F85A /* ZBHttpRequestDefine.h */,
+				FA3A97A92060E1FC0004F85A /* ZBHttpRequestEnum.h */,
+				FA3A97842060E1F50004F85A /* ZBHttpRequestTask.cpp */,
+				FA3A979B2060E1F90004F85A /* ZBHttpRequestTask.h */,
+				FA3A97892060E1F60004F85A /* ZBHttpServerSpeedTask.cpp */,
+				FA3A97992060E1F90004F85A /* ZBHttpServerSpeedTask.h */,
+				FA3A97822060E1F50004F85A /* ZBHttpSetAutoPushTask.cpp */,
+				FA3A978A2060E1F60004F85A /* ZBHttpSetAutoPushTask.h */,
+				FA3A97962060E1F80004F85A /* ZBHttpSetRoomCountDownTask.cpp */,
+				FA3A979A2060E1F90004F85A /* ZBHttpSetRoomCountDownTask.h */,
+				FA3A97A22060E1FB0004F85A /* ZBHttpUpdateTokenIdTask.cpp */,
+				FA3A97B02060E1FD0004F85A /* ZBHttpUpdateTokenIdTask.h */,
 				FABB255120479DDB005EDF51 /* ZBitem */,
 			);
 			name = anchorhttpcontroller;
@@ -1015,6 +1140,12 @@
 		FABB255120479DDB005EDF51 /* ZBitem */ = {
 			isa = PBXGroup;
 			children = (
+				FAAB2E2C209169260048E8B1 /* HttpAnchorBaseInfoItem.h */,
+				FAAB2E2E209169260048E8B1 /* HttpAnchorGiftNumItem.h */,
+				FAAB2E2D209169260048E8B1 /* HttpAnchorHangoutGiftListItem.h */,
+				FAAB2E2A209169260048E8B1 /* HttpAnchorHangoutItem.h */,
+				FAAB2E2B209169260048E8B1 /* HttpAnchorItem.h */,
+				FA7C1DAA208EC0AE00FE5A7B /* HttpAnchorProgramInfoItem.h */,
 				FABB26062047A320005EDF51 /* ZBHttpBookingInviteListItem.h */,
 				FABB25FA2047A31F005EDF51 /* ZBHttpBookingPrivateInviteItem.h */,
 				FABB25FD2047A31F005EDF51 /* ZBHttpBookingUnreadUnhandleNumItem.h */,
@@ -1101,113 +1232,131 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FABB264C2047A334005EDF51 /* ZBHttpRejectScheduledInviteTask.cpp in Sources */,
 				FACE551A2044F7F400CC3B45 /* HttpGetConfigTask.cpp in Sources */,
+				FA43DEEC2092A7BE00BE5F6C /* HttpShowListWithAnchorIdTask.cpp in Sources */,
 				507FFA2B1C9FD76D0083EC06 /* CheckMemoryList.cpp in Sources */,
 				FACE55282044F7F400CC3B45 /* HttpGetGiftDetailTask.cpp in Sources */,
 				FACE54F52044F7F400CC3B45 /* HttpGetManBaseInfoTask.cpp in Sources */,
-				FABB264B2047A334005EDF51 /* ZBHttpAcceptScheduledInviteTask.cpp in Sources */,
 				504CDA451C7FDB0500DBB429 /* HttpClient.cpp in Sources */,
-				FABB26432047A334005EDF51 /* ZBHttpRequestController.cpp in Sources */,
 				504CDA291C7FDA2D00DBB429 /* tinystr.cpp in Sources */,
 				FACE551B2044F7F400CC3B45 /* HttpGetVerificationCodeTask.cpp in Sources */,
 				501BF3B41C7EFF460052C59F /* KSocket.cpp in Sources */,
 				504CD9FD1C7FD6AF00DBB429 /* pngerror.c in Sources */,
+				FA3A97BA2060E1FF0004F85A /* ZBHttpSetAutoPushTask.cpp in Sources */,
 				FACE550F2044F7F400CC3B45 /* HttpGetLeftCreditTask.cpp in Sources */,
+				FA3A97CE2060E1FF0004F85A /* ZBHttpRejectScheduledInviteTask.cpp in Sources */,
 				FACE54F92044F7F400CC3B45 /* HttpSetFavoriteTask.cpp in Sources */,
+				FA3A97C92060E1FF0004F85A /* ZBHttpManBookingUnreadUnhandleNumTask.cpp in Sources */,
 				504CDA081C7FD6AF00DBB429 /* pngwrite.c in Sources */,
-				FABB263C2047A334005EDF51 /* ZBHttpRequestTask.cpp in Sources */,
+				FA3A97C32060E1FF0004F85A /* ZBHttpGetAllGiftListTask.cpp in Sources */,
 				FACE54F62044F7F400CC3B45 /* HttpSendCancelPrivateLiveInviteTask.cpp in Sources */,
 				504CDA541C7FDD7F00DBB429 /* PngReader.cpp in Sources */,
-				FABB264A2047A334005EDF51 /* ZBHttpGetScheduledAcceptNumTask.cpp in Sources */,
+				FA3A97BB2060E1FF0004F85A /* ZBHttpManHandleBookingListTask.cpp in Sources */,
 				FACE54872044F7CC00CC3B45 /* HttpBannerTask.cpp in Sources */,
+				FA3A97CC2060E1FF0004F85A /* ZBHttpGetScheduledAcceptNumTask.cpp in Sources */,
 				FACE55272044F7F400CC3B45 /* HttpVoucherListTask.cpp in Sources */,
+				FA3A97C82060E1FF0004F85A /* ZBHttpGetGiftDetailTask.cpp in Sources */,
 				FACE55132044F7F400CC3B45 /* HttpGetTalentListTask.cpp in Sources */,
 				501BF3C81C7F00400052C59F /* miniunz.c in Sources */,
 				501BF3C91C7F00400052C59F /* minizip.c in Sources */,
 				501BF3B51C7EFF460052C59F /* KTcpSocket.cpp in Sources */,
 				FACE55212044F7F400CC3B45 /* HttpControlManPushTask.cpp in Sources */,
+				FA031FBB209B015E00BC39B2 /* HttpDealKnockRequestTask.cpp in Sources */,
 				504CDA1F1C7FD6EE00DBB429 /* json_writer.cpp in Sources */,
+				FA3A97D02060E1FF0004F85A /* ZBHttpGiftListTask.cpp in Sources */,
 				504CDA341C7FDA4100DBB429 /* AMF3.cpp in Sources */,
 				504CDA2D1C7FDA2D00DBB429 /* xmltest.cpp in Sources */,
 				FACE55082044F7F400CC3B45 /* HttpLoginTask.cpp in Sources */,
+				FA3A97BC2060E1FF0004F85A /* ZBHttpRequestTask.cpp in Sources */,
 				509A8DA91ECBE6C1004720CF /* HttpRequestController.cpp in Sources */,
+				FA6E14042086F3BE004F8B92 /* HttpGetNoReadNumProgramTask.cpp in Sources */,
 				507FFA2A1C9FD76D0083EC06 /* CheckMemoryLeak.cpp in Sources */,
 				FACE54FC2044F7F400CC3B45 /* HttpGetPromoAnchorListTask.cpp in Sources */,
-				FABB263E2047A334005EDF51 /* ZBHttpBaseTask.cpp in Sources */,
+				FA3A97CA2060E1FF0004F85A /* ZBHttpUpdateTokenIdTask.cpp in Sources */,
 				FACE55062044F7F400CC3B45 /* HttpLogoutTask.cpp in Sources */,
-				FABB264D2047A334005EDF51 /* ZBHttpGiftListTask.cpp in Sources */,
-				FABB263D2047A334005EDF51 /* ZBHttpLiveFansListTask.cpp in Sources */,
 				50AE07221F96FCF6005CF8D2 /* LSCommon_C_Library.mm in Sources */,
 				FACE55032044F7F400CC3B45 /* HttpHandleBookingTask.cpp in Sources */,
 				FACE55112044F7F400CC3B45 /* HttpSendBookingRequestTask.cpp in Sources */,
 				501BF3B11C7EFF460052C59F /* IAutoLock.cpp in Sources */,
 				501BF3B01C7EFF460052C59F /* CommonFunc.cpp in Sources */,
+				FA7C1DC1208EDF4700FE5A7B /* HttpAnchorCheckIsPlayProgramTask.cpp in Sources */,
 				504CDA071C7FD6AF00DBB429 /* pngwio.c in Sources */,
 				5007B1CB1ECA8EC800C2C17F /* HttpRequestManager.cpp in Sources */,
+				FA7C1DBB208EDB6400FE5A7B /* HttpAnchorGetProgramListTask.cpp in Sources */,
+				FAAB2E272091691C0048E8B1 /* HttpAnchorGetOngoingHangoutListTask.cpp in Sources */,
+				FA3A97C02060E1FF0004F85A /* ZBHttpAcceptInstanceInviteTask.cpp in Sources */,
 				504CDA2B1C7FDA2D00DBB429 /* tinyxmlerror.cpp in Sources */,
 				FACE55072044F7F400CC3B45 /* HttpSetRideTask.cpp in Sources */,
 				FACE551D2044F7F400CC3B45 /* HttpOwnRegisterTask.cpp in Sources */,
+				FA3A97C12060E1FF0004F85A /* ZBHttpRejectInstanceInviteTask.cpp in Sources */,
 				FACE55122044F7F400CC3B45 /* HttpOwnEmailLoginTask.cpp in Sources */,
-				FA938EC02052359600B764CB /* ZBHttpSetRoomCountDownTask.cpp in Sources */,
 				FACE55162044F7F400CC3B45 /* HttpCrashFileTask.cpp in Sources */,
+				FA6E142420872B16004F8B92 /* HttpChangeFavouriteTask.cpp in Sources */,
 				504CDA061C7FD6AF00DBB429 /* pngtrans.c in Sources */,
-				FABB26442047A334005EDF51 /* ZBHttpGetNewFansBaseInfoTask.cpp in Sources */,
 				501BF3AF1C7EFF460052C59F /* command.cpp in Sources */,
 				FACE54882044F7CC00CC3B45 /* HttpAcceptInstanceInviteTask.cpp in Sources */,
 				FACE54F72044F7F400CC3B45 /* HttpGetGiftListByUserIdTask.cpp in Sources */,
+				FA6E141B208726AF004F8B92 /* HttpGetProgramListTask.cpp in Sources */,
 				FACE54FB2044F7F400CC3B45 /* HttpGetAnchorListTask.cpp in Sources */,
-				FABB26452047A334005EDF51 /* ZBHttpGetVerificationCodeTask.cpp in Sources */,
-				FABB26482047A334005EDF51 /* ZBHttpUpdateTokenIdTask.cpp in Sources */,
+				FAAB2E232091691C0048E8B1 /* HttpAnchorDealInvitationHangoutTask.cpp in Sources */,
+				FA3A97C62060E1FF0004F85A /* ZBHttpGetNewFansBaseInfoTask.cpp in Sources */,
+				FA3A97BF2060E1FF0004F85A /* ZBHttpServerSpeedTask.cpp in Sources */,
+				FA3A97CB2060E1FF0004F85A /* ZBHttpGetEmoticonListTask.cpp in Sources */,
 				504CDA051C7FD6AF00DBB429 /* pngset.c in Sources */,
 				504CDA1E1C7FD6EE00DBB429 /* json_value.cpp in Sources */,
 				504CDA351C7FDA4100DBB429 /* AmfParser.cpp in Sources */,
 				501BF3B31C7EFF460052C59F /* KLog.cpp in Sources */,
 				FACE551E2044F7F400CC3B45 /* HttpGetAllGiftListTask.cpp in Sources */,
+				FA3A97BD2060E1FF0004F85A /* ZBHttpLiveFansListTask.cpp in Sources */,
 				FACE54862044F7CC00CC3B45 /* HttpCloseAdAnchorListTask.cpp in Sources */,
-				FABB263A2047A334005EDF51 /* ZBHttpGetTodayCreditTask.cpp in Sources */,
+				FA3A97D12060E1FF0004F85A /* ZBHttpLoginTask.cpp in Sources */,
+				FAAB2E242091691C0048E8B1 /* HttpAnchorCancelHangoutKnockTask.cpp in Sources */,
+				FAAB2E292091691C0048E8B1 /* HttpAnchorRecommendFriendJoinHangoutTask.cpp in Sources */,
 				FACE550E2044F7F400CC3B45 /* HttpGetIOSPayTask.cpp in Sources */,
 				FACE54FA2044F7F400CC3B45 /* HttpGetAdAnchorListTask.cpp in Sources */,
 				501BF3AC1C7EFF460052C59F /* Arithmetic.cpp in Sources */,
 				5007B1DF1ECAAA5900C2C17F /* HttpBaseTask.cpp in Sources */,
 				504CD9FC1C7FD6AF00DBB429 /* png.c in Sources */,
 				504CDA481C7FDB0500DBB429 /* HttpRequest.cpp in Sources */,
+				FA3A97C22060E1FF0004F85A /* ZBHttpCancelInstantInviteUserTask.cpp in Sources */,
 				FACE54FE2044F7F400CC3B45 /* HttpGetPhoneVerifyCodeTask.cpp in Sources */,
 				504CD9FF1C7FD6AF00DBB429 /* pngmem.c in Sources */,
+				FA3A97CD2060E1FF0004F85A /* ZBHttpAcceptScheduledInviteTask.cpp in Sources */,
 				FACE55292044F7F400CC3B45 /* HttpGetShareLinkTask.cpp in Sources */,
 				FACE551C2044F7F400CC3B45 /* HttpIOSPayCallTask.cpp in Sources */,
 				FACE55142044F7F400CC3B45 /* HttpManBookingUnreadUnhandleNumTask.cpp in Sources */,
-				FABB26422047A334005EDF51 /* ZBHttpGetAllGiftListTask.cpp in Sources */,
 				501BF3CC1C7F00400052C59F /* zip.c in Sources */,
 				FACE55252044F7F400CC3B45 /* HttpGiftListTask.cpp in Sources */,
+				FA3A97C72060E1FF0004F85A /* ZBHttpGetVerificationCodeTask.cpp in Sources */,
+				FA6E142120872A79004F8B92 /* HttpBuyProgramTask.cpp in Sources */,
+				FAAB2E262091691C0048E8B1 /* HttpAnchorSendKnockRequestTask.cpp in Sources */,
 				FACE55092044F7F400CC3B45 /* HttpGetEmoticonListTask.cpp in Sources */,
 				504CD9FE1C7FD6AF00DBB429 /* pngget.c in Sources */,
+				FAB60C92208DA9D800901BBD /* HttpGetShowRoomInfoTask.cpp in Sources */,
 				5007B1DB1ECAAA3500C2C17F /* HttpRequestTask.cpp in Sources */,
+				FA3A97CF2060E1FF0004F85A /* ZBHttpCrashFileTask.cpp in Sources */,
 				FACE55192044F7F400CC3B45 /* HttpGetTalentStatusTask.cpp in Sources */,
 				504CDA021C7FD6AF00DBB429 /* pngrio.c in Sources */,
 				504CDA001C7FD6AF00DBB429 /* pngpread.c in Sources */,
-				FABB264E2047A334005EDF51 /* ZBHttpLoginTask.cpp in Sources */,
 				50F383991EE688AC003D2765 /* mongoose.c in Sources */,
-				FABB26522047B2EA005EDF51 /* ZBHttpCrashFileTask.cpp in Sources */,
-				FABB26402047A334005EDF51 /* ZBHttpAcceptInstanceInviteTask.cpp in Sources */,
-				FABB263B2047A334005EDF51 /* ZBHttpManHandleBookingListTask.cpp in Sources */,
 				FACE55002044F7F400CC3B45 /* HttpUploadPhotoTask.cpp in Sources */,
 				501BF3B81C7EFF460052C59F /* KZip.cpp in Sources */,
+				FA3A97C42060E1FF0004F85A /* ZBHttpSetRoomCountDownTask.cpp in Sources */,
 				504CDA091C7FD6AF00DBB429 /* pngwtran.c in Sources */,
+				FA3A97C52060E1FF0004F85A /* ZBHttpRequestController.cpp in Sources */,
 				FACE55022044F7F400CC3B45 /* HttpManHandleBookingListTask.cpp in Sources */,
 				FACE55232044F7F400CC3B45 /* HttpOwnFackBookLoginTask.cpp in Sources */,
 				501BF3B61C7EFF460052C59F /* KThread.cpp in Sources */,
-				FABB26462047A334005EDF51 /* ZBHttpGetGiftDetailTask.cpp in Sources */,
-				FABB26552047CCAB005EDF51 /* ZBHttpCancelInstantInviteUserTask.cpp in Sources */,
+				FAAB2E282091691C0048E8B1 /* HttpAnchorGetCanRecommendFriendListTask.cpp in Sources */,
 				FACE54F82044F7F400CC3B45 /* HttpGetUserInfoTask.cpp in Sources */,
-				FABB26472047A334005EDF51 /* ZBHttpManBookingUnreadUnhandleNumTask.cpp in Sources */,
 				FACE54FF2044F7F400CC3B45 /* HttpGetRoomInfoTask.cpp in Sources */,
 				504CDA0A1C7FD6AF00DBB429 /* pngwutil.c in Sources */,
-				FABB263F2047A334005EDF51 /* ZBHttpServerSpeedTask.cpp in Sources */,
 				FACE550C2044F7F400CC3B45 /* HttpGetFollowListTask.cpp in Sources */,
-				FABB26412047A334005EDF51 /* ZBHttpRejectInstanceInviteTask.cpp in Sources */,
 				504CDA461C7FDB0500DBB429 /* HttpDownloader.cpp in Sources */,
 				FACE55182044F7F400CC3B45 /* HttpPremiumMembershipTask.cpp in Sources */,
+				FA075CCC209C51FA00AF2E04 /* HttpCancelInviteHangoutTask.cpp in Sources */,
+				FA7C1DC4208EFD4800FE5A7B /* HttpAnchorGetShowRoomInfoTask.cpp in Sources */,
+				FA7C1DBE208EDEB500FE5A7B /* HttpAnchorGetNoReadNumProgramTask.cpp in Sources */,
 				504CDA2C1C7FDA2D00DBB429 /* tinyxmlparser.cpp in Sources */,
 				501BF3B21C7EFF460052C59F /* IPAddress.cpp in Sources */,
 				501BF3CA1C7F00400052C59F /* mztools.c in Sources */,
@@ -1216,11 +1365,13 @@
 				501BF3B91C7EFF460052C59F /* md5.c in Sources */,
 				504CDA031C7FD6AF00DBB429 /* pngrtran.c in Sources */,
 				504CDA011C7FD6AF00DBB429 /* pngread.c in Sources */,
-				FABB26492047A334005EDF51 /* ZBHttpGetEmoticonListTask.cpp in Sources */,
 				FACE55242044F7F400CC3B45 /* HttpGetVoucherAvailableInfoTask.cpp in Sources */,
+				FA3A97B92060E1FF0004F85A /* ZBHttpGetConfigTask.cpp in Sources */,
+				FA031FBC209B015E00BC39B2 /* HttpSendInvitationHangoutTask.cpp in Sources */,
+				FA3A97BE2060E1FF0004F85A /* ZBHttpBaseTask.cpp in Sources */,
 				FACE55052044F7F400CC3B45 /* HttpServerSpeedTask.cpp in Sources */,
+				FA3A97D22060E1FF0004F85A /* ZBHttpGetTodayCreditTask.cpp in Sources */,
 				501BF3C71C7F00400052C59F /* ioapi.c in Sources */,
-				FA938EB120521D3E00B764CB /* ZBHttpSetAutoPushTask.cpp in Sources */,
 				FACE55172044F7F400CC3B45 /* HttpOwnFindPasswordTask.cpp in Sources */,
 				504CDA2A1C7FDA2D00DBB429 /* tinyxml.cpp in Sources */,
 				FACE54FD2044F7F400CC3B45 /* HttpSubmitPhoneVerifyCodeTask.cpp in Sources */,
@@ -1228,16 +1379,19 @@
 				FACE55042044F7F400CC3B45 /* HttpGetInviteInfoTask.cpp in Sources */,
 				504CDA531C7FDD7F00DBB429 /* PngHandler.cpp in Sources */,
 				FACE55202044F7F400CC3B45 /* HttpUpdateTokenIdTask.cpp in Sources */,
+				FA031FBE209B015E00BC39B2 /* HttpGetHangoutInvitStatusTask.cpp in Sources */,
 				FACE55152044F7F400CC3B45 /* HttpSubmitFeedBackTask.cpp in Sources */,
 				504CDA551C7FDD7F00DBB429 /* PngWriter.cpp in Sources */,
 				FACE550A2044F7F400CC3B45 /* HttpSetManBaseInfoTask.cpp in Sources */,
-				FABB264F2047A334005EDF51 /* ZBHttpGetConfigTask.cpp in Sources */,
+				FAAB2E252091691C0048E8B1 /* HttpAnchorGetHangoutKnockStatusTask.cpp in Sources */,
 				FACE55012044F7F400CC3B45 /* HttpLiveFansListTask.cpp in Sources */,
 				504CDA471C7FDB0500DBB429 /* HttpEntiy.cpp in Sources */,
+				FA031FBA209B015E00BC39B2 /* HttpGetCanHangoutAnchorListTask.cpp in Sources */,
+				FAAB2E222091691C0048E8B1 /* HttpAnchorHangoutGiftListTask.cpp in Sources */,
 				FACE55222044F7F400CC3B45 /* HttpRideListTask.cpp in Sources */,
 				504CDA1D1C7FD6EE00DBB429 /* json_reader.cpp in Sources */,
 				FACE55262044F7F400CC3B45 /* HttpSetShareSucTask.cpp in Sources */,
-				FABB26392047A334005EDF51 /* ZBHttpDealTalentRequestTask.cpp in Sources */,
+				FA3A97B82060E1FF0004F85A /* ZBHttpDealTalentRequestTask.cpp in Sources */,
 				FACE550B2044F7F400CC3B45 /* HttpOwnCheckMailRegistrationTask.cpp in Sources */,
 				FACE551F2044F7F400CC3B45 /* HttpGetNewFansBaseInfoTask.cpp in Sources */,
 				FACE550D2044F7F400CC3B45 /* HttpGetBackpackUnreadNumTask.cpp in Sources */,

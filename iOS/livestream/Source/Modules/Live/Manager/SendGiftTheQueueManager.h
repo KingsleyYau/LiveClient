@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SendGiftItem.h"
+#import "GiftItem.h"
 
 @class SendGiftTheQueueManager;
 @protocol SendGiftTheQueueManagerDelegate <NSObject>
-- (void)sendGiftFailWithItem:(SendGiftItem *)item;
-- (void)sendGiftNoCredit:(SendGiftItem *)item;
+- (void)sendGiftFailWithItem:(GiftItem *)item;
+- (void)sendGiftNoCredit:(GiftItem *)item;
 @optional
 
 @end
@@ -58,6 +58,6 @@
 /**
  发送礼物请求
  */
-- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)giftItem;
+- (void)sendLiveRoomGiftRequestWithGiftItem:(GiftItem *)giftItem;
 
 @end

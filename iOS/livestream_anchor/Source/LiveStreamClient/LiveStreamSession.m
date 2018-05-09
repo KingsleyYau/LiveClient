@@ -187,6 +187,63 @@ static LiveStreamSession* gSession = nil;
     return bFlag;
 }
 
+- (void)checkCanAudio:(_Nullable CheckHandler)handler {
+    __block BOOL bFlag = NO;
+    AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    switch (videoAuthStatus) {
+        case AVAuthorizationStatusNotDetermined:{
+            // 未询问用户是否授权
+            [[AVAudioSession sharedInstance] performSelector:@selector(requestRecordPermission:) withObject:^(BOOL granted) {
+                handler(granted);
+            }];
+        }break;
+            
+        case AVAuthorizationStatusDenied:
+        case AVAuthorizationStatusRestricted:{
+            // 已拒绝
+            bFlag = NO;
+            handler(bFlag);
+        }break;
+            
+        case AVAuthorizationStatusAuthorized:{
+            // 已授权
+            bFlag = YES;
+            handler(bFlag);
+        }break;
+        default:
+            break;
+    }
+}
+
+- (void)checkCanVideo:(_Nullable CheckHandler)handler {
+    
+    __block BOOL bFlag = NO;
+    AVAuthorizationStatus videoAuthStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    switch (videoAuthStatus) {
+        case AVAuthorizationStatusNotDetermined:{
+            // 未询问用户是否授权
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                handler(granted);
+            }];
+        }break;
+            
+        case AVAuthorizationStatusDenied:
+        case AVAuthorizationStatusRestricted:{
+            // 已拒绝
+            bFlag = NO;
+            handler(bFlag);
+        }break;
+            
+        case AVAuthorizationStatusAuthorized:{
+            // 已授权
+            bFlag = YES;
+            handler(bFlag);
+        }break;
+        default:
+            break;
+    }
+}
+
 - (BOOL)useHeadphones {
     bool bFlag = NO;
     AVAudioSessionRouteDescription* route = [[AVAudioSession sharedInstance] currentRoute];

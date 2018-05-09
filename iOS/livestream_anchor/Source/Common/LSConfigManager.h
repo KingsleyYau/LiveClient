@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "GetConfigRequest.h"
 
 @interface LSConfigManager : NSObject

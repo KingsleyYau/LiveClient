@@ -14,35 +14,28 @@
 #import "LiveModule.h"
 #import "LiveUrlHandler.h"
 #import "LiveService.h"
-
 #import "LiveGobalManager.h"
+
 #import "LiveStreamPublisher.h"
 #import "LiveStreamPlayer.h"
+#import "LiveStreamSession.h"
 
 #import "MsgTableViewCell.h"
 #import "MsgItem.h"
 
-#import "LikeView.h"
-
-#import "LSFileCacheManager.h"
 #import "LiveGiftDownloadManager.h"
 #import "LSChatEmotionManager.h"
-#import "LiveStreamSession.h"
 #import "UserInfoManager.h"
-#import "LiveRoomCreditRebateManager.h"
 
 #import "AudienModel.h"
-#import "GetNewFansBaseInfoRequest.h"
-#import "LiveFansListRequest.h"
-#import "ZBLSRequestManager.h"
 
 #import "DialogOK.h"
 #import "DialogChoose.h"
 #import "DialogTip.h"
-#import "Dialog.h"
+#import "DialogWarning.h"
 
-//#import "LSImManager.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorRequestManager.h"
+#import "LSAnchorImManager.h"
 
 #define RECORD_START @"!record=1!"
 #define RECORD_STOP @"!record=0!"
@@ -77,13 +70,14 @@
 
 #define MsgTableViewHeight 250
 
-#define TIMECOUNT 30
+#define TIMECOUNT 0
 
 #pragma mark - 流[播放/推送]逻辑
 #define STREAM_PLAYER_RECONNECT_MAX_TIMES 5
 #define STREAM_PUBLISH_RECONNECT_MAX_TIMES STREAM_PLAYER_RECONNECT_MAX_TIMES
 
 typedef enum RoomTipType {
+    ROOMTIP_NONE,
     ROOMTIP_INVITING,
     ROOMTIP_AGREE,
     ROOMTIP_REJECT,
@@ -105,6 +99,8 @@ typedef enum RoomTipType {
 @property (strong) LiveStreamPublisher *publisher;
 // 流推送重连次数
 @property (assign) NSUInteger publisherReconnectTime;
+// 视频加载loadingview
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *videoLoadView;
 
 #pragma mark - 观众管理
 // 座驾数组
@@ -149,9 +145,6 @@ typedef enum RoomTipType {
 #pragma mark - 消息管理器
 @property (nonatomic, strong) LiveRoomMsgManager *msgManager;
 
-#pragma mark - 余额及返点信息管理器
-@property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
-
 #pragma mark - 倒数控制
 // 视频按钮倒数
 @property (strong) LSTimer *videoBtnTimer;
@@ -175,21 +168,8 @@ typedef enum RoomTipType {
 @property (nonatomic, assign) int showToastNum;
 
 #pragma mark - 对话框
-@property (strong) DialogOK *dialogToastAddCredit;
-@property (strong) DialogOK *dialogWatchAddCredit;
-@property (strong) DialogOK *dialogGiftAddCredit;
 @property (strong) DialogTip *dialogProbationTip;
-@property (strong) Dialog *dialogWarning;
-
-#pragma mark - 用于显示试用倦提示
-@property (nonatomic, assign) BOOL showTip;
-
-#pragma mark - 后台处理
-@property (nonatomic) BOOL isBackground;
-
-// 是否已退入后台超时
-@property (nonatomic) BOOL isTimeOut;
-
+@property (nonatomic, strong) DialogWarning *dialogWarning;
 /** 单击收起输入控件手势 **/
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
@@ -203,7 +183,7 @@ typedef enum RoomTipType {
 @property (nonatomic, assign) BOOL isDriveShow;
 
 #pragma mark - IM管理器
-@property (nonatomic, strong) ZBLSImManager *imManager;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 
 /** 聊天对象数组 **/
 @property (nonatomic, strong) NSMutableArray *useridArray;
@@ -212,6 +192,13 @@ typedef enum RoomTipType {
 @property (strong) NSURL *pushUrl;
 @property (nonatomic, assign) BOOL isInviting;
 @property (nonatomic, copy) NSString *invitionId;
+
+// 收到结束直播通知
+@property (nonatomic, assign) BOOL isRecvRoomClose;
+
+@property (nonatomic, assign) RoomTipType tipType;
+
+@property (nonatomic, assign) BOOL reloadAudience;
 
 @end
 
@@ -239,12 +226,9 @@ typedef enum RoomTipType {
     self.needToReload = NO;
 
     // 初始化IM管理器
-    self.imManager = [ZBLSImManager manager];
+    self.imManager = [LSAnchorImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-
-    // 初始化后台管理器
-    [[LiveGobalManager manager] addDelegate:self];
     
     // 初始登录
     self.loginManager = [LSLoginManager manager];
@@ -261,9 +245,6 @@ typedef enum RoomTipType {
 
     // 初始化文字管理器
     self.msgManager = [LiveRoomMsgManager msgManager];
-
-    // 初始化余额及返点信息管理器
-    self.creditRebateManager = [LiveRoomCreditRebateManager creditRebateManager];
 
     // 初始化大礼物播放队列
     self.bigGiftArray = [NSMutableArray array];
@@ -286,23 +267,25 @@ typedef enum RoomTipType {
     // 初始化私密邀请状态
     self.isInviting = NO;
     
+    // 刷新状态
+    self.reloadAudience = YES;
+    
+    // 初始化是否收到关闭直播间通知
+    self.isRecvRoomClose = NO;
+    
     // 显示的弹幕数量
     self.showToastNum = 0;
 
     // 初始化视频控制按钮消失计时器
     self.videoBtnLeftSecond = 3;
+    
+    // 初始化倒计时关闭直播间计时器
+    self.timeCount = 0;
 
     // 图片下载器
     self.headImageLoader = [LSImageViewLoader loader];
     self.giftImageLoader = [LSImageViewLoader loader];
     self.cellHeadImageLoader = [LSImageViewLoader loader];
-
-    
-    // 注册前后台切换通知
-    _isBackground = NO;
-    self.isTimeOut = NO;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     // 注册大礼物结束通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(animationWhatIs:) name:@"animationIsAnimaing" object:nil];
@@ -320,28 +303,25 @@ typedef enum RoomTipType {
     self.inviteTimer = [[LSTimer alloc] init];
     
     self.dialogProbationTip = [DialogTip dialogTip];
-    self.showTip = YES;
 }
 
 - (void)dealloc {
     NSLog(@"LiveViewController::dealloc()");
-
+    
     // 移除直播间用户信息
     [[UserInfoManager manager] removeAllInfo];
     
     // 去除大礼物结束通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"animationIsAnimaing" object:nil];
     
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"LivePushInviteNotification" object:nil];
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"LivePushBookingNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LivePushInviteNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LivePushBookingNotification" object:nil];
     
     [self.giftComboManager removeManager];
 
     for (GiftComboView *giftView in self.giftComboViews) {
         [giftView stopGiftCombo];
     }
-    
-    [self.timer stopTimer];
     
     // 移除直播间后台代理监听
     [[LiveGobalManager manager] removeDelegate:self];
@@ -361,14 +341,6 @@ typedef enum RoomTipType {
 
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-
-    if (self.dialogWatchAddCredit) {
-        [self.dialogWatchAddCredit removeFromSuperview];
-    }
-    if (self.dialogToastAddCredit) {
-        [self.dialogToastAddCredit removeFromSuperview];
-    }
-    
 }
 
 - (void)viewDidLoad {
@@ -405,6 +377,9 @@ typedef enum RoomTipType {
     // 初始化连击控件
     [self setupGiftView];
     
+    // 显示视频加载动画
+    [self showVideoLoadView];
+    
     // 初始化视频界面
     self.player.playView = self.videoView;
     self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
@@ -435,6 +410,20 @@ typedef enum RoomTipType {
     // 隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
+    
+    // 直播间倒数剩余秒数大于0，则倒数关闭
+    if (self.liveRoom.imLiveRoom.leftSeconds > 0 && self.liveRoom.imLiveRoom.status == ZBLIVESTATUS_RECIPROCALEND) {
+        self.isRecvRoomClose = YES;
+        // 显示房间关闭倒计时
+        [self setupTipRoomWithType:ROOMTIP_FINSH userName:nil];
+        self.timeCount = self.liveRoom.imLiveRoom.leftSeconds;
+        WeakObject(self, weakSelf);
+        [self.timer startTimer:nil timeInterval:1.0 * NSEC_PER_SEC starNow:YES action:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf changeTimeLabel];
+            });
+        }];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -452,22 +441,18 @@ typedef enum RoomTipType {
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    
     if( !self.viewDidAppearEver ) {
         // 第一次进入
-        // 开始播放流
-//        [self play];
         [self initPublish];
         [self publish];
     }
-    
     // 开始计时器
     [self startVideoBtnTimer];
     
     [super viewDidAppear:animated];
     
      // 添加手势
-     [self addSingleTap];
+    [self addSingleTap];
     
 //    [self test];
 }
@@ -480,6 +465,8 @@ typedef enum RoomTipType {
     
     // 去除手势
     [self removeSingleTap];
+    
+//    [self stopTest];
 }
 
 - (void)initialiseSubwidge {
@@ -531,16 +518,34 @@ typedef enum RoomTipType {
 
     [self.view bringSubviewToFront:self.giftView];
     [self.view bringSubviewToFront:self.barrageView];
-//    [self.view bringSubviewToFront:self.cameraBtn];
 
     [view bringSubviewToFront:self.giftView];
     [view bringSubviewToFront:self.barrageView];
-//    [view bringSubviewToFront:self.cameraBtn];
 }
 
 - (void)showPreview {
     // 显示预览控件
     self.previewVideoViewWidth.constant = 115;
+}
+
+- (void)showVideoLoadView {
+    self.videoLoadView.hidden = NO;
+    [self.videoLoadView startAnimating];
+}
+
+- (void)hiddenVideoLoadView {
+    self.videoLoadView.hidden = YES;
+    [self.videoLoadView stopAnimating];
+}
+
+- (void)showPreviewLoadView {
+    self.preActivityView.hidden = NO;
+    [self.preActivityView startAnimating];
+}
+
+- (void)hiddenPreviewLoadView {
+    self.preActivityView.hidden = YES;
+    [self.preActivityView stopAnimating];
 }
 
 #pragma mark - 手势事件 (单击屏幕)
@@ -584,17 +589,12 @@ typedef enum RoomTipType {
     }
 }
 
-#pragma mark - 界面事件
-- (IBAction)cameraAction:(id)sender {
-    [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickVideo eventCategory:EventCategoryBroadcast];
-    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:@"" userId:self.liveRoom.userId roomType:LiveRoomType_Private];
-    [LiveUrlHandler shareInstance].url = url;
-
-    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
-    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
+#pragma mark - 流[播放/推送]逻辑
+- (void)initPlayer {
+    self.player.playView = self.previewVideoView;
+    self.player.playView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
 }
 
-#pragma mark - 流[播放/推送]逻辑
 - (void)play {
     self.playUrl = self.liveRoom.playUrl;
     NSLog(@"LiveViewController::play( [开始播放流], playUrl : %@ )", self.playUrl);
@@ -615,7 +615,6 @@ typedef enum RoomTipType {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL bFlag = [self.player playUrl:self.playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
         dispatch_async(dispatch_get_main_queue(), ^{
-            // 停止菊花
             if (bFlag) {
                 // 播放成功
                 if ([weakSelf.liveDelegate respondsToSelector:@selector(liveViewIsPlay:)]) {
@@ -660,13 +659,11 @@ typedef enum RoomTipType {
 
     if (bFlag) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self.liveRoom changePublishUrl];
             self.publishUrl = self.liveRoom.publishUrl;
             NSLog(@"LiveViewController::publish( [开始推送流], publishUrl : %@ )", self.publishUrl);
-            [self debugInfo];
-            
             BOOL bFlag = [self.publisher pushlishUrl:self.publishUrl recordH264FilePath:@"" recordAACFilePath:@""];
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self debugInfo];
                 // 停止菊花
                 if (bFlag) {
                     // 成功
@@ -701,6 +698,17 @@ typedef enum RoomTipType {
     return url;
 }
 
+- (void)playerOnConnect:(LiveStreamPlayer *)player {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 停止菊花
+        [self hiddenPreviewLoadView];
+    });
+}
+
+- (void)playerOnDisconnect:(LiveStreamPlayer *)player {
+    
+}
+
 - (NSString *_Nullable)publisherShouldChangeUrl:(LiveStreamPublisher *_Nonnull)publisher {
     NSString *url = publisher.url;
 
@@ -709,7 +717,7 @@ typedef enum RoomTipType {
             // 断线超过指定次数, 切换URL
             url = [self.liveRoom changePublishUrl];
             self.publisherReconnectTime = 0;
-
+            
             NSLog(@"LiveViewController::publisherShouldChangeUrl( [切换推送流URL], url : %@)", url);
         }
     }
@@ -717,13 +725,30 @@ typedef enum RoomTipType {
     return url;
 }
 
+- (void)publisherOnConnect:(LiveStreamPublisher *)publisher {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self hiddenVideoLoadView];
+    });
+}
+
+- (void)publisherOnDisconnect:(LiveStreamPublisher *)publisher {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!self.videoLoadView.isAnimating && self.videoLoadView.hidden && self.liveRoom && !self.isRecvRoomClose) {
+            [self showVideoLoadView];
+            [[DialogTip dialogTip] showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"VIDEO_IS_JUMPY")];
+        }
+    });
+}
+
 #pragma mark - 刷新状态栏
 - (void)setupTipRoomWithType:(RoomTipType)type userName:(NSString *)userName {
     
+    self.tipType = type;
+    
     NSString *name = userName;
-    if (userName.length > 20) {
-        name = [NSString stringWithFormat:@"%@...",[userName substringToIndex:16]];
-    }
+//    if (userName.length > 10) {
+//        name = [NSString stringWithFormat:@"%@...",[userName substringToIndex:10]];
+//    }
     self.roomTipView.hidden = NO;
     [self.tipIconImageView stopAnimating];
     self.tipIconImageView.animationImages = nil;
@@ -800,8 +825,8 @@ typedef enum RoomTipType {
 
 #pragma mark - 获取观众列表
 - (void)setupAudienView {
-    [[ZBLSRequestManager manager] anchorLiveFansList:self.liveRoom.roomId start:0 step:0 finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBViewerFansItemObject *> * _Nullable array) {
-        NSLog(@"PublicViewController::AnchorLiveFansList( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
+    [[LSAnchorRequestManager manager] anchorLiveFansList:self.liveRoom.roomId start:0 step:0 finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBViewerFansItemObject *> * _Nullable array) {
+        NSLog(@"LiveViewController::AnchorLiveFansList( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 
@@ -825,7 +850,7 @@ typedef enum RoomTipType {
                 }
                 
                 // 观众人数显示
-                self.viewersNumLabel.text = [NSString stringWithFormat:@"%ld",self.audienceArray.count];
+                self.viewersNumLabel.text = [NSString stringWithFormat:@"%ld",(unsigned long)self.audienceArray.count];
                 
                 // 默认六个头像
                 if (self.audienceArray.count < 6) {
@@ -836,7 +861,10 @@ typedef enum RoomTipType {
                         [self.audienceArray addObject:model];
                     }
                 }
-                self.audienceView.audienceArray = self.audienceArray;
+                if (self.reloadAudience) {
+                    self.reloadAudience = NO;
+                    self.audienceView.audienceArray = self.audienceArray;
+                }
             }
         });
     }];
@@ -857,7 +885,7 @@ typedef enum RoomTipType {
         [self drivePlayCallback];
     } else {
         [self.driverView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(@78);
+            make.top.equalTo(@70);
             make.right.equalTo(self.view.mas_right).offset(offset);
             make.width.equalTo(@(offset));
         }];
@@ -1198,7 +1226,7 @@ typedef enum RoomTipType {
     self.msgTableView.clipsToBounds = YES;
     self.msgTableView.backgroundView = nil;
     self.msgTableView.backgroundColor = [UIColor clearColor];
-    self.msgTableView.contentInset = UIEdgeInsetsMake(12, 0, 0, 0);
+//    self.msgTableView.contentInset = UIEdgeInsetsMake(12, 0, 0, 0);
     [self.msgTableView registerClass:[MsgTableViewCell class] forCellReuseIdentifier:[MsgTableViewCell cellIdentifier]];
 
     self.msgTipsView.hidden = YES;
@@ -1230,9 +1258,9 @@ typedef enum RoomTipType {
     return bFlag;
 }
 
-- (void)addTips:(NSAttributedString *)text {
+- (void)addTips:(NSString *)text {
     MsgItem *item = [[MsgItem alloc] init];
-    item.text = text.string;
+    item.text = text;
     item.msgType = MsgType_Announce;
     NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:item];
     item.attText = attributeString;
@@ -1290,7 +1318,6 @@ typedef enum RoomTipType {
     // 增加文本消息
     NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
     msgItem.attText = attributeString;
-
     [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
 }
 
@@ -1335,6 +1362,9 @@ typedef enum RoomTipType {
 //}
 
 - (void)addMsg:(MsgItem *)item replace:(BOOL)replace scrollToEnd:(BOOL)scrollToEnd animated:(BOOL)animated {
+    // 计算文本高度
+    item.containerHeight = [self computeContainerHeight:item];
+    
     // 计算当前显示的位置
     NSInteger lastVisibleRow = -1;
     if (self.msgTableView.indexPathsForVisibleRows.count > 0) {
@@ -1374,7 +1404,6 @@ typedef enum RoomTipType {
 
             } else {
                 // 超出最大消息限制, 删除列表一条旧消息
-
                 [self.msgTableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:0 inSection:0]] withRowAnimation:UITableViewRowAnimationAutomatic];
             }
         }
@@ -1443,29 +1472,22 @@ typedef enum RoomTipType {
     //    [self scrollViewDidScroll:self.msgTableView];
 }
 
-// 可能有用
-/**
- 聊天图片富文本
-
- @param image 图片
- @param font 字体
- @return 富文本
- */
-- (NSAttributedString *)parseImageMessage:(UIImage *)image font:(UIFont *)font {
-    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
-
-    LSChatTextAttachment *attachment = nil;
-
-    // 增加表情文本
-    attachment = [[LSChatTextAttachment alloc] init];
-    //    attachment.bounds = CGRectMake(0, 0, font.lineHeight, font.lineHeight);
-    attachment.image = image;
-
-    // 生成表情富文本
-    NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attachment];
-    [attributeString appendAttributedString:imageString];
-
-    return attributeString;
+- (CGFloat)computeContainerHeight:(MsgItem *)item {
+    CGFloat height = 0;
+    CGFloat width = self.tableSuperView.frame.size.width;
+    YYTextContainer *container = [[YYTextContainer alloc] init];
+    if (item.msgType == MsgType_Gift) {
+        width = width - 3;
+    }
+    container.size = CGSizeMake(width, CGFLOAT_MAX);
+    YYTextLayout *layout = [YYTextLayout layoutWithContainer:container text:item.attText];
+    height = layout.textBoundingSize.height + 1;
+    if (height < 22) {
+        height = 22;
+    }
+    item.layout = layout;
+    item.labelFrame = CGRectMake(0, 0, layout.textBoundingSize.width, height);
+    return height;
 }
 
 #pragma mark - 消息列表列表界面回调 (UITableViewDataSource / UITableViewDelegate)
@@ -1485,22 +1507,8 @@ typedef enum RoomTipType {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat height = 0;
-
-    CGFloat width = tableView.frame.size.width;
-    // 数据填充
-    if (indexPath.row < self.msgShowArray.count) {
-        MsgItem *item = [self.msgShowArray objectAtIndex:indexPath.row];
-
-        height = [tableView fd_heightForCellWithIdentifier:[MsgTableViewCell cellIdentifier]
-                                          cacheByIndexPath:indexPath
-                                             configuration:^(MsgTableViewCell *cell) {
-
-                                                 [cell changeMessageLabelWidth:width];
-                                                 [cell updataChatMessage:item];
-                                             }];
-    }
-    return height;
+    MsgItem *item = [self.msgShowArray objectAtIndex:indexPath.row];
+    return item.containerHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -1557,6 +1565,31 @@ typedef enum RoomTipType {
     }
 }
 
+// 可能有用
+/**
+ 聊天图片富文本
+ 
+ @param image 图片
+ @param font 字体
+ @return 富文本
+ */
+- (NSAttributedString *)parseImageMessage:(UIImage *)image font:(UIFont *)font {
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
+    
+    LSChatTextAttachment *attachment = nil;
+    
+    // 增加表情文本
+    attachment = [[LSChatTextAttachment alloc] init];
+    //    attachment.bounds = CGRectMake(0, 0, font.lineHeight, font.lineHeight);
+    attachment.image = image;
+    
+    // 生成表情富文本
+    NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attachment];
+    [attributeString appendAttributedString:imageString];
+    
+    return attributeString;
+}
+
 #pragma mark - MsgTableViewCellDelegate
 - (void)msgCellRequestHttp:(NSString *)linkUrl {
     LiveWebViewController *webViewController = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
@@ -1568,7 +1601,9 @@ typedef enum RoomTipType {
 #pragma mark - LiveHeadViewDelegate (发送退出直播间、切换摄像头)
 - (void)liveHeadCloseAction:(LiveHeadView *)liveHeadView {
     if ([self.liveDelegate respondsToSelector:@selector(liveRoomIsClose:)]) {
-        [self.liveDelegate liveRoomIsClose:self];
+        if (self.timeCount == 0) {
+            [self.liveDelegate liveRoomIsClose:self];
+        }
     }
 }
 
@@ -1579,8 +1614,25 @@ typedef enum RoomTipType {
 
 #pragma mark - 发送请求 (请求发送直播间消息、请求发送立即私密邀请、请求设置准备进入直播间)
 - (void)sendRoomMsgRequestFromText:(NSString *)text {
-    // 发送直播间消息
-    [self.imManager sendLiveChat:self.liveRoom.roomId nickName:self.loginManager.loginItem.nickName msg:text at:self.useridArray];
+    BOOL inRoom = NO;
+    AudienModel *item = [[AudienModel alloc] init];
+    for (AudienModel *model in self.chatAudienceArray) {
+        if ([model.userId isEqualToString:self.chatUserId]) {
+            item = model;
+            inRoom = YES;
+        }
+    }
+    NSString *chatMsg = text;
+    if (item.nickName) {
+        chatMsg = [NSString stringWithFormat:@"@%@ %@",item.nickName ,text];
+    }
+    // 如果@用户不在直播间则弹提示
+    if (!inRoom && self.useridArray.count) {
+        [[DialogTip dialogTip] showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"CONTACT_NOT_HAVE")];
+    } else {
+        // 发送直播间消息
+        [self.imManager sendLiveChat:self.liveRoom.roomId nickName:self.loginManager.loginItem.nickName msg:chatMsg at:self.useridArray];
+    }
 }
 
 - (void)sendInstantInviteUser:(NSString *)userid userName:(NSString *)userName {
@@ -1591,18 +1643,32 @@ typedef enum RoomTipType {
         
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                // 邀请中...
-                [self setupTipRoomWithType:ROOMTIP_INVITING userName:userName];
-                self.invitionId = invitation;
-                if (timeOut) {
-                    // 邀请超时显示失败
-                    [self.inviteTimer startTimer:nil timeInterval:timeOut * NSEC_PER_SEC starNow:NO action:^{
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [self setupTipRoomWithType:ROOMTIP_REJECT userName:userName];
-                            [self.inviteTimer stopTimer];
-                        });
-                    }];
+                // 如果有roomid直接进入直播间
+                if (roomId.length) {
+                    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userid roomType:LiveRoomType_Private];
+                    [self sendSetRoomCountDown:roomId pushUrl:url];
+                    
+                } else {
+                    // 如果正在倒计时关闭直播间，则停止计时器
+                    if (self.timer) {
+                        [self.timer stopTimer];
+                    }
+                    // 邀请中...
+                    [self setupTipRoomWithType:ROOMTIP_INVITING userName:userName];
+                    self.invitionId = invitation;
+                    if (timeOut) {
+                        // 邀请超时显示失败
+                        [self.inviteTimer startTimer:nil timeInterval:timeOut * NSEC_PER_SEC starNow:NO action:^{
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [self setupTipRoomWithType:ROOMTIP_REJECT userName:userName];
+                                [self.inviteTimer stopTimer];
+                            });
+                        }];
+                    }
                 }
+            } else {
+                // 错误提示
+                [self showDialogTipView:errMsg];
             }
         });
     }];
@@ -1611,12 +1677,11 @@ typedef enum RoomTipType {
 - (void)sendSetRoomCountDown:(NSString *)roomid pushUrl:(NSURL *)pushUrl {
     // 设置准备进入直播间 请求失败则3秒重试
     LSTimer *timer = [[LSTimer alloc] init];
-    [timer startTimer:nil timeInterval:3.0 * NSEC_PER_SEC starNow:YES action:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[ZBLSRequestManager manager] anchorSetRoomCountDowne:roomid
-                    finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-                        NSLog(@"LiveViewController::anchorSetRoomCountDowne( [设置准备进入直播间] success : %@, errnum : %d, errmsg : %@ )",
-                              (success == YES) ? @"成功":@"失败", errnum, errmsg);
+    [timer startTimer:dispatch_get_main_queue() timeInterval:3.0 * NSEC_PER_SEC starNow:YES action:^{
+        [[LSAnchorRequestManager manager] anchorSetRoomCountDowne:roomid
+                finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+                    NSLog(@"LiveViewController::anchorSetRoomCountDowne( [设置准备进入直播间] success : %@, errnum : %d, errmsg : %@ roomId : %@)", (success == YES) ? @"成功":@"失败", errnum, errmsg , roomid);
+                    dispatch_async(dispatch_get_main_queue(), ^{
                         if (errnum != ZBHTTP_LCC_ERR_CONNECTFAIL) {
                             [timer stopTimer];
                         }
@@ -1624,8 +1689,8 @@ typedef enum RoomTipType {
                             self.isInviting = YES;
                             self.pushUrl = pushUrl;
                         }
-                    }];
-        });
+                    });
+                }];
     }];
 }
 
@@ -1642,7 +1707,7 @@ typedef enum RoomTipType {
             }
             
             if (bFlag) {
-                [[ZBLSImManager manager] enterRoom:self.liveRoom.roomId finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImLiveRoomObject * _Nonnull roomItem) {
+                [self.imManager enterRoom:self.liveRoom.roomId finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImLiveRoomObject * _Nonnull roomItem) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (success) {
                             NSLog(@"LiveViewController::onZBLogin( [IM登陆, 成功, 重新进入直播间], roomId : %@ )", self.liveRoom.roomId);
@@ -1682,9 +1747,14 @@ typedef enum RoomTipType {
     NSLog(@"LiveViewController::onZBLogout( [IM注销通知], errType : %d, errmsg : %@, playerReconnectTime : %lu, publisherReconnectTime : %lu )", errType, errmsg, (unsigned long)self.playerReconnectTime, (unsigned long)self.publisherReconnectTime);
 
     @synchronized(self) {
-        // IM断开, 重置RTMP断开次数
-        self.playerReconnectTime = 0;
-        self.publisherReconnectTime = 0;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // IM断开, 重置RTMP断开次数
+            if (self.liveRoom) {
+                [[DialogTip dialogTip] showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"VIDEO_IS_JUMPY")];
+            }
+            self.playerReconnectTime = 0;
+            self.publisherReconnectTime = 0;
+        });
     }
 }
 
@@ -1749,7 +1819,7 @@ typedef enum RoomTipType {
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
             self.barrageView.hidden = NO;
             // 插入普通文本消息
-            //[self addChatMessageNickName:nickName userLevel:self.loginManager.loginItem.level text:msg honorUrl:honorUrl fromId:fromId];
+            [self addChatMessageNickName:nickName userLevel:false text:msg honorUrl:honorUrl fromId:fromId];
 
             // 插入到弹幕
             BarrageModel *bgItem = [BarrageModel barrageModelForName:nickName message:msg urlWihtUserID:fromId];
@@ -1763,68 +1833,52 @@ typedef enum RoomTipType {
     NSLog(@"LiveViewController::onZBRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
-            
-            AudienModel *item = [[AudienModel alloc] init];
-            for (AudienModel *model in self.chatAudienceArray) {
-                if ([model.userId isEqualToString:self.chatUserId]) {
-                    item = model;
-                }
-            }
-            
-            NSString *chatMsg = msg;
-            if (item.nickName) {
-                chatMsg = [NSString stringWithFormat:@"%@@%@",msg ,item.nickName];
-            }
             // 插入聊天消息到列表
-            [self addChatMessageNickName:nickName userLevel:level text:chatMsg honorUrl:honorUrl fromId:fromId];
+            [self addChatMessageNickName:nickName userLevel:level text:msg honorUrl:honorUrl fromId:fromId];
         }
-    });
-}
-
-- (void)onZBRecvTalentRequestNotice:(ZBImTalentRequestObject *)talentRequestItem {
-    NSLog(@"LiveViewController::onZBRecvTalentRequestNotice( [接收直播间才艺点播通知], nickName : %@, TalentName : %@ )", talentRequestItem.nickName, talentRequestItem.name);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        
     });
 }
 
 - (void)onZBRecvSendSystemNotice:(NSString *)roomId msg:(NSString *)msg link:(NSString *)link type:(ZBIMSystemType)type {
     NSLog(@"LiveViewController::onZBRecvSendSystemNotice( [接收直播间公告消息], roomId : %@, msg : %@, link: %@ type:%d)", roomId, msg, link, type);
     dispatch_async(dispatch_get_main_queue(), ^{
-        MsgItem *msgItem = [[MsgItem alloc] init];
-        if (type == ZBIMSYSTEMTYPE_COMMON) {
-            msgItem.text = msg;
-            if ([link isEqualToString:@""] || link == nil) {
-                msgItem.msgType = MsgType_Announce;
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            MsgItem *msgItem = [[MsgItem alloc] init];
+            if (type == ZBIMSYSTEMTYPE_COMMON) {
+                msgItem.text = msg;
+                if ([link isEqualToString:@""] || link == nil) {
+                    msgItem.msgType = MsgType_Announce;
+                } else {
+                    msgItem.msgType = MsgType_Link;
+                    msgItem.linkStr = link;
+                }
             } else {
-                msgItem.msgType = MsgType_Link;
-                msgItem.linkStr = link;
+                
+                if (self.dialogWarning) {
+                    [self.dialogWarning removeFromSuperview];
+                }
+                //            WeakObject(self, weakSelf);
+                self.dialogWarning = [DialogWarning dialog];
+                self.dialogWarning.tipsLabel.text = msg;
+                [self.dialogWarning showDialog:self.liveRoom.superView actionBlock:^{
+                    
+                }];
+                
+                msgItem.text = msg;
+                msgItem.msgType = MsgType_Warning;
             }
-        } else {
-
-            if (self.dialogWarning) {
-                [self.dialogWarning removeFromSuperview];
-            }
-//            WeakObject(self, weakSelf);
-            self.dialogWarning = [Dialog dialog];
-            self.dialogWarning.tipsLabel.text = msg;
-            [self.dialogWarning showDialog:self.liveRoom.superView actionBlock:^{
-
-            }];
-
-            msgItem.text = msg;
-            msgItem.msgType = MsgType_Warning;
+            NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
+            msgItem.attText = attributeString;
+            [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
         }
-        NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
-        msgItem.attText = attributeString;
-        [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
     });
 }
 
-- (void)onZBRecvEnterRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl riderId:(NSString *)riderId riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl fansNum:(int)fansNum {
+- (void)onZBRecvEnterRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl riderId:(NSString *)riderId riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl fansNum:(int)fansNum isHasTicket:(BOOL)isHasTicket {
     NSLog(@"LiveViewController::onZBRecvEnterRoomNotice( [接收观众进入直播间], roomId : %@, userId : %@, nickName : %@, photoUrl : %@ )", roomId, userId, nickName, photoUrl);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.reloadAudience = YES;
             // 刷观众列表
             [self setupAudienView];
 
@@ -1870,7 +1924,10 @@ typedef enum RoomTipType {
     NSLog(@"LiveViewController::onZBRecvLeaveRoomNotice( [接收观众退出直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, fansNum);
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setupAudienView];
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            self.reloadAudience = YES;
+            [self setupAudienView];
+        }
     });
 }
 
@@ -1884,11 +1941,15 @@ typedef enum RoomTipType {
         if ([self.invitionId isEqualToString:inviteId]) {
             if (replyType == ZBREPLYTYPE_AGREE) {
                 // 更新提示栏
-                [self setupTipRoomWithType:ROOMTIP_AGREE userName:nickName];
+//                [self setupTipRoomWithType:ROOMTIP_AGREE userName:nickName];
+                self.tipType = ROOMTIP_AGREE;
                 
                 // 设置准备进入直播间
-                NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:self.loginManager.loginItem.userId nickName:self.loginManager.loginItem.nickName];
+                NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
                 [self sendSetRoomCountDown:roomId pushUrl:url];
+                
+                // 插入文本提示
+                [self addTips:[NSString stringWithFormat:NSLocalizedStringFromSelf(@"LIVE_INVITE_HAS_ACCEPT"),nickName]];
                 
             } else {
                 [self setupTipRoomWithType:ROOMTIP_REJECT userName:nickName];
@@ -1900,8 +1961,10 @@ typedef enum RoomTipType {
 - (void)onZBRecvRoomKickoffNotice:(NSString *)roomId errType:(ZBLCC_ERR_TYPE)errType errmsg:(NSString *)errmsg {
     NSLog(@"LiveViewController::onZBRecvRoomKickoffNotice( [接收踢出直播间通知], roomId : %@", roomId);
     dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
             // 停止推拉流、显示结束直播间界面
             [self stopLiveWithErrtype:errType errMsg:errmsg];
+        }
     });
 }
 
@@ -1910,7 +1973,7 @@ typedef enum RoomTipType {
 
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
-            
+            self.isRecvRoomClose = YES;
             // 显示房间关闭倒计时
             [self setupTipRoomWithType:ROOMTIP_FINSH userName:nil];
             self.timeCount = leftSeconds;
@@ -1924,13 +1987,24 @@ typedef enum RoomTipType {
     });
 }
 
+- (void)onRecvAnchorLeaveRoomNotice:(NSString *)roomId anchorId:(NSString *)anchorId {
+    NSLog(@"LiveViewController::onRecvAnchorLeaveRoomNotice( [接收主播退出直播间通知], roomId : %@ , anchorId : %@ )", roomId, anchorId);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([self.liveRoom.roomId isEqualToString:roomId] && [self.loginManager.loginItem.userId isEqualToString:anchorId]) {
+            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+        }
+    });
+}
+
 - (void)onZBRecvRoomCloseNotice:(NSString *)roomId errType:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
     NSLog(@"LiveViewController::onZBRecvRoomCloseNotice( [接收关闭直播间回调], roomId : %@, errType : %d, errMsg : %@ )", roomId, errType, errmsg);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
             
+            // 接收关闭直播间通知
+            self.isRecvRoomClose = YES;
+            
             if (self.isInviting) {
-                [self.timer stopTimer];
                 // 停止流
                 [self stopPlay];
                 [self stopPublish];
@@ -1976,6 +2050,8 @@ typedef enum RoomTipType {
     }
 }
 
+
+
 #pragma mark - 倒数控制
 - (void)setupPreviewView {
 
@@ -2011,38 +2087,13 @@ typedef enum RoomTipType {
 //    [self.cameraBtn setImage:[UIImage imageNamed:@"Live_willbe_end"] forState:UIControlStateNormal];
 }
 
-#pragma mark - 后台处理
-- (void)willEnterBackground:(NSNotification *)notification {
-    if( _isBackground == NO ) {
-        _isBackground = YES;
-        
-        [LiveGobalManager manager].enterRoomBackgroundTime = [NSDate date];
-    }
-}
-
-- (void)willEnterForeground:(NSNotification *)notification {
-    if( _isBackground == YES ) {
-        _isBackground = NO;
-        
-        if (self.isTimeOut) {
-            if (self.liveRoom) {
-                NSLog(@"LiveViewController::willEnterForeground ( [接收后台关闭直播间]  IsTimeOut : %@ )",(self.isTimeOut == YES) ? @"Yes" : @"No");
-                // 弹出直播间关闭界面
-//                [self showLiveFinshViewWithErrtype:LCC_ERR_BACKGROUND_TIMEOUT errMsg:nil];
-            }
-        }
-    }
-}
-
-#pragma mark - LiveGobalManagerDelegate
-- (void)enterBackgroundTimeOut:(NSDate * _Nullable)time {
-    
-    self.isTimeOut = YES;
-}
-
 // 显示直播结束界面
 - (void)showLiveFinshViewWithErrtype:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errMsg {
     if (self.liveRoom) {
+        if ([self.liveDelegate respondsToSelector:@selector(liveFinshViewIsShow:)]) {
+            [self.liveDelegate liveFinshViewIsShow:self];
+        }
+        
         LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
         finshController.liveRoom = self.liveRoom;
         finshController.errType = errType;
@@ -2062,8 +2113,13 @@ typedef enum RoomTipType {
 
 // 直播结束停止推拉流并显示结束页
 - (void)stopLiveWithErrtype:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errMsg {
+    // 如果正在私密邀请则取消
+    if (self.invitionId.length) {
+        [[LSAnchorRequestManager manager] anchorCancelInstantInvite:self.invitionId finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+            NSLog(@"LiveViewController::anchorCancelInstantInvite( [主播取消立即私密邀请:%@] )",(success == YES) ? @"成功" : @"失败");
+        }];
+    }
     
-    [self.timer stopTimer];
     // 停止流
     [self stopPlay];
     [self stopPublish];
@@ -2082,6 +2138,11 @@ typedef enum RoomTipType {
                              range:NSMakeRange(0, attributeString.length)
      ];
     return attributeString;
+}
+
+#pragma mark - 3秒dailog
+- (void)showDialogTipView:(NSString *)tipText {
+    [self.dialogProbationTip showDialogTip:self.liveRoom.superView tipText:tipText];
 }
 
 #pragma mark - 调试
@@ -2136,8 +2197,8 @@ typedef enum RoomTipType {
 //    self.testTimer2 = [NSTimer scheduledTimerWithTimeInterval:3.0 target:self selector:@selector(testMethod2) userInfo:nil repeats:YES];
 //    [[NSRunLoop currentRunLoop] addTimer:self.testTimer2 forMode:NSRunLoopCommonModes];
 //
-//    self.testTimer3 = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(testMethod3) userInfo:nil repeats:YES];
-//    [[NSRunLoop currentRunLoop] addTimer:self.testTimer3 forMode:NSRunLoopCommonModes];
+    self.testTimer3 = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(testMethod3) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.testTimer3 forMode:NSRunLoopCommonModes];
 //
 //    self.testTimer4 = [NSTimer scheduledTimerWithTimeInterval:2 target:self selector:@selector(testMethod4) userInfo:nil repeats:YES];
 //    [[NSRunLoop currentRunLoop] addTimer:self.testTimer4 forMode:NSRunLoopCommonModes];

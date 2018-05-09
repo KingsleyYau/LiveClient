@@ -8,14 +8,12 @@
 
 #import "BackpackSendGiftManager.h"
 #import "LSLoginManager.h"
-#import "ZBLSRequestManager.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorRequestManager.h"
+#import "LSAnchorImManager.h"
 
-@interface BackpackSendGiftManager () <LoginManagerDelegate>
+@interface BackpackSendGiftManager () <LoginManagerDelegate, ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate>
 
 @property (nonatomic, strong) LSLoginManager *loginManager;
-
-@property (nonatomic, assign) BOOL isFirstSend;
 
 @end
 
@@ -41,6 +39,7 @@
         self.loginManager = [LSLoginManager manager];
         self.sendGiftArray = [[NSMutableArray alloc] init];
         self.isFirstSend = YES;
+        self.isIMNetWork = YES;
     }
     return self;
 }
@@ -48,7 +47,7 @@
 #pragma mark - 请求背包礼物列表
 - (void)getGiftListWithRoomid:(NSString *)roomid finshCallback:(RequestRoomGiftBlock)finshCallback {
     
-    [[ZBLSRequestManager manager] anchorGiftList:roomid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBGiftLimitNumItemObject *> * _Nullable array) {
+    [[LSAnchorRequestManager manager] anchorGiftList:roomid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBGiftLimitNumItemObject *> * _Nullable array) {
         NSLog(@"BackpackSendGiftManager::AnchorGiftList( [主播获取直播间礼物列表], success : %d, errnum : %ld, errmsg : %@, count : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -110,23 +109,32 @@
         [self.backGiftArray replaceObjectAtIndex:index withObject:backGiftItem];
         successType = 1;
 
-    } else if (remainNum == 0) {
-
+    } else {
+        sendItem.giftNum = backGiftItem.giftNum;
+        sendItem.endNum = backGiftItem.giftNum + sendItem.starNum -1;
         [self addItemInQueueAndSend:sendItem];
         // 礼物送完移出合成礼物队列
         [self.backGiftArray removeObjectAtIndex:index];
         successType = 2;
-
-    } else {
-        successType = 0;
     }
-
     return successType;
 }
 
 - (void)addItemInQueueAndSend:(SendGiftItem *)sendItem {
 
-    [self.sendGiftArray addObject:sendItem];
+    // IM连接,送礼插队列
+    if (self.isIMNetWork) {
+        [self.sendGiftArray addObject:sendItem];
+        
+    } else {
+        // IM断线,清队列
+        @synchronized(self.sendGiftArray){
+            if (self.sendGiftArray.count) {
+                [self.sendGiftArray removeAllObjects];
+            }
+        }
+    }
+    
     if (self.isFirstSend) {
         [self sendBackGiftQurest];
         self.isFirstSend = NO;
@@ -135,7 +143,7 @@
 
 - (void)sendBackGiftQurest {
 
-    ZBLSImManager *manager = [ZBLSImManager manager];
+    LSAnchorImManager *manager = [LSAnchorImManager manager];
     SendGiftItem *item = self.sendGiftArray[0];
     
     // 送礼
@@ -157,16 +165,22 @@
 
                     if (success) {
                         if (self.sendGiftArray.count > 0) {
-                            [self.sendGiftArray removeObjectAtIndex:0];
+                            @synchronized(self.sendGiftArray){
+                                [self.sendGiftArray removeObjectAtIndex:0];
+                            }
                         }
+                        
                         if (self.sendGiftArray.count) {
                             [self sendBackGiftQurest];
                         } else {
                             self.isFirstSend = YES;
                         }
+                        
                     } else {
-
-                        [self.sendGiftArray removeAllObjects];
+                        // 发送失败清队列
+                        @synchronized(self.sendGiftArray){
+                            [self.sendGiftArray removeAllObjects];
+                        }
                         self.isFirstSend = YES;
                     }
                 });

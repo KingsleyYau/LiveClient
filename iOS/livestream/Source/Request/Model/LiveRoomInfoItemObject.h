@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <httpcontroller/HttpRequestEnum.h>
+#import "LSProgramItemObject.h"
 
 @interface LiveRoomInfoItemObject : NSObject
 {
@@ -23,6 +24,7 @@
  * roomType          直播间类型
  * interest          爱好ID列表
  * anchorType        主播类型（1:白银 2:黄金）
+ * showInfo          节目信息
  */
 
 @property (nonatomic, strong) NSString* userId;
@@ -38,6 +40,8 @@
 //InterestType interest[INTERESTTYPE_END];
 //主播类型（1:白银 2:黄金）
 @property (nonatomic, assign) AnchorLevelType anchorType;
+// 节目信息
+@property (nonatomic, strong) LSProgramItemObject* showInfo;
 
 @property (nonatomic, assign) int loveLevel;
 @property (nonatomic, assign) NSInteger addDate;

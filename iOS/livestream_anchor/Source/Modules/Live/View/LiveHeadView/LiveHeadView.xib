@@ -25,9 +25,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
                 </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uFk-qw-5z8">
-                    <rect key="frame" x="5" y="10" width="25" height="25"/>
+                    <rect key="frame" x="5" y="5" width="35" height="35"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="25" id="I53-eK-rQX"/>
+                        <constraint firstAttribute="height" constant="35" id="I53-eK-rQX"/>
                         <constraint firstAttribute="width" secondItem="uFk-qw-5z8" secondAttribute="height" multiplier="1:1" id="WO4-ps-BaM"/>
                     </constraints>
                     <state key="normal" image="Live_Btn_Cancel"/>
@@ -36,10 +36,10 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RoW-ya-URO">
-                    <rect key="frame" x="345" y="12.5" width="20" height="20"/>
+                    <rect key="frame" x="330" y="5" width="35" height="35"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="RoW-ya-URO" secondAttribute="height" multiplier="1:1" id="1BL-EE-e9O"/>
-                        <constraint firstAttribute="height" constant="20" id="4Oc-Qv-Dj0"/>
+                        <constraint firstAttribute="height" constant="35" id="4Oc-Qv-Dj0"/>
                     </constraints>
                     <state key="normal" image="Live_Change_Camera"/>
                     <connections>
@@ -52,7 +52,7 @@
                 <constraint firstItem="WC6-VY-WY6" firstAttribute="top" secondItem="NDm-Ta-p7E" secondAttribute="top" id="0VS-H5-QRG"/>
                 <constraint firstItem="uFk-qw-5z8" firstAttribute="leading" secondItem="NDm-Ta-p7E" secondAttribute="leading" constant="5" id="1Vx-c7-tfG"/>
                 <constraint firstAttribute="trailing" secondItem="WC6-VY-WY6" secondAttribute="trailing" id="DtU-hb-t4a"/>
-                <constraint firstItem="uFk-qw-5z8" firstAttribute="top" secondItem="NDm-Ta-p7E" secondAttribute="top" constant="10" id="IsL-8f-Uet"/>
+                <constraint firstItem="uFk-qw-5z8" firstAttribute="top" secondItem="NDm-Ta-p7E" secondAttribute="top" constant="5" id="IsL-8f-Uet"/>
                 <constraint firstAttribute="trailing" secondItem="RoW-ya-URO" secondAttribute="trailing" constant="10" id="K2w-ib-Cmz"/>
                 <constraint firstItem="RoW-ya-URO" firstAttribute="centerY" secondItem="uFk-qw-5z8" secondAttribute="centerY" id="Ufs-xF-zK1"/>
                 <constraint firstAttribute="bottom" secondItem="WC6-VY-WY6" secondAttribute="bottom" id="Vxu-nO-4Km"/>

@@ -8,7 +8,7 @@
 
 #import "LSGoogleAnalyticsViewController.h"
 #import "LiveRoom.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 
 @interface LiveFinshViewController : LSGoogleAnalyticsViewController
 

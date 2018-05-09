@@ -572,7 +572,7 @@ void HttpClient::Stop() {
 }
 
 void HttpClient::Init(string url) {
-	FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Init( url : %s )", url.c_str());
+    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Init( url : %s this：%s) ", url.c_str(), this);
 	mUrl = url;
 }
 
@@ -594,11 +594,9 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 	mdDownloadLastTime = INVALID_DOWNLOADLASTTIME;
     mdDownloadTimeout = entiy->mDownloadTimeout;
 
-    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Request( start, mpCURL : %p )", mpCURL);
 	if( mpCURL == NULL ) {
 		mpCURL = curl_easy_init();
 	}
-    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::Request( init success, mpCURL : %p )", mpCURL);
 
 
 	curl_easy_setopt(mpCURL, CURLOPT_URL, mUrl.c_str());
@@ -835,19 +833,20 @@ size_t HttpClient::CurlProgress(void *data, double downloadTotal, double downloa
 }
 
 size_t HttpClient::HttpProgress(double downloadTotal, double downloadNow, double uploadTotal, double uploadNow) {
-//	FileLog(LIVESHOW_HTTP_LOG, "HttpClient::HttpProgress( "
-//			"downloadTotal: %.0f, "
-//			"downloadNow : %.0f, "
-//			"uploadTotal : %.0f, "
-//			"uploadNow : %.0f, "
-//			"mbStop : %s "
-//			")",
-//			downloadTotal,
-//			downloadNow,
-//			uploadTotal,
-//			uploadNow,
-//			mbStop?"true":"false"
-//			);
+//    FileLog(LIVESHOW_HTTP_LOG, "HttpClient::HttpProgress( "
+//            "downloadTotal: %.0f, "
+//            "downloadNow : %.0f, "
+//            "uploadTotal : %.0f, "
+//            "uploadNow : %.0f, "
+//            "mbStop : %s "
+//            ")",
+//            downloadTotal,
+//            downloadNow,
+//            uploadTotal,
+//            uploadNow,
+//            mbStop?"true":"false"
+//            );
+ //   FileLog(LIVESHOW_HTTP_LOG, "HttpClient::HttpProgress()");
 
 	double totalTime = 0;
 	curl_easy_getinfo(mpCURL, CURLINFO_TOTAL_TIME, &totalTime);

@@ -101,6 +101,7 @@
         
         CGFloat failBtnY = CGRectGetMaxY(self.failTips.frame) + 44.0f;
         self.failBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 180, 36)];
+        [self.failBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         CGPoint failBtnCenter = self.failBtn.center;
         failBtnCenter.x = iconCenter;
         failBtnCenter.y = failBtnY;
@@ -128,6 +129,13 @@
     if (self.delegate && [self.delegate respondsToSelector:@selector(lsListViewController:didClick:)]) {
         [self.delegate lsListViewController:self didClick:sender];
     }
+    
+    [self lsListViewControllerDidClick:sender];
+}
+
+- (void)lsListViewControllerDidClick:(UIButton *)sender
+{
+    
 }
 
 - (void)reloadFailViewContent {

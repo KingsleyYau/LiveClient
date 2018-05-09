@@ -12,6 +12,7 @@
 #import "LSLoginManager.h"
 #import "UserInfoManager.h"
 #import "LSSessionRequestManager.h"
+#import "LiveFansListRequest.h"
 
 @interface LSImManager () <IMLiveRoomManagerDelegate, LoginManagerDelegate>
 @property (nonatomic, strong) NSMutableArray *delegates;
@@ -190,7 +191,7 @@ static LSImManager *gManager = nil;
 //                        // 不需要处理
 //                    }
 //                }
-
+                
                 // 处理预约
                 [self handleLoginScheduleRoomList:item.scheduleRoomList];
 
@@ -315,6 +316,20 @@ static LSImManager *gManager = nil;
     return bFlag;
 }
 
+- (BOOL)handleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject*> *) ongoingShowList {
+    BOOL bFlag = YES;
+    
+    for (NSValue *value in self.delegates) {
+        id<IMManagerDelegate> delegate = (id<IMManagerDelegate>)value.nonretainedObjectValue;
+        if ([delegate respondsToSelector:@selector(onHandleLoginOnGingShowList:)]) {
+            [delegate onHandleLoginOnGingShowList:ongoingShowList];
+        }
+    }
+    
+    return bFlag;
+}
+
+
 #pragma mark - 直播间状态
 - (BOOL)enterRoom:(NSString *_Nonnull)roomId finishHandler:(EnterRoomHandler _Nullable)finishHandler {
     NSLog(@"LSImManager::enterRoom( [发送观众进入直播间], roomId : %@ )", roomId);
@@ -399,8 +414,10 @@ static LSImManager *gManager = nil;
 }
 
 
-- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString * _Nonnull)honorImg{
+- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString * _Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
     NSLog(@"LSImManager::onRecvEnterRoomNotice( [接收观众进入直播间通知], roomId : %@, userId : %@, nickName : %@ )", roomId, userId, nickName);
+    
+    
 }
 
 
@@ -690,6 +707,10 @@ static LSImManager *gManager = nil;
     NSLog(@"LSImManager::onSendLiveChat( [发送直播间文本消息, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
 }
 
+
+
+
+
 - (void)onRecvSendChatNotice:(NSString *_Nonnull)roomId level:(int)level fromId:(NSString *_Nonnull)fromId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg honorUrl:(NSString * _Nonnull)honorUrl {
     NSLog(@"LSImManager::onRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@, honorUrl : %@ )", roomId, nickName, msg, honorUrl);
 }
@@ -773,6 +794,266 @@ static LSImManager *gManager = nil;
 
 - (void)onRecvGetHonorNotice:(NSString * _Nonnull)honorId honorUrl:(NSString * _Nonnull)honorUrl {
     NSLog(@"LSImManager::onRecvGetHonorNotice( [观众勋章升级通知] )");
+}
+
+#pragma mark - 多人互动
+// ------------- 多人互动 -------------
+/**
+ *  10.3.观众新建/进入多人互动直播间接口
+ *
+ *  @param roomId           直播间ID
+ *
+ */
+- (BOOL)enterHangoutRoom:(NSString* _Nonnull)roomId finishHandler:(EnterHangoutRoomHandler _Nullable)finishHandler {
+    NSLog(@"LSImManager::enterHangoutRoom( [发送直播间礼物消息], roomId : %@ )", roomId);
+    BOOL bFlag = NO;
+    
+    @synchronized(self) {
+        // 标记IM登陆未登陆
+        if (self.isIMLogin) {
+            SEQ_T reqId = [self.client getReqId];
+            bFlag = [self.client enterHangoutRoom:reqId roomId:roomId];
+            if (bFlag && finishHandler) {
+                [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
+            }
+        }
+    }
+    return bFlag;
+}
+
+/**
+ *  10.4.退出多人互动直播间接口
+ *
+ *  @param roomId           直播间ID
+ *
+ */
+- (BOOL)leaveHangoutRoom:(NSString* _Nonnull)roomId finishHandler:(LeaveHangoutRoomHandler _Nullable)finishHandler{
+    NSLog(@"LSImManager::leaveHangoutRoom( [退出多人互动直播间], roomId : %@ )", roomId);
+    BOOL bFlag = NO;
+    
+    @synchronized(self) {
+        // 标记IM登陆未登陆
+        if (self.isIMLogin) {
+            SEQ_T reqId = [self.client getReqId];
+            bFlag = [self.client leaveHangoutRoom:reqId roomId:roomId];
+            if (bFlag && finishHandler) {
+                [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
+            }
+        }
+    }
+    return bFlag;
+}
+
+/**
+ *  10.7.发送多人互动直播间礼物消息接口
+ *
+ * @roomId              直播间ID
+ * @nickName            发送人昵称
+ * @toUid               接收者ID
+ * @giftId              礼物ID
+ * @giftName            礼物名称
+ * @isBackPack          是否背包礼物（1：是，0：否）
+ * @giftNum             本次发送礼物的数量
+ * @isMultiClick        是否连击礼物（1：是，0：否）
+ * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
+ * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
+ * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
+ * @isPrivate           是否私密发送（1：是，0：否）
+ *
+ */
+- (BOOL)sendHangoutGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName toUid:(NSString* _Nonnull)toUid giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate finishHandler:(SendHangoutGiftHandler _Nullable)finishHandler{
+    NSLog(@"LSImManager::sendGift( [发送直播间礼物消息], roomId : %@, nickName : %@, giftId : %@ )", roomId, nickName, giftId);
+    BOOL bFlag = NO;
+    
+    @synchronized(self) {
+        // 标记IM登陆未登陆
+        if (self.isIMLogin) {
+            SEQ_T reqId = [self.client getReqId];
+            bFlag = [self.client sendHangoutGift:reqId roomId:roomId nickName:nickName toUid:toUid giftId:giftId giftName:giftName isBackPack:isBackPack giftNum:giftNum isMultiClick:isMultiClick multiClickStart:multiClickStart multiClickEnd:multiClickEnd multiClickId:multiClickId isPrivate:isPrivate];
+            if (bFlag && finishHandler) {
+                [self.requestDictionary setValue:finishHandler forKey:[NSString stringWithFormat:@"%u", reqId]];
+            }
+        }
+    }
+    return bFlag;
+}
+
+
+
+/**
+ *  10.1.接收主播推荐好友通知接口 回调
+ *
+ *  @param item         接收主播推荐好友通知
+ *
+ */
+- (void)onRecvRecommendHangoutNotice:(IMRecommendHangoutItemObject * _Nonnull)item {
+    NSLog(@"LSImManager::onRecvRecommendHangoutNotice( [接收主播推荐好友通知] )");
+}
+
+/**
+ *  10.2.接收主播回复观众多人互动邀请通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvDealInviteHangoutNotice:(IMRecvDealInviteItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvDealInviteHangoutNotice( [接收主播回复观众多人互动邀请通知] )");
+}
+
+
+/**
+ *  10.3.观众新建/进入多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *  @param item        进入多人互动直播间信息
+ *
+ */
+- (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg item:(IMHangoutRoomItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onEnterHangoutRoom( [观众新建/进入多人互动直播间] )");
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        EnterHangoutRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg, item);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
+}
+
+
+/**
+ *  10.4.退出多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *
+ */
+- (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg{
+    NSLog(@"LSImManager::onLeaveHangoutRoom( [退出多人互动直播间] )");
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        LeaveHangoutRoomHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
+}
+
+
+/**
+ *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvEnterHangoutRoomNotice:(IMRecvEnterRoomItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvEnterHangoutRoomNotice( [接收观众/主播进入多人互动直播间通知] )");
+}
+
+
+/**
+ *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
+ *
+ *  @param item         接收观众/主播退出多人互动直播间信息
+ *
+ */
+- (void)onRecvLeaveHangoutRoomNotice:(IMRecvLeaveRoomItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvLeaveHangoutRoomNotice( [接收观众/主播退出多人互动直播间通知] )");
+}
+
+
+/**
+ *  10.7.发送多人互动直播间礼物消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg{
+    NSLog(@"LSImManager::onSendHangoutGift( [发送多人互动直播间礼物消息] )");
+    @synchronized(self) {
+        NSString *key = [NSString stringWithFormat:@"%u", reqId];
+        SendHangoutGiftHandler finishHandler = [self.requestDictionary valueForKey:key];
+        if (finishHandler) {
+            finishHandler(success, err, errMsg);
+        }
+        [self.requestDictionary removeObjectForKey:key];
+    }
+}
+
+
+/**
+ *  10.8.接收多人互动直播间礼物通知接口 回调
+ *
+ *  @param item         接收多人互动直播间礼物信息
+ *
+ */
+- (void)onRecvHangoutGiftNotice:(IMRecvHangoutGiftItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvHangoutGiftNotice( [接收多人互动直播间礼物通知] )");
+}
+
+
+/**
+ *  10.9.接收主播敲门通知接口 回调
+ *
+ *  @param item         接收主播发起的敲门信息
+ *
+ */
+- (void)onRecvKnockRequestNotice:(IMKnockRequestItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvKnockRequestNotice( [接收主播敲门通知] )");
+}
+
+
+/**
+ *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
+ *
+ *  @param item         观众账号余额不足信息
+ *
+ */
+- (void)onRecvLackCreditHangoutNotice:(IMLackCreditHangoutItemObject * _Nonnull)item{
+    NSLog(@"LSImManager::onRecvLackCreditHangoutNotice( [接收多人互动余额不足导致主播将要离开的通知] )");
+}
+
+
+/**
+ *  11.1.接收节目开播通知接口 回调
+ *
+ *  @param item         节目
+ *  @param type                     通知类型（1：已购票的开播通知，2：仅关注的开播通知）
+ *  @param msg                      消息提示文字
+ *
+ */
+- (void)onRecvProgramPlayNotice:(IMProgramItemObject *_Nonnull)item type:(IMProgramNoticeType)type msg:(NSString * _Nonnull)msg{
+    
+    NSLog(@"LSImManager::onRecvProgramPlayNotice( [接收节目开播通知]type:%d)",type);
+}
+
+/**
+ *  11.2.接收节目已取消通知接口 回调
+ *
+ *  @param item         节目
+ *
+ */
+- (void)onRecvCancelProgramNotice:(IMProgramItemObject *_Nonnull)item {
+    
+    NSLog(@"LSImManager::onRecvCancelProgramNotice( [接收节目已取消通知] )");
+}
+
+/**
+ *  11.3.接收节目已退票通知接口 回调
+ *
+ *  @param item         节目
+ *  @param leftCredit   当前余额
+ *
+ */
+- (void)onRecvRetTicketNotice:(IMProgramItemObject *_Nonnull)item leftCredit:(double)leftCredit {
+    
+    NSLog(@"LSImManager::onRecvRetTicketNotice( [接收节目已退票通知] %f)", leftCredit);
 }
 
 @end

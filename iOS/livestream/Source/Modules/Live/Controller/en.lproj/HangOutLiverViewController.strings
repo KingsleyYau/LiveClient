@@ -1,0 +1,18 @@
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "DE4-h7-yHK"; */
+"DE4-h7-yHK.normalTitle" = "Cancel";
+
+/* Class = "UILabel"; text = "Randy"; ObjectID = "FLY-A2-Npi"; */
+"FLY-A2-Npi.text" = "Randy";
+
+/* Class = "UILabel"; text = "Invite Randy"; ObjectID = "zBx-hC-ddw"; */
+"zBx-hC-ddw.text" = "Invite Broadcast";
+
+"INVITING_ANCHOR" = "Inviting %@";
+
+"ANCHOR_IS_COMING" = "%@ is coming in";
+
+"ANCHOR_WILL_ENTER" = "%@ will enter in %ds";
+
+"INVITE_TIP" = "Invite Broadcaster";
+

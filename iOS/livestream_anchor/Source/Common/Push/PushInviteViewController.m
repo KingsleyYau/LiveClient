@@ -8,17 +8,17 @@
 
 #import "PushInviteViewController.h"
 #import "LSTimer.h"
-#import "LSImManager.h"
+#import "LSAnchorImManager.h"
 #import "UserInfoManager.h"
 #import "LSImageViewLoader.h"
 #import "LiveModule.h"
 #import "LiveService.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LiveGobalManager.h"
 #import "DialogTip.h"
 #import "LiveUrlHandler.h"
 #import "LSLoginManager.h"
-@interface PushInviteViewController ()
+@interface PushInviteViewController ()<UIAlertViewDelegate>
 @property (nonatomic, strong) UserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (strong) LSTimer *removeTimer;
@@ -53,7 +53,7 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self updataUserInfo:self.anchorId];
+    [self updataUserInfo:self.userId];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -84,38 +84,8 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
 - (void)pushLiveRoom
 {
     if ([LiveGobalManager manager].liveRoom) {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"Alert_Msg") preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            // 停止定时器
-            [self.removeTimer stopTimer];
-            // 移除界面
-            [self.view removeFromSuperview];
-            [self removeFromParentViewController];
-        }];
-        UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"SURE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            // 停止定时器
-            [self.removeTimer stopTimer];
-            
-            // 接收立即私密邀请
-            [self sendAcceptInstanceInvite:self.inviteId finshHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, ZBHttpRoomType roomType) {
-                if (success) {
-                    // 重组url
-                     self.url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:[LSLoginManager manager].loginItem.userId roomType:LiveRoomType_Private];
-                    // 发送通知
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"LivePushInviteNotification" object:self.url];
-                } else {
-                     [[DialogTip dialogTip]showDialogTip:ZBAppDelegate.window tipText:errmsg];
-                }
-            }];
-            // 移除界面
-            [self.view removeFromSuperview];
-            [self removeFromParentViewController];
-            
-        }];
-        [alert addAction:cancelAction];
-        [alert addAction:okAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedStringFromSelf(@"Alert_Msg") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"SURE", nil), nil];
+        [alertView show];
     }
     else
     {
@@ -143,9 +113,41 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
     [self removeFromParentViewController];
 }
 
+#pragma mark - AlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == alertView.cancelButtonIndex) {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+    else
+    {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        
+        // 接收立即私密邀请
+        [self sendAcceptInstanceInvite:self.inviteId finshHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, ZBHttpRoomType roomType) {
+            if (success) {
+                // 重组url
+                self.url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:self.userId roomType:LiveRoomType_Private];
+                // 发送通知
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"LivePushInviteNotification" object:self.url];
+            } else {
+                [[DialogTip dialogTip]showDialogTip:ZBAppDelegate.window tipText:errmsg];
+            }
+        }];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+}
+
 #pragma mark - 业务逻辑
 - (void)sendAcceptInstanceInvite:(NSString *)inviteid finshHandler:(AcceptInviteHandler)finshHandler {
-    [[ZBLSRequestManager manager] anchorAcceptInstanceInvite:inviteid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, ZBHttpRoomType roomType) {
+    [[LSAnchorRequestManager manager] anchorAcceptInstanceInvite:inviteid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, ZBHttpRoomType roomType) {
         NSLog(@"PushInviteViewController::sendAcceptInstanceInvite:( [主播接收立即私密邀请] success : %@, errnum : %d, errmsg : %@, roomid : %@, roomType : %d)",(success == YES) ? @"成功":@"失败", errnum, errmsg, roomId, roomType);
         dispatch_async(dispatch_get_main_queue(), ^{
             finshHandler(success, errnum, errmsg, roomId, roomType);
@@ -155,7 +157,7 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
 
 - (void)rejectInviteRequest {
     // 拒绝邀请
-    [[ZBLSRequestManager manager] anchorRejectInstanceInvite:self.inviteId rejectReason:@"" finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+    [[LSAnchorRequestManager manager] anchorRejectInstanceInvite:self.inviteId rejectReason:@"" finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
          NSLog(@"PushInviteViewController::anchorRejectInstanceInvite( [拒绝邀请, %@] )", BOOL2SUCCESS(success));
     }];
 }
@@ -167,7 +169,7 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
                         finishHandler:^(AudienModel *_Nonnull item) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 weakSelf.tipsLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_INVITE_TIP"), item.nickName];
-                                [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+                                [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
                             });
                         }];
 }

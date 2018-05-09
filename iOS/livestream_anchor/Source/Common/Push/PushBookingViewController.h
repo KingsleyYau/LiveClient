@@ -15,4 +15,5 @@
 @property (strong) NSURL *url;
 @property (strong) NSString *tips;
 @property (strong) NSString *userId;
+@property (strong) NSString *userName;
 @end

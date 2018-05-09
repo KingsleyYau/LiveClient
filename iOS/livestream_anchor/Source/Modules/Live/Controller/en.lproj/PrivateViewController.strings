@@ -8,6 +8,16 @@
 
 "PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
 
-"EXIT_LIVEROOM_TIP" = "Are you sure to leave the broadcast room?";
+"EXIT_LIVEROOM_TIP" = "Are you sure to end this broadcast?";
 
+"Accepted_msg" = "You have accepted %@'s request \"%@\"";
 
+"Declined_msg" = "You have declined %@'s request \"%@\"";
+
+"CONNECTION_SERVER_FAILED" = "Trouble connecting to the server please try again later.";
+
+"AUDIENCE_OPEND_CAMERA" = "%@ has turned on his webcam.";
+
+"AUDIENCE_CLOSE_CAMERA" = "%@ has turned off his webcam.";
+
+"Alert_Msg" = "Are you sure to end this broadcast and start One-on-One?";

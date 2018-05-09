@@ -33,6 +33,9 @@
 #import "AcceptInstanceInviteItemObject.h"
 #import "LSUserInfoItemObject.h"
 #import "LSVoucherAvailableInfoItemObject.h"
+#import "LSHangoutAnchorItemObject.h"
+
+#import "LSProgramItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -1006,5 +1009,258 @@ typedef void (^GetUserInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum,
  */
 - (NSInteger)getUserInfo:(NSString * _Nonnull) userId
            finishHandler:(GetUserInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  8.1.获取可邀请多人互动的主播列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        多人互动的主播列表
+ */
+typedef void (^GetCanHangoutAnchorListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSHangoutAnchorItemObject *>* _Nullable array);
+
+/**
+ *  8.1.获取可邀请多人互动的主播列表接口
+ *
+ *  @param type             列表类型（HANGOUTANCHORLISTTYPE_FOLLOW：已关注，HANGOUTANCHORLISTTYPE_WATCHED：Watched，HANGOUTANCHORLISTTYPE_FRIEND：主播好友）
+ *  @param anchorId         主播ID（可无，仅当type=3才存在）
+ *  @param start            起始，用于分页，表示从第几个元素开始获取
+ *  @param step             步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getCanHangoutAnchorList:(HangoutAnchorListType)type
+                            anchorId:(NSString *_Nullable)anchorId
+                               start:(int)start
+                                step:(int)step
+                       finishHandler:(GetCanHangoutAnchorListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  8.2.发起多人互动邀请接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param roomId       多人互动直播间ID（可无，有则表示邀请成功且多人互动直播间已存在）
+ *  @param inviteId     邀请ID（可无，若room_id不为空则无）
+ *  @param expire       邀请有效的剩余秒数（整型）（可无，若invite_id不存在或为空则无）
+ */
+typedef void (^SendInvitationHangoutFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, NSString *_Nonnull inviteId, int expire);
+
+/**
+ *  8.2.发起多人互动邀请接口
+ *
+ *  @param roomId           当前发起的直播间ID
+ *  @param anchorId         主播ID
+ *  @param recommendId      推荐ID（可无，无则表示不是因推荐导致观众发起邀请）
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)sendInvitationHangout:(NSString *_Nullable)roomId
+                          anchorId:(NSString *_Nullable)anchorId
+                       recommendId:(NSString *_Nullable)recommendId
+                     finishHandler:(SendInvitationHangoutFinishHandler _Nullable)finishHandler;
+
+/**
+ *  8.3.取消多人互动邀请接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ */
+typedef void (^CancelInviteHangoutFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  8.3.取消多人互动邀请接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)cancelInviteHangout:(NSString *_Nullable)inviteId
+                   finishHandler:(CancelInviteHangoutFinishHandler _Nullable)finishHandler;
+
+/**
+ *  8.4.获取多人互动邀请状态接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param status       邀请状态（HANGOUTINVITESTATUS_PENDING：待确定，HANGOUTINVITESTATUS_ACCEPT：已接受，HANGOUTINVITESTATUS_REJECT：已拒绝，HANGOUTINVITESTATUS_OUTTIME：已超时）
+ *  @param roomId       多人互动直播间ID
+ *  @param expire       邀请有效的剩余秒数
+ */
+typedef void (^GetHangoutInvitStatusFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, HangoutInviteStatus status, NSString * _Nonnull roomId, int expire);
+
+/**
+ *  8.4.获取多人互动邀请状态接口
+ *
+ *  @param inviteId         邀请ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getHangoutInvitStatus:(NSString *_Nullable)inviteId
+                   finishHandler:(GetHangoutInvitStatusFinishHandler _Nullable)finishHandler;
+
+/**
+ *  8.5.同意主播敲门请求接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ */
+typedef void (^DealKnockRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  8.5.同意主播敲门请求接口
+ *
+ *  @param knockId          敲门ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)dealKnockRequest:(NSString *_Nullable)knockId
+                finishHandler:(DealKnockRequestFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.1.获取节目未读数接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param num          未读数量
+ */
+typedef void (^GetNoReadNumProgramFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int num);
+
+/**
+ *  9.1.获取节目未读数接口
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getNoReadNumProgram:(GetNoReadNumProgramFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.2.获取节目列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        节目列表
+ */
+typedef void (^GetProgramListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *>* _Nullable array);
+
+/**
+ *  9.2.获取节目列表接口
+ *
+ *  @param sortType          列表类型（PROGRAMLISTTYPE_STARTTIEM：按节目开始时间排序，PROGRAMLISTTYPE_VERIFYTIEM：按节目审核时间排序，PROGRAMLISTTYPE_FEATURE：按广告排序，，PROGRAMLISTTYPE_BUYTICKET：已购票列表， PROGRAMLISTTYPE_HISTORY: 购票历史列表）
+ *  @param start                         起始，用于分页，表示从第几个元素开始获取
+ *  @param step                          步长，用于分页，表示本次请求获取多少个元素
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getProgramListProgram:(ProgramListType)sortType
+                             start:(int)start
+                              step:(int)step
+                     finishHandler:(GetProgramListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.3.购买节目接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ */
+typedef void (^BuyProgramFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, double leftCredit);
+
+/**
+ *  9.3.购买节目接口
+ *
+ *  @param liveShowId       节目ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)buyProgram:(NSString *_Nullable)liveShowId
+                       finishHandler:(BuyProgramFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.4.关注/取消关注接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ */
+typedef void (^FollowShowFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
+
+/**
+ *  9.4.关注/取消关注节目接口
+ *
+ *  @param liveShowId        节目ID
+ *  @param isCancle          是否取消
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)followShow:(NSString *_Nullable)liveShowId
+               isCancle:(BOOL)isCancle
+          finishHandler:(FollowShowFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.5.获取可进入的节目信息接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         节目信息
+ *  @param roomId       直播间ID
+ */
+typedef void (^GetShowRoomInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSProgramItemObject * _Nullable item, NSString * _Nonnull roomId);
+
+/**
+ *  9.5.获取可进入的节目信息接口
+ *
+ *  @param liveShowId        节目ID
+ *  @param finishHandler     接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getShowRoomInfo:(NSString *_Nullable)liveShowId
+          finishHandler:(GetShowRoomInfoFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.6.获取节目推荐列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param array        节目列表
+ */
+typedef void (^ShowListWithAnchorIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *>* _Nullable array);
+
+
+/**
+ *  9.6.获取节目推荐列表接口
+ *
+ *  @param anchorId          主播ID
+ *  @param start             起始，用于分页，表示从第几个元素开始获取
+ *  @param step              步长，用于分页，表示本次请求获取多少个元素
+ *  @param sortType          推荐列表类型（SHOWRECOMMENDLISTTYPE_ENDRECOMMEND：直播结束推荐<包括指定主播及其它主播>，SHOWRECOMMENDLISTTYPE_PERSONALRECOMMEND：主播个人节目推荐<仅包括指定主播>，SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND：不包括指定主播）
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)showListWithAnchorId:(NSString *_Nullable)anchorId
+                             start:(int)start
+                              step:(int)step
+                        sortType:(ShowRecommendListType)sortType
+                     finishHandler:(ShowListWithAnchorIdFinishHandler _Nullable)finishHandler;
 
 @end

@@ -12,16 +12,17 @@
 #import <AVFoundation/AVFoundation.h>
 
 #pragma mark - 公共模块
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LSFileCacheManager.h"
 #import "LiveStreamSession.h"
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
 #import "CrashLogManager.h"
+#import "LSRequestManager.h"
 
 #pragma mark - Http Server
 #import "GCDWebDAVServer.h"
-
+#import "LSUrlParmItem.h"
 @interface AppDelegate ()
 @property (strong) GCDWebServer *httpServer;
 @end
@@ -39,15 +40,7 @@
 
 - (void)didFinishLaunchWithApplication:(UIApplication *)application {
     self.window.backgroundColor = [UIColor whiteColor];
-    
-    // 设置公共属性
-    _debug = NO;
-    
-//    NSURLConnection *con = [[NSURLConnection alloc] initWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]] delegate:nil startImmediately:YES];
-    
-    // 状态栏白色
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
+ 
     // 为Document目录增加iTunes不同步属性
     NSURL *url = [NSURL fileURLWithPath:[NSHomeDirectory() stringByAppendingPathComponent:@"Documents"]];
     [LSURLFileAttribute addSkipBackupAttribute:url];
@@ -55,17 +48,18 @@
     [CrashLogManager manager];
     
     // 设置接口请求环境
-    // 如果调试模式, 直接进入正式环境
-    [self setRequestHost:_debug];
+    [self setRequestHost];
     
     [self reachability];
     
-    // 设置导航默认返回键
-//    LSNavigationController *nvc = (LSNavigationController *)self.window.rootViewController;
-//    [nvc.navigationBar setTintColor:[UIColor whiteColor]];
+    // 真机抓包代理
+//    [LSRequestManager setProxy:@"http://172.25.32.80:8888"];
     
     // 清除webview的缓存
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    //每次启动app只显示一次更新提示
+    [self setUpdateState];
     
     // 注册推送
     [self registerRemoteNotifications:application];
@@ -75,9 +69,15 @@
 //    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 //    [self.httpServer addGETHandlerForBasePath:@"/" directoryPath:documentsPath indexFilename:nil cacheAge:3600 allowRangeRequests:YES];
 //    [self.httpServer start];
-    
-    // 延长启动画面时间
-    // usleep(1000 * 1000);
+
+}
+
+- (void)setUpdateState
+{
+    [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"showUpdateDialog"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[NSUserDefaults standardUserDefaults]setObject:@"0" forKey:@"showMandatoryUpdateDialog"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -134,16 +134,19 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
     NSLog(@"AppDelegate::handleOpenURL( url : %@ )", url);
+    [self handleTestUrl:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     NSLog(@"AppDelegate::openURL( url : %@, sourceApplication : %@ )", url, sourceApplication);
+    [self handleTestUrl:url];
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
     NSLog(@"AppDelegate::openURL( url : %@ , options : %@ )", url, options);
+    [self handleTestUrl:url];
     return YES;
 }
 
@@ -167,25 +170,18 @@
     
 }
 
-- (void)setRequestHost:(BOOL)formal {
-    ZBLSRequestManager* manager = [ZBLSRequestManager manager];
+- (void)setRequestHost{
+    LSAnchorRequestManager* manager = [LSAnchorRequestManager manager];
     NSString* webSite = @"";
-    if( formal ) {
-        // 配置真是环境
-        if( self.demo ) {
-            // Demo环境
-            
-        } else {
-            
-        }
+    // 配置假服务器路径
+    if( self.demo ) {
+        webSite = @"https://demo.charmlive.com";
+//        webSite = @"http://192.168.88.17:8817";
+        webSite = @"http://172.25.32.17:8817";
         
     } else {
-        // 配置假服务器路径
-        if( self.demo ) {
-            webSite = @"http://172.25.32.17:8817";
-        } else {
-            
-        }
+        // 配置真是环境
+        webSite = @"https://www.charmlive.com";
     }
     [manager setConfigWebSite:webSite];
 }
@@ -230,6 +226,24 @@
     }];
     // 3.开始监控
     [mgr startMonitoring];
+}
+
+- (void)handleTestUrl:(NSURL *)url {
+    // TODO:启动连接是否带有测试标记
+    NSString *test = [LSURLQueryParam urlParamForKey:@"test" url:url];
+    BOOL bTest = [test boolValue];
+    if( bTest ) {
+        // 启动Http服务
+        if( self.httpServer.running ) {
+            [self.httpServer stop];
+        }
+        [self.httpServer startWithPort:8080 bonjourName:@""];
+    }
+    
+   NSString *proxy = [LSURLQueryParam urlParamForKey:@"httpproxy" url:url];
+    if (proxy) {
+       [LSRequestManager setProxy:proxy];
+    }
 }
 
 @end

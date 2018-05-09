@@ -33,6 +33,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	 * 回调
 	 */
 	private ILSVideoPreviewCallback callback = null;
+	private LSPublishConfig publishConfig;
 	/**
 	 * 预览界面宽度
 	 */
@@ -70,8 +71,9 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	private LSImageFlipFilter flipFilter = null;
 	private LSImageFilter recordFilter = null;
 
-	public LSVideoCaptureRenderer(ILSVideoPreviewCallback callback, FillMode fillMode, boolean useHardEncoder) {
+	public LSVideoCaptureRenderer(ILSVideoPreviewCallback callback, FillMode fillMode, boolean useHardEncoder, LSPublishConfig publishConfig) {
 		this.callback = callback;
+		this.publishConfig = publishConfig;
 
 		cameraFilter = new LSImageInputCameraFilter();
 		cropFilter = new LSImageCropFilter();
@@ -80,11 +82,11 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 
 		if( useHardEncoder ) {
 			// 硬编码录制滤镜
-			if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888 ) {
+			if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888 ) {
 				recordFilter = new LSImageRecordFilter(this);
-			} else if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ) {
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar ) {
 				recordFilter = new LSImageRecordYuvFilter(this, LSImageUtil.ColorFormat.ColorFormat_YUV420P);
-			} else if( LSVideoHardEncoder.supportHardEncoderFormat() == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar ) {
+			} else if( LSVideoHardEncoder.supportHardEncoderFormat(publishConfig) == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar ) {
 				recordFilter = new LSImageRecordYuvFilter(this, LSImageUtil.ColorFormat.ColorFormat_YUV420SP);
 			} else {
 				Log.e(LSConfig.TAG, String.format("LSVideoCaptureRenderer::LSVideoCaptureRenderer( this : 0x%x, [Not supported color format] )", hashCode()));
@@ -116,7 +118,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		originalHeight = height;
 
 		// 目标比例
-		float radioPreview = 1.0f * LSConfig.VIDEO_WIDTH / LSConfig.VIDEO_HEIGHT;
+		float radioPreview = 1.0f * publishConfig.videoWidth / publishConfig.videoHeight;
 		// 源比例
 		float radioImage = 1.0f * originalWidth / originalHeight;
 
@@ -172,6 +174,10 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	@Override
 	public void onDrawFrame(GL10 gl) {
 		// TODO Auto-generated method stub
+		// 重绘背景
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
         // 创建流输入, 只能在这里创建, 因为要保证GL的创建和渲染在同一个线程
 		createSurfaceTexture();
 		
@@ -179,10 +185,6 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		surfaceTexture.updateTexImage();
 		// 获取旧的图像矩阵
 		surfaceTexture.getTransformMatrix(transformMatrix);
-		
-		// 重绘背景
-		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
 		// 绘制
 		if( glCameraTextureId != null ) {
@@ -214,7 +216,7 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 
 		// 改变录制滤镜大小
 		if( recordFilter != null ) {
-			recordFilter.changeViewPointSize(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT);
+			recordFilter.changeViewPointSize(publishConfig.videoWidth, publishConfig.videoHeight);
 		}
 	}
 

@@ -20,6 +20,7 @@
 #import "LiveADView.h"
 #import "LiveModule.h"
 #import "HomeVouchersManager.h"
+#import "InterimShowViewController.h"
 #define PageSize 50
 #define DefaultSize 16
 @interface HotViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate, LiveADViewDelegate, LSListViewControllerDelegate>
@@ -336,30 +337,62 @@
 
 /** 免费的公开直播间 */
 - (void)tableView:(HotTableView *)tableView didPublicViewFreeBroadcast:(NSInteger)index {
-    // TODO:点击立即免费公开
-    [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Public;
+    
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
+    if (item.showInfo.showLiveId.length > 0) {
+        InterimShowViewController * vc = [[InterimShowViewController alloc]init];
+        // TODO:点击进入节目直播间
+        [[LiveModule module].analyticsManager reportActionEvent:ShowEnterShowBroadcast eventCategory:EventCategoryenterBroadcast];
+        LiveRoom *liveRoom = [[LiveRoom alloc] init];
+        liveRoom.roomType = LiveRoomType_Public;
+        liveRoom.httpLiveRoom = item;
+        vc.liveRoom = liveRoom;
+        // 继承导航栏控制器
+        [self navgationControllerPresent:vc];
+    }
+    else
+    {
+        // TODO:点击立即免费公开
+        [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
+        PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+        LiveRoom *liveRoom = [[LiveRoom alloc] init];
+        liveRoom.roomType = LiveRoomType_Public;
+        
+        liveRoom.httpLiveRoom = item;
+        vc.liveRoom = liveRoom;
+        // 继承导航栏控制器
+        [self navgationControllerPresent:vc];
+    }
+
 }
 
 /** 付费的公开直播间 */
 - (void)tableView:(HotTableView *)tableView didPublicViewVipFeeBroadcast:(NSInteger)index {
-    // TODO:点击立即付费公开
-    [[LiveModule module].analyticsManager reportActionEvent:EnterVipBroadcast eventCategory:EventCategoryenterBroadcast];
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    LiveRoom *liveRoom = [[LiveRoom alloc] init];
-    liveRoom.roomType = LiveRoomType_Public_VIP;
+    
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:index];
-    liveRoom.httpLiveRoom = item;
-    vc.liveRoom = liveRoom;
-    // 继承导航栏控制器
-    [self navgationControllerPresent:vc];
+    if (item.showInfo.showLiveId.length > 0) {
+        // TODO:点击进入节目直播间
+        [[LiveModule module].analyticsManager reportActionEvent:ShowEnterShowBroadcast eventCategory:EventCategoryenterBroadcast];
+        InterimShowViewController * vc = [[InterimShowViewController alloc]init];
+        LiveRoom *liveRoom = [[LiveRoom alloc] init];
+        liveRoom.roomType = LiveRoomType_Public;
+        liveRoom.httpLiveRoom = item;
+        vc.liveRoom = liveRoom;
+        // 继承导航栏控制器
+        [self navgationControllerPresent:vc];
+    }
+    else
+    {
+        // TODO:点击立即付费公开
+        [[LiveModule module].analyticsManager reportActionEvent:EnterVipBroadcast eventCategory:EventCategoryenterBroadcast];
+        PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+        LiveRoom *liveRoom = [[LiveRoom alloc] init];
+        liveRoom.roomType = LiveRoomType_Public_VIP;
+        liveRoom.httpLiveRoom = item;
+        vc.liveRoom = liveRoom;
+        // 继承导航栏控制器
+        [self navgationControllerPresent:vc];
+    }
 }
 
 /** 普通的私密直播间 */

@@ -9,6 +9,7 @@
 #import "VIPAudienceView.h"
 #import "AudienceCell.h"
 #import "LiveBundle.h"
+#import "LSImageViewLoader.h"
 
 #define ItemSize 40
 
@@ -51,8 +52,18 @@
 #pragma mark - Public Method
 - (void)setAudienceArray:(NSMutableArray *)audienceArray {
     _audienceArray = audienceArray;
-    
-    [self.collectionView reloadData];
+    BOOL haveID = NO;
+//    for (int index = 0; index < audienceArray.count; index++) {
+//        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:index inSection:0];
+//        AudienModel *model = audienceArray[index];
+//        if (model.userId.length) {
+//            haveID = YES;
+//            [self.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:indexpath]];
+//        }
+//    }
+    if (!haveID) {
+        [self.collectionView reloadData];
+    }
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -62,7 +73,18 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     AudienceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[AudienceCell cellIdentifier] forIndexPath:indexPath];
-    [cell updateHeadImageWith:self.audienceArray[indexPath.row] radius:ItemSize];
+//    [cell updateHeadImageWith:self.audienceArray[indexPath.row] radius:ItemSize];
+    AudienModel *model = self.audienceArray[indexPath.row];
+    cell.headImageView.layer.cornerRadius = ItemSize * 0.5;
+    cell.headImageView.layer.masksToBounds = YES;
+    
+    if (!model.photoUrl.length) {
+        [cell.headImageView setImage:model.image];
+    } else {
+//        [[LSImageViewLoader loader] refreshCachedImage:cell.headImageView options:SDWebImageRefreshCached imageUrl:model.photoUrl
+//                            placeholderImage:model.image];
+        [cell.headImageView sd_setImageWithURL:[NSURL URLWithString:model.photoUrl] placeholderImage:model.image options:SDWebImageRefreshCached completed:nil];
+    }
     return cell;
 }
 

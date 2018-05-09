@@ -98,7 +98,8 @@ typedef enum {
     HTTPROOMTYPE_FREEPUBLICLIVEROOM = 1,          // 免费公开直播间
     HTTPROOMTYPE_COMMONPRIVATELIVEROOM = 2,       // 普通私密直播间
     HTTPROOMTYPE_CHARGEPUBLICLIVEROOM = 3,        // 付费公开直播间
-    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4        // 豪华私密直播间
+    HTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4,        // 豪华私密直播间
+
 }HttpRoomType;
 
 /*头像类型*/
@@ -134,7 +135,9 @@ typedef enum{
 typedef enum{
     GIFTTYPE_UNKNOWN = 0,
     GIFTTYPE_COMMON = 1,   // 普通礼物
-    GIFTTYPE_Heigh = 2  // 高级礼物（动画）
+    GIFTTYPE_Heigh = 2,     // 高级礼物（动画）
+    GIFTTYPE_BAR = 3,       // 吧台礼物
+    GIFTTYPE_CELEBRATE = 4,  // 庆祝礼物
 }GiftType;
 
 typedef enum {
@@ -325,4 +328,64 @@ typedef enum {
     REGIONIDTYPE_AME = 6
 }RegionIdType;
 
+typedef enum {
+    HANGOUTANCHORLISTTYPE_UNKNOW = 0,           // 未知
+    HANGOUTANCHORLISTTYPE_FOLLOW = 1,           // 已关注
+    HANGOUTANCHORLISTTYPE_WATCHED = 2,          // Watched(看过的)
+    HANGOUTANCHORLISTTYPE_FRIEND = 3,           // 主播好友
+    HANGOUTANCHORLISTTYPE_ONLINEANCHOR = 4      // 在线主播
+    
+}HangoutAnchorListType;
+
+
+typedef enum {
+    HANGOUTINVITESTATUS_UNKNOW = 0,             // 未知
+    HANGOUTINVITESTATUS_PENDING = 1,            // 待确定
+    HANGOUTINVITESTATUS_ACCEPT = 2,             // 已接受
+    HANGOUTINVITESTATUS_REJECT = 3,            // 已拒绝
+    HANGOUTINVITESTATUS_OUTTIME = 4            // 已超时
+    
+}HangoutInviteStatus;
+
+// 节目列表类型
+typedef enum {
+    PROGRAMLISTTYPE_UNKNOW = 0,             // 未知
+    PROGRAMLISTTYPE_STARTTIEM = 1,          // 按节目开始时间排序
+    PROGRAMLISTTYPE_VERIFYTIEM = 2,         // 按节目审核时间排序
+    PROGRAMLISTTYPE_FEATURE = 3,           // 按广告排序
+    PROGRAMLISTTYPE_BUYTICKET = 4,          // 已购票列表
+    PROGRAMLISTTYPE_HISTORY = 5             // 购票历史列表
+    
+}ProgramListType;
+
+typedef enum {
+    PROGRAMSTATUS_UNKNOW = -1,              // 未知
+    PROGRAMSTATUS_UNVERIFY = 0,             // 未审核
+    PROGRAMSTATUS_VERIFYPASS = 1,           // 审核通过
+    PROGRAMSTATUS_VERIFYREJECT = 2,         // 审核被拒
+    PROGRAMSTATUS_PROGRAMEND = 3,           // 节目正常结束
+    PROGRAMSTATUS_OUTTIME = 4,               // 节目已超时
+    PROGRAMSTATUS_PROGRAMCALCEL = 5        // 节目已取消
+
+}ProgramStatus;
+
+// 节目推荐列表类型
+typedef enum {
+    SHOWRECOMMENDLISTTYPE_UNKNOW = 0,                    // 未知
+    SHOWRECOMMENDLISTTYPE_ENDRECOMMEND = 1,              // 直播结束推荐<包括指定主播及其它主播
+    SHOWRECOMMENDLISTTYPE_PERSONALRECOMMEND = 2,         // 主播个人节目推荐<仅包括指定主播>
+    SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND =  3           // 不包括指定主播
+
+}ShowRecommendListType;
+
+// 购票状态
+typedef enum {
+    PROGRAMTICKETSTATUS_UNKNOW = -1,    // 未知
+    PROGRAMTICKETSTATUS_NOBUY = 0,      // 未购票
+    PROGRAMTICKETSTATUS_BUYED = 1,      // 已购票
+    PROGRAMTICKETSTATUS_OUT = 2,        // 已退票
+
+}ProgramTicketStatus;
+
 #endif
+

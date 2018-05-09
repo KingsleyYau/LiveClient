@@ -24310,6 +24310,15 @@ int SrsRtmpClient::set_data_frame(string stream, int stream_id, int width, int h
         pkt->metadata->set("width", SrsAmf0Any::number(width));
         pkt->metadata->set("height", SrsAmf0Any::number(height));
         
+        // Add by Max 2018/04/26
+        pkt->metadata->set("displayWidth", SrsAmf0Any::number(width));
+        pkt->metadata->set("displayHeight", SrsAmf0Any::number(height));
+//        pkt->metadata->set("framerate", SrsAmf0Any::number(12));
+//        pkt->metadata->set("videocodecid", SrsAmf0Any::number(7));
+//        pkt->metadata->set("audiocodecid", SrsAmf0Any::number(10));
+//        pkt->metadata->set("videodatarate", SrsAmf0Any::number(500));
+//        pkt->metadata->set("audiodatarate", SrsAmf0Any::number(100));
+
         if ((ret = protocol->send_and_free_packet(pkt, stream_id)) != ERROR_SUCCESS) {
             srs_error("send meta data failed. "
                 "stream=%s, stream_id=%d, ret=%d", stream.c_str(), stream_id, ret);

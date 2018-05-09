@@ -25,6 +25,7 @@
         self.newestMsg = @"";
         self.downloadAppUrl = @"";
         self.svrList = nil;
+        self.showDetailPage = @"";
     }
     return self;
 }
@@ -41,6 +42,7 @@
         self.newestMsg = [coder decodeObjectForKey:@"newestMsg"];
         self.downloadAppUrl = [coder decodeObjectForKey:@"downloadAppUrl"];
         self.svrList = [coder decodeObjectForKey:@"svrList"];
+        self.showDetailPage = [coder decodeObjectForKey:@"showDetailPage"];
     }
     return self;
 }
@@ -56,7 +58,7 @@
     [coder encodeObject:self.newestMsg forKey:@"newestMsg"];
     [coder encodeObject:self.downloadAppUrl forKey:@"downloadAppUrl"];
     [coder encodeObject:self.svrList forKey:@"svrList"];
-
+    [coder encodeObject:self.showDetailPage forKey:@"showDetailPage"];
 
 }
 

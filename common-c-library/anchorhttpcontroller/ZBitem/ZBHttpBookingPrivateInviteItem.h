@@ -26,12 +26,7 @@ public:
             if (root[MANHANDLEBOOKINGLIST_LIST_BOOKING_INVITATIONID].isString()) {
                 invitationId = root[MANHANDLEBOOKINGLIST_LIST_BOOKING_INVITATIONID].asString();
             }
-//            // alextest
-//            if (root[MANHANDLEBOOKINGLIST_LIST_BOOKING_INVITATIONID].isNumeric()) {
-//                char temp[16];
-//                snprintf(temp, sizeof(temp), "%d",  root[MANHANDLEBOOKINGLIST_LIST_BOOKING_INVITATIONID].asInt());
-//                invitationId =  temp;
-//            }
+
             /* toId */
             if (root[MANHANDLEBOOKINGLIST_LIST_BOOKING_TOID].isString()) {
                 toId = root[MANHANDLEBOOKINGLIST_LIST_BOOKING_TOID].asString();
@@ -96,12 +91,6 @@ public:
                 roomId = root[MANHANDLEBOOKINGLIST_LIST_BOOKING_ROOMID].asString();
             }
             
-//            // alextest
-//            if (root[MANHANDLEBOOKINGLIST_LIST_BOOKING_ROOMID].isNumeric()) {
-//                char temp[16];
-//                snprintf(temp, sizeof(temp), "%d",  root[MANHANDLEBOOKINGLIST_LIST_BOOKING_ROOMID].asInt());
-//                roomId =  temp;
-//            }
             
         }
         

@@ -238,25 +238,33 @@
         LSUrlParmItem *item = [self.urlHandler parseUrlParms:url];
         
         if ([urlStr containsString:@"liveroom"]) {
-            
-            PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-            LiveRoom *liveRoom = [[LiveRoom alloc] init];
-            if (item.roomId.length > 0) {
-                liveRoom.roomId = item.roomId;
+        
+            if (item.showId.length > 0) {
+                NSURL *url =[[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showId userId:@""];
+                [LiveUrlHandler shareInstance].url = url;
+                [[LiveUrlHandler shareInstance] handleOpenURL];
             }
-            if (item.userId.length > 0) {
-                liveRoom.userId = item.userId;
+            else
+            {
+                PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+                LiveRoom *liveRoom = [[LiveRoom alloc] init];
+                if (item.roomId.length > 0) {
+                    liveRoom.roomId = item.roomId;
+                }
+                if (item.userId.length > 0) {
+                    liveRoom.userId = item.userId;
+                }
+                if (item.userName.length > 0) {
+                    liveRoom.userName = item.userName;
+                }
+                if ([item.roomTypeString isEqualToString:@"0"]) {
+                    liveRoom.roomType = LiveRoomType_Public;
+                } else {
+                    liveRoom.roomType = LiveRoomType_Private;
+                }
+                vc.liveRoom = liveRoom;
+                [self navgationControllerPresent:vc];
             }
-            if (item.userName.length > 0) {
-                liveRoom.userName = item.userName;
-            }
-            if ([item.roomTypeString isEqualToString:@"0"]) {
-                liveRoom.roomType = LiveRoomType_Public;
-            } else {
-                liveRoom.roomType = LiveRoomType_Private;
-            }
-            vc.liveRoom = liveRoom;
-            [self navgationControllerPresent:vc];
             
         } else if ([urlStr containsString:@"newbooking"]) {
             
@@ -389,11 +397,11 @@
     }
 }
 // Web通知App页面加载失败
-- (void)webViewJSCallbackWebReload:(NSString *)Errno {
-    NSLog(@"WebViewJSCallbackWebReload Errno:%@", Errno);
+- (void)webViewJSCallbackWebReload:(NSString *)error {
+    NSLog(@"WebViewJSCallbackWebReload error:%@", error);
     BOOL isReLoad = YES;
-    if (Errno != nil &&Errno.length > 0) {
-        int value = [Errno intValue];
+    if (error != nil &&error.length > 0) {
+        int value = [error intValue];
         // 判断是否token过期，重新登录
         if (value == LCC_ERR_TOKEN_EXPIRE) {
             isReLoad = NO;
@@ -406,7 +414,29 @@
     if (isReLoad) {
         [self reloadWebview];
     }
-    
+}
+
+//token过期
+- (void)webViewJSCallBackTokenTimeOut:(NSString *)error
+{
+    NSLog(@"webViewJSCallBackTokenTimeOut error:%@", error);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.controller showLoading];
+        [self getAnchorListRequest];
+    });
+}
+
+//账号余额不足
+- (void)webViewJSCallBackAddCredit:(NSString *)error
+{
+    NSLog(@"webViewJSCallBackAddCredit error:%@", error);
+    [self.controller.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+}
+
+- (void)webViewJSCallbackAppPublicGAEvent:(NSString *)event
+{
+    NSLog(@"webViewJSCallbackAppPublicGAEvent event:%@", event);
+    [[LiveModule module].analyticsManager reportActionEvent:event eventCategory:EventCategoryShowCalendar];
 }
 
 // 为了重登录（由Web通知App页面加载失败，token过期，调用hot列表接口因为token过期应该返回错误的就会重登录）

@@ -19,5 +19,14 @@
 #import "Model/ImStartOverRoomObject.h"
 #import "Model/ImBookingReplyObject.h"
 #import "Model/ImTalentReplyObject.h"
+#import "Model/IMRecommendHangoutItemObject.h"
+#import "Model/IMRecvDealInviteItemObject.h"
+#import "Model/IMHangoutRoomItemObject.h"
+#import "Model/IMRecvEnterRoomItemObject.h"
+#import "Model/IMRecvLeaveRoomItemObject.h"
+#import "Model/IMRecvHangoutGiftItemObject.h"
+#import "Model/IMKnockRequestItemObject.h"
+#import "Model/IMLackCreditHangoutItemObject.h"
+#import "Model/IMProgramItemObject.h"
 
 #endif /* ImHeader_h */

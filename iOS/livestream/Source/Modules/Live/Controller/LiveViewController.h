@@ -42,6 +42,7 @@
 - (void)bringRewardViewInTop:(LiveViewController *)vc;
 - (void)noCreditPushTo:(LiveViewController *)vc;
 - (void)liveViewIsPlay:(LiveViewController *)vc;
+- (void)liveFinshViewIsShow:(LiveViewController *)vc;
 @end
 
 @interface LiveViewController : LSGoogleAnalyticsViewController
@@ -71,6 +72,7 @@
 
 #pragma mark - 弹幕控件
 @property (nonatomic, weak) IBOutlet BarrageView *barrageView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *barrageViewTop;
 
 #pragma mark - 消息列表控件
 // 聊天框底部阴影
@@ -181,11 +183,6 @@
  @param view 视图
  */
 - (void)bringSubviewToFrontFromView:(UIView *)view;
-
-/**
- 坐骑出现动画
- */
-- (void)userHaveJoinToRoom;
 
 /**
  显示预览界面

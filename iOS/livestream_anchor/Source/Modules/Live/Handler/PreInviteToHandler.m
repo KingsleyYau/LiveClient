@@ -11,6 +11,7 @@
 
 @interface PreInviteToHandler()<ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate>
 @property (strong) LSTimer *inviteTimer;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 
 @property (nonatomic, assign) BOOL isInviteReply;
 @end
@@ -21,8 +22,9 @@
     
     self = [super init];
     if (self) {
-        [[ZBLSImManager manager] addDelegate:self];
-        [[ZBLSImManager manager].client addDelegate:self];
+        self.imManager = [LSAnchorImManager manager];
+        [self.imManager addDelegate:self];
+        [self.imManager.client addDelegate:self];
         
         self.inviteTimer = [[LSTimer alloc] init];
         self.isInviteReply = NO;
@@ -30,41 +32,49 @@
     return self;
 }
 
+- (void)unInit {
+    [self.imManager removeDelegate:self];
+    [self.imManager.client removeDelegate:self];
+}
+
 #pragma mark - 网络请求
-- (void)instantInviteWithUserid:(NSString *)userid finshHandler:(InvitedHandler)finshHandler {
-    [[ZBLSImManager manager] anchorSendImmediatePrivateInvite:userid finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, NSString * _Nonnull invitation, int timeOut, NSString * _Nonnull roomId) {
+- (BOOL)instantInviteWithUserid:(NSString *)userid finshHandler:(InvitedHandler)finshHandler {
+   BOOL bFlag = [[LSAnchorImManager manager] anchorSendImmediatePrivateInvite:userid finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, NSString * _Nonnull invitation, int timeOut, NSString * _Nonnull roomId) {
         NSLog(@"PreInviteToHandler::instantInviteWithUserid( [主播发送立即私密邀请] success : %@, errType : %d, errMsg : %@, invitation : %@, timeOut : %d, roomId : %@ )",(success == YES) ? @"成功" : @"失败", errType, errMsg, invitation, timeOut, roomId);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 self.inviteid = invitation;
-                
+                BOOL isNow = NO;
                 // 发送私密邀请超时倒计时
-                if (timeOut) {
+                if (!roomId.length) {
+                    if (timeOut > 0) {
+                        isNow = NO;
+                    } else {
+                        isNow = YES;
+                    }
                     WeakObject(self, weakSelf);
-                    [self.inviteTimer startTimer:nil timeInterval:timeOut * NSEC_PER_SEC starNow:NO action:^{
-                        if ([weakSelf.inviteDelegate respondsToSelector:@selector(inviteIsTimeOut)]) {
-                            [weakSelf.inviteDelegate inviteIsTimeOut];
-                        }
+                    [self.inviteTimer startTimer:nil timeInterval:timeOut * NSEC_PER_SEC starNow:isNow action:^{
+                        [weakSelf.inviteTimer stopTimer];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if ([weakSelf.inviteDelegate respondsToSelector:@selector(inviteIsTimeOut)]) {
+                                [weakSelf.inviteDelegate inviteIsTimeOut];
+                            }
+                        });
                     }];
                 }
             }
             finshHandler(success, errType, errMsg, invitation, roomId);
         });
     }];
+    return bFlag;
 }
-
 
 - (void)cancelInviteWithId:(NSString *)inviteid finshHandler:(CancelInvitedHandler)finshHandler {
-    [[ZBLSRequestManager manager] anchorCancelInstantInvite:inviteid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+    [[LSAnchorRequestManager manager] anchorCancelInstantInvite:inviteid finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         NSLog(@"PreInviteToHandler::cancelInviteWithId( [主播取消已发送立即私密邀请] success : %@, errnum : %d, errmsg : %@)",(success == YES) ? @"成功" : @"失败", errnum, errmsg);
-        finshHandler(success, errnum, errmsg);
-    }];
-}
-
-- (void)sendRoomIn:(NSString *)roomid finshHandler:(RoomInHandler)finshHandler {
-    [[ZBLSImManager manager] enterRoom:roomid finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImLiveRoomObject * _Nonnull roomItem) {
-        NSLog(@"PreInviteToHandler::sendRoomIn( [主播进入指定直播间] success : %@, errType : %d, errMsg : %@)",(success == YES) ? @"成功" : @"失败", errType, errMsg);
-        finshHandler(success, errType, errMsg, roomItem);
+        dispatch_async(dispatch_get_main_queue(), ^{
+           finshHandler(success, errnum, errmsg);
+        });
     }];
 }
 
@@ -75,12 +85,12 @@
         if (errType == ZBLCC_ERR_SUCCESS && !self.isInviteReply) {
             // IM断线查询指定私密邀请信息
             if (self.inviteid) {
-                [[ZBLSImManager manager] anchorGetInviteInfo:self.inviteid finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImInviteIdItemObject * _Nonnull item) {
+                [[LSAnchorImManager manager] anchorGetInviteInfo:self.inviteid finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImInviteIdItemObject * _Nonnull item) {
                     NSLog(@"PreInviteToHandler::anchorGetInviteInfo( [获取指定立即私密邀请信息] success : %@, errType : %d, errMsg : %@)", (success == YES) ? @"成功" : @"失败", errType, errMsg);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (success) {
-                            if ([self.inviteDelegate respondsToSelector:@selector(getInviteInfoWithId:imInviteIdItem:)]) {
-                                [self.inviteDelegate getInviteInfoWithId:self.inviteid imInviteIdItem:item];
+                            if ([self.inviteDelegate respondsToSelector:@selector(getInviteInfoWithId:imInviteIdItem:errType:errmsg:)]) {
+                                [self.inviteDelegate getInviteInfoWithId:self.inviteid imInviteIdItem:item errType:errType errmsg:errMsg];
                             }
                         }
                     });

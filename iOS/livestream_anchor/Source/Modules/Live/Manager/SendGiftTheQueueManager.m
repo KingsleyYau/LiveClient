@@ -7,14 +7,14 @@
 //
 
 #import "SendGiftTheQueueManager.h"
-#import "LSImManager.h"
+#import "LSAnchorImManager.h"
 #import "LSLoginManager.h"
 
-@interface SendGiftTheQueueManager () <IMManagerDelegate, IMLiveRoomManagerDelegate>
+@interface SendGiftTheQueueManager () <ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate>
 
 @property (nonatomic, assign) BOOL isFirstSend;
 @property (nonatomic, strong) LSLoginManager *loginManager;
-@property (nonatomic, strong) LSImManager *imManager;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 @property (nonatomic, assign) BOOL isIMNetwork;
 @end
 
@@ -29,7 +29,7 @@
         self.isFirstSend = YES;
         self.isIMNetwork = YES;
         self.loginManager = [LSLoginManager manager];
-        self.imManager = [LSImManager manager];
+        self.imManager = [LSAnchorImManager manager];
         [self.imManager addDelegate:self];
         [self.imManager.client addDelegate:self];
     }
@@ -71,17 +71,17 @@
 }
 
 #pragma mark - IM通知
-- (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ImLoginReturnObject *)item {
-    NSLog(@"SendGiftTheQueueManager::onLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == LCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
+- (void)onZBLogin:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ZBImLoginReturnObject *)item {
+    NSLog(@"SendGiftTheQueueManager::onZBLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == ZBLCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (errType == LCC_ERR_SUCCESS) {
+        if (errType == ZBLCC_ERR_SUCCESS) {
             self.isIMNetwork = YES;
         }
     });
 }
 
-- (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
-    NSLog(@"SendGiftTheQueueManager::onLogout( [IM注销通知], errType : %d, errmsg : %@)", errType, errmsg);
+- (void)onZBLogout:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
+    NSLog(@"SendGiftTheQueueManager::onZBLogout( [IM注销通知], errType : %d, errmsg : %@)", errType, errmsg);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (self.sendGiftArray.count) {
             @synchronized(self.sendGiftArray){
@@ -108,7 +108,7 @@
 }
 
 - (void)sendGiftQurest {
-    LSImManager *manager = [LSImManager manager];
+    LSAnchorImManager *manager = [LSAnchorImManager manager];
     SendGiftItem *item = self.sendGiftArray[0];
 
     // 送礼
@@ -122,8 +122,8 @@
                   multi_click_start:item.starNum
                     multi_click_end:item.endNum
                      multi_click_id:item.clickID
-                      finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit, double rebateCredit) {
-                          NSLog(@"SendGiftTheQueueManager::sendGiftQurest( [接收发送礼物结果], success : %d, errType : %d, errMsg : %@, credit : %f, rebateCredit : %f )", success, errType, errMsg, credit, rebateCredit);
+                      finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString *_Nonnull errMsg) {
+                          NSLog(@"SendGiftTheQueueManager::sendGiftQurest( [接收发送礼物结果], success : %d, errType : %d, errMsg : %@ )", success, errType, errMsg);
 
                           dispatch_async(dispatch_get_main_queue(), ^{
                               if (success) {
@@ -131,7 +131,6 @@
                                       @synchronized(self.sendGiftArray){
                                           [self.sendGiftArray removeObjectAtIndex:0];
                                       }
-                                      
                                   }
                                   NSLog(@"SendGiftTheQueueManager::sendGiftQurest( success, count : %lu )", (unsigned long)self.sendGiftArray.count);
 
@@ -153,13 +152,6 @@
                                   if (item.giftItem.infoItem.type == GIFTTYPE_Heigh) {
                                       if ([self.delegate respondsToSelector:@selector(sendGiftFailWithItem:)]) {
                                           [self.delegate sendGiftFailWithItem:item];
-                                      }
-                                  }
-
-                                  // 信用点不足发送失败
-                                  if (errType == LCC_ERR_NO_CREDIT) {
-                                      if ([self.delegate respondsToSelector:@selector(sendGiftNoCredit:)]) {
-                                          [self.delegate sendGiftNoCredit:item];
                                       }
                                   }
                               }

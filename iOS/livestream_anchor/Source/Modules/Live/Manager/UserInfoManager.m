@@ -7,7 +7,7 @@
 //
 
 #import "UserInfoManager.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LSLoginManager.h"
 
 static UserInfoManager *gManager = nil;
@@ -49,7 +49,7 @@ static UserInfoManager *gManager = nil;
                     finishHandler(userInfo);
                 }
             } else {
-                [[ZBLSRequestManager manager] anchorGetNewFansBaseInfo:userId finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBGetNewFansBaseInfoItemObject * _Nonnull item) {
+                [[LSAnchorRequestManager manager] anchorGetNewFansBaseInfo:userId finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBGetNewFansBaseInfoItemObject * _Nonnull item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if(success) {
                             AudienModel *model = [[AudienModel alloc] init];

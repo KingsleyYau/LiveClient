@@ -7,33 +7,30 @@
 //
 
 #import "GiftItem.h"
+#import "LiveGiftDownloadManager.h"
 
 @implementation GiftItem
 
 + (instancetype)itemRoomId:(NSString *)roomid
-            nickName:(NSString *)nickname
-              giftID:(NSString *)giftid
-            giftName:(NSString *)giftname
-         is_Backpack:(NSInteger) is_backpack
-             giftNum:(NSInteger)giftnum
-         multi_click:(NSInteger)multi_click
-             starNum:(NSInteger)starNum
-              endNum:(NSInteger)endNum
-             clickID:(NSInteger)clickID {
+                  nickName:(NSString *)nickname
+               is_Backpack:(NSInteger)is_backpack
+                   giftNum:(int)giftnum
+                   starNum:(int)starNum
+                    endNum:(int)endNum
+                   clickID:(int)clickID
+                  giftItem:(AllGiftItem *)giftItem {
     
-    GiftItem *giftItem = [[GiftItem alloc] init];
-    giftItem.roomid = roomid;
-    giftItem.nickname = nickname;
-    giftItem.giftid = giftid;
-    giftItem.giftname = giftname;
-    giftItem.is_backpack = is_backpack;
-    giftItem.giftnum = giftnum;
-    giftItem.multi_click = multi_click;
-    giftItem.multi_click_start = starNum;
-    giftItem.multi_click_end = endNum;
-    giftItem.multi_click_id = clickID;
+    GiftItem *item = [[GiftItem alloc] init];
+    item.roomid = roomid;
+    item.nickname = nickname;
+    item.is_backpack = is_backpack;
+    item.giftnum = giftnum;
+    item.multi_click_start = starNum;
+    item.multi_click_end = endNum;
+    item.multi_click_id = clickID;
+    item.giftItem = giftItem;
     
-    return giftItem;
+    return item;
 }
 
 + (instancetype)itemRoomId:(NSString *)roomid
@@ -41,29 +38,30 @@
             nickName:(NSString *)nickname
               giftID:(NSString *)giftid
             giftName:(NSString *)giftname
-             giftNum:(NSInteger)giftnum
-         multi_click:(NSInteger)multi_click
-             starNum:(NSInteger)starNum
-              endNum:(NSInteger)endNum
-             clickID:(NSInteger)clickID {
+                   giftNum:(int)giftnum
+               multi_click:(NSInteger)multi_click
+                   starNum:(int)starNum
+                    endNum:(int)endNum
+                   clickID:(int)clickID {
     
-    GiftItem *giftItem = [[GiftItem alloc] init];
-    giftItem.roomid = roomid;
-    giftItem.fromid = fromid;
-    giftItem.nickname = nickname;
-    giftItem.giftid = giftid;
-    giftItem.giftname = giftname;
-    giftItem.giftnum = giftnum;
-    giftItem.multi_click = multi_click;
-    giftItem.multi_click_start = starNum;
-    giftItem.multi_click_end = endNum;
-    giftItem.multi_click_id = clickID;
+    GiftItem *item = [[GiftItem alloc] init];
+    item.roomid = roomid;
+    item.fromid = fromid;
+    item.nickname = nickname;
+    item.giftid = giftid;
+    item.giftname = giftname;
+    item.giftnum = giftnum;
+    item.multi_click = multi_click;
+    item.multi_click_start = starNum;
+    item.multi_click_end = endNum;
+    item.multi_click_id = clickID;
+    item.giftItem = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:giftid];
     
-    return giftItem;
+    return item;
 }
 
 - (NSString *)itemId {
-    return [NSString stringWithFormat:@"%@_%@_%ld", self.fromid, self.giftid, (long)self.multi_click_id, nil];
+    return [NSString stringWithFormat:@"%@_%@_%d", self.fromid, self.giftid, self.multi_click_id, nil];
 }
 
 @end

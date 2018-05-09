@@ -16,7 +16,8 @@
 #import "LiveModule.h"
 #import "AnchorPersonalViewController.h"
 #import "LiveUrlHandler.h"
-
+#import "LSShowListWithAnchorIdRequest.h"
+#import "ShowDetailViewController.h"
 @interface LiveFinshViewController ()<UICollectionViewDataSource, UICollectionViewDelegate>
 #pragma mark - 推荐逻辑
 @property (atomic, strong) NSArray *recommandItems;
@@ -26,6 +27,7 @@
 @property (nonatomic, strong) LSImageViewLoader *ladyImageLoader;
 @property (nonatomic, strong) LSImageViewLoader *backgroundImageloader;
 
+@property (nonatomic, strong) LSProgramItemObject * showItem;
 @end
 
 @implementation LiveFinshViewController
@@ -99,7 +101,18 @@
         
         // TOOP:3 正常关闭直播间,显示推荐主播列表
         case LCC_ERR_RECV_REGULAR_CLOSE_ROOM:{
-            [self getAdvisementList];
+            
+            if (self.liveRoom.httpLiveRoom.showInfo.showLiveId.length == 0) {
+               [self getAdvisementList];
+                // 正常结束界面
+                [self reportDidShowPage:0];
+            }
+            else
+            {
+                // 节目结束页面
+                [self reportDidShowPage:1];
+                [self getRecommendedShow];
+            }
             self.bookPrivateBtn.hidden = NO;
             self.viewHotBtn.hidden = YES;
             self.addCreditBtn.hidden = YES;
@@ -116,6 +129,8 @@
         } break;
             
         default:{
+            // 默认正常结束页
+            [self reportDidShowPage:0];
             self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = NO;
             self.viewHotBtn.hidden = YES;
@@ -161,6 +176,29 @@
     [self.recommandCollectionView registerNib:nib forCellWithReuseIdentifier:[RecommandCollectionViewCell cellIdentifier]];
     self.recommandView.hidden = YES;
 }
+#pragma mark - 请求推荐节目
+- (void)getRecommendedShow
+{
+    NSLog(@"LiveFinshViewController::getRecommendedShow [请求推荐节目]");
+    
+    LSShowListWithAnchorIdRequest * request = [[LSShowListWithAnchorIdRequest alloc]init];
+    request.start = 0;
+    request.step = 1;
+    request.anchorId = self.liveRoom.httpLiveRoom.showInfo.anchorId;
+    request.sortType = SHOWRECOMMENDLISTTYPE_ENDRECOMMEND;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *> * _Nullable array){
+        dispatch_async(dispatch_get_main_queue(), ^{
+           NSLog(@"LiveFinshViewController::getRecommendedShow [请求推荐节目] success : %@, errmsg : %@, promoNum : %lu",success ? @"成功" : @"失败", errmsg, array.count);
+            if (success && array.count > 0) {
+                self.showItem = [array objectAtIndex:0];
+                self.showView.hidden = NO;
+                [self.showView  updateUI:self.showItem];
+            }
+        });
+    };
+    
+    [self.sessionManager sendRequest:request];
+}
 
 #pragma mark - 请求推荐列表
 - (void)getAdvisementList {
@@ -187,7 +225,7 @@
 - (void)reloadRecommandView {
     // TODO:刷新推荐列表
     self.recommandViewWidth.constant = [RecommandCollectionViewCell cellWidth] * self.recommandItems.count + ((self.recommandItems.count - 1) * 20);
-    self.recommandView.hidden = NO;
+    self.recommandView.hidden = (self.recommandItems.count > 0) ? NO : YES;
     [self.recommandCollectionView reloadData];
 }
 
@@ -254,5 +292,13 @@
     [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
 }
 
+- (IBAction)pushShowDetailVC:(id)sender {
+    [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickRecommendShow eventCategory:EventCategoryShowCalendar];
+    [self.navigationController dismissViewControllerAnimated:NO completion:^{
+        ShowDetailViewController * vc = [[ShowDetailViewController alloc]init];
+        vc.item = self.showItem;
+        [self.navigationController pushViewController:vc animated:YES];
+    }];
+}
 
 @end

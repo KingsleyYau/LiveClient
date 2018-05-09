@@ -16,7 +16,7 @@ typedef enum UsersType {
 } UsersType;
 
 typedef enum MsgType {
-    MsgType_Chat,
+    MsgType_Chat, 
     MsgType_Gift,
     MsgType_Announce,
     MsgType_Link,
@@ -42,5 +42,7 @@ typedef enum MsgType {
 @property (strong) NSString *linkStr;
 @property (strong) NSString *riderName;
 @property (strong) NSString *honorUrl;
-
+@property (nonatomic, assign) CGFloat containerHeight;
+@property (nonatomic, assign) CGRect labelFrame;
+@property (nonatomic, assign) BOOL isHasTicket;
 @end

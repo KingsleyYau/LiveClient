@@ -10,24 +10,28 @@
 
 @interface GiftComboManager ()
 @property (strong) NSMutableDictionary* dictionary;
+@property (strong) NSMutableArray *itemIdArray;
 @end
 
 @implementation GiftComboManager
 - (id)init {
     if( self = [super init] ) {
         self.dictionary = [NSMutableDictionary dictionary];
+        self.itemIdArray = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
 - (void)dealloc {
     [self.dictionary removeAllObjects];
+    [self.itemIdArray removeAllObjects];
 }
 
 - (void)removeManager{
-    
+    [self.itemIdArray removeAllObjects];
     [self.dictionary removeAllObjects];
     self.dictionary = nil;
+    self.itemIdArray = nil;
 }
 
 - (GiftItem *)popGift:(NSString * _Nullable)itemId {
@@ -43,12 +47,20 @@
             }
             
             if( !findItem ) {
+                NSString *itemId = nil;
+                if (self.itemIdArray.count) {
+                    itemId = self.itemIdArray.firstObject;
+                    [self.itemIdArray removeObjectAtIndex:0];
+                }
+                
                 NSString* key = [[self.dictionary allKeys] firstObject];
+                if (itemId) {
+                    key = itemId;
+                }
                 findItem = [self.dictionary objectForKey:key];
                 [self.dictionary removeObjectForKey:key];
             }
         }
-
     }
     
     return findItem;
@@ -64,6 +76,7 @@
                     findItem.multi_click_end = item.multi_click_end;
                 }
             } else {
+                [self.itemIdArray addObject:item.itemId];
                 [self.dictionary setObject:item forKey:item.itemId];
             }
         }
@@ -71,3 +84,4 @@
 }
 
 @end
+

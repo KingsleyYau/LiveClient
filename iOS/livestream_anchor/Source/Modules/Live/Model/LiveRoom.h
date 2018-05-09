@@ -23,7 +23,6 @@ typedef enum LiveRoomType {
 @property (strong) NSString *userId;
 @property (strong) NSString *userName;
 @property (strong) NSString *photoUrl;
-@property (strong, readonly) NSString *roomPhotoUrl;
 @property (assign) LiveRoomType roomType;
 
 // 播放url数组

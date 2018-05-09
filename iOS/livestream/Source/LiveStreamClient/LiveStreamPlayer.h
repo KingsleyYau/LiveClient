@@ -17,7 +17,8 @@
 @protocol LiveStreamPlayerDelegate <NSObject>
 @optional
 - (NSString * _Nullable)playerShouldChangeUrl:(LiveStreamPlayer * _Nonnull)player;
-
+- (void)playerOnConnect:(LiveStreamPlayer * _Nonnull)player;
+- (void)playerOnDisconnect:(LiveStreamPlayer * _Nonnull)player;
 @end
 
 @interface LiveStreamPlayer : NSObject
@@ -30,6 +31,11 @@
  委托
  */
 @property (weak) id<LiveStreamPlayerDelegate> _Nullable delegate;
+
+/**
+ 是否静音
+ */
+@property (nonatomic, assign) BOOL mute;
 
 /**
  当前播放URL

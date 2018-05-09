@@ -416,7 +416,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
         _totalFrameCount = 0;
         self.image = nil;
         [self removeFromSuperview];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"animationIsAnimaing" object:self userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftAnimationIsOver" object:self userInfo:nil];
     }
 }
 
@@ -539,7 +539,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
         _totalFrameCount = 0;
         self.image = nil;
         [self removeFromSuperview];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"animationIsAnimaing" object:self userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"GiftAnimationIsOver" object:self userInfo:nil];
     }
 }
 

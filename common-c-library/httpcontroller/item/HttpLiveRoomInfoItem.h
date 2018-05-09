@@ -16,6 +16,7 @@ using namespace std;
 
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
+#include "HttpProgramInfoItem.h"
 
 // typedef list<string> InterestList;
 typedef list<InterestType> InterestList;
@@ -72,6 +73,22 @@ public:
             if( root[LIVEROOM_HOT_ANCHORTYPE].isInt() ) {
                 anchorType = (AnchorLevelType)(root[LIVEROOM_HOT_ANCHORTYPE].asInt());
             }
+            
+            /* showInfo */
+            if( root[LIVEROOM_HOT_SHOWINFO].isObject() ) {
+                if (root[LIVEROOM_HOT_SHOWINFO].isNull()) {
+                    if(showInfo != NULL) {
+                        delete showInfo;
+                    }
+                    showInfo = NULL;
+                }
+                else {
+                    showInfo = new HttpProgramInfoItem();
+                    showInfo->Parse(root[LIVEROOM_HOT_SHOWINFO]);
+                }
+                
+                
+            }
         }
     }
 
@@ -83,10 +100,13 @@ public:
         onlineStatus  = ONLINE_STATUS_UNKNOWN;
         roomType = HTTPROOMTYPE_NOLIVEROOM;
         anchorType = ANCHORLEVELTYPE_UNKNOW;
+        showInfo = NULL;
 	}
 
 	virtual ~HttpLiveRoomInfoItem() {
-
+        if(showInfo != NULL) {
+            delete showInfo;
+        }
 	}
     /**
      * Hot结构体
@@ -98,6 +118,7 @@ public:
      * roomType          直播间类型
      * interest          爱好ID列表
      * anchorType        主播类型（1:白银 2:黄金）
+     * showInfo          节目信息
      */
     string userId;
 	string nickName;
@@ -107,8 +128,10 @@ public:
     HttpRoomType roomType;
     InterestList interest;
     AnchorLevelType anchorType;
+    HttpProgramInfoItem* showInfo;
 };
 
-typedef list<HttpLiveRoomInfoItem> HotItemList;
+typedef list<HttpLiveRoomInfoItem* > HotItemList;
+typedef list<HttpLiveRoomInfoItem>   AdItemList;
 
 #endif /* LIVEROOMINFOITEM_H_ */

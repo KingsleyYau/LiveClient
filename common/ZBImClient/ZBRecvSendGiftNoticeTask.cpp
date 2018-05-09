@@ -126,7 +126,7 @@ bool ZBRecvSendGiftNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvSendGiftNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvSendGiftNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
@@ -144,7 +144,7 @@ bool ZBRecvSendGiftNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvSendGiftNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvSendGiftNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -157,7 +157,7 @@ bool ZBRecvSendGiftNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvSendGiftNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvSendGiftNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

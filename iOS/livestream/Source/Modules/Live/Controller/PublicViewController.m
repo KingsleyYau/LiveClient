@@ -271,6 +271,7 @@
                     model.mountId = item.mountId;
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
+                    model.isHasTicket = item.isHasTicket;
                     [self.audienceArray addObject:model];
                     
                     // 更新并缓存本地观众数据
@@ -282,6 +283,7 @@
                     infoItem.riderName = item.mountUrl;
                     infoItem.userLevel = item.level;
                     infoItem.isAnchor = 0;
+                    infoItem.isHasTicket = item.isHasTicket;
                     [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
                 
@@ -359,7 +361,7 @@
 }
 
 #pragma mark - IM回调
-- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg {
+- (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新并缓存本地观众数据

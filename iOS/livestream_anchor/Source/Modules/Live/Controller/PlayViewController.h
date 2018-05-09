@@ -8,8 +8,6 @@
 
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSUITapImageView.h"
-#import "PresentView.h"
-#import "CountTimeButton.h"
 #import "LiveRoomTextField.h"
 #import "LSPageChooseKeyboardView.h"
 #import "BackpackPresentView.h"
@@ -20,12 +18,10 @@
 #import "LiveRoom.h"
 #import "ManDetailView.h"
 #import "LSCheckButton.h"
-#import "LiveRoomGiftModel.h"
 
 @class PlayViewController;
 @protocol PlayViewControllerDelegate <NSObject>
 @optional
-- (void)onGetLiveRoomGiftList:(NSArray<LiveRoomGiftModel *> *)array;
 - (void)onReEnterRoom:(PlayViewController *)vc;
 - (void)onCloseLiveRoom:(PlayViewController *)vc;
 - (void)sendInviteToAudience:(PlayViewController *)vc;
@@ -53,6 +49,8 @@
 @property (weak, nonatomic) IBOutlet LSCheckButton *selectBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatAudienceViewWidth;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatAudienceViewLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *audienceNameLabelWidth;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *arrowImageViewWidth;
 
 
 /** 聊天按钮 **/
@@ -105,5 +103,7 @@
 
 - (void)hiddenBottomView;
 - (void)showBottomView;
+
+- (void)hiddenchatAudienceView;
 
 @end

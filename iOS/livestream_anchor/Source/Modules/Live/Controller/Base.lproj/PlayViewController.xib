@@ -13,7 +13,9 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PlayViewController">
             <connections>
                 <outlet property="arrowImageView" destination="dqk-mt-eFC" id="Wf8-0D-4td"/>
+                <outlet property="arrowImageViewWidth" destination="ygF-qR-eBf" id="mpL-CE-b17"/>
                 <outlet property="audienceNameLabel" destination="0Cw-E6-G2W" id="4E7-Za-bQb"/>
+                <outlet property="audienceNameLabelWidth" destination="4eJ-Da-wne" id="Az9-TX-7bK"/>
                 <outlet property="chatAudienceView" destination="fgz-1D-4yk" id="qMo-wb-ClO"/>
                 <outlet property="chatAudienceViewLeading" destination="ZDq-sm-0VO" id="ZvW-x0-Gkp"/>
                 <outlet property="chatAudienceViewWidth" destination="5JO-OY-PKA" id="fZO-h1-ryJ"/>
@@ -44,13 +46,16 @@
                             <rect key="frame" x="8" y="10" width="77" height="28"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Cw-E6-G2W">
-                                    <rect key="frame" x="5.0000000000000018" y="5.6666666666666279" width="30.666666666666671" height="15.666666666666664"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <rect key="frame" x="5" y="6.6666666666666297" width="46" height="14.333333333333336"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="46" id="4eJ-Da-wne"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_selectNum_up" translatesAutoresizingMaskIntoConstraints="NO" id="dqk-mt-eFC">
-                                    <rect key="frame" x="60" y="10.666666666666629" width="12" height="7"/>
+                                    <rect key="frame" x="56" y="10.666666666666629" width="12" height="7"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="12" id="ygF-qR-eBf"/>
                                     </constraints>
@@ -65,10 +70,10 @@
                                 <constraint firstAttribute="bottom" secondItem="dg4-gq-QuF" secondAttribute="bottom" id="7Fm-9i-JRo"/>
                                 <constraint firstAttribute="trailing" secondItem="dg4-gq-QuF" secondAttribute="trailing" id="B9e-LI-tAx"/>
                                 <constraint firstItem="dg4-gq-QuF" firstAttribute="leading" secondItem="fgz-1D-4yk" secondAttribute="leading" id="IeY-UK-C8F"/>
-                                <constraint firstItem="0Cw-E6-G2W" firstAttribute="leading" secondItem="fgz-1D-4yk" secondAttribute="leading" constant="5" id="Iin-Rh-Wq5"/>
-                                <constraint firstAttribute="trailing" secondItem="dqk-mt-eFC" secondAttribute="trailing" constant="5" id="TRt-eg-sKy"/>
-                                <constraint firstItem="dqk-mt-eFC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0Cw-E6-G2W" secondAttribute="trailing" constant="3" id="TXM-Aj-Fvw"/>
+                                <constraint firstItem="0Cw-E6-G2W" firstAttribute="leading" relation="lessThanOrEqual" secondItem="fgz-1D-4yk" secondAttribute="leading" constant="5" id="Iin-Rh-Wq5"/>
+                                <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="dqk-mt-eFC" secondAttribute="trailing" constant="9" id="TRt-eg-sKy"/>
                                 <constraint firstItem="0Cw-E6-G2W" firstAttribute="centerY" secondItem="fgz-1D-4yk" secondAttribute="centerY" id="U9N-Ix-0kN"/>
+                                <constraint firstItem="dqk-mt-eFC" firstAttribute="leading" relation="lessThanOrEqual" secondItem="0Cw-E6-G2W" secondAttribute="trailing" constant="5" id="jQS-6k-G64"/>
                                 <constraint firstItem="dqk-mt-eFC" firstAttribute="centerY" secondItem="fgz-1D-4yk" secondAttribute="centerY" id="lnY-SF-7qJ"/>
                                 <constraint firstItem="dg4-gq-QuF" firstAttribute="top" secondItem="fgz-1D-4yk" secondAttribute="top" id="qpi-Lq-DeP"/>
                             </constraints>

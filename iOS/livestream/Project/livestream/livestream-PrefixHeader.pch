@@ -34,6 +34,8 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
+#import "LSGoogleAnalyticsViewController.h"
+
 ///屏幕大小
 #define screenSize              [UIScreen mainScreen].bounds.size
 

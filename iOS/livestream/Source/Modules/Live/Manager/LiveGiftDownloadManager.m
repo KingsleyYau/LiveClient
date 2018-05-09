@@ -131,8 +131,7 @@
     NSMutableArray *bigArray = [[NSMutableArray alloc] init];
     for (AllGiftItem *giftItem in self.giftMuArray) {
 
-        if (giftItem.infoItem.type == GIFTTYPE_Heigh) {
-
+        if (giftItem.infoItem.type != GIFTTYPE_COMMON || giftItem.infoItem.type != GIFTTYPE_UNKNOWN) {
             [bigArray addObject:giftItem];
         }
         [self downLoadSmallImage:giftItem.infoItem.smallImgUrl];
@@ -375,6 +374,7 @@
                 item.infoItem.loveLevel = giftItem.infoItem.loveLevel;
                 item.infoItem.sendNumList = giftItem.infoItem.sendNumList;
                 item.infoItem.updateTime = giftItem.infoItem.updateTime;
+                item.infoItem.playTime = item.infoItem.playTime;
             }
         }
     }

@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PreRoomInHandler.h"
 #import "InstantInviteItem.h"
 #import "LiveRoom.h"
-#import "ZBLSRequestManager.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorRequestManager.h"
+#import "LSAnchorImManager.h"
 
 @class PreInviteToHandler;
 @protocol PreInviteToHandlerDelegate <NSObject>
@@ -21,7 +22,7 @@
 
  @param item 回调对象
  */
-- (void)instantInviteReply:(InstantInviteItem *)item;
+- (void)instantInviteReply:(InstantInviteItem *_Nonnull)item;
 
 /**
  9.5 获取指定立即私密邀请信息回调
@@ -29,14 +30,7 @@
  @param inviteid 指定立即私密邀请id
  @param item 回调对象
  */
-- (void)getInviteInfoWithId:(NSString *)inviteid imInviteIdItem:(ZBImInviteIdItemObject *)item;
-
-/**
- 3.2 主播进入指定直播间回调
-
- @param roomid 房间id
- @param liveRoom 回调对象
- */
+- (void)getInviteInfoWithId:(NSString * _Nonnull)inviteid imInviteIdItem:(ZBImInviteIdItemObject * _Nonnull)item errType:(ZBLCC_ERR_TYPE)errType errmsg:(NSString * _Nonnull)errmsg;
 
 /**
  主播发送立即私密邀请超时
@@ -46,20 +40,24 @@
 @end
 
 
-@interface PreInviteToHandler : NSObject
+@interface PreInviteToHandler : PreRoomInHandler
 
 
-@property (nonatomic, weak) id<PreInviteToHandlerDelegate> inviteDelegate;
+@property (nonatomic, weak) id <PreInviteToHandlerDelegate> _Nullable  inviteDelegate;
 
 
-typedef void (^InvitedHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *errmsg, NSString *inviteid, NSString *roomid);
+typedef void (^InvitedHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull inviteid, NSString * _Nonnull roomid);
 
-typedef void (^CancelInvitedHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString *errmsg);
-
-typedef void (^RoomInHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *errmsg, ZBImLiveRoomObject *item);
+typedef void (^CancelInvitedHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg);
 
 // 邀请ID
-@property (nonatomic, copy) NSString *inviteid;
+@property (nonatomic, copy) NSString * _Nonnull inviteid;
+
+
+/**
+ 释放代理
+ */
+- (void)unInit;
 
 /**
  9.1 主播发送立即私密邀请
@@ -67,7 +65,7 @@ typedef void (^RoomInHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *err
  @param userid 主播ID
  @param finshHandler 请求回调
  */
-- (void)instantInviteWithUserid:(NSString *)userid finshHandler:(InvitedHandler)finshHandler;
+- (BOOL)instantInviteWithUserid:(NSString * _Nonnull)userid finshHandler:(InvitedHandler _Nonnull)finshHandler;
 
 /**
  4.8 主播取消立即私密邀请
@@ -75,14 +73,6 @@ typedef void (^RoomInHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *err
  @param inviteid 邀请id
  @param finshHandler 请求回调
  */
-- (void)cancelInviteWithId:(NSString *)inviteid finshHandler:(CancelInvitedHandler)finshHandler;
-
-/**
- 3.2 主播进入指定直播间
-
- @param roomid 直播间id
- @param finshHandler 结束回调
- */
-- (void)sendRoomIn:(NSString *)roomid finshHandler:(RoomInHandler)finshHandler;
+- (void)cancelInviteWithId:(NSString * _Nonnull)inviteid finshHandler:(CancelInvitedHandler _Nonnull)finshHandler;
 
 @end

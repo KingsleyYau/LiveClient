@@ -29,6 +29,9 @@ public:
     void Stop();
     void Reset();
     
+    bool GetMute();
+    void SetMute(bool isMute);
+    
 private:
     bool Create();
     static void AudioQueueOutputCallback(
@@ -40,6 +43,8 @@ private:
 protected:
     AudioQueueRef _Nullable mAudioQueue;
     list_lock<AudioQueueBufferRef> mAudioBufferList;
+    
+    bool mIsMute;
 };
 
 #endif /* AudioRendererImp_h */

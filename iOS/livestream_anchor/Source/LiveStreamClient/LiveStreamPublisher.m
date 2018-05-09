@@ -22,7 +22,13 @@
 
 #pragma mark - 上传分辨率
 #define VIDEO_WIDTH 240
-#define VIDEO_HEIGHT 240
+#define VIDEO_HEIGHT 320
+// 帧率
+#define VIDEO_FPS 10
+// 关键帧间隔(每VIDEO_KEY_INTERVAL个帧就有一个关键帧)
+#define VIDEO_KEY_INTERVAL VIDEO_FPS
+// 视频码率
+#define VIDEO_BIT_RATE 400 * 1000
 
 @interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate>
 
@@ -32,6 +38,7 @@
 
 @property (assign) BOOL isStart;
 @property (assign) BOOL isConnected;
+@property (assign) BOOL isPreview;
 
 #pragma mark - 传输处理
 /**
@@ -102,11 +109,13 @@
     if (self = [super init]) {
         NSLog(@"LiveStreamPublisher::init( self : %p )", self);
 
-        self.publisher = [RtmpPublisherOC instance:VIDEO_WIDTH height:VIDEO_HEIGHT];
+        self.publisher = [RtmpPublisherOC instance:VIDEO_WIDTH height:VIDEO_HEIGHT fps:VIDEO_FPS keyInterval:VIDEO_KEY_INTERVAL bitRate:VIDEO_BIT_RATE];
         self.publisher.delegate = self;
 
-        _isConnected = NO;
-        _isStart = NO;
+        self.isPreview = NO;
+        self.isConnected = NO;
+        self.isStart = NO;
+
         _beauty = YES;
 
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
@@ -167,20 +176,20 @@
 
 - (void)startPreview {
     NSLog(@"LiveStreamPublisher::startPreview( self : %p )", self);
-    
+
     // 开启音频服务
     [[LiveStreamSession session] startCapture];
-    
+
     // 开始采集音视频
     [self startCapture];
 }
 
 - (void)stopPreview {
     NSLog(@"LiveStreamPublisher::stopPreview( self : %p )", self);
-    
+
     // 停止采集音视频
     [self stopCapture];
-    
+
     // 停止音频服务
     [[LiveStreamSession session] stopCapture];
 }
@@ -294,7 +303,7 @@
             [self startCapture];
 
             // 仅在前台才运行
-            if (!_isBackground) {
+            if (!self.isBackground) {
                 // 开始推流
                 self.isConnected = [self.publisher publishUrl:self.url recordH264FilePath:self.recordH264FilePath recordAACFilePath:self.recordAACFilePath];
             } else {
@@ -335,7 +344,7 @@
     BOOL bHandle = NO;
 
     @synchronized(self) {
-        if (self.isStart && !self.isConnected && !_isBackground) {
+        if (self.isStart && !self.isConnected && !self.isBackground) {
             // 1.已经手动开始, 2.连接还没连接上
             bHandle = YES;
         }
@@ -381,27 +390,25 @@
         WeakObject(self, weakSelf);
         WeakObject(self.output, weakOutput);
         [self.output setNewFrameAvailableBlock:^{
-            @synchronized(weakSelf) {
-                if (weakSelf.isStart) {
-                    [weakOutput lockFramebufferForReading];
-                    
-                    GLubyte *outputBytes = [weakOutput rawBytesForImage];
-                    NSInteger bytesPerRow = [weakOutput bytesPerRowInOutput];
-                    
-                    CVPixelBufferRef pixelBuffer = NULL;
-                    CVReturn ret = kCVReturnSuccess;
-                    
-                    ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_WIDTH, VIDEO_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
-                    if (ret == kCVReturnSuccess) {
-                        // 将视频帧放进推流器
-                        [weakSelf.publisher pushVideoFrame:pixelBuffer];
-                        CVPixelBufferRelease(pixelBuffer);
-                    } else {
-                        NSLog(@"LiveStreamPublisher::initVideoCapture( [Send Video Frame Fail], self : %p, error : %d )", weakSelf, ret);
-                    }
-                    
-                    [weakOutput unlockFramebufferAfterReading];
+            if (weakSelf.isStart) {
+                [weakOutput lockFramebufferForReading];
+
+                GLubyte *outputBytes = [weakOutput rawBytesForImage];
+                NSInteger bytesPerRow = [weakOutput bytesPerRowInOutput];
+
+                CVPixelBufferRef pixelBuffer = NULL;
+                CVReturn ret = kCVReturnSuccess;
+
+                ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_WIDTH, VIDEO_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
+                if (ret == kCVReturnSuccess) {
+                    // 将视频帧放进推流器
+                    [weakSelf.publisher pushVideoFrame:pixelBuffer];
+                    CVPixelBufferRelease(pixelBuffer);
+                } else {
+                    NSLog(@"LiveStreamPublisher::initVideoCapture( [Send Video Frame Fail], self : %p, error : %d )", weakSelf, ret);
                 }
+
+                [weakOutput unlockFramebufferAfterReading];
             }
         }];
 
@@ -415,14 +422,14 @@
         double radioPreview = 1.0 * VIDEO_WIDTH / VIDEO_HEIGHT;
         // 源比例
         double radioImage = 1.0 * VIDEO_CAPTURE_WIDTH / VIDEO_CAPTURE_HEIGHT;
-        if( radioPreview < radioImage ) {
+        if (radioPreview < radioImage) {
             // 剪裁左右
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake((1 - radioImage) / 2, 0, radioImage, 1)];
         } else {
             // 剪裁上下
             self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:CGRectMake(0, (1 - radioImage) / 2, 1, radioImage)];
         }
-        
+
         // 组装滤镜
         [self.videoCaptureSession addTarget:self.cropFilter];
         if (_beauty) {
@@ -465,9 +472,11 @@
 }
 
 - (void)startCapture {
+    self.isPreview = YES;
+
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     [self.videoCaptureSession startCameraCapture];
-    
+
     if (!self.audioCaptureSession.running) {
         [self.audioCaptureSession startRunning];
     }
@@ -480,11 +489,12 @@
     if (self.videoCaptureSession) {
         [self.videoCaptureSession stopCameraCapture];
     }
-    
+
     if (self.audioCaptureSession.running) {
         [self.audioCaptureSession stopRunning];
     }
 
+    self.isPreview = NO;
     //    });
 }
 
@@ -492,11 +502,9 @@
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     if (self.audioCaptureOutput == captureOutput) {
         if (sampleBuffer) {
-            @synchronized(self) {
-                if (self.isStart) {
-                    // 获取到音频PCM
-                    [self.publisher pushAudioFrame:sampleBuffer];
-                }
+            if (self.isStart) {
+                // 获取到音频PCM
+                [self.publisher pushAudioFrame:sampleBuffer];
             }
         }
     }
@@ -504,10 +512,19 @@
 
 #pragma mark - 视频接收处理
 - (void)rtmpPublisherOCOnConnect:(RtmpPublisherOC *_Nonnull)rtmpClient {
+    NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnConnect( self : %p )", self);
+
+    if ([self.delegate respondsToSelector:@selector(publisherOnConnect:)]) {
+        [self.delegate publisherOnConnect:self];
+    }
 }
 
 - (void)rtmpPublisherOCOnDisconnect:(RtmpPublisherOC *_Nonnull)rtmpClient {
     NSLog(@"LiveStreamPublisher::rtmpPublisherOCOnDisconnect( self : %p )", self);
+
+    if ([self.delegate respondsToSelector:@selector(publisherOnDisconnect:)]) {
+        [self.delegate publisherOnDisconnect:self];
+    }
 
     @synchronized(self) {
         self.isConnected = NO;
@@ -532,18 +549,22 @@
     BOOL bHandle = NO;
 
     @synchronized(self) {
-        if (_isBackground == NO) {
-            _isBackground = YES;
+        if (self.isBackground == NO) {
+            self.isBackground = YES;
             bHandle = YES;
         }
     }
-    
-    if( bHandle ) {
+
+    if (bHandle) {
+        // 暂停视频推送
+        [self.publisher pausePushVideo];
+
         // 暂停摄像头采集队列
         [self.videoCaptureSession pauseCameraCapture];
         
-        // 暂停视频推送
-        [self.publisher pausePushVideo];
+        // 暂停OpenGL处理队列
+        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+        dispatch_suspend(videoProcessingQueue);
         
         // 直接断开连接
         [self.publisher stop];
@@ -554,15 +575,21 @@
     BOOL bHandle = NO;
     
     @synchronized (self) {
-        if (_isBackground == YES) {
-            _isBackground = NO;
+        if (self.isBackground == YES) {
+            self.isBackground = NO;
             bHandle = YES;
         }
     }
     
     if( bHandle ) {
+        // 恢复OpenGL处理队列
+        dispatch_queue_t videoProcessingQueue = [GPUImageContext sharedContextQueue];
+        dispatch_resume(videoProcessingQueue);
+        
         // 恢复摄像头采集队列
-        [self.videoCaptureSession resumeCameraCapture];
+        if (self.isPreview) {
+            [self.videoCaptureSession resumeCameraCapture];
+        }
         
         // 恢复视频推送
         [self.publisher resumePushVideo];

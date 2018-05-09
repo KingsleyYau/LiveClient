@@ -26,6 +26,8 @@
 
 @property (nonatomic, assign) BOOL isFirstCreate;
 
+@property (nonatomic, assign) NSInteger giftCount;
+
 @end
 
 @implementation BackpackPresentView
@@ -86,6 +88,8 @@
         self.buttonBarHeight = 1;
 
         self.isFirstCreate = YES;
+        
+        self.giftCount = 0;
     }
     return self;
 }
@@ -152,9 +156,31 @@
 
 #pragma mark 数据源
 - (void)setGiftIdArray:(NSArray *)giftIdArray {
-
+    BOOL lessen = NO;
+    // 如果送完选中礼物，自动跳回第一页第一个礼物选中
+    if (self.giftCount != giftIdArray.count) {
+        self.indextPathRow = 0;
+        self.collectionView.contentOffset = CGPointMake(0 , 0);
+        self.giftCount = giftIdArray.count;
+        lessen = YES;
+    } else {
+        lessen = NO;
+    }
     _giftIdArray = giftIdArray;
-    [self.collectionView reloadData];
+    
+    // 如果送完选中没送完，只刷新当前cell
+    if (lessen) {
+        [self.collectionView reloadData];
+    } else {
+        NSIndexPath *indexpath = [NSIndexPath indexPathForRow:self.indextPathRow inSection:0];
+        [UIView setAnimationsEnabled:NO];
+        WeakObject(self, weakSelf);
+        [self.collectionView performBatchUpdates:^{
+            [weakSelf.collectionView reloadItemsAtIndexPaths:[NSArray arrayWithObject:indexpath]];
+        } completion:^(BOOL finished) {
+            [UIView setAnimationsEnabled:YES];
+         }];
+    }
 }
 
 #pragma mark UICollectionViewDelegate / UICollectionViewDataSource
@@ -163,10 +189,6 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-
-    if (self.pageView.hidden) {
-        self.pageView.hidden = NO;
-    }
 
     GiftItemCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[GiftItemCollectionViewCell cellIdentifier] forIndexPath:indexPath];
 
@@ -179,31 +201,35 @@
         [self sendViewCanUserEnabled];
     }
     
-    AllGiftItem *item = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:model.giftId];
-    // 默认选中第一个
+    // 刷新选中状态
     BOOL isIndexPath = NO;
     if (self.indextPathRow == indexPath.row) {
         isIndexPath = YES;
-
-    } else if ((self.indextPathRow == -1 && indexPath.row == 0) || self.indextPathRow == self.giftIdArray.count) {
+    }
+    // 刷新选中第一个
+    if ((self.indextPathRow == -1 && indexPath.row == 0) || self.indextPathRow == self.giftIdArray.count) {
         self.indextPathRow = 0;
         isIndexPath = YES;
     }
     
     if (isIndexPath) {
+        RoomBackGiftItem *model = self.giftIdArray[self.indextPathRow];
+        AllGiftItem *item = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:model.giftId];
         cell.selectCell = YES;
         self.isCellSelect = YES;
-        self.selectCellItem = item;
-
-        if (self.isFirstCreate) {
+        if (![self.selectCellItem.infoItem.giftId isEqualToString:item.infoItem.giftId]) {
+            self.selectCellItem = item;
             [self setupButtonBar:item.infoItem.sendNumList];
-            self.isFirstCreate = NO;
         }
     }
-
+    // 刷新选中框
     [cell reloadStyle];
 
-    // 刷新页数 小高表布局
+    // 页数控件
+    if (self.pageView.hidden) {
+        self.pageView.hidden = NO;
+    }
+    // 刷新页数
     GiftItemLayout *layout = (GiftItemLayout *)self.collectionView.collectionViewLayout;
     if (self.pageView.numberOfPages != layout.pageCount) {
         self.pageView.numberOfPages = layout.pageCount;
@@ -216,7 +242,7 @@
     if (self.buttonBar.frame.size.height) {
         [self hideButtonBar];
     } else {
-
+        
         self.indextPathRow = indexPath.row;
         [self.collectionView reloadData];
 
@@ -227,12 +253,9 @@
             completion:^(BOOL finished) {
                 [UIView setAnimationsEnabled:YES];
             }];
-
-        RoomBackGiftItem *model = self.giftIdArray[indexPath.row];
-        AllGiftItem *item = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:model.giftId];
-
-        if ([self.backpackDelegate respondsToSelector:@selector(backpackPresentViewDidSelectItemWithSelf:numberList:atIndexPath:)]) {
-            [self.backpackDelegate backpackPresentViewDidSelectItemWithSelf:self numberList:item.infoItem.sendNumList atIndexPath:indexPath];
+        
+        if ([self.backpackDelegate respondsToSelector:@selector(backpackPresentViewDidSelectItemWithSelf:atIndexPath:)]) {
+            [self.backpackDelegate backpackPresentViewDidSelectItemWithSelf:self atIndexPath:indexPath];
         }
     }
 }

@@ -10,6 +10,8 @@ def shared_pods
 	pod 'Masonry', '0.6.4'
 	pod 'YYText', '1.0.7'
 	pod 'SDWebImage/WebP'
+	pod "GCDWebServer/WebDAV", "~> 3.0"
+
 end
 
 target 'livestream_anchor' do

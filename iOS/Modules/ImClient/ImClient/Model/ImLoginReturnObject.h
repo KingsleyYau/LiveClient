@@ -10,17 +10,20 @@
 #import "ImInviteIdItemObject.h"
 #import "ImScheduleRoomObject.h"
 #import "ImLoginRoomObject.h"
+#import "IMOngoingShowItemObject.h"
 
 /**
  * 立即私密邀请结构体
  * roomList                 需要强制进入的直播间数组
  * inviteList               本人邀请中有效的立即私密邀请
  * scheduleRoomList		    预约且未进入过直播
+ * ongoingShowList          将要开播的节目
  */
 
 @interface ImLoginReturnObject : NSObject
 @property (nonatomic, strong) NSArray<ImLoginRoomObject*> * _Nullable roomList;
 @property (nonatomic, strong) NSArray<ImInviteIdItemObject*> * _Nullable inviteList;
 @property (nonatomic, strong) NSArray<ImScheduleRoomObject*> * _Nullable scheduleRoomList;
+@property (nonatomic, strong) NSArray<IMOngoingShowItemObject*> * _Nullable ongoingShowList;
 
 @end

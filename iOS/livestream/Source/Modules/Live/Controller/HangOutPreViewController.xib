@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HangOutPreViewController">
+            <connections>
+                <outlet property="closeBtn" destination="rqO-uK-v5f" id="ws4-Dz-QSU"/>
+                <outlet property="headImageView" destination="zHf-sT-hdg" id="d0J-ar-JXZ"/>
+                <outlet property="loadingView" destination="zeN-Oa-k8u" id="kBz-09-5bA"/>
+                <outlet property="retryButton" destination="jeu-fL-Ipy" id="cpW-5q-Hk8"/>
+                <outlet property="tipLabel" destination="eTn-6U-HPz" id="1l2-IP-8XJ"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zHf-sT-hdg">
+                    <rect key="frame" x="137.5" y="80" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="zHf-sT-hdg" secondAttribute="height" multiplier="1:1" id="8dT-eX-oR6"/>
+                        <constraint firstAttribute="width" constant="100" id="eni-WK-euV"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eTn-6U-HPz">
+                    <rect key="frame" x="40" y="195" width="295" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.76078431372549016" green="0.76078431372549016" blue="0.76078431372549016" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jeu-fL-Ipy">
+                    <rect key="frame" x="82" y="233" width="211" height="33"/>
+                    <state key="normal" image="Live_PreLive_Btn_Retry"/>
+                    <connections>
+                        <action selector="retryAction:" destination="-1" eventType="touchUpInside" id="UgE-1B-DFb"/>
+                    </connections>
+                </button>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="zeN-Oa-k8u">
+                    <rect key="frame" x="137.5" y="233" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="zeN-Oa-k8u" secondAttribute="height" multiplier="1:1" id="5la-an-e7C"/>
+                        <constraint firstAttribute="height" constant="100" id="JTz-zZ-2Fm"/>
+                    </constraints>
+                </activityIndicatorView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rqO-uK-v5f">
+                    <rect key="frame" x="315" y="25" width="40" height="40"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="A9Q-gH-Tm6"/>
+                        <constraint firstAttribute="width" secondItem="rqO-uK-v5f" secondAttribute="height" multiplier="1:1" id="IJR-xk-moR"/>
+                    </constraints>
+                    <state key="normal" image="Live_Preview_Btn_Cancel"/>
+                    <connections>
+                        <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="IVX-8h-VCM"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="eTn-6U-HPz" secondAttribute="trailing" constant="40" id="Bve-Px-p4c"/>
+                <constraint firstItem="zHf-sT-hdg" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="80" id="DqY-2h-yv2"/>
+                <constraint firstItem="rqO-uK-v5f" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="25" id="Oxj-JV-v6D"/>
+                <constraint firstItem="eTn-6U-HPz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="Wb4-na-Ymq"/>
+                <constraint firstItem="jeu-fL-Ipy" firstAttribute="top" secondItem="eTn-6U-HPz" secondAttribute="bottom" constant="20" id="ZbY-JE-Tvv"/>
+                <constraint firstItem="jeu-fL-Ipy" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="aNH-Cp-QzM"/>
+                <constraint firstItem="zeN-Oa-k8u" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="cFY-vS-nQf"/>
+                <constraint firstItem="zeN-Oa-k8u" firstAttribute="width" secondItem="zeN-Oa-k8u" secondAttribute="height" multiplier="1:1" id="i2c-By-ljC"/>
+                <constraint firstItem="zeN-Oa-k8u" firstAttribute="top" secondItem="eTn-6U-HPz" secondAttribute="bottom" constant="20" id="iEw-qp-kCa"/>
+                <constraint firstItem="zHf-sT-hdg" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="pVX-aA-rXM"/>
+                <constraint firstItem="eTn-6U-HPz" firstAttribute="top" secondItem="zHf-sT-hdg" secondAttribute="bottom" constant="15" id="teg-ib-wln"/>
+                <constraint firstAttribute="trailing" secondItem="rqO-uK-v5f" secondAttribute="trailing" constant="20" id="vAg-dx-Sx9"/>
+            </constraints>
+            <point key="canvasLocation" x="26.5" y="51.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_PreLive_Btn_Retry" width="211" height="33"/>
+        <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
+    </resources>
+</document>

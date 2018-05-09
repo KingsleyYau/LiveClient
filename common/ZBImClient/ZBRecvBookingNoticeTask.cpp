@@ -51,7 +51,7 @@ bool ZBRecvBookingNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvBookingNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvBookingNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     string roomId = "";
@@ -88,15 +88,15 @@ bool ZBRecvBookingNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvBookingNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvBookingNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnZBRecvBookingNotice(roomId, userId, nickName, avatarImg, leftSeconds);
-		FileLog("ZBImClient", "ZBRecvBookingNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRecvBookingNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvBookingNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvBookingNoticeTask::Handle() end");
 
 	return result;
 }
@@ -106,7 +106,7 @@ bool ZBRecvBookingNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvBookingNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvBookingNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -119,7 +119,7 @@ bool ZBRecvBookingNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvBookingNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvBookingNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

@@ -13,6 +13,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveViewController">
             <connections>
                 <outlet property="barrageView" destination="tKU-mh-VjR" id="V02-Pn-S9L"/>
+                <outlet property="barrageViewTop" destination="4ka-9r-sVU" id="Eto-XT-Kds"/>
                 <outlet property="countdownLabel" destination="OxN-sR-Vn6" id="ly4-Fv-AzU"/>
                 <outlet property="countdownView" destination="42s-Tw-z1G" id="UXT-lF-8Mi"/>
                 <outlet property="debugLabel" destination="mZV-VJ-gyf" id="7QQ-KL-N1L"/>
@@ -113,7 +114,7 @@
                     <rect key="frame" x="0.0" y="311.33333333333331" width="414" height="40"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pJn-wx-siJ" userLabel="Start One On One Btn">
-                            <rect key="frame" x="121.66666666666669" y="6" width="170" height="28"/>
+                            <rect key="frame" x="129.33333333333334" y="6" width="155.00000000000003" height="28"/>
                             <state key="normal" image="Live_Public_Vip_Invite_Btn"/>
                             <connections>
                                 <action selector="cameraAction:" destination="-1" eventType="touchUpInside" id="e7O-sb-jHZ"/>
@@ -358,7 +359,7 @@
     </objects>
     <resources>
         <image name="Live_Msg_UnRead" width="9" height="5"/>
-        <image name="Live_Public_Vip_Invite_Btn" width="170" height="28"/>
+        <image name="Live_Public_Vip_Invite_Btn" width="155" height="28"/>
         <image name="Live_Publish_Btn_Camera_Open_Big" width="28" height="34"/>
         <image name="Live_Publish_Btn_Camera_Stop" width="19" height="19"/>
         <image name="Live_Publish_Btn_Mute" width="11" height="16"/>

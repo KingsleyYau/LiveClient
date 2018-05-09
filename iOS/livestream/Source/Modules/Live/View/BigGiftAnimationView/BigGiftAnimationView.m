@@ -13,16 +13,9 @@
 @end
 
 @implementation BigGiftAnimationView
-static BigGiftAnimationView *sharedInstance = nil;
-static dispatch_once_t onceToken;
 
 + (instancetype)sharedObject{
-    dispatch_once(&onceToken, ^(void){
-        if (sharedInstance == nil) {
-            sharedInstance = [[BigGiftAnimationView alloc] init];
-        }
-        
-    });
+    BigGiftAnimationView *sharedInstance = [[BigGiftAnimationView alloc] init];
     return sharedInstance;
 }
 

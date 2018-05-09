@@ -34,7 +34,7 @@
     self.firstManager = [RoomTypeIsFirstManager manager];
     
     self.vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
-    self.vc.delegate = self;
+    self.vc.privateDelegate = self;
     [self addChildViewController:self.vc];
     
     self.talentVC = [[TalentOnDemandViewController alloc] initWithNibName:nil bundle:nil];
@@ -56,12 +56,6 @@
     [self.talentVC getTalentList:self.liveRoom.roomId];
     
     self.haveCome = [self.firstManager getThisTypeHaveCome:@"Private_VIP_Join"];
-    if (self.haveCome) {
-        [self.vc.tipView hiddenChardTip];
-    } else {
-        self.vc.tipView.hidden = NO;
-        [self.firstManager comeinLiveRoomWithType:@"Private_VIP_Join" HaveComein:YES];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -110,7 +104,7 @@
     self.vc.playVC.liveVC.roomStyleItem.riderBgColor = Color(255, 109, 0, 0.7);
     self.vc.playVC.liveVC.roomStyleItem.driverStrColor = Color(255, 255, 255, 1);
     // 弹幕
-    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(37, 37, 37, 0.9);//Color(83, 13, 120, 0.9);
+    self.vc.playVC.liveVC.roomStyleItem.barrageBgColor =  Color(37, 37, 37, 0.9);
     // 消息列表界面
     self.vc.playVC.liveVC.roomStyleItem.myNameColor = Color(255, 109, 0, 1);
     self.vc.playVC.liveVC.roomStyleItem.liverNameColor = Color(92, 222, 126, 1);
@@ -125,30 +119,9 @@
 }
 
 - (void)onSetupViewController:(PrivateViewController *)vc {
-    // 底部背景
-//    self.vc.bgImageView.image = nil;//[UIImage imageNamed:@"Live_Private_Vip_Bg_Bottom"];
-    // 房间类型
-//    self.vc.roomTypeImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Type"];
-//    [self.vc.roomTypeImageView sizeToFit];
-    // 标题背景
-//    self.vc.titleBackGroundView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Title"];
-//    // 头像背景
-//    self.vc.manHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Man_Head"];
-//    self.vc.ladyHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Lady_Head"];
-//    // 关注按钮
-//    [self.vc.followBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Follow"] forState:UIControlStateNormal];
+ 
     // 礼物按钮
     [self.vc.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Gift"] forState:UIControlStateNormal];
-    // 输入栏目
-    
-    // 房间类型提示
-//    self.vc.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0X5D0E86);
-//    [self.vc.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
-//                                 roomTip:NSLocalizedStringFromSelf(@"VIP_PRIVATE_TIP")
-//                              creditText:NSLocalizedStringFromSelf(@"CREDIT_TIP")];
-//    [self.vc.tipView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.width.equalTo(@(self.vc.roomTypeImageView.frame.size.width * 1.5));
-//    }];
     
     // 隐藏立即私密邀请控件
     self.vc.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
@@ -156,8 +129,6 @@
     // 聊天输入框
     self.vc.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0x9b7930);
     self.vc.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
-    // 显示表情按钮
-    self.vc.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
 }
 
 #pragma mark - 按钮事件

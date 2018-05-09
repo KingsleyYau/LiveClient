@@ -9,6 +9,8 @@
 #import "MeLevelViewController.h"
 #import "IntroduceView.h"
 #import "LSLiveWKWebViewController.h"
+#import "LSRequestManager.h"
+#import "LiveModule.h"
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
 @interface MeLevelViewController () <WKUIDelegate,WKNavigationDelegate>
@@ -44,10 +46,12 @@
         } else {
             device = [NSString stringWithFormat:@"device=31"];
         }
+        
+        NSString *appVer = [NSString stringWithFormat:@"appver=%@",[LiveModule module].appVerCode];
         if ([webSiteUrl containsString:@"?"]) {
-            webSiteUrl = [NSString stringWithFormat:@"%@&%@",webSiteUrl,device];
+            webSiteUrl = [NSString stringWithFormat:@"%@&%@%@",webSiteUrl,device,appVer];
         } else {
-            webSiteUrl = [NSString stringWithFormat:@"%@?%@",webSiteUrl,device];
+            webSiteUrl = [NSString stringWithFormat:@"%@?%@%@",webSiteUrl,device,appVer];
         }
     }
     self.urlController.baseUrl = webSiteUrl;

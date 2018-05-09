@@ -26,7 +26,7 @@
 - (void)dealloc {
     NSLog(@"LiveWebViewController::dealloc()");
     [self.webView stopLoading];
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
 }
 
 - (void)viewDidLoad {

@@ -24,6 +24,12 @@
                         <constraint firstAttribute="width" secondItem="gB8-RO-OH8" secondAttribute="height" multiplier="1:1" id="itd-L7-fJb"/>
                     </constraints>
                 </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ldG-7O-62r" userLabel="Man Detail Button">
+                    <rect key="frame" x="156" y="12" width="62" height="62"/>
+                    <connections>
+                        <action selector="manDetailAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="ZR8-D2-WV3"/>
+                    </connections>
+                </button>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bRT-Li-6z4" userLabel="Name Level View">
                     <rect key="frame" x="147" y="90.5" width="81.5" height="14.5"/>
                     <subviews>
@@ -89,14 +95,18 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="ldG-7O-62r" firstAttribute="top" secondItem="gB8-RO-OH8" secondAttribute="top" id="1OO-70-2Oc"/>
                 <constraint firstItem="WdW-rf-tEJ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="1iH-ip-aMs"/>
                 <constraint firstItem="9CE-J1-yEp" firstAttribute="centerY" secondItem="gB8-RO-OH8" secondAttribute="bottom" constant="-6" id="5EK-yy-htK"/>
                 <constraint firstItem="WdW-rf-tEJ" firstAttribute="trailing" secondItem="iN0-l3-epB" secondAttribute="trailing" id="8bt-0W-Uhd"/>
+                <constraint firstItem="ldG-7O-62r" firstAttribute="leading" secondItem="gB8-RO-OH8" secondAttribute="leading" id="Cge-Ov-Oen"/>
+                <constraint firstItem="ldG-7O-62r" firstAttribute="bottom" secondItem="gB8-RO-OH8" secondAttribute="bottom" id="KdP-6Z-Rbk"/>
                 <constraint firstItem="gB8-RO-OH8" firstAttribute="trailing" secondItem="9CE-J1-yEp" secondAttribute="trailing" constant="-6" id="PdK-DN-e3a"/>
                 <constraint firstAttribute="bottom" secondItem="Ime-Jp-vHS" secondAttribute="bottom" constant="21" id="PsD-5W-d0F"/>
                 <constraint firstItem="gB8-RO-OH8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="WQQ-ET-s4K"/>
                 <constraint firstItem="gB8-RO-OH8" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ZSE-93-Gg4"/>
                 <constraint firstItem="bRT-Li-6z4" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="bIT-JM-WIw"/>
+                <constraint firstItem="ldG-7O-62r" firstAttribute="trailing" secondItem="gB8-RO-OH8" secondAttribute="trailing" id="soW-Px-U06"/>
                 <constraint firstItem="Ime-Jp-vHS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="uoe-NP-EWX"/>
                 <constraint firstItem="Ime-Jp-vHS" firstAttribute="top" secondItem="bRT-Li-6z4" secondAttribute="bottom" constant="11" id="yud-SO-R6x"/>
             </constraints>

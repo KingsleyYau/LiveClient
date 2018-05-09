@@ -13,6 +13,7 @@
 #import "MeLevelViewController.h"
 #import "LSLiveWKWebViewController.h"
 #import "LSLiveGuideViewController.h"
+#import "LiveModule.h"
 
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
@@ -39,6 +40,9 @@
     }else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
+    
+    self.tabType = 0;
+    
     self.urlController = [[LSLiveWKWebViewController alloc] init];
     self.urlController.isShowTaBar = NO;
     self.urlController.isRequestWeb = YES;
@@ -53,12 +57,16 @@
         } else {
             device = [NSString stringWithFormat:@"device=31"];
         }
+        NSString *appVer = [NSString stringWithFormat:@"appver=%@",[LiveModule module].appVerCode];
         if ([anchorPage containsString:@"?"]) {
-            anchorPage = [NSString stringWithFormat:@"%@&%@&%@%@",anchorPage,device,anchorid,enterroom];
+            anchorPage = [NSString stringWithFormat:@"%@&%@&%@&%@%@",anchorPage,device,appVer,anchorid,enterroom];
         } else {
-            anchorPage = [NSString stringWithFormat:@"%@?%@&%@%@",anchorPage,device,anchorid,enterroom];
+            anchorPage = [NSString stringWithFormat:@"%@?%@%@&%@%@",anchorPage,device,appVer,anchorid,enterroom];
         }
     }
+    
+    anchorPage = [NSString stringWithFormat:@"%@&tabtype=%ld",anchorPage,self.tabType];
+    
     self.urlController.baseUrl = anchorPage;
 }
 

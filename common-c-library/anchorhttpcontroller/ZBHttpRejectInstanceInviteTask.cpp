@@ -29,7 +29,6 @@ void ZBHttpRejectInstanceInviteTask::SetParam(
                                             const string& rejectReason
                                           ) {
 
-    char temp[16];
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     

@@ -13,7 +13,14 @@
 #import "LiveUrlHandler.h"
 #import "IntroduceViewController.h"
 
+@protocol LSLiveWKWebViewControllerDelegate<NSObject>
+@optional
+
+@end
+
 @interface LSLiveWKWebViewController : NSObject
+
+@property (nonatomic,weak) id<LSLiveWKWebViewControllerDelegate> delegate;
 /**
  加载视图
  */

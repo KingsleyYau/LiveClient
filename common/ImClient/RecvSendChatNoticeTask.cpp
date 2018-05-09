@@ -114,10 +114,10 @@ bool RecvSendChatNoticeTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-        value[ROOMID_PARAM] = m_roomId;
-        value[FROMID_PARAM] = m_fromId;
-        value[NICKNAME_PARAM] = m_nickName;
-        value[MSG_PARAM] = m_Msg;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
         data = value;
     }
 

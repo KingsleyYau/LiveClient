@@ -48,7 +48,7 @@ bool ZBRoomOutTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRoomOutTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRoomOutTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -64,16 +64,16 @@ bool ZBRoomOutTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRoomOutTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRoomOutTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
         m_listener->OnZBRoomOut(GetSeq(), success, m_errType, m_errMsg);
-		FileLog("ZBImClient", "ZBRoomOutTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRoomOutTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRoomOutTask::Handle() end");
+	FileLog("ImClient", "ZBRoomOutTask::Handle() end");
 
 	return result;
 }
@@ -83,7 +83,7 @@ bool ZBRoomOutTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRoomOutTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRoomOutTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -93,7 +93,7 @@ bool ZBRoomOutTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRoomOutTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRoomOutTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

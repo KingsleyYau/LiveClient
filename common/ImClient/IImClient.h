@@ -20,6 +20,15 @@
 #include "item/StartOverRoomItem.h"
 #include "item/BookingReplyItem.h"
 #include "item/TalentReplyItem.h"
+#include "item/IMRecommendHangoutItem.h"
+#include "item/IMRecvDealInviteItem.h"
+#include "item/IMHangoutRoomItem.h"
+#include "item/IMRecvEnterRoomItem.h"
+#include "item/IMRecvLeaveRoomItem.h"
+#include "item/IMRecvHangoutGiftItem.h"
+#include "item/IMKnockRequestItem.h"
+#include "item/IMLackCreditHangoutItem.h"
+#include "item/IMProgramItem.h"
 
 using namespace std;
 
@@ -178,9 +187,10 @@ public:
      *  @param riderUrl    座驾图片url
      *  @param fansNum     观众人数
      *  @param honorImg    勋章图片url
+     *  @param isHasTicket 是否已购票（false：否，ture：是）
      *
      */
-    virtual void OnRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum, const string& honorImg) {};
+    virtual void OnRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum, const string& honorImg, bool isHasTicket) {};
     
     /**
      *  3.5.接收观众退出直播间通知回调
@@ -251,6 +261,17 @@ public:
      *
      */
     virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem& item) {};
+    
+//    /**
+//     *  3.12.接收观众／主播切换视频流通知接口 回调
+//     *
+//     *  @param roomId       房间ID
+//     *  @param isAnchor     是否是主播推流（1:是 0:否）
+//     *  @param playUrl      播放url
+//     *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
+//     *
+//     */
+//    virtual void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl, const string& userId = "") {};
     
     /**
      *  3.12.接收观众／主播切换视频流通知接口 回调
@@ -538,6 +559,121 @@ public:
      */
     virtual void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) {};
     
+     // ------------- 多人互动直播间 -------------
+    /**
+     *  10.1.接收主播推荐好友通知接口 回调
+     *
+     *  @param item         接收主播推荐好友通知
+     *
+     */
+    virtual void OnRecvRecommendHangoutNotice(const IMRecommendHangoutItem& item) {};
+
+    /**
+     *  10.2.接收主播回复观众多人互动邀请通知接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    virtual void OnRecvDealInviteHangoutNotice(const IMRecvDealInviteItem& item) {};
+
+    /**
+     *  10.3.观众新建/进入多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *  @param item        进入多人互动直播间信息
+     *
+     */
+    virtual void OnEnterHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const IMHangoutRoomItem& item) {};
+
+    /**
+     *  10.4.退出多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *
+     */
+    virtual void OnLeaveHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {};
+
+    /**
+     *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    virtual void OnRecvEnterHangoutRoomNotice(const IMRecvEnterRoomItem& item) {};
+
+    /**
+     *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
+     *
+     *  @param item         接收观众/主播退出多人互动直播间信息
+     *
+     */
+    virtual void OnRecvLeaveHangoutRoomNotice(const IMRecvLeaveRoomItem& item) {};
+
+    /**
+     *  10.7.发送多人互动直播间礼物消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    virtual void OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {};
+
+    /**
+     *  10.8.接收多人互动直播间礼物通知接口 回调
+     *
+     *  @param item         接收多人互动直播间礼物信息
+     *
+     */
+    virtual void OnRecvHangoutGiftNotice(const IMRecvHangoutGiftItem& item) {};
+
+    /**
+     *  10.9.接收主播敲门通知接口 回调
+     *
+     *  @param item         接收主播发起的敲门信息
+     *
+     */
+    virtual void OnRecvKnockRequestNotice(const IMKnockRequestItem& item) {};
+
+    /**
+     *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
+     *
+     *  @param item         观众账号余额不足信息
+     *
+     */
+    virtual void OnRecvLackCreditHangoutNotice(const IMLackCreditHangoutItem& item) {};
+
+    // ------------- 节目 -------------
+    /**
+     *  11.1.接收节目开播通知接口 回调
+     *
+     *  @param item         节目
+     *  @param type         通知类型（1：已购票的开播通知，2：仅关注的开播通知）
+     *  @param msg          消息提示文字
+     *
+     */
+    virtual void OnRecvProgramPlayNotice(const IMProgramItem& item, IMProgramNoticeType type, const string& msg) {};
+    
+    /**
+     *  11.2.接收节目已取消通知接口 回调
+     *
+     *  @param item         节目
+     *
+     */
+    virtual void OnRecvCancelProgramNotice(const IMProgramItem& item) {};
+    
+    /**
+     *  11.3.接收节目已退票通知接口 回调
+     *
+     *  @param item         节目
+     *  @param leftCredit   当前余额
+     *
+     */
+    virtual void OnRecvRetTicketNotice(const IMProgramItem& item, double leftCredit) {};
 };
 
 // IM客户端接口类
@@ -709,6 +845,45 @@ public:
      *
      */
     virtual bool SendTalent(SEQ_T reqId, const string& roomId, const string& talentId) = 0;
+    
+    // ------------- 多人互动 -------------
+    /**
+     *  10.3.观众新建/进入多人互动直播间接口
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *
+     */
+    virtual bool EnterHangoutRoom(SEQ_T reqId, const string& roomId) = 0;
+    
+    /**
+     *  10.4.退出多人互动直播间接口
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *
+     */
+    virtual bool LeaveHangoutRoom(SEQ_T reqId, const string& roomId) = 0;
+    
+    /**
+     *  10.7.发送多人互动直播间礼物消息接口
+     *
+     * @param reqId         请求序列号
+     * @roomId              直播间ID
+     * @nickName            发送人昵称
+     * @toUid               接收者ID
+     * @giftId              礼物ID
+     * @giftName            礼物名称
+     * @isBackPack          是否背包礼物（1：是，0：否）
+     * @giftNum             本次发送礼物的数量
+     * @isMultiClick        是否连击礼物（1：是，0：否）
+     * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
+     * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
+     * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
+     * @isPrivate           是否私密发送（1：是，0：否）
+     *
+     */
+    virtual bool SendHangoutGift(SEQ_T reqId, const string& roomId, const string& nickName, const string& toUid, const string& giftId, const string& giftName, bool isBackPack, int giftNum, bool isMultiClick, int multiClickStart, int multiClickEnd, int multiClickId, bool isPrivate)  = 0;
     
 public:
 	// 获取用户账号

@@ -161,6 +161,12 @@ public:
         
     }
     
+    void OnPlayerConnect(PlayerController* pc) {
+        if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnConnect:)] ) {
+            [mpRtmpPlayerOC.delegate rtmpPlayerOnConnect:mpRtmpPlayerOC];
+        }
+    }
+    
     void OnPlayerDisconnect(PlayerController* pc) {
         if( [mpRtmpPlayerOC.delegate respondsToSelector:@selector(rtmpPlayerOnDisconnect:)] ) {
             [mpRtmpPlayerOC.delegate rtmpPlayerOnDisconnect:mpRtmpPlayerOC];
@@ -259,6 +265,20 @@ private:
 }
 
 #pragma mark - 私有方法
+- (BOOL)mute {
+    BOOL bMute = NO;
+    if( self.audioRenderer ) {
+        bMute = self.audioRenderer->GetMute();
+    }
+    return bMute;
+}
+
+- (void)setMute:(BOOL)mute {
+    if( self.audioRenderer ) {
+        self.audioRenderer->SetMute(mute);
+    }
+}
+
 - (BOOL)useHardDecoder {
     return _useHardDecoder;
 }

@@ -254,9 +254,18 @@ void CTaskManager::OnRecv(const TransportProtocol& tp)
 		if (NULL != m_mgrListener) {
 			m_mgrListener->OnTaskDone(task);
 		}
-		// 释放task
-		delete task;
+        
+//        // 处理完接收的数据，服务器主动请求增加在发送线程里
+//        if (!IsRequestCmd(tp.m_cmd)) {
+//           HandleRequestTask(task);
+//        } else {
+            // 释放task
+            delete task;
+//        }
+
 	}
+    
+
 
 	FileLog("ImClient", "CTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
 		, tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str());

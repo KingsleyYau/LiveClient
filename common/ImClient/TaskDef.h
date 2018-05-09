@@ -75,6 +75,23 @@ static const string CMD_RECVLOVELEVELUPNOTICE = "imMan/loveLevelUpNotice";    //
 static const string CMD_RECVBACKPACKUPDATENOTICE = "imMan/backpackUpdateNotice";    // 9.3.背包更新通知
 static const string CMD_RECVGETHONORNOTICE = "imShare/getHonorNotice";  // 9.4.观众勋章升级通知
 
+// ------------- 多人互动 -------------
+static const string CMD_RECVRECOMMENDHANGOUTNOTICE = "imMan/receiveRecommendHangoutNotice";    // 10.1.接收主播推荐好友通知
+static const string CMD_RECVDEALINVITATIONHANGOUTNOTICE = "imLady/receiveDealInvitationHangoutNotice";    // 10.2.接收主播回复观众多人互动邀请通知
+static const string CMD_ENTERHANGOUTROOM = "imMan/enterHangoutRoom";    // 10.3.观众新建/进入多人互动直播间
+static const string CMD_LEAVEHANGOUTROOM = "imMan/leaveHangoutRoom";    // 10.4.退出多人互动直播间
+static const string CMD_RECVENTERHANGOUTROOMNOTICE = "imShare/enterHangoutRoomNotice";    // 10.5.接收观众/主播进入多人互动直播间通知
+static const string CMD_RECVLEAVEHANGOUTROOMNOTICE = "imShare/leaveHangoutRoomNotice";    // 10.6.接收观众/主播退出多人互动直播间通知
+static const string CMD_SENDHANGOUTGIFT = "imShare/sendHangoutGift";    // 10.7.发送多人互动直播间礼物消息
+static const string CMD_RECVHANGOUTGIFTNOTICE = "imShare/sendHangoutGiftNotice";    // 10.8.接收多人互动直播间礼物通知
+static const string CMD_RECVKNOCKREQUESTNOTICE = "imMan/receiveKnockRequestNotice";    // 10.9.接收主播敲门通知
+static const string CMD_RECVLACKCREDITHANGOUTNOTICE = "imMan/lackCreditHangoutNotice";    // 10.10.接收多人互动余额不足导致主播将要离开的通知
+
+// ------------- 节目 -------------
+static const string CMD_RECVPROGRAMPLAYNOTICE = "imMan/showToStartNotice";    // 11.1.节目开播通知
+static const string CMD_RECVCANCELPROGRAMNOTICE = "imMan/statusChangeNotice";    // 11.2.节目取消通知
+static const string CMD_RECVRETTICKETNOTICE = "imMan/statusChangeNotice";    // 11.3.接收节目已退票通知
+
 // 判断是否客户端主动请求的命令
 inline bool IsRequestCmd(const string& cmd)
 {
@@ -94,6 +111,10 @@ inline bool IsRequestCmd(const string& cmd)
         || cmd == CMD_SENDCANCELPRIVATEINVITE     // 7.2.观众取消立即私密邀请
         || cmd == CMD_SENDTALENT                  // 8.1.发送直播间才艺点播邀请
         || cmd == CMD_SENDINSTANTINVITEUSERREPORT // 7.8.观众端是否显示主播立即私密邀请
+        || cmd == CMD_ENTERHANGOUTROOM              // 10.3.观众新建/进入多人互动直播间
+        || cmd == CMD_LEAVEHANGOUTROOM              // 10.4.退出多人互动直播间
+        || cmd == CMD_SENDHANGOUTGIFT               // 10.7.发送多人互动直播间礼物消息
+
         )
     {
         result = true;

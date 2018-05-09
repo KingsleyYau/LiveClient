@@ -115,9 +115,10 @@
  *  @param riderUrl    座驾图片url
  *  @param fansNum     观众人数
  *  @param honorImg    勋章图片url
+ *  @param isHasTicket 是否已购票（NO：否，YES：是）
  *
  */
-- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString* _Nonnull)honorImg;
+- (void)onRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString* _Nonnull)honorImg isHasTicket:(BOOL)isHasTicket;
 
 /**
  *  3.5.接收观众退出直播间通知回调
@@ -196,8 +197,10 @@
  *  @param roomId       房间ID
  *  @param isAnchor     是否是主播推流（1:是 0:否）
  *  @param playUrl      播放url
+ *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
  *
  */
+//- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl userId:(NSString* _Nonnull)userId;
 - (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl;
 
 #pragma mark - 直播间文本消息信息
@@ -440,5 +443,121 @@
  *
  */
 - (void)onRecvGetHonorNotice:(NSString * _Nonnull)honorId honorUrl:(NSString * _Nonnull)honorUrl;
+
+#pragma mark - 多人互动
+/**
+ *  10.1.接收主播推荐好友通知接口 回调
+ *
+ *  @param item         接收主播推荐好友通知
+ *
+ */
+- (void)onRecvRecommendHangoutNotice:(IMRecommendHangoutItemObject * _Nonnull)item;
+
+/**
+ *  10.2.接收主播回复观众多人互动邀请通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvDealInviteHangoutNotice:(IMRecvDealInviteItemObject * _Nonnull)item;
+
+/**
+ *  10.3.观众新建/进入多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *  @param item        进入多人互动直播间信息
+ *
+ */
+- (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg item:(IMHangoutRoomItemObject * _Nonnull)item;
+
+/**
+ *  10.4.退出多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *
+ */
+- (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
+
+/**
+ *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvEnterHangoutRoomNotice:(IMRecvEnterRoomItemObject * _Nonnull)item;
+
+/**
+ *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
+ *
+ *  @param item         接收观众/主播退出多人互动直播间信息
+ *
+ */
+- (void)onRecvLeaveHangoutRoomNotice:(IMRecvLeaveRoomItemObject * _Nonnull)item;
+
+/**
+ *  10.7.发送多人互动直播间礼物消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
+
+/**
+ *  10.8.接收多人互动直播间礼物通知接口 回调
+ *
+ *  @param item         接收多人互动直播间礼物信息
+ *
+ */
+- (void)onRecvHangoutGiftNotice:(IMRecvHangoutGiftItemObject * _Nonnull)item;
+
+/**
+ *  10.9.接收主播敲门通知接口 回调
+ *
+ *  @param item         接收主播发起的敲门信息
+ *
+ */
+- (void)onRecvKnockRequestNotice:(IMKnockRequestItemObject * _Nonnull)item;
+
+/**
+ *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
+ *
+ *  @param item         观众账号余额不足信息
+ *
+ */
+- (void)onRecvLackCreditHangoutNotice:(IMLackCreditHangoutItemObject * _Nonnull)item;
+
+// ------------- 节目 -------------
+/**
+ *  11.1.接收节目开播通知接口 回调
+ *
+ *  @param item                     节目信息
+ *  @param type                     通知类型（1：已购票的开播通知，2：仅关注的开播通知）
+ *  @param msg                      消息提示文字
+ *
+ */
+- (void)onRecvProgramPlayNotice:(IMProgramItemObject *_Nonnull)item type:(IMProgramNoticeType)type msg:(NSString * _Nonnull)msg;
+
+/**
+ *  11.2.接收节目已取消通知接口 回调
+ *
+ *  @param item         节目
+ *
+ */
+- (void)onRecvCancelProgramNotice:(IMProgramItemObject *_Nonnull)item;
+
+/**
+ *  11.3.接收节目已退票通知接口 回调
+ *
+ *  @param item         节目
+ *  @param leftCredit   当前余额
+ *
+ */
+- (void)onRecvRetTicketNotice:(IMProgramItemObject *_Nonnull)item leftCredit:(double)leftCredit;
 
 @end

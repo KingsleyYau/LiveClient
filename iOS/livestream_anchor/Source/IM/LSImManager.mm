@@ -219,6 +219,11 @@ static LSImManager *gManager = nil;
             }
         });
     }
+    else
+    {
+        NSString * logoutMsg = errmsg.length>0?errmsg:NSLocalizedString(@"ACCOUNT_HAS_LOAD", @"ACCOUNT_HAS_LOAD");
+        [self.loginManager logout:YES msg:logoutMsg];
+    }
 }
 
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg {

@@ -12,21 +12,23 @@ public class LSAudioRecorder {
     private boolean recording = false;
     private byte[] audioBuffer;
     private ILSAudioRecorderCallback recorderCallback;
-    
+	private LSPublishConfig publishConfig;
+
     public LSAudioRecorder() {
 		// TODO Auto-generated constructor stub
 	}
     
-	public boolean init(ILSAudioRecorderCallback callback) {
+	public boolean init(ILSAudioRecorderCallback callback, LSPublishConfig publishConfig) {
 		boolean bFlag = false;
 		
 		Log.d(LSConfig.TAG, String.format("LSAudioRecorder::init( this : 0x%x )", hashCode()));
-		
+
 		this.recorderCallback = callback;
-		
-        int sampleRateInHz = LSConfig.SAMPLE_RATE;
-        int channelConfig = (LSConfig.CHANNEL_PER_FRAME==2)?AudioFormat.CHANNEL_IN_STEREO:AudioFormat.CHANNEL_IN_MONO;
-        int audioFormat = (LSConfig.BIT_PER_SAMPLE==16)?AudioFormat.ENCODING_PCM_16BIT:AudioFormat.ENCODING_PCM_8BIT;
+		this.publishConfig = publishConfig;
+
+        int sampleRateInHz = publishConfig.audioSampleRate;
+        int channelConfig = (publishConfig.audioChannelPerFrame==2)?AudioFormat.CHANNEL_IN_STEREO:AudioFormat.CHANNEL_IN_MONO;
+        int audioFormat = (publishConfig.audioBitPerSample==16)?AudioFormat.ENCODING_PCM_16BIT:AudioFormat.ENCODING_PCM_8BIT;
         int bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
         if( bufferSizeInBytes > 0 ) {
             audioBuffer = new byte[bufferSizeInBytes];
@@ -69,7 +71,7 @@ public class LSAudioRecorder {
 					// TODO Auto-generated method stub
 					int bufferRead = 0;
 					int samplePerFrame = 1024;
-					int frameSize = LSConfig.BIT_PER_SAMPLE / 8 * samplePerFrame;
+					int frameSize = publishConfig.audioBitPerSample / 8 * samplePerFrame;
 					while( recording ) {
 						bufferRead = audioRecorder.read(audioBuffer, 0, frameSize);
 						if( bufferRead > 0 ) {

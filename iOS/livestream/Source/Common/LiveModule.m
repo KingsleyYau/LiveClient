@@ -51,6 +51,8 @@
 #pragma mark - QN
 #import "LiveService.h"
 
+#import "PushShowViewController.h"
+
 static LiveModule *gModule = nil;
 @interface LiveModule () <LoginManagerDelegate, IQNService, IServiceManager, IMLiveRoomManagerDelegate, IMManagerDelegate, LSUserUnreadCountManagerDelegate> {
     UIViewController *_moduleVC;
@@ -108,6 +110,7 @@ static LiveModule *gModule = nil;
         _adVc = nil;
         _showListGuide = YES;
         _isForTest = NO;
+        _appVerCode = @"122";
         // 创建直播服务
         [LiveService service];
         // 资源全局管理
@@ -266,6 +269,9 @@ static LiveModule *gModule = nil;
                 [self.delegate moduleOnAdViewController:self];
             }
         }
+        self.qnMainAdId = loginItem.qnMainAdId ;
+        self.qnMainAdUrl = loginItem.qnMainAdUrl;
+        self.qnMainAdTitle = loginItem.qnMainAdTitle;
 
         // Http登陆成功
         if ([self.delegate respondsToSelector:@selector(moduleOnLogin:)]) {
@@ -376,6 +382,38 @@ static LiveModule *gModule = nil;
     });
 }
 
+- (void)onRecvProgramPlayNotice:(IMProgramItemObject *)item type:(IMProgramNoticeType)type msg:(NSString * _Nonnull)msg
+{
+    // TODO:接收节目开播通知接口
+    NSLog(@"LiveModule::onRecvProgramPlayNotice( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showLiveId, item.anchorId, item.anchorNickName, type);
+    
+    if (type == IMPROGRAMNOTICETYPE_BUYTICKET) {
+       
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 生成直播间跳转的URL
+            NSURL *url =[[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId userId:item.anchorId];
+            // 调用QN弹出通知
+            PushShowViewController *vc = [[PushShowViewController alloc] initWithNibName:nil bundle:nil];
+            vc.url = url;
+            vc.tips = msg;
+            vc.anchorId = item.anchorId;
+            _notificationVC = vc;
+            
+            if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
+                [self.delegate moduleOnNotification:self];
+            }
+        });
+    }
+}
+
+- (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList
+{
+    IMOngoingShowItemObject * item = [ongoingShowList firstObject];
+    NSLog(@"LiveModule::onRecvProgramPlayNotice( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showInfo.showLiveId, item.showInfo.anchorId, item.showInfo.anchorNickName, item.type);
+    
+    [self onRecvProgramPlayNotice:item.showInfo type:item.type msg:item.msg];
+    
+}
 #pragma mark 获取用户中心未读数
 - (void)getUnReadMsg {
     [self.unReadManager getResevationsUnredCount];

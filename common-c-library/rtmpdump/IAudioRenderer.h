@@ -17,6 +17,8 @@ namespace coollive {
         virtual bool Start() = 0;
         virtual void Stop() = 0;
         virtual void Reset() = 0;
+        virtual bool GetMute() = 0;
+        virtual void SetMute(bool isMute) = 0;
     };
 }
 

@@ -3,7 +3,7 @@
  *
  *  Created on: 2018-02-27
  *      Author: Alex
- *        desc: 2.30.获取验证码（仅独立）
+ *        desc: 2.3.获取验证码（仅独立）
  */
 
 #include "ZBHttpGetVerificationCodeTask.h"

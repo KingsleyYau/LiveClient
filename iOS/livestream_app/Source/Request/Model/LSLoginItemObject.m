@@ -26,6 +26,7 @@
         self.isPushAd = NO;
         self.svrList = @[];
         self.userType = USERTYPEA2;
+        self.qnMainAdUrl = @"";
     }
     return self;
 }
@@ -43,6 +44,9 @@
         self.isPushAd = NO;
         self.svrList = @[];
         self.userType = USERTYPEA2;
+        self.qnMainAdUrl = @"";
+        self.qnMainAdTitle = @"";
+        self.qnMainAdId = @"";
     }
     return self;
 }
@@ -58,6 +62,9 @@
         self.isPushAd = [coder decodeBoolForKey:@"isPushAd"];
         self.svrList = [coder decodeObjectForKey:@"svrList"];
         self.userType = [coder decodeIntForKey:@"userType"];
+        self.qnMainAdUrl = [coder decodeObjectForKey:@"qnMainAdUrl"];
+        self.qnMainAdTitle = [coder decodeObjectForKey:@"qnMainAdTitle"];
+        self.qnMainAdId = [coder decodeObjectForKey:@"qnMainAdId"];
     }
     return self;
 }
@@ -72,6 +79,9 @@
     [coder encodeBool:self.isPushAd forKey:@"isPushAd"];
     [coder encodeObject:self.svrList forKey:@"svrList"];
     [coder encodeInt:self.userType forKey:@"userType"];
+    [coder encodeObject:self.qnMainAdUrl forKey:@"qnMainAdUrl"];
+    [coder encodeObject:self.qnMainAdTitle forKey:@"qnMainAdTitle"];
+    [coder encodeObject:self.qnMainAdId forKey:@"qnMainAdId"];
 
 }
 

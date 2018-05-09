@@ -71,18 +71,6 @@ public:
      *
      */
     bool ZBRoomOut(SEQ_T reqId, const string& roomId) override;
-//
-
-//
-//    /**
-//     *  3.14.观众开始／结束视频互动
-//     *
-//     *  @param reqId         请求序列号
-//     *  @param roomId        直播间ID
-//     *  @param control       视频操作（1:开始 2:关闭）
-//     *
-//     */
-//    bool ControlManPush(SEQ_T reqId, const string& roomId, IMControlType control) override;
 
 
 
@@ -126,37 +114,7 @@ public:
      *
      */
     bool ZBSendPrivateLiveInvite(SEQ_T reqId, const string& userIde) override;
-//
-//    /**
-//     *  7.2.观众取消立即私密邀请
-//     *
-//     *  @param reqId                 请求序列号
-//     *  @param inviteId              邀请ID
-//     *
-//     */
-//    bool SendCancelPrivateLiveInvite(SEQ_T reqId, const string& inviteId) override;
-//
-//    /**
-//     *  7.8.观众端是否显示主播立即私密邀请
-//     *
-//     *  @param reqId                 请求序列号
-//     *  @param inviteId              邀请ID
-//     *  @param isshow                观众端是否弹出邀请（整型）（0：否，1：是）
-//     *
-//     */
-//    bool SendInstantInviteUserReport(SEQ_T reqId, const string& inviteId, bool isShow) override;
-//
-//    // ------------- 直播间才艺点播邀请 -------------
-//    /**
-//     *  8.1.发送直播间才艺点播邀请
-//     *
-//     *  @param reqId                 请求序列号
-//     *  @param roomId                直播间ID
-//     *  @param talentId              才艺点播ID
-//     *
-//     */
-//    bool SendTalent(SEQ_T reqId, const string& roomId, const string& talentId) override;
-    
+
     /**
      *  9.5.获取指定立即私密邀请信息
      *
@@ -166,6 +124,45 @@ public:
      */
     bool ZBGetInviteInfo(SEQ_T reqId, const string& invitationId) override;
     
+    // ------------- 多人互动直播间 -------------
+    /**
+     *  10.1.进入多人互动直播间
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *
+     */
+    bool AnchorEnterHangoutRoom(SEQ_T reqId, const string& roomId) override;
+
+    /**
+     *  10.2.退出多人互动直播间
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *
+     */
+    bool AnchorLeaveHangoutRoom(SEQ_T reqId, const string& roomId) override;
+
+    /**
+     *  10.11.发送多人互动直播间礼物消息接口
+     *
+     * @param reqId         请求序列号
+     * @roomId              直播间ID
+     * @nickName            发送人昵称
+     * @toUid               接收者ID
+     * @giftId              礼物ID
+     * @giftName            礼物名称
+     * @isBackPack          是否背包礼物（1：是，0：否）
+     * @giftNum             本次发送礼物的数量
+     * @isMultiClick        是否连击礼物（1：是，0：否）
+     * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
+     * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
+     * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
+     * @isPrivate           是否私密发送（1：是，0：否）
+     *
+     */
+    bool SendAnchorHangoutGift(SEQ_T reqId, const string& roomId, const string& nickName, const string& toUid, const string& giftId, const string& giftName, bool isBackPack, int giftNum, bool isMultiClick, int multiClickStart, int multiClickEnd, int multiClickId, bool isPrivate) override;
+
 public:
 	// 获取用户账号
 	string GetUser() override;
@@ -314,41 +311,42 @@ private:
      */
     void OnZBSendPrivateLiveInvite(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) override;
     
-//    /**
-//     *  7.2.观众取消立即私密邀请 回调
-//     *
-//     *  @param success       操作是否成功
-//     *  @param reqId         请求序列号
-//     *  @param err           结果类型
-//     *  @param errMsg        结果描述
-//     *  @param roomId        直播间ID
-//     *
-//     */
-//    void OnSendCancelPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& roomId) override;
-//    
-//    /**
-//     *  7.8.观众端是否显示主播立即私密邀请 回调
-//     *
-//     *  @param success       操作是否成功
-//     *  @param reqId         请求序列号
-//     *  @param err           结果类型
-//     *  @param errMsg        结果描述
-//     *
-//     */
-//     void OnSendInstantInviteUserReport(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
-//
-//    /**
-//     *  8.1.发送直播间才艺点播邀请 回调
-//     *
-//     *  @param success           操作是否成功
-//     *  @param reqId             请求序列号
-//     *  @param err               结果类型
-//     *  @param errMsg            结果描述
-//     *
-//     */
-//    virtual void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& talentInviteId) override;
-//
-//    
+    
+    // ------------- 多人互动直播间 -------------
+    /**
+     *  10.1.进入多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *  @param item        进入多人互动直播间信息
+     *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+     *
+     */
+    void OnAnchorEnterHangoutRoom(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg, const AnchorHangoutRoomItem& item, int expire) override;
+
+    /**
+     *  10.2.退出多人互动直播间接口 回调
+     *
+     *  @param success      操作是否成功
+     *  @param reqId        请求序列号
+     *  @param errMsg      结果描述
+     *
+     */
+    void OnAnchorLeaveHangoutRoom(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) override;
+
+    /**
+     *  10.11.发送多人互动直播间礼物消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    virtual void OnSendAnchorHangoutGift(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) override;
+
+    
+  
     // 服务端主动请求
     /**
      *  3.4.接收直播间关闭通知(观众)回调
@@ -379,9 +377,10 @@ private:
      *  @param riderName   座驾名称
      *  @param riderUrl    座驾图片url
      *  @param fansNum     观众人数
+     *  @param isHasTicket  是否已购票
      *
      */
-    void OnZBRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum) override;
+    void OnZBRecvEnterRoomNotice(const string& roomId, const string& userId, const string& nickName, const string& photoUrl, const string& riderId, const string& riderName, const string& riderUrl, int fansNum, bool isHasTicket) override;
     
     /**
      *  3.7.接收观众退出直播间通知回调
@@ -405,18 +404,15 @@ private:
      *
      */
     void OnZBRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, ZBLCC_ERR_TYPE err, const string& errMsg) override;
-
-//    
-//    /**
-//     *  3.14.观众开始／结束视频互动接口 回调
-//     *
-//     *  @param success          操作是否成功
-//     *  @param reqId            请求序列号
-//     *  @param errMsg           结果描述
-//     *  @param manPushUrl       观众视频流url
-//     *
-//     */
-//    void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) override;
+    
+    /**
+     *  3.9.接收主播退出直播间通知回调
+     *
+     *  @param roomId       直播间ID
+     *  @param anchorId     退出直播间的主播ID
+     *
+     */
+    virtual void OnRecvAnchorLeaveRoomNotice(const string& roomId, const string& anchorId) override;
 
     
     /**
@@ -489,7 +485,7 @@ private:
      *  @param Item            互动切换
      *
      */
-    void OnZBRecvControlManPushNotice(const ZBControlPushItem Item) override;
+    void OnZBRecvControlManPushNotice(const ZBControlPushItem item) override;
 
     /**
      *  7.3.接收立即私密邀请回复通知 回调
@@ -515,27 +511,7 @@ private:
      *
      */
    void OnZBRecvInstantInviteUserNotice(const string& userId, const string& nickName, const string& photoUrl ,const string& invitationId) override;
-//    
-//    /**
-//     *  7.5.接收主播预约私密邀请通知 回调
-//     *
-//     *  @param inviteId     邀请ID
-//     *  @param anchorId     主播ID
-//     *  @param nickName     主播昵称
-//     *  @param avatarImg    主播头像url
-//     *  @param msg          提示文字
-//     *
-//     */
-//    void OnRecvScheduledInviteUserNotice(const string& inviteId, const string& anchorId ,const string& nickName, const string& avatarImg, const string& msg) override;
-//
-//    /**
-//     *  7.6.接收预约私密邀请回复通知 回调
-//     *
-//     *  @param item     预约私密邀请回复知结构体
-//     *
-//     */
-//    void OnRecvSendBookingReplyNotice(const BookingReplyItem& item) override;
-//    
+  
     /**
      *  9.4.接收预约开始倒数通知 回调
      *
@@ -570,4 +546,109 @@ private:
      *  @param bookTime         预约时间（1970年起的秒数）
      */
     void OnZBRecvInvitationAcceptNotice(const string& userId, const string& nickName, const string& photoUrl, const string& invitationId, long bookTime) override;
+    
+    // ------------- 多人互动直播间 -------------
+    /**
+     *  10.3.接收观众邀请多人互动通知接口 回调
+     *
+     *  @param item         观众邀请多人互动信息
+     *
+     */
+    void OnRecvAnchorInvitationHangoutNotice(const AnchorHangoutInviteItem& item) override;
+
+    /**
+     *  10.4.接收推荐好友通知接口 回调
+     *
+     *  @param item         主播端接收自己推荐好友给观众的信息
+     *
+     */
+    void OnRecvAnchorRecommendHangoutNotice(const IMAnchorRecommendHangoutItem& item) override;
+
+    /**
+     *  10.5.接收敲门回复通知接口 回调
+     *
+     *  @param item         接收敲门回复信息
+     *
+     */
+    void OnRecvAnchorDealKnockRequestNotice(const IMAnchorKnockRequestItem& item) override;
+
+    /**
+     *  10.6.接收观众邀请其它主播加入多人互动通知接口 回调
+     *
+     *  @param item         接收观众邀请其它主播加入多人互动信息
+     *
+     */
+    void OnRecvAnchorOtherInviteNotice(const IMAnchorRecvOtherInviteItem& item) override;
+
+    /**
+     *  10.7.接收主播回复观众多人互动邀请通知接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    void OnRecvAnchorDealInviteNotice(const IMAnchorRecvDealInviteItem& item) override;
+
+    /**
+     *  10.8.观众端/主播端接收观众/主播进入多人互动直播间接口 回调
+     *
+     *  @param item         接收主播回复观众多人互动邀请信息
+     *
+     */
+    void OnRecvAnchorEnterRoomNotice(const IMAnchorRecvEnterRoomItem& item) override;
+
+    /**
+     *  10.9.接收观众/主播退出多人互动直播间通知接口 回调
+     *
+     *  @param item         接收观众/主播退出多人互动直播间信息
+     *
+     */
+    void OnRecvAnchorLeaveRoomNotice(const IMAnchorRecvLeaveRoomItem& item) override;
+
+    /**
+     *  10.10.接收观众/主播多人互动直播间视频切换通知接口 回调
+     *
+     *  @param roomId         直播间ID
+     *  @param isAnchor       是否主播（0：否，1：是）
+     *  @param userId         观众/主播ID
+     *  @param playUrl        视频流url（字符串数组）（访问视频URL的协议参考《 “视频URL”协议描述》）
+     *
+     */
+    void OnRecvAnchorChangeVideoUrl(const string& roomId, bool isAnchor, const string& userId, const list<string>& playUrl) override;
+
+
+    /**
+     *  10.12.接收多人互动直播间礼物通知接口 回调
+     *
+     *  @param item         接收多人互动直播间礼物信息
+     *
+     */
+    void OnRecvAnchorGiftNotice(const IMAnchorRecvGiftItem& item) override;
+    
+    // ------------- 节目 -------------
+    /**
+     *  11.1.接收节目开播通知接口 回调
+     *
+     *  @param item         节目信息
+     *  @param msg          消息提示文字
+     *
+     */
+    void OnRecvAnchorProgramPlayNotice(const IMAnchorProgramInfoItem& item, const string& msg) override;
+    
+    /**
+     *  11.2.接收节目状态改变通知接口 回调
+     *
+     *  @param item         节目信息
+     *
+     */
+    void OnRecvAnchorChangeStatusNotice(const IMAnchorProgramInfoItem& item) override;
+    
+    /**
+     *  11.3.接收无操作的提示通知接口 回调
+     *
+     *  @param backgroundUrl 背景图url
+     *  @param msg           描述
+     *
+     */
+    void OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const string& msg) override;
+
 };

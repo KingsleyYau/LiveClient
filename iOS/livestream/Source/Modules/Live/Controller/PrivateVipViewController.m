@@ -168,6 +168,10 @@
     self.vc.playVC.liveSendBarView.inputTextField.textColor = [UIColor whiteColor];
     // 显示表情按钮
     self.vc.playVC.liveSendBarView.emotionBtnWidth.constant = 30;
+    
+    // 消息列表顶部间隔
+    self.vc.playVC.msgSuperTabelTop = 6;
+    self.vc.playVC.liveVC.barrageViewTop.constant = -6;
 }
 
 #pragma mark - 按钮事件

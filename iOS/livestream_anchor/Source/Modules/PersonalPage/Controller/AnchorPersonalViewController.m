@@ -20,6 +20,8 @@
 @interface AnchorPersonalViewController ()<LSLiveGuideViewControllerDelegate>
 
 @property (nonatomic, strong) LSLiveWKWebViewController *urlController;
+@property (weak, nonatomic) IBOutlet UIButton *backBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topDistance;
 
 @end
 
@@ -28,7 +30,7 @@
 - (void)dealloc {
     NSLog(@"AnchorPersonalViewController::dealloc()");
     [self.personalView stopLoading];
-    [self.personalView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    [self.personalView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
 }
 
 - (void)viewDidLoad {
@@ -40,13 +42,14 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
     self.urlController = [[LSLiveWKWebViewController alloc] init];
-    self.urlController.isShowTaBar = NO;
+    self.urlController.isShowTaBar = YES;
     self.urlController.isRequestWeb = YES;
     
-    NSString *anchorPage = self.urlController.configManager.item.mePageUrl;
+    NSString *anchorPage = self.urlController.configManager.item.manPageUrl;
     NSString *device; // 设备类型
-    NSString *anchorid = [NSString stringWithFormat:@"anchorid=%@",self.anchorId]; // 主播id;
-    NSString *enterroom = [NSString stringWithFormat:@"&enterroom=%d",self.enterRoom];
+    NSString *anchorid = [NSString stringWithFormat:@"manid=%@",self.anchorId]; // 主播id;
+    NSString *showinvite = [NSString stringWithFormat:@"&showinvite=%d",self.showInvite];
+    
     if (anchorPage.length > 0) {
         if (IS_IPAD) {
             device = [NSString stringWithFormat:@"device=32"];
@@ -54,13 +57,33 @@
             device = [NSString stringWithFormat:@"device=31"];
         }
         if ([anchorPage containsString:@"?"]) {
-            anchorPage = [NSString stringWithFormat:@"%@&%@&%@%@",anchorPage,device,anchorid,enterroom];
+            anchorPage = [NSString stringWithFormat:@"%@&%@&%@%@",anchorPage,device,anchorid,showinvite];
         } else {
-            anchorPage = [NSString stringWithFormat:@"%@?%@&%@%@",anchorPage,device,anchorid,enterroom];
+            anchorPage = [NSString stringWithFormat:@"%@?%@&%@%@",anchorPage,device,anchorid,showinvite];
         }
     }
     self.urlController.baseUrl = anchorPage;
 }
+
+
+- (void)setNeedsNavigationBackground:(CGFloat)alpha {
+    // 导航栏背景透明度设置
+    UIView *barBackgroundView = [[self.navigationController.navigationBar subviews] objectAtIndex:0];
+    UIImageView *backgroundImageView = [[barBackgroundView subviews] objectAtIndex:0];
+    if (self.navigationController.navigationBar.isTranslucent) {
+        if (backgroundImageView != nil && backgroundImageView.image != nil) {
+            barBackgroundView.alpha = alpha;
+        } else {
+            UIView *backgroundEffectView = [[barBackgroundView subviews] objectAtIndex:1];
+            if (backgroundEffectView != nil) {
+                backgroundEffectView.alpha = alpha;
+            }
+        }
+    } else {
+        barBackgroundView.alpha = alpha;
+    }
+}
+
 
 - (void)setupNavigationBar {
     [super setupNavigationBar];
@@ -76,62 +99,23 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-//    if (!self.viewDidAppearEver) {
-//        self.navigationController.navigationBar.hidden = NO;
-//        [self.navigationController setNavigationBarHidden:NO];
-//        self.navigationController.navigationBar.translucent = NO;
-//        self.edgesForExtendedLayout = UIRectEdgeNone;
-//    }
-//
-//    if (!self.navigationController.navigationBar.hidden) {
-//        self.navigationController.navigationBar.hidden = YES;
-//        [self.navigationController setNavigationBarHidden:YES];
-//    }
-    //    else {
-    //
-    //    }
-    //    [self.navigationController setNavigationBarHidden:NO];
-    //    self.urlController.liveWKWebView = self.personalView;
-    //    self.urlController.controller = self;
-    //    [self.urlController requestWebview];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    if (!self.viewDidAppearEver) {
+        self.urlController.liveWKWebView = self.personalView;
+        self.urlController.controller = self;
+        self.urlController.isShowTaBar = YES;
+        self.urlController.isRequestWeb = YES;
+        // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
+        [self.navigationController setNavigationBarHidden:NO];
+        self.navigationController.navigationBar.hidden = NO;
+        [self.urlController requestWebview];
+    }
+    self.navigationController.navigationBar.backgroundColor = [UIColor clearColor];
+    [self setNeedsNavigationBackground:0];
+    [self hideNavgationBarBottomLine:YES];
     
-    // 出现新手引导不加载webview,防止进入新手引导页会出现加载loading的状态
-    // 屏蔽新手引导功能
-//    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"]) {
-//        LSLiveGuideViewController *guide =  [[LSLiveGuideViewController alloc] initWithNibName:nil bundle:nil];
-//        guide.listGuide = NO;
-//        guide.guideDelegate = self;
-//        [self addChildViewController:guide];
-//        [self.view addSubview:guide.view];
-//        [guide.view mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.top.equalTo(self.view);
-//            make.left.equalTo(self.view);
-//            make.width.equalTo(self.view);
-//            make.height.equalTo(self.view);
-//        }];
-//        // 使约束生效
-//        [guide.view layoutSubviews];
-//        [self hideAndResetLoading];
-//    }else{
-        if (!self.viewDidAppearEver) {
-            self.urlController.liveWKWebView = self.personalView;
-            self.urlController.controller = self;
-            self.urlController.isShowTaBar = NO;
-            self.urlController.isRequestWeb = YES;
-            // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
-            [self.navigationController setNavigationBarHidden:NO];
-            self.navigationController.navigationBar.hidden = NO;
-            [self.urlController requestWebview];
-        } else {
-            // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
-            [self.navigationController setNavigationBarHidden:YES];
-            self.navigationController.navigationBar.hidden = YES;
-        }
-//    }
     
     [super viewDidAppear:animated];
 }
@@ -141,29 +125,17 @@
     [self hideAndResetLoading];
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.hidden = NO;
+    [self setNeedsNavigationBackground:1];
+    [self hideNavgationBarBottomLine:NO];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
 }
 
-
+#pragma mark - LSLiveGuideViewControllerDelegate
 - (void)lsLiveGuideViewControllerDidFinishGuide:(LSLiveGuideViewController *)guideViewController {
-    //TODO:新手引导页退出导航栏操作
-    //    self.navigationController.navigationBar.hidden = YES;
-    if (@available(iOS 11, *)) {
-        self.personalView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-    }else {
-        self.automaticallyAdjustsScrollViewInsets = NO;
-    }
-    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
-    [guideViewController.view removeFromSuperview];
     
-    self.urlController.liveWKWebView = self.personalView;
-    self.urlController.controller = self;
-    self.urlController.isShowTaBar = NO;
-    self.urlController.isRequestWeb = YES;
-    [self.urlController requestWebview];
 }
+
 @end

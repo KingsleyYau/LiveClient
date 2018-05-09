@@ -13,9 +13,9 @@
 using namespace std;
 
 #include <json/json/json.h>
-#define SCHEDULEROOM_ANCHORID_PARAM              "anchor_id"
-#define SCHEDULEROOM_NICKNAME_PARAM              "nickname"
-#define SCHEDULEROOM_ANCHORIMG_PARAM             "anchor_img"
+#define SCHEDULEROOM_ANCHORID_PARAM              "user_id"
+#define SCHEDULEROOM_NICKNAME_PARAM              "user_nick_name"
+#define SCHEDULEROOM_ANCHORIMG_PARAM             "user_img"
 #define SCHEDULEROOM_ANCHORCOVERIMG_PARAM        "anchor_cover_img"
 #define SCHEDULEROOM_CANENTERTIME_PARAM          "can_enter_time"
 #define SCHEDULEROOM_LEFTSECONDS_PARAM           "left_seconds"

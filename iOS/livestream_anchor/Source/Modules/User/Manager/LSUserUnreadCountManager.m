@@ -13,7 +13,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
 @interface LSUserUnreadCountManager ()
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @property (nonatomic, strong) NSMutableArray* delegates;
-@property (nonatomic, strong) ZBLSRequestManager *requestManager;
+@property (nonatomic, strong) LSAnchorRequestManager *requestManager;
 @end
 
 @implementation LSUserUnreadCountManager
@@ -32,7 +32,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
     self = [super init];
     if (self) {
         self.sessionManager = [LSSessionRequestManager manager];
-        self.requestManager= [ZBLSRequestManager manager];
+        self.requestManager= [LSAnchorRequestManager manager];
         self.delegates = [NSMutableArray array];
      }
     return self;
@@ -81,13 +81,13 @@ static LSUserUnreadCountManager * unreadCountinstance;
 
 
 - (void)getUnreadSheduledBooking {
-    [self.requestManager anchorGetScheduledAcceptNum:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int scheduledNum) {
+    [self.requestManager anchorGetScheduleListNoReadNum:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingUnreadUnhandleNumItemObject * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             @synchronized(self.delegates) {
                 for(NSValue* value in self.delegates) {
                     id<LSUserUnreadCountManagerDelegate> delegate = value.nonretainedObjectValue;
                     if ([delegate respondsToSelector:@selector(onGetUnreadSheduledBooking:)]) {
-                        [delegate onGetUnreadSheduledBooking:scheduledNum];
+                        [delegate onGetUnreadSheduledBooking:item.scheduledNoReadNum];
                     }
                     
                 }

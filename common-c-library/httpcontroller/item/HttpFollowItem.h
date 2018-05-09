@@ -16,6 +16,7 @@ using namespace std;
 
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
+#include "HttpProgramInfoItem.h"
 
 typedef list<InterestType> FollowInterestList;
 
@@ -77,6 +78,20 @@ public:
             if( root[LIVEROOM_FOLLOW_ANCHORTYPE].isInt() ) {
                 anchorType = (AnchorLevelType)(root[LIVEROOM_FOLLOW_ANCHORTYPE].asInt());
             }
+            
+            /* showInfo */
+            if( root[LIVEROOM_HOT_SHOWINFO].isObject() ) {
+                if (root[LIVEROOM_HOT_SHOWINFO].isNull()) {
+                    if(showInfo != NULL) {
+                        delete showInfo;
+                    }
+                    showInfo = NULL;
+                }
+                else {
+                    showInfo = new HttpProgramInfoItem;
+                    showInfo->Parse(root[LIVEROOM_HOT_SHOWINFO]);
+                }
+            }
 
         }
     }
@@ -91,10 +106,13 @@ public:
         loveLevel = 0;
         addDate = 0;
         anchorType = ANCHORLEVELTYPE_UNKNOW;
+        showInfo = NULL;
 	}
 
 	virtual ~HttpFollowItem() {
-
+        if(showInfo != NULL) {
+            delete showInfo;
+        }
 	}
     
     /**
@@ -109,6 +127,7 @@ public:
      * addDate          添加收藏时间（1970年起的秒数）
      * interest         爱好ID列表
      * anchorType        主播类型（1:白银 2:黄金）
+     * showInfo         节目信息
      */
     string userId;
 	string nickName;
@@ -120,8 +139,9 @@ public:
     long addDate;
     FollowInterestList interest;
     AnchorLevelType anchorType;
+    HttpProgramInfoItem* showInfo;
 };
 
-typedef list<HttpFollowItem> FollowItemList;
+typedef list<HttpFollowItem*> FollowItemList;
 
 #endif /* HTTPFOLLOWITEM_H_ */

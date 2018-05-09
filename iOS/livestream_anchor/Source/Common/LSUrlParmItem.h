@@ -16,5 +16,6 @@
 @property (nonatomic, assign) LiveRoomType roomType;
 @property (nonatomic, copy) NSString *roomTypeString;
 @property (nonatomic, copy) NSString *userName;
-
+@property (nonatomic, strong) NSString *apptitle;
+@property (nonatomic, assign) NSString *opentype;
 @end

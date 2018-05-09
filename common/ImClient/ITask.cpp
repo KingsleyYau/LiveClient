@@ -34,6 +34,16 @@
 #include "RecvChangeVideoUrlTask.h"
 #include "RecvSendSystemNoticeTask.h"
 #include "RecvGetHonorNoticeTask.h"
+#include "RecvRecommendHangoutNoticeTask.h"
+#include "RecvDealInviteHangoutNoticeTask.h"
+#include "RecvEnterHangoutRoomNoticeTask.h"
+#include "RecvLeaveHangoutRoomNoticeTask.h"
+#include "RecvHangoutGiftNoticeTask.h"
+#include "RecvKnockRequestNoticeTask.h"
+#include "RecvLackCreditangoutNoticeTask.h"
+#include "RecvProgramPlayNoticeTask.h"
+#include "RecvCancelProgramNoticeTask.h"
+#include "RecvRetTicketNoticeTask.h"
 #include "IImClientDef.h"
 
 
@@ -141,6 +151,48 @@ ITask* ITask::CreateTaskWithCmd(const string& cmd)
         // 9.4.观众勋章升级通知
         task = new RecvGetHonorNoticeTask();
     }
+    else if (cmd == CMD_RECVRECOMMENDHANGOUTNOTICE) {
+        // 10.1.接收主播推荐好友通知
+        task = new RecvRecommendHangoutNoticeTask();
+    }
+    else if (cmd == CMD_RECVDEALINVITATIONHANGOUTNOTICE) {
+        // 10.2.接收主播回复观众多人互动邀请通知
+        task = new RecvDealInviteHangoutNoticeTask();
+    }
+    else if (cmd == CMD_RECVENTERHANGOUTROOMNOTICE) {
+        // 10.5.接收观众/主播进入多人互动直播间通知
+        task = new RecvEnterHangoutRoomNoticeTask();
+    }
+    else if (cmd == CMD_RECVLEAVEHANGOUTROOMNOTICE) {
+        // 10.6.接收观众/主播退出多人互动直播间通知
+        task = new RecvLeaveHangoutRoomNoticeTask();
+    }
+    else if (cmd == CMD_RECVHANGOUTGIFTNOTICE) {
+        // 10.8.接收多人互动直播间礼物通知
+        task = new RecvHangoutGiftNoticeTask();
+    }
+    else if (cmd == CMD_RECVKNOCKREQUESTNOTICE) {
+        // 10.9.接收主播敲门通知
+        task = new RecvKnockRequestNoticeTask();
+    }
+    else if (cmd == CMD_RECVLACKCREDITHANGOUTNOTICE) {
+        // 10.10.接收多人互动余额不足导致主播将要离开的通知
+        task = new RecvLackCreditangoutNoticeTask();
+    }
+    else if (cmd == CMD_RECVPROGRAMPLAYNOTICE) {
+        // 11.1.节目开播通知
+        task = new RecvProgramPlayNoticeTask();
+    }
+    else if (cmd == CMD_RECVCANCELPROGRAMNOTICE) {
+        //11.2.节目取消通知
+        task = new RecvCancelProgramNoticeTask();
+    }
+    else if (cmd == CMD_RECVRETTICKETNOTICE) {
+        //11.3.接收节目已退票通知
+        task = new RecvRetTicketNoticeTask();
+    }
+    
+    
     return task;
 }
 

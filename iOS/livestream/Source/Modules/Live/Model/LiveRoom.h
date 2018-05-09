@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "LiveRoomInfoItemObject.h"
+#import "LSImManager.h"
 
 #import "ImHeader.h"
 
@@ -18,15 +18,17 @@ typedef enum LiveRoomType {
     LiveRoomType_Public_VIP,
     LiveRoomType_Private,
     LiveRoomType_Private_VIP,
+    LiveRoomType_Hang_Out,
 } LiveRoomType;
 
 @interface LiveRoom : NSObject
 
 @property (strong) NSString *roomId;
+@property (strong) NSString *showId;
 @property (strong) NSString *userId;
 @property (strong) NSString *userName;
 @property (assign) LiveRoomType roomType;
-
+@property (strong) NSString * showTitle;
 @property (strong, nonatomic) NSArray<NSString *> *playUrlArray;
 @property (strong, readonly) NSString *playUrl;
 @property (strong, nonatomic) NSArray<NSString *> *publishUrlArray;
@@ -37,6 +39,7 @@ typedef enum LiveRoomType {
 
 @property (strong) LiveRoomInfoItemObject *httpLiveRoom;
 @property (strong) ImLiveRoomObject *imLiveRoom;
+@property (strong) IMHangoutRoomItemObject *hangoutLiveRoom;
 
 @property (nonatomic, weak) UIViewController *superController;
 @property (nonatomic, weak) UIView *superView;

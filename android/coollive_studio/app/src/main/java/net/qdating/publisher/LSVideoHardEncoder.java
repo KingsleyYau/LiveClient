@@ -23,7 +23,7 @@ import net.qdating.LSConfig;
  */
 public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	// H.264 Advanced Video Coding
-	private static final String MIME_TYPE = "video/avc";
+	private static final String MIME_TYPE = MediaFormat.MIMETYPE_VIDEO_AVC;
 	// 输入源的采样格式
 	private static final int INVALID_COLOR_FORMAT = 0xFFFFFFFF;
 	private static int inputColorFormat = INVALID_COLOR_FORMAT;
@@ -40,10 +40,10 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	 * 获取支持的硬编码采样格式
 	 * @return
 	 */
-	static public synchronized int supportHardEncoderFormat() {
+	static public synchronized int supportHardEncoderFormat(LSPublishConfig publishConfig) {
 		if( inputColorFormat == INVALID_COLOR_FORMAT ) {
 			// 尝试获取采样格式
-			supportHardEncoder();
+			supportHardEncoder(publishConfig);
 		}
 		return inputColorFormat;
 	}
@@ -53,7 +53,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 	 * 判断是否支持硬解码
 	 * @return
 	 */
-	static public synchronized boolean supportHardEncoder() {
+	static public synchronized boolean supportHardEncoder(LSPublishConfig publishConfig) {
 		boolean bFlag = false;
 		String codecName = "";
 		String codecType = "";
@@ -115,7 +115,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 									}
 									
 									if(
-											inputVideoCaps.isSizeSupported(LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT) &&
+											inputVideoCaps.isSizeSupported(publishConfig.videoWidth, publishConfig.videoHeight) &&
 													(
 															(caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_Format32bitARGB8888)
 																	|| (caps.colorFormats[k] == MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar)
@@ -225,33 +225,33 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 			        videoMediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
 			        videoMediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, fps);
 			        // Android 25后才可以使用浮点
-					int seconds = LSConfig.VIDEO_KEYFRAMEINTERVAL / LSConfig.VIDEO_FPS;
+					int seconds = keyFrameInterval / fps;
 			        videoMediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, seconds);
 					videoMediaFormat.setInteger(MediaFormat.KEY_CAPTURE_RATE, fps);
-					/**
-					 * 设置使用CQ模式, 否则某些机器编码后图像会越来越模糊
-					 */
-					Log.d(LSConfig.TAG,
-							String.format("LSVideoHardEncoder::reset( "
-											+ "this : 0x%x, "
-											+ "setInteger [KEY_BITRATE_MODE : BITRATE_MODE_CQ] "
-											+ ")",
-									hashCode()
-							)
-					);
+//					/**
+//					 * 设置使用编码质量模式
+//					 */
+//					Log.d(LSConfig.TAG,
+//							String.format("LSVideoHardEncoder::reset( "
+//											+ "this : 0x%x, "
+//											+ "setInteger [KEY_BITRATE_MODE : BITRATE_MODE_CBR] "
+//											+ ")",
+//									hashCode()
+//							)
+//					);
 					videoMediaFormat.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CQ);
-					/**
-					 * 设置为实时流编码方式
-					 */
-					Log.d(LSConfig.TAG,
-							String.format("LSVideoHardEncoder::reset( "
-											+ "this : 0x%x, "
-											+ "setInteger [KEY_PRIORITY : 0] "
-											+ ")",
-									hashCode()
-							)
-					);
-					videoMediaFormat.setInteger(MediaFormat.KEY_PRIORITY, 0);
+//					/**
+//					 * 设置为实时流编码方式
+//					 */
+//					Log.d(LSConfig.TAG,
+//							String.format("LSVideoHardEncoder::reset( "
+//											+ "this : 0x%x, "
+//											+ "setInteger [KEY_PRIORITY : 0] "
+//											+ ")",
+//									hashCode()
+//							)
+//					);
+//					videoMediaFormat.setInteger(MediaFormat.KEY_PRIORITY, 0);
 
 					videoCodec.configure(videoMediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
 					videoCodec.start();
@@ -300,18 +300,22 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 		boolean bFlag = false;
 		
 		if( videoCodec != null ) {
-			// 每次编码之前都强制更新码率
-			Bundle param = new Bundle();
-			param.putInt(MediaCodec.PARAMETER_KEY_VIDEO_BITRATE, LSConfig.VIDEO_BITRATE);
-			videoCodec.setParameters(param);
+//			// 每次编码之前都强制更新码率
+//			Bundle param = new Bundle();
+//			param.putInt(MediaCodec.PARAMETER_KEY_VIDEO_BITRATE, pub.VIDEO_BITRATE);
+//			videoCodec.setParameters(param);
+
+//			param = new Bundle();
+//			param.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME, 0);
+//			videoCodec.setParameters(param);
 
 			// 阻塞等待
 			int inIndex = -1;
 	        inIndex = videoCodec.dequeueInputBuffer(-1);
-	        int timestamp = (int) (System.nanoTime() / 1000 / 1000);
+			long timestamp = System.nanoTime();
 
 //	        if( LSConfig.DEBUG ) {
-//	       		Log.d(LSConfig.TAG,
+//	       		Log.i(LSConfig.TAG,
 //	    				String.format("LSVideoHardEncoder::encodeVideoFrame( "
 //								+ "this : 0x%x, "
 //			    				+ "inIndex : %d, "
@@ -408,7 +412,7 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 
 //					if( LSConfig.DEBUG ) {
 //						Log.d(LSConfig.TAG,
-//								String.format("LSVideoHardDecoder::getEncodeVideoFrame( "
+//								String.format("LSVideoHardEncoder::getEncodeVideoFrame( "
 //												+ "this : 0x%x, "
 //												+ "bufferIndex : %d, "
 //												+ "size : %d, "
@@ -416,13 +420,15 @@ public class LSVideoHardEncoder implements ILSVideoHardEncoderJni {
 //												+ ")",
 //										hashCode(),
 //										bufferIndex,
-//										byteBuffer.remaining(),
-//										(int) bufferInfo.presentationTimeUs
+//										bufferInfo.size,
+//										bufferInfo.presentationTimeUs
 //								)
 //						);
 //					}
 
-					videoFrame.update(byteBuffer, (int)bufferInfo.presentationTimeUs);
+					int timestamp = (int) (bufferInfo.presentationTimeUs / 1000 / 1000);
+
+					videoFrame.update(byteBuffer, timestamp);
 					videoCodec.releaseOutputBuffer(bufferIndex, false);
 
 		        } else {

@@ -29,7 +29,7 @@ static LSConfigManager* gManager = nil;
     if( self = [super init] ) {
         self.item = nil;
         self.finishHandlers = [NSMutableArray array];
-        self.requestId = [ZBLSRequestManager manager].invalidRequestId;
+        self.requestId = [LSAnchorRequestManager manager].invalidRequestId;
         [self loadConfigParam];
     }
     return self;
@@ -41,7 +41,7 @@ static LSConfigManager* gManager = nil;
         [self.finishHandlers addObject:finishHandler];
     }
     
-    if( self.requestId == [ZBLSRequestManager manager].invalidRequestId ) {
+    if( self.requestId == [LSAnchorRequestManager manager].invalidRequestId ) {
         // 开始获取同步配置
         if( self.item ) {
             // 已经获取成功
@@ -57,7 +57,7 @@ static LSConfigManager* gManager = nil;
             return YES;
             
         } else {
-            self.requestId = [[ZBLSRequestManager manager] anchorGetConfig:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * errmsg, ZBConfigItemObject * item) {
+            self.requestId = [[LSAnchorRequestManager manager] anchorGetConfig:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * errmsg, ZBConfigItemObject * item) {
                 
                 NSLog(@"LSConfigManager::anchorGetConfig [请求同步配置] success : %@, errnum : %d, imUrl : %@, httpUrl : %@",(success == YES) ? @"成功" : @"失败", errnum, item.imSvrUrl, item.httpSvrUrl);
                 // 接口返回
@@ -75,11 +75,11 @@ static LSConfigManager* gManager = nil;
                     }
                     
                     // 请求完成
-                    self.requestId = [ZBLSRequestManager manager].invalidRequestId;
+                    self.requestId = [LSAnchorRequestManager manager].invalidRequestId;
                 });
             }];
             
-            if( self.requestId != [ZBLSRequestManager manager].invalidRequestId ) {
+            if( self.requestId != [LSAnchorRequestManager manager].invalidRequestId ) {
                 return YES;
             }
         }

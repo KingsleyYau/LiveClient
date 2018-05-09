@@ -16,29 +16,20 @@
 #import "MyBackpackViewController.h"
 #import "LSMyReservationsPageViewController.h"
 #import "AnchorPersonalViewController.h"
-
 #import "HotViewController.h"
-#import "LSUserInfoListViewController.h"
-
 #import "LSLoginManager.h"
 #import "LiveModule.h"
 #import "LiveUrlHandler.h"
 #import "LiveService.h"
-
-#import "Masonry.h"
-
-#import "LSInvitedToViewController.h"
+#import "LiveStreamSession.h"
 #import "LSLiveGuideViewController.h"
 #import "LSLiveBroadcasterViewController.h"
 #import "PreStartPublicViewController.h"
 #import "LSMeViewController.h"
-
-
-#import "ZBLSImManager.h"
-
-// Modify by Max 2018/01/26
+#import "LSAnchorImManager.h"
 #import "LSUserUnreadCountManager.h"
-#import "UpdateDialog.h"
+#import "CheckPrivacyManager.h"
+
 @interface LSMainViewController () <LiveUrlHandlerDelegate, LoginManagerDelegate, ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate, LSUserUnreadCountManagerDelegate,LiveModuleDelegate>
 /**
  内容页
@@ -51,26 +42,27 @@
 @property (strong) UITabBarItem *tabBarItemPublish;
 
 /**
- 底部TabBar当前选项
- */
-@property (strong) UITabBarItem *tabBarItemSelected;
-
-/**
  *  Login管理器
  */
 @property (nonatomic, strong) LSLoginManager *loginManager;
+
+@property (nonatomic, strong) CheckPrivacyManager *checkManager;
 
 /** 链接跳转管理器 */
 @property (nonatomic, strong) LiveUrlHandler *handler;
 
 // IM管理器
-@property (nonatomic, strong) ZBLSImManager *imManager;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 
 // Modify by Max 2018/01/26
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
 @property (nonatomic, assign) int unreadCount;
 
 @property (strong, nonatomic) UIWindow *window;
+/**
+ 底部TabBar当前选项
+ */
+@property (strong) UITabBarItem *tabBarItemSelected;
 @end
 
 @implementation LSMainViewController
@@ -80,13 +72,6 @@
     
     // TODO:刷新Tabbar items
     [self.tabBar invalidateIntrinsicContentSize];
-    
-    
-    // TODO:紧贴底部
-    //    for (UITabBarItem *item in self.tabBar.items) {
-    //        item.imageInsets = UIEdgeInsetsMake(15, 0, -15, 0);
-    //        [item setTitlePositionAdjustment:UIOffsetMake(0, 32)];
-    //    }
 }
 
 #pragma mark - 界面初始化
@@ -95,19 +80,19 @@
     
     NSLog(@"LSMainViewController::initCustomParam()");
     
-    // 导航栏
-    self.navigationTitle = NSLocalizedStringFromSelf(@"NAVIGATION_ITEM_TITLE");
-    
     // HTTP登录
     self.loginManager = [LSLoginManager manager];
     [self.loginManager addDelegate:self];
+    
+    // 权限检测管理器
+    self.checkManager = [[CheckPrivacyManager alloc] init];
     
     // 路径跳转
     self.handler = [LiveUrlHandler shareInstance];
     self.handler.delegate = self;
     
     // IM
-    self.imManager = [ZBLSImManager manager];
+    self.imManager = [LSAnchorImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
     
@@ -133,12 +118,7 @@
     [super viewDidLoad];
     
     [LiveModule module].delegate = self;
-    
-    // 主播Hot列表
-    //    HotViewController *vcHot = [[HotViewController alloc] initWithNibName:nil bundle:nil];
-    //    vcHot.tabBarItem.tag = 0;
-    //    [self addChildViewController:vcHot];
-    
+
     // 主播端首页
     LSLiveBroadcasterViewController *vcBroadcaster = [[LSLiveBroadcasterViewController alloc] initWithNibName:nil bundle:nil];
     vcBroadcaster.tabBarItem.tag = 0;
@@ -151,20 +131,9 @@
     
     
     // 个人中心
-    //    LSUserInfoListViewController *vcMe = [[LSUserInfoListViewController alloc] initWithNibName:nil bundle:nil];
     LSMeViewController *vcMe = [[LSMeViewController alloc] initWithNibName:nil bundle:nil];
     vcMe.tabBarItem.tag = 2;
     [self addChildViewController:vcMe];
-    
-    // 初始化主播列表内容界面
-    //    self.viewControllers = [NSDictionary dictionaryWithObjectsAndKeys:
-    //                            vcHot, @(vcHot.tabBarItem.tag),
-    //                            vcMe, @(vcMe.tabBarItem.tag),
-    //                            nil];
-    //
-    //    // 初始化底部TabBar
-    //    self.tabBar.items = [NSArray arrayWithObjects:vcHot.tabBarItem, self.tabBarItemPublish, vcMe.tabBarItem, nil];
-    
     
     // 初始化主播端首页内容界面
     self.viewControllers = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -178,14 +147,7 @@
     [self.tabBar setBackgroundImage:[[UIImage alloc] init]];
     
     [self.tabBar setShadowImage:[[UIImage alloc] init]];
-    
-    //    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selectType:)];
-    //    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
-    //    [self.view addGestureRecognizer:swipeRight];
-    //    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selectType:)];
-    //    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    //    [self.view addGestureRecognizer:swipeLeft];
-    
+
     // 计算Tabbar高度
     if ([LSDevice iPhoneXStyle]) {
         // TODO:底部留空
@@ -193,6 +155,11 @@
     } else {
         // TODO:紧贴底部
         self.tabBarHeight.constant = 49;
+    }
+    
+    if (![[[NSUserDefaults standardUserDefaults]objectForKey:@"showUpdateDialog"] boolValue]) {
+        //检测更新
+        [self checkUpdateAPP];
     }
 }
 
@@ -211,9 +178,6 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     // 处理跳转URL
     [[LiveUrlHandler shareInstance] handleOpenURL];
-    
-    
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -237,24 +201,31 @@
     
     // 刷新未读
     [self reloadUnreadCount];
-    
-    //检测更新
-    [self checkUpdateAPP];
 }
 
+#pragma mark 检测更新
 - (void)checkUpdateAPP
 {
     NSInteger buildID = [[[[NSBundle mainBundle]infoDictionary] objectForKey:@"CFBundleVersion"] integerValue];
-    if ([LSConfigManager manager].item.newestVer > buildID) {
-        [UpdateDialog dialog].tipsLabel.text =[LSConfigManager manager].item.newestMsg;
-        [[UpdateDialog dialog] showDialog:ZBAppDelegate.window cancelBlock:^{
-            
-        } actionBlock:^{
+    LSConfigManager *config = [LSConfigManager manager];
+    if (config.item.newestVer > buildID) {
+        UIAlertController * alertView = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"UPDATE_TITLE", nil) message:[LSConfigManager manager].item.newestMsg preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction * cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"UPDATE_NOT_NOW", nil) style:UIAlertActionStyleDefault handler:nil];
+        
+        UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"UPDATE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LSConfigManager manager].item.downloadAppUrl]];
         }];
+        [alertView addAction:cancelAction];
+        [alertView addAction:okAction];
+        [self presentViewController:alertView animated:YES completion:nil];
+        
+        [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"showUpdateDialog"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
+#pragma mark 界面属性
 - (void)willMoveToParentViewController:(nullable UIViewController *)parent {
     [super willMoveToParentViewController:parent];
     
@@ -319,6 +290,7 @@
     UIViewController *viewController = [self.viewControllers objectForKey:@(item.tag)];
     [self.tabContainView addSubview:viewController.view];
     
+    
     [viewController.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.tabContainView);
         make.left.equalTo(self.tabContainView);
@@ -338,14 +310,21 @@
 
 - (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
     if (item == self.tabBarItemPublish) {
+
         // 点击开播按钮, 弹出预备开播界面
         tabBar.selectedItem = self.tabBarItemSelected;
-        PreStartPublicViewController *startPublicVc = [[PreStartPublicViewController alloc] initWithNibName:nil bundle:nil];
-        LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:startPublicVc];
-        [nvc.navigationBar setTranslucent:self.navigationController.navigationBar.translucent];
-        [nvc.navigationBar setTintColor:self.navigationController.navigationBar.tintColor];
-        [nvc.navigationBar setBarTintColor:self.navigationController.navigationBar.barTintColor];
-        [self presentViewController:nvc animated:YES completion:nil];
+        
+        // 先检测是否开启摄像头/麦克风权限
+        [self.checkManager checkPrivacyIsOpen:^(BOOL granted) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (granted) {
+                    // 点击开播按钮, 弹出预备开播界面
+                    tabBar.selectedItem = self.tabBarItemSelected;
+                    PreStartPublicViewController *startPublicVc = [[PreStartPublicViewController alloc] initWithNibName:nil bundle:nil];
+                    [self navgationControllerPresent:startPublicVc];
+                }
+            });
+        }];
         
     } else {
         // 切换内容界面
@@ -356,17 +335,6 @@
     }
 }
 
-- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray<UITabBarItem *> *)items {
-}
-
-- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray<UITabBarItem *> *)items {
-}
-
-- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray<UITabBarItem *> *)items changed:(BOOL)changed {
-}
-
-- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray<UITabBarItem *> *)items changed:(BOOL)changed {
-}
 
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
@@ -412,28 +380,31 @@
 
 #pragma mark - LiveUrlHandler通知
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openPreLive:(NSString *)roomId userId:(NSString *)userId roomType:(LiveRoomType)roomType {
-    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主动邀请], roomId : %@, userId : %@, roomType : %u )", roomId, userId, roomType);
+    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 预约及切换直播间], roomId : %@, userId : %@, roomType : %u )", roomId, userId, roomType);
     // TODO:主动邀请, 跳转过渡页
-    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-    
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.roomId = roomId;
     liveRoom.userId = userId;
     liveRoom.roomType = roomType;
+    
+    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = liveRoom;
+    vc.status = PreLiveStatus_Enter;;
     
     [self navgationControllerPresent:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openInvited:(NSString *_Nullable)userName userId:(NSString *_Nullable)userId inviteId:(NSString *_Nullable)inviteId {
-    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 应邀], userName : %@, userId : %@, inviteId : %@ )", userName, userId, inviteId);
+    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 直播间外应邀], userName : %@, userId : %@, inviteId : %@ )", userName, userId, inviteId);
     // TODO:收到通知进入应邀过渡页
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.userId = userId;
+    liveRoom.userName = userName;
     
-    LSInvitedToViewController *vc = [[LSInvitedToViewController alloc] init];
+    PreLiveViewController *vc = [[PreLiveViewController alloc] init];
     vc.inviteId = inviteId;
     vc.liveRoom = liveRoom;
+    vc.status = PreLiveStatus_Accept;
     
     [self navgationControllerPresent:vc];
 }
@@ -454,7 +425,7 @@
     // TODO:收到通知进入主播资料页
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = anchorId;
-    listViewController.enterRoom = 1;
+    listViewController.showInvite = 1;
     [self.navigationController pushViewController:listViewController animated:NO];
 }
 
@@ -498,8 +469,8 @@
 - (void)navgationControllerPresent:(UIViewController *)controller {
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
-    nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
-    nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
+    nvc.navigationBar.barTintColor = [UIColor whiteColor];
+    nvc.navigationBar.backgroundColor = [UIColor whiteColor];
     NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName,nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
@@ -531,6 +502,11 @@
         // Keep the original keyWindow and avoid some unpredictable problems
         [keyWindow makeKeyWindow];
     });
+}
+
+- (void)moduleOnNotificationDisappear:(LiveModule *)module {
+    NSLog(@"LSMainViewController::moduleOnNotificationDisappear()");
+    self.window = nil;
 }
 
 @end

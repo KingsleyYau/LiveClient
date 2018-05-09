@@ -173,7 +173,7 @@ static LiveUrlHandler *gInstance = nil;
     item.roomType = LiveRoomType_Public;
     item.roomTypeString = [LSURLQueryParam urlParamForKey:@"roomtype" url:url];
     item.userName = [LSURLQueryParam urlParamForKey:@"anchorname" url:url];
-
+    item.showId = [LSURLQueryParam urlParamForKey:@"liveshowid" url:url];
     return item;
 }
 
@@ -188,14 +188,20 @@ static LiveUrlHandler *gInstance = nil;
             [self.delegate liveUrlHandler:self openInvited:item.userName userId:item.userId inviteId:inviteId];
         }
 
-    } else {
+    } else if ([item.roomTypeString isEqualToString:@"1"]) {
         // 主动邀请
-        if ([item.roomTypeString isEqualToString:@"1"]) {
-            item.roomType = LiveRoomType_Private;
-        }
-
+        item.roomType = LiveRoomType_Private;
         if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openPreLive:userId:roomType:)]) {
             [self.delegate liveUrlHandler:self openPreLive:item.roomId userId:item.userId roomType:item.roomType];
+        }
+    }
+    else
+    {
+        if (item.showId.length > 0) {
+            NSLog(@"进入节目直播间");
+            if ([self.delegate respondsToSelector:@selector(liveUrlHandler:openShow:userId:roomType:)]) {
+                [self.delegate liveUrlHandler:self openShow:item.showId userId:item.userId roomType:item.roomType];
+            }
         }
     }
 }
@@ -208,6 +214,13 @@ static LiveUrlHandler *gInstance = nil;
     }
 
     NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&roomid=%@&anchorid=%@&roomtype=%d", roomId, userId, roomTypeInt];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return url;
+}
+
+- (NSURL *)createUrlToShowRoomId:(NSString *)roomId userId:(NSString *)userId  {
+
+    NSString *urlString = [NSString stringWithFormat:@"qpidnetwork://app/open?site:4&service=live&module=liveroom&liveshowid=%@&anchorid=%@&roomtype=0", roomId, userId];
     NSURL *url = [NSURL URLWithString:urlString];
     return url;
 }

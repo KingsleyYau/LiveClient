@@ -61,6 +61,8 @@ protected:
     int mStart;
     // 步长，用于分页，表示本次请求获取多少个元素
     int mStep;
+    
+    FollowItemList mItemList;
 };
 
 #endif /* HttpGetAnchorListTask_H_ */

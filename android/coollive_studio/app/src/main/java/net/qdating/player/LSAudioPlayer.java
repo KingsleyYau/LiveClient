@@ -9,6 +9,8 @@ import android.os.Message;
 import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
+import java.util.Arrays;
+
 /***
  * 音频播放器
  * @author max
@@ -21,8 +23,15 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	 * 主线程消息处理
 	 */
 	private Handler handler = null;
+	/**
+	 * 状态锁
+	 */
 	private Object statusLock = new Object();
 	private boolean isRunning = false;
+	/**
+	 * 是否静音
+	 */
+	private boolean isMute = false;
 
 	public LSAudioPlayer() {
 		handler = new Handler() {
@@ -116,7 +125,24 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 			audioTrack = null;
 		}
 	}
-	
+
+	/**
+	 * 当前是否静音
+	 * @return
+	 */
+	public boolean getMute() {
+		return isMute;
+	}
+
+	/**
+	 * 设置是否静音
+	 * @param isMute 是否静音
+	 */
+	public void setMute(boolean isMute) {
+		Log.d(LSConfig.TAG, String.format("LSAudioPlayer::setMute( this : 0x%x, %s )", hashCode(), Boolean.toString(isMute)));
+		this.isMute = isMute;
+	}
+
 	/**
 	 * 播放一个音频帧
 	 * @param data
@@ -125,7 +151,12 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 //		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:playAudioFrame( size : %d )", data.length));
 		synchronized (statusLock) {
 			if( isRunning ) {
-				audioTrack.write(data, 0, data.length);
+				if( !isMute ) {
+					audioTrack.write(data, 0, data.length);
+				} else {
+					Arrays.fill(data, (byte)0);
+					audioTrack.write(data, 0, data.length);
+				}
 			}
 		}
 	}

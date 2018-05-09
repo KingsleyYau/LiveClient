@@ -17,6 +17,7 @@ inline static NSString *currentTimeString() {
 }
 
 inline static void nslogToFile(NSString *logString) {
+    
     NSString *str = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSRegularExpression *numberRegular = [NSRegularExpression regularExpressionWithPattern:@"[A-Za-z]" options:NSRegularExpressionCaseInsensitive error:nil];
     NSInteger count = [numberRegular numberOfMatchesInString:str options:NSMatchingReportProgress range:NSMakeRange(0, str.length)];
@@ -24,7 +25,7 @@ inline static void nslogToFile(NSString *logString) {
     // 根据版本号是否带字母判断打印log
     if (count) {
         // add by Samson 2018-01-16, 改为在nslogToFile中打印log到Output
-        printf("[ (LiveLog) %s ]%s\n", [currentTimeString() UTF8String], [logString UTF8String]);
+        printf("[ (LiveLog) %s ]%s", [currentTimeString() UTF8String], [logString UTF8String]);
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd"];

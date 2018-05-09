@@ -108,14 +108,13 @@ bool RecvLeaveRoomNoticeTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvLeaveRoomNoticeTask::GetSendData() begin");
     {
-//        // 构造json协议
-//        Json::Value value;
-//        value[ROOMID_PARAM] = m_roomId;
-//        value[USERID_PARAM] = m_userId;
-//        value[NICKNAME_PARAM] = m_nickName;
-//        value[PHOTOURL_PARAM] = m_photourl;
-//        value[FANSNUM_PARAM] = m_fansNum;
-//        data = value;
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        data = value;
     }
 
     result = true;

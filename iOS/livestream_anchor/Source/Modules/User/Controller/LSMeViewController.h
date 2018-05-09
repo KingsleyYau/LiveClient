@@ -9,9 +9,10 @@
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSLiveWKWebViewController.h"
 #import "IntroduceView.h"
+#import "LSMainViewController.h"
 
 
 @interface LSMeViewController : LSGoogleAnalyticsViewController
 @property (weak, nonatomic) IBOutlet IntroduceView *meView;
-
+ 
 @end

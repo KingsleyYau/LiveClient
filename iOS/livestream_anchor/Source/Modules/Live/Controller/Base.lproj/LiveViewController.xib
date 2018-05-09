@@ -35,6 +35,7 @@
                 <outlet property="tipIconImageWidth" destination="vhR-Tq-JaD" id="HOT-PX-rb1"/>
                 <outlet property="tipMessageLabel" destination="15x-um-fJ8" id="XtN-S8-MNU"/>
                 <outlet property="videoBgImageView" destination="DdK-1F-mg9" id="PQQ-xL-Ihf"/>
+                <outlet property="videoLoadView" destination="D1o-cd-Neh" id="bAt-Le-Tfq"/>
                 <outlet property="videoView" destination="vTO-X9-DjF" id="Yux-oC-fRl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewersNumLabel" destination="uqp-JI-Mh9" id="RnM-8F-xMW"/>
@@ -57,6 +58,13 @@
                         <constraint firstAttribute="height" secondItem="vTO-X9-DjF" secondAttribute="width" multiplier="1:1" id="xX7-Hk-doY"/>
                     </constraints>
                 </view>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="D1o-cd-Neh">
+                    <rect key="frame" x="157" y="157" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="D1o-cd-Neh" secondAttribute="height" multiplier="1:1" id="Q2O-Lg-bOF"/>
+                        <constraint firstAttribute="height" constant="100" id="uBQ-qg-8EK"/>
+                    </constraints>
+                </activityIndicatorView>
                 <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="characterWrap" numberOfLines="20" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mZV-VJ-gyf" userLabel="Debug Label">
                     <rect key="frame" x="10" y="30" width="394" height="0.0"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -71,14 +79,14 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fj7-Dt-UAT" userLabel="Gift View">
-                    <rect key="frame" x="0.0" y="283" width="414" height="115"/>
+                    <rect key="frame" x="0.0" y="288" width="414" height="115"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="115" id="3Bs-4p-hUT"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tKU-mh-VjR" customClass="BarrageView">
-                    <rect key="frame" x="0.0" y="464" width="414" height="54"/>
+                    <rect key="frame" x="0.0" y="469" width="414" height="54"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="54" id="WjH-sJ-cHV"/>
@@ -100,7 +108,7 @@
                                         <constraint firstAttribute="width" secondItem="H93-Yh-uXf" secondAttribute="height" multiplier="1:1" id="xAo-KD-YXE"/>
                                     </constraints>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy is the most handsome" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="15x-um-fJ8" userLabel="Tip Message Label">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy is the most handsome" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="15x-um-fJ8" userLabel="Tip Message Label">
                                     <rect key="frame" x="20.999999999999986" y="15" width="164" height="14.666666666666664"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -124,7 +132,9 @@
                         <constraint firstAttribute="bottom" secondItem="PvW-h5-hzo" secondAttribute="bottom" id="CCr-EM-1Gc"/>
                         <constraint firstItem="Ri4-f1-FbD" firstAttribute="leading" secondItem="quN-ZQ-HDk" secondAttribute="leading" id="DVU-tY-kGH"/>
                         <constraint firstAttribute="trailing" secondItem="Ri4-f1-FbD" secondAttribute="trailing" id="GGb-fT-hL4"/>
+                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="PvW-h5-hzo" secondAttribute="trailing" id="GsZ-7B-9VG"/>
                         <constraint firstItem="PvW-h5-hzo" firstAttribute="centerX" secondItem="quN-ZQ-HDk" secondAttribute="centerX" id="PgK-aa-sDe"/>
+                        <constraint firstItem="PvW-h5-hzo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="quN-ZQ-HDk" secondAttribute="leading" id="cFX-ZR-pwK"/>
                         <constraint firstAttribute="bottom" secondItem="Ri4-f1-FbD" secondAttribute="bottom" id="iZU-N5-1gg"/>
                     </constraints>
                 </view>
@@ -201,10 +211,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7l2-vK-Qqy" customClass="TableSuperView">
-                    <rect key="frame" x="15" y="464" width="264" height="222"/>
+                    <rect key="frame" x="15" y="469" width="264" height="217"/>
                     <subviews>
                         <tableView contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="dKv-VQ-e8F" userLabel="Msg Table View">
-                            <rect key="frame" x="0.0" y="0.0" width="264" height="222"/>
+                            <rect key="frame" x="0.0" y="0.0" width="264" height="217"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                             <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -229,7 +239,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="115" height="153"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Two_Video_icon" translatesAutoresizingMaskIntoConstraints="NO" id="f2O-ye-Tjm" userLabel="Preview Image View">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Interact_Video_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="f2O-ye-Tjm" userLabel="Preview Image View">
                             <rect key="frame" x="0.0" y="0.0" width="115" height="153"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </imageView>
@@ -305,9 +315,11 @@
                 <constraint firstAttribute="trailing" secondItem="quN-ZQ-HDk" secondAttribute="trailing" id="5S2-5z-VQZ"/>
                 <constraint firstItem="7l2-vK-Qqy" firstAttribute="leading" secondItem="Oyo-bw-5eR" secondAttribute="leading" constant="15" id="5lN-jt-0kl"/>
                 <constraint firstItem="7l2-vK-Qqy" firstAttribute="trailing" secondItem="l8x-C3-6XH" secondAttribute="leading" constant="-10" id="6Ry-Ug-5Tb"/>
+                <constraint firstItem="D1o-cd-Neh" firstAttribute="centerY" secondItem="vTO-X9-DjF" secondAttribute="centerY" id="7wq-89-Sas"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="top" secondItem="fj7-Dt-UAT" secondAttribute="bottom" constant="66" id="7zK-ov-SJe"/>
                 <constraint firstItem="DdK-1F-mg9" firstAttribute="top" secondItem="vTO-X9-DjF" secondAttribute="top" id="ALP-fa-Spd"/>
                 <constraint firstItem="l8x-C3-6XH" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-10" id="AjZ-fK-ONw"/>
+                <constraint firstItem="D1o-cd-Neh" firstAttribute="centerX" secondItem="vTO-X9-DjF" secondAttribute="centerX" id="BpQ-kj-T1W"/>
                 <constraint firstItem="STA-J9-cyY" firstAttribute="top" secondItem="vTO-X9-DjF" secondAttribute="bottom" id="Gby-FO-Ad5"/>
                 <constraint firstAttribute="trailing" secondItem="STA-J9-cyY" secondAttribute="trailing" id="Hbd-Yc-7CV"/>
                 <constraint firstItem="JBN-XE-fNy" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="IXY-ck-nlg"/>
@@ -318,7 +330,7 @@
                 <constraint firstItem="quN-ZQ-HDk" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="S9I-0s-Iiz"/>
                 <constraint firstAttribute="trailing" secondItem="JBN-XE-fNy" secondAttribute="trailing" id="SDx-bp-Zia"/>
                 <constraint firstItem="mZV-VJ-gyf" firstAttribute="leading" secondItem="vTO-X9-DjF" secondAttribute="leading" constant="10" id="UvL-c0-p7l"/>
-                <constraint firstItem="7l2-vK-Qqy" firstAttribute="top" secondItem="STA-J9-cyY" secondAttribute="bottom" id="VOk-i0-Tzz"/>
+                <constraint firstItem="7l2-vK-Qqy" firstAttribute="top" secondItem="STA-J9-cyY" secondAttribute="bottom" constant="5" id="VOk-i0-Tzz"/>
                 <constraint firstItem="tKU-mh-VjR" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VVB-nq-Fax"/>
                 <constraint firstItem="mZV-VJ-gyf" firstAttribute="top" secondItem="vTO-X9-DjF" secondAttribute="top" constant="30" id="Vca-E8-01Z"/>
                 <constraint firstItem="k0K-oG-W4B" firstAttribute="bottom" secondItem="dKv-VQ-e8F" secondAttribute="bottom" id="dBN-SJ-npc"/>
@@ -345,9 +357,9 @@
         </view>
     </objects>
     <resources>
+        <image name="Interact_Video_Icon" width="93" height="125"/>
         <image name="Live_Tip_Accepted_Icon" width="14" height="14"/>
         <image name="Live_Tip_Black_Backicon" width="1" height="37"/>
         <image name="Live_Unread_Icon" width="7" height="4"/>
-        <image name="Two_Video_icon" width="120" height="160"/>
     </resources>
 </document>

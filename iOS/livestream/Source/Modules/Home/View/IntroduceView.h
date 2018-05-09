@@ -17,8 +17,13 @@
 // 关闭当前WebView的JS接口
 - (void)webViewJSCallbackAppCloseWebView;
 // Web通知App页面加载失败
-- (void)webViewJSCallbackWebReload:(NSString *)Errno;
-
+- (void)webViewJSCallbackWebReload:(NSString *)error;
+//账号token过期
+- (void)webViewJSCallBackTokenTimeOut:(NSString *)error;
+//账号余额不足
+- (void)webViewJSCallBackAddCredit:(NSString *)error;
+// 节目GA跟踪事件JS接口
+- (void)webViewJSCallbackAppPublicGAEvent:(NSString *)event;
 @end
 
 @interface IntroduceView : WKWebView

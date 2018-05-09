@@ -54,4 +54,15 @@
  @return YES:允许/NO:拒绝
  */
 - (BOOL)canCapture;
+
+/**
+ 检测摄像头/麦克风是否开启
+
+ @param granted 是否开启
+ */
+typedef void (^CheckHandler)(BOOL granted);
+
+- (void)checkCanAudio:(_Nullable CheckHandler)handler;
+- (void)checkCanVideo:(_Nullable CheckHandler)handler;
+
 @end

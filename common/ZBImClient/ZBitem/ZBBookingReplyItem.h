@@ -86,7 +86,7 @@ public:
      * msg                      提示文字
      */
     string                inviteId;
-    ZBReplyType             replyType;
+    ZBReplyType           replyType;
     string                roomId;
     string                anchorId;
     string                nickName;

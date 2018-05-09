@@ -91,10 +91,15 @@
             } else {
                 nameColor = roomStyleItem.userNameColor;
             }
+            //是否购票
+            if (item.isHasTicket) {
+                [attributeStr appendAttributedString:[self addShowIconImage:item roomStyleItem:roomStyleItem]];
+            }
+            
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ : ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:item.text font:MessageFont color:roomStyleItem.chatStrColor]];
-            
+
             break;
         
 //        case MsgType_Follow:
@@ -117,6 +122,11 @@
             } else {
                 nameColor = roomStyleItem.userNameColor;
             }
+            //是否购票
+            if (item.isHasTicket) {
+            [attributeStr appendAttributedString:[self addShowIconImage:item roomStyleItem:roomStyleItem]];
+            }
+            
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ %@ ", NSLocalizedString(@"Member_SentGift",@"Member_SentGift"), item.giftName] font:GiftMessageFont color:roomStyleItem.sendStrColor]];
@@ -130,10 +140,15 @@
             } else {
                 nameColor = roomStyleItem.userNameColor;
             }
+            //是否购票
+            if (item.isHasTicket) {
+            [attributeStr appendAttributedString:[self addShowIconImage:item roomStyleItem:roomStyleItem]];
+            }
+            
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_Join",@"Member_Join") font:MessageFont color:roomStyleItem.riderStrColor]];
-            
+
             break;
             
         case MsgType_RiderJoin:
@@ -143,6 +158,11 @@
             } else {
                 nameColor = roomStyleItem.userNameColor;
             }
+            //是否购票
+            if (item.isHasTicket) {
+            [attributeStr appendAttributedString:[self addShowIconImage:item roomStyleItem:roomStyleItem]];
+            }
+            
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ \"%@\"", NSLocalizedString(@"Member_RiderJoin",@"Member_RiderJoin"), item.riderName]  font:MessageFont color:roomStyleItem.riderStrColor]];
@@ -159,7 +179,7 @@
 
     // 拼送礼图片
     if (item.msgType == MsgType_Gift) {
-        
+      
         UIImageView *imageView = [[UIImageView alloc] init];
         [self.loader loadImageWithImageView:imageView options:0 imageUrl:item.smallImgUrl placeholderImage:
          [UIImage imageNamed:@"Live_Publish_Btn_Gift"]];
@@ -182,6 +202,21 @@
     UIImageView *imageView = [[UIImageView alloc] initWithImage:styleItem.liverTypeImage];
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
     imageView.frame = CGRectMake(0, 0, 62, 21);
+    NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
+    if (item.msgType == MsgType_Gift) {
+        [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];
+    }
+    [attributeString appendAttributedString:attachText];
+    [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];
+    
+    return attributeString;
+}
+
+- (NSAttributedString *)addShowIconImage:(MsgItem *)item roomStyleItem:(RoomStyleItem *)styleItem {
+    NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] init];
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:styleItem.buyTicketImage];
+    [imageView setContentMode:UIViewContentModeScaleAspectFit];
+    imageView.frame = CGRectMake(0, 0, 18, 18);
     NSMutableAttributedString *attachText = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:MessageFont alignment:YYTextVerticalAlignmentCenter];
     if (item.msgType == MsgType_Gift) {
         [attributeString appendAttributedString:[self parseMessage:@" " font:MessageFont color:styleItem.myNameColor]];

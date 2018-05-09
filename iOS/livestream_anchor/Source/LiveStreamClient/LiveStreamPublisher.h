@@ -14,7 +14,8 @@
 @protocol LiveStreamPublisherDelegate <NSObject>
 @optional
 - (NSString * _Nullable)publisherShouldChangeUrl:(LiveStreamPublisher * _Nonnull)publisher;
-
+- (void)publisherOnConnect:(LiveStreamPublisher * _Nonnull)publisher;
+- (void)publisherOnDisconnect:(LiveStreamPublisher * _Nonnull)publisher;
 @end
 
 @interface LiveStreamPublisher : NSObject

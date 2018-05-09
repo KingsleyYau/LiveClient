@@ -51,6 +51,7 @@ public:
                 level = root[GETNEWFANSBASEINFO_LEVEL].asInt();
             }
             
+            
         }
 	}
 

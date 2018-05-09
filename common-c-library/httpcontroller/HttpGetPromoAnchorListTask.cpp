@@ -83,7 +83,7 @@ bool HttpGetPromoAnchorListTask::ParseData(const string& url, bool bFlag, const 
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    HotItemList itemList;
+    AdItemList itemList;
     bool bParse = false;
     
     if ( bFlag ) {

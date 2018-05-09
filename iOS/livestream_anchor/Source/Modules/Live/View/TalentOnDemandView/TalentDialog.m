@@ -7,7 +7,7 @@
 //
 
 #import "TalentDialog.h"
-
+#import "DialogTip.h"
 @interface TalentDialog ()
  
 @property (strong) void (^declineBlock)();
@@ -47,9 +47,13 @@
     self.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     
     [view addSubview:self];
+    
+    //60s自动消失
+    [self performSelector:@selector(hidenDialog) withObject:nil afterDelay:60];
 }
 
 - (IBAction)declineBtnDid:(UIButton *)sender {
+    
     if( self.declineBlock ) {
         self.declineBlock();
     }
@@ -58,11 +62,19 @@
 }
 
 - (IBAction)acceptBtnDid:(UIButton *)sender {
+    
+    if (!ZBAppDelegate.isNetwork) {
+        [[DialogTip dialogTip]showDialogTip:ZBAppDelegate.window tipText:NSLocalizedStringFromSelf(@"Accepted_Failed")];
+        return;
+    }
     if( self.acceptBlock ) {
         self.acceptBlock();
     }
- 
-    [self removeFromSuperview];
+}
+
+- (void)hidenDialog
+{
+     [self removeFromSuperview];
 }
 
 @end

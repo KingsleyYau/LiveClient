@@ -6,7 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import net.qdating.LSConfig.EncodeDecodeMode;
+import net.qdating.LSConfig.DecodeMode;
 import net.qdating.LSConfig.FillMode;
 import net.qdating.player.ILSPlayerCallback;
 import net.qdating.player.ILSPlayerStatusCallback;
@@ -97,12 +97,12 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		this.statusCallback = statusCallback;
 		
-		if( LSConfig.encodeDecodeMode == EncodeDecodeMode.EncodeDecodeModeAuto ) {
+		if( LSConfig.decodeMode == DecodeMode.DecodeModeAuto ) {
 			if( LSVideoHardDecoder.supportHardDecoder() ) {
 				// 判断可以使用硬解码
 				useHardDecoder = true;
 			}
-		} else if( LSConfig.encodeDecodeMode == EncodeDecodeMode.EncodeDecodeModeHard ) {
+		} else if( LSConfig.decodeMode == DecodeMode.DecodeModeHard ) {
 			// 强制使用硬解码
 			useHardDecoder = true;
 		}
@@ -326,7 +326,24 @@ public class LSPlayer implements ILSPlayerCallback {
 		
 		return bFlag;
 	}
-	
+
+	/**
+	 * 当前是否静音
+	 * @return
+	 */
+	public boolean getMute() {
+		return audioPlayer.getMute();
+	}
+
+	/**
+	 * 设置是否静音
+	 * @param isMute 是否静音
+	 */
+	public void setMute(boolean isMute) {
+		Log.d(LSConfig.TAG, String.format("LSPlayer::setMute( this : 0x%x, %s )", hashCode(), Boolean.toString(isMute)));
+		audioPlayer.setMute(isMute);
+	}
+
 	@Override
 	public void onConnect(LSPlayerJni player) {
 		// TODO Auto-generated method stub

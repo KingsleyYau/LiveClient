@@ -143,7 +143,10 @@ bool RecvSendGiftNoticeTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
         data = value;
     }
 

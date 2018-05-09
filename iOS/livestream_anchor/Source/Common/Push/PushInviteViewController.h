@@ -15,5 +15,6 @@
 @property (strong) NSURL *url;
 @property (strong) NSString *tips;
 @property (strong) NSString *inviteId;
-@property (strong) NSString *anchorId;
+@property (strong) NSString *userId;
+@property (strong) NSString *userName;
 @end

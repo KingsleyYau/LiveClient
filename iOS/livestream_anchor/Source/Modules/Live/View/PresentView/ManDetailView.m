@@ -11,14 +11,12 @@
 #import "LSImageViewLoader.h"
 #import "LiveBundle.h"
 #import "LiveModule.h"
-#import <objc/runtime.h>
-
 
 @interface ManDetailView()
 
 @property (nonatomic, strong) LSImageViewLoader *imageLoader;
 @property (nonatomic, strong) LSImageViewLoader *mountImageLoader;
-
+@property (nonatomic, strong) AudienModel *audienceItem;
 @end
 
 @implementation ManDetailView
@@ -31,10 +29,13 @@
     view.userHeadImageView.layer.masksToBounds = YES;
     view.imageLoader = [LSImageViewLoader loader];
     view.mountImageLoader = [LSImageViewLoader loader];
+    view.audienceItem = [[AudienModel alloc] init];
     return view;
 }
 
 - (void)updateManDataInfo:(AudienModel *)userInfo {
+    
+    self.audienceItem = userInfo;
     
     self.nameLabel.text = userInfo.nickName;
     
@@ -51,28 +52,26 @@
     } else {
         self.riderImageView.hidden = YES;
     }
-    
-    objc_setAssociatedObject(self.inviteToOneBtn, @"userid", userInfo.userId, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    objc_setAssociatedObject(self.inviteToOneBtn, @"username", userInfo.nickName, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    
 }
 
 - (IBAction)inviteToOneClick:(id)sender {
-    
-    UIButton *btn = sender;
-    NSString *userid = objc_getAssociatedObject(btn, @"userid");
-    NSString *username = objc_getAssociatedObject(btn, @"username");
-    
     if ([self.delegate respondsToSelector:@selector(inviteToOneAction:userName:)]) {
-        [self.delegate inviteToOneAction:userid userName:username];
+        [self.delegate inviteToOneAction:self.audienceItem.userId userName:self.audienceItem.nickName];
     }
 }
 
 - (IBAction)closeAction:(id)sender {
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(manDetailViewCloseAction:)]) {
+    if ([self.delegate respondsToSelector:@selector(manDetailViewCloseAction:)]) {
         [self.delegate manDetailViewCloseAction:self];
     }
 }
+
+- (IBAction)manDetailAction:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(pushManDetailAction:)]) {
+        [self.delegate pushManDetailAction:self.audienceItem.userId];
+    }
+}
+
+
 
 @end

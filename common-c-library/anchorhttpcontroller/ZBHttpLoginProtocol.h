@@ -76,6 +76,7 @@
 #define LIVEFANSLIST_MOUNTNAME              "mountname"
 #define LIVEFANSLIST_MOUNTURL               "mounturl"
 #define LIVEFANSLIST_LEVEL                  "level"
+#define LIVEFANSLIST_HASTICKET              "has_ticket"
 
 /* 3.2.获取指定观众信息 */
 /* 接口路径 */
@@ -305,7 +306,7 @@
 #define SETROOMCOUNTDOWN_ROOMID          "roomid"
 
 
-
+/* ########################    其它 模块  ######################## */
 /* 5.1.同步配置 */
 /* 接口路径 */
 #define GETCONFIG_PATH                       "/lady/v1/getconfig"
@@ -317,6 +318,8 @@
 #define GETCONFIG_HTTPSVR_URL                    "httpsvr_url"
 #define GETCONFIG_ME_PAGE_URL                    "me_page_url"
 #define GETCONFIG_MAN_PAGE_URL                   "man_page_url"
+#define GETCONFIG_SHOW_DETAIL_PAGE               "show_detail_page"
+#define GETCONFIG_SHOW_DESCRIPTION_PAGE          "show_description"
 #define GETCONFIG_MINAVAILABLEVER                "min_available_ver"
 #define GETCONFIG_MINAVAILABLEMSG                "min_available_msg"
 #define GETCONFIG_NEWEST_VER                     "newest_ver"
@@ -358,5 +361,209 @@
 #define UPLOADCRASHDUMP_DEVICEID                          "deviceid"
 #define UPLOADCRASHDUMP_CRASHFILE                         "crashfile"
 
+/* ########################    多人互动直播间 模块  ######################## */
+
+/* 6.1.获取可推荐的好友列表 */
+/* 接口路径 */
+#define GETCANRECOMMENDFRIENDLIST_PATH                              "/lady/v1/getCanRecommendFriendList"
+
+/**
+ *  请求
+ */
+#define GETCANRECOMMENDFRIENDLIST_START                          "start"
+#define GETCANRECOMMENDFRIENDLIST_STEP                           "step"
+
+/**
+ *  返回
+ */
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST                            "anchor_list"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_ANCHORID                       "anchor_id"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_NICKNAME                       "nickname"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_PHOTOURL                       "photourl"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_AGE                            "age"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_COUNTRY                        "country"
+
+/* 6.2.主播推荐好友给观众 */
+/* 接口路径 */
+#define RECOMMENDFRIENDJOINHANGOUT_PATH                              "/lady/v1/recommendFriendJoinHangout"
+
+/**
+ *  请求
+ */
+#define RECOMMENDFRIENDJOINHANGOUT_FRIENDID                             "friend_id"
+#define RECOMMENDFRIENDJOINHANGOUT_ROOMID                               "room_id"
+
+/**
+ *  返回
+ */
+#define RECOMMENDFRIENDJOINHANGOUT_RECOMMENDID                          "recommend_id"
+
+
+/* 6.3.主播回复多人互动邀请 */
+/* 接口路径 */
+#define DEALINVITATIONHANGOUT_PATH                                      "/lady/v1/dealInvitationHangout"
+
+/**
+ *  请求
+ */
+#define DEALINVITATIONHANGOUT_INVITEID                                  "invite_id"
+#define DEALINVITATIONHANGOUT_TYPE                                      "type"
+
+/**
+ *  返回
+ */
+#define DEALINVITATIONHANGOUT_ROOMID                                    "room_id"
+
+/* 6.4.获取未结束的多人互动直播间列表 */
+/* 接口路径 */
+#define GETONGOINGHANGOUTLIST_PATH                                      "/lady/v1/getOngoingHangoutList"
+
+/**
+ *  请求
+ */
+#define GETONGOINGHANGOUTLIST_START                                     "start"
+#define GETONGOINGHANGOUTLIST_STEP                                      "step"
+
+/**
+ *  返回
+ */
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST                               "hangout_list"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_USERID                            "user_id"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_NICKNAME                          "nickname"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_PHOTOURL                          "photourl"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_ANCHORLIST                        "anchor_list"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_ANCHORLIST_ANCHORID                   "anchor_id"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_ANCHORLIST_ANCHORNICKNAME             "anchor_nickname"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_ANCHORLIST_ANCHORPHOTOURL             "anchor_photourl"
+#define GETONGOINGHANGOUTLIST_HANGOUTLIST_ROOMID                            "room_id"
+
+
+/* 6.5.发起敲门请求 */
+/* 接口路径 */
+#define SENDKNOCKREQUEST_PATH                                               "/lady/v1/sendKnockRequest"
+
+/**
+ *  请求
+ */
+#define SENDKNOCKREQUEST_ROOMID                                             "room_id"
+
+/**
+ *  返回
+ */
+#define SENDKNOCKREQUEST_KNOCKID                                            "knock_id"
+#define SENDKNOCKREQUEST_EXPIRE                                             "expire"
+
+/* 6.6.获取敲门状态 */
+/* 接口路径 */
+#define GETHANGOUTKNOCKSTATUS_PATH                                          "/share/v1/getHangoutKnockStatus"
+
+/**
+ *  请求
+ */
+#define GETHANGOUTKNOCKSTATUS_KNOCKID                                       "knock_id"
+
+/**
+ *  返回
+ */
+#define GETHANGOUTKNOCKSTATUS_ROOMID                                        "roomid"
+#define GETHANGOUTKNOCKSTATUS_STATUS                                        "status"
+#define GETHANGOUTKNOCKSTATUS_EXPIRE                                        "expire"
+
+/* 6.7.取消敲门请求 */
+/* 接口路径 */
+#define CANCELHANGOUTKNOCK_PATH                                             "/lady/v1/cancelHangoutKnock"
+
+/**
+ *  请求
+ */
+#define CANCELHANGOUTKNOCK_KNOCKID                                          "knock_id"
+
+/* 6.8.获取多人互动直播间礼物列表 */
+/* 接口路径 */
+#define HANGOUTGIFTLIST_PATH                                                "/lady/v1/hangoutGiftList"
+
+/**
+ *  请求
+ */
+#define HANGOUTGIFTLIST_ROOMID                                              "room_id"
+
+/**
+ *  返回
+ */
+#define HANGOUTGIFTLIST_BUYFORLIST                                              "buyfor_list"
+#define HANGOUTGIFTLIST_BUYFORLIST_ID                                               "id"
+#define HANGOUTGIFTLIST_BUYFORLIST_NUM                                              "num"
+#define HANGOUTGIFTLIST_NORMALLIST                                              "normal_list"
+#define HANGOUTGIFTLIST_NORMALLIST_ID                                               "id"
+#define HANGOUTGIFTLIST_NORMALLIST_NUM                                              "num"
+#define HANGOUTGIFTLIST_CELEBRATIONLIST                                         "celebration_list"
+#define HANGOUTGIFTLIST_CELEBRATIONLIST_ID                                          "id"
+#define HANGOUTGIFTLIST_CELEBRATIONLIST_NUM                                         "num"
+
+
+/* 7.1.获取节目列表 */
+/* 接口路径 */
+#define ANCHORGETPROGRAMLIST_PATH                                                "/lady/v1/showList"
+
+/**
+ *  请求
+ */
+#define ANCHORGETPROGRAMLIST_START                                              "start"
+#define ANCHORGETPROGRAMLIST_STEP                                               "step"
+#define ANCHORGETPROGRAMLIST_STATUS                                             "status"
+
+/**
+ *  返回
+ */
+#define ANCHORGETPROGRAMLIST_LIST                     "list"
+#define ANCHORGETPROGRAMLIST_LIST_SHOWLIVEID                 "live_show_id"
+#define ANCHORGETPROGRAMLIST_LIST_ANCHORID                   "anchor_id"
+#define ANCHORGETPROGRAMLIST_LIST_SHOWTITLE                  "show_title"
+#define ANCHORGETPROGRAMLIST_LIST_SHOWINTRODUCE              "show_introduce"
+#define ANCHORGETPROGRAMLIST_LIST_COVER                      "cover"
+#define ANCHORGETPROGRAMLIST_LIST_APPROVETIME                "approve_time"
+#define ANCHORGETPROGRAMLIST_LIST_STARTTIME                  "start_time"
+#define ANCHORGETPROGRAMLIST_LIST_DURATION                   "duration"
+#define ANCHORGETPROGRAMLIST_LIST_LEFTSECTOSTART             "left_sec_to_start"
+#define ANCHORGETPROGRAMLIST_LIST_LEFTSECTOENTER             "left_sec_to_enter"
+#define ANCHORGETPROGRAMLIST_LIST_PRICE                      "price"
+#define ANCHORGETPROGRAMLIST_LIST_STATUS                     "status"
+#define ANCHORGETPROGRAMLIST_LIST_TICKETNUM                  "ticket_num"
+#define ANCHORGETPROGRAMLIST_LIST_FOLLOWNUM                  "follow_num"
+#define ANCHORGETPROGRAMLIST_LIST_TICKETISFULL               "ticket_is_full"
+
+/* 7.2.获取节目未读数 */
+/* 接口路径 */
+#define ANCHORGETNOREADNUMPROGRAM_PATH                                            "/lady/v1/noreadShowNum"
+
+/**
+ *  返回
+ */
+#define ANCHORGETNOREADNUMPROGRAM_NUM                     "num"
+
+/* 7.3.获取可进入的节目信息接口 */
+/* 接口路径 */
+#define ANCHORGETSHOWROOMINFO_PATH                                                "/lady/v1/getShowRoomInfo"
+
+/**
+ *  请求
+ */
+#define ANCHORGETSHOWROOMINFO_LIVESHOWID                                          "live_show_id"
+
+/**
+ *  返回
+ */
+#define ANCHORGETSHOWROOMINFO_SHOWINFO                     "show_info"
+#define ANCHORGETSHOWROOMINFO_ROOMID                       "room_id"
+
+/* 7.4.检测是否开播节目直播 */
+/* 接口路径 */
+#define ANCHORCHECKISPLAYPROGRA_PATH                                               "/lady/v1/checkPublicRoomType"
+
+/**
+ *  返回
+ */
+#define ANCHORCHECKISPLAYPROGRA_LIVESHOWTYPE                 "live_show_type"
+#define ANCHORCHECKISPLAYPROGRA_LIVESHOWID                   "live_show_id"
 
 #endif /* ZBHTTPLOGINPROTOCOL_H_ */

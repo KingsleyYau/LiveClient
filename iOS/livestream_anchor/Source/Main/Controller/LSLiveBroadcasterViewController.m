@@ -10,8 +10,9 @@
 #import "LSTodosViewController.h"
 #import "LSUserUnreadCountManager.h"
 #import "JDSegmentControl.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "DialogTip.h"
+#import "LSMyReservationsPageViewController.h"
 
 @interface LSLiveBroadcasterViewController ()<LSUserUnreadCountManagerDelegate,JDSegmentControlDelegate,LSPZPagingScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *incomeCount;
@@ -27,25 +28,36 @@
 @property (nonatomic, strong) LSPZPagingScrollView *pagingScrollView;
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 @property (weak, nonatomic) IBOutlet UILabel *targetCount;
-@property (nonatomic, strong) ZBLSRequestManager *requestManager;
+@property (nonatomic, strong) LSAnchorRequestManager *requestManager;
 @property (nonatomic, strong) DialogTip *dialogTipView;
+
+
+@property (nonatomic, strong) NSString* coins;
+@property (nonatomic, strong) NSString* bookings;
+@property (nonatomic, strong) NSString* unreadSheduled;
+@property (nonatomic, strong) NSString* monthCompleted;
+@property (nonatomic, strong) NSString* monthTarget;
+@property (nonatomic, assign) double monthProgress;
 @end
 
 @implementation LSLiveBroadcasterViewController
 
 - (void)initCustomParam {
     [super initCustomParam];
-    
-    // Items for tab
     LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
     self.tabBarItem = tabBarItem;
-    //    self.tabBarItem.title = @"Discover";
-    self.tabBarItem.image = [[UIImage imageNamed:@"TabBarHot"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarHot-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.title = @"Home";
+    self.tabBarItem.image = [[UIImage imageNamed:@"TabBarHome"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarHome-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     NSDictionary *normalColor = [NSDictionary dictionaryWithObject:Color(51, 51, 51, 1) forKey:NSForegroundColorAttributeName];
     NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
     [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
     [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
+}
+
+- (void)dealloc
+{
+    [self.unreadCountManager removeDelegate:self];
 }
 
 - (void)viewDidLoad {
@@ -57,7 +69,7 @@
     [self.unreadCountManager addDelegate:self];
     self.unreadCount = 0;
     
-    self.requestManager = [ZBLSRequestManager manager];
+    self.requestManager = [LSAnchorRequestManager manager];
     
     NSArray *title =  @[@"Todos"];
     self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 35) delegate:self isSymmetry:YES isRegularWidth:YES];
@@ -70,15 +82,12 @@
     [self addChildViewController:vc];
     
     self.viewControllers = [NSArray arrayWithObjects:vc, nil];
-    
-//    CGFloat bottom = self.topView.frame.origin.y + self.topView.frame.size.height;
     self.pagingScrollView = [[LSPZPagingScrollView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 1)];
     self.pagingScrollView.pagingViewDelegate = self;
     self.pagingScrollView.bounces = NO;
     [self.todosView addSubview:self.pagingScrollView];
     
     self.dialogTipView = [DialogTip dialogTip];
-    
 }
 
 - (void)didReceiveMemoryWarning {
@@ -91,6 +100,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    [self loadDataParam];
+    
     [self getTodayCredit];
     [self getUnreadSheduledBooking];
     [self getCornfirmScheduledBooking];
@@ -98,10 +110,14 @@
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.navigationBar.barTintColor = COLOR_WITH_16BAND_RGB(0x297AF3);
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     UILabel *titleLabel = [[UILabel alloc] init];
-    titleLabel.text = @"Dashboard";
+    titleLabel.text = NSLocalizedStringFromSelf(@"Dashboard");
     titleLabel.textColor = [UIColor whiteColor];
+    titleLabel.font = [UIFont boldSystemFontOfSize:17];
+    [titleLabel sizeToFit];
     self.navigationItem.titleView = titleLabel;
+    
     [self hideNavgationBarBottomLine:YES];
 
 }
@@ -116,12 +132,9 @@
     [self hideNavgationBarBottomLine:NO];
 }
 
-
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
 }
-
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
@@ -138,6 +151,11 @@
                 CGFloat progress = self.progressView.frame.size.width * (item.monthProgress / 100.0);
                 self.targetCount.text = [NSString stringWithFormat:@"Broadcast days: %d/%d",item.monthCompleted,item.monthTarget];
                 self.progressView.progressValue = progress;
+                self.coins = self.incomeCount.text;
+                self.monthTarget = [NSString stringWithFormat:@"%d",item.monthTarget];
+                self.monthCompleted = [NSString stringWithFormat:@"%d",item.monthCompleted];
+                [self saveDataParam];
+                
             }else {
                   [self.dialogTipView showDialogTip:self.view tipText:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
                 self.incomeCount.text = @"-";
@@ -151,27 +169,39 @@
     
 }
 
-- (void)getCornfirmScheduledBooking {
+- (void)getUnreadSheduledBooking {
     [self.requestManager anchorGetScheduleListNoReadNum:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingUnreadUnhandleNumItemObject * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) {
-                self.bookingCount.text = [NSString stringWithFormat:@"%d",item.scheduledNoReadNum];
-            }else {
-                self.bookingCount.text = @"-";
-            }
+            LSTodosViewController *vc = (LSTodosViewController *)[self.viewControllers objectAtIndex:0];
+            int unreadBookCount = item.scheduledNoReadNum;
+            vc.unReadBookingCount = unreadBookCount;
+            self.unreadSheduled = [NSString stringWithFormat:@"%d",unreadBookCount];
+            [self saveDataParam];
+            [vc.tableView reloadData];
 
         });
     }];
 
 }
 
-- (void)getUnreadSheduledBooking {
+- (void)getCornfirmScheduledBooking {
     [self.requestManager anchorGetScheduledAcceptNum:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int scheduledNum) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            LSTodosViewController *vc = (LSTodosViewController *)[self.viewControllers objectAtIndex:0];
-            vc.unReadBookingCount = scheduledNum;
-            [vc.tableView reloadData];
+            if (success) {
+                self.bookingCount.text = [NSString stringWithFormat:@"%d",scheduledNum];
+                self.bookings = self.bookingCount.text;
+            }else {
+                self.bookingCount.text = @"-";
+            }
         });
+
+    }];
+}
+
+- (void)getReservationList {
+    [[LSAnchorRequestManager manager] anchorManHandleBookingList:ZBBOOKINGLISTTYPE_COMFIRMED start:0 step:20 finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingPrivateInviteListObject * _Nonnull item ) {
+        
+        
     }];
 }
 
@@ -210,4 +240,45 @@
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
 }
 
+- (IBAction)tapToScheduledBooking:(id)sender {
+    LSMyReservationsPageViewController *vc = [[LSMyReservationsPageViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+/**
+ *  保存用户数据(文件)
+ *
+ */
+- (void)saveDataParam {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:self.coins forKey:@"Coins"];
+    [userDefaults setObject:self.bookings forKey:@"bookings"];
+    [userDefaults setObject:self.unreadSheduled forKey:@"UnreadSheduled"];
+    [userDefaults setObject:self.monthCompleted forKey:@"monthCompleted"];
+    [userDefaults setObject:self.monthTarget forKey:@"monthTarget"];
+     [userDefaults setDouble:self.monthProgress forKey:@"monthProgress"];
+    [userDefaults synchronize];
+}
+
+/**
+ *  加载用户信息(文件)
+ *
+ */
+- (void)loadDataParam {
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    self.coins = [userDefaults stringForKey:@"Coins"];
+    self.bookings = [userDefaults stringForKey:@"bookings"];
+    self.unreadSheduled = [userDefaults stringForKey:@"UnreadSheduled"];
+    self.monthCompleted = [userDefaults stringForKey:@"monthCompleted"];
+    self.monthTarget = [userDefaults stringForKey:@"monthTarget"];
+    self.monthProgress = [userDefaults doubleForKey:@"monthProgress"];
+    self.incomeCount.text = self.coins;
+    CGFloat progress = self.progressView.frame.size.width * (self.monthProgress / 100.0);
+    self.targetCount.text = [NSString stringWithFormat:@"Broadcast days: %@/%@",self.monthCompleted,self.monthTarget];
+    self.progressView.progressValue = progress;
+    self.bookingCount.text = self.bookings;
+    LSTodosViewController *vc = (LSTodosViewController *)[self.viewControllers objectAtIndex:0];
+    vc.unReadBookingCount = [self.unreadSheduled intValue];
+}
 @end
+

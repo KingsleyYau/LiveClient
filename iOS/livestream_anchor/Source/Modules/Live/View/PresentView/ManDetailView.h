@@ -14,6 +14,7 @@
 @protocol ManDetailViewDelegate <NSObject>
 - (void)manDetailViewCloseAction:(ManDetailView *)manDetailView;
 - (void)inviteToOneAction:(NSString *)userId userName:(NSString *)userName;
+- (void)pushManDetailAction:(NSString *)userId;
 @end
 
 @interface ManDetailView : UIView

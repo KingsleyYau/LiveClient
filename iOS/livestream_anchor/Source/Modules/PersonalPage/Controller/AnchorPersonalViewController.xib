@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AnchorPersonalViewController">
             <connections>
                 <outlet property="personalView" destination="71N-1x-u2u" id="7u6-7B-mYf"/>
+                <outlet property="topDistance" destination="qIe-9f-XU1" id="w9C-Xz-6Wd"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -21,7 +22,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71N-1x-u2u" customClass="IntroduceView">
-                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <rect key="frame" x="0.0" y="-64" width="375" height="731"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
             </subviews>
@@ -30,7 +31,7 @@
                 <constraint firstItem="71N-1x-u2u" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3oK-OB-kvW"/>
                 <constraint firstAttribute="trailing" secondItem="71N-1x-u2u" secondAttribute="trailing" id="KDl-OI-j6M"/>
                 <constraint firstAttribute="bottom" secondItem="71N-1x-u2u" secondAttribute="bottom" id="TSo-vD-tkL"/>
-                <constraint firstItem="71N-1x-u2u" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="qIe-9f-XU1"/>
+                <constraint firstItem="71N-1x-u2u" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="-64" id="qIe-9f-XU1"/>
             </constraints>
             <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>

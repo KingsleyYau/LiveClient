@@ -77,9 +77,12 @@ bool HttpUploadPhotoTask::ParseData(const string& url, bool bFlag, const char* b
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             bParse = true;
-            if (dataJson[OWN_UPLOAD_PHOTO_PHOTOURL].isString()) {
-                photoUrl = dataJson[OWN_UPLOAD_PHOTO_PHOTOURL].asString();
+            if (dataJson.isObject()) {
+                if (dataJson[OWN_UPLOAD_PHOTO_PHOTOURL].isString()) {
+                    photoUrl = dataJson[OWN_UPLOAD_PHOTO_PHOTOURL].asString();
+                }
             }
+            
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         

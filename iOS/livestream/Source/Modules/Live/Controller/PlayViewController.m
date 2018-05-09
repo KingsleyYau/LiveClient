@@ -28,7 +28,6 @@
 #import "UserInfoManager.h"
 
 #import "AllGiftItem.h"
-#import "SendGiftItem.h"
 
 #import "LSChatEmotion.h"
 #import "LSChatMessageObject.h"
@@ -82,13 +81,13 @@
 @property (nonatomic, strong) NSMutableArray<NSString *> *bigGiftArray;
 
 /** 表情选择器键盘 **/
-@property (nonatomic, strong) LSPageChooseKeyboardView *LSPageChooseKeyboardView;
+@property (nonatomic, strong) LSPageChooseKeyboardView *chatEmotionKeyboardView;
 
 /** 普通表情 */
 @property (nonatomic, strong) LSLiveStandardEmotionView *chatNomalEmotionView;
 
 /** 高亲密度表情 */
-@property (nonatomic, strong) LSLiveAdvancedEmotionView *LSLiveAdvancedEmotionView;
+@property (nonatomic, strong) LSLiveAdvancedEmotionView *chatAdvancedEmotionView;
 
 /** 键盘弹出高度 */
 @property (nonatomic, assign) CGFloat keyboardHeight;
@@ -201,6 +200,8 @@
     self.backRow = 0;
 
     self.creditOffset = 0;
+    
+    self.msgSuperTabelTop = 0;
 }
 
 - (void)dealloc {
@@ -227,6 +228,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.liveVC.liveRoom = self.liveRoom;
+    
     self.roominDate = [NSDate date];
     
     // 禁止导航栏后退手势
@@ -387,6 +390,7 @@
     
     self.creditView = [CreditView creditView];
     self.creditView.delegate = self;
+    self.creditView.hidden = YES;
     [self.view addSubview:self.creditView];
 }
 
@@ -502,21 +506,22 @@
     }
     
     // 高亲密度表情
-    if (self.LSLiveAdvancedEmotionView == nil) {
-        self.LSLiveAdvancedEmotionView = [LSLiveAdvancedEmotionView friendlyEmotionView:self];
-        self.LSLiveAdvancedEmotionView.delegate = self;
-        self.LSLiveAdvancedEmotionView.advanListItem = self.emotionManager.advanListItem;
-        self.LSLiveAdvancedEmotionView.tipView.hidden = NO;
-        self.LSLiveAdvancedEmotionView.tipLabel.text = self.emotionManager.advanListItem.errMsg;
-        [self.LSLiveAdvancedEmotionView reloadData];
+    if (self.chatAdvancedEmotionView == nil) {
+        self.chatAdvancedEmotionView = [LSLiveAdvancedEmotionView friendlyEmotionView:self];
+        self.chatAdvancedEmotionView.delegate = self;
+        self.chatAdvancedEmotionView.advanListItem = self.emotionManager.advanListItem;
+        self.chatAdvancedEmotionView.tipView.hidden = NO;
+        self.chatAdvancedEmotionView.tipLabel.text = self.emotionManager.advanListItem.errMsg;
+        [self.chatAdvancedEmotionView reloadData];
     }
     
     // 表情选择器
-    if (self.LSPageChooseKeyboardView == nil) {
-        self.LSPageChooseKeyboardView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
-        self.LSPageChooseKeyboardView.delegate = self;
-        [self.view addSubview:self.LSPageChooseKeyboardView];
-        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+    if (self.chatEmotionKeyboardView == nil) {
+        self.chatEmotionKeyboardView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
+        self.chatEmotionKeyboardView.delegate = self;
+        self.chatEmotionKeyboardView.hidden = YES;
+        [self.view addSubview:self.chatEmotionKeyboardView];
+        [self.chatEmotionKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.equalTo(self.inputMessageView.mas_width);
             make.height.equalTo(@219);
             make.left.equalTo(self.view.mas_left).offset(0);
@@ -538,7 +543,7 @@
         UIButton *btn = [self setupChooserBarBtnType:0 normalImage:nil selectImage:nil bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:title titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
         [array addObject:btn];
         
-        self.LSPageChooseKeyboardView.buttons = array;
+        self.chatEmotionKeyboardView.buttons = array;
     }
     // 请求表情列表
     [self getLiveRoomEmotionList];
@@ -562,11 +567,12 @@
         self.backpackView.backpackDelegate = self;
     }
 
-    if (self.giftListView == nil) {
-        self.giftListView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
-        self.giftListView.delegate = self;
-        [self.chooseGiftListView addSubview:self.giftListView];
-        [self.giftListView mas_makeConstraints:^(MASConstraintMaker *make) {
+    if (self.giftListKeyboardView == nil) {
+        self.giftListKeyboardView = [LSPageChooseKeyboardView LSPageChooseKeyboardView:self];
+        self.giftListKeyboardView.delegate = self;
+        [self.chooseGiftListView addSubview:self.giftListKeyboardView];
+        self.chooseGiftListView.hidden = YES;
+        [self.giftListKeyboardView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.chooseGiftListView);
         }];
     }
@@ -588,7 +594,7 @@
     UIButton *btn = [self setupChooserBarBtnType:1 normalImage:normalImage selectImage:selectImage bgNormalImage:bgNormalImage bgSelectImage:bgSelectImage titleText:titleText titleNormalColor:titleNormalColor titleSelectColor:titlrSelectColor];
     [array addObject:btn];
 
-    self.giftListView.buttons = array;
+    self.giftListKeyboardView.buttons = array;
 
     [self getLiveRoomGiftList];
 }
@@ -620,7 +626,7 @@
 
     for (NSNumber *i in self.liveRoom.imLiveRoom.emoTypeList) {
         if ([i intValue] == 1) {
-            self.LSLiveAdvancedEmotionView.tipView.hidden = YES;
+            self.chatAdvancedEmotionView.tipView.hidden = YES;
         } else {
             self.chatNomalEmotionView.tipView.hidden = YES;
         }
@@ -705,15 +711,6 @@
     }];
 }
 
-#pragma mark - 直播间信息
-- (void)setLiveRoom:(LiveRoom *)liveRoom {
-    self.liveVC.liveRoom = liveRoom;
-}
-
-- (LiveRoom *)liveRoom {
-    return self.liveVC.liveRoom;
-}
-
 #pragma mark - LiveViewControllerDelegate
 // 返回更新用户信用点余额
 - (void)onReEnterRoom:(LiveViewController *)vc {
@@ -741,6 +738,11 @@
     [self initRewardView];
 }
 
+// 显示结束页 收起所有输入
+- (void)liveFinshViewIsShow:(LiveViewController *)vc {
+    [self closeAllInputView];
+}
+
 #pragma mark - 请求数据逻辑
 - (BOOL)sendRoomGiftFormAllGiftItem:(AllGiftItem *)item andGiftNum:(int)giftNum starNum:(int)starNum endNum:(int)endNum isBack:(BOOL)isBack {
     NSLog(@"PlayViewController::sendRoomGiftFormLiveItem( "
@@ -750,8 +752,9 @@
 
     BOOL bFlag = YES;
 
-    SendGiftItem *sendItem = [[SendGiftItem alloc] initWithGiftItem:item andGiftNum:giftNum starNum:starNum endNum:endNum clickID:self.clickId roomID:self.liveRoom.roomId isBackPack:isBack];
-
+    GiftItem *sendItem = [GiftItem itemRoomId:self.liveRoom.roomId nickName:self.loginManager.loginItem.nickName
+                          is_Backpack:isBack giftNum:giftNum starNum:starNum endNum:endNum clickID:self.clickId giftItem:item];
+    
         if (isBack) {
             // 发送类型
             int type = [self.backGiftManager sendBackpackGiftWithSendGiftItem:sendItem];
@@ -789,14 +792,14 @@
 
 #pragma mark - SendGiftTheQueueManagerDelegate
 // 发送大礼物失败 提示
-- (void)sendGiftFailWithItem:(SendGiftItem *)item {
+- (void)sendGiftFailWithItem:(GiftItem *)item {
 
     NSString *tip = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"BIG_GIFT_SEND_FAIL"), item.giftItem.infoItem.name];
     [self showDialogTipView:tip];
 }
 
 // 信用点不足礼物发送失败 隐藏连击按钮
-- (void)sendGiftNoCredit:(SendGiftItem *)item {
+- (void)sendGiftNoCredit:(GiftItem *)item {
     self.comboBtn.hidden = YES;
     self.presentView.sendView.hidden = NO;
 }
@@ -918,7 +921,7 @@
 
     // 随机礼物按钮默认选中礼物列表
     if (sender == self.randomGiftBtn) {
-        [self.giftListView toggleButtonSelect:0];
+        [self.giftListKeyboardView toggleButtonSelect:0];
     }
 
     // 显示礼物列表
@@ -928,6 +931,7 @@
 #pragma mark - 界面显示/隐藏
 /** 显示信用详情 **/
 - (void)showCreditView {
+    self.creditView.hidden = NO;
     [self.creditViewBottom uninstall];
     self.creditOffset = -234;
     [self.creditView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -956,23 +960,22 @@
     [UIView animateWithDuration:0.25
                      animations:^{
                          [self.view layoutIfNeeded];
-
                      }
                      completion:^(BOOL finished){
-
+                         self.creditView.hidden = YES;
                      }];
 }
 
 /** 显示礼物列表 **/
 - (void)showChooseGiftListView {
-
+    self.chooseGiftListView.hidden = NO;
     [self.view layoutIfNeeded];
     self.chooseGiftListViewTop.constant = -self.chooseGiftListViewHeight.constant;
     [UIView animateWithDuration:0.25
         animations:^{
             //            self.chooseGiftListView.transform = CGAffineTransformMakeTranslation(0, -self.chooseGiftListView.frame.size.height);
             [self.view layoutIfNeeded];
-            [self.giftListView reloadData];
+            [self.giftListKeyboardView reloadData];
         }
         completion:^(BOOL finished) {
             self.liveVC.tableSuperView.hidden = YES;
@@ -991,7 +994,9 @@
             [self.view layoutIfNeeded];
         }
         completion:^(BOOL finished) {
+            self.chooseGiftListView.hidden = YES;
             [self showBottomView];
+            
             self.liveVC.tableSuperView.hidden = NO;
             if (self.liveVC.unReadMsgCount) {
                 self.liveVC.msgTipsView.hidden = NO;
@@ -1018,11 +1023,18 @@
     self.liveSendBarView.inputTextField.inputView = [[UIView alloc] init];
     [self.liveSendBarView.inputTextField resignFirstResponder];
     
-    if (self.inputMessageViewBottom.constant != -self.LSPageChooseKeyboardView.frame.size.height) {
-        // 未显示则显示
-        [self moveInputBarWithKeyboardHeight:self.LSPageChooseKeyboardView.frame.size.height withDuration:0.25];
+    if (self.inputMessageViewBottom.constant != -self.chatEmotionKeyboardView.frame.size.height) {
+        self.chatEmotionKeyboardView.hidden = NO;
         
-        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+        if ([LSDevice iPhoneXStyle]) {
+            CGFloat height = self.chatEmotionKeyboardView.frame.size.height + 35;
+            [self moveInputBarWithKeyboardHeight:height withDuration:0.25];
+        } else {
+            // 未显示则显示
+            [self moveInputBarWithKeyboardHeight:self.chatEmotionKeyboardView.frame.size.height withDuration:0.25];
+        }
+        
+        [self.chatEmotionKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.inputMessageView.mas_bottom);
         }];
         
@@ -1030,7 +1042,7 @@
             self.liveSendBarView.inputTextField.userInteractionEnabled = NO;
         }
     }
-    [self.LSPageChooseKeyboardView reloadData];
+    [self.chatEmotionKeyboardView reloadData];
 }
 
 - (void)closeAllInputView {
@@ -1045,6 +1057,7 @@
         self.liveSendBarView.inputTextField.inputView = nil;
         [self moveInputBarWithKeyboardHeight:0 withDuration:0.25];
         [self showInputMessageView];
+        self.chatEmotionKeyboardView.hidden = YES;
     } else {
         // 关闭键盘输入
         [self.liveSendBarView.inputTextField resignFirstResponder];
@@ -1052,22 +1065,29 @@
 }
 
 - (void)hiddenBottomView {
-    // 隐藏底部输入框
-    [UIView animateWithDuration:0.2
-                     animations:^{
-                         self.inputMessageView.transform = CGAffineTransformMakeTranslation(0, 54);
-                     }];
+    if ([LSDevice iPhoneXStyle]) {
+        self.inputMessageView.hidden = YES;
+    } else {
+        // 隐藏底部输入框
+        [UIView animateWithDuration:0.2
+                         animations:^{
+                             self.inputMessageView.transform = CGAffineTransformMakeTranslation(0, 54);
+                         }];
+    }
 }
 
 - (void)showBottomView {
-    // 显示底部输入框
-    [UIView animateWithDuration:0.2
-                          delay:0.25
-                        options:0
-                     animations:^{
-                         self.inputMessageView.transform = CGAffineTransformIdentity;
-                     }
-                     completion:nil];
+    if ([LSDevice iPhoneXStyle]) {
+        self.inputMessageView.hidden = NO;
+    } else {
+        // 显示底部输入框
+        [UIView animateWithDuration:0.2
+                              delay:0.25
+                            options:0
+                         animations:^{
+                             self.inputMessageView.transform = CGAffineTransformIdentity;
+                         } completion:nil];
+    }
 }
 
 // 显示3秒toas提示控件
@@ -1519,7 +1539,7 @@
 - (Class)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView classForIndex:(NSUInteger)index {
     Class cls = nil;
 
-    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
+    if (LSPageChooseKeyboardView == self.chatEmotionKeyboardView) {
         if (index == 0) {
             // 普通表情
             cls = [LSLiveStandardEmotionView class];
@@ -1561,14 +1581,14 @@
 - (UIView *)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView pageViewForIndex:(NSUInteger)index {
     UIView *view = nil;
 
-    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
+    if (LSPageChooseKeyboardView == self.chatEmotionKeyboardView) {
         if (index == 0) {
             view = self.chatNomalEmotionView;
             view.frame = CGRectMake(0, 0, ViewBoundsSize.width, ViewBoundsSize.height);
 
         } else if (index == 1) {
 
-            view = self.LSLiveAdvancedEmotionView;
+            view = self.chatAdvancedEmotionView;
             view.frame = CGRectMake(0, 0, ViewBoundsSize.width, ViewBoundsSize.height);
         }
     } else {
@@ -1583,14 +1603,14 @@
 }
 
 - (void)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
+    if (LSPageChooseKeyboardView == self.chatEmotionKeyboardView) {
         if (index == 0) {
             // 普通表情
             [self.chatNomalEmotionView reloadData];
 
         } else if (index == 1) {
             // 高级表情
-            [self.LSLiveAdvancedEmotionView reloadData];
+            [self.chatAdvancedEmotionView reloadData];
         }
 
     } else {
@@ -1603,7 +1623,7 @@
 }
 
 - (void)LSPageChooseKeyboardView:(LSPageChooseKeyboardView *)LSPageChooseKeyboardView didShowPageViewForDisplay:(NSUInteger)index {
-    if (LSPageChooseKeyboardView == self.LSPageChooseKeyboardView) {
+    if (LSPageChooseKeyboardView == self.chatEmotionKeyboardView) {
         if (index == 0) {
         } else if (index == 1) {
         }
@@ -1618,13 +1638,16 @@
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
     BOOL bFlag = NO;
 
-    // Ensures that all pending layout operations have been completed
-
     if (height != 0) {
 
         // 弹出键盘
-        self.liveVC.msgSuperViewTop.constant = 5 - height;
-        self.inputMessageViewBottom.constant = -height;
+        self.liveVC.msgSuperViewTop.constant = 5 - self.msgSuperTabelTop - height;
+        
+        if ([LSDevice iPhoneXStyle]) {
+            self.inputMessageViewBottom.constant = -height + 35;
+        } else {
+            self.inputMessageViewBottom.constant = -height;
+        }
 
         self.liveVC.barrageView.backgroundColor = Color(255, 255, 255, 0);
         self.liveVC.barrageView.layer.shadowColor = [UIColor clearColor].CGColor;
@@ -1633,12 +1656,13 @@
         bFlag = YES;
 
     } else {
+        self.chatEmotionKeyboardView.hidden = YES;
+        
         // 收起键盘
         self.inputMessageViewBottom.constant = -5;
-        self.liveVC.msgSuperViewTop.constant = 0;
+        self.liveVC.msgSuperViewTop.constant = self.msgSuperTabelTop;
 
-        //        self.liveVC.barrageView.backgroundColor = Color(255, 255, 255, 0.9);
-        self.liveVC.barrageView.backgroundColor = self.liveVC.roomStyleItem.barrageBgColor; // Color(255, 255, 255, 0);
+        self.liveVC.barrageView.backgroundColor = self.liveVC.roomStyleItem.barrageBgColor;
         self.liveVC.barrageView.layer.shadowColor = [UIColor blackColor].CGColor;
         self.liveVC.barrageView.layer.shadowOffset = CGSizeMake(0, 1);
         self.liveVC.barrageView.layer.shadowRadius = 1;
@@ -1646,21 +1670,10 @@
         
         self.liveVC.startOneView.hidden = NO;
         
-//        [self.emotionViewBottom uninstall];
-        [self.LSPageChooseKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.chatEmotionKeyboardView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.inputMessageView.mas_bottom).offset(5);
         }];
     }
-
-//    [UIView animateWithDuration:duration
-//                     animations:^{
-//                         // Make all constraint changes here, Called on parent view
-//                         [self.view layoutIfNeeded];
-//
-//                     }
-//                     completion:^(BOOL finished){
-//
-//                     }];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {

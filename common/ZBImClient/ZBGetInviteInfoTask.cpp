@@ -49,7 +49,7 @@ bool ZBGetInviteInfoTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBGetInviteInfoTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBGetInviteInfoTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     ZBPrivateInviteItem item;
@@ -69,16 +69,16 @@ bool ZBGetInviteInfoTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBGetInviteInfoTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBGetInviteInfoTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
         m_listener->OnZBGetInviteInfo(GetSeq(), success, m_errType, m_errMsg, item);
-		FileLog("ZBImClient", "ZBGetInviteInfoTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBGetInviteInfoTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBGetInviteInfoTask::Handle() end");
+	FileLog("ImClient", "ZBGetInviteInfoTask::Handle() end");
 
 	return result;
 }
@@ -88,7 +88,7 @@ bool ZBGetInviteInfoTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBGetInviteInfoTask::GetSendData() begin");
+	FileLog("ImClient", "ZBGetInviteInfoTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -98,7 +98,7 @@ bool ZBGetInviteInfoTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBGetInviteInfoTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBGetInviteInfoTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

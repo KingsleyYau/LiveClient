@@ -12,4 +12,5 @@
 @interface LSLiveBroadcasterViewController : LSGoogleAnalyticsViewController
 @property (nonatomic, assign) NSInteger curIndex;
 - (void)getUnreadSheduledBooking;
+- (void)getCornfirmScheduledBooking;
 @end

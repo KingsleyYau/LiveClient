@@ -16,6 +16,6 @@
 @property (weak, nonatomic) IBOutlet IntroduceView *personalView;
 
 @property (nonatomic, copy) NSString *anchorId;
-@property (nonatomic, assign) int enterRoom;
+@property (nonatomic, assign) int showInvite;
 
 @end

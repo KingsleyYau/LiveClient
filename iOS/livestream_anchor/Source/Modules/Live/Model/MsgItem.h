@@ -43,5 +43,7 @@ typedef enum MsgType {
 @property (strong) NSString *riderName;
 @property (strong) NSString *riderUrl;
 @property (strong) NSString *honorUrl;
+@property (nonatomic, assign) CGFloat containerHeight;
+@property (nonatomic, assign) CGRect labelFrame;
 
 @end

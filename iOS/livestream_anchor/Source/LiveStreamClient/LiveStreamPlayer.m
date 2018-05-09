@@ -112,6 +112,14 @@
 }
 
 #pragma mark - 私有方法
+- (BOOL)mute {
+    return self.player.mute;
+}
+
+- (void)setMute:(BOOL)mute {
+    self.player.mute = mute;
+}
+
 - (void)setPlayView:(GPUImageView *)playView {
     if (_playView != playView) {
         _playView = playView;
@@ -203,9 +211,21 @@
     }
 }
 
+- (void)rtmpPlayerOnConnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC {
+    NSLog(@"LiveStreamPlayer::rtmpPlayerOnConnect( self : %p )", self);
+    
+    if( [self.delegate respondsToSelector:@selector(playerOnConnect:)] ) {
+        [self.delegate playerOnConnect:self];
+    }
+}
+
 - (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC *_Nonnull)player {
     NSLog(@"LiveStreamPlayer::rtmpPlayerOnDisconnect( self : %p )", self);
 
+    if( [self.delegate respondsToSelector:@selector(playerOnDisconnect:)] ) {
+        [self.delegate playerOnDisconnect:self];
+    }
+    
     @synchronized (self) {
         self.isConnected = NO;
         if (!self.isStart) {

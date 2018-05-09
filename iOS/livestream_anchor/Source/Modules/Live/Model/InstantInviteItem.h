@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZBLSImManager.h"
+#import "LSAnchorImManager.h"
 
 @interface InstantInviteItem : NSObject
 

@@ -30,18 +30,18 @@ ZBCTaskManager::ZBCTaskManager(void)
 
 ZBCTaskManager::~ZBCTaskManager(void)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::~ZBCTaskManager() begin");
+	FileLog("ImClient", "ZBCTaskManager::~ZBCTaskManager() begin");
 	Stop();
-	FileLog("ZBImClient", "ZBCTaskManager::~ZBCTaskManager() stop ok");
+	FileLog("ImClient", "ZBCTaskManager::~ZBCTaskManager() stop ok");
 	IZBTransportDataHandler::Release(m_dataHandler);
 	m_dataHandler = NULL;
-	FileLog("ZBImClient", "ZBCTaskManager::~ZBCTaskManager() end");
+	FileLog("ImClient", "ZBCTaskManager::~ZBCTaskManager() end");
 }
 
 // 初始化接口
 bool ZBCTaskManager::Init(const list<string>& urls, IZBImClientListener* clientListener, IZBTaskManagerListener* mgrListener)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
+	FileLog("ImClient", "ZBCTaskManager::Init() urls.size:%d, clientListener:%p, mgrListener:%p"
             , urls.size(), clientListener, mgrListener);
 
 	if (!m_bInit) {
@@ -50,13 +50,13 @@ bool ZBCTaskManager::Init(const list<string>& urls, IZBImClientListener* clientL
 			m_dataHandler = IZBTransportDataHandler::Create();
 			m_bInit = m_dataHandler->Init(this);
 		}
-		FileLog("ZBImClient", "ZBCTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
+		FileLog("ImClient", "ZBCTaskManager::Init() create m_dataHandler:%p, m_bInit:%d", m_dataHandler, m_bInit);
 
 		// 初始化 task map
 		if (m_bInit) {
 			m_bInit = m_requestTaskMap.Init();
 		}
-		FileLog("ZBImClient", "ZBCTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
+		FileLog("ImClient", "ZBCTaskManager::Init() m_requestTaskMap.Init() m_bInit:%d", m_bInit);
 
 		// 赋值
 		if (m_bInit) {
@@ -66,7 +66,7 @@ bool ZBCTaskManager::Init(const list<string>& urls, IZBImClientListener* clientL
 		}
 	}
 
-	FileLog("ZBImClient", "ZBCTaskManager::Init() end");
+	FileLog("ImClient", "ZBCTaskManager::Init() end");
 
 	return m_bInit;
 }
@@ -74,37 +74,37 @@ bool ZBCTaskManager::Init(const list<string>& urls, IZBImClientListener* clientL
 // 开始
 bool ZBCTaskManager::Start()
 {
-	FileLog("ZBImClient", "ZBCTaskManager::Start()");
+	FileLog("ImClient", "ZBCTaskManager::Start()");
 	if (m_bInit && !m_bStart) {
 		m_bStart = m_dataHandler->Start(m_urls);
 	}
-	FileLog("ZBImClient", "ZBCTaskManager::Start() m_bStart:%d", m_bStart);
+	FileLog("ImClient", "ZBCTaskManager::Start() m_bStart:%d", m_bStart);
 	return m_bStart;
 }
 	
 // 停止（不等待）
 bool ZBCTaskManager::Stop()
 {
-	FileLog("ZBImClient", "ZBCTaskManager::Stop()");
+	FileLog("ImClient", "ZBCTaskManager::Stop()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->Stop();
 		m_bStart = !result;
 	}
-	FileLog("ZBImClient", "ZBCTaskManager::Stop() result:%d", result);
+	FileLog("ImClient", "ZBCTaskManager::Stop() result:%d", result);
 	return result;
 }
 
 // 停止（等待）
 bool ZBCTaskManager::StopAndWait()
 {
-	FileLog("ZBImClient", "ZBCTaskManager::StopAndWait()");
+	FileLog("ImClient", "ZBCTaskManager::StopAndWait()");
 	bool result = false;
 	if (NULL != m_dataHandler) {
 		result = m_dataHandler->StopAndWait();
 		m_bStart = !result;
 	}
-	FileLog("ZBImClient", "ZBCTaskManager::StopAndWait() result:%d", result);
+	FileLog("ImClient", "ZBCTaskManager::StopAndWait() result:%d", result);
 
 	return result;	
 }
@@ -112,21 +112,21 @@ bool ZBCTaskManager::StopAndWait()
 // 是否已经开始
 bool ZBCTaskManager::IsStart()
 {
-	FileLog("ZBImClient", "ZBCTaskManager::IsStart() m_bStart:%d", m_bStart);
+	FileLog("ImClient", "ZBCTaskManager::IsStart() m_bStart:%d", m_bStart);
 	return m_bStart;
 }
 	
 // 处理请求的task
 bool ZBCTaskManager::HandleRequestTask(IZBTask* task)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::HandleRequestTask() task:%p", task);
+	FileLog("ImClient", "ZBCTaskManager::HandleRequestTask() task:%p", task);
 
 	bool result = false;
 	if (m_bInit && NULL != task) {
 		result = m_dataHandler->SendTaskData(task);
 	}
 
-	FileLog("ZBImClient", "ZBCTaskManager::HandleRequestTask() result:%d", result);
+	FileLog("ImClient", "ZBCTaskManager::HandleRequestTask() result:%d", result);
 
 	return result;
 }
@@ -135,11 +135,11 @@ bool ZBCTaskManager::HandleRequestTask(IZBTask* task)
 // 连接callback
 void ZBCTaskManager::OnConnect(bool success)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::OnConnect() success:%d", success);
+	FileLog("ImClient", "ZBCTaskManager::OnConnect() success:%d", success);
 	if (NULL != m_mgrListener) {
 		m_mgrListener->OnConnect(success);
 	}
-	FileLog("ZBImClient", "ZBCTaskManager::OnConnect() end");
+	FileLog("ImClient", "ZBCTaskManager::OnConnect() end");
 }
 
 // 断开连接callback（先回调OnDisconnect()再回调OnDisconnect(const TaskList& list)）
@@ -151,7 +151,7 @@ void ZBCTaskManager::OnDisconnect()
 // 断开连接callback（连接不成功不会调用，断开后需要手动调用ITransportDataHandler::Stop才能停止）
 void ZBCTaskManager::OnDisconnect(const ZBTaskList& listUnsentTask)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
+	FileLog("ImClient", "ZBCTaskManager::OnDisconnect() listUnsentTask.size:%d", listUnsentTask.size());
 	if (NULL != m_mgrListener) {
 		// 回调 发送不成功 或 发送成功但没有回应 的task
 		m_requestTaskMap.InsertTaskList(listUnsentTask);
@@ -170,13 +170,13 @@ void ZBCTaskManager::OnDisconnect(const ZBTaskList& listUnsentTask)
 			delete task;
 		}
 	}
-	FileLog("ZBImClient", "ZBCTaskManager::OnDisconnect() end");
+	FileLog("ImClient", "ZBCTaskManager::OnDisconnect() end");
 }
 	
 // 发送callback
 void ZBCTaskManager::OnSend(bool success, IZBTask* task)
 {
-	FileLog("ZBImClient", "ZBCTaskManager::OnSend() success:%d, task:%p, cmd:%s, seq:%d"
+	FileLog("ImClient", "ZBCTaskManager::OnSend() success:%d, task:%p, cmd:%s, seq:%d"
 			, success, task, task->GetCmdCode().c_str(), task->GetSeq());
 	if (success)
 	{
@@ -195,7 +195,7 @@ void ZBCTaskManager::OnSend(bool success, IZBTask* task)
         // 发送失败，放回待处理队列，等待断开处理
         m_requestTaskMap.Insert(task);
     }
-	FileLog("ZBImClient", "ZBCTaskManager::OnSend() end");
+	FileLog("ImClient", "ZBCTaskManager::OnSend() end");
 	// 发送不成功，网络应已断开，程序会调用 OnDisconnect()，不用在此处理
 }
 	
@@ -203,7 +203,7 @@ void ZBCTaskManager::OnSend(bool success, IZBTask* task)
 void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
 {
 	FileLevelLog(
-                 "ZBImClient",
+                 "ImClient",
                  KLog::LOG_MSG,
                  "ZBCTaskManager::OnRecv() cmd:%s, seq:%d, data.empty:%d",
                  tp.m_cmd.c_str(),
@@ -232,7 +232,7 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
             // 命令是客户端主动请求，但协议解析不是返回命令（没有res_data）
             Json::FastWriter writer;
             string data = writer.write(tp.m_data);
-            FileLevelLog("ZBImClient",
+            FileLevelLog("ImClient",
                          KLog::LOG_ERR_USER,
                          "ZBCTaskManager::OnRecv() tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s, data:%s"
                          , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str(), data.c_str());
@@ -247,7 +247,7 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
 		}
 	}
 
-	FileLog("ZBImClient", "ZBCTaskManager::OnRecv() get task:%p, m_mgrListener:%p", task, m_mgrListener);
+	FileLog("ImClient", "ZBCTaskManager::OnRecv() get task:%p, m_mgrListener:%p", task, m_mgrListener);
 	if (NULL != task) {
 		task->Handle(tp);
 
@@ -267,6 +267,6 @@ void ZBCTaskManager::OnRecv(const ZBTransportProtocol& tp)
     
 
 
-	FileLog("ZBImClient", "ZBCTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
+	FileLog("ImClient", "ZBCTaskManager::OnRecv() end, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d, tp.errno:%d, tp.errmsg:%s"
 		, tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId, tp.m_errno, tp.m_errmsg.c_str());
 }

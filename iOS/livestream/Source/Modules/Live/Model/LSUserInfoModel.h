@@ -27,6 +27,7 @@
  * riderId          座驾ID
  * riderName        座驾名称
  * riderUrl         座驾url
+ * isHasTicket      是否已购票（NO：否，YES：是）
  */
 @property (nonatomic, copy) NSString *userId;
 @property (nonatomic, copy) NSString *nickName;
@@ -41,5 +42,5 @@
 @property (nonatomic, copy) NSString *riderId;
 @property (nonatomic, copy) NSString *riderName;
 @property (nonatomic, copy) NSString *riderUrl;
-
+@property (nonatomic, assign) BOOL isHasTicket;
 @end

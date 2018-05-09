@@ -57,7 +57,7 @@ bool ZBRecvInvitationAcceptNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -89,15 +89,15 @@ bool ZBRecvInvitationAcceptNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnZBRecvInvitationAcceptNotice(m_userId, m_nickName, m_photoUrl, m_invitationId, m_bookTime);
-		FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::Handle() end");
 
 	return result;
 }
@@ -107,7 +107,7 @@ bool ZBRecvInvitationAcceptNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -120,7 +120,7 @@ bool ZBRecvInvitationAcceptNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvInvitationAcceptNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvInvitationAcceptNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

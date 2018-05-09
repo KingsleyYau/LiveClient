@@ -156,9 +156,12 @@ bool HttpOwnRegisterTask::ParseData(const string& url, bool bFlag, const char* b
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             bParse = true;
-            if (dataJson[OWN_REGISTER_SESSIONID].isString()) {
-                sessionId = dataJson[OWN_REGISTER_SESSIONID].asString();
+            if (dataJson.isObject()) {
+                if (dataJson[OWN_REGISTER_SESSIONID].isString()) {
+                    sessionId = dataJson[OWN_REGISTER_SESSIONID].asString();
+                }
             }
+            
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         

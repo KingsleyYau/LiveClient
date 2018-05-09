@@ -66,129 +66,6 @@ static LSLoginManager* gManager = nil;
     }
 }
 
-- (LoginStatus)login:(NSString * _Nonnull)manId userSid:(NSString * _Nonnull)userSid {
-    NSLog(@"LSLoginManager::login( [Http登录], manId : %@  userSid : %@ )", manId, userSid);
-    
-    LSRequestManager* manager = [LSRequestManager manager];
-    
-    switch (self.status) {
-        case NONE:{
-            // 未登陆
-            
-            // 停止所有请求
-            [manager stopAllRequest];
-            
-            // 用户名和密码
-            if( userSid.length > 0 ) {
-                // 进入登陆状态
-                @synchronized(self) {
-                    _status = LOGINING;
-                }
-                
-                // 登陆回调
-                LoginFinishHandler loginFinishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSLoginItemObject * _Nonnull item) {
-                    @synchronized(self) {
-                        if( success && _status == LOGINING ) {
-                            // 登陆成功
-                            NSLog(@"LSLoginManager::login( [Http登录, 登陆成功], userId : %@, token : %@ )", item.userId, item.token);
-                            
-                            _status = LOGINED;
-                            
-                            _loginItem = item;
-                            
-                            // 标记可以自动重登陆
-                            self.isAutoLogin = YES;
-                            
-                            // 保存用户信息
-                            [self saveLoginParam];
-                            
-                        } else {
-                            // 登陆失败
-                            _status = NONE;
-                            
-                            //                            if( errnum == LOGIN_BY_OTHER_DEVICE ) {
-                            //                                // 账号已经在其他设备登录
-                            //                                // 标记不能自动重
-                            //                                self.isAutoLogin = NO;
-                            //                            }
-                            
-                            if( errnum == HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE ) {
-                                // 账号已经在其他设备登录
-                                // 标记不能自动重
-                                self.isAutoLogin = NO;
-                            }
-                        }
-                    }
-                    
-                    __block BOOL blockSuccess = success;
-                    __block HTTP_LCC_ERR_TYPE blockErrnum = errnum;
-                    __block NSString* blockErrmsg = errmsg;
-                    
-                    // 回调
-                    [self callbackLoginStatus:blockSuccess errnum:blockErrnum errmsg:blockErrmsg];
-                };
-                
-                ZBGetConfigFinishHandler synConfigFinishHandler = ^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBConfigItemObject *_Nullable item) {
-                    if( success ) {
-                        NSLog(@"LSLoginManager::login( [Http登录, 同步Http服务器地址], url : %@ )", item.httpSvrUrl);
-                        
-                        LSRequestManager *manager = [LSRequestManager manager];
-                        [manager setWebSite:item.httpSvrUrl];
-                        
-                        NSInteger requestId = [manager login:manId
-                                                     userSid:userSid
-                                                    deviceid:[manager getDeviceId]
-                                                       model:[[UIDevice currentDevice] model]
-                                                manufacturer:@"Apple"
-                                               finishHandler:loginFinishHandler];
-                        
-                        if( requestId != [LSRequestManager manager].invalidRequestId ) {
-                            // TODO:2.开始登陆
-                        } else {
-                            // 开始登陆失败
-                            [self callbackLoginStatus:NO errnum:errnum errmsg:@"Unknow error"];
-                        }
-                        
-      
-                    } else {
-                        // 同步配置失败, 导致登陆失败
-                        __block BOOL blockSuccess = success;
-                        __block ZBHTTP_LCC_ERR_TYPE blockErrnum = errnum;
-                        __block NSString* blockErrmsg = errmsg;
-                        
-                        @synchronized(self) {
-                            // 进入未登陆状态
-                            _status = NONE;
-                        }
-                        
-                        // 回调
-                        [self callbackLoginStatus:blockSuccess errnum:blockErrnum errmsg:blockErrmsg];
-                    }
-                };
-                
-                // TODO:1.开始同步配置
-                // 清空同步配置和服务器
-                [[LSConfigManager manager] clean];
-                [[LSConfigManager manager] synConfig:synConfigFinishHandler];
-                
-            } else {
-                // 参数不够
-            }
-        }break;
-        case LOGINING:{
-            // 登陆中
-            
-        }break;
-        case LOGINED:{
-            // 已经登陆
-            
-        }break;
-        default:
-            break;
-    }
-    
-    return self.status;
-}
 - (LoginStatus)login:(NSString *)user password:(NSString *)password checkcode:(NSString *)checkcode  {
     NSLog(@"LSLoginManager::login( [Http登录], user : %@  password : %@ )", user, password);
     
@@ -251,7 +128,7 @@ static LSLoginManager* gManager = nil;
                     if( success ) {
                         NSLog(@"LSLoginManager::login( [Http登录, 同步Http服务器地址], url : %@ )", item.httpSvrUrl);
 
-                        ZBLSRequestManager *manager = [ZBLSRequestManager manager];
+                        LSAnchorRequestManager *manager = [LSAnchorRequestManager manager];
                         [manager setWebSite:item.httpSvrUrl];
                         
                         [[LiveModule module] setConfigUrl:item.httpSvrUrl];
@@ -332,15 +209,11 @@ static LSLoginManager* gManager = nil;
                 // 标记不能自动重
                 self.isAutoLogin = NO;
             }
-            
             // 清除token
             _email = nil;
             _password = nil;
-            // 不能清除, 其他地方在直接用里面的属性
-//            _loginItem = nil;
             
-            // 保存用户信息
-            [self saveLoginParam];
+            [self removePassword];
             
             // 标记为已经注销
             _status = NONE;
@@ -350,7 +223,6 @@ static LSLoginManager* gManager = nil;
                 if( [delegate respondsToSelector:@selector(manager:onLogout:msg:)] ) {
                     [delegate manager:self onLogout:kick msg:msg];
                 }
-                
             }
         }
     }
@@ -375,6 +247,14 @@ static LSLoginManager* gManager = nil;
     [userDefaults setObject:self.email forKey:@"email"];
     [userDefaults setObject:self.password forKey:@"password"];
     
+    [userDefaults synchronize];
+}
+
+// 清空密码
+- (void)removePassword
+{
+    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+    [userDefaults setObject:@"" forKey:@"password"];
     [userDefaults synchronize];
 }
 

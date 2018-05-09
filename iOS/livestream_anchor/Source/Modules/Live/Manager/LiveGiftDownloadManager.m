@@ -12,7 +12,7 @@
 #import "LSFileCacheManager.h"
 #import "LSImageViewLoader.h"
 #import "LSYYImage.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 
 @interface LiveGiftDownloadManager () <LoginManagerDelegate>
 
@@ -79,35 +79,37 @@
 
     } else {
         
-        [[ZBLSRequestManager manager] anchorGetAllGiftList:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBGiftInfoItemObject *> * _Nullable array) {
+        [[LSAnchorRequestManager manager] anchorGetAllGiftList:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<ZBGiftInfoItemObject *> * _Nullable array) {
             
             NSLog(@"LiveGiftDownloadManager::AnchorGetAllGiftList( [主播获取所有礼物列表], success : %d, errnum : %ld, errmsg : %@, count : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
-            if (success) {
-                // 清空旧数据
-                [self.giftMuArray removeAllObjects];
-                [self.giftDictionary removeAllObjects];
-                
-                if (array != nil && array.count) {
-                    for (ZBGiftInfoItemObject *object in array) {
-                        AllGiftItem *item = [[AllGiftItem alloc] init];
-                        item.infoItem = object;
-                        if (!self.giftMuArray) {
-                            self.giftMuArray = [[NSMutableArray alloc] init];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (success) {
+                    // 清空旧数据
+                    [self.giftMuArray removeAllObjects];
+                    [self.giftDictionary removeAllObjects];
+                    
+                    if (array != nil && array.count) {
+                        for (ZBGiftInfoItemObject *object in array) {
+                            AllGiftItem *item = [[AllGiftItem alloc] init];
+                            item.infoItem = object;
+                            if (!self.giftMuArray) {
+                                self.giftMuArray = [[NSMutableArray alloc] init];
+                            }
+                            [self.giftMuArray addObject:item];
+                            [self.giftDictionary setValue:item forKey:item.infoItem.giftId];
                         }
-                        [self.giftMuArray addObject:item];
-                        [self.giftDictionary setValue:item forKey:item.infoItem.giftId];
+                        // 下载大礼物动画
+                        [self downLoadSrcImage];
+                        callBack(success, self.giftMuArray);
                     }
-                    // 下载大礼物动画
-                    [self downLoadSrcImage];
+                    self.isFirstLogin = NO;
+                    
+                } else {
+                    self.giftMuArray = nil;
                     callBack(success, self.giftMuArray);
+                    self.isFirstLogin = YES;
                 }
-                self.isFirstLogin = NO;
-                
-            } else {
-                self.giftMuArray = nil;
-                callBack(success, self.giftMuArray);
-                self.isFirstLogin = YES;
-            }
+            });
         }];
     }
 }
@@ -408,7 +410,7 @@
 #pragma mark - 获取指定礼物详情
 - (void)requestListnotGiftID:(NSString *)giftId {
 
-    [[ZBLSRequestManager manager] anchorGetGiftDetail:giftId finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBGiftInfoItemObject * _Nullable item) {
+    [[LSAnchorRequestManager manager] anchorGetGiftDetail:giftId finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBGiftInfoItemObject * _Nullable item) {
         if (success) {
             
             AllGiftItem *allItem = [[AllGiftItem alloc] init];

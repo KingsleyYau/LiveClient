@@ -17,6 +17,7 @@
         self.roomList = [coder decodeObjectForKey:@"roomList"];
         self.inviteList = [coder decodeObjectForKey:@"inviteList"];
         self.scheduleRoomList = [coder decodeObjectForKey:@"scheduleRoomList"];
+        self.ongoingShowList = [coder decodeObjectForKey:@"ongoingShowList"];
     }
     return self;
 }
@@ -25,6 +26,7 @@
     [coder encodeObject:self.roomList forKey:@"roomList"];
     [coder encodeObject:self.inviteList forKey:@"inviteList"];
     [coder encodeObject:self.scheduleRoomList forKey:@"scheduleRoomList"];
+    [coder encodeObject:self.ongoingShowList forKey:@"ongoingShowList"];
 
 }
 

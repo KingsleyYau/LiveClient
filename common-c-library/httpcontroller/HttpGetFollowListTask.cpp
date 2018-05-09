@@ -18,6 +18,11 @@ HttpGetFollowListTask::HttpGetFollowListTask() {
 
 HttpGetFollowListTask::~HttpGetFollowListTask() {
 	// TODO Auto-generated destructor stub
+    
+    for( FollowItemList::const_iterator iter = mItemList.begin(); iter != mItemList.end(); iter++) {
+        delete (*iter);
+    }
+
 }
 
 void HttpGetFollowListTask::SetCallback(IRequestGetFollowListCallback* callback) {
@@ -81,7 +86,7 @@ bool HttpGetFollowListTask::ParseData(const string& url, bool bFlag, const char*
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    FollowItemList itemList;
+    //FollowItemList itemList;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -93,9 +98,9 @@ bool HttpGetFollowListTask::ParseData(const string& url, bool bFlag, const char*
                 if (dataJson[COMMON_LIST].isArray()) {
                     int i = 0;
                     for (i = 0; i < dataJson[COMMON_LIST].size(); i++) {
-                        HttpFollowItem item;
-                        item.Parse(dataJson[COMMON_LIST].get(i, Json::Value::null));
-                        itemList.push_back(item);
+                        HttpFollowItem *item = new HttpFollowItem();
+                        item->Parse(dataJson[COMMON_LIST].get(i, Json::Value::null));
+                        mItemList.push_back(item);
                     }
                 }
             }
@@ -111,7 +116,7 @@ bool HttpGetFollowListTask::ParseData(const string& url, bool bFlag, const char*
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetFollowList(this, bParse, errnum, errmsg, itemList);
+        mpCallback->OnGetFollowList(this, bParse, errnum, errmsg, mItemList);
     }
     
     return bParse;

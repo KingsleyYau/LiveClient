@@ -153,7 +153,7 @@
  @param sendItem 发送礼物item
  @return 发送类型
  */
-- (int)sendBackpackGiftWithSendGiftItem:(SendGiftItem *)sendItem {
+- (int)sendBackpackGiftWithSendGiftItem:(GiftItem *)sendItem {
 
     int successType = -1;
 
@@ -170,7 +170,7 @@
     }
 
     /** 判断背包礼物数量是否够送 */
-    int remainNum = backGiftItem.num - sendItem.giftNum;
+    int remainNum = backGiftItem.num - sendItem.giftnum;
     if (remainNum > 0) {
 
         // 添加礼物到发送队列 并发送礼物请求
@@ -195,7 +195,7 @@
     return successType;
 }
 
-- (void)addItemInQueueAndSend:(SendGiftItem *)sendItem {
+- (void)addItemInQueueAndSend:(GiftItem *)sendItem {
 
     [self.sendGiftArray addObject:sendItem];
     if (self.isFirstSend) {
@@ -207,19 +207,19 @@
 - (void)sendBackGiftQurest {
 
     LSImManager *manager = [LSImManager manager];
-    SendGiftItem *item = self.sendGiftArray[0];
+    GiftItem *item = self.sendGiftArray[0];
 
     // 送礼
-    BOOL result = [manager sendGift:item.roomID
+    BOOL result = [manager sendGift:item.roomid
                  nickName:self.loginManager.loginItem.nickName
                    giftId:item.giftItem.infoItem.giftId
                  giftName:item.giftItem.infoItem.name
-               isBackPack:item.isBackPack
-                  giftNum:item.giftNum
+               isBackPack:item.is_backpack
+                  giftNum:item.giftnum
               multi_click:item.giftItem.infoItem.multiClick
-        multi_click_start:item.starNum
-          multi_click_end:item.endNum
-           multi_click_id:item.clickID
+        multi_click_start:item.multi_click_start
+          multi_click_end:item.multi_click_end
+           multi_click_id:item.multi_click_id
             finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit, double rebateCredit) {
 
                 NSLog(@"BackpackSendGiftManager::sendBackGiftQurest( [接收发送背包礼物结果], success : %d, errType : %d, errMsg : %@, credit : %f, rebateCredit : %f)", success, errType, errMsg, credit, rebateCredit);
@@ -248,16 +248,5 @@
         self.isFirstSend = YES;
     }
 }
-
-- (void)updataBackpackGiftList {
-    
-    
-}
-
-- (void)requestSendGiftFail {
-    
-}
-
-
 
 @end

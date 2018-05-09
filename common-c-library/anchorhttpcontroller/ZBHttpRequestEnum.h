@@ -76,67 +76,23 @@ typedef enum {
 //    HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN = -22336         // 其他设备登录，这里时本地返回的，仅用于ios
  } ZBHTTP_LCC_ERR_TYPE;
 
-//typedef enum LoginType {
-//    LoginType_Unknow = -1,
-//    LoginType_Phone = 0,
-//    LoginType_Email =1,
-//} LoginType;
-//
-//typedef enum UserType {
-//    USERTYPEUNKNOW = 0,     // 未知
-//    USERTYPEA1 = 1,         // A1类型
-//    USERTYPEA2 = 2          // A2类型
-//}UserType;
-//
-///*主播在线状态*/
-//typedef enum{
-//    ONLINE_STATUS_UNKNOWN = -1,
-//    ONLINE_STATUS_OFFLINE = 0,
-//    ONLINE_STATUS_LIVE = 1
-//} OnLineStatus;
-//
+
 typedef enum {
     ZBHTTPROOMTYPE_NOLIVEROOM = 0,                  // 没有直播间
     ZBHTTPROOMTYPE_FREEPUBLICLIVEROOM = 1,          // 免费公开直播间
     ZBHTTPROOMTYPE_COMMONPRIVATELIVEROOM = 2,       // 普通私密直播间
     ZBHTTPROOMTYPE_CHARGEPUBLICLIVEROOM = 3,        // 付费公开直播间
-    ZBHTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4        // 豪华私密直播间
+    ZBHTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4,        // 豪华私密直播间
+    ZBHTTPROOMTYPE_MULTIPLAYINTERACTIONLIVEROOM = 5  // 多人互动直播间
 }ZBHttpRoomType;
-//
-///*头像类型*/
-//typedef enum{
-//    PHOTOTYPE_UNKNOWN = -1,
-//    PHOTOTYPE_THUMB = 0,
-//    PHOTOTYPE_LARGE = 1
-//} PhotoType;
-//
-///*性别*/
-//typedef enum{
-//    GENDER_UNKNOWN = -1,
-//    GENDER_MALE = 0,
-//    GENDER_FEMALE = 1
-//} Gender;
-//
-///*图片类型*/
-//typedef enum{
-//    IMAGETYPE_UNKNOWN = 0,
-//    IMAGETYPE_USER = 1,
-//    IMAGETYPE_COVER = 2
-//} ImageType;
-//
-///*审核状态*/
-//typedef enum{
-//    EXAMINE_STATUS_UNKNOWN = 0,
-//    EXAMINE_STATUS_WAITING = 1,  // 待审核
-//    EXAMINE_STATUS_PASS    = 2,  // 通过
-//    EXAMINE_STATUS_REFUSE  = 3   // 否决
-//}ExamineStatus;
-//
+
 /*礼物类型*/
 typedef enum{
     ZBGIFTTYPE_UNKNOWN = 0,
-    ZBGIFTTYPE_COMMON = 1,   // 普通礼物
-    ZBGIFTTYPE_HEIGH = 2  // 高级礼物（动画）
+    ZBGIFTTYPE_COMMON = 1,      // 普通礼物
+    ZBGIFTTYPE_HEIGH = 2,       // 高级礼物（动画）
+    ZBGIFTTYPE_BAR = 3,         // 吧台礼物
+    ZBGIFTTYPE_CELEBRATE = 4    // 庆祝礼物
 }ZBGiftType;
 
 typedef enum {
@@ -156,19 +112,7 @@ typedef enum {
     ZBEMOTICONACTIONTYPE_STATIC = 0,      // 静态表情
     ZBEMOTICONACTIONTYPE_DYNAMIC = 1      // 动画表情
 }ZBEmoticonActionType;
-//// 回复状态
-//typedef enum {
-//    HTTPREPLYTYPE_UNKNOWN = 0,              // 未知
-//    HTTPREPLYTYPE_UNCONFIRM = 1,            // 待确定
-//    HTTPREPLYTYPE_AGREE = 2,                // 已同意
-//    HTTPREPLYTYPE_REJECT = 3,               // 已拒绝
-//    HTTPREPLYTYPE_OUTTIME = 4,              // 已超时
-//    HTTPREPLYTYPE_CANCEL = 5,               // 观众/主播取消
-//    HTTPREPLYTYPE_ANCHORABSENT = 6,         // 主播缺席
-//    HTTPREPLYTYPE_FANSABSENT = 7,           // 观众缺席
-//    HTTPREPLYTYPE_COMFIRMED = 8             // 已完成
-//}HttpReplyType;
-//
+
 // 预约列表类型
 typedef enum {
     ZBBOOKINGLISTTYPE_WAITANCHORHANDLEING = 1,        // 等待主播处理
@@ -197,138 +141,49 @@ typedef enum {
     ZBSETPUSHTYPE_START = 1                    // 启动
 }ZBSetPushType;
 
+//多人互动回复结果
+typedef enum {
+    ANCHORMULTIPLAYERREPLYTYPE_AGREE = 0,                   // 接受
+    ANCHORMULTIPLAYERREPLYTYPE_REJECT = 1                    // 拒绝
+} AnchorMultiplayerReplyType;
 
-//typedef enum {
-//    HTTPTALENTSTATUS_UNREPLY = 0,               // 未回复
-//    HTTPTALENTSTATUS_ACCEPT = 1,                // 已接受
-//    HTTPTALENTSTATUS_REJECT = 2                 // 拒绝
-//}HTTPTalentStatus;
-//
-//typedef enum {
-//    BOOKTIMESTATUS_BOOKING = 0,             // 可预约
-//    BOOKTIMESTATUS_INVITEED = 1,            // 本人已邀请
-//    BOOKTIMESTATUS_COMFIRMED = 2,           // 本人已确认
-//    BOOKTIMESTATUS_INVITEEDOTHER = 3        // 本人已邀请其它主播
-//}BookTimeStatus;
-//
-//// 可用的直播间类型
-//typedef enum {
-//    USEROOMTYPE_LIMITLESS = 0,                  // 不限
-//    USEROOMTYPE_PUBLIC = 1,                     // 公开
-//    USEROOMTYPE_PRIVATE = 2                     // 私密
-//}UseRoomType;
-//
-//// 主播类型
-//typedef enum {
-//    ANCHORTYPE_LIMITLESS = 0,                  // 不限
-//    ANCHORTYPE_APPOINTANCHOR = 1,              // 指定主播
-//    ANCHORTYPE_NOSEEANCHOR = 2                 //没看过直播的主播
-//}AnchorType;
-//
-//typedef enum {
-//    CONTROLTYPE_UNKNOW = 0,               // 未知
-//    CONTROLTYPE_START = 1,                   // 开始
-//    CONTROLTYPE_CLOSE = 2                    // 关闭
-//}ControlType;
-//
-//typedef enum {
-//    ANCHORLEVELTYPE_UNKNOW = 0,             // 未知
-//    ANCHORLEVELTYPE_SILVER = 1,             // 白银
-//    ANCHORLEVELTYPE_GOLD = 2                // 黄金
-//}AnchorLevelType;
-//
-//typedef enum {
-//    GENDERTYPE_UNKNOW = 0,              // 未知
-//    GENDERTYPE_MAN = 1,                 // 男
-//    GENDERTYPE_LADY = 2                 // nv
-//}GenderType;
-//
-//typedef enum {
-//    SHARETYPE_OTHER = 0,              // 其它
-//    SHARETYPE_FACEBOOK = 1,           // Facebook
-//    SHARETYPE_TWITTER = 2             // Twitter
-//}ShareType;
-//
-//typedef enum {
-//    SHAREPAGETYPE_UNKNOW = 0,                 // 未知
-//    SHAREPAGETYPE_ANCHOR = 1,                 // 主播资料页
-//    SHAREPAGETYPE_FREEROOM = 2                // 免费公开直播间
-//}SharePageType;
-//
-//typedef enum {
-//    INTERESTTYPE_UNKNOW = 0,                        // 0:未知
-//    INTERESTTYPE_GOINGTORESTAURANTS = 1,            // 1:Going to Restaurants
-//    INTERESTTYPE_COOKING = 2,                       // 2:Cooking
-//    INTERESTTYPE_TRAVAEL = 3,                       // 3:Travel
-//    INTERESTTYPE_HIKING = 4,                        // 4:Hiking/ourdoor activities
-//    INTERESTTYPE_DANCING = 5,                       // 5:Dancing
-//    INTERESTTYPE_WATCHINGMOVIES = 6,                // 6:Watching movies
-//    INTERESTTYPE_SHOPPING = 7,                      // 7:Shopping
-//    INTERESTTYPE_HAVINGPETS = 8,                    // 8:Having pets
-//    INTERESTTYPE_READING = 9,                       // 9:Reading
-//    INTERESTTYPE_SPORTS = 10,                       // 10:Sports/exercise
-//    INTERESTTYPE_PLAYINGCARDS = 11,                 // 11:Playing cards/chess
-//    INTERESTTYPE_MUSIC = 12,                        // 12:Music/play instruments
-//    INTERESTTYPE_NOINTEREST,                        // 没有兴趣
-//    INTERESTTYPE_BEGIN = INTERESTTYPE_UNKNOW,    // 有效范围起始值
-//    INTERESTTYPE_END = INTERESTTYPE_NOINTEREST      // 有效范围结束值
-//}InterestType;
-//
-//// int 转换 CLIENT_TYPE
-//inline InterestType GetInterestType(int value) {
-//    return INTERESTTYPE_BEGIN < value && value < INTERESTTYPE_END ? (InterestType)value : INTERESTTYPE_NOINTEREST;
-//}
-//
-//// 获取界面的类型
-//typedef enum {
-//    PROMOANCHORTYPE_UNKNOW = 0,                             // 未知
-//    PROMOANCHORTYPE_LIVEROOM = 1,                           // 直播间
-//    PROMOANCHORTYPE_ANCHORPERSONAL = 2,                     // 主播个人页
-//    PROMOANCHORTYPE_BEGIN = PROMOANCHORTYPE_UNKNOW,         // 有效范围起始值
-//    PROMOANCHORTYPE_END = PROMOANCHORTYPE_ANCHORPERSONAL    // 有效范围结束值
-//}PromoAnchorType;
-//
-//// int 转换 PromoAnchorType
-//inline PromoAnchorType GetPromoAnchorType(int value) {
-//    return PROMOANCHORTYPE_BEGIN < value && value <= PROMOANCHORTYPE_END ? (PromoAnchorType)value : PROMOANCHORTYPE_UNKNOW;
-//}
-//
-//// AppStore支付完成返回的状态code
-//typedef enum {
-//    APPSTOREPAYTYPE_UNKNOW = 0,                             // 未知
-//    APPSTOREPAYTYPE_PAYSUCCES = 1,                           // 支付成功
-//    APPSTOREPAYTYPE_PAYFAIL = 2,                     // 支付失败
-//    APPSTOREPAYTYPE_PAYRECOVERY = 3,                     // 恢复交易(仅非消息及自动续费商品)
-//    APPSTOREPAYTYPE_NOIMMEDIATELYPAY = 4,                     // 无法立即支付
-//}AppStorePayCodeType;
-//
-//// 昵称审核状态
-//typedef enum {
-//    NICKNAMEVERIFYSTATUS_FINISH = 0,                             // 审核完成
-//    NICKNAMEVERIFYSTATUS_HANDLDING = 1                           // 审核中
-//}NickNameVerifyStatus;
-//
-//// int 转换 PromoAnchorType
-//inline NickNameVerifyStatus GetNickNameVerifyStatus(int value) {
-//    return NICKNAMEVERIFYSTATUS_FINISH <= value && value <= NICKNAMEVERIFYSTATUS_HANDLDING ? (NickNameVerifyStatus)value : NICKNAMEVERIFYSTATUS_HANDLDING;
-//}
-//
-//// 头像审核状态
-//typedef enum {
-//    PHOTOVERIFYSTATUS_NOPHOTO_AND_FINISH = 0,                             // 没有头像及审核成功
-//    PHOTOVERIFYSTATUS_HANDLDING = 1,                                      // 审核中
-//    PHOTOVERIFYSTATUS_NOPASS = 2,                                         // 不合格
-//}PhotoVerifyStatus;
-//
-//// int 转换 PromoAnchorType
-//inline PhotoVerifyStatus GetPhotoVerifyStatus(int value) {
-//    return PHOTOVERIFYSTATUS_NOPHOTO_AND_FINISH <= value && value <= PHOTOVERIFYSTATUS_NOPASS ? (PhotoVerifyStatus)value : PHOTOVERIFYSTATUS_HANDLDING;
-//}
-//
-//// 验证码种类
-//typedef enum {
-//    VERIFYCODETYPE_LOGIN = 0,                             // “login”：登录
-//    VERIFYCODETYPE_FINDPW = 1                             // “findpw”：找回密码
-//}VerifyCodeType;
+//多人互动敲门状态
+typedef enum {
+    ANCHORMULTIKNOCKTYPE_UNKNOW = 0,                   // 未知
+    ANCHORMULTIKNOCKTYPE_PENDING = 1,                  // 待确定
+    ANCHORMULTIKNOCKTYPE_ACCEPT = 2,                   // 已接受
+    ANCHORMULTIKNOCKTYPE_REJECT = 3,                   // 已拒绝
+    ANCHORMULTIKNOCKTYPE_OUTTIME = 4,                  // 超时
+} AnchorMultiKnockType;
+
+// 节目状态
+typedef enum {
+    ANCHORPROGRAMSTATUS_UNKNOW = -1,              // 未知
+    ANCHORPROGRAMSTATUS_UNVERIFY = 0,             // 未审核
+    ANCHORPROGRAMSTATUS_VERIFYPASS = 1,           // 审核通过
+    ANCHORPROGRAMSTATUS_VERIFYREJECT = 2,         // 审核被拒
+    ANCHORPROGRAMSTATUS_PROGRAMEND = 3,           // 节目正常结束
+    ANCHORPROGRAMSTATUS_OUTTIME = 4,              // 节目已超时
+    ANCHORPROGRAMSTATUS_PROGRAMCALCEL = 5         // 节目已取消
+    
+    
+}AnchorProgramStatus;
+
+// 节目列表类型
+typedef enum {
+    ANCHORPROGRAMLISTTYPE_UNKNOW = 0,           // 未知
+    ANCHORPROGRAMLISTTYPE_UNVERIFY = 1,         // 待审核
+    ANCHORPROGRAMLISTTYPE_VERIFYPASS = 2,       // 已通过审核且未开播
+    ANCHORPROGRAMLISTTYPE_VERIFYREJECT = 3,     // 被拒绝
+    ANCHORPROGRAMLISTTYPE_HISTORY = 4           // 历史
+}AnchorProgramListType;
+
+// 公开直播间类型
+typedef enum {
+    ANCHORPUBLICROOMTYPE_UNKNOW = -1,           // 未知
+    ANCHORPUBLICROOMTYPE_OPEN = 0,              // 公开
+    ANCHORPUBLICROOMTYPE_PROGRAM = 1            // 节目
+    
+}AnchorPublicRoomType;
 
 #endif

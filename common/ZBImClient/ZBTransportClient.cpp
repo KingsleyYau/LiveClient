@@ -6,6 +6,7 @@
  */
 
 #include "ZBTransportClient.h"
+#include <common/KLog.h>
 
 ZBTransportClient::ZBTransportClient(void)
 {
@@ -20,8 +21,8 @@ ZBTransportClient::ZBTransportClient(void)
 
 ZBTransportClient::~ZBTransportClient(void)
 {
-	// 释放mgr
-	ReleaseMgrProc();
+    // 释放mgr
+    ReleaseMgrProc();
     
     IAutoLock::ReleaseAutoLock(m_connStateLock);
     m_connStateLock = NULL;
@@ -39,42 +40,44 @@ bool ZBTransportClient::Init(IZBTransportClientCallback* callback)
 bool ZBTransportClient::Connect(const char* url)
 {
     bool result = false;
-
+    
     if (NULL != url && url[0] != '\0') {
         m_connStateLock->Lock();
         if (DISCONNECT == m_connState) {
-			// 释放mgr
-			ReleaseMgrProc();
-
-			// 创建mgr
+            // 释放mgr
+            ReleaseMgrProc();
+            
+            // 创建mgr
             mg_mgr_init(&m_mgr, NULL);
             m_isInitMgr = true;
-     
-			// 连接url
+            
+            // 连接url
             m_url = url;
             struct mg_connect_opts opt = {0};
             opt.user_data = (void*)this;
             m_conn = mg_connect_ws_opt(&m_mgr, ev_handler, opt, m_url.c_str(), "", NULL);
+            FileLog("ImClient", "ZBTransportClient::Connect() m_conn->err:%d start", m_conn->err);
             if (NULL != m_conn && m_conn->err == 0) {
                 m_connState = CONNECTING;
                 result = true;
             }
             
-            // 连接失败
-            if (!result) {
-                if (NULL != m_conn) {
-                    // 释放mgr
-                    ReleaseMgrProc();
-                }
-                else {
-                    // 仅重置标志
-                    m_isInitMgr = false;
-                }
-            }
         }
         m_connStateLock->Unlock();
+        
+        // 连接失败, 不放在m_connStateLock锁里面，因为mg_connect_ws_opt已经ev_handler了，导致ReleaseMgrProc关闭websocket回调ev_handler 的关闭 调用OnDisconnect的m_connStateLock锁
+        if (!result) {
+            if (NULL != m_conn) {
+                // 释放mgr
+                ReleaseMgrProc();
+            }
+            else {
+                // 仅重置标志
+                m_isInitMgr = false;
+            }
+        }
     }
-
+    
     return result;
 }
 
@@ -122,7 +125,7 @@ bool ZBTransportClient::SendData(const unsigned char* data, size_t dataLen)
     if (NULL != data && dataLen > 0) {
         if (CONNECTED == m_connState && NULL != m_conn) {
             mg_send_websocket_frame(m_conn, WEBSOCKET_OP_TEXT, data, dataLen);
-			result = true;
+            result = true;
         }
     }
     return result;
@@ -193,7 +196,7 @@ void ZBTransportClient::OnDisconnect()
             m_callback->OnDisconnect();
         }
     }
-    else if (CONNECTING == m_connState) {
+    else if (CONNECTING == m_connState || DISCONNECT == m_connState) {
         // 状态为连接中(返回连接失败)
         if (NULL != m_callback) {
             m_callback->OnConnect(false);
@@ -211,3 +214,4 @@ void ZBTransportClient::OnRecvData(const unsigned char* data, size_t dataLen)
         m_callback->OnRecvData(data, dataLen);
     }
 }
+

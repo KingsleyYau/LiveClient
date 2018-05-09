@@ -36,7 +36,7 @@
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
-                            <state key="normal" title="Talent Request" image="Live_bigGift_Logo">
+                            <state key="normal" title="Talent Request" image="TalentDialogIcon">
                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                         </button>
@@ -77,6 +77,6 @@
         </view>
     </objects>
     <resources>
-        <image name="Live_bigGift_Logo" width="13" height="13"/>
+        <image name="TalentDialogIcon" width="21" height="20"/>
     </resources>
 </document>

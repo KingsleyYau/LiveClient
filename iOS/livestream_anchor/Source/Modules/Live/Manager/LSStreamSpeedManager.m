@@ -9,7 +9,7 @@
 #import "LSStreamSpeedManager.h"
 #import "LSLoginManager.h"
 #import "LSConfigManager.h"
-#import "LSServerSpeedRequest.h"
+#import "LSAnchorRequestManager.h"
 
 @interface LSStreamSpeedManager () <LoginManagerDelegate, NSURLSessionDelegate>
 
@@ -33,7 +33,7 @@
 - (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(ZBLSLoginItemObject *)loginItem errnum:(ZBHTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     if (success) {
         NSArray *svrList = [LSConfigManager manager].item.svrList;
-        for (LSSvrItemObject *object in svrList) {
+        for (ZBLSSvrItemObject *object in svrList) {
             NSLog(@"LSStreamSpeedManager::onLogin( 服务器(%@), 开始测速, url : %@ )", object.svrId, object.tUrl);
             
             NSURLSession *session = [NSURLSession sharedSession];
@@ -44,7 +44,7 @@
                                                 completionHandler:^(NSData *_Nullable data, NSURLResponse *_Nullable response, NSError *_Nullable error) {
                                                     NSDate *date = [NSDate date];
                                                     NSTimeInterval time = [date timeIntervalSince1970] - [startDate timeIntervalSince1970];
-                                                    double timeMS = error?-1:(time * 1000);
+                                                    double timeMS = error ? -1 : (time * 1000);
                                                     
                                                     NSLog(@"LSStreamSpeedManager::onLogin( 服务器(%@), 测速%@用时 : %f 毫秒, url : %@ )", object.svrId, BOOL2SUCCESS(!error), timeMS, object.tUrl);
                                                     
@@ -59,13 +59,11 @@
 }
 
 - (void)requestSpeedResult:(int)res svrID:(NSString *)svrID {
-    LSServerSpeedRequest *request = [[LSServerSpeedRequest alloc] init];
-    request.sid = svrID;
-    request.res = res;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
-        NSLog(@"LSStreamSpeedManager::requestSpeedResult( success : %s, errnum : %d, svrID : %@ )", success ? "true" : "false", (int)errnum, svrID);
-    };
-    [self.sessionManager sendRequest:request];
+    [[LSAnchorRequestManager manager] anchorServerSpeed:svrID res:res finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"LSStreamSpeedManager::requestSpeedResult:( [流媒体服务器测速] success : %@ )", (success == YES) ? @"成功" : @"失败");
+        });
+    }];
 }
 
 @end

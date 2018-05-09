@@ -64,16 +64,16 @@ bool ZBPublicRoomInTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBPublicRoomInTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBPublicRoomInTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
         m_listener->OnZBPublicRoomIn(GetSeq(), success, m_errType, m_errMsg, item);
-		FileLog("ZBImClient", "ZBPublicRoomInTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBPublicRoomInTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBPublicRoomInTask::Handle() end");
+	FileLog("ImClient", "ZBPublicRoomInTask::Handle() end");
 
 	return result;
 }

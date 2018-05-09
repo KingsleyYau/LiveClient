@@ -58,6 +58,7 @@
 }
 
 - (IBAction)startBroadcast:(UIButton *)sender {
+    sender.userInteractionEnabled = NO;
     if ([self.startNowDelegate respondsToSelector:@selector(preStartNowTableViewCell:didStartBroadcast:)]) {
         [self.startNowDelegate preStartNowTableViewCell:self didStartBroadcast:sender];
     }

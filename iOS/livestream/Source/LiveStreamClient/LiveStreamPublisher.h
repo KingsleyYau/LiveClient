@@ -14,7 +14,8 @@
 @protocol LiveStreamPublisherDelegate <NSObject>
 @optional
 - (NSString * _Nullable)publisherShouldChangeUrl:(LiveStreamPublisher * _Nonnull)publisher;
-
+- (void)publisherOnConnect:(LiveStreamPublisher * _Nonnull)publisher;
+- (void)publisherOnDisconnect:(LiveStreamPublisher * _Nonnull)publisher;
 @end
 
 @interface LiveStreamPublisher : NSObject
@@ -74,5 +75,15 @@
  镜头翻转
  */
 - (void)rotateCamera;
+
+/**
+ 开启预览
+ */
+- (void)startPreview;
+
+/**
+ 停止预览
+ */
+- (void)stopPreview;
 
 @end

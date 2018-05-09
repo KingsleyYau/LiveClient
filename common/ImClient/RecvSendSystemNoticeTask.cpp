@@ -104,9 +104,10 @@ bool RecvSendSystemNoticeTask::GetSendData(Json::Value& data)
     {
         // 构造json协议
         Json::Value value;
-        value[ROOMID_PARAM] = m_roomId;
-        value[MSG_PARAM] = m_msg;
-        value[LINK_PARAM] = m_link;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
         data = value;
     }
 

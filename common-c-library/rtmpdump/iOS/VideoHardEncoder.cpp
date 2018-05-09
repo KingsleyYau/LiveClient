@@ -41,11 +41,11 @@ bool VideoHardEncoder::Create(int width, int height, int bitRate, int keyFrameIn
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardEncoder::Create( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+                 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -63,11 +63,11 @@ bool VideoHardEncoder::Reset() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "VideoHardEncoder::Reset( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+                 "[%s] "
                  ")",
-                 bFlag?"Success":"Fail",
-                 this
+                 this,
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -102,7 +102,7 @@ void VideoHardEncoder::EncodeVideoFrame(void* data, int size, void* frame) {
                                                           &flags
                                                           );
         if( status != noErr ) {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::EncodeVideoFrame( [Fail], frame : %p, status : %d )", frame, (int)status);
+            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoHardEncoder::EncodeVideoFrame( this : %p, [Fail], frame : %p, status : %d )", this, frame, (int)status);
         }
         
         CVPixelBufferRelease(pixelBuffer);

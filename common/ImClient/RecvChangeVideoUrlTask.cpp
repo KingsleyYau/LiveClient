@@ -17,7 +17,7 @@
 //#define ROOMID_PARAM            "roomid"
 #define ISANCHOR_PARAM          "is_anchor"
 #define PLAYURL_PARAM           "play_url"
-
+#define RCVU_USERID_PARAM       "userid"
 
 
 RecvChangeVideoUrlTask::RecvChangeVideoUrlTask(void)
@@ -55,6 +55,7 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     string roomId = "";
+    string userId = "";
     bool isAnchor = false;
     list<string> playUrl;
     // 协议解析
@@ -64,6 +65,9 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         if (tp.m_data[ROOMID_PARAM].isString()) {
             roomId = tp.m_data[ROOMID_PARAM].asString();
+        }
+        if (tp.m_data[RCVU_USERID_PARAM].isString()) {
+            userId = tp.m_data[RCVU_USERID_PARAM].asString();
         }
         if (tp.m_data[ISANCHOR_PARAM].isIntegral()) {
             isAnchor = tp.m_data[ISANCHOR_PARAM].asInt() == 1 ? true : false;
@@ -90,6 +94,7 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
+        //m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl, userId);
         m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
 		FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() callback end, result:%d", result);
 	}
@@ -106,7 +111,13 @@ bool RecvChangeVideoUrlTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvChangeVideoUrlTask::GetSendData() begin");
     {
-
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        data = value;
     }
 
     result = true;

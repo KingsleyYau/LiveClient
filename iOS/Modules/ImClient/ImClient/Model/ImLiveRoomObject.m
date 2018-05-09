@@ -37,6 +37,7 @@
         self.popPrice = [coder decodeDoubleForKey:@"popPrice"];
         self.useCoupon = [coder decodeIntForKey:@"useCoupon"];
         self.shareLink = [coder decodeObjectForKey:@"shareLink"];
+        self.liveShowType = [coder decodeIntForKey:@"liveShowType"];
     }
     return self;
 }
@@ -67,6 +68,7 @@
     [coder encodeDouble:self.popPrice forKey:@"popPrice"];
     [coder encodeInt:self.useCoupon forKey:@"useCoupon"];
     [coder encodeObject:self.shareLink forKey:@"shareLink"];
+    [coder encodeInt:self.liveShowType forKey:@"liveShowType"];
 }
 
 

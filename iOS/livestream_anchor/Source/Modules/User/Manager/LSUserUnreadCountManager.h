@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "GetBackpackUnreadNumRequest.h"
 #import "ManBookingUnreadUnhandleNumRequest.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>
 @optional;

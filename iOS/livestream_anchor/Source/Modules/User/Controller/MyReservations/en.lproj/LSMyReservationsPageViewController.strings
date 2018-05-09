@@ -21,12 +21,7 @@
 
 "NoData_Tip_1" = "No scheduled bookings.";
 
-
 "Reservation_Time" = "Broadcast Time:";
-
-"Failed_Message" = "Failed to load.";
-"Hot_Broadcasters" = "Hot Broadcasters";
-"Reload" = "Reload";
 
 "PRELIVE_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
 

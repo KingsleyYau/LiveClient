@@ -45,7 +45,9 @@ private:
 	SEQ_T               m_seq;		// seq
     
 
+    
 	LCC_ERR_TYPE	m_errType;	// 服务器返回的处理结果
 	string			m_errMsg;	// 服务器返回的结果描述
+    string          m_talentInviteId;  // 才艺邀请ID
     
 };

@@ -57,8 +57,10 @@ bool PublisherController::PublishUrl(const string& url, const string& recordH264
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::PublishUrl( "
+                 "this : %p "
                  "url : %s "
                  ")",
+                 this,
                  url.c_str()
                  );
     
@@ -79,9 +81,11 @@ bool PublisherController::PublishUrl(const string& url, const string& recordH264
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::PublishUrl( "
+                 "this : %p， "
                  "[%s], "
                  "url : %s "
                  ")",
+                 this,
                  bFlag?"Success":"Fail",
                  url.c_str()
                  );
@@ -172,10 +176,12 @@ void PublisherController::OnEncodeVideoFrame(VideoEncoder* encoder, char* data, 
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeVideoFrame( "
+                 "this : %p, "
                  "frameType : 0x%02x, "
                  "timestamp : %u, "
                  "size : %d "
                  ")",
+                 this,
                  data[0],
                  timestamp,
                  size
@@ -201,9 +207,11 @@ void PublisherController::OnEncodeAudioFrame(
     FileLevelLog("rtmpdump",
                  KLog::LOG_STAT,
                  "PublisherController::OnEncodeAudioFrame( "
+                 "this : %p, "
                  "timestamp : %u, "
                  "size : %d "
                  ")",
+                 this,
                  timestamp,
                  size
                  );
@@ -221,7 +229,8 @@ void PublisherController::OnEncodeAudioFrame(
 void PublisherController::OnConnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PublisherController::OnConnect()"
+                 "PublisherController::OnConnect( this : %p )",
+                 this
                  );
     if( mpPublisherStatusCallback ) {
         mpPublisherStatusCallback->OnPublisherConnect(this);
@@ -231,7 +240,8 @@ void PublisherController::OnConnect(RtmpDump* rtmpDump) {
 void PublisherController::OnDisconnect(RtmpDump* rtmpDump) {
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
-                 "PublisherController::OnDisconnect()"
+                 "PublisherController::OnDisconnect( this : %p )",
+                 this
                  );
     if( mpPublisherStatusCallback ) {
         mpPublisherStatusCallback->OnPublisherDisconnect(this);
@@ -242,10 +252,12 @@ void PublisherController::OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sp
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::OnChangeVideoSpsPps( "
+                 "this : %p, "
                  "sps_size : %d, "
                  "pps_size : %d, "
                  "naluHeaderSize : %d "
                  ")",
+                 this,
                  sps_size,
                  pps_size,
                  naluHeaderSize
@@ -256,8 +268,10 @@ void PublisherController::OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data,
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PublisherController::OnRecvVideoFrame( "
+                 "this : %p, "
                  "timestamp : %u "
                  ")",
+                 this,
                  timestamp
                  );
 }
@@ -272,11 +286,13 @@ void PublisherController::OnChangeAudioFormat(
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::OnChangeAudioFormat( "
+                 "this : %p, "
                  "format : %d, "
                  "sound_rate : %d, "
                  "sound_size : %d, "
                  "sound_type : %d "
                  ")",
+                 this,
                  format,
                  sound_rate,
                  sound_size,
@@ -297,8 +313,10 @@ void PublisherController::OnRecvAudioFrame(
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "PublisherController::OnRecvAudioFrame( "
+                 "this : %p, "
                  "timestamp : %u "
                  ")",
+                 this,
                  timestamp
                  );
 }

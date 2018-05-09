@@ -19,9 +19,9 @@
 #import "DialogTip.h"
 #import "DialogChoose.h"
 #import "LSImageViewLoader.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorImManager.h"
 
-@interface PublicVipViewController () <ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate,PlayViewControllerDelegate>
+@interface PublicVipViewController () <ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate,PlayViewControllerDelegate, UIAlertViewDelegate>
 
 // 观众数组
 @property (nonatomic, strong) NSMutableArray *audienceArray;
@@ -33,14 +33,9 @@
 @property (nonatomic, assign) BOOL isClickGot;
 
 // 管理器
-@property (nonatomic, strong) ZBLSImManager *imManager;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 
 @property (nonatomic, strong) LSLoginManager *loginManager;
-
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-
-// 是否第一次进类型直播间管理器
-@property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
 
 #pragma mark - toast控件
 @property (nonatomic, strong) DialogTip *dialogTipView;
@@ -56,9 +51,7 @@
 
     NSLog(@"PublicVipViewController::initCustomParam( self : %p )", self);
 
-    self.sessionManager = [LSSessionRequestManager manager];
-    self.firstManager = [RoomTypeIsFirstManager manager];
-    self.imManager = [ZBLSImManager manager];
+    self.imManager = [LSAnchorImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
 
@@ -81,8 +74,6 @@
     
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
-    
-    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 - (void)viewDidLoad {
@@ -93,7 +84,7 @@
     [self.navigationController setNavigationBarHidden:YES];
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    
+    self.view.backgroundColor = [UIColor whiteColor];
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
     
@@ -103,12 +94,14 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-     [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+    // 设置状态栏为默认字体
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+    [[UIApplication sharedApplication] setStatusBarHidden:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -155,28 +148,20 @@
         make.width.equalTo(self.view);
         make.bottom.equalTo(self.view);
     }];
-
+    
     [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
     [self.view bringSubviewToFront:self.playVC.chooseGiftListView];
     CGRect frame = self.playVC.chooseGiftListView.frame;
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
-    // 设置邀请私密按钮
+    // 观众席
     self.playVC.liveVC.startOneViewHeigh.constant = 50;
     self.playVC.liveVC.startOneView.clipsToBounds = NO;
-    
-    // 立即私密按钮
-//    self.playVC.liveVC.cameraBtn.hidden = NO;
-//    [self.playVC.liveVC.cameraBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Invite_Btn"] forState:UIControlStateNormal];
-    //    [self.playVC.liveVC.cameraBtn addTarget:self action:@selector(cameraAction:) forControlEvents:UIControlEventTouchUpInside];
 
     // 礼物按钮
     [self.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Public_Vip_Gift_Btn"] forState:UIControlStateNormal];
     // 输入栏目
-   
-    // 视频播放界面
-    //        self.playVC.liveVC.videoBgImageView.backgroundColor = self.view.backgroundColor;
 
     // 聊天输入框
     self.playVC.liveSendBarView.placeholderColor = COLOR_WITH_16BAND_RGB(0xbaac3f);
@@ -185,41 +170,24 @@
     self.playVC.liveSendBarView.emotionBtnWidth.constant = 0;
 }
 
-#pragma mark - IM回调
-- (void)onZBRecvEnterRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl riderId:(NSString *)riderId riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl fansNum:(int)fansNum {
-    NSLog(@"PublicViewController::onZBRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-    });
-}
-
-- (void)onZBRecvLeaveRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl fansNum:(int)fansNum {
-    NSLog(@"PublicViewController::onZBRecvLeaveRoomNotice( [接收观众退出直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, fansNum);
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-    });
-}
-
 #pragma mark - PlayViewControllerDelegate
 - (void)onCloseLiveRoom:(PlayViewController *)vc {
-    if (self.closeDialogTipView) {
-        [self.closeDialogTipView removeFromSuperview];
-    }
-    self.closeDialogTipView = [DialogChoose dialog];
-    [self.closeDialogTipView hiddenCheckView];
-    self.closeDialogTipView.tipsLabel.text = NSLocalizedStringFromSelf(@"EXIT_LIVEROOM_TIP");
-    WeakObject(self, weakObj);
-    [self.closeDialogTipView showDialog:self.view cancelBlock:^{
-        
-    } actionBlock:^{
-        if (weakObj.liveRoom.roomId.length > 0) {
-            // 发送退出直播间
-            NSLog(@"PublicViewController::liveHeadCloseAction [发送退出直播间:%@]",self.liveRoom.roomId);
-            [weakObj.imManager leaveRoom:self.liveRoom.roomId];
+    
+    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedStringFromSelf(@"EXIT_LIVEROOM_TIP") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"SURE", nil), nil];
+    [alertView show];
+}
+
+#pragma mark - AlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        if (self.liveRoom.roomId.length) {
+            NSLog(@"PublicViewController::alertView:clickedButtonAtIndex( [发送退出直播间:%@] )",self.liveRoom.roomId);
+            [self.imManager leaveRoom:self.liveRoom.roomId];
             // QN判断已退出直播间
             [LiveModule module].roomID = nil;
         }
-    }];
+    }
 }
 
 @end

@@ -63,15 +63,18 @@
 }
 
 - (void)updataMasonry{
-    
-    self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
-    self.giftNameLabel.textColor = COLOR_WITH_16BAND_RGB_ALPHA(0x8cffffff);
-    self.haveNumLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(9)];
-    self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
-    self.giftNameLableBottomOffset.constant = 0;
-    self.giftImageBottomOffset.constant = DESGIN_TRANSFORM_3X(3);
-    self.giftImageWidth.constant = self.giftImageHeight.constant = DESGIN_TRANSFORM_3X(50);
-    self.bigGiftLogoWidth.constant = self.bigGiftLogoHeight.constant = DESGIN_TRANSFORM_3X(12);
+    if (![LSDevice iPhoneXStyle]) {
+        self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
+        self.giftNameLabel.textColor = COLOR_WITH_16BAND_RGB_ALPHA(0x8cffffff);
+        self.haveNumLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(9)];
+        self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
+        self.giftNameLableBottomOffset.constant = 0;
+        self.giftImageBottomOffset.constant = DESGIN_TRANSFORM_3X(3);
+        self.giftImageWidth.constant = self.giftImageHeight.constant = DESGIN_TRANSFORM_3X(50);
+        self.bigGiftLogoWidth.constant = self.bigGiftLogoHeight.constant = DESGIN_TRANSFORM_3X(12);
+    } else {
+        self.giftImageBottomOffset.constant = 8;
+    }
 }
 
 - (void)reloadStyle {

@@ -24,7 +24,6 @@
 #import "GiftComboManager.h"
 
 #import "LSLoginManager.h"
-#import "MsgItem.h"
 #import "LiveRoom.h"
 
 #import "BigGiftAnimationView.h"
@@ -43,6 +42,7 @@
 - (void)liveViewIsPlay:(LiveViewController *)vc;
 - (void)liveRoomIsClose:(LiveViewController *)vc;
 - (void)audidenveViewDidSelectItem:(AudienModel *)model indexPath:(NSIndexPath *)indexPath;
+- (void)liveFinshViewIsShow:(LiveViewController *)vc;
 @end
 
 @interface LiveViewController : LSGoogleAnalyticsViewController
@@ -101,7 +101,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *tipIconImageWidth;
 @property (weak, nonatomic) IBOutlet UILabel *tipMessageLabel;
 
-
 #pragma mark - 视频控件
 @property (weak, nonatomic) IBOutlet UIImageView *videoBgImageView;
 @property (nonatomic, weak) IBOutlet GPUImageView *videoView;
@@ -141,11 +140,14 @@
 @property (nonatomic, copy) NSString *chatUserId;
 
 #pragma mark - 流播放推送事件
+- (void)initPlayer;
 - (void)play;
 - (void)stopPlay;
 - (void)initPublish;
 - (void)publish;
 - (void)stopPublish;
+- (void)showPreviewLoadView;
+- (void)hiddenPreviewLoadView;
 
 #pragma mark - 逻辑事件
 /**
@@ -161,7 +163,7 @@
 
  @param text 文本内容
  */
-- (void)addTips:(NSAttributedString *)text;
+- (void)addTips:(NSString *)text;
 
 /**
  增加连击

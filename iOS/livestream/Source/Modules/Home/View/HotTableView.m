@@ -85,16 +85,9 @@
     LiveRoomInfoItemObject *item = [self.items objectAtIndex:indexPath.row];
     
     cell.tag = indexPath.row;
+    
     // 房间名
     cell.labelRoomTitle.text = item.nickName;
-    
-//    if (item.onlineStatus != ONLINE_STATUS_LIVE) {
-//        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_offline_icon"]];
-//    }
-//    else
-//    {
-//        [cell.onlineIcon setImage:[UIImage imageNamed:@"home_online_icon"]];
-//    }
     
     cell.hotCellDelegate = self;
     switch (item.roomType) {
@@ -103,17 +96,14 @@
             
             cell.viewPublicFreeBtn.hidden = YES;
             cell.viewPublicFeeBtn.hidden = YES;
-            cell.normalPrivateCenterX.constant = 0;
             
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 cell.bookPrivateBtn.hidden = NO;
-                cell.normalPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = YES;
                 cell.onlineStatus.hidden = YES;
             } else {
                 cell.bookPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = NO;
-                cell.normalPrivateBtn.hidden = YES;
                 cell.onlineStatus.hidden = NO;
                 if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                     //显示Free
@@ -140,7 +130,6 @@
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = NO;
                 cell.vipPrivateBtn.hidden = YES;
-                cell.normalPrivateBtn.hidden = YES;
                 cell.liveStatus.hidden = YES;
             } else {
                 // 高级还是普通的私密直播间
@@ -159,9 +148,19 @@
                 cell.liveStatus.animationDuration = 0.6;
                 [cell.liveStatus startAnimating];
                 cell.vipPrivateBtn.hidden = YES;
-                cell.normalPrivateBtn.hidden = YES;
             }
             
+            //显示节目名字
+            if (item.showInfo.showTitle.length > 0) {
+                cell.viewBtnTopDistance.constant = 50;
+                cell.titleView.hidden = NO;
+                [cell setScrollLabelViewText:item.showInfo.showTitle];
+            }
+            else
+            {
+                cell.titleView.hidden = YES;
+                cell.viewBtnTopDistance.constant = 2;
+            }
             
         } break;
             // 付费公开直播间
@@ -173,7 +172,6 @@
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = NO;
                 cell.vipPrivateBtn.hidden = YES;
-                cell.normalPrivateBtn.hidden = YES;
                 cell.roomType.hidden = YES;
                 cell.liveStatus.hidden = YES;
             } else {
@@ -193,7 +191,6 @@
                 cell.liveStatus.animationDuration = 0.6;
                 [cell.liveStatus startAnimating];
                 cell.vipPrivateBtn.hidden = YES;
-                cell.normalPrivateBtn.hidden = YES;
             }
             if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                 //显示Free
@@ -204,7 +201,19 @@
             {
                 //不显示Free
                 [cell.viewPublicFeeBtn setImage:[UIImage imageNamed:@"Home_HotAndFollow_Btn_ViewNow"] forState:UIControlStateNormal];
-                cell.viewBtnTopDistance.constant = 9;
+                cell.viewBtnTopDistance.constant = 90;
+            }
+            
+            //显示节目名字
+            if (item.showInfo.showTitle.length > 0) {
+                cell.viewBtnTopDistance.constant = 50;
+                cell.titleView.hidden = NO;
+                [cell setScrollLabelViewText:item.showInfo.showTitle];
+            }
+            else
+            {
+                cell.titleView.hidden = YES;
+                cell.viewBtnTopDistance.constant = 2;
             }
             
         } break;
@@ -212,20 +221,17 @@
         case HTTPROOMTYPE_COMMONPRIVATELIVEROOM:
             // 豪华私密直播间
         case HTTPROOMTYPE_LUXURYPRIVATELIVEROOM: {
-            cell.normalPrivateCenterX.constant = 0;
             cell.onlineStatus.hidden = YES;
             if (item.onlineStatus != ONLINE_STATUS_LIVE) {
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = NO;
                 cell.vipPrivateBtn.hidden = YES;
-                cell.normalPrivateBtn.hidden = YES;
             } else {
                 cell.viewPublicFreeBtn.hidden = YES;
                 cell.viewPublicFeeBtn.hidden = YES;
                 cell.bookPrivateBtn.hidden = YES;
                 cell.vipPrivateBtn.hidden = NO;
-                cell.normalPrivateBtn.hidden = YES;
             }
             if ([[HomeVouchersManager manager] isShowFreeLive:item.userId LiveRoomType:item.roomType]) {
                 //显示Free
@@ -246,13 +252,13 @@
     }
     
     // 头像
-    
     cell.imageViewHeader.image = nil;
     [cell.imageViewLoader stop];
     [cell.imageViewLoader loadImageWithImageView:cell.imageViewHeader
                                          options:0
                                         imageUrl:item.roomPhotoUrl
                                 placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
+
     
     return tableViewCell;
 }

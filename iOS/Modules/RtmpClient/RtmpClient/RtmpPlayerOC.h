@@ -14,8 +14,8 @@
 
 @class RtmpPlayerOC;
 @protocol RtmpPlayerOCDelegate <NSObject>
-
 - (void)rtmpPlayerRenderVideoFrame:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC buffer:(CVPixelBufferRef _Nonnull)buffer;
+- (void)rtmpPlayerOnConnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 - (void)rtmpPlayerOnDisconnect:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 - (void)rtmpPlayerOnPlayerOnDelayMaxTime:(RtmpPlayerOC * _Nonnull)rtmpPlayerOC;
 @end
@@ -36,6 +36,11 @@
  是否使用硬解码
  */
 @property (assign) BOOL useHardDecoder;
+
+/**
+ 是否静音
+ */
+@property (nonatomic, assign) BOOL mute;
 
 #pragma mark - 获取实例
 /**

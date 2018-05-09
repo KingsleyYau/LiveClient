@@ -22,6 +22,7 @@
         self.roomType = [coder decodeIntForKey:@"roomType"];
         self.interest = [coder decodeObjectForKey:@"interest"];
         self.anchorType = [coder decodeIntForKey:@"anchorType"];
+        self.showInfo = [coder decodeObjectForKey:@"showInfo"];
     }
     return self;
 }
@@ -35,6 +36,7 @@
     [coder encodeInt:self.roomType forKey:@"roomType"];
     [coder encodeObject:self.interest forKey:@"interest"];
     [coder encodeInt:self.anchorType forKey:@"anchorType"];
+    [coder encodeObject:self.showInfo forKey:@"showInfo"];
 }
 
 //- (void)SetInterestWithIndex:(InterestType)type index:(int)index {

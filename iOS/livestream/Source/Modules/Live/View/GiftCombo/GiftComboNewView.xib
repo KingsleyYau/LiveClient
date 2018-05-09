@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="Ewl-0K-WK1" userLabel="Gift Combo New View" customClass="GiftComboView">
+            <rect key="frame" x="0.0" y="0.0" width="175" height="40"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_HangOut_Bg_Combo" translatesAutoresizingMaskIntoConstraints="NO" id="iaZ-Qv-3cL" userLabel="Bg Image View">
+                    <rect key="frame" x="5" y="0.0" width="170" height="40"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eyb-jG-CXa">
+                    <rect key="frame" x="0.0" y="0.0" width="55" height="40"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ca4-5J-Ic0">
+                            <rect key="frame" x="19" y="2" width="36" height="36"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="ca4-5J-Ic0" secondAttribute="trailing" id="2Oq-4c-1FI"/>
+                        <constraint firstItem="ca4-5J-Ic0" firstAttribute="leading" secondItem="eyb-jG-CXa" secondAttribute="leading" constant="19" id="aJp-T4-LwN"/>
+                        <constraint firstAttribute="bottom" secondItem="ca4-5J-Ic0" secondAttribute="bottom" constant="2" id="cKT-8c-JzJ"/>
+                        <constraint firstItem="ca4-5J-Ic0" firstAttribute="top" secondItem="eyb-jG-CXa" secondAttribute="top" constant="2" id="kIq-rU-l3i"/>
+                        <constraint firstAttribute="width" constant="55" id="xTN-u8-clB"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QQW-2J-aQa" customClass="GiftComboNumView">
+                    <rect key="frame" x="65" y="7.5" width="105" height="25"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="VlO-an-rRt"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="iaZ-Qv-3cL" firstAttribute="top" secondItem="Ewl-0K-WK1" secondAttribute="top" id="9iq-10-Ycz"/>
+                <constraint firstAttribute="trailing" secondItem="iaZ-Qv-3cL" secondAttribute="trailing" id="F3O-kT-ryP"/>
+                <constraint firstItem="QQW-2J-aQa" firstAttribute="trailing" secondItem="iaZ-Qv-3cL" secondAttribute="trailing" constant="-5" id="Oc8-qp-fxK"/>
+                <constraint firstItem="QQW-2J-aQa" firstAttribute="centerY" secondItem="Ewl-0K-WK1" secondAttribute="centerY" id="Ppi-X8-KaG"/>
+                <constraint firstItem="QQW-2J-aQa" firstAttribute="leading" secondItem="eyb-jG-CXa" secondAttribute="trailing" constant="10" id="Qpq-uA-gsf"/>
+                <constraint firstItem="iaZ-Qv-3cL" firstAttribute="height" secondItem="Ewl-0K-WK1" secondAttribute="height" id="W1u-o4-nVu"/>
+                <constraint firstItem="eyb-jG-CXa" firstAttribute="leading" secondItem="Ewl-0K-WK1" secondAttribute="leading" id="WSP-0A-23h"/>
+                <constraint firstItem="eyb-jG-CXa" firstAttribute="height" secondItem="Ewl-0K-WK1" secondAttribute="height" id="aEf-GB-F0n"/>
+                <constraint firstItem="eyb-jG-CXa" firstAttribute="top" secondItem="Ewl-0K-WK1" secondAttribute="top" id="dkf-do-GIC"/>
+                <constraint firstItem="iaZ-Qv-3cL" firstAttribute="leading" secondItem="Ewl-0K-WK1" secondAttribute="leading" constant="5" id="oAz-br-qVV"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="backImageView" destination="iaZ-Qv-3cL" id="6br-aE-mpc"/>
+                <outlet property="backView" destination="eyb-jG-CXa" id="Vyh-JB-w2Z"/>
+                <outlet property="giftImageView" destination="ca4-5J-Ic0" id="d93-g6-ohV"/>
+                <outlet property="numberView" destination="QQW-2J-aQa" id="bGy-Gx-Nr3"/>
+            </connections>
+            <point key="canvasLocation" x="-226.5" y="-168"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_HangOut_Bg_Combo" width="173" height="40"/>
+    </resources>
+</document>

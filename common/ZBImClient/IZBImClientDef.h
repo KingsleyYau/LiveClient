@@ -139,6 +139,7 @@ typedef enum {
     ZBROOMTYPE_COMMONPRIVATELIVEROOM = 2, // 普通私密直播间
     ZBROOMTYPE_CHARGEPUBLICLIVEROOM = 3,  // 付费公开直播间
     ZBROOMTYPE_LUXURYPRIVATELIVEROOM = 4, // 豪华私密直播间
+    ZBROOMTYPE_MULTIPLAYINTERACTIONLIVEROOM = 5, // 多人互动直播间
     ZBROOMTYPE_UNKNOW,
     ZBROOMTYPE_BEGIN = ZBROOMTYPE_NOLIVEROOM,
     ZBROOMTYPE_END = ZBROOMTYPE_UNKNOW
@@ -146,28 +147,6 @@ typedef enum {
 
 // int 转换 RoomType
 inline ZBRoomType ZBGetRoomType(int value) {
-    //    RoomType type = ROOMTYPE_NOLIVEROOM;
-    //    switch (value) {
-    //        case 1:{
-    //            // 免费公开直播间
-    //            type = ROOMTYPE_FREEPUBLICLIVEROOM;
-    //        }break;
-    //        case 2:{
-    //            // 普通私密直播间
-    //            type = ROOMTYPE_COMMONPRIVATELIVEROOM;
-    //        }break;
-    //        case 3:{
-    //            // 付费公开直播间
-    //            type = ROOMTYPE_CHARGEPUBLICLIVEROOM;
-    //        }break;
-    //        case 4:{
-    //            // 豪华私密直播间
-    //            type = ROOMTYPE_LUXURYPRIVATELIVEROOM;
-    //        }break;
-    //        default:
-    //            break;
-    //    }
-    //    return type;
     return ZBROOMTYPE_BEGIN <= value && value < ZBROOMTYPE_END ? (ZBRoomType)value : ZBROOMTYPE_UNKNOW;
 }
 
@@ -249,4 +228,107 @@ typedef enum {
 // int 转换 IMSystemType
 inline ZBIMSystemType ZBGetIMSystemType(int value) {
     return ZBIMSYSTEMTYPE_COMMON <= value && value <= ZBIMSYSTEMTYPE_WARN ? (ZBIMSystemType)value : ZBIMSYSTEMTYPE_COMMON;
+}
+
+// 直播间状态
+typedef enum {
+    ZBLIVESTATUS_UNKNOW = 0,            // 未知
+    ZBLIVESTATUS_INIT = 1,              // 初始
+    ZBLIVESTATUSE_RECIPROCALSTART = 2,  // 开始倒数中
+    ZBLIVESTATUS_ONLINE = 3,            // 在线
+    ZBLIVESTATUS_ARREARAGE = 4,         // 欠费中
+    ZBLIVESTATUS_RECIPROCALEND = 5,     // 结束倒数中
+    ZBLIVESTATUS_CLOSE = 6,             // 关闭
+    ZBLIVESTATUS_BEGIN = ZBLIVESTATUS_UNKNOW,
+    ZBLIVESTATUS_END = ZBLIVESTATUS_CLOSE
+} ZBLiveStatus;
+
+// int 转换 ZBLiveStatus
+inline ZBLiveStatus ZBGetLiveStatus(int value) {
+    return ZBLIVESTATUS_BEGIN < value && value <= ZBLIVESTATUS_END ? (ZBLiveStatus)value : ZBLIVESTATUS_UNKNOW;
+}
+
+
+// 主播状态
+typedef enum {
+    ANCHORSTATUS_INVITATION = 0,        // 邀请中
+    ANCHORSTATUS_INVITECONFIRM = 1,     // 邀请已确认
+    ANCHORSTATUS_KNOCKCONFIRM = 2,      // 敲门已确认
+    ANCHORSTATUS_RECIPROCALENTER = 3,   // 倒数进入中
+    ANCHORSTATUS_ONLINE = 4,            // 在线
+    ANCHORSTATUS_UNKNOW,
+    ANCHORSTATUS_BEGIN = ANCHORSTATUS_INVITATION,
+    ANCHORSTATUS_END = ANCHORSTATUS_UNKNOW
+} AnchorStatus;
+
+// int 转换 AnchorStatus
+inline AnchorStatus GetAnchorStatus(int value) {
+    return ANCHORSTATUS_BEGIN <= value && value < ANCHORSTATUS_END ? (AnchorStatus)value : ANCHORSTATUS_UNKNOW;
+}
+
+// 敲门回复
+typedef enum {
+    IMANCHORKNOCKTYPE_UNKNOWN = 0,          // 未知
+    IMANCHORKNOCKTYPE_AGREE = 2,            // 接受
+    IMANCHORKNOCKTYPE_REJECT = 3,           // 拒绝
+    IMANCHORKNOCKTYPE_OUTTIME = 4,          // 邀请超时
+    IMANCHORKNOCKTYPE_CANCEL = 5,           // 主播取消邀请
+    IMANCHORKNOCKTYPE_BEGIN = IMANCHORKNOCKTYPE_AGREE,
+    IMANCHORKNOCKTYPE_END = IMANCHORKNOCKTYPE_CANCEL
+} IMAnchorKnockType;
+
+// int 转换 IMAnchorKnockType
+inline IMAnchorKnockType GetIMAnchorKnockType(int value) {
+    return IMANCHORKNOCKTYPE_BEGIN <= value && value <= IMANCHORKNOCKTYPE_END ? (IMAnchorKnockType)value : IMANCHORKNOCKTYPE_UNKNOWN;
+}
+
+// 邀请回复
+typedef enum {
+    IMANCHORREPLYINVITETYPE_UNKNOWN = 0,          // 未知
+    IMANCHORREPLYINVITETYPE_AGREE = 2,            // 接受
+    IMANCHORREPLYINVITETYPE_REJECT = 3,           // 拒绝
+    IMANCHORREPLYINVITETYPEE_OUTTIME = 4,         // 邀请超时
+    IMANCHORREPLYINVITETYPE_CANCEL = 5,           // 观众取消邀请
+    IMANCHORREPLYINVITETYPE_BEGIN = IMANCHORREPLYINVITETYPE_AGREE,
+    IMANCHORREPLYINVITETYPE_END = IMANCHORREPLYINVITETYPE_CANCEL
+} IMAnchorReplyInviteType;
+
+// int 转换 IMAnchorKnockType
+inline IMAnchorReplyInviteType GetIMAnchorReplyInviteType(int value) {
+    return IMANCHORREPLYINVITETYPE_BEGIN <= value && value <= IMANCHORREPLYINVITETYPE_END ? (IMAnchorReplyInviteType)value : IMANCHORREPLYINVITETYPE_UNKNOWN;
+}
+
+// 公开直播间类型
+typedef enum {
+    IMANCHORPUBLICROOMTYPE_UNKNOW = -1,              // 未知
+    IMANCHORPUBLICROOMTYPE_COMMON = 0,              // 普通公开
+    IMANCHORPUBLICROOMTYPE_PROGRAM = 1,              // 节目
+    IMANCHORPUBLICROOMTYPE_BEGIN = IMANCHORPUBLICROOMTYPE_UNKNOW,
+    IMANCHORPUBLICROOMTYPE_END = IMANCHORPUBLICROOMTYPE_PROGRAM
+    
+}IMAnchorPublicRoomType;
+
+// int 转换 IMAnchorPublicRoomType
+inline IMAnchorPublicRoomType GetIMAnchorPublicRoomType(int value) {
+    return IMANCHORPUBLICROOMTYPE_BEGIN < value && value <= IMANCHORPUBLICROOMTYPE_END ? (IMAnchorPublicRoomType)value : IMANCHORPUBLICROOMTYPE_UNKNOW;
+}
+
+// 节目状态
+typedef enum {
+    IMANCHORPROGRAMSTATUS_UNKNOW = -1,              // 未知
+    IMANCHORPROGRAMSTATUS_UNVERIFY = 0,             // 未审核
+    IMANCHORPROGRAMSTATUS_VERIFYPASS = 1,           // 审核通过
+    IMANCHORPROGRAMSTATUS_VERIFYREJECT = 2,         // 审核被拒
+    IMANCHORPROGRAMSTATUS_PROGRAMEND = 3,           // 节目正常结束
+    IMANCHORPROGRAMSTATUS_OUTTIME = 4,               // 节目已超时
+    IMANCHORPROGRAMSTATUS_PROGRAMCALCEL = 5,         // 节目已取消
+    
+    IMANCHORPROGRAMSTATUS_BEGIN = IMANCHORPROGRAMSTATUS_UNKNOW,
+    IMANCHORPROGRAMSTATUS_END = IMANCHORPROGRAMSTATUS_PROGRAMCALCEL
+    
+}IMAnchorProgramStatus;
+
+// int 转换 IMAnchorProgramStatus
+inline IMAnchorProgramStatus GetIMAnchorProgramStatus(int value) {
+    return IMANCHORPROGRAMSTATUS_BEGIN < value && value <= IMANCHORPROGRAMSTATUS_END ? (IMAnchorProgramStatus)value : IMANCHORPROGRAMSTATUS_UNKNOW;
 }

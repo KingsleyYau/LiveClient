@@ -42,11 +42,15 @@
     [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
 
     // 初始化播放
-    self.playerPreviewArray = @[self.previewView0, self.previewView1, self.previewView2];
+    self.playerPreviewArray = @[
+                                self.previewView0,
+                                self.previewView1,
+                                self.previewView2
+                                ];
     self.playerUrlArray = @[
                             @"rtmp://172.25.32.17:19351/live/max0",
-                            @"rtmp://172.25.32.17:19351/live/max1",
-                            @"rtmp://172.25.32.17:19351/live/maxa"
+                            @"rtmp://172.25.32.17:19351/live/maxa",
+                            @"rtmp://172.25.32.17:19351/live/maxf"
                             ];
     NSMutableArray *playerArray = [NSMutableArray array];
     for(int i = 0; i < self.playerPreviewArray.count; i++) {
@@ -56,6 +60,7 @@
         [playerArray addObject:player];
     }
     self.playerArray = playerArray;
+    [self play:nil];
     
     // 初始化推送
     self.publishUrl = @"rtmp://172.25.32.17:19351/live/maxi";
@@ -176,12 +181,13 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 
     for(int i = 0; i < self.playerArray.count; i++) {
         // 开始转菊花
+        NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+        NSString *recordH264FilePath = [NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+        NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+        
         BOOL bFlag = [self.playerArray[i] playUrl:self.playerUrlArray[i] recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
         if (bFlag) {
             // 播放成功

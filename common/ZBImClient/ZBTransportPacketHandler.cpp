@@ -26,7 +26,7 @@ bool ZBCTransportPacketHandler::Packet(IZBTask* task, void* data, size_t dataSiz
 {
 	//printf("CTransportPacketHandler::Packet() task:%p, data:%p, dataLen:%d\n", task, data, dataLen);
 
-	FileLog("ZBImClient", "ZBCTransportPacketHandler::Packet() begin");
+	FileLog("ImClient", "ZBCTransportPacketHandler::Packet() begin");
 
 	// 获取task数据
     Json::Value req_data;
@@ -66,7 +66,7 @@ bool ZBCTransportPacketHandler::Packet(IZBTask* task, void* data, size_t dataSiz
         result = true;
     }
 	
-	FileLog("ZBImClient", "ZBCTransportPacketHandler::Packet() end, result:%d, strData:%s", result,  strData.c_str());
+	FileLog("ImClient", "ZBCTransportPacketHandler::Packet() end, result:%d, strData:%s", result,  strData.c_str());
 
 	return result;
 }
@@ -122,6 +122,11 @@ ZBUNPACKET_RESULT_TYPE ZBCTransportPacketHandler::Unpacket(const void* data, siz
                     tp.m_errmsg = resData[ZB_ROOT_ERRMSG].asString();
                 }
                 tp.m_data = resData[ZB_ROOT_DATA];
+                
+                if (resData[ZB_ROOT_ERRDATA].isObject()) {
+                    tp.m_errData = resData[ZB_ROOT_ERRDATA];
+                }
+                
             
                 result = ZBUNPACKET_SUCCESS;
             }

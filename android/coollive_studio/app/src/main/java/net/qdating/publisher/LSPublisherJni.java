@@ -33,19 +33,20 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	/**
 	 * 创建实例
 	 * @param publisherCallback		状态回调
-	 * @param useHardDecoder		是否使用硬编码器
+	 * @param useHardEncoder		是否使用硬编码器
 	 * @param videoHardEncoder		视频硬编码器
 	 * @return 成功失败
 	 */
 	public boolean Create(
 			ILSPublisherCallback publisherCallback, 
-			boolean useHardDecoder,
-			ILSVideoHardEncoderJni videoHardEncoder
+			boolean useHardEncoder,
+			ILSVideoHardEncoderJni videoHardEncoder,
+			LSPublishConfig publishConfig
 			) {
 		// 状态回调
 		this.publisherCallback = publisherCallback;
 		
-		client = Create(this, useHardDecoder, videoHardEncoder, LSConfig.VIDEO_WIDTH, LSConfig.VIDEO_HEIGHT, LSConfig.VIDEO_BITRATE, LSConfig.VIDEO_KEYFRAMEINTERVAL, LSConfig.VIDEO_FPS);	
+		client = Create(this, useHardEncoder, videoHardEncoder, publishConfig.videoWidth, publishConfig.videoHeight, publishConfig.videoBitrate, publishConfig.videoKeyFrameInterval, publishConfig.videoFps);
 		return client != INVALID_CLIENT;
 	}
 	
@@ -59,7 +60,7 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	private native long Create(
 			ILSPublisherCallbackJni publisherCallback, 
 			boolean useHardDecoder,
-			ILSVideoHardEncoderJni videoEncoder, 
+			ILSVideoHardEncoderJni videoHardEncoder,
 			int width,
 			int height,
 			int bitRate,

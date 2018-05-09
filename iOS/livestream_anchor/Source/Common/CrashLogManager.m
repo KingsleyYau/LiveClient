@@ -8,7 +8,7 @@
 
 #import "CrashLogManager.h"
 #import "LSLoginManager.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LSFileCacheManager.h"
 //#import "LSUploadCrashFileRequest.h"
 //#include "common/KZip.h"
@@ -25,7 +25,7 @@ static CrashLogManager* gManager = nil;
  */
 
 @property (nonatomic, strong) LSLoginManager* loginManager;
-@property (nonatomic,strong) ZBLSRequestManager *requestManager;
+@property (nonatomic,strong) LSAnchorRequestManager *requestManager;
 /** crashLog路径 */
 @property (nonatomic,strong) NSString *crashPath;
 
@@ -46,7 +46,7 @@ static CrashLogManager* gManager = nil;
     if(self = [super init] ) {
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
-        self.requestManager = [ZBLSRequestManager manager];
+        self.requestManager = [LSAnchorRequestManager manager];
         // 初始化Crash Log捕捉
         _handler = NSGetUncaughtExceptionHandler();
         NSSetUncaughtExceptionHandler(UncaughtExceptionHandler);

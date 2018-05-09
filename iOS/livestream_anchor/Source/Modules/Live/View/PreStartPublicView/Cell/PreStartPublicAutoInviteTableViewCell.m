@@ -15,7 +15,7 @@
 }
 
 + (NSInteger)cellHeight {
-    return 160;
+    return 112;
 }
 
 + (id)getUITableViewCell:(UITableView*)tableView {

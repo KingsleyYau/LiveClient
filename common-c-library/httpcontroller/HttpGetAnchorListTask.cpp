@@ -15,10 +15,17 @@ HttpGetAnchorListTask::HttpGetAnchorListTask() {
     mStart = 0;
     mStep = 0;
     mIsForTest = false;
+    
 }
 
 HttpGetAnchorListTask::~HttpGetAnchorListTask() {
 	// TODO Auto-generated destructor stub
+    
+    for( HotItemList::const_iterator iter = mItemList.begin(); iter != mItemList.end(); iter++) {
+        delete (*iter);
+    }
+
+    
 }
 
 void HttpGetAnchorListTask::SetCallback(IRequestGetAnchorListCallback* callback) {
@@ -99,7 +106,7 @@ bool HttpGetAnchorListTask::ParseData(const string& url, bool bFlag, const char*
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    HotItemList itemList;
+   // HotItemList itemList;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -111,9 +118,9 @@ bool HttpGetAnchorListTask::ParseData(const string& url, bool bFlag, const char*
                 if (dataJson[COMMON_LIST].isArray()) {
                     int i = 0;
                     for (i = 0; i < dataJson[COMMON_LIST].size(); i++) {
-                        HttpLiveRoomInfoItem item;
-                        item.Parse(dataJson[COMMON_LIST].get(i, Json::Value::null));
-                        itemList.push_back(item);
+                        HttpLiveRoomInfoItem* item = new HttpLiveRoomInfoItem();
+                        item->Parse(dataJson[COMMON_LIST].get(i, Json::Value::null));
+                        mItemList.push_back(item);
                     }
                 }
             }
@@ -129,7 +136,7 @@ bool HttpGetAnchorListTask::ParseData(const string& url, bool bFlag, const char*
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetAnchorList(this, bParse, errnum, errmsg, itemList);
+        mpCallback->OnGetAnchorList(this, bParse, errnum, errmsg, mItemList);
     }
     
     return bParse;

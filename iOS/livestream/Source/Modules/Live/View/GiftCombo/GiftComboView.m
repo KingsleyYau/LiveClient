@@ -8,6 +8,7 @@
 
 #import "GiftComboView.h"
 #import "LiveBundle.h"
+#import "LiveViewController.h"
 
 static NSInteger const kTimeOut = 3;             /**< 超时移除时长 */
 static CGFloat const kRemoveAnimationTime = 0.5; /**< 移除动画时长 */
@@ -40,7 +41,12 @@ static CGFloat const kNumberChangeTime = 0.55;    /**< 计时器时长 */
 
 #pragma mark - 初始化
 + (instancetype)giftComboView:(id)owner {
-    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
+    NSArray *nibs = [NSArray array];
+    if ([owner isKindOfClass:[LiveViewController class]]) {
+        nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboView" owner:owner options:nil];
+    } else {
+        nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"GiftComboNewView" owner:owner options:nil];
+    }
     GiftComboView *view = [nibs objectAtIndex:0];
     return view;
 }
@@ -68,8 +74,8 @@ static CGFloat const kNumberChangeTime = 0.55;    /**< 计时器时长 */
     self.iconImageView.layer.cornerRadius = self.iconImageView.frame.size.height / 2;
     self.iconImageView.layer.masksToBounds = YES;
 
-    self.backView.layer.cornerRadius = self.backView.frame.size.height / 2;
-    self.backView.layer.masksToBounds = YES;
+//    self.backView.layer.cornerRadius = self.backView.frame.size.height / 2;
+//    self.backView.layer.masksToBounds = YES;
     self.isPlayTimerStop = YES;
     self.isPlayGiftCombo = NO;
 

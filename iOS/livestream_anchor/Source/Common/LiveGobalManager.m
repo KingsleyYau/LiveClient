@@ -7,7 +7,7 @@
 //
 
 #import "LiveGobalManager.h"
-#import "LSImManager.h"
+#import "LSAnchorImManager.h"
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
     // 是否显示私密邀请
@@ -190,7 +190,7 @@ static LiveGobalManager *gManager = nil;
             }
             
             // 发送IM退出直播间命令
-            [[LSImManager manager] leaveRoom:self.liveRoom.roomId];
+            [[LSAnchorImManager manager] leaveRoom:self.liveRoom.roomId];
             self.liveRoom = nil;
         }
         if (self.player) {

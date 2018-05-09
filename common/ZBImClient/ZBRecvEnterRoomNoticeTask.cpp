@@ -22,6 +22,7 @@
 #define ZBRERN_RIDERNAME_PARAM        "ridername"
 #define ZBRERN_RIDERURL_PARAM         "riderurl"
 #define ZBRERN_FANSNUM_PARAM          "fansnum"
+#define ZBRERN_HASTICKET_PARAM        "has_ticket"
 
 ZBRecvEnterRoomNoticeTask::ZBRecvEnterRoomNoticeTask(void)
 {
@@ -39,6 +40,7 @@ ZBRecvEnterRoomNoticeTask::ZBRecvEnterRoomNoticeTask(void)
     m_riderId = "";
     m_riderName = "";
     m_riderUrl = "";
+    m_hasTicket = false;
 }
 
 ZBRecvEnterRoomNoticeTask::~ZBRecvEnterRoomNoticeTask(void)
@@ -62,7 +64,7 @@ bool ZBRecvEnterRoomNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -94,6 +96,10 @@ bool ZBRecvEnterRoomNoticeTask::Handle(const ZBTransportProtocol& tp)
         if (tp.m_data[ZBRERN_FANSNUM_PARAM].isNumeric()) {
             m_fansNum = tp.m_data[ZBRERN_FANSNUM_PARAM].asInt();
         }
+        
+        if (tp.m_data[ZBRERN_HASTICKET_PARAM].isNumeric()) {
+            m_hasTicket = tp.m_data[ZBRERN_HASTICKET_PARAM].asInt() == 0 ? false : true;
+        }
 
     }
     
@@ -103,15 +109,15 @@ bool ZBRecvEnterRoomNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnZBRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum);
-		FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::Handle() callback end, result:%d", result);
+        m_listener->OnZBRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum, m_hasTicket);
+		FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::Handle() end");
 
 	return result;
 }
@@ -121,7 +127,7 @@ bool ZBRecvEnterRoomNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -134,7 +140,7 @@ bool ZBRecvEnterRoomNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvEnterRoomNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvEnterRoomNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

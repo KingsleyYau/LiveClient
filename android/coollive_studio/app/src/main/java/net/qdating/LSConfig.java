@@ -5,13 +5,13 @@ import net.qdating.utils.Log;
 /**
  * 推拉流模块初始化配置
  * @author max
- * @version 1.1.1
+ * @version 1.1.2
  */
 public class LSConfig {
 	/**
 	 * 版本号
 	 */
-	final public static String VERSION = "1.1.1";
+	final public static String VERSION = "1.1.2";
 	/**
 	 * 日志TAG
 	 */
@@ -48,53 +48,14 @@ public class LSConfig {
 	 */
 	public static int VIDEO_ENCODE_FRAME_COUNT = 10;
 	/**
-	 * 视频宽度(摄像头参数)
+	 * 视频参数模式
+	 * VideoConfigType120x160 : 采集480x640, 编码120x160
+	 * VideoConfigType240x240 : 采集480x640, 编码240x240
 	 */
-	public static int VIDEO_CAPTURE_WIDTH = 480;
-	/**
-	 * 视频高度(摄像头参数)
-	 */
-	public static int VIDEO_CAPTURE_HEIGHT = 640;
-	/**
-	 * 视频宽度(推流参数)
-	 * 大部分硬编码器要求是4的倍数, 有些要求其他, 但都是2的指数
-	 */
-	public static int VIDEO_WIDTH = 240;
-	/**
-	 * 视频高度(推流参数)
-	 * 大部分硬编码器要求是4的倍数, 有些要求其他, 但都是2的指数
-	 */
-	public static int VIDEO_HEIGHT = 240;
-	/**
-	 * 码率(推流参数)
-	 */
-	public static int VIDEO_BITRATE = 500 * 1000;
-	/**
-	 * 视频帧率(推流参数)
-	 */
-	public static int VIDEO_FPS = 12;
-	/**
-	 * 视频关键帧间隔(推流参数)
-	 */
-	public static int VIDEO_KEYFRAMEINTERVAL = VIDEO_FPS;
-	/**
-	 * 音频PCM采样率
-	 */
-	public static int SAMPLE_RATE = 44100;
-	/**
-	 * 音频PCM声道
-	 */
-	public static int CHANNEL_PER_FRAME = 1;
-	/**
-	 * 音频PCM精度
-	 */
-	public static int BIT_PER_SAMPLE = 16;
-	
-	/**
-	 * 视频预览用的对象
-	 */
-	public static int MAGIC_TEXTURE_ID = 10;
-	
+	static public enum VideoConfigType {
+		VideoConfigType120x160,
+		VideoConfigType240x240
+	}
 	/**
 	 * 渲染模式类型
 	 * FillModeStretch 			满屏拉伸
@@ -102,22 +63,32 @@ public class LSConfig {
 	 * FillModeAspectRatioFill 	保持比例全屏显示
 	 */
 	static public enum FillMode {
-		FillModeStretch, 
+		FillModeStretch,
 		FillModeAspectRatioFit,
 		FillModeAspectRatioFill
 	};
-	
 	/**
-	 * 编解码模式
-	 * @author max
-	 * EncodeDecodeModeAuto 自动选择解码模式
-	 * EncodeDecodeModeSoft 强制选择软解码模式
-	 * EncodeDecodeModeHard 强制选择硬解码模式
+	 * 解码模式
+	 * DecodeModeAuto 自动选择解码模式
+	 * DecodeModeSoft 强制选择软解码模式
+	 * DecodeModeHard 强制选择硬解码模式
 	 */
-	static public enum EncodeDecodeMode {
-		EncodeDecodeModeAuto,
-		EncodeDecodeModeSoft,
-		EncodeDecodeModeHard
+	static public enum DecodeMode {
+		DecodeModeAuto,
+		DecodeModeSoft,
+		DecodeModeHard
 	}
-	public static EncodeDecodeMode encodeDecodeMode = EncodeDecodeMode.EncodeDecodeModeAuto;
+	public static DecodeMode decodeMode = DecodeMode.DecodeModeAuto;
+	/**
+	 * 编码模式
+	 * EncodeModeAuto 自动选择编码模式
+	 * EncodeModeSoft 强制选择编编码模式
+	 * EncodeModeHard 强制选择硬编码模式
+	 */
+	static public enum EncodeMode {
+		EncodeModeAuto,
+		EncodeModeSoft,
+		EncodeModeHard
+	}
+	public static EncodeMode encodeMode = EncodeMode.EncodeModeAuto;
 }

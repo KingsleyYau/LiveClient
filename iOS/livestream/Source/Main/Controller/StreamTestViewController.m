@@ -17,10 +17,13 @@
 
 @interface StreamTestViewController ()
 
-@property (strong) LiveStreamPlayer *palyer;
-@property (strong) LiveStreamPublisher *publisher;
+@property (strong) NSArray<LiveStreamPlayer *> *playerArray;
+@property (strong) NSArray<GPUImageView *> *playerPreviewArray;
+@property (strong) NSArray<NSString *> *playerUrlArray;
+@property (assign) NSUInteger playerCount;
 
-@property (nonatomic, strong) NSString *url;
+@property (strong) LiveStreamPublisher *publisher;
+@property (strong) NSString *publishUrl;
 
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
@@ -37,28 +40,37 @@
     // Do any additional setup after loading the view, typically from a nib.
     [LSRequestManager setLogEnable:YES];
     [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
-    
-    self.previewView.fillMode = kGPUImageFillModePreserveAspectRatio;
 
+    // 初始化播放
+    self.playerPreviewArray = @[
+                                self.previewView0,
+                                self.previewView1,
+                                self.previewView2
+                                ];
+    self.playerUrlArray = @[
+                            @"rtmp://172.25.32.17:19351/live/max0",
+                            @"rtmp://172.25.32.17:19351/live/max1",
+                            @"rtmp://172.25.32.17:19351/live/max2"
+                            ];
+    NSMutableArray *playerArray = [NSMutableArray array];
+    for(int i = 0; i < self.playerPreviewArray.count; i++) {
+        LiveStreamPlayer *player = [LiveStreamPlayer instance];
+        player.playView = self.playerPreviewArray[i];
+        player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
+        [playerArray addObject:player];
+    }
+    self.playerArray = playerArray;
+    [self play:nil];
+    
+    // 初始化推送
+    self.publishUrl = @"rtmp://172.25.32.17:19351/live/maxi";
     self.publisher = [LiveStreamPublisher instance];
     [self.publisher initCapture];
     self.publisher.publishView = self.previewPublishView;
-
-    self.palyer = [LiveStreamPlayer instance];
-    self.palyer.playView = self.previewView;
-
-//    self.url = @"rtmp://52.196.96.7:7474/test_flash/max";
-    self.url = @"rtmp://172.25.32.230:1935/live/max";
+    self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
     
-    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", self.url, nil];
-    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@_i", self.url, nil];
-    
-//    self.textFieldAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
-//    self.textFieldAddress.text = @"rtmp://52.196.96.7:7474/test_flash/test";
-//    self.textFieldAddress.text = @"rtmp://52.196.96.7:4000/cdn_standard/fansi_CM42137154_6507";
-//    self.textFieldPublishAddress.text = @"rtmp://172.25.32.133:7474/test_flash/test";
-//    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:7474/test_flash/test";
-//    self.textFieldPublishAddress.text = @"rtmp://52.196.96.7:4000/cdn_standard/fansi_CM42137154_6507";
+    self.textFieldAddress.text = [NSString stringWithFormat:@"%@", self.playerUrlArray[0], nil];
+    self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
     
     // 计算StatusBar高度
     if ([LSDevice iPhoneXStyle]) {
@@ -103,7 +115,8 @@
     [self removeSingleTap];
 
     // 停止流
-    [self stop:nil];
+    [self stopPlay:nil];
+    [self stopPush:nil];
     
     // 允许锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
@@ -129,8 +142,8 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
+    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
+    NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
 
     BOOL bFlag = NO;
 
@@ -168,23 +181,30 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
     NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
-//    NSString *recordFilePath = [NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-    NSString *recordFilePath = @"";
-    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.h264"];
-    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"play.aac"];
 
-    // 开始转菊花
-    BOOL bFlag = [self.palyer playUrl:self.textFieldAddress.text recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-    if (bFlag) {
-        // 播放成功
+    for(int i = 0; i < self.playerArray.count; i++) {
+        // 开始转菊花
+        NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+        NSString *recordH264FilePath = [NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+        NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+        
+        BOOL bFlag = [self.playerArray[i] playUrl:self.playerUrlArray[i] recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+        if (bFlag) {
+            // 播放成功
+        } else {
+            // 播放失败
+        }
+    }
 
-    } else {
-        // 播放失败
+}
+
+- (IBAction)stopPlay:(id)sender {
+    for(int i = 0; i < self.playerArray.count; i++) {
+        [self.playerArray[i] stop];
     }
 }
 
-- (IBAction)stop:(id)sender {
-    [self.palyer stop];
+- (IBAction)stopPush:(id)sender {
     [self.publisher stop];
 }
 
@@ -198,6 +218,27 @@
 
 - (IBAction)roate:(id)sender {
     [self.publisher rotateCamera];
+}
+
+- (IBAction)startCam:(id)sender {
+    [self.publisher startPreview];
+}
+
+- (IBAction)stopCam:(id)sender {
+    [self.publisher stopPreview];
+}
+
+#pragma mark - 静音
+- (IBAction)mute0:(id)sender {
+    self.playerArray[0].mute = !self.playerArray[0].mute;
+}
+
+- (IBAction)mute1:(id)sender {
+    self.playerArray[1].mute = !self.playerArray[1].mute;
+}
+
+- (IBAction)mute2:(id)sender {
+    self.playerArray[2].mute = !self.playerArray[2].mute;
 }
 
 #pragma mark - 单击屏幕

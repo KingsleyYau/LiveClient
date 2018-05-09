@@ -18,6 +18,8 @@
 - (void)webViewJSCallbackAppCloseWebView;
 // Web通知App页面加载失败
 - (void)webViewJSCallbackWebReload:(NSString *)Errno;
+- (void)webViewJSCallbackInvite:(NSString *)userid nickName:(NSString *)name photo:(NSString *)photoUrl;
+- (void)webViewJSCallbackWebAuthExpired:(NSString *)errmsg;
 
 @end
 

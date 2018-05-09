@@ -213,6 +213,24 @@
 #define LIVEROOM_HOT_ROOMTYPE             "room_type"
 #define LIVEROOM_HOT_INTEREST             "interest"
 #define LIVEROOM_HOT_ANCHORTYPE           "anchor_type"
+#define LIVEROOM_HOT_SHOWINFO             "show_info"
+#define LIVEROOM_HOT_PROGRAMLIST_SHOWLIVEID                 "live_show_id"
+#define LIVEROOM_HOT_PROGRAMLIST_ANCHORID                   "anchor_id"
+#define LIVEROOM_HOT_PROGRAMLIST_ANCHORNICKNAME             "anchor_nickname"
+#define LIVEROOM_HOT_PROGRAMLIST_ANCHORAVATAR               "anchor_avatar"
+#define LIVEROOM_HOT_PROGRAMLIST_SHOWTITLE                  "show_title"
+#define LIVEROOM_HOT_PROGRAMLIST_SHOWINTRODUCE              "show_introduce"
+#define LIVEROOM_HOT_PROGRAMLIST_COVER                      "cover"
+#define LIVEROOM_HOT_PROGRAMLIST_APPROVETIME                "approve_time"
+#define LIVEROOM_HOT_PROGRAMLIST_STARTTIME                  "start_time"
+#define LIVEROOM_HOT_PROGRAMLIST_DURATION                   "duration"
+#define LIVEROOM_HOT_PROGRAMLIST_LEFTSECTOSTART             "left_sec_to_start"
+#define LIVEROOM_HOT_PROGRAMLIST_LEFTSECTOENTER             "left_sec_to_enter"
+#define LIVEROOM_HOT_PROGRAMLIST_PRICE                      "price"
+#define LIVEROOM_HOT_PROGRAMLIST_STATUS                     "status"
+#define LIVEROOM_HOT_PROGRAMLIST_TICKETSTATUS               "ticket_status"
+#define LIVEROOM_HOT_PROGRAMLIST_HASFOLLOW                  "has_follow"
+#define LIVEROOM_HOT_PROGRAMLIST_TICKETISFULL               "ticket_is_full"
 
 /* 3.2.获取Follow列表 */
 /* 接口路径 */
@@ -276,6 +294,7 @@
 #define LIVEROOM_FANS_MOUNTID            "mountid"
 #define LIVEROOM_FANS_MOUNTURL           "mounturl"
 #define LIVEROOM_FANS_LEVEL              "level"
+#define LIVEROOM_FANS_HASTICKET          "has_ticket"
 
 
 /* 3.5.获取礼物列表(观众端／主播端获取礼物列表，登录成功即获取礼物列表) */
@@ -700,6 +719,8 @@
 #define LIVEROOM_USERPROTOCOL                   "user_protocol"
 #define LIVEROOM_TERMSOFUSE                     "terms_of_use"
 #define LIVEROOM_PRIVACYPOLICY                  "privacy_policy"
+#define LIVEROOM_SHOWDETAILPAGE                 "show_detail_page"
+#define LIVEROOM_SHOWDESCRIPTION                "show_description"
 #define LIVEROOM_MINAVAILABLEVER                "min_available_ver"
 #define LIVEROOM_MINAVAILABLEMSG                "min_available_msg"
 #define LIVEROOM_NEWEST_VER                     "newest_ver"
@@ -708,6 +729,9 @@
 #define LIVEROOM_SVRLIST                        "svr_list"
 #define LIVEROOM_SVRLIST_SVRID                                  "svrid"
 #define LIVEROOM_SVRLIST_TURL                                   "turl"
+#define LIVEROOM_HANGOUT                        "hangout"
+#define LIVEROOM_HANGOUT_CREDITPERMINUTE                        "credit_per_minute"
+
 /* 6.2.获取账号余额 */
 /* 接口路径 */
 #define LIVEROOM_GET_LEFTCREDIT                       "/share/v1/getLeftCredit"
@@ -924,7 +948,6 @@
 #define LIVEROOM_ORDER_IOSPAY_NUMBER                        "number"
 #define LIVEROOM_ORDER_IOSPAY_SITED                         "siteid"
 
-
 /**
  *  返回
  */
@@ -945,6 +968,162 @@
 #define LIVEROOM_ORDER_IOSCALLBACK_CODE                             "code"
 
 
+/* ########################   多人互动模块  ######################## */
+/* 8.1.获取可邀请多人互动的主播列表 */
+/* 接口路径 */
+#define LIVEROOM_GETCANHANGOUTANCHORLIST                                "/man/v1/getCanHangoutAnchorList"
 
+/**
+ *  请求
+ */
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_TYPE                           "type"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_ANCHORID                       "anchor_id"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_START                          "start"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_STEP                           "step"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST                           "list"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ANCHORID                              "anchor_id"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_NICKNAME                              "nickname"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_PHOTOURL                              "photourl"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AGE                                   "age"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_COUNTRY                               "country"
+
+/* 8.2.发起多人互动邀请*/
+/* 接口路径 */
+#define LIVEROOM_SENDINVITATIONHANGOUT                                "/man/v1/sendInvitationHangout"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_SENDINVITATIONHANGOUT_ROOMID                         "room_id"
+#define LIVEROOM_SENDINVITATIONHANGOUT_ANCHORID                       "anchor_id"
+#define LIVEROOM_SENDINVITATIONHANGOUT_RECOMMENDID                    "recommend_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_SENDINVITATIONHANGOUT_INVITEID                        "invite_id"
+#define LIVEROOM_SENDINVITATIONHANGOUT_EXPIRE                          "expire"
+
+/* 8.3.取消多人互动邀请*/
+/* 接口路径 */
+#define LIVEROOM_CANCELHANGOUTINVIT                                     "/man/v1/cancelHangoutInvit"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CANCELHANGOUTINVIT_INVITEID                            "invite_id"
+
+/* 8.4.获取多人互动邀请状态*/
+/* 接口路径 */
+#define LIVEROOM_GETHANGOUTINVITSTATUS                                   "/share/v1/getHangoutInvitStatus"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETHANGOUTINVITSTATUS_INVITEID                          "invite_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETHANGOUTINVITSTATUS_STATUS                            "status"
+#define LIVEROOM_GETHANGOUTINVITSTATUS_ROOMID                            "roomid"
+#define LIVEROOM_GETHANGOUTINVITSTATUS_EXPIRE                            "expire"
+
+/* 8.5.同意主播敲门请求*/
+/* 接口路径 */
+#define LIVEROOM_DEALKNOCKREQUEST                                       "/man/v1/dealKnockRequest"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_DEALKNOCKREQUEST_KNOCKID                               "knock_id"
+
+/* 9.1.获取节目列表未读 */
+/* 接口路径 */
+#define GETNOREADNUMPROGRAM_PATH                                        "/man/v1/noreadShowNum"
+
+/**
+ *  返回
+ */
+#define GETNOREADNUMPROGRAM_NUM                                          "num"
+
+/* 9.2.获取节目列表 */
+/* 接口路径 */
+#define GETPROGRAMLIST_PATH                                                "/man/v1/showList"
+
+/**
+ *  请求
+ */
+#define GETPROGRAMLIST_SORTTYPE                                             "sort_type"
+#define GETPROGRAMLIST_START                                                "start"
+#define GETPROGRAMLIST_STEP                                                 "step"
+
+/**
+ *  返回
+ */
+#define  GETPROGRAMLIST_LIST                                                "list"
+
+/* 9.3.购买*/
+/* 接口路径 */
+#define BUYPROGRAM_PATH                                                     "/man/v1/buyTicket"
+
+
+
+/**
+ *  请求
+ */
+#define BUYPROGRAM_LIVESHOWID                                               "live_show_id"
+
+/**
+ *  返回
+ */
+#define BUYPROGRAM_LEFTCREDIT                                               "left_credit"
+
+/* 9.4.关注/取消关注关注节目*/
+/* 接口路径 */
+#define CHANGEFAVOURITE_PATH                                                "/man/v1/followShow"
+
+/**
+ *  请求
+ */
+#define CHANGEFAVOURITE_LIVESHOWID                                           "live_show_id"
+#define CHANGEFAVOURITE_CANCEL                                               "cancel"
+
+/* 9.5.获取可进入的节目信息*/
+/* 接口路径 */
+#define GETSHOWROOMINFO_PATH                                                "/man/v1/getShowRoomInfo"
+
+/**
+ *  请求
+ */
+#define GETSHOWROOMINFO_LIVESHOWID                                           "live_show_id"
+
+/**
+ *  返回
+ */
+#define GETSHOWROOMINFO_SHOWINFO                                            "show_info"
+#define GETSHOWROOMINFO_ROOMID                                              "room_id"
+
+
+/* 9.6.获取节目推荐列表 */
+/* 接口路径 */
+#define SHOWLISTWITHANCHORID_PATH                                                "/man/v1/showListWithAnchorId"
+
+/**
+ *  请求
+ */
+#define SHOWLISTWITHANCHORID_ANCHORID                                             "anchor_id"
+#define SHOWLISTWITHANCHORID_START                                                "start"
+#define SHOWLISTWITHANCHORID_STEP                                                 "step"
+#define SHOWLISTWITHANCHORID_SORTTYPE                                             "sort_type"
+
+/**
+ *  返回
+ */
+#define  SHOWLISTWITHANCHORI_LIST                                                "list"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

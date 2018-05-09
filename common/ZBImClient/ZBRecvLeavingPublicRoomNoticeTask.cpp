@@ -55,7 +55,7 @@ bool ZBRecvLeavingPublicRoomNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     // 协议解析
@@ -83,15 +83,15 @@ bool ZBRecvLeavingPublicRoomNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnZBRecvLeavingPublicRoomNotice(m_roomId, m_leftSeconds, m_errType, m_errMsg);
-		FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::Handle() end");
 
 	return result;
 }
@@ -101,7 +101,7 @@ bool ZBRecvLeavingPublicRoomNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -114,7 +114,7 @@ bool ZBRecvLeavingPublicRoomNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvLeavingPublicRoomNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvLeavingPublicRoomNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

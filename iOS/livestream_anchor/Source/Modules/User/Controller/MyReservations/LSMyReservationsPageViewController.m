@@ -17,16 +17,14 @@
 #import "LSLoginManager.h"
 #import "PreLiveViewController.h"
 #import "LiveService.h"
-#import "ZBLSRequestManager.h"
-#define MAXNum 20
+#import "LSAnchorRequestManager.h"
+#define MAXNum 50
 
 @interface LSMyReservationsPageViewController () <UITableViewDelegate, UITableViewDataSource,UIScrollViewRefreshDelegate,ScheduledCellDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray *data;
 @property (nonatomic, assign) int page;
-@property (weak, nonatomic) IBOutlet UIView *infoView;
-@property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (nonatomic, assign) BOOL isReload;
 @property (nonatomic, strong) DialogTip *dialogTipView;
 @property (nonatomic, strong) NSTimer * timer;
@@ -45,6 +43,7 @@
     [super viewDidLoad];
 
     self.title = NSLocalizedStringFromSelf(@"MY_TITLE");
+    
     
     [self.tableView setTableFooterView:[UIView new]];
  
@@ -106,7 +105,7 @@
         self.page = 0;
     }
     
-    [[ZBLSRequestManager manager] anchorManHandleBookingList:ZBBOOKINGLISTTYPE_COMFIRMED start:self.page step:MAXNum finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingPrivateInviteListObject * _Nonnull item) {
+    [[LSAnchorRequestManager manager] anchorManHandleBookingList:ZBBOOKINGLISTTYPE_COMFIRMED start:self.page step:MAXNum finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingPrivateInviteListObject * _Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
 
             if (isLoadMore) {
@@ -129,13 +128,13 @@
                 NSMutableArray * list = item.list;
                 NSMutableArray * array = [NSMutableArray array];
                 for (ZBBookingPrivateInviteItemObject * obj in list) {
-                    
+
                     if (obj.bookTime + 180 > [[NSDate new]timeIntervalSince1970])
                     {
                         [array addObject:obj];
                     }
                 }
-                
+           
                 [self.data addObjectsFromArray:array];
                 
                 if (self.data.count == 0) {
@@ -158,17 +157,27 @@
 
 - (void)showInfoViewIsReload:(BOOL)isReload {
     self.isReload = isReload;
-    self.infoView.hidden = NO;
+    self.failView.hidden = NO;
     if (isReload) {
-        self.infoLabel.text = NSLocalizedStringFromSelf(@"Failed_Message");
+        self.failTipsText = NSLocalizedString(@"List_FailTips", nil);
+        self.failBtn.hidden = NO;
+        self.failBtnText = NSLocalizedString(@"List_Reload", nil);
     } else {
         NSString *message = NSLocalizedStringFromSelf(@"NoData_Tip_1");
-        self.infoLabel.text = message;
+        self.failTipsText = message;
+        self.failBtn.hidden = YES;
     }
+    [self reloadFailViewContent];
 }
 
 - (void)hideInfoView {
-    self.infoView.hidden = YES;
+    self.failView.hidden = YES;
+}
+
+- (void)lsListViewControllerDidClick:(UIButton *)sender
+{
+    [super lsListViewControllerDidClick:sender];
+    [self pullDownRefresh];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -205,7 +214,7 @@
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
         
-        [cell.imageViewLoader refreshCachedImage:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [cell.imageViewLoader refreshCachedImage:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
         
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
@@ -252,7 +261,7 @@
         }
         AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
         vc.anchorId = userId;
-        vc.enterRoom = 1;
+        vc.showInvite = 1;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -273,7 +282,7 @@
         }
         AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
         vc.anchorId = userId;
-        vc.enterRoom = 1;
+        vc.showInvite = 1;
         [self.navigationController pushViewController:vc animated:YES];
     }
 }
@@ -287,7 +296,12 @@
         PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
         LiveRoom *liveRoom = [[LiveRoom alloc] init];
         liveRoom.roomId = obj.roomId;
+        liveRoom.userName = obj.oppositeNickName;
+        liveRoom.photoUrl = obj.oppositePhotoUrl;
+        liveRoom.userId = obj.fromId;
+        vc.inviteId = obj.invitationId;
         vc.liveRoom = liveRoom;
+        vc.status = PreLiveStatus_Enter;
         [self navgationControllerPresent:vc];
         
         NSLog(@"点击进入预约直播%@",obj.roomId);

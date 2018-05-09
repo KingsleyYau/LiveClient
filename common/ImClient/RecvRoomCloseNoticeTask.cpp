@@ -24,7 +24,6 @@ RecvRoomCloseNoticeTask::RecvRoomCloseNoticeTask(void)
 
 	m_seq = 0;
 	m_errType = LCC_ERR_FAIL;
-	m_errMsg = "";
     
     m_roomId = "";
 
@@ -97,13 +96,13 @@ bool RecvRoomCloseNoticeTask::GetSendData(Json::Value& data)
 	
 	FileLog("ImClient", "RecvRoomCloseNoticeTask::GetSendData() begin");
     {
-//        // 构造json协议
-//        Json::Value value;
-//        value[ROOMID_PARAM] = m_roomId;
-//        value[USERID_PARAM] = m_userId;
-//        value[NICKNAME_PARAM] = m_nickName;
-//        value[REASON_PARAM] = m_reason;
-//        data = value;
+        // 构造json协议
+        Json::Value value;
+        value[ROOT_ERRNO] = (int)m_errType;
+        if (m_errType != LCC_ERR_SUCCESS) {
+            value[ROOT_ERRMSG] = m_errMsg;
+        }
+        data = value;
     }
 
     result = true;

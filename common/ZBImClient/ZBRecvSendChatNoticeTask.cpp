@@ -58,7 +58,7 @@ bool ZBRecvSendChatNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvSendChatNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvSendChatNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -92,7 +92,7 @@ bool ZBRecvSendChatNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvSendChatNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvSendChatNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
@@ -100,7 +100,7 @@ bool ZBRecvSendChatNoticeTask::Handle(const ZBTransportProtocol& tp)
 		FileLog("ImClient", "ZBRecvSendChatNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvSendChatNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvSendChatNoticeTask::Handle() end");
 
 	return result;
 }
@@ -123,7 +123,7 @@ bool ZBRecvSendChatNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvSendChatNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvSendChatNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

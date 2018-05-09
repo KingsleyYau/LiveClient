@@ -367,6 +367,9 @@ public:
         }
         obj.svrList = array;
         obj.userType = item.userType;
+        obj.qnMainAdUrl = [NSString stringWithUTF8String:item.qnMainAdUrl.c_str()];
+        obj.qnMainAdTitle = [NSString stringWithUTF8String:item.qnMainAdTitle.c_str()];
+        obj.qnMainAdId = [NSString stringWithUTF8String:item.qnMainAdId.c_str()];
         
         LSRequestManager *manager = [LSRequestManager manager];
         @synchronized(manager.delegateDictionary) {

@@ -224,6 +224,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         // 跳转用户
         NSString *url = [LSConfigManager manager].item.userProtocol;
+        
         LiveWebViewController *webViewController = [[LiveWebViewController alloc] init];
         webViewController.url = url;
         self.navigationController.navigationBar.hidden = NO;

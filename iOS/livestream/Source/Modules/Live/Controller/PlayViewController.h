@@ -97,7 +97,7 @@
 @property (strong, nonatomic) BackpackPresentView *backpackView;
 
 /**  选择礼物列表界面 **/
-@property (strong, nonatomic) LSPageChooseKeyboardView *giftListView;
+@property (strong, nonatomic) LSPageChooseKeyboardView *giftListKeyboardView;
 
 /**  选择礼物承载界面 **/
 @property (weak, nonatomic) IBOutlet UIView *chooseGiftListView;
@@ -113,6 +113,8 @@
 
 // 当前选中礼物下标
 @property (nonatomic, assign) NSInteger presentRow;
+
+@property (nonatomic, assign) int msgSuperTabelTop;
 
 #pragma mark - 界面事件
 

@@ -17,7 +17,7 @@ class HttpGetAdAnchorListTask;
 class IRequestGetAdAnchorListCallback {
 public:
 	virtual ~IRequestGetAdAnchorListCallback(){};
-	virtual void OnGetAdAnchorList(HttpGetAdAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& list) = 0;
+	virtual void OnGetAdAnchorList(HttpGetAdAnchorListTask* task, bool success, int errnum, const string& errmsg, const AdItemList& list) = 0;
 };
       
 class HttpGetAdAnchorListTask : public HttpRequestTask {

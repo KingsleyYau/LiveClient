@@ -24,4 +24,6 @@
 - (void)setupVideoPlay;
 - (void)startPreViewVideoPlay;
 - (void)stopPreViewVideoPlay;
+- (void)showVideoLoadView;
+- (void)hiddenVideoLoadView;
 @end

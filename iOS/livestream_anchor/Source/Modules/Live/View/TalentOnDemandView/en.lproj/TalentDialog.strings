@@ -12,3 +12,7 @@
 "gC0-4M-AGC.text" = "";
 
 "Talent_Msg" = "%@ has sent you a performance request: %@";
+
+"Accepted_Failed" = "Failed to accept the request, please try again.";
+
+"Declined_Failed" = "Failed to decline the request, please try again.";

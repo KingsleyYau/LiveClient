@@ -18,35 +18,35 @@ PODS:
   - GCDWebServer/WebDAV (3.4.2):
     - GCDWebServer/Core
   - GPUImage (0.1.7)
-  - libwebp (0.6.0):
-    - libwebp/core (= 0.6.0)
-    - libwebp/dec (= 0.6.0)
-    - libwebp/demux (= 0.6.0)
-    - libwebp/dsp (= 0.6.0)
-    - libwebp/enc (= 0.6.0)
-    - libwebp/mux (= 0.6.0)
-    - libwebp/utils (= 0.6.0)
-    - libwebp/webp (= 0.6.0)
-  - libwebp/core (0.6.0):
+  - libwebp (0.6.1):
+    - libwebp/core (= 0.6.1)
+    - libwebp/dec (= 0.6.1)
+    - libwebp/demux (= 0.6.1)
+    - libwebp/dsp (= 0.6.1)
+    - libwebp/enc (= 0.6.1)
+    - libwebp/mux (= 0.6.1)
+    - libwebp/utils (= 0.6.1)
+    - libwebp/webp (= 0.6.1)
+  - libwebp/core (0.6.1):
     - libwebp/webp
-  - libwebp/dec (0.6.0):
+  - libwebp/dec (0.6.1):
     - libwebp/core
-  - libwebp/demux (0.6.0):
+  - libwebp/demux (0.6.1):
     - libwebp/core
-  - libwebp/dsp (0.6.0):
+  - libwebp/dsp (0.6.1):
     - libwebp/core
-  - libwebp/enc (0.6.0):
+  - libwebp/enc (0.6.1):
     - libwebp/core
-  - libwebp/mux (0.6.0):
+  - libwebp/mux (0.6.1):
     - libwebp/core
-  - libwebp/utils (0.6.0):
+  - libwebp/utils (0.6.1):
     - libwebp/core
-  - libwebp/webp (0.6.0)
+  - libwebp/webp (0.6.1)
   - Masonry (0.6.4)
-  - SDWebImage (4.3.0):
-    - SDWebImage/Core (= 4.3.0)
-  - SDWebImage/Core (4.3.0)
-  - SDWebImage/WebP (4.3.0):
+  - SDWebImage (4.3.1):
+    - SDWebImage/Core (= 4.3.1)
+  - SDWebImage/Core (4.3.1)
+  - SDWebImage/WebP (4.3.1):
     - libwebp (~> 0.5)
     - SDWebImage/Core
   - YYText (1.0.7)
@@ -56,7 +56,7 @@ DEPENDENCIES:
   - GCDWebServer/WebDAV (~> 3.0)
   - GPUImage (= 0.1.7)
   - Masonry (= 0.6.4)
-  - SDWebImage (= 4.3.0)
+  - SDWebImage (= 4.3.1)
   - SDWebImage/WebP
   - YYText (= 1.0.7)
 
@@ -64,11 +64,11 @@ SPEC CHECKSUMS:
   AFNetworking: a0075feb321559dc78d9d85b55d11caa19eabb93
   GCDWebServer: 8d67ee9f634b4bb91eb4b8aee440318a5fc6debd
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
-  libwebp: 1d5a07c2eb97f9c31bd5f154bb82efc0ea67c6a2
+  libwebp: 0f01098c6c17175391af621b2f14150f3ca16e16
   Masonry: 281802d04d787ea2973179ee8bcb50500579ede2
-  SDWebImage: 6da6c8bca115addc4de8613362e1b15f66333825
+  SDWebImage: '09808bac78357b39f8db4ea360c7b5534d785ef4'
   YYText: 5c461d709e24d55a182d1441c41dc639a18a4849
 
-PODFILE CHECKSUM: 76054be733ae4b6bb7d7965a5dc3a3464938880d
+PODFILE CHECKSUM: 5d72edcbebc9d83d8246687485884f34a105dd0c
 
 COCOAPODS: 1.1.1

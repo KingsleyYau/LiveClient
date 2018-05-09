@@ -71,18 +71,6 @@
  *
  */
 - (void)onZBPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ZBImLiveRoomObject* _Nonnull)item;
-//
-///**
-// *  3.14.观众开始／结束视频互动接口 回调
-// *
-// *  @param success          操作是否成功
-// *  @param reqId            请求序列号
-// *  @param errMsg           结果描述
-// *  @param manPushUrl       观众视频流url
-// *
-// */
-//- (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg manPushUrl:(NSArray<NSString *> *_Nonnull)manPushUrl;
-//
 
 
 //#pragma mark - 直播间接收操作回调
@@ -116,9 +104,10 @@
  *  @param riderName   座驾名称
  *  @param riderUrl    座驾图片url
  *  @param fansNum     观众人数
+ *  @param isHasTicket 是否已购票
  *
  */
-- (void)onZBRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum;
+- (void)onZBRecvEnterRoomNotice:(NSString* _Nonnull)roomId userId:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl riderId:(NSString* _Nonnull)riderId riderName:(NSString* _Nonnull)riderName riderUrl:(NSString* _Nonnull)riderUrl fansNum:(int)fansNum isHasTicket:(BOOL)isHasTicket;
 
 /**
  *  3.7.接收观众退出直播间通知回调
@@ -142,6 +131,15 @@
  *
  */
 - (void)onZBRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  3.9.接收主播退出直播间通知回调
+ *
+ *  @param roomId       直播间ID
+ *  @param anchorId     退出直播间的主播ID
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(NSString* _Nonnull)roomId anchorId:(NSString* _Nonnull)anchorId;
 
 
 #pragma mark - 直播间文本消息信息
@@ -232,10 +230,10 @@
 /**
  *  8.1.接收观众启动/关闭视频互动通知回调
  *
- *  @param Item            互动切换
+ *  @param item            互动切换
  *
  */
-- (void)onZBRecvControlManPushNotice:(ZBImControlPushItemObject * _Nonnull)Item;
+- (void)onZBRecvControlManPushNotice:(ZBImControlPushItemObject * _Nonnull)item;
 
 #pragma mark - 邀请私密直播
 /**
@@ -252,18 +250,6 @@
  */
 - (void) onZBSendImmediatePrivateInvite:(BOOL)success reqId:(SEQ_T)reqId err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId;
 
-///**
-// *  7.2.观众取消立即私密邀请 回调
-// *
-// *  @param success       操作是否成功
-// *  @param reqId         请求序列号
-// *  @param err           结果类型
-// *  @param errMsg        结果描述
-// *  @param roomId        直播间ID
-// *
-// */
-//- (void)onSendCancelPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg roomId:(NSString* _Nonnull)roomId;
-//
 /**
  *  9.2.接收立即私密邀请回复通知 回调
  *
@@ -310,7 +296,7 @@
  *  @param item             立即私密邀请
  *
  */
-- (void)onZBGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ZBImInviteIdItemObject *_Nonnull)item;
+- (void)onZBGetInviteInfo:(SEQ_T) reqId success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ZBImInviteIdItemObject *_Nonnull)item;
 
 /**
  *  9.6.接收观众接受预约通知接口 回调
@@ -322,5 +308,139 @@
  *  @param bookTime         预约时间（1970年起的秒数）
  */
 - (void)onZBRecvInvitationAcceptNotice:(NSString* _Nonnull)userId nickName:(NSString* _Nonnull)nickName photoUrl:(NSString* _Nonnull)photoUrl invitationId:(NSString* _Nonnull)invitationId bookTime:(long)bookTime;
+
+/**
+ *  10.1.进入多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *  @param item        进入多人互动直播间信息
+ *  @param expire      倒数进入秒数，倒数完成后再调用本接口重新进入
+ *
+ */
+- (void)onAnchorEnterHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(AnchorHangoutRoomItemObject *_Nonnull)item expire:(int)expire;
+
+/**
+ *  10.2.退出多人互动直播间接口 回调
+ *
+ *  @param success      操作是否成功
+ *  @param reqId        请求序列号
+ *  @param errMsg      结果描述
+ *
+ */
+- (void)onAnchorLeaveHangoutRoom:(SEQ_T)reqId  success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  10.3.接收观众邀请多人互动通知接口 回调
+ *
+ *  @param item      观众邀请多人互动信息
+ *
+ */
+- (void)onRecvAnchorInvitationHangoutNotice:(AnchorHangoutInviteItemObject *_Nonnull)item;
+
+/**
+ *  10.4.接收推荐好友通知接口 回调
+ *
+ *  @param item         主播端接收自己推荐好友给观众的信息
+ *
+ */
+- (void)onRecvAnchorRecommendHangoutNotice:(IMAnchorRecommendHangoutItemObject *_Nonnull)item;
+
+/**
+ *  10.5.接收敲门回复通知接口 回调
+ *
+ *  @param item         接收敲门回复信息
+ *
+ */
+- (void)onRecvAnchorDealKnockRequestNotice:(IMAnchorKnockRequestItemObject *_Nonnull)item;
+
+/**
+ *  10.6.接收观众邀请其它主播加入多人互动通知接口 回调
+ *
+ *  @param item         接收观众邀请其它主播加入多人互动信息
+ *
+ */
+- (void)onRecvAnchorOtherInviteNotice:(IMAnchorRecvOtherInviteItemObject *_Nonnull)item;
+
+/**
+ *  10.7.接收主播回复观众多人互动邀请通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorDealInviteNotice:(IMAnchorRecvDealInviteItemObject *_Nonnull)item;
+
+/**
+ *  10.8.观众端/主播端接收观众/主播进入多人互动直播间通知接口 回调
+ *
+ *  @param item         接收主播回复观众多人互动邀请信息
+ *
+ */
+- (void)onRecvAnchorEnterRoomNotice:(IMAnchorRecvEnterRoomItemObject *_Nonnull)item;
+
+/**
+ *  10.9.接收观众/主播退出多人互动直播间通知接口 回调
+ *
+ *  @param item         接收观众/主播退出多人互动直播间信息
+ *
+ */
+- (void)onRecvAnchorLeaveRoomNotice:(IMAnchorRecvLeaveRoomItemObject *_Nonnull)item;
+
+/**
+ *  10.10.接收观众/主播多人互动直播间视频切换通知接口 回调
+ *
+ *  @param roomId         直播间ID
+ *  @param isAnchor       是否主播（0：否，1：是）
+ *  @param userId         观众/主播ID
+ *  @param playUrl        视频流url（字符串数组）（访问视频URL的协议参考《 “视频URL”协议描述》）
+ *
+ */
+- (void)onRecvAnchorChangeVideoUrl:(NSString* _Nonnull)roomId isAnchor:(bool)isAnchor userId:(NSString* _Nonnull)userId playUrl:(NSMutableArray *_Nullable)playUrl;
+
+/**
+ *  10.11.发送多人互动直播间礼物消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendAnchorHangoutGift:(SEQ_T)reqId success:(bool)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  10.12.接收多人互动直播间礼物通知接口 回调
+ *
+ *  @param item         接收多人互动直播间礼物信息
+ *
+ */
+- (void)onRecvAnchorGiftNotice:(IMAnchorRecvGiftItemObject *_Nonnull)item;
+
+// ------------- 节目 -------------
+/**
+ *  11.1.接收节目开播通知接口 回调
+ *
+ *  @param item         节目信息
+ *  @param msg          消息提示文字
+ *
+ */
+- (void)onRecvAnchorProgramPlayNotice:(IMAnchorProgramItemObject *_Nonnull)item msg:(NSString* _Nonnull)msg;
+
+/**
+ *  11.2.接收节目状态改变通知接口 回调
+ *
+ *  @param item         节目信息
+ *
+ */
+- (void)onRecvAnchorChangeStatusNotice:(IMAnchorProgramItemObject *_Nonnull)item;
+
+/**
+ *  11.3.接收无操作的提示通知接口 回调
+ *
+ *  @param backgroundUrl 背景图url
+ *  @param msg           描述
+ *
+ */
+- (void)onRecvAnchorShowMsgNotice:(NSString* _Nonnull)backgroundUrl msg:(NSString* _Nonnull)msg;
 
 @end

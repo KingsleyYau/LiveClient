@@ -14,7 +14,9 @@
 #import "LiveRoomCreditRebateManager.h"
 #import "GetAnchorListRequest.h"
 #import "LiveModule.h"
-#import "ZBLSRequestManager.h"
+#import "LSAnchorRequestManager.h"
+#import "DialogTip.h"
+#import "LSProfileViewController.h"
 
 @interface LSLiveWKWebViewController ()<WKUIDelegate,WKNavigationDelegate, WebViewJSDelegate, LoginManagerDelegate,LSListViewControllerDelegate>
 /**
@@ -36,6 +38,9 @@
  *  接口管理器
  */
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
+
+/** 错误信息 */
+@property (nonatomic, strong) NSString* errmsg;
 
 @end
 
@@ -75,6 +80,9 @@
 // 请求webview
 - (void)requestWebview
 {
+    self.liveWKWebView.hidden = NO;
+    self.controller.failView.hidden = YES;
+    
     // 清cookies和http缓存
     [self clearAllCookies];
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -271,6 +279,24 @@
         }
         result = NO;
     }
+    else if ([urlStr containsString:@"opentype"]) {
+        LSUrlParmItem *item = [self.urlHandler parseUrlParms:url];
+        if ([item.opentype isEqualToString:@"2"]) {
+            LSProfileViewController *vc = [[LSProfileViewController alloc] initWithNibName:nil bundle:nil];
+            vc.title = item.apptitle;
+            vc.profileUrl = urlStr;
+            if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+                [self.controller.navigationController pushViewController:vc animated:YES];
+                result = NO;
+            }
+          
+        }else if ([item.opentype isEqualToString:@"1"]) {
+            NSURL *webUrl = [NSURL URLWithString:urlStr];
+            [[UIApplication sharedApplication] openURL:webUrl];
+            result = NO;
+        }
+ 
+    }
     
     if (result) {
         decisionHandler(WKNavigationActionPolicyAllow);
@@ -359,8 +385,7 @@
 }
 
 - (void)retryToload:(UIButton *)btn {
-    self.liveWKWebView.hidden = NO;
-    self.controller.failView.hidden = YES;
+
     [self requestWebview];
 }
 
@@ -410,11 +435,27 @@
     
 }
 
-
+// Web通知App跳转私密直播过渡页
 - (void)webViewJSCallbackInvite:(NSString *)userid nickName:(NSString *)name photo:(NSString *)photoUrl {
     NSLog(@"webViewJSCallbackInvite userid:%@ nickName :%@", userid,name);
-
+    LiveRoom *liveRoom = [[LiveRoom alloc] init];
+    liveRoom.userId = userid;
+    liveRoom.userName = name;
+    liveRoom.photoUrl = photoUrl;
     
+    // TODO:主动邀请, 跳转私密直播过渡页
+    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+    vc.liveRoom = liveRoom;
+    vc.status = PreLiveStatus_Inviting;
+    [self navgationControllerPresent:vc];
+}
+
+
+// Web通知App身份失效
+- (void)webViewJSCallbackWebAuthExpired:(NSString *)errmsg {
+    NSLog(@"webViewJScallbackWebAuthExpired ");
+     [self.loginManager logout:YES msg:@""];
+    self.errmsg = errmsg;
 }
 
 // 为了重登录（由Web通知App页面加载失败，token过期，调用hot列表接口因为token过期应该返回错误的就会重登录）
@@ -427,8 +468,8 @@
     // 调用接口
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self.controller hideLoading];
             if (success) {
-                [self.controller hideLoading];
                 [self reloadWebview];
             }
         });
@@ -444,6 +485,14 @@
         if (success) {
             // 登录成功就加载
             [self reloadWebview];
+        }
+    });
+}
+
+- (void)manager:(LSLoginManager *)manager onLogout:(BOOL)kick msg:(NSString *)msg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (self.errmsg.length > 0) {
+            [[DialogTip dialogTip] showDialogTip:ZBAppDelegate.window tipText:self.errmsg];
         }
     });
 }

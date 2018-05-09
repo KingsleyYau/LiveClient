@@ -55,6 +55,15 @@
                         <constraint firstItem="yNA-Sa-ITk" firstAttribute="top" secondItem="nxX-Ec-90Z" secondAttribute="top" constant="16" id="eoQ-ya-W7f"/>
                     </constraints>
                 </view>
+                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="xUA-hV-N7u">
+                    <rect key="frame" x="168" y="226" width="39" height="6"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="6" id="oW8-MT-3Nc"/>
+                    </constraints>
+                    <color key="pageIndicatorTintColor" red="0.47450980390000003" green="0.47450980390000003" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="currentPageIndicatorTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </pageControl>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69e-ke-PVW" customClass="CountTimeButton">
                     <rect key="frame" x="275" y="172" width="100" height="100"/>
                     <constraints>
@@ -66,15 +75,6 @@
                         <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                 </button>
-                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="xUA-hV-N7u">
-                    <rect key="frame" x="168" y="226" width="39" height="6"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="6" id="oW8-MT-3Nc"/>
-                    </constraints>
-                    <color key="pageIndicatorTintColor" red="0.47450980390000003" green="0.47450980390000003" blue="0.47450980390000003" alpha="1" colorSpace="calibratedRGB"/>
-                    <color key="currentPageIndicatorTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                </pageControl>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vGb-hh-agt" userLabel="Request Fail View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="218"/>
                     <subviews>

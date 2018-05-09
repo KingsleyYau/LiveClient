@@ -220,7 +220,11 @@
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
-        make.bottom.equalTo(self.view);
+        if ([LSDevice iPhoneXStyle]) {
+            make.bottom.equalTo(self.view).offset(-35);
+        } else {
+            make.bottom.equalTo(self.view);
+        }
     }];
 
     [self.playVC.liveVC bringSubviewToFrontFromView:self.view];
@@ -649,9 +653,6 @@
 #pragma mark - 播放界面回调
 - (void)onReEnterRoom:(PlayViewController *)vc {
     NSLog(@"PrivateViewController::onReEnterRoom()");
-    // 清空旧的推流地址
-    [self.liveRoom reset];
-
     // 刷新双向视频状态
     [self reloadVideoStatus];
 }

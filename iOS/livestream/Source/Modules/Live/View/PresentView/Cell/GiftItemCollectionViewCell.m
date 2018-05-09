@@ -66,21 +66,20 @@
 }
 
 - (void)updataMasonry{
-    
-    self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
-    self.giftNameLabel.textColor = COLOR_WITH_16BAND_RGB_ALPHA(0x8cffffff);
-    self.giftCountLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(9)];
-    self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
-    self.giftNameLableBottomOffset.constant = 0;
-    self.giftImageBottomOffset.constant = DESGIN_TRANSFORM_3X(3);
-    self.giftImageWidth.constant = self.giftImageHeight.constant = DESGIN_TRANSFORM_3X(50);
-    self.bigGiftLogoWidth.constant = self.bigGiftLogoHeight.constant = DESGIN_TRANSFORM_3X(12);
-//    self.haveNumViewWidth.constant = DESGIN_TRANSFORM_3X(18);
-//    self.haveNumViewHeight.constant = DESGIN_TRANSFORM_3X(18);
-//    self.haveNumView.layer.cornerRadius = DESGIN_TRANSFORM_3X(9);
     self.haveNumView.layer.cornerRadius = self.haveNumView.frame.size.height / 2;
-    self.haveNumView.layer.masksToBounds = YES;
-//    self.haveNumLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(14)];
+    if ([LSDevice iPhoneXStyle]) {
+        self.giftImageBottomOffset.constant = 8;
+    } else {
+        self.giftNameLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(11)];
+        self.giftNameLabel.textColor = COLOR_WITH_16BAND_RGB_ALPHA(0x8cffffff);
+        self.giftCountLabel.font = [UIFont systemFontOfSize:DESGIN_TRANSFORM_3X(9)];
+        self.giftCountBottomOffset.constant = DESGIN_TRANSFORM_3X(4);
+        self.giftNameLableBottomOffset.constant = 0;
+        self.giftImageBottomOffset.constant = DESGIN_TRANSFORM_3X(3);
+        self.giftImageWidth.constant = self.giftImageHeight.constant = DESGIN_TRANSFORM_3X(50);
+        self.bigGiftLogoWidth.constant = self.bigGiftLogoHeight.constant = DESGIN_TRANSFORM_3X(12);
+        self.haveNumView.layer.masksToBounds = YES;
+    }
 }
 
 - (void)reloadStyle {
@@ -111,8 +110,12 @@
     if (item.infoItem.type == GIFTTYPE_COMMON) {
         self.bigGiftLogo.hidden = YES;
         self.loadingView.hidden = YES;
-    }else{
-        self.bigGiftLogo.hidden = NO;
+    } else {
+        if (item.infoItem.type == GIFTTYPE_Heigh) {
+            self.bigGiftLogo.hidden = NO;
+        } else {
+            self.bigGiftLogo.hidden = YES;
+        }
         AllGiftItem *dicItem = [self.loadManager.bigGiftDownloadDic objectForKey:item.infoItem.giftId];
         if (dicItem.isDownloading) {
             [self.loadingView startAnimating];

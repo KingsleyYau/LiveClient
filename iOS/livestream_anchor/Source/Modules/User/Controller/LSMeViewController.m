@@ -14,6 +14,7 @@
 @interface LSMeViewController ()
 @property (nonatomic, strong) LSLiveWKWebViewController *urlController;
 @property (nonatomic, strong) LSLoginManager *loginManager;
+@property (nonatomic, assign) BOOL isloadData;
 @end
 
 @implementation LSMeViewController
@@ -26,21 +27,25 @@
 }
 - (void)initCustomParam {
     [super initCustomParam];
-    
     // Items for tab
     LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
     self.tabBarItem = tabBarItem;
-    //    self.tabBarItem.title = @"Me";
+    self.tabBarItem.title = @"Me";
     self.tabBarItem.image = [[UIImage imageNamed:@"TabBarMe"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarMe-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     NSDictionary *normalColor = [NSDictionary dictionaryWithObject:Color(51, 51, 51, 1) forKey:NSForegroundColorAttributeName];
     NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
     [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
     [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
+    [self setupNavigationRightItem];
+    
+}
 
+- (void)setupNavigationRightItem {
     UIBarButtonItem * btnItem = [[UIBarButtonItem alloc]initWithTitle:NSLocalizedStringFromSelf(@"Logout") style:UIBarButtonItemStylePlain target:self action:@selector(logout)];
     btnItem.tintColor = [UIColor blackColor];
     self.navigationItem.rightBarButtonItem = btnItem;
+
 }
 
 
@@ -48,35 +53,46 @@
     NSLog(@"AnchorPersonalViewController::dealloc()");
     [self.meView stopLoading];
     [self hideAndResetLoading];
-    [self.meView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    [self.meView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    [self.meView stopLoading];
     [self hideAndResetLoading];
+    self.isloadData = NO;
 }
 
 
 - (void)setupNavigationBar {
     [super setupNavigationBar];
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    // 每次都刷新界面
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     self.urlController.liveWKWebView = self.meView;
     self.urlController.controller = self;
     self.urlController.isShowTaBar = YES;
     self.urlController.isRequestWeb = YES;
-    // 加载webview时显示导航栏，加载完会隐藏的，不要不写，因为如果从这里到其它界面时，再回来会显示导航栏的
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.hidden = NO;
-    [self.urlController requestWebview];
+    if (!self.isloadData) {
+        self.isloadData = YES;
+      [self.urlController requestWebview];
+    }
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    // 导航栏
+    UILabel *titleLabel = [[UILabel alloc] init];
+    titleLabel.text = NSLocalizedStringFromSelf(@"Me");
+    titleLabel.textColor = [UIColor blackColor];
+    [titleLabel sizeToFit];
+    self.navigationItem.titleView = titleLabel;
     self.loginManager = [LSLoginManager manager];
     if (@available(iOS 11, *)) {
         self.meView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -94,9 +110,23 @@
         } else {
             device = [NSString stringWithFormat:@"device=31"];
         }
-
+        
+        if ([anchorPage containsString:@"?"]) {
+            anchorPage = [NSString stringWithFormat:@"%@&%@",anchorPage,device];
+        } else {
+            anchorPage = [NSString stringWithFormat:@"%@?%@",anchorPage,device];
+        }
     }
     self.urlController.baseUrl = anchorPage;
+    
+    __weak typeof(self) weakSelf = self;
+    UIApplication *app = [UIApplication sharedApplication];
+    [[NSNotificationCenter defaultCenter]addObserverForName:UIApplicationDidBecomeActiveNotification  object:app queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        if (weakSelf.isloadData) {
+            [weakSelf.urlController requestWebview];
+        }
+
+    }];
 }
 
 

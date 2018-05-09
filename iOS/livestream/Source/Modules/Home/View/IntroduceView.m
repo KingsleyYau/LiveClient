@@ -19,6 +19,12 @@
 // js回调的函数名是callbackWebReload
 #define LIVEAPP_CALLBACK_WEBRELOAD @"callbackWebReload"
 #define LIVEAPP_CALLBACK_WEBRELOAD_ERROR @"Errno"
+//身份验证失败
+#define LIVEAPP_CALLBACK_AUTH_EXPIRED @"callbackWebAuthExpired"
+//账号余额不足
+#define LIVEAPP_CALLBACK_RECHANGE @"callbackWebRechange"
+// 节目GA回调
+#define LIVEAPP_CALLBACK_APPPUBLiCGAEVENT @"callbackAppPublicGAEvent"
 @implementation IntroduceView
 
 
@@ -81,13 +87,35 @@
         }
         // 判断是否是回调callbackWebReload函数
         else if ([methodName isEqualToString:LIVEAPP_CALLBACK_WEBRELOAD]) {
-            NSString *Errno = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
+            NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackWebReload:)]) {
-                [self.webViewJSDelegate webViewJSCallbackWebReload:Errno];
+                [self.webViewJSDelegate webViewJSCallbackWebReload:error];
+            }
+        }
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTH_EXPIRED])
+        {
+            //身份验证失败
+             NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackTokenTimeOut:)]) {
+                [self.webViewJSDelegate webViewJSCallBackTokenTimeOut:error];
+            }
+        }
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_RECHANGE])
+        {
+            NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
+            //账号余额不足
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackAddCredit:)]) {
+                [self.webViewJSDelegate webViewJSCallBackAddCredit:error];
+            }
+        }
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_APPPUBLiCGAEVENT]){
+            //节目GA跟踪
+            NSString *event = message.body[LIVEAPP_CALLBACK_APPGAEVENT_EVENT];
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackAppPublicGAEvent:)]) {
+                [self.webViewJSDelegate webViewJSCallbackAppPublicGAEvent:event];
             }
         }
     }
-    
 }
 
 @end

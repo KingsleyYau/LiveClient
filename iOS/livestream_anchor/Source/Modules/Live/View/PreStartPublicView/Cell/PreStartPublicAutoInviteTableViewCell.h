@@ -17,6 +17,7 @@
 
 @interface PreStartPublicAutoInviteTableViewCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UISwitch *autoInviteSwitch;
 @property (nonatomic, weak) id<PreStartPublicAutoInviteTableViewCellDelegate> startPublicAutoInviteDelegate;
 
 + (NSString *)cellIdentifier;

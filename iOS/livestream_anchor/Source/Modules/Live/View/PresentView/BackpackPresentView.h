@@ -15,13 +15,12 @@
 
 @class BackpackPresentView;
 @protocol BackpackPresentViewDelegate <NSObject>
-- (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView numberList:(NSMutableArray *)list atIndexPath:(NSIndexPath *)indexPath;
 - (void)backpackPresentViewDidScroll:(BackpackPresentView *)backpackView currentPageNumber:(NSInteger)page;
 - (void)backpackPresentViewSendBtnClick:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewComboBtnInside:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewComboBtnDown:(BackpackPresentView *)backpackView andSender:(id)sender;
 - (void)backpackPresentViewReloadList:(BackpackPresentView *)presentView;
-
+- (void)backpackPresentViewDidSelectItemWithSelf:(BackpackPresentView *)backpackView atIndexPath:(NSIndexPath *)indexPath;
 @end
 
 

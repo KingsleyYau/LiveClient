@@ -17,7 +17,9 @@
 @interface LiveRoom () {
     NSString *_roomId;
     NSString *_userId;
+    NSString *_showId;
     NSString *_userName;
+    NSString * _showTitle;
     NSString *_photoUrl;
     NSString *_playUrl;
     NSString *_publishUrl;
@@ -44,6 +46,9 @@
     if (!_roomId) {
         _roomId = _imLiveRoom.roomId;
     }
+    if (!_roomId) {
+        _roomId = _hangoutLiveRoom.roomId;
+    }
     return _roomId;
 }
 
@@ -63,6 +68,10 @@
     if (_imLiveRoom) {
         _imLiveRoom.userId = _userId;
     }
+    
+    if (_httpLiveRoom.showInfo) {
+        _httpLiveRoom.showInfo.anchorId = _userId;
+    }
 }
 
 - (NSString *)userId {
@@ -73,8 +82,27 @@
     if (!_userId) {
         _userId = _imLiveRoom.userId;
     }
+    
+    if (!_userId) {
+        _userId = _httpLiveRoom.showInfo.anchorId;
+    }
 
     return _userId;
+}
+
+- (NSString *)showId {
+    if (!_showId) {
+        _showId = _httpLiveRoom.showInfo.showLiveId;
+    }
+    return _showId;
+}
+
+- (void)setShowId:(NSString *)showId
+{
+    _showId = showId;
+    if (_httpLiveRoom.showInfo.showLiveId.length > 0) {
+        _httpLiveRoom.showInfo.showLiveId = _showId;
+    }
 }
 
 - (NSString *)userName {
@@ -84,6 +112,10 @@
 
     if (!_userName) {
         _userName = _imLiveRoom.nickName;
+    }
+    
+    if (!_userName) {
+        _userName = _httpLiveRoom.showInfo.anchorNickName;
     }
 
     return _userName;
@@ -99,6 +131,26 @@
     if (_imLiveRoom) {
         _imLiveRoom.nickName = _userName;
     }
+    
+    if (_httpLiveRoom.showInfo) {
+        _httpLiveRoom.showInfo.anchorNickName = _userName;
+    }
+}
+
+- (NSString *)showTitle {
+    if (!_showTitle) {
+        _showTitle = _httpLiveRoom.showInfo.showTitle;
+    }
+    return _showTitle;
+}
+
+- (void)setShowTitle:(NSString *)showTitle
+{
+    _showTitle = showTitle;
+    
+    if (_httpLiveRoom) {
+        _httpLiveRoom.showInfo.showTitle = _showTitle;
+    }
 }
 
 - (NSString *)photoUrl {
@@ -113,6 +165,12 @@
             _photoUrl = _imLiveRoom.photoUrl;
         }
     }
+    
+    if (!_photoUrl) {
+        if (_httpLiveRoom.showInfo) {
+            _photoUrl = _httpLiveRoom.showInfo.anchorAvatar;
+        }
+    }
 
     return _photoUrl;
 }
@@ -121,6 +179,10 @@
     _photoUrl = photoUrl;
     if (_httpLiveRoom) {
         _httpLiveRoom.photoUrl = _photoUrl;
+    }
+    
+    if (_httpLiveRoom.showInfo) {
+        _httpLiveRoom.showInfo.anchorAvatar = _photoUrl;
     }
 }
 
@@ -161,6 +223,9 @@
 - (NSArray<NSString *> *)publishUrlArray {
     if (!_publishUrlArray) {
         _publishUrlArray = _imLiveRoom.manPushUrl;
+    }
+    if (!_publishUrlArray) {
+        _publishUrlArray = _hangoutLiveRoom.pushUrl;
     }
     return _publishUrlArray;
 }

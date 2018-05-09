@@ -1,0 +1,19 @@
+
+/* Class = "UILabel"; text = "Note:\n1) Tickets can be refunded only if the show is cancelled.\n2) You need to join the show in 3 minutes after the show started otherwise your seat maybe released to other viewers."; ObjectID = "3Q4-eb-t6w"; */
+"3Q4-eb-t6w.text" = "Note:\n1) Tickets can be refunded only if the show is cancelled.\n2) You need to join the show in 3 minutes after the show started otherwise your seat maybe released to other viewers.";
+
+/* Class = "UILabel"; text = "A hot dance for you"; ObjectID = "CMA-m2-3gH"; */
+"CMA-m2-3gH.text" = "A hot dance for you";
+
+/* Class = "UIButton"; normalTitle = "Get Ticket"; ObjectID = "mPO-Dg-nsx"; */
+"mPO-Dg-nsx.normalTitle" = "Get Ticket";
+
+/* Class = "UILabel"; text = "0.4 credits"; ObjectID = "xxG-Ko-KOu"; */
+"xxG-Ko-KOu.text" = "0.4 credits";
+
+"ADD_CREDITS_SUCCESS" = "Ticket has been successfully added to your account. Enjoy the show!";
+"ADD_CREDITS_MSG" = "You don't have enough credits. Please buy more credits and try again.";
+
+"Cancel" = "Cancel";
+
+"Add Credit" = "Add Credit";

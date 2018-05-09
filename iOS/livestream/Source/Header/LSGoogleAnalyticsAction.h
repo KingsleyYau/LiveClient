@@ -14,6 +14,7 @@
 #define EventCategoryBroadcast @"Broadcast"
 #define EventCategoryTransition @"Transition"
 #define EventCategoryGobal @"Global"
+#define EventCategoryShowCalendar @"showCalendar"
 
 // 广告
 #define LiveChannelCloseAd @"close_Ad"
@@ -62,5 +63,17 @@
 #define ClickBooking @"click_BookingStart"
 #define ClickInvitation @"click_Invitation"
 
+//节目列表
+#define ShowCalendarClickGetTicket @"click_GetTicket"
+#define ShowCalendarConfirmGetTicket @"confirm_GetTicket"
+#define ShowCalendarClickMyOtherShows @"click_MyOtherShows"
+#define ShowCalendarClickFollowShow @"click_FollowShow"
+#define ShowCalendarClickUnFollowShow @"click_UnfollowShow"
 
+#define ShowEnterShowBroadcast @"enter_ShowBroadcast"
+
+
+#define ShowCalendarClickRecommendShow @"click_RecommendShow"
+#define ShowShowStart @"show_ShowStart"
+#define ClickShowStart @"click_ShowStart"
 #endif /* LSGoogleAnalyticsAction_h */

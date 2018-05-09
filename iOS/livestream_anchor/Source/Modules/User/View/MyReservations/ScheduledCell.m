@@ -150,7 +150,7 @@
     
     NSInteger times = self.time - self.countdownTime;
     
-    self.colorView.frame = CGRectMake(0, 0, (180 - times) * percent, self.scheduledTimeView.frame.size.height);
+    self.colorView.frame = CGRectMake(0, 0,self.scheduledTimeView.frame.size.width - ((180 - times) * percent), self.scheduledTimeView.frame.size.height);
     
     if (self.time == self.countdownTime) {
         if ([self.delegate respondsToSelector:@selector(scheduledCountdownEnd)]) {

@@ -64,11 +64,12 @@ long long ZBHttpRequestController::ZBLogin(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -96,11 +97,12 @@ long long  ZBHttpRequestController::ZBUpdateTokenId(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -125,12 +127,14 @@ long long ZBHttpRequestController::ZBGetVerificationCode(
     mRequestMap.Insert(task, task);
     mRequestMap.Unlock();
     
+    
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//        
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -159,11 +163,12 @@ long long ZBHttpRequestController::ZBLiveFansList(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -190,11 +195,12 @@ long long ZBHttpRequestController::ZBGetNewFansBaseInfo(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//        
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -220,11 +226,12 @@ long long ZBHttpRequestController::ZBGetAllGiftList(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -252,11 +259,12 @@ long long ZBHttpRequestController::ZBGiftList(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -283,11 +291,12 @@ long long ZBHttpRequestController::ZBGetGiftDetail(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -313,11 +322,12 @@ long long ZBHttpRequestController::ZBGetEmoticonList(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -345,11 +355,12 @@ long long ZBHttpRequestController::ZBDealTalentRequest(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -376,11 +387,12 @@ long long ZBHttpRequestController::ZBSetAutoPush(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -409,11 +421,12 @@ long long ZBHttpRequestController::ZBManHandleBookingList(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -440,11 +453,12 @@ long long ZBHttpRequestController::ZBAcceptScheduledInvite(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -471,11 +485,12 @@ long long ZBHttpRequestController::ZBRejectScheduledInvite(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -501,11 +516,13 @@ long long ZBHttpRequestController::ZBGetScheduleListNoReadNum(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+         FileLog(LIVESHOW_HTTP_LOG, "ZBHttpRequestController::ZBGetScheduleListNoReadNum( task : %p )", task);
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -540,11 +557,13 @@ long long ZBHttpRequestController::ZBGetScheduledAcceptNum(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        FileLog(LIVESHOW_HTTP_LOG, "ZBHttpRequestController::ZBGetScheduledAcceptNum( task : %p )", task);
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -571,11 +590,12 @@ long long ZBHttpRequestController::ZBAcceptInstanceInvite(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -603,11 +623,12 @@ long long ZBHttpRequestController::ZBRejectInstanceInvite(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -634,11 +655,12 @@ long long ZBHttpRequestController::ZBCancelInstantInviteUser(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -665,11 +687,12 @@ long long ZBHttpRequestController::ZBSetRoomCountDown(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -696,11 +719,12 @@ long long ZBHttpRequestController::ZBGetConfig(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -726,11 +750,12 @@ long long ZBHttpRequestController::ZBGetTodayCredit(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -758,11 +783,12 @@ long long ZBHttpRequestController::ZBServerSpeed(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     
@@ -790,11 +816,401 @@ long long ZBHttpRequestController::ZBCrashFile(
     mRequestMap.Unlock();
     
     if( !task->Start() ) {
-        mRequestMap.Lock();
-        mRequestMap.Erase(task);
-        mRequestMap.Unlock();
-        
-        delete task;
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetCanRecommendFriendList(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          int start,
+                                          int step,
+                                          IRequestAnchorGetCanRecommendFriendListCallback* callback
+                                                                   ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetCanRecommendFriendListTask* task = new HttpAnchorGetCanRecommendFriendListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorRecommendFriend(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         const string& friendId,
+                                                         const string& roomId,
+                                                         IRequestAnchorRecommendFriendJoinHangoutCallback* callback
+                                                         ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorRecommendFriendJoinHangoutTask* task = new HttpAnchorRecommendFriendJoinHangoutTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(friendId, roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorDealInvitationHangout(
+                                                               HttpRequestManager *pHttpRequestManager,
+                                                               const string& inviteId,
+                                                               AnchorMultiplayerReplyType type,
+                                                               IRequestAnchorDealInvitationHangoutCallback* callback
+                                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorDealInvitationHangoutTask* task = new HttpAnchorDealInvitationHangoutTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(inviteId, type);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetOngoingHangoutList(
+                                                               HttpRequestManager *pHttpRequestManager,
+                                                               int start,
+                                                               int step,
+                                                               IRequestAnchorGetOngoingHangoutListCallback* callback
+                                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetOngoingHangoutListTask* task = new HttpAnchorGetOngoingHangoutListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorSendKnockRequest(
+                                                          HttpRequestManager *pHttpRequestManager,
+                                                          const string& roomId,
+                                                          IRequestAnchorSendKnockRequestCallback* callback
+                                                          ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorSendKnockRequestTask* task = new HttpAnchorSendKnockRequestTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetHangoutKnockStatus(
+                                                               HttpRequestManager *pHttpRequestManager,
+                                                               const string& knockId,
+                                                               IRequestAnchorGetHangoutKnockStatusCallback* callback
+                                                               ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetHangoutKnockStatusTask* task = new HttpAnchorGetHangoutKnockStatusTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(knockId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorCancelHangoutKnock(
+                                                            HttpRequestManager *pHttpRequestManager,
+                                                            const string& knockId,
+                                                            IRequestAnchorCancelHangoutKnockCallback* callback
+                                                            ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorCancelHangoutKnockTask* task = new HttpAnchorCancelHangoutKnockTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(knockId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorHangoutGiftList(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         const string& roomId,
+                                                         IRequestAnchorHangoutGiftListCallback* callback
+                                                         ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorHangoutGiftListTask* task = new HttpAnchorHangoutGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+//        mRequestMap.Lock();
+//        mRequestMap.Erase(task);
+//        mRequestMap.Unlock();
+//
+//        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetProgramList(
+                                                        HttpRequestManager *pHttpRequestManager,
+                                                        int start,
+                                                        int step,
+                                                        AnchorProgramListType status,
+                                                        IRequestAnchorGetProgramListCallback* callback
+                                                        ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetProgramListTask* task = new HttpAnchorGetProgramListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(start, step, status);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetNoReadNumProgram(
+                                                             HttpRequestManager *pHttpRequestManager,
+                                                             IRequestAnchorGetNoReadNumProgramCallback* callback
+                                                             ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetNoReadNumProgramTask* task = new HttpAnchorGetNoReadNumProgramTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long ZBHttpRequestController::AnchorGetShowRoomInfo(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         const string& liveShowId,
+                                                         IRequestAnchorGetShowRoomInfoCallback* callback
+                                                         ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorGetShowRoomInfoTask* task = new HttpAnchorGetShowRoomInfoTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(liveShowId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+
+long long ZBHttpRequestController::AnchorCheckPublicRoomType(
+                                                            HttpRequestManager *pHttpRequestManager,
+                                                            IRequestAnchorCheckIsPlayProgramCallback* callback
+                                                            ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpAnchorCheckIsPlayProgramTask* task = new HttpAnchorCheckIsPlayProgramTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
         requestId = HTTPREQUEST_INVALIDREQUESTID;
     }
     

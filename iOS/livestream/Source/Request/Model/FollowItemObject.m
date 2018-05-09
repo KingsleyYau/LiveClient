@@ -24,6 +24,7 @@
         self.addDate = [coder decodeIntegerForKey:@"addDate"];
         self.interest = [coder decodeObjectForKey:@"interest"];
         self.anchorType = [coder decodeIntForKey:@"anchorType"];
+        self.showInfo = [coder decodeObjectForKey:@"showInfo"];
     }
     return self;
 }
@@ -39,6 +40,7 @@
     [coder encodeInteger:self.addDate forKey:@"addDate"];
     [coder encodeObject:self.interest forKey:@"interest"];
     [coder encodeInt:self.anchorType forKey:@"anchorType"];
+    [coder encodeObject:self.showInfo forKey:@"showInfo"];
 }
 
 @end

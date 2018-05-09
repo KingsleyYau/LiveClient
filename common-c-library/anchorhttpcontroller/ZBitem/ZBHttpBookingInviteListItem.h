@@ -37,20 +37,7 @@ public:
                     if (item.Parse(element)) {
                         list.push_back(item);
                     }
-//                     // alextest
-//                    if (element.isArray()) {
-//                        /* list */
-//                        
-//                        for (int i = 0; i < element.size(); i++) {
-//                            Json::Value element2 = element.get(i, Json::Value::null);
-//                            if (element2.isObject()) {
-//                                ZBHttpBookingPrivateInviteItem item;
-//                                if (item.Parse(element2)) {
-//                                    list.push_back(item);
-//                                }
-//                            }
-//                        }
-//                    }
+
                 }
             }
         }

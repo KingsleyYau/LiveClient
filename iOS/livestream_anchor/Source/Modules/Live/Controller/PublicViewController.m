@@ -13,7 +13,7 @@
 #import "LiveUrlHandler.h"
 
 #import "AudienceCell.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorImManager.h"
 #import "LiveModule.h"
 #import "SetFavoriteRequest.h"
 #import "LiveFansListRequest.h"
@@ -31,7 +31,7 @@
 @property (nonatomic, strong) NSMutableArray *audienceArray;
 
 // IM管理器
-@property (nonatomic, strong) ZBLSImManager *imManager;
+@property (nonatomic, strong) LSAnchorImManager *imManager;
 
 @property (nonatomic, strong) NSTimer *hidenTimer;
 
@@ -63,7 +63,7 @@
 
     self.audienceArray = [[NSMutableArray alloc] init];
 
-    self.imManager = [ZBLSImManager manager];
+    self.imManager = [LSAnchorImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
 
@@ -256,7 +256,7 @@
 - (IBAction)pushLiveHomePage:(id)sender {
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
     listViewController.anchorId = self.liveRoom.userId;
-    listViewController.enterRoom = 0;
+    listViewController.showInvite = 0;
     [self.navigationController pushViewController:listViewController animated:YES];
 }
 
@@ -293,7 +293,7 @@
 }
 
 #pragma mark - IM回调
-- (void)onZBRecvEnterRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl riderId:(NSString *)riderId riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl fansNum:(int)fansNum {
+- (void)onZBRecvEnterRoomNotice:(NSString *)roomId userId:(NSString *)userId nickName:(NSString *)nickName photoUrl:(NSString *)photoUrl riderId:(NSString *)riderId riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl fansNum:(int)fansNum isHasTicket:(BOOL)isHasTicket{
     NSLog(@"PublicViewController::onZBRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
     dispatch_async(dispatch_get_main_queue(), ^{
         
@@ -311,7 +311,7 @@
 - (void)onCloseLiveRoom:(PlayViewController *)vc {
     if (self.liveRoom.roomId.length > 0) {
         // 发送退出直播间
-        NSLog(@"PublicViewController::liveHeadCloseAction [发送退出直播间:%@]",self.liveRoom.roomId);
+        NSLog(@"PublicViewController::onCloseLiveRoom( [发送退出直播间:%@] )",self.liveRoom.roomId);
         [self.imManager leaveRoom:self.liveRoom.roomId];
         // QN判断已退出直播间
         [LiveModule module].roomID = nil;

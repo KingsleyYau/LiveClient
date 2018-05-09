@@ -80,16 +80,6 @@
  */
 - (BOOL)anchorRoomOut:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId;
 
-///**
-// *  3.14.观众开始／结束视频互动
-// *
-// *  @param reqId         请求序列号
-// *  @param roomId        直播间ID
-// *  @param control       视频操作（1:开始 2:关闭）
-// *
-// */
-//-(BOOL)controlManPush:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId control:(IMControlType)control;
-
 
 /**
  *  4.1.发送直播间文本消息
@@ -136,6 +126,44 @@
  *
  */
 -(BOOL)anchorGetInviteInfo:(SEQ_T)reqId invitationId:(NSString *_Nonnull)invitationId;
+
+/**
+ *  10.1.进入多人互动直播间
+ *
+ *  @param reqId         请求序列号
+ *  @param roomId 多人互动直播间ID
+ *
+ */
+-(BOOL)anchorEnterHangoutRoom:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId;
+
+/**
+ *  10.2.退出多人互动直播间
+ *
+ *  @param reqId            请求序列号
+ *  @param roomId           多人互动直播间ID
+ *
+ */
+-(BOOL)anchorLeaveHangoutRoom:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId;
+
+/**
+ *  10.11.发送多人互动直播间礼物消息
+ *
+ * @param reqId         请求序列号
+ * @roomId              直播间ID
+ * @nickName            发送人昵称
+ * @toUid               接收者ID
+ * @giftId              礼物ID
+ * @giftName            礼物名称
+ * @isBackPack          是否背包礼物（1：是，0：否）
+ * @giftNum             本次发送礼物的数量
+ * @isMultiClick        是否连击礼物（1：是，0：否）
+ * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
+ * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
+ * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
+ * @isPrivate           是否私密发送（1：是，0：否）
+ *
+ */
+-(BOOL)anchorSendHangoutGift:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName toUid:(NSString *_Nonnull)toUid giftId:(NSString *_Nonnull)giftId giftName:(NSString *_Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate;
 
 
 @end

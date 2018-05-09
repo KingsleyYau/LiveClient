@@ -29,6 +29,10 @@ typedef void (^SendBackpackGiftBlock)(BOOL success,NSMutableArray *backArray);
 
 @property (nonatomic, strong) RoomBackGiftItem *backGiftItem;
 
+@property (nonatomic, assign) BOOL isIMNetWork;
+
+@property (nonatomic, assign) BOOL isFirstSend;
+
 + (instancetype)backpackGiftManager;
 
 #pragma mark - 请求背包礼物列表

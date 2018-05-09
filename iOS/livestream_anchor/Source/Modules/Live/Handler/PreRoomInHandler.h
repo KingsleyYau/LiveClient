@@ -7,12 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZBLSRequestManager.h"
-#import "ZBLSImManager.h"
+#import "LSAnchorRequestManager.h"
+#import "LSAnchorImManager.h"
 
 @interface PreRoomInHandler : NSObject
 
-typedef void (^RoomInHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *errmsg, ZBImLiveRoomObject *item);
+typedef void (^RoomInHandler)(BOOL success,ZBLCC_ERR_TYPE errnum, NSString * _Nonnull errmsg,  ZBImLiveRoomObject * _Nonnull item);
 
 /**
  3.2 主播进入指定直播间
@@ -20,6 +20,6 @@ typedef void (^RoomInHandler)(BOOL success, ZBLCC_ERR_TYPE errnum, NSString *err
  @param roomid 直播间id
  @param finshHandler 结束回调
  */
-- (void)sendRoomIn:(NSString *)roomid finshHandler:(RoomInHandler)finshHandler;
+- (BOOL)sendRoomIn:(NSString *_Nonnull)roomid finshHandler:(RoomInHandler _Nonnull)finshHandler;
 
 @end

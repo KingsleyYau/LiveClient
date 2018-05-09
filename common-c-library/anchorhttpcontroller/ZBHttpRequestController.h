@@ -32,6 +32,19 @@
 #include "ZBHttpCancelInstantInviteUserTask.h"
 #include "ZBHttpSetAutoPushTask.h"
 #include "ZBHttpSetRoomCountDownTask.h"
+#include "HttpAnchorGetCanRecommendFriendListTask.h"
+#include "HttpAnchorRecommendFriendJoinHangoutTask.h"
+#include "HttpAnchorDealInvitationHangoutTask.h"
+#include "HttpAnchorGetOngoingHangoutListTask.h"
+#include "HttpAnchorSendKnockRequestTask.h"
+#include "HttpAnchorGetHangoutKnockStatusTask.h"
+#include "HttpAnchorCancelHangoutKnockTask.h"
+#include "HttpAnchorHangoutGiftListTask.h"
+
+#include "HttpAnchorGetNoReadNumProgramTask.h"
+#include "HttpAnchorGetProgramListTask.h"
+#include "HttpAnchorCheckIsPlayProgramTask.h"
+#include "HttpAnchorGetShowRoomInfoTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -352,7 +365,7 @@ public:
      *  4.9.设置直播间为开始倒数
      *
      * @param pHttpRequestManager           http管理器
-     * @param inviteId                      直播间ID
+     * @param roomId                        直播间
      * @param callback                      接口回调
      *
      * @return                              成功请求Id
@@ -422,6 +435,197 @@ public:
                         const string& crashFile,
                         IRequestZBCrashFileCallback* callback = NULL
                         );
+    
+    /**
+     * 6.1.获取可推荐的好友列表
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetCanRecommendFriendList(
+                                              HttpRequestManager *pHttpRequestManager,
+                                              int start,
+                                              int step,
+                                              IRequestAnchorGetCanRecommendFriendListCallback* callback = NULL
+                                              );
+    
+    /**
+     * 6.2.获取可推荐的好友列表
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param friendId                      主播好友ID
+     * @param roomId                        直播间ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorRecommendFriend(
+                                    HttpRequestManager *pHttpRequestManager,
+                                    const string& friendId,
+                                    const string& roomId,
+                                    IRequestAnchorRecommendFriendJoinHangoutCallback* callback = NULL
+                                    );
+    
+    /**
+     * 6.3.主播回复多人互动邀请
+     *
+     * @param pHttpRequestManager           http管理器）
+     * @param inviteId                      多人互动邀请ID
+     * @param type                          回复结果（ANCHORMULTIPLAYERREPLYTYPE_AGREE：接受，ANCHORMULTIPLAYERREPLYTYPE_REJECT：拒绝）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorDealInvitationHangout(
+                                    HttpRequestManager *pHttpRequestManager,
+                                    const string& inviteId,
+                                    AnchorMultiplayerReplyType type,
+                                    IRequestAnchorDealInvitationHangoutCallback* callback = NULL
+                                    );
+    
+    /**
+     * 6.4.获取未结束的多人互动直播间列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetOngoingHangoutList(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          int start,
+                                          int step,
+                                          IRequestAnchorGetOngoingHangoutListCallback* callback = NULL
+                                          );
+    
+    /**
+     * 6.5.发起敲门请求
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomId                        多人互动直播间ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorSendKnockRequest(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      const string& roomId,
+                                      IRequestAnchorSendKnockRequestCallback* callback = NULL
+                                      );
+    
+    /**
+     * 6.6.获取敲门状态
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param knockId                       敲门ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetHangoutKnockStatus(
+                                          HttpRequestManager *pHttpRequestManager,
+                                          const string& knockId,
+                                          IRequestAnchorGetHangoutKnockStatusCallback* callback = NULL
+                                          );
+    
+    /**
+     * 6.7.取消敲门请求
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param knockId                       敲门ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorCancelHangoutKnock(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      const string& knockId,
+                                      IRequestAnchorCancelHangoutKnockCallback* callback = NULL
+                                      );
+    
+    /**
+     * 6.8.获取多人互动直播间礼物列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomId                        多人互动直播间ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorHangoutGiftList(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   const string& roomId,
+                                   IRequestAnchorHangoutGiftListCallback* callback = NULL
+                                   );
+    
+    
+    /**
+     * 7.1.获取节目列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param status                        列表类型（ANCHORPROGRAMLISTTYPE_UNVERIFY：待审核，ANCHORPROGRAMLISTTYPE_VERIFYPASS：已通过审核且未开播，ANCHORPROGRAMLISTTYPE_VERIFYREJECT：被拒绝，ANCHORPROGRAMLISTTYPE_HISTORY：历史）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetProgramList(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   int start,
+                                   int step,
+                                   AnchorProgramListType status,
+                                   IRequestAnchorGetProgramListCallback* callback = NULL
+                                   );
+    
+    
+    /**
+     * 7.2.获取节目未读数
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetNoReadNumProgram(
+                                        HttpRequestManager *pHttpRequestManager,
+                                        IRequestAnchorGetNoReadNumProgramCallback* callback = NULL
+                                    );
+    
+    /**
+     * 7.3.获取可进入的节目信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param liveShowId                    节目ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorGetShowRoomInfo(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   const string& liveShowId,
+                                   IRequestAnchorGetShowRoomInfoCallback* callback = NULL
+                                   );
+
+    
+    /**
+     * 7.4.检测是否开播节目直播
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AnchorCheckPublicRoomType(
+                                       HttpRequestManager *pHttpRequestManager,
+                                       IRequestAnchorCheckIsPlayProgramCallback* callback = NULL
+                                       );
     
     
 private:

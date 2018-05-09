@@ -8,12 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "LSImageViewLoader.h"
-
+#import "TXScrollLabelView/TXScrollLabelView.h"
 @class HotTableViewCell;
 @protocol HotTableViewCellDelegate <NSObject>
 @optional
 
-- (void)hotTableViewCell:(HotTableViewCell *)cell didClickNormalPrivateBtn:(UIButton *)sender;
 /** 预约私密直播间 */
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewPublicFreeBtn:(UIButton *)sender;
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickBookPrivateBtn:(UIButton *)sender;
@@ -29,8 +28,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *labelRoomTitle;
 @property (weak, nonatomic) IBOutlet UIImageView *liveStatus;
-/** 普通私密直播间  */
-@property (weak, nonatomic) IBOutlet UIButton *normalPrivateBtn;
+
 /** 免费公开直播间 */
 @property (weak, nonatomic) IBOutlet UIButton *viewPublicFreeBtn;
 /** 预约私密直播间 */
@@ -41,13 +39,14 @@
 @property (weak, nonatomic) IBOutlet UIButton *viewPublicFeeBtn;
 /** 播放数组 */
 @property (nonatomic, strong) NSMutableArray *animationArray;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *normalPrivateCenterX;
+
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *viewBtnTopDistance;
 @property (weak, nonatomic) IBOutlet UIView *bottomView;
 
-@property (weak, nonatomic) IBOutlet UIImageView *onlineIcon;
 @property (weak, nonatomic) IBOutlet UIImageView *roomType;
 @property (weak, nonatomic) IBOutlet UIImageView *onlineStatus;
+@property (weak, nonatomic) IBOutlet UIView *titleView;
+@property (nonatomic, strong) TXScrollLabelView *scrollLabelView;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;
@@ -56,4 +55,5 @@
 + (NSInteger)cellHeight;
 + (id)getUITableViewCell:(UITableView*)tableView;
 
+- (void)setScrollLabelViewText:(NSString *)text;
 @end

@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,6 +20,14 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                 </view>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="HR9-ln-GZS">
+                    <rect key="frame" x="138" y="138" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="HR9-ln-GZS" secondAttribute="height" multiplier="1:1" id="Emv-Rg-buz"/>
+                        <constraint firstAttribute="height" constant="100" id="SzC-4Z-WZT"/>
+                    </constraints>
+                    <color key="color" red="0.36862745099999999" green="0.36862745099999999" blue="0.36862745099999999" alpha="1" colorSpace="calibratedRGB"/>
+                </activityIndicatorView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S28-O3-jat">
                     <rect key="frame" x="13" y="17" width="25" height="25"/>
                     <constraints>
@@ -33,16 +42,20 @@
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="HR9-ln-GZS" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="1lm-a2-iFM"/>
+                <constraint firstItem="HR9-ln-GZS" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="5pE-Wi-cZT"/>
                 <constraint firstItem="4cS-GM-98M" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="GOS-pb-wDG"/>
                 <constraint firstAttribute="trailing" secondItem="4cS-GM-98M" secondAttribute="trailing" id="QD1-GE-FRX"/>
                 <constraint firstAttribute="bottom" secondItem="4cS-GM-98M" secondAttribute="bottom" id="hNp-9j-c5b"/>
                 <constraint firstItem="S28-O3-jat" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="17" id="ji7-oj-Tip"/>
+                <constraint firstItem="HR9-ln-GZS" firstAttribute="width" secondItem="HR9-ln-GZS" secondAttribute="height" multiplier="1:1" id="qyF-xL-Raw"/>
                 <constraint firstItem="4cS-GM-98M" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="uOl-f3-rjB"/>
                 <constraint firstItem="S28-O3-jat" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="13" id="yHY-yk-xc3"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
                 <outlet property="closeBtn" destination="S28-O3-jat" id="yIS-WB-gfs"/>
+                <outlet property="videoLoadView" destination="HR9-ln-GZS" id="D9e-v6-Ofy"/>
                 <outlet property="videoView" destination="4cS-GM-98M" id="UUG-Ec-ne6"/>
             </connections>
             <point key="canvasLocation" x="-43" y="-54"/>

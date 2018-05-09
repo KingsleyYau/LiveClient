@@ -50,6 +50,11 @@ public:
                 level = root[LIVEROOM_FANS_LEVEL].asInt();
             }
             
+            /* isHasTicket */
+            if( root[LIVEROOM_FANS_HASTICKET].isIntegral() ) {
+                isHasTicket = root[LIVEROOM_FANS_HASTICKET].asInt() == 0 ? false : true;
+            }
+            
         }
 	}
 
@@ -60,6 +65,7 @@ public:
         mountId = "";
         mountUrl = "";
         level = 0;
+        isHasTicket = false;
 	}
 
 	virtual ~HttpLiveFansItem() {
@@ -73,6 +79,7 @@ public:
      * mountId          坐驾ID
      * mountUrl         坐驾图片url
      * level            用户等级
+     * isHasTicket      是否已购票（false：否，true：是）
      */
     string userId;
 	string nickName;
@@ -80,6 +87,7 @@ public:
     string mountId;
     string mountUrl;
     int    level;
+    bool   isHasTicket;
 };
 
 typedef list<HttpLiveFansItem> HttpLiveFansList;

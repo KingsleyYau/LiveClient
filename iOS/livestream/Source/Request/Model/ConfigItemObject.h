@@ -18,6 +18,8 @@
  * userLevel                  观众等级页URL（请求时需要提交device参数，参数值与《1.1.http请求头格式》的“dev-type”一致）
  * intimacy                   观众与主播亲密度页URL（请求时需要提交device参数，参数值与《1.1.http请求头格式》的“dev-type”一致）
  * userProtocol               观众协议页URL
+ * showDetailPage             节目详情页URL
+ * showDescription            节目介绍
  */
 @property (nonatomic, copy) NSString *_Nonnull imSvrUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrUrl;
@@ -26,5 +28,7 @@
 @property (nonatomic, copy) NSString *_Nonnull userLevel;
 @property (nonatomic, copy) NSString *_Nonnull intimacy;
 @property (nonatomic, copy) NSString *_Nonnull userProtocol;
+@property (nonatomic, copy) NSString *_Nonnull showDetailPage;
+@property (nonatomic, copy) NSString *_Nonnull showDescription;
 
 @end

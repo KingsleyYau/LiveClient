@@ -11,6 +11,7 @@
 #import "LSConfigManager.h"
 #import "IntroduceView.h"
 #import "LSLiveWKWebViewController.h"
+#import "LiveModule.h"
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
@@ -37,29 +38,43 @@
     self.urlController.isRequestWeb = self.isIntimacy;
 
     NSString *intimacyUrl; // 拼接url
+    NSString *appVer = [NSString stringWithFormat:@"appver=%@",[LiveModule module].appVerCode];
+    NSString *anchorID = [NSString stringWithFormat:@"&anchorid=%@",self.anchorId];
+    NSString *device; // 设备类型
+    if (IS_IPAD) {
+        device = [NSString stringWithFormat:@"device=32"];
+    } else {
+        device = [NSString stringWithFormat:@"device=31"];
+    }
     
     if (self.isIntimacy) {
-    NSString *webSiteUrl = self.urlController.configManager.item.intimacy;
-        NSString *device; // 设备类型
-
+        NSString *webSiteUrl = self.urlController.configManager.item.intimacy;
         if (webSiteUrl.length > 0) {
-            if (IS_IPAD) {
-                device = [NSString stringWithFormat:@"device=32"];
-            } else {
-                device = [NSString stringWithFormat:@"device=31"];
-            }
-            NSString *anchorID = [NSString stringWithFormat:@"&anchorid=%@",self.anchorId];
-
             if ([webSiteUrl containsString:@"?"]) {
-                intimacyUrl = [NSString stringWithFormat:@"%@&%@%@",webSiteUrl,device,anchorID];
+                intimacyUrl = [NSString stringWithFormat:@"%@&%@&%@%@",webSiteUrl,device,appVer,anchorID];
             } else {
-                intimacyUrl = [NSString stringWithFormat:@"%@?%@%@",webSiteUrl,device,anchorID];
+                intimacyUrl = [NSString stringWithFormat:@"%@?%@&%@%@",webSiteUrl,device,appVer,anchorID];
             }
         }
     } else {
         intimacyUrl = self.url;
+        if (_isUserProtocol) {
+            if ([intimacyUrl containsString:@"?"]) {
+                intimacyUrl = [NSString stringWithFormat:@"%@&%@%@",intimacyUrl,device,appVer];
+            } else {
+                intimacyUrl = [NSString stringWithFormat:@"%@?%@%@",intimacyUrl,device,appVer];
+            }
+        }else {
+            if ([intimacyUrl containsString:@"?"]) {
+                intimacyUrl = [NSString stringWithFormat:@"%@&%@",intimacyUrl,appVer];
+            } else {
+                intimacyUrl = [NSString stringWithFormat:@"%@?%@&%@%@",intimacyUrl,device,appVer,anchorID];
+            }
+        }
+
     }
     self.urlController.baseUrl = intimacyUrl;
+
 }
 
 - (void)initCustomParam {

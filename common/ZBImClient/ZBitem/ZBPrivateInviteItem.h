@@ -108,18 +108,18 @@ public:
     }
     /**
      * 立即私密邀请结构体
-     * invitationId             邀请ID
-     * oppositeId               主播ID
-     * oppositeNickName		    主播头像url
-     * oppositePhotoUrl		    主播昵称
-     * oppositeLevel		    主播头像url
-     * oppositeAge              主播头像url
-     * oppositeCountry		    主播头像url
-     * read                     主播头像url
-     * inviTime                 主播头像url
-     * replyType                回复状态（0:拒绝 1:同意 2:未回复 3:已超时 4:超时 5:观众／主播取消 6:主播缺席 7:观众缺席 8:已完成）
-     * validTime                邀请的剩余有效时间（秒）（可无，仅reply_type = 2 存在）
-     * roomId                   直播间ID(可无， 仅reply_type = 1 存在)
+     * @invitationId            邀请ID
+     * @oppositeId              主播ID
+     * @oppositeNickName        对端昵称
+     * @oppositePhotoUrl        对端头像
+     * @oppositeLevel           对端等级
+     * @oppositeAge             对端年龄
+     * @oppositeCountry         对端国家
+     * @read                    已读状态（false：未读，true：已读）
+     * @inviTime                邀请时间（1970年起的秒数）
+     * @replyType               回复状态（1：待确定，2：已接受，3：已拒绝，4：超时，5：观众/主播取消，6：主播缺席， 7：观众缺席，8：已完成）
+     * @validTime               邀请的剩余有效时间（秒）（可无，仅reply_type = 2 存在）
+     * @roomId                  直播间ID(可无， 仅reply_type = 1 存在)
      */
     string      invitationId;
     string      oppositeId;

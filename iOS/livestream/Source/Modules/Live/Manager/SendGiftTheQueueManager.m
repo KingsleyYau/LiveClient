@@ -92,7 +92,7 @@
     });
 }
 
-- (void)sendLiveRoomGiftRequestWithGiftItem:(SendGiftItem *)giftItem {
+- (void)sendLiveRoomGiftRequestWithGiftItem:(GiftItem *)giftItem {
     @synchronized(self.sendGiftArray){
         [self.sendGiftArray addObject:giftItem];
     }
@@ -109,19 +109,19 @@
 
 - (void)sendGiftQurest {
     LSImManager *manager = [LSImManager manager];
-    SendGiftItem *item = self.sendGiftArray[0];
+    GiftItem *item = self.sendGiftArray[0];
 
     // 送礼
-    BOOL relues = [manager sendGift:item.roomID
+    BOOL relues = [manager sendGift:item.roomid
                            nickName:self.loginManager.loginItem.nickName
                              giftId:item.giftItem.infoItem.giftId
                            giftName:item.giftItem.infoItem.name
-                         isBackPack:item.isBackPack
-                            giftNum:item.giftNum
+                         isBackPack:item.is_backpack
+                            giftNum:item.giftnum
                         multi_click:item.giftItem.infoItem.multiClick
-                  multi_click_start:item.starNum
-                    multi_click_end:item.endNum
-                     multi_click_id:item.clickID
+                  multi_click_start:item.multi_click_start
+                    multi_click_end:item.multi_click_end
+                     multi_click_id:item.multi_click_id
                       finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit, double rebateCredit) {
                           NSLog(@"SendGiftTheQueueManager::sendGiftQurest( [接收发送礼物结果], success : %d, errType : %d, errMsg : %@, credit : %f, rebateCredit : %f )", success, errType, errMsg, credit, rebateCredit);
 

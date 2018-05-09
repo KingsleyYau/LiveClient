@@ -41,7 +41,6 @@
 
 #pragma mark - TableView
 #import "UIScrollView+PullRefresh.h"
-#import "UITableView+FDTemplateLayoutCell.h"
 
 #pragma mark - TextView
 #import "LSUITextFieldAlign.h"

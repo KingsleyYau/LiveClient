@@ -23,6 +23,7 @@
 #define RIDERURL_PARAM         "riderurl"
 #define FANSNUM_PARAM          "fansnum"
 #define HONORIMG_PARAM         "honor_img"
+#define HASTICKET_PARAM        "has_ticket"
 
 RecvEnterRoomNoticeTask::RecvEnterRoomNoticeTask(void)
 {
@@ -41,6 +42,7 @@ RecvEnterRoomNoticeTask::RecvEnterRoomNoticeTask(void)
     m_riderName = "";
     m_riderUrl = "";
     m_honorImg = "";
+    m_hasTicket = false;
 }
 
 RecvEnterRoomNoticeTask::~RecvEnterRoomNoticeTask(void)
@@ -99,6 +101,9 @@ bool RecvEnterRoomNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[HONORIMG_PARAM].isString()) {
             m_honorImg = tp.m_data[HONORIMG_PARAM].asString();
         }
+        if (tp.m_data[HASTICKET_PARAM].isNumeric()) {
+            m_hasTicket = tp.m_data[HASTICKET_PARAM].asInt() == 0 ? false : true;
+        }
     }
     
     // 协议解析失败
@@ -111,7 +116,7 @@ bool RecvEnterRoomNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum, m_honorImg);
+        m_listener->OnRecvEnterRoomNotice(m_roomId, m_userId, m_nickName, m_photourl, m_riderId, m_riderName, m_riderUrl, m_fansNum, m_honorImg, m_hasTicket);
 		FileLog("ImClient", "RecvEnterRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

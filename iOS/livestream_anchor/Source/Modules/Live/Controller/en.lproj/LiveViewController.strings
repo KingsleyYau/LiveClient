@@ -39,13 +39,15 @@
 
 "LIVE_NOT_ROOM" = "Broadcast has ended.\nPlease check back later.";
 
-"LIVE_WILL_END" = "Live will end in ";
+"LIVE_WILL_END" = "Broadcast will end in ";
 
 "LIVE_INVITE_FAIL" = "No response from %@，please try again later";
 
-"LIVE_INVITE_ING" = "Inviting %@ to One-on-One...";
+"LIVE_INVITE_ING" = "Inviting %@ to start One-on-One...";
 
-"LIVE_INVITE_HAS_ACCEPT" = "%@ has accepted";
+"LIVE_INVITE_HAS_ACCEPT" = "%@ has accepted.Broadcast will end soon.";
 
+"VIDEO_IS_JUMPY" = "You have an unstable connection.Broadcast may be jumpy.";
 
+"CONTACT_NOT_HAVE" = "The broadcast room has no viewers or the viewer you @ has left the broadcast room";
 

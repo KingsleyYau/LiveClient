@@ -102,6 +102,24 @@ public:
                 }
             }
             
+            /* hangoutCredirMsg */
+            if (root[LIVEROOM_HANGOUT].isObject()) {
+                Json::Value element = root[LIVEROOM_HANGOUT];
+                if (element[LIVEROOM_HANGOUT_CREDITPERMINUTE].isString()) {
+                    hangoutCredirMsg = element[hangoutCredirMsg].asString();
+                }
+            }
+            
+            /* showDetailPage */
+            if (root[LIVEROOM_SHOWDETAILPAGE].isString()) {
+                showDetailPage = root[LIVEROOM_SHOWDETAILPAGE].asString();
+            }
+            
+            /* showDescription */
+            if (root[LIVEROOM_SHOWDESCRIPTION].isString()) {
+                showDescription = root[LIVEROOM_SHOWDESCRIPTION].asString();
+            }
+            
         }
 
         result = true;
@@ -124,7 +142,9 @@ public:
         newestVer = 0;
         newestMsg = "";
         downloadAppUrl = "";
-
+        hangoutCredirMsg = "";
+        showDetailPage = "";
+        showDescription = "";
     }
     
     virtual ~HttpConfigItem() {
@@ -147,6 +167,9 @@ public:
      * newestMsg                  App普通升级提示
      * downloadAppUrl             下载App的url
      * svrList                    流媒体服务器ID
+     * hangoutCredirMsg           多人互动资费提示
+     * showDetailPage              节目详情页URL
+     * showDescription             节目介绍
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -163,6 +186,9 @@ public:
     string newestMsg;
     string downloadAppUrl;
     HttpLoginItem::SvrList svrList;
+    string hangoutCredirMsg;
+    string showDetailPage;
+    string showDescription;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

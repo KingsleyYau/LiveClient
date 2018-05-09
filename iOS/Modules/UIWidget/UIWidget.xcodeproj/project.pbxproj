@@ -15,11 +15,9 @@
 		254D0DF41EF27DBD00DDBC0B /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DF31EF27DBD00DDBC0B /* MobileCoreServices.framework */; };
 		254D0DFC1EF2837900DDBC0B /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 254D0DFB1EF2837900DDBC0B /* WebP.framework */; };
 		25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25E8873C1F582EE2006E4639 /* LSUITapImageView.m */; };
+		3EA003542094706E00278891 /* TXScrollLabelView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA003512094706E00278891 /* TXScrollLabelView.m */; };
+		3EA003552094706E00278891 /* UIView+TXFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3EA003532094706E00278891 /* UIView+TXFrame.m */; };
 		500689871D3CF97A00CF5D10 /* LSUIImageViewFill.m in Sources */ = {isa = PBXBuildFile; fileRef = 500689861D3CF97A00CF5D10 /* LSUIImageViewFill.m */; };
-		503A70531EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A704C1EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.m */; };
-		503A70541EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A704E1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m */; };
-		503A70551EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A70501EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m */; };
-		503A70561EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */; };
 		504B17B8201ABBD4007D5B8B /* LSUITabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */; };
 		50511F461F9450D0009E4C88 /* LSColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F451F9450D0009E4C88 /* LSColor.m */; };
 		50511F521F945A9C009E4C88 /* NSBundle+DeviceFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 50511F4F1F945A9C009E4C88 /* NSBundle+DeviceFamily.m */; };
@@ -77,16 +75,12 @@
 		254D0DFB1EF2837900DDBC0B /* WebP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WebP.framework; sourceTree = "<group>"; };
 		25E8873B1F582EE2006E4639 /* LSUITapImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUITapImageView.h; sourceTree = "<group>"; };
 		25E8873C1F582EE2006E4639 /* LSUITapImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUITapImageView.m; sourceTree = "<group>"; };
+		3EA003502094706E00278891 /* TXScrollLabelView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TXScrollLabelView.h; sourceTree = "<group>"; };
+		3EA003512094706E00278891 /* TXScrollLabelView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TXScrollLabelView.m; sourceTree = "<group>"; };
+		3EA003522094706E00278891 /* UIView+TXFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+TXFrame.h"; sourceTree = "<group>"; };
+		3EA003532094706E00278891 /* UIView+TXFrame.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+TXFrame.m"; sourceTree = "<group>"; };
 		500689851D3CF97A00CF5D10 /* LSUIImageViewFill.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIImageViewFill.h; sourceTree = "<group>"; };
 		500689861D3CF97A00CF5D10 /* LSUIImageViewFill.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIImageViewFill.m; sourceTree = "<group>"; };
-		503A704B1EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDIndexPathHeightCache.h"; sourceTree = "<group>"; };
-		503A704C1EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDIndexPathHeightCache.m"; sourceTree = "<group>"; };
-		503A704D1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDKeyedHeightCache.h"; sourceTree = "<group>"; };
-		503A704E1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDKeyedHeightCache.m"; sourceTree = "<group>"; };
-		503A704F1EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCell.h"; sourceTree = "<group>"; };
-		503A70501EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCell.m"; sourceTree = "<group>"; };
-		503A70511EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+FDTemplateLayoutCellDebug.h"; sourceTree = "<group>"; };
-		503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+FDTemplateLayoutCellDebug.m"; sourceTree = "<group>"; };
 		504B17B6201ABBD4007D5B8B /* LSUITabBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LSUITabBarItem.h; sourceTree = "<group>"; };
 		504B17B7201ABBD4007D5B8B /* LSUITabBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LSUITabBarItem.m; sourceTree = "<group>"; };
 		50511F441F9450D0009E4C88 /* LSColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSColor.h; sourceTree = "<group>"; };
@@ -180,19 +174,15 @@
 			path = Extern;
 			sourceTree = "<group>";
 		};
-		503A704A1EEF6F9A00BA8FF8 /* TableViewCategory */ = {
+		3EA0034F2094706E00278891 /* TXScrollLabelView */ = {
 			isa = PBXGroup;
 			children = (
-				503A704B1EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.h */,
-				503A704C1EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.m */,
-				503A704D1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.h */,
-				503A704E1EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m */,
-				503A704F1EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.h */,
-				503A70501EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m */,
-				503A70511EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.h */,
-				503A70521EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m */,
+				3EA003502094706E00278891 /* TXScrollLabelView.h */,
+				3EA003512094706E00278891 /* TXScrollLabelView.m */,
+				3EA003522094706E00278891 /* UIView+TXFrame.h */,
+				3EA003532094706E00278891 /* UIView+TXFrame.m */,
 			);
-			path = TableViewCategory;
+			path = TXScrollLabelView;
 			sourceTree = "<group>";
 		};
 		504B17B5201ABBA2007D5B8B /* Tabbar */ = {
@@ -331,6 +321,7 @@
 		CAF537C9171FDB70005DCB49 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3EA0034F2094706E00278891 /* TXScrollLabelView */,
 				52F65B6D2044EC6E007DA957 /* Progress */,
 				50511F4D1F945A6D009E4C88 /* Bundle */,
 				CAF537E8171FDB70005DCB49 /* Button */,
@@ -341,7 +332,6 @@
 				CAF537F6171FDB70005DCB49 /* PhotoZoom */,
 				504B17B5201ABBA2007D5B8B /* Tabbar */,
 				50A6112C1D10E86C00498C7C /* TableView */,
-				503A704A1EEF6F9A00BA8FF8 /* TableViewCategory */,
 				CAF53808171FDB71005DCB49 /* TextView */,
 				525081931CBCF03F006CF6D3 /* UIImage */,
 				CAF53810171FDB71005DCB49 /* ViewController */,
@@ -541,6 +531,7 @@
 				50EAD2851D17CA04008B8F76 /* UIScrollView+PullRefresh.m in Sources */,
 				504B17B8201ABBD4007D5B8B /* LSUITabBarItem.m in Sources */,
 				CAF53823171FDB71005DCB49 /* LSNavigationController.m in Sources */,
+				3EA003552094706E00278891 /* UIView+TXFrame.m in Sources */,
 				CAF5382F171FDB71005DCB49 /* LSBadgeButton.m in Sources */,
 				529DA2EB1F78AC7E00651318 /* LSListViewController.m in Sources */,
 				CAF53830171FDB71005DCB49 /* LSCheckButton.m in Sources */,
@@ -548,18 +539,15 @@
 				CAF53835171FDB71005DCB49 /* LSPZPagingScrollView.m in Sources */,
 				25E8873D1F582EE2006E4639 /* LSUITapImageView.m in Sources */,
 				52F65B762044F174007DA957 /* LSProgressView.m in Sources */,
-				503A70541EEF6F9A00BA8FF8 /* UITableView+FDKeyedHeightCache.m in Sources */,
 				CAF53836171FDB71005DCB49 /* LSPZPhotoView.m in Sources */,
 				50DA55451C76A75F001E1D98 /* LSButtonBar.m in Sources */,
 				50511F461F9450D0009E4C88 /* LSColor.m in Sources */,
-				503A70531EEF6F9A00BA8FF8 /* UITableView+FDIndexPathHeightCache.m in Sources */,
-				503A70551EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCell.m in Sources */,
 				5063A3EA1ECE91D000361942 /* LSUITextFieldAlign.m in Sources */,
 				CAF5383F171FDB71005DCB49 /* LSViewController.m in Sources */,
 				CAF53875171FE62E005DCB49 /* CustomUIView.m in Sources */,
 				5063A4121ECF1A9400361942 /* LSBLTextField.m in Sources */,
+				3EA003542094706E00278891 /* TXScrollLabelView.m in Sources */,
 				50511F521F945A9C009E4C88 /* NSBundle+DeviceFamily.m in Sources */,
-				503A70561EEF6F9A00BA8FF8 /* UITableView+FDTemplateLayoutCellDebug.m in Sources */,
 				50F125411D1BE4FA00435C12 /* LSUIImageViewTopFit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

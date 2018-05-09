@@ -54,7 +54,7 @@ bool ZBRecvSendSystemNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvSendSystemNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -82,15 +82,15 @@ bool ZBRecvSendSystemNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvSendSystemNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnZBRecvSendSystemNotice(m_roomId, m_msg, m_link, m_type);
-		FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRecvSendSystemNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvSendSystemNoticeTask::Handle() end");
 
 	return result;
 }
@@ -100,7 +100,7 @@ bool ZBRecvSendSystemNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvSendSystemNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -113,7 +113,7 @@ bool ZBRecvSendSystemNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvSendSystemNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvSendSystemNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

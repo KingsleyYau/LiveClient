@@ -54,42 +54,6 @@
     }
 }
 
-- (void)setUserId:(NSString *)userId {
-    _userId = userId;
-    if (_imLiveRoom) {
-        _imLiveRoom.anchorId = _userId;
-    }
-}
-
-- (NSString *)userId {
-    if (!_userId) {
-        _userId = _imLiveRoom.anchorId;
-    }
-    return _userId;
-}
-
-- (NSString *)userName {
-    if (!_userName) {
-        _userName = [LSLoginManager manager].loginItem.nickName;
-    }
-    return _userName;
-}
-
-- (void)setUserName:(NSString *)userName {
-    _userName = userName;
-}
-
-- (NSString *)photoUrl {
-    if (!_photoUrl) {
-        _photoUrl = [LSLoginManager manager].loginItem.photoUrl;
-    }
-    return _photoUrl;
-}
-
-- (void)setPhotoUrl:(NSString *)photoUrl {
-    _photoUrl = photoUrl;
-}
-
 - (NSString *)playUrl {
     NSString *realUrl = @"";
     if (self.playUrlArray.count > 0) {

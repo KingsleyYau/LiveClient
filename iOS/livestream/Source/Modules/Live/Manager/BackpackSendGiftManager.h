@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "BackpackGiftItem.h"
 #import "RoomBackGiftItem.h"
-#import "SendGiftItem.h"
+#import "GiftItem.h"
 
 @class BackpackSendGiftManager;
 typedef void (^RequestRoomGiftBlock)(BOOL success,NSMutableArray *backArray);
@@ -45,7 +45,7 @@ typedef void (^SendBackpackGiftBlock)(BOOL success,NSMutableArray *backArray);
 #pragma mark - 请求背包礼物列表
 - (void)getBackpackListRequest:(RequestRoomGiftBlock)callBack;
 
-- (int)sendBackpackGiftWithSendGiftItem:(SendGiftItem *)sendItem;
+- (int)sendBackpackGiftWithSendGiftItem:(GiftItem *)sendItem;
 
 - (void)updataBackpackGiftList;
 

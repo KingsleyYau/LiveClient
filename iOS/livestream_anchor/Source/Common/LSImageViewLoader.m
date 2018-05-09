@@ -108,7 +108,7 @@
 
     } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
         NSLog(@"LSImageViewLoader::refreshCachedImage( imageURL : %@, error : %@ )", imageURL, error);
-
+    
         if (image) {
             [self displayImage:image];
         }

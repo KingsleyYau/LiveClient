@@ -68,7 +68,7 @@ bool ZBSendGiftTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBSendGiftTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBSendGiftTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
 
@@ -86,16 +86,16 @@ bool ZBSendGiftTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBSendGiftTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBSendGiftTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
         m_listener->OnZBSendGift(GetSeq(), success, m_errType, m_errMsg);
-		FileLog("ZBImClient", "ZBSendGiftTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBSendGiftTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBSendGiftTask::Handle() end");
+	FileLog("ImClient", "ZBSendGiftTask::Handle() end");
 
 	return result;
 }
@@ -105,7 +105,7 @@ bool ZBSendGiftTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBSendGiftTask::GetSendData() begin");
+	FileLog("ImClient", "ZBSendGiftTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -127,7 +127,7 @@ bool ZBSendGiftTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBSendGiftTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBSendGiftTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

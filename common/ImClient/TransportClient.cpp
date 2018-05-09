@@ -6,6 +6,7 @@
  */
 
 #include "TransportClient.h"
+#include <common/KLog.h>
 
 TransportClient::TransportClient(void)
 {
@@ -43,7 +44,7 @@ bool TransportClient::Connect(const char* url)
     if (NULL != url && url[0] != '\0') {
         m_connStateLock->Lock();
         if (DISCONNECT == m_connState) {
-			// 释放mgr
+			// 释放mgr,
 			ReleaseMgrProc();
 
 			// 创建mgr
@@ -55,24 +56,26 @@ bool TransportClient::Connect(const char* url)
             struct mg_connect_opts opt = {0};
             opt.user_data = (void*)this;
             m_conn = mg_connect_ws_opt(&m_mgr, ev_handler, opt, m_url.c_str(), "", NULL);
+            FileLog("ImClient", "TransportClient::ConnectProc() m_conn->err:%d start", m_conn->err);
             if (NULL != m_conn && m_conn->err == 0) {
                 m_connState = CONNECTING;
                 result = true;
             }
             
-            // 连接失败
-            if (!result) {
-                if (NULL != m_conn) {
-                    // 释放mgr
-                    ReleaseMgrProc();
-                }
-                else {
-                    // 仅重置标志
-                    m_isInitMgr = false;
-                }
-            }
         }
         m_connStateLock->Unlock();
+    
+        // 连接失败, 不放在m_connStateLock锁里面，因为mg_connect_ws_opt已经ev_handler了，导致ReleaseMgrProc关闭websocket回调ev_handler 的关闭 调用OnDisconnect的m_connStateLock锁
+        if (!result) {
+            if (NULL != m_conn) {
+                // 释放mgr
+                ReleaseMgrProc();
+            }
+            else {
+                // 仅重置标志
+                m_isInitMgr = false;
+            }
+        }
     }
 
     return result;
@@ -193,7 +196,7 @@ void TransportClient::OnDisconnect()
             m_callback->OnDisconnect();
         }
     }
-    else if (CONNECTING == m_connState) {
+    else if (CONNECTING == m_connState || DISCONNECT == m_connState) {
         // 状态为连接中(返回连接失败)
         if (NULL != m_callback) {
             m_callback->OnConnect(false);

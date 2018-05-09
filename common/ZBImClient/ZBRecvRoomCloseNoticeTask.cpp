@@ -50,7 +50,7 @@ bool ZBRecvRoomCloseNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvRoomCloseNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvRoomCloseNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     // 协议解析
@@ -76,7 +76,7 @@ bool ZBRecvRoomCloseNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvRoomCloseNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvRoomCloseNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
@@ -94,7 +94,7 @@ bool ZBRecvRoomCloseNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvRoomCloseNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvRoomCloseNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -107,7 +107,7 @@ bool ZBRecvRoomCloseNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvRoomCloseNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvRoomCloseNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

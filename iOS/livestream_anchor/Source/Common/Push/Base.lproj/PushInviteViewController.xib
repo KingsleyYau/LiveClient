@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -25,13 +25,13 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Push_BackGround_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="7p9-Oo-Hys" userLabel="Back Ground View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="56"/>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Hg7-eh-fe7" userLabel="Lady Image View">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="Hg7-eh-fe7" userLabel="Lady Image View">
                     <rect key="frame" x="10" y="5" width="46" height="46"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="Hg7-eh-fe7" secondAttribute="height" multiplier="1:1" id="xEM-YE-f2T"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Karen is inviting you to start a private broadcast." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gm0-Sp-0V5" userLabel="Tips Label">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="middleTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gm0-Sp-0V5" userLabel="Tips Label">
                     <rect key="frame" x="61" y="5" width="198" height="46"/>
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <nil key="textColor"/>
@@ -84,7 +84,7 @@
         </view>
     </objects>
     <resources>
-        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Default_Img_Man_Circyle" width="100" height="100"/>
         <image name="Live_Preview_Btn_Cancel" width="16" height="16"/>
         <image name="Push_Accept_Btn" width="65" height="30"/>
         <image name="Push_BackGround_Icon" width="365" height="80"/>

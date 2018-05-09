@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0.0a</string>
+	<string>1.0.1a</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>100</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -28,7 +28,7 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>This lets you take photos right from within Qdating.</string>
+	<string>This lets you take photos right from within CharmLive.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This lets you send Voice Messages, and record videos with sound.</string>
 	<key>UIBackgroundModes</key>

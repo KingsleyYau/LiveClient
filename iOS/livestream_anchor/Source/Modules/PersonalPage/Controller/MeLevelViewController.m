@@ -24,7 +24,7 @@
 - (void)dealloc {
     NSLog(@"MeLevelViewController::dealloc()");
     [self.meLevelView stopLoading];
-    [self.meLevelView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    [self.meLevelView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
 }
 
 - (void)viewDidLoad {

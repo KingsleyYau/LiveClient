@@ -45,7 +45,7 @@ bool ZBRecvTalentRequestNoticeTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
     ZBTalentRequestItem item;
@@ -63,15 +63,15 @@ bool ZBRecvTalentRequestNoticeTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         m_listener->OnZBRecvTalentRequestNotice(item);
-		FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::Handle() callback end, result:%d", result);
 	}
 	
-	FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::Handle() end");
+	FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::Handle() end");
 
 	return result;
 }
@@ -81,7 +81,7 @@ bool ZBRecvTalentRequestNoticeTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -96,7 +96,7 @@ bool ZBRecvTalentRequestNoticeTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRecvTalentRequestNoticeTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRecvTalentRequestNoticeTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

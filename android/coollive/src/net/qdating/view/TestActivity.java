@@ -8,6 +8,7 @@ import android.os.Handler;
 import net.qdating.utils.Log;
 
 import net.qdating.LSConfig;
+import net.qdating.LSConfig.VideoConfigType;
 import net.qdating.LSPlayer;
 import net.qdating.LSPublisher;
 import net.qdating.R;
@@ -47,7 +48,7 @@ public class TestActivity extends Activity {
 		final int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
 		publisher = new LSPublisher();
-		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null);
+		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null, VideoConfigType.VideoConfigType240x240, 12, 12, 500 * 1000);
 		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
 
 //		handler.postDelayed(new Runnable() {

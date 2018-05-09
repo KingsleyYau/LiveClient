@@ -50,7 +50,7 @@ bool ZBRoomInTask::Handle(const ZBTransportProtocol& tp)
 {
 	bool result = false;
 
-	FileLog("ZBImClient", "ZBRoomInTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
+	FileLog("ImClient", "ZBRoomInTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     ZBRoomInfoItem item;
@@ -71,13 +71,13 @@ bool ZBRoomInTask::Handle(const ZBTransportProtocol& tp)
 		m_errMsg = "";
 	}
 
-	FileLog("ZBImClient", "ZBRoomInTask::Handle() m_errType:%d", m_errType);
+	FileLog("ImClient", "ZBRoomInTask::Handle() m_errType:%d", m_errType);
 
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == ZBLCC_ERR_SUCCESS);
         m_listener->OnZBRoomIn(GetSeq(), success, m_errType, m_errMsg, item);
-		FileLog("ZBImClient", "ZBRoomInTask::Handle() callback end, result:%d", result);
+		FileLog("ImClient", "ZBRoomInTask::Handle() callback end, result:%d", result);
 	}
 	
 	FileLog("ImClient", "RoomInTask::Handle() end");
@@ -90,7 +90,7 @@ bool ZBRoomInTask::GetSendData(Json::Value& data)
 {
 	bool result = false;
 	
-	FileLog("ZBImClient", "ZBRoomInTask::GetSendData() begin");
+	FileLog("ImClient", "ZBRoomInTask::GetSendData() begin");
     {
         // 构造json协议
         Json::Value value;
@@ -100,7 +100,7 @@ bool ZBRoomInTask::GetSendData(Json::Value& data)
 
     result = true;
 
-	FileLog("ZBImClient", "ZBRoomInTask::GetSendData() end, result:%d", result);
+	FileLog("ImClient", "ZBRoomInTask::GetSendData() end, result:%d", result);
 
 	return result;
 }

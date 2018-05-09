@@ -13,7 +13,7 @@
 #import "LSImageViewLoader.h"
 #import "LSTimer.h"
 #import "LiveGobalManager.h"
-@interface PushBookingViewController ()
+@interface PushBookingViewController ()<UIAlertViewDelegate>
 @property (nonatomic, strong) UserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (strong) LSTimer *removeTimer;
@@ -71,28 +71,9 @@
     NSLog(@"PushBookingViewController::acceptAction: url:%@", self.url);
 
     if ([LiveGobalManager manager].liveRoom) {
-        UIAlertController * alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"Alert_Msg") preferredStyle:UIAlertControllerStyleAlert];
         
-        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"CANCEL", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            // 停止定时器
-            [self.removeTimer stopTimer];
-            // 移除界面
-            [self.view removeFromSuperview];
-            [self removeFromParentViewController];
-        }];
-        UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"SURE", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            // 停止定时器
-            [self.removeTimer stopTimer];
-            // 发送通知
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"LivePushBookingNotification" object:self.url];
-            // 移除界面
-            [self.view removeFromSuperview];
-            [self removeFromParentViewController];
-            
-        }];
-        [alert addAction:cancelAction];
-        [alert addAction:okAction];
-        [self presentViewController:alert animated:YES completion:nil];
+        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedStringFromSelf(@"Alert_Msg") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"SURE", nil), nil];
+        [alertView show];
     }
     else
     {
@@ -108,6 +89,29 @@
     }
 }
 
+#pragma mark - AlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+     if (buttonIndex == alertView.cancelButtonIndex) {
+         // 停止定时器
+         [self.removeTimer stopTimer];
+         // 移除界面
+         [self.view removeFromSuperview];
+         [self removeFromParentViewController];
+     }
+    else
+    {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        // 发送通知
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"LivePushBookingNotification" object:self.url];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+}
+
+#pragma mark 取消事件
 - (IBAction)cancelAction:(id)sender {
     NSLog(@"PushBookingViewController::cancelAction( url : %@ )", self.url);
     // 停止定时器
@@ -122,7 +126,7 @@
     WeakObject(self, weakSelf);
     [self.userInfoManager getFansBaseInfo:userId finishHandler:^(AudienModel * _Nonnull item) {
         weakSelf.tipsLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_BROADCAST_TIP"), item.nickName];
-        [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [weakSelf.imageViewLoader refreshCachedImage:weakSelf.ladyImageView options:SDWebImageRefreshCached imageUrl:item.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
     }];
 }
 

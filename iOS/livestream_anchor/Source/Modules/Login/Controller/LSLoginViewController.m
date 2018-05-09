@@ -9,25 +9,21 @@
 #import "LSLoginViewController.h"
 #import "LSConfigManager.h"
 #import "LSLoginManager.h"
-#import "UpdateDialog.h"
 #import "LSMainViewController.h"
 #import "LiveModule.h"
 #import "DialogTip.h"
-
 #import "StreamTestViewController.h"
 
-@interface LSLoginViewController ()<UITextViewDelegate,LoginManagerDelegate,UITextFieldDelegate>
+@interface LSLoginViewController ()<LoginManagerDelegate,UITextFieldDelegate>
 
 @property (nonatomic, copy) NSString * token;
-@property (weak, nonatomic) IBOutlet UITextView *infoView;
 @property (weak, nonatomic) IBOutlet UIButton *loginBtn;
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *pawTextfield;
 @property (weak, nonatomic) IBOutlet UITextField *codeTextField;
-@property (weak, nonatomic) IBOutlet UIImageView *checkcodeImageView;
 @property (weak, nonatomic) IBOutlet UIButton *reloadBtn;
-@property (nonatomic, strong) UpdateDialog * updateDialog;
 @property (nonatomic, strong) LSLoginManager * loginManager;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *codeLoading;
 @end
 
 @implementation LSLoginViewController
@@ -42,7 +38,6 @@
    
     self.loginBtn.layer.cornerRadius = self.loginBtn.frame.size.height/2;
     self.loginBtn.layer.masksToBounds = YES;
-    [self setInfoViewText];
     
     self.loginManager = [LSLoginManager manager];
     [self.loginManager addDelegate:self];
@@ -53,14 +48,18 @@
     self.codeTextField.autocorrectionType = UITextAutocorrectionTypeNo;
     
     self.pawTextfield.delegate = self;
-    
-    self.updateDialog = [UpdateDialog dialog];
-    
+    self.codeTextField.delegate = self;
     
     NSString * email = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
     if (email.length > 0) {
         self.emailTextField.text = email;
     }
+    
+    __weak typeof(self) weakSelf = self;
+    UIApplication *app = [UIApplication sharedApplication];
+    [[NSNotificationCenter defaultCenter]addObserverForName:UIApplicationDidEnterBackgroundNotification  object:app queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
+        [weakSelf.view endEditing:YES];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -68,15 +67,31 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBar.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
-    
+
+    [self registerNotification];
     [self getConfig];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+     
+}
+
+#pragma mark -  添加对键盘的监听
+- (void)registerNotification {
+    //键盘即将显示时的监听
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                           selector:@selector(keyboardWillApprear:)
+                                               name:UIKeyboardWillShowNotification
+                                             object:nil];
+    //键盘即将隐藏时的监听
+    [[NSNotificationCenter defaultCenter]addObserver:self
+                                           selector:@selector(keyboardWillDisAppear:)
+                                               name:UIKeyboardWillHideNotification
+                                             object:nil];
 }
 
 #pragma mark 获取同步配置和验证码
@@ -90,24 +105,22 @@
                 LSConfigManager *config = [LSConfigManager manager];
                 config.item = item;
                 
-                [[ZBLSRequestManager manager] setWebSite:item.httpSvrUrl];
+                [[LSAnchorRequestManager manager] setWebSite:item.httpSvrUrl];
                 [[LiveModule module] setConfigUrl:item.httpSvrUrl];
-                
+               
                 [self getCheckCode];
-                
+               
                 NSInteger buildID = [[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"] integerValue];
                 //判断是否有强制更新
                 if (item.minAavilableVer > buildID) {
-                    self.updateDialog.tipsLabel.text = item.minAvailableMsg;
-                    [self.updateDialog showDialog:self.view actionBlock:^{
-                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LSConfigManager manager].item.downloadAppUrl]];
-                    }];
+                    [self showUpdateAlertView];
                 }
             }
             else
             {
+                self.codeLoading.hidden = YES;
                 self.reloadBtn.hidden = NO;
-                self.checkcodeImageView.hidden = YES;
+                [self.reloadBtn setBackgroundImage:[UIImage imageNamed:@"Reload"] forState:UIControlStateNormal];
             }
         });
     }];
@@ -117,71 +130,74 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-- (IBAction)audienceLogin:(UIButton *)sender {
-    // Test
+
+#pragma mark 登录按钮点击方法
+- (IBAction)loginBtnDid:(UIButton *)sender {
     StreamTestViewController *vc = [[StreamTestViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
-    
-//    // 开始登陆
-//    [[LiveModule module] start:@"manId123" token:ALEX_TOKEN];
-}
-
-//登录按钮点击方法
-- (IBAction)loginBtnDid:(UIButton *)sender {
+    return;
     
     [self.view endEditing:YES];
     
-    if (self.emailTextField.text.length > 0 && self.pawTextfield.text > 0 && self.codeTextField.text > 0) {
-    
-        // 保存输入
-        self.token = self.emailTextField.text;
-        
-        NSString *emailStr = self.emailTextField.text;
-        NSCharacterSet  *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
-        emailStr = [emailStr stringByTrimmingCharactersInSet:set];
- 
-        NSString *codeStr = self.codeTextField.text;
-        codeStr = [codeStr stringByTrimmingCharactersInSet:set];
-        
-        // 开始登陆
-        [[LSLoginManager manager]login:emailStr password:self.pawTextfield.text checkcode:codeStr];
-        
-    } else {
-        // 弹出提示
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:nil message:@"Input token cant be empty" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *ok = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", nil)
-                                                     style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction *_Nonnull action){
-                                                   }];
-        [vc addAction:ok];
-        [self presentViewController:vc animated:NO completion:nil];
+    if (self.emailTextField.text.length == 0) {
+        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"ID_MSG", nil)];
+        return;
     }
+    if (self.pawTextfield.text.length == 0) {
+        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"PAW_MSG", nil)];
+        return;
+    }
+    if (self.codeTextField.text.length == 0) {
+        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"CODE_MSG", nil)];
+        return;
+    }
+    if (!ZBAppDelegate.isNetwork) {
+        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"NO_NETWORK", nil)];
+        return;
+    }
+    // 保存输入
+    self.token = self.emailTextField.text;
+    
+    NSString *emailStr = self.emailTextField.text;
+    NSCharacterSet  *set = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    emailStr = [emailStr stringByTrimmingCharactersInSet:set];
+
+    NSString *codeStr = self.codeTextField.text;
+    codeStr = [codeStr stringByTrimmingCharactersInSet:set];
+    
+    // 开始登陆
+    [[LSLoginManager manager]login:emailStr password:self.pawTextfield.text checkcode:codeStr];
+    [self showLoading];
 }
 
 //重新请求验证码
 - (IBAction)reloadBtnDid:(UIButton *)sender {
+    self.codeLoading.hidden = NO;
+    self.reloadBtn.hidden = YES;
     [self getConfig];
 }
 
 // 请求验证码
 - (void)getCheckCode {
-    __weak typeof(self) weakSelf = self;
-    ZBLSRequestManager *manager = [ZBLSRequestManager manager];
+    NSLog(@"请求验证码");
+    self.codeLoading.hidden = NO;
+    self.reloadBtn.hidden = YES;
+    LSAnchorRequestManager *manager = [LSAnchorRequestManager manager];
     [manager anchorGetVerificationCode:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, const char * _Nullable data, int len) {
-
-        __block UIImage *image = [UIImage imageWithData:[NSData dataWithBytes:data length:len]];
+        NSData * imageData = [[NSData alloc]initWithBytes:data length:len];
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"获取验证码%d",len);
+            self.codeLoading.hidden = YES;
+            self.reloadBtn.hidden = NO;
                 // 获取验证码成功
                 if (len > 0) {
+                UIImage *image = [UIImage imageWithData:imageData];
                     // 有验证码, 不能自动登陆
-                    weakSelf.reloadBtn.hidden = YES;
-                    weakSelf.checkcodeImageView.hidden = NO;
-                    [weakSelf.checkcodeImageView setImage:image];
+                    [self.reloadBtn setBackgroundImage:image forState:UIControlStateNormal];
                     
                 } else {
                     // 无验证码
-                    weakSelf.reloadBtn.hidden = NO;
-                    weakSelf.checkcodeImageView.hidden = YES;
+                    [self.reloadBtn setBackgroundImage:[UIImage imageNamed:@"Reload"] forState:UIControlStateNormal];
                 }
         });
     }];
@@ -204,13 +220,11 @@
             //强制更新
              if (errnum == ZBHTTP_LCC_ERR_FORCED_TO_UPDATE) {
                 [self.navigationController popToRootViewControllerAnimated:NO];
-                self.updateDialog.tipsLabel.text = [LSConfigManager manager].item.minAvailableMsg;
-                [self.updateDialog showDialog:self.view actionBlock:^{
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LSConfigManager manager].item.downloadAppUrl]];
-                }];
+                 [self showUpdateAlertView];
             }
             else
             {
+                NSLog(@"登录失败获取验证码");
                 [self getCheckCode];
                 [[DialogTip dialogTip]showDialogTip:self.view tipText:errmsg];
             }
@@ -218,62 +232,7 @@
     });
 }
 
-#pragma mark TextViewDelegate
--(BOOL)textViewShouldBeginEditing:(UITextView *)textView
-{
-    return NO;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldInteractWithURL:(NSURL *)URL inRange:(NSRange)characterRange {
-    if ([[URL scheme] isEqualToString:@"Terms"]) {
-        
-        return NO;
-    }
-    else
-    {
-        return YES;
-    }
-    return YES;
-}
-
-#pragma mark 设置下划线
-- (void)setInfoViewText
-{
-    self.infoView.delegate = self;
-    NSString * str = NSLocalizedString(@"User agreement", nil);
-    
-    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:str];
-    
-    [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[str rangeOfString:str]];
-    
-    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-    style.alignment = NSTextAlignmentCenter;
-    
-    [attributedString addAttribute:NSParagraphStyleAttributeName value:style range:[str rangeOfString:str]];
-    
-    [attributedString addAttribute:NSLinkAttributeName
-                             value:@"Terms://"
-                             range:[[attributedString string] rangeOfString:NSLocalizedString(@"Terms and Policies", nil)]];
-    [attributedString addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:[str rangeOfString:NSLocalizedString(@"Terms and Policies", nil)]];//设置下划线
-    
-    self.infoView.attributedText = attributedString;
-}
-
-#pragma mark TextField监听通知和回调
-- (void)textDidChange:(NSNotification *)notifi
-{
-    if (self.emailTextField.text.length >= 4 && self.pawTextfield.text.length >= 4 && self.codeTextField.text.length > 0)
-    {
-        [self.loginBtn setBackgroundColor:COLOR_WITH_16BAND_RGB(0x297AF3)];
-        self.loginBtn.userInteractionEnabled = YES;
-    }
-    else
-    {
-        [self.loginBtn setBackgroundColor:COLOR_WITH_16BAND_RGB(0xbfbfbf)];
-        self.loginBtn.userInteractionEnabled = NO;
-    }
-}
-
+#pragma mark TextFieldDelegate
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     if (textField == self.pawTextfield) {
@@ -286,7 +245,49 @@
             return NO;
         }
     }
+    if (textField == self.codeTextField) {
+        if (string.length == 0) return YES;
+        
+        NSInteger existedLength = textField.text.length;
+        NSInteger selectedLength = range.length;
+        NSInteger replaceLength = string.length;
+        if (existedLength - selectedLength + replaceLength > 4) {
+            return NO;
+        }
+    }
     return YES;
+}
+
+#pragma mark -  键盘即将显示的时候调用
+- (void)keyboardWillApprear:(NSNotification *)noti {
+    
+    CGFloat loginBtnMaxY = self.loginBtn.frame.origin.y + self.loginBtn.frame.size.height +20;
+    // 取出通知中的信息
+    NSDictionary *dict = noti.userInfo;
+    // 键盘的高度
+    // 停止后的Y值
+    CGRect keyboardRect = [dict[UIKeyboardFrameEndUserInfoKey]CGRectValue];
+    CGFloat keyboardEndY = keyboardRect.origin.y;
+
+    if (loginBtnMaxY > keyboardEndY) {
+        // 对 View 执行动画，向上平移
+        [UIView animateWithDuration:0.3 animations:^{
+            self.view.transform =CGAffineTransformMakeTranslation(0, (keyboardEndY - loginBtnMaxY));
+        }];
+    }
+}
+
+#pragma mark -  键盘即将隐藏的时候调用
+- (void)keyboardWillDisAppear:(NSNotification *)noti {
+    // 取出通知中的信息
+    NSDictionary *dict = noti.userInfo;
+    // 间隔时间
+    NSTimeInterval interval = [dict[UIKeyboardAnimationDurationUserInfoKey]doubleValue];
+    
+    [UIView animateWithDuration:interval animations:^{
+        // CGAffineTransformIdentity 恢复 transform的设置
+        self.view.transform =CGAffineTransformIdentity;
+    }];
 }
 
 #pragma mark 隐藏键盘
@@ -294,4 +295,23 @@
 {
     [self.view endEditing:YES];
 }
+
+#pragma mark 强制更新弹窗
+- (void)showUpdateAlertView
+{
+    if (![[[NSUserDefaults standardUserDefaults]objectForKey:@"showMandatoryUpdateDialog"] boolValue]) {
+
+        UIAlertController * alertView = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"UPDATE_TITLE", nil) message:[LSConfigManager manager].item.minAvailableMsg preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction * okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"UPDATE_UPDATE_NOW", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[LSConfigManager manager].item.downloadAppUrl]];
+        }];
+        [alertView addAction:okAction];
+        [self presentViewController:alertView animated:YES completion:nil];
+        
+        [[NSUserDefaults standardUserDefaults]setObject:@"1" forKey:@"showMandatoryUpdateDialog"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 @end

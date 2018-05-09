@@ -101,21 +101,21 @@
 }
 
 - (void)updataChatMessage:(MsgItem *)item {
+//    // 礼物label重算frame值
+//    CGSize size = self.container.size;
+//    if (item.msgType == MsgType_Gift) {
+//        size.width = size.width - 3;
+//    }
+//    self.container.size = size;
+//
+//    // 生成排版结果
+//    self.tapBtn.hidden = YES;
+//    YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
+//    CGRect frame = self.messageLabel.frame;
+//    frame.size = layout.textBoundingSize;
+//
     // 礼物label重算frame值
-    CGSize size = self.container.size;
-    if (item.msgType == MsgType_Gift) {
-        size.width = size.width - 3;
-    }
-    self.container.size = size;
-    
-    // 生成排版结果
-    self.tapBtn.hidden = YES;
-    YYTextLayout *layout = [YYTextLayout layoutWithContainer:self.container text:item.attText];
-    CGRect frame = self.messageLabel.frame;
-    frame.size = layout.textBoundingSize;
-    
-    // 礼物label重算frame值
-    CGRect giftFrame = frame;
+    CGRect giftFrame = item.labelFrame;
     if (item.msgType == MsgType_Gift) {
         self.textBackgroundView.hidden = NO;
         giftFrame.origin.x = 3;
@@ -123,10 +123,9 @@
         self.textBackgroundView.hidden = YES;
         giftFrame.origin.x = 0;
     }
-    frame = giftFrame;
     
-    self.messageLabel.frame = frame;
-    self.messageLabel.textLayout = layout;
+    self.messageLabel.frame = giftFrame;
+    self.messageLabel.textLayout = item.layout;
     self.messageLabel.shadowColor = Color(0, 0, 0, 0.7);
     self.messageLabel.shadowOffset = CGSizeMake(0, 0.5);
     self.messageLabel.shadowBlurRadius = 1.0f;
@@ -144,7 +143,6 @@
 }
 
 - (void)pushGoAction {
-    
     if ([self.msgDelegate respondsToSelector:@selector(msgCellRequestHttp:)]) {
         [self.msgDelegate msgCellRequestHttp:self.linkUrl];
     }
@@ -152,18 +150,6 @@
 
 + (NSString *)textPreDetail {
     return @"          ";
-}
-
-- (void)setMessageLabelHeight:(CGFloat)messageLabelHeight {
-    
-    
-}
-
-- (CGSize)sizeThatFits:(CGSize)size{
-    
-    CGFloat giftLabelHight = 1;
-    giftLabelHight += self.messageLabel.frame.size.height;
-    return CGSizeMake(self.tableViewWidth , giftLabelHight);
 }
 
 - (void)layoutSubviews {

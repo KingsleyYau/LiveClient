@@ -55,6 +55,12 @@ class PublisherStatusCallbackImp;
 @property (assign) int width;
 // 高
 @property (assign) int height;
+// 帧率
+@property (assign) int fps;
+// 关键帧间隔
+@property (assign) int keyInterval;
+// 视频码率
+@property (assign) int bitRate;
 // 第一次处理帧时间
 @property (assign) long long videoFrameStartPushTime;
 @property (assign) long long videoFrameLastPushTime;
@@ -103,24 +109,27 @@ private:
 
 @implementation RtmpPublisherOC
 #pragma mark - 获取实例
-+ (instancetype)instance:(NSInteger)width height:(NSInteger)height {
-    RtmpPublisherOC *obj = [[[self class] alloc] initWithWidthAndHeight:width height:height];
++ (instancetype)instance:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate {
+    RtmpPublisherOC *obj = [[[self class] alloc] initWithWidthAndHeight:width height:height fps:fps keyInterval:keyInterval bitRate:bitRate];
     return obj;
 }
 
-- (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height {
-    NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld )", (long)width, (long)height);
+- (instancetype)initWithWidthAndHeight:(NSInteger)width height:(NSInteger)height fps:(NSInteger)fps keyInterval:(NSInteger)keyInterval bitRate:(NSInteger)bitRate {
+    NSLog(@"RtmpPublisherOC::initWithWidthAndHeight( width : %ld, height : %ld, fps : %ld, keyInterval : %ld, bitRate : %ld )", (long)width, (long)height, (long)fps, (long)keyInterval, (long)bitRate);
     
     if(self = [super init] ) {
         // 初始化参数
         _width = (int)width;
         _height = (int)height;
+        _fps = (int)fps;
+        _keyInterval = (int)keyInterval;
+        _bitRate = (int)bitRate;
         _mute = NO;
         
         self.videoFrameLastPushTime = 0;
         self.videoFrameStartPushTime = 0;
         self.videoFrameIndex = 0;
-        self.videoFrameInterval = 1000.0 / FPS;
+        self.videoFrameInterval = 1000.0 / fps;
         
         self.videoPause = NO;
         self.videoResume = YES;
@@ -371,7 +380,7 @@ recordH264FilePath:(NSString *)recordH264FilePath
     }
     
     // 替换编码器
-    self.videoEncoder->Create(self.width, self.height, BIT_RATE, KEY_FRAME_INTERVAL, FPS, VIDEO_FORMATE_BGRA);
+    self.videoEncoder->Create(self.width, self.height, self.bitRate, self.keyInterval, self.fps, VIDEO_FORMATE_BGRA);
     self.publisher->SetVideoEncoder(self.videoEncoder);
     
     self.audioEncoder->Create(44100, 1, 16);

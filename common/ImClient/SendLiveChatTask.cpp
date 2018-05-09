@@ -98,9 +98,12 @@ bool SendLiveChatTask::GetSendData(Json::Value& data)
         int i = 0;
         for (list<string>::const_iterator iter = m_at.begin(); iter != m_at.end(); iter++) {
             string item = (*iter);
-            strArray[i] = item;
+            strArray[i++] = item;
         }
-        value[AT_PARAM] = strArray;
+        if (i > 0) {
+             value[AT_PARAM] = strArray;
+        }
+       
         data = value;
     }
 

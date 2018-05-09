@@ -125,11 +125,7 @@
             
         case MsgType_Join:
             // 名字
-            if (item.usersType == UsersType_Me) {
-                nameColor = roomStyleItem.myNameColor;
-            } else {
-                nameColor = roomStyleItem.userNameColor;
-            }
+            nameColor = roomStyleItem.riderStrColor;
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:NSLocalizedString(@"Member_Join",@"Member_Join") font:MessageFont color:roomStyleItem.riderStrColor]];
@@ -138,11 +134,7 @@
             
         case MsgType_RiderJoin:
             // 名字
-            if (item.usersType == UsersType_Me) {
-                nameColor = roomStyleItem.myNameColor;
-            } else {
-                nameColor = roomStyleItem.userNameColor;
-            }
+            nameColor = roomStyleItem.riderStrColor;
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ ",item.name] font:MessageFont color:nameColor]];
             // 内容
             [attributeStr appendAttributedString:[self parseMessage:[NSString stringWithFormat:@"%@ \"%@\" ", NSLocalizedString(@"Member_RiderJoin",@"Member_RiderJoin"), item.riderName]  font:MessageFont color:roomStyleItem.riderStrColor]];

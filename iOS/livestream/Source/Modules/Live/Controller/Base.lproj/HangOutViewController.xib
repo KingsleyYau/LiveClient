@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HangOutViewController">
+            <connections>
+                <outlet property="arrowImageView" destination="tkt-hK-8NO" id="FsI-AL-Mkh"/>
+                <outlet property="arrowImageViewWidth" destination="4xb-Bg-Gmp" id="NYx-a7-RhE"/>
+                <outlet property="audienceNameLabel" destination="xAm-O2-N9I" id="QeC-Er-nKO"/>
+                <outlet property="audienceNameLabelWidth" destination="5tg-BI-5e3" id="8zc-Ih-vE9"/>
+                <outlet property="chatAudienceView" destination="QYc-Rq-FyF" id="YHM-GQ-QDC"/>
+                <outlet property="chatAudienceViewLeading" destination="NPI-3e-bfH" id="iqZ-Nq-EwK"/>
+                <outlet property="chatAudienceViewWidth" destination="DAE-z2-bQY" id="LK0-Al-Igu"/>
+                <outlet property="chatBtn" destination="CKa-LU-Lzo" id="hk3-Az-kiS"/>
+                <outlet property="giftBtn" destination="Wft-pB-94y" id="41E-yY-7RM"/>
+                <outlet property="inputMessageView" destination="8fP-8N-PoD" id="pNh-tt-pMz"/>
+                <outlet property="inputMessageViewBottom" destination="bzG-ZQ-v7E" id="qyx-Gg-3q8"/>
+                <outlet property="inputMessageViewHeight" destination="Pzs-ko-eeJ" id="iQV-7S-jiE"/>
+                <outlet property="liveSendBarView" destination="HVN-pp-FHs" id="31N-HU-Vap"/>
+                <outlet property="selectBtn" destination="mkf-wp-HXP" id="yWL-wK-nT6"/>
+                <outlet property="videoBottomView" destination="b5z-fa-Fgu" id="AHC-3L-0Pe"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b5z-fa-Fgu">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                    <color key="backgroundColor" red="1" green="0.4431372549" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="b5z-fa-Fgu" secondAttribute="height" multiplier="1:1" id="rbn-Kg-Hej"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8fP-8N-PoD" userLabel="Input Message View">
+                    <rect key="frame" x="0.0" y="619" width="375" height="48"/>
+                    <subviews>
+                        <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QYc-Rq-FyF">
+                            <rect key="frame" x="8" y="10" width="77" height="28"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="@ All" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAm-O2-N9I">
+                                    <rect key="frame" x="5" y="6.5" width="46" height="14.5"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="46" id="5tg-BI-5e3"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_selectNum_up" translatesAutoresizingMaskIntoConstraints="NO" id="tkt-hK-8NO">
+                                    <rect key="frame" x="56" y="10.5" width="12" height="7"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="12" id="4xb-Bg-Gmp"/>
+                                    </constraints>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mkf-wp-HXP" customClass="LSCheckButton">
+                                    <rect key="frame" x="0.0" y="0.0" width="77" height="28"/>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.25077218559999997" green="0.62525595379999999" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstItem="mkf-wp-HXP" firstAttribute="leading" secondItem="QYc-Rq-FyF" secondAttribute="leading" id="4sP-Qt-R58"/>
+                                <constraint firstAttribute="width" constant="77" id="DAE-z2-bQY"/>
+                                <constraint firstAttribute="trailing" secondItem="mkf-wp-HXP" secondAttribute="trailing" id="GHn-9Y-JNz"/>
+                                <constraint firstItem="xAm-O2-N9I" firstAttribute="leading" relation="lessThanOrEqual" secondItem="QYc-Rq-FyF" secondAttribute="leading" constant="5" id="NPI-3e-bfH"/>
+                                <constraint firstAttribute="bottom" secondItem="mkf-wp-HXP" secondAttribute="bottom" id="Q8E-Wm-bSZ"/>
+                                <constraint firstItem="tkt-hK-8NO" firstAttribute="leading" relation="lessThanOrEqual" secondItem="xAm-O2-N9I" secondAttribute="trailing" constant="5" id="SO3-dp-cQW"/>
+                                <constraint firstAttribute="trailing" relation="lessThanOrEqual" secondItem="tkt-hK-8NO" secondAttribute="trailing" constant="9" id="cTZ-c7-Ocy"/>
+                                <constraint firstItem="tkt-hK-8NO" firstAttribute="centerY" secondItem="QYc-Rq-FyF" secondAttribute="centerY" id="d3S-JA-1Wf"/>
+                                <constraint firstItem="mkf-wp-HXP" firstAttribute="top" secondItem="QYc-Rq-FyF" secondAttribute="top" id="efd-Ql-C05"/>
+                                <constraint firstItem="xAm-O2-N9I" firstAttribute="centerY" secondItem="QYc-Rq-FyF" secondAttribute="centerY" id="zJ7-Rh-KX6"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HVN-pp-FHs" customClass="LiveSendBarView">
+                            <rect key="frame" x="95" y="0.0" width="280" height="48"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CKa-LU-Lzo">
+                            <rect key="frame" x="95" y="8" width="224" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="32" id="J5L-Lq-8bY"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <state key="normal" title="Say something...">
+                                <color key="titleColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="chatBtnAction:" destination="-1" eventType="touchUpInside" id="FLL-Fi-2SK"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wft-pB-94y" userLabel="Gift Button">
+                            <rect key="frame" x="329" y="4" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="36" id="NNI-MM-AYb"/>
+                                <constraint firstAttribute="width" secondItem="Wft-pB-94y" secondAttribute="height" multiplier="1:1" id="d08-BX-6dX"/>
+                            </constraints>
+                            <state key="normal" image="Live_Public_Btn_Gift"/>
+                            <connections>
+                                <action selector="giftBtnAction:" destination="-1" eventType="touchUpInside" id="tyC-Tk-m2Y"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="HVN-pp-FHs" firstAttribute="height" secondItem="8fP-8N-PoD" secondAttribute="height" id="21w-DY-7iB"/>
+                        <constraint firstItem="HVN-pp-FHs" firstAttribute="leading" secondItem="CKa-LU-Lzo" secondAttribute="leading" id="4Dc-cY-59D"/>
+                        <constraint firstItem="Wft-pB-94y" firstAttribute="leading" secondItem="CKa-LU-Lzo" secondAttribute="trailing" constant="10" id="5mh-CO-ifA"/>
+                        <constraint firstItem="HVN-pp-FHs" firstAttribute="trailing" secondItem="8fP-8N-PoD" secondAttribute="trailing" id="6NL-r3-QAu"/>
+                        <constraint firstItem="CKa-LU-Lzo" firstAttribute="leading" secondItem="QYc-Rq-FyF" secondAttribute="trailing" constant="10" id="6ti-ps-Y3J"/>
+                        <constraint firstItem="Wft-pB-94y" firstAttribute="bottom" secondItem="CKa-LU-Lzo" secondAttribute="bottom" id="CbN-Rw-S9j"/>
+                        <constraint firstItem="HVN-pp-FHs" firstAttribute="top" secondItem="8fP-8N-PoD" secondAttribute="top" id="H3O-xJ-A1Y"/>
+                        <constraint firstItem="QYc-Rq-FyF" firstAttribute="leading" secondItem="8fP-8N-PoD" secondAttribute="leading" constant="8" id="I1K-4X-wf6"/>
+                        <constraint firstAttribute="height" constant="48" id="Pzs-ko-eeJ"/>
+                        <constraint firstAttribute="bottom" secondItem="QYc-Rq-FyF" secondAttribute="bottom" constant="10" id="YFr-QO-NVX"/>
+                        <constraint firstItem="QYc-Rq-FyF" firstAttribute="top" secondItem="8fP-8N-PoD" secondAttribute="top" constant="10" id="YM2-4G-kw1"/>
+                        <constraint firstItem="CKa-LU-Lzo" firstAttribute="centerY" secondItem="8fP-8N-PoD" secondAttribute="centerY" id="aR1-we-rjz"/>
+                        <constraint firstItem="Wft-pB-94y" firstAttribute="trailing" secondItem="8fP-8N-PoD" secondAttribute="trailing" constant="-10" id="yl7-Vn-7PX"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8fP-8N-PoD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="27G-30-7T9"/>
+                <constraint firstAttribute="trailing" secondItem="b5z-fa-Fgu" secondAttribute="trailing" id="4nl-ih-OsU"/>
+                <constraint firstItem="b5z-fa-Fgu" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="JPP-tg-nzt"/>
+                <constraint firstAttribute="trailing" secondItem="8fP-8N-PoD" secondAttribute="trailing" id="b9v-fe-sre"/>
+                <constraint firstAttribute="bottom" secondItem="8fP-8N-PoD" secondAttribute="bottom" id="bzG-ZQ-v7E"/>
+                <constraint firstItem="b5z-fa-Fgu" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mru-IR-MW6"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Public_Btn_Gift" width="41" height="45"/>
+        <image name="Live_selectNum_up" width="12" height="7"/>
+    </resources>
+</document>

@@ -15,6 +15,7 @@
 #import "BookPrivateBroadcastViewController.h"
 #import "LiveFinshViewController.h"
 #import "AnchorPersonalViewController.h"
+#import "ShowLiveViewController.h"
 
 #import "LiveModule.h"
 #import "LSImManager.h"
@@ -147,8 +148,6 @@ typedef enum PreLiveStatus {
 
 - (void)dealloc {
     NSLog(@"PreLiveViewController::dealloc()");
-
-    [[LiveGobalManager manager] removeDelegate:self];
     
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
@@ -258,6 +257,9 @@ typedef enum PreLiveStatus {
     
     // 设置允许显示立即邀请
     [[LiveGobalManager manager] setCanShowInvite:YES];
+    
+    // 移除退入后台通知
+    [[LiveGobalManager manager] removeDelegate:self];
 }
 
 - (void)setupContainView {
@@ -320,7 +322,7 @@ typedef enum PreLiveStatus {
         if (!bFlag) {
             NSLog(@"PreLiveViewController::startRequest( [请求进入指定直播间失败], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
             self.statusLabel.text = DEBUG_STRING(@"请求进入指定直播间失败");
-            [self handleError:LCC_ERR_CONNECTFAIL errMsg:@""];
+            [self handleError:LCC_ERR_CONNECTFAIL errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
         }
 
     } else {
@@ -343,7 +345,7 @@ typedef enum PreLiveStatus {
             if (!bFlag) {
                 NSLog(@"PreLiveViewController::startRequest( [请求进入公开直播间失败], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
                 self.statusLabel.text = DEBUG_STRING(@"请求进入公开直播间失败");
-                [self handleError:LCC_ERR_CONNECTFAIL errMsg:@""];
+                [self handleError:LCC_ERR_CONNECTFAIL errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
             }
 
         } else {
@@ -382,24 +384,8 @@ typedef enum PreLiveStatus {
                                                         }
 
                                                     } else {
-                                                        if (!self.inviteForce) {
-                                                            // 未发送过强制邀请
-                                                            if (errType == LCC_ERR_ANCHOR_PLAYING) {
-                                                                // 主播正在私密直播中
-                                                                
-                                                                // 弹出选择对话框
-                                                                self.statusLabel.text = DEBUG_STRING(@"主播正在直播中");
-                                                                [self handleError:errType errMsg:errMsg];
-
-                                                            } else {
-                                                                // 弹出错误提示(邀请失败)
-                                                                [self handleError:errType errMsg:errMsg];
-                                                            }
-
-                                                        } else {
-                                                            // 弹出错误提示(邀请失败)
-                                                            [self handleError:errType errMsg:errMsg];
-                                                        }
+                                                        // 弹出错误提示(邀请失败)
+                                                        [self handleError:errType errMsg:errMsg];
                                                     }
                                                 }
 
@@ -409,7 +395,7 @@ typedef enum PreLiveStatus {
             if (!bFlag) {
                 NSLog(@"PreLiveViewController::startRequest( [请求私密邀请失败], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
                 self.statusLabel.text = DEBUG_STRING(@"请求私密邀请失败");
-                [self handleError:LCC_ERR_INVITE_FAIL errMsg:@""];
+                [self handleError:LCC_ERR_CONNECTFAIL errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
             }
         }
     }
@@ -451,7 +437,7 @@ typedef enum PreLiveStatus {
     switch (errType) {
         case LCC_ERR_NO_CREDIT: {
             // TODO:1.没有信用点
-            self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_ERR_ADD_CREDIT");
+            self.tipsLabel.text = errMsg;
             
             // 显示充点按钮
             self.addCreditButtonTop.constant = 15;
@@ -460,7 +446,7 @@ typedef enum PreLiveStatus {
         } break;
         case LCC_ERR_ANCHOR_PLAYING: {
             // TODO:2.主播正在私密直播中
-            self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_ERR_BOARDCAST_LIVING");
+            self.tipsLabel.text = errMsg;
             
             // 显示强制邀请按钮
             self.inviteButtonTop.constant = 15;
@@ -473,13 +459,7 @@ typedef enum PreLiveStatus {
         case LCC_ERR_ANCHOR_OFFLINE: {
             // TODO:3.主播不在线
             
-            NSString *tips = @"";
-            if(errMsg.length > 0) {
-                tips = [NSString stringWithFormat:@"%@", errMsg];
-            } else {
-                tips = NSLocalizedStringFromSelf(@"PRELIVE_ERR_BOARDCAST_OFFLINE");
-            }
-            self.tipsLabel.text = tips;
+            self.tipsLabel.text = errMsg;
 
             // 显示预约按钮
             [self showBook];
@@ -487,32 +467,17 @@ typedef enum PreLiveStatus {
         } break;
         case LCC_ERR_INVITE_NO_RESPOND: {
             // TODO:4.主播未确认,180秒超时
-            self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE");
+            self.tipsLabel.text = errMsg;
             
             // 显示预约按钮
             [self showBook];
             
         } break;
-        case LCC_ERR_INVITE_FAIL: {
-            // TODO:5.发送邀请失败
-            self.tipsLabel.text = NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT");//NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_FAIL");
-
-            // 显示重试
-            [self showRetry];
-
-        } break;
         // TODO:6.重连获取主播邀请状态拒绝
         case LCC_ERR_INVITATION_EXPIRE:
         case LCC_ERR_INVITE_REJECT:{
             // TODO:7.主播拒绝
-            NSString *tips = @"";
-            if(errMsg.length > 0) {
-                tips = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_REJECT"), errMsg];
-            } else {
-                tips = NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE");
-            }
-            
-            self.tipsLabel.text = tips;
+            self.tipsLabel.text = errMsg;
             
             // 显示预约按钮
             [self showBook];
@@ -520,7 +485,7 @@ typedef enum PreLiveStatus {
         }break;
         case LCC_ERR_CONNECTFAIL: {
             // TODO:8.网络中断
-            self.tipsLabel.text = NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT");
+            self.tipsLabel.text = errMsg;
 
             // 显示重试
             [self showRetry];
@@ -529,7 +494,7 @@ typedef enum PreLiveStatus {
         case LCC_ERR_ROOM_FULL: {
             // 进入付费公开直播间房间满人
             
-            self.tipsLabel.text = NSLocalizedStringFromSelf(@"LIVE_ROOM_FULL");
+            self.tipsLabel.text = errMsg;
             // 显示立即私密
             self.vipStartButtonTop.constant = 15;
             self.vipStartButtonTop.constant = 35;
@@ -540,13 +505,7 @@ typedef enum PreLiveStatus {
         }break;
         default: {
             // TODO:9.普通错误提示
-            NSString *tip = @"";
-            if (errMsg.length > 0) {
-                tip = errMsg;
-            } else {
-                tip = NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP");
-            }
-            self.tipsLabel.text = tip;
+            self.tipsLabel.text = errMsg;
             
             // 显示预约按钮
             [self showBook];
@@ -735,6 +694,7 @@ typedef enum PreLiveStatus {
     self.isEnterRoom = YES;
     PublicViewController *vc = [[PublicViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
+    [[LiveGobalManager manager] removeDelegate:self];
     self.vc = vc;
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -761,6 +721,15 @@ typedef enum PreLiveStatus {
     // TODO:进入豪华私密直播间界面
     self.isEnterRoom = YES;
     PrivateVipViewController *vc = [[PrivateVipViewController alloc] initWithNibName:nil bundle:nil];
+    vc.liveRoom = self.liveRoom;
+    self.vc = vc;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)enterShowLiveRoom {
+    // TODO:进入节目直播间
+    self.isEnterRoom = YES;
+    ShowLiveViewController *vc = [[ShowLiveViewController alloc] initWithNibName:nil bundle:nil];
     vc.liveRoom = self.liveRoom;
     self.vc = vc;
     [self.navigationController pushViewController:vc animated:YES];
@@ -985,7 +954,13 @@ typedef enum PreLiveStatus {
                     } else if (replyType == REPLYTYPE_REJECT) {
                         // 主播结束拒绝, 弹出提示
                         self.statusLabel.text = DEBUG_STRING(@"主播拒绝私密邀请");
-                        [self handleError:LCC_ERR_INVITE_REJECT errMsg:msg];
+                        NSString *tips = @"";
+                        if(msg.length > 0) {
+                            tips = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_REJECT"), msg];
+                        } else {
+                            tips = NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE");
+                        }
+                        [self handleError:LCC_ERR_INVITE_REJECT errMsg:tips];
                     }
 
                     // 清空邀请
@@ -1021,13 +996,13 @@ typedef enum PreLiveStatus {
                     [self startRequest];
 
                 } else if (item.replyType == HTTPREPLYTYPE_REJECT) {
-                    // 主播结束拒绝
+                    // 主播已拒绝
 
                     // 清空邀请
                     self.inviteId = nil;
 
                     // 显示错误提示
-                    [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:@""];
+                    [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE")];
 
                 } else if (item.replyType == HTTPREPLYTYPE_CANCEL) {
                     // 邀请已经取消
@@ -1036,7 +1011,7 @@ typedef enum PreLiveStatus {
                     self.inviteId = nil;
 
                     // 显示错误提示
-                    [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:@""];
+                    [self handleError:LCC_ERR_INVITATION_EXPIRE errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE")];
 
                 } else {
                     // 继续等待
@@ -1066,7 +1041,7 @@ typedef enum PreLiveStatus {
                self.status != PreLiveStatus_Error
                ) {
                 // 处理错误
-                [self handleError:LCC_ERR_DEFAULT errMsg:@""];
+                [self handleError:LCC_ERR_DEFAULT errMsg:NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP")];
                 
                 // 弹出直播间关闭界面
                 LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
@@ -1160,7 +1135,7 @@ typedef enum PreLiveStatus {
         dispatch_async(dispatch_get_main_queue(), ^{
             // 倒数完成, 提示超时
             [self stopHandleTimer];
-            [self handleError:LCC_ERR_INVITE_NO_RESPOND errMsg:@""];
+            [self handleError:LCC_ERR_INVITE_NO_RESPOND errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE")];
             // 允许显示退出按钮
             self.cancelButton.hidden = NO;
         });
