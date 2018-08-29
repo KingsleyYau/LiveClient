@@ -18,7 +18,6 @@
                 <outlet property="loading" destination="Tk9-i8-Hb7" id="tfA-Zg-Aex"/>
                 <outlet property="nameLabel" destination="4Zg-HP-xoB" id="iXa-JG-DNd"/>
                 <outlet property="reloadBtn" destination="UcZ-bM-k6r" id="j34-i7-8hH"/>
-                <outlet property="showView" destination="jCA-TO-FHI" id="62b-yw-I5X"/>
                 <outlet property="tipsLabel" destination="NUy-l2-1bb" id="wqP-wB-cLR"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -39,7 +38,7 @@
                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLQ-Wb-do2" userLabel="Cancel Button">
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QLQ-Wb-do2" userLabel="Cancel Button">
                     <rect key="frame" x="320" y="20" width="40" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="Live_Preview_Btn_Cancel"/>
@@ -58,6 +57,9 @@
                     <rect key="frame" x="82" y="321" width="211" height="33"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="Live_PreLive_Btn_Retry"/>
+                    <connections>
+                        <action selector="reloadBtnDid:" destination="-1" eventType="touchUpInside" id="cMx-l5-daC"/>
+                    </connections>
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IOQ-fd-xIn" userLabel="Book Private Button">
                     <rect key="frame" x="84" y="320" width="207" height="35"/>
@@ -65,7 +67,6 @@
                     <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
                     <connections>
                         <action selector="bookBtnDid:" destination="-1" eventType="touchUpInside" id="Rjv-iT-0SM"/>
-                        <action selector="reloadBtnDid:" destination="-1" eventType="touchUpInside" id="oM1-do-wD0"/>
                     </connections>
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UcZ-bM-k6r" userLabel="Add Credit Button">
@@ -80,12 +81,6 @@
                     <rect key="frame" x="177" y="324" width="20" height="20"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                 </activityIndicatorView>
-                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jCA-TO-FHI" customClass="ShowListView">
-                    <rect key="frame" x="16" y="456" width="344" height="180"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <gestureRecognizers/>
-                </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <point key="canvasLocation" x="-6.5" y="-9.5"/>

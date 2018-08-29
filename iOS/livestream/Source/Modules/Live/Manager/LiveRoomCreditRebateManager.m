@@ -56,7 +56,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 请求账号余额
-            [self getLeftCreditRequest];
+            [self getLeftCreditRequest:^(BOOL success, double credit) {
+                
+            }];
         }
     });
 }
@@ -89,7 +91,7 @@
 - (BOOL)removeDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate {
     BOOL result = NO;
     
-    NSLog(@"liveRoomCreditRebateManager::removeDelegate( delegate : %@ )", delegate);
+    NSLog(@"LiveRoomCreditRebateManager::removeDelegate( delegate : %@ )", delegate);
     
     @synchronized(self.delegates) {
         for (NSValue *value in self.delegates) {
@@ -106,7 +108,7 @@
 }
 
 #pragma mark - 请求账号余额
-- (void)getLeftCreditRequest {
+- (void)getLeftCreditRequest:(GetCreditFinshtHandler)handler {
 
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit) {
@@ -114,7 +116,8 @@
         NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
 
         dispatch_async(dispatch_get_main_queue(), ^{
-
+            handler(success, credit);
+            
             if (success) {
                 [self setCredit:credit];
             } else {

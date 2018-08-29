@@ -102,7 +102,7 @@ bool ZBRecvControlManPushNoticeTask::GetSendData(Json::Value& data)
 // 获取命令号
 string ZBRecvControlManPushNoticeTask::GetCmdCode() const
 {
-	return ZB_CMD_RECVLEAVINGPUBLICROOMNOTICE;
+	return ZB_CMD_RECVCONTROLMANPUSHNOTICE;
 }
 
 // 设置seq

@@ -45,7 +45,7 @@ public:
             }
             /* errNo */
             if (root[IMLACKCREDITHANGOUTITEM_ERRNO_PARAM].isNumeric()) {
-                errNo = root[IMLACKCREDITHANGOUTITEM_ERRNO_PARAM].asInt();
+                errNo = (LCC_ERR_TYPE)root[IMLACKCREDITHANGOUTITEM_ERRNO_PARAM].asInt();
             }
             /* errMsg */
             if (root[IMLACKCREDITHANGOUTITEM_ERRMSG_PARAM].isString()) {
@@ -61,7 +61,7 @@ public:
         anchorId = "";
         nickName = "";
         avatarImg = "";
-        errNo = 0;
+        errNo = LCC_ERR_FAIL;
         errMsg = "";
     }
     
@@ -81,7 +81,7 @@ public:
     string                      anchorId;
     string                      nickName;
     string                      avatarImg;
-    int                         errNo;
+    LCC_ERR_TYPE               errNo;
     string                      errMsg;
 
 };

@@ -55,4 +55,13 @@ public class ApplicationSettingUtil {
         }
         return defaultCountryCode;
     }
+
+    /**
+     * 全局格式化金币值的显示方式
+     * @param coinsValue
+     * @return
+     */
+    public static String formatCoinValue(double coinsValue){
+        return String.valueOf(Double.valueOf(coinsValue).intValue());
+    }
 }

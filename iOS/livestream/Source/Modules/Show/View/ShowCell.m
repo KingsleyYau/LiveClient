@@ -44,8 +44,8 @@
         NSArray *nib = [bundle loadNibNamedWithFamily:[ShowCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        cell.showListView.delegates = cell;
     }
+        cell.showListView.delegates = cell;
     
     return cell;
 }

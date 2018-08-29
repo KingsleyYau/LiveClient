@@ -30,6 +30,10 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
 
+@property (weak, nonatomic) IBOutlet UIButton *backButton;
+
+@property (weak, nonatomic) IBOutlet UIButton *closeButton;
+
 /** 代理 */
 @property (nonatomic, weak) id<CreditViewDelegate> delegate;
 

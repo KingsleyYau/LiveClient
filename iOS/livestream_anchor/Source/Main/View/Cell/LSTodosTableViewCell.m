@@ -30,6 +30,10 @@
     return 54;
 }
 
+- (void)setFrame:(CGRect)frame {
+    frame.size.height -= 4;
+    [super setFrame:frame];
+}
 
 + (id)getUITableViewCell:(UITableView*)tableView {
     LSTodosTableViewCell *cell = (LSTodosTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[LSTodosTableViewCell cellIdentifier]];

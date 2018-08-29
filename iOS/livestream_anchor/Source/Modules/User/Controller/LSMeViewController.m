@@ -50,7 +50,7 @@
 
 
 - (void)dealloc {
-    NSLog(@"AnchorPersonalViewController::dealloc()");
+    NSLog(@"LSMeViewController::dealloc()");
     [self.meView stopLoading];
     [self hideAndResetLoading];
     [self.meView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];
@@ -101,22 +101,23 @@
     }
     self.urlController = [[LSLiveWKWebViewController alloc] init];
     self.urlController.isRequestWeb = YES;
-    
+ 
     NSString *anchorPage = self.urlController.configManager.item.mePageUrl;
-    NSString *device; // 设备类型
-    if (anchorPage.length > 0) {
-        if (IS_IPAD) {
-            device = [NSString stringWithFormat:@"device=32"];
-        } else {
-            device = [NSString stringWithFormat:@"device=31"];
-        }
-        
-        if ([anchorPage containsString:@"?"]) {
-            anchorPage = [NSString stringWithFormat:@"%@&%@",anchorPage,device];
-        } else {
-            anchorPage = [NSString stringWithFormat:@"%@?%@",anchorPage,device];
-        }
-    }
+     anchorPage = [self.urlController setupCommonConfig:anchorPage];
+//    NSString *device; // 设备类型
+//    if (anchorPage.length > 0) {
+//        if (IS_IPAD) {
+//            device = [NSString stringWithFormat:@"device=32"];
+//        } else {
+//            device = [NSString stringWithFormat:@"device=31"];
+//        }
+//
+//        if ([anchorPage containsString:@"?"]) {
+//            anchorPage = [NSString stringWithFormat:@"%@&%@",anchorPage,device];
+//        } else {
+//            anchorPage = [NSString stringWithFormat:@"%@?%@",anchorPage,device];
+//        }
+//    }
     self.urlController.baseUrl = anchorPage;
     
     __weak typeof(self) weakSelf = self;

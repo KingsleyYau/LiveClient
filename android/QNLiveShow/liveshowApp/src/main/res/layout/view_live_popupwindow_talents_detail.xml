@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_talents"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Title -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black">
+
+        <TextView
+            android:id="@+id/tv_detailTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center_horizontal"
+            android:maxWidth="230dp"
+            android:paddingBottom="13dp"
+            android:paddingTop="13dp"
+            android:lines="1"
+            android:text="@string/live_talent_title"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:singleLine="true" />
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:padding="13dp"
+            android:src="@drawable/ic_arrow_back_white" />
+    </RelativeLayout>
+
+    <!-- 分割线 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/talent_divider" />
+
+    <!-- 内容 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="13dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <!-- 主播头像 -->
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img_anchorAvatar"
+                    android:layout_width="@dimen/live_size_48dp"
+                    android:layout_height="@dimen/live_size_48dp"
+                    fresco:actualImageScaleType="focusCrop"
+                    fresco:backgroundImage="@color/black4"
+                    fresco:placeholderImage="@drawable/ic_default_photo_woman"
+                    fresco:roundAsCircle="true"
+                    fresco:roundBottomLeft="true"
+                    fresco:roundBottomRight="true"
+                    fresco:roundTopLeft="true"
+                    fresco:roundTopRight="true"
+                    fresco:roundedCornerRadius="30dp" />
+
+                <!-- 详细 -->
+                <LinearLayout
+                    android:id="@+id/ll_des"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/live_size_12dp"
+                    android:background="@drawable/live_talent_detail_des_bg"
+                    android:orientation="vertical"
+                    android:paddingBottom="18dp"
+                    android:paddingRight="@dimen/live_size_14dp"
+                    android:paddingTop="@dimen/live_size_10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:drawableLeft="@drawable/ic_talent_des_title"
+                        android:text="@string/live_talent_des_title"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_12sp"
+                        android:textStyle="bold" />
+
+                    <!-- 描述 -->
+                    <com.qpidnetwork.qnbridgemodule.view.textView.JustifyTextView
+                        android:id="@+id/tv_des"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginTop="4dp"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="@color/white_text_70"
+                        android:textSize="@dimen/live_size_12sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 礼物 -->
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/cl_gift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="80dp">
+
+                <!-- 图标与文字右对齐， 文字paddingRight与图标宽一致，这样文字超长时，才可以同时显示图标与省略号-->
+                <TextView
+                    android:id="@+id/tv_talentGift"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:paddingRight="18dp"
+                    android:text="@string/live_talent_gift"
+                    android:textColor="@color/black3"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img_talentGift"
+                    android:layout_width="18dp"
+                    android:layout_height="@dimen/live_size_16dp"
+                    android:layout_gravity="center"
+                    app:layout_constraintRight_toRightOf="@+id/tv_talentGift"
+                    fresco:actualImageScaleType="centerInside"
+                    fresco:backgroundImage="@color/transparent_full"
+                    fresco:placeholderImage="@drawable/ic_default_gift" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <!-- 价格 -->
+            <TextView
+                android:id="@+id/tv_talentCredits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:ellipsize="end"
+                android:layout_marginLeft="80dp"
+                android:text="@string/live_talent_pay_for_gift"
+                android:textColor="@color/black3"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -43,6 +43,11 @@ public:
             if (root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_COUNTRY].isString()) {
                 country = root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_COUNTRY].asString();
             }
+            
+            /* onlineStatus */
+            if (root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ONLINESTATUS].isNumeric()) {
+                onlineStatus = GetIntToOnLineStatus(root[LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ONLINESTATUS].asInt());
+            }
 
         }
         result = true;
@@ -55,6 +60,7 @@ public:
         photoUrl = "";
         age = 0;
         country = "";
+        onlineStatus = ONLINE_STATUS_UNKNOWN;
     }
     
     virtual ~HttpHangoutAnchorItem() {
@@ -68,12 +74,14 @@ public:
      * photoUrl         头像
      * age              年龄
      * country		    国家
+     * onlineStatus     在线状态（ONLINE_STATUS_OFFLINE：离线，ONLINE_STATUS_LIVE：在线）
      */
     string   anchorId;
     string   nickName;
     string   photoUrl;
     int      age;
     string   country;
+    OnLineStatus onlineStatus;
 };
 
 typedef list<HttpHangoutAnchorItem> HangoutAnchorList;

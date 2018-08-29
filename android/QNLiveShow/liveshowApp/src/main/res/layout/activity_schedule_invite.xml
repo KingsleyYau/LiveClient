@@ -6,28 +6,30 @@
     android:orientation="vertical">
 
     <!--TODO:优化标题底部指示器的宽度-->
-    <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
-        android:id="@+id/tabPageIndicator"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
-        custom:titleTextColorUnselected="#3c3c3c"
-        custom:titleTextColorSelected="#5d0e86"
-        custom:tabSelectedBgColor="@android:color/transparent"
-        custom:tabUnselectedBgColor="@android:color/transparent"
-        custom:titleTextSize="12sp"
-        custom:digitalHintTextColor="@android:color/white"
-        custom:digitalHintTextBgColor="#ec6941"
-        custom:digitalHintTextSize="7sp"
-        custom:hasDigitalHint="true"
-        custom:underlineColor="#61db96ff"
-        custom:underlineHeight="1dp"
-        custom:indicatorColor="#5d0e86"
-        custom:indicatorHeight="2dp"
-        />
-
+        android:background="@color/theme_default_white"
+        android:orientation="vertical">
+        <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
+            android:id="@+id/tabPageIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            custom:titleTextColorUnselected="@color/text_color_grey"
+            custom:titleTextColorSelected="@color/theme_default_light_black"
+            custom:tabSelectedBgColor="@android:color/transparent"
+            custom:tabUnselectedBgColor="@android:color/transparent"
+            custom:titleTextSize="12sp"
+            custom:digitalHintTextColor="@android:color/white"
+            custom:digitalHintTextBgColor="#ec6941"
+            custom:digitalHintTextSize="7sp"
+            custom:underlineColor="@color/theme_default_divider_grey"
+            custom:underlineHeight="1dp"
+            custom:indicatorColor="@color/theme_sky_blue"
+            custom:indicatorHeight="2dp"
+            />
+    </LinearLayout>
     <android.support.v4.view.ViewPager
         android:id="@+id/viewPagerContent"
         android:layout_width="match_parent"

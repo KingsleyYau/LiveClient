@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/v_float"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#A5FFFFFF"/>
+
+    <com.qpidnetwork.anchor.liveshow.liveroom.vedio.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|left"/>
+
+    <com.qpidnetwork.anchor.liveshow.liveroom.vedio.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|right"/>
+
+
+    <com.qpidnetwork.anchor.liveshow.liveroom.vedio.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|left"/>
+
+    <com.qpidnetwork.anchor.liveshow.liveroom.vedio.HangOutVedioWindow
+        android:id="@+id/view_vedioWindow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"/>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:background="#19FFFFFF"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="center_vertical"
+        android:background="#19FFFFFF"/>
+</FrameLayout>

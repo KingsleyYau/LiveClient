@@ -21,25 +21,33 @@ typedef enum {
     LiveUrlTypeBookingList,
     LiveUrlTypeBackpackList,
     LiveUrlTypeBuyCredit,
-    LiveUrlTypeMyLevel
+    LiveUrlTypeMyLevel,
+    LiveUrlTypeChatlist,
+    LiveUrlTypeChat,
+    LiveUrlTypeGreetmaillist,
+    LiveUrlTypeMaillist
 } LiveUrlType;
 
+
+
 typedef enum {
-    BookingListUrlTypeWaitUser = 1,
+    BookingListUrlTypeWaitUser,
     BookingListUrlTypeWaitAnchor,
     BookingListUrlTypeConfirm,
     BookingListUrlTypeHistory
 } BookingListUrlType;
 
 typedef enum {
-    BackPackListUrlTypePresent = 1,
+    BackPackListUrlTypePostStamp,
     BackPackListUrlTypeVoucher,
-    BackPackListUrlTypeDrive,
+    BackPackListUrlTypePresent,
+    BackPackListUrlTypeDrive
 } BackPackListUrlType;
 
 typedef enum {
     MainListTypeHot = 1,
     MainListTypeFollow,
+    MainListTypeCalendar
 } MainListType;
 
 typedef enum {
@@ -60,19 +68,24 @@ typedef enum {
  @param roomType 直播间类型
  */
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPreLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPublicLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openShow:(NSString *_Nullable)showId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openInvited:(NSString *_Nullable)userName userId:(NSString *_Nullable)userId inviteId:(NSString *_Nullable)inviteId;
 //- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index isForTest:(BOOL)forTest;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openAnchorDetail:(NSString *_Nullable)anchorId;
-- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBooking:(NSString *_Nullable)anchorId;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBooking:(NSString *_Nullable)anchorId userName:(NSString * _Nullable)userName;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBookingList:(int)bookType;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBackpackList:(int)BackpackType;
 - (void)liveUrlHandlerOpenAddCredit:(LiveUrlHandler *_Nonnull)handler;
 - (void)liveUrlHandlerOpenMyLevel:(LiveUrlHandler *_Nonnull)handler;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openWithModule:(LiveUrlType)type;
 - (void)liveUrlHandlerActive:(LiveUrlHandler *_Nonnull)handler openWithModule:(LiveUrlType)type;
-
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler OpenHangout:(NSString *_Nullable)roomId anchorId:(NSString *_Nullable)anchorId nickName:(NSString *_Nullable)nickName;
+- (void)liveUrlHandlerOpenChatlist:(LiveUrlHandler *_Nonnull)handler;
+- (void)liveUrlHandlerOpenGreetmaillist:(LiveUrlHandler *_Nonnull)handler;
+- (void)liveUrlHandlerOpenMaillist:(LiveUrlHandler *_Nonnull)handler;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openChatWithAnchor:(NSString *_Nullable)anchorId;
 @end
 
 @interface LiveUrlHandler : NSObject
@@ -115,9 +128,11 @@ typedef enum {
 - (BOOL)handleOpenURL;
 
 #pragma mark - 获取模块URL
-- (NSURL * _Nonnull)createUrlToInviteByRoomId:(NSString * _Nullable)roomId userId:(NSString * _Nullable)roomId roomType:(LiveRoomType)roomType;
+- (NSURL * _Nonnull)createUrlToHangoutByRoomId:(NSString * _Nullable)roomId anchorId:(NSString * _Nullable)anchorId nickName:(NSString *_Nullable)nickName;
 
-- (NSURL *)createUrlToShowRoomId:(NSString *)roomId userId:(NSString *)userId;
+- (NSURL * _Nonnull)createUrlToInviteByRoomId:(NSString * _Nullable)roomId userId:(NSString * _Nullable)userId roomType:(LiveRoomType)roomType;
+
+- (NSURL * _Nonnull)createUrlToShowRoomId:(NSString * _Nonnull)roomId userId:(NSString * _Nullable)userId;
 
 - (NSURL * _Nonnull)createUrlToInviteByInviteId:(NSString * _Nullable)inviteId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName;
 

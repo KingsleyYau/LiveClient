@@ -34,13 +34,24 @@
 #define BOOK_PHONE_ITEM_CLASS   		"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookPhoneItem"
 
 /* 5.背包    */
-#define PACKAGE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"
-#define PACKAGE_VOUCHER_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/VoucherItem"
-#define PACKAGE_RIDE_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/RideItem"
+#define PACKAGE_GIFT_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"
+#define PACKAGE_VOUCHER_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/VoucherItem"
+#define PACKAGE_RIDE_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/RideItem"
+#define PACKAGE_BIND_ANCHOR_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/BindAnchorItem"
+#define PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/VouchorAvailableInfoItem"
 
 /* 6.其他    */
-#define OTHER_CONFIG_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/ConfigItem"
-#define OTHER_ANCHORINFO_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/AnchorInfoItem"
-#define OTHER_USERINFO_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/UserInfoItem"
+#define OTHER_CONFIG_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/ConfigItem"
+#define OTHER_ANCHORINFO_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/AnchorInfoItem"
+#define OTHER_USERINFO_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/UserInfoItem"
+#define OTHER_MAINUNREADNUM_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/MainUnreadNumItem"
+
+/* 8.多人互动 */
+#define HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/HangoutAnchorInfoItem"
+#define HANGOUT_HANGOUGIFTLIST_ITEM_CLASS 		    "com/qpidnetwork/livemodule/httprequest/item/HangoutGiftListItem"
+
+
+/* 9.节目 */
+#define PROGRAM_PROGRAMINFO_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/ProgramInfoItem"
 
 #endif /* CALLBACKITEMANDROIDDEF_H_ */

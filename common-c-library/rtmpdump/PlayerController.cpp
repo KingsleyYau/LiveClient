@@ -100,7 +100,7 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     mpAudioRenderer->Start();
     // 开始播放
     if( bFlag ) {
-        bFlag = mRtmpPlayer.PlayUrl(url, recordFilePath);
+        bFlag = mRtmpPlayer.PlayUrl(recordFilePath);
     }
     // 开始录制
     if( bFlag ) {

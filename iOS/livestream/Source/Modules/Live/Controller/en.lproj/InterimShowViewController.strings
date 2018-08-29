@@ -4,3 +4,6 @@
 
 /* Class = "UILabel"; text = "Tips"; ObjectID = "NUy-l2-1bb"; */
 "NUy-l2-1bb.text" = "Tips";
+
+// 邀请发送成功，等待主播确认
+"PRELIVE_TIPS_INVITE_SUCCESS" = "Waiting for the broadcaster to start broadcast...";

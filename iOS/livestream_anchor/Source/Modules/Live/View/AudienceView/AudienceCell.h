@@ -12,6 +12,7 @@
 @interface AudienceCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *headImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *showIcon;
 
 + (NSString *)cellIdentifier;
 

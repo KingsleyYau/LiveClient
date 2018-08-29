@@ -42,12 +42,16 @@
         CGFloat itemHeight = (self.containView.frame.size.height - self.blanking * (self.items.count + 1)) / self.items.count;
         
         for(UIView *view in self.items) {
-            view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+//            view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight |UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
             [view removeFromSuperview];
+//            view.frame = CGRectMake(self.blanking, curIndex, self.containView.frame.size.width - 2 * self.blanking, itemHeight);
             [self.containView addSubview:view];
-            view.frame = CGRectMake(self.blanking, curIndex, self.containView.frame.size.width - 2 * self.blanking, itemHeight);
+            [view mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.width.equalTo(self.containView);
+                make.top.equalTo(@(curIndex));
+                make.height.equalTo(@(itemHeight));
+            }];
             curIndex += itemHeight;
-            curIndex += self.blanking;
         }
     }
     

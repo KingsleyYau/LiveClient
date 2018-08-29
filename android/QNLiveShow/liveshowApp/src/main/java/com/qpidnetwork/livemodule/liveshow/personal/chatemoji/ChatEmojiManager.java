@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetEmotionListCallback;
@@ -15,6 +17,7 @@ import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.ImageSpanJ;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
@@ -194,12 +197,15 @@ public class ChatEmojiManager {
         }else{//\|\[\w*\]\|
             emojiSignPattern = Pattern.compile("\\|\\[\\w*\\]\\|");
         }
+
         try {
             String result = ChatEmojiManager.getInstance().
                     parseEmojiToImage(str, emojiSignPattern,0);
+            android.util.Log.d("Jagger","parseEmoji-result:"+result);
             spanned = Html.fromHtml(result, new Html.ImageGetter() {
                         @Override
                         public Drawable getDrawable(String source) {
+                            android.util.Log.i("Jagger","parseEmoji-getDrawable:"+source);
                             String id = emotionIdUrlMaps.get(source);
                             String localPath = FileCacheManager.getInstance().parseEmotionImgLocalPath(id,source);
                             Drawable drawable = null;
@@ -218,6 +224,32 @@ public class ChatEmojiManager {
             e.printStackTrace();
         }
         return spanned;
+    }
+
+    /**
+     * 选择表情
+     * add by Jagger 2018-7-30
+     * 返回SpannableString，在Edit中能取出表情符号（|[aa]|）,发送就没问题了。
+     * 但parseEmoji方法返回Spanned，在Edit中不能取出表情符号（|[aa]|），也就没办法发送表情了
+     * @param emojiTagStr
+     */
+    @SuppressWarnings("deprecation")
+    public SpannableString parseEmoji2SpannableString(final Context context, final String emojiTagStr, final int width, final int height){
+        SpannableString ss = null;
+
+        //本地取出表情图片
+        Drawable drawable = parseEmojiTagToDrawable(context , emojiTagStr , width , height);
+
+        //替换
+        if (drawable != null) {
+            drawable.setBounds(0, 0, width, height);
+            ImageSpanJ imgSpan = new ImageSpanJ(drawable, ImageSpanJ.ALIGN_VCENTER);
+            ss = new SpannableString(emojiTagStr);
+            ss.setSpan(imgSpan, 0, emojiTagStr.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return ss;
     }
 
     /**
@@ -345,7 +377,27 @@ public class ChatEmojiManager {
         return resultStr;
     }
 
-
+    /**
+     * 根据表情tag(如：|[aa]|)在本地取出图片
+     * @param context
+     * @param emojiTag
+     * @param width
+     * @param height
+     * @return
+     */
+    private Drawable parseEmojiTagToDrawable(final Context context, String emojiTag, final int width, final int height){
+        EmotionItem emotionItem = emotionSignMaps.get(emojiTag);
+        String localPath = FileCacheManager.getInstance().parseEmotionImgLocalPath(emotionItem.emotionId,emotionItem.emoUrl);
+        Drawable drawable = null;
+        if(SystemUtils.fileExists(localPath)){
+            drawable = new BitmapDrawable(ImageUtil.decodeSampledBitmapFromFile(
+                    localPath,width == 0 ? DisplayUtil.dip2px(context,14f) : width,
+                    height == 0 ? DisplayUtil.dip2px(context,14f) : height));
+            drawable.setBounds(0, 0, (width == 0 ? drawable.getIntrinsicWidth() : width),
+                    (height == 0 ? drawable.getIntrinsicHeight() : height));
+        }
+        return drawable;
+    }
 
 //------------------------------用于EditText的显示---------------------
     //Note:目前edittext表情暂时显示为规则描述文本,后续根据产品需求再定是否显示表情图片

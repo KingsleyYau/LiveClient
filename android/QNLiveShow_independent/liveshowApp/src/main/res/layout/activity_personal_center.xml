@@ -19,6 +19,11 @@
             android:src="@drawable/ic_personal_photo_default"/>
 
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_personal_shadow_top"/>
+
         <ImageView
             android:id="@+id/iv_goBack"
             android:layout_width="wrap_content"
@@ -46,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="bottom"
-            android:background="@drawable/bg_host_list_float"/>
+            android:background="@drawable/ic_personal_shadow_buttom"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,6 +67,10 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:layout_gravity="bottom"
+                android:gravity="bottom"
+                android:maxEms="6"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="@android:color/white"
                 android:text=""/>
 
@@ -70,6 +79,7 @@
                 android:layout_width="26dp"
                 android:layout_height="11dp"
                 android:layout_marginLeft="10dp"
+                android:layout_marginBottom="4dp"
                 android:layout_gravity="bottom"/>
 
             <TextView
@@ -80,7 +90,7 @@
                 android:textSize="12sp"
                 android:layout_gravity="bottom"
                 android:gravity="right"
-                android:text="ID:65535"/>
+                android:text=""/>
 
         </LinearLayout>
 
@@ -160,6 +170,7 @@
             android:gravity="center_vertical"
             android:text="@string/my_schedule_invite_title"
             android:textSize="12sp"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
             android:layout_marginLeft="12dp"/>
 
         <com.qpidnetwork.livemodule.view.DotView.DotView
@@ -207,6 +218,7 @@
             android:gravity="center_vertical"
             android:text="@string/my_package_title"
             android:textSize="12sp"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
             android:layout_marginLeft="12dp"/>
         <TextView
             android:id="@+id/tv_pkgUnread"
@@ -254,6 +266,7 @@
             android:gravity="center_vertical"
             android:layout_weight="1"
             android:text="@string/my_level_title"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
             android:textSize="12sp" />
 
 
@@ -293,6 +306,7 @@
             android:gravity="center_vertical"
             android:layout_weight="1"
             android:text="@string/settings_title"
+            android:textColor="@color/custom_dialog_txt_color_btn_no"
             android:textSize="12sp" />
 
         <ImageView

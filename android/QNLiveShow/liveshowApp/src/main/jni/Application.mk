@@ -15,10 +15,10 @@ APP_STL := stlport_static #使用STLport作为静态库
 APP_OPTIM := debug # gdbserver调试模式
 
 #APP_ABI := all #NDK-rv7之后可以使用这样方式编译支持多种芯片 [armeabi] [armeabi-v7a] [x86] [mips]
-APP_ABI	:= armeabi armeabi-v7a x86 arm64-v8a 
+APP_ABI	:= armeabi armeabi-v7a x86 arm64-v8a
 
 #NDK_TOOLCHAIN_VERSION = 4.8
 
 #STLPORT_FORCE_REBUILD := true 可以强制重新编译STLPort源码
-APP_CFLAGS += -O2 -D_ANDROID -g -O0 -DPRINT_JNI_LOG -DFILE_JNI_LOG -DMG_ENABLE_SSL -D_HTTPS_SUPPORT#-O2#-DHAVE_PTHREADS -DHAVE_ANDROID_OS=1 -g #-std=c++0x#-std=gnu++0x
+APP_CFLAGS += -O2 -D_ANDROID -DMG_ENABLE_SSL -D_HTTPS_SUPPORT -g -O0 -DPRINT_JNI_LOG -DFILE_JNI_LOG -DMONGOOSE_LOG #-O2#-DHAVE_PTHREADS -DHAVE_ANDROID_OS=1 -g #-std=c++0x#-std=gnu++0x
 #APP_CXXFLAGS += -std=c++11

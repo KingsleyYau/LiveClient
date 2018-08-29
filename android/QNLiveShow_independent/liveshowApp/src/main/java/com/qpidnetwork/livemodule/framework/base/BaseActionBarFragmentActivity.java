@@ -50,6 +50,16 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity{
 		errorMsg = (TextView)findViewById(R.id.errorMsg);
 	}
 
+	/**
+	 * 修改返回键样式
+	 * @param resId
+	 */
+	protected void setBackButtonImg(int resId){
+		if(iv_commBack != null){
+			iv_commBack.setImageResource(resId);
+		}
+	}
+
 	protected void setCustomContentView(int layoutResId) {
 		LayoutInflater.from(this).inflate(layoutResId, llContainer);
 	}
@@ -94,6 +104,7 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity{
 		super.onClick(v);
 		int i = v.getId();
 		if (i == R.id.iv_commBack) {
+			onTitleBackBtnClick();
 			finish();
 		}else if(i == R.id.tv_opera){
 			onRightTitleBtnClick();
@@ -105,5 +116,12 @@ public class BaseActionBarFragmentActivity extends BaseFragmentActivity{
 	 */
 	public void onRightTitleBtnClick(){
 		Log.d(TAG,"onRightTitleBtnClick");
+	}
+
+	/**
+	 * 标题栏 返回前点击事件
+	 */
+	public void onTitleBackBtnClick(){
+		Log.d(TAG,"onTitleBackBtnClick");
 	}
 }

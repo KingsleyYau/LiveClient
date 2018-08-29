@@ -165,5 +165,16 @@
  */
 -(BOOL)anchorSendHangoutGift:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName toUid:(NSString *_Nonnull)toUid giftId:(NSString *_Nonnull)giftId giftName:(NSString *_Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate;
 
+/**
+ *  10.14.发送多人互动直播间文本消息
+ *
+ *  @param reqId         请求序列号
+ *  @param roomId        直播间ID
+ *  @param nickName      发送者昵称
+ *  @param msg           发送的信息
+ *  @param at           用户ID，用于指定接收者（字符串数组）
+ *
+ */
+- (BOOL)anchorSendHangoutLiveChat:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at;
 
 @end

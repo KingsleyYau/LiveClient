@@ -154,7 +154,7 @@
                 LSChatEmotion* emotion = [[LSChatEmotion alloc] initWithTextImage:item.emoSign image:image];
                 [self.imageNameArray addObject:emotion.text];
                 [self.emotionDict setObject:emotion forKey:emotion.text];
-                if (type == EMOTICONTYPE_STANDARD) {
+                if (type == ZBEMOTICONTYPE_STANDARD) {
                     
                     for (LSChatEmotion *chatEmotion in self.stanEmotionList) {
                         if ([chatEmotion.text isEqualToString:emotion.text]) {

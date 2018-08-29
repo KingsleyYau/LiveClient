@@ -98,6 +98,9 @@ typedef enum PreLiveStatus {
 
 // 是否退入后台超时
 @property (nonatomic, assign) BOOL isTimeOut;
+//私密直播间新UI
+@property (weak, nonatomic) IBOutlet UIView *vipView;
+@property (weak, nonatomic) IBOutlet UIImageView *talentIcon;
 
 @end
 
@@ -149,13 +152,28 @@ typedef enum PreLiveStatus {
 - (void)dealloc {
     NSLog(@"PreLiveViewController::dealloc()");
     
+    //已有RoomId 进入直播间
+    if (self.liveRoom.roomId.length > 0) {
+        //退出直播间
+        [self.imManager leaveRoom:self.liveRoom.roomId];
+    }
+    else
+    {
+        //未有RoomId 取消邀请
+        if (self.liveRoom.roomType == LiveRoomType_Private || self.liveRoom.roomType == LiveRoomType_Private_VIP) {
+            if (self.inviteId.length > 0) {
+                [self.imManager cancelPrivateLive:nil];
+            }
+        }
+        // 清空邀请
+        self.inviteId = nil;
+    }
+
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
     
     // 赋值到全局变量, 用于前台计时
     [LiveGobalManager manager].liveRoom = nil;
-    [LiveGobalManager manager].player = nil;
-    [LiveGobalManager manager].publisher = nil;
     
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
@@ -216,6 +234,7 @@ typedef enum PreLiveStatus {
     
     // 禁止锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -315,7 +334,7 @@ typedef enum PreLiveStatus {
                             finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     NSLog(@"PreLiveViewController::startRequest( [请求进入指定直播间, %@], roomId : %@, waitStart : %@ )", BOOL2SUCCESS(success), self.liveRoom.roomId, BOOL2YES(roomItem.waitStart));
-
+                                    
                                     [self handleEnterRoom:success errType:errType errMsg:errMsg roomItem:roomItem];
                                 });
                             }];
@@ -352,7 +371,21 @@ typedef enum PreLiveStatus {
             NSLog(@"PreLiveViewController::startRequest( [请求私密邀请], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
             self.statusLabel.text = DEBUG_STRING([NSString stringWithFormat:@"请求私密邀请..."]);
             self.status = PreLiveStatus_Inviting;
-
+            
+            self.vipView.hidden = NO;
+            
+            NSMutableArray * array = [NSMutableArray array];
+            for (int i = 1; i <= 12; i++) {
+                [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"TalentIcon%d",i]]];
+            }
+            for (int i = 1; i <= 6; i++) {
+               [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"TalentIcon%d",12]]];
+            }
+        
+            self.talentIcon.animationImages = array;
+            self.talentIcon.animationDuration = 0.9;
+            [self.talentIcon startAnimating];
+            
             // TODO:发起私密直播邀请
             bFlag = [self.imManager invitePrivateLive:self.liveRoom.userId
                                                 logId:@""
@@ -429,6 +462,8 @@ typedef enum PreLiveStatus {
     self.status = PreLiveStatus_Error;
     // 隐藏菊花
     self.loadingView.hidden = YES;
+    // 隐藏VIP界面
+    self.vipView.hidden = YES;
     // 清空邀请
     self.inviteId = nil;
 
@@ -496,8 +531,8 @@ typedef enum PreLiveStatus {
             
             self.tipsLabel.text = errMsg;
             // 显示立即私密
-            self.vipStartButtonTop.constant = 15;
-            self.vipStartButtonTop.constant = 35;
+//            self.vipStartButtonTop.constant = 15;
+//            self.vipStartButtonHeight.constant = 35;
             
             // 显示预约按钮
             [self showBook];
@@ -581,10 +616,11 @@ typedef enum PreLiveStatus {
                 // 更新本地登录信息
                 [LSLoginManager manager].loginItem.level = roomItem.manLevel;
                 self.liveRoom.imLiveRoom = roomItem;
+                self.liveRoom.liveShowType = roomItem.liveShowType;
                 if (roomItem.photoUrl.length > 0) {
                     self.liveRoom.photoUrl = roomItem.photoUrl;
                 }
-                
+
                 // 更新并缓存主播信息
                 LSUserInfoModel *item = [[LSUserInfoModel alloc] init];
                 item.userId = roomItem.userId;
@@ -808,20 +844,10 @@ typedef enum PreLiveStatus {
     //        [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     //    }
 
-    if (self.liveRoom.roomType == LiveRoomType_Private || self.liveRoom.roomType == LiveRoomType_Private_VIP) {
-        if (self.inviteId.length) {
-            [self.imManager cancelPrivateLive:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSString *_Nonnull roomId) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                               });
-            }];
-        }
-    }
-
-    // 清空邀请
-    self.inviteId = nil;
-
     // 公开直播, 直接退出
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
 }
 
 - (IBAction)addCreditAciton:(id)sender {
@@ -1021,8 +1047,8 @@ typedef enum PreLiveStatus {
     }
 }
 
-- (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl {
-    NSLog(@"PreLiveViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ )", roomId, playUrl);
+- (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl userId:(NSString * _Nonnull)userId{
+    NSLog(@"PreLiveViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ userId:%@)", roomId, playUrl, userId);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新流地址
@@ -1262,6 +1288,10 @@ typedef enum PreLiveStatus {
         
         // 已超时
         self.isTimeOut = YES;
+        
+        if (self.liveRoom.roomId.length > 0) {
+            [self.imManager leaveRoom:self.liveRoom.roomId];
+        }
     }
 }
 

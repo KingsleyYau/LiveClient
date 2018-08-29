@@ -1,8 +1,6 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
 
-import com.qpidnetwork.livemodule.im.listener.IMClientListener;
-
 import java.util.List;
 
 /**
@@ -33,7 +31,8 @@ public class HotListItem {
 					String roomPhotoUrl,
 					int roomType,
 					int[] interests,
-					int anchorType){
+					int anchorType,
+					ProgramInfoItem showInfo){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -60,6 +59,7 @@ public class HotListItem {
 		} else {
 			this.anchorType = AnchorLevelType.values()[anchorType];
 		}
+		this.showInfo = showInfo;
 	}
 	
 	public String userId;
@@ -70,5 +70,7 @@ public class HotListItem {
 	public LiveRoomType roomType;
 	public List<InterestType> interests;
 	public AnchorLevelType anchorType;
-	
+	public ProgramInfoItem showInfo;
+	public boolean isHasPublicVoucherFree;	//是否有公开试聊卷
+	public boolean isHasPrivateVoucherFree;	//是否有私密试聊卷
 }

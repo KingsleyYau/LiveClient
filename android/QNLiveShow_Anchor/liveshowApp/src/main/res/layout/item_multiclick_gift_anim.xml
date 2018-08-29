@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/liveroom_mulitgift_width"
+    android:layout_height="@dimen/liveroom_mulitgift_height"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:id="@+id/ll_giftAnimContainer">
+
+    <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+        android:src="@drawable/ic_default_photo_man"
+        android:id="@+id/civ_photo"
+        android:layout_width="40dp"
+        android:layout_height="40dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_giftInfo"
+        android:layout_width="66dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+        <TextView
+            android:id="@+id/tvNickName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="13sp"
+            android:ellipsize="end"
+            android:singleLine="true" />
+        <TextView
+            android:id="@+id/tvGiftName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="11sp"/>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivGift"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_default_gift"
+        android:layout_marginRight="13dp"/>
+</LinearLayout>

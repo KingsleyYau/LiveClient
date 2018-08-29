@@ -10,7 +10,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
 import com.qpidnetwork.livemodule.framework.base.BaseLoadingFragment;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetGiftDetailCallback;

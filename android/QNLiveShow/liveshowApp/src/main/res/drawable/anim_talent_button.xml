@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 默认循环播放 android:oneshot="false" -->
+<!-- 最后一个item android:duration="300" 循环播放价格为 300 毫秒 -->
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="false">
+    <item android:drawable="@drawable/live_talent_anim_1" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_2" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_3" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_4" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_5" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_6" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_7" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_8" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_9" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_10" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_11" android:duration="50"></item>
+    <item android:drawable="@drawable/live_talent_anim_12" android:duration="300"></item>
+</animation-list>

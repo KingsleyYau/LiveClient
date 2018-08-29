@@ -312,3 +312,67 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
 
     return taskId;
 }
+
+/*********************************** 5.6.获取试用券可用信息  ****************************************/
+
+class RequestGetVoucherAvailableInfoCallback : public IRequestGetVoucherAvailableInfoCallback{
+	void OnGetVoucherAvailableInfo(HttpGetVoucherAvailableInfoTask* task, bool success, int errnum, const string& errmsg, const HttpVoucherInfoItem& item) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetVoucherAvailableInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		jobject jItem = getVoucherInfoItem(env, item);
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetVoucherAvailableInfo", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetVoucherAvailableInfo( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestGetVoucherAvailableInfoCallback gRequestGetVoucherAvailableInfoCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniPackage
+ * Method:    GetVoucherAvailableInfo
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetVoucherAvailableInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPackage_GetVoucherAvailableInfo
+		(JNIEnv *env, jclass cls, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetVoucherAvailableInfo()");
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetVoucherAvailableInfo(&gHttpRequestManager,
+														 &gRequestGetVoucherAvailableInfoCallback);
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}

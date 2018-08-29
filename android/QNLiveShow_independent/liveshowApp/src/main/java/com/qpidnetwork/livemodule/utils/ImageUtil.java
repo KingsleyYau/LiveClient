@@ -29,7 +29,6 @@ import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import java.io.File;
 import java.io.IOException;
 
-import static com.qpidnetwork.livemodule.utils.ActivityUtil.TAG;
 
 /**
  * Description:
@@ -38,6 +37,8 @@ import static com.qpidnetwork.livemodule.utils.ActivityUtil.TAG;
  */
 
 public class ImageUtil {
+
+    private static final String TAG = ImageUtil.class.getSimpleName();
 
     /**
      * 高效获取指定路径下图片文件Bitmap（压缩处理，防止过大导致内存溢出）
@@ -135,21 +136,36 @@ public class ImageUtil {
     }
 
     /**
-     * 测底删除文件
+     * 删除文件并同步图库
      * @param context
      * @param filePath
      * @return
      */
     public static boolean realDeleteFile(Context context, String filePath){
-        File deleteFile = new File(filePath);
+        Log.d(TAG,"realDeleteFile-filePath:"+filePath);
+        boolean result = false;
         ContentResolver mContentResolver = context.getContentResolver();
-        if(null != deleteFile && deleteFile.exists()){
-            String where = MediaStore.Images.Media.DATA + "='" + filePath + "'";
-            Uri uri = getContentUriFromFile(context,filePath);
-            return mContentResolver.delete(uri,where,null) != 0;
+        Cursor cursor = MediaStore.Images.Media.query(mContentResolver,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[] { MediaStore.Images.Media._ID },
+                MediaStore.Images.Media.DATA + "=?",
+                new String[] { filePath }, null);
+        if (cursor.moveToFirst()) {
+            long id = cursor.getLong(0);
+            Uri contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            Uri uri = ContentUris.withAppendedId(contentUri, id);
+            int count = mContentResolver.delete(uri, null, null);
+            result = count == 1;
+        } else {
+            File file = new File(filePath);
+            if(null !=file && file.exists()){
+                result = file.delete();
+            }
         }
-        return false;
+        Log.d(TAG,"realDeleteFile-result:"+result);
+        return result;
     }
+
 
     /**
      * Gets the corresponding path to a file from the given content:// URI

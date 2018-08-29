@@ -31,16 +31,16 @@
         //        layout.minimumInteritemSpacing = 0;
         layout.minimumLineSpacing = 6;
         layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
-        self.collectionView.showsHorizontalScrollIndicator = NO;
-        self.collectionView.bounces = NO;
-        NSBundle *bundle = [LiveBundle mainBundle];
-        UINib *nib = [UINib nibWithNibName:@"AudienceCell" bundle:bundle];
-        [self.collectionView registerNib:nib forCellWithReuseIdentifier:[AudienceCell cellIdentifier]];
-        self.collectionView.backgroundColor = [UIColor clearColor];
-        [self addSubview:self.collectionView];
+//        self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+//        self.collectionView.dataSource = self;
+//        self.collectionView.delegate = self;
+//        self.collectionView.showsHorizontalScrollIndicator = NO;
+//        self.collectionView.bounces = NO;
+//        NSBundle *bundle = [LiveBundle mainBundle];
+//        UINib *nib = [UINib nibWithNibName:@"AudienceCell" bundle:bundle];
+//        [self.collectionView registerNib:nib forCellWithReuseIdentifier:[AudienceCell cellIdentifier]];
+//        self.collectionView.backgroundColor = [UIColor clearColor];
+//        [self addSubview:self.collectionView];
 
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self);
@@ -49,6 +49,51 @@
     return self;
 }
 
+- (void)updateUserInfo {
+    
+    [self removeAllSubviews];
+    UIScrollView * scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    scrollView.showsVerticalScrollIndicator = NO;
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.bounces = NO;
+    scrollView.userInteractionEnabled = YES;
+    [self addSubview:scrollView];
+    for (int i = 0; i < self.audienceArray.count; i++) {
+        AudienModel *model = self.audienceArray[i];
+        UIImageView * headView = [[UIImageView alloc]initWithFrame:CGRectMake(i*(ItemSize +10), 0, ItemSize, ItemSize)];
+        headView.userInteractionEnabled = YES;
+        headView.layer.cornerRadius = ItemSize * 0.5;
+        headView.layer.masksToBounds = YES;
+        headView.tag = i + 88;
+        [scrollView addSubview:headView];
+        
+        UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(headViewDid:)];
+        [headView addGestureRecognizer:tap];
+        if (model.photoUrl.length) {
+        [[LSImageViewLoader loader] refreshCachedImage:headView options:0 imageUrl:model.photoUrl placeholderImage:model.image];
+        }
+        else
+        {
+           headView.image = model.image;
+        }
+
+        if (model.isHasTicket) {
+            UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(i*(ItemSize + 10) + 23, 23, 17, 17)];
+            icon.image = [UIImage imageNamed:@"LiveShowIcon"];
+            [scrollView addSubview:icon];
+        }
+        
+        scrollView.contentSize = CGSizeMake(i*(ItemSize +10) + ItemSize, self.frame.size.height);
+    }
+}
+
+- (void)headViewDid:(UITapGestureRecognizer *)tap {
+    
+    int tag = (int)tap.view.tag - 88;
+    if ([self.delegate respondsToSelector:@selector(vipLiveAudidenveViewDidSelectItem:)]) {
+        [self.delegate vipLiveAudidenveViewDidSelectItem:self.audienceArray[tag]];
+    }
+}
 #pragma mark - Public Method
 - (void)setAudienceArray:(NSMutableArray *)audienceArray {
     _audienceArray = audienceArray;
@@ -72,27 +117,37 @@
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     AudienceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[AudienceCell cellIdentifier] forIndexPath:indexPath];
-//    [cell updateHeadImageWith:self.audienceArray[indexPath.row] radius:ItemSize];
+ 
     AudienModel *model = self.audienceArray[indexPath.row];
     cell.headImageView.layer.cornerRadius = ItemSize * 0.5;
     cell.headImageView.layer.masksToBounds = YES;
     
-    if (!model.photoUrl.length) {
-        [cell.headImageView setImage:model.image];
-    } else {
-//        [[LSImageViewLoader loader] refreshCachedImage:cell.headImageView options:SDWebImageRefreshCached imageUrl:model.photoUrl
-//                            placeholderImage:model.image];
-        [cell.headImageView sd_setImageWithURL:[NSURL URLWithString:model.photoUrl] placeholderImage:model.image options:SDWebImageRefreshCached completed:nil];
+    if (model.photoUrl.length) {
+        [[LSImageViewLoader loader] refreshCachedImage:cell.headImageView options:SDWebImageRefreshCached imageUrl:model.photoUrl
+                                      placeholderImage:model.image];
+    }
+    else
+    {
+        cell.headImageView.image = model.image;
+    }
+
+    if (model.isHasTicket) {
+        cell.showIcon.hidden = NO;
+    }
+    else
+    {
+        cell.showIcon.hidden = YES;
     }
     return cell;
 }
 
 #pragma mark - UICollectionViewDelegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.delegate respondsToSelector:@selector(vipLiveAudidenveViewDidSelectItem:indexPath:)]) {
-        [self.delegate vipLiveAudidenveViewDidSelectItem:self.audienceArray[indexPath.row] indexPath:indexPath];
-    }
+//    if ([self.delegate respondsToSelector:@selector(vipLiveAudidenveViewDidSelectItem:indexPath:)]) {
+//        [self.delegate vipLiveAudidenveViewDidSelectItem:self.audienceArray[indexPath.row] indexPath:indexPath];
+//    }
 }
 
 #pragma mark - UIScrollViewDelegate

@@ -68,6 +68,7 @@ static const string CMD_SENDINSTANTINVITEUSERREPORT = "imLady/instantInviteUserR
 // ------------- 直播间才艺点播邀请 -------------
 static const string CMD_SENDTALENT = "imMan/sendTalent";    // 8.1.发送直播间才艺点播邀请
 static const string CMD_RECVSENDTALENTNOTICE = "imShare/sendTalentNotice"; //8.2.接收直播间才艺点播回复通知
+static const string CMD_RECVTALENTLISTNOTICE = "imShare/talentListNotice"; //8.3.接收直播间才艺点播提示公告通知
 
 // ------------- 公共 -------------
 static const string CMD_RECVLEVELUPNOTICE = "imMan/levelUpNotice";    // 9.1.观众等级升级通知
@@ -86,11 +87,23 @@ static const string CMD_SENDHANGOUTGIFT = "imShare/sendHangoutGift";    // 10.7.
 static const string CMD_RECVHANGOUTGIFTNOTICE = "imShare/sendHangoutGiftNotice";    // 10.8.接收多人互动直播间礼物通知
 static const string CMD_RECVKNOCKREQUESTNOTICE = "imMan/receiveKnockRequestNotice";    // 10.9.接收主播敲门通知
 static const string CMD_RECVLACKCREDITHANGOUTNOTICE = "imMan/lackCreditHangoutNotice";    // 10.10.接收多人互动余额不足导致主播将要离开的通知
+static const string CMD_CONTROLMANPUSHHANGOUT = "imMan/controlManPushHangout";   //10.11.多人互动观众开始/结束视频互动
+static const string CMD_HANGOUTSENDLIVECHAT = "imShare/hangoutSendLiveChat"; //10.12.发送多人互动直播间文本消息
+static const string CMD_HANGOUTSENDCHATNOTICE = "imShare/hangoutSendChatNotice"; //10.13.接收直播间文本消息
+static const string CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE = "imShare/receiveAnchorCountDownEnterRoomNotice"; //10.14.接收进入多人互动直播间倒数通知
 
 // ------------- 节目 -------------
 static const string CMD_RECVPROGRAMPLAYNOTICE = "imMan/showToStartNotice";    // 11.1.节目开播通知
-static const string CMD_RECVCANCELPROGRAMNOTICE = "imMan/statusChangeNotice";    // 11.2.节目取消通知
+static const string CMD_RECVCANCELPROGRAMNOTICE = "imMan/statusChangeNotice";  // 11.2.节目取消通知
 static const string CMD_RECVRETTICKETNOTICE = "imMan/statusChangeNotice";    // 11.3.接收节目已退票通知
+
+// ------------- 私信 -------------
+static const string CMD_SENDPRIVATEMESSAGE = "imShare/sendPrivateMessage";    // 12.1.发送私信文本消息
+static const string CMD_RECVSENDPRIVATEMESSAGENOTICE = "imShare/sendPrivateMessageNotice";    // 12.2.接收私信文本消息通知
+
+// ------------- 信件 -------------
+static const string CMD_SENDLOINOTICE = "imLady/sendLoiNotice";    // 13.1.接收意向信通知
+static const string CMD_SENDEMFNOTICE = "imLady/sendEmfNotice";    // 13.2.接收EMF通知
 
 // 判断是否客户端主动请求的命令
 inline bool IsRequestCmd(const string& cmd)
@@ -105,8 +118,8 @@ inline bool IsRequestCmd(const string& cmd)
         || cmd == CMD_PUBLICROOMIN		// 3.13.观众进入公开直播间
         || cmd == CMD_CONTROLMANPUSH    // 3.14.观众开始／结束视频互动
         || cmd == CMD_GETINVITEINFO     // 3.15.获取指定立即私密邀请信息
-        || cmd == CMD_SENDGIFT          //5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-        || cmd == CMD_SENDTOAST         //6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
+        || cmd == CMD_SENDGIFT          // 5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
+        || cmd == CMD_SENDTOAST         // 6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
         || cmd == CMD_SENDPRIVATELIVEINVITE       // 7.1.观众立即私密邀请
         || cmd == CMD_SENDCANCELPRIVATEINVITE     // 7.2.观众取消立即私密邀请
         || cmd == CMD_SENDTALENT                  // 8.1.发送直播间才艺点播邀请
@@ -114,7 +127,9 @@ inline bool IsRequestCmd(const string& cmd)
         || cmd == CMD_ENTERHANGOUTROOM              // 10.3.观众新建/进入多人互动直播间
         || cmd == CMD_LEAVEHANGOUTROOM              // 10.4.退出多人互动直播间
         || cmd == CMD_SENDHANGOUTGIFT               // 10.7.发送多人互动直播间礼物消息
-
+        || cmd == CMD_CONTROLMANPUSHHANGOUT         // 10.11.多人互动观众开始/结束视频互动
+        || cmd == CMD_HANGOUTSENDLIVECHAT           // 10.12.发送多人互动直播间文本消息
+        || cmd == CMD_SENDPRIVATEMESSAGE           // 12.1.发送私信文本消息
         )
     {
         result = true;

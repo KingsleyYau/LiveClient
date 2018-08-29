@@ -21,16 +21,20 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 		return -1;
 	}
 
-	KLog::SetLogDirectory("/sdcard/coollive");
-	KLog::SetLogLevel(KLog::LOG_WARNING);
-
-	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lsplayer, version : %s )", LS_VERSION);
+	KLog::SetLogLevel(KLog::LOG_MSG);
 
 	jobject jLSHardDecodeVideoFrameItem;
 	InitClassHelper(env, LS_DECODE_VIDEO_ITEM_CLASS, &jLSHardDecodeVideoFrameItem);
 
 	return JNI_VERSION_1_4;
 }
+
+JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogDir
+  (JNIEnv *env, jclass cls, jstring jLogDir) {
+    string logDir = JString2String(env, jLogDir);
+    KLog::SetLogDirectory(logDir);
+    FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "SetLogDir( lsplayer, version : %s )", LS_VERSION);
+  }
 
 JNIEXPORT jlong JNICALL Java_net_qdating_player_LSPlayerJni_Create
   (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardDecoder, jobject videoRenderer, jobject audioRenderer, jobject videoHardDecoder, jobject videoHardRenderer) {

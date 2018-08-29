@@ -65,20 +65,6 @@ private:
     int mKeyFrameInterval;
     int mFPS;
 
-	// 视频控制
-	// 第一次处理帧时间
-    long long mVideoFrameStartPushTime;
-    long long mVideoFrameLastPushTime;
-	// 由帧率得出的帧间隔(ms)
-	int mVideoFrameInterval;
-	int mVideoFrameIndex;
-    // 视频是否暂停采集
-    bool mVideoPause;
-    // 视频是否已经恢复采集
-    bool mVideoResume;
-    // 视频总暂停时长
-    long long mVideoFramePauseTime;
-
     // 音频参数
     int mSampleRate;
     int mChannelsPerFrame;

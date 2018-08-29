@@ -52,7 +52,7 @@ public:
             }
             /* replyType */
             if (root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST_BOOKING_REPLYTYPE].isInt()) {
-                replyType = (BookingReplyType)root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST_BOOKING_REPLYTYPE].asInt();
+                replyType = GetIntToBookingReplyType(root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST_BOOKING_REPLYTYPE].asInt());
             }
             /* bookTime */
             if (root[LIVEROOM_MANHANDLEBOOKINGLIST_LIST_BOOKING_BOOKTIME].isInt()) {

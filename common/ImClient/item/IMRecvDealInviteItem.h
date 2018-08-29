@@ -20,7 +20,6 @@ using namespace std;
 #define IMRECVDEALINVITEITEM_NICKNAME_PARAM              "nickname"
 #define IMRECVDEALINVITEITEM_PHOTOURL_PARAM              "photourl"
 #define IMRECVDEALINVITEITEM_TYPE_PARAM                  "type"
-#define IMRECVDEALINVITEITEM_EXPIRES_PARAM               "expires"
 
 class IMRecvDealInviteItem {
 public:
@@ -52,11 +51,6 @@ public:
                 type = GetIMReplyInviteType(root[IMRECVDEALINVITEITEM_TYPE_PARAM].asInt());
             }
             
-            /* expires */
-            if (root[IMRECVDEALINVITEITEM_EXPIRES_PARAM].isNumeric()) {
-                expires = root[IMRECVDEALINVITEITEM_EXPIRES_PARAM].asInt();
-            }
-            
             result = true;
         }
         return result;
@@ -69,7 +63,6 @@ public:
         nickName = "";
         photoUrl = "";
         type = IMREPLYINVITETYPE_UNKNOWN;
-        expires = 0;
     }
     
     virtual ~IMRecvDealInviteItem() {
@@ -91,7 +84,6 @@ public:
     string                      nickName;
     string                      photoUrl;
     IMReplyInviteType           type;
-    int                         expires;
 
 };
 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="34dp"
+    android:id="@+id/ll_carView"
+    android:background="@drawable/bg_entrance_car_master_public"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/iv_carImg"
+        android:layout_width="@dimen/liveroom_car_default_width"
+        android:layout_height="@dimen/liveroom_car_default_height"
+        android:layout_marginLeft="12dp"
+        android:src="@drawable/ic_package_rider_default"
+        android:scaleType="fitCenter"/>
+
+
+    <TextView
+        android:id="@+id/tv_carMaster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:maxEms="4"
+        android:gravity="center"
+        android:text="Harrydwedf fewadf "
+        android:layout_marginLeft="3dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="#FFFFD205"
+        />
+
+    <TextView
+        android:id="@+id/tv_joined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/liveroom_entrancecar_joined"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:layout_marginRight="14dp"
+        android:textColor="#FFFFD205"
+        />
+</LinearLayout>

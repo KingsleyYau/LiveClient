@@ -10,6 +10,7 @@ import net.qdating.utils.Log;
 import net.qdating.LSConfig;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 
 /***
  * 音频播放器
@@ -37,20 +38,20 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
-				if (audioTrack != null) {
-					audioTrack.pause();
-					audioTrack.flush();
-					audioTrack.play();
-				}
-
-				Log.d(LSConfig.TAG, String.format("LSAudioPlayer:handleMessage( " +
-								"this : 0x%x, " +
-								"[Reset success] " +
-								")",
-						(msg.obj!=null)?msg.obj.hashCode():0
-				));
-
 				synchronized (statusLock) {
+					Log.d(LSConfig.TAG, String.format("LSAudioPlayer:handleMessage( " +
+									"this : 0x%x, " +
+									"[Reset success] " +
+									")",
+							(msg.obj!=null)?msg.obj.hashCode():0
+					));
+
+					if (audioTrack != null) {
+						audioTrack.pause();
+						audioTrack.flush();
+						audioTrack.play();
+					}
+
 					isRunning = true;
 				}
 			}
@@ -67,47 +68,65 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	public boolean changeAudioFormat(int sampleRate, int channelPerFrame, int bitPerSample) {
 		boolean bFlag = false;
 
-		if (audioTrack == null) {
-			int sampleRateInHz = sampleRate;
-			int channelConfig = (channelPerFrame == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
-			int audioFormat = (bitPerSample == 16) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT;
-			int bufferSizeInBytes = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
+		synchronized (statusLock) {
+			try {
+				if (audioTrack == null) {
+					int sampleRateInHz = sampleRate;
+					int channelConfig = (channelPerFrame == 2) ? AudioFormat.CHANNEL_OUT_STEREO : AudioFormat.CHANNEL_OUT_MONO;
+					int audioFormat = (bitPerSample == 16) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT;
+					int bufferSizeInBytes = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
 
-			Log.d(LSConfig.TAG,
-					String.format("LSAudioPlayer:changeAudioFormat( "
-									+ "this : 0x%x, "
-									+ "sampleRateInHz : %d, "
-									+ "channelPerFrame : %d, "
-									+ "channelConfig : %d, "
-									+ "bitPerSample : %d, "
-									+ "audioFormat : %d, "
-									+ "bufferSizeInBytes : %d "
-									+ ")",
-							hashCode(),
+					Log.d(LSConfig.TAG,
+							String.format("LSAudioPlayer:changeAudioFormat( "
+											+ "this : 0x%x, "
+											+ "sampleRateInHz : %d, "
+											+ "channelPerFrame : %d, "
+											+ "channelConfig : %d, "
+											+ "bitPerSample : %d, "
+											+ "audioFormat : %d, "
+											+ "bufferSizeInBytes : %d "
+											+ ")",
+									hashCode(),
+									sampleRateInHz,
+									channelPerFrame,
+									channelConfig,
+									bitPerSample,
+									audioFormat,
+									bufferSizeInBytes
+							)
+					);
+
+					audioTrack = new AudioTrack(
+							AudioManager.STREAM_MUSIC,
 							sampleRateInHz,
-							channelPerFrame,
 							channelConfig,
-							bitPerSample,
 							audioFormat,
-							bufferSizeInBytes
-					)
-			);
+							bufferSizeInBytes,
+							AudioTrack.MODE_STREAM
+					);
 
-			audioTrack = new AudioTrack(
-					AudioManager.STREAM_MUSIC,
-					sampleRateInHz,
-					channelConfig,
-					audioFormat,
-					bufferSizeInBytes,
-					AudioTrack.MODE_STREAM
-			);
+					if (audioTrack != null) {
+						audioTrack.play();
 
-			if (audioTrack != null) {
-				audioTrack.play();
+						isRunning = true;
+						bFlag = true;
+					}
 
-				synchronized (statusLock) {
-					isRunning = true;
 				}
+			} catch (IllegalStateException e) {
+				Log.d(LSConfig.TAG,
+						String.format("LSAudioPlayer:changeAudioFormat( "
+										+ "this : 0x%x, "
+										+ "exception : %s "
+										+ ")",
+								hashCode(),
+								e.toString()
+						)
+				);
+
+				audioTrack = null;
+				isRunning = false;
+				bFlag = false;
 			}
 
 		}
@@ -120,8 +139,14 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	 */
 	public void stop() {
 		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:stop( this : 0x%x )", hashCode()));
-		if (audioTrack != null) {
-			audioTrack.stop();
+		synchronized (statusLock) {
+			try {
+				if (audioTrack != null) {
+					audioTrack.stop();
+				}
+			} catch (IllegalStateException e) {
+
+			}
 			audioTrack = null;
 		}
 	}
@@ -150,7 +175,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	public void playAudioFrame(byte[] data) {
 //		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:playAudioFrame( size : %d )", data.length));
 		synchronized (statusLock) {
-			if( isRunning ) {
+			if( isRunning && audioTrack != null ) {
 				if( !isMute ) {
 					audioTrack.write(data, 0, data.length);
 				} else {
@@ -172,6 +197,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	public void reset() {
 		// TODO Auto-generated method stub
 		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:reset( this : 0x%x )", hashCode()));
+		// 如果在当前线程处理声卡会阻塞造成延迟
 		synchronized (statusLock) {
 			if( isRunning ) {
 				isRunning = false;

@@ -82,7 +82,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"PublicVipViewController::dealloc( self : %p )", self);
+    NSLog(@"ShowLiveViewController::dealloc( self : %p )", self);
     
     if (self.closeDialogTipView) {
         [self.closeDialogTipView removeFromSuperview];
@@ -185,8 +185,17 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
     
-    // 隐藏立即私密邀请控件
-    self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
+        // 隐藏立即私密邀请控件
+        self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+    }
+    else
+    {
+        // 设置邀请私密按钮
+        self.playVC.liveVC.startOneViewHeigh.constant = 40;
+        self.playVC.liveVC.startOneBtn.hidden = NO;
+        self.playVC.liveVC.startOneView.hidden = NO;
+    }
     
     // 立即私密按钮
     //    self.playVC.liveVC.cameraBtn.hidden = NO;
@@ -355,6 +364,7 @@
         infoItem.riderName = riderName;
         infoItem.riderUrl = riderUrl;
         infoItem.isAnchor = 0;
+        infoItem.isHasTicket = isHasTicket;
         [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
         
         // 刷观众列表
@@ -419,7 +429,14 @@
     [self.closeDialogTipView showDialog:self.view cancelBlock:^{
         
     } actionBlock:^{
-        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+        // 停止流
+        [weakObj.playVC.liveVC stopPlay];
+        [weakObj.playVC.liveVC stopPublish];
+        
+        // 退出界面
+//        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+        LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
+        [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
     }];
 }
 

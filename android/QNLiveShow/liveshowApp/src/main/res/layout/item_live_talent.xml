@@ -1,42 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_itemRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:layout_height="60dp"
+    android:paddingBottom="@dimen/live_size_6dp"
+    android:paddingLeft="@dimen/live_size_12dp"
+    android:paddingRight="@dimen/live_size_12dp"
+    android:paddingTop="@dimen/live_size_6dp">
 
-
-    <TextView
-        android:id="@+id/tv_talentName"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/live_size_14sp"
-        android:lines="1"
-        android:ellipsize="end"/>
-
-    <TextView
-        android:id="@+id/tv_talentCredits"
+    <!-- 左边文字区域 -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="15dp"
-        android:textSize="@dimen/live_size_14sp"
-        android:textColor="@color/talent_yellow"
-        android:layout_marginLeft="4dp"/>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/live_size_100dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_talentName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="@dimen/live_size_220dp"
+            android:text="Sing a song"
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_14sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_talentName">
+
+            <TextView
+                android:id="@+id/tv_talentCredits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="200dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/live_talent_gift"
+                android:textColor="@color/black3"
+                android:textSize="@dimen/live_size_12sp" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/img_talentGift"
+                android:layout_width="18dp"
+                android:layout_height="@dimen/live_size_16dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/live_size_4dp"
+                fresco:actualImageScaleType="centerInside"
+                fresco:backgroundImage="@color/transparent_full"
+                fresco:placeholderImage="@drawable/ic_default_gift" />
+        </LinearLayout>
+    </LinearLayout>
+
 
     <TextView
-        android:id="@+id/tv_talentRequest"
-        android:layout_width="63dp"
-        android:layout_height="25dp"
-        android:background="@drawable/rectangle_rounded_angle_talent_yellow_bg"
-        android:textSize="14sp"
+        android:id="@+id/tv_talentDetail"
+        android:layout_width="80dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/selector_live_btn_talent_details"
         android:gravity="center"
-        android:textStyle="normal"
+        android:text="@string/live_talent_details"
         android:textColor="@color/talent_btn_txt"
-        android:text="@string/live_talent_request" />
+        android:textSize="14sp"
+        android:textStyle="normal" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.anchor.view.SoftKeyboradListenFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentBody"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!-- 背景不随软键盘切换部分：视频播放view-->
+    <com.qpidnetwork.anchor.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llBackBody"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_bgContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/include_audience_area"
+                    layout="@layout/include_liveroom_audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+            </FrameLayout>
+        </LinearLayout>
+    </com.qpidnetwork.anchor.view.LiveRoomScrollView>
+
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <!--最上层消息控制等-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent">
+
+            <!--房间头部-->
+            <include
+                android:id="@+id/include_im_body"
+                layout="@layout/include_liveroom_im_private"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:visibility="visible" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/advanceGift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="600dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                fresco:actualImageScaleType="fitCenter" />
+
+        </FrameLayout>
+
+        <include
+            android:id="@+id/rl_inputMsg"
+            layout="@layout/view_liveroom_sendmsg_private"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_gravity="bottom"
+            android:visibility="visible" />
+
+        <!--&lt;!&ndash;最底部为表情选择器&ndash;&gt;-->
+        <!--<com.qpidnetwork.anchor.liveshow.personal.chatemoji.EmojiTabScrollLayout-->
+            <!--xmlns:custom="http://schemas.android.com/apk/res-auto"-->
+            <!--android:id="@+id/etsl_emojiContainer"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@android:color/white"-->
+            <!--android:visibility="gone"-->
+            <!--custom:columnNumbPerPage="5"-->
+            <!--custom:lineNumbPerPage="3" />-->
+    </LinearLayout>
+
+    <!--视频上传区域-->
+    <include
+        android:id="@+id/includePull"
+        layout="@layout/include_liveroom_publish"
+        android:layout_width="93dp"
+        android:layout_height="125dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="76dp"
+        android:layout_marginRight="13dp" />
+
+</com.qpidnetwork.anchor.view.SoftKeyboradListenFrameLayout>

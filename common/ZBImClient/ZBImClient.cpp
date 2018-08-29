@@ -30,6 +30,7 @@ const long long HEARTBEAT_TIMEOUT = 25*1000;     // 心跳超时（毫秒）
 #include "AnchorHangoutRoomTask.h"
 #include "AnchorLeaveHangoutRoomTask.h"
 #include "SendAnchorHangoutGiftTask.h"
+#include "SendAnchorHangoutLiveChatTask.h"
 
 ZBImClient::ZBImClient()
 {
@@ -961,6 +962,64 @@ void ZBImClient::OnSendAnchorHangoutGift(SEQ_T reqId, bool success, ZBLCC_ERR_TY
     m_listenerListLock->Unlock();
 }
 
+/**
+ *  10.14.发送多人互动直播间文本消息
+ *
+ *  @param reqId         请求序列号
+ *  @param roomId        直播间ID
+ *  @param nickName      发送者昵称
+ *  @param msg           发送的信息
+ *  @param at           用户ID，用于指定接收者（字符串数组）
+ *
+ */
+bool ZBImClient::SendAnchorHangoutLiveChat(SEQ_T reqId, const string& roomId, const string& nickName, const string& msg, const list<string> at) {
+    bool result = false;
+    m_loginStatusLock->Lock();
+    ZBLoginStatus loginStatus = m_loginStatus;
+    m_loginStatusLock->Unlock();
+    FileLog("ImClient", "ZBImClient::SendAnchorHangoutLiveChat() begin, m_taskManager:%p roomId:%s nickName:%s msg:%s", m_taskManager, roomId.c_str(), nickName.c_str(), msg.c_str());
+    // 若为已登录状态
+    if (ZBLOGINED == loginStatus) {
+        SendAnchorHangoutLiveChatTask* task = new SendAnchorHangoutLiveChatTask();
+        if (NULL != task) {
+            task->Init(this);
+            task->InitParam(roomId, nickName, msg,at);
+            
+            task->SetSeq(reqId);
+            result = m_taskManager->HandleRequestTask(task);
+        }
+    }
+    else
+    {
+        // 没有登录
+        result = false;
+    }
+    FileLog("ImClient", "ZBImClient::SendAnchorHangoutLiveChat() end, m_taskManager:%p roomId:%s result:%d", m_taskManager, roomId.c_str(), result);
+    return result;
+}
+
+/**
+ *  10.14.发送多人互动直播间文本消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+void ZBImClient::OnSendAnchorHangoutLiveChat(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) {
+    FileLog("ImClient", "ZBImClient::OnSendAnchorHangoutLiveChat() begin, ImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnSendAnchorHangoutLiveChat(reqId, success, err, errMsg);
+    }
+    FileLog("ImClient", "ZBImClient::OnSendAnchorHangoutLiveChat() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+
 //// 服务端主动请求
 // 接收直播间关闭通知(观众)
 void ZBImClient::OnZBRecvRoomCloseNotice(const string& roomId, ZBLCC_ERR_TYPE err, const string& errMsg) {
@@ -1416,6 +1475,57 @@ void ZBImClient::OnRecvAnchorGiftNotice(const IMAnchorRecvGiftItem& item) {
 }
 
 /**
+ *  10.13.接收多人互动直播间观众启动/关闭视频互动通知回调
+ *
+ *  @param Item            互动切换
+ *
+ */
+void ZBImClient::OnRecvAnchorControlManPushHangoutNotice(const ZBControlPushItem item) {
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorControlManPushHangoutNotice() begin, ZBImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvAnchorControlManPushHangoutNotice(item);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorControlManPushHangoutNotice() end, ZBImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  10.15.接收直播间文本消息回调
+ *
+ *  @param item            接收直播间的文本消息
+ *
+ */
+void ZBImClient::OnRecvAnchorHangoutChatNotice(const IMAnchorRecvHangoutChatItem& item) {
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorHangoutChatNotice() begin, ZBImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvAnchorHangoutChatNotice(item);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorHangoutChatNotice() end, ZBImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ZBImClient::OnRecvAnchorCountDownEnterRoomNotice(const string& roomId, const string& anchorId, int leftSecond) {
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorCountDownEnterRoomNotice() begin, ZBImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IZBImClientListener* callback = *itr;
+        callback->OnRecvAnchorCountDownEnterRoomNotice(roomId, anchorId, leftSecond);
+    }
+    FileLog("ImClient", "ZBImClient::OnRecvAnchorCountDownEnterRoomNotice() end, ZBImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+/**
  *  11.1.节目开播通知接口 回调
  *
  *  @param item         接收多人互动直播间礼物信息
@@ -1473,4 +1583,5 @@ void ZBImClient::OnRecvAnchorShowMsgNotice(const string& backgroundUrl, const st
     FileLog("ImClient", "ZBImClient::OnRecvAnchorShowMsgNotice() end, ImClient:%p", this);
     m_listenerListLock->Unlock();
 }
+
 

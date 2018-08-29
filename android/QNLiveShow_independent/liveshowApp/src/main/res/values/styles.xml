@@ -35,13 +35,43 @@
         <item name="android:windowIsTranslucent">true</item>
         <!--背景是否昏暗-->
         <item name="android:backgroundDimEnabled">false</item>
-        <item name="android:windowBackground">@color/dialog_background</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <!--进出动画-->
         <item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>
         <!--是否有覆盖-->
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="CustomTheme.LiveShareDialog" parent="@android:style/Theme.Dialog">
+        <!--没有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--窗口浮动-->
+        <item name="android:windowIsFloating">true</item>
+        <!--透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--背景是否昏暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--进出动画-->
+        <item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+    <style name="CustomTheme.LoadingDialog" parent="@android:style/Theme.Dialog">
+        <!--没有标题-->
+        <item name="android:windowNoTitle">true</item>
+        <!--窗口浮动-->
+        <item name="android:windowIsFloating">true</item>
+        <!--透明-->
+        <item name="android:windowIsTranslucent">true</item>
+        <!--背景是否昏暗-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--进出动画-->
+        <item name="android:windowAnimationStyle">@style/CustomTheme.SimpleDialog.Anim</item>
+        <!--是否有覆盖-->
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
     <style name="CustomTheme.UserBalanceInfoDialog" parent="@android:style/Theme.Dialog">
         <!--没有标题-->
         <item name="android:windowNoTitle">true</item>
@@ -84,6 +114,22 @@
         <item name="android:textColor">#fffefe</item>
         <item name="android:textSize">15sp</item>
         <item name="android:background">@drawable/selector_btn_next</item>
+
+    </style>
+
+    <!--登录注册模块提交按钮通用样式-->
+    <style name="CustomTheme.Btn.Submit" parent="@android:style/Theme">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">35dp</item>
+        <item name="android:minWidth">163dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginTop">62dp</item>
+        <item name="android:background">@drawable/selector_live_submit</item>
 
     </style>
 
@@ -144,5 +190,13 @@
     <!-- FemaleCheckBox theme -->
     <style name="FemaleCheckBoxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/selector_cb_female</item>
+    </style>
+
+    <!---->
+    <style name="CustomTheme.Black.NoTitleBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/black</item>
     </style>
 </resources>

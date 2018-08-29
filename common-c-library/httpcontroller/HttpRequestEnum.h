@@ -24,17 +24,20 @@ typedef enum {
     // 服务器返回错误
     HTTP_LCC_ERR_ROOM_FULL = 10023,   // 房间人满
     HTTP_LCC_ERR_NO_CREDIT = 10025,   // 信用点不足
+    
     /* IM公用错误码 */
     HTTP_LCC_ERR_NO_LOGIN = 10002,   // 未登录
     HTTP_LCC_ERR_SYSTEM = 10003,     // 系统错误
     HTTP_LCC_ERR_TOKEN_EXPIRE = 10004, // Token 过期了
     HTTP_LCC_ERR_NOT_FOUND_ROOM = 10021, // 进入房间失败 找不到房间信息or房间关闭
     HTTP_LCC_ERR_CREDIT_FAIL = 10027, // 远程扣费接口调用失败
+    
     HTTP_LCC_ERR_ROOM_CLOSE = 10029,  // 房间已经关闭
     HTTP_LCC_ERR_KICKOFF     = 10037, // 被挤掉线 默认通知内容
     HTTP_LCC_ERR_NO_AUTHORIZED = 10039, // 不能操作 不是对应的userid
     HTTP_LCC_ERR_LIVEROOM_NO_EXIST = 16104, // 直播间不存在
     HTTP_LCC_ERR_LIVEROOM_CLOSED = 16106, // 直播间已关闭
+    
     HTTP_LCC_ERR_ANCHORID_INCONSISTENT = 16108, // 主播id与直播场次的主播id不合
     HTTP_LCC_ERR_CLOSELIVE_DATA_FAIL = 16110, // 关闭直播场次,数据表操作出错
     HTTP_LCC_ERR_CLOSELIVE_LACK_CODITION = 16122, // 主播立即关闭私密直播间, 不满足关闭条件
@@ -44,31 +47,37 @@ typedef enum {
     HTTP_LCC_ERR_NOT_FIND_ANCHOR = 10026, // 主播机构信息找不到
     HTTP_LCC_ERR_NOTCAN_REFUND = 10032, // 立即私密退点失败，已经定时扣费不能退点
     HTTP_LCC_ERR_NOT_FIND_PRICE_INFO = 10024, // 找不到price_setting表信息
+    
     HTTP_LCC_ERR_ANCHOR_BUSY = 10035, // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
     HTTP_LCC_ERR_CHOOSE_TIME_ERR = 10042, // 预约时间错误 /*important*/
     HTTP_LCC_ERR_BOOK_EXIST = 10043, // 用户预约时间段已经存在预约 /*important*/
     HTTP_LCC_ERR_BIND_PHONE = 10064, // 手机号码已绑定
     HTTP_LCC_ERR_RETRY_PHONE = 10065, // 请稍后再重试
+    
     HTTP_LCC_ERR_MORE_TWENTY_PHONE = 10066, // 60分钟内验证超过20次，请24小时后再试
     HTTP_LCC_ERR_UPDATE_PHONE_FAIL = 10067, // 更新失败
     HTTP_LCC_ERR_ANCHOR_OFFLIVE = 10059,       // 主播不在线，不能操作
     HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING = 10072, // 观众已同意预约
     HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING = 10073, // 预约邀请已超时（当观众拒绝时）
+    
     HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING = 10078,   // 预约邀请已超时（当观众同意时）
     HTTP_LCC_ERR_FACEBOOK_NO_MAILBOX = 61001,     // Facebook没有邮箱（需要提交邮箱）
     HTTP_LCC_ERR_FACEBOOK_EXIST_QN_MAILBOX = 61002, // Facebook邮箱已在QN注册（需要换邮箱）
     HTTP_LCC_ERR_FACEBOOK_EXIST_LS_MAILBOX = 61003,  // Facebook邮箱已在直播独立站注册（需要输入密码）
     HTTP_LCC_ERR_FACEBOOK_TOKEN_INVALID = 61004,     // Facebook token无效登录失败
+    
     HTTP_LCC_ERR_FACEBOOK_PARAMETER_FAIL = 61005,    // 参数错误
     HTTP_LCC_ERR_FACEBOOK_ALREADY_REGISTER = 61006,  // Facebook帐号已在QN注册（提示错误）
     HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX = 62001,          // 邮箱已在QN注册
     HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX = 62002,          // 邮箱已在直播独立站注册
     HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN = 62003,        // 年龄小于18岁
+    
     HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL = 62004,            // 参数错误
     HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT = 63001,           // 密码不正确
     HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL = 63002,              // 邮箱未注册
     HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL = 64001,           // 邮箱未注册
     HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG = 4,            // 验证码错误
+    
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE = -22335,                 // 其他设备登录，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN = -22336         // 其他设备登录，这里时本地返回的，仅用于ios
@@ -83,15 +92,29 @@ typedef enum LoginType {
 typedef enum UserType {
     USERTYPEUNKNOW = 0,     // 未知
     USERTYPEA1 = 1,         // A1类型
-    USERTYPEA2 = 2          // A2类型
+    USERTYPEA2 = 2,          // A2类型
+    USERTYPE_BEGIN = USERTYPEUNKNOW,
+    USERTYPE_END = USERTYPEA2
 }UserType;
+
+// int 转换 UserType
+inline UserType GetIntToUserType(int value) {
+    return USERTYPE_BEGIN <= value && value <= USERTYPE_END ? (UserType)value : USERTYPEUNKNOW;
+}
 
 /*主播在线状态*/
 typedef enum{
 	ONLINE_STATUS_UNKNOWN = -1,
 	ONLINE_STATUS_OFFLINE = 0,
-	ONLINE_STATUS_LIVE = 1
+	ONLINE_STATUS_LIVE = 1,
+    ONLINE_STATUS_BEGIN = ONLINE_STATUS_UNKNOWN,
+    ONLINE_STATUS_END = ONLINE_STATUS_LIVE
 } OnLineStatus;
+
+// int 转换 UserType
+inline OnLineStatus GetIntToOnLineStatus(int value) {
+    return ONLINE_STATUS_BEGIN <= value && value <= ONLINE_STATUS_END ? (OnLineStatus)value : ONLINE_STATUS_UNKNOWN;
+}
 
 typedef enum {
     HTTPROOMTYPE_NOLIVEROOM = 0,                  // 没有直播间
@@ -99,37 +122,72 @@ typedef enum {
     HTTPROOMTYPE_COMMONPRIVATELIVEROOM = 2,       // 普通私密直播间
     HTTPROOMTYPE_CHARGEPUBLICLIVEROOM = 3,        // 付费公开直播间
     HTTPROOMTYPE_LUXURYPRIVATELIVEROOM = 4,        // 豪华私密直播间
-
+    HTTPROOMTYPE_BEGIN = HTTPROOMTYPE_NOLIVEROOM,
+    HTTPROOMTYPE_END = HTTPROOMTYPE_LUXURYPRIVATELIVEROOM,
 }HttpRoomType;
+
+// int 转换 HttpRoomType
+inline HttpRoomType GetIntToHttpRoomType(int value) {
+    return HTTPROOMTYPE_BEGIN <= value && value <= HTTPROOMTYPE_END ? (HttpRoomType)value : HTTPROOMTYPE_NOLIVEROOM;
+}
 
 /*头像类型*/
 typedef enum{
 	PHOTOTYPE_UNKNOWN = -1,
 	PHOTOTYPE_THUMB = 0,
-	PHOTOTYPE_LARGE = 1
+	PHOTOTYPE_LARGE = 1,
+    PHOTOTYPE_BEGIN = PHOTOTYPE_UNKNOWN,
+    PHOTOTYPE_END = PHOTOTYPE_LARGE
 } PhotoType;
+
+// int 转换 PhotoType
+inline PhotoType GetIntToPhotoType(int value) {
+    return PHOTOTYPE_BEGIN <= value && value <= PHOTOTYPE_END ? (PhotoType)value : PHOTOTYPE_UNKNOWN;
+}
 
 /*性别*/
 typedef enum{
 	GENDER_UNKNOWN = -1,
 	GENDER_MALE = 0,
-	GENDER_FEMALE = 1
+	GENDER_FEMALE = 1,
+    GENDER_BEGIN = GENDER_UNKNOWN,
+    GENDER_END = GENDER_FEMALE
 } Gender;
+
+// int 转换 Gender
+inline Gender GetIntToGender(int value) {
+    return GENDER_BEGIN <= value && value <= GENDER_END ? (Gender)value : GENDER_UNKNOWN;
+}
 
 /*图片类型*/
 typedef enum{
     IMAGETYPE_UNKNOWN = 0,
     IMAGETYPE_USER = 1,
-    IMAGETYPE_COVER = 2
+    IMAGETYPE_COVER = 2,
+    IMAGETYPE_BEGIN = IMAGETYPE_UNKNOWN,
+    IMAGETYPE_END = IMAGETYPE_COVER
 } ImageType;
+
+// int 转换 ImageType
+inline ImageType GetIntToImageType(int value) {
+    return IMAGETYPE_BEGIN <= value && value <= IMAGETYPE_END ? (ImageType)value : IMAGETYPE_UNKNOWN;
+}
+
 
 /*审核状态*/
 typedef enum{
     EXAMINE_STATUS_UNKNOWN = 0,
     EXAMINE_STATUS_WAITING = 1,  // 待审核
     EXAMINE_STATUS_PASS    = 2,  // 通过
-    EXAMINE_STATUS_REFUSE  = 3   // 否决
+    EXAMINE_STATUS_REFUSE  = 3,   // 否决
+    EXAMINE_STATUS_BEGIN = EXAMINE_STATUS_UNKNOWN,
+    EXAMINE_STATUS_END = EXAMINE_STATUS_REFUSE
 }ExamineStatus;
+
+// int 转换 ExamineStatus
+inline ExamineStatus GetIntToExamineStatus(int value) {
+    return EXAMINE_STATUS_BEGIN <= value && value <= EXAMINE_STATUS_END ? (ExamineStatus)value : EXAMINE_STATUS_UNKNOWN;
+}
 
 /*礼物类型*/
 typedef enum{
@@ -138,18 +196,39 @@ typedef enum{
     GIFTTYPE_Heigh = 2,     // 高级礼物（动画）
     GIFTTYPE_BAR = 3,       // 吧台礼物
     GIFTTYPE_CELEBRATE = 4,  // 庆祝礼物
+    GIFTTYPE_BEGIN = GIFTTYPE_UNKNOWN,
+    GIFTTYPE_END = GIFTTYPE_CELEBRATE
 }GiftType;
+
+// int 转换 GiftType
+inline GiftType GetIntToGiftType(int value) {
+    return GIFTTYPE_BEGIN <= value && value <= GIFTTYPE_END ? (GiftType)value : GIFTTYPE_UNKNOWN;
+}
 
 typedef enum {
     EMOTICONTYPE_STANDARD = 0,      // Standard
-    EMOTICONTYPE_ADVANCED = 1       // Advanced
+    EMOTICONTYPE_ADVANCED = 1,       // Advanced
+    EMOTICONTYPE_BEGIN = EMOTICONTYPE_STANDARD,
+    EMOTICONTYPE_END = EMOTICONTYPE_ADVANCED
 }EmoticonType;
+
+// int 转换 EmoticonType
+inline EmoticonType GetIntToEmoticonType(int value) {
+    return EMOTICONTYPE_BEGIN <= value && value <= EMOTICONTYPE_END ? (EmoticonType)value : EMOTICONTYPE_STANDARD;
+}
 
 /* 表情类型 */
 typedef enum {
     EMOTICONACTIONTYPE_STATIC = 0,      // 静态表情
-    EMOTICONACTIONTYPE_DYNAMIC = 1      // 动画表情
+    EMOTICONACTIONTYPE_DYNAMIC = 1,      // 动画表情
+    EMOTICONACTIONTYPE_BEGIN = EMOTICONACTIONTYPE_STATIC,
+    EMOTICONACTIONTYPE_END = EMOTICONACTIONTYPE_DYNAMIC
 }EmoticonActionType;
+
+// int 转换 EmoticonActionType
+inline EmoticonActionType GetIntToEmoticonActionType(int value) {
+    return EMOTICONACTIONTYPE_BEGIN <= value && value <= EMOTICONACTIONTYPE_END ? (EmoticonActionType)value : EMOTICONACTIONTYPE_STATIC;
+}
 
 // 回复状态
 typedef enum {
@@ -161,17 +240,31 @@ typedef enum {
     HTTPREPLYTYPE_CANCEL = 5,               // 观众/主播取消
     HTTPREPLYTYPE_ANCHORABSENT = 6,         // 主播缺席
     HTTPREPLYTYPE_FANSABSENT = 7,           // 观众缺席
-    HTTPREPLYTYPE_COMFIRMED = 8             // 已完成
+    HTTPREPLYTYPE_COMFIRMED = 8,             // 已完成
+    HTTPREPLYTYPE_BEGIN = HTTPREPLYTYPE_UNKNOWN,
+    HTTPREPLYTYPE_END = HTTPREPLYTYPE_COMFIRMED
 }HttpReplyType;
+
+// int 转换 HttpReplyType
+inline HttpReplyType GetIntToHttpReplyType(int value) {
+    return HTTPREPLYTYPE_BEGIN <= value && value <= HTTPREPLYTYPE_END ? (HttpReplyType)value : HTTPREPLYTYPE_UNKNOWN;
+}
 
 // 预约列表类型
 typedef enum {
     BOOKINGLISTTYPE_WAITFANSHANDLEING = 1,          // 等待观众处理
     BOOKINGLISTTYPE_WAITANCHORHANDLEING = 2,        // 等待主播处理
     BOOKINGLISTTYPE_COMFIRMED = 3,                  // 已确认
-    BOOKINGLISTTYPE_HISTORY = 4                     // 历史
+    BOOKINGLISTTYPE_HISTORY = 4,                     // 历史
+    BOOKINGLISTTYPE_BEGIN = BOOKINGLISTTYPE_WAITFANSHANDLEING,
+    BOOKINGLISTTYPE_END = BOOKINGLISTTYPE_HISTORY
     
 } BookingListType;
+
+// int 转换 BookingListType
+inline BookingListType GetIntToBookingListType(int value) {
+    return BOOKINGLISTTYPE_BEGIN <= value && value <= BOOKINGLISTTYPE_END ? (BookingListType)value : BOOKINGLISTTYPE_WAITFANSHANDLEING;
+}
 
 // 预约回复状态
 typedef enum {
@@ -183,66 +276,137 @@ typedef enum {
     BOOKINGREPLYTYPE_CANCEL  = 5,           // 取消
     BOOKINGREPLYTYPE_ANCHORABSENT = 6,      // 主播缺席
     BOOKINGREPLYTYPE_FANSABSENT = 7,        // 观众缺席
-    BOOKINGREPLYTYPE_COMFIRMED = 8          // 已完成
+    BOOKINGREPLYTYPE_COMFIRMED = 8,          // 已完成
+    BOOKINGREPLYTYPE_BEGIN = BOOKINGREPLYTYPE_UNKNOWN,
+    BOOKINGREPLYTYPE_END = BOOKINGREPLYTYPE_COMFIRMED
     
 }BookingReplyType;
+
+// int 转换 BookingReplyType
+inline BookingReplyType GetIntToBookingReplyType(int value) {
+    return BOOKINGREPLYTYPE_BEGIN <= value && value <= BOOKINGREPLYTYPE_END ? (BookingReplyType)value : BOOKINGREPLYTYPE_UNKNOWN;
+}
 
 typedef enum {
     HTTPTALENTSTATUS_UNREPLY = 0,               // 未回复
     HTTPTALENTSTATUS_ACCEPT = 1,                // 已接受
-    HTTPTALENTSTATUS_REJECT = 2                 // 拒绝
+    HTTPTALENTSTATUS_REJECT = 2,                // 拒绝
+    HTTPTALENTSTATUS_OUTTIME = 3,               // 已超时
+    HTTPTALENTSTATUS_CANCEL = 4,                // 已取消
+    HTTPTALENTSTATUS_BEGIN = HTTPTALENTSTATUS_UNREPLY,
+    HTTPTALENTSTATUS_END = HTTPTALENTSTATUS_CANCEL
 }HTTPTalentStatus;
+
+// int 转换 HTTPTalentStatus
+inline HTTPTalentStatus GetIntToHTTPTalentStatus(int value) {
+    return HTTPTALENTSTATUS_BEGIN <= value && value <= HTTPTALENTSTATUS_END ? (HTTPTalentStatus)value : HTTPTALENTSTATUS_UNREPLY;
+}
 
 typedef enum {
     BOOKTIMESTATUS_BOOKING = 0,             // 可预约
     BOOKTIMESTATUS_INVITEED = 1,            // 本人已邀请
     BOOKTIMESTATUS_COMFIRMED = 2,           // 本人已确认
-    BOOKTIMESTATUS_INVITEEDOTHER = 3        // 本人已邀请其它主播
+    BOOKTIMESTATUS_INVITEEDOTHER = 3,        // 本人已邀请其它主播
+    BOOKTIMESTATUS_BEGIN = BOOKTIMESTATUS_BOOKING,
+    BOOKTIMESTATUS_END = BOOKTIMESTATUS_INVITEEDOTHER
 }BookTimeStatus;
+
+// int 转换 BookTimeStatus
+inline BookTimeStatus GetIntToBookTimeStatus(int value) {
+    return BOOKTIMESTATUS_BEGIN <= value && value <= BOOKTIMESTATUS_END ? (BookTimeStatus)value : BOOKTIMESTATUS_BOOKING;
+}
 
 // 可用的直播间类型
 typedef enum {
 	USEROOMTYPE_LIMITLESS = 0,                  // 不限
 	USEROOMTYPE_PUBLIC = 1,                     // 公开
-	USEROOMTYPE_PRIVATE = 2                     // 私密
+	USEROOMTYPE_PRIVATE = 2,                     // 私密
+    USEROOMTYPE_BEGIN = USEROOMTYPE_LIMITLESS,
+    USEROOMTYPE_END = USEROOMTYPE_PRIVATE
 }UseRoomType;
+// int 转换 UseRoomType
+inline UseRoomType GetIntToUseRoomType(int value) {
+    return USEROOMTYPE_BEGIN <= value && value <= USEROOMTYPE_END ? (UseRoomType)value : USEROOMTYPE_LIMITLESS;
+}
 
 // 主播类型
 typedef enum {
     ANCHORTYPE_LIMITLESS = 0,                  // 不限
     ANCHORTYPE_APPOINTANCHOR = 1,              // 指定主播
-    ANCHORTYPE_NOSEEANCHOR = 2                 //没看过直播的主播
+    ANCHORTYPE_NOSEEANCHOR = 2,                 //没看过直播的主播
+    ANCHORTYPE_BEGIN = ANCHORTYPE_LIMITLESS,
+    ANCHORTYPE_END = ANCHORTYPE_NOSEEANCHOR
 }AnchorType;
+
+// int 转换 AnchorType
+inline AnchorType GetIntToAnchorType(int value) {
+    return ANCHORTYPE_BEGIN <= value && value <= ANCHORTYPE_END ? (AnchorType)value : ANCHORTYPE_LIMITLESS;
+}
 
 typedef enum {
     CONTROLTYPE_UNKNOW = 0,               // 未知
     CONTROLTYPE_START = 1,                   // 开始
-    CONTROLTYPE_CLOSE = 2                    // 关闭
+    CONTROLTYPE_CLOSE = 2,                    // 关闭
+    CONTROLTYPE_BEGIN = CONTROLTYPE_UNKNOW,
+    CONTROLTYPE_END = CONTROLTYPE_CLOSE
 }ControlType;
+
+// int 转换 ControlType
+inline ControlType GetIntToControlType(int value) {
+    return CONTROLTYPE_BEGIN <= value && value <= CONTROLTYPE_END ? (ControlType)value : CONTROLTYPE_UNKNOW;
+}
 
 typedef enum {
     ANCHORLEVELTYPE_UNKNOW = 0,             // 未知
     ANCHORLEVELTYPE_SILVER = 1,             // 白银
-    ANCHORLEVELTYPE_GOLD = 2                // 黄金
+    ANCHORLEVELTYPE_GOLD = 2,                // 黄金
+    ANCHORLEVELTYPE_BEGIN = ANCHORLEVELTYPE_UNKNOW,
+    ANCHORLEVELTYPE_END = ANCHORLEVELTYPE_GOLD
 }AnchorLevelType;
+
+// int 转换 AnchorLevelType
+inline AnchorLevelType GetIntToAnchorLevelType(int value) {
+    return ANCHORLEVELTYPE_BEGIN <= value && value <= ANCHORLEVELTYPE_END ? (AnchorLevelType)value : ANCHORLEVELTYPE_UNKNOW;
+}
 
 typedef enum {
     GENDERTYPE_UNKNOW = 0,              // 未知
     GENDERTYPE_MAN = 1,                 // 男
-    GENDERTYPE_LADY = 2                 // nv
+    GENDERTYPE_LADY = 2,                 // nv
+    GENDERTYPE_BEGIN = GENDERTYPE_UNKNOW,
+    GENDERTYPE_END = GENDERTYPE_LADY
 }GenderType;
+
+// int 转换 GenderType
+inline GenderType GetIntToGenderType(int value) {
+    return GENDERTYPE_BEGIN <= value && value <= GENDERTYPE_END ? (GenderType)value : GENDERTYPE_UNKNOW;
+}
 
 typedef enum {
     SHARETYPE_OTHER = 0,              // 其它
     SHARETYPE_FACEBOOK = 1,           // Facebook
-    SHARETYPE_TWITTER = 2             // Twitter
+    SHARETYPE_TWITTER = 2,             // Twitter
+    SHARETYPE_BEGIN = SHARETYPE_OTHER,
+    SHARETYPE_END = SHARETYPE_TWITTER
 }ShareType;
+
+// int 转换 ShareType
+inline ShareType GetIntToShareType(int value) {
+    return SHARETYPE_BEGIN <= value && value <= SHARETYPE_END ? (ShareType)value : SHARETYPE_OTHER;
+}
 
 typedef enum {
     SHAREPAGETYPE_UNKNOW = 0,                 // 未知
     SHAREPAGETYPE_ANCHOR = 1,                 // 主播资料页
-    SHAREPAGETYPE_FREEROOM = 2                // 免费公开直播间
+    SHAREPAGETYPE_FREEROOM = 2,                // 免费公开直播间
+    SHAREPAGETYPE_BEGIN = SHAREPAGETYPE_UNKNOW,
+    SHAREPAGETYPE_END = SHAREPAGETYPE_FREEROOM
 }SharePageType;
+
+// int 转换 SharePageType
+inline SharePageType GetIntToSharePageType(int value) {
+    return SHAREPAGETYPE_BEGIN <= value && value <= SHAREPAGETYPE_END ? (SharePageType)value : SHAREPAGETYPE_UNKNOW;
+}
 
 typedef enum {
     INTERESTTYPE_UNKNOW = 0,                        // 0:未知
@@ -289,7 +453,14 @@ typedef enum {
     APPSTOREPAYTYPE_PAYFAIL = 2,                     // 支付失败
     APPSTOREPAYTYPE_PAYRECOVERY = 3,                     // 恢复交易(仅非消息及自动续费商品)
     APPSTOREPAYTYPE_NOIMMEDIATELYPAY = 4,                     // 无法立即支付
+    APPSTOREPAYTYPE_BEGIN = APPSTOREPAYTYPE_UNKNOW,
+    APPSTOREPAYTYPE_END = APPSTOREPAYTYPE_NOIMMEDIATELYPAY
 }AppStorePayCodeType;
+
+// int 转换 AppStorePayCodeType
+inline AppStorePayCodeType GetIntToAppStorePayCodeType(int value) {
+    return APPSTOREPAYTYPE_BEGIN <= value && value <= APPSTOREPAYTYPE_END ? (AppStorePayCodeType)value : APPSTOREPAYTYPE_UNKNOW;
+}
 
 // 昵称审核状态
 typedef enum {
@@ -317,35 +488,65 @@ inline PhotoVerifyStatus GetPhotoVerifyStatus(int value) {
 // 验证码种类
 typedef enum {
     VERIFYCODETYPE_LOGIN = 0,                             // “login”：登录
-    VERIFYCODETYPE_FINDPW = 1                             // “findpw”：找回密码
+    VERIFYCODETYPE_FINDPW = 1,                             // “findpw”：找回密码
+    VERIFYCODETYPE_BEGIN = VERIFYCODETYPE_LOGIN,
+    VERIFYCODETYPE_END = VERIFYCODETYPE_FINDPW
 }VerifyCodeType;
+
+// int 转换 VerifyCodeType
+inline VerifyCodeType GetIntToVerifyCodeType(int value) {
+    return VERIFYCODETYPE_BEGIN <= value && value <= VERIFYCODETYPE_END ? (VerifyCodeType)value : VERIFYCODETYPE_LOGIN;
+}
 
 
 typedef enum {
     REGIONIDTYPE_UNKNOW = 0,
     REGIONIDTYPE_CD = 4,
     REGIONIDTYPE_LD = 5,
-    REGIONIDTYPE_AME = 6
+    REGIONIDTYPE_AME = 6,
+    REGIONIDTYPE_BEGIN = REGIONIDTYPE_CD,
+    REGIONIDTYPE_END = REGIONIDTYPE_AME
 }RegionIdType;
+
+// int 转换 RegionIdType
+inline RegionIdType GetIntToRegionIdType(int value) {
+    return REGIONIDTYPE_BEGIN <= value && value <= REGIONIDTYPE_END ? (RegionIdType)value : REGIONIDTYPE_UNKNOW;
+}
 
 typedef enum {
     HANGOUTANCHORLISTTYPE_UNKNOW = 0,           // 未知
     HANGOUTANCHORLISTTYPE_FOLLOW = 1,           // 已关注
     HANGOUTANCHORLISTTYPE_WATCHED = 2,          // Watched(看过的)
     HANGOUTANCHORLISTTYPE_FRIEND = 3,           // 主播好友
-    HANGOUTANCHORLISTTYPE_ONLINEANCHOR = 4      // 在线主播
+    HANGOUTANCHORLISTTYPE_ONLINEANCHOR = 4,      // 在线主播
+    HANGOUTANCHORLISTTYPE_BEGIN = HANGOUTANCHORLISTTYPE_UNKNOW,
+    HANGOUTANCHORLISTTYPE_END = HANGOUTANCHORLISTTYPE_ONLINEANCHOR
     
 }HangoutAnchorListType;
 
+// int 转换 HangoutAnchorListType
+inline HangoutAnchorListType GetIntToHangoutAnchorListType(int value) {
+    return HANGOUTANCHORLISTTYPE_BEGIN <= value && value <= HANGOUTANCHORLISTTYPE_END ? (HangoutAnchorListType)value : HANGOUTANCHORLISTTYPE_UNKNOW;
+}
 
 typedef enum {
     HANGOUTINVITESTATUS_UNKNOW = 0,             // 未知
     HANGOUTINVITESTATUS_PENDING = 1,            // 待确定
     HANGOUTINVITESTATUS_ACCEPT = 2,             // 已接受
     HANGOUTINVITESTATUS_REJECT = 3,            // 已拒绝
-    HANGOUTINVITESTATUS_OUTTIME = 4            // 已超时
+    HANGOUTINVITESTATUS_OUTTIME = 4,            // 已超时
+    HANGOUTINVITESTATUS_CANCLE = 5,             // 观众取消邀
+    HANGOUTINVITESTATUS_NOCREDIT = 6,           // 余额不足
+    HANGOUTINVITESTATUS_BUSY = 7,               // 主播繁忙
+    HANGOUTINVITESTATUS_BEGIN = HANGOUTINVITESTATUS_UNKNOW,
+    HANGOUTINVITESTATUS_END = HANGOUTINVITESTATUS_BUSY
     
 }HangoutInviteStatus;
+
+// int 转换 HangoutInviteStatus
+inline HangoutInviteStatus GetIntToHangoutInviteStatus(int value) {
+    return HANGOUTINVITESTATUS_BEGIN <= value && value <= HANGOUTINVITESTATUS_END ? (HangoutInviteStatus)value : HANGOUTINVITESTATUS_UNKNOW;
+}
 
 // 节目列表类型
 typedef enum {
@@ -354,9 +555,16 @@ typedef enum {
     PROGRAMLISTTYPE_VERIFYTIEM = 2,         // 按节目审核时间排序
     PROGRAMLISTTYPE_FEATURE = 3,           // 按广告排序
     PROGRAMLISTTYPE_BUYTICKET = 4,          // 已购票列表
-    PROGRAMLISTTYPE_HISTORY = 5             // 购票历史列表
+    PROGRAMLISTTYPE_HISTORY = 5,             // 购票历史列表
+    PROGRAMLISTTYPE_BEGIN = PROGRAMLISTTYPE_UNKNOW,
+    PROGRAMLISTTYPE_END = PROGRAMLISTTYPE_HISTORY
     
 }ProgramListType;
+
+// int 转换 ProgramListType
+inline ProgramListType GetIntToProgramListType(int value) {
+    return PROGRAMLISTTYPE_BEGIN <= value && value <= PROGRAMLISTTYPE_END ? (ProgramListType)value : PROGRAMLISTTYPE_UNKNOW;
+}
 
 typedef enum {
     PROGRAMSTATUS_UNKNOW = -1,              // 未知
@@ -365,18 +573,32 @@ typedef enum {
     PROGRAMSTATUS_VERIFYREJECT = 2,         // 审核被拒
     PROGRAMSTATUS_PROGRAMEND = 3,           // 节目正常结束
     PROGRAMSTATUS_OUTTIME = 4,               // 节目已超时
-    PROGRAMSTATUS_PROGRAMCALCEL = 5        // 节目已取消
+    PROGRAMSTATUS_PROGRAMCALCEL = 5,        // 节目已取消
+    PROGRAMSTATUS_BEGIN = PROGRAMSTATUS_UNKNOW,
+    PROGRAMSTATUS_END = PROGRAMSTATUS_PROGRAMCALCEL
 
 }ProgramStatus;
+
+// int 转换 ProgramStatus
+inline ProgramStatus GetIntToProgramStatus(int value) {
+    return PROGRAMSTATUS_BEGIN <= value && value <= PROGRAMSTATUS_END ? (ProgramStatus)value : PROGRAMSTATUS_UNKNOW;
+}
 
 // 节目推荐列表类型
 typedef enum {
     SHOWRECOMMENDLISTTYPE_UNKNOW = 0,                    // 未知
     SHOWRECOMMENDLISTTYPE_ENDRECOMMEND = 1,              // 直播结束推荐<包括指定主播及其它主播
     SHOWRECOMMENDLISTTYPE_PERSONALRECOMMEND = 2,         // 主播个人节目推荐<仅包括指定主播>
-    SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND =  3           // 不包括指定主播
+    SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND =  3,           // 不包括指定主播
+    SHOWRECOMMENDLISTTYPE_BEGIN = SHOWRECOMMENDLISTTYPE_UNKNOW,
+    SHOWRECOMMENDLISTTYPE_END = SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND
 
 }ShowRecommendListType;
+
+// int 转换 ShowRecommendListType
+inline ShowRecommendListType GetIntToShowRecommendListType(int value) {
+    return SHOWRECOMMENDLISTTYPE_BEGIN <= value && value <= SHOWRECOMMENDLISTTYPE_END ? (ShowRecommendListType)value : SHOWRECOMMENDLISTTYPE_UNKNOW;
+}
 
 // 购票状态
 typedef enum {
@@ -384,8 +606,45 @@ typedef enum {
     PROGRAMTICKETSTATUS_NOBUY = 0,      // 未购票
     PROGRAMTICKETSTATUS_BUYED = 1,      // 已购票
     PROGRAMTICKETSTATUS_OUT = 2,        // 已退票
+    PROGRAMTICKETSTATUS_BEGIN = PROGRAMTICKETSTATUS_UNKNOW,
+    PROGRAMTICKETSTATUS_END = PROGRAMTICKETSTATUS_OUT
 
 }ProgramTicketStatus;
+
+// int 转换 ProgramTicketStatus
+inline ProgramTicketStatus GetIntToProgramTicketStatus(int value) {
+    return PROGRAMTICKETSTATUS_BEGIN <= value && value <= PROGRAMTICKETSTATUS_END ? (ProgramTicketStatus)value : PROGRAMTICKETSTATUS_UNKNOW;
+}
+
+// 私信消息排序类型
+typedef enum {
+    PRIVATEMSGORDERTYPE_UNKNOW = -1,    // 未知
+    PRIVATEMSGORDERTYPE_OLD = 0,      // 获取更多旧消息
+    PRIVATEMSGORDERTYPE_NEW = 1,      // 获取所有最新消息
+    PRIVATEMSGORDERTYPE_BEGIN = PRIVATEMSGORDERTYPE_UNKNOW,
+    PRIVATEMSGORDERTYPE_END = PRIVATEMSGORDERTYPE_NEW
+    
+}PrivateMsgOrderType;
+
+// int 转换 ProgramTicketStatus
+inline PrivateMsgOrderType GetIntToPrivateMsgOrderType(int value) {
+    return PRIVATEMSGORDERTYPE_BEGIN <= value && value <= PRIVATEMSGORDERTYPE_END ? (PrivateMsgOrderType)value : PRIVATEMSGORDERTYPE_UNKNOW;
+}
+
+// 私信消息排序类型
+typedef enum {
+    PRIVATEMSGTYPE_UNKNOW = 0,    // 未知
+    PRIVATEMSGTYPE_TEXT = 1,      // 私信文本
+    PRIVATEMSGTYPE_Dynamic = 2,   // 动态
+    PRIVATEMSGTYPE_BEGIN = PRIVATEMSGTYPE_UNKNOW,
+    PRIVATEMSGTYPE_END = PRIVATEMSGTYPE_Dynamic
+    
+}PrivateMsgType;
+
+// int 转换 ProgramTicketStatus
+inline PrivateMsgType GetIntToPrivateMsgType(int value) {
+    return PRIVATEMSGTYPE_BEGIN <= value && value <= PRIVATEMSGTYPE_END ? (PrivateMsgType)value : PRIVATEMSGTYPE_UNKNOW;
+}
 
 #endif
 

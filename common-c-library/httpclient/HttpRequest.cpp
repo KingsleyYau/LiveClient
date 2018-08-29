@@ -24,6 +24,16 @@ protected:
 	void onRun() {
 		bool bFlag = mpHttpRequest->mHttpClient.Request(&mpHttpRequest->mEntiy);
         if( mpHttpRequest->mpIHttpRequestCallback != NULL ) {
+            FileLevelLog(LIVESHOW_HTTP_LOG,
+                         KLog::LOG_MSG,
+                         "HttpRequest::StartRequest( "
+                         "request : %p, "
+                         "url : %s, "
+                         "respond : %s "
+                         ") \n\n",
+                         mpHttpRequest,
+                         mpHttpRequest->mUrl.c_str(),
+                         mpHttpRequest->mpRespondBuffer);
             mpHttpRequest->mpIHttpRequestCallback->OnFinish(
                                                             mpHttpRequest,
                                                             bFlag,

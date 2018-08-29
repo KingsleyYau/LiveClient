@@ -34,12 +34,14 @@
     if (self) {
         LSLoginManager *logManager = [LSLoginManager manager];
         [logManager addDelegate:self];
+        
         self.backGiftArray = [[NSMutableArray alloc] init];
         self.backGiftItem = [[RoomBackGiftItem alloc] init];
         self.loginManager = [LSLoginManager manager];
         self.sendGiftArray = [[NSMutableArray alloc] init];
         self.isFirstSend = YES;
         self.isIMNetWork = YES;
+        
     }
     return self;
 }
@@ -190,6 +192,15 @@
         [self.sendGiftArray removeAllObjects];
         self.isFirstSend = YES;
     }
+}
+
+#pragma mark - IM回调
+- (void)onZBLogin:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ZBImLoginReturnObject *)item {
+    NSLog(@"BackpackSendGiftManager::onZBLogin( [IM登录], errType : %d, errmsg : %@ )", errType, errmsg);
+}
+
+- (void)onZBLogout:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
+    NSLog(@"PlayViewController::onZBLogout( [IM注销通知], errType : %d, errmsg : %@ )", errType, errmsg);
 }
 
 

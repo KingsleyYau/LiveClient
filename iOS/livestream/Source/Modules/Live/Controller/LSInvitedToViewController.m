@@ -139,8 +139,6 @@ typedef enum PreLiveStatus {
 
     // 赋值到全局变量, 用于前台计时
     [LiveGobalManager manager].liveRoom = nil;
-    [LiveGobalManager manager].player = nil;
-    [LiveGobalManager manager].publisher = nil;
     
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
@@ -552,7 +550,9 @@ typedef enum PreLiveStatus {
         case LCC_ERR_ANCHOR_OFFLINE:{
             self.bookPrivateHeight.constant = 35;
         }break;
-            
+        case LCC_ERR_ROOM_FULL:{
+            self.vipStartPrivateBtn.hidden = YES;
+        }break;
         case LCC_ERR_INVITE_FAIL:{
             // 显示立即私密按钮
             self.startPrivateHeight.constant = 35;
@@ -699,8 +699,8 @@ typedef enum PreLiveStatus {
     });
 }
 
-- (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl {
-    NSLog(@"LSInvitedToViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ )", roomId, playUrl);
+- (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl userId:(NSString * _Nonnull)userId{
+    NSLog(@"LSInvitedToViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ userId:%@)", roomId, playUrl, userId);
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新流地址
@@ -907,6 +907,10 @@ typedef enum PreLiveStatus {
         self.status = PreLiveStatus_Error;
         
         self.isTimeOut = YES;
+        
+        if (self.liveRoom.roomId.length > 0) {
+            [self.imManager leaveRoom:self.liveRoom.roomId];
+        }
     }
 }
 
@@ -922,9 +926,11 @@ typedef enum PreLiveStatus {
     self.inviteId = nil;
     
     // 公开直播, 直接退出
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-
-    }];
+//    [self.navigationController dismissViewControllerAnimated:YES completion:^{
+//
+//    }];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
 }
 
 

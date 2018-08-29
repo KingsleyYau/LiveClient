@@ -9,7 +9,6 @@
 #import "LSMainViewController.h"
 
 #import "StreamTestViewController.h"
-#import "LSHomePageViewController.h"
 #import "PreLiveViewController.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "MeLevelViewController.h"
@@ -18,6 +17,12 @@
 #import "MyBackpackViewController.h"
 #import "LSMyReservationsViewController.h"
 #import "AnchorPersonalViewController.h"
+#import "MyTicketPageViewController.h"
+
+#import "LSChatListViewController.h"
+#import "LSChatViewController.h"
+
+#import "LSHomeSettingViewController.h"
 
 // Modify by Max 2018/01/25
 #import "HotViewController.h"
@@ -27,8 +32,8 @@
 #import "LSLoginManager.h"
 #import "LiveModule.h"
 #import "LiveUrlHandler.h"
-#import "LiveService.h"
-
+#import "LiveMutexService.h"
+#import "LSConfigManager.h"
 #import "Masonry.h"
 
 #import "LSInvitedToViewController.h"
@@ -38,30 +43,35 @@
 
 // Modify by Max 2018/01/26
 #import "LSUserUnreadCountManager.h"
+#import "UnreadNumManager.h"
 
 #import "HangOutViewController.h"
 
+#import "LiveWebViewController.h"
 #import "ShowListViewController.h"
 #import "InterimShowViewController.h"
 #import "HangOutPreViewController.h"
-
+#import "LSChatListViewController.h"
+#import "IntentionletterListViewController.h"
+#import "CorrespondencePageViewController.h"
 
 #import "ShowTipView.h"
-@interface LSMainViewController () <LiveUrlHandlerDelegate, LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, LSLiveGuideViewControllerDelegate, FollowingViewControllerDelegate, LSUserUnreadCountManagerDelegate>
+#import "StartHangOutTipView.h"
+
+#import "HangoutInvitePageViewController.h"
+
+#import "LiveHeaderScrollview.h"
+#import "HomeSegmentControl.h"
+#import "LSPZPagingScrollView.h"
+
+#import "LSBackgroudReloadManager.h"
+@interface LSMainViewController () <LiveUrlHandlerDelegate, LoginManagerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, FollowingViewControllerDelegate, LSUserUnreadCountManagerDelegate, LSPZPagingScrollViewDelegate, StartHangOutTipViewDelegate, LiveHeaderScrollviewDelegate, UnreadNumManagerDelegate, UIGestureRecognizerDelegate, LSBackgroudReloadManagerDelegate, ShowListViewControllerDelegate>
 /**
  内容页
  */
-@property (strong) NSDictionary<NSNumber *, UIViewController *> *viewControllers;
+@property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 
-/**
- 底部TabBar发布视频选项
- */
-@property (strong) UITabBarItem *tabBarItemPublish;
-
-/**
- 底部TabBar当前选项
- */
-@property (strong) UITabBarItem *tabBarItemSelected;
+@property (nonatomic, weak) IBOutlet LSPZPagingScrollView * pagingScrollView;
 
 /**
  *  Login管理器
@@ -78,378 +88,519 @@
 @property (nonatomic, strong) LSUserUnreadCountManager *unreadCountManager;
 @property (nonatomic, assign) int unreadCount;
 
-@property (nonatomic, assign) NSInteger tabBarNum;
+@property (nonatomic, strong) LiveHeaderScrollview *liveHeaderScrollview;
 
-@property (nonatomic, strong) ShowTipView * showTipView;
+@property (nonatomic, strong) HomeSegmentControl *segment;
 
-@property (nonatomic, assign) BOOL isShowVC;
+@property (nonatomic, strong) StartHangOutTipView *hangoutTipView;
 
-@property (nonatomic, strong) NSMutableArray * pushArray;
+@property (nonatomic, strong) UIButton *closeHangoutTipBtn;
+
+@property (nonatomic, strong) UnreadNumManager *unreadManager;
+
+@property (nonatomic, strong) LSHomeSettingViewController * settingVC;
+
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipe;
+
+@property (nonatomic, strong) UIView *coverView;
+/**
+ 是否第一次登录
+ */
+@property (nonatomic, assign) BOOL isFirstLogin;
+
+/**
+ 是否换站
+ */
+@property (nonatomic, assign) BOOL isSwitchSite;
 @end
 
 @implementation LSMainViewController
-#pragma mark - iPhoneX适配Tabbar
-- (void)viewDidLayoutSubviews {
+
+- (void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
-
-    // TODO:刷新Tabbar items
-    [self.tabBar invalidateIntrinsicContentSize];
-
-    // TODO:紧贴底部
-    //    for (UITabBarItem *item in self.tabBar.items) {
-    //        item.imageInsets = UIEdgeInsetsMake(15, 0, -15, 0);
-    //        [item setTitlePositionAdjustment:UIOffsetMake(0, 32)];
-    //    }
+    CGFloat y = 64;
+    CGFloat x = ([UIScreen mainScreen].bounds.size.width - 310) / 2;
+    self.hangoutTipView.frame = CGRectMake(x, y, 310, 228);
 }
-
 #pragma mark - 界面初始化
 - (void)initCustomParam {
     [super initCustomParam];
-
+    
     NSLog(@"LSMainViewController::initCustomParam()");
-
-    self.navigationTitle = NSLocalizedStringFromSelf(@"NAVIGATION_ITEM_TITLE");
-
+    
+    //self.navigationTitle = NSLocalizedStringFromSelf(@"NAVIGATION_ITEM_TITLE");
+    
     // 监听登录事件
     self.loginManager = [LSLoginManager manager];
     [self.loginManager addDelegate:self];
-
+    
     // 路径跳转
     self.handler = [LiveUrlHandler shareInstance];
     self.handler.delegate = self;
-
+    
     self.imManager = [LSImManager manager];
     [self.imManager addDelegate:self];
     [self.imManager.client addDelegate:self];
-
-    /**
-     *  Modify by Max 2018/01/26
-     *
-     */
+    
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
     self.unreadCount = 0;
+    
+    self.unreadManager = [UnreadNumManager manager];
+    [self.unreadManager addDelegate:self];
+    
+    [LSBackgroudReloadManager manager].delegate = self;
+    
+    // 第一次登录
+    self.isFirstLogin = YES;
+    // 是否换站
+    self.isSwitchSite = NO;
 }
 
 - (void)dealloc {
     NSLog(@"LSMainViewController::dealloc()");
-
+    
     // 去掉登录事件
     [self.loginManager removeDelegate:self];
-
+    
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
-
+    
     [self.unreadCountManager removeDelegate:self];
+    [self.unreadManager removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-
-    //    // 主播列表
-    //    LSHomePageViewController *vcHome = [[LSHomePageViewController alloc] initWithNibName:nil bundle:nil];
-    //    vcHome.tabBarItem.tag = 0;
-    //    vcHome.tabBarItem.title = nil;
-    //    [self addChildViewController:vcHome];
-    //
-    //    // 开播选项
-    //    self.tabBarItemPublish = [[UITabBarItem alloc] initWithTitle:nil image:[UIImage imageNamed:@"TabBarShow"] tag:1];
-    //    self.tabBarItemPublish.imageInsets = UIEdgeInsetsMake(-10, 0, 10, 0);
-    //
-    //    // 个人中心
-    //    StreamTestViewController *vcTest = [[StreamTestViewController alloc] initWithNibName:nil bundle:nil];
-    //    vcTest.tabBarItem.tag = 2;
-    //    vcTest.tabBarItem.title = nil;
-    //    [self addChildViewController:vcTest];
-
-    /**
-     *  Modify by Max 2018/01/25
-     *
-     */
+    
+    self.curIndex = 0;
+    
     // 主播Hot列表
     HotViewController *vcHot = [[HotViewController alloc] initWithNibName:nil bundle:nil];
-    vcHot.tabBarItem.tag = 0;
     [self addChildViewController:vcHot];
-
+    
     // 主播Follow列表
     FollowingViewController *vcFollow = [[FollowingViewController alloc] initWithNibName:nil bundle:nil];
-    vcFollow.tabBarItem.tag = 1;
     vcFollow.followVCDelegate = self;
     [self addChildViewController:vcFollow];
     
-    ShowListViewController * vcShow = [[ShowListViewController alloc]initWithNibName:nil bundle:nil];
-    vcShow.tabBarItem.tag = 2;
-    [self addChildViewController:vcShow];
-
-    LSUserInfoListViewController *vcMe = [[LSUserInfoListViewController alloc] initWithNibName:nil bundle:nil];
-    vcMe.tabBarItem.tag = 3;
-    [self addChildViewController:vcMe];
-
-    // 初始化内容界面
-    self.viewControllers = [NSDictionary dictionaryWithObjectsAndKeys:
-                                             vcHot, @(vcHot.tabBarItem.tag),
-                                             vcFollow, @(vcFollow.tabBarItem.tag),
-                                            vcShow, @(vcShow.tabBarItem.tag),
-                                             vcMe, @(vcMe.tabBarItem.tag),
-                                             nil];
-
-    // 初始化底部TabBar
-    self.tabBar.items = [NSArray arrayWithObjects:vcHot.tabBarItem, vcFollow.tabBarItem, vcShow.tabBarItem,vcMe.tabBarItem, nil];
+    ShowListViewController *vcShowList = [[ShowListViewController alloc]initWithNibName:nil bundle:nil];
+    vcShowList.showDelegate = self;
+    [self addChildViewController:vcShowList];
     
-    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selectType:)];
-    swipeRight.direction = UISwipeGestureRecognizerDirectionRight;
-    [self.view addGestureRecognizer:swipeRight];
-    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(selectType:)];
-    swipeLeft.direction = UISwipeGestureRecognizerDirectionLeft;
-    [self.view addGestureRecognizer:swipeLeft];
+    self.viewControllers = [NSArray arrayWithObjects:vcHot, vcFollow,vcShowList, nil];
 
-    // 计算Tabbar高度
-    if ([LSDevice iPhoneXStyle]) {
-        // TODO:底部留空
-        self.tabBarHeight.constant = 83;
-    } else {
-        // TODO:紧贴底部
-        self.tabBarHeight.constant = 49;
-    }
+    self.pagingScrollView.pagingViewDelegate = self;
+
+    self.hangoutTipView = [[StartHangOutTipView alloc] init];
+    self.hangoutTipView.hidden = YES;
+    self.hangoutTipView.delegate = self;
+    [self.navigationController.view addSubview:self.hangoutTipView];
     
-    if (!self.showTipView) {
-        CGFloat x = SCREEN_WIDTH/4 * 3 - 197 + 15;
-        CGFloat navH = self.navigationController.navigationBar.frame.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height;
-        CGFloat y = SCREEN_HEIGHT - navH - 50 - self.tabBarHeight.constant;
-        self.showTipView = [[ShowTipView alloc]initWithFrame:CGRectMake(x, y, 197, 50)];
-        [self.view addSubview:self.showTipView];
-        [self.view bringSubviewToFront:self.showTipView];
-    }
+    self.coverView = [[UIView alloc] init];
+    self.coverView.backgroundColor = Color(0, 0, 0, 0.5);
+    self.coverView.hidden = YES;
+    [self.navigationController.view addSubview:self.coverView];
     
-    self.pushArray = [NSMutableArray array];
+    [self addSwipeGesture];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
+    
     NSLog(@"LSMainViewController::viewWillAppear( animated : %@ )", BOOL2YES(animated));
-
     // 头部颜色
     self.navigationController.navigationBar.barTintColor = [UIColor whiteColor];
     self.navigationController.navigationBar.hidden = NO;
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    
-    self.isShowVC = YES;
-    
-    // 处理跳转URL
-    [[LiveUrlHandler shareInstance] handleOpenURL];
+
 }
 
-- (void)perFormAdd {
-    HangOutPreViewController *vc = [[HangOutPreViewController alloc] init];
+- (void)addSwipeGesture {
+    if (self.swipe == nil) {
+        self.swipe = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+        self.swipe.delegate = self;
+        [self.swipe setDirection:UISwipeGestureRecognizerDirectionRight];
+    }
+}
+
+- (void)removeSwipeGesture {
+    if (self.swipe) {
+        self.swipe = nil;
+        self.swipe.delegate = nil;
+        [self.view removeGestureRecognizer:self.swipe];
+    }
+}
+
+- (void)handleSwipeFrom:(UISwipeGestureRecognizer *)sender {
+    
+    if(self.curIndex == 0 && sender.direction==UISwipeGestureRecognizerDirectionRight) {
+        [self addSettingView];
+    }
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer*)otherGestureRecognizer {
+    return YES;
+}
+
+- (void)backAction:(id)sender {
+    [self addSettingView];
+}
+
+- (void)addSettingView {
+    self.settingVC = [[LSHomeSettingViewController alloc]initWithNibName:nil bundle:nil];
+    self.settingVC.mainVC = self;
+    [self.navigationController addChildViewController:self.settingVC];
+    [self.navigationController.view addSubview:self.settingVC.view];
+    [self.settingVC viewWillAppear:NO];
+    [self.settingVC showSettingView];
+}
+
+- (void)removeSettingView {
+    [self.settingVC removeHomeSettingVC];
+    [self.settingVC viewWillDisappear:NO];
+}
+
+- (void)enterHangoutRoom {
+    HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
     [self navgationControllerPresent:vc];
+    
+    [self showHangoutTipView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     NSLog(@"LSMainViewController::viewDidAppear( animated : %@, viewDidAppearEver : %@ )", BOOL2YES(animated), BOOL2YES(self.viewDidAppearEver));
     if (!self.viewDidAppearEver) {
         // 选中默认页, 第一次进入
-        UITabBarItem *tabBarItemDefault = [self.tabBar.items objectAtIndex:0];
-        self.tabBar.selectedItem = tabBarItemDefault;
-        [self showCurrentViewController:tabBarItemDefault];
-        self.tabBarNum = 0;
     }
-
+    
     [super viewDidAppear:animated];
-
+    
+    [self.view addGestureRecognizer:self.swipe];
+    
     // 禁止主界面右滑
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     }
-    
-    
-    if ([LiveModule module].adVc) {
-        [[LiveModule module].adVc.view removeFromSuperview];
-        [[LiveModule module].adVc removeFromParentViewController];
-    }
 
+    
     // 处理跳转URL
     [[LiveUrlHandler shareInstance] handleOpenURL];
-    // 屏蔽新手引导
-//    if ([LiveModule module].showListGuide) {
-//        if (![[NSUserDefaults standardUserDefaults] boolForKey:@"firstLaunch"] && [LSLoginManager manager].status == LOGINED) {
-//            LSLiveGuideViewController *guide = [[LSLiveGuideViewController alloc] initWithNibName:nil bundle:nil];
-//            guide.listGuide = YES;
-//            guide.guideDelegate = self;
-//            [self addChildViewController:guide];
-//            [self.view addSubview:guide.view];
-//            [guide.view mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.top.equalTo(self.view);
-//                make.left.equalTo(self.view);
-//                make.width.equalTo(self.view);
-//                make.height.equalTo(self.view);
-//            }];
-//            // 使约束生效
-//            [guide.view layoutSubviews];
-//
-//        } else {
-//        }
-//    }
-
     // 刷新未读
     [self reloadUnreadCount];
     
-    if (self.pushArray.count > 0) {
-        [self.showTipView hideTipView];
-        [self.showTipView showTipViewMsg:[self.pushArray firstObject]];
-        [self.pushArray removeAllObjects];
-    }
+    [self.pagingScrollView layoutIfNeeded];
+    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:NO];
+    
+    // 判断登录状态显示loading
+    [self showLoadingForStatus];
 }
 
-//- (void)lsLiveGuideViewControllerDidFinishGuide:(LSLiveGuideViewController *)guideViewController {
-//    // TODO:新手引导结束
-//    [guideViewController.view removeFromSuperview];
-//    [guideViewController removeFromParentViewController];
-//}
-
-- (void)selectType:(UISwipeGestureRecognizer *)gesture {
-    switch (gesture.direction) {
-        case UISwipeGestureRecognizerDirectionLeft:{
-            self.tabBarNum++;
-            if (self.tabBarNum >=self.tabBar.items.count) {
-                self.tabBarNum  = self.tabBar.items.count - 1;
-            }
-            UITabBarItem *item = [self.tabBar.items objectAtIndex:self.tabBarNum];
-            [self showCurrentViewController:item];
-
-        }break;
-        case UISwipeGestureRecognizerDirectionRight:{
-            
-            self.tabBarNum--;
-            if (self.tabBarNum < 0) {
-                self.tabBarNum = 0;
-            }
-            UITabBarItem *item = [self.tabBar.items objectAtIndex:self.tabBarNum];
-            [self showCurrentViewController:item];
+- (void)showLoadingForStatus {
+    switch (self.loginManager.status) {
+        case NONE:
+        case LOGINING:{
+            [self.coverView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.right.top.bottom.equalTo(self.navigationController.view);
+            }];
+            self.coverView.hidden = NO;
+            [self showLoading];
         }break;
             
-        default:
-            break;
+        default:{
+            // 如果第一次登录 刷新列表数据
+            if (self.isFirstLogin) {
+                [self reloadVCData:NO];
+                self.isFirstLogin = NO;
+            }
+            // 如果换站 刷新列表数据以及刷新标志位
+            if (self.isSwitchSite) {
+                [self reloadVCData:self.isSwitchSite];
+                [self resetMainListLoad:YES];
+                self.isSwitchSite = NO;
+            }
+            // 请求未读刷新hot页
+            [self.unreadManager getTotalUnreadNum:^(BOOL success, TotalUnreadNumObject *unreadModel) {
+                if (success) {
+                    if (self.curIndex == 0) {
+                        HotViewController *hotVC = (HotViewController *)self.viewControllers[self.curIndex];
+                        [hotVC reloadHotHeadView];
+                    }
+                }
+            }];
+        }break;
     }
 }
 
 - (void)willMoveToParentViewController:(nullable UIViewController *)parent {
     [super willMoveToParentViewController:parent];
-
+    
     NSLog(@"LSMainViewController::willMoveToParentViewController( parent : %@ )", parent);
-
+    
     if (!parent) {
         // 停止互斥服务
-        [[LiveService service] closeService];
+        [[LiveMutexService service] closeService];
         [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"END_MODULE"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [self removeSettingView];
     } else {
         // 开始互斥服务
-        [[LiveService service] startService];
+        [[LiveMutexService service] startService];
         [[NSUserDefaults standardUserDefaults] setObject:@"live" forKey:@"END_MODULE"];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        // 换站到直播服务
+        if (!self.isFirstLogin) {
+            self.isSwitchSite = YES;
+        }
     }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
     NSLog(@"LSMainViewController::viewWillDisappear( animated : %@ )", BOOL2YES(animated));
-    
-    self.isShowVC = NO;
+    [self removeSettingView];
+    // 移除手势
+//    [self removeSwipeGesture];
+
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    NSLog(@"LSMainViewController::viewDidDisappear( animated : %@ )", BOOL2YES(animated));
     // 恢复右滑手势
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     }
-}
 
+}
 
 - (void)setupNavigationBar {
     [super setupNavigationBar];
-    UIViewController *viewController = [self.viewControllers objectForKey:@(self.tabBarItemSelected.tag)];
-    self.navigationItem.titleView = viewController.navigationItem.titleView;
-    self.navigationItem.leftBarButtonItems = viewController.navigationItem.leftBarButtonItems;
-//    self.navigationItem.rightBarButtonItems = viewController.navigationItem.rightBarButtonItems;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Hang-Out" style:UIBarButtonItemStylePlain target:self action:@selector(perFormAdd)];//为导航栏添加右侧按钮
+    
+    self.navigationItem.leftBarButtonItem = [UIBarButtonItem itemWithTarget:self action:@selector(backAction:) image:[UIImage imageNamed:@"Home_Me_Btn"]];
+    
+    self.liveHeaderScrollview  = [[LiveHeaderScrollview alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 45, 44)];
+    self.liveHeaderScrollview.delegate = self;
+    self.liveHeaderScrollview.dataSource = [NSArray arrayWithArray:[self setUpDataSource]];
+    self.navigationItem.titleView = self.liveHeaderScrollview;
+    
+//    UIButton *rightBtn = [[UIButton alloc] init];
+//    [rightBtn setImage:[UIImage imageNamed:@"Navigation_Right_Button"] forState:UIControlStateNormal];
+//    [rightBtn addTarget:self action:@selector(enterHangoutRoom) forControlEvents:UIControlEventTouchUpInside];
+//    [rightBtn sizeToFit];
+//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:rightBtn];//为导航栏添加右侧按钮
 }
 
-#pragma mark - 数据逻辑
+- (NSArray *)setUpDataSource {
+    return @[@"DISCOVER",@"FOLLOW",@"CALENDAR"];
+}
+
+#pragma mark - LiveHeaderScrollviewDelegate
+- (void)header_disSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    self.curIndex = indexPath.row;
+    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+}
+
+//- (void)segmentControlSelectedTag:(NSInteger)tag {
+//    self.curIndex = tag;
+//    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+//}
+
+#pragma mark - ShowListViewControllerDelegate
+- (void)reloadNowShowList {
+    [self.liveHeaderScrollview reloadHeaderScrollview:NO];
+}
+
+#pragma mark - UnreadNumManagerDelegate
+- (void)reloadUnreadView:(TotalUnreadNumObject *)model {
+    if (model.ticketNoreadNum > 0) {
+        [self.liveHeaderScrollview reloadHeaderScrollview:YES];
+        ShowListViewController *showListVC = (ShowListViewController *)self.viewControllers[2];
+        [showListVC setupLoadData:YES];
+    }
+}
+
+#pragma mark - 画廊回调 (LSPZPagingScrollViewDelegate)
+- (Class)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView classForIndex:(NSUInteger)index {
+    return [UIView class];
+}
+
+- (NSUInteger)pagingScrollViewPagingViewCount:(LSPZPagingScrollView *)pagingScrollView {
+    return (nil == self.viewControllers) ? 0 : self.viewControllers.count;
+}
+
+- (UIView *)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView pageViewForIndex:(NSUInteger)index {
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, pagingScrollView.frame.size.width, pagingScrollView.frame.size.height)];
+    return view;
+}
+
+- (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
+    
+    UIViewController *vc = [self.viewControllers objectAtIndex:index];
+    CGFloat pageViewHeight = pageView.self.frame.size.height;
+    
+    if (vc.view != nil) {
+        [vc.view removeFromSuperview];
+    }
+    
+    [pageView removeAllSubviews];
+    
+    [vc.view setFrame:CGRectMake(0, 0, pageView.self.frame.size.width, pageViewHeight)];
+    [pageView addSubview:vc.view];
+}
+
+- (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
+    self.curIndex = index;
+    [self reportDidShowPage:index];
+    [self.liveHeaderScrollview scrollCollectionItemToDesWithDesIndex:self.curIndex];
+    
+    if (self.curIndex == 0) {
+        HotViewController *hotVC = (HotViewController *)self.viewControllers[self.curIndex];
+        [hotVC reloadUnreadNum];
+    }
+}
 
 #pragma mark - LSLoginManager回调
 - (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nonnull)errmsg {
-}
-
-- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(BOOL)kick {
-}
-
-#pragma mark - 内容界面切换逻辑
-- (void)showCurrentViewController:(UITabBarItem *)item {
-    NSLog(@"LSMainViewController::showCurrentViewController( item.tag : %@ )", @(item.tag));
-
-    UIViewController *viewController = [self.viewControllers objectForKey:@(item.tag)];
-    [self.tabContainView addSubview:viewController.view];
-
-    [viewController.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.tabContainView);
-        make.left.equalTo(self.tabContainView);
-        make.width.equalTo(self.tabContainView);
-        make.height.equalTo(self.tabContainView);
-    }];
-    // 使约束生效
-    [viewController.view layoutSubviews];
-
-    // 刷新底部Tab
-    self.tabBarItemSelected = item;
-    self.tabBar.selectedItem = item;
-
-    // 刷新导航栏
-    [self setupNavigationBar];
-}
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-    if (item == self.tabBarItemPublish) {
-        // 点击开播按钮, 弹出预备开播界面
-        tabBar.selectedItem = self.tabBarItemSelected;
-
-    } else {
-        // 切换内容界面
-        for (UIViewController *viewController in self.viewControllers.allValues) {
-            [viewController.view removeFromSuperview];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (errnum == HTTP_LCC_ERR_SUCCESS) {
+            self.coverView.hidden = YES;
+            [self hideLoading];
+            
+            [self.unreadManager getTotalUnreadNum:^(BOOL success, TotalUnreadNumObject *unreadModel) {
+            }];
+            
+            if (self.viewControllers.count && self.isFirstLogin) {
+                [self reloadVCData:NO];
+                self.isFirstLogin = NO;
+            }
         }
-        [self showCurrentViewController:item];
-        
-        if ([tabBar.items objectAtIndex:2] == item) {
-            [self.showTipView hideTipView];
+    });
+}
+
+- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(LogoutType)type msg:(NSString * _Nullable)msg {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self removeSettingView];
+        self.isFirstLogin = YES;
+        [self resetMainListLoad:NO];
+        [self resetMainListLogin:NO];
+    });
+}
+
+#pragma mark - 刷新数据
+- (void)reloadVCData:(BOOL)isSwitchSite {
+    for (int index = 0; index < self.viewControllers.count; index++) {
+        switch (index) {
+            case 0:{
+                HotViewController *hotVC = (HotViewController *)self.viewControllers[index];
+                [hotVC setupFirstLogin:self.isFirstLogin];
+                if (self.curIndex == index) {
+                    [hotVC viewDidAppearGetList:isSwitchSite];
+                    [hotVC reloadUnreadNum];
+                }
+            }break;
+                
+            case 1:{
+                FollowingViewController *followVC = (FollowingViewController *)self.viewControllers[index];
+                [followVC setupFirstLogin:self.isFirstLogin];
+                if (self.curIndex == index) {
+                    [followVC viewDidAppearGetList:isSwitchSite];
+                }
+            }break;
+                
+            default:{
+                ShowListViewController *showListVC = (ShowListViewController *)self.viewControllers[index];
+                [showListVC setupFirstLogin:self.isFirstLogin];
+                if (self.curIndex == index) {
+                    [showListVC viewDidAppearGetList:isSwitchSite];
+                }
+            }break;
         }
     }
 }
 
-- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray<UITabBarItem *> *)items {
+- (void)resetMainListLoad:(BOOL)isLoadData {
+    for (int index = 0; index < self.viewControllers.count; index++) {
+        switch (index) {
+            case 0:{
+                HotViewController *hotVC = (HotViewController *)self.viewControllers[index];
+                [hotVC setupLoadData:isLoadData];
+            }break;
+                
+            case 1:{
+                FollowingViewController *followVC = (FollowingViewController *)self.viewControllers[index];
+                [followVC setupLoadData:isLoadData];
+            }break;
+                
+            default:{
+                ShowListViewController *showListVC = (ShowListViewController *)self.viewControllers[index];
+                [showListVC setupLoadData:isLoadData];
+            }break;
+        }
+    }
 }
 
-- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray<UITabBarItem *> *)items {
+- (void)resetMainListLogin:(BOOL)isFirstLogin {
+    for (int index = 0; index < self.viewControllers.count; index++) {
+        switch (index) {
+            case 0:{
+                HotViewController *hotVC = (HotViewController *)self.viewControllers[index];
+                [hotVC setupFirstLogin:isFirstLogin];
+            }break;
+                
+            case 1:{
+                FollowingViewController *followVC = (FollowingViewController *)self.viewControllers[index];
+                [followVC setupFirstLogin:isFirstLogin];
+            }break;
+                
+            default:{
+                ShowListViewController *showListVC = (ShowListViewController *)self.viewControllers[index];
+                [showListVC setupFirstLogin:isFirstLogin];
+            }break;
+        }
+    }
 }
 
-- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray<UITabBarItem *> *)items changed:(BOOL)changed {
+#pragma mark - 多人互动
+- (void)showHangoutTipView {
+    [self.navigationController.view bringSubviewToFront:self.closeHangoutTipBtn];
+    [self.navigationController.view bringSubviewToFront:self.hangoutTipView];
+    [self.hangoutTipView showMainHangoutTip];
+    self.closeHangoutTipBtn.hidden = NO;
+    self.hangoutTipView.hidden = NO;
 }
 
-- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray<UITabBarItem *> *)items changed:(BOOL)changed {
+- (void)removeHangoutTip:(id)sender {
+    self.closeHangoutTipBtn.hidden = YES;
+    self.hangoutTipView.hidden = YES;
+}
+
+#pragma mark - StartHangOutTipViewDelegate
+- (void)requestHangout:(StartHangOutTipView *)view {
+    self.closeHangoutTipBtn.hidden = YES;
+    self.hangoutTipView.hidden = YES;
+    
+    HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
+    [self navgationControllerPresent:vc];
+}
+
+- (void)closeHangoutTip:(StartHangOutTipView *)view {
+    self.closeHangoutTipBtn.hidden = YES;
+    self.hangoutTipView.hidden = YES;
 }
 
 #pragma mark - 内容界面通知
 - (void)followingVCBrowseToHot {
     // TODO:从Following列表切换到Hot列表
-
-    UITabBarItem *item = [self.tabBar.items objectAtIndex:0];
-    [self showCurrentViewController:item];
+    self.curIndex = 0;
+    [self reportDidShowPage:self.curIndex];
+    [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
+    [self.liveHeaderScrollview scrollCollectionItemToDesWithDesIndex:self.curIndex];
 }
+
 
 #pragma mark - 获取用户中心未读数
 - (void)reloadUnreadCount {
@@ -466,30 +617,30 @@
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
     // TODO:获取背包未读返回
-    if (self.unreadCount == 0 && item.total > 0) {
-        // TODO:显示红点
-        LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:3];
-        tabBarItem.isShowNum = NO;
-        tabBarItem.badgeValue = @"";
-    } else {
-        [self reloadUnreadMessage];
-    }
+    //    if (self.unreadCount == 0 && item.total > 0) {
+    //        // TODO:显示红点
+    //        LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:3];
+    //        tabBarItem.isShowNum = NO;
+    //        tabBarItem.badgeValue = @"";
+    //    } else {
+    //        [self reloadUnreadMessage];
+    //    }
 }
 
 - (void)reloadUnreadMessage {
     // TODO:刷新界面未读消息
-    LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:3];
-    tabBarItem.isShowNum = YES;
-    tabBarItem.badgeValue = nil;
-    if (self.unreadCount == 0) {
-        tabBarItem.badgeValue = nil;
-    } else {
-        if (self.unreadCount > 99) {
-            tabBarItem.badgeValue = @"99+";
-        } else {
-            tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadCount];
-        }
-    }
+    //    LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:3];
+    //    tabBarItem.isShowNum = YES;
+    //    tabBarItem.badgeValue = nil;
+    //    if (self.unreadCount == 0) {
+    //        tabBarItem.badgeValue = nil;
+    //    } else {
+    //        if (self.unreadCount > 99) {
+    //            tabBarItem.badgeValue = @"99+";
+    //        } else {
+    //            tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadCount];
+    //        }
+    //    }
 }
 
 - (void)onRecvBackpackUpdateNotice:(BackpackInfoObject *)item {
@@ -512,34 +663,6 @@
     [self reloadUnreadCount];
 }
 
-- (void)onRecvProgramPlayNotice:(IMProgramItemObject *)item type:(IMProgramNoticeType)type msg:(NSString * _Nonnull)msg
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"LSMainViewController 接收节目开播通知类型:%d 消息内容:%@",type,msg);
-        // TODO:接收节目开播通知接口
-        LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:2];
-        tabBarItem.isShowNum = NO;
-        tabBarItem.badgeValue = @"";
-        
-        ShowListViewController *vc = (ShowListViewController *)[self.viewControllers objectForKey:@(2)];
-        vc.isLoadData = YES;
-        
-        if (type == IMPROGRAMNOTICETYPE_FOLLOW) {
-            if (self.tabBarItemSelected != tabBarItem) {
-                if (self.isShowVC) {
-                    [self.showTipView hideTipView];
-                    [self.showTipView showTipViewMsg:msg];
-                }
-                else
-                {
-                    [self.pushArray addObject:msg];
-                }
-
-            }
-        }
-    });
-}
-
 - (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList
 {
     IMOngoingShowItemObject * item = [ongoingShowList firstObject];
@@ -549,17 +672,31 @@
 }
 
 #pragma mark - LiveUrlHandler通知
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openPreLive:(NSString *)roomId userId:(NSString *)userId roomType:(LiveRoomType)roomType {
-    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主动邀请], roomId : %@, userId : %@, roomType : %u )", roomId, userId, roomType);
-    // TODO:主动邀请, 跳转过渡页
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPublicLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType {
+    // TODO:点击立即免费公开
+    [[LiveModule module].analyticsManager reportActionEvent:EnterPublicBroadcast eventCategory:EventCategoryenterBroadcast];
     PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.roomId = roomId;
     liveRoom.userId = userId;
     liveRoom.roomType = roomType;
     vc.liveRoom = liveRoom;
+    // 继承导航栏控制器
+    [self navgationControllerPresent:vc];
+}
 
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openPreLive:(NSString *)roomId userId:(NSString *)userId roomType:(LiveRoomType)roomType {
+    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主动邀请], roomId : %@, userId : %@, roomType : %u )", roomId, userId, roomType);
+    // TODO:主动邀请, 跳转过渡页
+    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+    
+    LiveRoom *liveRoom = [[LiveRoom alloc] init];
+    liveRoom.roomId = roomId;
+    liveRoom.userId = userId;
+    liveRoom.roomType = roomType;
+    vc.liveRoom = liveRoom;
+    
     [self navgationControllerPresent:vc];
 }
 
@@ -584,22 +721,33 @@
     LiveRoom *liveRoom = [[LiveRoom alloc] init];
     liveRoom.userId = userId;
     liveRoom.userName = userName;
-
+    
     LSInvitedToViewController *vc = [[LSInvitedToViewController alloc] init];
     vc.inviteId = inviteId;
     vc.liveRoom = liveRoom;
+    
+    [self navgationControllerPresent:vc];
+}
 
+- (void)liveUrlHandler:(LiveUrlHandler *)handler OpenHangout:(NSString *)roomId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName {
+    NSLog(@"LSMainViewController::liveUrlHandlerOpenHangoutPre( [URL跳转, 进入多人互动直播间], roomId : %@, userId : %@)", roomId , anchorId);
+    HangOutPreViewController *vc = [[HangOutPreViewController alloc] initWithNibName:nil bundle:nil];
+    vc.roomId = roomId;
+    
+    vc.inviteAnchorId = anchorId;
+    vc.inviteAnchorName = nickName;
     [self navgationControllerPresent:vc];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index {
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 主页], index : %i )", index);
     // TODO:收到通知进入主页
-    [self.navigationController popToViewController:self animated:YES];
-
-    if (index < self.tabBar.items.count) {
-        UITabBarItem *tabBarItem = [self.tabBar.items objectAtIndex:index];
-        [self showCurrentViewController:tabBarItem];
+    [self.navigationController popToViewController:self animated:NO];
+    self.curIndex = index;
+    // 界面显示再切换标题页
+    if (self.viewDidAppearEver) {
+        [self.pagingScrollView layoutIfNeeded];
+        [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:NO];
     }
 }
 
@@ -609,49 +757,117 @@
     AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = anchorId;
     listViewController.enterRoom = 1;
-    [self.navigationController pushViewController:listViewController animated:NO];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:listViewController animated:NO];
+    });
 }
 
-- (void)liveUrlHandler:(LiveUrlHandler *)handler openBooking:(NSString *)anchorId {
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openBooking:(NSString *_Nullable)anchorId userName:(NSString * _Nullable)userName{
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 新建预约页], anchorId : %@ )", anchorId);
+    [self.navigationController popToViewController:self animated:NO];
     // TODO:收到通知进入新建预约页
     BookPrivateBroadcastViewController *bookPrivate = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
     bookPrivate.userId = anchorId;
-    [self.navigationController pushViewController:bookPrivate animated:NO];
+    bookPrivate.userName = userName;
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    UIViewController *vc = keyWindow.rootViewController;
+    if (vc.presentedViewController) {
+        vc = vc.presentedViewController;
+        if ([vc isKindOfClass:[UINavigationController class]]) {
+            vc = [(UINavigationController *)vc visibleViewController];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [vc.navigationController pushViewController:bookPrivate animated:NO];
+            });
+        }
+    }else {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.navigationController pushViewController:bookPrivate animated:NO];
+        });
+    }
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBookingList:(int)bookType {
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 预约列表页], bookType : %i )", bookType);
+    [self.navigationController popToViewController:self animated:NO];
     // TODO:收到通知进入预约列表页
     LSMyReservationsViewController *reservation = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
-    reservation.curIndex = bookType - 1;
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:reservation];
-    [self.navigationController presentViewController:nvc animated:NO completion:nil];
+    reservation.curIndex = bookType;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:reservation animated:NO];
+    });
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBackpackList:(int)BackpackType {
+    [self.navigationController popToViewController:self animated:NO];
     MyBackpackViewController *backPack = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
-    backPack.curIndex = BackpackType - 1;
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:backPack];
-    [self.navigationController presentViewController:nvc animated:NO completion:nil];
+    backPack.curIndex = BackpackType ;
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:backPack animated:NO];
+    });
+
 }
 
 - (void)liveUrlHandlerOpenAddCredit:(LiveUrlHandler *)handler {
+    //[self.navigationController popToViewController:self animated:NO];
     UIViewController *vc = [LiveModule module].addCreditVc;
     if (vc) {
-        [self.navigationController pushViewController:vc animated:NO];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self.navigationController pushViewController:vc animated:NO];
+        });
     }
 }
 
 - (void)liveUrlHandlerOpenMyLevel:(LiveUrlHandler *)handler {
     // TODO:进入我的等级界面
+    [self.navigationController popToViewController:self animated:NO];
     MeLevelViewController *level = [[MeLevelViewController alloc] initWithNibName:nil bundle:nil];
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:level];
-    [self.navigationController presentViewController:nvc animated:NO completion:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:level animated:NO];
+    });
+}
+
+- (void)liveUrlHandlerOpenChatlist:(LiveUrlHandler *)handler {
+    [self.navigationController popToViewController:self animated:NO];
+    LSChatListViewController *chatlistVc = [[LSChatListViewController alloc] initWithNibName:nil bundle:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:chatlistVc animated:NO];
+    });
+}
+
+- (void)liveUrlHandlerOpenGreetmaillist:(LiveUrlHandler *)handler {
+    [self.navigationController popToViewController:self animated:NO];
+    LiveWebViewController *vc = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
+    vc.isIntimacy = NO;
+    vc.isUserProtocol = YES;
+    vc.gaScreenName =  NSLocalizedString(@"GREETING", nil);
+    vc.url = [LSConfigManager manager].item.loiH5Url;
+    vc.title = NSLocalizedString(@"GREETING", nil);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:vc animated:NO];
+    });
+}
+
+- (void)liveUrlHandlerOpenMaillist:(LiveUrlHandler *)handler {
+    [self.navigationController popToViewController:self animated:NO];
+    LiveWebViewController *vc = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
+    vc.isIntimacy = NO;
+    vc.isUserProtocol = YES;
+    vc.gaScreenName = NSLocalizedString(@"MAIL", nil);
+    vc.url = [LSConfigManager manager].item.emfH5Url;
+    vc.title = NSLocalizedString(@"MAIL", nil);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.navigationController pushViewController:vc animated:NO];
+    });
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openChatWithAnchor:(NSString *)anchorId {
+//    LSChatViewController *chatVc = [[LSChatViewController alloc] initWithNibName:nil bundle:nil];
+//    [self.navigationController pushViewController:chatVc animated:NO];
 }
 
 - (void)navgationControllerPresent:(UIViewController *)controller {
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
+    nvc.flag = YES;
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
@@ -661,4 +877,9 @@
     [self.navigationController presentViewController:nvc animated:NO completion:nil];
 }
 
+#pragma mark - 后台刷新
+- (void)WillEnterForegroundReloadData {
+    [self resetMainListLoad:YES];
+    [self reloadVCData:NO];
+}
 @end

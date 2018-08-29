@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:text="@string/live_guide_tips1"
             android:textSize="@dimen/live_size_10sp"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <!-- 点 -->

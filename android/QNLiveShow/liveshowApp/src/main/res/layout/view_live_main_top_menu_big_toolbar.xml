@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fl_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <!-- 毛玻璃 (作为背景 透的是 列表)-->
+    <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+        android:id="@+id/blurring_view_bg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_main_top_menu_min_height"
+        android:layout_gravity="bottom"
+        app:blurRadius="3"
+        app:downsampleFactor="12"
+        app:overlayColor="@color/live_main_top_menu_burring_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <!-- Message -->
+        <LinearLayout
+            android:id="@+id/llMessage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 (宽、高减去padding才是图标大小，预留padding的位置是为了放未读控件，这样不会遮挡到图标) -->
+            <FrameLayout
+                android:id="@+id/flImgMessage"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgMessageBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/selector_discover_top_message_big"/>
+
+                <ImageView
+                    android:id="@+id/imgMessageSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_discover_top_message_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_message"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <!-- Mail -->
+        <LinearLayout
+            android:id="@+id/llMail"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 -->
+            <FrameLayout
+                android:id="@+id/flImgMail"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgMailBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/selector_discover_top_mail_big"/>
+                <ImageView
+                    android:id="@+id/imgMailSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_discover_top_mail_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_mail"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Greetings -->
+        <LinearLayout
+            android:id="@+id/llGreetings"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 -->
+            <FrameLayout
+                android:id="@+id/flImgGreetings"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgGreetingsBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/selector_discover_top_greet_big"/>
+                <ImageView
+                    android:id="@+id/imgGreetingSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:src="@drawable/ic_discover_top_greet_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvGreeting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_greet"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- HangOut -->
+        <LinearLayout
+            android:id="@+id/llHangOut"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 -->
+            <FrameLayout
+                android:id="@+id/flImgHangOut"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgHangOutBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/selector_discover_top_hangout_big"/>
+                <ImageView
+                    android:id="@+id/imgHangOutSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:src="@drawable/ic_discover_top_hangout_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvHangOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_hangout"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- HangOut -->
+        <LinearLayout
+            android:id="@+id/llAddCredit"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:background="@drawable/selector_discover_top_tab"
+            android:layout_weight="1">
+            <!-- 图标 -->
+            <FrameLayout
+                android:id="@+id/flImgAddCredit"
+                android:layout_marginTop="@dimen/live_main_top_menu_top_padding"
+                android:layout_width="@dimen/live_main_top_menu_image_view_max_width"
+                android:layout_height="@dimen/live_main_top_menu_image_view_max_height"
+                android:paddingTop="4dp"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp">
+                <ImageView
+                    android:id="@+id/imgAddCreditBig"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/selector_discover_top_addcredit_big"/>
+                <ImageView
+                    android:id="@+id/imgAddCreditSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0"
+                    android:src="@drawable/ic_discover_top_addcredit_small"/>
+            </FrameLayout>
+            <!-- 文字 -->
+            <TextView
+                android:id="@+id/tvAddCredits"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/discover_top_addcredit"
+                android:textSize="13sp"
+                android:textColor="@color/dicover_top_tab_txt_big"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

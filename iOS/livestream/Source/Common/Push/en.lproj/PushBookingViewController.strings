@@ -9,3 +9,5 @@
 "gm0-Sp-0V5.text" = "One-on-One broadcast with Karen will be started soon.";
 
 "PUSH_BROADCAST_TIP" = "One-on-One broadcast with %@ will be started soon.";
+
+"Alert_Msg" = "Are you sure to end this broadcast and start One-On-One?";

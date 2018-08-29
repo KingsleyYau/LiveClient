@@ -18,9 +18,9 @@
             android:layout_height="@dimen/live_size_40dp"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/live_size_14dp"
-            android:paddingRight="@dimen/live_size_14dp"
             android:text="@string/live_book_tips1"
-            android:textSize="@dimen/live_size_14sp" />
+            android:textSize="@dimen/live_size_12sp"
+            android:textColor="@color/black3"/>
 
         <!--　日期　-->
         <LinearLayout
@@ -34,61 +34,84 @@
             <!-- Date -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/live_size_40dp"
-                android:gravity="center_vertical">
+                android:layout_height="@dimen/live_size_48dp">
 
                 <TextView
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/live_date"
                     android:textColor="@color/black"
                     android:textSize="@dimen/live_size_14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow_right_date"
+                    android:layout_width="@dimen/live_size_16dp"
+                    android:layout_height="@dimen/live_size_16dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_right_grey" />
 
                 <TextView
                     android:id="@+id/txt_book_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/textView2"
                     android:layout_toRightOf="@+id/textView2"
+                    android:layout_toStartOf="@+id/iv_arrow_right_date"
+                    android:layout_toLeftOf="@+id/iv_arrow_right_date"
+                    android:layout_marginRight="@dimen/live_size_8dp"
                     android:gravity="right"
                     android:text=""
-                    android:textColor="@color/talent_violet"
+                    android:textColor="@color/theme_sky_blue"
                     android:textSize="@dimen/live_size_14sp" />
+
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
-                android:background="@color/hotlist_divider_color" />
+                android:background="@color/theme_default_divider_grey" />
 
             <!-- Time -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/live_size_40dp"
-                android:gravity="center_vertical">
+                android:layout_height="@dimen/live_size_48dp">
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
                     android:text="@string/live_time"
                     android:textColor="@color/black"
                     android:textSize="@dimen/live_size_14sp" />
+
+                <ImageView
+                    android:id="@+id/iv_arrow_right_time"
+                    android:layout_width="@dimen/live_size_16dp"
+                    android:layout_height="@dimen/live_size_16dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_right_grey" />
 
                 <TextView
                     android:id="@+id/txt_book_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/textView3"
                     android:layout_toRightOf="@+id/textView3"
+                    android:layout_toStartOf="@+id/iv_arrow_right_time"
+                    android:layout_toLeftOf="@+id/iv_arrow_right_time"
+                    android:layout_marginRight="@dimen/live_size_8dp"
                     android:gravity="right"
                     android:text=""
-                    android:textColor="@color/talent_violet"
+                    android:textColor="@color/theme_sky_blue"
                     android:textSize="@dimen/live_size_14sp" />
             </RelativeLayout>
 
@@ -108,7 +131,7 @@
             <!-- 添加礼物 -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_48dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -124,7 +147,7 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:checked="true"
+                    android:checked="false"
                     android:switchMinWidth="20dp"
                     android:textOff=" "
                     android:textOn=" "
@@ -137,7 +160,8 @@
                 android:id="@+id/ll_book_gift"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <!--　礼物列表　-->
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rcv_vgift"
@@ -147,19 +171,20 @@
                 <!-- 数目 -->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/live_size_40dp"
+                    android:layout_height="@dimen/live_size_48dp"
                     android:layout_marginTop="@dimen/live_size_8dp"
                     android:gravity="center_vertical">
 
                     <Spinner
                         android:id="@+id/spinner_book_gift_sum"
                         android:layout_width="@dimen/live_size_100dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/live_size_38dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:background="@drawable/live_book_spinner_bg"
-                        android:spinnerMode="dropdown" />
+                        android:spinnerMode="dropdown"
+                        android:dropDownVerticalOffset="@dimen/live_size_38dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -178,7 +203,7 @@
                 <!-- 价格　-->
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/live_size_40dp"
+                    android:layout_height="@dimen/live_size_48dp"
                     android:gravity="center_vertical">
 
 
@@ -189,8 +214,8 @@
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:text="@string/live_talent_credits"
-                        android:textColor="@color/talent_yellow"
-                        android:textSize="@dimen/live_size_18sp" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/live_size_14sp" />
 
                     <TextView
                         android:id="@+id/txt_book_gift_tips"
@@ -224,7 +249,7 @@
             <!-- SMS开关 -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_48dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -248,16 +273,24 @@
                     android:track="@drawable/switch_track" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/theme_default_divider_grey" />
+
             <!-- Number -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/live_size_60dp"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/live_size_48dp"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:paddingTop="@dimen/live_size_4dp"
+                    android:paddingBottom="@dimen/live_size_4dp"
                     android:text="@string/live_book_num"
                     android:textColor="@color/black"
                     android:textSize="@dimen/live_size_14sp" />
@@ -267,6 +300,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:paddingTop="@dimen/live_size_4dp"
+                    android:paddingBottom="@dimen/live_size_4dp"
                     android:gravity="right"
                     android:text=""
                     android:textColor="@color/black"
@@ -277,10 +312,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
+                    android:paddingTop="@dimen/live_size_4dp"
+                    android:paddingBottom="@dimen/live_size_4dp"
                     android:layout_below="@id/txt_book_number"
                     android:gravity="right"
                     android:text="@string/live_book_change_num"
-                    android:textColor="@color/book_live_light_violet"
+                    android:textColor="@color/theme_sky_blue"
                     android:textSize="@dimen/live_size_14sp" />
             </RelativeLayout>
         </LinearLayout>
@@ -288,31 +325,37 @@
         <!-- Tips -->
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/live_size_40dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingLeft="@dimen/live_size_14dp"
             android:paddingRight="@dimen/live_size_14dp"
             android:text="@string/live_note"
-            android:textSize="@dimen/live_size_14sp" />
+            android:textSize="@dimen/live_size_14sp"
+            android:textColor="@color/black3"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_book_live_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:paddingLeft="@dimen/live_size_14dp"
             android:paddingRight="@dimen/live_size_14dp"
-            android:textSize="@dimen/live_size_12sp" />
+            android:textSize="@dimen/live_size_12sp"
+            android:textColor="@color/black3"
+            android:layout_marginTop="@dimen/live_size_8dp"/>
 
         <!-- BOOK NOW　-->
         <com.qpidnetwork.livemodule.view.ButtonRaised
             android:id="@+id/btn_book"
-            android:layout_width="@dimen/live_size_140dp"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/live_size_40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/live_size_8dp"
+            android:layout_marginBottom="@dimen/live_size_16dp"
             android:layout_marginTop="@dimen/live_size_16dp"
-            button:background="@color/talent_light_violet"
+            android:layout_marginLeft="@dimen/live_size_8dp"
+            android:layout_marginRight="@dimen/live_size_8dp"
+            button:background="@color/theme_sky_blue"
+            button:raisebutton_radius="@dimen/raise_button_radius"
             button:title="@string/live_book_now"
             button:title_color="@color/white"
             button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"/>

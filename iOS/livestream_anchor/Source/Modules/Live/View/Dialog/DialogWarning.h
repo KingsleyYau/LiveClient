@@ -17,4 +17,5 @@
 + (DialogWarning *)dialog;
 - (void)showDialog:(UIView *)view  actionBlock:(void(^)())actionBlock;
 
+- (void)hidenDialog;
 @end

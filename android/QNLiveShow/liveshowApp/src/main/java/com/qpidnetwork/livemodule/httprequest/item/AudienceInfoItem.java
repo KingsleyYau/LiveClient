@@ -18,19 +18,23 @@ public class AudienceInfoItem {
 	 * @param photoUrl			观众头像url
 	 * @param mountId			坐驾ID
 	 * @param mountUrl			坐驾图片url
+	 * @param level             用户等级
+	 * @param has_ticket        是否已购票
 	 */
 	public AudienceInfoItem(String userId,
 	 						String nickName,
 	 						String photoUrl,
 	 						String mountId,
 	 						String mountUrl,
-	 						int level){
+	 						int level,
+							boolean isHasTicket){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
 		this.mountId = mountId;
 		this.mountUrl = mountUrl;
 		this.level = level;
+		this.isHasTicket = isHasTicket;
 	}
 	
 	public String userId;
@@ -39,6 +43,7 @@ public class AudienceInfoItem {
 	public String mountId;
 	public String mountUrl;
 	public int level;
+	public boolean isHasTicket;
 
 
 	@Override
@@ -56,6 +61,8 @@ public class AudienceInfoItem {
         sb.append(mountUrl);
         sb.append(" mountId:");
         sb.append(mountId);
+		sb.append(" isHasTicket:");
+		sb.append(isHasTicket);
         sb.append("]");
         return sb.toString();
 	}

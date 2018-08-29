@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="116dp"
-    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="16dp"
     android:orientation="horizontal"
-    android:paddingTop="3dp"
-    android:paddingBottom="3dp"
+    android:paddingLeft="9dp"
+    android:paddingRight="9dp"
     android:visibility="visible"
-    android:background="@drawable/bg_liveroom_creditstips_b03a0953"
+    android:background="@drawable/bg_liveroom_creditstips_70434343"
     android:gravity="center">
 
     <TextView
@@ -15,16 +15,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="8sp"
-        android:textColor="@android:color/white"
-        android:text="@string/tip_roomGiftCredit"/>
+        android:textSize="10sp"
+        android:textColor="#383838"
+        android:text="pqabghHAQJGd"/>
 
     <TextView
         android:id="@+id/tv_rebateValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="10sp"
+        android:textSize="12sp"
+        android:text="0.62"
         android:textColor="#ffd205" />
 
 </LinearLayout>

@@ -1,22 +1,26 @@
 package com.qpidnetwork.livemodule.liveshow.personal;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.httprequest.item.ManBaseInfoItem;
+import com.qpidnetwork.livemodule.liveshow.authorization.MainBaseInfoManager;
 import com.qpidnetwork.livemodule.utils.Log;
 
 /**
- * Description:
+ * Description:昵称编辑界面
  * <p>
  * Created by Harry on 2017/12/25.
  */
@@ -26,10 +30,12 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
     private EditText et_nickName;
     private TextView tv_nickNameCharNum;
 
-    private LoginItem loginItem;
+    private ManBaseInfoItem manBaseInfoItem;
     private TextWatcher tw_msgEt;
-    private int maxNickNameCharLength = 18;
-
+    private int maxNickNameCharLength = 20;
+    private int lastNicknameStart = 0;
+    private int lastNicknameNumb = 0;
+    private boolean hasNicknameChanged = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +48,7 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
     private void initView(){
         //状态栏颜色
         StatusBarUtil.setColor(this, Color.parseColor("#5d0e86"),0);
-        setTitle(getResources().getString(R.string.live_edit_profile_nickname_tips1),Color.WHITE);
+        setTitle(getResources().getString(R.string.profile_nickname_edit_title),Color.WHITE);
         et_nickName = (EditText) findViewById(R.id.et_nickName);
         if(null == tw_msgEt){
             tw_msgEt = new TextWatcher() {
@@ -52,6 +58,9 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.logD(TAG,"onTextChanged-s:"+s.toString()+" start:"+start+" before:"+before+" count:"+count);
+                    lastNicknameStart = start;
+                    lastNicknameNumb = count;
                 }
 
                 @Override
@@ -59,12 +68,14 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
                     Log.logD(TAG,"afterTextChanged-s:"+s.toString());
                     if(null != et_nickName){
                         if(s.toString().length()>maxNickNameCharLength){
-                            int selectedStartIndex = et_nickName.getSelectionStart();
-                            int selectedEndIndex = et_nickName.getSelectionEnd();
-                            s.delete(selectedStartIndex-1,selectedEndIndex);
+                            int outNumb = s.toString().length() -maxNickNameCharLength;
+                            int outStart = lastNicknameStart+lastNicknameNumb-outNumb;
+                            s.delete(outStart,lastNicknameStart+lastNicknameNumb);
+                            Log.logD(TAG,"afterTextChanged-outNumb:"+outNumb+" outStart:"+outStart+" s:"+s);
+
                             et_nickName.removeTextChangedListener(tw_msgEt);
                             et_nickName.setText(s.toString());
-                            et_nickName.setSelection(s.toString().length());
+                            et_nickName.setSelection(outStart);
                             et_nickName.addTextChangedListener(tw_msgEt);
                         }else{
                             tv_nickNameCharNum.setText(getResources().getString(R.string.profile_nickname_charleng_tips,
@@ -72,8 +83,8 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
                                     String.valueOf(maxNickNameCharLength)));
                         }
                         boolean currClickable = s.toString().length()>=2;
-                        setOperaTVTxt(getResources().getString(R.string.profile_nickname_edit_save),
-                                getResources().getColor(currClickable ? R.color.profile_save_yes : R.color.profile_save_no));
+                        setOperaTVTxt(getResources().getString(R.string.profile_nickname_edit_save), getResources().getColor(currClickable ?
+                                R.color.profile_save_yes : R.color.profile_save_no));
                         setOperaTVTxtClickable(currClickable);
                     }
                 }
@@ -84,16 +95,30 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
     }
 
     private void initData(){
-        loginItem = LoginManager.getInstance().getLoginItem();
-        if(null != loginItem){
-            et_nickName.setText(loginItem.nickName);
+        manBaseInfoItem = MainBaseInfoManager.getInstance().getLocalMainBaseInfo();
+        if(null != manBaseInfoItem){
+            et_nickName.setText(manBaseInfoItem.nickName);
             tv_nickNameCharNum.setText(getResources().getString(R.string.profile_nickname_charleng_tips,
-                    String.valueOf(loginItem.nickName.length()),
+                    String.valueOf(manBaseInfoItem.nickName.length()),
                     String.valueOf(maxNickNameCharLength)));
-            boolean currClickable = loginItem.nickName.length()>=2;
+            boolean currClickable = manBaseInfoItem.nickName.length()>=2;
             setOperaTVTxtClickable(currClickable);
             setOperaTVTxt(getResources().getString(R.string.profile_nickname_edit_save),
                     getResources().getColor(currClickable ? R.color.profile_save_yes : R.color.profile_save_no));
+        }
+
+
+
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if(i == R.id.iv_commBack){
+            exitNicknameModel();
+        }else{
+            super.onClick(v);
         }
 
     }
@@ -101,6 +126,70 @@ public class EditNickNameActivity extends BaseActionBarFragmentActivity {
     @Override
     public void onRightTitleBtnClick() {
         super.onRightTitleBtnClick();
-        //TODO:1.哪个接口对应用户昵称信息更新的？(更新成功需要刷新同步loginitem)
+        String editNickname = et_nickName.getText().toString();
+        Log.d(TAG,"onRightTitleBtnClick-afterNickname:"+editNickname+" beforeNickname:"+manBaseInfoItem.nickName);
+        if(TextUtils.isEmpty(editNickname)){
+            //昵称输入为空
+            return;
+        }
+        if(editNickname.equals(manBaseInfoItem.nickName)){
+            //昵称未更改
+            hasNicknameChanged = false;
+            exitNicknameModel();
+            return;
+        }
+
+        for (int cha : editNickname.toCharArray()){
+            if ( cha == ' ' || cha == '\t' || cha == '\r' || cha == '\n' ){
+                showToast(R.string.profile_nickname_edit_tips);
+                return;
+            }
+        }
+
+            //昵称有更改
+        showLoadingDialog();
+        MainBaseInfoManager.getInstance().updateMainBaseInfo(editNickname, new MainBaseInfoManager.OnUpdateMainBaseInfoListener() {
+            @Override
+            public void onUpdateMainBaseInfo(final boolean isSuccess, int errCode, final String errMsg) {
+                runOnUiThread(new Thread(){
+                    @Override
+                    public void run() {
+                        hideLoadingDialog();
+                        if(isSuccess){
+                            hasNicknameChanged = true;
+                            exitNicknameModel();
+                        }else{
+                            showToast(errMsg);
+                        }
+                    }
+                });
+
+            }
+        });
+
+        //GA统计，点击保存昵称
+        onAnalyticsEvent(getResources().getString(R.string.Live_PersonalCenter_Category),
+                getResources().getString(R.string.Live_PersonalCenter_Action_Save_Nickname),
+                getResources().getString(R.string.Live_PersonalCenter_Label_Save_Nickname));
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
+            //拦截返回键
+            exitNicknameModel();
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 退出昵称编辑界面
+     */
+    private void exitNicknameModel(){
+        Intent data = new Intent();
+        data.putExtra("hasNicknameChanged",hasNicknameChanged);
+        setResult(0,data);
+        finish();
     }
 }

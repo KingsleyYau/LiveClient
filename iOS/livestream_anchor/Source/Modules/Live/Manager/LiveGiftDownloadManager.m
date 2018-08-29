@@ -120,10 +120,12 @@
     NSMutableArray *bigArray = [[NSMutableArray alloc] init];
     for (AllGiftItem *giftItem in self.giftMuArray) {
 
-        if (giftItem.infoItem.type == GIFTTYPE_Heigh) {
+        #warning 11111
+        if (giftItem.infoItem.type == ZBGIFTTYPE_HEIGH) {
 
             [bigArray addObject:giftItem];
         }
+        #warning 22222
         [self downLoadSmallImage:giftItem.infoItem.smallImgUrl];
         [self downLoadMiddleImage:giftItem.infoItem.middleImgUrl];
         [self downLoadBigImage:giftItem.infoItem.bigImgUrl];
@@ -143,8 +145,7 @@
 - (void)downLoadGiftDetail:(NSString *)giftID {
 
     AllGiftItem *item = [self backGiftItemWithGiftID:giftID];
-
-    if (item.infoItem.type == GIFTTYPE_Heigh) {
+    if (item.infoItem.type == ZBGIFTTYPE_HEIGH) {
         [self afnDownLoadFileWith:item.infoItem.srcwebpUrl giftItem:item];
     }
     [self downLoadSmallImage:item.infoItem.smallImgUrl];

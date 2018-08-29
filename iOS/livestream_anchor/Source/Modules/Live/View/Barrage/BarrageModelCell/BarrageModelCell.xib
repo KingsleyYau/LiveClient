@@ -28,7 +28,7 @@
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q" customClass="LSUIImageViewTopFit">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q">
                     <rect key="frame" x="2" y="2" width="34" height="34"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="LPv-ng-f9Q" secondAttribute="height" multiplier="1:1" id="4RY-tU-CpA"/>

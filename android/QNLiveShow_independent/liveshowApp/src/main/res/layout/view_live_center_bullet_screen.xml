@@ -18,7 +18,7 @@
         />
 
     <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-        android:src="@drawable/circleimageview_hugh"
+        android:src="@drawable/ic_default_photo_man"
         android:id="@+id/civ_bullletIcon"
         android:layout_width="32dp"
         android:layout_height="32dp"

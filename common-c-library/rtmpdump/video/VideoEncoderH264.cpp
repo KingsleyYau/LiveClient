@@ -364,8 +364,8 @@ void VideoEncoderH264::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "VideoEncoderH264::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+				 "[Success] "
                  ")",
                  this
                  );
@@ -428,7 +428,7 @@ bool VideoEncoderH264::EncodeVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFra
     yuvFrame->height = mContext->height;
 
     yuvFrame->pts = mPts++;
-    dstFrame->mTimestamp = (unsigned int)(1000.0 * yuvFrame->pts / mContext->time_base.den);
+    dstFrame->mTimestamp = (unsigned int)floor(1000.0 * yuvFrame->pts / mContext->time_base.den);
     
     // 编码帧
     int bGotFrame = 0;
@@ -832,8 +832,8 @@ void VideoEncoderH264::EncodeVideoHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "VideoEncoderH264::EncodeVideoHandle( "
-                "[Exit], "
-                "this : %p "
+                "this : %p, "
+				"[Exit] "
                 ")",
                 this
                 );

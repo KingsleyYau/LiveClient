@@ -62,6 +62,9 @@ public class InviteHistoryFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_INVITE_HISTORY_CALLBACK:{
                 hideLoadingProcess();

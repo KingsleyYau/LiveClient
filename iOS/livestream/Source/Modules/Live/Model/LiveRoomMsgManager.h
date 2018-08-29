@@ -12,10 +12,6 @@
 
 @interface LiveRoomMsgManager : NSObject
 
-@property (nonatomic, assign) MsgType msgType;
-
-+ (instancetype)msgManager;
-
 - (NSMutableAttributedString *)presentTheRoomStyleItem:(RoomStyleItem *)roomStyleItem msgItem:(MsgItem *)item;
 
 @end

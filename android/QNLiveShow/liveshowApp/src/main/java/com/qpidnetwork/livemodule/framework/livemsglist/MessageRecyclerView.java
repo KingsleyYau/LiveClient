@@ -49,6 +49,13 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
     private Paint mPaint;
     private LinearGradient linearGradient;
     private int layerId;
+    /**
+     * 顶部渐进色
+     */
+    private int gradualColor = 0;
+
+    //设置列表垂直间距
+    private int mVerticalSpace = 0;
 
     //未读数接口
     public interface onMsgUnreadListener{
@@ -71,9 +78,8 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
         init(context);
     }
 
-    private void init(Context context){
+    public void init(Context context){
         mContext = context;
-
         //滑动监听
         mRecyclerViewScrollDetector = new RecyclerViewScrollDetector(){
             @Override
@@ -107,8 +113,8 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
         linearLayoutManager.setStackFromEnd(true);
         setLayoutManager(linearLayoutManager);
 
-        //半透明效果
-        doTopGradualEffect();
+//        //半透明效果
+//        doTopGradualEffect();
 
         //数据管理
         mLiveMsgManager = new LiveMsgManager<T>();
@@ -117,14 +123,23 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
         mHoldingTimer = new java.util.Timer(true);
     }
 
-    //顶部半透明效果
+    public void setGradualColor(int gradualColor){
+        this.gradualColor = gradualColor;
+        //半透明效果
+        doTopGradualEffect();
+    }
+
+    /**顶部半透明效果
+     * 参考:http://blog.csdn.net/linyukun6422/article/details/52516022
+     */
     private void doTopGradualEffect() {
+        Log.d(TAG,"doTopGradualEffect-gradualColor:"+gradualColor);
         mPaint = new Paint();
         mPaint.setColor(Color.RED);
         final Xfermode xfermode = new PorterDuffXfermode(PorterDuff.Mode.DST_IN);
         mPaint.setXfermode(xfermode);
         linearGradient = new LinearGradient(0.0f, 0.0f, 0.0f, 10.0f,
-                new int[]{0, Color.BLACK}, null, Shader.TileMode.CLAMP); //100 Color.BLACK
+                new int[]{0, 0 == gradualColor ? Color.BLACK : gradualColor}, null, Shader.TileMode.CLAMP);
         addItemDecoration(new ItemDecoration() {
             @Override
             public void onDrawOver(Canvas canvas, RecyclerView parent, State state) {
@@ -135,7 +150,7 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
                 Log.i("hunter", "onDrawOver left: " + parent.getLeft() + " right: " + parent.getRight()
                         + " top: " + parent.getTop() + " bottom: " + parent.getBottom() + "~~~ height: " + parent.getHeight());
                 if(parent.getHeight() >= DisplayUtil.dip2px(mContext, 120)) {
-                    canvas.drawRect(0.0f, 0.0f, parent.getRight(), 10.0f, mPaint);//200
+                    canvas.drawRect(0.0f, 0.0f, parent.getRight(), DisplayUtil.dip2px(mContext,6f), mPaint);//200
                 }
                 mPaint.setXfermode(null);
                 canvas.restoreToCount(layerId);
@@ -151,9 +166,16 @@ public class MessageRecyclerView<T extends Object> extends RecyclerView implemen
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, State state) {
                 super.getItemOffsets(outRect, view, parent, state);
+                if(parent.getChildPosition(view) != 0){
+                    outRect.top = mVerticalSpace;
+                }
             }
         });
 
+    }
+
+    public void setVerticalSpace(int space){
+        mVerticalSpace = space;
     }
 
     /**

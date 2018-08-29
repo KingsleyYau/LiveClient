@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="StartHangOutTipView">
+            <rect key="frame" x="0.0" y="0.0" width="310" height="228"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Main_Hangout_TipView" translatesAutoresizingMaskIntoConstraints="NO" id="dNa-GC-JZu" userLabel="Close Icon">
+                    <rect key="frame" x="273" y="0.0" width="13" height="7"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qJw-Sg-CDV" userLabel="Bottom View">
+                    <rect key="frame" x="0.0" y="7" width="310" height="221"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What is Hang-out?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vdc-V4-Hqw">
+                            <rect key="frame" x="22" y="21" width="121" height="16"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hang-out allows you to have fun with 3 broadcasters in the same broadcasting room." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9L7-Dp-0Ta">
+                            <rect key="frame" x="22" y="42" width="266" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You can broadcast yourself to each other in the Hang-out room, exchange virtual gifts, beer, snacks and share funny stories." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mev-eC-bfo">
+                            <rect key="frame" x="22" y="71" width="266" height="43"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price: %f credits per minute for each broadcaster participated." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPH-qU-TlK">
+                            <rect key="frame" x="22" y="119" width="266" height="29"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qcd-9C-Wl9" userLabel="Hangout Button">
+                            <rect key="frame" x="66" y="168" width="178" height="35"/>
+                            <color key="backgroundColor" red="0.019607843140000001" green="0.78039215689999997" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="178" id="WJI-is-2Ro"/>
+                                <constraint firstAttribute="height" constant="35" id="oBB-4I-ScG"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                            <state key="normal" title="Hang-out Now!">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="hangoutAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="bOe-eQ-WiV"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RVf-dQ-G5v" userLabel="Close Button">
+                            <rect key="frame" x="280" y="0.0" width="30" height="30"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="RVf-dQ-G5v" secondAttribute="height" multiplier="1:1" id="3Nn-8V-N9P"/>
+                                <constraint firstAttribute="width" constant="30" id="DPg-wr-EFg"/>
+                            </constraints>
+                            <state key="normal" image="Live_Public_Vip_Close_Btn"/>
+                            <connections>
+                                <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="aUm-Dk-fez"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="PPH-qU-TlK" firstAttribute="leading" secondItem="qJw-Sg-CDV" secondAttribute="leading" constant="22" id="43J-Jb-hOM"/>
+                        <constraint firstItem="Mev-eC-bfo" firstAttribute="top" secondItem="9L7-Dp-0Ta" secondAttribute="bottom" id="59X-RD-QPQ"/>
+                        <constraint firstAttribute="trailing" secondItem="Mev-eC-bfo" secondAttribute="trailing" constant="22" id="Afc-bb-GcY"/>
+                        <constraint firstAttribute="trailing" secondItem="RVf-dQ-G5v" secondAttribute="trailing" id="HG6-QG-EeO"/>
+                        <constraint firstItem="Mev-eC-bfo" firstAttribute="leading" secondItem="qJw-Sg-CDV" secondAttribute="leading" constant="22" id="HLo-u8-o3c"/>
+                        <constraint firstAttribute="trailing" secondItem="9L7-Dp-0Ta" secondAttribute="trailing" constant="22" id="Jlg-Fk-Z6S"/>
+                        <constraint firstItem="qcd-9C-Wl9" firstAttribute="top" secondItem="PPH-qU-TlK" secondAttribute="bottom" constant="20" id="OFK-ij-zqF"/>
+                        <constraint firstItem="qcd-9C-Wl9" firstAttribute="centerX" secondItem="qJw-Sg-CDV" secondAttribute="centerX" id="OHG-xm-2Co"/>
+                        <constraint firstItem="Vdc-V4-Hqw" firstAttribute="leading" secondItem="qJw-Sg-CDV" secondAttribute="leading" constant="22" id="P5S-Vj-IWL"/>
+                        <constraint firstAttribute="bottom" secondItem="qcd-9C-Wl9" secondAttribute="bottom" constant="18" id="Tif-fg-nB2"/>
+                        <constraint firstAttribute="trailing" secondItem="PPH-qU-TlK" secondAttribute="trailing" constant="22" id="V0H-Yd-RCz"/>
+                        <constraint firstItem="RVf-dQ-G5v" firstAttribute="top" secondItem="qJw-Sg-CDV" secondAttribute="top" id="W4z-4x-qu2"/>
+                        <constraint firstItem="9L7-Dp-0Ta" firstAttribute="leading" secondItem="qJw-Sg-CDV" secondAttribute="leading" constant="22" id="hXc-gE-FmC"/>
+                        <constraint firstItem="9L7-Dp-0Ta" firstAttribute="top" secondItem="Vdc-V4-Hqw" secondAttribute="bottom" constant="5" id="jN5-BO-GQ0"/>
+                        <constraint firstItem="PPH-qU-TlK" firstAttribute="top" secondItem="Mev-eC-bfo" secondAttribute="bottom" constant="5" id="joa-GB-ClN"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="qJw-Sg-CDV" firstAttribute="top" secondItem="dNa-GC-JZu" secondAttribute="bottom" id="4kl-D5-jox"/>
+                <constraint firstAttribute="trailing" secondItem="qJw-Sg-CDV" secondAttribute="trailing" id="HIp-KG-eGx"/>
+                <constraint firstItem="qJw-Sg-CDV" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="I2x-GB-msn"/>
+                <constraint firstAttribute="bottom" secondItem="qJw-Sg-CDV" secondAttribute="bottom" id="Kkf-Fu-lfq"/>
+                <constraint firstItem="dNa-GC-JZu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="fkh-A3-s38"/>
+                <constraint firstAttribute="trailing" secondItem="dNa-GC-JZu" secondAttribute="trailing" constant="24" id="uMh-As-CTu"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="bottomView" destination="qJw-Sg-CDV" id="m23-fx-o6B"/>
+                <outlet property="closeButton" destination="RVf-dQ-G5v" id="9UE-ma-LdO"/>
+                <outlet property="closeImageView" destination="dNa-GC-JZu" id="2Vg-4J-Yv2"/>
+                <outlet property="hangoutButton" destination="qcd-9C-Wl9" id="0cI-dH-Z89"/>
+                <outlet property="hangoutTipLabel" destination="PPH-qU-TlK" id="uA9-lQ-6mC"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Public_Vip_Close_Btn" width="12" height="12"/>
+        <image name="Main_Hangout_TipView" width="13" height="7"/>
+    </resources>
+</document>

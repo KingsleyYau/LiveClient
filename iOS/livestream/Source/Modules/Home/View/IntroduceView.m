@@ -14,6 +14,9 @@
 // js回调的函数名是callbackAppGAEvent
 #define LIVEAPP_CALLBACK_APPGAEVENT @"callbackAppGAEvent"
 #define LIVEAPP_CALLBACK_APPGAEVENT_EVENT @"Event"
+#define LIVEAPP_CALLBACK_APPPUBLICGAEVENT_EVENT @"event"
+#define LIVEAPP_CALLBACK_APPPUBLICGAEVENT_CATEGORY @"category"
+#define LIVEAPP_CALLBACK_APPPUBLICGAEVENT_LABEL @"label"
 // js回调的函数名是callbackAppCloseWebView
 #define LIVEAPP_CALLBACK_APPCLOSEWEBVIEW @"callbackAppCloseWebView"
 // js回调的函数名是callbackWebReload
@@ -25,6 +28,14 @@
 #define LIVEAPP_CALLBACK_RECHANGE @"callbackWebRechange"
 // 节目GA回调
 #define LIVEAPP_CALLBACK_APPPUBLiCGAEVENT @"callbackAppPublicGAEvent"
+// app调用界面回到前台JS接口
+#define LIVEAPP_TRANSFER_NOTIFYRESUME @"notifyResume()"
+
+@interface IntroduceView()<WKScriptMessageHandler>
+
+@end
+
+
 @implementation IntroduceView
 
 
@@ -42,8 +53,8 @@
     myConfiguration.mediaPlaybackRequiresUserAction = NO;
     myConfiguration.mediaPlaybackAllowsAirPlay = YES;
     
-    // 加载LiveApp.js的LiveApp类
-    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    // 加载LiveApp.js的LiveApp类 WKUserScriptInjectionTimeAtDocumentStart在加载网页前插入js的 WKUserScriptInjectionTimeAtDocumentEnd在网页加载完成后才加入
+    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
     
     //通过JS与webView内容交互
     myConfiguration.userContentController = [[WKUserContentController alloc] init];
@@ -60,7 +71,7 @@
 
 // 将js文件变成NSString（里面就是LiveApp类的js，为了将这个js文件加载进web去，js才能调用OC）
 + (NSString*)getJsString {
-    NSString *path =[[NSBundle bundleForClass:[self class]] pathForResource:LIVEAPP_JS ofType:@"js"];
+    NSString *path =[[LiveBundle bundleForClass:[self class]] pathForResource:LIVEAPP_JS ofType:@"js"];
     NSString *handlerJS = [NSString stringWithContentsOfFile:path encoding:kCFStringEncodingUTF8 error:nil];
     handlerJS = [handlerJS stringByReplacingOccurrencesOfString:@"\n" withString:@""];
     return handlerJS;
@@ -68,6 +79,7 @@
 
 #pragma mark - WKScriptMessageHandler
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message{
+    
     // 判断是否是LiveApp类
     if ([message.name isEqualToString:LIVEAPP_JS]) {
         // 得到回调的函数名
@@ -92,30 +104,44 @@
                 [self.webViewJSDelegate webViewJSCallbackWebReload:error];
             }
         }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTH_EXPIRED])
-        {
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_AUTH_EXPIRED]) {
             //身份验证失败
              NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackTokenTimeOut:)]) {
                 [self.webViewJSDelegate webViewJSCallBackTokenTimeOut:error];
             }
         }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_RECHANGE])
-        {
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_RECHANGE]) {
             NSString *error = message.body[LIVEAPP_CALLBACK_WEBRELOAD_ERROR];
             //账号余额不足
             if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallBackAddCredit:)]) {
                 [self.webViewJSDelegate webViewJSCallBackAddCredit:error];
             }
         }
-        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_APPPUBLiCGAEVENT]){
+        else if ([methodName isEqualToString:LIVEAPP_CALLBACK_APPPUBLiCGAEVENT]) {
             //节目GA跟踪
-            NSString *event = message.body[LIVEAPP_CALLBACK_APPGAEVENT_EVENT];
-            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackAppPublicGAEvent:)]) {
-                [self.webViewJSDelegate webViewJSCallbackAppPublicGAEvent:event];
+            NSString *category = message.body[LIVEAPP_CALLBACK_APPPUBLICGAEVENT_CATEGORY];
+            NSString *event = message.body[LIVEAPP_CALLBACK_APPPUBLICGAEVENT_EVENT];
+            NSString *label = message.body[LIVEAPP_CALLBACK_APPPUBLICGAEVENT_LABEL];
+            if ([self.webViewJSDelegate respondsToSelector:@selector(webViewJSCallbackAppPublicGAEvent:category:label:)]) {
+                [self.webViewJSDelegate webViewJSCallbackAppPublicGAEvent:event category:category label:label];
             }
         }
     }
+}
+
+#pragma mark - app调用JS接口
+- (void)webViewTransferResumeHandler:(JSFinshHandler)handler {
+    [self webViewTransferJSName:LIVEAPP_TRANSFER_NOTIFYRESUME handler:^(id  _Nullable response, NSError * _Nullable error) {
+        NSLog(@"IntroduceView::webViewTransferResumeHandler ([调用js界面回到前台事件, response : %@, error : %@])",response ,error);
+        handler(response, error);
+    }];
+}
+
+- (void)webViewTransferJSName:(NSString *)jsName handler:(JSFinshHandler)handler {
+    [self evaluateJavaScript:jsName completionHandler:^(id _Nullable response, NSError * _Nullable error) {
+        handler(response, error);
+    }];
 }
 
 @end

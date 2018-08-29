@@ -15,15 +15,19 @@
 }
 
 + (NSInteger)cellHeight {
-    return 45;
+    return 58;
 }
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-
-    self.requestBtn.layer.cornerRadius = 5;
-    self.requestBtn.layer.masksToBounds = YES;
+    // Initialization code
+    UIImage *image = [UIImage imageNamed:@"TalentCellSelected"];
+    UIImageView * imageView =  [[UIImageView alloc] initWithImage:image];
+    self.selectedBackgroundView = imageView;
+    
+    [self.detialsBtn setBackgroundImage:[UIImage imageNamed:@"Talent_Detials_Btn_Selected"] forState:UIControlStateHighlighted];
 }
+
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
@@ -31,16 +35,16 @@
     // Configure the view for the selected state
 }
 
-+ (id)getUITableViewCell:(UITableView *)tableView {
++ (id)getUITableViewCell:(UITableView *)tableView  {
     TalentOnDemandCell *cell = (TalentOnDemandCell *)[tableView dequeueReusableCellWithIdentifier:[TalentOnDemandCell cellIdentifier]];
 
     if (nil == cell) {
-        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[TalentOnDemandCell cellIdentifier] owner:tableView options:nil];
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamed:[TalentOnDemandCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-
+    
     return cell;
 }
+
 
 @end

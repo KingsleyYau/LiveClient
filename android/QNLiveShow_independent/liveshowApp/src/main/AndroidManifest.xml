@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- 在一些4.2左右或者以下的手机有这个问题:this requires android.permission.INTERACT_ACROSS_USERS_FULL -->
+    <permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" android:protectionLevel="signature"/>
+
     <!-- 独立版 -->
     <application
         android:name=".liveshow.LiveApplication"
@@ -30,6 +33,7 @@
         <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
         <!-- android:supportsRtl="true"> -->
 
+
         <!-- 　拍照功能　buildsdk>=24时报android.os.FileUriExposedException: -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -40,7 +44,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
 
         <!-- 文件下载器进程 -->
         <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
@@ -58,8 +61,56 @@
         </receiver>
         <!-- end -->
 
+        <!-- Add by Samson for Google Play Services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!--
+             Optionally, register AnalyticsReceiver and AnalyticsService to support background
+             dispatching on non-Google Play devices
+        -->
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!--
+             Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
+             installation campaign reporting
+        -->
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <!-- end -->
+
+        <!--add by hunter for push click receive-->
+        <receiver
+            android:name="com.qpidnetwork.livemodule.liveshow.pushmanager.NocificationOptReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="action.push.notification" />
+            </intent-filter>
+        </receiver>
+        <!-- end -->
+
         <activity
-            android:name=".liveshow.welcome.PeacockActivity"
+            android:name=".liveshow.login.LiveLoginActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
 
             <!-- 独立版 -->
@@ -68,6 +119,20 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!--外部Url支持-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:pathPrefix="/open"
+                    android:scheme="qpidnetwork-live" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".liveshow.home.MainFragmentActivity"
@@ -84,7 +149,6 @@
         <activity
             android:name=".liveshow.personal.PersonalCenterActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".liveshow.personal.UserProfileActivity"
             android:screenOrientation="portrait" />
@@ -116,7 +180,7 @@
         <activity
             android:name=".liveshow.liveroom.LiveRoomNormalErrorActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
+            android:theme="@style/CustomTheme.Black.NoTitleBar" />
 
         <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
         <activity
@@ -203,41 +267,61 @@
 
         <!-- 登录,注册 -->
         <activity
-            android:name=".liveshow.login.LiveLoginActivity"
+            android:name=".liveshow.welcome.PeacockActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".liveshow.login.LiveEmailSignUpActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".liveshow.login.LiveEmailLoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name=".liveshow.login.ForgotPasswordActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity android:name=".liveshow.login.LiveFBAddEmailActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
+        <activity android:name=".liveshow.login.LiveFBEmailLoginActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <!-- 填写资料 -->
-        <activity android:name=".liveshow.home.EditProfileActivity"
+        <activity
+            android:name=".liveshow.home.EditProfileActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
-        <!--Facebook sdk-->
-        <!--<activity-->
-            <!--android:name=".liveshow.welcome.FacebookSdkTestActivity"-->
-            <!--android:screenOrientation="portrait">-->
-            <!--&lt;!&ndash; 独立版 &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        <!--</activity>-->
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <!-- BuyCreditActivity -->
+        <activity
+            android:name=".liveshow.credit.BuyCreditActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="com.facebook.FacebookActivity"
+        <!--服务冲突提示框-->
+        <activity
+            android:name=".liveshow.pushmanager.ServiceConflictDialogActivity"
+            android:screenOrientation="portrait" />
+        <!-- Facebook sdk -->
+        <!-- <activity -->
+        <!-- android:name=".liveshow.welcome.FacebookSdkTestActivity" -->
+        <!-- android:screenOrientation="portrait"> -->
+        <!-- &lt;!&ndash; 独立版 &ndash;&gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
         <activity
@@ -245,16 +329,19 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
 
-        <provider android:authorities="com.facebook.app.FacebookContentProvider145949329397789"
+        <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:exported="true"/>
-     </application>
+            android:authorities="com.facebook.app.FacebookContentProvider145949329397789"
+            android:exported="true" />
 
+    </application>
 
 </manifest>

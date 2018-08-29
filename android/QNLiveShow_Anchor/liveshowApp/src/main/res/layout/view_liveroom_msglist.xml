@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--消息列表-->
+    <com.qpidnetwork.anchor.framework.livemsglist.LiveMessageListView
+        android:id="@+id/lvlv_roomMsgList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_unReadTip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        android:clickable="true"
+        android:layout_marginBottom="1dp">
+        <!--未读条数-->
+        <TextView
+            android:id="@+id/tv_unReadTip"
+            android:gravity="center_vertical"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:clickable="true"
+            android:visibility="visible"
+            android:background="@drawable/bg_live_buttom_unreadmsg"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="3 unread messages"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_live_msglist_unread_indic"
+            android:layout_gravity="right"
+            android:layout_marginRight="6dp"/>
+    </LinearLayout>
+
+
+</FrameLayout>

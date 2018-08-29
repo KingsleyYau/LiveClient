@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
 import android.view.SurfaceView;
 
@@ -8,6 +9,7 @@ import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 
+import net.qdating.LSConfig;
 import net.qdating.LSPlayer;
 import net.qdating.player.ILSPlayerStatusCallback;
 
@@ -40,11 +42,11 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
      * 初始化
      * @param sv_player
      */
-    public void init(SurfaceView sv_player){
+    public void init(GLSurfaceView sv_player){
         if(mLSPlayer == null){
             mIsInit = true;
             mLSPlayer = new LSPlayer();
-            mLSPlayer.init(sv_player, this);
+            mLSPlayer.init(sv_player, LSConfig.FillMode.FillModeAspectRatioFill, this);
         }
     }
 
@@ -105,6 +107,11 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
         if(mLSPlayer != null){
             mLSPlayer.stop();
         }
+    }
+
+    @Override
+    public void onConnect(LSPlayer lsPlayer) {
+
     }
 
     /**

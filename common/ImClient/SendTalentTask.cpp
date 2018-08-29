@@ -81,7 +81,7 @@ bool SendTalentTask::Handle(const TransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnSendTalent(GetSeq(), success, m_errType, m_errMsg, talentInviteId);
+        m_listener->OnSendTalent(GetSeq(), success, m_errType, m_errMsg, talentInviteId, m_talentId);
 		FileLog("ImClient", "SendTalentTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -162,6 +162,6 @@ bool SendTalentTask::InitParam(const string& roomId, const string& talentId)
 void SendTalentTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendTalent(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "");
+        m_listener->OnSendTalent(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "", "");
     }
 }

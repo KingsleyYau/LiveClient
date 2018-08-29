@@ -1,8 +1,11 @@
 package com.qpidnetwork.livemodule.framework.base;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.DrawableRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,6 +139,14 @@ public abstract class BaseLoadingFragment extends BaseFragment implements SwipeR
     }
 
     /**
+     * 是否已经执行onCreateView
+     * @return
+     */
+    public boolean isCreatedView(){
+        return (pbLoading != null);
+    }
+
+    /**
      * 和showDefaultErrorPage配套适用，默认retry点击事件
      */
     protected void onDefaultErrorRetryClick(){
@@ -199,6 +210,32 @@ public abstract class BaseLoadingFragment extends BaseFragment implements SwipeR
         if(tvEmptyDesc != null){
             tvEmptyDesc.setText(message);
         }
+    }
+
+    /**
+     * 设置默认无数据页样式中文字
+     * @param message
+     */
+    public void setDefaultEmptyMessage(String message  , @DrawableRes int drawableLeftId , int widthPx , int heightPx){
+        if(tvEmptyDesc != null){
+            tvEmptyDesc.setText(message);
+            Drawable drawableLeft = mContext.getResources().getDrawable(drawableLeftId);
+            // 这一步必须要做，否则不会显示。
+            drawableLeft.setBounds(0,
+                    0,
+                    widthPx,
+                    heightPx);// 设置图片宽高
+            tvEmptyDesc.setCompoundDrawables(drawableLeft , null , null , null);
+            tvEmptyDesc.setCompoundDrawablePadding(8);//设置图片和text之间的间距
+        }
+    }
+
+    /**
+     * 设置默认无数据页图标
+     * @param visible
+     */
+    public void setDefaultEmptyIconVisible(int visible){
+        ivNodata.setVisibility(visible);
     }
 
     /**

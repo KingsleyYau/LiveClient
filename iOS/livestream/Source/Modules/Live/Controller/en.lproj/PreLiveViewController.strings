@@ -1,6 +1,9 @@
 
-/* Class = "UILabel"; text = "Recommended Broadcasters"; ObjectID = "Whb-I4-Yu4"; */
-"Whb-I4-Yu4.text" = "Recommended Broadcasters";
+/* Class = "UILabel"; text = "Try to request a talent show from the versatile broadcaster!"; ObjectID = "CKQ-OJ-SSZ"; */
+"CKQ-OJ-SSZ.text" = "Try to request a talent show from the versatile broadcaster!";
+
+/* Class = "UILabel"; text = "Recommanded Performers"; ObjectID = "Whb-I4-Yu4"; */
+"Whb-I4-Yu4.text" = "Recommanded Performers";
 
 /* Class = "UILabel"; text = "当前状态提示"; ObjectID = "dam-36-UhM"; */
 "dam-36-UhM.text" = "当前状态提示";
@@ -8,7 +11,7 @@
 /* Class = "UILabel"; text = "30 s"; ObjectID = "gdW-JK-7iy"; */
 "gdW-JK-7iy.text" = "30 s";
 
-/* Class = "UILabel"; text = "Waiting for the broadcaster to start broadcast..."; ObjectID = "h2y-1A-AFR"; */
+/* Class = "UILabel"; text = "Tips"; ObjectID = "h2y-1A-AFR"; */
 "h2y-1A-AFR.text" = "Tips";
 
 /* Class = "UILabel"; text = "Malinla"; ObjectID = "scc-RK-ANB"; */
@@ -60,5 +63,3 @@
 "BOOKING_ERROR_TREATING" = "Could not connect to the broadcaster. Please try again later.";
 
 "UNKNOW_ROOM_TYPE" = "Unknow room type.";
-
-

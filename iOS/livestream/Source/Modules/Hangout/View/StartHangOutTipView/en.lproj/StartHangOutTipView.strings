@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "Hang-out allows you to have fun with 3 broadcasters in the same broadcasting room."; ObjectID = "9L7-Dp-0Ta"; */
+"9L7-Dp-0Ta.text" = "Hang-out allows you to have fun with 3 broadcasters in the same broadcasting room.";
+
+/* Class = "UILabel"; text = "You can broadcast yourself to each other in the Hang-out room, exchange virtual gifts, beer, snacks and share funny stories."; ObjectID = "Mev-eC-bfo"; */
+"Mev-eC-bfo.text" = "You can broadcast yourself to each other in the Hang-out room, exchange virtual gifts, beer, snacks and share funny stories.";
+
+/* Class = "UILabel"; text = "Price: %f credits per minute for each broadcaster participated."; ObjectID = "PPH-qU-TlK"; */
+"PPH-qU-TlK.text" = "Price: %f credits per minute for each broadcaster participated.";
+
+/* Class = "UILabel"; text = "What is Hang-out?"; ObjectID = "Vdc-V4-Hqw"; */
+"Vdc-V4-Hqw.text" = "What is Hang-out?";
+
+/* Class = "UIButton"; normalTitle = "Hang-out Now!"; ObjectID = "qcd-9C-Wl9"; */
+"qcd-9C-Wl9.normalTitle" = "Hang-out Now!";

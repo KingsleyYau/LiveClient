@@ -89,6 +89,9 @@
     self.liveRoom.superController = self;
     // 初始化播放界面
     [self setupPlayController];
+    
+    // 请求观众头像
+    [self setupAudienView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -105,13 +108,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-}
-
-- (void)initialiseSubwidge {
-    [super initialiseSubwidge];
-    
-    // 请求观众头像
-    [self setupAudienView];
 }
 
 - (void)setupContainView {
@@ -220,11 +216,19 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
-    // 设置邀请私密按钮
-    self.playVC.liveVC.startOneViewHeigh.constant = 40;
-    self.playVC.liveVC.startOneBtn.hidden = NO;
-    self.playVC.liveVC.startOneView.hidden = NO;
-    
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
+        // 隐藏立即私密邀请控件
+        self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
+    }
+    else
+    {
+        // 设置邀请私密按钮
+        self.playVC.liveVC.startOneViewHeigh.constant = 40;
+        self.playVC.liveVC.startOneBtn.hidden = NO;
+        self.playVC.liveVC.startOneView.hidden = NO;
+        self.playVC.liveVC.showPublicTipBtn.hidden = YES;
+    }
+
     //    self.playVC.chooseGiftListView.frame.origin = CGPointMake(self.playVC.chooseGiftListView.frame.origin.x, SCREEN_HEIGHT);
     // 立即私密按钮
 //    self.playVC.liveVC.cameraBtn.hidden = NO;
@@ -346,7 +350,9 @@
 }
 
 - (IBAction)closeAction:(id)sender {
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
 }
 
 #pragma mark - 请求数据逻辑
@@ -387,25 +393,5 @@
         [self setupAudienView];
     });
 }
-
-- (void)text {
-
-    UIImage *image1 = [UIImage imageNamed:@"freeLive_nomal_background"];
-    UIImage *image2 = [UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"];
-    UIImage *image3 = [UIImage imageNamed:@"Login_Main_Logo"];
-    UIImage *image4 = [UIImage imageNamed:@"freeLive_nomal_background"];
-    UIImage *image5 = [UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"];
-    UIImage *image6 = [UIImage imageNamed:@"Login_Main_Logo"];
-    UIImage *image7 = [UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"];
-    UIImage *image8 = [UIImage imageNamed:@"Login_Main_Logo"];
-    UIImage *image9 = [UIImage imageNamed:@"freeLive_nomal_background"];
-    UIImage *image10 = [UIImage imageNamed:@"Login_Main_Logo"];
-    UIImage *image11 = [UIImage imageNamed:@"Live_Public_Btn_Camera_Invite"];
-    UIImage *image12 = [UIImage imageNamed:@"freeLive_nomal_background"];
-    NSMutableArray *array = [[NSMutableArray alloc]initWithObjects:image1,image2,image3,image4,image5,image6,image7,image8,image9,image10,image11,image12, nil];
-    self.audienceArray = array;
-    self.audienceView.audienceArray = self.audienceArray;
-}
-
 
 @end

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_columnWeight="1"
+    android:background="#2b2b2b"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/ll_giftItem"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|bottom">
+
+        <ImageView
+            android:id="@+id/iv_giftIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|center_horizontal"
+            android:src="@drawable/ic_default_gift"
+            android:gravity="center_horizontal"
+            android:scaleType="fitCenter"/>
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_giftName"
+                android:textSize="12sp"
+                android:textColor="#8cffffff"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="crown"
+                android:layout_gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/tv_giftCount"
+                android:textSize="8sp"
+                android:textColor="@color/public_liveroom_giftlist_count"
+                android:singleLine="true"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="5dp"
+                android:gravity="center_vertical"
+                android:ellipsize="end"
+                android:text="X 100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_rightGiftFlag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"
+        android:textSize="9sp"
+        android:gravity="center"
+        android:layout_gravity="right|top"
+        android:textColor="#2b2b2b"
+        android:background="@drawable/ic_live_buttom_gift_advance"
+        />
+
+    <ProgressBar
+        android:id="@+id/pb_loadAdvanceAnimFile"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:scrollbarStyle="insideInset"
+        android:indeterminateDrawable="@drawable/live_loading_progress"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDuration="1000"
+        style="?android:attr/progressBarStyleSmallInverse"/>
+</FrameLayout>

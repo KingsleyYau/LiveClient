@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "CoverPhotoItemObject.h"
+
 
 @interface SelectCoverViewCell : UICollectionViewCell
 
@@ -21,6 +21,8 @@
 - (UIView *)snapshotView;
 + (NSString *)cellIdentifier;
 
-- (void)setCellCoverImage:(CoverPhotoItemObject *)coverDic;
+
+//- (void)setCellCoverImage:(CoverPhotoItemObject *)coverDic;
+
 
 @end

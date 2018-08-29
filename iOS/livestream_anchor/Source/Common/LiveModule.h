@@ -134,6 +134,7 @@
 /** QN判断是否在直播间 */
 @property (copy, nonatomic) NSString *roomID;
 
+
 /**
  获取实例
 

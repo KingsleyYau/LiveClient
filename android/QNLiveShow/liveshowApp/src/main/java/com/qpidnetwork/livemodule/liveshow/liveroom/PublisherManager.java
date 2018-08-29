@@ -1,13 +1,16 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 import android.app.Activity;
+import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.SurfaceView;
 
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 
+import net.qdating.LSConfig;
 import net.qdating.LSPublisher;
 import net.qdating.publisher.ILSPublisherStatusCallback;
 
@@ -37,12 +40,12 @@ public class PublisherManager implements ILSPublisherStatusCallback {
      * 初始化
      * @param svPublisher
      */
-    public void init(SurfaceView svPublisher){
+    public void init(GLSurfaceView svPublisher){
         if(mLSPublisher == null){
             mIsInited = true;
             mLSPublisher = new LSPublisher();
             int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-            mLSPublisher.init(svPublisher, rotation, this);
+            mLSPublisher.init(mActivity.getApplicationContext(), svPublisher, rotation, LSConfig.FillMode.FillModeAspectRatioFill, this, LSConfig.VideoConfigType.VideoConfigType240x320, 10, 10, 400 * 1000);
         }
     }
 
@@ -54,6 +57,8 @@ public class PublisherManager implements ILSPublisherStatusCallback {
             mIsInited = false;
             mLSPublisher.stop();
             mLSPublisher.uninit();
+            //add by Jagger unInit和init是对应的，如果不至空，再调用init也并没有什么卵用
+            mLSPublisher = null;
         }
     }
 
@@ -114,6 +119,11 @@ public class PublisherManager implements ILSPublisherStatusCallback {
         if(mLSPublisher != null){
             mLSPublisher.setMute(isMute);
         }
+    }
+
+    @Override
+    public void onConnect(LSPublisher lsPublisher) {
+
     }
 
     /**

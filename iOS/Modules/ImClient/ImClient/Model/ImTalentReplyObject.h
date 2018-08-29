@@ -18,6 +18,9 @@
  * credit                 信用点
  * status                 状态（1:已接受 2:拒绝）
  * rebateCredit           返点
+ * giftId                 礼物ID
+ * giftName               礼物名称
+ * giftNum                礼物数量
  */
 @interface ImTalentReplyObject : NSObject
 @property (nonatomic, copy) NSString* _Nullable roomId;
@@ -27,5 +30,8 @@
 @property (nonatomic, assign) double credit;
 @property (nonatomic, assign) TalentStatus status;
 @property (nonatomic, assign) double rebateCredit;
+@property (nonatomic, copy) NSString* _Nullable giftId;
+@property (nonatomic, copy) NSString* _Nullable giftName;
+@property (nonatomic, assign) int giftNum;
 
 @end

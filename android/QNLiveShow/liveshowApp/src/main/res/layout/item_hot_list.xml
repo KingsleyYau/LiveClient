@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/flBody"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@drawable/bg_hotlist_item">
+    android:layout_gravity="center">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/hotlist_item_default"
-        android:layout_gravity="center"/>
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/hotlist_item_default"-->
+        <!--android:layout_gravity="center"/>-->
 
-    <ImageView
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_roomBg"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:scaleType="centerCrop"/>-->
+
+    <!-- 相片 -->
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/iv_roomBg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        fresco:backgroundImage="@color/black4"
+        />
 
     <View
         android:layout_width="match_parent"
@@ -32,18 +40,25 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="13dp">
             <ImageView
                 android:id="@+id/ivLiveType"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/ivPremium"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/room_type_private"/>
+                android:src="@drawable/list_premium_public"
+                android:layout_alignParentRight="true"
+                android:visibility="gone"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="8dp">
+                android:layout_marginRight="8dp"
+                android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/ivInterest1"
@@ -73,7 +88,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="13dp">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -81,46 +96,102 @@
                 android:gravity="center_vertical"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp">
-                <ImageView
-                    android:id="@+id/ivOnlineStatus"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:background="@drawable/circle_solid_green"/>
+                <!--<ImageView-->
+                    <!--android:id="@+id/ivOnlineStatus"-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:layout_gravity="center_vertical"-->
+                    <!--android:background="@drawable/anchor_status_online"-->
+                    <!--android:visibility="visible"/>-->
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textColor="#FEFEFE"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginLeft="6dp"
                     android:singleLine="true"
-                    android:ellipsize="middle"/>
+                    android:ellipsize="middle"
+                    android:text="Marry"/>
             </LinearLayout>
+
             <LinearLayout
-                android:id="@+id/llStartContent"
+                android:id="@+id/llProgramDesc"
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="6dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvProgramDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="#FEFEFE"
+                    android:singleLine="true"/>
+
+                <!--<com.qpidnetwork.livemodule.view.AlwaysMarqueeTextView-->
+                    <!--android:id="@+id/tvProgramDesc"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="32dp"-->
+                    <!--android:layout_marginRight="32dp"-->
+                    <!--android:layout_marginTop="6dp"-->
+                    <!--android:gravity="center"-->
+                    <!--android:textSize="18sp"-->
+                    <!--android:textColor="#FEFEFE"-->
+                    <!--android:singleLine="true"-->
+                    <!--android:ellipsize="marquee"-->
+                    <!--android:marqueeRepeatLimit="marquee_forever"-->
+                    <!--android:focusable="true"-->
+                    <!--android:focusableInTouchMode="true"-->
+                    <!--android:visibility="visible"-->
+                    <!--android:scrollHorizontally="true"/>-->
+            </LinearLayout>
+
+
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/llStartContent"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal"-->
+                <!--android:layout_marginTop="12dp"-->
+                <!--android:layout_marginLeft="16dp"-->
+                <!--android:layout_marginRight="16dp"-->
+                <!--android:visibility="gone">-->
+                <!--<ImageView-->
+                    <!--android:id="@+id/btnPrivate"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:clickable="true" />-->
+                <!--<ImageView-->
+                    <!--android:id="@+id/btnPublic"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@drawable/list_button_view_free_public_broadcast"-->
+                    <!--android:clickable="true"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:layout_marginLeft="32dp"-->
+                    <!--android:visibility="visible"/>-->
+            <!--</LinearLayout>-->
+            <ImageView
+                android:id="@+id/btnPrivate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp">
-                <ImageView
-                    android:id="@+id/btnPrivate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/list_button_start_normal_private_broadcast"
-                    android:clickable="true" />
-                <ImageView
-                    android:id="@+id/btnPublic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/list_button_view_free_public_broadcast"
-                    android:clickable="true"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="32dp"
-                    android:visibility="visible"/>
-            </LinearLayout>
+                android:src="@drawable/list_button_start_private_broadcast"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_marginTop="12dp"/>
+            <ImageView
+                android:id="@+id/btnPublic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/list_button_view_paid_public_broadcast"
+                android:clickable="true"
+                android:visibility="visible"
+                android:layout_marginTop="12dp"/>
             <ImageView
                 android:id="@+id/btnSchedule"
                 android:layout_width="wrap_content"

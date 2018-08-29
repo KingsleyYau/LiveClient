@@ -64,11 +64,6 @@ bool ZBHttpRejectScheduledInviteTask::ParseData(const string& url, bool bFlag, c
             url.c_str(),
             bFlag?"true":"false"
             );
-    
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "ZBHttpRejectScheduledInviteTask::ParseData( buf : %s )", buf);
-    }
-    
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

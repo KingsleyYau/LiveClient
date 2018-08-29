@@ -143,6 +143,10 @@ public class SpeedTestManager {
         t.start();
     }
 
+    /**
+     * 如果连接失败，会被catch
+     * @param speedBean
+     */
     private void doHttpRequest(final SpeedBean speedBean){
         try {
             //开始时间
@@ -155,11 +159,11 @@ public class SpeedTestManager {
             urlConnection.setConnectTimeout(TimeOut);
 
             //响应
-
-            //结束时间
-            long timeEnd = System.currentTimeMillis();
-            int time = (int)(timeEnd - timeBegin);
             if(urlConnection.getResponseCode() == HttpsURLConnection.HTTP_OK){
+                //结束时间
+                long timeEnd = System.currentTimeMillis();
+                int time = (int)(timeEnd - timeBegin);
+
                 speedBean.resTime = time;
             }else{
                 speedBean.resTime = -1;
@@ -170,9 +174,20 @@ public class SpeedTestManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+            //add by Jagger 2018-5-10
+            //连接失败也提交结果
+            if(speedBean != null){
+                speedBean.resTime = -1;
+                //提交
+                doSummit(speedBean);
+            }
         }
     }
 
+    /**
+     * 如果连接失败，会被catch
+     * @param speedBean
+     */
     private void doHttpsRequest(final SpeedBean speedBean){
         try {
             //开始时间
@@ -191,11 +206,11 @@ public class SpeedTestManager {
             });
 
             //响应
-
-            //结束时间
-            long timeEnd = System.currentTimeMillis();
-            int time = (int)(timeEnd - timeBegin);
             if(urlConnection.getResponseCode() == HttpsURLConnection.HTTP_OK){
+                //结束时间
+                long timeEnd = System.currentTimeMillis();
+                int time = (int)(timeEnd - timeBegin);
+
                 speedBean.resTime = time;
             }else{
                 speedBean.resTime = -1;
@@ -206,6 +221,13 @@ public class SpeedTestManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+            //add by Jagger 2018-5-10
+            //连接失败也提交结果
+            if(speedBean != null){
+                speedBean.resTime = -1;
+                //提交
+                doSummit(speedBean);
+            }
         }
     }
 

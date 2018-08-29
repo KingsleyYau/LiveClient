@@ -45,6 +45,17 @@ public class BaseListFragment extends BaseLoadingFragment implements OnPullRefre
 		return view;
 	}
 
+
+	/**
+	 * 设置背景颜色
+	 * @param colorResId
+	 */
+	public void setContentBackground(int colorResId){
+		if(fl_baseListContainer != null){
+			fl_baseListContainer.setBackgroundColor(getResources().getColor(colorResId));
+		}
+	}
+
 	@Override
 	public void onReloadDataInEmptyView() {
 

@@ -27,10 +27,13 @@ public class FileCacheManager {
     private final String CAR = "car";                //本地座驾图片缓存路径
     private final String EMOTION = "emotion";                //本地表情图片缓存路径
     private final String MEDAL = "medal";                //本地勋章图片缓存路径
+    private final String PICASS_LOCAL_DIR = "picassoLocalCache";
 
     private static FileCacheManager gFileCacheManager;
 
     private String mMainPath = "";
+
+    private final String TAG = FileCacheManager.class.getSimpleName();
 
     public static FileCacheManager newInstance(Context context) {
         if (gFileCacheManager == null) {
@@ -46,7 +49,7 @@ public class FileCacheManager {
 
     public FileCacheManager(Context context) {
 //        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + context.getResources().getString(R.string.app_name);
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "QpidDating";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "LiveShow";
         changeMainPath(path);
     }
 
@@ -107,11 +110,23 @@ public class FileCacheManager {
     }
 
     /**
+     * 获取picasso本地缓存路径
+     * @return
+     */
+    public String GetPicassoLocalPath(){
+        String path = mMainPath + "/" + PICASS_LOCAL_DIR + "/";
+        File file = new File(path);
+        file.mkdirs();
+
+        return path;
+    }
+
+    /**
      * 获取图片目录
      *
      * @return
      */
-    public String getImagePath() {
+    private String getImagePath() {
 		/* 创建图片目录 */
         String path = mMainPath + IMAGE_DIR + File.separator;
         File file = new File(path);
@@ -120,6 +135,18 @@ public class FileCacheManager {
         }
         Log.d("FileCacheManager","getImagePath-path:"+path);
         return path;
+    }
+
+    /**
+     * 获取本地用户头像文件缓存
+     * @param url
+     * @return
+     */
+    public String getLocalImgPath(String url){
+        String localPath = getImagePath();
+        localPath += parseFileNameFromUrl(url);
+        Log.d(TAG,"getLocalImgPath-localPath:"+localPath);
+        return  localPath;
     }
 
     /**
@@ -146,7 +173,9 @@ public class FileCacheManager {
     public String getGiftLocalPath(String giftId, String url){
         String localPath = getGiftPath();
         localPath += giftId;
+        localPath += File.separator;
         localPath += parseFileNameFromUrl(url);
+        Log.d(TAG,"getGiftLocalPath-localPath:"+localPath);
         return  localPath;
     }
 
@@ -158,7 +187,7 @@ public class FileCacheManager {
     public String parseFileNameFromUrl(String fileUrl){
         String fileName = null;
         if(!TextUtils.isEmpty(fileUrl)){
-            fileName = fileUrl.substring(fileUrl.lastIndexOf(File.separator),fileUrl.length());
+            fileName = fileUrl.substring(fileUrl.lastIndexOf(File.separator)+1,fileUrl.length());
         }
         return fileName;
     }

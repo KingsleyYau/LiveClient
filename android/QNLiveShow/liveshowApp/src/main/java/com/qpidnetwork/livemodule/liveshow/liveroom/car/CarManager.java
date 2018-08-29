@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
-import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.lang.ref.WeakReference;
@@ -41,8 +41,6 @@ public class CarManager {
     private AnimatorSet animationSet;
     private final String TAG = CarManager.class.getSimpleName();
     private LinearLayout ll_entranceCar;
-    private int topMargin;
-    private int rightMargin;
 
     public CarManager(){
         carAnimExcutorSer = Executors.newSingleThreadExecutor(new ThreadFactory() {
@@ -60,14 +58,13 @@ public class CarManager {
      * 初始化
      * @param activity
      * @param rootView
-     * @param topMargin
      */
-    public void init(Activity activity, LinearLayout rootView, int topMargin){
+    public void init(Activity activity, LinearLayout rootView, int txtColor, int bgResId){
         mActivity = new WeakReference<Activity>(activity);
+        this.bgResId = bgResId;
+        this.txtColor = txtColor;
         ll_entranceCar = rootView;
         ll_entranceCar.removeAllViews();
-        this.topMargin = topMargin+(int)mActivity.get().getResources().getDimension(R.dimen.liveroom_car_default_topmargin);
-        this.rightMargin = (int)mActivity.get().getResources().getDimension(R.dimen.liveroom_car_default_rightmargin);
         executeNextAnimTask();
     }
 
@@ -138,13 +135,17 @@ public class CarManager {
         public void run() {
             final CarInfo item = takeLiveRoomCarInfo();
             Log.d(TAG,"LiveRoomCarAnimThreadrun-item:"+item);
-            if(null != mActivity && mActivity.get() != null){
-                mActivity.get().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        playLiveRoomCarAnim(item);
+            if(null != mActivity){
+                Activity tempActivity = mActivity.get();{
+                    if(tempActivity != null){
+                        tempActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                playLiveRoomCarAnim(item);
+                            }
+                        });
                     }
-                });
+                }
             }
         }
     }
@@ -159,9 +160,7 @@ public class CarManager {
         }
         CarView carView = generateEntranceCarView(mActivity.get(),carInfo);
         LinearLayout.LayoutParams entranceCarLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        entranceCarLp.topMargin = topMargin;
-        entranceCarLp.rightMargin = rightMargin;
+                ViewGroup.LayoutParams.WRAP_CONTENT, DisplayUtil.dip2px(mActivity.get(),34f));
         ll_entranceCar.addView(carView,entranceCarLp);
 
         playCarInAnim(carView);
@@ -172,6 +171,7 @@ public class CarManager {
      * @param carView
      */
     private void playCarInAnim(final CarView carView){
+        carView.requestLayout();
         animationSet = new AnimatorSet();
         float translationX = carView.getTranslationX();
         float translationY = carView.getTranslationY();
@@ -184,7 +184,7 @@ public class CarManager {
                 translationX+carViewMeasureWidth, translationX);
         animator2.setDuration(normalAnimStartPlayTime);
         ObjectAnimator animator3 = ObjectAnimator.ofFloat(carView, "translationY",
-                translationY-topMargin, translationY);
+                translationY, translationY);
         animator3.setDuration(normalAnimStartPlayTime);
         animationSet.playTogether(animator1,animator2,animator3);
 
@@ -267,6 +267,9 @@ public class CarManager {
         animationSet.start();
     }
 
+    private int bgResId = 0;
+    private int txtColor = 0;
+
     /**
      * 生成座驾控件
      * @param activity
@@ -275,6 +278,7 @@ public class CarManager {
      */
     public CarView generateEntranceCarView(Activity activity,CarInfo carInfo){
         CarView carView = new CarView(activity);
+        carView.init(txtColor,bgResId);
         carView.setCarMasterName(carInfo.nickName);
         carView.setCarImgLocalPath(carInfo.riderLocalPath);
         return carView;

@@ -1789,6 +1789,37 @@ long long HttpRequestController::CrashFile(
     return requestId;
 }
 
+long long HttpRequestController::GetTotalNoreadNum(
+                                                   HttpRequestManager *pHttpRequestManager,
+                                                   IRequestGetTotalNoreadNumCallback* callback
+                                                   ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetTotalNoreadNumTask* task = new HttpGetTotalNoreadNumTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam( );
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::PremiumMembership(
                                                    HttpRequestManager *pHttpRequestManager,
                                                    const string& siteId,
@@ -2057,6 +2088,38 @@ long long HttpRequestController::DealKnockRequest(
     return requestId;
 }
 
+long long HttpRequestController::GetHangoutGiftList(
+                                                    HttpRequestManager *pHttpRequestManager,
+                                                    const string& roomId,
+                                                    IRequestGetHangoutGiftListCallback* callback
+                                                    ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetHangoutGiftListTask* task = new HttpGetHangoutGiftListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(roomId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
 long long HttpRequestController::GetNoReadNumProgram(
                               HttpRequestManager *pHttpRequestManager,
                               IRequestGetNoReadNumProgramCallback* callback
@@ -2232,6 +2295,146 @@ long long HttpRequestController::ShowListWithAnchorId(
     HttpShowListWithAnchorIdTask* task = new HttpShowListWithAnchorIdTask();
     task->Init(pHttpRequestManager);
     task->SetParam(anchorId, start, step, sortType);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPrivateMsgFriendList(
+                                                         HttpRequestManager *pHttpRequestManager,
+                                                         IRequestGetPrivateMsgFriendListCallback* callback
+                                                         ){
+    
+    FileLevelLog(LIVESHOW_HTTP_LOG,
+                 KLog::LOG_MSG,
+                 "alextest:HttpRequest::StartRequest( "
+                 "pHttpRequestManager : %p, "
+                 "this : %p, "
+                 ") \n\n",
+                 pHttpRequestManager,
+                 this);
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPrivateMsgFriendListTask* task = new HttpGetPrivateMsgFriendListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetFollowPrivateMsgFriendList(
+                                                               HttpRequestManager *pHttpRequestManager,
+                                                               IRequestGetFollowPrivateMsgFriendListCallback* callback
+                                                               ){
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetFollowPrivateMsgFriendListTask* task = new HttpGetFollowPrivateMsgFriendListTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam();
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::GetPrivateMsgHistoryById(
+                                                          HttpRequestManager *pHttpRequestManager,
+                                                          const string& toId,
+                                                          const string& startMsgId,
+                                                          PrivateMsgOrderType order,
+                                                          int limit,
+                                                          int reqId,
+                                                          IRequestGetPrivateMsgHistoryByIdCallback* callback
+                                                          ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpGetPrivateMsgHistoryByIdTask* task = new HttpGetPrivateMsgHistoryByIdTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(toId, startMsgId, order, limit, reqId);
+    task->SetCallback(callback);
+    task->SetHttpTaskCallback(this);
+    
+    requestId = (long long)task;
+    
+    mRequestMap.Lock();
+    mRequestMap.Insert(task, task);
+    mRequestMap.Unlock();
+    
+    if( !task->Start() ) {
+        // 当task->start为fail已经delet 了，如线程太多时KThread::Start( [Create Thread Fail : Resource temporarily unavailable] )
+        //        mRequestMap.Lock();
+        //        mRequestMap.Erase(task);
+        //        mRequestMap.Unlock();
+        //
+        //        delete task;
+        requestId = HTTPREQUEST_INVALIDREQUESTID;
+    }
+    
+    return requestId;
+}
+
+long long HttpRequestController::SetPrivateMsgReaded(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& toId,
+                              const string& msgId,
+                              IRequestSetPrivateMsgReadedCallback* callback
+                              ) {
+    long long requestId = HTTPREQUEST_INVALIDREQUESTID;
+    
+    HttpSetPrivateMsgReadedTask* task = new HttpSetPrivateMsgReadedTask();
+    task->Init(pHttpRequestManager);
+    task->SetParam(toId, msgId);
     task->SetCallback(callback);
     task->SetHttpTaskCallback(this);
     

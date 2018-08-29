@@ -18,15 +18,18 @@ import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.liveshow.ad.AD4QNActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.credit.BuyCreditActivity;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
-import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
+import com.qpidnetwork.livemodule.liveshow.login.LiveLoginActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.pushmanager.PushManager;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.qpidnetwork.qnbridgemodule.bean.MainModuleConfig;
 import com.qpidnetwork.qnbridgemodule.interfaces.IQNService;
 import com.qpidnetwork.qnbridgemodule.interfaces.OnServiceEventListener;
@@ -110,6 +113,14 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
             e.printStackTrace();
         }
 
+        // 设置log级别（demo环境才打印log）
+        if (isDebug) {
+            Log.SetLevel(android.util.Log.DEBUG);
+        }
+        else {
+            Log.SetLevel(android.util.Log.ERROR);
+        }
+
         // 初始化GA管理器
         if (isDebug) {
             AnalyticsManager.newInstance().init(mApplicationContext, R.xml.live_tracker_demo);
@@ -118,12 +129,12 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
             AnalyticsManager.newInstance().init(mApplicationContext, R.xml.live_tracker);
         }
 
-        //初始化LoginManager单例
+        //初始化LoginManager
         LoginManager loginManager = LoginManager.newInstance(mApplicationContext);
 
         //初始化IMManager
         IMManager imManager = IMManager.newInstance(mApplicationContext);
-        loginManager.register(imManager);
+        loginManager.addListener(imManager);
 
         //Fresco库初始化
         Fresco.initialize(mApplicationContext);
@@ -138,26 +149,26 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
         ScheduleInvitePackageUnreadManager unreadManager = ScheduleInvitePackageUnreadManager.getInstance();
         unreadManager.registerUnreadListener(this);
 
-        //初始化pushmanager
+        //初始化pushManager
         PushManager.newInstance(mApplicationContext);
 
 
-        //本地环境未联调，写死同步配置domain
-        RequestJni.SetConfigSite("http://192.168.88.17:8817");//("http://172.25.32.17:7717");
+        //本地环境根据配置获取入口同步配置的host地址
+        RequestJni.SetConfigSite(mApplicationContext.getResources().getString(R.string.webHost));
     }
 
     @Override
     public void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, String configDomain) {
         Log.i(TAG, "onMainServiceLogin isSucess:%d userId:%s token:%s ga_uid:%s configDomain:%s", isSucess?1:0, userId, token, ga_uid, configDomain);
 //        String domain = "http://demo-live.charmdate.com:3007";      //客户端https支持有问题，先写死http环境
-        RequestJni.SetConfigSite(configDomain);
-        LoginManager.getInstance().onMainMoudleLogin(isSucess, userId, token, ga_uid);
+//        RequestJni.SetConfigSite(configDomain);
+//        LoginManager.getInstance().onMainMoudleLogin(isSucess, userId, token, ga_uid);
     }
 
     @Override
     public void onMainServiceLogout(LogoutType type, String tips) {
         Log.i(TAG, "onMainServiceLogout LogoutType:%s tips:%s ", type.name(), tips);
-        LoginManager.getInstance().onMainMoudleLogout(type, tips);
+//        LoginManager.getInstance().onMainMoudleLogout(type, tips);
     }
 
     @Override
@@ -184,6 +195,18 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
         //传递Url给MainFragmentActivity
         Log.i(TAG, "openUrl url:%s ", url);
         MainFragmentActivity.launchActivityWIthUrl(context, url);
+    }
+
+    /**
+     * 打开App
+     * @param context
+     * @param url
+     */
+    public void openAppWithUrl(Context context, String url){
+        Intent intent = new Intent(context, LiveLoginActivity.class);
+        intent.putExtra(CommonConstant.KEY_PUSH_NOTIFICATION_URL, url);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     /**
@@ -215,7 +238,9 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
      * @return
      */
     public MainModuleConfig getmMainModuleConfig(){
-        return mMainModuleConfig;
+//        return mMainModuleConfig;
+        //修改push设置本地设置
+        return new MainModuleConfig();
     }
 
     /**
@@ -368,11 +393,14 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     /**
      * 添加买点跳转由主模块处理
      */
-    public void onAddCreditClick(){
+    public void onAddCreditClick(Context context){
         Log.i(TAG, "onAddCreditClick event");
-        if(mOnServiceStatusChangeListener != null){
-            mOnServiceStatusChangeListener.onAddCreditClick(this);
-        }
+//        if(mOnServiceStatusChangeListener != null){
+//            mOnServiceStatusChangeListener.onAddCreditClick(this);
+//        }
+        Intent intent = new Intent(context, BuyCreditActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
     /**

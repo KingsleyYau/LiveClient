@@ -1,102 +1,210 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Message;
-import android.text.TextUtils;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
-import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
-import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
-import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
+import com.qpidnetwork.livemodule.framework.base.BaseImmersedRecyclerViewFragment;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
-import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
-import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
 import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
-import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
-import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
-import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
-import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
+import com.qpidnetwork.livemodule.im.IMOtherEventListener;
+import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
+import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
+import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
-import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.IPConfigUtil;
-import com.qpidnetwork.livemodule.utils.ImageUtil;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.livemodule.utils.ButtonUtils;
+import com.qpidnetwork.livemodule.view.BadgeHelper;
+import com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Vector;
+
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 
 /**
- * Created by Hunter Mun on 2017/9/6.
+ * @author Jagger 2018-6-28
+ *
  */
+public class HotListFragment extends BaseImmersedRecyclerViewFragment implements ShowUnreadManager.OnShowUnreadListener,IMOtherEventListener {
 
-public class HotListFragment extends BaseListFragment{
     private static final int GET_FOLLOWING_CALLBACK = 1;
+    private static final int GET_VOUCHER_CALLBACK = 2;
 
-    private CanAdapter<HotListItem> mAdapter;
-    private List<HotListItem> mHotList = new ArrayList<HotListItem>();
-    private BannerItem bannerItem;
-    private ImageView headerView = null;
+    /**
+     * 顶部菜单选项类型
+     */
+    private enum TopMenuItemType{
+        Message,
+        Mail,
+        Greetings,
+        Hangout,
+        AddCredit
+    }
+
+    private HotListAdapter mAdapter;
+    private LinearLayoutManager mLinearLayoutManager;
+    private Vector<HotListItem> mHotList = new Vector<>();
+    private HotListVoucherHelper hotListVoucherHelper = new HotListVoucherHelper();
+    private boolean isNeedRefresh = true;   //是否需要刷新列表 刷新逻辑可看BUG#13060
+
+    //第三版
+    private int mImgMaxWidth, mImgMaxHeight, mImgMinWidth, mImgMinHeight;
+    private int mTxtMaxTopMargin,mTxtMinTopMargin;
+    private float mTvMaxSize, mTvMinSize;
+    private int mBadgeTextMaxSize, mBadgeTextMinSize, mBadgeTextSize;
+
+    private FrameLayout flContent;
+    private LinearLayout llMessage,llMail,llGreetings,llHangOut,llAddCredit;
+    private BlurringView mBlurringViewBg ;
+    private FrameLayout flImgMessage , flImgMail, flImgGreetings, flImgHangout,flImgAddCredit;
+    private ImageView imgMessageBig , imgMailBig , imgGreetingBig, imgHangoutBig,imgAddCreditBig;
+    private ImageView imgMessageSmall , imgMailSmall , imgGreetingSmall, imgHangoutSmall,imgAddCreditSmall;
+    private TextView tvMessage , tvMail , tvGreeting, tvHangOut,tvAddCredits;
+    private Badge badgeMessage , badgeMail , badgeGreetingMail;
+    //最近一次点击选中的tab类型 用户列表查询、界面跳转或界面展示
+    private TopMenuItemType lastSelectedTopMenuItemType = null;
+    //标识toolbar当前是否处于完全展开的状态
+    private boolean istExpandedNow = false;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initListHeaderView();
-        mAdapter = createAdapter();
-        getPullToRefreshListView().addHeaderView(headerView);
-        //隐藏滚动条
-        getPullToRefreshListView().setVerticalScrollBarEnabled(false);
-        getPullToRefreshListView().setFastScrollEnabled(false);
-        getPullToRefreshListView().setAdapter(mAdapter);
-        getPullToRefreshListView().setHeaderDividersEnabled(true);
-        getPullToRefreshListView().setDivider(new ColorDrawable(getResources().getColor(R.color.hotlist_divider_color)));
-        getPullToRefreshListView().setDividerHeight(DisplayUtil.dip2px(getActivity(), 4));
-        onDefaultErrorRetryClick();
+        TAG = HotListFragment.class.getSimpleName();
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        refreshRecyclerView.getRecyclerView().setLayoutManager(mLinearLayoutManager);
+
+        mAdapter = new HotListAdapter(getContext(), mHotList);
+        refreshRecyclerView.getRecyclerView().setAdapter(mAdapter);
+
+        Log.d(TAG,"onActivityCreated reloadData");
+//        reloadData();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ShowUnreadManager.getInstance().unregisterUnreadListener(this);
+    }
+
+    @Override
+    protected void onReVisible() {
+        super.onReVisible();
+        Log.d(TAG,"onReVisible");
+        //切换到当前fragment
+        if(isNeedRefresh){
+            Log.d(TAG,"onReVisible reloadData");
+            //列表为空，切换刷一次
+            reloadData();
+        }else{
+            //刷新试用券信息
+            updateVoucherAvailableInfo();
+        }
+    }
+
+    @Override
+    protected void onBackFromHomeInTimeInterval() {
+        super.onBackFromHomeInTimeInterval();
+        Log.d(TAG,"onBackFromHomeInTimeInterval");
+        reloadData();
+    }
+
+    /**更新未读数据*/
+    private void updateUnReadData() {
+        Log.d(TAG,"updateUnReadData");
+        //主界面未读 onResume读取本地判断刷新
+        showTopMenuUnread(TopMenuItemType.Message,ShowUnreadManager.getInstance().getMsgUnReadNum());
+        showTopMenuUnread(TopMenuItemType.Mail,ShowUnreadManager.getInstance().getMailUnReadNum());
+        showTopMenuUnread(TopMenuItemType.Greetings,ShowUnreadManager.getInstance().getGreetMailUnReadNum());
+    }
+
+    /**
+     * 刷新试用券信息
+     */
+    private void updateVoucherAvailableInfo(){
+        Log.d(TAG,"updateVoucherAvailableInfo");
+        //add by Jagger 2018-2-6 列表为空不刷新,减少请求次数
+        if((mHotList ==  null) || mHotList.size() == 0){
+            Log.d(TAG,"**** cancel ****");
+            return;
+        }
+
+        hotListVoucherHelper.updateVoucherAvailableInfo(new HotListVoucherHelper.OnGetVoucherAvailableInfoListener() {
+            @Override
+            public void onVoucherInfoUpdated(boolean isSuccess) {
+                Log.d(TAG,"onGetVoucherInfo-isSuccess:"+isSuccess);
+                if(isSuccess){
+                    synchronized (mHotList) {
+                        for (HotListItem item : mHotList) {
+                            item.isHasPublicVoucherFree = hotListVoucherHelper.checkVoucherFree(item.userId, true);
+                            item.isHasPrivateVoucherFree = hotListVoucherHelper.checkVoucherFree(item.userId, false);
+                        }
+                    }
+                }
+                sendEmptyUiMessage(GET_VOUCHER_CALLBACK);
+            }
+        });
     }
 
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch (msg.what){
+            case GET_VOUCHER_CALLBACK:{
+                mAdapter.notifyDataSetChanged();
+            }break;
             case GET_FOLLOWING_CALLBACK:{
-                hideLoadingProcess();
+                //Ps:msg.arg1 == 1 取更多; ==0 刷新
                 HttpRespObject response = (HttpRespObject)msg.obj;
                 if(response.isSuccess){
-                    if(!(msg.arg1 == 1)){
+
+                    if(0 == msg.arg1){
                         mHotList.clear();
                     }
+
                     HotListItem[] followingArray = (HotListItem[])response.data;
                     if(followingArray != null){
                         mHotList.addAll(Arrays.asList(followingArray));
                     }
-                    mAdapter.setList(mHotList);
 
                     //hot数据为空时只展示banner
                     if(mHotList == null || mHotList.size() == 0){
                         showEmptyView();
                     }
+
+                    //刷新试用券信息
+                    if(0 == msg.arg1) {
+                        updateVoucherAvailableInfo();
+                    }
+
+                    //
+                    isNeedRefresh = false;
                 }else{
                     if(mHotList.size()>0){
                         if(getActivity() != null){
                             Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
                         }
+                        isNeedRefresh = false;
                     }else{
                         //无数据显示错误页，引导用户
-                        showErrorPage();
+                        showErrorView();
+                        isNeedRefresh = true;
                     }
                 }
             }break;
@@ -104,54 +212,16 @@ public class HotListFragment extends BaseListFragment{
         onRefreshComplete();
     }
 
-    public void updateBannerImg(BannerItem bannerItem){
-        this.bannerItem = bannerItem;
-        if(null != headerView && null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl)
-                && !TextUtils.isEmpty(bannerItem.bannerLinkUrl) && (getActivity() != null)){
-            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
-                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .into(headerView);
-        }
-    }
-
     /**
-     * 生成列表头
-     * @return
+     * 刷新列表
+     * @param isLoadMore
      */
-    private void initListHeaderView(){
-        headerView = new ImageView(getActivity());
-        headerView.setAdjustViewBounds(true);
-        if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl) && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
-            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
-                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .into(headerView);
-
-        }else{
-            headerView.setImageResource(R.drawable.hotlist_default_header);
-        }
-
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
-                    startActivity(WebViewActivity.getIntent(getActivity(),
-                            bannerItem.bannerName,
-                            IPConfigUtil.addCommonParamsToH5Url(bannerItem.bannerLinkUrl),
-                            true));
-                }
-
-            }
-        });
-
-    }
-
     private void queryHotList(final boolean isLoadMore){
         int start = 0;
         if(isLoadMore){
             start = mHotList.size();
         }
+
         LiveRequestOperator.getInstance().GetHotLiveList(start, Default_Step, false, LiveService.getInstance().getForTest(), new OnGetHotListCallback() {
             @Override
             public void onGetHotList(boolean isSuccess, int errCode, String errMsg, HotListItem[] followingList) {
@@ -166,258 +236,402 @@ public class HotListFragment extends BaseListFragment{
     }
 
     /**
-     * 显示无数据页
+     * 重新刷新界面
      */
-    private void showEmptyView(){
-        //不处理，用户自己下啦刷新
-//        setDefaultEmptyMessage(getResources().getString(R.string.followinglist_empty_text));
-//        setDefaultEmptyButtonText(getResources().getString(R.string.common_hotlist_guide));
-//        showNodataPage();
-//        getPullToRefreshListView().setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected void onDefaultErrorRetryClick() {
-        super.onDefaultErrorRetryClick();
-        //错误也点击刷新
-        mHotList.clear();
+    public void reloadData(){
         showLoadingProcess();
         queryHotList(false);
     }
 
     @Override
-    protected void onDefaultEmptyGuide() {
-//        super.onDefaultEmptyGuide();
-//        if(getActivity() != null && getActivity() instanceof  MainFragmentActivity){
-//            ((MainFragmentActivity)getActivity()).setCurrentPager(0);
-//        }
+    public void onReloadDataInEmptyView() {
+        super.onReloadDataInEmptyView();
+        reloadData();
     }
 
     @Override
-    public void onPullDownToRefresh() {
-        super.onPullDownToRefresh();
+    public void onGuideInEmptyView(){
+        super.onGuideInEmptyView();
+        reloadData();
+    }
+
+    @Override
+    protected void onDefaultErrorRetryClick() {
+        super.onDefaultErrorRetryClick();
+        reloadData();
+    }
+
+    @Override
+    protected void onPullDown() {
+        //取数据
         queryHotList(false);
     }
 
     @Override
-    public void onPullUpToRefresh() {
-        super.onPullUpToRefresh();
+    protected void onPullUp() {
+        //取数据
         queryHotList(true);
     }
 
     @Override
-    public void onReloadDataInEmptyView() {
-        super.onReloadDataInEmptyView();
-        queryHotList(false);
+    public void onClick(View v) {
+        //add by Jagger 2018-7-10
+        super.onClick(v);
+        int viewId = v.getId();
+        if(ButtonUtils.isFastDoubleClick(viewId)){
+            return;
+        }
+        if(viewId == R.id.llMessage){
+            lastSelectedTopMenuItemType = TopMenuItemType.Message;
+            Activity activity = getActivity();
+            if(activity != null && activity instanceof MainFragmentActivity){
+                MainFragmentActivity mainFragmentActivity = (MainFragmentActivity)activity;
+                mainFragmentActivity.showMessageListActivity();
+            }
+        }else if(viewId == R.id.llMail){
+            lastSelectedTopMenuItemType = TopMenuItemType.Mail;
+            Activity activity = getActivity();
+            if(activity != null && activity instanceof MainFragmentActivity){
+                MainFragmentActivity mainFragmentActivity = (MainFragmentActivity)activity;
+                mainFragmentActivity.showEmfListWebView();
+            }
+        }else if(viewId == R.id.llGreetings){
+            lastSelectedTopMenuItemType = TopMenuItemType.Greetings;
+            Activity activity = getActivity();
+            if(activity != null && activity instanceof MainFragmentActivity){
+                MainFragmentActivity mainFragmentActivity = (MainFragmentActivity)activity;
+                mainFragmentActivity.showLoiListWebView();
+            }
+        }else if(viewId == R.id.llHangOut){
+            lastSelectedTopMenuItemType = TopMenuItemType.Hangout;
+        }else if(viewId == R.id.llAddCredit){
+            lastSelectedTopMenuItemType = TopMenuItemType.AddCredit;
+            Activity activity = getActivity();
+            if(activity != null && activity instanceof MainFragmentActivity){
+                MainFragmentActivity mainFragmentActivity = (MainFragmentActivity)activity;
+                mainFragmentActivity.addCredits();
+            }
+        }else{
+
+        }
     }
 
     @Override
-    public void onRefreshComplete() {
-        super.onRefreshComplete();
-    }
+    protected void setFoldView() {
+        Log.d(TAG,"setFoldView");
+        viewFoldCustom = LayoutInflater.from(getActivity()).inflate(R.layout.view_live_main_top_menu_big_toolbar, null);
+        flContent = (FrameLayout) viewFoldCustom.findViewById(R.id.fl_content);
+        llMessage = (LinearLayout)viewFoldCustom.findViewById(R.id.llMessage);
+        llMessage.setOnClickListener(this);
+        llMail = (LinearLayout)viewFoldCustom.findViewById(R.id.llMail);
+        llMail.setOnClickListener(this);
+        llGreetings = (LinearLayout)viewFoldCustom.findViewById(R.id.llGreetings);
+        llGreetings.setOnClickListener(this);
+        llHangOut = (LinearLayout)viewFoldCustom.findViewById(R.id.llHangOut);
+        llHangOut.setOnClickListener(this);
+        llAddCredit = (LinearLayout)viewFoldCustom.findViewById(R.id.llAddCredit);
+        llAddCredit.setOnClickListener(this);
 
-    private CanAdapter<HotListItem> createAdapter(){
-        CanAdapter<HotListItem> adapter = new CanAdapter<HotListItem>(getActivity(), R.layout.item_hot_list, mHotList) {
+        //毛玻璃
+        mBlurringViewBg = (BlurringView)viewFoldCustom.findViewById(R.id.blurring_view_bg);
+        mBlurringViewBg.setBlurredView(refreshRecyclerView.getRootView());
+        refreshRecyclerView.getRecyclerView().addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            protected void setView(CanHolderHelper helper, int position, HotListItem bean) {
-
-                //处理item大小（宽高相同）
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams)helper.getConvertView().getLayoutParams();
-                params.height = DisplayUtil.getScreenWidth(helper.getContext());
-
-                helper.setImageResource(R.id.ivOnlineStatus,
-                        bean.onlineStatus == AnchorOnlineStatus.Online ? R.drawable.circle_solid_green :
-                        R.drawable.circle_solid_grey);
-                helper.setText(R.id.tvName,bean.nickName);
-
-                //兴趣爱好区域
-                helper.setVisibility(R.id.ivInterest1, View.GONE);
-                helper.setVisibility(R.id.ivInterest2, View.GONE);
-                helper.setVisibility(R.id.ivInterest3, View.GONE);
-                if(bean.interests != null && bean.interests.size() > 0){
-                    if(bean.interests.size() >= 3){
-                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
-                        helper.setVisibility(R.id.ivInterest2, View.VISIBLE);
-                        helper.setVisibility(R.id.ivInterest3, View.VISIBLE);
-                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
-                        helper.setImageResource(R.id.ivInterest2, ImageUtil.getImageResoursceByName(bean.interests.get(1).name()));
-                        helper.setImageResource(R.id.ivInterest3, ImageUtil.getImageResoursceByName(bean.interests.get(2).name()));
-                    }else if(bean.interests.size() == 2){
-                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
-                        helper.setVisibility(R.id.ivInterest2, View.VISIBLE);
-                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
-                        helper.setImageResource(R.id.ivInterest2, ImageUtil.getImageResoursceByName(bean.interests.get(1).name()));
-                    }else{
-                        helper.setVisibility(R.id.ivInterest1, View.VISIBLE);
-                        helper.setImageResource(R.id.ivInterest1, ImageUtil.getImageResoursceByName(bean.interests.get(0).name()));
-                    }
-                }
-
-                //按钮区域
-                if(bean.onlineStatus == AnchorOnlineStatus.Online){
-                    if(bean.roomType != LiveRoomType.Unknown) {
-                        //房间类型
-                        helper.setVisibility(R.id.btnSchedule, View.GONE);
-                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
-                        if (bean.roomType == LiveRoomType.FreePublicRoom
-                                || bean.roomType == LiveRoomType.PaidPublicRoom) {
-                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
-                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                            helper.setVisibility(R.id.btnPublic, View.VISIBLE);
-                        } else {
-                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_private);
-                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                            helper.setVisibility(R.id.btnPublic, View.GONE);
-                        }
-
-                        final ImageView btnPrivate = helper.getView(R.id.btnPrivate);
-
-                        Drawable privateDrawable = btnPrivate.getDrawable();
-                        if ((privateDrawable != null)
-                                && (privateDrawable instanceof AnimationDrawable)) {
-                            ((AnimationDrawable) privateDrawable).stop();
-                        }
-
-                        switch (bean.roomType) {
-                            case FreePublicRoom: {
-//                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
-                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                                helper.setImageResource(R.id.btnPublic, R.drawable.list_button_view_free_public_broadcast);
-                            }
-                            break;
-                            case PaidPublicRoom: {
-                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                                helper.setImageResource(R.id.btnPublic, R.drawable.list_button_view_paid_public_broadcast);
-                            }
-                            break;
-                            case AdvancedPrivateRoom: {
-                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                            }
-                            break;
-                            case NormalPrivateRoom: {
-//                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
-                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                            }
-                            break;
-                        }
-                    }else{
-                        //在线未直播
-                        helper.setVisibility(R.id.btnSchedule, View.GONE);
-                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                        helper.setVisibility(R.id.ivLiveType, View.GONE);
-                        helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                        helper.setVisibility(R.id.btnPublic, View.GONE);
-                        ImageView btnPrivate = helper.getView(R.id.btnPrivate);
-                        if(bean.anchorType == AnchorLevelType.gold){
-                            setAndStartAdvancePrivateAnimation(btnPrivate);
-                        }else{
-//                            helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
-                            setAndStartAdvancePrivateAnimation(btnPrivate);
-                        }
-                    }
-                }else{
-                    helper.setVisibility(R.id.ivLiveType, View.GONE);
-                    helper.setVisibility(R.id.llStartContent, View.GONE);
-                    helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
-                    helper.setImageResource(R.id.btnSchedule, R.drawable.list_button_send_schedule);
-                }
-
-                helper.setImageResource(R.id.iv_roomBg, R.drawable.rectangle_transparent_drawable);
-                if(!TextUtils.isEmpty(bean.roomPhotoUrl) && getActivity() != null){
-                    ImageView imgView = helper.getImageView(R.id.iv_roomBg);
-                    Picasso.with(getActivity())
-                            .load(bean.roomPhotoUrl)
-                            .transform(new PicassoRoundTransform(
-                                    params.height,   //宽    //因为这个Item宽高都一样,以屏幕宽为准.
-                                    params.height, //高
-                                    0))//弧度
-                            .placeholder(R.drawable.rectangle_transparent_drawable)
-                            .error(R.drawable.rectangle_transparent_drawable)
-                            .config(Bitmap.Config.RGB_565)
-                            .into(imgView);
-                }
-            }
-
-            /**
-             * 设置启动帧动画
-             * @param view
-             */
-            private void setAndStartAdvancePrivateAnimation(final ImageView view){
-                view.setImageResource(R.drawable.anim_private_broadcast_button);
-                postUiDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Drawable tempDrawable = view.getDrawable();
-                        if((tempDrawable != null)
-                                && (tempDrawable instanceof AnimationDrawable)){
-                            ((AnimationDrawable)tempDrawable).start();
-                        }
-                    }
-                }, 200);
-            }
-
-            @Override
-            protected void setItemListener(CanHolderHelper helper) {
-                //只有这里设置了setItemChildClickListener,对adapter的setOnItemListener才会有效
-                helper.setItemChildClickListener(R.id.btnPrivate);
-                helper.setItemChildClickListener(R.id.btnPublic);
-                helper.setItemChildClickListener(R.id.btnSchedule);
-                helper.setItemChildClickListener(R.id.iv_roomBg);
-            }
-        };
-        adapter.setOnItemListener(new CanOnItemListener(){
-            @Override
-            public void onItemChildClick(View view, int position) {
-                String action = "";
-                String label = "";
-
-                HotListItem item = mHotList.get(position);
-                int i = view.getId();
-                if (i == R.id.iv_roomBg) {
-                    startActivity(AnchorProfileActivity.getAnchorInfoIntent(getActivity(),
-                            getResources().getString(R.string.live_webview_anchor_profile_title),
-                            item.userId, false));
-                } else if (i == R.id.btnPrivate) {
-                    startActivity(LiveRoomTransitionActivity.getIntent(mContext,
-                            LiveRoomTransitionActivity.CategoryType.Audience_Invite_Enter_Room,
-                            item.userId, item.nickName, item.photoUrl, "", item.roomPhotoUrl));
-                    //GA统计
-                    if(item.anchorType == AnchorLevelType.gold){
-                        action = getResources().getString(R.string.Live_EnterBroadcast_Action_VIPPrivateBroadcast);
-                        label = getResources().getString(R.string.Live_EnterBroadcast_Label_VIPPrivateBroadcast);
-                    }else{
-                        action = getResources().getString(R.string.Live_EnterBroadcast_Action_PrivateBroadcast);
-                        label = getResources().getString(R.string.Live_EnterBroadcast_Label_PrivateBroadcast);
-                    }
-                } else if (i == R.id.btnPublic) {
-                    startActivity(LiveRoomTransitionActivity.getIntent(mContext,
-                            LiveRoomTransitionActivity.CategoryType.Enter_Public_Room,
-                            item.userId, item.nickName, item.photoUrl, "", item.roomPhotoUrl));
-                    //GA统计
-                    if(item.anchorType == AnchorLevelType.gold){
-                        action = getResources().getString(R.string.Live_EnterBroadcast_Action_VIPPublicBroadcast);
-                        label = getResources().getString(R.string.Live_EnterBroadcast_Label_VIPPublicBroadcast);
-                    }else{
-                        action = getResources().getString(R.string.Live_EnterBroadcast_Action_PublicBroadcast);
-                        label = getResources().getString(R.string.Live_EnterBroadcast_Label_PublicBroadcast);
-                    }
-                } else if (i == R.id.btnSchedule) {
-                    startActivity(BookPrivateActivity.getIntent(mContext, item.userId, item.nickName));
-                    //GA统计
-                    action = getResources().getString(R.string.Live_EnterBroadcast_Action_RequestBooking);
-                    label = getResources().getString(R.string.Live_EnterBroadcast_Label_RequestBooking);
-                }
-
-                //GA统计
-                Activity activity = getActivity();
-                if(!TextUtils.isEmpty(action) && activity != null
-                        && activity instanceof AnalyticsFragmentActivity){
-                    ((AnalyticsFragmentActivity)activity).onAnalyticsEvent(getResources().getString(R.string.Live_EnterBroadcast_Category), action, label);
-                }
-
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                refreshBlurringView();
             }
         });
-        return adapter;
+
+        //控制imageView大小
+        flImgMessage = (FrameLayout) viewFoldCustom.findViewById(R.id.flImgMessage);
+        flImgMail = (FrameLayout) viewFoldCustom.findViewById(R.id.flImgMail);
+        flImgGreetings = (FrameLayout) viewFoldCustom.findViewById(R.id.flImgGreetings);
+        flImgHangout = (FrameLayout) viewFoldCustom.findViewById(R.id.flImgHangOut);
+        flImgAddCredit = (FrameLayout) viewFoldCustom.findViewById(R.id.flImgAddCredit);
+
+        //大图标
+        imgMessageBig = (ImageView)viewFoldCustom.findViewById(R.id.imgMessageBig);
+        imgMailBig = (ImageView)viewFoldCustom.findViewById(R.id.imgMailBig);
+        imgGreetingBig = (ImageView)viewFoldCustom.findViewById(R.id.imgGreetingsBig);
+        imgHangoutBig = (ImageView)viewFoldCustom.findViewById(R.id.imgHangOutBig);
+        imgAddCreditBig = (ImageView)viewFoldCustom.findViewById(R.id.imgAddCreditBig);
+
+        //小图标
+        imgMessageSmall = (ImageView)viewFoldCustom.findViewById(R.id.imgMessageSmall);
+        imgMailSmall = (ImageView)viewFoldCustom.findViewById(R.id.imgMailSmall);
+        imgGreetingSmall = (ImageView)viewFoldCustom.findViewById(R.id.imgGreetingSmall);
+        imgHangoutSmall = (ImageView)viewFoldCustom.findViewById(R.id.imgHangOutSmall);
+        imgAddCreditSmall = (ImageView)viewFoldCustom.findViewById(R.id.imgAddCreditSmall);
+
+        //文字
+        tvMessage = (TextView) viewFoldCustom.findViewById(R.id.tvMessage);
+        tvMail = (TextView) viewFoldCustom.findViewById(R.id.tvMail);
+        tvGreeting = (TextView) viewFoldCustom.findViewById(R.id.tvGreeting);
+        tvHangOut = (TextView) viewFoldCustom.findViewById(R.id.tvHangOut);
+        tvAddCredits = (TextView) viewFoldCustom.findViewById(R.id.tvAddCredits);
+
+        //图标最大尺寸
+        mImgMaxWidth = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_image_view_max_width);
+        mImgMaxHeight = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_image_view_max_height);
+        //图标最小尺寸
+        mImgMinWidth = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_image_view_min_width);
+        mImgMinHeight = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_image_view_min_height);
+        //tab title组件顶部间距
+        mTxtMaxTopMargin = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_txt_top_margin_max);
+        mTxtMinTopMargin = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_txt_top_margin_min);
+        //未读文字尺寸
+        mBadgeTextMaxSize = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_badge_txt_size_max);
+        mBadgeTextMinSize = getResources().getDimensionPixelSize(R.dimen.live_main_top_menu_badge_txt_size_min);
+
+        //文字最大、最小尺寸
+        mTvMaxSize = getResources().getDimensionPixelSize(R.dimen.live_size_13sp);
+        mTvMinSize = getResources().getDimensionPixelSize(R.dimen.live_size_10sp);
+
+        //未读红点
+        initTopMenuUnread();
+
+        //刷新毛玻璃
+        refreshBlurringView();
+
+        //红点未读
+        ShowUnreadManager.getInstance().registerUnreadListener(this);
+        updateUnReadData();
+    }
+
+    @Override
+    protected void onAppBarLayoutOffsetChange(int totalScrollRange , float scrolledPercent) {
+        //scrolledPercent->0 放大 向下滑动, scrolledPercent->1 缩小 向上滑动
+        istExpandedNow = 0 == (int)scrolledPercent;
+//        Log.i(TAG ,"onAppBarLayoutOffsetChange totalScrollRange:"+totalScrollRange+" scrolledPercent:"+scrolledPercent+" istExpandedNow:"+istExpandedNow);
+        //大图标透明度渐变
+        imgMessageBig.setAlpha(1-scrolledPercent);
+        imgMailBig.setAlpha(1-scrolledPercent);
+        imgGreetingBig.setAlpha(1-scrolledPercent);
+        imgHangoutBig.setAlpha(1-scrolledPercent);
+        imgAddCreditBig.setAlpha(1-scrolledPercent);
+
+        //小图标透明度渐变
+        imgMessageSmall.setAlpha(scrolledPercent);
+        imgMailSmall.setAlpha(scrolledPercent);
+        imgGreetingSmall.setAlpha(scrolledPercent);
+        imgHangoutSmall.setAlpha(scrolledPercent);
+        imgAddCreditSmall.setAlpha(scrolledPercent);
+
+        //图标尺寸渐变计算
+        int width = (int)(mImgMaxWidth * (1-scrolledPercent));
+        int height = (int)(mImgMaxHeight * (1-scrolledPercent));
+
+        if(width <= mImgMinWidth){
+            width = mImgMinWidth;
+        }else if(width >= mImgMaxWidth){
+            width = mImgMaxWidth;
+        }
+
+        if(height <= mImgMinHeight){
+            height = mImgMinHeight;
+        }else if(height >= mImgMaxHeight){
+            height = mImgMaxHeight;
+        }
+
+        //图标尺寸渐变
+        flImgMessage.getLayoutParams().width = width;
+        flImgMessage.getLayoutParams().height = height;
+        flImgMail.getLayoutParams().width = width;
+        flImgMail.getLayoutParams().height = height;
+        flImgGreetings.getLayoutParams().width = width;
+        flImgGreetings.getLayoutParams().height = height;
+        flImgHangout.getLayoutParams().width = width;
+        flImgHangout.getLayoutParams().height = height;
+        flImgAddCredit.getLayoutParams().height = height;
+
+        //文字尺寸渐变
+        dynamicModifyTabTxtViewPropert(tvMessage,scrolledPercent);
+        dynamicModifyTabTxtViewPropert(tvMail,scrolledPercent);
+        dynamicModifyTabTxtViewPropert(tvGreeting,scrolledPercent);
+        dynamicModifyTabTxtViewPropert(tvHangOut,scrolledPercent);
+        dynamicModifyTabTxtViewPropert(tvAddCredits,scrolledPercent);
+
+        //未读数字尺寸渐变
+        mBadgeTextSize = (int)(mBadgeTextMaxSize * (1-scrolledPercent));
+        if(mBadgeTextSize <= mBadgeTextMinSize){
+            mBadgeTextSize = mBadgeTextMinSize;
+        }else if(mBadgeTextSize >= mBadgeTextMaxSize){
+            mBadgeTextSize = mBadgeTextMaxSize;
+        }
+
+        if(badgeMessage != null){
+            badgeMessage.setBadgeTextSize(mBadgeTextSize , false);
+        }
+        if(badgeMail != null){
+            badgeMail.setBadgeTextSize(mBadgeTextSize , false);
+        }
+        if(badgeGreetingMail != null){
+            badgeGreetingMail.setBadgeTextSize(mBadgeTextSize , false);
+        }
+
+        //父控件向下移（因为在toolbar中，布局只能居中, 通过改变PaddingTop令整体布局总是靠下）
+        dynamicModifyTabParentViewPropert(totalScrollRange, scrolledPercent);
+
+        //毛玻璃在展开时隐藏
+        if(istExpandedNow){
+            mBlurringViewBg.setVisibility(View.GONE);
+        }else {
+            mBlurringViewBg.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 动态修改四个tab父布局组件属性
+     * @param totalScrollRange
+     * @param scrolledPercent
+     */
+    private void dynamicModifyTabParentViewPropert(int totalScrollRange, float scrolledPercent) {
+        //整个布局上下移动
+        flContent.setPadding(0,(int)(totalScrollRange*scrolledPercent),0,0);
+    }
+
+    /**
+     * 动态修改顶部四tab标题组件的布局属性
+     */
+    private void dynamicModifyTabTxtViewPropert(TextView targetTv, float scrolledPercent){
+        float txtSize = mTvMinSize+(mTvMaxSize-mTvMinSize)*(1-scrolledPercent);
+        targetTv.setTextSize(TypedValue.COMPLEX_UNIT_PX ,txtSize);
+        LinearLayout.LayoutParams txtLp = (LinearLayout.LayoutParams) targetTv.getLayoutParams();
+        txtLp.topMargin = (int)(mTxtMinTopMargin+(mTxtMaxTopMargin-mTxtMinTopMargin)*(1-scrolledPercent));
+    }
+
+    /**
+     * 刷新毛玻璃
+     */
+    private void refreshBlurringView(){
+        if(!istExpandedNow){
+            if(mBlurringViewBg != null){
+                mBlurringViewBg.invalidate();
+            }
+        }
+    }
+
+    /**
+     * 初始化未读红点
+     */
+    private void initTopMenuUnread(){
+        badgeMessage = new QBadgeView(mContext).bindTarget(flImgMessage);
+        badgeMessage.setBadgeNumber(0);
+        badgeMessage.setBadgeGravity(Gravity.TOP | Gravity.END);
+        BadgeHelper.setBaseStyle(mContext , badgeMessage, mBadgeTextSize);
+
+        badgeMail = new QBadgeView(mContext).bindTarget(flImgMail);
+        badgeMail.setBadgeNumber(0);
+        badgeMail.setBadgeGravity(Gravity.TOP | Gravity.END);
+        BadgeHelper.setBaseStyle(mContext , badgeMail, mBadgeTextSize);
+
+        badgeGreetingMail = new QBadgeView(mContext).bindTarget(flImgGreetings);
+        badgeGreetingMail.setBadgeNumber(0);
+        badgeGreetingMail.setBadgeGravity(Gravity.TOP | Gravity.END);
+        BadgeHelper.setBaseStyle(mContext , badgeGreetingMail, mBadgeTextSize);
+    }
+
+    /**
+     * 未读
+     * @param menuType
+     * @param readSum 0为隐藏;
+     */
+    private void showTopMenuUnread(TopMenuItemType menuType , int readSum){
+        Log.d(TAG,"showTopMenuUnread-menuType:"+menuType+" readSum:"+readSum);
+        if(menuType == TopMenuItemType.Message) {
+            if(badgeMessage != null){
+                badgeMessage.setBadgeNumber(readSum);
+            }
+        }else if(menuType == TopMenuItemType.Mail) {
+            if(badgeMail != null){
+                badgeMail.setBadgeNumber(readSum);
+            }
+        }else if(menuType == TopMenuItemType.Greetings) {
+            if(badgeGreetingMail != null){
+                badgeGreetingMail.setBadgeNumber(readSum);
+            }
+        }
+    }
+
+    @Override
+    public void onUnReadDataUpdate() {
+        Log.d(TAG,"onUnReadDataUpdate");
+        if(null != getActivity()){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateUnReadData();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onShowUnreadUpdate(int unreadNum) {
+
+    }
+
+    @Override
+    public void OnLogin(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+        if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_SUCCESS){
+            //断线重登陆刷新本地未读红点数据到主界面
+            onUnReadDataUpdate();
+        }
+    }
+
+    @Override
+    public void OnLogout(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+
+    }
+
+    @Override
+    public void OnKickOff(IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+
+    }
+
+    @Override
+    public void OnRecvLackOfCreditNotice(String roomId, String message, double credit) {
+
+    }
+
+    @Override
+    public void OnRecvCreditNotice(String roomId, double credit) {
+
+    }
+
+    @Override
+    public void OnRecvAnchoeInviteNotify(String logId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+
+    }
+
+    @Override
+    public void OnRecvScheduledInviteNotify(String inviteId, String anchorId, String anchorName, String anchorPhotoUrl, String message) {
+
+    }
+
+    @Override
+    public void OnRecvSendBookingReplyNotice(String inviteId, IMClientListener.BookInviteReplyType replyType) {
+
+    }
+
+    @Override
+    public void OnRecvBookingNotice(String roomId, String userId, String nickName, String photoUrl, int leftSeconds) {
+
+    }
+
+    @Override
+    public void OnRecvLevelUpNotice(int level) {
+
+    }
+
+    @Override
+    public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem) {
+
+    }
+
+    @Override
+    public void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item) {
+
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="HotTopViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_Message_Btn" translatesAutoresizingMaskIntoConstraints="NO" id="TxD-Us-QDl">
+                        <rect key="frame" x="15" y="6" width="20" height="20"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fxx-OM-1ci">
+                        <rect key="frame" x="4" y="30" width="43" height="12"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                        <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZVk-ig-2UG">
+                        <rect key="frame" x="29" y="3" width="13" height="12"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2e-ER-Efq">
+                                <rect key="frame" x="3" y="0.5" width="7" height="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="10"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="0.15200722229999999" blue="0.12611113169999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="G2e-ER-Efq" firstAttribute="centerY" secondItem="ZVk-ig-2UG" secondAttribute="centerY" id="7VA-xj-wbs"/>
+                            <constraint firstItem="G2e-ER-Efq" firstAttribute="leading" secondItem="ZVk-ig-2UG" secondAttribute="leading" constant="3" id="DSV-wX-tsB"/>
+                            <constraint firstAttribute="height" constant="12" id="aZX-91-0G7"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="12" id="ao7-I3-jku"/>
+                            <constraint firstAttribute="trailing" secondItem="G2e-ER-Efq" secondAttribute="trailing" constant="3" id="xn4-re-I74"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="ZVk-ig-2UG" firstAttribute="leading" secondItem="TxD-Us-QDl" secondAttribute="trailing" constant="-6" id="88g-1j-wnk"/>
+                <constraint firstItem="ZVk-ig-2UG" firstAttribute="top" secondItem="TxD-Us-QDl" secondAttribute="top" constant="-3" id="Dh5-Oh-O8P"/>
+                <constraint firstItem="TxD-Us-QDl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="EJf-Uc-ZZg"/>
+                <constraint firstItem="Fxx-OM-1ci" firstAttribute="top" secondItem="TxD-Us-QDl" secondAttribute="bottom" constant="4" id="RsH-Vy-KM2"/>
+                <constraint firstItem="Fxx-OM-1ci" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="VFY-h7-0wT"/>
+                <constraint firstItem="TxD-Us-QDl" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="6" id="Vj9-sU-h9F"/>
+            </constraints>
+            <connections>
+                <outlet property="iconImageView" destination="TxD-Us-QDl" id="pIu-Z3-bBj"/>
+                <outlet property="titleLabel" destination="Fxx-OM-1ci" id="eIM-7f-eft"/>
+                <outlet property="unreadNumLabel" destination="G2e-ER-Efq" id="GQy-DB-zVK"/>
+                <outlet property="unreadView" destination="ZVk-ig-2UG" id="TUF-iM-7a8"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="Home_Message_Btn" width="20" height="20"/>
+    </resources>
+</document>

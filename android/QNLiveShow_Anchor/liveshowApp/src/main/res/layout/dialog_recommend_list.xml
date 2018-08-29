@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Title -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_40dp"
+        android:background="@color/live_msg_list_recommend_bg">
+
+        <!--<TextView-->
+            <!--android:id="@+id/tv_recommend_title"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:ellipsize="end"-->
+            <!--android:maxLines="1"-->
+            <!--android:layout_marginLeft="26dp"-->
+            <!--android:layout_marginRight="26dp"-->
+            <!--android:text="@string/hangout_dialog_title"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="@dimen/live_size_14sp" />-->
+
+        <!-- 如果用一个TextView把尾部省略，当名字太长，会直播把名字变成省略号 BUG#11906-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hangout_dialog_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"/>
+
+            <TextView
+                android:id="@+id/tv_recommend_title_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/tv_title"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:maxWidth="100dp"
+                android:text="name"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/img_recommend_list_close"
+            android:layout_width="@dimen/live_size_20dp"
+            android:layout_height="@dimen/live_size_20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/live_size_4dp"
+            android:src="@drawable/ic_clear_disabled"/>
+    </RelativeLayout>
+
+    <!-- List -->
+    <com.qpidnetwork.anchor.view.RefreshRecyclerView
+        android:id="@+id/rv_recommend_list"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_size_220dp">
+
+    </com.qpidnetwork.anchor.view.RefreshRecyclerView>
+
+</LinearLayout>

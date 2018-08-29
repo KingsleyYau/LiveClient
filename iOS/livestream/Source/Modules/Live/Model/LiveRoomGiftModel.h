@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AllGiftItem.h"
-#import "LiveGiftDownloadManager.h"
+#import "LSGiftManagerItem.h"
+#import "LSGiftManager.h"
 
 @interface LiveRoomGiftModel : NSObject
 
@@ -20,6 +20,6 @@
 @property (nonatomic, copy) NSString *giftId;
 @property (nonatomic, assign) BOOL isShow;
 @property (nonatomic, assign) BOOL isPromo;
-@property (nonatomic, strong) AllGiftItem *allItem;
+@property (nonatomic, strong) LSGiftManagerItem *allItem;
 
 @end

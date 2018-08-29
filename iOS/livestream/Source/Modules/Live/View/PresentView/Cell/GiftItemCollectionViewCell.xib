@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,26 +15,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Gift_Nomal" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8">
-                        <rect key="frame" x="25" y="-2" width="40" height="40"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_BigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-jj-DsS" userLabel="Gift Big Image View">
+                        <rect key="frame" x="71" y="4" width="15" height="15"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="40" id="55T-or-0d8"/>
-                            <constraint firstAttribute="width" constant="40" id="MoY-f3-A8w"/>
+                            <constraint firstAttribute="width" constant="15" id="jF2-lG-w48"/>
+                            <constraint firstAttribute="width" secondItem="4cl-jj-DsS" secondAttribute="height" multiplier="1:1" id="obb-vQ-RWS"/>
                         </constraints>
                     </imageView>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_bigGift_Logo" translatesAutoresizingMaskIntoConstraints="NO" id="4cl-jj-DsS">
-                        <rect key="frame" x="76" y="4" width="10" height="10"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="10" id="Gn4-yE-gia"/>
-                            <constraint firstAttribute="width" constant="10" id="Uad-MG-Ivj"/>
-                        </constraints>
-                    </imageView>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mhF-jb-LH1">
-                        <rect key="frame" x="68" y="3" width="19" height="19"/>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mhF-jb-LH1" userLabel="Gift Count View">
+                        <rect key="frame" x="71" y="4" width="15" height="15"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh">
-                                <rect key="frame" x="1" y="4" width="18" height="11"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="9"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l41-v9-vBh" userLabel="Gift Count Label">
+                                <rect key="frame" x="2.5" y="2.5" width="11" height="10"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                 <color key="textColor" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -46,86 +36,79 @@
                         <constraints>
                             <constraint firstItem="l41-v9-vBh" firstAttribute="centerY" secondItem="mhF-jb-LH1" secondAttribute="centerY" id="JyI-h1-5h3"/>
                             <constraint firstItem="l41-v9-vBh" firstAttribute="centerX" secondItem="mhF-jb-LH1" secondAttribute="centerX" id="Mfo-Zt-H8P"/>
-                            <constraint firstAttribute="width" constant="19" id="gSR-EE-uwn"/>
-                            <constraint firstAttribute="height" constant="19" id="xox-AM-JoU"/>
                         </constraints>
                     </view>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="noe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mue-fu-Fwa">
-                        <rect key="frame" x="0.0" y="71.5" width="90" height="13.5"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
-                        <color key="textColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="live_notSend_icon" translatesAutoresizingMaskIntoConstraints="NO" id="ZIV-jS-oGl">
-                        <rect key="frame" x="77" y="4" width="9" height="10.5"/>
-                        <constraints>
-                            <constraint firstAttribute="width" secondItem="ZIV-jS-oGl" secondAttribute="height" multiplier="11:13" id="09E-7s-uBY"/>
-                            <constraint firstAttribute="width" constant="9" id="5cq-Qt-gPG"/>
-                        </constraints>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_NotSend_Icon" translatesAutoresizingMaskIntoConstraints="NO" id="ZIV-jS-oGl" userLabel="Gift Lock Image View">
+                        <rect key="frame" x="71" y="4" width="15" height="15"/>
                     </imageView>
-                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pnr-aC-qID">
-                        <rect key="frame" x="30" y="30" width="30" height="30"/>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iKm-b7-Qu8" userLabel="Gift Image View">
+                        <rect key="frame" x="24" y="8" width="42" height="42.5"/>
+                    </imageView>
+                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Pnr-aC-qID">
+                        <rect key="frame" x="24" y="24" width="42" height="42.5"/>
                         <color key="backgroundColor" white="1" alpha="0.69830907534246578" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="30" id="LlL-yX-gAU"/>
-                            <constraint firstAttribute="width" constant="30" id="M7g-J3-5bJ"/>
-                        </constraints>
                     </activityIndicatorView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
-                        <rect key="frame" x="5" y="50" width="80" height="15"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gift Name" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="47x-lT-YTl">
+                        <rect key="frame" x="5" y="55.5" width="80" height="14.5"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="80" id="n9m-qg-2F2"/>
+                            <constraint firstAttribute="height" constant="15" id="Dz7-ei-C5c"/>
                         </constraints>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="0.51372549020000002" green="0.51372549020000002" blue="0.51372549020000002" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 Credit" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mue-fu-Fwa" userLabel="Gift Credit Label">
+                        <rect key="frame" x="5" y="70" width="80" height="15"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="15" id="j5V-E5-oa3"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" red="0.96862745098039216" green="0.80392156862745101" blue="0.22745098039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="mue-fu-Fwa" secondAttribute="bottom" constant="5" id="0OU-Gx-geF"/>
-                <constraint firstItem="mhF-jb-LH1" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="3" id="4lA-59-sSa"/>
-                <constraint firstItem="47x-lT-YTl" firstAttribute="top" secondItem="iKm-b7-Qu8" secondAttribute="bottom" constant="11.5" id="7xX-nX-0Jx"/>
-                <constraint firstItem="mue-fu-Fwa" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="KHG-vl-Cef"/>
-                <constraint firstItem="47x-lT-YTl" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="LLx-qu-xju"/>
-                <constraint firstItem="mue-fu-Fwa" firstAttribute="top" secondItem="47x-lT-YTl" secondAttribute="bottom" constant="7" id="PaX-hf-PgS"/>
-                <constraint firstAttribute="trailing" secondItem="mhF-jb-LH1" secondAttribute="trailing" constant="3" id="Q9f-kb-hcn"/>
-                <constraint firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="trailing" constant="4" id="Rw8-Hj-95u"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="trailing" secondItem="4cl-jj-DsS" secondAttribute="leading" constant="-5" id="50g-TU-HTd"/>
+                <constraint firstItem="ZIV-jS-oGl" firstAttribute="height" secondItem="4cl-jj-DsS" secondAttribute="height" id="7P0-c6-AJt"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="BsA-vI-qmQ"/>
+                <constraint firstItem="mhF-jb-LH1" firstAttribute="centerY" secondItem="4cl-jj-DsS" secondAttribute="centerY" id="FPo-aJ-qSG"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="bottom" secondItem="47x-lT-YTl" secondAttribute="top" constant="-5" id="GxF-Ea-vud"/>
+                <constraint firstItem="ZIV-jS-oGl" firstAttribute="width" secondItem="4cl-jj-DsS" secondAttribute="width" id="J4x-cc-oZ0"/>
+                <constraint firstItem="Pnr-aC-qID" firstAttribute="height" secondItem="iKm-b7-Qu8" secondAttribute="height" id="KAu-dj-a6J"/>
+                <constraint firstItem="47x-lT-YTl" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" constant="-5" id="KpP-rg-Fje"/>
+                <constraint firstItem="mhF-jb-LH1" firstAttribute="centerX" secondItem="4cl-jj-DsS" secondAttribute="centerX" id="LQg-vW-mDC"/>
+                <constraint firstItem="mhF-jb-LH1" firstAttribute="height" secondItem="4cl-jj-DsS" secondAttribute="height" id="O7l-MK-Q6m"/>
+                <constraint firstItem="ZIV-jS-oGl" firstAttribute="centerX" secondItem="4cl-jj-DsS" secondAttribute="centerX" id="OOM-F4-7Yz"/>
+                <constraint firstItem="4cl-jj-DsS" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" constant="-4" id="Rw8-Hj-95u"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="bottom" secondItem="gTV-IL-0wX" secondAttribute="bottom" constant="-5" id="S5W-Ox-Klo"/>
                 <constraint firstItem="4cl-jj-DsS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="VcZ-Lq-CNj"/>
-                <constraint firstItem="ZIV-jS-oGl" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="Ysm-IE-3WR"/>
-                <constraint firstItem="mue-fu-Fwa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="auj-er-p32"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="auj-er-p32"/>
+                <constraint firstItem="Pnr-aC-qID" firstAttribute="width" secondItem="iKm-b7-Qu8" secondAttribute="width" id="dBJ-i4-bMA"/>
+                <constraint firstItem="ZIV-jS-oGl" firstAttribute="centerY" secondItem="4cl-jj-DsS" secondAttribute="centerY" id="dta-Ez-Oe2"/>
                 <constraint firstItem="Pnr-aC-qID" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="hY5-YC-gbo"/>
-                <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="m6L-PP-2bI"/>
-                <constraint firstAttribute="trailing" secondItem="mue-fu-Fwa" secondAttribute="trailing" id="sii-Je-Iyi"/>
+                <constraint firstItem="iKm-b7-Qu8" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="nBp-in-LK7"/>
+                <constraint firstItem="mue-fu-Fwa" firstAttribute="trailing" secondItem="gTV-IL-0wX" secondAttribute="trailing" constant="-5" id="sii-Je-Iyi"/>
+                <constraint firstItem="47x-lT-YTl" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="5" id="tO0-1e-UVm"/>
+                <constraint firstItem="47x-lT-YTl" firstAttribute="bottom" secondItem="mue-fu-Fwa" secondAttribute="top" id="uzI-Xe-5OB"/>
+                <constraint firstItem="mhF-jb-LH1" firstAttribute="width" secondItem="4cl-jj-DsS" secondAttribute="width" id="x9A-4h-gEy"/>
                 <constraint firstItem="Pnr-aC-qID" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="yvO-2k-CIL"/>
-                <constraint firstAttribute="trailing" secondItem="ZIV-jS-oGl" secondAttribute="trailing" constant="4" id="z0X-Ba-ab3"/>
             </constraints>
             <size key="customSize" width="167" height="169"/>
             <connections>
-                <outlet property="bigGiftLogo" destination="4cl-jj-DsS" id="xjX-Vq-Tbh"/>
-                <outlet property="bigGiftLogoHeight" destination="Gn4-yE-gia" id="OoM-mQ-sdf"/>
-                <outlet property="bigGiftLogoWidth" destination="Uad-MG-Ivj" id="QOq-ig-1GY"/>
-                <outlet property="giftCountBottomOffset" destination="0OU-Gx-geF" id="cXv-4S-5Fz"/>
-                <outlet property="giftCountLabel" destination="mue-fu-Fwa" id="ucS-ya-KCg"/>
-                <outlet property="giftImageBottomOffset" destination="7xX-nX-0Jx" id="ZwR-jp-NkP"/>
-                <outlet property="giftImageHeight" destination="55T-or-0d8" id="qqT-B2-eJA"/>
-                <outlet property="giftImageView" destination="iKm-b7-Qu8" id="kqb-J3-061"/>
-                <outlet property="giftImageWidth" destination="MoY-f3-A8w" id="tVU-w9-XhY"/>
-                <outlet property="giftNameLabel" destination="47x-lT-YTl" id="X63-K2-ENu"/>
-                <outlet property="giftNameLableBottomOffset" destination="PaX-hf-PgS" id="Wly-dO-zLp"/>
-                <outlet property="haveNumLabel" destination="l41-v9-vBh" id="Wkn-ng-v0u"/>
-                <outlet property="haveNumView" destination="mhF-jb-LH1" id="Bet-Zk-rVT"/>
-                <outlet property="haveNumViewHeight" destination="xox-AM-JoU" id="Omc-aL-7Ns"/>
-                <outlet property="haveNumViewWidth" destination="gSR-EE-uwn" id="V7C-KT-HWg"/>
-                <outlet property="loadingView" destination="Pnr-aC-qID" id="bxs-0k-iMr"/>
-                <outlet property="notSendImageView" destination="ZIV-jS-oGl" id="yRj-jU-m4Y"/>
+                <outlet property="giftBigImageView" destination="4cl-jj-DsS" id="EX8-4j-kof"/>
+                <outlet property="giftCountLabel" destination="l41-v9-vBh" id="IKp-UI-CGX"/>
+                <outlet property="giftCountView" destination="mhF-jb-LH1" id="we6-oZ-u8g"/>
+                <outlet property="giftCreditLabel" destination="mue-fu-Fwa" id="kVX-Ju-WQI"/>
+                <outlet property="giftImageView" destination="iKm-b7-Qu8" id="l01-Yn-bjf"/>
+                <outlet property="giftLockImageView" destination="ZIV-jS-oGl" id="LVG-Bf-PCg"/>
+                <outlet property="giftNameLabel" destination="47x-lT-YTl" id="Jo0-pp-jPO"/>
             </connections>
             <point key="canvasLocation" x="-121" y="56"/>
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="Live_Gift_Nomal" width="44" height="44"/>
-        <image name="Live_bigGift_Logo" width="13" height="13"/>
-        <image name="live_notSend_icon" width="11" height="13"/>
+        <image name="Live_BigGift_Logo" width="16" height="16"/>
+        <image name="Live_NotSend_Icon" width="16" height="16"/>
     </resources>
 </document>

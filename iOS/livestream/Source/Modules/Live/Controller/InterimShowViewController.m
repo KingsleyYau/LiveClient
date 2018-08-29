@@ -46,6 +46,7 @@ typedef enum ShowButtonType {
 // 接口管理器
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
+
 #pragma mark - 倒数控制
 // 开播前倒数
 @property (strong) LSTimer *enterRoomTimer;
@@ -58,6 +59,7 @@ typedef enum ShowButtonType {
 #pragma mark - 余额及返点信息管理器
 @property (nonatomic, strong) LiveRoomCreditRebateManager *creditRebateManager;
 
+@property (nonatomic) BOOL isAddCredit;
 #pragma mark - 后台处理
 @property (nonatomic) BOOL isBackground;
 @property (nonatomic, strong) UIViewController *vc;
@@ -82,13 +84,16 @@ typedef enum ShowButtonType {
     
     [[LiveGobalManager manager] removeDelegate:self];
     
+    if (self.liveRoom.roomId.length > 0 && self.status != PreLiveStatus_EnterRoomAlready && self.status != PreLiveStatus_Error) {
+        NSLog(@"leaveRoom:%@",self.liveRoom.roomId);
+        [self.imManager leaveRoom:self.liveRoom.roomId];
+    }
+    
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
     
     // 赋值到全局变量, 用于前台计时
     [LiveGobalManager manager].liveRoom = nil;
-    [LiveGobalManager manager].player = nil;
-    [LiveGobalManager manager].publisher = nil;
     
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
@@ -165,8 +170,6 @@ typedef enum ShowButtonType {
     
     // 禁止锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    
-    [self getShowInfo];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -175,11 +178,28 @@ typedef enum ShowButtonType {
     // 隐藏导航栏
     self.navigationController.navigationBar.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
+    
+    if( !self.viewDidAppearEver || self.isAddCredit ) {
+        self.isAddCredit = NO;
+        self.closeBtn.hidden = YES;
+        self.reloadBtn.hidden = YES;
+        self.addBtn.hidden = YES;
+        self.bookBtn.hidden = YES;
+        self.tipsLabel.text = @"";
+        self.loading.hidden = NO;
+        [self getShowInfo];
+        [self performSelector:@selector(closeBtnShow) withObject:self afterDelay:10];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)closeBtnShow
+{
+    self.closeBtn.hidden = NO;
 }
 
 #pragma mark 获取用户信息
@@ -218,9 +238,8 @@ typedef enum ShowButtonType {
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.loading.hidden = YES;
-            NSLog(@"InterimShowViewController::getShowInfo( [请求进入指定直播间, %@], roomId : %@, leftSecToStart : %d )", BOOL2SUCCESS(success), self.liveRoom.roomId, item.leftSecToStart);
+            NSLog(@"InterimShowViewController::getShowInfo( [请求进入指定直播间, %@], roomId : %@, leftSecToStart : %d )", BOOL2SUCCESS(success), roomId, item.leftSecToStart);
             if (success) {
-                self.showView.hidden = YES;
                 if (!self.liveRoom.httpLiveRoom) {
                     LiveRoomInfoItemObject *httpLiveRoom = [[LiveRoomInfoItemObject alloc]init];
                     self.liveRoom.httpLiveRoom = httpLiveRoom;
@@ -245,6 +264,8 @@ typedef enum ShowButtonType {
             }
             else
             {
+                self.closeBtn.hidden = NO;
+                self.status = PreLiveStatus_Error;
                 if (errnum == HTTP_LCC_ERR_CONNECTFAIL) {
                     [self setButtonType:ShowButtonType_Reload];
                     [self handleError:LCC_ERR_CONNECTFAIL errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
@@ -253,7 +274,6 @@ typedef enum ShowButtonType {
                 {
                     [self setButtonType:ShowButtonType_Book];
                     self.tipsLabel.text = errmsg;
-                    [self getRecommendedShow];
                 }
             }
         });
@@ -271,7 +291,7 @@ typedef enum ShowButtonType {
             // 倒数完成, 停止计时器
             [self stopEnterRoomTimer];
             // 进入直播间
-            [self enterRoom];
+            [self pushShowRoom];
         });
     }
     
@@ -299,8 +319,11 @@ typedef enum ShowButtonType {
 
 #pragma mark 取消按钮点击事件
 - (IBAction)closeBtnDid:(UIButton *)sender {
-    NSLog(@"InterimShowViewController::closeBtnDid()");
-    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"InterimShowViewController::closeBtnDid() RoomId:%@",self.liveRoom.roomId);
+    self.status = PreLiveStatus_Canceling;
+//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
 }
 
 - (IBAction)bookBtnDid:(UIButton *)sender {
@@ -313,7 +336,8 @@ typedef enum ShowButtonType {
 }
 
 - (IBAction)addBtnDid:(UIButton *)sender {
-        [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    self.isAddCredit = YES;
+    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
 }
 
 - (IBAction)reloadBtnDid:(UIButton *)sender {
@@ -321,34 +345,12 @@ typedef enum ShowButtonType {
      [self getShowInfo];
 }
 
-#pragma mark - 请求推荐节目
-- (void)getRecommendedShow
-{
-    if (self.liveRoom.userId.length > 0) {
-       NSLog(@"InterimShowViewController::getRecommendedShow [请求推荐节目]");
-        LSShowListWithAnchorIdRequest * request = [[LSShowListWithAnchorIdRequest alloc]init];
-        request.start = 0;
-        request.step = 1;
-        request.anchorId = self.liveRoom.userId;
-        request.sortType = SHOWRECOMMENDLISTTYPE_ENDRECOMMEND;
-        request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *> * _Nullable array){
-            dispatch_async(dispatch_get_main_queue(), ^{
-                NSLog(@"InterimShowViewController::getRecommendedShow [请求推荐节目] success : %@, errmsg : %@, promoNum : %lu",success ? @"成功" : @"失败", errmsg, array.count);
-                if (success && array.count > 0) {
-                    self.showItem = [array objectAtIndex:0];
-                    self.showView.hidden = NO;
-                    [self.showView  updateUI:self.showItem];
-                }
-            });
-        };
-        
-        [self.sessionManager sendRequest:request];
-    }
-}
-
 #pragma mark 进入节目直播间
 - (void)pushShowRoom {
     
+    if (self.status == PreLiveStatus_Canceling) {
+        return;
+    }
     BOOL bFlag = NO;
     // TODO:发起进入指定直播间
     bFlag = [self.imManager enterRoom:self.liveRoom.roomId
@@ -361,7 +363,7 @@ typedef enum ShowButtonType {
                         }];
     if (!bFlag) {
         NSLog(@"InterimShowViewController::startRequest( [请求进入指定直播间失败], roomType : %d, userId : %@, roomId : %@ )", self.liveRoom.roomType, self.liveRoom.userId, self.liveRoom.roomId);
-         
+      
        [self handleError:LCC_ERR_CONNECTFAIL errMsg:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
     }
 }
@@ -377,6 +379,7 @@ typedef enum ShowButtonType {
                 // 更新本地登录信息
                 [LSLoginManager manager].loginItem.level = roomItem.manLevel;
                 self.liveRoom.imLiveRoom = roomItem;
+                self.liveRoom.liveShowType = roomItem.liveShowType;
                 if (roomItem.photoUrl.length > 0) {
                     self.liveRoom.photoUrl = roomItem.photoUrl;
                 }
@@ -391,48 +394,54 @@ typedef enum ShowButtonType {
                 // 进入成功不能显示退出按钮
                 self.closeBtn.hidden = YES;
                 
-                // self.statusLabel.text = DEBUG_STRING([NSString stringWithFormat:@"进入直播间成功, 准备跳转..."]);
-                if (roomItem.leftSeconds > 0) {
-                    
-                    // 更新流地址
-                    [self.liveRoom reset];
-                    self.liveRoom.playUrlArray = [roomItem.videoUrls copy];
-                    
-                    // 更新倒数时间
-                    self.enterRoomLeftSecond = roomItem.leftSeconds;
-                    
-                    if (self.enterRoomLeftSecond > 0) {
-                        self.status = PreLiveStatus_CountingDownForEnterRoom;
-                        
-                    }
+                if (roomItem.waitStart) {
+                    // 等待主播进入
+                    self.status = PreLiveStatus_WaitingEnterRoom;
+                    self.tipsLabel.text = NSLocalizedStringFromSelf(@"PRELIVE_TIPS_INVITE_SUCCESS");
                 } else {
-                    self.liveRoom.userId = roomItem.userId;
-                    // 马上进入直播间
-                    [self enterRoom];
+                    if (roomItem.leftSeconds > 0) {
+                        // 更新流地址
+                        [self.liveRoom reset];
+                        self.liveRoom.playUrlArray = [roomItem.videoUrls copy];
+                        
+                        // 更新倒数时间
+                        self.enterRoomLeftSecond = roomItem.leftSeconds;
+                        
+                        self.status = PreLiveStatus_CountingDownForEnterRoom;
+                        // 开始倒数
+                        [self stopEnterRoomTimer];
+                        [self startEnterRoomTimer];
+                        
+                    } else {
+                        self.liveRoom.userId = roomItem.userId;
+                        // 马上进入直播间
+                        [self enterRoom];
+                    }
                     
+                    // 设置余额及返点信息管理器
+                    IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
+                    imRebateItem.curCredit = roomItem.rebateInfo.curCredit;
+                    imRebateItem.curTime = roomItem.rebateInfo.curTime;
+                    imRebateItem.preCredit = roomItem.rebateInfo.preCredit;
+                    imRebateItem.preTime = roomItem.rebateInfo.preTime;
+                    [self.creditRebateManager setReBateItem:imRebateItem];
+                    [self.creditRebateManager setCredit:roomItem.credit];
                 }
-                
-                // 设置余额及返点信息管理器
-                IMRebateItem *imRebateItem = [[IMRebateItem alloc] init];
-                imRebateItem.curCredit = roomItem.rebateInfo.curCredit;
-                imRebateItem.curTime = roomItem.rebateInfo.curTime;
-                imRebateItem.preCredit = roomItem.rebateInfo.preCredit;
-                imRebateItem.preTime = roomItem.rebateInfo.preTime;
-                [self.creditRebateManager setReBateItem:imRebateItem];
-                [self.creditRebateManager setCredit:roomItem.credit];
-                
+
             } else {
                 // 请求进入失败, 进行错误处理
-                
                 [self handleError:errType errMsg:errMsg];
             }
+        }else {
+           [self handleError:errType errMsg:errMsg];
         }
 }
 
 - (void)handleError:(LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg {
     
     self.tipsLabel.text = errMsg;
-
+    self.closeBtn.hidden = NO;
+    self.status = PreLiveStatus_Error;
     if (errType == LCC_ERR_NO_CREDIT) {
         [self setButtonType:ShowButtonType_Add];
     }
@@ -473,17 +482,60 @@ typedef enum ShowButtonType {
         [LiveGobalManager manager].liveRoom = self.liveRoom;
     } else {
     
-      [self enterShowLiveRoom];
+        // TODO:进入节目直播间
+        self.isEnterRoom = YES;
+        ShowLiveViewController *vc = [[ShowLiveViewController alloc] initWithNibName:nil bundle:nil];
+        vc.liveRoom = self.liveRoom;
+        self.vc = vc;
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
-- (void)enterShowLiveRoom {
-    // TODO:进入节目直播间
-    self.isEnterRoom = YES;
-    ShowLiveViewController *vc = [[ShowLiveViewController alloc] initWithNibName:nil bundle:nil];
-    vc.liveRoom = self.liveRoom;
-    self.vc = vc;
-    [self.navigationController pushViewController:vc animated:YES];
+- (void)onRecvChangeVideoUrl:(NSString *_Nonnull)roomId isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*> *_Nonnull)playUrl userId:(NSString * _Nonnull)userId{
+    NSLog(@"InterimShowViewController::onRecvChangeVideoUrl( [接收观众／主播切换视频流通知], roomId : %@, playUrl : %@ userId:%@)", roomId, playUrl, userId);
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 更新流地址
+        [self.liveRoom reset];
+        self.liveRoom.playUrlArray = [playUrl copy];
+    });
+    
+}
+
+- (void)onRecvWaitStartOverNotice:(ImStartOverRoomObject *)item {
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"InterimShowViewController::onRecvWaitStartOverNotice( [接收主播进入直播间通知], roomId : %@ )", item.roomId);
+        
+        // 当前直播间通知, 并且是需要等待主播进入的
+        if ([item.roomId isEqualToString:self.liveRoom.roomId] && self.liveRoom.imLiveRoom.waitStart) {
+            // 等待进入房间中才处理
+            if (self.status == PreLiveStatus_WaitingEnterRoom) {
+
+                // 更新流地址
+                [self.liveRoom reset];
+                self.liveRoom.playUrlArray = [item.playUrl copy];
+                
+                // 更新倒数时间
+                self.enterRoomLeftSecond = item.leftSeconds;
+                
+                // 不能显示退出按钮
+                self.closeBtn.hidden = YES;
+                
+                if (self.enterRoomLeftSecond > 0) {
+                    self.status = PreLiveStatus_CountingDownForEnterRoom;
+                    
+                    // 开始倒数
+                    [self stopEnterRoomTimer];
+                    [self startEnterRoomTimer];
+                    
+                } else {
+                    // 马上进入直播间
+                    [self enterRoom];
+                }
+            }
+        }
+    });
 }
 
 #pragma mark - 后台处理
@@ -548,6 +600,10 @@ typedef enum ShowButtonType {
         
         // 已超时
         self.isTimeOut = YES;
+        
+        if (self.liveRoom.roomId.length > 0) {
+            [self.imManager leaveRoom:self.liveRoom.roomId];
+        }
     }
 }
 

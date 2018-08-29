@@ -85,11 +85,17 @@
 		FA075CC9209C51CC00AF2E04 /* RecvLeaveHangoutRoomNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA075CC0209C51CC00AF2E04 /* RecvLeaveHangoutRoomNoticeTask.cpp */; };
 		FA075CCF209C529100AF2E04 /* SendHangoutGiftTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA075CCD209C529000AF2E04 /* SendHangoutGiftTask.cpp */; };
 		FA1CEBD81F611B760010E671 /* ControlManPushTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */; };
+		FA228ACE20CE729C00A19A8D /* IMLoveLevelItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA228ACC20CE729B00A19A8D /* IMLoveLevelItemObject.m */; };
+		FA2C1EFF20D1F51100AC2ABF /* RecvPrivateMessageNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C1EFD20D1F51100AC2ABF /* RecvPrivateMessageNoticeTask.cpp */; };
+		FA2C1F0020D1F51100AC2ABF /* SendPrivateMessageTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA2C1EFE20D1F51100AC2ABF /* SendPrivateMessageTask.cpp */; };
 		FA3315C31F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */; };
+		FA34104B20B79AE400FF36A6 /* RecvTalentListNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA34104A20B79AE400FF36A6 /* RecvTalentListNoticeTask.cpp */; };
+		FA3C183020B2624500D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA3C182F20B2624400D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.cpp */; };
 		FA48E48F1F60EAA000D590E1 /* ImScheduleRoomObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E48E1F60EAA000D590E1 /* ImScheduleRoomObject.m */; };
 		FA48E4921F60EC2300D590E1 /* ImInviteIdItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E4911F60EC2300D590E1 /* ImInviteIdItemObject.m */; };
 		FA48E49B1F60F10300D590E1 /* ImLoginReturnObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA48E49A1F60F10300D590E1 /* ImLoginReturnObject.m */; };
 		FA5254671F7C8BDE00A997FD /* ImTalentReplyObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */; };
+		FA59BD0520AFBBAD00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA59BD0320AFBBAC00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.cpp */; };
 		FA6357A82088537700CE8374 /* RecvRetTicketNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6357A62088537600CE8374 /* RecvRetTicketNoticeTask.cpp */; };
 		FA6E142920872F91004F8B92 /* RecvCancelProgramNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E142520872F91004F8B92 /* RecvCancelProgramNoticeTask.cpp */; };
 		FA6E142A20872F91004F8B92 /* RecvProgramPlayNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6E142720872F91004F8B92 /* RecvProgramPlayNoticeTask.cpp */; };
@@ -106,6 +112,12 @@
 		FA6F7FA4204FE5C400AF5534 /* ZBRecvControlManPushNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA6F7FA2204FE5C400AF5534 /* ZBRecvControlManPushNoticeTask.cpp */; };
 		FA6F7FA8204FEC9400AF5534 /* ZBImControlPushItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA6F7FA7204FEC9400AF5534 /* ZBImControlPushItemObject.m */; };
 		FA795655209FF13C00D68C18 /* IMOngoingShowItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA795654209FF13C00D68C18 /* IMOngoingShowItemObject.m */; };
+		FA7AD2A420A68578005AF56D /* SendAnchorHangoutLiveChatTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2A320A68578005AF56D /* SendAnchorHangoutLiveChatTask.cpp */; };
+		FA7AD2A720A688D4005AF56D /* RecvAnchorHangoutChatNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2A620A688D3005AF56D /* RecvAnchorHangoutChatNoticeTask.cpp */; };
+		FA7AD2AB20A695A7005AF56D /* IMRecvAnchorHangoutChatItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2AA20A695A7005AF56D /* IMRecvAnchorHangoutChatItemObject.m */; };
+		FA7AD2AE20A69CBD005AF56D /* SendHangoutLiveChatTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2AC20A69CBD005AF56D /* SendHangoutLiveChatTask.cpp */; };
+		FA7AD2B120A6B80B005AF56D /* RecvHangoutChatNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2AF20A6B80A005AF56D /* RecvHangoutChatNoticeTask.cpp */; };
+		FA7AD2B520A6C013005AF56D /* IMRecvHangoutChatItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7AD2B320A6C012005AF56D /* IMRecvHangoutChatItemObject.m */; };
 		FA7C1DDA208F267A00FE5A7B /* RecvAnchorChangeStatusNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DD4208F267800FE5A7B /* RecvAnchorChangeStatusNoticeTask.cpp */; };
 		FA7C1DDB208F267A00FE5A7B /* RecvAnchorProgramPlayNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DD5208F267800FE5A7B /* RecvAnchorProgramPlayNoticeTask.cpp */; };
 		FA7C1DDE208F2E3A00FE5A7B /* IMAnchorProgramItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7C1DDC208F2E3900FE5A7B /* IMAnchorProgramItemObject.m */; };
@@ -142,6 +154,10 @@
 		FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA92A5981F665B39004F239F /* GetInviteInfoTask.cpp */; };
 		FA938EC32052771500B764CB /* ZBRecvInvitationAcceptNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA938EC12052771400B764CB /* ZBRecvInvitationAcceptNoticeTask.cpp */; };
 		FA97FB091FD8E61E00880178 /* SendInstantInviteUserReportTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA97FB071FD8E61D00880178 /* SendInstantInviteUserReportTask.cpp */; };
+		FA992BAF20F2EC7A0088D40A /* RecvLoiNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA992BAB20F2EC790088D40A /* RecvLoiNoticeTask.cpp */; };
+		FA992BB020F2EC7A0088D40A /* RecvEMFNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA992BAD20F2EC7A0088D40A /* RecvEMFNoticeTask.cpp */; };
+		FAA9A99620A3CF43002AB1CD /* ControlManPushHangoutTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAA9A99520A3CF43002AB1CD /* ControlManPushHangoutTask.cpp */; };
+		FAA9A9B020A435FA002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAA9A9AF20A435F9002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.cpp */; };
 		FAB60C85208D8DB900901BBD /* IMProgramItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB60C84208D8DB800901BBD /* IMProgramItemObject.m */; };
 		FAB60CA2208E102A00901BBD /* RecvAnchorLeaveRoomNoticeTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB60CA1208E102900901BBD /* RecvAnchorLeaveRoomNoticeTask.cpp */; };
 		FAB694151F5EA11C008A64B6 /* PublicRoomInTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FAB694131F5EA11C008A64B6 /* PublicRoomInTask.cpp */; };
@@ -371,6 +387,14 @@
 		FA075CCE209C529000AF2E04 /* SendHangoutGiftTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendHangoutGiftTask.h; sourceTree = "<group>"; };
 		FA1CEBD61F611B760010E671 /* ControlManPushTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlManPushTask.cpp; sourceTree = "<group>"; };
 		FA1CEBD71F611B760010E671 /* ControlManPushTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlManPushTask.h; sourceTree = "<group>"; };
+		FA228ACB20CE6E5F00A19A8D /* IMLoveLevelItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMLoveLevelItem.h; path = item/IMLoveLevelItem.h; sourceTree = "<group>"; };
+		FA228ACC20CE729B00A19A8D /* IMLoveLevelItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMLoveLevelItemObject.m; sourceTree = "<group>"; };
+		FA228ACD20CE729C00A19A8D /* IMLoveLevelItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMLoveLevelItemObject.h; sourceTree = "<group>"; };
+		FA2C1EFB20D1F51000AC2ABF /* RecvPrivateMessageNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvPrivateMessageNoticeTask.h; sourceTree = "<group>"; };
+		FA2C1EFC20D1F51100AC2ABF /* SendPrivateMessageTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendPrivateMessageTask.h; sourceTree = "<group>"; };
+		FA2C1EFD20D1F51100AC2ABF /* RecvPrivateMessageNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvPrivateMessageNoticeTask.cpp; sourceTree = "<group>"; };
+		FA2C1EFE20D1F51100AC2ABF /* SendPrivateMessageTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendPrivateMessageTask.cpp; sourceTree = "<group>"; };
+		FA2C1F0120D1FC8500AC2ABF /* IMPrivateMessageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMPrivateMessageItem.h; path = item/IMPrivateMessageItem.h; sourceTree = "<group>"; };
 		FA2C7DEB207E04680035B3EB /* AnchorRecvGiftItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnchorRecvGiftItem.h; sourceTree = "<group>"; };
 		FA2C7DEC207E04690035B3EB /* IMAnchorKnockRequestItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMAnchorKnockRequestItem.h; sourceTree = "<group>"; };
 		FA2C7DED207E04690035B3EB /* AnchorGiftNumItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnchorGiftNumItem.h; sourceTree = "<group>"; };
@@ -387,6 +411,10 @@
 		FA2C7DF8207E046B0035B3EB /* IMAnchorRecvEnterRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMAnchorRecvEnterRoomItem.h; sourceTree = "<group>"; };
 		FA3315C11F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvGetHonorNoticeTask.cpp; sourceTree = "<group>"; };
 		FA3315C21F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvGetHonorNoticeTask.h; sourceTree = "<group>"; };
+		FA34104920B79AE300FF36A6 /* RecvTalentListNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvTalentListNoticeTask.h; sourceTree = "<group>"; };
+		FA34104A20B79AE400FF36A6 /* RecvTalentListNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvTalentListNoticeTask.cpp; sourceTree = "<group>"; };
+		FA3C182E20B2624400D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvAnchorCountDownEnterRoomNoticeTask.h; sourceTree = "<group>"; };
+		FA3C182F20B2624400D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvAnchorCountDownEnterRoomNoticeTask.cpp; sourceTree = "<group>"; };
 		FA48E48A1F60D46000D590E1 /* PrivateInviteItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PrivateInviteItem.h; path = item/PrivateInviteItem.h; sourceTree = "<group>"; };
 		FA48E48B1F60DB3C00D590E1 /* ScheduleRoomItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ScheduleRoomItem.h; path = item/ScheduleRoomItem.h; sourceTree = "<group>"; };
 		FA48E48C1F60E14F00D590E1 /* LoginReturnItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginReturnItem.h; path = item/LoginReturnItem.h; sourceTree = "<group>"; };
@@ -399,6 +427,8 @@
 		FA5254641F7C7ECC00A997FD /* TalentReplyItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TalentReplyItem.h; path = item/TalentReplyItem.h; sourceTree = "<group>"; };
 		FA5254651F7C8BDE00A997FD /* ImTalentReplyObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImTalentReplyObject.h; sourceTree = "<group>"; };
 		FA5254661F7C8BDE00A997FD /* ImTalentReplyObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImTalentReplyObject.m; sourceTree = "<group>"; };
+		FA59BD0320AFBBAC00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvZBAnchorCountDownEnterRoomNoticeTask.cpp; sourceTree = "<group>"; };
+		FA59BD0420AFBBAD00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvZBAnchorCountDownEnterRoomNoticeTask.h; sourceTree = "<group>"; };
 		FA6357A62088537600CE8374 /* RecvRetTicketNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvRetTicketNoticeTask.cpp; sourceTree = "<group>"; };
 		FA6357A72088537700CE8374 /* RecvRetTicketNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvRetTicketNoticeTask.h; sourceTree = "<group>"; };
 		FA6E142520872F91004F8B92 /* RecvCancelProgramNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvCancelProgramNoticeTask.cpp; sourceTree = "<group>"; };
@@ -434,6 +464,20 @@
 		FA795652209FE52B00D68C18 /* LSIMOngoingshowItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LSIMOngoingshowItem.h; path = item/LSIMOngoingshowItem.h; sourceTree = "<group>"; };
 		FA795653209FF13C00D68C18 /* IMOngoingShowItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMOngoingShowItemObject.h; sourceTree = "<group>"; };
 		FA795654209FF13C00D68C18 /* IMOngoingShowItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMOngoingShowItemObject.m; sourceTree = "<group>"; };
+		FA7AD2A220A68578005AF56D /* SendAnchorHangoutLiveChatTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendAnchorHangoutLiveChatTask.h; sourceTree = "<group>"; };
+		FA7AD2A320A68578005AF56D /* SendAnchorHangoutLiveChatTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendAnchorHangoutLiveChatTask.cpp; sourceTree = "<group>"; };
+		FA7AD2A520A688D3005AF56D /* RecvAnchorHangoutChatNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvAnchorHangoutChatNoticeTask.h; sourceTree = "<group>"; };
+		FA7AD2A620A688D3005AF56D /* RecvAnchorHangoutChatNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvAnchorHangoutChatNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7AD2A820A68B97005AF56D /* IMAnchorRecvHangoutChatItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMAnchorRecvHangoutChatItem.h; sourceTree = "<group>"; };
+		FA7AD2A920A695A6005AF56D /* IMRecvAnchorHangoutChatItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMRecvAnchorHangoutChatItemObject.h; sourceTree = "<group>"; };
+		FA7AD2AA20A695A7005AF56D /* IMRecvAnchorHangoutChatItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMRecvAnchorHangoutChatItemObject.m; sourceTree = "<group>"; };
+		FA7AD2AC20A69CBD005AF56D /* SendHangoutLiveChatTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendHangoutLiveChatTask.cpp; sourceTree = "<group>"; };
+		FA7AD2AD20A69CBD005AF56D /* SendHangoutLiveChatTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendHangoutLiveChatTask.h; sourceTree = "<group>"; };
+		FA7AD2AF20A6B80A005AF56D /* RecvHangoutChatNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvHangoutChatNoticeTask.cpp; sourceTree = "<group>"; };
+		FA7AD2B020A6B80A005AF56D /* RecvHangoutChatNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvHangoutChatNoticeTask.h; sourceTree = "<group>"; };
+		FA7AD2B220A6BAA0005AF56D /* IMRecvHangoutChatItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMRecvHangoutChatItem.h; path = item/IMRecvHangoutChatItem.h; sourceTree = "<group>"; };
+		FA7AD2B320A6C012005AF56D /* IMRecvHangoutChatItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMRecvHangoutChatItemObject.m; sourceTree = "<group>"; };
+		FA7AD2B420A6C012005AF56D /* IMRecvHangoutChatItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMRecvHangoutChatItemObject.h; sourceTree = "<group>"; };
 		FA7C1DD2208F223600FE5A7B /* IMAnchorProgramInfoItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMAnchorProgramInfoItem.h; sourceTree = "<group>"; };
 		FA7C1DD4208F267800FE5A7B /* RecvAnchorChangeStatusNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvAnchorChangeStatusNoticeTask.cpp; sourceTree = "<group>"; };
 		FA7C1DD5208F267800FE5A7B /* RecvAnchorProgramPlayNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvAnchorProgramPlayNoticeTask.cpp; sourceTree = "<group>"; };
@@ -509,6 +553,14 @@
 		FA938EC22052771500B764CB /* ZBRecvInvitationAcceptNoticeTask.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZBRecvInvitationAcceptNoticeTask.h; sourceTree = "<group>"; };
 		FA97FB071FD8E61D00880178 /* SendInstantInviteUserReportTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SendInstantInviteUserReportTask.cpp; sourceTree = "<group>"; };
 		FA97FB081FD8E61D00880178 /* SendInstantInviteUserReportTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SendInstantInviteUserReportTask.h; sourceTree = "<group>"; };
+		FA992BAB20F2EC790088D40A /* RecvLoiNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvLoiNoticeTask.cpp; sourceTree = "<group>"; };
+		FA992BAC20F2EC7A0088D40A /* RecvLoiNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvLoiNoticeTask.h; sourceTree = "<group>"; };
+		FA992BAD20F2EC7A0088D40A /* RecvEMFNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvEMFNoticeTask.cpp; sourceTree = "<group>"; };
+		FA992BAE20F2EC7A0088D40A /* RecvEMFNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvEMFNoticeTask.h; sourceTree = "<group>"; };
+		FAA9A99420A3CF42002AB1CD /* ControlManPushHangoutTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ControlManPushHangoutTask.h; sourceTree = "<group>"; };
+		FAA9A99520A3CF43002AB1CD /* ControlManPushHangoutTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ControlManPushHangoutTask.cpp; sourceTree = "<group>"; };
+		FAA9A9AE20A435F9002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecvAnchorControlManPushHangoutNoticeTask.h; sourceTree = "<group>"; };
+		FAA9A9AF20A435F9002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RecvAnchorControlManPushHangoutNoticeTask.cpp; sourceTree = "<group>"; };
 		FAB60C76208D65C800901BBD /* IMProgramItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IMProgramItem.h; path = item/IMProgramItem.h; sourceTree = "<group>"; };
 		FAB60C83208D8DB800901BBD /* IMProgramItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IMProgramItemObject.h; sourceTree = "<group>"; };
 		FAB60C84208D8DB800901BBD /* IMProgramItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IMProgramItemObject.m; sourceTree = "<group>"; };
@@ -619,6 +671,24 @@
 		500B45061EE7D19500C89375 /* ImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA992BAD20F2EC7A0088D40A /* RecvEMFNoticeTask.cpp */,
+				FA992BAE20F2EC7A0088D40A /* RecvEMFNoticeTask.h */,
+				FA992BAB20F2EC790088D40A /* RecvLoiNoticeTask.cpp */,
+				FA992BAC20F2EC7A0088D40A /* RecvLoiNoticeTask.h */,
+				FA2C1EFD20D1F51100AC2ABF /* RecvPrivateMessageNoticeTask.cpp */,
+				FA2C1EFB20D1F51000AC2ABF /* RecvPrivateMessageNoticeTask.h */,
+				FA2C1EFE20D1F51100AC2ABF /* SendPrivateMessageTask.cpp */,
+				FA2C1EFC20D1F51100AC2ABF /* SendPrivateMessageTask.h */,
+				FA34104A20B79AE400FF36A6 /* RecvTalentListNoticeTask.cpp */,
+				FA34104920B79AE300FF36A6 /* RecvTalentListNoticeTask.h */,
+				FA3C182F20B2624400D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.cpp */,
+				FA3C182E20B2624400D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.h */,
+				FA7AD2AF20A6B80A005AF56D /* RecvHangoutChatNoticeTask.cpp */,
+				FA7AD2B020A6B80A005AF56D /* RecvHangoutChatNoticeTask.h */,
+				FA7AD2AC20A69CBD005AF56D /* SendHangoutLiveChatTask.cpp */,
+				FA7AD2AD20A69CBD005AF56D /* SendHangoutLiveChatTask.h */,
+				FAA9A99520A3CF43002AB1CD /* ControlManPushHangoutTask.cpp */,
+				FAA9A99420A3CF42002AB1CD /* ControlManPushHangoutTask.h */,
 				FA075CCD209C529000AF2E04 /* SendHangoutGiftTask.cpp */,
 				FA075CCE209C529000AF2E04 /* SendHangoutGiftTask.h */,
 				FA075CB8209C51CA00AF2E04 /* EnterHangoutRoomTask.cpp */,
@@ -764,6 +834,10 @@
 		506BC2791F58FD91001C2962 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FA228ACD20CE729C00A19A8D /* IMLoveLevelItemObject.h */,
+				FA228ACC20CE729B00A19A8D /* IMLoveLevelItemObject.m */,
+				FA7AD2B420A6C012005AF56D /* IMRecvHangoutChatItemObject.h */,
+				FA7AD2B320A6C012005AF56D /* IMRecvHangoutChatItemObject.m */,
 				FA795653209FF13C00D68C18 /* IMOngoingShowItemObject.h */,
 				FA795654209FF13C00D68C18 /* IMOngoingShowItemObject.m */,
 				FA031F7F209AB8C100BC39B2 /* IMGiftNumItemObject.h */,
@@ -863,6 +937,9 @@
 		FAB694161F5EA2D3008A64B6 /* item */ = {
 			isa = PBXGroup;
 			children = (
+				FA2C1F0120D1FC8500AC2ABF /* IMPrivateMessageItem.h */,
+				FA228ACB20CE6E5F00A19A8D /* IMLoveLevelItem.h */,
+				FA7AD2B220A6BAA0005AF56D /* IMRecvHangoutChatItem.h */,
 				FA795652209FE52B00D68C18 /* LSIMOngoingshowItem.h */,
 				FA031F5E209AB89500BC39B2 /* IMGiftNumItem.h */,
 				FA031F60209AB89600BC39B2 /* IMKnockRequestItem.h */,
@@ -893,6 +970,8 @@
 		FACAA13F204CD31D00B3F616 /* ZBModel */ = {
 			isa = PBXGroup;
 			children = (
+				FA7AD2A920A695A6005AF56D /* IMRecvAnchorHangoutChatItemObject.h */,
+				FA7AD2AA20A695A7005AF56D /* IMRecvAnchorHangoutChatItemObject.m */,
 				FA7D454A209162D000881E5E /* IMAnchorRecommendHangoutItemObject.h */,
 				FA7D4547209162CF00881E5E /* IMAnchorRecommendHangoutItemObject.m */,
 				FA7D4548209162D000881E5E /* IMAnchorRecvDealInviteItemObject.h */,
@@ -944,6 +1023,14 @@
 		FAF9CA5820493BF6007E16D4 /* ZBImClient */ = {
 			isa = PBXGroup;
 			children = (
+				FA59BD0320AFBBAC00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.cpp */,
+				FA59BD0420AFBBAD00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.h */,
+				FA7AD2A620A688D3005AF56D /* RecvAnchorHangoutChatNoticeTask.cpp */,
+				FA7AD2A520A688D3005AF56D /* RecvAnchorHangoutChatNoticeTask.h */,
+				FA7AD2A320A68578005AF56D /* SendAnchorHangoutLiveChatTask.cpp */,
+				FA7AD2A220A68578005AF56D /* SendAnchorHangoutLiveChatTask.h */,
+				FAA9A9AF20A435F9002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.cpp */,
+				FAA9A9AE20A435F9002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.h */,
 				FA075C96209C46F700AF2E04 /* RecvAnchorShowMsgNoticeTask.cpp */,
 				FA075C97209C46F800AF2E04 /* RecvAnchorShowMsgNoticeTask.h */,
 				FA7D452E209162AC00881E5E /* RecvAnchorOtherInviteHangoutNoticeTask.cpp */,
@@ -1067,6 +1154,7 @@
 		FAF9CA5E20493BF6007E16D4 /* ZBitem */ = {
 			isa = PBXGroup;
 			children = (
+				FA7AD2A820A68B97005AF56D /* IMAnchorRecvHangoutChatItem.h */,
 				FA7C1DD2208F223600FE5A7B /* IMAnchorProgramInfoItem.h */,
 				FA2C7DED207E04690035B3EB /* AnchorGiftNumItem.h */,
 				FA2C7DEE207E04690035B3EB /* AnchorHangoutInviteItem.h */,
@@ -1154,11 +1242,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAA9A9B020A435FA002AB1CD /* RecvAnchorControlManPushHangoutNoticeTask.cpp in Sources */,
 				FA6F7F94204FB42800AF5534 /* ZBRecvLeaveRoomNoticeTask.cpp in Sources */,
 				FAC7FD38204A2AD300022FBA /* ZBKickOffTask.cpp in Sources */,
 				FA3315C31F9EE1CC001A7A93 /* RecvGetHonorNoticeTask.cpp in Sources */,
 				FAC7FD32204A2AD300022FBA /* IZBTransportDataHandler.cpp in Sources */,
 				FA92A59A1F665B39004F239F /* GetInviteInfoTask.cpp in Sources */,
+				FA34104B20B79AE400FF36A6 /* RecvTalentListNoticeTask.cpp in Sources */,
 				FA7D4557209162D300881E5E /* OtherAnchorItemObject.m in Sources */,
 				5055918B1EF3E4AB000AF03A /* KickOffTask.cpp in Sources */,
 				500B45511EE7D19500C89375 /* TransportClient.cpp in Sources */,
@@ -1172,6 +1262,7 @@
 				FA97FB091FD8E61E00880178 /* SendInstantInviteUserReportTask.cpp in Sources */,
 				FACAA148204CD31D00B3F616 /* ZBImInviteIdItemObject.m in Sources */,
 				506BC2651F58FCE1001C2962 /* RecvLevelUpNoticeTask.cpp in Sources */,
+				FAA9A99620A3CF43002AB1CD /* ControlManPushHangoutTask.cpp in Sources */,
 				500B45521EE7D19500C89375 /* TransportDataHandler.cpp in Sources */,
 				FA6E142A20872F91004F8B92 /* RecvProgramPlayNoticeTask.cpp in Sources */,
 				FA031F88209AB8C200BC39B2 /* IMGiftNumItemObject.m in Sources */,
@@ -1182,8 +1273,10 @@
 				FA8A85E31F678FB20003EA17 /* ImStartOverRoomObject.m in Sources */,
 				FAC7FD0A204A2AD300022FBA /* IZBImClient.cpp in Sources */,
 				FA075CC7209C51CC00AF2E04 /* RecvHangoutGiftNoticeTask.cpp in Sources */,
+				FA992BAF20F2EC7A0088D40A /* RecvLoiNoticeTask.cpp in Sources */,
 				FA7C1DDB208F267A00FE5A7B /* RecvAnchorProgramPlayNoticeTask.cpp in Sources */,
 				506BC2871F58FD91001C2962 /* GiftInfoObject.m in Sources */,
+				FA7AD2A420A68578005AF56D /* SendAnchorHangoutLiveChatTask.cpp in Sources */,
 				FA7D45232091629900881E5E /* RecvAnchorEnterHangoutRoomNoticeTask.cpp in Sources */,
 				506BC25B1F58FCE1001C2962 /* RecvBackpackUpdateNoticeTask.cpp in Sources */,
 				506BC2631F58FCE1001C2962 /* RecvLeaveRoomNoticeTask.cpp in Sources */,
@@ -1197,21 +1290,27 @@
 				FA7D455C209162D300881E5E /* IMAnchorRecvGiftItemObject.m in Sources */,
 				FAC7FD3D204A2AD300022FBA /* ZBRecvSendToastNoticeTask.cpp in Sources */,
 				FA075CC8209C51CC00AF2E04 /* RecvLackCreditangoutNoticeTask.cpp in Sources */,
+				FA2C1EFF20D1F51100AC2ABF /* RecvPrivateMessageNoticeTask.cpp in Sources */,
 				FA031F84209AB8C200BC39B2 /* IMRecommendHangoutItemObject.m in Sources */,
+				FA7AD2AE20A69CBD005AF56D /* SendHangoutLiveChatTask.cpp in Sources */,
+				FA7AD2B520A6C013005AF56D /* IMRecvHangoutChatItemObject.m in Sources */,
 				506BC2741F58FCE1001C2962 /* SendGiftTask.cpp in Sources */,
 				506BC2661F58FCE1001C2962 /* RecvLoveLevelUpNoticeTask.cpp in Sources */,
 				FA7D4542209162C300881E5E /* IMAnchorKnockRequestItemObject.m in Sources */,
 				FA075CC2209C51CC00AF2E04 /* RecvDealInviteHangoutNoticeTask.cpp in Sources */,
+				FA59BD0520AFBBAD00EB42A1 /* RecvZBAnchorCountDownEnterRoomNoticeTask.cpp in Sources */,
 				506BC26A1F58FCE1001C2962 /* RecvScheduledInviteUserNoticeTask.cpp in Sources */,
 				FA6F7F88204FB42800AF5534 /* ZBSendPrivateLiveInviteTask.cpp in Sources */,
 				FA6F7F57204FB41400AF5534 /* ZBGetInviteInfoTask.cpp in Sources */,
 				FA7D45242091629900881E5E /* RecvAnchorLeaveHangoutRoomNoticeTask.cpp in Sources */,
 				FA8A85E71F67B3230003EA17 /* ImBookingReplyObject.m in Sources */,
 				506BC2731F58FCE1001C2962 /* SendCancelPrivateLiveInviteTask.cpp in Sources */,
+				FA2C1F0020D1F51100AC2ABF /* SendPrivateMessageTask.cpp in Sources */,
 				506BC26C1F58FCE1001C2962 /* RecvSendChatNoticeTask.cpp in Sources */,
 				506BC26F1F58FCE1001C2962 /* RecvSendToastNoticeTask.cpp in Sources */,
 				FA48E4921F60EC2300D590E1 /* ImInviteIdItemObject.m in Sources */,
 				FA7C1DDA208F267A00FE5A7B /* RecvAnchorChangeStatusNoticeTask.cpp in Sources */,
+				FA992BB020F2EC7A0088D40A /* RecvEMFNoticeTask.cpp in Sources */,
 				FA031F85209AB8C200BC39B2 /* IMRecvEnterRoomItemObject.m in Sources */,
 				500B45471EE7D19500C89375 /* ITransportDataHandler.cpp in Sources */,
 				506BC2711F58FCE1001C2962 /* RoomInTask.cpp in Sources */,
@@ -1235,6 +1334,7 @@
 				506BC28A1F58FD91001C2962 /* RoomTopFanItemObject.m in Sources */,
 				506BC2761F58FCE1001C2962 /* SendPrivateLiveInviteTask.cpp in Sources */,
 				500B45421EE7D19500C89375 /* IImClient.cpp in Sources */,
+				FA7AD2B120A6B80B005AF56D /* RecvHangoutChatNoticeTask.cpp in Sources */,
 				FA7D45262091629900881E5E /* RecvAnchorInvitationHangoutNoticeTask.cpp in Sources */,
 				FAC7FD15204A2AD300022FBA /* ZBTransportDataHandler.cpp in Sources */,
 				FA075CC5209C51CC00AF2E04 /* EnterHangoutRoomTask.cpp in Sources */,
@@ -1278,6 +1378,7 @@
 				FA7D4532209162AC00881E5E /* RecvAnchorOtherInviteHangoutNoticeTask.cpp in Sources */,
 				FA7D45292091629900881E5E /* RecvAnchorDealInviteHangoutNoticeTask.cpp in Sources */,
 				506BC25C1F58FCE1001C2962 /* RecvBookingNoticeTask.cpp in Sources */,
+				FA228ACE20CE729C00A19A8D /* IMLoveLevelItemObject.m in Sources */,
 				FAC7FD1A204A2AD300022FBA /* ZBTransportPacketHandler.cpp in Sources */,
 				FA84AF3A1F5F8B1000D91411 /* ImLiveRoomObject.m in Sources */,
 				FA075CC9209C51CC00AF2E04 /* RecvLeaveHangoutRoomNoticeTask.cpp in Sources */,
@@ -1291,6 +1392,7 @@
 				FA6F7F99204FB42800AF5534 /* ZBRecvInstantInviteUserNoticeTask.cpp in Sources */,
 				500B45491EE7D19500C89375 /* LoginTask.cpp in Sources */,
 				500B453C1EE7D19500C89375 /* CommonParsing.cpp in Sources */,
+				FA7AD2A720A688D4005AF56D /* RecvAnchorHangoutChatNoticeTask.cpp in Sources */,
 				506BC26D1F58FCE1001C2962 /* RecvSendGiftNoticeTask.cpp in Sources */,
 				500B45531EE7D19500C89375 /* TransportPacketHandler.cpp in Sources */,
 				FA6F7F9C204FB42800AF5534 /* ZBRecvBookingNoticeTask.cpp in Sources */,
@@ -1315,6 +1417,7 @@
 				FA5254671F7C8BDE00A997FD /* ImTalentReplyObject.m in Sources */,
 				FA84AF3D1F5F9B9800D91411 /* RecvSendSystemNoticeTask.cpp in Sources */,
 				FAC7FD09204A2AD300022FBA /* ZBSendLiveChatTask.cpp in Sources */,
+				FA7AD2AB20A695A7005AF56D /* IMRecvAnchorHangoutChatItemObject.m in Sources */,
 				FA075CC4209C51CC00AF2E04 /* RecvRecommendHangoutNoticeTask.cpp in Sources */,
 				FA7D4556209162D300881E5E /* IMAnchorRecommendHangoutItemObject.m in Sources */,
 				FAC7FD25204A2AD300022FBA /* IZBThreadHandler.cpp in Sources */,
@@ -1324,6 +1427,7 @@
 				FACAA14A204CD31D00B3F616 /* ZBImLoginRoomObject.m in Sources */,
 				506BC2691F58FCE1001C2962 /* RecvRoomKickoffNoticeTask.cpp in Sources */,
 				FAC7FD2F204A2AD300022FBA /* ZBLoginTask.cpp in Sources */,
+				FA3C183020B2624500D7ABFC /* RecvAnchorCountDownEnterRoomNoticeTask.cpp in Sources */,
 				506BC25E1F58FCE1001C2962 /* RecvCreditNoticeTask.cpp in Sources */,
 				500B45501EE7D19500C89375 /* TaskMapManager.cpp in Sources */,
 				FAC7FD3A204A2AD300022FBA /* ZBTransportClient.cpp in Sources */,

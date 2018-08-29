@@ -1,6 +1,8 @@
 #ifdef MG_MODULE_LINES
 #line 1 "mongoose/src/common.h"
 #endif
+#include <common/IAutoLockWrapper.h>
+
 /*
  * Copyright (c) 2004-2013 Sergey Lyubka
  * Copyright (c) 2013-2015 Cesanta Software Limited
@@ -3299,6 +3301,10 @@ struct mg_connection {
   void *mgr_data; /* Implementation-specific event manager's data. */
   struct mg_iface *iface;
   unsigned long flags;
+    // 增加websocket发送数据的锁
+    struct IAutoLockTag * webSocketSendDataLock;
+    
+    
 /* Flags set by Mongoose */
 #define MG_F_LISTENING (1 << 0)          /* This connection is listening */
 #define MG_F_UDP (1 << 1)                /* This connection is UDP */

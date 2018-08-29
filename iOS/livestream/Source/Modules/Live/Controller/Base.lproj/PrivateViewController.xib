@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,22 +30,22 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TOh-ki-9Hu" userLabel="Bg Image View">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <color key="backgroundColor" red="0.1450980392" green="0.1450980392" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jaE-2b-OdZ" userLabel="Title Bg ImageView">
-                    <rect key="frame" x="0.0" y="20" width="414" height="60"/>
+                    <rect key="frame" x="0.0" y="20" width="375" height="60"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="9sN-i0-FDQ"/>
                     </constraints>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Lr-s9-7i7" userLabel="Lady Head View">
-                    <rect key="frame" x="10" y="28" width="168.66666666666666" height="45"/>
+                    <rect key="frame" x="10" y="28" width="169" height="45"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="QKZ-4l-Nu0" userLabel="Lady ImangeView" customClass="LSUITapImageView">
                             <rect key="frame" x="2" y="2" width="41" height="41"/>
@@ -55,7 +55,7 @@
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XxR-vI-fte" userLabel="Follow Button">
-                            <rect key="frame" x="129.66666666666666" y="6.6666666666666643" width="32" height="32"/>
+                            <rect key="frame" x="130" y="6.5" width="32" height="32"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="XxR-vI-fte" secondAttribute="height" multiplier="1:1" id="IG6-9o-mc5"/>
                                 <constraint firstAttribute="width" constant="32" id="g0L-e9-Juv"/>
@@ -66,19 +66,19 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Randy" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jl5-eC-38s" userLabel="Laddy Name Label">
-                            <rect key="frame" x="51.000000000000007" y="6.0000000000000009" width="71.666666666666686" height="14.333333333333336"/>
+                            <rect key="frame" x="51" y="6" width="72" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One-on-One" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0qe-sQ-nib" userLabel="Live Room Type Label">
-                            <rect key="frame" x="51.000000000000007" y="25.333333333333332" width="71.666666666666686" height="14.333333333333332"/>
+                            <rect key="frame" x="51" y="25.5" width="72" height="14"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PzM-a5-E3r" userLabel="Liver Homepage Btn">
-                            <rect key="frame" x="0.0" y="0.0" width="122.66666666666667" height="45"/>
+                            <rect key="frame" x="0.0" y="0.0" width="123" height="45"/>
                             <connections>
                                 <action selector="pushToAnchorPersonal:" destination="-1" eventType="touchUpInside" id="Sjl-fw-Nn1"/>
                             </connections>
@@ -105,7 +105,7 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iwf-Rl-g11" userLabel="Intimacy Head View">
-                    <rect key="frame" x="186.66666666666666" y="36" width="90.999999999999972" height="30"/>
+                    <rect key="frame" x="187" y="36" width="91" height="30"/>
                     <subviews>
                         <view alpha="0.28000000000000003" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZJD-8v-j31" userLabel="Intimacy Bg View">
                             <rect key="frame" x="0.0" y="0.0" width="91" height="30"/>
@@ -148,7 +148,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="23g-vX-uiz" userLabel="Cancel Btn">
-                    <rect key="frame" x="369" y="33.333333333333336" width="35" height="35.000000000000007"/>
+                    <rect key="frame" x="330" y="33.5" width="35" height="35"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="35" id="27j-yB-YOd"/>
                         <constraint firstAttribute="width" secondItem="23g-vX-uiz" secondAttribute="height" multiplier="1:1" id="a7U-bp-gCb"/>
@@ -158,8 +158,15 @@
                         <action selector="closeAction:" destination="-1" eventType="touchUpInside" id="V3A-Bp-Tub"/>
                     </connections>
                 </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fb-FF-ozO" userLabel="Hangout Button">
+                    <rect key="frame" x="188" y="38" width="72" height="25"/>
+                    <state key="normal" image="Navigation_Right_Button"/>
+                    <connections>
+                        <action selector="hangoutAction:" destination="-1" eventType="touchUpInside" id="OxK-cI-IJa"/>
+                    </connections>
+                </button>
             </subviews>
-            <color key="backgroundColor" red="0.36470588235294116" green="0.36078431372549019" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.36078431372549019" green="0.36078431372549019" blue="0.36078431372549019" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="Iwf-Rl-g11" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="0UW-ho-AFy"/>
                 <constraint firstItem="jaE-2b-OdZ" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="7N4-ew-giK"/>
@@ -174,6 +181,8 @@
                 <constraint firstItem="jaE-2b-OdZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="kpL-3k-Ga1"/>
                 <constraint firstItem="jaE-2b-OdZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="mtK-dx-kZQ"/>
                 <constraint firstItem="0Lr-s9-7i7" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="10" id="t3S-g1-4XQ"/>
+                <constraint firstItem="4fb-FF-ozO" firstAttribute="centerY" secondItem="0Lr-s9-7i7" secondAttribute="centerY" id="vk9-cv-bEh"/>
+                <constraint firstItem="4fb-FF-ozO" firstAttribute="leading" secondItem="0Lr-s9-7i7" secondAttribute="trailing" constant="9" id="zfS-HM-Ll5"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
         </view>
@@ -184,5 +193,6 @@
         <image name="Live_Private_Img_Intimacy_Head_0" width="58" height="45"/>
         <image name="Live_Private_Vip_Btn_Follow" width="31" height="31"/>
         <image name="Live_Public_Btn_Close" width="16" height="16"/>
+        <image name="Navigation_Right_Button" width="72" height="25"/>
     </resources>
 </document>

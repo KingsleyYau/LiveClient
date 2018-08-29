@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_hangout_anchor_info_dialog">
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingRight="13dp"
+            android:paddingLeft="13dp"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_liveroom_audience_dialog_close"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/ll_anchorInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="invisible"
+                android:paddingTop="16dp"
+                android:paddingBottom="24dp"
+                android:orientation="vertical">
+
+                <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civ_anchorPic"
+                    android:layout_width="62dp"
+                    android:layout_height="62dp"
+                    android:layout_gravity="top|center_horizontal"
+                    android:src="@drawable/ic_default_photo_man"/>
+
+                <TextView
+                    android:id="@+id/tv_anchorNickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginLeft="13dp"
+                    android:textSize="13sp"
+                    android:layout_marginTop="7dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/common_bottom_item_simple"
+                    android:text="Mary K"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_anchorAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="18yrs"
+                        android:textColor="@color/common_bottom_item_simple"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/common_bottom_item_simple"
+                        android:text=" / "/>
+                    <TextView
+                        android:id="@+id/tv_anchorLocate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:text="Ukaine"
+                        android:textColor="@color/common_bottom_item_simple"/>
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_sendFriendReq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="178dp"
+                    android:minHeight="35dp"
+                    android:textSize="14sp"
+                    android:text="@string/hangout_other_anchor_dialog_addfriend"
+                    android:textColor="@android:color/white"
+                    android:textAllCaps="false"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:enabled="false"
+                    android:layout_marginTop="9dp"
+                    android:background="@drawable/selector_btn_hangout_addfriend"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_errorRetry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/ic_hangout_load_error"/>
+
+                <TextView
+                    android:id="@+id/tv_errerReload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hangout_gift_retry"
+                    android:textColor="#999999"
+                    android:clickable="true"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:scrollbarStyle="insideInset"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDuration="1000"
+                android:layout_gravity="center"/>
+
+
+        </FrameLayout>
+
+
+    </FrameLayout>
+
+</FrameLayout>

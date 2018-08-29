@@ -29,13 +29,15 @@ typedef enum : NSUInteger {
 @property (nonatomic, strong) LSAnchorImManager *imManager;
 @property (nonatomic, strong) LSAnchorRequestManager *requestManager;
 @property (nonatomic, strong) PreStartPublicHeaderView *headerView;
-
+@property (nonatomic, strong) UIButton *startBtn;
 @end
 
 @implementation PreStartPublicViewController
 
 - (void)dealloc {
     NSLog(@"PreStartPublicViewController::( [dealloc] )");
+    
+    [[DialogTip dialogTip] stopTimer];
 }
 
 - (void)viewDidLoad {
@@ -91,6 +93,7 @@ typedef enum : NSUInteger {
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.headerView startPreViewVideoPlay];
+    self.startBtn.userInteractionEnabled = YES;
 }
 
 
@@ -146,23 +149,22 @@ typedef enum : NSUInteger {
 }
 
 - (void)preStartNowTableViewCell:(PreStartNowTableViewCell *)cell didStartBroadcast:(UIButton *)sender {
+    self.startBtn = sender;
     [[LSAnchorRequestManager manager] anchorCheckPublicRoomType:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, AnchorPublicRoomType liveShowType,  NSString * _Nonnull liveShowId){
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"PreStartPublicViewController::anchorCheckPublicRoomType( [检测房间类型] success : %@)",(success == YES) ? @"成功" : @"失败");
-            sender.userInteractionEnabled = YES;
             if (success) {
                 //  房间类型
                 switch (liveShowType) {
                     case ANCHORPUBLICROOMTYPE_OPEN:{
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            sender.userInteractionEnabled = YES;
+                        });
                         // 进入公开直播间
                         [self enterPublicRoom:sender];
                     }break;
                     case ANCHORPUBLICROOMTYPE_PROGRAM: {
-                        // 进入节目直播间
-                        PreLiveViewController *preLive = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
-                        preLive.liveShowId = liveShowId;
-                        preLive.status = PreLiveStatus_Show;
-                        [self navgationControllerPresent:preLive];
+                        [self enterShowRoom:liveShowId];
                     }break;
                     default:
                         break;
@@ -176,6 +178,18 @@ typedef enum : NSUInteger {
     }];
 }
 
+- (void)enterShowRoom:(NSString *)showId {
+    // 进入节目直播间
+    PreLiveViewController *preLive = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+    LiveRoom *room = [[LiveRoom alloc] init];
+    room.userId = [LSLoginManager manager].loginItem.userId;
+    room.photoUrl = [LSLoginManager manager].loginItem.photoUrl;
+    room.showId = showId;
+    preLive.liveRoom = room;
+    preLive.liveShowId = showId;
+    preLive.status = PreLiveStatus_Show;
+    [self navgationControllerPresent:preLive];
+}
 
 - (void)enterPublicRoom:(UIButton *)sender {
     [self.headerView showVideoLoadView];
@@ -183,8 +197,10 @@ typedef enum : NSUInteger {
         NSLog(@"PreStartPublicViewController::enterPublicRoom( [主播发送进入公开直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )",(success == YES) ? @"成功" : @"失败", errType, errMsg, roomItem.roomId);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.headerView hiddenVideoLoadView];
-            sender.userInteractionEnabled = YES;
             if (success) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    sender.userInteractionEnabled = YES;
+                });
                 PublicVipViewController *vc = [[PublicVipViewController alloc] initWithNibName:nil bundle:nil];
                 LiveRoom *room = [[LiveRoom alloc] init];
                 room.userId = roomItem.anchorId;
@@ -198,6 +214,7 @@ typedef enum : NSUInteger {
                 vc.liveRoom = room;
                 [self.navigationController pushViewController:vc animated:YES];
             } else {
+                sender.userInteractionEnabled = YES;
                 [[DialogTip dialogTip] showDialogTip:self.view tipText:errMsg];
             }
         });

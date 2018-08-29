@@ -1,11 +1,17 @@
 package com.qpidnetwork.livemodule.framework.base;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,7 +19,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.barlibrary.ImmersionBar;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.CustomShowTimeToast;
 import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.CreditsTipsDialog;
@@ -21,8 +29,12 @@ import com.qpidnetwork.livemodule.utils.EToast2;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.MaterialProgressDialog;
 import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
+import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
+import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionResetManager;
 
 import java.lang.ref.WeakReference;
+
+import static com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL;
 
 /**
  * Created by Hunter Mun on 2017/9/4.
@@ -43,8 +55,26 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     protected EToast2 threeSecondToast;
 
     @Override
-    protected void onCreate(Bundle arg0) {
-        super.onCreate(arg0);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //add by Jagger 2018-7-19
+        //原因：权限被禁止后，用户调用系统“设置”打开权限再返回APP时，系统会重启APP，走了Application的onCreate()并回到当前界面，
+        //     但APP所有变量都被重置了。所以只有重新走一次启动流程，才能正常运行。参考：https://www.jianshu.com/p/cb68ca511776
+        //疑问：例如拍照后savedInstanceState不为空，这样是否会导致重启APP。
+        //     经测试，Activity的android:screenOrientation="portrait"时，拍照后不会调用onCreate,
+        //     所以这种方法来处理暂时是可行的
+        //在系统“设置”修改权限后，返回APP，重启
+//        if (null != savedInstanceState) {
+//            //注：不能通过ServiceManager重启。因为Application重启后，直播模块已从ServiceManager反注册，只有登录成功后，才会注册到ServiceManager中去。
+//            sendBroadcast(new Intent(CommonConstant.ACTION_NOTIFICATION_APP_PERMISSION_RESET));
+////            finish();
+//        }
+        if(PermissionResetManager.isPermissionReset(this, savedInstanceState)){
+            finish();
+        }
+        //end
+
         mContext = this;
         mProgressDialogCount = 0;
         progressDialog = new MaterialProgressDialog(this);
@@ -68,12 +98,21 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     protected void onResume() {
         super.onResume();
         isActivityVisible = true;
+
+        //注册session过期广播接收器
+        registerBroadcastReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         isActivityVisible = false;
+
+        try{
+            unregisterReceiver(sessionTimeoutReceiver);
+        }catch(IllegalArgumentException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,6 +128,13 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
      */
     public void showThreeSecondTips(String msg,int gravity){
         Log.d(TAG,"showThreeSecondTips-msg:"+msg +" gravity:"+gravity);
+
+        //add by Jagger 2018-5-16
+        //以免出现弹出空的提示
+        if(TextUtils.isEmpty(msg)){
+            return;
+        }
+
         boolean isShowCustomToast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT
                 && !EToast2.isNotificationEnabled(this);
         if (isShowCustomToast || EToast2.isErrToastDevice()) {
@@ -106,6 +152,12 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
      * @param tips
      */
     public void showToast(String tips){
+        //add by Jagger 2018-5-16
+        //以免出现弹出空的提示
+        if(TextUtils.isEmpty(tips)){
+            return;
+        }
+
         customToast.setText(tips);
         customToast.setDuration(Toast.LENGTH_SHORT);
         customToast.show();
@@ -316,7 +368,64 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         }
         if(!creditsTipsDialog.isShowing()){
             creditsTipsDialog.setCreditsTips(getResources().getString(tipsResId));
+            creditsTipsDialog.setmNoMoneyParamsBean(new NoMoneyParamsBean());
             creditsTipsDialog.show();
+        }
+    }
+
+    public void showCreditNoEnoughDialog(String message, NoMoneyParamsBean paramsBean){
+        if(null == creditsTipsDialog){
+            creditsTipsDialog = new CreditsTipsDialog(this);
+        }
+        if(!creditsTipsDialog.isShowing()){
+            creditsTipsDialog.setCreditsTips(message);
+            creditsTipsDialog.setmNoMoneyParamsBean(paramsBean);
+            creditsTipsDialog.show();
+        }
+    }
+
+    //******************************** session过期广播通知 ****************************************
+
+    /**
+     * 注册广播接收器
+     * add by Jagger
+     */
+    private void registerBroadcastReceiver(){
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CommonConstant.ACTION_SESSION_TIMEOUT);
+        registerReceiver(sessionTimeoutReceiver, filter);
+    }
+
+    /**
+     * 广播接收器
+     */
+    private BroadcastReceiver sessionTimeoutReceiver = new BroadcastReceiver(){
+        @Override
+        public void onReceive(android.content.Context context, android.content.Intent intent) {
+            String action = intent.getAction();
+            if(action.equals(CommonConstant.ACTION_SESSION_TIMEOUT)){
+                //收到session过期
+                showSessionTimeoutDialog();
+            }
+        }
+    };
+
+    /**
+     * 显示session过期dialog提示
+     */
+    private void showSessionTimeoutDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setMessage(getResources().getString(R.string.live_session_timeout_desc))
+                .setCancelable(false)
+                .setPositiveButton(getResources().getString(R.string.live_common_btn_yes), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //点击触发被踢
+                        LiveService.getInstance().onModuleSessionOverTime();
+                    }
+                });
+        if(isActivityVisible()){
+            builder.create().show();
         }
     }
 

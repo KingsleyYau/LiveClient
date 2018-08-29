@@ -60,6 +60,7 @@ typedef enum {
  @param roomType 直播间类型
  */
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openPreLive:(NSString *_Nullable)roomId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
+- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openShow:(NSString *_Nullable)showId userId:(NSString *_Nullable)userId roomType:(LiveRoomType)roomType;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openInvited:(NSString *_Nullable)userName userId:(NSString *_Nullable)userId inviteId:(NSString *_Nullable)inviteId;
 //- (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index isForTest:(BOOL)forTest;
 - (void)liveUrlHandler:(LiveUrlHandler *_Nonnull)handler openMainType:(int)index;
@@ -115,6 +116,8 @@ typedef enum {
 
 #pragma mark - 获取模块URL
 - (NSURL * _Nonnull)createUrlToInviteByRoomId:(NSString * _Nullable)roomId userId:(NSString * _Nullable)roomId roomType:(LiveRoomType)roomType;
+
+- (NSURL *)createUrlToShowRoomId:(NSString *)roomId userId:(NSString *)userId;
 
 - (NSURL * _Nonnull)createUrlToInviteByInviteId:(NSString * _Nullable)inviteId anchorId:(NSString * _Nullable)anchorId nickName:(NSString * _Nullable)nickName;
 

@@ -3,15 +3,12 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -54,8 +51,11 @@ import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
+import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Timer;
@@ -290,6 +290,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
                     .placeholder(R.drawable.ic_default_photo_woman)
                     .error(R.drawable.ic_default_photo_woman)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(civPhoto);
         }
 
@@ -401,7 +402,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             finish();
         } else if (i == R.id.btnAddCredit) {
             mEnterAddCredit = true;
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(this);
             //GA统计点击充值
             onAnalyticsEvent(getResources().getString(R.string.Live_Global_Category),
                     getResources().getString(R.string.Live_Global_Action_AddCredit),
@@ -572,6 +573,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         isCanShowRecommand = false;
         if(mReciprocalTimer != null){
             mReciprocalTimer.cancel();
+            mReciprocalTimer.purge();
+            mReciprocalTimer = null;
         }
         removeUiMessages(TEN_SENCONDS_EVNET);
         removeUiMessages(OVERTIME_EVNET);
@@ -616,15 +619,16 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         super.onDestroy();
 
         //停止动画
-        Drawable tempDrawable = btnStartPrivate.getDrawable();
-        if((tempDrawable != null)
-                && (tempDrawable instanceof AnimationDrawable)){
-            ((AnimationDrawable)tempDrawable).stop();
-        }
-
+//        Drawable tempDrawable = btnStartPrivate.getDrawable();
+//        if((tempDrawable != null)
+//                && (tempDrawable instanceof AnimationDrawable)){
+//            ((AnimationDrawable)tempDrawable).stop();
+//        }
         unRegisterListener();
         if(mReciprocalTimer != null){
             mReciprocalTimer.cancel();
+            mReciprocalTimer.purge();
+            mReciprocalTimer = null;
         }
         //删除定时消息
         removeUiMessages(TEN_SENCONDS_EVNET);
@@ -820,6 +824,11 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         if(leftSeconds > 0){
             showCountDownToEnterRoom();
             mLeftSeconds = leftSeconds;
+            //解决过度页面弹充值提示-跳转充值界面-完成充值回来-走onResume逻辑时后重新RoomIn，
+            // 调用mReciprocalTimer.schedule抛java.lang.IllegalStateException: Timer was canceled
+            if(null == mReciprocalTimer){
+                mReciprocalTimer = new Timer();
+            }
             mReciprocalTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -827,6 +836,9 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                     if(mLeftSeconds <= 0){
                         //开播倒数结束
                         mReciprocalTimer.cancel();
+                        //从定时器队列中移除所有已取消的任务(任务虽然已取消，但仍在队列中)
+                        mReciprocalTimer.purge();
+                        mReciprocalTimer = null;
                     }else {
                         mLeftSeconds--;
                     }
@@ -883,7 +895,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * 进入直播间界面跳转
      */
     private void enterLiveRoom(){
-        unRegisterListener();
+//        unRegisterListener();     //后台自动进入时，还需要收通知OnRecvChangeVideoUrl，防止主播开始推流拿不到播放流
 
         //判断当前是否后台，后台时统一不跳转（解决5.0以下startActivity会在后台打开页面，但是5.0以上会将应用带到前台），在resume处理超出1分钟停止，否则进入直播间
         if(SystemUtils.isBackground(this)){
@@ -1159,6 +1171,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                 Picasso.with(getApplicationContext()).load(anchorList[0].photoUrl)
                                         .placeholder(R.drawable.ic_default_photo_woman)
                                         .error(R.drawable.ic_default_photo_woman)
+                                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                                         .into(civRecommand1);
                             }
                             civRecommand1.setTag(anchorList[0].userId);
@@ -1172,6 +1185,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                     Picasso.with(getApplicationContext()).load(anchorList[1].photoUrl)
                                             .placeholder(R.drawable.ic_default_photo_woman)
                                             .error(R.drawable.ic_default_photo_woman)
+                                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                                             .into(civRecommand2);
                                 }
                                 tvRecommandName2.setText(anchorList[1].nickName);
@@ -1349,6 +1363,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                         Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
                                                 .placeholder(R.drawable.ic_default_photo_woman)
                                                 .error(R.drawable.ic_default_photo_woman)
+                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                 .into(civPhoto);
                                     }
                                 }
@@ -1377,12 +1392,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             btnStart.setVisibility(View.VISIBLE);
 //            if(type == AnchorLevelType.gold){
                 //黄金会员
-                btnStart.setImageResource(R.drawable.anim_private_broadcast_button);
-                Drawable tempDrawable = btnStart.getDrawable();
-                if((tempDrawable != null)
-                        && (tempDrawable instanceof AnimationDrawable)){
-                    ((AnimationDrawable)tempDrawable).start();
-                }
+                btnStart.setImageResource(R.drawable.button_start_private_broadcast);
+//                Drawable tempDrawable = btnStart.getDrawable();
+//                if((tempDrawable != null)
+//                        && (tempDrawable instanceof AnimationDrawable)){
+//                    ((AnimationDrawable)tempDrawable).start();
+//                }
 //            }else{
 //                btnStart.setImageResource(R.drawable.list_button_start_normal_private_broadcast);
 //            }
@@ -1440,7 +1455,14 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 
     @Override
     public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {
-
+        if(mIMRoomInItem != null && !TextUtils.isEmpty(mIMRoomInItem.roomId)
+                && mIMRoomInItem.roomId.equals(roomId)){
+            if((mIMRoomInItem.videoUrls == null) || (mIMRoomInItem.videoUrls.length == 0)){
+                //更新返点时间
+                LiveRoomCreditRebateManager.getInstance().refreshRebateLastUpdate();
+            }
+            mIMRoomInItem.videoUrls = playUrls;
+        }
     }
 
     @Override

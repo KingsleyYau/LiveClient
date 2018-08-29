@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- actionBar -->
+    <item name="common_button_send" type="id"/>
+    <item name="common_button_search" type="id"/>
+    <item name="common_button_back" type="id"/>
+    <item name="common_button_overflow" type="id"/>
+
+    <!--CanRefresh需要的ID定义-->
+    <item name="can_content_view" type="id" />
+    <item name="can_refresh_header" type="id" />
+    <item name="can_refresh_footer" type="id" />
+    <item name="can_scroll_view" type="id" />
+
+    <!--SwipeToLoadLayout需要的ID定义-->
+    <item name="swipe_target" type="id" />
+    <item name="swipe_refresh_header" type="id" />
+    <item name="swipe_load_more_footer" type="id" />
+
+    <!--连接动画控件自定义ID-->
+    <item type="id" name="livegift_rootview" />
+    <item type="id" name="btn_giftCount" />
+
+    <!--StatusBar-->
+    <item type="id" name="statusbarutil_fake_status_bar_view" />
+    <item type="id" name="statusbarutil_translucent_view" />
+
+    <!-- dialog -->
+    <item name="live_dialog_custom_view" type="id"/>
+</resources>

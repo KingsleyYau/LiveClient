@@ -1,29 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_commTitleBar"
     android:layout_width="match_parent"
-    android:background="#5d0e86"
-    android:layout_height="56dp">
+    android:background="@color/theme_default_white"
+    android:layout_height="@dimen/actionbar_height">
 
-    <TextView
-        android:id="@+id/tv_commTitle"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
         android:gravity="center"
-        android:layout_gravity="center"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"/>
+        android:layout_gravity="center">
 
+        <!-- 标题图标 -->
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/img_commTitle"
+            android:layout_width="@dimen/live_size_30dp"
+            android:layout_height="@dimen/live_size_30dp"
+            android:layout_marginRight="@dimen/live_size_8dp"
+            android:visibility="gone"
+            fresco:placeholderImage="@drawable/ic_default_photo_woman"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4" />
+
+        <!-- 标题文字 -->
+        <TextView
+            android:id="@+id/tv_commTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@color/theme_default_black"
+            android:gravity="center"
+            android:focusable="true"
+            android:clickable="true"
+            android:text="Live" />
+
+    </LinearLayout>
+
+    <!-- 返回 -->
     <ImageView
         android:id="@+id/iv_commBack"
-        android:src="@drawable/ic_arrow_back_white"
+        android:src="@drawable/ic_arrow_back"
+        android:background="@drawable/touch_feedback_holo_light_circle"
         android:paddingLeft="13dp"
         android:paddingRight="18dp"
         android:layout_gravity="center_vertical|left"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
+
+    <!-- 阴影 -->
+    <View
+        android:id="@+id/bottomDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/theme_default_divider_grey"
+        android:layout_gravity="bottom"/>
 
 </FrameLayout>

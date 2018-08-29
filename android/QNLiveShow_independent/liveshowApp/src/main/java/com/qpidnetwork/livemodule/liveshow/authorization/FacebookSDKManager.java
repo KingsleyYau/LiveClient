@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.authorization;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -33,6 +34,8 @@ import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.model.ShareVideo;
 import com.facebook.share.model.ShareVideoContent;
 import com.facebook.share.widget.ShareDialog;
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.item.ShareType;
 import com.qpidnetwork.livemodule.liveshow.share.ShareContentInfo;
 
 import org.json.JSONException;
@@ -83,7 +86,9 @@ public class FacebookSDKManager {
         //facebook sdk的初始化
         FacebookSdk.sdkInitialize(context.getApplicationContext());
         FacebookSdk.addLoggingBehavior(LoggingBehavior.REQUESTS);
-        FacebookSdk.setIsDebugEnabled(true);
+        boolean isDebug = context.getResources().getBoolean(R.bool.demo);
+        Log.d(TAG,"init-isDebug:"+isDebug);
+        FacebookSdk.setIsDebugEnabled(isDebug);
         FacebookSdk.addLoggingBehavior(LoggingBehavior.GRAPH_API_DEBUG_INFO);
         //应用事件记录
         AppEventsLogger.activateApp(context.getApplicationContext());
@@ -91,6 +96,7 @@ public class FacebookSDKManager {
         logKeyHash(context);
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -193,9 +199,11 @@ public class FacebookSDKManager {
                                         +" subErrorCode:"+subErrorCode
                                         +" errorMessage:"+errorMessage
                                         +" errorType:"+errorType);
+                                ThirdPlatformUserInfo userInfo = new ThirdPlatformUserInfo();
+                                userInfo.token = accessToken.getToken();
                                 if(null != facebookSdkLoginCallbackList){
                                     for(FacebookSDKLoginCallback callBack : facebookSdkLoginCallbackList){
-                                        callBack.onLogin(OpearResultCode.FAILED, errorMessage,null);
+                                        callBack.onLogin(OpearResultCode.SUCCESS, errorMessage,userInfo);
                                         facebookSdkLoginCallbackList.remove(callBack);
                                     }
                                 }
@@ -208,6 +216,20 @@ public class FacebookSDKManager {
                                 Log.d(TAG,"getFacebookUserInfo-onCompleted request.accessToken:"
                                         +request.getAccessToken().getToken());
                                 //解析jsonobject封装ThirdPlatformUserInfo
+                                /*{
+                                    "id": "343007902773655",
+                                    "name": "胡克",
+                                    "picture": {
+                                        "data": {
+                                            "height": 50,
+                                            "is_silhouette": false,
+                                            "url": "https://scontent.xx.fbcdn.net/v/t1.0-1/p50x50/16195821_226931217714658_2923792466498886168_n.jpg?oh=31ee5e2f1deb18806d99cd640dfe482a&oe=5AF9B686",
+                                            "width": 50
+                                        }
+                                    },
+                                    "gender": "male",
+                                    "locale": "zh_CN"
+                                }*/
                                 ThirdPlatformUserInfo userInfo = new ThirdPlatformUserInfo();
                                 try {
                                     userInfo.id = object.getString("id");
@@ -224,6 +246,7 @@ public class FacebookSDKManager {
                                     userInfo.gender = object.getString("gender");
                                     userInfo.locale = object.getString("locale");
                                     userInfo.email = object.getString("email");
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -259,7 +282,6 @@ public class FacebookSDKManager {
      */
     public void login(Activity context, FacebookSDKLoginCallback facebookSdkLoginCallback){
         registerLoginCallBack(facebookSdkLoginCallback);
-        //TODO:先判断本地token是否存在,这里测试方便，每次都直接调用,但是由于有没有token，界面上来说只是多了一个dialog的展示
         LoginManager.getInstance().logInWithReadPermissions(context,
                 Arrays.asList(new String[]{"public_profile","email","user_birthday"}));
     }
@@ -316,14 +338,14 @@ public class FacebookSDKManager {
     /**
      * 对外分享接口
      * @param activity
-     * @param sdkPlatform
+     * @param shareType
      * @param shareContentInfo
      * @param facebookSDKShareCallBack
      */
-    public void share(Activity activity, SDKPlatform sdkPlatform,
+    public void share(Activity activity, ShareType shareType,
                       ShareContentInfo shareContentInfo, FacebookSDKShareCallBack facebookSDKShareCallBack){
-        switch (sdkPlatform){
-            case FACEBOOK:
+        switch (shareType){
+            case faceBook:
                 share2FaceBook(activity,shareContentInfo, facebookSDKShareCallBack);
                 break;
         }

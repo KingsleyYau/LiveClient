@@ -162,7 +162,18 @@ public:
      *
      */
     bool SendAnchorHangoutGift(SEQ_T reqId, const string& roomId, const string& nickName, const string& toUid, const string& giftId, const string& giftName, bool isBackPack, int giftNum, bool isMultiClick, int multiClickStart, int multiClickEnd, int multiClickId, bool isPrivate) override;
-
+    
+    /**
+     *  10.14.发送多人互动直播间文本消息
+     *
+     *  @param reqId         请求序列号
+     *  @param roomId        直播间ID
+     *  @param nickName      发送者昵称
+     *  @param msg           发送的信息
+     *  @param at           用户ID，用于指定接收者（字符串数组）
+     *
+     */
+    bool SendAnchorHangoutLiveChat(SEQ_T reqId, const string& roomId, const string& nickName, const string& msg, const list<string> at) override;
 public:
 	// 获取用户账号
 	string GetUser() override;
@@ -623,6 +634,41 @@ private:
      *
      */
     void OnRecvAnchorGiftNotice(const IMAnchorRecvGiftItem& item) override;
+    
+    /**
+     *  10.13.接收多人互动直播间观众启动/关闭视频互动通知回调
+     *
+     *  @param Item            互动切换
+     *
+     */
+    void OnRecvAnchorControlManPushHangoutNotice(const ZBControlPushItem item) override;
+    
+    /**
+     *  10.14.发送多人互动直播间文本消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    virtual void OnSendAnchorHangoutLiveChat(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) override;
+    
+    /**
+     *  10.15.接收直播间文本消息回调
+     *
+     *  @param item            接收直播间的文本消息
+     *
+     */
+    void OnRecvAnchorHangoutChatNotice(const IMAnchorRecvHangoutChatItem& item) override;
+    
+    /**
+     *  10.16.接收进入多人互动直播间倒数通知回调
+     *
+     *  @param item            接收直播间的文本消息
+     *
+     */
+    void OnRecvAnchorCountDownEnterRoomNotice(const string& roomId, const string& anchorId, int leftSecond) override;
+    
     
     // ------------- 节目 -------------
     /**

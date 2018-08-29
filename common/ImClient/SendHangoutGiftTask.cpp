@@ -27,6 +27,9 @@
 #define IMSENDHANGOUTGIFT_MULTICLICKEND_PARAM        "multi_click_end"
 #define IMSENDHANGOUTGIFT_MULTICLICKID_PARAM         "multi_click_id"
 
+// 返回
+#define IMSENDHANGOUTGIFT_CREDIT_PARAM               "credit"
+
 SendHangoutGiftTask::SendHangoutGiftTask(void)
 {
     m_listener = NULL;
@@ -73,12 +76,17 @@ bool SendHangoutGiftTask::Handle(const TransportProtocol& tp)
     FileLog("ImClient", "SendHangoutGiftTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
     
+    double credit = 0.0;
     // 协议解析
-    int expire = 0;
     if (tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
         m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
+        if (tp.m_data.isObject()) {
+            if (tp.m_data[IMSENDHANGOUTGIFT_CREDIT_PARAM].isNumeric()) {
+                credit = tp.m_data[IMSENDHANGOUTGIFT_CREDIT_PARAM].asDouble();
+            }
+        }
     }
     
     // 协议解析失败
@@ -92,7 +100,7 @@ bool SendHangoutGiftTask::Handle(const TransportProtocol& tp)
     // 通知listener
     if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnSendHangoutGift(GetSeq(), success, m_errType, m_errMsg);
+        m_listener->OnSendHangoutGift(GetSeq(), success, m_errType, m_errMsg, credit);
         FileLog("ImClient", "SendHangoutGiftTask::Handle() callback end, result:%d", success);
     }
     
@@ -194,7 +202,7 @@ bool SendHangoutGiftTask::InitParam(const string& roomId, const string& nickName
 void SendHangoutGiftTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendHangoutGift(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC);
+        m_listener->OnSendHangoutGift(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, 0.0);
     }
 }
 

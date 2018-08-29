@@ -53,6 +53,9 @@ public class VoucherFragment extends BaseListFragment{
         super.handleUiMessage(msg);
         hideLoadingProcess();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         if(response.isSuccess){
             //列表刷新成功，更新未读
             ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();

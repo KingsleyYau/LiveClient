@@ -24,8 +24,9 @@ public interface IMLiveRoomEventListener {
 	 * @param nickName
 	 * @param photoUrl
 	 * @param fansNum
+	 * @param isHasTicket
 	 */
-    void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum, String honorImg);
+    void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum, String honorImg, boolean isHasTicket);
 
 
 	/**
@@ -142,8 +143,9 @@ public interface IMLiveRoomEventListener {
 	 * @param success
 	 * @param errType
 	 * @param errMsg
+	 * @param talentInviteId
 	 */
-    void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg);
+    void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String talentInviteId, String talentId);
 
 	/**
 	 * 8.2.接收直播间才艺点播回复通知
@@ -154,8 +156,18 @@ public interface IMLiveRoomEventListener {
 	 * @param credit
 	 * @param status
 	 * @param rebateCredit
+	 * @param giftId
+	 * @param giftName
+	 * @param giftNum
 	 */
-    void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit, IMClientListener.TalentInviteStatus status, double rebateCredit);
+    void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit, IMClientListener.TalentInviteStatus status, double rebateCredit, String giftId, String giftName, int giftNum);
+
+	/**
+	 * 8.3.接收直播间才艺点播提示公告通知
+	 * @param roomId
+	 * @param introduction
+	 */
+	void OnRecvTalentPromptNotice(String roomId, String introduction);
 
 	/**
 	 * 9.4 勋章更新通知

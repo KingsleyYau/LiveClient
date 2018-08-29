@@ -1,6 +1,9 @@
 #!/bin/sh
 
-# change dir
+# Compile coollive files and export jar file
+# Author:	Max.Chiu
+
+# Change dir
 CUR_PATH=$(dirname $0)
 cd $CUR_PATH
 
@@ -23,8 +26,9 @@ javac \
 -source 1.6 -target 1.6 \
 -bootclasspath $SDK_PATH/android-25/android.jar \
 -Xlint:deprecation \
+-g \
 -d $TMP_PATH \
-$ECLIPSE_PROJECT_PATH/src/net/qdating/utils/*.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/utils/Log.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/filter/*.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/player/*.java \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/publisher/*.java \
@@ -38,8 +42,26 @@ cd - >/dev/null 2>&1
 
 # package
 mkdir -p $VERSION
+
+# Copy source files
+mkdir -p $TMP_PATH/net/qdating/ 
+cp -rf $ECLIPSE_PROJECT_PATH/src/net/qdating/*.java $TMP_PATH/net/qdating/
+
+# Delete system tmp files
+find $TMP_PATH -name ".DS_Store" | xargs rm -rf {}
+
+# Export jar
 jar cvf $VERSION/coollive.jar -C $TMP_PATH . >> $LOG_FILE 2>&1
 cp -rf $ECLIPSE_PROJECT_PATH/libs $VERSION >> $LOG_FILE 2>&1
+
+mkdir -p $VERSION/doc
+javadoc \
+-public \
+-author \
+-version \
+-d $VERSION/doc \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/*.java \
+>> $LOG_FILE 2>&1
 
 # delete 
 rm -rf $TMP_PATH >> $LOG_FILE 2>&1

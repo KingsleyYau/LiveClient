@@ -19,7 +19,9 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
+import com.qpidnetwork.livemodule.liveshow.liveroom.online.AudienceHeadItem;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -35,11 +37,11 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
 
     private final String TAG = CircleImageHorizontScrollView.class.getSimpleName();
 
-    private List<String> imageUrlList = new ArrayList<>();
+    private List<AudienceHeadItem> audienceHeadItems = new ArrayList<>();
 
     private LinearLayout circleImageContainer;
 
-    private CanAdapter<String> gridViewAdapter;
+    private CanAdapter<AudienceHeadItem> gridViewAdapter;
     private GridView gridView;
 
     private int horizontSpace = 0;
@@ -77,95 +79,85 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
         circleImageContainer.setOrientation(LinearLayout.HORIZONTAL);
         HorizontalScrollView.LayoutParams layoutParams =
                 new HorizontalScrollView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        layoutParams.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
+        layoutParams.gravity = Gravity.CENTER_VERTICAL;
         circleImageContainer.setLayoutParams(layoutParams);
         circleImageContainer.setGravity(Gravity.CENTER_VERTICAL);
         addView(circleImageContainer);
-    }
 
-    public synchronized void addOnLinePerson(String imgUrl){
-        if(null == imageUrlList){
-            imageUrlList = new ArrayList<>();
-        }
-        imageUrlList.add(imgUrl);
-        notifyDataSetChanged();
-    }
-
-    public synchronized void deleteOnLinePerson(){
-        if(null != imageUrlList && imageUrlList.size()>0){
-            imageUrlList.remove(imageUrlList.size()-1);
-        }
-        notifyDataSetChanged();
-    }
-
-    public synchronized void setList(List<String> datas){
-        if(null == imageUrlList){
-            imageUrlList = new ArrayList<>();
-        }
-        this.imageUrlList.clear();
-        imageUrlList.addAll(datas);
-        notifyDataSetChanged();
-    }
-
-    public int getListNum(){
-        return null == imageUrlList ? 0 : imageUrlList.size();
-    }
-
-    private void notifyDataSetChanged(){
-        circleImageContainer.removeAllViews();
-        int itemNumbs = imageUrlList.size();
-        gridView = (GridView)View.inflate(getContext(),R.layout.item_simple_gridview_1,null);
+        gridView = (GridView) View.inflate(getContext(),R.layout.item_simple_gridview_1,null);
         gridView.setHorizontalSpacing(horizontSpace);
-        int containerWidth = itemWidth*itemNumbs+(itemNumbs-1)*horizontSpace
-                +gridView.getPaddingLeft()+gridView.getPaddingRight();
+
         LinearLayout.LayoutParams gridViewLp = new LinearLayout.LayoutParams(
-                containerWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
-        gridViewLp.width =containerWidth;
-        gridViewLp.gravity = Gravity.CENTER_VERTICAL|Gravity.LEFT;
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        gridViewLp.gravity = Gravity.CENTER_VERTICAL|Gravity.RIGHT;
         gridView.setLayoutParams(gridViewLp);
         circleImageContainer.addView(gridView);
-        gridView.setGravity(Gravity.CENTER_VERTICAL);
+        gridView.setGravity(Gravity.CENTER_VERTICAL|Gravity.RIGHT);
         //itemLayoutId布局
-        gridViewAdapter = new CanAdapter<String>(
-                getContext(),R.layout.item_simple_online,imageUrlList) {
+        gridViewAdapter = new CanAdapter<AudienceHeadItem>(
+                getContext(),R.layout.item_simple_online, audienceHeadItems) {
             @Override
-            protected void setView(CanHolderHelper helper, int position, String bean) {
+            protected void setView(CanHolderHelper helper, int position, AudienceHeadItem bean) {
+                //头像
                 CircleImageView civ_userHeader = (CircleImageView) helper.getImageView(R.id.civ_userHeader);
                 civ_userHeader.setTag(bean);
                 ViewGroup.LayoutParams imageViewLp = civ_userHeader.getLayoutParams();
                 imageViewLp.width = itemWidth;
                 imageViewLp.height = itemWidth;
                 civ_userHeader.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                if(!TextUtils.isEmpty(bean)){
+                if(!TextUtils.isEmpty(bean.photoUrl)){
                     Picasso.with(getContext().getApplicationContext())
-                            .load(bean).noFade()
-                            .placeholder(R.drawable.ic_default_photo_man)
-                            .error(R.drawable.ic_default_photo_man)
+                            .load(bean.photoUrl).noFade()
+                            .error(bean.defaultPhotoResId)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+                            .noPlaceholder()
                             .into(civ_userHeader);
                 }else{
                     Picasso.with(getContext().getApplicationContext())
-                            .load(R.drawable.ic_default_photo_man).noFade()
+                            .load(bean.defaultPhotoResId).noFade()
                             .into(civ_userHeader);
                 }
+                //是否购票
+                ImageView imgHasTicket = helper.getImageView(R.id.img_has_ticket);
+                imgHasTicket.setVisibility(bean.isHasTicket()?VISIBLE:GONE);
+
             }
 
             @Override
             protected void setItemListener(CanHolderHelper helper) {}
         };
         gridView.setAdapter(gridViewAdapter);
-        gridView.setStretchMode(GridView.STRETCH_SPACING);
+        gridView.setStretchMode(GridView.NO_STRETCH);
         gridView.setColumnWidth(itemWidth);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String imageUrl = gridViewAdapter.getList().get(position);
+                AudienceHeadItem audienceHeadItem = gridViewAdapter.getList().get(position);
                 if(null != listener){
-                    listener.onCircleImageClicked(imageUrl);
+                    listener.onCircleImageClicked(audienceHeadItem.photoUrl);
                 }
-                Log.d(TAG,"onItemClick-imageUrl:"+imageUrl);
+                Log.d(TAG,"onItemClick-imageUrl:"+audienceHeadItem.photoUrl);
             }
         });
+    }
+
+    public synchronized void setList(List<AudienceHeadItem> audienceHeadItems){
+        if(null == this.audienceHeadItems){
+            this.audienceHeadItems = new ArrayList<>();
+        }
+        this.audienceHeadItems.clear();
+        this.audienceHeadItems.addAll(audienceHeadItems);
+        notifyDataSetChanged();
+    }
+
+    private void notifyDataSetChanged(){
+        int itemNumbs = audienceHeadItems.size();
+        int containerWidth = itemWidth*itemNumbs+(itemNumbs-1)*horizontSpace
+                +gridView.getPaddingLeft()+gridView.getPaddingRight();
+        LinearLayout.LayoutParams gridViewLp = (LinearLayout.LayoutParams) gridView.getLayoutParams();
+        gridViewLp.width = containerWidth;
         gridView.setNumColumns(itemNumbs);
+        gridViewAdapter.setList(this.audienceHeadItems);
     }
 
     private OnCircleImageClickListener listener;

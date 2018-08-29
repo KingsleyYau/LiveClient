@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.anchor.view.SoftKeyboradListenFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/flContentBody"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 背景不随软键盘切换部分：视频播放view-->
+    <com.qpidnetwork.anchor.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/llBackBody"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_bgContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include
+                    android:id="@+id/include_audience_area"
+                    layout="@layout/include_liveroom_audience"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+            </FrameLayout>
+        </LinearLayout>
+    </com.qpidnetwork.anchor.view.LiveRoomScrollView>
+
+    <!--覆盖在视频上的业务层-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="vertical">
+
+        <!--最上层消息控制等-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent">
+
+            <include
+                android:id="@+id/include_im_body"
+                layout="@layout/include_liveroom_im_public"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:visibility="visible" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/advanceGift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="600dp"
+                android:layout_gravity="bottom"
+                android:visibility="gone"
+                fresco:actualImageScaleType="fitCenter" />
+
+        </FrameLayout>
+        <include
+            layout="@layout/view_liveroom_sendmsg_public"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/imButtomMargin"
+            android:layout_gravity="bottom"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_audienceList"
+        android:layout_width="77dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="13dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:background="@drawable/bg_public_live_room_audience_list"
+        android:choiceMode="singleChoice"
+        android:divider="@null" />
+</com.qpidnetwork.anchor.view.SoftKeyboradListenFrameLayout>

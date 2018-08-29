@@ -28,9 +28,11 @@ import com.qpidnetwork.livemodule.httprequest.OnGetPromoAnchorListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniLiveShow;
 import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL;
@@ -174,6 +176,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
             Picasso.with(getApplicationContext()).load(anchorPhotoUrl)
                     .placeholder(R.drawable.ic_default_photo_woman)
                     .error(R.drawable.ic_default_photo_woman)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(civPhoto);
         }
 
@@ -234,7 +237,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
             startActivity(BookPrivateActivity.getIntent(mContext, mAnchorId, mAnchorName));
             finish();
         } else if (i == R.id.btnAddCredit) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
             finish();
         } else if (i == R.id.btnViewHot) {
             Intent intent = new Intent(this, MainFragmentActivity.class);
@@ -244,15 +247,19 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
         } else if (i == R.id.civRecommand1 || i == R.id.civRecommand2|| i == R.id.tvRecommandName1|| i == R.id.tvRecommandName2) {
             String anchorId = (String) v.getTag();
             if (!TextUtils.isEmpty(anchorId)) {
-                startActivity(AnchorProfileActivity.getAnchorInfoIntent(this,
+                AnchorProfileActivity.launchAnchorInfoActivty(this,
                         getResources().getString(R.string.live_webview_anchor_profile_title),
                         anchorId,
-                        false));
+                        false,
+                        AnchorProfileActivity.TagType.Album);
             }
             //GA统计点击推荐
             onAnalyticsEvent(getResources().getString(R.string.Live_BroadcastEnd_Category),
                     getResources().getString(R.string.Live_BroadcastEnd_Action_Recommend),
                     getResources().getString(R.string.Live_BroadcastEnd_Label_Recommend));
+
+            //点击推荐，关闭界面
+            finish();
         }
     }
 
@@ -279,6 +286,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
                                                 .load(anchorList[0].photoUrl)
                                                 .placeholder(R.drawable.ic_default_photo_woman)
                                                 .error(R.drawable.ic_default_photo_woman)
+                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                 .into(civRecommand1);
                                     }
                                     civRecommand1.setTag(anchorList[0].userId);
@@ -294,6 +302,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
                                                     .load(anchorList[1].photoUrl)
                                                     .placeholder(R.drawable.ic_default_photo_woman)
                                                     .error(R.drawable.ic_default_photo_woman)
+                                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                     .into(civRecommand2);
                                         }
                                         tvRecommandName2.setText(anchorList[1].nickName);

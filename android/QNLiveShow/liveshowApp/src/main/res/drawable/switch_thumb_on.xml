@@ -2,18 +2,18 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle" >
 
-    <!-- 高度40 -->
+    <!-- 高度 (必须跟track的高度一样)-->
     <size android:height="@dimen/live_swicth_book_height" android:width="@dimen/live_swicth_book_height"/>
     <!-- 圆角弧度  -->
     <corners android:radius="@dimen/live_swicth_book_radius"/>
 
-
     <!-- 变化率 -->
     <gradient
-        android:endColor="#eeeeee"
-        android:startColor="#eeeeee" />
+        android:endColor="@color/white"
+        android:startColor="@color/white" />
 
-    <stroke android:width="1dp"
+    <!-- 边框 (这样为了能和track有一点距离 )-->
+    <stroke android:width="2dp"
         android:color="@color/transparent"/>
 
 </shape>

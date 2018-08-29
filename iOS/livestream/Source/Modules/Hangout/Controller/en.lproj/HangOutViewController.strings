@@ -1,0 +1,40 @@
+
+/* Class = "UIButton"; normalTitle = "Say something..."; ObjectID = "CKa-LU-Lzo"; */
+"CKa-LU-Lzo.normalTitle" = "Say something...";
+
+/* Class = "UILabel"; text = "@ All"; ObjectID = "xAm-O2-N9I"; */
+"xAm-O2-N9I.text" = "@ All";
+
+"CHAT_AUDIENCE_ALL" = "All";
+
+"INPUT_PLACEHOLDER" = "Say something...";
+
+"CONTACT_NOT_HAVE" = "The broadcast room has no viewers or the viewer you @ has left the broadcast room";
+
+"UnRead_Messages" = "unread messages";
+
+"SEND_GIFT_ERROR" = "Failed to send \"%@\". No broadcasters in this Hang-out.";
+
+"SEND_GIFT_ANCHOR_LEAVE" = "Failed to send “%@”.%@ has left the Hang-out.";
+
+"SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"ROOM_IS_FULL" = "Your broadcast room is full. Pleaes try again later.";
+
+"ANCHOR_HAS_JOIN" = "The broadcaster has joined this Hang-out.";
+
+"ANCHOR_IS_INVITINF" = "Invitation has been sent. Please try again later.";
+
+"OPEN_DOOR_ALREADY" = "Door already open.";
+
+"RECOMMEND_JOIN_HANGOUT" = "%@ Recommended %@ to join the Hang-out.";
+
+"ANCHOR_KNOCKING_DOOR" = "%@ has come back and is knocking the door.";
+
+"INVITE_HANGOUT_FAIL" = "%@ is not responding. Please try again later.";
+
+"ANCHOR_LEFT_HANGOUT" = "%@ has left the Hang-out.";
+
+"NO_CREIDT_ANCHOR_LEFT" = "%@'s line has been held. Add credits to bring her back to line now!";
+
+"CONNECT_SEVER_FAIL" = "Trouble connecting to the server,please try again later.";

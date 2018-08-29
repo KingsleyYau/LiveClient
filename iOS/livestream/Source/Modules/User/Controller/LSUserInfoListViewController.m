@@ -64,7 +64,7 @@
         @{ @"title" : NSLocalizedStringFromSelf(@"My Reservations"),
            @"icon" : @"MyReservations_icon" },
         @{ @"title" : NSLocalizedStringFromSelf(@"My Tickets"),
-           @"icon" : @"MyReservations_icon" },
+           @"icon" : @"MyShow_icon" },
         @{ @"title" : NSLocalizedStringFromSelf(@"My Backpack"),
            @"icon" : @"MyBackpack_icon" },
         @{ @"title" : NSLocalizedStringFromSelf(@"My Level"),

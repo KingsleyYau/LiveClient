@@ -7,6 +7,8 @@
 #include "RequestJniConvert.h"
 #include "com_qpidnetwork_livemodule_httprequest_RequestJniOther.h"
 
+#include <common/KZip.h>
+
 
 /*********************************** 6.1. 同步配置    ****************************************/
 
@@ -876,4 +878,95 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
     putCallbackIntoMap(taskId, obj);
 
     return taskId;
+}
+
+
+/*********************************** 6.16.提交crash dump文件（仅独立） ****************************************/
+class RequestCrashFileCallback : public IRequestCrashFileCallback {
+	void OnCrashFile(HttpCrashFileTask* task, bool success, int errnum, const string& errmsg) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUploadCrashFile( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;)V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onUploadCrashFile", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUploadCrashFile( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+
+			}
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+
+RequestCrashFileCallback gRequestCrashFileCallback;
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    UploadCrashFile
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLSUploadCrashFileCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UploadCrashFile
+		(JNIEnv *env, jclass cls, jstring deviceId, jstring directory, jstring tmpDirectory, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetManBaseInfo( deviceId : %s, directory : %s, tmpDirectory : %s)",
+			JString2String(env, deviceId).c_str(),
+	        JString2String(env, directory).c_str(),
+            JString2String(env, tmpDirectory).c_str());
+	jlong taskId = -1;
+
+    const char *cpDeviceId = env->GetStringUTFChars(deviceId, 0);
+    const char *cpDirectory = env->GetStringUTFChars(directory, 0);
+    const char *cpTmpDirectory = env->GetStringUTFChars(tmpDirectory, 0);
+
+    FileLog("httprequest", "UploadCrashLog ( directory : %s, tmpDirectory : %s ) ", cpDirectory, cpTmpDirectory);
+
+    time_t stm = time(NULL);
+    struct tm tTime;
+    localtime_r(&stm, &tTime);
+    char pZipFileName[1024] = {'\0'};
+    snprintf(pZipFileName, sizeof(pZipFileName), "%s/crash-%d-%02d-%02d_[%02d-%02d-%02d].zip", \
+    		cpTmpDirectory, tTime.tm_year + 1900, tTime.tm_mon + 1, \
+    		tTime.tm_mday, tTime.tm_hour, tTime.tm_min, tTime.tm_sec);
+
+    // create zip
+    KZip zip;
+    string comment = "";
+    const char password[] = {
+            0x51, 0x70, 0x69, 0x64, 0x5F, 0x44, 0x61, 0x74, 0x69, 0x6E, 0x67, 0x00
+    }; // Qpid_Dating
+
+    bool bFlag = zip.CreateZipFromDir(cpDirectory, pZipFileName, "", comment);
+
+    FileLog("httprequest", "UploadCrashLog ( pZipFileName : %s  zip  : %s ) ", pZipFileName, bFlag?"ok":"fail");
+
+    if (bFlag) {
+        taskId = gHttpRequestController.CrashFile(&gHttpRequestManager,
+                                                  JString2String(env, deviceId),
+                                                  pZipFileName,
+                                                  &gRequestCrashFileCallback);
+        jobject obj = env->NewGlobalRef(callback);
+        putCallbackIntoMap(taskId, obj);
+    }
+
+    env->ReleaseStringUTFChars(deviceId, cpDeviceId);
+    env->ReleaseStringUTFChars(directory, cpDirectory);
+    env->ReleaseStringUTFChars(tmpDirectory, cpTmpDirectory);
+
+	return taskId;
 }

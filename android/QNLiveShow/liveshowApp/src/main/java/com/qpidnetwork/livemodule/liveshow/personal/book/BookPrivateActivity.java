@@ -2,15 +2,12 @@ package com.qpidnetwork.livemodule.liveshow.personal.book;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +32,7 @@ import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteBookTimeItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteConfig;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
@@ -80,13 +78,13 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private int mPostionTimePick = 0;                                   //时间选中索引
     private String mTimeID = "";                                        //选择的日期的ID，用于提交
     private int mTimestamp = 0;                                         //选择的具体时间，用于提交
-    private boolean mIsAddGift = true;                               //标记是否带礼物
+    private boolean mIsAddGift = false;                               //标记是否带礼物
     private String mGiftID = "",mGiftURL = "";
     private int mGiftSum = 0;
     private String mPhone = "";
 
     //控件
-    private TextView mTvBookDate , mTvBookTime , mTvBookGiftCredit , mTvBookNumber ,mTvChangeNumber , mTvTipsTotalPirce , mTvNoteTips;
+    private TextView mTvBookDate , mTvBookTime , mTvBookGiftCredit , mTvBookNumber ,mTvChangeNumber , mTvNoteTips;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
     private BoolGiftAdapter mAdapter;
@@ -125,9 +123,9 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         }
 
         //设置头
-        setTitle(getString(R.string.live_book_title), Color.WHITE);
+        setTitle(getString(R.string.live_book_title), R.color.theme_default_black);
 
-        //
+        //ui
         initUI();
 
         //
@@ -184,7 +182,9 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         });
 
         //礼物区
+        //礼物列表区
         mLinearLayoutGift = (LinearLayout)findViewById(R.id.ll_book_gift);
+        //礼物开关 和 列表区(没礼物时, 整个不显示)
         mLinearLayoutAddGift = (LinearLayout)findViewById(R.id.ll_book_add_gift);
         mLinearLayoutAddGift.setVisibility(View.GONE);
 
@@ -207,13 +207,13 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
         });
 
         //礼物总价(Total Price:)
-        mTvTipsTotalPirce = (TextView) findViewById(R.id.txt_book_gift_tips);
-        mTvTipsTotalPirce.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
-        mTvTipsTotalPirce.getPaint().setAntiAlias(true);//抗锯齿
+//        mTvTipsTotalPirce = (TextView) findViewById(R.id.txt_book_gift_tips);
+//        mTvTipsTotalPirce.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
+//        mTvTipsTotalPirce.getPaint().setAntiAlias(true);//抗锯齿
 
         //礼物总价
         mTvBookGiftCredit = (TextView) findViewById(R.id.txt_book_gift_price);
-        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , 0f)));
+        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , "0"));
 
         //电话号码
         mTvBookNumber = (TextView) findViewById(R.id.txt_book_number);
@@ -244,6 +244,9 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
         //提交
         mBtnBook = (ButtonRaised) findViewById(R.id.btn_book);
+        //默认应该不能点击，需等待预约配置成功且有数据
+        mBtnBook.setButtonBackground(getResources().getColor(R.color.black3));
+        mBtnBook.setEnabled(false);
         mBtnBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -287,7 +290,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
                     //更新描述
                     if(mTvNoteTips != null){
-                        mTvNoteTips.setText(Html.fromHtml(String.format(getResources().getString(R.string.live_note_tips), String.valueOf(mScheduleInviteConfig.bookDeposit))));
+                        mTvNoteTips.setText(Html.fromHtml(String.format(getResources().getString(R.string.live_note_tips),
+                                ApplicationSettingUtil.formatCoinValue(mScheduleInviteConfig.bookDeposit))));
                     }
 
                     //处理时间
@@ -306,6 +310,9 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
                         //设置时间选项列表
                         setTimeList();
+                        //设置成功，可预约
+                        mBtnBook.setButtonBackground(getResources().getColor(R.color.theme_sky_blue));
+                        mBtnBook.setEnabled(true);
                     }else{
                         mTvBookDate.setText("");
                         mTvBookTime.setText("");
@@ -318,7 +325,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                         mLinearLayoutAddGift.setVisibility(View.VISIBLE);
 
                         for (int i = 0 ; i < mScheduleInviteConfig.bookGiftList.length; i++){
-                            GiftItem item = NormalGiftManager.getInstance().queryLocalGiftDetailById(mScheduleInviteConfig.bookGiftList[i].giftId);
+                            GiftItem item = NormalGiftManager.getInstance().getLocalGiftDetail(mScheduleInviteConfig.bookGiftList[i].giftId);
                             if(item != null){
                                 mGifts.add(item);
                             }
@@ -346,10 +353,12 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                     break;
                 case REQUEST_SUMMIT_SUCCESS:
                     //预约成功
+                    hideProgressDialog();
                     onBookSuccess();
                     break;
                 case REQUEST_SUMMIT_FAILED:
                     //预约失败
+                    hideProgressDialog();
                     HttpRespObject response = (HttpRespObject)msg.obj;
                     if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_NO_CREDIT){
                         showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
@@ -384,8 +393,6 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
             timeDetail.timestamp = mScheduleInviteConfig.bookTimeList[i].time;
 
             //返回的数据排序有问题，例如会把12:00 AM　排在3:00 AM之前
-            Log.d("Jagger", "setMapDates: " + dateDeail + "  " + timeDetail.timeStr + ",timestamp:" + timeDetail.timestamp);
-
             if(mMapDates.containsKey(date)){
                 mMapDates.get(date).add(timeDetail);
             }else{
@@ -485,7 +492,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private void setTotalPrice(int position){
         mGiftSum = Integer.parseInt(mGiftNums.get(position));
         double sumCredit =  mSelectGiftCredit * mGiftSum;
-        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , sumCredit)));
+        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits ,
+                ApplicationSettingUtil.formatCoinValue(sumCredit)));
     }
 
     /**
@@ -625,6 +633,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
      * 提交
      */
     private void onSummit(){
+        showProgressDialog("");
+
         if(!mIsAddGift){
             mGiftID = "";
             mGiftSum = 0;

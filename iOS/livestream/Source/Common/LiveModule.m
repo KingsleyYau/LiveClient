@@ -15,14 +15,12 @@
 #import "PushBookingViewController.h"
 
 #pragma mark - 登录
-#import "LiveGiftListManager.h"
-#import "LiveGiftDownloadManager.h"
+#import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LSStreamSpeedManager.h"
 
 #pragma mark - 公共
 #import "LSFileCacheManager.h"
-#import "BackpackSendGiftManager.h"
 #import "UserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveBundle.h"
@@ -32,7 +30,6 @@
 #import "LSLoginManager.h"
 #import "LSRequestManager.h"
 #import "LSSessionRequestManager.h"
-#import "LSUserUnreadCountManager.h"
 
 #pragma mark - IM
 #import "LSImManager.h"
@@ -49,12 +46,12 @@
 #import "LiveUrlHandler.h"
 
 #pragma mark - QN
-#import "LiveService.h"
+#import "LiveMutexService.h"
 
 #import "PushShowViewController.h"
 
 static LiveModule *gModule = nil;
-@interface LiveModule () <LoginManagerDelegate, IQNService, IServiceManager, IMLiveRoomManagerDelegate, IMManagerDelegate, LSUserUnreadCountManagerDelegate> {
+@interface LiveModule () <LoginManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate> {
     UIViewController *_moduleVC;
     UIViewController *_adVc;
 }
@@ -67,9 +64,7 @@ static LiveModule *gModule = nil;
 @property (strong, nonatomic) LSLoginManager *loginManager;
 @property (strong, nonatomic) LSImManager *imManager;
 @property (strong, nonatomic) LiveGobalManager *liveGobalManager;
-@property (strong, nonatomic) LiveGiftListManager *giftListManager;
-@property (strong, nonatomic) LiveGiftDownloadManager *giftDownloadManager;
-@property (strong, nonatomic) BackpackSendGiftManager *backGiftManager;
+@property (strong, nonatomic) LSGiftManager *giftDownloadManager;
 @property (strong, nonatomic) LSChatEmotionManager *emotionManager;
 @property (strong, nonatomic) LiveChannelAdViewController *liveChannel;
 @property (strong, nonatomic) LSStreamSpeedManager *speedManager;
@@ -79,10 +74,7 @@ static LiveModule *gModule = nil;
 @property (strong, nonatomic) UIViewController *notificationVC;
 // 广告界面
 @property (strong, nonatomic) UIViewController *adVc;
-/** 未读信息管理器 */
-@property (nonatomic, strong) LSUserUnreadCountManager *unReadManager;
 
-@property (nonatomic, assign) int unreadCount;
 @end
 
 @implementation LiveModule
@@ -110,9 +102,10 @@ static LiveModule *gModule = nil;
         _adVc = nil;
         _showListGuide = YES;
         _isForTest = NO;
-        _appVerCode = @"122";
+        _appVerCode = @"";
+        _siteId = @"";
         // 创建直播服务
-        [LiveService service];
+        [LiveMutexService service];
         // 资源全局管理
         [LiveBundle gobalInit];
         // 初始化图像下载器
@@ -130,12 +123,9 @@ static LiveModule *gModule = nil;
         [self.imManager.client addDelegate:self];
 
         // 初始化礼物下载器
-        self.giftListManager = [LiveGiftListManager manager];
-        self.giftDownloadManager = [LiveGiftDownloadManager manager];
+        self.giftDownloadManager = [LSGiftManager manager];
         // 初始化聊天表情管理器
         self.emotionManager = [LSChatEmotionManager emotionManager];
-        // 初始化背包礼物管理器
-        self.backGiftManager = [BackpackSendGiftManager backpackGiftManager];
         // 初始session管理器
         self.sessionManager = [LSSessionRequestManager manager];
         // 初始化用户信息管理器
@@ -151,9 +141,6 @@ static LiveModule *gModule = nil;
         [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
         LSRequestManager *manager = [LSRequestManager manager];
         [manager setWebSite:@""];
-        // 初始化未读信息管理器
-        self.unReadManager = [LSUserUnreadCountManager shareInstance];
-        [self.unReadManager addDelegate:self];
     }
     return self;
 }
@@ -162,13 +149,12 @@ static LiveModule *gModule = nil;
     NSLog(@"LiveModule::dealloc()");
 
     if (_serviceManager) {
-        [_serviceManager removeService:self];
+        [_serviceManager removeService:self.service];
     }
 
     [self.imManager.client removeDelegate:self];
     [self.imManager removeDelegate:self];
     [self.loginManager removeDelegate:self];
-    [self.unReadManager removeDelegate:self];
 }
 
 - (void)setConfigUrl:(NSString *)url {
@@ -204,8 +190,10 @@ static LiveModule *gModule = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.loginManager logout:YES msg:@""];
-        [self.imManager logout];
+        [self.loginManager logout:LogoutTypeActive msg:@""];
+        
+        // 停止直播间, 退出到模块入口
+        [[LiveMutexService service] stopService];
     });
 }
 
@@ -222,15 +210,15 @@ static LiveModule *gModule = nil;
     [LSRequestManager setProxy:httpProxy];
 }
 
-- (void)setServiceManager:(id<IServiceManager>)serviceManager {
+- (void)setServiceManager:(id<IMutexServiceManager>)serviceManager {
     _serviceManager = serviceManager;
     if (_serviceManager) {
         [_serviceManager addService:self.service];
     }
 }
 
-- (id<IQNService>)service {
-    return (id<IQNService>)[LiveService service];
+- (id<IMutexService>)service {
+    return (id<IMutexService>)[LiveMutexService service];
 }
 
 - (void)setFromVC:(UIViewController *)fromVC {
@@ -269,7 +257,7 @@ static LiveModule *gModule = nil;
                 [self.delegate moduleOnAdViewController:self];
             }
         }
-        self.qnMainAdId = loginItem.qnMainAdId ;
+        self.qnMainAdId = loginItem.qnMainAdId;
         self.qnMainAdUrl = loginItem.qnMainAdUrl;
         self.qnMainAdTitle = loginItem.qnMainAdTitle;
 
@@ -287,8 +275,8 @@ static LiveModule *gModule = nil;
     }
 }
 
-- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(BOOL)kick msg:(NSString *)msg {
-    NSLog(@"LiveModule::onLogout( [Http注销], kick : %@, msg : %@ )", BOOL2YES(kick), msg);
+- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(LogoutType)type msg:(NSString * _Nullable)msg {
+    NSLog(@"LiveModule::onLogout( [Http注销通知], type : %d, msg : %@ )", type, msg);
 
     // Http注销
     @synchronized(self) {
@@ -297,12 +285,10 @@ static LiveModule *gModule = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        // 停止直播间, 退出到模块入口
-        [[LiveService service] stopService];
-
+    
         // 通知外部模块停止
-        if ([self.delegate respondsToSelector:@selector(moduleOnLogout:kick:msg:)]) {
-            [self.delegate moduleOnLogout:self kick:kick msg:msg];
+        if ([self.delegate respondsToSelector:@selector(moduleOnLogout:type:msg:)]) {
+            [self.delegate moduleOnLogout:self type:type msg:msg];
         }
     });
 }
@@ -315,7 +301,7 @@ static LiveModule *gModule = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
         NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
-        [[LiveService service] openUrlByLive:url];
+        [[LiveMutexService service] openUrlByLive:url];
     });
 }
 
@@ -326,7 +312,7 @@ static LiveModule *gModule = nil;
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
         NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId userId:inviteItem.oppositeId roomType:LiveRoomType_Private];
-        [[LiveService service] openUrlByLive:url];
+        [[LiveMutexService service] openUrlByLive:url];
     });
 }
 
@@ -338,7 +324,7 @@ static LiveModule *gModule = nil;
         // 当前在直播模块
         if (_moduleVC.navigationController) {
             // 当前主播私密邀请能否显示
-            if ([_liveGobalManager canShowInvite:anchorId]) {
+            if ([_liveGobalManager canShowInvite:anchorId] || !_liveGobalManager.isHangouting) {
                 // 生成直播间跳转的URL
                 NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:anchorId nickName:nickName];
                 // 调用QN弹出通知
@@ -382,23 +368,24 @@ static LiveModule *gModule = nil;
     });
 }
 
-- (void)onRecvProgramPlayNotice:(IMProgramItemObject *)item type:(IMProgramNoticeType)type msg:(NSString * _Nonnull)msg
-{
+- (void)onRecvProgramPlayNotice:(IMProgramItemObject *)item type:(IMProgramNoticeType)type msg:(NSString *_Nonnull)msg {
     // TODO:接收节目开播通知接口
     NSLog(@"LiveModule::onRecvProgramPlayNotice( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showLiveId, item.anchorId, item.anchorNickName, type);
-    
+
     if (type == IMPROGRAMNOTICETYPE_BUYTICKET) {
-       
+
         dispatch_async(dispatch_get_main_queue(), ^{
             // 生成直播间跳转的URL
-            NSURL *url =[[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId userId:item.anchorId];
+            NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId userId:item.anchorId];
             // 调用QN弹出通知
             PushShowViewController *vc = [[PushShowViewController alloc] initWithNibName:nil bundle:nil];
             vc.url = url;
             vc.tips = msg;
             vc.anchorId = item.anchorId;
             _notificationVC = vc;
-            
+
+            self.pushCount = 1;
+
             if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
                 [self.delegate moduleOnNotification:self];
             }
@@ -406,35 +393,15 @@ static LiveModule *gModule = nil;
     }
 }
 
-- (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList
-{
-    IMOngoingShowItemObject * item = [ongoingShowList firstObject];
-    NSLog(@"LiveModule::onRecvProgramPlayNotice( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showInfo.showLiveId, item.showInfo.anchorId, item.showInfo.anchorNickName, item.type);
-    
+- (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject *> *)ongoingShowList {
+    IMOngoingShowItemObject *item = [ongoingShowList firstObject];
+    NSLog(@"LiveModule::onHandleLoginOnGingShowList( [接收节目开播通知], showLiveId : %@, anchorId : %@, anchorNickName : %@, type : %d )", item.showInfo.showLiveId, item.showInfo.anchorId, item.showInfo.anchorNickName, item.type);
     [self onRecvProgramPlayNotice:item.showInfo type:item.type msg:item.msg];
-    
-}
-#pragma mark 获取用户中心未读数
-- (void)getUnReadMsg {
-    [self.unReadManager getResevationsUnredCount];
-}
-
-- (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
-    NSInteger count = self.unreadCount + item.total;
-    if ([self.delegate respondsToSelector:@selector(moduleOnGetUnReadMsg:unReadCount:)]) {
-        [self.delegate moduleOnGetUnReadMsg:self unReadCount:count];
-    }
-}
-
-- (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject *)item {
-    self.unreadCount = item.totalNoReadNum;
-    [self.unReadManager getBackpackUnreadCount];
 }
 
 #pragma mark - Application
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     NSLog(@"LiveModule::applicationDidEnterBackground()");
-    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {

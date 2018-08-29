@@ -85,8 +85,8 @@ public class InviteHistoryAdapter extends BaseAdapter {
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_anchor_off1));
                 holder.tvInviteReply2.setVisibility(View.VISIBLE);
                 holder.tvInviteReply2.setText(mContext.getResources().getString(R.string.invite_history_reply_type_anchor_off2));
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
             case AudienceOff:{
                 //用户失约
@@ -94,47 +94,47 @@ public class InviteHistoryAdapter extends BaseAdapter {
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_audience_off1));
                 holder.tvInviteReply2.setText(mContext.getResources().getString(R.string.invite_history_reply_type_audience_off2));
                 holder.tvInviteReply2.setVisibility(View.VISIBLE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
             case Finished:{
                 //已完成
                 holder.tvInviteStatus.setText(mContext.getResources().getString(R.string.invite_history_state_broadcast));
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_finished));
                 holder.tvInviteReply2.setVisibility(View.GONE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#3c3c3c"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#3c3c3c"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#3c3c3c"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#3c3c3c"));
             }break;
             case Canceled:{
                 //已取消
                 holder.tvInviteStatus.setText(mContext.getResources().getString(R.string.invite_history_state_booking));
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_cancel));
                 holder.tvInviteReply2.setVisibility(View.GONE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
             case Defined:{
                 //用户或主播已拒绝
                 holder.tvInviteStatus.setText(mContext.getResources().getString(R.string.invite_history_state_booking));
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_decline));
                 holder.tvInviteReply2.setVisibility(View.GONE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
             case Missed:{
                 //主播或用户超时未处理
                 holder.tvInviteStatus.setText(mContext.getResources().getString(R.string.invite_history_state_booking));
                 holder.tvInviteReply1.setText(mContext.getResources().getString(R.string.invite_history_reply_type_timeout));
                 holder.tvInviteReply2.setVisibility(View.GONE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
             default:{
                 holder.tvInviteStatus.setText("");
                 holder.tvInviteReply1.setText("");
                 holder.tvInviteReply2.setVisibility(View.GONE);
-                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
-                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteStatus.setTextColor(Color.parseColor("#9d9d9d"));
+//                holder.tvInviteReply1.setTextColor(Color.parseColor("#9d9d9d"));
             }break;
         }
 
@@ -161,8 +161,8 @@ public class InviteHistoryAdapter extends BaseAdapter {
                 }
                 //跳转到主播详情页
                 if(!TextUtils.isEmpty(userId)){
-                    mContext.startActivity(AnchorProfileActivity.getAnchorInfoIntent(mContext, mContext.getResources().getString(R.string.live_webview_anchor_profile_title),
-                            userId, false));
+                    AnchorProfileActivity.launchAnchorInfoActivty(mContext, mContext.getResources().getString(R.string.live_webview_anchor_profile_title),
+                            userId, false, AnchorProfileActivity.TagType.Album);
                 }
             }
         });

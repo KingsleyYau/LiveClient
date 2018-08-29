@@ -23,17 +23,18 @@ fileprivate enum JTItemViewState : Int {
 }
 
 fileprivate class JTItemView : UIView {
-    
     fileprivate func itemWidth() -> CGFloat {
-        
         if let text = titleLabel.text {
             let string = text as NSString
             let size = string.size(attributes: [NSFontAttributeName:selectedFont!])
             return size.width + JTSegmentPattern.itemBorder
         }
-        
         return 0.0
     }
+    
+    fileprivate let titleImageView = UIImageView()
+    fileprivate var image: UIImage?
+    fileprivate var selectedImage: UIImage?
     
     fileprivate let titleLabel = UILabel()
     fileprivate lazy var bridgeView : CALayer = {
@@ -118,10 +119,12 @@ fileprivate class JTItemView : UIView {
             self.titleLabel.font = self.font
             self.titleLabel.textColor = self.textColor
             self.backgroundColor = self.itemBackgroundColor
+            self.titleImageView.image = self.image;
         case .Selected:
             self.titleLabel.font = selectedFont
             self.titleLabel.textColor = self.selectedTextColor
             self.backgroundColor = self.selectedBackgroundColor
+            self.titleImageView.image = self.selectedImage;
         }
         self.setNeedsLayout()
         self.layoutIfNeeded()
@@ -129,7 +132,12 @@ fileprivate class JTItemView : UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        titleImageView.contentMode = UIViewContentMode.scaleAspectFit;
+        addSubview(titleImageView)
+        
         titleLabel.textAlignment = .center
+        titleLabel.lineBreakMode = .byTruncatingTail;
         
         addSubview(titleLabel)
         
@@ -143,9 +151,16 @@ fileprivate class JTItemView : UIView {
         super.layoutSubviews()
         
         titleLabel.sizeToFit()
-        
-        titleLabel.center.x = bounds.size.width * 0.5
         titleLabel.center.y = bounds.size.height * 0.5
+        titleLabel.center.x = bounds.size.width * 0.5
+        
+        if(titleImageView.image != nil) {
+            let frame = CGRect(x: titleLabel.frame.origin.x - 5 - titleLabel.frame.size.height, y: 0, width: titleLabel.frame.size.height, height: titleLabel.frame.size.height)
+            titleImageView.frame = frame
+            titleImageView.center.y = titleLabel.center.y
+        } else {
+            titleLabel.center.x = bounds.size.width * 0.5
+        }
         
         let width = bridgeView.bounds.size.width
         let x:CGFloat = titleLabel.frame.maxX
@@ -161,6 +176,19 @@ fileprivate class JTItemView : UIView {
     @objc optional func didSelected(segement:JTSegmentControl, index: Int)
 }
 
+open class JTSegmentItem: NSObject {
+    open var image: UIImage?
+    open var selectedImage: UIImage?
+    open var title: String?
+    
+    public init(image: UIImage?, selectedImage: UIImage?, title: String) {
+        super.init()
+        self.image = image
+        self.selectedImage = selectedImage
+        self.title = title
+    }
+}
+
 open class JTSegmentControl: UIControl {
     
     fileprivate struct Constants {
@@ -168,6 +196,13 @@ open class JTSegmentControl: UIControl {
     }
     
     open weak var delegate : JTSegmentControlDelegate?
+    
+    // Add by Max 2018/05/16
+    open var itemWidthCustom : CGFloat = -1 {
+        didSet{
+            
+        }
+    }
     
     open var autoAdjustWidth = false {
         didSet{
@@ -185,7 +220,11 @@ open class JTSegmentControl: UIControl {
             return 0.0
         }
         if autoAdjustWidth {
-            return itemViews[index].itemWidth()
+            if( itemWidthCustom == -1 ) {
+                return itemViews[index].itemWidth()
+            } else {
+                return itemWidthCustom
+            }
         }else{
             return segementWidth()
         }
@@ -193,8 +232,10 @@ open class JTSegmentControl: UIControl {
     
     open var selectedIndex = 0 {
         willSet{
-            let originItem = self.itemViews[selectedIndex]
-            originItem.state = .Normal
+            if(self.itemViews.count > 0 && selectedIndex < self.itemViews.count) {
+                let originItem = self.itemViews[selectedIndex]
+                originItem.state = .Normal
+            }
             
             let selectItem = self.itemViews[newValue]
             selectItem.state = .Selected
@@ -256,7 +297,7 @@ open class JTSegmentControl: UIControl {
         }
     }
     
-    open var items : [String]?{
+    open var items : [JTSegmentItem]?{
         didSet{
             guard items != nil && items!.count > 0 else {
                 fatalError("Items cannot be empty")
@@ -264,9 +305,8 @@ open class JTSegmentControl: UIControl {
             
             self.removeAllItemView()
             
-            
-            for title in items! {
-                let view = self.createItemView(title: title)
+            for item in items! {
+                let view = self.createItemView(image: item.image, selectedImage: item.selectedImage, title: item.title!)
                 self.itemViews.append(view)
                 self.contentView.addSubview(view)
             }
@@ -304,8 +344,10 @@ open class JTSegmentControl: UIControl {
         itemViews.removeAll()
     }
     private var itemWidths = [CGFloat]()
-    private func createItemView(title:String) -> JTItemView {
-        return createItemView(title: title,
+    private func createItemView(image: UIImage?, selectedImage: UIImage?, title:String) -> JTItemView {
+        return createItemView(image: image,
+                              selectedImage : selectedImage,
+                              title: title,
                               font: self.font,
                               selectedFont: self.selectedFont,
                               textColor: self.itemTextColor,
@@ -315,8 +357,10 @@ open class JTSegmentControl: UIControl {
         )
     }
     
-    private func createItemView(title:String, font:UIFont, selectedFont:UIFont, textColor:UIColor, selectedTextColor:UIColor, backgroundColor:UIColor, selectedBackgroundColor:UIColor) -> JTItemView {
+    private func createItemView(image: UIImage?, selectedImage: UIImage?, title:String, font:UIFont, selectedFont:UIFont, textColor:UIColor, selectedTextColor:UIColor, backgroundColor:UIColor, selectedBackgroundColor:UIColor) -> JTItemView {
         let item = JTItemView()
+        item.image = image
+        item.selectedImage = selectedImage
         item.text = title
         item.textColor = textColor
         item.textAlignment = .center

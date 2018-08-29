@@ -12,7 +12,7 @@
  Twitter : http://twitter.com/tingxins
  */
 
-#define TXScrollLabelFont [UIFont systemFontOfSize:14]
+#define TXScrollLabelFont [UIFont systemFontOfSize:18]
 #import "TXScrollLabelView.h"
 #import <CoreText/CoreText.h>
 
@@ -88,7 +88,7 @@ typedef NS_ENUM(NSInteger, TXScrollLabelType) {
 
 + (instancetype)tx_label {
     TXScrollLabel *label = [[TXScrollLabel alloc]init];
-    label.numberOfLines = 0;
+    label.numberOfLines = 1;
     label.font = TXScrollLabelFont;
     label.textColor = [UIColor whiteColor];
     label.lineBreakMode = NSLineBreakByWordWrapping;
@@ -448,9 +448,9 @@ typedef NS_ENUM(NSInteger, TXScrollLabelType) {
     [self setupLRUDTypeLayoutWithMaxSize:CGSizeMake(labelMaxW, labelMaxH) width:labelW height:labelH completedHandler:^(CGSize size) {
         labelW = MAX(size.width, self.tx_width);
         //开始布局
-        self.upLabel.frame = CGRectMake(_scrollInset.left, 0, labelW, labelH);
+        self.upLabel.frame = CGRectMake(_scrollInset.left, 0, labelW+20, labelH);
         //由于 TXScrollLabelViewTypeLeftRight\UpDown 类型 X\Y 值均不一样，此处不再block中处理！
-        self.downLabel.frame = CGRectMake(CGRectGetMaxX(self.upLabel.frame) + self.scrollSpace, 0, labelW, labelH);
+        self.downLabel.frame = CGRectMake(CGRectGetMaxX(self.upLabel.frame) + self.scrollSpace, 0, labelW+20, labelH);
     }];
 }
 
@@ -462,8 +462,8 @@ typedef NS_ENUM(NSInteger, TXScrollLabelType) {
     
     [self setupLRUDTypeLayoutWithMaxSize:CGSizeMake(labelMaxW, labelMaxH) width:labelW height:labelH completedHandler:^(CGSize size) {
         labelH = MAX(size.height, self.tx_height);
-        self.upLabel.frame = CGRectMake(_scrollInset.left, 0, labelW, labelH);
-        self.downLabel.frame = CGRectMake(_scrollInset.left, CGRectGetMaxY(self.upLabel.frame) + self.scrollSpace, labelW, labelH);
+        self.upLabel.frame = CGRectMake(_scrollInset.left, 0, labelW+20, labelH);
+        self.downLabel.frame = CGRectMake(_scrollInset.left, CGRectGetMaxY(self.upLabel.frame) + self.scrollSpace, labelW+20, labelH);
     }];
 }
 

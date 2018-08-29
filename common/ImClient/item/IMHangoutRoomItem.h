@@ -20,6 +20,7 @@ using namespace std;
 #define HANGOUTROOM_ROOMTYPE_PARAM              "room_type"
 #define HANGOUTROOM_MANLEVEL_PARAM              "man_level"
 #define HANGOUTROOM_MANPUSHPRICE_PARAM          "man_push_price"
+#define HANGOUTROOM_CREDIT_PARAM                "credit"
 #define HANGOUTROOM_PUSHURL_PARAM               "push_url"
 #define HANGOUTROOM_LIVINGANCHORLIST_PARAM      "living_anchor_list"
 #define HANGOUTROOM_BUYFOR_PARAM                "buyfor"
@@ -45,6 +46,10 @@ public:
             /* manPushPrice */
             if (root[HANGOUTROOM_MANPUSHPRICE_PARAM].isNumeric()) {
                 manPushPrice = root[HANGOUTROOM_MANPUSHPRICE_PARAM].asDouble();
+            }
+            /* credit */
+            if (root[HANGOUTROOM_CREDIT_PARAM].isNumeric()) {
+                credit = root[HANGOUTROOM_CREDIT_PARAM].asDouble();
             }
             /* pushUrl */
             if (root[HANGOUTROOM_PUSHURL_PARAM].isArray()) {
@@ -86,6 +91,7 @@ public:
         roomType = ROOMTYPE_UNKNOW;
         manLevel = 0;
         manPushPrice = 0.0;
+        credit = 0.0;
     }
     
     virtual ~IMHangoutRoomItem() {
@@ -97,6 +103,7 @@ public:
      * @roomType                直播间类型（参考《“直播间类型”对照表》）
      * @manLevel                观众等级
      * @manVideoUrl             观众视频流url（字符串数组）（访问视频URL的协议参考《“视频URL”协议描述》）
+     * @credit                  当前信用点余额
      * @pushUrl                 视频流url（字符串数组）（访问视频URL的协议参考《“视频URL”协议描述》）
      * @otherAnchorList         其它主播列表
      * @buyforList              已收礼物列表
@@ -105,6 +112,7 @@ public:
     RoomType                    roomType;
     int                         manLevel;
     double                      manPushPrice;
+    double                      credit;
     list<string>                pushUrl;
     IMOtherAnchorItemList       otherAnchorList;
     RecvGiftList              buyforList;

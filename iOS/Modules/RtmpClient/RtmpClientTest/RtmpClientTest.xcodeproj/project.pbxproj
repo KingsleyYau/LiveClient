@@ -10,13 +10,21 @@
 		500520161E94A26B00C45E22 /* libCommon-C-Library.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 500520131E94A26200C45E22 /* libCommon-C-Library.a */; };
 		500520171E94A33800C45E22 /* libRtmpClient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995221E8F930A001E1355 /* libRtmpClient.a */; };
 		50C9948E1E8F911E001E1355 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C9948D1E8F911E001E1355 /* main.m */; };
-		50C994911E8F911E001E1355 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C994901E8F911E001E1355 /* AppDelegate.m */; };
-		50C994941E8F911E001E1355 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50C994931E8F911E001E1355 /* ViewController.m */; };
+		50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 50C994901E8F911E001E1355 /* AppDelegate.mm */; };
 		50C994971E8F911E001E1355 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C994951E8F911E001E1355 /* Main.storyboard */; };
 		50C994991E8F911E001E1355 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50C994981E8F911E001E1355 /* Assets.xcassets */; };
 		50C9949C1E8F911E001E1355 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */; };
 		50C995811E8F9E1B001E1355 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995801E8F9E1B001E1355 /* libz.tbd */; };
 		50C995831E8F9E2E001E1355 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 50C995821E8F9E2E001E1355 /* libstdc++.tbd */; };
+		50DAEF842136403D00FB374D /* StreamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF812136403D00FB374D /* StreamViewController.m */; };
+		50DAEF852136403D00FB374D /* StreamViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 50DAEF822136403D00FB374D /* StreamViewController.xib */; };
+		50DAEF98213641E900FB374D /* GPUImageBeautifyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF8C213641E900FB374D /* GPUImageBeautifyFilter.m */; };
+		50DAEF99213641E900FB374D /* LFGPUImageBeautyFilter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF8D213641E900FB374D /* LFGPUImageBeautyFilter.m */; };
+		50DAEF9A213641E900FB374D /* LiveStreamPublisher.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF8E213641E900FB374D /* LiveStreamPublisher.m */; };
+		50DAEF9B213641E900FB374D /* LiveStreamPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF90213641E900FB374D /* LiveStreamPlayer.m */; };
+		50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF94213641E900FB374D /* ImageCVPixelBufferInput.m */; };
+		50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 50DAEF96213641E900FB374D /* LiveStreamSession.m */; };
+		50DAEFAD2136468600FB374D /* common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 50DAEFAC2136468600FB374D /* common.xcconfig */; };
 		50F18BF91E94F46100116A4B /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BF81E94F46100116A4B /* VideoToolbox.framework */; };
 		50F18BFB1E94F46A00116A4B /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F18BFA1E94F46A00116A4B /* AVFoundation.framework */; };
 		8F5691877057381C867446C4 /* libPods-RtmpClientTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */; };
@@ -58,9 +66,7 @@
 		50C994891E8F911E001E1355 /* RtmpClientTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RtmpClientTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		50C9948D1E8F911E001E1355 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		50C9948F1E8F911E001E1355 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		50C994901E8F911E001E1355 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		50C994921E8F911E001E1355 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		50C994931E8F911E001E1355 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		50C994901E8F911E001E1355 /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
 		50C994961E8F911E001E1355 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		50C994981E8F911E001E1355 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		50C9949B1E8F911E001E1355 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -68,6 +74,24 @@
 		50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RtmpClient.xcodeproj; path = ../RtmpClient.xcodeproj; sourceTree = "<group>"; };
 		50C995801E8F9E1B001E1355 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		50C995821E8F9E2E001E1355 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		50DAEF812136403D00FB374D /* StreamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StreamViewController.m; sourceTree = "<group>"; };
+		50DAEF822136403D00FB374D /* StreamViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamViewController.xib; sourceTree = "<group>"; };
+		50DAEF832136403D00FB374D /* StreamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StreamViewController.h; sourceTree = "<group>"; };
+		50DAEF8C213641E900FB374D /* GPUImageBeautifyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GPUImageBeautifyFilter.m; sourceTree = "<group>"; };
+		50DAEF8D213641E900FB374D /* LFGPUImageBeautyFilter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFGPUImageBeautyFilter.m; sourceTree = "<group>"; };
+		50DAEF8E213641E900FB374D /* LiveStreamPublisher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveStreamPublisher.m; sourceTree = "<group>"; };
+		50DAEF8F213641E900FB374D /* ImageCVPixelBufferInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageCVPixelBufferInput.h; sourceTree = "<group>"; };
+		50DAEF90213641E900FB374D /* LiveStreamPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveStreamPlayer.m; sourceTree = "<group>"; };
+		50DAEF91213641E900FB374D /* LiveStreamSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveStreamSession.h; sourceTree = "<group>"; };
+		50DAEF92213641E900FB374D /* LFGPUImageBeautyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFGPUImageBeautyFilter.h; sourceTree = "<group>"; };
+		50DAEF93213641E900FB374D /* GPUImageBeautifyFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GPUImageBeautifyFilter.h; sourceTree = "<group>"; };
+		50DAEF94213641E900FB374D /* ImageCVPixelBufferInput.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageCVPixelBufferInput.m; sourceTree = "<group>"; };
+		50DAEF95213641E900FB374D /* LiveStreamPublisher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveStreamPublisher.h; sourceTree = "<group>"; };
+		50DAEF96213641E900FB374D /* LiveStreamSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LiveStreamSession.m; sourceTree = "<group>"; };
+		50DAEF97213641E900FB374D /* LiveStreamPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveStreamPlayer.h; sourceTree = "<group>"; };
+		50DAEFA12136429E00FB374D /* CommonDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonDefine.h; sourceTree = "<group>"; };
+		50DAEFA22136436100FB374D /* RtmpClientTest-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RtmpClientTest-PrefixHeader.pch"; sourceTree = "<group>"; };
+		50DAEFAC2136468600FB374D /* common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
 		50F18BF81E94F46100116A4B /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		50F18BFA1E94F46A00116A4B /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-RtmpClientTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,10 +139,11 @@
 			children = (
 				5005200E1E94A26200C45E22 /* Common-C-Library.xcodeproj */,
 				50C9951D1E8F930A001E1355 /* RtmpClient.xcodeproj */,
-				50C9948B1E8F911E001E1355 /* RtmpClientTest */,
-				50C9948A1E8F911E001E1355 /* Products */,
+				50DAEFAB2136468600FB374D /* Config */,
 				50C9957F1E8F9E1B001E1355 /* Frameworks */,
 				2A16BB52D16BA4B732C36DFD /* Pods */,
+				50C9948A1E8F911E001E1355 /* Products */,
+				50C9948B1E8F911E001E1355 /* RtmpClientTest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -134,13 +159,16 @@
 			isa = PBXGroup;
 			children = (
 				50C9948F1E8F911E001E1355 /* AppDelegate.h */,
-				50C994901E8F911E001E1355 /* AppDelegate.m */,
-				50C994921E8F911E001E1355 /* ViewController.h */,
-				50C994931E8F911E001E1355 /* ViewController.m */,
-				50C994951E8F911E001E1355 /* Main.storyboard */,
+				50C994901E8F911E001E1355 /* AppDelegate.mm */,
 				50C994981E8F911E001E1355 /* Assets.xcassets */,
-				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
+				50DAEF9E2136429E00FB374D /* Header */,
 				50C9949D1E8F911E001E1355 /* Info.plist */,
+				50C9949A1E8F911E001E1355 /* LaunchScreen.storyboard */,
+				50DAEF8B213641E900FB374D /* LiveStreamClient */,
+				50C994951E8F911E001E1355 /* Main.storyboard */,
+				50DAEF832136403D00FB374D /* StreamViewController.h */,
+				50DAEF812136403D00FB374D /* StreamViewController.m */,
+				50DAEF822136403D00FB374D /* StreamViewController.xib */,
 				50C9948C1E8F911E001E1355 /* Supporting Files */,
 			);
 			path = RtmpClientTest;
@@ -150,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				50C9948D1E8F911E001E1355 /* main.m */,
+				50DAEFA22136436100FB374D /* RtmpClientTest-PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -172,6 +201,41 @@
 				962A5EAA277DBD15ABCF5AB1 /* libPods-RtmpClientTest.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		50DAEF8B213641E900FB374D /* LiveStreamClient */ = {
+			isa = PBXGroup;
+			children = (
+				50DAEF93213641E900FB374D /* GPUImageBeautifyFilter.h */,
+				50DAEF8C213641E900FB374D /* GPUImageBeautifyFilter.m */,
+				50DAEF8F213641E900FB374D /* ImageCVPixelBufferInput.h */,
+				50DAEF94213641E900FB374D /* ImageCVPixelBufferInput.m */,
+				50DAEF92213641E900FB374D /* LFGPUImageBeautyFilter.h */,
+				50DAEF8D213641E900FB374D /* LFGPUImageBeautyFilter.m */,
+				50DAEF97213641E900FB374D /* LiveStreamPlayer.h */,
+				50DAEF90213641E900FB374D /* LiveStreamPlayer.m */,
+				50DAEF95213641E900FB374D /* LiveStreamPublisher.h */,
+				50DAEF8E213641E900FB374D /* LiveStreamPublisher.m */,
+				50DAEF91213641E900FB374D /* LiveStreamSession.h */,
+				50DAEF96213641E900FB374D /* LiveStreamSession.m */,
+			);
+			path = LiveStreamClient;
+			sourceTree = "<group>";
+		};
+		50DAEF9E2136429E00FB374D /* Header */ = {
+			isa = PBXGroup;
+			children = (
+				50DAEFA12136429E00FB374D /* CommonDefine.h */,
+			);
+			path = Header;
+			sourceTree = "<group>";
+		};
+		50DAEFAB2136468600FB374D /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				50DAEFAC2136468600FB374D /* common.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,9 +334,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50DAEF852136403D00FB374D /* StreamViewController.xib in Resources */,
 				50C9949C1E8F911E001E1355 /* LaunchScreen.storyboard in Resources */,
 				50C994991E8F911E001E1355 /* Assets.xcassets in Resources */,
 				50C994971E8F911E001E1355 /* Main.storyboard in Resources */,
+				50DAEFAD2136468600FB374D /* common.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,8 +397,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				50C994941E8F911E001E1355 /* ViewController.m in Sources */,
-				50C994911E8F911E001E1355 /* AppDelegate.m in Sources */,
+				50DAEF9B213641E900FB374D /* LiveStreamPlayer.m in Sources */,
+				50DAEF842136403D00FB374D /* StreamViewController.m in Sources */,
+				50DAEF99213641E900FB374D /* LFGPUImageBeautyFilter.m in Sources */,
+				50DAEF98213641E900FB374D /* GPUImageBeautifyFilter.m in Sources */,
+				50DAEF9C213641E900FB374D /* ImageCVPixelBufferInput.m in Sources */,
+				50C994911E8F911E001E1355 /* AppDelegate.mm in Sources */,
+				50DAEF9D213641E900FB374D /* LiveStreamSession.m in Sources */,
+				50DAEF9A213641E900FB374D /* LiveStreamPublisher.m in Sources */,
 				50C9948E1E8F911E001E1355 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -374,6 +446,7 @@
 /* Begin XCBuildConfiguration section */
 		50C9949E1E8F911E001E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50DAEFAC2136468600FB374D /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -422,6 +495,7 @@
 		};
 		50C9949F1E8F911E001E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 50DAEFAC2136468600FB374D /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -468,10 +542,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = MK37J4UMHH;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../RtmpClient/",
-				);
+				GCC_INPUT_FILETYPE = automatic;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/${PRODUCT_NAME}/${PRODUCT_NAME}-PrefixHeader.pch";
 				INFOPLIST_FILE = RtmpClientTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -488,10 +560,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = MK37J4UMHH;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"${SRCROOT}/../RtmpClient/",
-				);
+				GCC_INPUT_FILETYPE = automatic;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/${PRODUCT_NAME}/${PRODUCT_NAME}-PrefixHeader.pch";
 				INFOPLIST_FILE = RtmpClientTest/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

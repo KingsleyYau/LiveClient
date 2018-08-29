@@ -56,7 +56,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
                 }
                 String token = et_token.getText().toString();
                 showToast(getResources().getString(R.string.tip_waitlogin));
-                LoginManager.getInstance().login("", token);
+                LoginManager.getInstance().login("", token , -1);
             }
         });
     }

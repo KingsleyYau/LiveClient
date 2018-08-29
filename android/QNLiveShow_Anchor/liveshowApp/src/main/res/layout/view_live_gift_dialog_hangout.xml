@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/fl_giftDialogRootView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tpi="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/fl_giftDialogContainer"
+        android:orientation="vertical"
+        android:background="@drawable/bg_gift_dialog_hangout"
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_height="250dp">
+
+        <!--tab-->
+        <com.qpidnetwork.anchor.framework.widget.viewpagerindicator.TabPageIndicator
+            android:id="@+id/tpi_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="29dp"
+            android:layout_marginLeft="2dp"
+            tpi:titleTextColorSelected="#05C775"
+            tpi:titleTextColorUnselected="#383838"
+            tpi:titleTextSize="12sp"
+            tpi:hasDigitalHint="false"
+            tpi:indicatorColor="#05C775"
+            tpi:indicatorHeight="2dp"
+            tpi:dividerColor="@android:color/transparent"
+            tpi:dividerTopBottomPadding="4dp"
+            tpi:underlineHeight="1dp"
+            tpi:underlineColor="@android:color/transparent"
+            tpi:txtAllCaps="false"
+            tpi:tabPaddingLeftRight="14dp"
+            tpi:tabSelectedBgColor="@android:color/transparent"
+            tpi:tabUnselectedBgColor="@android:color/transparent">
+
+        </com.qpidnetwork.anchor.framework.widget.viewpagerindicator.TabPageIndicator>
+
+        <FrameLayout
+            android:id="@+id/fl_giftPageContainer"
+            android:layout_marginTop="29dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:layout_gravity="bottom"
+            android:visibility="visible"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/fl_giftListContainer"
+                android:layout_gravity="top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.qpidnetwork.anchor.view.ScrollLayout
+                    android:id="@+id/sl_giftPagerContainer"
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+                </com.qpidnetwork.anchor.view.ScrollLayout>
+            </FrameLayout>
+            <LinearLayout
+                android:id="@+id/ll_indicator"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="15dp"
+                android:gravity="center">
+                <View
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/bg_gift_indicator_unselected"/>
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_loading"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ECEDF1"
+            android:layout_marginTop="29dp"
+            android:gravity="center"
+            android:clickable="true"
+            android:orientation="vertical">
+
+            <ProgressBar
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:scrollbarStyle="insideInset"
+                android:indeterminateDrawable="@drawable/live_loading_progress"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDuration="1000"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_emptyData"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ECEDF1"
+            android:layout_marginTop="29dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_hangout_gift_empty"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hangout_gift_empty"
+                android:textColor="#999999"
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_errorRetry"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="#ECEDF1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="29dp">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_hangout_load_error"/>
+
+            <TextView
+                android:id="@+id/tv_errerReload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hangout_gift_retry"
+                android:textColor="#999999"
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+
+
+</FrameLayout>

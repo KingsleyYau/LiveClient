@@ -68,7 +68,7 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
             dismiss();
 
         } else if (i == R.id.tv_getCredits) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(context);
             //GA统计点击充值
             AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
                     context.getResources().getString(R.string.Live_Global_Action_AddCredit),

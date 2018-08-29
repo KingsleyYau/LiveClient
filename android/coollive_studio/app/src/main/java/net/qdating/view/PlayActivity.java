@@ -44,12 +44,12 @@ public class PlayActivity extends Activity {
 	
 	// 播放相关
 	private String[] playerUrls = {
-		"rtmp://172.25.32.17:19351/live/max0",
-		"rtmp://172.25.32.17:19351/live/max1",
-		"rtmp://172.25.32.17:19351/live/max2",
+			"rtmp://172.25.32.17:19351/live/maxa",
+			"rtmp://172.25.32.17:19351/live/max1",
+			"rtmp://172.25.32.17:19351/live/max2",
 	};
 //	private String[] playerUrls = {
-//		"rtmp://172.25.32.133:7474/test_flash/samson",
+//		"rtmp://52.196.96.7:8899/play_standard/fansi_CM46054718_17710?token=A582892#uid#8WOK1IC5_1530000959125&deviceid=358074081011879",
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
 //		"rtmp://172.25.32.133:7474/test_flash/samson",
 //	};
@@ -69,13 +69,17 @@ public class PlayActivity extends Activity {
 	private EditText editTextPublish = null;
 	
 	private Handler handler = null;
-	
+
+	private boolean supportPublish = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_play);
 
+		LSConfig.DEBUG = false;
 		LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
+		LSConfig.LOGDIR = LSConfig.TAG;
 
 		File path = Environment.getExternalStorageDirectory();
 		filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR;
@@ -92,12 +96,12 @@ public class PlayActivity extends Activity {
 		
 		editTextPublish = (EditText) this.findViewById(R.id.editTextPublish);
 		editTextPublish.setText(publishUrl);
-		
+
 		// 播放相关
-		surfaceViews = new GLSurfaceView[3];
+		surfaceViews = new GLSurfaceView[1];
 		surfaceViews[0] = (GLSurfaceView) this.findViewById(R.id.surfaceView0);
-		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
-		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
+//		surfaceViews[1] = (GLSurfaceView) this.findViewById(R.id.surfaceView1);
+//		surfaceViews[2] = (GLSurfaceView) this.findViewById(R.id.surfaceView2);
 		surfaceViewsScale = new boolean[surfaceViews.length];
 		players = new LSPlayer[surfaceViews.length];
 		for(int i = 0; i < surfaceViews.length; i++) {
@@ -106,27 +110,32 @@ public class PlayActivity extends Activity {
 
 			players[i] = new LSPlayer();
 			players[i].init(surfaceViews[i], FillMode.FillModeAspectRatioFill, null);
-			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
+//			players[i].playUrl(playerUrls[i], "", playH264File[i], playAACFile[i]);
 		}
 		
 		// 推送相关
 		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
-		surfaceViewPublish.setKeepScreenOn(true);
-		int rotation = getWindowManager().getDefaultDisplay()
-	             .getRotation();
-		publisher = new LSPublisher();
-		publisher.init(
-				this,
-				surfaceViewPublish,
-				rotation,
-				FillMode.FillModeAspectRatioFill,
-				null,
-				LSConfig.VideoConfigType.VideoConfigType240x240,
-				12,
-				12,
-				500 * 1000
-		);
-//		publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+		supportPublish = LSPublisher.checkDeviceSupport(this);
+		if( supportPublish ) {
+			surfaceViewPublish.setKeepScreenOn(true);
+			int rotation = getWindowManager().getDefaultDisplay()
+					.getRotation();
+			publisher = new LSPublisher();
+			publisher.init(
+					this,
+					surfaceViewPublish,
+					rotation,
+					FillMode.FillModeAspectRatioFill,
+					null,
+					LSConfig.VideoConfigType.VideoConfigType240x240,
+					12,
+					12,
+					400 * 1000
+			);
+			publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
+		} else {
+			surfaceViewPublish.setVisibility(View.INVISIBLE);
+		}
 
 		// 初始化界面缩放
 		initAnimation();
@@ -151,7 +160,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					String publishUrl = editTextPublish.getText().toString();
 					publisher.publisherUrl(publishUrl, publishH264File, publishAACFile);
 				}
@@ -202,7 +211,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					publisher.stop();
 				}
 			}
@@ -213,7 +222,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					publisher.startPreview();
 				}
 			}
@@ -224,7 +233,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					publisher.stopPreview();
 				}
 			}
@@ -281,7 +290,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					publisher.setMute(!publisher.getMute());
 				}
 			}
@@ -292,7 +301,7 @@ public class PlayActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				if( publisher != null ) {
+				if( publisher != null && supportPublish ) {
 					publisher.rotateCamera();
 				}
 			}

@@ -54,7 +54,7 @@
                 android:ellipsize="end"
                 android:text="@string/invite_history_state_booking"
                 android:textColor="#9d9d9d"
-                android:textSize="10sp"/>
+                android:textSize="12sp"/>
             <TextView
                 android:id="@+id/tvInviteReply1"
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                 android:ellipsize="end"
                 android:text="@string/invite_history_reply_type_audience_off2"
                 android:textColor="#9d9d9d"
-                android:textSize="12sp"/>
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
     <ImageView

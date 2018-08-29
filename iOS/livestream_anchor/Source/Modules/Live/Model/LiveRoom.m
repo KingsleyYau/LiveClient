@@ -8,7 +8,6 @@
 
 #import "LiveRoom.h"
 
-#import "LSRequestManager.h"
 #import "LSLoginManager.h"
 
 #define DEVICEID_KEY "deviceid"
@@ -16,6 +15,7 @@
 
 @interface LiveRoom () {
     NSString *_roomId;
+    NSString *_showId;
     NSString *_userId;
     NSString *_userName;
     NSString *_photoUrl;
@@ -54,11 +54,51 @@
     }
 }
 
+- (void)setUserId:(NSString *)userId {
+    _userId = userId;
+
+    if (_imLiveRoom) {
+        _imLiveRoom.anchorId = _userId;
+    }
+    
+    if (_showInfo) {
+        _showInfo.anchorId = _userId;
+    }
+}
+
+- (NSString *)userId {
+
+    if (!_userId) {
+        _userId = _imLiveRoom.anchorId;
+    }
+    
+    if (!_userId) {
+        _userId = _showInfo.anchorId;
+    }
+    
+    return _userId;
+}
+
+- (NSString *)showId {
+    if (!_showId) {
+        _showId = _showInfo.showLiveId;
+    }
+    return _showId;
+}
+
+- (void)setShowId:(NSString *)showId
+{
+    _showId = showId;
+    if (_showInfo.showLiveId.length > 0) {
+        _showInfo.showLiveId = _showId;
+    }
+}
+
 - (NSString *)playUrl {
     NSString *realUrl = @"";
     if (self.playUrlArray.count > 0) {
         NSString *url = [self.playUrlArray objectAtIndex:_playUrlIndex];
-        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSAnchorRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
     }
     return realUrl;
 }
@@ -81,7 +121,9 @@
     NSString *realUrl = @"";
     if (self.publishUrlArray.count > 0) {
         NSString *url = [self.publishUrlArray objectAtIndex:_publishUrlIndex];
-        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+     
+        realUrl = [NSString stringWithFormat:@"%@?" DEVICEID_KEY "=%@&" TOKEN_KEY "=%@", url, [[LSAnchorRequestManager manager] getDeviceId], [LSLoginManager manager].loginItem.token];
+ 
     }
     return realUrl;
 }

@@ -1,12 +1,15 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -18,9 +21,9 @@ import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
@@ -33,26 +36,27 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dou361.dialogui.DialogUIUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
-import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInfoItem;
 import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem.IMLiveRoomType;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMTextMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
@@ -70,30 +74,33 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSendReqManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftSender;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.ModuleGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.RoomGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.dialog.LiveGiftDialog;
 import com.qpidnetwork.livemodule.liveshow.liveroom.interactivevideo.OpenInterVideoTipsPopupWindow;
-import com.qpidnetwork.livemodule.liveshow.liveroom.intimacy.UserIntimacyWithHostPopupWindow;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.RoomRebateTipsPopupWindow;
 import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.AudienceBalanceInfoPopupWindow;
 import com.qpidnetwork.livemodule.liveshow.liveroom.talent.TalentManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.talent.interfaces.onRequestConfirmListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.vedio.VedioLoadingAnimManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.livemodule.view.CircleImageHorizontScrollView;
 import com.qpidnetwork.livemodule.view.LiveRoomHeaderBezierView;
+import com.qpidnetwork.livemodule.view.LiveRoomScrollView;
+import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
 import com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout;
 import com.qpidnetwork.livemodule.view.listener.ViewDragTouchListener;
-import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionManager;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+
+import net.qdating.LSPublisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +120,9 @@ import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomNormalErrorAc
  * Created by Hunter Mun on 2017/6/16.
  */
 
-public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
+public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity
+        implements BarrageManager.OnBarrageEventListener, LiveRoomChatManager.LiveMessageListItemClickListener, GiftRecommandManager.OnGiftRecommandListener{
+
     /**
      * 直播间消息更新
      */
@@ -130,14 +139,14 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
      * 接受观众进入直播间通知
      */
     public static final int EVENT_MESSAGE_ENTERROOMNOTICE = 1004;
-    /**
-     * 成功获取房间可发送礼物配置信息
-     */
-    private static final int EVENT_UPDATE_SENDABLEGIFT =1005;
-    /**
-     * 成功获取所有背包礼物配置信息
-     */
-    private static final int EVENT_UPDATE_BACKPACKGIFT =1006;
+//    /**
+//     * 成功获取房间可发送礼物配置信息
+//     */
+//    private static final int EVENT_UPDATE_SENDABLEGIFT =1005;
+//    /**
+//     * 成功获取所有背包礼物配置信息
+//     */
+//    private static final int EVENT_UPDATE_BACKPACKGIFT =1006;
     /**
      * 收藏/取消收藏主播
      */
@@ -174,18 +183,30 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
      * 更新推荐礼物
      */
     private static final int EVENT_UPDATE_RECOMMANDGIFT=1016;
+    /**
+     * 播放礼物动画
+     */
+    private static final int EVENT_SHOW_GIFT = 1017;
+    /**
+     * 用户等级升级
+     */
+    private static final int EVENT_MAN_LEVEL_UPDATE = 1018;
 
     //整个view的父，用于解决软键盘等监听
     public SoftKeyboradListenFrameLayout flContentBody;
+    public LiveRoomScrollView lrsv_roomBody;
     public RoomThemeManager roomThemeManager = new RoomThemeManager();
 
     //--------------------------------直播间头部视图层--------------------------------
     protected View view_roomHeader;
-    private ImageView iv_roomHeaderBg;
+//    private ImageView iv_roomHeaderBg;
     private LiveRoomHeaderBezierView lrhbv_flag;
     //主播信息
+    private CircleImageView civ_hostIcon;
     private TextView tv_hostName;
+    private TextView tv_roomFlag;
     private ImageView iv_follow;
+    private View ll_hostInfoView;
     //资费提示
     private View view_tariff_prompt;
     private ImageView iv_roomFlag;
@@ -213,15 +234,14 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     protected ImageView iv_prvHostIconBg;
     protected ImageView iv_followPrvHost;
 
+    protected ImageView iv_closeLiveRoom;
+
     //返点
     private TextView tv_rebateTips;
     private TextView tv_rebateValue;
     private View ll_rebate;
     private View view_roomHeader_buttomLine;
     private RoomRebateTipsPopupWindow roomRebateTipsPopupWindow;
-
-    //亲密度
-    public UserIntimacyWithHostPopupWindow userIntimacyWithHostPopupWindow;
 
     //---------------------消息编辑区域--------------------------------------
     private View rl_inputMsg;
@@ -253,12 +273,11 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
 
     private GiftItem lastRecommendGiftItem;
 
-
     private boolean hasShowCreditsLackTips = false;
 
     //视频播放
     protected ImageView iv_vedioBg;
-    public SurfaceView sv_player;
+    public GLSurfaceView sv_player;
     private View rl_media;
     private View imBody;
     protected View include_audience_area;
@@ -271,6 +290,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     protected LinearLayout ll_entranceCar;
 
     //私密预约按钮
+    protected View ll_privateLive;
     protected ImageView iv_privateLiveNow;
     protected TextView tv_enterPrvRoomTimerCount;
     protected LinearLayout ll_enterPriRoomTimeCount;
@@ -278,7 +298,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
 
     //男士互动区域
     protected View includePublish;
-    protected SurfaceView svPublisher;
+    protected GLSurfaceView svPublisher;
     protected FrameLayout flPublishOperate;
     protected ImageView iv_publishstart;
     protected ImageView iv_publishstop;
@@ -293,28 +313,43 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     protected ImageView iv_freePublicBg1;
     protected ImageView iv_freePublicBg2;
     protected View ll_buttom_audience;
-    protected ImageView iv_inputMsg;
+    protected TextView tv_inputMsg;
     protected ImageView iv_gift;
     protected ImageView iv_recommendGift;
     protected ImageView iv_talent;
     protected ImageView iv_recommGiftFloat;
     protected View fl_recommendGift;
+    protected AnimationDrawable mAnimationDrawableTalent;
 
     protected boolean hasBackgroundTimeOut = false;
     protected boolean closeRoomByUser = false;
 
     //处理后台(即当前页不可用见时收到直播间关闭处理)
     private boolean mIsNeedRecommand = false;
+    private boolean mIsNeedCommand = true;
     private boolean mIsRoomBackgroundClose = false;
     private LiveRoomNormalErrorActivity.PageErrorType mClosePageErrorType;
     private String mCloseErrMsg = "";
+
+    //房间礼物管理器
+    private RoomGiftManager mRoomGiftManager;
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         TAG = BaseCommonLiveRoomActivity.class.getName();
         super.onCreate(savedInstanceState);
+
+        //直播间中不熄灭屏幕
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
         setContentView(R.layout.activity_live_room);
+
+        //初始化房间礼物管理器
+        if(mIMRoomInItem != null){
+            mRoomGiftManager = new RoomGiftManager(mIMRoomInItem);
+        }
 
         initViews();
         if(null != mIMRoomInItem){
@@ -338,6 +373,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         //解决软键盘关闭的监听问题
         flContentBody = (SoftKeyboradListenFrameLayout)findViewById(R.id.flContentBody);
         flContentBody.setInputWindowListener(this);
+        lrsv_roomBody = (LiveRoomScrollView) findViewById(R.id.lrsv_roomBody);
         initRoomHeader();
         if(null != mIMRoomInItem){
             initRoomViewDataAndStyle();
@@ -358,14 +394,15 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         setSizeUnChanageViewParams();
     }
 
+
     /**
      * 初始化数据
      */
     public void initData(){
         if(null != mIMRoomInItem){
             //添加主播头像信息,方便web端主播送礼时客户端能够在小礼物动画上展示其头像
-            mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(mIMRoomInItem.userId,
-                    mIMRoomInItem.nickName,mIMRoomInItem.photoUrl));
+            mIMManager.updateOrAddUserBaseInfo(mIMRoomInItem.userId,
+                    mIMRoomInItem.nickName, mIMRoomInItem.photoUrl);
         }
         //添加试用券使用提示
         if(null != mIMRoomInItem && mIMRoomInItem.usedVoucher){
@@ -373,18 +410,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             showThreeSecondTips(String.format(getResources().getString(R.string.liveroom_paypublic_usedVoucher), String.valueOf(mIMRoomInItem.useCoupon)), Gravity.CENTER);
         }
 
-        //获取本人座驾
+
         if(null != loginItem){
+            //获取本人座驾
             LiveRequestOperator.getInstance().GetAudienceDetailInfo(loginItem.userId,this);
-            //添加我的头像信息
-            mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(loginItem.userId,
-                    loginItem.nickName,loginItem.photoUrl));
         }
         //返点信息初始化
         if(mIMRoomInItem.roomType != IMLiveRoomType.FreePublicRoom
-                && null != mIMRoomInItem.rebateItem && null!=roomRebateTipsPopupWindow){
+                && null != mIMRoomInItem.rebateItem && null!=roomRebateTipsPopupWindow
+                && (mIMRoomInItem.videoUrls!=null && mIMRoomInItem.videoUrls.length > 0)){
+            //主播已推流才开始进行返点倒计时操作
             roomRebateTipsPopupWindow.notifyReBateUpdate(mIMRoomInItem.rebateItem);
-            tv_rebateValue.setText(String.format ("%.2f", mIMRoomInItem.rebateItem.cur_credit));
+            tv_rebateValue.setText(ApplicationSettingUtil.formatCoinValue(mIMRoomInItem.rebateItem.cur_credit));
         }
         //主播视频流加载
         if(mIMRoomInItem.videoUrls!=null && mIMRoomInItem.videoUrls.length > 0){
@@ -394,36 +431,6 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             if(null != vedioLoadingAnimManager){
                 vedioLoadingAnimManager.showLoadingAnim();
             }
-        }
-    }
-
-    /**
-     * 权限检查
-     */
-    private void checkPermissions(){
-        PermissionManager permissionManager = new PermissionManager(mContext, new PermissionManager.PermissionCallback() {
-            @Override
-            public void onSuccessful() {
-                publishStart();
-            }
-
-            @Override
-            public void onFailure() {
-
-            }
-        });
-
-        permissionManager.requestVideo();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//		super.onActivityResult(requestCode, resultCode, data);
-        //系统<设置>界面权限返回处理
-        switch (requestCode) {
-            case PermissionManager.REQUEST_CODE_SYSSETTING: {
-                publishStart();
-            }break;
         }
     }
 
@@ -440,9 +447,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     getResources().getString(R.string.Live_Broadcast_Action_RewardedCredit),
                     getResources().getString(R.string.Live_Broadcast_Label_RewardedCredit));
 
-        } else if (i == R.id.iv_prvHostIconBg || i == R.id.civ_prvHostIcon || i == R.id.tv_hostName) {
+        } else if (i == R.id.iv_prvHostIconBg || i == R.id.civ_prvHostIcon || i == R.id.tv_hostName
+                || i == R.id.civ_hostIcon) {
             visitHostInfo();
-        } else if (i == R.id.iv_inputMsg || i == R.id.btn_showInputView) {
+        } else if (i == R.id.tv_inputMsg) {
             ll_buttom_audience.setVisibility(View.GONE);
             rl_inputMsg.setVisibility(View.VISIBLE);
             showSoftInput(et_liveMsg);
@@ -497,12 +505,16 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     getResources().getString(R.string.Live_Broadcast_Label_Follow));
 
         } else if (i == R.id.iv_closeLiveRoom || i == R.id.ll_closeLiveRoom) {
-            closeRoomByUser = true;
-            closeLiveRoom();
+            userCloseRoom();
         } else if (i == R.id.iv_publishstart) {
+            if(!isHasPermission){
+                doShowPublishNoPermissionDialog();
+                return;
+            }
+
             if (System.currentTimeMillis() - mPublishStartlastClickTime > PUBLIC_CLICK_TIME) {//判断距离上次点击小于2秒
                 mPublishStartlastClickTime = System.currentTimeMillis();//记录这次点击时间
-                checkPermissions();
+                publishStart();
             }
         } else if (i == R.id.iv_publishstop) {
             if (System.currentTimeMillis() - mPublishEndlastClickTime > PUBLIC_CLICK_TIME) {//判断距离上次点击小于2秒
@@ -514,14 +526,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         } else if (i == R.id.includePublish) {
             refreshPublishViews();
         } else if(i == R.id.iv_gift) {
-            showLiveGiftDialog(false);
+            showLiveGiftDialog("");
             //GA点击打开礼物列表
             onAnalyticsEvent(getResources().getString(R.string.Live_Broadcast_Category),
                     getResources().getString(R.string.Live_Broadcast_Action_GiftList),
                     getResources().getString(R.string.Live_Broadcast_Label_GiftList));
 
         } else if( i == R.id.fl_recommendGift ||i == R.id.iv_recommGiftFloat ||i == R.id.iv_recommendGift ){
-            showLiveGiftDialog(null != lastRecommendGiftItem);
+            String recommandGiftId = "";
+            if(lastRecommendGiftItem != null){
+                recommandGiftId = lastRecommendGiftItem.id;
+            }
+            showLiveGiftDialog(recommandGiftId);
             //GA推荐礼物点击
             onAnalyticsEvent(getResources().getString(R.string.Live_Broadcast_Category),
                     getResources().getString(R.string.Live_Broadcast_Action_RecommendGift),
@@ -541,11 +557,12 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     getResources().getString(R.string.Live_Broadcast_Action_Talent),
                     getResources().getString(R.string.Live_Broadcast_Label_Talent));
         } else if(i == R.id.iv_privateLiveNow){
-            closeLiveRoom();
             startActivity(LiveRoomTransitionActivity.getIntent(this,
                     LiveRoomTransitionActivity.CategoryType.Audience_Invite_Enter_Room,
                     mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,
                     null,null));
+            //先跳转再关闭
+            closeLiveRoom(true);
         }
     }
 
@@ -555,7 +572,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         switch(msg.what){
             case EVENT_UPDATE_RECOMMANDGIFT:
                 //更新推荐礼物btn,并标记当前推荐礼物,点击推荐礼物，打开礼物列表弹框，选中并跳转显示该推荐礼物
-                if(!TextUtils.isEmpty(lastRecommendGiftItem.middleImgUrl)){
+                if((lastRecommendGiftItem != null) && !TextUtils.isEmpty(lastRecommendGiftItem.middleImgUrl)){
                     String localImgPath = FileCacheManager.getInstance()
                             .getGiftLocalPath(lastRecommendGiftItem.id, lastRecommendGiftItem.middleImgUrl);
                     boolean localFileExists = SystemUtils.fileExists(localImgPath);
@@ -576,15 +593,25 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     }
                 }
                 break;
-            case EVENT_INTIMACY_LEVEL_UPDATE:
-                if(null != roomThemeManager && null != mIMRoomInItem){
-                    Drawable lovelLevelDrawable = roomThemeManager.getPrivateRoomLoveLevelDrawable(this,mIMRoomInItem.loveLevel);
-                    if(null != lovelLevelDrawable){
+            case EVENT_INTIMACY_LEVEL_UPDATE: {
+                if (null != roomThemeManager && null != mIMRoomInItem) {
+                    Drawable lovelLevelDrawable = roomThemeManager.getPrivateRoomLoveLevelDrawable(this, mIMRoomInItem.loveLevel);
+                    if (null != lovelLevelDrawable) {
                         iv_intimacyPrv.setImageDrawable(lovelLevelDrawable);
                     }
                 }
 
-                break;
+                //更新礼物列表显示
+                if(liveGiftDialog != null && (mIMRoomInItem != null)){
+                    liveGiftDialog.updateRoomInfo(mIMRoomInItem);
+                }
+            }break;
+            case EVENT_MAN_LEVEL_UPDATE:{
+                //用户等级升级，通知礼物列表
+                if(liveGiftDialog != null && (mIMRoomInItem != null)){
+                    liveGiftDialog.updateRoomInfo(mIMRoomInItem);
+                }
+            }break;
             case EVENT_LEAVING_ROOM_TIMECOUNT:
                 //关闭直播间倒计时
                 if(leavingRoomTimeCount>=0){
@@ -592,6 +619,12 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                             String.valueOf(leavingRoomTimeCount)));
                     leavingRoomTimeCount-=1;
                     sendEmptyUiMessageDelayed(EVENT_LEAVING_ROOM_TIMECOUNT,1000l);
+                }else{
+                    //add by Jagger 2018-4-9
+                    //Bug#9972 修复断线后不会退出直播间的问题
+                    if(isActivityVisible()) {
+                        endLive(PAGE_ERROR_LIEV_EDN, getString(R.string.liveroom_transition_broadcast_ended), true, true);
+                    }
                 }
                 break;
             case EVENT_TIMEOUT_BACKGROUND:
@@ -602,12 +635,24 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     mIMManager.RoomOut(mIMRoomInItem.roomId);
                     mIMRoomInItem.roomId = "";  //不再处理直播间消息、通知等
                 }
+
+                //停止上传和拉流
+                //回收拉流播放器
+                if(mLivePlayerManager != null){
+                    mLivePlayerManager.uninit();
+                    mLivePlayerManager = null;
+                }
+                //add by Jagger 2017-12-1
+                destroyPublisher();
+                //销毁互动UI
+                removeCallback(mHideOperateRunnable);
+
                 Log.d(TAG,"EVENT_TIMEOUT_BACKGROUND-hasBackgroundTimeOut:"+hasBackgroundTimeOut);
                 break;
             case EVENT_UPDATE_REBATE:
                 IMRebateItem tempIMRebateItem =mLiveRoomCreditRebateManager.getImRebateItem();
                 if(null != tempIMRebateItem && null != roomRebateTipsPopupWindow){
-                    tv_rebateValue.setText(String.format ("%.2f", tempIMRebateItem.cur_credit));
+                    tv_rebateValue.setText(ApplicationSettingUtil.formatCoinValue(tempIMRebateItem.cur_credit));
                     roomRebateTipsPopupWindow.notifyReBateUpdate(tempIMRebateItem);
                 }
                 break;
@@ -616,14 +661,14 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                 showThreeSecondTips(getResources().getString(R.string.live_gift_send_failed,msg.obj.toString()),
                         Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
                 if(null != liveGiftDialog){
-                    liveGiftDialog.notifyGiftSentFailed(IMClientListener.LCC_ERR_TYPE.LCC_ERR_FAIL);
+                    liveGiftDialog.notifyGiftSentFailed();
                 }
                 break;
             case EVENT_GIFT_SEND_FAILED_CREDITS_NOENOUGH:
                 //非豪华非背包礼物，发送失败(信用点不足)，弹充值对话框，清理发送队列，关闭倒计时动画
                 showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
                 if(null != liveGiftDialog){
-                    liveGiftDialog.notifyGiftSentFailed(IMClientListener.LCC_ERR_TYPE.LCC_ERR_FAIL);
+                    liveGiftDialog.notifyGiftSentFailed();
                 }
                 break;
             case EVENT_FAVORITE_RESULT:
@@ -637,17 +682,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                         && !TextUtils.isEmpty(carInfo.riderName)) {
                     //聊天区域插入座驾进入直播间消息
                     boolean playCarInAnimAfterDownImg = msg.getData().getBoolean("playCarInAnimAfterDownImg",false);
-                    final String honorImg = msg.getData().getString("honorImg");
                     //避免首次未下载座驾img，下载成功后回调重复生成入场消息
                     if(!playCarInAnimAfterDownImg){
-                        String str = getResources().getString(
-                                R.string.enterlive_withrider, carInfo.nickName, carInfo.riderName);
                         IMMessageItem msgItem = new IMMessageItem(mIMRoomInItem.roomId,
                                 mIMManager.mMsgIdIndex.getAndIncrement(),
-                                honorImg,
-                                IMMessageItem.MessageType.SysNotice,
-                                new IMSysNoticeMessageContent(str,"",
-                                        IMSysNoticeMessageContent.SysNoticeType.CarIn));
+                                carInfo.userId,
+                                carInfo.nickName,
+                                null,
+                                mIMRoomInItem.manLevel,
+                                IMMessageItem.MessageType.RoomIn,
+                                new IMTextMessageContent(String.format(getResources().getString(R.string.enterlive_withrider), carInfo.riderName)),
+                                null
+                                );
                         sendMessageUpdateEvent(msgItem);
                     }
                     //判断并播放入场座驾动画
@@ -676,7 +722,6 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                                     msg.what = EVENT_MESSAGE_ENTERROOMNOTICE;
                                     msg.obj = carInfo;
                                     Bundle bundle = msg.getData();
-                                    bundle.putString("honorImg",honorImg);
                                     bundle.putBoolean("playCarInAnimAfterDownImg",true);
                                     msg.setData(bundle);
                                     sendUiMessage(msg);
@@ -698,6 +743,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                 if(msgItem != null && msgItem.msgId > 0){
                     //更新消息列表
                     if(null != liveRoomChatManager){
+
                         liveRoomChatManager.addMessageToList(msgItem);
                     }
 
@@ -705,17 +751,12 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     launchAnimationByMessage(msgItem);
                 }
                 break;
-            case EVENT_UPDATE_SENDABLEGIFT: {
-                List<GiftItem> giftItems = (List<GiftItem>) msg.obj;
-                if (liveGiftDialog != null) {
-                    liveGiftDialog.notifyStoreGiftData(giftItems);
+            case EVENT_SHOW_GIFT:
+                IMMessageItem msgGiftItem = (IMMessageItem)msg.obj;
+                if(msgGiftItem != null && msgGiftItem.msgId > 0) {
+                    launchAnimationByMessage(msgGiftItem);
                 }
-            }break;
-            case EVENT_UPDATE_BACKPACKGIFT: {
-                if (liveGiftDialog != null) {
-                    liveGiftDialog.notifyBackPackDataChanged(msg.getData().getBoolean("isSuccess"));
-                }
-            }break;
+                break;
             default:
                 break;
         }
@@ -733,9 +774,26 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         sendUiMessage(msg);
     }
 
+    /**
+     * 消息切换主线程(播放礼物)
+     * @param msgItem
+     */
+    public void sendMessageShowGiftEvent(IMMessageItem msgItem){
+        Log.d(TAG,"sendMessageUpdateEvent");
+        Message msg = Message.obtain();
+        msg.what = EVENT_SHOW_GIFT;
+        msg.obj = msgItem;
+        sendUiMessage(msg);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        //停止才艺动画
+        if(mAnimationDrawableTalent != null && mAnimationDrawableTalent.isRunning()){
+            mAnimationDrawableTalent.stop();
+        }
 
         //同步模块直播已结束
         String targetId = "";
@@ -763,13 +821,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         }
         //退出房间成功，就清空送礼队列，并停止服务
         GiftSendReqManager.getInstance().shutDownReqQueueServNow();
-        normalGiftManager.unregisterListener(mIMRoomInItem.roomId);
-        packageGiftManager.unregisterListener(mIMRoomInItem.roomId);
+
         //推荐礼物
-        if(null != giftRecommandManager){
-            giftRecommandManager.setRecommandListener(null);
-            giftRecommandManager.stopRecommand();
-            giftRecommandManager = null;
+        if(null != mRoomGiftManager){
+            mRoomGiftManager.onDestroy();
         }
 
         //del by Jagger 2017-12-1
@@ -788,23 +843,41 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         removeUiMessages(EVENT_LEAVING_ROOM_TIMECOUNT);
         //才艺
         if(null != talentManager){
-            talentManager.release();
+            talentManager.destory();
         }
         talentManager = null;
 
         if(null != vedioLoadingAnimManager){
             vedioLoadingAnimManager.hideLoadingAnim();
         }
+        if(null != liveRoomChatManager){
+            liveRoomChatManager.destroy();
+        }
+
+        //礼物列表回收
+        if(liveGiftDialog != null){
+            liveGiftDialog.onDestroy();
+        }
+
     }
 
     /**
      * 关闭直播间
+     * @param needCommand
      */
-    public void closeLiveRoom(){
+    public void closeLiveRoom(boolean needCommand){
         Log.d(TAG,"closeLiveRoom");
         if(null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId) && null != mIMManager){
-            mIMManager.RoomOut(mIMRoomInItem.roomId);
+            if(needCommand) {
+                mIMManager.RoomOut(mIMRoomInItem.roomId);
+            }
+            //清理缓存直播间基本用户信息
+            mIMManager.clearUserInfoList();
         }
+
+        //退出直播间操作后，不再接收事件
+        clearIMListener();
+
         finish();
     }
 
@@ -812,11 +885,38 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){
             //拦截返回键
-            closeRoomByUser = true;
-            closeLiveRoom();
+//            closeRoomByUser = true;
+//            closeLiveRoom();
+            userCloseRoom();
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 用户手动点击退出直播间
+     */
+    private void userCloseRoom(){
+        if(null != mIMRoomInItem && mIMRoomInItem.roomType != IMLiveRoomType.FreePublicRoom){
+            showSimpleTipsDialog(R.string.liveroom_close_room_notify,
+                    R.string.live_common_btn_no,R.string.live_common_btn_yes,
+                    new SimpleDoubleBtnTipsDialog.OnTipsDialogBtnClickListener() {
+                        @Override
+                        public void onCancelBtnClick() {
+
+                        }
+
+                        @Override
+                        public void onConfirmBtnClick() {
+                            closeRoomByUser = true;
+                            closeLiveRoom(true);
+                        }
+                    });
+        }else{
+            closeRoomByUser = true;
+            closeLiveRoom(true);
+        }
+
     }
 
     //******************************** 顶部房间信息模块 ****************************************************************
@@ -866,46 +966,52 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     private void initRoomHeader(){
         view_roomHeader = findViewById(R.id.view_roomHeader);
         view_roomHeader.setOnClickListener(this);
-        iv_roomHeaderBg = (ImageView) findViewById(R.id.iv_roomHeaderBg);
+//        iv_roomHeaderBg = (ImageView) findViewById(R.id.iv_roomHeaderBg);
         lrhbv_flag = (LiveRoomHeaderBezierView) findViewById(R.id.lrhbv_flag);
         iv_roomFlag = (ImageView) findViewById(R.id.iv_roomFlag);
-        RelativeLayout.LayoutParams roomFlagLp = (RelativeLayout.LayoutParams) iv_roomFlag.getLayoutParams();
+        FrameLayout.LayoutParams roomFlagLp = (FrameLayout.LayoutParams) iv_roomFlag.getLayoutParams();
         findViewById(R.id.ll_closeLiveRoom).setOnClickListener(this);
-        //背景图高度写死
+//        view_roomHeader.measure(0,0);
         if(null != mIMRoomInItem){
-            FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)iv_roomHeaderBg.getLayoutParams();
-            lp1.height = roomThemeManager.getRoomHeadViewHeight(this,mIMRoomInItem.roomType);
-            iv_roomHeaderBg.setLayoutParams(lp1);
+//            FrameLayout.LayoutParams lp1 = (FrameLayout.LayoutParams)iv_roomHeaderBg.getLayoutParams();
+//            lp1.height = view_roomHeader.getMeasuredHeight();
+//            iv_roomHeaderBg.setLayoutParams(lp1);
             iv_roomFlag.setImageDrawable(roomThemeManager.getRoomFlagDrawable(this,mIMRoomInItem.roomType));
-            roomFlagLp.height =roomThemeManager.getRoomFlagHeight(this,mIMRoomInItem.roomType);
-            roomFlagLp.topMargin = roomThemeManager.getRoomFlagTopMargin(this,mIMRoomInItem.roomType);
-            roomFlagLp.bottomMargin = roomThemeManager.getRoomFlagBottomMargin(this,mIMRoomInItem.roomType);
-            iv_roomFlag.setLayoutParams(roomFlagLp);
-
+//            roomFlagLp.height =roomThemeManager.getRoomFlagHeight(this,mIMRoomInItem.roomType);
+//            roomFlagLp.topMargin = roomThemeManager.getRoomFlagTopMargin(this,mIMRoomInItem.roomType);
+//            roomFlagLp.bottomMargin = roomThemeManager.getRoomFlagBottomMargin(this,mIMRoomInItem.roomType);
+//            iv_roomFlag.setLayoutParams(roomFlagLp);
+//
         }
-        iv_roomFlag.measure(0,0);
+//        iv_roomFlag.measure(0,0);
         //资费提示
         view_tariff_prompt = findViewById(R.id.view_tariff_prompt);
-        FrameLayout.LayoutParams tpLp = (FrameLayout.LayoutParams) view_tariff_prompt.getLayoutParams();
-        tpLp.topMargin = iv_roomFlag.getMeasuredHeight()+roomFlagLp.topMargin+tpLp.topMargin;
-        tpLp.width = iv_roomFlag.getMeasuredWidth();
-        view_tariff_prompt.setLayoutParams(tpLp);
-        btn_OK = (Button) findViewById(R.id.btn_OK);
-        btn_OK.setOnClickListener(tpOKClickListener);
-        iv_roomFlag.setOnClickListener(roomFlagClickListener);
+        view_tariff_prompt.setVisibility(View.GONE);
+//        FrameLayout.LayoutParams tpLp = (FrameLayout.LayoutParams) view_tariff_prompt.getLayoutParams();
+//        tpLp.topMargin += view_roomHeader.getMeasuredHeight()-roomFlagLp.bottomMargin;
+//        tpLp.width = iv_roomFlag.getMeasuredWidth()*3/2;
+//        view_tariff_prompt.setLayoutParams(tpLp);
+//        btn_OK = (Button) findViewById(R.id.btn_OK);
+//        btn_OK.setOnClickListener(tpOKClickListener);
+//        iv_roomFlag.setOnClickListener(roomFlagClickListener);
         tpManager = new TariffPromptManager(this);
         tv_triffMsg = (TextView) findViewById(R.id.tv_triffMsg);
-        if(null != mIMRoomInItem){
-            tpManager.init(mIMRoomInItem).getRoomTariffInfo(this);
-        }
+//        if(null != mIMRoomInItem){
+//            tpManager.init(mIMRoomInItem).getRoomTariffInfo(this);
+//        }
 
         //---公开直播间----
         ll_publicRoomHeader = (LinearLayout) findViewById(R.id.ll_publicRoomHeader);
         ll_publicRoomHeader.setVisibility(View.GONE);
+        ll_hostInfoView = findViewById(R.id.ll_hostInfoView);
+        civ_hostIcon = (CircleImageView)findViewById(R.id.civ_hostIcon);
+        civ_hostIcon.setOnClickListener(this);
         iv_follow = (ImageView) findViewById(R.id.iv_follow);
         iv_follow.setOnClickListener(this);
         tv_hostName = (TextView) findViewById(R.id.tv_hostName);
         tv_hostName.setOnClickListener(this);
+        tv_roomFlag = (TextView) findViewById(R.id.tv_roomFlag);
+
         //免费公开直播间
         cihsv_onlineFreePublic = (CircleImageHorizontScrollView) findViewById(R.id.cihsv_onlineFreePublic);
         tv_onlineNum = (TextView) findViewById(R.id.tv_onlineNum);
@@ -930,36 +1036,59 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         iv_followPrvHost.setOnClickListener(this);
         ll_privateRoomHeader.setVisibility(View.GONE);
         view_roomHeader_buttomLine = findViewById(R.id.view_roomHeader_buttomLine);
-        if(null != mIMRoomInItem){
-            LinearLayout.LayoutParams buttomLineLp = (LinearLayout.LayoutParams) view_roomHeader_buttomLine.getLayoutParams();
-            buttomLineLp.height = roomThemeManager.getRoomHeadViewButtomLineHeight(this,mIMRoomInItem.roomType);
-            view_roomHeader_buttomLine.setLayoutParams(buttomLineLp);
-        }
+//        if(null != mIMRoomInItem){
+//            LinearLayout.LayoutParams buttomLineLp = (LinearLayout.LayoutParams) view_roomHeader_buttomLine.getLayoutParams();
+//            buttomLineLp.height = roomThemeManager.getRoomHeadViewButtomLineHeight(this,mIMRoomInItem.roomType);
+//            view_roomHeader_buttomLine.setLayoutParams(buttomLineLp);
+//        }
+
+        iv_closeLiveRoom = (ImageView) findViewById(R.id.iv_closeLiveRoom);
     }
 
     private void initRoomViewDataAndStyle(){
-        int color = roomThemeManager.getRootViewTopColor(this,mIMRoomInItem.roomType);
-        StatusBarUtil.setColor(this,color,0);
-        lrhbv_flag.setRoomHeaderBgColor(color);
-        iv_roomHeaderBg.setImageDrawable(roomThemeManager.getRoomHeaderViewBgDrawable(this,mIMRoomInItem.roomType));
+        int color = roomThemeManager.getRootViewTopColor(mIMRoomInItem.roomType);
+//        StatusBarUtil.setColor(this,color,0);
+//        lrhbv_flag.setRoomHeaderBgColor(color);
+//        iv_roomHeaderBg.setImageDrawable(roomThemeManager.getRoomHeaderViewBgDrawable(this,mIMRoomInItem.roomType));
+        ll_hostInfoView.setBackgroundDrawable(roomThemeManager.getRoomHeaderHostInfoViewBg(this,mIMRoomInItem.roomType));
+        tv_roomFlag.setText(getResources().getString(roomThemeManager.getRoomHeaderRoomFlagStrResId(mIMRoomInItem.roomType)));
+        view_roomHeader_buttomLine.setBackgroundDrawable(roomThemeManager.getRoomHeadDeviderLineDrawable(mIMRoomInItem.roomType));
         flContentBody.setBackgroundDrawable(roomThemeManager.getRoomThemeDrawable(this,mIMRoomInItem.roomType));
+        if(null != mIMRoomInItem && !TextUtils.isEmpty((mIMRoomInItem.photoUrl))){
+            //主播的头像是过渡页面带进来的，所以IMManager.getUserInfo拿到的同mIMRoomInItem的一样的
+            Picasso.with(getApplicationContext())
+                    .load(mIMRoomInItem.photoUrl)
+                    .error(R.drawable.ic_default_photo_woman)
+                    .placeholder(R.drawable.ic_default_photo_woman)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                    .into(civ_hostIcon);
+        }
         if(mIMRoomInItem.roomType==IMLiveRoomType.NormalPrivateRoom
                 || mIMRoomInItem.roomType==IMLiveRoomType.AdvancedPrivateRoom){
-            iv_prvUserIconBg.setImageDrawable(roomThemeManager.getPrivateRoomUserIconBg(this,mIMRoomInItem.roomType));
-            iv_prvHostIconBg.setImageDrawable(roomThemeManager.getPrivateRoomHostIconBg(this,mIMRoomInItem.roomType));
+//            iv_prvUserIconBg.setImageDrawable(
+//                    roomThemeManager.getPrivateRoomUserIconBg(this,mIMRoomInItem.roomType));
+//            iv_prvHostIconBg.setImageDrawable(
+//                    roomThemeManager.getPrivateRoomHostIconBg(this,mIMRoomInItem.roomType));
             if(null != mIMRoomInItem && !TextUtils.isEmpty((mIMRoomInItem.photoUrl))){
+                //主播的头像是过渡页面带进来的，所以IMManager.getUserInfo拿到的同mIMRoomInItem的一样的
                 Picasso.with(getApplicationContext())
                         .load(mIMRoomInItem.photoUrl)
                         .error(R.drawable.ic_default_photo_woman)
                         .placeholder(R.drawable.ic_default_photo_woman)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
                         .into(civ_prvHostIcon);
             }
-            if(null != loginItem && !TextUtils.isEmpty(loginItem.photoUrl)){
-                Picasso.with(getApplicationContext())
-                        .load(loginItem.photoUrl)
-                        .error(R.drawable.ic_default_photo_man)
-                        .placeholder(R.drawable.ic_default_photo_man)
-                        .into(civ_prvUserIcon);
+
+            if(null != mIMManager && null != loginItem){
+                //自己的通过3.12接口缓存的数据更新
+                IMUserBaseInfoItem imUserBaseInfoItem = mIMManager.getUserInfo(loginItem.userId);
+                if(null != imUserBaseInfoItem && !TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)){
+                    Picasso.with(getApplicationContext())
+                            .load(imUserBaseInfoItem.photoUrl)
+                            .error(R.drawable.ic_default_photo_man)
+                            .placeholder(R.drawable.ic_default_photo_man)
+                            .into(civ_prvUserIcon);
+                }
             }
             Drawable prvFollowDrawable = roomThemeManager.getPrivateRoomFollowBtnDrawable(this,mIMRoomInItem.roomType);
             if(null != prvFollowDrawable){
@@ -970,16 +1099,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             if(null != lovelLevelDrawable){
                 iv_intimacyPrv.setImageDrawable(lovelLevelDrawable);
             }
-        }else{
-            tv_hostName.setText(mIMRoomInItem.nickName);
         }
+        tv_hostName.setText(getResources().getString(R.string.live_room_host_nickname_tips,mIMRoomInItem.nickName));
+
         //是否已经关注
         onRecvFollowHostResp(mIMRoomInItem.isFavorite,"");
+        //根据直播间类型更换关闭直播间按钮图标
+        iv_closeLiveRoom.setImageDrawable(roomThemeManager.getCloseRoomImgResId(this,mIMRoomInItem.roomType));
     }
 
     protected void updatePublicRoomOnlineData(int fansNum){
         Log.d(TAG,"updatePublicRoomOnlineData-fansNum:"+fansNum);
-        tv_onlineNum.setVisibility(fansNum >0 ? View.VISIBLE : View.GONE);
+        tv_onlineNum.setVisibility(fansNum >0 ? View.GONE : View.GONE);
         tv_onlineNum.setText(String.valueOf(fansNum));
         tv_vipGuestData.setText(getResources().getString(R.string.liveroom_header_vipguestdata,
                 String.valueOf(fansNum),String.valueOf(mIMRoomInItem.audienceLimitNum)));
@@ -1000,9 +1131,9 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     }
 
     protected void visitHostInfo(){
-        startActivity(AnchorProfileActivity.getAnchorInfoIntent(this,
+        AnchorProfileActivity.launchAnchorInfoActivty(this,
                 getResources().getString(R.string.live_webview_anchor_profile_title),
-                mIMRoomInItem.userId, false));
+                mIMRoomInItem.userId, false, AnchorProfileActivity.TagType.Album);
     }
 
     /**
@@ -1035,7 +1166,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             showToast(errMsg);
         }
         iv_follow.setVisibility(isSuccess ? View.GONE : View.VISIBLE);
-        iv_followPrvHost.setVisibility(isSuccess ? View.GONE : View.VISIBLE);
+        iv_followPrvHost.setVisibility(isSuccess ? View.GONE : View.GONE);
     }
 
     /**
@@ -1086,13 +1217,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     }
 
     @Override
-    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType,
+    public void OnRoomIn(int reqId, final boolean success, final IMClientListener.LCC_ERR_TYPE errType,
                          String errMsg, final IMRoomInItem roomInfo) {
         super.OnRoomIn(reqId,success,errType,errMsg,roomInfo);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                onDisconnectRoomIn();
+                if(!success && errType != IMClientListener.LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL){
+                    //关闭直播间逻辑
+                    endLive(PAGE_ERROR_LIEV_EDN, getString(R.string.liveroom_transition_broadcast_ended), false, false);
+                }else{
+                    onDisconnectRoomIn();
+                }
             }
         });
     }
@@ -1102,7 +1238,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         include_audience_area = findViewById(R.id.include_audience_area);
         iv_vedioBg = (ImageView) findViewById(R.id.iv_vedioBg);
         //视频播放组件
-        sv_player = (SurfaceView)findViewById(R.id.sv_player);
+        sv_player = (GLSurfaceView)findViewById(R.id.sv_player);
         //add by Jagger 2017-11-29 解决小窗口能浮在大窗口上的问题
 //        sv_player.getHolder().setFormat(PixelFormat.TRANSPARENT);
 
@@ -1159,9 +1295,17 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                                 drawable = roomThemeManager.getRoomCreditsBgDrawable(BaseCommonLiveRoomActivity.this,
                                         mIMRoomInItem.roomType);
                             }
+                            //通过photo控制免费公开直播间不显示返点信息
                             if (null != drawable) {
+                                if(ll_rebate.getVisibility() != View.VISIBLE){
+                                    //第一次显示返点信息，返点倒计时才开始
+                                    LiveRoomCreditRebateManager.getInstance().refreshRebateLastUpdate();
+                                    //启动定时器
+                                    onRebateUpdate();
+                                }
+
                                 ll_rebate.setBackgroundDrawable(drawable);
-                                ll_rebate.setVisibility(View.VISIBLE);
+                                ll_rebate.setVisibility(View.INVISIBLE);
                             } else {
                                 ll_rebate.setVisibility(View.INVISIBLE);
                             }
@@ -1203,24 +1347,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             pw_audienceBalanceInfo = new AudienceBalanceInfoPopupWindow(getApplicationContext());
             pw_audienceBalanceInfo.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         }
-        pw_audienceBalanceInfo.setUserLevel(mIMRoomInItem.manLevel);
+        //AudienceBalanceInfoPopupWindow中会实时变动的数据为level和credits，credits使用直播间内部manager缓存,
         pw_audienceBalanceInfo.showAtLocation(rootView,Gravity.BOTTOM, ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
-    }
-
-    //-----------------------亲密度说明----------------------------------------
-    private void showUserIntimacyWithHostPopupWindow(){
-        if(null == userIntimacyWithHostPopupWindow){
-            userIntimacyWithHostPopupWindow = new UserIntimacyWithHostPopupWindow(this);
-            userIntimacyWithHostPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
-        if(null != mIMRoomInItem){
-            userIntimacyWithHostPopupWindow.updateViewData(mIMRoomInItem.nickName,mIMRoomInItem.loveLevel);
-        }
-        if(!userIntimacyWithHostPopupWindow.isShowing()){
-            userIntimacyWithHostPopupWindow.showAtLocation(flContentBody, Gravity.CENTER,0,0);
-        }
     }
 
     //******************************** 礼物模块 ****************************************************************
@@ -1229,49 +1359,52 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
      * 初始化礼物配置
      */
     public void initRoomGiftDataSet() {
-        if(null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId)){
-            //获取房间可用礼物配置
-            normalGiftManager.registerListener(mIMRoomInItem.roomId,this);
-            normalGiftManager.getSendableGiftItems(mIMRoomInItem.roomId,this);
-            packageGiftManager.currRoomId = mIMRoomInItem.roomId;
-            packageGiftManager.registerListener(mIMRoomInItem.roomId,this);
-        }
-        normalGiftManager.getAllGiftItems(this);
-    }
-
-    public void reloadPkgGiftData(){
-        Log.d(TAG,"reloadPkgGiftData");
-        if(null != packageGiftManager){
-            packageGiftManager.getAllPackageGiftItems(null);
+        if(mRoomGiftManager != null){
+            //刷新房间可发送列表
+            mRoomGiftManager.getSendableGiftList(null);
+            //刷新直播间背包列表
+            mRoomGiftManager.getPackageGiftItems(null);
         }
     }
-
-    public void reloadStoreGiftData(){
-        if(null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId) && null != normalGiftManager){
-            normalGiftManager.getSendableGiftItems(mIMRoomInItem.roomId,this);
-            normalGiftManager.getAllGiftItems(this);
-        }
-    }
-
-    private NormalGiftManager normalGiftManager = NormalGiftManager.getInstance();
-    private PackageGiftManager packageGiftManager = PackageGiftManager.getInstance();
 
     /**
      * 初始化底部礼物选择界面
      */
     protected void initLiveGiftDialog(){
         if(null == liveGiftDialog){
-            liveGiftDialog = new LiveGiftDialog(this);
-        }
-        if(null != mIMRoomInItem){
-            liveGiftDialog.setImRoomInItem(mIMRoomInItem);
+            if(mIMRoomInItem != null && mRoomGiftManager != null) {
+                liveGiftDialog = new LiveGiftDialog(this, mRoomGiftManager, mIMRoomInItem);
+                liveGiftDialog.setLiveGiftDialogEventListener(new LiveGiftDialog.LiveGiftDialogEventListener() {
+                    @Override
+                    public void onShowToastTipsNotify(String message) {
+                        //显示toast
+                        if(!TextUtils.isEmpty(message)){
+                            showThreeSecondTips(message, Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+                        }
+                    }
+
+                    @Override
+                    public void onNoEnoughMoneyTips() {
+                        //显示没钱提示
+                        showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
+                    }
+
+                    @Override
+                    public void onAudiencBalanceClick(View rootView) {
+                        showAudienceBalanceInfoDialog(rootView);
+                    }
+                });
+            }
         }
     }
 
-    protected void showLiveGiftDialog(boolean showPromoGift){
-        Log.d(TAG,"showLiveGiftDialog-showPromoGift:"+showPromoGift);
+    /**
+     * 显示礼物列表
+     * @param recommandGiftId 推荐id可为空
+     */
+    protected void showLiveGiftDialog(String recommandGiftId){
         initLiveGiftDialog();
-        liveGiftDialog.show(showPromoGift ? lastRecommendGiftItem : null);
+        liveGiftDialog.show(recommandGiftId);
     }
 
     /**
@@ -1283,6 +1416,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         mModuleGiftManager = new ModuleGiftManager(this);
         mModuleGiftManager.initMultiGift(viewContent);
         ll_bulletScreen = findViewById(R.id.ll_bulletScreen);
+        ll_bulletScreen.setVisibility(View.INVISIBLE);
         mModuleGiftManager.showMultiGiftAs(ll_bulletScreen);
         //大礼物
         advanceGift = (SimpleDraweeView)findViewById(R.id.advanceGift);
@@ -1290,8 +1424,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         //推荐礼物
         if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom
                 || mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom)){
-            giftRecommandManager = new GiftRecommandManager(this);
-            giftRecommandManager.setRecommandListener(this);
+            //设置绑定礼物推荐监听器
+            if(mRoomGiftManager != null) {
+                mRoomGiftManager.setOnGiftRecommandListener(this);
+            }
         }
     }
 
@@ -1326,7 +1462,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                 sendUiMessage(msg);
             }else{
                 if(null != msgItem && null != msgItem.giftMsgContent){
-                    GiftItem giftDetail = normalGiftManager.getLocalGiftDetail(msgItem.giftMsgContent.giftId);
+                    GiftItem giftDetail = NormalGiftManager.getInstance().getLocalGiftDetail(msgItem.giftMsgContent.giftId);
                     if(null != giftDetail && giftDetail.giftType == GiftItem.GiftType.Advanced){
                         msg.what = EVENT_GIFT_ADVANCE_SEND_FAILED;
                         msg.obj = giftDetail.name;
@@ -1342,33 +1478,15 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     @Override
     public void OnRecvBackpackUpdateNotice(IMPackageUpdateItem item) {
         super.OnRecvBackpackUpdateNotice(item);
-        if(null!=normalGiftManager && null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId)){
-            normalGiftManager.getSendableGiftItems(mIMRoomInItem.roomId,this);
-        }
-    }
-
-    @Override
-    public void onRoomSendableGiftChanged(String roomId, List<GiftItem> sendableGiftItemList) {
-        super.onRoomSendableGiftChanged(roomId, sendableGiftItemList);
-        Message msg = Message.obtain();
-        msg.what = EVENT_UPDATE_SENDABLEGIFT;
-        msg.obj = sendableGiftItemList;
-        sendUiMessage(msg);
-    }
-
-    @Override
-    public void onGetSendableGiftList(boolean isSuccess, int errCode, String errMsg, SendableGiftItem[] giftIds) {
-        super.onGetSendableGiftList(isSuccess, errCode, errMsg, giftIds);
-        if(isSuccess){
-            if(null != giftRecommandManager){
-                giftRecommandManager.startRecommand();
-            }
-        }
+        //max确认暂时屏蔽刷新功能
+//        if(null!= mRoomGiftManager){
+//            //背包更新通知，刷新直播间背包列表
+//            mRoomGiftManager.getPackageGiftItems(null);
+//        }
     }
 
     @Override
     public void onGiftRecommand(final GiftItem giftItem) {
-        super.onGiftRecommand(giftItem);
         //获取到推荐礼物
         lastRecommendGiftItem = giftItem;
         sendEmptyUiMessage(EVENT_UPDATE_RECOMMANDGIFT);
@@ -1383,34 +1501,23 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         sendMessageUpdateEvent(msgItem);
     }
 
-
-    @Override
-    public void onPkgGiftDataChanged(boolean isSuccess, String currRoomId) {
-        super.onPkgGiftDataChanged(isSuccess,currRoomId);
-        if(!currRoomId.equals(mIMRoomInItem.roomId)){
-           return;
-        }
-        Message msg = Message.obtain();
-        msg.what = EVENT_UPDATE_BACKPACKGIFT;
-        Bundle bundle = msg.getData();
-        bundle.putBoolean("isSuccess",isSuccess);
-        sendUiMessage(msg);
-    }
-
     //******************************** 预约私密直播 **************************************************
     private void initPrePriView(){
+        ll_privateLive = findViewById(R.id.ll_privateLive);
+        ll_privateLive.setVisibility(View.GONE);
         iv_privateLiveNow = (ImageView) findViewById(R.id.iv_privateLiveNow);
         if(null != mIMRoomInItem){
             Drawable drawable = roomThemeManager.getRoomPriLiveNowBtnDrawable(this,mIMRoomInItem.roomType);
             if(null != drawable){
                 iv_privateLiveNow.setImageDrawable(drawable);
             }else{
-                iv_privateLiveNow.setVisibility(View.GONE);
+                ll_privateLive.setVisibility(View.GONE);
             }
-            if(IMLiveRoomType.FreePublicRoom == mIMRoomInItem.roomType || IMLiveRoomType.PaidPublicRoom == mIMRoomInItem.roomType){
-                iv_privateLiveNow.setVisibility(View.VISIBLE);
+            if((IMLiveRoomType.FreePublicRoom == mIMRoomInItem.roomType || IMLiveRoomType.PaidPublicRoom == mIMRoomInItem.roomType)
+                    && mIMRoomInItem.liveShowType != IMRoomInItem.IMPublicRoomType.Program){
+                ll_privateLive.setVisibility(View.VISIBLE);
             }else{
-                iv_privateLiveNow.setVisibility(View.GONE);
+                ll_privateLive.setVisibility(View.GONE);
             }
         }
 
@@ -1424,24 +1531,26 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     protected CarManager carManager = new CarManager();
 
     private void initLiveRoomCar(){
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) ll_rebate.getLayoutParams();
-        ll_rebate.measure(0,0);
-        int mH = ll_rebate.getMeasuredHeight();
+//        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) ll_rebate.getLayoutParams();
+//        ll_rebate.measure(0,0);
+//        int mH = ll_rebate.getMeasuredHeight();
         ll_entranceCar = (LinearLayout) findViewById(R.id.ll_entranceCar);
-        int topMargin = (int) getResources().getDimension(R.dimen.liveroom_rebate_tips_margintop);
-        carManager.init(this,ll_entranceCar,mH+topMargin);
+        carManager.init(this, ll_entranceCar,
+                roomThemeManager.getRoomCarViewTxtColor(mIMRoomInItem.roomType),
+                roomThemeManager.getRoomCarViewBgDrawableResId(mIMRoomInItem.roomType));
     }
 
     private void initRebateView(){
         //ll_rebate从原本的im浮层布局移到
         ll_rebate = findViewById(R.id.ll_rebate);
         view_roomHeader.measure(0,0);
-        int roomHeaderMeasuredHeight = view_roomHeader.getMeasuredHeight();
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)ll_rebate.getLayoutParams();
-        lp.topMargin+=roomHeaderMeasuredHeight;
-        ll_rebate.setLayoutParams(lp);
+//        int roomHeaderMeasuredHeight = view_roomHeader.getMeasuredHeight();
+//        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams)ll_rebate.getLayoutParams();
+//        lp.topMargin+=roomHeaderMeasuredHeight;
+//        ll_rebate.setLayoutParams(lp);
         tv_rebateTips = (TextView) findViewById(R.id.tv_rebateTips);
         tv_rebateTips.setText(getResources().getString(R.string.tip_roomGiftCredit," "));
+        tv_rebateTips.setTextColor(roomThemeManager.getRoomHeaderRebateTipsTxtColor(mIMRoomInItem.roomType));
         tv_rebateValue = (TextView) findViewById(R.id.tv_rebateValue);
 
         ll_rebate.setOnClickListener(this);
@@ -1454,11 +1563,11 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     @Override
     public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName,
                                       String photoUrl, String riderId, String riderName,
-                                      String riderUrl, int fansNum, String honorImg) {
+                                      String riderUrl, int fansNum, String honorImg, boolean isHasTicket) {
         if(!isCurrentRoom(roomId)){
             return;
         }
-        super.OnRecvEnterRoomNotice(roomId,userId,nickName,photoUrl,riderId,riderName,riderUrl,fansNum, honorImg);
+        super.OnRecvEnterRoomNotice(roomId,userId,nickName,photoUrl,riderId,riderName,riderUrl,fansNum, honorImg, isHasTicket);
         Log.d(TAG,"OnRecvEnterRoomNotice-userId:"+userId);
         if(!TextUtils.isEmpty(userId) && null != loginItem && userId.equals(loginItem.userId)){
             //断线重登陆，接收到自己的进入房间通知，过滤处理
@@ -1466,51 +1575,95 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             return;
         }
         if(null != mIMManager){
-            mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(userId,nickName,photoUrl));
+            mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(userId,nickName,photoUrl, isHasTicket));
         }
         addEnterRoomMsgToList(roomId,userId,nickName,riderId,riderName,riderUrl,honorImg);
     }
 
     @Override
-    public void onGetAudienceDetailInfo(boolean isSuccess, int errCode, String errMsg, AudienceBaseInfoItem audienceInfo) {
+    public void onGetAudienceDetailInfo(boolean isSuccess, int errCode, String errMsg,
+                                        final AudienceBaseInfoItem audienceInfo) {
         super.onGetAudienceDetailInfo(isSuccess, errCode, errMsg, audienceInfo);
-        Message msg = null;
         Log.d(TAG,"onGetAudienceDetailInfo-audienceInfo.userId:"+audienceInfo.userId);
-        if(isSuccess && null != loginItem && audienceInfo.userId.equals(loginItem.userId)){
-            addEnterRoomMsgToList(mIMRoomInItem.roomId,audienceInfo.userId,audienceInfo.nickName,
-                    audienceInfo.riderId,audienceInfo.riderName,audienceInfo.riderUrl,mIMRoomInItem.honorImg);
+        if(isSuccess&& null != audienceInfo){
+            //数据缓存到内存中，不用过滤是否是自己的
+            if(null != mIMManager){
+                mIMManager.updateOrAddUserBaseInfo(audienceInfo.userId, audienceInfo.nickName, audienceInfo.photoUrl);
+            }
+
+            if(null != loginItem && audienceInfo.userId.equals(loginItem.userId)){
+                //自己的入场座驾动画
+                addEnterRoomMsgToList(mIMRoomInItem.roomId,audienceInfo.userId,audienceInfo.nickName,
+                        audienceInfo.riderId,audienceInfo.riderName,audienceInfo.riderUrl,mIMRoomInItem.honorImg);
+
+                //私密直播间自己的头像使用该接口的数据获取并更新显示
+                if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom
+                        || mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom)){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(null != mIMManager && null != loginItem){
+                                //自己的通过3.12接口缓存的数据更新
+                                Picasso.with(getApplicationContext())
+                                        .load(audienceInfo.photoUrl)
+                                        .error(R.drawable.ic_default_photo_man)
+                                        .placeholder(R.drawable.ic_default_photo_man)
+                                        .into(civ_prvUserIcon);
+                            }
+                        }
+                    });
+                }
+
+            }
+
+
+
         }
     }
 
-    private void addEnterRoomMsgToList(String roomId,String userId,String nickName,String riderId,
-                                       String riderName, String riderUrl,String honorImg){
+    private void addEnterRoomMsgToList(final String roomId,final String userId,final String nickName,
+                                       final String riderId, final String riderName, final String riderUrl,
+                                       final String honorImg){
         Log.d(TAG,"addEnterRoomMsgToList-roomId:"+roomId+" userId:"+userId+" nickName:"+nickName
                 +" riderId:"+riderId+" riderName:"+riderName+" riderUrl:"+riderUrl+" honorImg:"+honorImg);
-        Message msg = null;
         if(!TextUtils.isEmpty(riderId)){
+            Message msg = null;
             CarInfo carInfo = new CarInfo(nickName,userId,riderId,riderName,riderUrl);
             msg = Message.obtain();
             msg.what = EVENT_MESSAGE_ENTERROOMNOTICE;
             Bundle bundle = msg.getData();
-            bundle.putString("honorImg",honorImg);
             bundle.putBoolean("playCarInAnimAfterDownImg",false);
             msg.setData(bundle);
             msg.obj = carInfo;
             sendUiMessage(msg);
         }else{
-            IMMessageItem msgItem = new IMMessageItem(roomId,
-                    mIMManager.mMsgIdIndex.getAndIncrement(), userId,
-                    nickName, honorImg, mIMRoomInItem.manLevel, IMMessageItem.MessageType.RoomIn, null,null);
-            msg = Message.obtain();
-            msg.what = EVENT_MESSAGE_UPDATE;
-            msg.obj = msgItem;
-            sendUiMessage(msg);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Message msg = null;
+                    IMMessageItem msgItem = new IMMessageItem(roomId,
+                            mIMManager.mMsgIdIndex.getAndIncrement(),
+                            userId,
+                            nickName,
+                            honorImg,
+                            mIMRoomInItem.manLevel,
+                            IMMessageItem.MessageType.RoomIn,
+                            new IMTextMessageContent(BaseCommonLiveRoomActivity.this.getResources().getString(R.string.enterlive_norider)),null);
+                    msg = Message.obtain();
+                    msg.what = EVENT_MESSAGE_UPDATE;
+                    msg.obj = msgItem;
+                    sendUiMessage(msg);
+                }
+            });
+
         }
     }
 
     //******************************** 弹幕消息编辑区域处理 ********************************************
     private TextWatcher tw_msgEt;
     private static int liveMsgMaxLength = 10;
+    private int lastTxtChangedStart = 0;
+    private int lastTxtChangedNumb = 0;
     private String lastInputEmoSign = null;
     /**
      * 处理编辑框区域view初始化
@@ -1536,7 +1689,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             if(mIMRoomInItem != null){
                 price = mIMRoomInItem.popPrice;
             }
-            editHint = String.format(getResources().getString(R.string.txt_hint_input_barrage), String.valueOf(price));
+            editHint = String.format(getResources().getString(R.string.txt_hint_input_barrage),
+                    ApplicationSettingUtil.formatCoinValue(price));
         }else{
             editHint = getResources().getString(R.string.txt_hint_input_general);
         }
@@ -1558,30 +1712,42 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             tw_msgEt = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    Log.logD(TAG,"beforeTextChanged-s:"+s.toString()+" start:"+start+" count:"+count+" after:"+after);
                 }
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    Log.logD(TAG,"onTextChanged-s:"+s.toString()+" start:"+start+" before:"+before+" count:"+count);
+                    lastTxtChangedStart = start;
+                    lastTxtChangedNumb = count;
                 }
 
                 @Override
                 public void afterTextChanged(Editable s) {
                     Log.logD(TAG,"afterTextChanged-s:"+s.toString());
-                    if(null != et_liveMsg){
-                        if(s.toString().length()>liveMsgMaxLength){
-                            int selectedStartIndex = et_liveMsg.getSelectionStart();
-                            int selectedEndIndex = et_liveMsg.getSelectionEnd();
-                            if(etsl_emojiContainer.getVisibility() == View.VISIBLE && !TextUtils.isEmpty(lastInputEmoSign)){
-                                s.delete(selectedEndIndex-lastInputEmoSign.length(),selectedEndIndex);
-                                lastInputEmoSign = null;
-                            }else{
-                                s.delete(selectedStartIndex-1,selectedEndIndex);
-                            }
-                            et_liveMsg.removeTextChangedListener(tw_msgEt);
-                            et_liveMsg.setText(s.toString());
-                            et_liveMsg.setSelection(s.toString().length());
-                            et_liveMsg.addTextChangedListener(tw_msgEt);
+                    if(null == et_liveMsg){
+                        return;
+                    }
+                    if(s.toString().length()>liveMsgMaxLength){
+                        int selectedEndIndex = et_liveMsg.getSelectionEnd();
+                        int outStart = 0;
+                        //s.delete会瞬间触发TextChangedListener流程，导致lastTxtChangedNumb=0时多走一遍流程
+                        et_liveMsg.removeTextChangedListener(tw_msgEt);
+                        if(etsl_emojiContainer.getVisibility() == View.VISIBLE && !TextUtils.isEmpty(lastInputEmoSign)){
+                            outStart = lastTxtChangedStart;
+                            s.delete(outStart,outStart+lastTxtChangedNumb);
+                            Log.logD(TAG,"afterTextChanged-outNumb:"+lastTxtChangedNumb
+                                    +" outStart:"+outStart+" s:"+s.toString());
+                            lastInputEmoSign = null;
+                        }else{
+                            int outNumb = s.toString().length() -liveMsgMaxLength;
+                            outStart = lastTxtChangedStart+lastTxtChangedNumb-outNumb;
+                            s.delete(outStart,lastTxtChangedStart+lastTxtChangedNumb);
+                            Log.logD(TAG,"afterTextChanged-outNumb:"+outNumb+" outStart:"+outStart+" s:"+s);
                         }
+                        et_liveMsg.setText(s.toString());
+                        et_liveMsg.setSelection(outStart);
+                        et_liveMsg.addTextChangedListener(tw_msgEt);
                     }
                 }
             };
@@ -1636,12 +1802,15 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         iv_freePublicBg1.setVisibility(View.GONE);
         iv_freePublicBg2.setVisibility(View.GONE);
         ll_buttom_audience = findViewById(R.id.ll_buttom_audience);
-        iv_inputMsg = (ImageView) findViewById(R.id.iv_inputMsg);
+        tv_inputMsg = (TextView) findViewById(R.id.tv_inputMsg);
         iv_gift = (ImageView) findViewById(R.id.iv_gift);
         iv_recommendGift = (ImageView) findViewById(R.id.iv_recommendGift);
         iv_recommGiftFloat = (ImageView) findViewById(R.id.iv_recommGiftFloat);
         iv_talent = (ImageView) findViewById(R.id.iv_talent);
         iv_talent.setVisibility(View.GONE);
+        //动画播放一次
+        mAnimationDrawableTalent = ((AnimationDrawable) iv_talent.getBackground());
+//        mAnimationDrawableTalent.setOneShot(false);
 
         fl_recommendGift = findViewById(R.id.fl_recommendGift);
         fl_recommendGift.setVisibility(View.GONE);
@@ -1654,21 +1823,57 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             //say something...
             Drawable inputDrawalbe = roomThemeManager.getRoomInputBtnDrawable(this,mIMRoomInItem.roomType);
             if(null != inputDrawalbe){
-                iv_inputMsg.setImageDrawable(inputDrawalbe);
+                tv_inputMsg.setBackgroundDrawable(inputDrawalbe);
             }
-
+            tv_inputMsg.setTextColor(roomThemeManager.getRoomInputTipsTxtColor(mIMRoomInItem.roomType));
             et_liveMsg.setTextColor(roomThemeManager.getRoomETTxtColor(mIMRoomInItem.roomType));
 
             //才艺点播按钮
             if(mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom){
                 iv_talent.setVisibility(View.VISIBLE);
+                //动画 播放,延时1秒，因为太早播放完，跟本看不到
+                if(mAnimationDrawableTalent != null ){
+                    if(mAnimationDrawableTalent.isRunning()){
+                        postUiRunnableDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(mAnimationDrawableTalent != null && mAnimationDrawableTalent.isRunning()){
+                                    mAnimationDrawableTalent.stop();
+                                    if(iv_talent != null){
+                                        iv_talent.setBackgroundResource(R.drawable.live_talent_anim_12);
+                                    }
+                                }
+                            }
+                        }, 850 * 5 - 100);
+                    }else {
+                        //执行播放5次
+                        iv_talent.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAnimationDrawableTalent.start();
+                                //播放5次后停止动画播放,并调整100毫秒防止事件过慢，动画跳帧
+                                postUiRunnableDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(mAnimationDrawableTalent != null && mAnimationDrawableTalent.isRunning()){
+                                            mAnimationDrawableTalent.stop();
+                                            if(iv_talent != null){
+                                                iv_talent.setBackgroundResource(R.drawable.live_talent_anim_12);
+                                            }
+                                        }
+                                    }
+                                }, 850 * 5 - 100);
+                            }
+                        }, 200);
+                    }
+                }
             }
 
             //推荐礼物按钮
-            int leftMargin = roomThemeManager.getRoomRecommGiftBtnLeftMargin(this,mIMRoomInItem.roomType);
-            fl_recommendGift.setVisibility(0 == leftMargin ? View.GONE : View.VISIBLE);
+            int rightMargin = roomThemeManager.getRoomRecommGiftBtnRightMargin(this,mIMRoomInItem.roomType);
+            fl_recommendGift.setVisibility(0 == rightMargin ? View.GONE : View.VISIBLE);
             LinearLayout.LayoutParams recommGiftBtnLp = (LinearLayout.LayoutParams) fl_recommendGift.getLayoutParams();
-            recommGiftBtnLp.leftMargin = leftMargin;
+            recommGiftBtnLp.rightMargin = rightMargin;
             fl_recommendGift.setLayoutParams(recommGiftBtnLp);
             Drawable recGiftDrawable = roomThemeManager.getRoomRecommGiftFloatDrawable(this,mIMRoomInItem.roomType);
             if(null != recGiftDrawable){
@@ -1678,6 +1883,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             //礼物按钮
             LinearLayout.LayoutParams giftBtnLp = (LinearLayout.LayoutParams) iv_gift.getLayoutParams();
             giftBtnLp.leftMargin = roomThemeManager.getRoomGiftBtnLeftMargin(this,mIMRoomInItem.roomType);
+            giftBtnLp.rightMargin = roomThemeManager.getRoomGiftBtnRightMargin(this,mIMRoomInItem.roomType);
+            giftBtnLp.bottomMargin = roomThemeManager.getRoomGiftBtnButtomMargin(this,mIMRoomInItem.roomType);
             iv_gift.setLayoutParams(giftBtnLp);
             Drawable giftDrawalbe = roomThemeManager.getRoomGiftBtnDrawable(this,mIMRoomInItem.roomType);
             if(null != giftDrawalbe){
@@ -1688,8 +1895,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
 
     //显示免费公开直播间底部的背景图片-欢呼粉丝群.jpg
     protected void showFreePublicRoomButtomImGBg(){
-        iv_freePublicBg1.setVisibility(View.VISIBLE);
-        iv_freePublicBg2.setVisibility(View.VISIBLE);
+        iv_freePublicBg1.setVisibility(View.GONE);
+        iv_freePublicBg2.setVisibility(View.GONE);
     }
 
     private void initEditAreaViewStyle(){
@@ -1715,7 +1922,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             if(mIMRoomInItem != null){
                 price = mIMRoomInItem.popPrice;
             }
-            editHint = String.format(getResources().getString(R.string.txt_hint_input_barrage), String.valueOf(price));
+            editHint = String.format(getResources().getString(R.string.txt_hint_input_barrage),
+                    ApplicationSettingUtil.formatCoinValue(price));
         }else{
             editHint = getResources().getString(R.string.txt_hint_input_general);
         }
@@ -1732,7 +1940,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         sendTextMessagePreProcess(isBarrage);
         String message = et_liveMsg.getText().toString();
         IMMessageItem msgItem = null;
-        if(!TextUtils.isEmpty(message)) {
+        //过滤只发空格消息的情况
+        if(!TextUtils.isEmpty(message) && !TextUtils.isEmpty(message.trim())) {
             if(null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId)){
                 if (isBarrage) {
                     if(LiveRoomCreditRebateManager.getInstance().getCredit()<mIMRoomInItem.popPrice){
@@ -1796,17 +2005,30 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         //判断是否弹幕播放中，是则隐藏底部白底阴影
         if(null != mBarrageManager){
             mBarrageManager.changeBulletScreenBg(false);
+            ll_privateLive.setVisibility(View.GONE);
+        }
+
+        //适配某些机型，当切换英文键盘到中文键盘，会先走onSoftKeyboardHide后走onSoftKeyboardShow，
+        // 导致底部输入框被隐藏
+        if(View.VISIBLE == ll_buttom_audience.getVisibility()){
+            ll_buttom_audience.setVisibility(View.GONE);
+            rl_inputMsg.setVisibility(View.VISIBLE);
+            showSoftInput(et_liveMsg);
         }
 
         //add by Jagger
         doMovePublishViewUnderEditView();
+
+        lrsv_roomBody.setScrollFuncEnable(false);
     }
 
     @Override
     public void onSoftKeyboardHide() {
-        android.util.Log.i(TAG, "onSoftKeyboardHide");
+        Log.d(TAG, "onSoftKeyboardHide");
         isSoftInputOpen = false;
         //如果onSoftKeyboardHide回调是由表情控件触发
+        //TODO:解决私密直播间，1.弹出软键盘显示输入框;2.点开表情;3.关闭表情;4.点空白地方试图隐藏输入框，ui展示不合预期的bug;5.3之后点击输入框隐藏表情再点击空白区域就正常
+        //解决方案可以是在点击空白区域的onclick事件中处理?
         if(isEmojiOpera){
             isEmojiOpera = false;
             return;
@@ -1820,9 +2042,17 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         }
         //判断是否弹幕播放中，是则显示底部白底阴影
         mBarrageManager.changeBulletScreenBg(true);
+        if((IMLiveRoomType.FreePublicRoom == mIMRoomInItem.roomType || IMLiveRoomType.PaidPublicRoom == mIMRoomInItem.roomType)
+                && mIMRoomInItem.liveShowType != IMRoomInItem.IMPublicRoomType.Program){
+            ll_privateLive.setVisibility(View.VISIBLE);
+        }else{
+            ll_privateLive.setVisibility(View.GONE);
+        }
 
         //add by Jagger
         doReMovePublishView();
+
+        lrsv_roomBody.setScrollFuncEnable(true);
     }
 
     //******************************** 消息展示列表 ****************************************************************
@@ -1830,8 +2060,14 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
      * 初始化消息展示列表
      */
     private void initMessageList(){
-        liveRoomChatManager = new LiveRoomChatManager(this);
-        liveRoomChatManager.init(this,findViewById(R.id.fl_msglist));
+        View fl_msglist = findViewById(R.id.fl_msglist);
+        FrameLayout.LayoutParams msgListLp = (FrameLayout.LayoutParams) fl_msglist.getLayoutParams();
+        msgListLp.topMargin = roomThemeManager.getRoomMsgListTopMargin(this,mIMRoomInItem.roomType);
+        fl_msglist.setLayoutParams(msgListLp);
+        liveRoomChatManager = new LiveRoomChatManager(this,mIMRoomInItem.roomType,
+                mIMRoomInItem.userId,loginItem.userId,roomThemeManager);
+        liveRoomChatManager.init(this,fl_msglist);
+        liveRoomChatManager.setLiveMessageListItemClickListener(this);
 
         //incliude view id 必须通过setOnClickListener方式设置onclick监听,
         // xml中include标签下没有onclick和clickable属性
@@ -1871,6 +2107,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         List<View> mViews = new ArrayList<View>();
         mViews.add(findViewById(R.id.rl_bullet1));
         mBarrageManager = new BarrageManager<IMMessageItem>(this, mViews,ll_bulletScreen);
+        mBarrageManager.setOnBarrageEventListener(this);
         mBarrageManager.setBarrageFiller(new IBarrageViewFiller<IMMessageItem>() {
             @Override
             public void onBarrageViewFill(View view, IMMessageItem item) {
@@ -1896,6 +2133,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                                 .load(photoUrl)
                                 .placeholder(R.drawable.ic_default_photo_man)
                                 .error(R.drawable.ic_default_photo_man)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                 .into(civ_bullletIcon);
                     }else{
                         civ_bullletIcon.setImageResource(R.drawable.ic_default_photo_man);
@@ -1967,9 +2205,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                     pageErrorType = PAGE_ERROR_NOMONEY;
                 }
                 if (isActivityVisible()) {
-                    endLive(pageErrorType, errMsg, false);
+                    endLive(pageErrorType, errMsg, false, true);
                 } else {
                     mIsNeedRecommand = false;
+                    mIsNeedCommand = true;
                     mIsRoomBackgroundClose = true;
                     mCloseErrMsg = errMsg;
                     mClosePageErrorType = pageErrorType;
@@ -2008,29 +2247,28 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                 new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_level_upgraded,String.valueOf(level)),
                         null, IMSysNoticeMessageContent.SysNoticeType.Normal));
         Log.d(TAG,"OnRecvLevelUpNotice-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
-        if(null != loginItem){
-            loginItem.level= level;
-        }
+        //IMManager.OnRecvLevelUpNotice中有更新level到LoginItem
         sendMessageUpdateEvent(imMessageItem);
-        if(null!=normalGiftManager && null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId)){
-            normalGiftManager.getSendableGiftItems(mIMRoomInItem.roomId,this);
-        }
+        //通知用户等级升级
+        sendEmptyUiMessage(EVENT_MAN_LEVEL_UPDATE);
     }
 
     @Override
-    public void OnRecvLoveLevelUpNotice(int lovelevel) {
-        super.OnRecvLoveLevelUpNotice(lovelevel);
+    public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem) {
+        super.OnRecvLoveLevelUpNotice(lovelevelItem);
         //添加消息列表
-        IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
-                mIMManager.mMsgIdIndex.getAndIncrement(),
-                "",
-                IMMessageItem.MessageType.SysNotice,
-                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_intimacylevel_upgraded,
-                        mIMRoomInItem.nickName,String.valueOf(lovelevel)),
-                        null, IMSysNoticeMessageContent.SysNoticeType.Normal));
-        Log.d(TAG,"OnRecvLoveLevelUpNotice-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
-        sendMessageUpdateEvent(imMessageItem);
-        sendEmptyUiMessage(EVENT_INTIMACY_LEVEL_UPDATE);
+        if(lovelevelItem != null){
+            IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
+                    mIMManager.mMsgIdIndex.getAndIncrement(),
+                    "",
+                    IMMessageItem.MessageType.SysNotice,
+                    new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_intimacylevel_upgraded,
+                            mIMRoomInItem.nickName,String.valueOf(lovelevelItem.loveLevel)),
+                            null, IMSysNoticeMessageContent.SysNoticeType.Normal));
+            Log.d(TAG,"OnRecvLoveLevelUpNotice-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
+            sendMessageUpdateEvent(imMessageItem);
+            sendEmptyUiMessage(EVENT_INTIMACY_LEVEL_UPDATE);
+        }
     }
 
     //------------------------直播间关闭-------------------------------------------------------
@@ -2044,7 +2282,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                iv_privateLiveNow.setVisibility(View.GONE);
+                ll_privateLive.setVisibility(View.GONE);
                 ll_enterPriRoomTimeCount.setVisibility(View.VISIBLE);
                 sendEmptyUiMessageDelayed(EVENT_LEAVING_ROOM_TIMECOUNT,0l);
             }
@@ -2076,9 +2314,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                             isShowRecommand = true;
                         }
                         if(isActivityVisible()) {
-                            endLive(PAGE_ERROR_LIEV_EDN, errMsg, isShowRecommand);
+                            endLive(PAGE_ERROR_LIEV_EDN, errMsg, isShowRecommand, true);
                         }else{
                             mIsNeedRecommand = isShowRecommand;
+                            mIsNeedCommand = true;
                             mIsRoomBackgroundClose = true;
                             mCloseErrMsg = errMsg;
                             mClosePageErrorType = PAGE_ERROR_LIEV_EDN;
@@ -2090,13 +2329,18 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
 
     }
 
-    protected void endLive(LiveRoomNormalErrorActivity.PageErrorType pageErrorType, String errMsg, boolean isRecommand){
+    protected void endLive(LiveRoomNormalErrorActivity.PageErrorType pageErrorType, String errMsg, boolean isRecommand, boolean needCommand){
         Log.d(TAG,"endLive");
         if(null != mIMRoomInItem && null != pageErrorType){
-            startActivity(LiveRoomNormalErrorActivity.getIntent(this, pageErrorType, errMsg,
-                    mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,roomPhotoUrl, isRecommand));
+            Intent intent = null;
+            if(mIMRoomInItem.liveShowType == IMRoomInItem.IMPublicRoomType.Program){
+                intent = LiveProgramEndActivity.getIntent(this, pageErrorType, errMsg, mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,roomPhotoUrl, isRecommand);
+            }else{
+                intent = LiveRoomNormalErrorActivity.getIntent(this, pageErrorType, errMsg, mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,roomPhotoUrl, isRecommand);
+            }
+            startActivity(intent);
         }
-        closeLiveRoom();
+        closeLiveRoom(needCommand);
     }
 
     @Override
@@ -2135,7 +2379,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     private void initPublishView(){
         //视频上传预览
         includePublish = findViewById(R.id.includePublish);
-        svPublisher = (SurfaceView)findViewById(R.id.svPublisher);
+        svPublisher = (GLSurfaceView)findViewById(R.id.svPublisher);
         //add by Jagger 2017-11-29 解决小窗口能浮在大窗口上的问题
         svPublisher.setZOrderOnTop(true);
         svPublisher.setZOrderMediaOverlay(true);
@@ -2155,11 +2399,11 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         iv_publishstop.setOnClickListener(this);
         iv_publishsoundswitch.setOnClickListener(this);
         includePublish.setOnClickListener(this);
-        includePublish.setVisibility(View.GONE);
-        ViewDragTouchListener listener = new ViewDragTouchListener();
+        ViewDragTouchListener listener = new ViewDragTouchListener(100l);
         listener.setOnViewDragListener(new ViewDragTouchListener.OnViewDragStatusChangedListener() {
             @Override
             public void onViewDragged(int l, int t, int r, int b) {
+                Log.d(TAG,"onViewDragged-l:"+l+" t:"+t+" r:"+r+" b:"+b);
                 //避免父布局重绘后includePublish回到原来的位置
                 FrameLayout.LayoutParams flIPublish = (FrameLayout.LayoutParams) includePublish.getLayoutParams();
                 flIPublish.gravity = Gravity.TOP|Gravity.LEFT;
@@ -2173,12 +2417,15 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         view_gaussian_blur_me = findViewById(R.id.view_gaussian_blur_me);
         v_gaussianBlurFloat = findViewById(R.id.v_gaussianBlurFloat);
         iv_gaussianBlur = (SimpleDraweeView)findViewById(R.id.iv_gaussianBlur);
-        if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom
-                || mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom)){
-            includePublish.setVisibility(View.VISIBLE);
-        }else{
-            includePublish.setVisibility(View.GONE);
-        }
+
+        //del by Jagger 2018-5-31 因为在initPublishData()已经做了这步，所以这里的代码不需要了
+//        if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom
+//                || mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom)
+//                && LSPublisher.checkDeviceSupport(mContext)){
+////            includePublish.setVisibility(View.VISIBLE);
+//        }else{
+//            includePublish.setVisibility(View.GONE);
+//        }
 
         openInterVideoTipsPopupWindow = new OpenInterVideoTipsPopupWindow(this);
         openInterVideoTipsPopupWindow.setOnBtnClickListener(new OpenInterVideoTipsPopupWindow.OnOpenTipsBtnClickListener() {
@@ -2197,6 +2444,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
                 }
             }
         });
+
+        //初始化推流器(这个东西只能初始化一次，跟GLSurfaceView生命周期一样。 而且初始化慢点也不行，一定要在这做)
+        mPublisherManager = new PublisherManager(this);
+        mPublisherManager.init(svPublisher);
     }
 
     protected void initPublishData(){
@@ -2259,7 +2510,8 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             if(null != openInterVideoTipsPopupWindow){
                 String textDesc = "";
                 if(mIMRoomInItem != null){
-                    textDesc = String.format(getResources().getString(R.string.live_inter_video_open), String.valueOf(mIMRoomInItem.videoPrice));
+                    textDesc = String.format(getResources().getString(R.string.live_inter_video_open),
+                            ApplicationSettingUtil.formatCoinValue(mIMRoomInItem.videoPrice));
                 }
                 if(!TextUtils.isEmpty(textDesc)) {
                     openInterVideoTipsPopupWindow.setTextDesc(textDesc);
@@ -2279,8 +2531,10 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
      */
     private boolean checkCanInterVideo(){
         boolean canInterVideo = false;
-        if(mIMRoomInItem != null && (mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom
-                || mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom)){
+        if(mIMRoomInItem != null
+                && (mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom|| mIMRoomInItem.roomType == IMLiveRoomType.NormalPrivateRoom)
+                && LSPublisher.checkDeviceSupport(mContext)
+                ){
             canInterVideo = true;
         }
         return canInterVideo;
@@ -2313,6 +2567,13 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
             startOrStopVideoInteraction();
         }else{
             stopPublishStream();
+        }
+
+        //公开直播间IM断线重登录成功并进入直播间（调用《3.4.获取直播间观众头像列表（http post）》）（缓存观众信息，包括头像、昵称、座驾等）
+        if(null != mIMRoomInItem && (mIMRoomInItem.roomType == IMLiveRoomType.FreePublicRoom
+                || mIMRoomInItem.roomType == IMLiveRoomType.PaidPublicRoom)){
+            //查询头像列表
+            LiveRequestOperator.getInstance().GetAudienceListInRoom(mIMRoomInItem.roomId,0,0,this);
         }
     }
 
@@ -2405,9 +2666,9 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     private void startPublishStream(String[] manPushUrls){
         isPublishing = true;
 
-        //stop清除publisher，开始推流才初始化
-        mPublisherManager = new PublisherManager(this);
-        mPublisherManager.init(svPublisher);
+//        //stop清除publisher，开始推流才初始化
+//        mPublisherManager = new PublisherManager(this);
+//        mPublisherManager.init(svPublisher);
 
         //刷新界面
         refreshPublishViews();
@@ -2433,7 +2694,7 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
 
         //add by Jagger 2017-12-1
         //销毁播放器
-        destroyPublisher();
+//        destroyPublisher();
 
         //刷新界面
         refreshPublishViews();
@@ -2533,15 +2794,50 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         }
     }
 
+    /**
+     * 没权限，提示用户
+     */
+    private void doShowPublishNoPermissionDialog(){
+        View view = View.inflate(this, R.layout.dialog_simple_double_btn, null);
+        final Dialog dialog = DialogUIUtils.showCustomAlert(this, view,
+                null,
+                null,
+                Gravity.CENTER, true, true,
+                null).show();
+        //VIEW内事件
+        ((TextView)view.findViewById(R.id.tv_simpleTips)).setText(getString(R.string.liveroom_publish_no_permission_tips));
+        view.findViewById(R.id.tv_confirm).setVisibility(View.GONE);
+
+        TextView btnOk = (TextView)view.findViewById(R.id.tv_cancel);
+        btnOk.setText(getString(R.string.common_btn_ok));
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogUIUtils.dismiss(dialog);
+            }
+        });
+
+        view.findViewById(R.id.iv_closeSimpleTips).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogUIUtils.dismiss(dialog);
+            }
+        });
+    }
+
     //------------------------------------才艺点播相关--------------------------------
     protected TalentManager talentManager;
 
     private void initTalentManager(){
         Log.d(TAG,"initTalentManager");
         if(null != mIMRoomInItem && mIMRoomInItem.roomType == IMLiveRoomType.AdvancedPrivateRoom){
-            talentManager = new TalentManager(this);
-            talentManager.getTalentsData(mIMRoomInItem.roomId);
-            talentManager.setOnClickedRequestConfirmListener(new onRequestConfirmListener() {
+            talentManager = TalentManager.newInstance(this , mIMRoomInItem);
+            talentManager.registerOnTalentEventListener(new TalentManager.onTalentEventListener() {
+                @Override
+                public void onGetTalentList(HttpRespObject httpRespObject) {
+
+                }
+
                 @Override
                 public void onConfirm(TalentInfoItem talent) {
                     Log.i(TAG , "initTalentManager-onConfirm talent:" + talent);
@@ -2555,23 +2851,60 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     }
 
     @Override
-    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
-        super.OnSendTalent(reqId, success, errType, errMsg);
+    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String talentInviteId, String talentId ) {
+        super.OnSendTalent(reqId, success, errType, errMsg, talentInviteId, talentId);
         if(null != talentManager){
-            talentManager.onTanlentSent(success , errMsg, errType);
+            talentManager.onTalentSent(success , errMsg, errType, talentInviteId, talentId);
         }
     }
 
     @Override
     public void OnRecvSendTalentNotice(String roomId, String talentInviteId,
                                        String talentId, String name, double credit,
-                                       IMClientListener.TalentInviteStatus status, double rebateCredit) {
+                                       IMClientListener.TalentInviteStatus status, double rebateCredit, String giftId, String giftName, int giftNum) {
         if(!isCurrentRoom(roomId)){
             return;
         }
-        super.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status, rebateCredit);
+        super.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status, rebateCredit, giftId, giftName, giftNum);
         if(null != talentManager){
-            talentManager.onTanlentProcessed(talentId,name,status);
+            talentManager.onTalentProcessed(talentId,name,credit,status ,giftId ,giftName, giftNum, talentInviteId );
+        }
+    }
+
+    @Override
+    public void OnRecvTalentPromptNotice(String roomId, String introduction){
+        if(!isCurrentRoom(roomId) || (mIMRoomInItem == null)){
+            return;
+        }
+
+        IMMessageItem msgItem = new IMMessageItem(roomId,
+                mIMManager.mMsgIdIndex.getAndIncrement(),
+                mIMRoomInItem.userId,
+                mIMRoomInItem.nickName,
+                "",
+                0,
+                IMMessageItem.MessageType.TalentRecommand,
+                new IMTextMessageContent(introduction),null);
+
+        Message msg = Message.obtain();
+        msg.what = EVENT_MESSAGE_UPDATE;
+        msg.obj = msgItem;
+        sendUiMessage(msg);
+    }
+
+    @Override
+    public void onItemClick(IMMessageItem item) {
+        //消息列表点击响应
+        if(item != null && item.msgType == IMMessageItem.MessageType.TalentRecommand){
+            //显示才艺列表
+            if(null != mIMRoomInItem){
+                talentManager.showTalentsList(flContentBody);
+            }
+
+            //GA点击才艺点播
+            onAnalyticsEvent(getResources().getString(R.string.Live_Broadcast_Category),
+                    getResources().getString(R.string.Live_Broadcast_Action_Talent),
+                    getResources().getString(R.string.Live_Broadcast_Label_Talent));
         }
     }
 
@@ -2619,8 +2952,6 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
     }
 
     //--------------------------------进入后台超过一定时间------------------------------------------------
-
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -2652,11 +2983,11 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         //直播中切换其他界面如主播资料时，收到直播间关闭等通知需要关闭直播间，延迟处理
         if(mIsRoomBackgroundClose){
             if(mClosePageErrorType != null){
-                endLive(mClosePageErrorType, mCloseErrMsg, mIsNeedRecommand);
+                endLive(mClosePageErrorType, mCloseErrMsg, mIsNeedRecommand, mIsNeedCommand);
             }
         }else if(hasBackgroundTimeOut){
             //解决5.0以下startActivity会在后台打开页面，但是5.0以上会将应用带到前台
-            endLive(LiveRoomNormalErrorActivity.PageErrorType.PAGE_ERROR_BACKGROUD_OVERTIME, "", true);
+            endLive(LiveRoomNormalErrorActivity.PageErrorType.PAGE_ERROR_BACKGROUD_OVERTIME, "", true, true);
         }else{
             //刷新一次信用点解决信用点不足，充值返回，由于本地信用点未刷新导致直播间本地判断异常
             GetCredit();
@@ -2667,6 +2998,13 @@ public class BaseCommonLiveRoomActivity extends BaseImplLiveRoomActivity {
         mClosePageErrorType = null;
         hasBackgroundTimeOut = false;
         mIsNeedRecommand = false;
+        mIsNeedCommand = true;
         mCloseErrMsg = "";
+    }
+
+    @Override
+    public void onRecvBarrageEvent(boolean startOrOver) {
+        Log.d(TAG,"onRecvBarrageEvent-startOrOver:"+startOrOver+" thread:"+Thread.currentThread().getName());
+        ViewCompat.setElevation(ll_privateLive, startOrOver ? 0f : DisplayUtil.dip2px(this,3f));
     }
 }

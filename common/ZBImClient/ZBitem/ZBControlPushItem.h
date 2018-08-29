@@ -20,7 +20,8 @@ using namespace std;
 #define ZBCMPN_AVATARIMG_PARAM       "avatar_img"
 #define ZBCMPN_CONTROL_PARAM         "control"
 #define ZBCMPN_MANVIDEOURL_PARAM     "man_video_url"
-
+#define ZBCMPN_HANGOUT_ROOMID_PARAM          "room_id"
+#define ZBCMPN_HANGOUT_USERID_PARAM          "user_id"
 
 class ZBControlPushItem {
 public:
@@ -57,6 +58,14 @@ public:
                     }
                 }
             }
+            /* hangoutRoomId */
+            if (root[ZBCMPN_HANGOUT_ROOMID_PARAM].isString()) {
+                hangoutRoomId = root[ZBCMPN_HANGOUT_ROOMID_PARAM].asString();
+            }
+            /* hangoutUserId */
+            if (root[ZBCMPN_HANGOUT_USERID_PARAM].isString()) {
+                hangoutUserId = root[ZBCMPN_HANGOUT_USERID_PARAM].asString();
+            }
             
         }
         result = true;
@@ -69,6 +78,8 @@ public:
         nickName = "";
         avatarImg = "";
         control = ZBIMCONTROLTYPE_UNKNOW;
+        hangoutRoomId = "";
+        hangoutUserId = "";
     }
     
     virtual ~ZBControlPushItem() {
@@ -89,6 +100,8 @@ public:
     string                avatarImg;
     ZBIMControlType       control;
     list<string>          manVideoUrl;
+    string                hangoutRoomId;
+    string                hangoutUserId;
     
 };
 

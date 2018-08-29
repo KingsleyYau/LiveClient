@@ -7,15 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GetBackpackUnreadNumRequest.h"
-#import "ManBookingUnreadUnhandleNumRequest.h"
 #import "LSAnchorRequestManager.h"
 
 @protocol LSUserUnreadCountManagerDelegate <NSObject>
 @optional;
-- (void)onGetResevationsUnredCount:(BookingUnreadUnhandleNumItemObject * _Nullable)item;
 - (void)onGetUnreadSheduledBooking:(int)count;
-
+- (void)onGetUnreadShowCalendar:(int)count;
 @end
 
 @interface LSUserUnreadCountManager : NSObject
@@ -38,5 +35,6 @@
 
 - (void)getResevationsUnredCount;
 - (void)getUnreadSheduledBooking;
+- (void)getUnreadShowCalendar;
 
 @end

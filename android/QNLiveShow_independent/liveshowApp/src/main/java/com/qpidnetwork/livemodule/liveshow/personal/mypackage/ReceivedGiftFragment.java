@@ -71,6 +71,9 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
         super.handleUiMessage(msg);
         onRefreshComplete();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         if(response.isSuccess){
             //列表刷新成功，更新未读
             ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();

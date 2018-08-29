@@ -2,7 +2,7 @@
  * author: Alex
  *   date: 2018-05-04
  *   file: RecvAnchorShowMsgNoticeTask.h
- *   desc: 11.3.接收节目状态改变通知Task实现类
+ *   desc: 11.3.接收无操作的提示通知Task实现类
  */
 
 #pragma once

@@ -45,6 +45,10 @@ public:
                 country = root[GETCANRECOMMENDFRIENDLIST_ANCHORLIST_COUNTRY].asString();
             }
 
+            /* onlineStatus */
+            if( root[GETCANRECOMMENDFRIENDLIST_ANCHORLIST_ONLINESTATUS].isIntegral() ) {
+                onlineStatus = (AnchorOnlineStatus)root[GETCANRECOMMENDFRIENDLIST_ANCHORLIST_ONLINESTATUS].asInt();
+            }
             
         }
 	}
@@ -55,6 +59,7 @@ public:
 		photoUrl = "";
         age = 0;
         country = "";
+        onlineStatus = ANCHORONLINESTATUS_UNKNOW;
 	}
 
 	virtual ~HttpAnchorItem() {
@@ -67,12 +72,15 @@ public:
      * photoUrl		    头像url
      * age              年龄
      * country          国家
+     * onlineStatus     在线状态（ANCHORONLINESTATUS_OFF：离线，ANCHORONLINESTATUS_ON：在线）
      */
     string anchorId;
 	string nickName;
 	string photoUrl;
     int age;
     string country;
+    AnchorOnlineStatus onlineStatus;
+    
 };
 
 typedef list<HttpAnchorItem> HttpAnchorItemList;

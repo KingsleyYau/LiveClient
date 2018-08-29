@@ -20,6 +20,7 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnBannerCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
@@ -34,6 +35,8 @@ import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.IPConfigUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
+import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.view.ViewSmartHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -46,6 +49,7 @@ import java.util.List;
 
 public class HotListFragment extends BaseListFragment{
     private static final int GET_FOLLOWING_CALLBACK = 1;
+    private static final int GET_BANNER_CALLBACK = 2;
 
     private CanAdapter<HotListItem> mAdapter;
     private List<HotListItem> mHotList = new ArrayList<HotListItem>();
@@ -57,6 +61,7 @@ public class HotListFragment extends BaseListFragment{
         super.onActivityCreated(savedInstanceState);
         initListHeaderView();
         mAdapter = createAdapter();
+        TAG = HotListFragment.class.getSimpleName();
         getPullToRefreshListView().addHeaderView(headerView);
         //隐藏滚动条
         getPullToRefreshListView().setVerticalScrollBarEnabled(false);
@@ -64,7 +69,7 @@ public class HotListFragment extends BaseListFragment{
         getPullToRefreshListView().setAdapter(mAdapter);
         getPullToRefreshListView().setHeaderDividersEnabled(true);
         getPullToRefreshListView().setDivider(new ColorDrawable(getResources().getColor(R.color.hotlist_divider_color)));
-        getPullToRefreshListView().setDividerHeight(DisplayUtil.dip2px(getActivity(), 4));
+        getPullToRefreshListView().setDividerHeight(DisplayUtil.dip2px(getActivity(), 2));
         onDefaultErrorRetryClick();
     }
 
@@ -72,6 +77,12 @@ public class HotListFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch (msg.what){
+            case GET_BANNER_CALLBACK:
+                BannerItem bannerItem = (BannerItem)msg.obj;
+                if(null != bannerItem){
+                    updateBannerImg(bannerItem);
+                }
+                break;
             case GET_FOLLOWING_CALLBACK:{
                 hideLoadingProcess();
                 HttpRespObject response = (HttpRespObject)msg.obj;
@@ -111,6 +122,7 @@ public class HotListFragment extends BaseListFragment{
             Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
                     .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
                     .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
+                    .fit()
                     .into(headerView);
         }
     }
@@ -166,6 +178,29 @@ public class HotListFragment extends BaseListFragment{
     }
 
     /**
+     * 刷新banner
+     */
+    private void updateBannerData(){
+        LiveRequestOperator.getInstance().Banner(new OnBannerCallback() {
+            @Override
+            public void onBanner(boolean isSuccess, int errCode, String errMsg,
+                                 String bannerImg, String bannerLink, String bannerName) {
+                Log.d(TAG,"onBanner-isSuccess:"+isSuccess+" errCode:"+errCode
+                        +" errMsg:"+errMsg+" bannerImg:"+bannerImg+" bannerLink:"+bannerLink
+                        +" bannerName:"+bannerName);
+                if(isSuccess){
+                    BannerItem bannerItem = new BannerItem(bannerImg,bannerLink,bannerName);
+                    Message msg = Message.obtain();
+                    msg.what = GET_BANNER_CALLBACK;
+                    msg.obj = bannerItem;
+                    sendUiMessage(msg);
+
+                }
+            }
+        });
+    }
+
+    /**
      * 显示无数据页
      */
     private void showEmptyView(){
@@ -183,6 +218,8 @@ public class HotListFragment extends BaseListFragment{
         mHotList.clear();
         showLoadingProcess();
         queryHotList(false);
+        Log.d(TAG,"onDefaultErrorRetryClick-updateBannerData");
+        updateBannerData();
     }
 
     @Override
@@ -197,6 +234,7 @@ public class HotListFragment extends BaseListFragment{
     public void onPullDownToRefresh() {
         super.onPullDownToRefresh();
         queryHotList(false);
+        updateBannerData();
     }
 
     @Override
@@ -225,9 +263,9 @@ public class HotListFragment extends BaseListFragment{
                 AbsListView.LayoutParams params = (AbsListView.LayoutParams)helper.getConvertView().getLayoutParams();
                 params.height = DisplayUtil.getScreenWidth(helper.getContext());
 
-                helper.setImageResource(R.id.ivOnlineStatus,
-                        bean.onlineStatus == AnchorOnlineStatus.Online ? R.drawable.circle_solid_green :
-                        R.drawable.circle_solid_grey);
+//                helper.setImageResource(R.id.ivOnlineStatus,
+//                        bean.onlineStatus == AnchorOnlineStatus.Online ? R.drawable.circle_solid_green :
+//                        R.drawable.circle_solid_grey);
                 helper.setText(R.id.tvName,bean.nickName);
 
                 //兴趣爱好区域
@@ -253,30 +291,63 @@ public class HotListFragment extends BaseListFragment{
                     }
                 }
 
+                //回收停止动画
+                final ImageView btnPrivate = helper.getView(R.id.btnPrivate);
+                //edit by Jagger 2018-1-8 控件看不到时, 停止动画
+                ViewSmartHelper viewSmartHelperPrivate = new ViewSmartHelper(btnPrivate);
+                viewSmartHelperPrivate.setOnVisibilityChangedListener(new ViewSmartHelper.onVisibilityChangedListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isVisible) {
+                        if(!isVisible){
+                            Drawable privateDrawable = btnPrivate.getDrawable();
+                            if ((privateDrawable != null)
+                                    && (privateDrawable instanceof AnimationDrawable)) {
+                                if(((AnimationDrawable) privateDrawable).isRunning()){
+                                    ((AnimationDrawable) privateDrawable).stop();
+                                }
+                            }
+                        }
+                    }
+                });
+
+
+                //房间状态
+                final ImageView ivLiveType = helper.getView(R.id.ivLiveType);
+                //edit by Jagger 2018-1-8 控件看不到时, 停止动画
+                ViewSmartHelper viewSmartHelperLiveType = new ViewSmartHelper(ivLiveType);
+                viewSmartHelperLiveType.setOnVisibilityChangedListener(new ViewSmartHelper.onVisibilityChangedListener() {
+                    @Override
+                    public void onVisibilityChanged(boolean isVisible) {
+                        if(!isVisible){
+                            Drawable liveTypeDrawable = ivLiveType.getDrawable();
+                            if ((liveTypeDrawable != null)
+                                    && (liveTypeDrawable instanceof AnimationDrawable)) {
+                                if(((AnimationDrawable) liveTypeDrawable).isRunning()) {
+                                    ((AnimationDrawable) liveTypeDrawable).stop();
+                                }
+                            }
+                        }
+                    }
+                });
+
+
                 //按钮区域
                 if(bean.onlineStatus == AnchorOnlineStatus.Online){
                     if(bean.roomType != LiveRoomType.Unknown) {
                         //房间类型
                         helper.setVisibility(R.id.btnSchedule, View.GONE);
                         helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
+//                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
                         if (bean.roomType == LiveRoomType.FreePublicRoom
                                 || bean.roomType == LiveRoomType.PaidPublicRoom) {
-                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
+//                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
+                            setAndStartRoomTypeAnimation(bean.roomType, ivLiveType);
                             helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
                             helper.setVisibility(R.id.btnPublic, View.VISIBLE);
                         } else {
-                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_private);
+                            helper.setImageResource(R.id.ivLiveType, R.drawable.anchor_status_online);
                             helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
                             helper.setVisibility(R.id.btnPublic, View.GONE);
-                        }
-
-                        final ImageView btnPrivate = helper.getView(R.id.btnPrivate);
-
-                        Drawable privateDrawable = btnPrivate.getDrawable();
-                        if ((privateDrawable != null)
-                                && (privateDrawable instanceof AnimationDrawable)) {
-                            ((AnimationDrawable) privateDrawable).stop();
                         }
 
                         switch (bean.roomType) {
@@ -305,10 +376,9 @@ public class HotListFragment extends BaseListFragment{
                         //在线未直播
                         helper.setVisibility(R.id.btnSchedule, View.GONE);
                         helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                        helper.setVisibility(R.id.ivLiveType, View.GONE);
+                        helper.setImageResource(R.id.ivLiveType, R.drawable.anchor_status_online);
                         helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
                         helper.setVisibility(R.id.btnPublic, View.GONE);
-                        ImageView btnPrivate = helper.getView(R.id.btnPrivate);
                         if(bean.anchorType == AnchorLevelType.gold){
                             setAndStartAdvancePrivateAnimation(btnPrivate);
                         }else{
@@ -317,7 +387,7 @@ public class HotListFragment extends BaseListFragment{
                         }
                     }
                 }else{
-                    helper.setVisibility(R.id.ivLiveType, View.GONE);
+                    helper.setImageResource(R.id.ivLiveType, R.drawable.anchor_status_offline);
                     helper.setVisibility(R.id.llStartContent, View.GONE);
                     helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
                     helper.setImageResource(R.id.btnSchedule, R.drawable.list_button_send_schedule);
@@ -345,6 +415,29 @@ public class HotListFragment extends BaseListFragment{
              */
             private void setAndStartAdvancePrivateAnimation(final ImageView view){
                 view.setImageResource(R.drawable.anim_private_broadcast_button);
+                postUiDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Drawable tempDrawable = view.getDrawable();
+                        if((tempDrawable != null)
+                                && (tempDrawable instanceof AnimationDrawable)){
+                            ((AnimationDrawable)tempDrawable).start();
+                        }
+                    }
+                }, 200);
+            }
+
+            /**
+             * 设置启动房间直播间状态
+             * @param roomType
+             * @param view
+             */
+            private void setAndStartRoomTypeAnimation(LiveRoomType roomType, final ImageView view){
+                if(roomType == LiveRoomType.FreePublicRoom){
+                    view.setImageResource(R.drawable.anim_roomtype_free_public_button);
+                }else if(roomType == LiveRoomType.PaidPublicRoom){
+                    view.setImageResource(R.drawable.anim_roomtype_pay_public_button);
+                }
                 postUiDelayed(new Runnable() {
                     @Override
                     public void run() {

@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.model.LoginAccount;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 
 import java.io.ByteArrayInputStream;
@@ -219,6 +221,81 @@ public class LocalPreferenceManager {
     }
 
     /**
+     * 用于独立版本
+     * 保存用户最近登录方式
+     */
+    public void saveLoginType(LoginManager.LoginType loginType){
+        try {
+            save(LocalPreferenceConstant.KEY_LOGIN_TYPE, loginType);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用于独立版本
+     * 取用户最近登录方式
+     * @return
+     */
+    public LoginManager.LoginType getLoginType(){
+        Object object = getObject(LocalPreferenceConstant.KEY_LOGIN_TYPE);
+        if(object != null && (object instanceof LoginManager.LoginType)){
+            return (LoginManager.LoginType)object;
+        }
+        return null;
+    }
+
+    /**
+     * 用于独立版本
+     * 保存用户FaceBook登录账户信息
+     */
+    public void saveFaceBookLoginAccount(LoginAccount loginAccount){
+        try {
+            save(LocalPreferenceConstant.KEY_FACEBOOK_LOGIN_ACCOUNT, loginAccount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用于独立版本
+     * 取用户FaceBook登录账户信息
+     * @return
+     */
+    public LoginAccount getFaceBookLoginAccount(){
+        Object object = getObject(LocalPreferenceConstant.KEY_FACEBOOK_LOGIN_ACCOUNT);
+        if(object != null && (object instanceof LoginAccount)){
+            return (LoginAccount)object;
+        }
+        return null;
+    }
+
+    /**
+     * 用于独立版本
+     * 保存用户Email登录账户信息
+     */
+    public void saveEmailLoginAccount(LoginAccount loginAccount){
+        try {
+            save(LocalPreferenceConstant.KEY_EMAIL_LOGIN_ACCOUNT, loginAccount);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 用于独立版本
+     * 取用户Email登录账户信息
+     * @return
+     */
+    public LoginAccount getEmailLoginAccount(){
+        Object object = getObject(LocalPreferenceConstant.KEY_EMAIL_LOGIN_ACCOUNT);
+        if(object != null && (object instanceof LoginAccount)){
+            return (LoginAccount)object;
+        }
+        return null;
+    }
+
+    /**
      * 获取本地存储广告推广utm_reference
      * @return
      */
@@ -233,5 +310,4 @@ public class LocalPreferenceManager {
     public void savePromotionUtmReference(String utm_reference){
         save(LocalPreferenceConstant.KEY_PROMOTION_UTM_REFERENCE, utm_reference);
     }
-
 }

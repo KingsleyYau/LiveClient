@@ -14,7 +14,6 @@
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
 #import "UserInfoManager.h"
-#import "LiveRoomCreditRebateManager.h"
 #import "AnchorPersonalViewController.h"
 #import "DialogTip.h"
 #import "DialogChoose.h"
@@ -68,9 +67,12 @@
 - (void)dealloc {
     NSLog(@"PublicVipViewController::dealloc( self : %p )", self);
 
+    [[DialogTip dialogTip] stopTimer];
+    
     if (self.closeDialogTipView) {
         [self.closeDialogTipView removeFromSuperview];
     }
+    
     
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];

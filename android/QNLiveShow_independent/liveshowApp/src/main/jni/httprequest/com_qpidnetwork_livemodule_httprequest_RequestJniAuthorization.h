@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jint, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
@@ -37,7 +37,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestFackBookLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_FackBookLogin
-        (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jobject);
+        (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jint, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
@@ -53,7 +53,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestMailLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_LSMailLogin
-(JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jstring, jobject);
+(JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
+import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
@@ -24,8 +25,8 @@ import com.qpidnetwork.livemodule.httprequest.item.TalentInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ValidLiveRoomItem;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
 /**
@@ -36,6 +37,7 @@ public class LiveRequestOperator {
 
     private Handler mHandler = null;
     private static LiveRequestOperator gRequestOperate;
+    private Context mContext;
 
     /***
      * 单例初始化
@@ -54,26 +56,35 @@ public class LiveRequestOperator {
     }
 
     private LiveRequestOperator(Context context){
+        mContext = context;
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 HttpRespObject response = (HttpRespObject)msg.obj;
-                if(response.isSuccess){
-                    LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
-                }else{
-                    HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
-                    switch (errType){
-                        case HTTP_LCC_ERR_TOKEN_EXPIRE:{
-                            //sesssion 过期
-                            LoginManager.getInstance().register((IAuthorizationListener)response.data);
-                            LoginManager.getInstance().onModuleSessionOverTime();
-                        }break;
-                        default:{
-                            LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
-                        }break;
-                    }
+                HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
+                switch (errType){
+                    case HTTP_LCC_ERR_TOKEN_EXPIRE:
+                    case HTTP_LCC_ERR_NO_LOGIN:{
+                        LoginManager.getInstance().onKickedOff(mContext.getResources().getString(R.string.session_timeout_kick_off_tips));
+                    }break;
                 }
+//                if(response.isSuccess){
+//                    LoginManager.getInstance().removeListener((IAuthorizationListener)response.data);
+//                }else{
+//                    HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
+//                    switch (errType){
+//                        case HTTP_LCC_ERR_TOKEN_EXPIRE:
+//                        case HTTP_LCC_ERR_NO_LOGIN:{
+//                            //sesssion 过期
+//                            LoginManager.getInstance().addListener((IAuthorizationListener)response.data);
+////                            LoginManager.getInstance().onModuleSessionOverTime();
+//                        }break;
+//                        default:{
+//                            LoginManager.getInstance().removeListener((IAuthorizationListener)response.data);
+//                        }break;
+//                    }
+//                }
             }
         };
     }
@@ -93,8 +104,9 @@ public class LiveRequestOperator {
         HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(errCode);
         if(!isSuccess){
             switch (errType){
-                case HTTP_LCC_ERR_TOKEN_EXPIRE:{
-                    bFlag = true;
+                case HTTP_LCC_ERR_TOKEN_EXPIRE:
+                case HTTP_LCC_ERR_NO_LOGIN:{
+                    bFlag = false;
                 }break;
             }
         }

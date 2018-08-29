@@ -54,9 +54,12 @@
 
     <color name="live_book_bg">#f5f5f5</color>
 
+    <color name="light_gray">#E4E4E4</color>
     <color name="dark_gray">#5E5E5E</color>
 
     <color name="text_light_white">#C2C2C2</color>
+
+    <color name="webview_title_bg">#FFFFFF</color>
 
     <!-- process button -->
     <color name="progress_bg">#fff2c0</color>
@@ -71,4 +74,54 @@
 
     <color name="talent_confirm_dialog_confirm">#724602</color>
 
+    <!--改版统一蓝色-->
+    <color name="hotlist_item_default_bg_color">#ECEDF1</color>
+    <color name="theme_sky_blue">#297AF3</color>
+    <color name="theme_default_white">@android:color/white</color>
+    <color name="theme_default_black">#000000</color>
+    <color name="theme_default_light_black">#1A1A1A</color>
+    <color name="theme_default_divider_grey">#E4E4E4</color>
+    <color name="theme_default_activity_bg_grey">#F2F2F2</color>
+
+    <!-- 才艺 -->
+    <color name="talent_yellow">#55FFD205</color>
+    <color name="talent_violet">#3B3B3B</color>
+    <color name="talent_btn_txt">#ffffff</color>
+    <color name="talent_light_violet">#f94ceb</color>
+    <color name="book_live_light_violet">#0291ff</color>
+    <color name="talent_request">#ff8200</color>
+    <color name="talent_dialog_bg">#fd000000</color>
+    <color name="talent_divider">#ff535353</color>
+    <color name="talent_burring_bg">#aa000000</color>
+
+    <!-- 节目 -->
+    <color name="live_programme_list_group_title">#999999</color>
+    <color name="live_programme_list_group_gray">#F2F2F2</color>
+    <color name="live_programme_list_bg">#ecedf1</color>
+    <color name="live_programme_list_btn_watch">#00c300</color>
+    <color name="live_programme_list_btn_get_ticket">#ff7100</color>
+    <color name="live_programme_list_btn_canceled">#bfbfbf</color>
+    <color name="live_programme_list_btn_reserved">#fbbd8b</color>
+    <color name="live_calendar_bubble_bg">#d0ffffff</color>
+
+    <color name="dicover_top_tab_txt_big">#666666</color>
+    <color name="dicover_top_tab_txt_small">#383838</color>
+    <!--设计图需要这里实现磨砂玻璃效果，也即高斯模糊处理，等gg实现-->
+    <!--<color name="dicover_top_tab_small_bg">#EAFFFFFF</color>-->
+    <color name="dicover_top_tab_small_bg">#F3F5E0</color>
+
+    <!-- 主界面 -->
+    <color name="live_main_top_menu_burring_bg">#ebffffff</color>
+    <color name="live_main_top_menu_item_pressed">#EEF3F9</color>
+    <color name="live_main_top_menu_unread_bg">#FF4747</color>
+
+    <!--私信列表-->
+    <color name="live_message_contact_list_background_color">#ECEDF1</color>
+    <color name="live_message_warning_item_background_color">#EEEEEE</color>
+    <color name="live_message_textrecv_item_background_color">#EEEEEE</color>
+    <color name="live_message_textsend_item_background_color">#297AF3</color>
+    <color name="live_message_textcolor_gray">#999999</color>
+    <color name="live_message_textcolor_orange">#FF7100</color>
+    <color name="live_message_textcolor_black">#383838</color>
+    <color name="live_message_edit_area_bg">#dae9ff</color>
 </resources>

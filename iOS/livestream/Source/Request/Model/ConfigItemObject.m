@@ -24,6 +24,11 @@
         self.userProtocol = @"";
         self.showDetailPage = @"";
         self.showDescription = @"";
+        self.hangoutCredirMsg = @"";
+        self.loiH5Url = @"";
+        self.emfH5Url = @"";
+        self.pmStartNotice = @"";
+        self.postStampUrl = @"";
     }
     return self;
 }
@@ -39,6 +44,11 @@
         self.userProtocol = [coder decodeObjectForKey:@"userProtocol"];
         self.showDetailPage = [coder decodeObjectForKey:@"showDetailPage"];
         self.showDescription = [coder decodeObjectForKey:@"showDescription"];
+        self.hangoutCredirMsg = [coder decodeObjectForKey:@"hangoutCredirMsg"];
+        self.loiH5Url = [coder decodeObjectForKey:@"loiH5Url"];
+        self.emfH5Url = [coder decodeObjectForKey:@"emfH5Url"];
+        self.pmStartNotice = [coder decodeObjectForKey:@"pmStartNotice"];
+        self.postStampUrl = [coder decodeObjectForKey:@"postStampUrl"];
     }
     return self;
 }
@@ -53,6 +63,11 @@
     [coder encodeObject:self.userProtocol forKey:@"userProtocol"];
     [coder encodeObject:self.showDetailPage forKey:@"showDetailPage"];
     [coder encodeObject:self.showDescription forKey:@"showDescription"];
+    [coder encodeObject:self.hangoutCredirMsg forKey:@"hangoutCredirMsg"];
+    [coder encodeObject:self.loiH5Url forKey:@"loiH5Url"];
+    [coder encodeObject:self.emfH5Url forKey:@"emfH5Url"];
+    [coder encodeObject:self.pmStartNotice forKey:@"pmStartNotice"];
+    [coder encodeObject:self.postStampUrl forKey:@"postStampUrl"];
 
 }
 

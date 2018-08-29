@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -87,13 +91,64 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
      */
     private int gridViewVerticalSpacing = 0;
     /**
+     * 每个item的宽度
+     */
+    private int gridViewItemWidth = 0;
+    /**
+     * 每个item的高度
+     */
+    private int gridViewItemHeight = 0;
+    /**
      * GridView中item的水平间距，表情控件可不设置，默认为0
      */
     private int gridViewHorizontalSpacing = 0;
-    private int itemHeight;
+    /**
+     * 每页展示item的数量
+     */
     private int itemNumbPerPage;
-    private int emojiImgViewWidth = 0;
-    private int emojiImgViewHeight = 0;
+    /**
+     * 每个item中表情图标的宽度
+     */
+    private int gridViewItemIconWidth = 0;
+    /**
+     * 每个item中表情图标的高度
+     */
+    private int gridViewItemIconHeight = 0;
+    /**
+     * 表情选择面板的高度
+     */
+    private int emojiPanelHeight = 0;
+    /**
+     * 底部页面指示器高度
+     */
+    private int pageIndicatorHeight = 0;
+    /**
+     * 底部页面指示器间距
+     */
+    private int pageIndicatorSpace = 0;
+    /**
+     * 底部指示器topMargin
+     */
+    private int pageIndicatorTopMargin = 0;
+    /**
+     * 底部指示器bottomMargin
+     */
+    private int pageIndicatorBottomMargin = 0;
+    /**
+     * 是否展示tab
+     */
+    private boolean showTabPageIndicator = true;
+    /**
+     * 设置表情选择面板是否自动填充父容器（避免布局修改影响到直播间已有UI效果，通过该参数来控制）
+     */
+    private boolean emojiPanelAutoFitWindow = false;
+
+    /**
+     * 面板[表情页]背景色  #0075E7
+     */
+    private int emojiBgColor = Color.parseColor("#ffffff");
+
+    private int emojiIndicBgResId =  R.drawable.selector_emoji_indicator_live;
 
     public EmojiTabScrollLayout(Context context) {
         this(context, null);
@@ -117,22 +172,50 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
      * @param attrs
      */
     public void initParams(@Nullable AttributeSet attrs){
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        gridViewItemIconWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, gridViewItemIconWidth, dm);
+        gridViewItemIconHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, gridViewItemIconHeight, dm);
+        gridViewItemWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, gridViewItemWidth, dm);
+        gridViewItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, gridViewItemHeight, dm);
+        emojiPanelHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, emojiPanelHeight, dm);
+        pageIndicatorHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageIndicatorHeight, dm);
+        pageIndicatorSpace = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageIndicatorSpace, dm);
+        pageIndicatorTopMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageIndicatorTopMargin, dm);
+        pageIndicatorBottomMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, pageIndicatorBottomMargin, dm);
+
         TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.EmojiTabScrollLayout);
         columnNumbPerPage = a.getInteger(R.styleable.EmojiTabScrollLayout_columnNumbPerPage,columnNumbPerPage);
         lineNumbPerPage = a.getInteger(R.styleable.EmojiTabScrollLayout_lineNumbPerPage,lineNumbPerPage);
+        gridViewItemIconWidth = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_gridViewItemIconWidth, gridViewItemIconWidth);
+        gridViewItemIconHeight = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_gridViewItemIconHeight, gridViewItemIconHeight);
+        gridViewItemWidth = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_gridViewItemWidth, gridViewItemWidth);
+        gridViewItemHeight = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_gridViewItemHeight, gridViewItemHeight);
+        emojiPanelHeight = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_emojiPanelHeight, emojiPanelHeight);
+        pageIndicatorHeight = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_pageIndicatorHeight, pageIndicatorHeight);
+        pageIndicatorSpace = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_pageIndicatorSpace, pageIndicatorSpace);
+        pageIndicatorTopMargin = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_pageIndicatorTopMargin, pageIndicatorTopMargin);
+        pageIndicatorBottomMargin = a.getDimensionPixelSize(R.styleable.EmojiTabScrollLayout_pageIndicatorBottomMargin, pageIndicatorBottomMargin);
+        showTabPageIndicator = a.getBoolean(R.styleable.EmojiTabScrollLayout_showTabPageIndicator, showTabPageIndicator);
+        emojiPanelAutoFitWindow = a.getBoolean(R.styleable.EmojiTabScrollLayout_emojiPanelAutoFitWindow, emojiPanelAutoFitWindow);
+        emojiBgColor = a.getColor(R.styleable.EmojiTabScrollLayout_emojiBgColor, emojiBgColor);
         a.recycle();
-
-        itemHeight = DisplayUtil.getScreenWidth(mContext)/columnNumbPerPage;
-        itemNumbPerPage = columnNumbPerPage*lineNumbPerPage;
-
-        emojiImgViewWidth = (int)mContext.getResources().getDimension(R.dimen.live_emoji_width);
-        emojiImgViewHeight = (int)mContext.getResources().getDimension(R.dimen.live_emoji_height);
     }
 
     private void initView(){
-        ll_emojiRootView = findViewById(R.id.ll_emojiRootView);
+        Log.d(TAG,"initView");
         tpi_tabIndicator = (TabPageIndicator)findViewById(R.id.tpi_tabIndicator);
+        tpi_tabIndicator.setVisibility(showTabPageIndicator ? View.VISIBLE : View.GONE);
+        resetEmojiPanelColumnLineNum();
+        ll_emojiRootView = findViewById(R.id.ll_emojiRootView);
+        ll_emojiRootView.getLayoutParams().height = emojiPanelHeight;
+
         sl_pagerContainer = (ScrollLayout)findViewById(R.id.sl_pagerContainer);
+        LinearLayout.LayoutParams slLp = (LayoutParams) sl_pagerContainer.getLayoutParams();
+        if(emojiPanelAutoFitWindow){
+            slLp.topMargin = 0;
+            slLp.leftMargin = 0;
+            slLp.rightMargin = 0;
+        }
         sl_pagerContainer.setOnScreenChangeListener(new ScrollLayout.OnScreenChangeListener() {
             @Override
             public void onScreenChange(int currentIndex) {
@@ -140,6 +223,10 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
             }
         });
         ll_pageIndicator = (LinearLayout) findViewById(R.id.ll_pageIndicator);
+        LinearLayout.LayoutParams pageIndLp = (LayoutParams) ll_pageIndicator.getLayoutParams();
+        pageIndLp.height = pageIndicatorHeight;
+        pageIndLp.topMargin = pageIndicatorTopMargin;
+        pageIndLp.bottomMargin = pageIndicatorBottomMargin;
         tv_itemUnusableTip = (TextView) findViewById(R.id.tv_itemUnusableTip);
         tv_itemUnusableTip.setVisibility(View.GONE);
         tv_itemUnusableTip.setOnClickListener(new OnClickListener() {
@@ -154,9 +241,25 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
         ll_emptyEmojiData.setVisibility(View.GONE);
         ll_retryLoadEmoji =  findViewById(R.id.ll_retryLoadEmoji);
         fl_emojiContainer =  findViewById(R.id.fl_emojiContainer);
+        fl_emojiContainer.setBackgroundDrawable(new ColorDrawable(emojiBgColor));
         ll_emojiContainer =  findViewById(R.id.ll_emojiContainer);
         tv_reloadEmojiList = (TextView) findViewById(R.id.tv_reloadEmojiList);
         ll_retryLoadEmoji.setVisibility(View.GONE);
+    }
+
+    private void resetEmojiPanelColumnLineNum() {
+        if(emojiPanelAutoFitWindow){
+            //默认宽度全屏
+            columnNumbPerPage = DisplayUtil.getScreenWidth(mContext)/gridViewItemWidth;
+            int emojiTotalHeight =emojiPanelHeight-pageIndicatorHeight-pageIndicatorTopMargin-pageIndicatorBottomMargin;
+            if(showTabPageIndicator){
+                LayoutParams tabIndLp = (LayoutParams) tpi_tabIndicator.getLayoutParams();
+                emojiTotalHeight -= tabIndLp.height;
+                emojiTotalHeight -= tabIndLp.bottomMargin;
+            }
+            lineNumbPerPage = (emojiTotalHeight)/gridViewItemHeight;
+        }
+        itemNumbPerPage = columnNumbPerPage*lineNumbPerPage;
     }
 
     /**
@@ -167,6 +270,10 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
             initTabTitle();
             updatePageGridView(tabTitles.get(0));
         }
+    }
+
+    public void setEmojiIndicBgResId(int emojiIndicBgResId){
+        this.emojiIndicBgResId = emojiIndicBgResId;
     }
 
     /**
@@ -201,32 +308,37 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
             if(null != emotionCategory && null != emotionCategory.emotionList&& emotionCategory.emotionList.length>0){
                 List<EmotionItem> emotionItems = Arrays.asList(emotionCategory.emotionList);
                 GridView gridView = null;
-                int pageCount = emotionItems.size()/itemNumbPerPage+
-                        (0 == emotionItems.size()%itemNumbPerPage ? 0 : 1);
+                int pageCount = emotionItems.size()/itemNumbPerPage+ (0 == emotionItems.size()%itemNumbPerPage ? 0 : 1);
                 int maxPageIndex = 0;
                 for(int pageIndex = 0; pageIndex<pageCount; pageIndex++){
                     gridView = new GridView(mContext);
-                    gridView.setVerticalSpacing(gridViewVerticalSpacing);
-                    gridView.setHorizontalSpacing(gridViewHorizontalSpacing);
                     gridView.setGravity(Gravity.CENTER);
                     gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
                     gridView.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     gridView.setNumColumns(columnNumbPerPage);
                     maxPageIndex = (pageIndex+1)*itemNumbPerPage;
-                    final CanAdapter gridViewAdapter = new CanAdapter(mContext,
-                            R.layout.item_emoji_gridview) {
+                    final CanAdapter gridViewAdapter = new CanAdapter(mContext, R.layout.item_emoji_gridview) {
                         @Override
                         protected void setView(final CanHolderHelper helper, int position, Object bean) {
+                            //设置layoutparams
+                            ViewGroup.LayoutParams lp0 = helper.getView(R.id.rl_emojiContainer).getLayoutParams();
+                            if(null != lp0){
+                                lp0.width = gridViewItemWidth;
+                                lp0.height = gridViewItemHeight;
+                            }
+                            ViewGroup.LayoutParams lp1 = helper.getView(R.id.iv_emoji).getLayoutParams();
+                            if(null != lp1){
+                                lp1.width = gridViewItemIconWidth;
+                                lp1.height = gridViewItemIconHeight;
+                            }
                             EmotionItem emotionItem = (EmotionItem)bean;
                             String localPath = FileCacheManager.getInstance().parseEmotionImgLocalPath(
                                     emotionItem.emotionId,emotionItem.emoIconUrl);
                             Log.d(TAG,"updatePageGridView-localPath:"+localPath);
                             if(SystemUtils.fileExists(localPath)){
                                 helper.getImageView(R.id.iv_emoji).setImageBitmap(
-                                        ImageUtil.decodeSampledBitmapFromFile(
-                                                localPath,
-                                                emojiImgViewWidth,
-                                                emojiImgViewHeight));
+                                        ImageUtil.decodeSampledBitmapFromFile(localPath,
+                                                gridViewItemIconWidth, gridViewItemIconHeight));
                             }
                         }
 
@@ -248,8 +360,7 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
                         }
                     });
                     ViewGroup.LayoutParams gridViewLp = new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,itemHeight*columnNumbPerPage);
-                    Log.d(TAG,"updatePageGridView-itemHeight:"+itemHeight*columnNumbPerPage);
+                            ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT);
                     sl_pagerContainer.addView(gridView,gridViewLp);
                 }
                 updatePageIndicView(pageCount);
@@ -274,8 +385,6 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
         Log.d(TAG,"updatePageIndicView-pageCount:"+pageCount);
         ll_pageIndicator.removeAllViews();
         int endIndex = pageCount-1;
-        int indicatorWidth = DisplayUtil.dip2px(mContext,6f);
-        int indicatorMargin = DisplayUtil.dip2px(mContext,4f);
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -286,12 +395,14 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
         };
         for(int index=0; index<pageCount; index++){
             ImageView indicator = new ImageView(mContext);
-            LinearLayout.LayoutParams lp_indicator = new LinearLayout.LayoutParams(indicatorWidth, indicatorWidth);
+            LinearLayout.LayoutParams lp_indicator = new LinearLayout.LayoutParams(pageIndicatorHeight, pageIndicatorHeight);
             lp_indicator.gravity = Gravity.CENTER;
-            lp_indicator.leftMargin = 0 == index ? 0 : indicatorMargin;
-            lp_indicator.rightMargin = endIndex == index ? 0 : indicatorMargin;
+            lp_indicator.leftMargin = 0 == index ? 0 : pageIndicatorSpace;
+            lp_indicator.rightMargin = endIndex == index ? 0 : pageIndicatorSpace;
             indicator.setLayoutParams(lp_indicator);
-            indicator.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.selector_emoji_indicator));
+            if(0 != emojiIndicBgResId){
+                indicator.setBackgroundDrawable(mContext.getResources().getDrawable(emojiIndicBgResId));
+            }
             indicator.setTag(index);
             indicator.setOnClickListener(onClickListener);
             ll_pageIndicator.addView(indicator);
@@ -317,7 +428,6 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
      * 初始化Tab 导航
      */
     private void initTabTitle(){
-        tpi_tabIndicator.setVisibility(View.VISIBLE);
         tpi_tabIndicator.setTitles(tabTitles.toArray(new String[tabTitles.size()]));
         tpi_tabIndicator.setDefaultPosition(0);
         tpi_tabIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_SAME);
@@ -378,6 +488,20 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
     public void setGridViewVerticalSpacing(int gridViewVerticalSpacing){
         this.gridViewVerticalSpacing = gridViewVerticalSpacing;
         invalidate();
+    }
+
+    /**
+     * 设置表情面板的高度
+     * @param emojiPanelHeight
+     */
+    public void setEmojiPanelHeight(int emojiPanelHeight){
+        Log.d(TAG,"setEmojiPanelHeight-emojiPanelHeight:"+emojiPanelHeight);
+        this.emojiPanelHeight = emojiPanelHeight;
+        if(null != ll_emojiRootView){
+            ll_emojiRootView.getLayoutParams().height = emojiPanelHeight;
+            Log.d(TAG,"setEmojiPanelHeight-ll_emojiRootView.height:"+ll_emojiRootView.getLayoutParams().height);
+        }
+        resetEmojiPanelColumnLineNum();
     }
 
     /**

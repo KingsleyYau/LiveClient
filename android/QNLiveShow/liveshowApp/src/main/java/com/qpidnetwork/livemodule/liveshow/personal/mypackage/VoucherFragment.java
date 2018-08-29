@@ -35,13 +35,17 @@ public class VoucherFragment extends BaseListFragment{
 //        closePullDownRefresh();
         //关闭上啦刷新
         closePullUpRefresh(true);
+
+        //刷新列表，显示菊花，解决setUserVisibleHint比onCreateView先执行，导致loading未加载完成无法显示
+        showLoadingProcess();
+        queryVoucherList();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         //Fragment是否可见，用于viewpager切换时再加载
-        if(isVisibleToUser){
+        if(isVisibleToUser && isCreatedView()){
             //切换到当前fragment
             showLoadingProcess();
             queryVoucherList();

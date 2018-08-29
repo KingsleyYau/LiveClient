@@ -876,14 +876,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniLi
 /*********************************** 3.14.获取推荐主播列表  ****************************************/
 
 class RequestGetPromoAnchorListCallback : public IRequestGetPromoAnchorListCallback{
-	void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& listItem){
+	void OnGetPromoAnchorList(HttpGetPromoAnchorListTask* task, bool success, int errnum, const string& errmsg, const AdItemList& listItem){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
         FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetPromoAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
-		jobjectArray jItemArray = getHotListArray(env, listItem);
+		jobjectArray jItemArray = getAdListArray(env, listItem);
 		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/

@@ -10,8 +10,6 @@
 #import "LSNavigationController.h"
 #import "LSMainViewController.h"
 #import "StreamTestViewController.h"
-#import "LSLiveGuideViewController.h"
-
 #import "LiveModule.h"
 #import "LSConfigManager.h"
 
@@ -33,7 +31,10 @@
 
     LSConfigManager *config = [LSConfigManager manager];
 
-    config.item = [[ConfigItemObject alloc] init];
+    config.item = [[ZBConfigItemObject alloc] init];
+
+    
+    
 //        config.item.httpSvrUrl = @"http://demo-live.charmdate.com:3007";
 //        config.item.imSvrUrl = @"ws://demo-live.charmdate.com:3006";
     config.item.httpSvrUrl = @"http://172.25.32.17:8817";
@@ -46,10 +47,6 @@
     [[LiveModule module] setConfigUrl:@"http://172.25.32.17:8817"];
 //    [[LiveModule module] setConfigUrl:@"http://192.168.88.17:8817"];
 //    [[LiveModule module] setConfigUrl:@"https://demo-live.charmdate.com:446"];
-}
-
-- (void)initialiseSubwidge {
-    [super initialiseSubwidge];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,7 +8,6 @@
     <EditText
         android:id="@+id/et_nickName"
         android:layout_width="match_parent"
-        android:hint="wtf"
         android:textColorLink="#3c3c3c"
         android:layout_height="49dp"
         android:paddingLeft="13dp"

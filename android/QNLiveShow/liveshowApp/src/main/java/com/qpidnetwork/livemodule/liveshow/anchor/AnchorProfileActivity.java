@@ -24,11 +24,23 @@ public class AnchorProfileActivity extends BaseWebViewActivity {
 
     public static final String WEB_URL_KEY_ENTERROOM = "enterroom";
 
+    /**
+     * 打开主播资料页，tab默认定位位置
+     */
+    public enum TagType{
+        Album,
+        MyCalendar,
+        Profile
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //del by Jagger 2018-2-6 samson说不需要了
+        //del by Jagger 2018-2-6 samson说不需要了
         //判断显示启动引导页
-        showGuideView();
+//        showGuideView();
     }
 
     @Override
@@ -83,30 +95,39 @@ public class AnchorProfileActivity extends BaseWebViewActivity {
      * @param showTitleBarWhenLoadSuc
      * @return
      */
-    public static Intent getAnchorInfoIntent(Context context, String title, String anchorid, boolean showTitleBarWhenLoadSuc){
-        Intent intent = new Intent(context, AnchorProfileActivity.class);
-        intent.putExtra(WEB_TITLE, title);
-        intent.putExtra(WEB_TITLE_BAR_SHOW_LOADSUC, showTitleBarWhenLoadSuc);
+    public static void launchAnchorInfoActivty(Context context, String title, String anchorid, boolean showTitleBarWhenLoadSuc, TagType tagType){
         ConfigItem configItem = LoginManager.getInstance().getLocalConfigItem();
-        String url = configItem.anchorPage;
-        StringBuilder sb = new StringBuilder(url);
-        if(url.contains("?")){
-            sb.append("&device=30");
-        }else{
-            sb.append("?device=30");
-        }
-        sb.append("&anchorid=");
-        sb.append(anchorid);
+        Intent intent = null;
+        if(configItem != null){
+            intent = new Intent();
+            intent = new Intent(context, AnchorProfileActivity.class);
+            intent.putExtra(WEB_TITLE, title);
+            intent.putExtra(WEB_TITLE_BAR_SHOW_LOADSUC, showTitleBarWhenLoadSuc);
 
-        //修改为根据是否直播中提示
-        int isEnterRoom = IMManager.getInstance().isCurrentInLive() ? 0:1;
-        sb.append("&" + WEB_URL_KEY_ENTERROOM + "=");
-        sb.append(String.valueOf(isEnterRoom));
-        url = sb.toString();
-        if(!TextUtils.isEmpty(url)){
-            intent.putExtra(WEB_URL, url);
+            String url = configItem.anchorPage;
+            StringBuilder sb = new StringBuilder(url);
+            if (url.contains("?")) {
+                sb.append("&anchorid=");
+            } else {
+                sb.append("?anchorid=");
+            }
+            sb.append(anchorid);
+
+            //修改为根据是否直播中提示
+            int isEnterRoom = IMManager.getInstance().isCurrentInLive() ? 0 : 1;
+            sb.append("&" + WEB_URL_KEY_ENTERROOM + "=");
+            sb.append(String.valueOf(isEnterRoom));
+            //增加tab定位字段
+            sb.append("&tabtype=");
+            sb.append(String.valueOf(tagType.ordinal()));
+            url = sb.toString();
+            if (!TextUtils.isEmpty(url)) {
+                intent.putExtra(WEB_URL, url);
+            }
         }
-        return intent;
+        if(intent != null){
+            context.startActivity(intent);
+        }
     }
 
     /***************************************  显示启动引导页  **********************************/

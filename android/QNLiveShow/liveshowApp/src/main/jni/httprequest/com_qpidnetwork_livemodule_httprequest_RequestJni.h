@@ -95,6 +95,15 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Cl
 JNIEXPORT jobjectArray JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_GetCookiesItem
   (JNIEnv *, jclass);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetProxy
+ * Signature: (Ljava/lang/String;I)V
+ * add by Jagger 2018-2-22
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetProxy
+  (JNIEnv *, jclass, jstring);
+
 #ifdef __cplusplus
 }
 #endif

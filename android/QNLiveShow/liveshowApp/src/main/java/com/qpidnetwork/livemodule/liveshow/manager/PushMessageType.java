@@ -6,5 +6,6 @@ package com.qpidnetwork.livemodule.liveshow.manager;
 
 public enum PushMessageType {
     Anchor_Invite_Notify,
-    Schedule_Invite_Expired
+    Schedule_Invite_Expired,
+    Program_Show_Start
 }

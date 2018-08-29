@@ -12,19 +12,21 @@
         android:layout_height="match_parent"
         android:background="@color/black3"/>
 
+    <!--LOGO图片UI设计师后需会更换，所以给的切图并未成比例-->
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/live_size_60dp"
-        android:layout_height="@dimen/live_size_120dp"
+        android:layout_width="160dp"
+        android:layout_height="67dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/live_size_100dp"
-        android:src="@android:drawable/ic_dialog_info" />
+        android:layout_marginTop="145dp"
+        android:src="@drawable/ic_charm_live" />
 
 
     <TextView
         android:id="@+id/txt_guide_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/live_size_16dp"
@@ -36,21 +38,19 @@
     <!-- E-mail　-->
     <FrameLayout
         android:id="@+id/fl_login_email"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/live_size_50dp"
+        android:layout_width="285dp"
+        android:layout_height="53dp"
         android:layout_above="@id/txt_guide_link"
-        android:layout_marginLeft="@dimen/live_size_46dp"
-        android:layout_marginRight="@dimen/live_size_46dp"
-        android:layout_marginBottom="@dimen/live_size_30dp"
+        android:layout_marginBottom="38dp"
         android:layout_centerHorizontal="true"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/selector_live_login_email">
 
         <ImageView
-            android:layout_width="@dimen/live_size_24dp"
-            android:layout_height="@dimen/live_size_24dp"
-            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_width="24dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="18dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_live_login_email" />
 
@@ -58,13 +58,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:fontFamily="monospace"
             android:gravity="center"
             android:text="@string/live_login_email"
-            android:textColor="@color/white"
-            android:textSize="@dimen/live_size_14sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
+            android:textColor="#fefefe"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
     </FrameLayout>
 
@@ -72,21 +70,19 @@
     <!-- FaceBook　-->
     <FrameLayout
         android:id="@+id/fl_login_facebook"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/live_size_50dp"
+        android:layout_width="285dp"
+        android:layout_height="53dp"
         android:layout_above="@id/fl_login_email"
-        android:layout_marginLeft="@dimen/live_size_46dp"
-        android:layout_marginRight="@dimen/live_size_46dp"
-        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:layout_marginBottom="10dp"
         android:layout_centerHorizontal="true"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/selector_live_login_facebook">
 
         <ImageView
-            android:layout_width="@dimen/live_size_24dp"
-            android:layout_height="@dimen/live_size_24dp"
-            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:layout_width="24dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="18dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_live_login_facebook" />
 
@@ -94,13 +90,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:fontFamily="monospace"
             android:gravity="center"
             android:text="@string/live_login_facebook"
-            android:textColor="@color/white"
-            android:textSize="@dimen/live_size_14sp"
-            android:textStyle="bold"
-            android:typeface="monospace" />
+            android:textColor="#fefefe"
+            android:textSize="15sp"
+            android:textStyle="bold" />
     </FrameLayout>
 
 </RelativeLayout>

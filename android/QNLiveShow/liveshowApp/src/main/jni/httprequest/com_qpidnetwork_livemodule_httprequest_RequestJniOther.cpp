@@ -16,7 +16,7 @@ class RequestGetConfigCallback : public IRequestGetConfigCallback{
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
-        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::onSynConfig( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::onSynConfig( success : %s, task : %p, isAttachThread:%d post_stamp_url:%s)", success?"true":"false", task, isAttachThread, configItem.postStampUrl.c_str());
 
         jobject jItem = getSynConfigItem(env, configItem);
         int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
@@ -188,14 +188,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 /*********************************** 6.4. 获取QN广告列表   ****************************************/
 
 class RequestGetAdAnchorListCallback : public IRequestGetAdAnchorListCallback{
-	void OnGetAdAnchorList(HttpGetAdAnchorListTask* task, bool success, int errnum, const string& errmsg, const HotItemList& list){
+	void OnGetAdAnchorList(HttpGetAdAnchorListTask* task, bool success, int errnum, const string& errmsg, const AdItemList& list){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
         FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetAdAnchorList( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
 
-		jobjectArray jItemArray = getHotListArray(env, list);
+		jobjectArray jItemArray = getAdListArray(env, list);
 		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
 		/*callback object*/
@@ -235,7 +235,7 @@ RequestGetAdAnchorListCallback gRequestGetAdAnchorListCallback;
  * Signature: (ILcom/qpidnetwork/livemodule/httprequest/OnRequestCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetAdAnchorList
-  (JNIEnv *env, jclass cls, jint number, jobject callback) {
+  (JNIEnv *env, jclass cls, jint number,  jobject callback) {
     FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetAdAnchorList( number : %d)",
             number);
     jlong taskId = -1;
@@ -583,3 +583,65 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
     return taskId;
 
 }
+
+/*********************************** 6.17.获取主界面未读数量  ****************************************/
+class RequestGetTotalNoreadNumCallback : public IRequestGetTotalNoreadNumCallback {
+	void OnGetTotalNoreadNum(HttpGetTotalNoreadNumTask* task, bool success, int errnum, const string& errmsg, const HttpMainNoReadNumItem& item) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetMainUnreadNum( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+
+		jobject jItem = getMainNoReadNumItem(env, item);
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += OTHER_MAINUNREADNUM_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetMainUnreadNum", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetMainUnreadNum( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+                jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+                env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestGetTotalNoreadNumCallback gRequestGetTotalNoreadNumCallback;
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetMainUnreadNum
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetMainUnreadNumCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetMainUnreadNum
+		(JNIEnv *env, jclass cls, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetMainUnreadNum()");
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetTotalNoreadNum(&gHttpRequestManager,
+										   &gRequestGetTotalNoreadNumCallback);
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+
+}
+

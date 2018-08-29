@@ -15,6 +15,7 @@
                 <outlet property="infoLabel" destination="30W-T6-gJQ" id="ppW-ma-nUt"/>
                 <outlet property="infoView" destination="6jJ-cD-BhM" id="reL-WU-ScZ"/>
                 <outlet property="myRidesWaterfallView" destination="iMu-wr-Ulc" id="M1X-Th-Kab"/>
+                <outlet property="noDataIcon" destination="Ild-m9-s9A" id="Fzz-hU-n0r"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

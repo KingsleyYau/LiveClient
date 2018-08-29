@@ -1,10 +1,10 @@
 package com.qpidnetwork.livemodule.im;
 
-import java.util.HashMap;
-
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
+
+import java.util.HashMap;
 
 /**
  * 本地缓存会员基本信息（主播/观众）
@@ -12,13 +12,13 @@ import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
  * @since 2017-6-1
  */
 public class IMUserBaseInfoManager {
-	
+
 	private HashMap<String, IMUserBaseInfoItem> mUserBaseInfoMap;
 	
 	public IMUserBaseInfoManager(){
 		mUserBaseInfoMap = new HashMap<String, IMUserBaseInfoItem>();
 	}
-	
+
 	/**
 	 * 添加到本地缓存
 	 * @param userInfo
@@ -30,8 +30,30 @@ public class IMUserBaseInfoManager {
 					IMUserBaseInfoItem item = mUserBaseInfoMap.get(userInfo.userId);
 					item.nickName = userInfo.nickName;
 					item.photoUrl = userInfo.photoUrl;
+					item.isHasTicket = userInfo.isHasTicket;
 				}else{
 					mUserBaseInfoMap.put(userInfo.userId, userInfo);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 更新用户信息
+	 * @param userId
+	 * @param userName
+	 * @param photoUrl
+	 */
+	public void updateOrAddUserBaseInfo(String userId, String userName, String photoUrl){
+		if(!TextUtils.isEmpty(userId)){
+			synchronized (mUserBaseInfoMap) {
+				if(mUserBaseInfoMap.containsKey(userId)){
+					IMUserBaseInfoItem item = mUserBaseInfoMap.get(userId);
+					item.nickName = userName;
+					item.photoUrl = photoUrl;
+				}else{
+
+					mUserBaseInfoMap.put(userId, new IMUserBaseInfoItem(userId, userName, photoUrl, false));
 				}
 			}
 		}
@@ -52,5 +74,11 @@ public class IMUserBaseInfoManager {
 			}
 		}
 		return item;
+	}
+
+	public void clearUserBaseInfoList(){
+		if(null != mUserBaseInfoMap){
+			mUserBaseInfoMap.clear();
+		}
 	}
 }

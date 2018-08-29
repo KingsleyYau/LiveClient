@@ -7,7 +7,6 @@
 //
 
 #import "LSProfileViewController.h"
-#import "LSRequestManager.h"
 
 @interface LSProfileViewController ()
 @property (nonatomic, strong) LSLiveWKWebViewController *urlController;
@@ -26,7 +25,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"AnchorPersonalViewController::dealloc()");
+    NSLog(@"LSProfileViewController::dealloc()");
     [self.profileView stopLoading];
     [self hideAndResetLoading];
 //    [self.profileView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveAnchorApp"];

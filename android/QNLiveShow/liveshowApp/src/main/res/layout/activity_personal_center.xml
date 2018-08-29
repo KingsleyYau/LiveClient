@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
+    android:background="@color/theme_default_activity_bg_grey"
     android:orientation="vertical">
 
     <!--My Reservations-->
@@ -17,10 +17,11 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:clickable="true"
-        android:onClick="onClick">
+        android:onClick="onClick"
+        android:layout_marginTop="9dp">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/live_size_20dp"
+            android:layout_height="@dimen/live_size_20dp"
             android:src="@drawable/ic_reservations"/>
         <TextView
             android:layout_width="0dp"
@@ -47,15 +48,67 @@
             android:text="10"
             android:textColor="@color/white"
             android:textSize="@dimen/live_size_10sp"
-            app:dotPadding="2dp">
+            app:dotPadding="2dp"
+            android:visibility="gone">
         </com.qpidnetwork.livemodule.view.DotView.DotView>
     </LinearLayout>
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
         android:layout_height="1dp"
-        android:background="#61db96ff"/>
+        android:orientation="vertical"
+        android:background="@android:color/white">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:background="@color/theme_default_divider_grey"/>
+    </LinearLayout>
+
+    <!--My Tickets-->
+    <LinearLayout
+        android:id="@+id/llTickets"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:gravity="center_vertical"
+        android:clickable="true"
+        android:onClick="onClick">
+        <ImageView
+            android:layout_width="@dimen/live_size_20dp"
+            android:layout_height="@dimen/live_size_20dp"
+            android:src="@drawable/ic_tickets"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/my_tickets_invite_title"
+            android:textSize="12sp"
+            android:layout_marginLeft="15dp"/>
+        <!--<TextView-->
+            <!--android:id="@+id/tvTickets"-->
+            <!--android:layout_width="8dp"-->
+            <!--android:layout_height="8dp"-->
+            <!--android:background="@drawable/bg_custom_ff4747_circle"-->
+            <!--android:textSize="9sp"-->
+            <!--android:visibility="invisible"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@color/white"/>-->
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:background="@color/theme_default_divider_grey"/>
+    </LinearLayout>
 
     <!--My Package-->
     <LinearLayout
@@ -70,8 +123,8 @@
         android:clickable="true"
         android:onClick="onClick">
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/live_size_20dp"
+            android:layout_height="@dimen/live_size_20dp"
             android:src="@drawable/ic_backpack"/>
         <TextView
             android:layout_width="0dp"
@@ -90,12 +143,18 @@
             android:gravity="center"
             android:textColor="@color/white"/>
     </LinearLayout>
-    <View
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:background="#61db96ff"/>
+        android:orientation="vertical"
+        android:background="@android:color/white">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:background="@color/theme_default_divider_grey"/>
+    </LinearLayout>
 
     <!--My Level-->
     <LinearLayout
@@ -111,8 +170,8 @@
         android:onClick="onClick">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/live_size_20dp"
+            android:layout_height="@dimen/live_size_20dp"
             android:src="@drawable/ic_level"/>
 
         <TextView
@@ -127,17 +186,21 @@
         <ImageView
             android:id="@+id/iv_myLevel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_level_icon_2"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginRight="13dp"
-        android:background="#61db96ff"/>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#f5f5f5"/>
+        android:orientation="vertical"
+        android:background="@android:color/white">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="13dp"
+            android:background="@color/theme_default_divider_grey"/>
+    </LinearLayout>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="#f5f5f5"/>-->
 </LinearLayout>

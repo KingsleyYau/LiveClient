@@ -10,6 +10,9 @@
 #import "IMRebateItem.h"
 
 @class LiveRoomCreditRebateManager;
+
+typedef void (^GetCreditFinshtHandler)(BOOL success, double credit);
+
 @protocol LiveRoomCreditRebateManagerDelegate <NSObject>
 @optional
 - (void)updataCredit:(double)credit;
@@ -30,7 +33,7 @@
 - (BOOL)removeDelegate:(id<LiveRoomCreditRebateManagerDelegate> _Nonnull)delegate;
 
 //请求账号余额
-- (void)getLeftCreditRequest;
+- (void)getLeftCreditRequest:(GetCreditFinshtHandler)handler;
 // 设置信用点
 - (void)setCredit:(double)credit;
 // 获取信用点

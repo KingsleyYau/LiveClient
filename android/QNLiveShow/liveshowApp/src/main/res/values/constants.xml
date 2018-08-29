@@ -11,12 +11,22 @@
     <!--倒计时-->
     <integer name="maxTimeCount">60</integer>
     <integer name="minPasswordLength">6</integer>
-    <integer name="giftNumPerPage">8</integer>
-    <integer name="giftColumnNumPerPage">4</integer>
+
+    <!--直播间礼物列表配置-->
+    <integer name="gift_list_coloum">4</integer>
+    <integer name="gift_list_row">2</integer>
+    <dimen name="gift_titlebar_height">31dp</dimen>
+    <dimen name="gift_page_indicator_height">12dp</dimen>
+    <dimen name="gift_operate_area_height">28dp</dimen>
+    <dimen name="gift_operate_area_margin_bottom">8dp</dimen>
+    <dimen name="gift_area_margin_bottom">40dp</dimen>
+    <!--礼物发送配置-->
+    <integer name="repeatSendStartCount">30</integer>
+    <integer name="repeatSendAnimPerid">100</integer>
+
+
     <integer name="emojiColumnNumPerPage">5</integer>
     <integer name="emojiLineNumPerPage">3</integer>
-    <integer name="repeatSendStartCount">30</integer>
-    <integer name="repeatSendAnimTime">3000</integer>
     <!--聊天栏最大的信息条目数-->
     <integer name="liveMsgListMaxNum">500</integer>
     <!--聊天栏单个条目数的最大停留时间-->

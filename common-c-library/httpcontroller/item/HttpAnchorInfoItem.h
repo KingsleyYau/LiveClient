@@ -28,7 +28,7 @@ public:
 
 			/* anchorType */
 			if( root[LIVEROOM_GETUSERINFO_ANCHORINFO_ANCHORTYPE].isNumeric() ) {
-				anchorType = (AnchorLevelType)root[LIVEROOM_GETUSERINFO_ANCHORINFO_ANCHORTYPE].asInt();
+				anchorType = GetIntToAnchorLevelType(root[LIVEROOM_GETUSERINFO_ANCHORINFO_ANCHORTYPE].asInt());
 			}
             
             /* isLive */

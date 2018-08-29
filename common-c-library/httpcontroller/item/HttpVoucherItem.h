@@ -38,11 +38,11 @@ public:
             }
             /* useRoomType */
             if (root[LIVEROOM_VOUCHERLIST_LIST_USEROOMTYPE].isInt()) {
-                useRoomType = (UseRoomType)root[LIVEROOM_VOUCHERLIST_LIST_USEROOMTYPE].asInt();
+                useRoomType = GetIntToUseRoomType(root[LIVEROOM_VOUCHERLIST_LIST_USEROOMTYPE].asInt());
             }
             /* anchorType */
             if (root[LIVEROOM_VOUCHERLIST_LIST_ANCHORTYPE].isInt()) {
-                anchorType = (AnchorType)root[LIVEROOM_VOUCHERLIST_LIST_ANCHORTYPE].asInt();
+                anchorType = GetIntToAnchorType(root[LIVEROOM_VOUCHERLIST_LIST_ANCHORTYPE].asInt());
             }
             /* anchorId */
             if (root[LIVEROOM_VOUCHERLIST_LIST_ANCHORID].isString()) {

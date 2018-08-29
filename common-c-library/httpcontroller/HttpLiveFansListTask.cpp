@@ -88,11 +88,6 @@ bool HttpLiveFansListTask::ParseData(const string& url, bool bFlag, const char* 
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpLiveFansListTask::ParseData( buf : %s )", buf);
-    }
-    
-
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     HttpLiveFansList itemList;

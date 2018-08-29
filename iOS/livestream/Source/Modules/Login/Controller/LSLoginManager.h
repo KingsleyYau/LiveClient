@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "IService.h"
+
 #import "LSLoginItemObject.h"
 #import "LSRegisterItemObject.h"
 
@@ -32,17 +34,11 @@
  *  @param manager 登陆状态管理器实例
  *  @param kick  是否主动注销(YES:主动/NO:超时)
  */
-- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(BOOL)kick msg:(NSString * _Nullable)msg;
+- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(LogoutType)type msg:(NSString * _Nullable)msg;
 
 @end
 
-typedef enum {
-    NONE = 0,
-    LOGINING,
-    LOGINED
-} LoginStatus;
-
-@interface LSLoginManager : NSObject
+@interface LSLoginManager : NSObject <ILoginService>
 /**
  *  登陆状态
  */
@@ -72,6 +68,26 @@ typedef enum {
  *  用户所在地区号
  */
 @property (nonatomic, copy) NSString* _Nullable zipCode;
+
+/**
+ *  用户名
+ */
+@property (nonatomic, strong, readonly) NSString* _Nullable email;
+
+/**
+ *  密码
+ */
+@property (nonatomic, strong, readonly) NSString* _Nullable password;
+
+/**
+ *  上一次输入用户名
+ */
+@property (nonatomic, strong, readonly) NSString* _Nullable lastInputEmail;
+
+/**
+ *  上一次输入密码
+ */
+@property (nonatomic, strong, readonly) NSString* _Nullable lastInputPassword;
 
 /**
  *  获取实例
@@ -105,12 +121,11 @@ typedef enum {
 - (LoginStatus)login:(NSString * _Nonnull)manId userSid:(NSString * _Nonnull)userSid;
 
 /**
- *  注销接口
- *
- *  @param kick 是否主动注销(或者被踢)
- *
+ 注销
+ 
+ @param type 注销类型
  */
-- (void)logout:(BOOL)kick msg:(NSString * _Nullable)msg;
+- (void)logout:(LogoutType)type msg:(NSString * _Nullable)msg;
 
 /**
  *  自动登陆
@@ -118,5 +133,16 @@ typedef enum {
  *  @return 是否进入登陆中状态
  */
 - (BOOL)autoLogin;
+
+/*************** 模块接口 ***************/
+/**
+ 模块登录接口
+
+ @param user 用户Id
+ @param password 密码
+ @param checkcode 验证码
+ @return 登录状态
+ */
+- (LoginStatus)login:(NSString * _Nonnull)user password:(NSString * _Nonnull)password checkcode:(NSString * _Nullable)checkcode;
 
 @end

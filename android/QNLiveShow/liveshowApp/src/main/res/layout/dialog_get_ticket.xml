@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rectangle_radius8_connor_solid_white_stoke_transparent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp"
+    android:paddingBottom="14dp"
+    android:paddingTop="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/img_close"
+            android:layout_width="@dimen/live_size_14dp"
+            android:layout_height="@dimen/live_size_14dp"
+            android:src="@drawable/ic_credits_dialog_close"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img_room_logo"
+        android:layout_width="@dimen/live_size_70dp"
+        android:layout_height="@dimen/live_size_70dp"
+        android:layout_gravity="center_horizontal"
+        fresco:actualImageScaleType="focusCrop"
+        fresco:backgroundImage="@color/black4"
+        fresco:placeholderImage="@drawable/ic_default_photo_woman"
+        fresco:roundAsCircle="true"
+        fresco:roundBottomLeft="true"
+        fresco:roundBottomRight="true"
+        fresco:roundTopLeft="true"
+        fresco:roundTopRight="true"
+        fresco:roundedCornerRadius="30dp"
+        fresco:roundingBorderColor="@color/white"
+        fresco:roundingBorderWidth="2dp" />
+
+    <TextView
+        android:id="@+id/txtRoomTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/live_size_14dp"
+        android:gravity="center"
+        android:text="The Show"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/text_color_dark"
+        android:textSize="@dimen/live_size_18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txtPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="@string/live_credits"
+        android:textColor="@color/live_programme_list_btn_get_ticket"
+        android:textSize="@dimen/live_size_16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:lineSpacingExtra="2sp"
+        android:text="@string/live_programme_get_ticket_tips"
+        android:textColor="@color/text_color_grey"
+        android:textSize="@dimen/abc_text_size_body_1_material" />
+
+
+    <com.qpidnetwork.livemodule.view.ButtonRaised
+        android:id="@+id/btn_get_ticket"
+        android:layout_width="@dimen/live_size_140dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal"
+        button:background="@color/live_programme_list_btn_get_ticket"
+        button:raisebutton_radius="6dp"
+        button:elevation="1dp"
+        button:title="@string/live_programme_btn_get_ticket"
+        button:title_color="@color/white"
+        button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+
+
+</LinearLayout>

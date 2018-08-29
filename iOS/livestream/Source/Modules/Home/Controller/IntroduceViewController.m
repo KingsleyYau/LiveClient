@@ -7,53 +7,46 @@
 //
 
 #import "IntroduceViewController.h"
-#import "LSLiveWKWebViewController.h"
+#import "LSLiveWKWebViewManager.h"
+#import "LiveModule.h"
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
-@interface IntroduceViewController ()<WKUIDelegate,WKNavigationDelegate>
+@interface IntroduceViewController ()<WKUIDelegate,WKNavigationDelegate,LSLiveWKWebViewManagerDelegate>
 
-@property (nonatomic, strong) LSLiveWKWebViewController *urlController;
+@property (nonatomic, strong) LSLiveWKWebViewManager *urlManager;
 
+@property (nonatomic, assign) BOOL isResume;
+@property (nonatomic, assign) BOOL didFinshNav;
 @end
 
 @implementation IntroduceViewController
 
 - (void)dealloc {
-    NSLog(@"IntroduceViewController::dealloc()");
-    [self.introduceView stopLoading];
-    [self.introduceView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+    NSLog(@"webViewController::dealloc()");
+    [self.webView stopLoading];
+    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.isResume = NO;
+    self.didFinshNav = NO;
+    
     if (@available(iOS 11, *)) {
-     self.introduceView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+     self.webView.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }else {
         self.automaticallyAdjustsScrollViewInsets = NO;
     }
 
-    self.urlController = [[LSLiveWKWebViewController alloc] init];
-    self.urlController.isShowTaBar = YES;
-    self.urlController.isRequestWeb = YES;
-
+    self.urlManager = [[LSLiveWKWebViewManager alloc] init];
+    self.urlManager.isShowTaBar = YES;
+    self.urlManager.delegate = self;
+    
     // webview请求url
     NSString *webSiteUrl = self.bannerUrl;
-    NSString *device; // 设备类型
-    if (webSiteUrl.length > 0) {
-        if (IS_IPAD) {
-            device = [NSString stringWithFormat:@"device=32"];
-        } else {
-            device = [NSString stringWithFormat:@"device=31"];
-        }
-        if ([webSiteUrl containsString:@"?"]) {
-            webSiteUrl = [NSString stringWithFormat:@"%@&%@",webSiteUrl,device];
-        } else {
-            webSiteUrl = [NSString stringWithFormat:@"%@?%@",webSiteUrl,device];
-        }
-    }
-    self.urlController.baseUrl = webSiteUrl;
+    self.urlManager.baseUrl = webSiteUrl;
     
     self.title = self.titleStr;
 }
@@ -75,12 +68,16 @@
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.hidden = NO;
     if (!self.viewDidAppearEver) {
-        self.urlController.liveWKWebView = self.introduceView;
-        self.urlController.controller = self;
-        self.urlController.isShowTaBar = YES;
-        self.urlController.isRequestWeb = YES;
-        [self.urlController requestWebview];
+        self.urlManager.liveWKWebView = self.webView;
+        self.urlManager.controller = self;
+        self.urlManager.isShowTaBar = YES;
+        [self.urlManager requestWebview];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self nativeTransferJavaScript];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -92,8 +89,25 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-
 }
 
+- (void)nativeTransferJavaScript {
+    if (self.isResume && self.didFinshNav) {
+        [self.webView webViewTransferResumeHandler:^(id  _Nullable response, NSError * _Nullable error) {
+        }];
+    }
+}
+
+#pragma mark - LSLiveWKWebViewManagerDelegate
+- (void)webViewTransferJSIsResume:(BOOL)isResume {
+    self.isResume = isResume;
+}
+
+- (void)webViewDidFinishNavigation {
+    self.didFinshNav = YES;
+    if (self.viewDidAppearEver) {
+        [self nativeTransferJavaScript];
+    }
+}
 
 @end

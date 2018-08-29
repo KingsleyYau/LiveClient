@@ -40,7 +40,7 @@ public:
 			}
             /* onlineStatus */
             if( root[LIVEROOM_FOLLOW_ONLINESTATUS].isInt() ) {
-                onlineStatus = (OnLineStatus)(root[LIVEROOM_FOLLOW_ONLINESTATUS].asInt());
+                onlineStatus = GetIntToOnLineStatus(root[LIVEROOM_FOLLOW_ONLINESTATUS].asInt());
             }
             
             /* roomPhotoUrl */
@@ -53,7 +53,7 @@ public:
             }
             /* roomType */
             if( root[LIVEROOM_FOLLOW_ROOMTYPE].isInt() ) {
-                roomType = (HttpRoomType)root[LIVEROOM_FOLLOW_ROOMTYPE].asInt();
+                roomType = GetIntToHttpRoomType(root[LIVEROOM_FOLLOW_ROOMTYPE].asInt());
             }
             /* addDate */
             if( root[LIVEROOM_FOLLOW_ADDDATE].isIntegral() ) {
@@ -76,7 +76,7 @@ public:
             }
             /* anchorType */
             if( root[LIVEROOM_FOLLOW_ANCHORTYPE].isInt() ) {
-                anchorType = (AnchorLevelType)(root[LIVEROOM_FOLLOW_ANCHORTYPE].asInt());
+                anchorType = GetIntToAnchorLevelType(root[LIVEROOM_FOLLOW_ANCHORTYPE].asInt());
             }
             
             /* showInfo */

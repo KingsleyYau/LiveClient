@@ -79,4 +79,8 @@
  弹幕背景颜色
  */
 @property (nonatomic, strong) UIColor *barrageBgColor;
+/**
+ 购票标志
+ */
+@property (nonatomic, strong) UIImage * buyTicketImage;
 @end

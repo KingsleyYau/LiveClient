@@ -11,7 +11,6 @@
 static LSUserUnreadCountManager * unreadCountinstance;
 
 @interface LSUserUnreadCountManager ()
-@property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @property (nonatomic, strong) NSMutableArray* delegates;
 @property (nonatomic, strong) LSAnchorRequestManager *requestManager;
 @end
@@ -31,8 +30,7 @@ static LSUserUnreadCountManager * unreadCountinstance;
 {
     self = [super init];
     if (self) {
-        self.sessionManager = [LSSessionRequestManager manager];
-        self.requestManager= [LSAnchorRequestManager manager];
+        self.requestManager = [LSAnchorRequestManager manager];
         self.delegates = [NSMutableArray array];
      }
     return self;
@@ -58,27 +56,6 @@ static LSUserUnreadCountManager * unreadCountinstance;
 
 
 #pragma mark 请求预约未读数
-- (void)getResevationsUnredCount
-{
-    ManBookingUnreadUnhandleNumRequest * request = [[ManBookingUnreadUnhandleNumRequest alloc]init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * errmsg, BookingUnreadUnhandleNumItemObject * item) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            @synchronized(self.delegates) {
-                for(NSValue* value in self.delegates) {
-                    id<LSUserUnreadCountManagerDelegate> delegate = value.nonretainedObjectValue;
-                    if ([delegate respondsToSelector:@selector(onGetResevationsUnredCount:)]) {
-                        [delegate onGetResevationsUnredCount:item];
-                    }
-
-                }
-            }
-        });
-    };
-
-    [self.sessionManager sendRequest:request];
-
-}
-
 
 - (void)getUnreadSheduledBooking {
     [self.requestManager anchorGetScheduleListNoReadNum:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingUnreadUnhandleNumItemObject * _Nonnull item) {
@@ -89,7 +66,6 @@ static LSUserUnreadCountManager * unreadCountinstance;
                     if ([delegate respondsToSelector:@selector(onGetUnreadSheduledBooking:)]) {
                         [delegate onGetUnreadSheduledBooking:item.scheduledNoReadNum];
                     }
-                    
                 }
             }
         });
@@ -97,5 +73,19 @@ static LSUserUnreadCountManager * unreadCountinstance;
     }];
 }
 
-
+- (void)getUnreadShowCalendar {
+    [self.requestManager anchorGetNoReadNumProgram:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int num) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"LSMainViewController::anchorGetNoReadNumProgram( [节目未读信息], success : %d, errmsg :%@, num : %d )", success, errmsg, num);
+            @synchronized(self.delegates) {
+                for(NSValue* value in self.delegates) {
+                    id<LSUserUnreadCountManagerDelegate> delegate = value.nonretainedObjectValue;
+                    if ([delegate respondsToSelector:@selector(onGetUnreadShowCalendar:)]) {
+                        [delegate onGetUnreadShowCalendar:num];
+                    }
+                }
+            }
+        });
+    }];
+}
 @end

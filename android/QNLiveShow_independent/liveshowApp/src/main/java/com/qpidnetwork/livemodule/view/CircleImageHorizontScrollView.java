@@ -20,6 +20,7 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -141,6 +142,7 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
                             .load(bean).noFade()
                             .placeholder(R.drawable.ic_default_photo_man)
                             .error(R.drawable.ic_default_photo_man)
+                            .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .into(civ_userHeader);
                 }else{
                     Picasso.with(getContext().getApplicationContext())

@@ -20,7 +20,7 @@
 #import "InterimShowViewController.h"
 #define PageSize 10
 
-@interface FollowingViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate,LiveADViewDelegate,LSListViewControllerDelegate>
+@interface FollowingViewController () <UIScrollViewRefreshDelegate, HotTableViewDelegate,LiveADViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *items;
 
@@ -30,21 +30,31 @@
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 /** 广告banner */
 @property (nonatomic, strong) LiveADView* adView;
+@property (weak, nonatomic) IBOutlet UIImageView *noDataImageView;
+@property (weak, nonatomic) IBOutlet UILabel *noDataTips;
+@property (weak, nonatomic) IBOutlet UIButton *viewHotBtn;
 
+
+/**
+ 是否加载数据
+ */
+@property (nonatomic, assign) BOOL isLoadData;
+/**
+ 是否第一次登录
+ */
+@property (nonatomic, assign) BOOL isFirstLogin;
 @end
 
 @implementation FollowingViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
+   
     // 初始化主播列表
     [self setupTableView];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    self.viewHotBtn.layer.cornerRadius = 18.0f;
+    self.viewHotBtn.layer.masksToBounds = YES;
 }
 
 - (void)initCustomParam {
@@ -64,7 +74,10 @@
     
     self.sessionManager = [LSSessionRequestManager manager];
     
-    self.delegate = self;
+    // 是否第一次登录
+    self.isFirstLogin = NO;
+    // 是否刷新数据
+    self.isLoadData = NO;
 }
 
 - (void)dealloc {
@@ -77,35 +90,37 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-    if (self.items.count == 0) {
-        // 第一次进来已登陆, 没有数据, 下拉控件, 触发调用刷新女士列表
-        [self getListRequest:NO];
+    if (!self.viewDidAppearEver) {
+        [self showTipsContent];
     }
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    __weak typeof(self) weakSelf = self;
-    UIApplication *app = [UIApplication sharedApplication];
-    [[NSNotificationCenter defaultCenter]addObserverForName:UIApplicationWillEnterForegroundNotification  object:app queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *note) {
-        [weakSelf.tableView startPullDown:YES];
-    }];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTableViewVouchersData) name:@"updateTableViewVouchersData" object:nil];
-    [[HomeVouchersManager manager] getVouchersData];
+    [self viewDidAppearGetList:NO];
+    [self updateTableViewVouchersData];
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"updateTableViewVouchersData" object:nil];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
 }
 
 - (void)updateTableViewVouchersData
 {
-    [self.tableView reloadData];
+    [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSVoucherAvailableInfoItemObject * _Nonnull item) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [HomeVouchersManager manager].item = item;
+                [self.tableView reloadData];
+            }
+        });
+    }];
 }
 
 - (void)setupTableView {
@@ -114,8 +129,9 @@
 
     self.tableView.backgroundView = nil;
     self.tableView.backgroundColor = [UIColor clearColor];
-
-
+    self.tableView.showsVerticalScrollIndicator = NO;
+    self.tableView.showsHorizontalScrollIndicator = NO;
+    
     LiveADView * adView = [[LiveADView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 80)];
     adView.delegate = self;
     self.adView = adView;
@@ -140,23 +156,26 @@
     [self.navigationController pushViewController:introduceVc animated:YES];
 }
 
+// 显示没有数据页面
 - (void)showTipsContent {
-
-    self.failView.hidden = NO;
-    self.failTipsText = NSLocalizedStringFromSelf(@"NO_FOLLOW_PERFORMER");
-    self.failBtnText = NSLocalizedStringFromSelf(@"WATCH_HOT_LIVE");
-//    self.delegateSelect = @selector(BrowseToHotAction:);
-    [self reloadFailViewContent];
+    self.noDataTips.hidden = NO;
+    self.noDataImageView.hidden = NO;
+    self.viewHotBtn.hidden = NO;
+    [self.tableView.tableHeaderView setHidden:YES];
 }
 
-- (void)lsListViewController:(LSListViewController *)listView didClick:(UIButton *)sender {
+- (void)hideNoDataTipsContent {
+    self.noDataTips.hidden = YES;
+    self.noDataImageView.hidden = YES;
+    self.viewHotBtn.hidden = YES;
+}
+
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
     NSLog(@"%s",__func__);
-    if ([listView.failBtnText isEqualToString:@"View Hot Broadcasts"]) {
-        [self BrowseToHotAction:sender];
-    }else if ([listView.failBtnText isEqualToString:@"Reload"]) {
-        [self reloadBtnClickAction:sender];
-    }
-    
+    [self reloadBtnClickAction:sender];
+}
+- (IBAction)viewHotlistDidClick:(id)sender {
+    [self BrowseToHotAction:sender];
 }
 
 - (void)hideTipsContent {
@@ -179,6 +198,26 @@
     if (isReloadView) {
         self.tableView.items = self.items;
         [self.tableView reloadData];
+    }
+}
+
+#pragma mark - HTTP登录调用
+- (void)setupLoadData:(BOOL)isLoadData {
+    self.isLoadData = isLoadData;
+}
+
+- (void)setupFirstLogin:(BOOL)isFirstLogin {
+    self.isFirstLogin = isFirstLogin;
+}
+
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite {
+    // 第一次http登录成功刷列表
+    if (self.isFirstLogin || isSwitchSite || self.isLoadData) {
+        // 界面是否显示
+        if (self.viewDidAppearEver) {
+            [self.tableView startPullDown:YES];
+            self.isFirstLogin = NO;
+        }
     }
 }
 
@@ -226,85 +265,82 @@
     // 每页最大纪录数
     request.start = start;
     request.step = PageSize;
-
+    
+    // 隐藏没有数据内容
+    [self hideNoDataTipsContent];
     // 调用接口
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<FollowItemObject *> *_Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"FollowingViewController::getListRequest( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
-                [[HomeVouchersManager manager] getVouchersData];
-                [self.tableView.tableHeaderView setHidden:NO];
-                self.failView.hidden = YES;
-                if (!loadMore) {
-
-                    // 停止头部
-                    [self.tableView finishPullDown:YES];
-
-                    // 清空列表
-                    [self.items removeAllObjects];
-                } else {
-                    // 停止底部
-                    [self.tableView finishPullUp:YES];
-                }
-                // 排重
-//                for (LiveRoomInfoItemObject *item in array) {
-//                    [self addItemIfNotExist:item];
-//                }
                 
-                for (FollowItemObject *item in array) {
-                    LiveRoomInfoItemObject *itemInfo = [[LiveRoomInfoItemObject alloc] init];
-                    itemInfo.photoUrl = item.photoUrl;
-                    itemInfo.nickName = item.nickName;
-                    itemInfo.userId = item.userId;
-                    itemInfo.onlineStatus = item.onlineStatus;
-                    itemInfo.roomPhotoUrl = item.roomPhotoUrl;
-                    itemInfo.loveLevel = item.loveLevel;
-                    itemInfo.addDate = item.addDate;
-                    itemInfo.interest = item.interest;
-                    itemInfo.anchorType = item.anchorType;
-                    itemInfo.roomType = item.roomType;
-
-                    [self.items addObject:itemInfo];
-                }
-
-                if (self.items.count == 0) {
-                    [self showTipsContent];
-                }
-
-                [self reloadData:YES];
-
-                if (!loadMore) {
-                    if (self.items.count > 0) {
-                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                            // 拉到最顶
-                            //                            NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:0];
-                            //                            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-                            [self.tableView scrollsToTop];
-                        });
-                    }
-                }else {
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                        if (self.items.count > PageSize) {
-                            // 拉到下一页
-                            UITableViewCell *cell = [self.tableView visibleCells].firstObject;
-                            NSIndexPath *index = [self.tableView indexPathForCell:cell];
-                            NSInteger row = index.row;
-                            NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
-                            [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                [[HomeVouchersManager manager] getVouchersData:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSVoucherAvailableInfoItemObject * _Nonnull item) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"FollowingViewController::getVouchersData(请求试聊券:[%@])", BOOL2SUCCESS(success));
+                        [self.tableView.tableHeaderView setHidden:NO];
+                        self.failView.hidden = YES;
+                        if (!loadMore) {
+                            // 停止头部
+                            [self.tableView finishPullDown:YES];
+                            // 清空列表
+                            [self.items removeAllObjects];
+                            self.isLoadData = NO;
+                        } else {
+                            // 停止底部
+                            [self.tableView finishPullUp:YES];
                         }
                         
+                        for (FollowItemObject *item in array) {
+                            LiveRoomInfoItemObject *itemInfo = [[LiveRoomInfoItemObject alloc] init];
+                            itemInfo.photoUrl = item.photoUrl;
+                            itemInfo.nickName = item.nickName;
+                            itemInfo.userId = item.userId;
+                            itemInfo.onlineStatus = item.onlineStatus;
+                            itemInfo.roomPhotoUrl = item.roomPhotoUrl;
+                            itemInfo.loveLevel = item.loveLevel;
+                            itemInfo.addDate = item.addDate;
+                            itemInfo.interest = item.interest;
+                            itemInfo.anchorType = item.anchorType;
+                            itemInfo.roomType = item.roomType;
+                            itemInfo.showInfo = item.showInfo;
+                            [self.items addObject:itemInfo];
+                        }
                         
+                        if (self.items.count == 0) {
+                            [self showTipsContent];
+                        }
+                        
+                        [self reloadData:YES];
+                        
+                        if (!loadMore) {
+                            if (self.items.count > 0) {
+                                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                    // 拉到最顶
+                                    [self.tableView scrollsToTop];
+                                });
+                            }
+                        }else {
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+                                if (self.items.count > PageSize) {
+                                    // 拉到下一页
+                                    UITableViewCell *cell = [self.tableView visibleCells].firstObject;
+                                    NSIndexPath *index = [self.tableView indexPathForCell:cell];
+                                    NSInteger row = index.row;
+                                    NSIndexPath *nextIndex = [NSIndexPath indexPathForRow:row + 1 inSection:0];
+                                    [self.tableView scrollToRowAtIndexPath:nextIndex atScrollPosition:UITableViewScrollPositionTop animated:YES];
+                                }
+                            });
+                        }
                     });
-                }
-
+                }];
             } else {
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishPullDown:NO];
                      [self.items removeAllObjects];
                     [self showFailTipsContent];
                     [self.tableView.tableHeaderView setHidden:YES];
-
+                    self.isLoadData = YES;
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
@@ -444,6 +480,7 @@
 
 - (void)navgationControllerPresent:(UIViewController *)controller {
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
+    nvc.flag = YES;
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;

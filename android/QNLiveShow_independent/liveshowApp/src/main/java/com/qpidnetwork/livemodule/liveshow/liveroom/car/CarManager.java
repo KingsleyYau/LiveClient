@@ -138,13 +138,17 @@ public class CarManager {
         public void run() {
             final CarInfo item = takeLiveRoomCarInfo();
             Log.d(TAG,"LiveRoomCarAnimThreadrun-item:"+item);
-            if(null != mActivity && mActivity.get() != null){
-                mActivity.get().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        playLiveRoomCarAnim(item);
+            if(null != mActivity){
+                Activity tempActivity = mActivity.get();{
+                    if(tempActivity != null){
+                        tempActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                playLiveRoomCarAnim(item);
+                            }
+                        });
                     }
-                });
+                }
             }
         }
     }

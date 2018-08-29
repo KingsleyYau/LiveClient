@@ -215,6 +215,39 @@ public:
      */
     bool SendHangoutGift(SEQ_T reqId, const string& roomId, const string& nickName, const string& toUid, const string& giftId, const string& giftName, bool isBackPack, int giftNum, bool isMultiClick, int multiClickStart, int multiClickEnd, int multiClickId, bool isPrivate)  override;
     
+    /**
+     *  10.11.多人互动观众开始/结束视频互动接口
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *  @param control          视频操作（IMCONTROLTYPE_START：开始 IMCONTROLTYPE_CLOSE：关闭）
+     *
+     */
+    bool ControlManPushHangout(SEQ_T reqId, const string& roomId, IMControlType control) override;
+    
+    /**
+     *  10.12.发送多人互动直播间文本消息接口
+     *
+     *  @param reqId            请求序列号
+     *  @param roomId           直播间ID
+     *  @param nickName         发送者昵称
+     *  @param msg              发送的信息
+     *  @param at               用户ID，用于指定接收者（字符串数组）（可无，无则表示发送给直播间所有人）
+     *
+     */
+    bool SendHangoutLiveChat(SEQ_T reqId, const string& roomId, const string& nickName, const string& msg, const list<string>& at) override;
+    
+    /**
+     *  12.1.发送私信文本消息接口
+     *
+     *  @param reqId            请求序列号
+     *  @param toId             接收者ID
+     *  @param content          消息内容
+     *  @param sendMsgId        发送时的假Id
+     *
+     */
+    bool SendPrivateMessage(SEQ_T reqId, const string& toId, const string& content, int sendMsgId) override;
+    
 public:
 	// 获取用户账号
 	string GetUser() override;
@@ -399,7 +432,7 @@ private:
      *  @param errMsg            结果描述
      *
      */
-    void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& talentInviteId) override;
+    void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& talentInviteId, const string& talentId) override;
     
     /**
      *  10.3.观众新建/进入多人互动直播间接口 回调
@@ -429,13 +462,45 @@ private:
      *  @param success          操作是否成功
      *  @param reqId            请求序列号
      *  @param errMsg           结果描述
+     *  @param credit           信用点（浮点型）（若小于0，则表示信用点不变）
      *
      */
-    void OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
+    void OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double credit) override;
 
+    /**
+     *  10.11.多人互动观众开始/结束视频互动接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param manPushUrl       观众视频流url
+     *
+     */
+    void OnControlManPushHangout(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) override;
 
-
+    /**
+     *  10.12.发送多人互动直播间文本消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    void OnSendHangoutLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override;
     
+    /**
+     *  12.1.发送私信文本消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *  @param messageId        消息ID
+     *  @param credit           信用点（浮点型）（可无，无或小于0，则表示信用点不变）
+     *  @param toId             被发送者ID
+     *  @param sendMsgId        发送时的假Id
+     *
+     */
+    void OnSendPrivateMessage(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, int messageId, double credit, const string& toId, int sendMsgId) override;
     // 服务端主动请求
     /**
      *  3.3.接收直播间关闭通知(观众)回调
@@ -532,26 +597,17 @@ private:
      */
     void OnRecvWaitStartOverNotice(const StartOverRoomItem& item) override;
     
-//    /**
-//     *  3.12.接收观众／主播切换视频流通知接口 回调
-//     *
-//     *  @param roomId       房间ID
-//     *  @param isAnchor     是否是主播推流（1:是 0:否）
-//     *  @param playUrl      播放url
-//     *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
-//     *
-//     */
-//    void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl, const string& userId = "") override;
-    
     /**
      *  3.12.接收观众／主播切换视频流通知接口 回调
      *
      *  @param roomId       房间ID
      *  @param isAnchor     是否是主播推流（1:是 0:否）
      *  @param playUrl      播放url
+     *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
      *
      */
-    void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl) override;
+    void OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl, const string& userId = "") override;
+    
     
     /**
      *  3.13.观众进入公开直播间接口 回调
@@ -705,6 +761,15 @@ private:
     void OnRecvSendTalentNotice(const TalentReplyItem& item) override;
     
     /**
+     *  8.2.接收直播间才艺点播回复通知 回调
+     *
+     *  @param roomId          直播间ID
+     *  @param introduction    公告描述
+     *
+     */
+    void OnRecvTalentListNotice(const string& roomId, const string& introduction) override;
+    
+    /**
      *  9.1.观众等级升级通知 回调
      *
      *  @param level           当前等级
@@ -715,10 +780,10 @@ private:
     /**
      *  9.2.观众亲密度升级通知
      *
-     *  @param loveLevel           当前等级
+     *  @param loveLevelItem           观众亲密度升级信息
      *
      */
-    void OnRecvLoveLevelUpNotice(int loveLevel) override;
+    void OnRecvLoveLevelUpNotice(const IMLoveLevelItem& loveLevelItem) override;
     
     /**
      *  9.3.背包更新通知
@@ -793,6 +858,24 @@ private:
      *
      */
     void OnRecvLackCreditHangoutNotice(const IMLackCreditHangoutItem& item) override;
+    
+    /**
+     *  10.13.接收直播间文本消息接口 回调
+     *
+     *  @param item         接收直播间文本消息
+     *
+     */
+    void OnRecvHangoutChatNotice(const IMRecvHangoutChatItem& item) override;
+    
+    /**
+     *  10.14.接收进入多人互动直播间倒数通知接口 回调
+     *
+     *  @param roomId         待进入的直播间ID
+     *  @param anchorId       主播ID
+     *  @param leftSecond     进入直播间的剩余秒数
+     *
+     */
+    void OnRecvAnchorCountDownEnterHangoutRoomNotice(const string& roomId, const string& anchorId, int leftSecond) override;
 
     // ------------- 节目 -------------
     /**
@@ -821,4 +904,32 @@ private:
      *
      */
     void OnRecvRetTicketNotice(const IMProgramItem& item, double leftCredit) override;
+    
+    /**
+     *  12.2.接收私信文本消息通知接口 回调
+     *
+     *  @param item         私信文本消息
+     *
+     */
+    void OnRecvPrivateMessageNotice(const IMPrivateMessageItem& item) override;
+    
+    // ------------- 信件 -------------
+    /**
+     *  13.1.接收意向信通知 接口 回调
+     *
+     *  @param anchorId         主播ID
+     *  @param loiId            信件ID
+     *
+     */
+    void OnRecvLoiNotice(const string& anchorId, const string& loiId) override;
+    
+    /**
+     *  13.2.接收意向信通知 接口 回调
+     *
+     *  @param anchorId         主播ID
+     *  @param emfId            信件ID
+     *
+     */
+    void OnRecvEMFNotice(const string& anchorId, const string& emfId) override;
+    
 };

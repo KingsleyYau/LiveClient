@@ -22,8 +22,8 @@
 @synthesize tableViewDelegate;
 @synthesize items;
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
+    self = [super initWithFrame:frame style:style];
     if (self) {
         // Initialization code
         [self initialize];
@@ -154,11 +154,15 @@
             if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
+                cell.showIcon.hidden = NO;
+                cell.roomType.hidden = YES;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
             }
             else
             {
                 cell.titleView.hidden = YES;
+                cell.showIcon.hidden = YES;
+                cell.roomType.hidden = NO;
                 cell.viewBtnTopDistance.constant = 2;
             }
             
@@ -208,11 +212,15 @@
             if (item.showInfo.showTitle.length > 0) {
                 cell.viewBtnTopDistance.constant = 50;
                 cell.titleView.hidden = NO;
+                cell.showIcon.hidden = NO;
+                cell.roomType.hidden = YES;
                 [cell setScrollLabelViewText:item.showInfo.showTitle];
             }
             else
             {
                 cell.titleView.hidden = YES;
+                cell.showIcon.hidden = YES;
+                cell.roomType.hidden = NO;
                 cell.viewBtnTopDistance.constant = 2;
             }
             
@@ -259,7 +267,6 @@
                                         imageUrl:item.roomPhotoUrl
                                 placeholderImage:[UIImage imageNamed:@"Home_HotAndFollow_ImageView_Placeholder"]];
 
-    
     return tableViewCell;
 }
 

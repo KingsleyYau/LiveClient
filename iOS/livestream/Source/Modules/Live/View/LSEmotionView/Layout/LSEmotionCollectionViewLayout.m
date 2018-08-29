@@ -110,7 +110,7 @@
         self.paddingY = self.collectionView.frame.size.height - (self.pageLineCount * (self.itemSize + self.lineSpace));
     }
     
-    self.paddingY = (self.paddingY / 2 > 10) ? self.paddingY / 2 : 14;
+    self.paddingY = (self.paddingY / 2 > 10) ? self.paddingY / 2 : 5;
     self.pageLineCount = 3;
     
     // 计算页数

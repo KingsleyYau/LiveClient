@@ -7,8 +7,9 @@
     </string-array>
 
     <string-array name="topTabs">
-        <item>Hot</item>
-        <item>Following</item>
+        <item>DISCOVER</item>
+        <item>FOLLOW</item>
+        <item>CALENDAR</item>
     </string-array>
 
     <string-array name="mobilePopupItems">
@@ -31,9 +32,22 @@
 
     <!--我的背包-->
     <string-array name="myPackageTags">
+        <item>Post Stamp</item>
         <item>Vouchers</item>
-        <item>Received Gifts</item>
-        <item>My Rides</item>
+        <item>Gifts</item>
+        <item>Rides</item>
+    </string-array>
+
+    <!--我的节目票-->
+    <string-array name="myTicketsTags">
+        <item>Unused</item>
+        <item>History</item>
+    </string-array>
+
+    <!--私信-->
+    <string-array name="myMessageTags">
+        <item>All</item>
+        <item>Follow</item>
     </string-array>
 
     <!--预约邀请-->

@@ -50,7 +50,7 @@ public:
             }
             /* errNo */
             if (root[IMRECVLEAVEROOMITEM_ERRNO_PARAM].isNumeric()) {
-                errNo = root[IMRECVLEAVEROOMITEM_ERRNO_PARAM].asInt();
+                errNo = (LCC_ERR_TYPE)root[IMRECVLEAVEROOMITEM_ERRNO_PARAM].asInt();
             }
             /* errMsg */
             if (root[IMRECVLEAVEROOMITEM_ERRMSG_PARAM].isString()) {
@@ -67,7 +67,7 @@ public:
         userId = "";
         nickName = "";
         photoUrl = "";
-        errNo = 0;
+        errNo = LCC_ERR_FAIL;
         errMsg = "";
     }
     
@@ -89,7 +89,7 @@ public:
     string                      userId;
     string                      nickName;
     string                      photoUrl;
-    int                         errNo;
+    LCC_ERR_TYPE                errNo;
     string                      errMsg;
 
 };

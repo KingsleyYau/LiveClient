@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+<!---->
+
+<!--<LinearLayout-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:orientation="vertical">-->
+
+<!--<RelativeLayout-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+<!--&lt;!&ndash;<TextView&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;android:layout_height="200dp"&ndash;&gt;-->
+<!--&lt;!&ndash;android:background="#FF33B5E5"&ndash;&gt;-->
+<!--&lt;!&ndash;android:gravity="center"&ndash;&gt;-->
+<!--&lt;!&ndash;android:text="Content"&ndash;&gt;-->
+<!--&lt;!&ndash;android:textColor="@android:color/white"&ndash;&gt;-->
+<!--&lt;!&ndash;android:textSize="50sp" />&ndash;&gt;-->
+
+<!--<android.support.v7.widget.RecyclerView-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"/>-->
+
+<!--<EditText-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="50dp"-->
+<!--android:layout_marginTop="50dp"-->
+<!--android:layout_alignParentBottom="true"-->
+<!--android:text="EditText" />-->
+<!--</RelativeLayout>-->
+<!---->
+<!--</LinearLayout>-->
+<!--</ScrollView>-->
+
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:id="@+id/fl_root"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+
+<!--<ScrollView-->
+<!--android:id="@+id/sv_check_keyboard"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
+<!--</ScrollView>-->
+
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!--<ScrollView-->
+        <!--android:id="@+id/sv_check_keyboard"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/show_bg">-->
+    <!--</ScrollView>-->
+
+    <!-- 输入法和表情区 -->
+    <FrameLayout
+        android:id="@+id/fl_inputArea"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/light_gray"
+        android:layout_height="0dp">
+        <!-- 表情区 -->
+        <FrameLayout
+            android:id="@+id/fl_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+
+    <!-- Edit区域 -->
+    <!-- 使用ConstraintLayout是因为，用RelativeLayout是没办法在按钮居下且输入框多行时把layout_height设置为wrap_content的 -->
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fl_inputArea"
+        android:background="@color/live_message_edit_area_bg"
+        android:paddingTop="@dimen/live_size_8dp"
+        android:paddingLeft="@dimen/live_size_8dp"
+        android:paddingRight="@dimen/live_size_8dp"
+        android:paddingBottom="@dimen/live_size_6dp">
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_send"
+            android:layout_width="@dimen/live_size_60dp"
+            android:layout_height="@dimen/live_size_40dp"
+            button:background="@color/black3"
+            button:raisebutton_radius="6dp"
+            button:title="@string/txt_send_msg"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ImageView
+            android:id="@+id/img_emoji"
+            android:layout_width="@dimen/live_size_30dp"
+            android:layout_height="@dimen/live_size_30dp"
+            android:layout_marginRight="9dp"
+            android:layout_marginBottom="@dimen/live_size_2dp"
+            android:background="@drawable/live_msg_keyboard_emoji"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/btn_send"/>
+
+        <EditText
+            android:id="@+id/edt_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/rectangle_radius8_connor_solid_white_stoke_transparent"
+            android:maxLength="@integer/message_edit_max_length"
+            android:maxLines="3"
+            android:minHeight="@dimen/live_size_40dp"
+            android:padding="@dimen/live_size_4dp"
+            android:text=""
+            android:textSize="@dimen/live_size_16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/img_emoji"
+            app:layout_constraintStart_toStartOf="parent"
+            android:imeOptions="actionSend" />
+    </android.support.constraint.ConstraintLayout>
+
+    <!-- 信息列表 -->
+    <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+        android:id="@+id/rcv_chat_msg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/cl_edit"/>
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>

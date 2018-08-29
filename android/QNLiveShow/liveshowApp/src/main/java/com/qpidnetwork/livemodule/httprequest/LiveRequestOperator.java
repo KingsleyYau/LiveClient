@@ -15,7 +15,10 @@ import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.ImmediateInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.httprequest.item.MainUnreadNumItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.RegionType;
 import com.qpidnetwork.livemodule.httprequest.item.RideItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteConfig;
 import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
@@ -24,6 +27,7 @@ import com.qpidnetwork.livemodule.httprequest.item.TalentInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ValidLiveRoomItem;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
+import com.qpidnetwork.livemodule.httprequest.item.VouchorAvailableInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
@@ -59,22 +63,24 @@ public class LiveRequestOperator {
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 HttpRespObject response = (HttpRespObject)msg.obj;
-                if(response.isSuccess){
-                    LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
-                }else{
+//                if(response.isSuccess){
+//                    LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
+//                }else{
                     HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
                     switch (errType){
-                        case HTTP_LCC_ERR_TOKEN_EXPIRE:{
+                        case HTTP_LCC_ERR_TOKEN_EXPIRE:
+                        case HTTP_LCC_ERR_NO_LOGIN:{
                             //sesssion 过期
-                            LoginManager.getInstance().register((IAuthorizationListener)response.data);
+//                            LoginManager.getInstance().register((IAuthorizationListener)response.data);
+                            //modify by hunter 2018.8.7 修改为session过期执行踢出逻辑
                             LoginManager.getInstance().onModuleSessionOverTime();
                         }break;
                         default:{
-                            LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
+//                            LoginManager.getInstance().unRegister((IAuthorizationListener)response.data);
                         }break;
                     }
                 }
-            }
+//            }
         };
     }
 
@@ -1413,6 +1419,54 @@ public class LiveRequestOperator {
     }
 
     /**
+     * 5.6.获取试用券可用信息
+     * @param callback
+     * @return
+     */
+    public long GetVoucherAvailableInfo(final OnGetVoucherAvailableInfoCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniPackage.GetVoucherAvailableInfo(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetVoucherAvailableInfo(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniPackage.GetVoucherAvailableInfo(new OnGetVoucherAvailableInfoCallback() {
+
+            @Override
+            public void onGetVoucherAvailableInfo(boolean isSuccess, int errCode, String errMsg, VouchorAvailableInfoItem infoItem) {
+
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetVoucherAvailableInfo(isSuccess, errCode, errMsg, infoItem);
+                }
+            }
+        });
+    }
+
+    /**
      * 6.2.获取账号余额
      * @param callback
      * @return
@@ -1517,7 +1571,7 @@ public class LiveRequestOperator {
      * @param callback
      * @return
      */
-    public long GetAdAnchorList(final int number, final OnGetAdAnchorListCallback callback) {
+    public long GetAdAnchorList(final int number, final RegionType regionType, final OnGetAdAnchorListCallback callback) {
         // 登录状态改变重新调用接口
         final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
 
@@ -1535,7 +1589,7 @@ public class LiveRequestOperator {
                 if (isSuccess) {
                     // 登录成功
                     // 再次调用jni接口
-                    RequestJniOther.GetAdAnchorList(number, callback);
+                    RequestJniOther.GetAdAnchorList(number ,callback);
                 } else {
                     // 登录不成功, 回调失败
                     callback.onGetAdAnchorList(isSuccess, errCode, errMsg, null);
@@ -1848,6 +1902,348 @@ public class LiveRequestOperator {
                 } else {
                     // 没有匹配处理, 直接回调
                     callback.onGetUserInfo(isSuccess, errCode, errMsg, userItem);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.1.获取节目未读数(用于观众端向服务器获取节目未读数，已购或已关注的开播中节目数 + 退票未读数)
+     * @param callback
+     * @return
+     * @deprecated http接口已经废弃
+     */
+    public long GetNoReadNumProgram(final OnGetNoReadNumProgramCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.GetNoReadNumProgram(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetNoReadNumProgram(isSuccess, errCode, errMsg, 0);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.GetNoReadNumProgram(new OnGetNoReadNumProgramCallback() {
+
+            @Override
+            public void onGetNoReadNumProgram(boolean isSuccess, int errCode, String errMsg, int num) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetNoReadNumProgram(isSuccess, errCode, errMsg, num);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.2.获取节目列表
+     * @param type
+     * @param start
+     * @param step
+     * @param callback
+     * @return
+     */
+    public long GetProgramList(final RequestJniProgram.ProgramSortType type, final int start, final int step, final OnGetProgramListCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.GetProgramList(type, start, step, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetProgramList(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.GetProgramList(type, start, step, new OnGetProgramListCallback() {
+
+            @Override
+            public void onGetProgramList (boolean isSuccess, int errCode, String errMsg, ProgramInfoItem[] array) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetProgramList(isSuccess, errCode, errMsg, array);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.3.购买
+     * @param liveShowId
+     * @param callback
+     * @return
+     */
+    public long BuyProgram(final String liveShowId, final OnBuyProgramCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.BuyProgram(liveShowId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onBuyProgram(isSuccess, errCode, errMsg, 0);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.BuyProgram(liveShowId, new OnBuyProgramCallback() {
+
+            @Override
+            public void onBuyProgram(boolean isSuccess, int errCode, String errMsg, double leftCredit) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onBuyProgram(isSuccess, errCode, errMsg, leftCredit);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.4.关注/取消关注
+     * @param liveShowId
+     * @param isCancel
+     * @param callback
+     * @return
+     */
+    public long FollowShow(final String liveShowId, final boolean isCancel, final OnFollowShowCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.FollowShow(liveShowId, isCancel, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onFollowShow(isSuccess, errCode, errMsg);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.FollowShow(liveShowId, isCancel, new OnFollowShowCallback() {
+
+            @Override
+            public void onFollowShow(boolean isSuccess, int errCode, String errMsg){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onFollowShow(isSuccess, errCode, errMsg);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.5.获取可进入的节目信息接口
+     * @param liveShowId
+     * @param callback
+     * @return
+     */
+    public long GetShowRoomInfo(final String liveShowId, final OnGetShowRoomInfoCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.GetShowRoomInfo(liveShowId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetShowRoomInfo(isSuccess, errCode, errMsg, null, "");
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.GetShowRoomInfo(liveShowId, new OnGetShowRoomInfoCallback() {
+
+            @Override
+            public void onGetShowRoomInfo(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem item, String roomId){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetShowRoomInfo(isSuccess, errCode, errMsg, item, roomId);
+                }
+            }
+        });
+    }
+
+    /**
+     * 9.6.获取节目推荐列表
+     * @param type
+     * @param start
+     * @param step
+     * @param anchorId
+     * @param callback
+     * @return
+     */
+    public long ShowListWithAnchorId(final RequestJniProgram.ShowRecommendListType type, final int start, final int step, final String anchorId, final OnShowListWithAnchorIdCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniProgram.ShowListWithAnchorId(type, start, step, anchorId, callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onShowListWithAnchorId(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniProgram.ShowListWithAnchorId(type, start, step, anchorId, new OnShowListWithAnchorIdCallback() {
+
+            @Override
+            public void onShowListWithAnchorId(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem[] array){
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onShowListWithAnchorId(isSuccess, errCode, errMsg, array);
+                }
+            }
+        });
+    }
+
+    /**
+     /**
+     * 6.17.获取主界面未读数量
+     * @param callback
+     * @return
+     */
+    public long GetMainUnreadNum(final OnGetMainUnreadNumCallback callback) {
+        // 登录状态改变重新调用接口
+        final IAuthorizationListener callbackLogin = new IAuthorizationListener() {
+
+            @Override
+            public void onLogout(boolean isMannual) {
+
+
+            }
+
+            @Override
+            public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+                // 公共处理
+                HandleRequestCallback(isSuccess, errCode, errMsg, this);
+                if (isSuccess) {
+                    // 登录成功
+                    // 再次调用jni接口
+                    RequestJniOther.GetMainUnreadNum(callback);
+                } else {
+                    // 登录不成功, 回调失败
+                    callback.onGetMainUnreadNum(isSuccess, errCode, errMsg, null);
+                }
+            }
+        };
+        // 调用jni接口
+        return RequestJniOther.GetMainUnreadNum(new OnGetMainUnreadNumCallback() {
+
+            @Override
+            public void onGetMainUnreadNum(boolean isSuccess, int errCode, String errMsg, MainUnreadNumItem unreadItem) {
+                // 公共处理VerifySms
+                boolean bFlag = HandleRequestCallback(isSuccess, errCode, errMsg, callbackLogin);
+                if (bFlag) {
+                    // 已经匹配处理, 等待回调
+                } else {
+                    // 没有匹配处理, 直接回调
+                    callback.onGetMainUnreadNum(isSuccess, errCode, errMsg, unreadItem);
                 }
             }
         });

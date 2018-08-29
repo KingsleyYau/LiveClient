@@ -5,6 +5,8 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
+
 import net.qdating.utils.Log;
 
 import net.qdating.LSConfig;
@@ -15,8 +17,8 @@ import net.qdating.R;
 import net.qdating.LSConfig.FillMode;
 
 public class TestActivity extends Activity {
-	private String playH264File = "/sdcard/coollive/play0.h264" ;
-	private String url = "rtmp://172.25.32.17:19351/live/max0";
+	private String playH264File = "" ;
+	private String url = "rtmp://172.25.32.17:19351/live/maxa";
 	
 	private LSPlayer player;
 	private LSPublisher publisher;
@@ -38,7 +40,7 @@ public class TestActivity extends Activity {
 		surfaceView.setKeepScreenOn(true);
 		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
 		surfaceViewPublish.setKeepScreenOn(true);
-		
+
 		// 播放相关
 		player = new LSPlayer();
 		player.init(surfaceView, FillMode.FillModeAspectRatioFill, null);
@@ -86,29 +88,31 @@ public class TestActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-
-//		surfaceViewPublish.onResume();
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-
-//		surfaceViewPublish.onPause();
 	}
 
-//	@Override
-//    protected void onPause() {
-//		super.onPause();
+	@Override
+    protected void onPause() {
+		super.onPause();
+		surfaceView.onPause();
+		surfaceViewPublish.onPause();
 //
-//
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//		super.onResume();
-//		if( test ) {
-////			finish();
-//		}
-//    }
+//		surfaceView.setVisibility(View.INVISIBLE);
+//		surfaceViewPublish.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    protected void onResume() {
+		super.onResume();
+		surfaceView.onResume();
+		surfaceViewPublish.onResume();
+
+		if( test ) {
+//			finish();
+		}
+    }
 }

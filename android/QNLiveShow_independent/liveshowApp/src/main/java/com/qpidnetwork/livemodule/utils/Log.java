@@ -37,15 +37,24 @@ public class Log {
 
 	public static void v(String tag, String msg, Object... args) {
 		if (android.util.Log.VERBOSE >= LOG_LEVEL) {
-			android.util.Log.v(tag, String.format(msg, args));
+			try {
+				android.util.Log.v(tag, String.format(msg, args));
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
 		}
 	}
 
 	public static void d(String tag, String msg, Object... args) {
 		if (android.util.Log.DEBUG >= LOG_LEVEL) {
-			String m = String.format(msg, args);
-			// m = (m.length() > 300 ? m.substring(0, 300) : m);
-			android.util.Log.d(tag, m);
+			try {
+				String m = String.format(msg, args);
+				// m = (m.length() > 300 ? m.substring(0, 300) : m);
+				android.util.Log.d(tag, m);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -63,31 +72,51 @@ public class Log {
 
 	public static void i(String tag, String msg, Object... args) {
 		if (android.util.Log.INFO >= LOG_LEVEL) {
-			android.util.Log.i(tag, String.format(msg, args));
+			try {
+				android.util.Log.i(tag, String.format(msg, args));
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void w(String tag, String msg, Object... args) {
 		if (android.util.Log.WARN >= LOG_LEVEL) {
-			android.util.Log.w(tag, String.format(msg, args));
+			try {
+				android.util.Log.w(tag, String.format(msg, args));
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void w(String tag, String msg, Throwable tr, Object... args) {
 		if (android.util.Log.WARN >= LOG_LEVEL) {
-			android.util.Log.w(tag, String.format(msg, args), tr);
+			try {
+				android.util.Log.w(tag, String.format(msg, args), tr);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void e(String tag, String msg, Object... args) {
 		if (android.util.Log.ERROR >= LOG_LEVEL) {
-			android.util.Log.e(tag, String.format(msg, args));
+			try {
+				android.util.Log.e(tag, String.format(msg, args));
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static void e(String tag, String msg, Throwable tr, Object... args) {
 		if (android.util.Log.ERROR >= LOG_LEVEL) {
-			android.util.Log.e(tag, String.format(msg, args), tr);
+			try {
+				android.util.Log.e(tag, String.format(msg, args), tr);
+			}catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -107,7 +136,11 @@ public class Log {
 	}
 	
 	public static void file(String tag, String msg, Object... agrs) {
-		writeLog(mContext, mDirPath, tag, String.format(msg, agrs));
+		try {
+			writeLog(mContext, mDirPath, tag, String.format(msg, agrs));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	private static void writeLog(Context context, String dirPath, String tag, String strLog){

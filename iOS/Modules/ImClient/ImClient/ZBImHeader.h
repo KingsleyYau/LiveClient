@@ -24,6 +24,7 @@
 #import "ZBModel/IMAnchorRecvEnterRoomItemObject.h"
 #import "ZBModel/IMAnchorRecvLeaveRoomItemObject.h"
 #import "ZBModel/IMAnchorRecvGiftItemObject.h"
+#import "ZBModel/IMRecvAnchorHangoutChatItemObject.h"
 
 #import "ZBModel/IMAnchorProgramItemObject.h"
 

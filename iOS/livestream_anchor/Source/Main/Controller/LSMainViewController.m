@@ -10,25 +10,20 @@
 
 #import "StreamTestViewController.h"
 #import "PreLiveViewController.h"
-#import "BookPrivateBroadcastViewController.h"
-#import "MeLevelViewController.h"
-#import "MeLevelViewController.h"
-#import "MyBackpackViewController.h"
 #import "LSMyReservationsPageViewController.h"
 #import "AnchorPersonalViewController.h"
-#import "HotViewController.h"
 #import "LSLoginManager.h"
 #import "LiveModule.h"
 #import "LiveUrlHandler.h"
 #import "LiveService.h"
 #import "LiveStreamSession.h"
-#import "LSLiveGuideViewController.h"
 #import "LSLiveBroadcasterViewController.h"
 #import "PreStartPublicViewController.h"
 #import "LSMeViewController.h"
 #import "LSAnchorImManager.h"
 #import "LSUserUnreadCountManager.h"
 #import "CheckPrivacyManager.h"
+
 
 @interface LSMainViewController () <LiveUrlHandlerDelegate, LoginManagerDelegate, ZBIMManagerDelegate, ZBIMLiveRoomManagerDelegate, LSUserUnreadCountManagerDelegate,LiveModuleDelegate>
 /**
@@ -178,6 +173,8 @@
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     // 处理跳转URL
     [[LiveUrlHandler shareInstance] handleOpenURL];
+    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -200,7 +197,8 @@
     [[LiveUrlHandler shareInstance] handleOpenURL];
     
     // 刷新未读
-    [self reloadUnreadCount];
+//    [self reloadUnreadCount];
+//    [self reloadUnReadShow];
 }
 
 #pragma mark 检测更新
@@ -304,6 +302,9 @@
     self.tabBarItemSelected = item;
     self.tabBar.selectedItem = item;
     
+    if (item.tag == 0) {
+        [self reloadUnReadShow];
+    }
     // 刷新导航栏
     [self setupNavigationBar];
 }
@@ -347,6 +348,11 @@
     [self.unreadCountManager getUnreadSheduledBooking];
 }
 
+- (void)reloadUnReadShow {
+    [self.unreadCountManager getUnreadShowCalendar];
+}
+
+
 - (void)reloadUnreadMessage {
     // TODO:刷新界面未读消息
     LSUITabBarItem *tabBarItem = (LSUITabBarItem *)[self.tabBar.items objectAtIndex:0];
@@ -358,6 +364,17 @@
         if (self.unreadCount > 0) {
             tabBarItem.badgeValue = @"";
         }
+    }
+}
+
+
+- (void)onGetUnreadShowCalendar:(int)count {
+    if (count > 0) {
+        // TODO:获取未读数量
+        self.unreadCount = count;
+        [self reloadUnreadMessage];
+    }else {
+        [self reloadUnreadCount];
     }
 }
 
@@ -376,6 +393,24 @@
     LSLiveBroadcasterViewController *vcBroadcaster = (LSLiveBroadcasterViewController *)[self.viewControllers objectForKey:@(0)];
     [vcBroadcaster getUnreadSheduledBooking];
     
+}
+
+#pragma mark - im通知回调
+- (void)onRecvAnchorProgramPlayNotice:(IMAnchorProgramItemObject *_Nonnull)item msg:(NSString * _Nonnull)msg{
+    NSLog(@"LSAnchorImManager::onRecvAnchorProgramPlayNotice( [接收节目开播通知])");
+    [self.unreadCountManager getUnreadShowCalendar];
+}
+
+- (void)onRecvAnchorChangeStatusNotice:(IMAnchorProgramItemObject *_Nonnull)item {
+    NSLog(@"LSAnchorImManager::onRecvAnchorChangeStatusNotice( [接收节目状态改变通知])");
+    // 不管什么状态都获取,什么状态是未读由服务器控制
+    [self.unreadCountManager getUnreadShowCalendar];
+}
+
+- (void)onZBLogin:(ZBLCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ZBImLoginReturnObject* _Nonnull)item {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.unreadCountManager getUnreadShowCalendar];
+    });
 }
 
 #pragma mark - LiveUrlHandler通知
@@ -432,9 +467,9 @@
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBooking:(NSString *)anchorId {
     NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 新建预约页], anchorId : %@ )", anchorId);
     // TODO:收到通知进入新建预约页
-    BookPrivateBroadcastViewController *bookPrivate = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
-    bookPrivate.userId = anchorId;
-    [self.navigationController pushViewController:bookPrivate animated:NO];
+//    BookPrivateBroadcastViewController *bookPrivate = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
+//    bookPrivate.userId = anchorId;
+//    [self.navigationController pushViewController:bookPrivate animated:NO];
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBookingList:(int)bookType {
@@ -446,10 +481,7 @@
 }
 
 - (void)liveUrlHandler:(LiveUrlHandler *)handler openBackpackList:(int)BackpackType {
-    MyBackpackViewController *backPack = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
-    backPack.curIndex = BackpackType - 1;
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:backPack];
-    [self.navigationController presentViewController:nvc animated:NO completion:nil];
+
 }
 
 - (void)liveUrlHandlerOpenAddCredit:(LiveUrlHandler *)handler {
@@ -461,9 +493,25 @@
 
 - (void)liveUrlHandlerOpenMyLevel:(LiveUrlHandler *)handler {
     // TODO:进入我的等级界面
-    MeLevelViewController *level = [[MeLevelViewController alloc] initWithNibName:nil bundle:nil];
-    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:level];
-    [self.navigationController presentViewController:nvc animated:NO completion:nil];
+}
+
+- (void)liveUrlHandler:(LiveUrlHandler *)handler openShow:(NSString *)showId userId:(NSString *)userId roomType:(LiveRoomType)roomType
+{
+    NSLog(@"LSMainViewController::liveUrlHandler( [URL跳转, 进入节目], roomId : %@, userId : %@, roomType : %u )", showId, userId, roomType);
+    // TODO:进入节目过渡页
+    PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+    
+    LiveRoom *liveRoom = [[LiveRoom alloc] init];
+    liveRoom.photoUrl = [LSLoginManager manager].loginItem.photoUrl;
+    liveRoom.userName = [LSLoginManager manager].loginItem.nickName;
+    liveRoom.showId = showId;
+    liveRoom.userId = userId;
+    liveRoom.roomType = roomType;
+    vc.liveShowId = showId;
+    vc.status = PreLiveStatus_Show;
+    vc.liveRoom = liveRoom;
+    
+    [self navgationControllerPresent:vc];
 }
 
 - (void)navgationControllerPresent:(UIViewController *)controller {

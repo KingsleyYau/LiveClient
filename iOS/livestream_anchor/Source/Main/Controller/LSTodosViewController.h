@@ -11,4 +11,5 @@
 @interface LSTodosViewController : LSListViewController
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, assign) int unReadBookingCount;
+@property (nonatomic, assign) int unReadShowCount;
 @end

@@ -14,7 +14,8 @@
         <!-- QN APP Bar -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="56dp" />
+            android:layout_height="56dp"
+            android:background="@color/black_text_54"/>
 
         <!-- 半透明 -->
         <LinearLayout
@@ -26,20 +27,20 @@
             <LinearLayout
                 android:id="@+id/ll_header_title"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/live_entrance_title_height"
                 android:background="@drawable/live_ad_entrance_title_bg"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="16dp"
-                    android:text="@string/live_ad_entrance_title"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/live_size_16sp"
-                    android:textStyle="bold" />
+                <!--<TextView-->
+                    <!--android:id="@+id/tv_header"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:gravity="center"-->
+                    <!--android:padding="16dp"-->
+                    <!--android:text="@string/live_ad_entrance_title"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/live_size_16sp"-->
+                    <!--android:textStyle="bold" />-->
 
             </LinearLayout>
 

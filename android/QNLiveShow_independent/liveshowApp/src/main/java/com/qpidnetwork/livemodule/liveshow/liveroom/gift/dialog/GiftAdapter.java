@@ -22,6 +22,7 @@ import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.squareup.picasso.Picasso;
@@ -125,7 +126,8 @@ public class GiftAdapter <T> extends CanAdapter {
         tv_giftName.setVisibility(View.VISIBLE);
 
         TextView tv_giftCoins = helper.getTextView(R.id.tv_giftCoins);
-        tv_giftCoins.setText(mContext.getResources().getString(R.string.live_gift_coins,String.valueOf(item.credit)));
+        tv_giftCoins.setText(mContext.getResources().getString(R.string.live_gift_coins,
+                ApplicationSettingUtil.formatCoinValue(item.credit)));
 
         TextView tv_rightGiftFlag = helper.getTextView(R.id.tv_rightGiftFlag);
         if(giftTab == GiftTab.GiftTabFlag.BACKPACK){

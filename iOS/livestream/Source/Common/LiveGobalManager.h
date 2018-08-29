@@ -26,19 +26,14 @@
 @interface LiveGobalManager : NSObject
 
 /**
+ 是否正在hangout
+ */
+@property (assign, nonatomic) BOOL isHangouting;
+
+/**
  当前直播间信息
  */
 @property (strong) LiveRoom * _Nullable liveRoom;
-
-/**
- 当前拉流器
- */
-@property (strong) LiveStreamPlayer * _Nullable player;
-
-/**
- 当前推流器
- */
-@property (strong) LiveStreamPublisher * _Nullable publisher;
 
 /**
  进入房间时间

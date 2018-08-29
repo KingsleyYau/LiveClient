@@ -17,6 +17,8 @@ ZBTransportClient::ZBTransportClient(void)
     
     m_connState = DISCONNECT;
     m_conn = NULL;
+    m_isShutdownConnecting = false;
+    m_isWebConnected = false;
 }
 
 ZBTransportClient::~ZBTransportClient(void)
@@ -40,13 +42,15 @@ bool ZBTransportClient::Init(IZBTransportClientCallback* callback)
 bool ZBTransportClient::Connect(const char* url)
 {
     bool result = false;
-    
+    FileLog("ImClient", "ZBTransportClient::Connect()m_isShutdownConnecting:%d begin",m_isShutdownConnecting);
+    m_isWebConnected = false;
+    m_isShutdownConnecting = false;
     if (NULL != url && url[0] != '\0') {
+        // 释放mgr
+        ReleaseMgrProc();
         m_connStateLock->Lock();
         if (DISCONNECT == m_connState) {
-            // 释放mgr
-            ReleaseMgrProc();
-            
+
             // 创建mgr
             mg_mgr_init(&m_mgr, NULL);
             m_isInitMgr = true;
@@ -57,7 +61,7 @@ bool ZBTransportClient::Connect(const char* url)
             opt.user_data = (void*)this;
             m_conn = mg_connect_ws_opt(&m_mgr, ev_handler, opt, m_url.c_str(), "", NULL);
             FileLog("ImClient", "ZBTransportClient::Connect() m_conn->err:%d start", m_conn->err);
-            if (NULL != m_conn && m_conn->err == 0) {
+            if (NULL != m_conn && m_conn->err == 0 && !m_isShutdownConnecting) {
                 m_connState = CONNECTING;
                 result = true;
             }
@@ -77,7 +81,7 @@ bool ZBTransportClient::Connect(const char* url)
             }
         }
     }
-    
+    FileLog("ImClient", "ZBTransportClient::Connect()m_isShutdownConnecting:%d end",m_isShutdownConnecting);
     return result;
 }
 
@@ -92,10 +96,18 @@ void ZBTransportClient::Disconnect()
 // 断开连接处理(不锁)
 void ZBTransportClient::DisconnectProc()
 {
+    FileLog("ImClient", "ZBTransportClient::DisconnectProc() m_conn:%p  m_connState:%d m_isShutdownConnecting:%d begin", m_conn, m_connState, m_isShutdownConnecting);
+    // 当m_connState == CONNECTING时，im的socket还没有connect（可能是连socket都没有（因为ip为域名时mg_connect_ws_opt不去socket，都放到mg_mgr_poll去做，导致socketid没有，mg_shutdown 没有用，就设置DISCONNECT，使mg_mgr_poll结束））
+    if (m_connState == CONNECTING || m_connState == DISCONNECT) {
+        m_connState = DISCONNECT;
+    }
     if (NULL != m_conn) {
+        FileLog("ImClient", "ZBTransportClient::DisconnectProc() m_conn:%p m_conn->err:%d m_conn->sock:%d m_connState:%d", m_conn, m_conn->err, m_conn->sock, m_connState);
         mg_shutdown(m_conn);
         m_conn = NULL;
     }
+    m_isShutdownConnecting = true;
+    FileLog("ImClient", "ZBTransportClient::DisconnectProc() m_conn:%p  m_connState:%d m_isOnDisConnect:%d end", m_conn, m_connState, m_isShutdownConnecting);
 }
 
 // 释放mgr
@@ -138,6 +150,14 @@ void ZBTransportClient::Loop()
         mg_mgr_poll(&m_mgr, 100);
     }
     Disconnect();
+    // 如果im是连接中logout，没有走OnDisconnect，现在就走
+    if (!m_isWebConnected) {
+        FileLog("ImClient", "ZBTransportClient::Loop() m_conn:%p m_connState:%d m_isShutdownConnecting:%d", m_conn, m_connState, m_isShutdownConnecting);
+        // 状态为已连接(返回断开连接)
+        if (NULL != m_callback) {
+            m_callback->OnDisconnect();
+        }
+    }
 }
 
 // -- mongoose处理函数
@@ -194,6 +214,8 @@ void ZBTransportClient::OnDisconnect()
         // 状态为已连接(返回断开连接)
         if (NULL != m_callback) {
             m_callback->OnDisconnect();
+            m_isWebConnected = false;
+            m_isShutdownConnecting = false;
         }
     }
     else if (CONNECTING == m_connState || DISCONNECT == m_connState) {

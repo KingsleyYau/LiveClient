@@ -27,7 +27,7 @@
 #import "LiveRoom.h"
 
 #import "BigGiftAnimationView.h"
-#import "LiveRoomMsgManager.h"
+#import "PublicPrativeMsgManager.h"
 #import "RoomStyleItem.h"
 
 #define PlaceholderFontSize DESGIN_TRANSFORM_3X(14)
@@ -43,6 +43,7 @@
 - (void)noCreditPushTo:(LiveViewController *)vc;
 - (void)liveViewIsPlay:(LiveViewController *)vc;
 - (void)liveFinshViewIsShow:(LiveViewController *)vc;
+- (void)showHangoutTipView:(LiveViewController *)vc;
 @end
 
 @interface LiveViewController : LSGoogleAnalyticsViewController
@@ -64,6 +65,7 @@
 #pragma mark - 邀请私密直播控件
 @property (weak, nonatomic) IBOutlet UIView *startOneView;
 @property (weak, nonatomic) IBOutlet UIButton *startOneBtn;
+@property (weak, nonatomic) IBOutlet UIButton *showPublicTipBtn;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneViewHeigh;
 
 #pragma mark - 倒计时关闭直播间控件
@@ -133,6 +135,10 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *preActivityView;
 
 
+#pragma mark - 邀请hangout提示控件
+@property (weak, nonatomic) IBOutlet UIView *roomTipView;
+@property (weak, nonatomic) IBOutlet UILabel *roomTipLabel;
+
 @property (nonatomic, assign) BOOL isWantLeave;
 
 #pragma mark - 流播放推送事件
@@ -188,5 +194,14 @@
  显示预览界面
  */
 - (void)showPreview;
+
+/**
+ 邀请当前直播间主播Hangout
+
+ @param recommendId 推荐ID
+ @param anchorId 主播ID
+ @param anchorName 主播昵称
+ */
+- (void)inviteAnchorWithHangout:(NSString *)recommendId anchorId:(NSString *)anchorId anchorName:(NSString *)anchorName;
 
 @end

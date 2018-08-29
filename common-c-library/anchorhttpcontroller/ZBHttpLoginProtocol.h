@@ -382,6 +382,7 @@
 #define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_PHOTOURL                       "photourl"
 #define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_AGE                            "age"
 #define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_COUNTRY                        "country"
+#define GETCANRECOMMENDFRIENDLIST_ANCHORLIST_ONLINESTATUS                   "online_status"
 
 /* 6.2.主播推荐好友给观众 */
 /* 接口路径 */
@@ -500,6 +501,32 @@
 #define HANGOUTGIFTLIST_CELEBRATIONLIST_ID                                          "id"
 #define HANGOUTGIFTLIST_CELEBRATIONLIST_NUM                                         "num"
 
+/* 6.9.请求添加好友 */
+/* 接口路径 */
+#define HANGOUTADDANCHORFRIEND_PATH                                                "/lady/v1/addAnchorFriend"
+
+/**
+ *  请求
+ */
+#define HANGOUTADDANCHORFRIEND_USERID                                              "userid"
+
+/* 6.10.获取好友关系信息 */
+/* 接口路径 */
+#define HANGOUTGETFRIENDRELATION_PATH                                                "/lady/v1/getFriendRelation"
+
+/**
+ *  请求
+ */
+#define HANGOUTGETFRIENDRELATION_ANCHORID                                             "anchor_id"
+
+/**
+ *  返回
+ */
+#define HANGOUTGETFRIENDRELATION_AVATAR                                                 "avatar"
+#define HANGOUTGETFRIENDRELATION_NICKNAME                                               "nickname"
+#define HANGOUTGETFRIENDRELATION_AGE                                                    "age"
+#define HANGOUTGETFRIENDRELATION_COUNTRY                                                "country"
+#define HANGOUTGETFRIENDRELATION_ISFRIEND                                               "is_friend"
 
 /* 7.1.获取节目列表 */
 /* 接口路径 */

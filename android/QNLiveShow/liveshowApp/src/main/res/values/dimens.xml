@@ -6,31 +6,30 @@
     <dimen name="girdview_gift_padding">5dp</dimen>
     <dimen name="girdview_gift_vertical_spacing">5dp</dimen>
     <dimen name="girdview_gift_horizontal_spacing">5dp</dimen>
-    <dimen name="listmsgview_item_decoration">8dp</dimen>
+    <dimen name="listmsgview_item_decoration">2dp</dimen>
     <dimen name="coverphoto_min_width">640px</dimen>
     <dimen name="coverphoto_min_height">640px</dimen>
     <dimen name="coverphoto_selected_stroke_width">1dp</dimen>
     <dimen name="coverphoto_unselected_stroke_width">0dp</dimen>
     <dimen name="coverphoto_corner_radiu">3dp</dimen>
-
-    <dimen name="liveroom_rebate_tips_margintop">7dip</dimen>
+    <integer name="lady_hot_list_bg_max_HW">500</integer>
 
     <dimen name="liveroom_bullet_height">46dp</dimen>
+    <dimen name="keyboard_height">400dp</dimen>
+
+    <dimen name="listmsgview_item_height_63">63dp</dimen>
 
     <!--消息列表礼物大小处理-->
     <dimen name="liveroom_messagelist_gift_width">16dp</dimen>
     <dimen name="liveroom_messagelist_gift_height">16dp</dimen>
-    <dimen name="liveroom_messagelist_medal_width">14dp</dimen>
-    <dimen name="liveroom_messagelist_medal_height">14dp</dimen>
+    <dimen name="liveroom_messagelist_anchor_flag_width">62dp</dimen>
+    <dimen name="liveroom_messagelist_anchor_flag_height">13dp</dimen>
     <dimen name="defaultVedioPlayerHeight">270dp</dimen>
     <dimen name="imButtomMargin">56dp</dimen>
-    <dimen name="liveroom_mulitgift_width">142dp</dimen>
     <dimen name="liveroom_mulitgift_height">40dp</dimen>
 
-    <dimen name="liveroom_car_default_topmargin">8dp</dimen>
-    <dimen name="liveroom_car_default_rightmargin">42dp</dimen>
-    <dimen name="liveroom_car_default_width">57dp</dimen>
-    <dimen name="liveroom_car_default_height">57dp</dimen>
+    <dimen name="liveroom_car_default_width">34dp</dimen>
+    <dimen name="liveroom_car_default_height">34dp</dimen>
 
     <!--actionBar 设置-->
     <dimen name="actionbar_height">56dp</dimen>
@@ -56,26 +55,33 @@
     <dimen name="headerview_roomflag_marginbottom_paidpublic">3dp</dimen>
     <dimen name="headerview_roomflag_marginbottom_normalprivate">5dp</dimen>
     <dimen name="headerview_roomflag_marginbottom_advanceprivate">3dp</dimen>
-    
-    <dimen name="headerview_bottomlineheight_freepublic">7dp</dimen>
-    <dimen name="headerview_bottomlineheight_paidpublic">7dp</dimen>
-    <dimen name="headerview_bottomlineheight_normalprivate">5dp</dimen>
-    <dimen name="headerview_bottomlineheight_advanceprivate">4dp</dimen>
+
+    <dimen name="headerview_bottomlineheight_freepublic">1dp</dimen>
+    <dimen name="headerview_bottomlineheight_paidpublic">1dp</dimen>
+    <dimen name="headerview_bottomlineheight_normalprivate">1dp</dimen>
+    <dimen name="headerview_bottomlineheight_advanceprivate">1dp</dimen>
 
     <dimen name="headerview_height_public">75dp</dimen>
     <dimen name="headerview_height_private">90dp</dimen>
 
-    <dimen name="live_buttomgift_leftmargin_freepublic">15dp</dimen>
-    <dimen name="live_buttomgift_leftmargin_paypublic">13dp</dimen>
-    <dimen name="live_buttomgift_leftmargin_normalprv">15dp</dimen>
-    <dimen name="live_buttomgift_leftmargin_advanceprv">14dp</dimen>
+    <dimen name="live_msglist_topmargin_private">12dp</dimen>
 
-    <dimen name="live_buttomrecommgift_leftmargin_normalprv">15dp</dimen>
-    <dimen name="live_buttomrecommgift_leftmargin_advanceprv">11dp</dimen>
+    <dimen name="live_buttomgift_leftmargin_public">13dp</dimen>
+    <dimen name="live_buttomgift_leftmargin_private">18dp</dimen>
+
+    <dimen name="live_buttomgift_rightmargin_public">12dp</dimen>
+    <dimen name="live_buttomgift_rightmargin_private">18dp</dimen>
+
+    <dimen name="live_buttomgift_buttommargin_public">8dp</dimen>
+    <dimen name="live_buttomgift_buttommargin_private">11dp</dimen>
+
+    <dimen name="live_buttomrecommgift_rightmargin_private">13dp</dimen>
 
     <!--直播间表情-->
-    <dimen name="live_emoji_width">29dp</dimen>
-    <dimen name="live_emoji_height">29dp</dimen>
+    <dimen name="live_emoji_item_icon_width">29dp</dimen>
+    <dimen name="live_emoji_item_icon_height">29dp</dimen>
+    <dimen name="live_emoji_item_width">59dp</dimen>
+    <dimen name="live_emoji_item_height">49dp</dimen>
 
     <!-- swicht -->
     <dimen name="live_swicth_book_height">24dp</dimen>
@@ -84,18 +90,31 @@
     <!-- 公用 -->
     <dimen name="live_size_10sp">10sp</dimen>
     <dimen name="live_size_12sp">12sp</dimen>
+    <dimen name="live_size_13sp">13sp</dimen>
     <dimen name="live_size_14sp">14sp</dimen>
     <dimen name="live_size_16sp">16sp</dimen>
     <dimen name="live_size_18sp">18sp</dimen>
+    <dimen name="live_size_22sp">22sp</dimen>
 
+    <dimen name="live_size_2dp">2dp</dimen>
+    <dimen name="live_size_4dp">4dp</dimen>
+    <dimen name="live_size_6dp">6dp</dimen>
     <dimen name="live_size_8dp">8dp</dimen>
+    <dimen name="live_size_10dp">10dp</dimen>
+    <dimen name="live_size_12dp">12dp</dimen>
     <dimen name="live_size_14dp">14dp</dimen>
     <dimen name="live_size_16dp">16dp</dimen>
+    <dimen name="live_size_24dp">24dp</dimen>
+    <dimen name="live_size_20dp">20dp</dimen>
     <dimen name="live_size_30dp">30dp</dimen>
+    <dimen name="live_size_38dp">38dp</dimen>
     <dimen name="live_size_40dp">40dp</dimen>
+    <dimen name="live_size_48dp">48dp</dimen>
     <dimen name="live_size_60dp">60dp</dimen>
+    <dimen name="live_size_70dp">70dp</dimen>
     <dimen name="live_size_80dp">80dp</dimen>
     <dimen name="live_size_100dp">100dp</dimen>
+    <dimen name="live_size_110dp">110dp</dimen>
     <dimen name="live_size_120dp">120dp</dimen>
     <dimen name="live_size_140dp">140dp</dimen>
     <dimen name="live_size_180dp">180dp</dimen>
@@ -110,5 +129,30 @@
     <!--统一样式 自定义对话框-->
     <dimen name="custom_dialog_left_right_margin">30dp</dimen>
     <dimen name="custom_dialog_text_size_simple">12sp</dimen>
+
+    <!-- 按钮弧度 -->
+    <dimen name="raise_button_radius">16dp</dimen>
+
+    <!-- 直播广告 -->
+    <dimen name="live_entrance_title_height">56dp</dimen>
+    <dimen name="live_talent_dialog_height">330dp</dimen>
+
+    <!-- 主界面 顶部可折叠菜单 -->
+    <dimen name="live_main_top_menu_max_height">88dp</dimen>
+    <dimen name="live_main_top_menu_min_height">46dp</dimen>
+    <dimen name="live_main_top_menu_image_view_max_height">47dp</dimen>
+    <dimen name="live_main_top_menu_image_view_min_height">28dp</dimen>
+    <dimen name="live_main_top_menu_image_view_max_width">55dp</dimen>
+    <dimen name="live_main_top_menu_image_view_min_width">36dp</dimen>
+    <dimen name="live_main_top_menu_top_padding">2dp</dimen>
+    <dimen name="live_main_top_menu_txt_top_margin_max">8dp</dimen>
+    <dimen name="live_main_top_menu_txt_top_margin_min">0dp</dimen>
+    <dimen name="live_main_top_menu_badge_txt_size_max">11sp</dimen>
+    <dimen name="live_main_top_menu_badge_txt_size_min">9sp</dimen>
+
+    <!-- 私信 -->
+    <dimen name="mesage_emoji_item_height">50dp</dimen>
+    <dimen name="mesage_emoji_item_width">50dp</dimen>
+    <integer name="message_edit_max_length">200</integer>
 
 </resources>

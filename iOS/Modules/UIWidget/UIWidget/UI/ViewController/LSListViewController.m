@@ -21,7 +21,7 @@
         // Custom initialization
         [self initCustomParam];
     }
-    
+
     return self;
 }
 
@@ -50,8 +50,7 @@
     if( !self.viewDidAppearEver ) {
         [UIView setAnimationsEnabled:YES];
         [self setupNavigationBar];
-        [self setupContainView];
-          [self setupFailView];
+        [self setupFailView];
     }
     
 }
@@ -59,12 +58,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     self.viewDidAppearEver = YES;
-}
-
-
-- (void)setupContainView {
-    [super setupContainView];
-
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -108,15 +101,13 @@
         self.failBtn.center = failBtnCenter;
         [self.failBtn setTitle:self.failBtnText forState:UIControlStateNormal];
         self.failBtn.titleLabel.textAlignment = NSTextAlignmentCenter;
-        self.failBtn.layer.cornerRadius = 8.0f;
+        self.failBtn.layer.cornerRadius = 18.0f;
         self.failBtn.layer.masksToBounds = YES;
         
         self.failBtn.backgroundColor = [UIColor colorWithRed:41.0 / 255.0 green:122.0 / 255.0 blue:243.0 / 255.0 alpha:1];
         
-//        [self.failBtn addTarget:self action:self.delegateSelect forControlEvents:UIControlEventTouchUpInside];
-           [self.failBtn addTarget:self.delegate action:@selector(btnActionClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.failBtn addTarget:self.listDelegate action:@selector(btnActionClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.failView addSubview:self.failBtn];
-        
         
         [self.view addSubview:self.failView];
         self.failView.hidden = YES;
@@ -126,8 +117,8 @@
 
 - (void)btnActionClick:(UIButton *)sender {
 //    NSLog(@"%s",__func__);
-    if (self.delegate && [self.delegate respondsToSelector:@selector(lsListViewController:didClick:)]) {
-        [self.delegate lsListViewController:self didClick:sender];
+    if (self.listDelegate && [self.listDelegate respondsToSelector:@selector(lsListViewController:didClick:)]) {
+        [self.listDelegate lsListViewController:self didClick:sender];
     }
     
     [self lsListViewControllerDidClick:sender];
@@ -142,8 +133,6 @@
     self.failTips.text = self.failTipsText;
     [self.failBtn setTitle:self.failBtnText forState:UIControlStateNormal];
 
-//    [self.failBtn removeTarget:self action:nil forControlEvents:UIControlEventTouchUpInside];
-//    [self.failBtn addTarget:self action:self.delegateSelect forControlEvents:UIControlEventTouchUpInside];
 }
 
 

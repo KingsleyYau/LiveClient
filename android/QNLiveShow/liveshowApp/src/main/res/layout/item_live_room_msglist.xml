@@ -1,15 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:id="@+id/ll_msgItemContainer"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/tvMsgDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:textSize="14sp"
-        style="@style/Text_Shadow"
-        android:textStyle="normal"/>
+        android:textStyle="normal" />
+
+    <!--增加才艺推荐样式-->
+    <LinearLayout
+        android:id="@+id/llRecommended"
+        android:layout_width="215dp"
+        android:layout_height="65dp"
+        android:paddingBottom="2dp"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:visibility="gone">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imgMsgAnchorPhoto"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4"
+            fresco:placeholderImage="@drawable/ic_default_photo_woman_rect"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="6dp"
+            fresco:roundingBorderColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_rounded_angle_talent_recommand"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_12sp"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:layout_marginLeft="@dimen/live_size_8dp"
+                android:layout_marginRight="@dimen/live_size_8dp"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

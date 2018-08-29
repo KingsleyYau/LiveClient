@@ -566,14 +566,12 @@ bool RtmpDump::SendAudioFrame(
     mClientMutex.unlock();
     
     if( !bFlag ) {
+    	FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
         mConnectedMutex.lock();
         if( mIsConnected ) {
-            FileLevelLog("rtmpdump", KLog::LOG_WARNING, "RtmpDump::SendAudioFrame( this : %p, Send audio raw data failed. ret=%d, timestamp : %u )", this, ret, mSendAudioFrameTimestamp);
-            
             srs_rtmp_shutdown(mpRtmp);
         }
         mConnectedMutex.unlock();
-        
     }
     
     return bFlag;

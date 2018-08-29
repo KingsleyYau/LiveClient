@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import "IServiceManager.h"
-#import "IQNService.h"
-#import "IAnalyticsManager.h"
+#import "IService.h"
+//#import "IServiceManager.h"
+//#import "IQNService.h"
+//#import "IAnalyticsManager.h"
 
 #pragma mark - QNToken
 #define SAMSON_TOKEN @"Samson_iy5gL22gsTDJ"
@@ -38,9 +39,9 @@
  直播模块注销回调
 
  @param module 模块实例
- @param kick 是否主动注销(YES:主动/NO:超时)
+ @param type 是否主动注销(YES:主动/NO:超时)
  */
-- (void)moduleOnLogout:(LiveModule *)module kick:(BOOL)kick msg:(NSString *)msg;
+- (void)moduleOnLogout:(LiveModule *)module type:(LogoutType)type msg:(NSString *)msg;
 
 /**
   直播模块需要显示广告
@@ -62,13 +63,6 @@
  @param module 模块实例
  */
 - (void)moduleOnNotificationDisappear:(LiveModule *)module;
-
-/**
- 直播模块需要消失浮窗
- 
- @param module 模块实例
- */
-- (void)moduleOnGetUnReadMsg:(LiveModule *)module unReadCount:(NSInteger)count;
 
 @end
 
@@ -94,6 +88,11 @@
  */
 @property (strong, readonly) UIViewController *adVc;
 
+/**
+ QN个人资料控制器
+ */
+@property (nonatomic, strong) UIViewController *qnProfileVC;
+
 /** 是否带有test参数 */
 @property (nonatomic, assign) BOOL isForTest;
 
@@ -110,52 +109,74 @@
 @property (readonly) NSDictionary *barTitleTextAttributes;
 
 /** 买点界面 */
-@property (nonatomic, strong) UIViewController* addCreditVc;
+@property (nonatomic, strong) UIViewController *addCreditVc;
 
 #pragma mark - 基本属性
 /**
  委托
  */
 @property (weak) id<LiveModuleDelegate> delegate;
-
 /**
  互斥服务器管理器
  */
-@property (weak, nonatomic) id<IServiceManager> serviceManager;
-
+@property (weak, nonatomic) id<IMutexServiceManager> serviceManager;
 /**
  直播服务
  */
-@property (weak, nonatomic, readonly) id<IQNService> service;
-
+@property (weak, nonatomic, readonly) id<IMutexService> service;
 /**
  GA跟踪管理器
  */
 @property (weak) id<IAnalyticsManager> analyticsManager;
-
+/**
+ 换站管理器
+ */
+@property (weak) id<ISiteManager> siteManager;
+#pragma mark - 公用属性
 /**
  是否Debug模式
  */
 @property (assign, nonatomic) BOOL debug;
-
 /**
  是否输出日志
  */
 @property (assign, nonatomic) BOOL debugLog;
+/**
+ 应用版本号
+ */
+@property (nonatomic, copy) NSString *appVerCode;
+/**
+ QN的站点Id
+ */
+@property (nonatomic, copy) NSString *siteId;
 
-/** 是否显示列表引导 */
+#pragma mark - 新手引导
+/**
+ 是否显示列表引导
+ */
 @property (assign, nonatomic) BOOL showListGuide;
 
-/** QN判断是否在直播间 */
-@property (copy, nonatomic) NSString *roomID;
-/** 广告id */
+#pragma mark - 广告相关
+/**
+ 广告Id
+ */
 @property (nonatomic, copy) NSString *qnMainAdId;
-/** 广告链接 */
+/**
+ 广告链接
+ */
 @property (nonatomic, copy) NSString *qnMainAdUrl;
-/** 广告标题 */
+/**
+ 广告标题
+ */
 @property (nonatomic, copy) NSString *qnMainAdTitle;
-/** app版本号 */
-@property (nonatomic, copy) NSString *appVerCode;
+
+#pragma mark - 未读提示
+/**
+ QN显示红点
+ */
+@property (nonatomic, assign) int pushCount;
+
+#pragma mark - 外部接口
 /**
  获取实例
 
@@ -188,12 +209,8 @@
  */
 - (void)cleanCache;
 
-/**
- 获取未读信息
- */
-- (void)getUnReadMsg;
 
-#pragma mark - Application
+#pragma mark - Application(通知)
 - (void)applicationDidEnterBackground:(UIApplication *)application;
 - (void)applicationWillEnterForeground:(UIApplication *)application;
 

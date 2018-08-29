@@ -8,18 +8,17 @@
 
 #import "LSGoogleAnalyticsViewController.h"
 
+#import "GiftPageViewController.h"
+#import "LiveViewController.h"
+
+#import "LSGiftManager.h"
 #import "LSImManager.h"
 
 #import "LSUITapImageView.h"
-#import "PresentView.h"
 #import "CountTimeButton.h"
 #import "LiveRoomTextField.h"
 #import "LSPageChooseKeyboardView.h"
-#import "BackpackPresentView.h"
 #import "LiveSendBarView.h"
-#import "YMAudienceView.h"
-#import "LiveViewController.h"
-#import "LiveGiftDownloadManager.h"
 #import "LiveRoom.h"
 #import "CreditView.h"
 
@@ -28,20 +27,23 @@
 @class PlayViewController;
 @protocol PlayViewControllerDelegate <NSObject>
 @optional
-- (void)onGetLiveRoomGiftList:(NSArray<LiveRoomGiftModel *> *)array;
+- (void)didChangeGiftList:(PlayViewController *)vc;
 - (void)onReEnterRoom:(PlayViewController *)vc;
 - (void)pushToAddCredit:(PlayViewController *)vc;
+- (void)showPubilcHangoutTipView:(PlayViewController *)vc;
 @end
 
 @interface PlayViewController : LSGoogleAnalyticsViewController
-
 @property (nonatomic, weak) id<PlayViewControllerDelegate> playDelegate;
 
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 
-/** 显示界面 **/
+// 直播间界面
 @property (strong) LiveViewController *liveVC;
+
+// 礼物列表界面管理器
+@property (nonatomic, strong) GiftPageViewController *giftVC;
 
 #pragma mark - 文本输入控件
 
@@ -49,7 +51,7 @@
 @property (nonatomic, strong) LSLoginManager *loginManager;
 
 /** 喇叭按钮 **/
-@property (nonatomic, weak) IBOutlet LSUITapImageView * chatBtn;
+@property (nonatomic, weak) IBOutlet LSUITapImageView *chatBtn;
 
 /** 礼物按钮 **/
 @property (nonatomic, weak) IBOutlet UIButton *giftBtn;
@@ -90,12 +92,6 @@
 /** 单击收起输入控件手势 **/
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 
-/**  礼物列表界面 **/
-@property (strong, nonatomic) PresentView *presentView;
-
-/**  背包礼物界面 **/
-@property (strong, nonatomic) BackpackPresentView *backpackView;
-
 /**  选择礼物列表界面 **/
 @property (strong, nonatomic) LSPageChooseKeyboardView *giftListKeyboardView;
 
@@ -110,9 +106,6 @@
 
 // balanceView
 @property (nonatomic, strong) CreditView *creditView;
-
-// 当前选中礼物下标
-@property (nonatomic, assign) NSInteger presentRow;
 
 @property (nonatomic, assign) int msgSuperTabelTop;
 

@@ -41,7 +41,7 @@ public:
             
             /* onlineStatus */
             if( root[LIVEROOM_HOT_ONLINESTATUS].isInt() ) {
-                onlineStatus = (OnLineStatus)(root[LIVEROOM_HOT_ONLINESTATUS].asInt());
+                onlineStatus = GetIntToOnLineStatus(root[LIVEROOM_HOT_ONLINESTATUS].asInt());
             }
 
             /* roomPhotoUrl */
@@ -51,7 +51,7 @@ public:
             
             /* roomType */
             if( root[LIVEROOM_HOT_ROOMTYPE].isInt() ) {
-                roomType = (HttpRoomType)root[LIVEROOM_HOT_ROOMTYPE].asInt();
+                roomType = GetIntToHttpRoomType(root[LIVEROOM_HOT_ROOMTYPE].asInt());
             }
             
             /* interest */
@@ -71,7 +71,7 @@ public:
             }
             /* anchorType */
             if( root[LIVEROOM_HOT_ANCHORTYPE].isInt() ) {
-                anchorType = (AnchorLevelType)(root[LIVEROOM_HOT_ANCHORTYPE].asInt());
+                anchorType = GetIntToAnchorLevelType(root[LIVEROOM_HOT_ANCHORTYPE].asInt());
             }
             
             /* showInfo */

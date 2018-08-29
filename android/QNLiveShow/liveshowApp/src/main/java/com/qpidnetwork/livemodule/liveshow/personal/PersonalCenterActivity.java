@@ -22,11 +22,12 @@ import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.livemodule.view.DotView.DotLayout;
 import com.qpidnetwork.livemodule.view.DotView.DotView;
 
 /**
  * Created by Hunter Mun on 2017/9/14.
+ *
+ * @deprecated
  */
 
 public class PersonalCenterActivity extends BaseActionBarFragmentActivity implements OnUnreadListener{
@@ -51,7 +52,7 @@ public class PersonalCenterActivity extends BaseActionBarFragmentActivity implem
 
     private void initView(){
         //状态栏颜色
-        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
+//        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
 
         //设置头
         String title = "";
@@ -59,7 +60,7 @@ public class PersonalCenterActivity extends BaseActionBarFragmentActivity implem
         if(item != null && !TextUtils.isEmpty(item.nickName)){
             title = item.nickName;
         }
-        setTitle(title, Color.WHITE);
+        setTitle(title, R.color.theme_default_black);
 
 
 //        tvInviteUnread = (TextView)findViewById(R.id.tvInviteUnread);

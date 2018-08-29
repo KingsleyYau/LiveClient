@@ -26,7 +26,7 @@
 }
 
 - (void)dealloc {
-    
+    NSLog(@"LSViewController::dealloc( %@, %p )", NSStringFromClass([self class]), self);
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -77,7 +77,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    [self initialiseSubwidge];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -87,7 +86,7 @@
         [self setupContainView];
         [self setupLoadingActivityView];
     }
-
+    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -99,6 +98,7 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     self.viewIsAppear = NO;
+     [self hideLoading];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,26 +126,20 @@
     return self.navigationItem.backBarButtonItem.title;
 }
 
-- (void)setBackTitle:(NSString *)backTitle {
-    UINavigationItem *item = self.navigationItem;
-    UIBarButtonItem* barButtonItem = [[UIBarButtonItem alloc] initWithTitle:backTitle style:UIBarButtonItemStylePlain target:self action:@selector(backAction:)];
-    item.backBarButtonItem = barButtonItem;
-    
-//    item.backBarButtonItem.tintColor = [UIColor colorWithRed:0 green:122.0 / 255.0 blue:1 alpha:1];
-}
-
 - (void)setNavigationTitle:(NSString *)navigationTitle{
     
     self.title = navigationTitle;
 }
 
 - (void)initCustomParam {
-    NSLog(@"LSViewController::initCustomParam( %@ )", NSStringFromClass([self class]));
+    NSLog(@"LSViewController::initCustomParam( %@, %p )", NSStringFromClass([self class]), self);
     
-    self.backTitle = NSLocalizedString(@"", nil);
+    //self.backTitle = NSLocalizedString(@"", nil);
 //    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    // 设置导航栏返回按钮
-//    [self setBackleftBarButtonItemOffset:15];
+    
+    UIBarButtonItem * backButtonItem = [[UIBarButtonItem alloc] init];
+    backButtonItem.title = @"";
+    self.navigationItem.backBarButtonItem = backButtonItem;
 }
 
 - (void)setupNavigationBar {
@@ -156,20 +150,6 @@
 
 - (void)setupContainView {
 
-}
-
-- (void)initialiseSubwidge {
-    
-}
-
-- (void)setBackleftBarButtonItemOffset:(CGFloat)offset {
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backButton setImage:[UIImage imageNamed:@"nav_back_icon"] forState:UIControlStateNormal];
-    backButton.frame = CGRectMake(0, 0, 40, 40);
-    [backButton setImageEdgeInsets:UIEdgeInsetsMake(0, -offset, 0, 0)];
-    [backButton addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
-    UIBarButtonItem *barButtonItem = [[UIBarButtonItem alloc]initWithCustomView:backButton];
-    self.navigationItem.leftBarButtonItem = barButtonItem;
 }
 
 - (void)backAction:(id)sender {

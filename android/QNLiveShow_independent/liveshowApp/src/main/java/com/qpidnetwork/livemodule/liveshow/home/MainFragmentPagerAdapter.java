@@ -58,15 +58,4 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
         }
         return title;
     }
-
-    public void notifyBannerImgChanged(BannerItem bannerItem){
-        if(null != bannerItem){
-            if(null != sr_hotFragment && null != sr_hotFragment.get()){
-                sr_hotFragment.get().updateBannerImg(bannerItem);
-            }
-            if(null != sr_followingFragment && null != sr_followingFragment.get()){
-                sr_followingFragment.get().updateBannerImg(bannerItem);
-            }
-        }
-    }
 }

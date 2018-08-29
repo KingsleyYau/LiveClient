@@ -372,10 +372,14 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 											+ "this : 0x%x, "
 											+ "[INFO_OUTPUT_FORMAT_CHANGED], "
 											+ "stride : %d, "
+											+ "width : %d, "
+											+ "height : %d, "
 											+ "videoMediaFormat : %s "
 											+ ")",
 									hashCode(),
 									stride,
+									width,
+									height,
 									videoMediaFormat.toString()
 							)
 					);
@@ -399,21 +403,21 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 			            }
 					}
 
-//					if( LSConfig.DEBUG ) {
-//						Log.d(LSConfig.TAG,
-//								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
-//												+ "this : 0x%x, "
-//												+ "bufferIndex : %d, "
-//												+ "size : %d, "
-//												+ "timestamp : %d "
-//												+ ")",
-//										hashCode(),
-//										bufferIndex,
-//										bufferInfo.size,
-//										(int) bufferInfo.presentationTimeUs
-//								)
-//						);
-//					}
+					if( LSConfig.DEBUG ) {
+						Log.d(LSConfig.TAG,
+								String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
+												+ "this : 0x%x, "
+												+ "bufferIndex : %d, "
+												+ "size : %d, "
+												+ "timestamp : %d "
+												+ ")",
+										hashCode(),
+										bufferIndex,
+										bufferInfo.size,
+										(int) bufferInfo.presentationTimeUs
+								)
+						);
+					}
 
 					// API 16
 					ByteBuffer byteBuffer = videoCodec.getOutputBuffer(bufferIndex);
@@ -454,8 +458,6 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 //						);
 //					}
 
-	                videoCodec.releaseOutputBuffer(bufferIndex, false);
-
 		        } else {
 		    		Log.d(LSConfig.TAG,
 		    				String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
@@ -482,6 +484,10 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	                            e.toString()
 	                    )
 	            );
+			} finally {
+				if( bufferIndex >= 0 ) {
+					videoCodec.releaseOutputBuffer(bufferIndex, false);
+				}
 			}
 
 			if( !bFlag ) {

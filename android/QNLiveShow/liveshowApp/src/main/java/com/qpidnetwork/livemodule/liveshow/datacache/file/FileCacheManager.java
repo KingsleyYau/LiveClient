@@ -18,6 +18,7 @@ import java.io.IOException;
  * @author Hunter.Mun
  */
 public class FileCacheManager {
+    private final String LOCAL_CACHE_ROOT_DIR = "QpidDating";       //根路径
     private final String CRASH = "crash";
     private final String IMAGE_DIR = "image";
     private final String LOG_DIR = "log";              //本地Log缓存路径
@@ -27,6 +28,7 @@ public class FileCacheManager {
     private final String CAR = "car";                //本地座驾图片缓存路径
     private final String EMOTION = "emotion";                //本地表情图片缓存路径
     private final String MEDAL = "medal";                //本地勋章图片缓存路径
+    private final String PLAYER_PUBLISHER_LOG_DIR = "coollive";     //本地播放器或推溜器log地址
 
     private static FileCacheManager gFileCacheManager;
 
@@ -46,7 +48,7 @@ public class FileCacheManager {
 
     public FileCacheManager(Context context) {
 //        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + context.getResources().getString(R.string.app_name);
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "QpidDating";
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + LOCAL_CACHE_ROOT_DIR;
         changeMainPath(path);
     }
 
@@ -107,6 +109,16 @@ public class FileCacheManager {
     }
 
     /**
+     * 获取一个临时拍照图片的路径
+     * @return
+     */
+    public String getTempCameraImageUrl() {
+        String temp = "";
+        temp += getTempPath() + "cameraphoto.jpg";
+        return temp;
+    }
+
+    /**
      * 获取图片目录
      *
      * @return
@@ -159,6 +171,8 @@ public class FileCacheManager {
         String fileName = null;
         if(!TextUtils.isEmpty(fileUrl)){
             fileName = fileUrl.substring(fileUrl.lastIndexOf(File.separator),fileUrl.length());
+            //add by Jagger 2018-5-10
+            fileName = getFileNameNoEx(fileName);
         }
         return fileName;
     }
@@ -176,6 +190,15 @@ public class FileCacheManager {
             file.mkdirs();
         }
 
+        return path;
+    }
+
+    /**
+     * 获取推流器/播放器本地缓存目录（库内获取sd路径拼接）
+     * @return
+     */
+    public String GetPublisherPlayerLogLocalPath(){
+        String path = LOCAL_CACHE_ROOT_DIR + "/" + PLAYER_PUBLISHER_LOG_DIR;
         return path;
     }
 
@@ -211,6 +234,22 @@ public class FileCacheManager {
         return path;
     }
 
+    /**
+     * 获取log目录路径
+     *
+     * @return
+     */
+    public String getLMLogPath() {
+		/* 创建log路径 */
+        String path = mMainPath + LOG_DIR + "/" + "LM" + "/";
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        return path;
+    }
+
     private String getCarImgRootPath(){
         /* 创建log路径 */
         String path = mMainPath + CAR + File.separator;
@@ -225,7 +264,8 @@ public class FileCacheManager {
     public String parseCarImgLocalPath(String riderId,String riderUrl){
         String localPath = getCarImgRootPath();
         localPath += riderId;
-        localPath += riderUrl.substring(riderUrl.lastIndexOf(File.separator),riderUrl.length());
+        //edit by Jagger 2018-5-10
+        localPath += getFileNameNoEx(riderUrl.substring(riderUrl.lastIndexOf(File.separator),riderUrl.length()));
         return localPath;
     }
 
@@ -243,7 +283,8 @@ public class FileCacheManager {
     public String parseEmotionImgLocalPath(String emotionId, String emotionUrl){
         String localPath = getEmotionImgRootPath();
         localPath += emotionId;
-        localPath += emotionUrl.substring(emotionUrl.lastIndexOf(File.separator),emotionUrl.length());
+        //edit by Jagger 2018-5-10
+        localPath += getFileNameNoEx(emotionUrl.substring(emotionUrl.lastIndexOf(File.separator),emotionUrl.length()));
         return localPath;
     }
 
@@ -325,5 +366,22 @@ public class FileCacheManager {
             bos.flush();
             bos.close();
         }
+    }
+
+    /**
+     * 获取不带扩展名的文件名
+     * 例如：把 .png 转换为 _png， 而不是把.png去掉，
+     * 是因为避免 abc.png和abc.webp下载到同一目录下 先下载的会被覆盖的问题
+     * add by Jagger 2018-5-10
+     */
+    public static String getFileNameNoEx(String filename) {
+        if ((filename != null) && (filename.length() > 0)) {
+            int dot = filename.lastIndexOf('.');
+            if ((dot >-1) && (dot < (filename.length()))) {
+//                return filename.substring(0, dot);
+                return filename.replace("." , "_");
+            }
+        }
+        return filename;
     }
 }

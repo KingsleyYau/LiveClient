@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="GiftPageViewController">
+            <connections>
+                <outlet property="comboBtn" destination="vTh-kC-UZB" id="XjZ-Mb-qTk"/>
+                <outlet property="pagingScrollView" destination="lnz-q1-0pI" id="L3P-sW-LLW"/>
+                <outlet property="segmentView" destination="SwN-co-Sq1" id="Hlo-Qt-VRk"/>
+                <outlet property="sendView" destination="S3R-NI-Ht2" id="19M-Lk-8NS"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="290"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SwN-co-Sq1" userLabel="Segment">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="36"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="V16-5c-SFJ"/>
+                    </constraints>
+                </view>
+                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lnz-q1-0pI" customClass="LSPZPagingScrollView">
+                    <rect key="frame" x="0.0" y="36" width="375" height="200"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="pagingViewDelegate" destination="-1" id="w4E-XG-Unv"/>
+                    </connections>
+                </scrollView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qoI-ek-aBV" userLabel="Bottom View">
+                    <rect key="frame" x="0.0" y="236" width="375" height="54"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S3R-NI-Ht2" userLabel="Send View" customClass="PresentSendView">
+                            <rect key="frame" x="237" y="16" width="125" height="32"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="125" id="yIv-IJ-yVL"/>
+                            </constraints>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hru-sp-1Lb" userLabel="Balance Button">
+                            <rect key="frame" x="15" y="9.5" width="94" height="35"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="35" id="tSL-i6-Udm"/>
+                            </constraints>
+                            <state key="normal" title="My Balance"/>
+                            <connections>
+                                <action selector="balanceAction:" destination="-1" eventType="touchUpInside" id="2Es-K1-GUc"/>
+                            </connections>
+                        </button>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Fans_Img_Access" translatesAutoresizingMaskIntoConstraints="NO" id="vGg-Gj-LhJ" userLabel="Balance Access">
+                            <rect key="frame" x="119" y="24.5" width="5" height="9"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="S3R-NI-Ht2" firstAttribute="bottom" secondItem="qoI-ek-aBV" secondAttribute="bottom" constant="-6" id="4dr-Ju-SRT"/>
+                        <constraint firstAttribute="height" constant="54" id="8Vb-9S-ZD1"/>
+                        <constraint firstItem="vGg-Gj-LhJ" firstAttribute="leading" secondItem="hru-sp-1Lb" secondAttribute="trailing" constant="10" id="JaW-7c-RXb"/>
+                        <constraint firstItem="hru-sp-1Lb" firstAttribute="centerY" secondItem="qoI-ek-aBV" secondAttribute="centerY" id="Mff-gI-mhq"/>
+                        <constraint firstItem="vGg-Gj-LhJ" firstAttribute="centerY" secondItem="qoI-ek-aBV" secondAttribute="centerY" constant="2" id="T3E-Er-ZyM"/>
+                        <constraint firstItem="S3R-NI-Ht2" firstAttribute="trailing" secondItem="qoI-ek-aBV" secondAttribute="trailing" constant="-13" id="YBv-dG-Zx0"/>
+                        <constraint firstItem="hru-sp-1Lb" firstAttribute="leading" secondItem="qoI-ek-aBV" secondAttribute="leading" constant="15" id="haV-Jt-P4G"/>
+                        <constraint firstItem="S3R-NI-Ht2" firstAttribute="top" secondItem="qoI-ek-aBV" secondAttribute="top" constant="16" id="wmi-7F-YA0"/>
+                    </constraints>
+                </view>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vTh-kC-UZB" userLabel="Combo Button" customClass="CountTimeButton">
+                    <rect key="frame" x="275" y="190" width="100" height="100"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="100" id="IrX-LD-2Er"/>
+                        <constraint firstAttribute="width" constant="100" id="cjV-li-dtC"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                    <state key="normal" backgroundImage="Live_Cambo_Nomal">
+                        <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="0.16862745098039217" green="0.16862745098039217" blue="0.16862745098039217" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="vTh-kC-UZB" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="5tU-nU-c7a"/>
+                <constraint firstItem="SwN-co-Sq1" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="Bhj-FK-LbF"/>
+                <constraint firstItem="lnz-q1-0pI" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="IIY-YT-jJd"/>
+                <constraint firstItem="lnz-q1-0pI" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="NaT-3m-Ahq"/>
+                <constraint firstItem="SwN-co-Sq1" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="TeN-Op-6ul"/>
+                <constraint firstItem="qoI-ek-aBV" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="YN8-UE-uXm"/>
+                <constraint firstItem="lnz-q1-0pI" firstAttribute="top" secondItem="SwN-co-Sq1" secondAttribute="bottom" id="bAu-ja-AjB"/>
+                <constraint firstItem="SwN-co-Sq1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="d1s-kn-qCY"/>
+                <constraint firstItem="qoI-ek-aBV" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="liY-t5-1rT"/>
+                <constraint firstItem="lnz-q1-0pI" firstAttribute="bottom" secondItem="qoI-ek-aBV" secondAttribute="top" id="tB4-CR-pPl"/>
+                <constraint firstItem="vTh-kC-UZB" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="vqq-Nt-7j7"/>
+                <constraint firstItem="qoI-ek-aBV" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="zwE-ey-3CK"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Cambo_Nomal" width="16" height="16"/>
+        <image name="Live_Fans_Img_Access" width="5" height="9"/>
+    </resources>
+</document>

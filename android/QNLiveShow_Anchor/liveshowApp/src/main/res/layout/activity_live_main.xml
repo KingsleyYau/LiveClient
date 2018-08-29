@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/actionbar_height"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.qpidnetwork.anchor.view.BottomNavigationViewEx
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            app:itemIconTint="@color/selector_nav_item_color"
+            app:itemTextColor="@color/selector_nav_item_color"
+            app:menu="@menu/live_main_navigation" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPagerContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/navigation" />
+    </RelativeLayout>
+    
+    <ImageView
+        android:id="@+id/navigation_cam"
+        android:layout_width="@dimen/live_size_70dp"
+        android:layout_height="@dimen/live_size_70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/ic_live_nav_item_cam"
+        android:src="@drawable/touch_feedback_holo_light_circle"
+         />
+    
+</RelativeLayout>

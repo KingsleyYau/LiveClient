@@ -186,6 +186,14 @@ string gToken;
  	InitClassHelper(env, PACKAGE_RIDE_ITEM_CLASS, &jPackageRideItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_RIDE_ITEM_CLASS, jPackageRideItem));
 
+	jobject jPackageBindAnchorItem;
+	InitClassHelper(env, PACKAGE_BIND_ANCHOR_ITEM_CLASS, &jPackageBindAnchorItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_BIND_ANCHOR_ITEM_CLASS, jPackageBindAnchorItem));
+
+	jobject jPackageVouchorAvailableItem;
+	InitClassHelper(env, PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS, &jPackageVouchorAvailableItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(PACKAGE_VOUCHOR_AVAILABLE_ITEM_CLASS, jPackageVouchorAvailableItem));
+
  	/* 6.其他    */
  	jobject jConfigItem;
  	InitClassHelper(env, OTHER_CONFIG_ITEM_CLASS, &jConfigItem);
@@ -198,6 +206,26 @@ string gToken;
  	jobject jUserInfoItem;
  	InitClassHelper(env, OTHER_USERINFO_ITEM_CLASS, &jUserInfoItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_USERINFO_ITEM_CLASS, jUserInfoItem));
+
+	 jobject jMainUnReadNumItem;
+	 InitClassHelper(env, OTHER_MAINUNREADNUM_ITEM_CLASS, &jMainUnReadNumItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_MAINUNREADNUM_ITEM_CLASS, jMainUnReadNumItem));
+
+	 /* 8.多人互动 */
+	 jobject jHangoutAnchorInfoItem;
+	 InitClassHelper(env, HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS, &jHangoutAnchorInfoItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS, jHangoutAnchorInfoItem));
+
+	 jobject jHangoutGiftListItem;
+	 InitClassHelper(env, HANGOUT_HANGOUGIFTLIST_ITEM_CLASS, &jHangoutGiftListItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(HANGOUT_HANGOUGIFTLIST_ITEM_CLASS, jHangoutGiftListItem));
+
+
+	 /* 9.节目 */
+	 jobject jProgramInfoItem;
+	 InitClassHelper(env, PROGRAM_PROGRAMINFO_ITEM_CLASS, &jProgramInfoItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(PROGRAM_PROGRAMINFO_ITEM_CLASS, jProgramInfoItem));
+
 
  	return JNI_VERSION_1_4;
  }

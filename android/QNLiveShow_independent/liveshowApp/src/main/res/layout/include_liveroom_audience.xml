@@ -8,8 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/defaultVedioPlayerHeight"
         android:background="#BFBFBF"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_live_room_vediobg"/>
+        android:scaleType="centerCrop" />
 
     <SurfaceView
         android:id="@+id/sv_player"

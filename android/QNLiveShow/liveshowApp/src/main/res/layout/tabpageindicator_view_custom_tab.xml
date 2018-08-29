@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="6dp"
-        android:text="10"
+        android:text=""
         android:textColor="@color/white"
         android:textSize="@dimen/live_size_10sp"
         app:dotPadding="2dp">

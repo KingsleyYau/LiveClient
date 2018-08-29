@@ -79,6 +79,9 @@ public class MyRidesFragment extends BaseLoadingFragment implements SwipeRefresh
         super.handleUiMessage(msg);
         onRefreshComplete();
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_PACKAGE_RIDERLIST_CALLBACK:{
                 if(response.isSuccess){

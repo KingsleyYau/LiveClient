@@ -35,17 +35,18 @@
 }
 
 - (void)updateUserBalanceCredit:(double)credit userInfo:(LSUserInfoModel *)userInfo {
-    
-    NSString * name = userInfo.nickName;
-    if (name.length > 20) {
-        name = [name substringToIndex:17];
-        name = [NSString stringWithFormat:@"%@...",name];
+
+    if (!self.nameLabel.text ||self.nameLabel.text.length <= 0) {
+        NSString * name = userInfo.nickName;
+        if (name.length > 20) {
+            name = [name substringToIndex:17];
+            name = [NSString stringWithFormat:@"%@...",name];
+        }
+        self.nameLabel.text = name;
     }
-    self.nameLabel.text = name;
-    if (userInfo.userId.length) {
+
+    if (!self.userIdLabel.text || self.userIdLabel.text.length <= 0) {
         self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",userInfo.userId];
-    } else {
-        self.userIdLabel.text = [NSString stringWithFormat:@"ID:%@",[LSLoginManager manager].loginItem.userId];
     }
     
     [self.imageLoader refreshCachedImage:self.userHeadImageView options:SDWebImageRefreshCached imageUrl:userInfo.photoUrl

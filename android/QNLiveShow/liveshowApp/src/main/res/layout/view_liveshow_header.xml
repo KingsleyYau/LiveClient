@@ -7,7 +7,6 @@
     <ImageView
         android:id="@+id/iv_roomHeaderBg"
         android:layout_width="match_parent"
-        android:src="@drawable/ic_live_headbg_normalprivate"
         android:scaleType="fitXY"
         android:layout_height="90dp"/>
 
@@ -32,7 +31,7 @@
                 android:layout_marginLeft="13dp"
                 android:layout_marginTop="7dp"
                 android:layout_marginBottom="5dp"
-                android:src="@drawable/ic_live_freepublic"/>
+                android:src="@drawable/ic_live_public_flag"/>
 
             <com.qpidnetwork.livemodule.view.LiveRoomHeaderBezierView
                 android:id="@+id/lrhbv_flag"
@@ -62,7 +61,7 @@
                     android:onClick="onClick"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/ic_live_close_room"
+                    android:src="@drawable/ic_live_close_private_room"
                     android:layout_marginTop="8dp"
                     android:layout_marginRight="13dp"
                     android:layout_marginLeft="13dp"
@@ -82,7 +81,7 @@
             <RelativeLayout
                 android:id="@+id/rl_host_header"
                 android:onClick="onClick"
-                android:background="@drawable/bg_live_host_header"
+                android:background="@drawable/bg_live_header_host_public"
                 android:layout_marginLeft="13dp"
                 android:visibility="visible"
                 android:layout_width="wrap_content"
@@ -132,7 +131,7 @@
                         android:layout_marginLeft="9dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:background="@drawable/bg_live_host_header">
+                        android:background="@drawable/bg_live_header_host_public">
                         <ImageView
                             android:id="@+id/iv_onlineFlag"
                             android:layout_width="wrap_content"

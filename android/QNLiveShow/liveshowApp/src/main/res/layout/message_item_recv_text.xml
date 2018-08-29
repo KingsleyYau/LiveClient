@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/live_size_20dp">
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="112dp"
+        android:gravity="left|center"
+        android:minHeight="36dp"
+        android:background="@drawable/msglist_recvtext_item_background"
+        android:padding="9dp"
+        android:textColor="@color/live_message_textcolor_black"
+        android:textSize="16sp" />
+</RelativeLayout>

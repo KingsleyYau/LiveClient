@@ -14,18 +14,24 @@
 #import "ShowDetailViewController.h"
 #import "LiveUrlHandler.h"
 #import "AnchorPersonalViewController.h"
-@interface MyTicketsViewController ()<UITableViewDelegate,UITableViewDataSource,LSListViewControllerDelegate,UIScrollViewDelegate,UIScrollViewRefreshDelegate,ShowCellDelegate,ShowAddCreditsViewDelegate>
+#define PageSize 50
+
+@interface MyTicketsViewController ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate,UIScrollViewRefreshDelegate,ShowCellDelegate,ShowAddCreditsViewDelegate>
+
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSMutableArray * items;
 @property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 @property (nonatomic, strong) NSTimer * timer;
 @property (weak, nonatomic) IBOutlet UIView *noDataTipView;
+@property (nonatomic, assign) int page;
 @end
 
 @implementation MyTicketsViewController
 
 - (void)dealloc {
     NSLog(@"%s", __func__);
+    [self.timer invalidate];
+    self.timer = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.tableView unInitPullRefresh];
 }
@@ -42,6 +48,8 @@
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
     
+    [self.tableView registerNib:[UINib nibWithNibName:@"ShowCell" bundle:[LiveBundle mainBundle]] forCellReuseIdentifier:[ShowCell cellIdentifier]];
+    
     self.items = [NSMutableArray array];
     
     self.sessionManager = [LSSessionRequestManager manager];
@@ -51,7 +59,6 @@
     
     self.failBtnText = NSLocalizedString(@"List_Reload", @"List_Reload");
     
-    self.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -62,14 +69,14 @@
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    [self.tableView startPullDown:YES];
+    if (self.items.count == 0) {
+     [self.tableView startPullDown:YES];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.timer invalidate];
-    self.timer = nil;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -90,12 +97,12 @@
         self.timer = nil;
     } else {
         // 刷更多
-        start = self.items ? ((int)self.items.count) : 0;
+        start = self.page * PageSize;
     }
     request.sortType = self.sortType;
     // 每页最大纪录数
     request.start = start;
-    request.step = 10;
+    request.step = PageSize;
     
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *> * _Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -109,9 +116,13 @@
                     // 清空列表
                     [self.items removeAllObjects];
                     
+                    self.page = 1;
+                    
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
+                    
+                    self.page++;
                 }
                 
                 if (!self.timer && self.sortType != PROGRAMLISTTYPE_HISTORY) {
@@ -132,15 +143,14 @@
                 self.noDataTipView.hidden = YES;
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishPullDown:NO];
                     [self.items removeAllObjects];
                     self.failView.hidden = NO;
-                    
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
                 }
-                
+
                 [self.tableView reloadData];
             }
             self.view.userInteractionEnabled = YES;
@@ -151,14 +161,10 @@
 
 - (void)getShowTime:(NSArray *)array
 {
-    NSMutableArray * data = [NSMutableArray array];
     for (LSProgramItemObject * item in array) {
-        LSProgramItemObject * items = [[LSProgramItemObject alloc]init];
-        items = item;
-        items.countdownTime = items.countdownTime + 10;
-        [data addObject:items];
+        item.leftSecToEnter -= 10;
+        item.leftSecToStart -= 10;
     }
-    self.items = data;
 }
 
 - (void)countdown
@@ -186,12 +192,18 @@
 }
 
 - (void)pullUpRefresh:(UIScrollView *)scrollView {
-    // 上拉更多回调
-    [self pullUpRefresh];
+    if (self.items.count >= PageSize * self.page) {
+        // 上拉更多回调
+        [self pullUpRefresh];
+    }
+    else {
+        // 停止底部
+        [self.tableView finishPullUp:NO];
+    }
 }
 
 #pragma mark 失败界面点击事件
-- (void)lsListViewController:(LSListViewController *)listView didClick:(UIButton *)sender {
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
     [self reloadBtnClick:sender];
 }
 
@@ -266,6 +278,19 @@
         vc.tabType = 1;
         [self.navigationController pushViewController:vc animated:YES];
     }
+}
+
+#pragma mark 购票成功回调
+- (void)buyProgramSuccess:(LSProgramItemObject *)item
+{
+    NSInteger row = [self.items indexOfObject:item];
+    
+    [self.items removeObjectAtIndex:row];
+    [self.items insertObject:item atIndex:row];
+    
+    [self getShowTime:self.items];
+    
+    [self.tableView reloadData];
 }
 
 - (void)pushAddCreditVc

@@ -34,7 +34,8 @@ public class FollowingListItem {
 							int roomType,
 							int addDate,
 							int[] interests,
-							int anchorType){
+							int anchorType,
+							ProgramInfoItem showInfo){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -64,6 +65,7 @@ public class FollowingListItem {
 		} else {
 			this.anchorType = AnchorLevelType.values()[anchorType];
 		}
+		this.showInfo = showInfo;
 	}
 	
 	
@@ -77,4 +79,5 @@ public class FollowingListItem {
 	public int addDate;
 	public List<InterestType> interests;
 	public AnchorLevelType anchorType;
+	public ProgramInfoItem showInfo;
 }

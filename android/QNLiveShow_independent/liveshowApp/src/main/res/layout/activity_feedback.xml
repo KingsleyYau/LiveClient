@@ -1,67 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:paddingLeft="13dp"
-    android:paddingRight="13dp"
-    android:paddingTop="10dp"
-    android:orientation="vertical">
-    
-    <FrameLayout
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@drawable/bg_feedback_editarea">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/bg_feedback_editarea">
+
+            <EditText
+                android:id="@+id/et_feedbackContent"
+                android:layout_width="match_parent"
+                android:padding="8dp"
+                android:hint="@string/settings_feedback_hint_tips"
+                android:gravity="left|top"
+                android:textSize="12sp"
+                android:background="@android:color/transparent"
+                android:textColorHint="@color/feedback_hint_tips"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/tv_feedbackLengthLimit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="@color/feedback_hint_tips"
+                android:layout_gravity="right|bottom"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+
+                android:text="0 / 300"/>
+
+        </FrameLayout>
 
         <EditText
-            android:id="@+id/et_feedbackContent"
+            android:id="@+id/et_email"
             android:layout_width="match_parent"
-            android:padding="8dp"
-            android:hint="@string/settings_feedback_hint_tips"
-            android:gravity="left|top"
+            android:layout_height="32dp"
+            android:layout_marginTop="14dp"
+            android:paddingLeft="9dp"
+            android:paddingRight="9dp"
             android:textSize="12sp"
-            android:background="@android:color/transparent"
+            android:inputType="textEmailAddress"
             android:textColorHint="@color/feedback_hint_tips"
-            android:layout_height="match_parent" />
+            android:hint="@string/settings_feedback_hint_email"
+            android:background="@drawable/bg_feedback_editarea"/>
 
-        <TextView
-            android:id="@+id/tv_feedbackLengthLimit"
+        <Button
+            android:id="@+id/btn_commitFeedback"
+            android:layout_width="113dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="33dp"
+            android:textAllCaps="false"
+            android:background="@drawable/bg_interactive_video_confirm"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/settings_feedback_submit"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_submitSuc"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:background="@android:color/white">
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="11sp"
-            android:textColor="@color/feedback_hint_tips"
-            android:layout_gravity="right|bottom"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="91dp"
+            android:src="@drawable/ic_feedback_submit_suc"/>
 
-            android:text="0 / 300"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_feedback_submit_suc"
+            android:layout_gravity="center_horizontal"
+            android:textSize="12sp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:layout_marginTop="24dp"/>
 
-    </FrameLayout>
-    
-    <EditText
-        android:id="@+id/et_email"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:layout_marginTop="14dp"
-        android:paddingLeft="9dp"
-        android:paddingRight="9dp"
-        android:textSize="12sp"
-        android:textColorHint="@color/feedback_hint_tips"
-        android:hint="@string/settings_feedback_hint_email"
-        android:background="@drawable/bg_feedback_editarea"/>
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_commitFeedback"
-        android:layout_width="113dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="33dp"
-        android:textAllCaps="false"
-        android:background="@drawable/bg_interactive_video_confirm"
-        android:textColor="@android:color/white"
-        android:textSize="15sp"
-        android:onClick="onClick"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/settings_feedback_submit"/>
 
-</LinearLayout>
+</FrameLayout>
+
+
+

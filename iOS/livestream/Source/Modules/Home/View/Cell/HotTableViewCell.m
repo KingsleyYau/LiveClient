@@ -59,7 +59,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-
+ 
 }
 
 - (void)awakeFromNib {
@@ -72,14 +72,15 @@
      if (!self.scrollLabelView) {
          CGSize size = self.titleView.frame.size;
          NSString * str = [NSString stringWithFormat:@"\tSpecial Show: %@",text];
-        NSAttributedString * title = [self addShowIconImage:str];
-        self.scrollLabelView = [TXScrollLabelView scrollWithTitle:str type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
-        self.scrollLabelView.frame = CGRectMake(0, 0, size.width, size.height);
+         NSAttributedString * title = [self addShowIconImage:str];
+         self.scrollLabelView = [TXScrollLabelView scrollWithTitle:str type:TXScrollLabelViewTypeLeftRight velocity:1 options:UIViewAnimationOptionCurveEaseInOut];
+         self.scrollLabelView.frame = CGRectMake(0, 0, size.width, size.height);
          self.scrollLabelView.scrollInset = UIEdgeInsetsMake(0, 10 , 0, 10);
          self.scrollLabelView.tx_centerX  = SCREEN_WIDTH/2 -30;
          self.scrollLabelView.scrollSpace = 20;
          self.scrollLabelView.textAlignment = NSTextAlignmentCenter;
          self.scrollLabelView.backgroundColor = [UIColor clearColor];
+         self.scrollLabelView.font = [UIFont systemFontOfSize:18];
          [self.scrollLabelView setupAttributeTitle:title];
          [self.titleView addSubview:self.scrollLabelView];
          [self.scrollLabelView beginScrolling];
@@ -91,6 +92,7 @@
     //创建富文本
     NSMutableAttributedString *attributeString = [[NSMutableAttributedString alloc] initWithString:text];
     [attributeString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:18] range:NSMakeRange(0, attributeString.length)];
+    [attributeString addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributeString.length)];
     
     //NSTextAttachment可以将要插入的图片作为特殊字符处理
     NSTextAttachment *attch = [[NSTextAttachment alloc] init];

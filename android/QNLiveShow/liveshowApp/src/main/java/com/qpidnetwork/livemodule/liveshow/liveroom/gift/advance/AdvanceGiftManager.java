@@ -11,11 +11,10 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.controller.ControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.animated.base.AbstractAnimatedDrawable;
+import com.facebook.fresco.animation.drawable.AnimatedDrawable2;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.qpidnetwork.livemodule.utils.Log;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +50,9 @@ public class AdvanceGiftManager {
      * 开始播放大礼物动画
      * @param advanceGiftItem
      */
-    private void startPlayAdvanceAnimation(final AdvanceGiftItem advanceGiftItem){
+    private void startPlayAdvanceAnimation(AdvanceGiftItem advanceGiftItem){
+        final int repeatTimes = advanceGiftItem.sendNum;
+
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>() {
             @Override
             public void onFinalImageSet(
@@ -59,22 +60,30 @@ public class AdvanceGiftManager {
                     @Nullable ImageInfo imageInfo,
                     @Nullable final Animatable anim) {
                 if (anim != null) {
-                    int animationDuration = 0;
-                    if (anim instanceof AbstractAnimatedDrawable) {
-                        AbstractAnimatedDrawable animatedDrawable = (AbstractAnimatedDrawable) anim;
-
-                        //反射尝试设置循环播放次数
-                        try {
-                            Field field = AbstractAnimatedDrawable.class.getDeclaredField("mLoopCount");
-                            field.setAccessible(true);
-                            field.set(animatedDrawable, advanceGiftItem.sendNum);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        animationDuration = animatedDrawable.getDuration()*advanceGiftItem.sendNum;
+                    long animationDuration = 0;
+//                    if (anim instanceof AbstractAnimatedDrawable) {
+//                        AbstractAnimatedDrawable animatedDrawable = (AbstractAnimatedDrawable) anim;
+//
+//                        //反射尝试设置循环播放次数
+//                        try {
+//                            Field field = AbstractAnimatedDrawable.class.getDeclaredField("mLoopCount");
+//                            field.setAccessible(true);
+//                            field.set(animatedDrawable, advanceGiftItem.sendNum);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        animationDuration = animatedDrawable.getDuration()*advanceGiftItem.sendNum;
+//                        Log.d(TAG,"startPlayAdvanceAnimation-onFinalImageSet animationDuration:"+animationDuration
+//                                +" sendNum:"+advanceGiftItem.sendNum);
+//                    }
+                    //edit by Jagger 2018-6-22 Frecso升级到1.9.0改版本
+                    if (anim instanceof AnimatedDrawable2) {
+                        AnimatedDrawable2 animatedDrawable = (AnimatedDrawable2) anim;
+                        animationDuration = animatedDrawable.getLoopDurationMs() * repeatTimes;
                         Log.d(TAG,"startPlayAdvanceAnimation-onFinalImageSet animationDuration:"+animationDuration
-                                +" sendNum:"+advanceGiftItem.sendNum);
+                                +" sendNum:"+repeatTimes);
                     }
+
                     if(animationDuration > 0){
                         isAnimationRunning = true;
                         anim.start();

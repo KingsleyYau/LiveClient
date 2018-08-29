@@ -19,26 +19,20 @@
 
 @interface SendGiftTheQueueManager : NSObject
 @property (nonatomic, weak) id<SendGiftTheQueueManagerDelegate> delegate;
-@property (nonatomic, strong) NSMutableDictionary *sendGiftDictionary;
 @property (nonatomic, strong) NSMutableArray *sendGiftArray;
+@property (nonatomic, assign) NSInteger isPrivate;
+@property (nonatomic, copy) NSString *toUid;
+
+
+/**
+ 初始化方法
+ */
++ (instancetype)manager;
 
 /**
  在主线程调用
  */
 - (void)unInit;
-//-------------- 礼物列表送礼逻辑 -----------------//
-/**
- 字典增加/替换对象
-
- @param key 对象key
- @param array 对象数组
- */
-- (void)setSendGiftWithKey:(int)key forArray:(NSArray *)array;
-
-/**
- 移除指定对象
- */
-- (void)removeSendGiftWithKey:(int)key;
 
 /**
  移除所有对象
@@ -46,18 +40,13 @@
 - (void)removeAllSendGift;
 
 /**
- 根据key取对象
- */
-- (NSMutableArray *)objectForKey:(int)key;
-
-/**
- 取第一个key
- */
-- (NSString *)getTheFirstKey;
-
-/**
- 发送礼物请求
+ 普通直播间发送礼物请求
  */
 - (void)sendLiveRoomGiftRequestWithGiftItem:(GiftItem *)giftItem;
+
+/**
+ 多人互动直播间发送礼物请求
+ */
+- (void)sendHangoutGiftrRequestWithGiftItem:(GiftItem *)giftItem;
 
 @end

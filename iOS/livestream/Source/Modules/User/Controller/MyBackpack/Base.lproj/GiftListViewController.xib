@@ -15,6 +15,7 @@
                 <outlet property="infoBtn" destination="AxE-Jk-Ufp" id="Xg3-gE-HQn"/>
                 <outlet property="infoLabel" destination="Bz8-oh-mMc" id="h2B-g4-zgA"/>
                 <outlet property="infoView" destination="8uB-Qp-5kp" id="wWd-WS-zow"/>
+                <outlet property="noDataIcon" destination="oRk-bh-ruJ" id="KqH-vb-qqw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

@@ -22,8 +22,10 @@
 #import "DialogTip.h"
 #import "DialogChoose.h"
 #import "LSImageViewLoader.h"
+#import "StartHangOutTipView.h"
+#import "LiveUrlHandler.h"
 
-@interface PublicVipViewController () <IMManagerDelegate, IMLiveRoomManagerDelegate,PlayViewControllerDelegate>
+@interface PublicVipViewController () <IMManagerDelegate, IMLiveRoomManagerDelegate,PlayViewControllerDelegate,StartHangOutTipViewDelegate>
 
 // 观众数组
 @property (nonatomic, strong) NSMutableArray *audienceArray;
@@ -49,6 +51,10 @@
 @property (nonatomic, strong) DialogChoose *closeDialogTipView;
 
 @property (nonatomic, strong) LSImageViewLoader *ladyImageLoader;
+
+// Hangout提示框
+@property (nonatomic, strong) StartHangOutTipView *hangoutTipView;
+@property (nonatomic, strong) UIButton *closeHangoutTipBtn;
 
 @end
 
@@ -119,6 +125,23 @@
 
     // 请求观众席列表
     [self setupAudienView];
+    
+    self.hangoutTipView = [[StartHangOutTipView alloc] init];
+    self.hangoutTipView.hidden = YES;
+    self.hangoutTipView.delegate = self;
+    self.hangoutTipView.layer.shadowColor = Color(0, 0, 0, 1).CGColor;
+    self.hangoutTipView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.hangoutTipView.layer.shadowRadius = 1;
+    self.hangoutTipView.layer.shadowOpacity = 0.1;
+    [self.view addSubview:self.hangoutTipView];
+    
+    self.closeHangoutTipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.closeHangoutTipBtn.hidden = YES;
+    [self.closeHangoutTipBtn addTarget:self action:@selector(removeHangoutTip:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.closeHangoutTipBtn];
+    [self.closeHangoutTipBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -135,6 +158,27 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    CGFloat y = 150;
+    CGFloat x = ([UIScreen mainScreen].bounds.size.width - 310) / 2;
+    self.hangoutTipView.frame = CGRectMake(x, y, 310, 228);
+}
+
+- (void)showHangoutTipView {
+    [self.view bringSubviewToFront:self.closeHangoutTipBtn];
+    [self.view bringSubviewToFront:self.hangoutTipView];
+    [self.hangoutTipView showLiveRoomHangoutTip];
+    self.closeHangoutTipBtn.hidden = NO;
+    self.hangoutTipView.hidden = NO;
+}
+
+- (void)removeHangoutTip:(id)sender {
+    self.closeHangoutTipBtn.hidden = YES;
+    self.hangoutTipView.hidden = YES;
 }
 
 #pragma mark - 界面风格初始化
@@ -188,6 +232,7 @@
     self.playVC.liveVC.startOneViewHeigh.constant = 40;
     self.playVC.liveVC.startOneBtn.hidden = NO;
     self.playVC.liveVC.startOneView.hidden = NO;
+    self.playVC.liveVC.showPublicTipBtn.hidden = YES;
     
     // 立即私密按钮
 //    self.playVC.liveVC.cameraBtn.hidden = NO;
@@ -338,6 +383,11 @@
     [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
 }
 
+- (void)showPubilcHangoutTipView:(PlayViewController *)vc {
+    // 显示hangout提示框
+    [self showHangoutTipView];
+}
+
 #pragma mark - IM回调
 
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
@@ -416,8 +466,27 @@
     [self.closeDialogTipView showDialog:self.view cancelBlock:^{
         
     } actionBlock:^{
-       [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+//       [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+        LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
+        [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
     }];
+}
+
+#pragma mark - StartHangOutTipViewDelegate
+- (void)requestHangout:(StartHangOutTipView *)view {
+    [[LiveModule module].analyticsManager reportActionEvent:InviteHangOut eventCategory:EventCategoryBroadcast];
+    
+    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:self.liveRoom.userId nickName:self.liveRoom.userName];
+    [LiveUrlHandler shareInstance].url = url;
+    
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
+    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
+}
+
+- (void)closeHangoutTip:(StartHangOutTipView *)view {
+    [self removeHangoutTip:nil];
 }
 
 @end

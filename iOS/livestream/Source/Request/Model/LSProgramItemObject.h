@@ -46,6 +46,4 @@
 @property (nonatomic, assign) ProgramTicketStatus ticketStatus;
 @property (nonatomic, assign) BOOL isHasFollow;
 @property (nonatomic, assign) BOOL isTicketFull;
-//本地倒计时用
-@property (nonatomic, assign) NSInteger countdownTime;
 @end

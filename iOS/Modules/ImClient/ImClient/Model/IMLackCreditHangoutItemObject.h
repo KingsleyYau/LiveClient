@@ -25,7 +25,7 @@
 @property (nonatomic, copy) NSString *_Nonnull anchorId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
 @property (nonatomic, copy) NSString *_Nonnull avatarImg;
-@property (nonatomic, assign) int errNo;
+@property (nonatomic, assign) LCC_ERR_TYPE errNo;
 @property (nonatomic, copy) NSString *_Nonnull errMsg;
 
 

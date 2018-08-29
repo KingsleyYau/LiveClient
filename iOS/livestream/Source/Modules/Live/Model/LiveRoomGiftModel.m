@@ -13,7 +13,7 @@
 - (void)setGiftId:(NSString *)giftId{
     
     _giftId = giftId;
-    _allItem = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:_giftId];
+    _allItem = [[LSGiftManager manager] getGiftItemWithId:_giftId];
     
 }
 

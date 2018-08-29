@@ -50,10 +50,6 @@ bool HttpGetEmoticonListTask::ParseData(const string& url, bool bFlag, const cha
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpGetEmoticonListTask::ParseData( buf : %s )", buf);
-    }
-    
     EmoticonItemList itemList;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

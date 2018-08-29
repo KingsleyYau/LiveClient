@@ -20,6 +20,9 @@
         self.name = @"";
         self.credit = 0.0;
         self.status = 0;
+        self.giftId = @"";
+        self.giftName = @"";
+        self.giftNum = 0;
     }
     return self;
 }
@@ -31,6 +34,9 @@
         self.name = [coder decodeObjectForKey:@"name"];
         self.credit = [coder decodeDoubleForKey:@"credit"];
         self.status = [coder decodeIntForKey:@"status"];
+        self.giftId = [coder decodeObjectForKey:@"giftId"];
+        self.giftName = [coder decodeObjectForKey:@"giftName"];
+        self.giftNum = [coder decodeIntForKey:@"giftNum"];
     }
     return self;
 }
@@ -41,6 +47,9 @@
     [coder encodeObject:self.name forKey:@"name"];
     [coder encodeDouble:self.credit forKey:@"credit"];
     [coder encodeInt:self.status forKey:@"status"];
+    [coder encodeObject:self.giftId forKey:@"giftId"];
+    [coder encodeObject:self.giftName forKey:@"giftName"];
+    [coder encodeInt:self.giftNum forKey:@"giftNum"];
 
 }
 

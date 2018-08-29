@@ -16,7 +16,11 @@
 #import "LSConfigManager.h"
 #import "LiveUrlHandler.h"
 #import "AnchorPersonalViewController.h"
-@interface ShowListViewController ()<UITableViewDelegate,UITableViewDataSource,ShowCellDelegate,ShowAddCreditsViewDelegate,LSListViewControllerDelegate,UIScrollViewDelegate,UIScrollViewRefreshDelegate>
+#import "LSBuyProgramRequest.h"
+#import "DialogTip.h"
+#define PageSize 50
+
+@interface ShowListViewController ()<UITableViewDelegate,UITableViewDataSource,ShowCellDelegate,ShowAddCreditsViewDelegate,UIScrollViewDelegate,UIScrollViewRefreshDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 //接口管理器
@@ -27,29 +31,37 @@
 @property (nonatomic, strong) NSMutableArray *dataArray;
 @property (weak, nonatomic) IBOutlet UIView *noDataTipView;
 @property (nonatomic, strong) NSTimer * timer;
+@property (nonatomic, strong) ShowAddCreditsView * addCreditsView;
+@property (nonatomic, assign) int page;
+
+/**
+ 是否加载数据
+ */
+@property (nonatomic, assign) BOOL isLoadData;
+/**
+ 是否第一次登录
+ */
+@property (nonatomic, assign) BOOL isFirstLogin;
 @end
 
 @implementation ShowListViewController
 
 - (void)dealloc {
     NSLog(@"%s", __func__);
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.timer invalidate];
+    self.timer = nil;
     [self.tableView unInitPullRefresh];
 }
 
-- (void)initCustomParam
-{
+- (void)initCustomParam {
     [super initCustomParam];
     
-    LSUITabBarItem *tabBarItem = [[LSUITabBarItem alloc] init];
-    self.tabBarItem = tabBarItem;
-    self.tabBarItem.title = @"Calendar";
-    self.tabBarItem.image = [[UIImage imageNamed:@"TabBarShow"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    self.tabBarItem.selectedImage = [[UIImage imageNamed:@"TabBarShow-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-    NSDictionary *normalColor = [NSDictionary dictionaryWithObject:Color(51, 51, 51, 1) forKey:NSForegroundColorAttributeName];
-    NSDictionary *selectedColor = [NSDictionary dictionaryWithObject:Color(52, 120, 247, 1) forKey:NSForegroundColorAttributeName];
-    [self.tabBarItem setTitleTextAttributes:normalColor forState:UIControlStateNormal];
-    [self.tabBarItem setTitleTextAttributes:selectedColor forState:UIControlStateSelected];
+    self.navigationTitle = @"Calendar";
+    
+    // 是否第一次登录
+    self.isFirstLogin = NO;
+    // 是否刷新数据
+    self.isLoadData = NO;
 }
 
 - (void)viewDidLoad {
@@ -64,6 +76,8 @@
     // 初始化下拉
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
     
+    [self.tableView registerNib:[UINib nibWithNibName:@"ShowCell" bundle:[LiveBundle mainBundle]] forCellReuseIdentifier:[ShowCell cellIdentifier]];
+    
     self.items = [NSMutableArray array];
     
     self.dataArray = [NSMutableArray array];
@@ -75,21 +89,21 @@
     
     self.failBtnText = NSLocalizedString(@"List_Reload", @"List_Reload");
     
-    self.delegate = self;
 }
 
-- (void)settableViewHeadView
-{
+- (void)settableViewHeadView {
     NSString * str = [LSConfigManager manager].item.showDescription;
-    CGRect rect = [str boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]} context:nil];
-    UIView * headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, rect.size.height + 10)];
-    UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, SCREEN_WIDTH - 30, rect.size.height)];
-    label.font = [UIFont systemFontOfSize:15];
-    label.numberOfLines = 0;
-    label.textColor = COLOR_WITH_16BAND_RGB(0x666666);
-    label.text = [LSConfigManager manager].item.showDescription;
-    [headView addSubview:label];
-    [self.tableView setTableHeaderView:headView];
+    if (str.length > 0) {
+        CGRect rect = [str boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 30, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:15]} context:nil];
+        UIView * headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, rect.size.height + 10)];
+        UILabel * label = [[UILabel alloc]initWithFrame:CGRectMake(15, 5, SCREEN_WIDTH - 30, rect.size.height)];
+        label.font = [UIFont systemFontOfSize:15];
+        label.numberOfLines = 0;
+        label.textColor = COLOR_WITH_16BAND_RGB(0x666666);
+        label.text = [LSConfigManager manager].item.showDescription;
+        [headView addSubview:label];
+        [self.tableView setTableHeaderView:headView];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -100,26 +114,47 @@
     self.navigationController.navigationBar.translucent = NO;
     self.edgesForExtendedLayout = UIRectEdgeNone;
     
-    if (self.dataArray.count == 0 || self.isLoadData) {
-      self.isLoadData = NO;
-      [self.tableView startPullDown:YES];
+//    if (self.dataArray.count == 0 || self.isLoadData) {
+//      self.isLoadData = NO;
+//      [self.tableView startPullDown:YES];
+//    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self viewDidAppearGetList:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+
+#pragma mark - HTTP登录调用
+- (void)setupLoadData:(BOOL)isLoadData {
+    self.isLoadData = isLoadData;
+}
+
+- (void)setupFirstLogin:(BOOL)isFirstLogin {
+    self.isFirstLogin = isFirstLogin;
+}
+
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite {
+    // 第一次http登录成功刷列表
+    if (self.isFirstLogin || isSwitchSite || self.isLoadData) {
+        // 界面是否显示
+        if (self.viewDidAppearEver) {
+            [self.tableView startPullDown:YES];
+            self.isFirstLogin = NO;
+        }
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [self.timer invalidate];
-    self.timer = nil;
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void)getShowList:(BOOL)loadMore
-{
+- (void)getShowList:(BOOL)loadMore {
     self.noDataTipView.hidden = YES;
     LSGetProgramListRequest *request = [[LSGetProgramListRequest alloc] init];
     
@@ -133,28 +168,35 @@
         self.timer = nil;
     } else {
         // 刷更多
-        start = self.dataArray ? ((int)self.dataArray.count) : 0;
+        start = self.page * PageSize;
     }
     request.sortType = PROGRAMLISTTYPE_STARTTIEM;
     // 每页最大纪录数
     request.start = start;
-    request.step = 10;
-    
+    request.step = PageSize;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSProgramItemObject *> * _Nullable array) {
         dispatch_async(dispatch_get_main_queue(), ^{
             NSLog(@"ShowListViewController::getShowList( [%@], loadMore : %@, count : %ld )", BOOL2SUCCESS(success), BOOL2YES(loadMore), (long)array.count);
             if (success) {
                 self.failView.hidden = YES;
-                
                 if (!loadMore) {
                     // 停止头部
                     [self.tableView finishPullDown:YES];
                     // 清空列表
                     [self.dataArray removeAllObjects];
-
+                    [self.items removeAllObjects];
+                    self.page = 1;
+                    
+                    // 下拉刷新成功回调
+                    if ([self.showDelegate respondsToSelector:@selector(reloadNowShowList)]) {
+                        [self.showDelegate reloadNowShowList];
+                    }
+                    self.isLoadData = NO;
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
+                    
+                    self.page++;
                 }
                 
                 if (!self.timer) {
@@ -165,28 +207,26 @@
             
                 if (self.dataArray.count == 0) {
                      self.noDataTipView.hidden = NO;
+                }else{
+                  [self getShowTime:self.dataArray];
                 }
-                
-                [self getShowTime:self.dataArray];
-
                 [self settableViewHeadView];
                 
                 [self.tableView reloadData];
-            }
-            else
-            {
+                
+            } else {
                 self.noDataTipView.hidden = YES;
                 if (!loadMore) {
                     // 停止头部
-                    [self.tableView finishPullDown:YES];
+                    [self.tableView finishPullDown:NO];
                     [self.dataArray removeAllObjects];
+                    [self.items removeAllObjects];
                     self.failView.hidden = NO;
-                    
+                    self.isLoadData = YES;
                 } else {
                     // 停止底部
                     [self.tableView finishPullUp:YES];
                 }
-                
                 [self.tableView reloadData];
             }
             self.view.userInteractionEnabled = YES;
@@ -195,8 +235,7 @@
     [self.sessionManager sendRequest:request];
 }
 
-- (void)countdown
-{
+- (void)countdown {
     [self getShowTime:self.dataArray];
     
     [self.tableView reloadData];
@@ -209,6 +248,7 @@
 }
 
 - (void)pullUpRefresh {
+    
     self.view.userInteractionEnabled = NO;
     [self getShowList:YES];
 }
@@ -220,18 +260,20 @@
 }
 
 - (void)pullUpRefresh:(UIScrollView *)scrollView {
-    // 上拉更多回调
-    [self pullUpRefresh];
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    NSLog(@"%@",scrollView);
+    
+    if (self.dataArray.count >= PageSize * self.page) {
+        // 上拉更多回调
+        [self pullUpRefresh];
+    }
+    else {
+        // 停止底部
+        [self.tableView finishPullUp:NO];
+    }
 }
 
 #pragma mark 失败界面点击事件
-- (void)lsListViewController:(LSListViewController *)listView didClick:(UIButton *)sender {
-    [self reloadBtnClick:sender];
+- (void)lsListViewControllerDidClick:(UIButton *)sender {
+        [self reloadBtnClick:sender];
 }
 
 - (void)reloadBtnClick:(id)sender {
@@ -242,24 +284,20 @@
 
 #pragma mark TableViewDelegateAndDataSource
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.items.count;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return [ShowCell cellHeight];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSArray * array = [[self.items objectAtIndex:section] objectForKey:@"time"];
     return array.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ShowCell *result = nil;
     ShowCell *cell = [ShowCell getUITableViewCell:tableView];
     result = cell;
@@ -274,8 +312,7 @@
     return result;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.items.count > 0) {
         LSProgramItemObject * obj = [[[self.items objectAtIndex:indexPath.section] objectForKey:@"time"] objectAtIndex:indexPath.row];
         
@@ -285,8 +322,7 @@
     }
 }
 
-- (void)showCellBtnDid:(NSInteger)type fromItem:(LSProgramItemObject *)item
-{
+- (void)showCellBtnDid:(NSInteger)type fromItem:(LSProgramItemObject *)item {
     if (type == 1) {
         [[LiveModule module].analyticsManager reportActionEvent:ShowEnterShowBroadcast eventCategory:EventCategoryShowCalendar];
         NSURL *url =[[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId userId:item.anchorId];
@@ -296,10 +332,10 @@
     else if (type == 2)
     {
         [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickGetTicket eventCategory:EventCategoryShowCalendar];
-        ShowAddCreditsView * view = [[ShowAddCreditsView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
-        view.delegate = self;
-        [view updateUI:item];
-        [self.view.window addSubview:view];
+        self.addCreditsView = [[ShowAddCreditsView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
+        self.addCreditsView.delegate = self;
+        [self.addCreditsView updateUI:item];
+        [self.view.window addSubview:self.addCreditsView];
     }
     else
     {
@@ -313,8 +349,7 @@
 
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _tableView.frame.size.width, 20)];
 
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, _tableView.frame.size.width-15, 20)];
@@ -326,47 +361,84 @@
     return headerView;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 20;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     return 1;
 }
 
 #pragma mark 购票成功回调
-- (void)buyProgramSuccess:(LSProgramItemObject *)item
-{
+
+- (void)showAddCreditsViewGetTicketBtnDid:(NSString *)showId {
     
-    NSInteger row = [self.dataArray indexOfObject:item];
-    
-    [self.dataArray removeObjectAtIndex:row];
-    [self.dataArray insertObject:item atIndex:row];
-    
-    [self getShowTime:self.dataArray];
-    
-    [self.tableView reloadData];
+    [self showLoading];
+    self.addCreditsView.userInteractionEnabled = NO;
+    [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarConfirmGetTicket eventCategory:EventCategoryShowCalendar];
+    LSBuyProgramRequest * request = [[LSBuyProgramRequest alloc]init];
+    request.liveShowId = showId;
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, double leftCredit){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self hideLoading];
+            self.addCreditsView.userInteractionEnabled = YES;
+            if (success) {
+                [[DialogTip dialogTip]showDialogTip:[LiveModule module].moduleVC.view tipText:NSLocalizedStringFromSelf(@"ADD_CREDITS_SUCCESS")];
+                
+                self.addCreditsView.obj.ticketStatus = PROGRAMTICKETSTATUS_BUYED;
+                self.addCreditsView.obj.isHasFollow = YES;
+        
+                [self.addCreditsView removeFromSuperview];
+                
+                NSInteger row = [self.dataArray indexOfObject:self.addCreditsView.obj];
+                
+                [self.dataArray removeObjectAtIndex:row];
+                [self.dataArray insertObject:self.addCreditsView.obj atIndex:row];
+                
+                [self getShowTime:self.dataArray];
+                
+                [self.tableView reloadData];
+            }
+            else
+            {
+               
+                if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
+                    UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedStringFromSelf(@"ADD_CREDITS_MSG") delegate:self cancelButtonTitle:NSLocalizedStringFromSelf(@"Cancel") otherButtonTitles:NSLocalizedStringFromSelf(@"Add Credit"), nil];
+                    [alertView show];
+                }
+                else
+                {
+                    [[DialogTip dialogTip]showDialogTip:[LiveModule module].moduleVC.view.window tipText:errmsg];
+                }
+            }
+        });
+    };
+    [self.sessionManager sendRequest:request];
 }
 
-- (void)pushAddCreditVc
-{
+- (void)pushAddCreditVc {
+    [self.addCreditsView removeFromSuperview];
     UIViewController *vc = [LiveModule module].addCreditVc;
     if (vc) {
         [self.navigationController pushViewController:vc animated:NO];
     }
 }
 
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (alertView.cancelButtonIndex != buttonIndex) {
+        [self pushAddCreditVc];
+    }
+}
+
 #pragma mark 时间分组
-- (void)getShowTime:(NSArray *)array
-{
+- (void)getShowTime:(NSArray *)array {
     
     NSMutableArray *data = [NSMutableArray array];
     for (LSProgramItemObject * item in array) {
         LSProgramItemObject * items = [[LSProgramItemObject alloc]init];
         items = item;
         items.leftSecToEnter = items.leftSecToEnter - 10;
+        items.leftSecToStart = items.leftSecToStart - 10;
         [data addObject:items];
     }
     
@@ -386,6 +458,10 @@
         NSDate *dayDate = [NSDate dateWithTimeIntervalSince1970:obj.startTime];
         NSString *dayStr = [stampFormatter stringFromDate:dayDate];
         [dayArary addObject:dayStr];
+    }
+    
+    if (timeArray.count == 0) {
+        return;
     }
     
     NSMutableArray *dateArray = [NSMutableArray arrayWithArray:timeArray];

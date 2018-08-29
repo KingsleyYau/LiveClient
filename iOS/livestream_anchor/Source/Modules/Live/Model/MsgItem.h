@@ -45,5 +45,5 @@ typedef enum MsgType {
 @property (strong) NSString *honorUrl;
 @property (nonatomic, assign) CGFloat containerHeight;
 @property (nonatomic, assign) CGRect labelFrame;
-
+@property (nonatomic, assign) BOOL isHasTicket;
 @end

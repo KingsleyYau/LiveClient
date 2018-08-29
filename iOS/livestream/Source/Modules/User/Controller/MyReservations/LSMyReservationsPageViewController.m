@@ -17,7 +17,8 @@
 #import "LSLoginManager.h"
 #import "PreLiveViewController.h"
 #import "LiveRoomCreditRebateManager.h"
-#import "LiveService.h"
+#import "LiveMutexService.h"
+#import "LiveUrlHandler.h"
 #define MAXNum 20
 
 @interface LSMyReservationsPageViewController () <UITableViewDelegate, UITableViewDataSource, NewInvitesCellDelegate, UIScrollViewRefreshDelegate>
@@ -36,6 +37,7 @@
 @property (nonatomic, assign) BOOL isShowStartNowBtn;
 @property (nonatomic, assign) BOOL isRequstData;
 @property (nonatomic, strong) NSTimer * loadtimer;
+@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @end
 
 @implementation LSMyReservationsPageViewController
@@ -216,6 +218,7 @@
     self.isReload = isReload;
     self.infoView.hidden = NO;
     if (isReload) {
+        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
         self.infoLabel.text = NSLocalizedStringFromSelf(@"Failed_Message");
         [self.infoBtn setTitle:NSLocalizedStringFromSelf(@"Reload") forState:UIControlStateNormal];
     } else {
@@ -229,7 +232,7 @@
         } else {
             message = NSLocalizedStringFromSelf(@"NoData_Tip_4");
         }
-
+        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
         self.infoLabel.text = message;
         [self.infoBtn setTitle:NSLocalizedStringFromSelf(@"Hot_Broadcasters") forState:UIControlStateNormal];
     }
@@ -290,7 +293,7 @@
 //        [cell.imageViewLoader loadImage];
 //        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
 
-        [cell.imageViewLoader refreshCachedImage:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
+        [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
         
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
@@ -535,6 +538,7 @@
 
 - (void)navgationControllerPresent:(UIViewController *)controller {
     LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:controller];
+    nvc.flag = YES;
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;

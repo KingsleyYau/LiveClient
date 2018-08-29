@@ -8,7 +8,7 @@
 
 #import "LSImageViewLoader.h"
 #import "AFNetWorkHelpr.h"
-
+#import "LSYYWebImage/Categories/UIImageView+LSYYWebImage.h"
 @interface LSImageViewLoader ()
 
 @property (nonatomic, strong) UIImage *image;
@@ -28,6 +28,8 @@
 + (void)gobalInit {
     [SDWebImageDownloader sharedDownloader].username = @"test";
     [SDWebImageDownloader sharedDownloader].password = @"5179";
+    [YYWebImageManager sharedManager].username = @"test";
+    [YYWebImageManager sharedManager].password = @"5179";
 }
 
 - (id)init {
@@ -101,26 +103,30 @@
     }
 }
 
-- (void)refreshCachedImage:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage {
-    self.view = view;
-    [self displayImage:placeholderImage];
-    [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:url] options:option progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+- (void)refreshCachedImage:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage {
+    
+    self.view = imageView;
+    
+   dispatch_async(dispatch_get_global_queue(0, 0), ^{
+       
+       UIImage *image =  [[YYImageCache sharedCache] getImageForKey:url];
+       
+       if (!image) {
+           image = placeholderImage;
+       }
+       [imageView yy_setImageWithURL:[NSURL URLWithString:url] placeholder:image options:YYWebImageOptionRefreshImageCache
+                          completion:^(UIImage * _Nullable image, NSURL * _Nonnull url, YYWebImageFromType from, YYWebImageStage stage, NSError * _Nullable error) {
+                              dispatch_async(dispatch_get_main_queue(), ^{
+                                  if (image) {
+                                      
+                                      [[YYImageCache sharedCache] setImage:image forKey:[NSString stringWithFormat:@"%@",url]];
+                                      
+                                      [self displayImage:image];
+                                  }
+                              });
+                          }];
+   });
 
-    } completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-        NSLog(@"LSImageViewLoader::refreshCachedImage( imageURL : %@, error : %@ )", imageURL, error);
-    
-        if (image) {
-            [self displayImage:image];
-        }
-    }];
-//    UIImageView *headView = (UIImageView *)view;
-//    [headView sd_setImageWithURL:[NSURL URLWithString:url] placeholderImage:image options:SDWebImageRefreshCached progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-//
-//    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-//
-//        NSLog(@"LSImageViewLoader::refreshCachedImage( imageURL : %@, error : %@ , view : %p, image : %@)", imageURL, error, view, image);
-//    }];
-    
 }
 
 

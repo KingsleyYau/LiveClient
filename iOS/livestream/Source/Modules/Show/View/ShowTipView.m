@@ -27,7 +27,8 @@
         
         self.alpha = 0;
         self.hidden = YES;
-
+        
+        self.userInteractionEnabled = YES;
     }
     return self;
 }
@@ -40,8 +41,6 @@
     self.hidden = NO;
     [UIView animateWithDuration:0.3 animations:^{
         self.alpha = 1;
-    }completion:^(BOOL finished) {
-         [self performSelector:@selector(hideTipView) withObject:nil afterDelay:60];
     }];
 }
 

@@ -138,6 +138,8 @@ public class IMRoomInItem implements Serializable{
 		sb.append(honorId);
 		sb.append(" honorImg:");
 		sb.append(honorImg);
+		sb.append(" shareLink:");
+		sb.append(shareLink);
 		sb.append("]");
 		return sb.toString();
 	}

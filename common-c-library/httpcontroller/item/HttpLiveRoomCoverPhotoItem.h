@@ -33,7 +33,7 @@ public:
 
             /* status */
             if( root[LIVEROOM_PHOTOLIST_STATUS].isInt() ) {
-                status = (ExamineStatus)root[LIVEROOM_PHOTOLIST_STATUS].asInt();
+                status = GetIntToExamineStatus(root[LIVEROOM_PHOTOLIST_STATUS].asInt());
             }
             
             /* isIn_use */

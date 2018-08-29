@@ -26,9 +26,6 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
     private Drawable mUnreadTxtBgDrawable;
     private String TAG = LiveMessageListView.class.getSimpleName();
 
-    //设置列表垂直间距
-    private int mVerticalSpace = 0;
-
     public MessageRecyclerView.onMsgUnreadListener onMsgUnreadListener= new MessageRecyclerView.onMsgUnreadListener() {
         @SuppressLint("NewApi")
         @Override
@@ -69,6 +66,10 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         mMessageRecyclerView.setOnMsgUnreadListener(onMsgUnreadListener);
     }
 
+    public void setGradualColor(int gradualColor){
+        this.mMessageRecyclerView.setGradualColor(gradualColor);
+    }
+
     public LiveMessageListView(Context context) {
         super(context);
         init(context);
@@ -99,7 +100,6 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         listLP.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         mMessageRecyclerView.setLayoutParams(listLP);
         mMessageRecyclerView.setOnMsgUnreadListener(onMsgUnreadListener);
-
         //未读提示
         mUnreadTxt = new TextView(context);
         LayoutParams txtLP = new LayoutParams(80,80);
@@ -123,7 +123,8 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
     }
 
     public void setVerticalSpace(int space){
-        mVerticalSpace = space;
+        Log.d(TAG,"setVerticalSpace-space:"+space);
+        mMessageRecyclerView.setVerticalSpace(space);
     }
 
     public void setMaxHeight(int height){

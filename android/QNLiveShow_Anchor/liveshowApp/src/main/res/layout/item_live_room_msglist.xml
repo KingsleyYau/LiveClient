@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_msgItemContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvMsgDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:textStyle="normal" />
+
+    <!-- 推荐的主播信息 -->
+    <LinearLayout
+        android:id="@+id/llRecommended"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="@dimen/live_size_4dp"
+        android:paddingBottom="2dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/imgMsgAnchorPhoto"
+            android:layout_width="58dp"
+            android:layout_height="match_parent"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:backgroundImage="@color/black4"
+            fresco:placeholderImage="@drawable/ic_default_photo_woman_rect"
+            fresco:roundAsCircle="false"
+            fresco:roundBottomLeft="true"
+            fresco:roundBottomRight="false"
+            fresco:roundTopLeft="true"
+            fresco:roundTopRight="false"
+            fresco:roundedCornerRadius="6dp"
+            fresco:roundingBorderColor="@color/white" />
+
+        <LinearLayout
+            android:layout_width="140dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_rounded_angle_hangout_recommend_bg"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="@dimen/live_size_4dp">
+
+            <TextView
+                android:id="@+id/tvMsgAnchorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="name"
+                android:maxEms="12"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp"
+                android:textStyle="bold" />
+
+            <!-- 魅族NOTE2会把过长的文字最后一个单词变成省略号， 就会造成看不到地区的问题，所以要这样布局-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="horizontal">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tvAnchorYrs"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/live_size_4dp"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:lines="1"-->
+                    <!--android:text="20 yrs / "-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/live_size_14sp" />-->
+                <!--<TextView-->
+                    <!--android:id="@+id/tvAnchorLocal"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginTop="@dimen/live_size_4dp"-->
+                    <!--android:ellipsize="end"-->
+                    <!--android:lines="1"-->
+                    <!--android:text="aaa"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/live_size_14sp"-->
+                    <!--android:visibility="gone"/>-->
+            <!--</LinearLayout>-->
+            <TextView
+                android:id="@+id/tvAnchorYrs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/live_size_4dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:text="@string/hangout_dialog_des"
+                android:textColor="@color/white"
+                android:textSize="@dimen/live_size_14sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

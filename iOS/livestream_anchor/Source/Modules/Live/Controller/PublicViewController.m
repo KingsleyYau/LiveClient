@@ -15,11 +15,8 @@
 #import "AudienceCell.h"
 #import "LSAnchorImManager.h"
 #import "LiveModule.h"
-#import "SetFavoriteRequest.h"
-#import "LiveFansListRequest.h"
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
-#import "LiveRoomCreditRebateManager.h"
 #import "UserInfoManager.h"
 #import "DialogTip.h"
 
@@ -39,9 +36,6 @@
 
 @property (nonatomic, assign) BOOL isClickGot;
 
-/** 接口管理器 **/
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-
 // 是否第一次进类型直播间管理器
 @property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
 
@@ -58,7 +52,6 @@
     NSLog(@"PublicViewController::initCustomParam( self : %p )", self);
     self.isTipShow = NO;
 
-    self.sessionManager = [LSSessionRequestManager manager];
     self.firstManager = [RoomTypeIsFirstManager manager];
 
     self.audienceArray = [[NSMutableArray alloc] init];
@@ -73,6 +66,8 @@
 - (void)dealloc {
     NSLog(@"PublicViewController::dealloc( self : %p )", self);
 
+    [[DialogTip dialogTip] stopTimer];
+    
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
 }
@@ -105,11 +100,6 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-}
-
-- (void)initialiseSubwidge {
-    [super initialiseSubwidge];
-
 }
 
 - (void)setupContainView {
@@ -258,27 +248,6 @@
     listViewController.anchorId = self.liveRoom.userId;
     listViewController.showInvite = 0;
     [self.navigationController pushViewController:listViewController animated:YES];
-}
-
-- (IBAction)followLiverAction:(id)sender {
-    [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickFollow eventCategory:EventCategoryBroadcast];
-    SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
-    request.userId = self.liveRoom.userId;
-    request.roomId = self.liveRoom.roomId;
-    request.isFav = YES;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) {
-                self.followBtnWidth.constant = 0;
-                //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
-
-            } else {
-                [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
-            }
-            NSLog(@"PublicViewController::followLiverAction( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
-        });
-    };
-    [self.sessionManager sendRequest:request];
 }
 
 - (IBAction)closeAction:(id)sender {

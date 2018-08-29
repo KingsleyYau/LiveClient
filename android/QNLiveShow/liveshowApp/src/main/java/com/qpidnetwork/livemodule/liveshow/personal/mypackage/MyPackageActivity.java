@@ -12,7 +12,6 @@ import android.support.v4.view.ViewPager;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.base.BaseFragment;
-import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
@@ -55,7 +54,8 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
         SetPageActivity(true);
 
         //设置头
-        setTitle(getString(R.string.my_package_title), Color.WHITE);
+        setTitle(getString(R.string.my_package_title), R.color.theme_default_black);
+        hideTitleBarBottomDivider();
 
         mScheduleInvitePackageUnreadManager = ScheduleInvitePackageUnreadManager.getInstance();
         mScheduleInvitePackageUnreadManager.registerUnreadListener(this);
@@ -71,7 +71,7 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
 
     private void initViews(){
         //状态栏颜色
-        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
+//        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
 
         tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabPageIndicator);
         mViewPagerContent = (ViewPager)findViewById(R.id.viewPagerContent);
@@ -85,12 +85,8 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
         tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_SAME);
         // 设置两个标题之间的竖直分割线的颜色，如果不需要显示这个，设置颜色为透明即可
         tabPageIndicator.setDividerColor(Color.TRANSPARENT);
-        //无未读条数
-        tabPageIndicator.setHasDigitalHint(false);
         //设置中间竖线上下的padding值
         tabPageIndicator.setDividerPadding(DisplayUtil.dip2px(this, 10));
-        //打开未读设置
-        tabPageIndicator.setHasDigitalHint(true);
         //设置页面切换处理
         tabPageIndicator.setOnPageChangeListener(this);
     }
@@ -105,6 +101,7 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
         }
         if(defaultIndex >= 0 && defaultIndex < mAdapter.getCount()){
             mViewPagerContent.setCurrentItem(defaultIndex);
+            selectedFragment = mAdapter.getItem(defaultIndex);
         }
     }
 
@@ -121,9 +118,9 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
      */
     private void refreshUnreadCount(PackageUnreadCountItem item){
         if(tabPageIndicator != null && item != null){
-            tabPageIndicator.updateTabDiginalHintNumb(Voucher.ordinal(), item.voucherNum);
-            tabPageIndicator.updateTabDiginalHintNumb(ReceivedGifts.ordinal(), item.giftNum);
-            tabPageIndicator.updateTabDiginalHintNumb(MyRides.ordinal(), item.rideNum);
+            tabPageIndicator.updateTabDiginalHint(Voucher.ordinal(),item.voucherNum>0,false,item.voucherNum);
+            tabPageIndicator.updateTabDiginalHint(ReceivedGifts.ordinal(),item.giftNum>0,false,item.giftNum);
+            tabPageIndicator.updateTabDiginalHint(MyRides.ordinal(),item.rideNum>0,false,item.rideNum);
         }
     }
 
@@ -142,6 +139,7 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
     public void onPageSelected(int position) {
 //        //Tab切换刷新未读数目
 //        getPackageUnreadCount();
+        selectedFragment = mAdapter.getItem(position);
         //GA统计
         onAnalyticsPageSelected(position);
     }
@@ -168,10 +166,23 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
         });
     }
 
+    private Fragment selectedFragment;
+
+    @Override
+    public void onBackPressed() {
+        //如果PostStampFragment页面支持重定向，那么应当可见监听返回键
+        if(selectedFragment != null && selectedFragment instanceof PostStampFragment){
+            ((PostStampFragment)selectedFragment).onBackKeyDown();
+        }else{
+            super.onBackPressed();
+        }
+    }
+
     /**
      * 背包Tab类型
      */
     public enum MyPackageTab{
+        PostStamp,
         Voucher,
         ReceivedGifts,
         MyRides
@@ -197,14 +208,18 @@ public class MyPackageActivity extends BaseActionBarFragmentActivity implements 
             BaseFragment fragment = null;
             switch (position){
                 case 0:{
-                    fragment = new VoucherFragment();
+                    fragment = new PostStampFragment();
                 }break;
 
                 case 1:{
-                    fragment = new ReceivedGiftFragment();
+                    fragment = new VoucherFragment();
                 }break;
 
                 case 2:{
+                    fragment = new ReceivedGiftFragment();
+                }break;
+
+                case 3:{
                     fragment = new MyRidesFragment();
                 }break;
             }

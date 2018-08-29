@@ -11,9 +11,8 @@
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
 #import "LiveStreamPublisher.h"
-
-#import "LSRequestManager.h"
 #import "LSFileCacheManager.h"
+#import "LSAnchorRequestManager.h"
 
 @interface StreamTestViewController ()
 
@@ -38,8 +37,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    [LSRequestManager setLogEnable:YES];
-    [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
+    [LSAnchorRequestManager setLogEnable:YES];
+    [LSAnchorRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
 
     // 初始化播放
     self.playerPreviewArray = @[
@@ -64,7 +63,7 @@
     
     // 初始化推送
     self.publishUrl = @"rtmp://172.25.32.17:19351/live/maxi";
-    self.publisher = [LiveStreamPublisher instance];
+    self.publisher = [LiveStreamPublisher instance:LiveStreamType_ShowHost_Public];
     [self.publisher initCapture];
     self.publisher.publishView = self.previewPublishView;
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;

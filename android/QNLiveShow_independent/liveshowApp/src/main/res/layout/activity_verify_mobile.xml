@@ -110,7 +110,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_code"
-            button:background="@color/talent_violet"
+            button:background="@color/black3"
             button:title="@string/live_book_verify"
             button:title_color="@color/white"
             button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />

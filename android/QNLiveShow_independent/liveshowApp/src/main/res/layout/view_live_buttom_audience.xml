@@ -45,7 +45,17 @@
                     android:onClick="onClick"
                     android:scaleType="fitXY"
                     android:layout_marginLeft="13dp" />
-
+                
+                <ImageView
+                    android:id="@+id/iv_liveRoomShare"
+                    android:visibility="gone"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="9dp"
+                    android:onClick="onClick"
+                    android:src="@drawable/ic_liveroom_share_freepublic"/>
+                
                 <ImageView
                     android:id="@+id/iv_talent"
                     android:layout_marginBottom="6dp"
@@ -55,7 +65,7 @@
                     android:layout_marginLeft="15dp"
                     android:src="@drawable/ic_liveroom_talent"
                     android:onClick="onClick" />
-
+                        
                 <FrameLayout
                     android:id="@+id/fl_recommendGift"
                     android:layout_width="41dp"

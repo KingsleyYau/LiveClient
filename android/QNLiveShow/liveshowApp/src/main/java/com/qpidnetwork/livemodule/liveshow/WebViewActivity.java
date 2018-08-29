@@ -1,46 +1,11 @@
 package com.qpidnetwork.livemodule.liveshow;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.http.SslError;
-import android.os.Bundle;
-import android.os.Message;
 import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
-import android.webkit.HttpAuthHandler;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebResourceResponse;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
-import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
-import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
-import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
-import com.qpidnetwork.livemodule.utils.IPConfigUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 
 /**
  * Created by Hunter Mun on 2017/9/14.
@@ -53,7 +18,9 @@ public class WebViewActivity extends BaseWebViewActivity{
     public enum UrlIntent{
         View_Audience_Level,//查看用户个人等级
         View_Audience_Intimacy_With_Anchor,//查看亲密度等级说明
-        View_Terms_Of_Use//查看用户协议页面
+        View_Terms_Of_Use,//查看用户协议页面
+        View_Loi_List,//查看意向信列表
+        View_Emf_List//查看主播来信列表
     }
 
     /**
@@ -91,8 +58,13 @@ public class WebViewActivity extends BaseWebViewActivity{
                     sb.append(anchorid);
                     url = sb.toString();
                     break;
+                case View_Emf_List:
+                    url = configItem.emfH5Url;
+                break;
+                case View_Loi_List:
+                    url = configItem.loiH5Url;
+                break;
             }
-            url = IPConfigUtil.addCommonParamsToH5Url(url);
             System.err.println("WebViewActivity-getIntent-urlIntent:" + urlIntent + " url:" + url);
             if (!TextUtils.isEmpty(url)) {
                 intent.putExtra(WEB_URL, url);

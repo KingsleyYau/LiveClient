@@ -28,7 +28,7 @@ public class AnchorProfileActivity extends BaseWebViewActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //判断显示启动引导页
-        showGuideView();
+//        showGuideView();      //modify by hunter 独立app资料页去掉新手引导
     }
 
     @Override
@@ -87,7 +87,7 @@ public class AnchorProfileActivity extends BaseWebViewActivity {
         Intent intent = new Intent(context, AnchorProfileActivity.class);
         intent.putExtra(WEB_TITLE, title);
         intent.putExtra(WEB_TITLE_BAR_SHOW_LOADSUC, showTitleBarWhenLoadSuc);
-        ConfigItem configItem = LoginManager.getInstance().getLocalConfigItem();
+        ConfigItem configItem = LoginManager.getInstance().getSynConfig();
         String url = configItem.anchorPage;
         StringBuilder sb = new StringBuilder(url);
         if(url.contains("?")){

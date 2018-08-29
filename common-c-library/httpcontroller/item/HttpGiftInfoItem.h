@@ -68,7 +68,7 @@ public:
             
             /* type */
             if( root[LIVEROOM_GIFTINFO_TYPE].isInt() ) {
-                type = (GiftType)root[LIVEROOM_GIFTINFO_TYPE].asInt();
+                type = GetIntToGiftType(root[LIVEROOM_GIFTINFO_TYPE].asInt());
             }
             
             /* level */

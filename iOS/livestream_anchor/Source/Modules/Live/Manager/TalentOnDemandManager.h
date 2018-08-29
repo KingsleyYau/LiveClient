@@ -7,13 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GetTalentListRequest.h"
-#import "GetTalentStatusRequest.h"
 @protocol TalentOnDemandManagerDelegate <NSObject>
 @optional;
-- (void)onGetTalentListSuccess:(BOOL)success Data:(NSArray<GetTalentItemObject *> *)array errMsg:(NSString *)errMsg errNum:(HTTP_LCC_ERR_TYPE)errnum;
 
-- (void)onGetTalentStatus:(GetTalentStatusItemObject *)statusItemObject;
 
 @end
 

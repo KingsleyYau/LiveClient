@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context="com.qpidnetwork.livemodule.liveshow.login.LiveFBAddEmailActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_fb_mail_tips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:lineSpacingExtra="0dp"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/live_sing_up_fb_mail_tips2"/>
+
+        <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp" />
+
+        <!--宽度高度最好不要写死，以适配各种机型-->
+        <Button
+            android:id="@+id/btn_submit"
+            android:text="@string/live_login"
+            android:textColor="@color/submit_unusable"
+            android:enabled="false"
+            style="@style/CustomTheme.Btn.Submit"
+            />
+
+    </LinearLayout>
+</LinearLayout>
+

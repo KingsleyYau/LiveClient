@@ -9,8 +9,8 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
-import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
@@ -92,12 +92,6 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
             msg.what = EVENT_MESSAGE_UPDATE_ONLINEFANS;
             msg.obj = imRespObject;
             sendUiMessage(msg);
-            if(null != mIMManager){
-                for(AudienceInfoItem audienceInfoItem : audienceList){
-                    mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(audienceInfoItem.userId,
-                            audienceInfoItem.nickName,audienceInfoItem.photoUrl));
-                }
-            }
         }
     }
 
@@ -108,7 +102,8 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
         IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
                 mIMManager.mMsgIdIndex.getAndIncrement(),"",
                 IMMessageItem.MessageType.SysNotice,
-                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,String.format ("%.2f", rebateGranted)),
+                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,
+                        ApplicationSettingUtil.formatCoinValue(rebateGranted)),
                         null, IMSysNoticeMessageContent.SysNoticeType.Normal));
         Log.d(TAG,"addRebateGrantedMsg-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
         sendMessageUpdateEvent(imMessageItem);

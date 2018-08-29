@@ -21,6 +21,9 @@ public class LoginItem {
 	 * @param isPushAd
 	 * @param svrList
 	 * @param userType
+     * @param qnMainAdUrl   QN主界面广告浮层的URL（可无，无则表示不弹广告）
+     * @param qnMainAdTitle QN主界面广告浮层的标题（可无）
+     * @param qnMainAdId    QN主界面广告浮层的ID（可无，无则表示不弹广告）
 	 */
     public LoginItem(
             String userId,
@@ -31,7 +34,10 @@ public class LoginItem {
             String photoUrl,
             boolean isPushAd,
             ServerItem[] svrList,
-            int userType) {
+            int userType,
+            String qnMainAdUrl,
+            String qnMainAdTitle,
+            String qnMainAdId) {
         this.userId = userId;
         this.token = token;
         this.nickName = nickName;
@@ -45,6 +51,9 @@ public class LoginItem {
 		} else {
 			this.userType = UserType.values()[userType];
 		}
+		this.qnMainAdUrl = qnMainAdUrl;
+        this.qnMainAdTitle = qnMainAdTitle;
+        this.qnMainAdId = qnMainAdId;
     }
 
     public String userId;
@@ -56,4 +65,7 @@ public class LoginItem {
     public boolean isPushAd;
     public ServerItem[] svrList;
     public UserType userType;
+    public String qnMainAdUrl;
+    public String qnMainAdTitle;
+    public String qnMainAdId;
 }

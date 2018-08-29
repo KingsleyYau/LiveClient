@@ -6,7 +6,6 @@ import android.os.Message;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
-import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
 import java.util.ArrayList;
@@ -89,12 +88,6 @@ public class FreePublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
             msg.what = EVENT_MESSAGE_UPDATE_ONLINEFANS;
             msg.obj = imRespObject;
             sendUiMessage(msg);
-            if(null != mIMManager){
-                for(AudienceInfoItem audienceInfoItem : audienceList){
-                    mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(audienceInfoItem.userId,
-                            audienceInfoItem.nickName,audienceInfoItem.photoUrl));
-                }
-            }
         }
     }
 }

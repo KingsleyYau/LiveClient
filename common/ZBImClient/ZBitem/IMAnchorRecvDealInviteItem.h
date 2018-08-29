@@ -21,7 +21,6 @@ using namespace std;
 #define IMANCHORRECVDEALINVITEITEM_PHOTOURL_PARAM              "photourl"
 #define IMANCHORRECVDEALINVITEITEM_TYPE_PARAM                  "type"
 
-
 class IMAnchorRecvDealInviteItem {
 public:
     bool Parse(const Json::Value& root) {
@@ -87,7 +86,5 @@ public:
     IMAnchorReplyInviteType     type;
 
 };
-
-
 
 #endif /* IMANCHORRECVDEALINVITEITEM_H_*/

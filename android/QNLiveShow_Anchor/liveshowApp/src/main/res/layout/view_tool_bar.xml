@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolbar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/actionbar_height"
+    android:background="@color/white"
+    android:minHeight="?attr/actionBarSize"
+    android:fitsSystemWindows="true"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp">
+
+    <ImageView
+        android:id="@+id/iv_commBack"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:background="@drawable/touch_feedback_holo_light_circle"
+        android:paddingLeft="13dp"
+        android:paddingRight="18dp"
+        android:src="@drawable/ic_arrow_back" />
+
+    <TextView
+        android:id="@+id/tv_commTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:text="title"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:maxWidth="@dimen/live_size_220dp"/>
+
+
+    <TextView
+        android:id="@+id/tv_opera"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/live_size_8dp"
+        android:layout_gravity="center_vertical|right"
+        android:gravity="center"
+        android:textColor="@color/actionbar_title_right_text_color"
+        android:textSize="14sp"
+        android:visibility="invisible"
+        android:text="right"/>
+
+</android.support.v7.widget.Toolbar>

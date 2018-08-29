@@ -13,11 +13,20 @@
     <!-- 6. ;parentkeywords;tag -->
 
 	<!--hot/following list-->
-	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_0">Live.HotList</string>
-	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_1">Live.FollowingList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_0">Live.Overview</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_1_0">Live.HotList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_1_1">Live.FollowingList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity_1_2">Live.ShowCalendar</string>
 
 	<!--anchor profile-->
 	<string name="com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity">BroadcasterProfile</string>
+
+	<!--Program detail-->
+	<string name="com.qpidnetwork.livemodule.liveshow.home.LiveProgramDetailActivity">ShowDetail</string>
+
+	<!--Program MyTicket-->
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity_0">MyTicket.Scheduled</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity_1">MyTicket.History</string>
 
 	<!--personal center-->
     <string name="com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity">Live.PersonalCenter</string>
@@ -25,24 +34,31 @@
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_1">MySchedules.Sent</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_2">MySchedules.Scheduled</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_3">MySchedules.History</string>
-	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_0">MyBackpack.Voucher</string>
-	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_1">MyBackpack.Gift</string>
-	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_2">MyBackpack.Ride</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_0">MyBackpack.PostStampOverview</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_1">MyBackpack.Voucher</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_2">MyBackpack.Gift</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity_3">MyBackpack.Ride</string>
 
 	<!--live room-->
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.FreePublicLiveRoomActivity">PublicBroadcast</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.PayPublicLiveRoomActivity">VIPPublicBroadcast</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.NormalPrivateLiveRoomActivity">PrivateBroadcast</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.AdvancePrivateLiveRoomActivity">VIPPrivateBroadcast</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.ProgramPayPublicLiveRoomActivity">ShowBroadcast</string>
 
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity">BroadcastTransition</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomNormalErrorActivity">BroadcastEnd</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.liveroom.LiveProgramEndActivity">ShowEnd</string>
 
 	<!--schedule invite-->
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity">RequestBooking</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.BookSuccessActivity">RequestBooking.Success</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.AddMobileActivity">InputMobileNumber</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.book.VerifyMobileActivity">VerifyMobileNumber</string>
+
+	<!--私信-->
+	<string name="com.qpidnetwork.livemodule.liveshow.message.MessageContactListActivity">Live.MessageList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.message.ChatTextActivity">MessageDetail</string>
 
 	<!--QN外部广告页-->
 	<string name="com.qpidnetwork.livemodule.liveshow.ad.AD4QNActivity">Home.LiveAd</string>
@@ -67,12 +83,14 @@
 	<string name="Live_EnterBroadcast_Label_PublicBroadcast">enterBroadcast.enter_PublicBroadcast</string>
 	<string name="Live_EnterBroadcast_Action_VIPPublicBroadcast">enter_VIPPublicBroadcast</string>
 	<string name="Live_EnterBroadcast_Label_VIPPublicBroadcast">enterBroadcast.enter_VIPPublicBroadcast</string>
-	<string name="Live_EnterBroadcast_Action_PrivateBroadcast">start_PrivateBroadcast</string>
-	<string name="Live_EnterBroadcast_Label_PrivateBroadcast">enterBroadcast.start_PrivateBroadcast</string>
+	<string name="Live_EnterBroadcast_Action_PrivateBroadcast">start_VIPPrivateBroadcast</string>
+	<string name="Live_EnterBroadcast_Label_PrivateBroadcast">enterBroadcast.start_VIPPrivateBroadcast</string>
 	<string name="Live_EnterBroadcast_Action_VIPPrivateBroadcast">start_VIPPrivateBroadcast</string>
 	<string name="Live_EnterBroadcast_Label_VIPPrivateBroadcast">enterBroadcast.start_VIPPrivateBroadcast</string>
 	<string name="Live_EnterBroadcast_Action_RequestBooking">send_RequestBooking</string>
 	<string name="Live_EnterBroadcast_Label_RequestBooking">enterBroadcast.send_RequestBooking</string>
+	<string name="Live_EnterBroadcast_Action_ShowBroadcast">enter_ShowBroadcast</string>
+	<string name="Live_EnterBroadcast_Label_ShowBroadcast">enterBroadcast.enter_ShowBroadcast</string>
 	<!--主播过渡页及主播个人主页等点击进入直播间，无法区分豪华or私密，使用如下通用-->
 	<string name="Live_EnterBroadcast_Action_NormalEnterBroadcast">enter_Broadcast_thrProfileandTran</string>
 	<string name="Live_EnterBroadcast_Label_NormalEnterBroadcast">enterBroadcast.enter_Broadcast_thrProfileandTran</string>
@@ -111,6 +129,28 @@
 	<string name="Live_BroadcastEnd_Category">BroadcastEnd</string>
 	<string name="Live_BroadcastEnd_Action_Recommend">click_Recommend</string>
 	<string name="Live_BroadcastEnd_Label_Recommend">BroadcastEnd.click_Recommend</string>
+
+	<!--节目列表点击时间-->
+	<string name="Live_Calendar_Category">showCalendar</string>
+	<string name="Live_Calendar_Action_GetTicket">click_GetTicket</string>
+	<string name="Live_Calendar_Label_GetTicket">showCalendar.click_GetTicket</string>
+	<string name="Live_Calendar_Action_GetTicket_Confirm">confirm_GetTicket</string>
+	<string name="Live_Calendar_Label_GetTicket_Confirm">showCalendar.confirm_GetTicket</string>
+	<string name="Live_Calendar_Action_OtherShows">click_MyOtherShows</string>
+	<string name="Live_Calendar_Label_OtherShows">showCalendar.click_MyOtherShows</string>
+	<string name="Live_Calendar_Action_showStart_notify">show_ShowStart</string>
+	<string name="Live_Calendar_Label_showStart_notify">showCalendar.show_ShowStart</string>
+	<string name="Live_Calendar_Action_showStart_click">click_ShowStart</string>
+	<string name="Live_Calendar_Label_showStart_click">showCalendar.click_ShowStart</string>
+
+	<!--节目结束页推荐-->
+	<string name="Live_CalendarEnd_Action_Recommend">click_RecommendShow</string>
+	<string name="Live_CalendarEnd_Label_Recommend">showCalendar.click_RecommendShow</string>
+
+	<!--私信-->
+	<string name="Live_Message_Category">message</string>
+	<string name="Live_Message_Action_Send">send_message</string>
+	<string name="Live_Message_Label_Send">message.send_message</string>
 
 	<!--Global-->
 	<string name="Live_Global_Category">Global</string>

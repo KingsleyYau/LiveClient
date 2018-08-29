@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_liveroom_giftanim_public"
+    android:id="@+id/ll_giftItemParentView"
     android:minHeight="40dp">
     <!-- 外部填充 -->
     <LinearLayout
         android:id="@+id/childView"
-        android:layout_marginLeft="13dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
         android:orientation="horizontal">
 
     </LinearLayout>
 
-    <!-- 显示连击数 -->
+    <!-- 显示连击数
+    TODO:确认连击动画数字样式-->
     <RelativeLayout
         android:id="@+id/llayout_num"
         android:layout_width="wrap_content"
-        android:layout_height="26dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/childView">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/img_x"
@@ -28,8 +29,8 @@
             android:layout_height="15dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="6dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="4dp"
             android:src="@drawable/ic_live_gift_anim_number_x"
             android:scaleType="fitCenter"/>
 
@@ -69,4 +70,4 @@
             android:scaleType="fitCenter"
             android:layout_marginRight="1dp"/>
     </RelativeLayout>
-</RelativeLayout>
+</LinearLayout>

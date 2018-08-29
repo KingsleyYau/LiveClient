@@ -70,6 +70,7 @@ static const int HTTPErrorTypeArray[] = {
 		HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT,           // 密码不正确
 		HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL,              // 邮箱未注册
 		HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL,           // 邮箱未注册
+        HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG,        // 验证码错误
 };
 
 // 底层状态转换JAVA坐标
@@ -226,6 +227,8 @@ static const int GenderTypeOperateTypeArray[] = {
 
 // Java层转底层枚举(性别)
 GenderType IntToGenderTypeOperateType(int value);
+// 底层状态转换JAVA坐标
+int HTTPGenderTypeToInt(GenderType type);
 
 /*获取界面的类型*/
 static const int PromoAnchorTypeArray[] = {
@@ -281,6 +284,16 @@ static const int VerifyCodeTypeArray[] = {
 };
 //Java层转底层枚举分享类型
 VerifyCodeType IntToVerifyCodeTypeOperateType(int value);
+
+/*地区ID的类型*/
+static const int RegionIdTypeArray[] = {
+        REGIONIDTYPE_UNKNOW,                             // 未知
+        REGIONIDTYPE_CD,                           		// CD
+        REGIONIDTYPE_LD,		                     	// LD
+        REGIONIDTYPE_AME
+};
+//Java层转底层枚举
+RegionIdType IntToRegionIdType(int value);
 
 //c++对象转Java对象
 jobjectArray getJavaStringArray(JNIEnv *env, const list<string>& sourceList);

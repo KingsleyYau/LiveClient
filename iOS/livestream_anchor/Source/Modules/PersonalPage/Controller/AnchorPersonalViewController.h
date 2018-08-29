@@ -6,7 +6,7 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LiveRoomInfoItemObject.h"
+
 #import "LSLiveWKWebViewController.h"
 #import "IntroduceView.h"
 #import "LSGoogleAnalyticsViewController.h"

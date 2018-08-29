@@ -35,6 +35,7 @@ import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteBookTimeItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteConfig;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
@@ -213,7 +214,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
         //礼物总价
         mTvBookGiftCredit = (TextView) findViewById(R.id.txt_book_gift_price);
-        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , 0f)));
+        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , "0"));
 
         //电话号码
         mTvBookNumber = (TextView) findViewById(R.id.txt_book_number);
@@ -287,7 +288,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
 
                     //更新描述
                     if(mTvNoteTips != null){
-                        mTvNoteTips.setText(Html.fromHtml(String.format(getResources().getString(R.string.live_note_tips), String.valueOf(mScheduleInviteConfig.bookDeposit))));
+                        mTvNoteTips.setText(Html.fromHtml(String.format(getResources().getString(R.string.live_note_tips),
+                                ApplicationSettingUtil.formatCoinValue(mScheduleInviteConfig.bookDeposit))));
                     }
 
                     //处理时间
@@ -354,7 +356,7 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
                     if(IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_NO_CREDIT){
                         showCreditNoEnoughDialog(R.string.live_common_noenough_money_tips);
                     }else{
-                        Toast.makeText(mContext , response.errMsg , Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext , response.errMsg , Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -485,7 +487,8 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
     private void setTotalPrice(int position){
         mGiftSum = Integer.parseInt(mGiftNums.get(position));
         double sumCredit =  mSelectGiftCredit * mGiftSum;
-        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits , String.format("%.2f" , sumCredit)));
+        mTvBookGiftCredit.setText(getString(R.string.live_talent_credits ,
+                ApplicationSettingUtil.formatCoinValue(sumCredit)));
     }
 
     /**
@@ -525,7 +528,10 @@ public class BookPrivateActivity extends BaseActionBarFragmentActivity {
             mSwitchSMS.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    Toast.makeText(mContext , getString(R.string.live_book_add_number_tips1) , Toast.LENGTH_SHORT).show();
+                    if(event.getAction() == MotionEvent.ACTION_DOWN){
+                        Toast.makeText(mContext , getString(R.string.live_book_add_number_tips1) , Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
                     return true;
                 }
             });

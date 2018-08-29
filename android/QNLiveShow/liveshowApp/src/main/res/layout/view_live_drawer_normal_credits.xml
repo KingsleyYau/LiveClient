@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_addCredit"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="57dp"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:background="@drawable/touch_feedback_holo_light"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="24dp"
+        android:src="@drawable/ic_live_menu_item_credits"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginLeft="14dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left_menu_credits_tips"
+            android:textColor="#383838"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tv_currCredits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/left_menu_credits_balance"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_addCredits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="68dp"
+        android:minHeight="32dp"
+        android:text="@string/left_menu_credits_add"
+        android:textSize="16sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:clickable="true"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/selector_live_menu_credits_add"/>
+
+</LinearLayout>

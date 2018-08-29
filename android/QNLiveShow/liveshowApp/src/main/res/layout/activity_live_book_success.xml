@@ -29,7 +29,7 @@
             android:text="@string/live_book_success_tips1"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="@color/talent_light_violet"
+            android:textColor="@color/white"
             android:textSize="30sp"
             android:textStyle="bold|italic" />
 
@@ -40,7 +40,8 @@
             android:layout_weight="1"
             android:text="@string/live_book_success_tips2"
             android:textAlignment="center"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/live_size_16sp"/>
     </LinearLayout>
 
     <!-- 内容　-->
@@ -63,6 +64,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:text="@string/txt_broadcaster"
+            android:textColor="@color/black"
             app:layout_constraintTop_toTopOf="parent"
             button:layout_constraintLeft_toLeftOf="parent" />
 
@@ -74,6 +76,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="24dp"
             android:layout_marginStart="8dp"
+            android:textColor="@color/text_color_grey"
             button:layout_constraintBaseline_toBaselineOf="@+id/textView11"
             button:layout_constraintHorizontal_bias="1.0"
             button:layout_constraintLeft_toRightOf="@+id/textView11"
@@ -88,7 +91,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:background="@color/hotlist_divider_color"
+            android:background="@color/theme_default_divider_grey"
             button:layout_constraintLeft_toLeftOf="parent"
             button:layout_constraintRight_toRightOf="parent"
             button:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -102,6 +105,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:text="@string/live_book_time"
+            android:textColor="@color/black"
             button:layout_constraintLeft_toLeftOf="parent"
             button:layout_constraintTop_toBottomOf="@+id/view2" />
 
@@ -113,6 +117,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="24dp"
             android:layout_marginStart="8dp"
+            android:textColor="@color/text_color_grey"
             button:layout_constraintBaseline_toBaselineOf="@+id/textView13"
             button:layout_constraintHorizontal_bias="1.0"
             button:layout_constraintLeft_toRightOf="@+id/textView13"
@@ -127,7 +132,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="7dp"
-            android:background="@color/hotlist_divider_color"
+            android:background="@color/theme_default_divider_grey"
             button:layout_constraintHorizontal_bias="0.0"
             button:layout_constraintLeft_toLeftOf="parent"
             button:layout_constraintRight_toRightOf="parent"
@@ -156,6 +161,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/txt_virtual_gift"
+                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -165,6 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/live_book_giftsumx"
+                android:textColor="@color/text_color_grey"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView18"
                 app:layout_constraintRight_toRightOf="parent" />
 
@@ -180,7 +187,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_gift_num"
                 fresco:actualImageScaleType="fitXY"
                 fresco:backgroundImage="@color/white"
-                fresco:placeholderImage="@drawable/icon_data_empty"
+                fresco:placeholderImage="@drawable/icon_list_refreash_error"
                 fresco:roundBottomLeft="true"
                 fresco:roundBottomRight="true"
                 fresco:roundTopLeft="true"
@@ -193,7 +200,7 @@
     <!-- OK　-->
     <com.qpidnetwork.livemodule.view.ButtonRaised
         android:id="@+id/btn_ok"
-        android:layout_width="180dp"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
@@ -203,7 +210,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_content"
-        button:background="@color/talent_light_violet"
+        button:background="@color/theme_sky_blue"
+        button:raisebutton_radius="@dimen/raise_button_radius"
         button:title="@string/common_btn_ok"
         button:title_color="@color/white"
         button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
@@ -221,7 +229,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_ok"
-        button:background="@color/talent_violet"
+        button:background="@color/theme_sky_blue"
+        button:raisebutton_radius="@dimen/raise_button_radius"
         button:title="@string/live_book_my_reservations"
         button:title_color="@color/white"
         button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"

@@ -53,34 +53,52 @@ public class ADAnchorAdapter extends RecyclerView.Adapter<ADAnchorAdapter.ViewHo
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final HotListItem item = mDatas.get(position);
 
-        //房间类型
-        if(item.onlineStatus != AnchorOnlineStatus.Online
-                || item.roomType == LiveRoomType.Unknown){
-            viewHolder.mImgRoomType.setVisibility(View.GONE);
-        }else{
-            viewHolder.mImgRoomType.setVisibility(View.VISIBLE);
-            if(item.roomType == LiveRoomType.FreePublicRoom
-                    || item.roomType == LiveRoomType.PaidPublicRoom){
-                viewHolder.mImgRoomType.setImageResource(R.drawable.room_type_public);
-            }else {
-                viewHolder.mImgRoomType.setImageResource(R.drawable.room_type_private);
-            }
-        }
+//        //添加动画看不见回收
+//        final ImageView roomTypeImageView = viewHolder.mImgRoomType;
+//        ViewSmartHelper viewSmartHelperLiveType = new ViewSmartHelper(roomTypeImageView);
+//        viewSmartHelperLiveType.setOnVisibilityChangedListener(new ViewSmartHelper.onVisibilityChangedListener() {
+//            @Override
+//            public void onVisibilityChanged(boolean isVisible) {
+//                if(!isVisible){
+//                    Drawable liveTypeDrawable = roomTypeImageView.getDrawable();
+//                    if ((liveTypeDrawable != null)
+//                            && (liveTypeDrawable instanceof AnimationDrawable)) {
+//                        if(((AnimationDrawable) liveTypeDrawable).isRunning()) {
+//                            ((AnimationDrawable) liveTypeDrawable).stop();
+//                        }
+//                    }
+//                }
+//            }
+//        });
+
+//        //房间类型
+//        if(item.onlineStatus != AnchorOnlineStatus.Online
+//                || item.roomType == LiveRoomType.Unknown){
+//            viewHolder.mImgRoomType.setVisibility(View.GONE);
+//        }else{
+//            viewHolder.mImgRoomType.setVisibility(View.VISIBLE);
+//            if(item.roomType == LiveRoomType.FreePublicRoom
+//                    || item.roomType == LiveRoomType.PaidPublicRoom){
+//                viewHolder.mImgRoomType.setImageResource(R.drawable.room_type_public);
+//            }else {
+//                viewHolder.mImgRoomType.setImageResource(R.drawable.room_type_private);
+//            }
+//        }
 
         //人名
         viewHolder.mTextViewName.setText(item.nickName);
         //绿点
-        Drawable drawable = null;
-        if(item.onlineStatus == AnchorOnlineStatus.Online){
-            drawable = mContext.getResources().getDrawable(R.drawable.circle_solid_green);
-        }else{
-            drawable= mContext.getResources().getDrawable(R.drawable.circle_solid_grey);
-        }
-        drawable.setBounds(0, 0,
-                mContext.getResources().getDimensionPixelSize(R.dimen.live_size_8dp),
-                mContext.getResources().getDimensionPixelSize(R.dimen.live_size_8dp));
-        viewHolder.mTextViewName.setCompoundDrawables(drawable,null,null,null);
-        viewHolder.mTextViewName.setCompoundDrawablePadding(8);
+//        Drawable drawable = null;
+//        if(item.onlineStatus == AnchorOnlineStatus.Online){
+//            drawable = mContext.getResources().getDrawable(R.drawable.circle_solid_green);
+//        }else{
+//            drawable= mContext.getResources().getDrawable(R.drawable.circle_solid_grey);
+//        }
+//        drawable.setBounds(0, 0,
+//                mContext.getResources().getDimensionPixelSize(R.dimen.live_size_8dp),
+//                mContext.getResources().getDimensionPixelSize(R.dimen.live_size_8dp));
+//        viewHolder.mTextViewName.setCompoundDrawables(drawable,null,null,null);
+//        viewHolder.mTextViewName.setCompoundDrawablePadding(8);
 
         //照片
         if(!TextUtils.isEmpty(item.photoUrl)){

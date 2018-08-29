@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/actionbar_height"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="#5D0E86">
+    android:background="@color/white"
+    android:gravity="center_vertical">
 
-    <FrameLayout
-        android:id="@+id/btnBack"
-        android:layout_width="@dimen/actionbar_backicon_height"
-        android:layout_height="@dimen/actionbar_backicon_height"
-        android:background="@drawable/touch_feedback_holo_dark_circle"
-        android:clickable="true">
-        <ImageView
+
+    <RelativeLayout
+        android:id="@+id/btn_main_title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@drawable/touch_feedback_holo_light_circle"
+        android:clickable="true"
+        android:onClick="onClick">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/tv_main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_arrow_back_white"
-            android:layout_gravity="center_vertical|left"
-            android:layout_marginLeft="13dp"/>
-    </FrameLayout>
+            android:layout_centerVertical="true"
+            android:text="@string/live_main_title"
+            android:textColor="@color/theme_default_black"
+            android:textSize="@dimen/live_size_18sp" />
+
+        <!-- 下拉 -->
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@id/tv_main_title"
+            android:src="@drawable/ic_arrow_change_website" />
+    </RelativeLayout>
+
+    <!--
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -37,7 +53,6 @@
             custom:digitalHintTextColor="@android:color/darker_gray"
             custom:digitalHintTextBgColor="@android:color/holo_red_light"
             custom:digitalHintTextSize="12sp"
-            custom:hasDigitalHint="false"
             custom:underlineColor="@android:color/transparent"
             custom:underlineHeight="2dp"
             custom:indicatorColor="#FFF600"
@@ -71,20 +86,6 @@
                 android:src="@drawable/personal_center" />
         </com.qpidnetwork.livemodule.view.DotView.DotLayout>
 
-        <!--<TextView-->
-        <!--android:id="@+id/tv_centerUnReadNum"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="11dp"-->
-        <!--android:background="@drawable/live_unread_bg"-->
-        <!--android:textSize="8sp"-->
-        <!--android:padding="2dp"-->
-        <!--android:gravity="center"-->
-        <!--android:textColor="@color/white"-->
-        <!--android:layout_alignLeft="@+id/btnCenter"-->
-        <!--android:layout_alignBottom="@+id/btnCenter"-->
-        <!--android:layout_marginBottom="-2dp"-->
-        <!--android:layout_marginLeft="12dp"-->
-        <!--android:text="99+"/>-->
     </RelativeLayout>
-
-</LinearLayout>
+    -->
+</RelativeLayout>

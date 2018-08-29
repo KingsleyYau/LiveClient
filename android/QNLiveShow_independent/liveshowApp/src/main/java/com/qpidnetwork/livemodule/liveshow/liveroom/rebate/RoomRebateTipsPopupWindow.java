@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 
 import java.lang.ref.WeakReference;
 import java.util.Timer;
@@ -125,31 +126,29 @@ public class RoomRebateTipsPopupWindow extends PopupWindow implements View.OnCli
         }
     }
 
-    public void notifyReBateUpdate(IMRebateItem tempRebateItem){
+    public void  notifyReBateUpdate(IMRebateItem tempRebateItem){
         Log.d(TAG,"notifyReBateUpdate-tempRebateItem:"+tempRebateItem);
-        //0.关闭计时器
-        stopTimeCount();
-        if(null != tempRebateItem){
-            //1.更新本地数据
-            rebateItem = new IMRebateItem(tempRebateItem.cur_credit,tempRebateItem.cur_time,
-                    tempRebateItem.pre_credit,tempRebateItem.pre_time);
-            //2.隐藏loading显示数据
-            rl_roomRebate.setVisibility(View.VISIBLE);
-            pb_loadingRebate.setVisibility(View.GONE);
-            //3.更新规则说明以及当前已返点
-            if(null != mActivity && null != mActivity.get()){
-                tv_rebateNote2.setText(mActivity.get().getResources().getString(R.string.live_backcredits_tips42,
-                        String.valueOf(rebateItem.pre_time),String.valueOf(rebateItem.pre_credit)));
-            }
-            tv_currRoomRebate.setText(String.valueOf(rebateItem.cur_credit));
-            //4.重新开始倒计时
-            initTimeCounter();
-            timer.schedule(timerTask,0,1000l);
-        }else{
+        if(null==tempRebateItem){
             rl_roomRebate.setVisibility(View.INVISIBLE);
             pb_loadingRebate.setVisibility(View.VISIBLE);
+            return;
         }
-
+        //0.关闭计时器
+        stopTimeCount();
+        //1.更新本地数据
+        rebateItem = new IMRebateItem(tempRebateItem.cur_credit,tempRebateItem.cur_time,
+                    tempRebateItem.pre_credit,tempRebateItem.pre_time);
+        //2.隐藏loading显示数据
+        rl_roomRebate.setVisibility(View.VISIBLE);
+        pb_loadingRebate.setVisibility(View.GONE);
+        //3.更新规则说明以及当前已返点
+        if(null != mActivity && null != mActivity.get()){
+            tv_rebateNote2.setText(mActivity.get().getResources().getString(R.string.live_backcredits_tips42));
+        }
+        tv_currRoomRebate.setText(ApplicationSettingUtil.formatCoinValue(rebateItem.cur_credit));
+        //4.重新开始倒计时
+        initTimeCounter();
+        timer.schedule(timerTask,0,1000l);
     }
 
     public void stopTimeCount(){

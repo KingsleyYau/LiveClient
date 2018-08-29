@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.base.BaseListFragment;
-import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
@@ -58,9 +57,11 @@ public class ScheduleInviteActivity extends BaseActionBarFragmentActivity
         SetPageActivity(true);
 
         //状态栏颜色
-        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
+//        StatusBarUtil.setColor(this,Color.parseColor("#5d0e86"),0);
         //设置头
-        setTitle(getString(R.string.my_schedule_invite_title), Color.WHITE);
+        setTitle(getString(R.string.my_schedule_invite_title), R.color.theme_default_black);
+        hideTitleBarBottomDivider();
+
         mScheduleInvitePackageUnreadManager = ScheduleInvitePackageUnreadManager.getInstance();
         mScheduleInvitePackageUnreadManager.registerUnreadListener(this);
         initViews();
@@ -86,12 +87,8 @@ public class ScheduleInviteActivity extends BaseActionBarFragmentActivity
         tabPageIndicator.setIndicatorMode(TabPageIndicator.IndicatorMode.MODE_WEIGHT_NOEXPAND_SAME);
         // 设置两个标题之间的竖直分割线的颜色，如果不需要显示这个，设置颜色为透明即可
         tabPageIndicator.setDividerColor(Color.TRANSPARENT);
-        //无未读条数
-        tabPageIndicator.setHasDigitalHint(false);
         //设置中间竖线上下的padding值
         tabPageIndicator.setDividerPadding(DisplayUtil.dip2px(this, 10));
-        //打开未读设置
-        tabPageIndicator.setHasDigitalHint(true);
         //设置页面切换处理
         tabPageIndicator.setOnPageChangeListener(this);
     }
@@ -122,12 +119,13 @@ public class ScheduleInviteActivity extends BaseActionBarFragmentActivity
      */
     private void refreshUnreadCount(ScheduleInviteUnreadItem item){
         if(tabPageIndicator != null && item != null){
-            int[] indexs = new int[]{ScheduleInviteTab.NewInvite.ordinal(),
+            int[] indexs = new int[]{ScheduleInviteTab.NewInvite.ordinal(), ScheduleInviteTab.PendingConfirm.ordinal(),
                     ScheduleInviteTab.Confirmed.ordinal(),ScheduleInviteTab.History.ordinal()};
-            int[] unreads = new int[]{item.pendingNum,item.confirmedUnreadCount,item.otherUnreadCount};
+            int[] unreads = new int[]{item.pendingNum, 0, item.confirmedUnreadCount,item.otherUnreadCount};
             for(int index = 0; index<indexs.length; index++){
                 int tabPageIndex = indexs[index];
-                tabPageIndicator.updateTabDiginalHintNumb(tabPageIndex, unreads[index]);
+                int tabUnReadOnIndex = unreads[index];
+                tabPageIndicator.updateTabDiginalHint(tabPageIndex,tabUnReadOnIndex>0,false,tabUnReadOnIndex);
 //                if(null != mLocalCache && mLocalCache.size()>tabPageIndex){
 //                    SoftReference<BaseListFragment> fragmentSr = mLocalCache.get(tabPageIndex);
 //                    if(null != fragmentSr && fragmentSr.get() != null){

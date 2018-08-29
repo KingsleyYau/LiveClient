@@ -49,11 +49,10 @@ public:
     /**
      播放流连接
      
-     @param url 连接
      @param recordFilePath flv录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath);
+    bool PlayUrl(const string& recordFilePath);
     
     /**
      停止

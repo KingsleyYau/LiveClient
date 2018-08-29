@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/ll_emojiRootView"
     android:background="#535353"
     android:orientation="vertical">
@@ -11,10 +11,10 @@
         android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="29dip"
+        android:layout_marginBottom="1dp"
         custom:titleTextColorUnselected="#59ffffff"
         custom:titleTextColorSelected="#f7cd3a"
         custom:titleTextSize="12sp"
-        custom:hasDigitalHint="false"
         custom:tabSelectedBgColor="#2b2b2b"
         custom:tabUnselectedBgColor="@android:color/black"
         custom:underlineColor="@android:color/holo_blue_bright"
@@ -26,10 +26,8 @@
 
     <FrameLayout
         android:id="@+id/fl_emojiContainer"
-        android:layout_marginTop="1dp"
-        android:background="#2b2b2b"
         android:layout_width="match_parent"
-        android:layout_height="190dp">
+        android:layout_height="match_parent">
         <LinearLayout
             android:id="@+id/ll_emojiContainer"
             android:layout_width="match_parent"
@@ -40,15 +38,10 @@
                 android:background="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="13dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_height="149dp"
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
-                custom:columnNumbPerPage="6"
-                custom:lineNumbPerPage="3"
-                custom:gridViewVerticalSpacing="1dp"
-                custom:gridViewHorizontalSpacing="1dp">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
             </com.qpidnetwork.livemodule.view.ScrollLayout>
 
@@ -56,8 +49,7 @@
                 android:id="@+id/ll_pageIndicator"
                 android:layout_width="match_parent"
                 android:layout_gravity="bottom"
-                android:layout_height="6dp"
-                android:layout_marginBottom="12dp"
+                android:layout_height="120dp"
                 android:orientation="horizontal"
                 android:gravity="center">
             </LinearLayout>

@@ -1,0 +1,602 @@
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">CharmLive</string>
+
+    <!--peacockActivity-->
+    <string name="txt_splash_dec">This is my sologan !</string>
+    <string name="tip_waitlogin">Logining...</string>
+    <string name="tip_loading">Loading...</string>
+    <string name="tip_failed_to_load">Failed to load.</string>
+    <string name="tip_reload">Reload</string>
+    <string name="txt_hint_input_general">Say something...</string>
+    <string name="txt_close">Close</string>
+
+    <string name="tip_emoji_unusable">You need to have an Intimacy Level of at least 10 to use advanced emoticions</string>
+    <string name="tip_roomGiftCredit">Coin rebate: %1$s</string>
+    <string name="txt_broadcaster">Broadcaster</string>
+    <string name="txt_reservations">Bookings</string>
+    <string name="txt_virtual_gift">Virtual Gift</string>
+    <!--Common-->
+    <string name="common_hotlist_guide">Watch Hot Broadcasts</string>
+    <string name="common_default_middle_dash">-</string>
+    <!--首页列表-->
+    <string name="live_main_title">Live</string>
+    <string name="anchor_list_empty">View Hot Broadcasts</string>
+
+    <string name="live_main_home_title">Dashboard</string>
+    <string name="live_home_month_task_progress_tips">Monthly task progress</string>
+    <string name="live_home_month_task_progress_desc">Broadcast days: %1$s/%2$s</string>
+    <string name="live_home_coins_tips">Coins this month</string>
+    <string name="live_home_scheduled_bookings_tips">Scheduled bookings</string>
+    <string name="live_home_todos_title">Todos</string>
+    <string name="live_home_todos_item_title">Bookings</string>
+    <string name="live_home_todos_item_desc">Upcoming One-on-One bookings</string>
+    <string name="live_home_calendar_item_title">Show Calendar</string>
+    <string name="live_home_calendar_item_desc">Upcoming shows</string>
+    <string name="live_home_hangout_item_title">Hang-out</string>
+    <string name="live_home_hangout_item_desc">Ongoing Hang-outs</string>
+
+    <string name="live_main_me_title">Me</string>
+    <string name="live_main_me_right_button_tips">Log Out</string>
+
+    <!--2018改版后的直播间消息列表样式,勋章功能去掉-->
+    <!--入场-->
+    <!--公开直播间，有座驾入场-->
+    <string name="enterlive_withrider">&#160;Joined with \"%1$s\"</string>
+    <string name="enterlive_norider">&#160;Joined</string>
+    <string name="livemsg_temp_roomin_public_nocar"><![CDATA[<jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g> joined</font>]]></string>
+    <string name="livemsg_temp_roomin_public_hascar"><![CDATA[<jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g> joined with \"%2$s\" </font>[rider:%3$s]]]></string>
+    <!--私密直播间入场-->
+    <string name="livemsg_temp_roomin_private_nocar"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s</xliff:g> joined</font>]]></string>
+    <string name="livemsg_temp_roomin_private_hascar"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s</xliff:g> joined with \"%2$s\" </font>[rider:%3$s]]]></string>
+
+    <!--文本/弹幕-->
+    <!--公开直播间-->
+    <string name="livemsg_temp_normal_public_anchor"><![CDATA[<jimg src=\"anchor1\"></jimg><font color=\"#009927\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>]]></string>
+    <string name="livemsg_temp_normal_public_man"><![CDATA[<jimg src=\"ticket\"/><font color=\"#297AF3\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#000000\">%2$s</font>]]></string>
+    <!--私密直播间-->
+    <string name="livemsg_temp_normal_private_anchor"><![CDATA[<jimg src=\"anchor2\"/><font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+    <string name="livemsg_temp_normal_private_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+
+    <!--送礼-->
+    <!--公开直播间-->
+    <string name="livemsg_temp_gift_public_anchor"><![CDATA[<jimg src=\"anchor1\"/><font color=\"#009927\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s]<font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_public"><![CDATA[<jimg src=\"ticket\"/><font color=\"#FF8700\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#297AF3\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s]<font color=\"#297AF3\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+    <!--私密直播间-送礼-->
+    <string name="livemsg_temp_gift_private_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s]<font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_private_anchor"><![CDATA[<jimg src=\"anchor2\"/><font color=\"#5DDE7E\"><xliff:g id="message_username">&#160;%1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> </font> [gift:%3$s]<font color=\"#FFD205\"><xliff:g id="message_giftnum">%4$s</xliff:g> </font>]]></string>
+
+    <!--直播间发弹幕消息提示-->
+    <string name="txt_hint_input_barrage">%1$s coins per pop-up msg</string>
+    <string name="liveroom_message_gift_x">x %1$d</string>
+    <string name="tip_unReadLiveMsg">%d unread messages</string>
+
+    <string name="txt_send_msg">Send</string>
+
+    <string name="liveroom_tariff_prompt_free_public">Public Broadcast is free to watch.</string>
+    <string name="liveroom_tariff_prompt_pre_public">VIP Public Broadcast is billed at %1$s coins per minute.</string>
+    <string name="liveroom_tariff_prompt_silver_private">One-on-One Broadcast is billed at %1$s coins per minute.</string>
+    <string name="liveroom_tariff_prompt_golden_private">One-on-One Broadcast is billed at %1$s coins per minute.</string>
+    <string name="liveroom_tariff_prompt_ok">Got it</string>
+    <string name="liveroom_entrancecar_joined">%1$s Joined</string>
+    <string name="liveroom_vipguest">Viewers</string>
+    <string name="liveroom_header_vipguestdata">%1$s / %2$s</string>
+    <string name="liveroom_close_room_notify">Are you sure to end this broadcast?</string>
+
+    <!--ListView-->
+    <string name="common_empty_text">No des yet.</string>
+    <string name="common_btn_tap_to_retry">Reload</string>
+    <string name="common_btn_retry">Retry</string>
+    <string name="followinglist_empty_text">No following broadcasters.</string>
+    <string name="live_common_noenough_money_tips">You don\'t have enough coins, please buy more.</string>
+
+    <!--room transition-->
+    <string name="liveroom_transition_anchor_private_broadcast_exception">The broadcaster is in a One-on-One broadcast. Do you still wish to send the invitation?</string>
+    <string name="liveroom_transition_waiting_anchor_start_tips">Waiting for the broadcaster to start broadcast...</string>
+    <string name="liveroom_transition_invite_enterroom_countdown_tips">The broadcaster has accepted your invitation.One-on-One Broadcast will start in</string>
+    <string name="liveroom_transition_anchorinvite_enterroom_countdown_tips">You have accepted the invitation. One-on-One broadcast will start in:</string>
+    <string name="liveroom_transition_enterroom_countdown_tips">The broadcaster is getting prepared. One-on-One broadcast will start in</string>
+    <string name="liveroom_transition_invite_deny_without_message">The broadcaster is not responding. Please try again later</string>
+    <string name="liveroom_transition_invite_deny_with_message">Sorry, the broadcaster has declined your invitation and left you a message as below: %1$s</string>
+    <string name="liveroom_noenough_money_tips_watching">You are running out of coins. Please buy more coins to continue watching.</string>
+    <string name="liveroom_noenough_money_tips_watch_end">You don\'t have enough coins to continue watching this broadcast.</string>
+    <string name="liveroom_transition_anchor_offline">The broadcaster offline, please check back later.</string>
+    <string name="liveroom_transition_enterroom_full">Broadcast room is full. Please check back later.</string>
+    <string name="liveroom_transition_broadcast_ended">Broadcast has ended. Please check back later.</string>
+    <string name="liveroom_transition_anchor_invite_network_error">Failed to accept the invitation. Please try again.</string>
+    <string name="liveroom_transition_audience_invite_network_error">Trouble connecting to the server, please try again later.</string>
+    <string name="liveroom_transition_enterroom_network_error">Failed to enter the broadcast room, please try again later.</string>
+    <string name="liveroom_transition_unknown_error_default_tips">A problem occur while communicating with the server.</string>
+    <string name="liveroom_transition_invite_overtime_default_tips">Failed to connect. Please try again later.</string>
+    <string name="liveroom_transition_enterroom_overtime_default_tips">Failed to enter the broadcast room, please try again later.</string>
+    <string name="liveroom_live_backgroud_too_long_finish">Sorry, since you have not viewed broadcast for over 1 minute, you are exited the broadcast room automatically.</string>
+    <string name="liveroom_leaving_room_time_count_tips1">Broadcast will end in&#160;</string>
+    <string name="liveroom_leaving_room_time_count_tips2">&#160;has accepted. Broadcast will end in&#160;</string>
+    <string name="liveroom_leaving_room_time_count_s">s</string>
+    <string name="liveroom_transition_recommand_tips">Recommended Broadcasters</string>
+    <string name="liveroom_transition_countdown_unit">S</string>
+
+    <!-- room end-->
+    <string name="liveroom_end_tips1">Broadcast has ended</string>
+
+
+    <!--新增-->
+    <string name="liveroom_transition_invite_start_tips">Inviting the viewer to start One-on-One broadcast...</string>
+    <string name="liveroom_transition_invite_overtime_tips">Could not connect to the viewer. The viewer is not responding.</string>
+    <string name="liveroom_transition_invite_define_tips">Could not connect to the viewer. The viewer is not responding.</string>
+    <string name="liveroom_transition_cancel_invite_tips">The invitation is being cancelled...</string>
+    <string name="liveroom_transition_cancel_invite_failed_tips">Failed to cancel. The invitation has been accepted.</string>
+    <!--<string name="liveroom_transition_accepting_invite_tips">Accepting the viewer invite ...</string>-->
+    <!--<string name="liveroom_transition_enter_room_tips">Processing to start the broadcast ...</string>-->
+
+    <string name="liveroom_invite_accepted_sysnotice">%1$s has accepted. Broadcast will start soon.</string>
+
+    <string name="common_btn_ok">OK</string>
+    <string name="common_btn_cancel">Cancel</string>
+    <string name="common_btn_sure">Sure</string>
+    <string name="common_btn_close">Close</string>
+    <string name="common_normal_newwork_error_tips">Trouble connecting to the server, please try again later.</string>
+    <string name="live_common_btn_add_credit">Add Coin</string>
+    <string name="live_common_btn_yes">Yes</string>
+    <string name="live_common_btn_no">No</string>
+
+    <string name="liveroom_my_balance">My Balance</string>
+    <string name="liveroom_gift_user_levellimit">This gift is only available for viewers of level %1$s or higher</string>
+    <string name="liveroom_gift_intimacy_levellimit">This gift is only available for viewers with an Intimacy Level of %1$s or higher</string>
+    <string name="liveroom_gift_pack_empty">Your backpack is empty</string>
+    <string name="liveroom_emotion_list_empty">No emotions yet.</string>
+    <string name="liveroom_gift_tab_blackpace">BackPack</string>
+    <string name="liveroom_gift_tab_store">Store</string>
+    <string name="liveroom_gift_repeat_tips">Combo</string>
+    <string name="liveroom_gift_pack_notsendable">Sorry, this gift could not be sent in this broadcast room</string>
+    <string name="liveroom_paypublic_usedVoucher">Live voucher is applied. The first %1$s minutes is free</string>
+    <string name="live_balance_credits">My Balance: %1$s coins</string>
+    <string name="live_balance_userId">ID:%1$s</string>
+
+    <string name="live_gift_coins">%1$s Coins</string>
+    <string name="live_gift_maxnum">99+</string>
+    <string name="live_gift_count">X %1$s</string>
+
+    <!--系统警告-标题-->
+    <string name="system_notice_warning_title">Warning</string>
+
+    <!--个人中心-->
+    <string name="personal_center_title">Personal Center</string>
+    <string name="my_level_title">My Level</string>
+    <string name="my_package_title">My Backpack</string>
+    <string name="my_schedule_invite_title">My Bookings</string>
+    <string name="my_shows_title">My Shows</string>
+    <string name="my_coins_title">My Coins</string>
+    <string name="settings_title">Settings</string>
+
+    <string name="invite_empty_hot_broadcasters">Hot Broadcasters</string>
+    <string name="newinvite_empty_tips">No new bookings pending your action.Go to request a booking now.</string>
+    <string name="newinvite_confirm_success_tips">Booking has been confirmed successfully</string>
+    <string name="newinvite_confirm_failed_timeout_tips">Could not confirm the booking due to the booking request has been expired.</string>
+    <string name="newinvite_confirm_failed_tips">Failed to confirm. Please try again later.</string>
+    <string name="newinvite_confirm_nocredits_tips">You don\'t have enough coins, please buy more.</string>
+    <string name="newinvite_cancel_tips">Are you sure you wish to decline this booking?</string>
+    <string name="newinvite_cancel_success_tips">Booking has been declined successfully</string>
+    <string name="sent_empty_tips">No unconfirmed bookings.Go to request a booking now.</string>
+    <string name="sent_cancel_tips">Are you sure you wish to cancel this booking?</string>
+    <string name="sent_cancel_success_tips">Your booking has been canceled successfully</string>
+    <string name="sent_cancel_failed_csonfirmed_tips">Could not cancel the booking due to the booking has been confirmed by the broadcaster.</string>
+    <string name="sent_cancel_failed_tips">Failed to cancel. Please try again later.</string>
+    <string name="scheduled_empty_tips">No scheduled bookings.</string>
+    <string name="history_empty_tips">No booking history.Go to browse live broadcasts now.</string>
+    <!--背包-->
+    <string name="my_package_voucher_default_desc">Premium session Voucher</string>
+    <string name="my_package_voucher_nolimit_session">No limit sessions</string>
+    <string name="my_package_voucher_private_session">Only in One-on-One</string>
+    <string name="my_package_voucher_public_session">Only in Public sessions</string>
+    <string name="my_package_voucher_new_performer">New broadcaster</string>
+    <string name="my_package_voucher_special_performer">Only with broadcaster:</string>
+    <string name="my_package_voucher_nolimit_performer">No limit broadcasters</string>
+    <string name="my_package_voucher_expired_desc">Valid Time : %1$s</string>
+
+    <string name="my_package_gift_expired_desc">Valid Time : %1$s</string>
+    <string name="my_package_gift_maxnum">x 999+</string>
+    <string name="my_package_gift_num">x %1$s</string>
+    <string name="my_package_rider_expired_desc">Valid Time : %1$s</string>
+    <string name="my_package_rider_riding">Riding</string>
+    <string name="my_package_rider_ride">Ride</string>
+
+    <string name="my_package_voucher_empty_tips">No Vouchers</string>
+    <string name="my_package_gift_empty_tips">No Gifts</string>
+    <string name="my_package_rider_empty_tips">No Rides</string>
+
+    <string name="my_package_voucher_valid_time_1line">Valid Time : %1$s -- %2$s</string>
+    <string name="my_package_voucher_valid_time_2line">Valid Time :\n %1$s -- %2$s</string>
+
+    <!--预约邀请-->
+    <string name="common_button_confirm">Confirm</string>
+    <string name="common_button_decline">Decline</string>
+    <string name="common_button_cancel">Cancel</string>
+    <string name="common_button_accept">Accept</string>
+    <string name="common_switcher_remb_choice">Remenber my choice</string>
+    <string name="schedule_invite_book_time_desc">Broadcast Time: %1$s</string>
+    <string name="schedule_invite_starting_in_tips">Starting in</string>
+    <string name="schedule_invite_confirmed_start_tips">Start Now</string>
+
+    <string name="schedule_invite_confirmed_format_day_hour">%1$sd %2$sh</string>
+    <string name="schedule_invite_confirmed_format_hour_minute">%1$sh %2$sm</string>
+    <string name="schedule_invite_confirmed_format_minute_second">%1$sm %2$ss</string>
+
+    <string name="invite_history_state_booking">Booking</string>
+    <string name="invite_history_state_broadcast">Broadcast</string>
+    <string name="invite_history_reply_type_decline">Declined</string>
+    <string name="invite_history_reply_type_cancel">Canceled</string>
+    <string name="invite_history_reply_type_timeout">Unconfirmed</string>
+    <string name="invite_history_reply_type_finished">Completed</string>
+    <string name="invite_history_reply_type_anchor_off1">Broadcaster</string>
+    <string name="invite_history_reply_type_anchor_off2">No-Show</string>
+    <string name="invite_history_reply_type_audience_off1">Viewer</string>
+    <string name="invite_history_reply_type_audience_off2">No-Show</string>
+
+    <!--WebView Normal-->
+    <string name="common_webview_load_error">Oh no! A problem was encountered please try again.</string>
+
+    <!-- giff -->
+    <string name="live_gift_send_failed">Failed to send %1$s. Please try again.</string>
+    <string name="live_gift_send_failed_numnoenough">You don\'t have enough %1$s to send.</string>
+
+    <!-- 才艺 -->
+    <string name="live_talent_rewarded_credits">Coin rebate:&#160;</string>
+    <string name="live_talent_generated_in">Generated in:&#160;</string>
+    <string name="live_talent_credits">%1$s coins</string>
+
+    <string name="live_talent_request_success">Your talent request \"%1$s\" has been sent successfully. Please wait for response.</string>
+    <string name="live_talent_request_failed_room_closing">You cannot send a performance request while the broadcast is ending.</string>
+    <string name="live_talent_request_failed">Failed to send talent request.Please try again later.</string>
+    <string name="live_talent_accepted">%1$s has accepted your request \"%2$s\"</string>
+    <string name="live_talent_declined">%1$s has declined your request \"%2$s\"</string>
+    <string name="live_talent_title">Broadcaster\'s talents</string>
+    <string name="live_talent_name">Talent:</string>
+    <string name="live_talent_price">Price:</string>
+    <string name="live_talent_tips">Your coins will be deducted when the broadcaster accepts your request.</string>
+    <string name="live_talent_request">Request</string>
+    <string name="live_talent_request_wait">Sorry. Can not send duplicated performance requests in a row</string>
+    <string name="live_talent_list_empty_tips">The broadcaster has not added any talent yet.</string>
+
+    <string name="live_msg_send_tips">Please do not send repeatedly</string>
+
+    <string name="live_talent_request_title">Talent Request</string>
+    <string name="live_talent_request_des"><![CDATA[<font color=\"#000000\">%1$s has sent you a performance request:</font><font color=\"#297af3\">\"%2$s\"</font>]]></string>
+
+    <!--　广告　-->
+    <string name="live_ad_entrance_title">OUR LIVE CHANNEL IS BROADCASTING NOW</string>
+    <string name="live_ad_entrance_go">GO WATCH</string>
+
+    <!-- 预约直播 -->
+    <string name="live_book_title">Book One-on-One</string>
+    <string name="live_book_tips1">When do you want to start the One-on-One broadcast?</string>
+    <string name="live_date">Date</string>
+    <string name="live_time">Time</string>
+    <string name="live_add_vgift">Add virtual gifts</string>
+    <string name="live_quantity">Quantity:</string>
+    <string name="live_total_price">Total Price:</string>
+    <string name="live_note">Note:</string>
+    <string name="live_note_tips">
+        <![CDATA[
+        <br />
+        <b><font color=\"#000000\" size=\"16\"><tt>%1$s coins</tt></font></b><font color=\"#000000\"> will be deducted as deposit for the first 5 minutes of the broadcast. The deposit will be returned to your account if:</font>
+        <br />
+        <br /><font color=\"#000000\" size=\"16\">- The broadcaster does not accept your request</font>
+        <br /><font color=\"#000000\" size=\"16\">- The broadcaster does not show up during the booking period</font>
+        <br />
+        ]]>
+    </string>
+    <string name="live_book_now">BOOK NOW</string>
+    <string name="live_backcredits_tips3">%1$ss</string>
+    <string name="live_backcredits_tips41">Rules:</string>
+    <string name="live_backcredits_tips42">You will receive a rebate after watching a paid broadcast for a certain amount of time. You can use these coins to send gifts, pop-up messages and request talent shows. </string>
+
+    <string name="live_book_no_time_tips">Sorry, this broadcaster does not offer a booking schedule at the moment.</string>
+    <string name="live_book_sms">Notify me with SMS</string>
+    <string name="live_book_num">Mobile Number</string>
+    <string name="live_book_change_num">Change</string>
+    <string name="live_book_add_num">Add</string>
+    <string name="live_book_add_mobile_title">Add Mobile Number</string>
+    <string name="live_book_country_code">Country code</string>
+    <string name="live_book_mobile_number">Mobile Number</string>
+    <string name="live_book_default_country_code">United States +001</string>
+    <string name="live_book_enter_mobile_number">Enter your mobile number</string>
+    <string name="live_book_send_verify_code">Send Verify Code</string>
+    <string name="live_book_choose_country_code_title">Choose Country Code</string>
+    <string name="live_book_verify">Verify</string>
+    <string name="live_book_verify_num_title">Verify Mobile Number</string>
+    <string name="live_book_verify_num_tips1">We have sent a code to your mobile:</string>
+    <string name="live_book_resend_in">Resend in %1$ss</string>
+    <string name="live_book_resend">Resend</string>
+    <string name="live_book_time">Broadcast Time</string>
+    <string name="live_book_my_reservations">My Bookings</string>
+    <string name="live_book_success_tips1">Congratulations</string>
+    <string name="live_book_success_tips2">
+        You have booked a One-on-One broadcast\n
+        Please wait for the broadcaster\'s confirmation patiently.
+    </string>
+    <string name="live_book_error_tips1">
+        Sorry,you have made too many verification attempts.
+        \nThis number is blocked for 24 hours,please use another mobile number.
+    </string>
+    <string name="live_book_giftsumx">x %1$s</string>
+    <string name="live_book_add_another_num">Add another mobile number</string>
+    <string name="live_book_add_number_tips1">Please add a mobile number first.</string>
+
+    <!--亲密度-->
+    <string name="live_intimacy_title_h5">Intimacy Level</string>
+    <string name="live_intimacy_title">%1$s and You</string>
+    <string name="live_intimacy_levelscale">%1$s / %2$s Intimacy Value</string>
+    <string name="live_intimacy_whatlevel">Level %1$s</string>
+    <string name="live_intimacy_note1">1、What is Intimacy Level?
+        \nYour Intimacy Level represents how intimate you are with a broadcaster and is independent for each broadcaster.
+    </string>
+    <string name="live_intimacy_note2">2、What are the privileges for different levels?
+        \nLevel 1: send private messages to broadcasters.
+        \nLevel 2: unlock broadcaster\'s private photos.
+        \nLevel 3: send advanced emoticons.
+        \nLevel 4: send intimacy limited virtual gifts.
+        \nLevel 5 and higher: more privileges will be available soon
+    </string>
+    <string name="live_intimacy_note3">3、How do I move up to the next intimacy level?
+        \nEach gift sent goes toward moving up to the next level, and you will unlock different privileges and services. Intimacy with the broadcaster may decrease if you don\'t regularly view their One-on-One broadcasts.
+    </string>
+
+    <string name="live_serving_conflict_tips">Are you sure to end the broadcast and start One-on-One?</string>
+    <string name="live_inter_video_open">2-way video is billed at %1$s coins per minute.\nAre you sure to turn it on?</string>
+    <string name="live_inter_video_never_show_again">Don\'t show again</string>
+    <string name="live_inter_video_yes">Yes</string>
+    <string name="live_inter_video_no">No</string>
+    <string name="live_inter_video_failed_open">Could not start 2-way video chat.Please try again later.</string>
+    <string name="live_inter_video_failed_close">Could not terminate 2-way video chat.Please try again later.</string>
+
+    <!--Notification-->
+    <string name="notification_anchor_inite_tips">%1$s is inviting you to start a One-on-One.Start now! </string>
+    <string name="notification_scheduled_invite_expired_tip">One-on-One broadcast with %1$s will be started soon. Click to start now!</string>
+
+    <!-- 引导 -->
+    <string name="live_guide_tips1">By clicking "GO WATCH", you agree to the </string>
+    <string name="live_guide_tips2"> terms of use and privacy policy.</string>
+
+    <!--webview 默认几个页的title-->
+    <string name="live_webview_user_terms_title">Terms of Use</string>
+    <string name="live_webview_anchor_profile_title">Profile</string>
+
+    <!-- 登录 -->
+    <string name="live_login_facebook">Facebook</string>
+    <string name="live_login_email">Email</string>
+    <string name="live_login_tips1">By using our service, you agree to our </string>
+    <string name="live_login_tips2"> Terms and Conditions</string>
+    <string name="live_login_tips3"> Privacy Policy</string>
+    <string name="live_login_with_email">Sign in with Email</string>
+    <string name="live_sign_up_with_email">Sign up with Email</string>
+    <string name="live_sign_up_et_tips_enter_password">Enter your password</string>
+    <string name="live_sign_up_et_tips2_enter_password">4 - 12 characters. Numbers and English letters only.</string>
+    <string name="live_login">Sign in</string>
+    <string name="live_forgot_password">Forgotten Password?</string>
+    <string name="live_sign_in_et_tips_email">Enter your email address / member ID</string>
+    <string name="live_sign_in_sign_up">Sign up</string>
+    <string name="live_login_facebook_failed_tips">Facebook login failed</string>
+
+    <string name="live_login_account_hint_tips">YOUR LOGIN ID</string>
+    <string name="live_login_password_hint_tips">PASSWORD</string>
+    <string name="live_login_verifycode_hint_tips">VERIFICATION CODE</string>
+    <string name="live_login_sign_in_tips">LOGIN</string>
+    <string name="live_login_param_account_null_tips">Your login ID is required.</string>
+    <string name="live_login_param_password_null_tips">Password is required.</string>
+    <string name="live_login_param_verify_null_tips">Verification is required.</string>
+
+    <!--忘记密码页面title-->
+    <string name="live_forgot_password_title">Forgotten Password</string>
+    <string name="live_update_title">Update Notice</string>
+    <string name="live_update_default_text">We have upgraded our app and hope you enjoy!</string>
+    <string name="live_update_summit">Update Now</string>
+    <string name="live_update">Update</string>
+    <string name="live_not_now">Not Now</string>
+    <string name="live_logout_tips">Log Out</string>
+    <string name="live_logout_confirm_tips">Are you sure you want to log out?</string>
+
+    <!-- 注册 -->
+    <string name="live_sing_up_mail_title">Sign up with Email</string>
+    <string name="live_login_with_mail_title">Sign in with Email</string>
+    <string name="live_sign_up">Sign up</string>
+    <string name="live_sign_up_et_tips_email">Enter your email address</string>
+    <string name="live_sign_up_email_address_tips">Please enter a valid email address</string>
+    <string name="live_sign_up_et_tips_ver_code">Verification Code</string>
+    <string name="live_sign_up_et_tips_password">Create a password</string>
+    <string name="live_forgot_pw_tips">Please enter the email address that you have signed up with CharmLive. A password reset email will be sent to this email address.</string>
+    <string name="live_forgot_pw_tips2">An email verification email has been sent to your email account.\nPlease check your email for further actions.</string>
+    <string name="live_next">Next</string>
+    <string name="live_enjoy">Enjoy Now</string>
+    <string name="live_sing_up_fb_mail_title">Sign in with Facebook</string>
+    <string name="live_sing_up_fb_mail_tips1">To protect and secure your account, please add your email address to continue.</string>
+    <string name="live_sing_up_fb_mail_tips2">
+        <![CDATA[
+        Your email:<b><font color=\"#000000\" size=\"16\"><tt>%1$s</tt></font></b><font color=\"#000000\"> has been registered.Please enter passwrod to continue.</font>
+        ]]>
+    </string>
+    <string name="live_password">Password</string>
+    <string name="live_register_tips1">Name should be at least 2 characters</string>
+
+    <!-- 编写资料 -->
+    <string name="live_edit_profile_title">Welcome to CharmLive</string>
+    <string name="live_edit_profile_tips1">Complete your profile to enjoy our service.</string>
+    <string name="live_edit_profile_male">Male</string>
+    <string name="live_edit_profile_female">Female</string>
+    <string name="live_edit_profile_nickname_tips">Name</string>
+    <!--填写资料页面-生日提示文案-->
+    <string name="live_edit_profile_birthday_tips1">Date of birth</string>
+    <string name="live_edit_profile_invite_tips1">Invite Code</string>
+    <string name="live_edit_profile_menu_choose_photo">Choose from album</string>
+    <string name="live_edit_profile_menu_take_photo">Take a photo</string>
+    <string name="live_edit_profile_invite_code_help">An invite code is shared by our members/broadcasters.If you enter this code when registering as our new member,they will receive benefits.\n\nPlease enter if you have an invite code.</string>
+    <string name="live_edit_profile_not_18y">Your age must be 18 years old or older.</string>
+
+    <!--Profile-->
+    <string name="profile_title">Profile</string>
+    <string name="profile_photo">Profile photo</string>
+    <string name="profile_photo_status">Profile photo (%1$s)</string>
+    <string name="profile_photo_status_pending">Pending Approval</string>
+    <string name="profile_photo_status_rejected">Rejected</string>
+    <string name="profile_photo_status_pending_tips">Could not edit profile photo while it is pending approval</string>
+    <string name="profile_id">ID</string>
+    <string name="profile_gender">Gender</string>
+    <!--个人中心-个人资料-生日描述文案-->
+    <string name="profile_birthday">Date of birth</string>
+    <string name="profile_nickname">Nickname</string>
+    <string name="profile_nickname_status">Nickname (%1$s)</string>
+    <string name="profile_nickname_status_pending">Pending Approval</string>
+    <string name="profile_nickname_charleng_tips">%1$s / %2$s</string>
+    <string name="profile_nickname_edit_title">Nickname</string>
+    <string name="profile_nickname_edit_save">Save</string>
+    <string name="profile_nickname_edit_tips">Spaces and line breaks are not allowed for nickname</string>
+    <string name="profile_my_coins">My Coins</string>
+    <string name="profile_coins_add">Add</string>
+    <string name="profile_available_coins">My Balance</string>
+    <string name="settings_about_us">About us</string>
+    <string name="settings_feedback">Feedback</string>
+    <string name="settings_logoug">Log Out</string>
+    <string name="settings_feedback_hint_tips">Please enter your details</string>
+    <string name="settings_feedback_hint_email">Enter your email address</string>
+    <string name="settings_feedback_submit">Submit</string>
+    <string name="settings_feedback_submit_suc">Thanks for your feedback!</string>
+    <string name="settings_feedback_length_limit">%1$s / %2$s</string>
+    <string name="about_us_version_name">Version %1$s</string>
+    <!--关于我们-隐私条款那一行的文本及隐私条款页title-->
+    <string name="about_us_privacy_policy">Privacy Policy</string>
+    <!--关于我们-用户协议那一行的文本及用户协议页title-->
+    <string name="about_us_terms">Terms and Conditions</string>
+
+    <!--直播间分享-->
+    <string name="shareto">Share to</string>
+    <string name="live_share_title">Invite friends to get rewards</string>
+    <string name="live_share_copylink">Copy Link</string>
+    <string name="live_share_copylink_suc">The link has been copied to pasteboard</string>
+    <string name="live_share_more">More</string>
+
+    <!--金币充值-->
+    <string name="BuyCredit_Category">Failed to process your payment. Please try again.</string>
+    <string name="BuyCredit_Action_SSLError">Failed to process your payment. Please try again.</string>
+    <string name="title_payment_failed">Failed to process your payment. Please try again.</string>
+    <string name="title_payment_success">Payment successfully processed.</string>
+    <!--被踢提示-->
+    <string name="session_timeout_kick_off_tips">Login expired. Please sign in again.</string>
+    <string name="im_kick_off_tips">Your account has been signed out. Please sign in again.</string>
+
+    <!-- crash -->
+    <string name="Crash_report_detected">Crash report detected</string>
+    <string name="Do_you_want_report_an_incident_to_help_us_for_app_improvement">Do you want report an incident to help us for app improvement?</string>
+    <string name="Remember_my_choise">Remember my choise</string>
+
+    <!-- 屏幕尺寸 -->
+    <string name="size_warning_tips1">Sorry, your phone is unable to start broadcast,please use another.</string>
+    <string name="size_warning_tips2">(To start broadcast, the dpi of your screen width must be at least 720)</string>
+
+    <!-- 权限检测 -->
+    <string name="permission_check_exception_camera">Please allow CharmLive to access your camera.</string>
+    <string name="permission_check_exception_record_audio">Please allow CharmLive to access your microphone.</string>
+    <string name="permission_check_dialog_button_setttings">Settings</string>
+    <string name="permission_check_dialog_button_cancel">Cancel</string>
+
+    <!-- 节目 -->
+    <string name="live_duration">Duration</string>
+    <string name="live_tickets_sold">Tickets Sold</string>
+    <string name="live_duration_time">%1s min</string>
+    <string name="live_programme_on_show_countdown">&#160;Starting in %1s min</string>
+    <string name="live_programme_on_show">&#160;On Going Show</string>
+    <string name="live_programme_btn_start_show">Start Show</string>
+    <string name="live_programme_btn_cancelled">Cancelled</string>
+    <string name="live_programme_btn_finished">Finished</string>
+    <string name="live_programme_list_empty">No shows yet.</string>
+    <string name="livemsg_program_transition_reciprocal_tips">Your show \"%1$s\" is starting in %2$s minutes.Please do not leave this page.</string>
+    <string name="live_programme_enter_room_desc">start entering the program room...</string>
+    <string name="live_programme_detail_title">My Shows</string>
+    <string name="live_programme_transition_close_desc">You scheduled show will be started soon. Are you sure you wish to close this page?</string>
+
+    <!--以下开始是主播端的文案-->
+    <string name="public_tran_autoinvi">Auto Invitation</string>
+    <string name="public_tran_autoinvi_tips">Auto invite assistance can help you to reach out audience as many as possible in the shortest time.</string>
+    <string name="public_tran_startlive">Start Broadcast Now</string>
+    <string name="public_tran_startlive_tips">Pornography and violent content is strictly prohibited. Before starting your live broadcast please read  the Broadcaster Code of Conduct and all other policies of our platform. Please be aware of that violating our policies will lead to the termination of your account.</string>
+    <string name="public_live_audience_invite_priv">START ONE-ON-ONE</string>
+    <string name="public_live_inviting_privlive1">Inviting&#160;</string>
+    <string name="public_live_inviting_privlive2">&#160;to start One-on-One...</string>
+    <string name="public_live_invite_privlive_timeout1">No response from&#160;</string>
+    <string name="public_live_invite_privlive_timeout2">, please try again later</string>
+    <string name="public_live_sendmsg_manleave_tips">The broadcast room has no viewers or the viewer you @ has left the broadcast room</string>
+    <string name="live_bullet_content">: %1$s</string>
+    <string name="private_live_interactive_vedio_open">%1$s has turned on his webcam.</string>
+    <string name="private_live_interactive_vedio_close">%1$s has turned off his webcam.</string>
+    <string name="live_push_stream_network_poor">You have an unstable connection. Broadcast may be jumpy.</string>
+    <string name="private_live_anchor_accepted_talent">You have accepted %1$s\'s request %2$s</string>
+    <string name="private_live_anchor_declined_talent">You have declined %1$s\'s request %2$s</string>
+
+    <!--敲门列表-->
+    <string name="hangout_list_desc_tips">Hosted by %1$s</string>
+    <string name="hangout_list_knock_button_desc">Knock</string>
+    <string name="hangout_list_knock_title">Ongoing Hang-outs</string>
+    <string name="hangout_list_empty_desc">No ongoing Hang-outs</string>
+
+    <!--Hang Out直播间相关-->
+    <string name="hangout_inviting_tips">Inviting %1$s</string>
+    <string name="hangout_coming_tips">%1$s is coming in</string>
+    <string name="hangout_enter_tips">%1$s will enter in %2$ss</string>
+    <string name="hangout_invite_tips">Recommend a friend to join the Hang-out</string>
+    <string name="notification_hangout_inite_tips">%1$s is inviting you to Hang-out. Click to join now! </string>
+    <string name="hangout_dialog_title">Bring a friend to Hang-out with&#160;</string>
+    <string name="hangout_dialog_empty_tips">No friends at the moment.</string>
+    <string name="hangout_dialog_error_tips">Could not load your friend list.</string>
+    <string name="hangout_dialog_des">%1$d yrs / %2$s</string>
+    <string name="hangout_liveroom_close_room_notify">Are you sure to exit the Hang-out?</string>
+
+    <!--HangOut直播间入场-->
+    <string name="livemsg_temp_roomin_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> has joined </font>]]></string>
+    <string name="livemsg_temp_roomin_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> has joined </font>]]></string>
+
+    <string name="livemsg_temp_normal_hangout_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+    <string name="livemsg_temp_normal_hangout_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="message_username"> %1$s : </xliff:g></font><font color=\"#FFFFFF\">%2$s</font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_bar_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_bar_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> bought a <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] for </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_giftstore_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_man_secretly"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> secretly sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#5DDE7E\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+    <string name="livemsg_temp_gift_hangout_giftstore_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"> sent <xliff:g id="message_giftname">%2$s</xliff:g> [gift:%3$s] to </font><font color=\"#FF6D00\"><xliff:g id="to_username">%4$s</xliff:g> </font>]]></string>
+
+    <string name="livemsg_temp_gift_hangout_celeb_man"><![CDATA[<font color=\"#FF6D00\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+    <string name="livemsg_temp_gift_hangout_celeb_anchor"><![CDATA[<font color=\"#5DDE7E\"><xliff:g id="from_username"> %1$s</xliff:g></font><font color=\"#FFD205\"><xliff:g id="message_giftname"> %2$s</xliff:g></font>]]></string>
+
+    <string name="livemsg_temp_hangout_recommend"><![CDATA[
+        <font color=\"#05C775\"><xliff:g id="message_username">%1$s</xliff:g></font><font color=\"#FF6D00\"> Recommended </font><font color=\"#05C775\">%2$s</xliff:g></font><font color=\"#FF6D00\"> to join the hang-out. </font>
+    ]]></string>
+    <string name="livemsg_temp_private_recommend"><![CDATA[
+        <font color=\"#FF6D00\">You invited </font><font color=\"#FF6D00\">%1$s</font><font color=\"#FF6D00\"> to hang out with </font><font color=\"#FF6D00\">%2$s</xliff:g></font>
+    ]]></string>
+
+    <string name="hangout_gift_count">x %1$s</string>
+    <string name="hangout_gift_empty">No gifts yet</string>
+    <string name="hangout_gift_retry">Tap to retry</string>
+    <string name="liveroom_gift_tab_bar">Bar counter</string>
+    <string name="liveroom_gift_tab_giftstore">Gift store</string>
+    <string name="liveroom_gift_tab_celeb">Celebration</string>
+    <array name="hangout_gift_tabs">
+        <item>Bar counter</item>
+        <item>Gift store</item>
+        <item>Celebration</item>
+    </array>
+    <string name="hangout_other_anchor_dialog_addfriend">Send Friend Request</string>
+    <string name="hangout_other_anchor_dialog_age">%1$syrs</string>
+    <string name="hangout_other_anchor_dialog_friendreq_sentsuc">Request has been sent</string>
+    <string name="hangout_other_anchor_dialog_friendreq_sent">Friend Request Sent</string>
+    <string name="hangout_other_anchor_dialog_friendreq_sentfailed">Hang-out has ended. Please try again later.</string>
+    <string name="hangout_recommended">Recommend</string>
+    <string name="hangout_serving_conflict_tips">%1$s is inviting you to Hang-out. Go Hang-out now!</string>
+    <string name="hangout_anchor_cancel_knocking">The knock is being cancelled.</string>
+    <string name="hangout_anchor_knocking">Knocking the Hang-out\'s door...</string>
+    <string name="hangout_anchor_knock_failed">Knock failed. The host is not responding.</string>
+
+    <string name="hangout_liveroom_end">Hang-out has ended.</string>
+    <string name="hangout_liveroom_controll_exit">Exit Hang-out</string>
+    <string name="hangout_liveroom_controll_silent">Silent</string>
+    <string name="hangout_liveroom_controll_mute">Mute</string>
+</resources>

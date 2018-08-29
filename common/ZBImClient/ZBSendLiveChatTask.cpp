@@ -73,7 +73,8 @@ bool ZBSendLiveChatTask::Handle(const ZBTransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnZBSendLiveChat(GetSeq(), result, m_errType, m_errMsg);
+        bool success = (m_errType == ZBLCC_ERR_SUCCESS);
+        m_listener->OnZBSendLiveChat(GetSeq(), success, m_errType, m_errMsg);
 		FileLog("ImClient", "ZBSendLiveChatTask::Handle() callback end, result:%d", result);
 	}
 	

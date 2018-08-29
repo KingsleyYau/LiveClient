@@ -27,15 +27,16 @@
 
 "Recv_Rebate" = "You have been given a rebate of";
 
-"Recv_Level_Up" = "Congratulations! You have upgraded to Level";
-
-"Recv_Love_Up" = "Congratulations! Your intimacy level with";
-
-"Love_Level_Up" = "has upgraded to Level";
-
 "Open_Permissions_Tip" = "Please open the camera and record permissions";
 
 "LIVE_VOUCHER_APPLIED" = "Live voucher is applied. The first %d minutes is free";
 
 "LIVE_NOT_ROOM" = "Broadcast has ended.\nPlease check back later.";
+
+"INVITING_HANG_OUT" = "Inviting %@ to start Hang-out...";
+
+"INVITE_SUCCESS_HANGOUT" = "Hang-out will start soon.";
+
+"INVITE_REJECT_HANGOUT" = "%@ is not responding. Please try again later.";
+
 

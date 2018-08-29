@@ -4,15 +4,18 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 
 import java.util.ArrayList;
 
@@ -25,6 +28,7 @@ public class LiveGiftItemView extends LinearLayout{
 
     private Context mContext;
     //控件
+    private View ll_giftItemParentView;
     private LinearLayout mLinearLayoutChildView;
     private RelativeLayout mLinearLayoutNum;
 
@@ -67,11 +71,19 @@ public class LiveGiftItemView extends LinearLayout{
     private void init(Context context){
         mContext = context;
         mPlayState = PlayState.preparing;
-
         // 加载布局
         LayoutInflater.from(context).inflate(R.layout.layout_livegiftview, this);
-
         mLinearLayoutChildView = (LinearLayout)findViewById(R.id.childView);
+        ll_giftItemParentView = findViewById(R.id.ll_giftItemParentView);
+
+        if(mContext instanceof BaseCommonLiveRoomActivity){
+            BaseCommonLiveRoomActivity activity = (BaseCommonLiveRoomActivity)mContext;
+            ll_giftItemParentView.setBackgroundDrawable(
+                    activity.roomThemeManager.getRoomRepeatGiftAnimBgDrawable(
+                            activity,
+                            activity.mIMRoomInItem.roomType));
+
+        }
         mLinearLayoutNum = (RelativeLayout)findViewById(R.id.llayout_num);
 
         //数字图片
@@ -91,6 +103,10 @@ public class LiveGiftItemView extends LinearLayout{
         mLiveGift = liveGift;
     }
 
+    public void setGiftItemViewBgDrawable(Drawable bgDrawable){
+        mLinearLayoutChildView.setBackgroundDrawable(bgDrawable);
+    }
+
     public LiveGift getLiveGift() {
         return mLiveGift;
     }
@@ -105,7 +121,7 @@ public class LiveGiftItemView extends LinearLayout{
 
     public void setChildView(View view){
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_width),
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 mContext.getResources().getDimensionPixelSize(R.dimen.liveroom_mulitgift_height));
         mLinearLayoutChildView.addView(view,lp);
     }

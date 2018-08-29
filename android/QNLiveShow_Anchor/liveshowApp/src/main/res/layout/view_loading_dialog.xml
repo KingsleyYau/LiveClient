@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@android:color/transparent">
+
+    <ProgressBar
+        android:id="@+id/pb_loading"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_gravity="center"
+        android:indeterminateDrawable="@drawable/live_loading_progress"
+        android:visibility="visible"
+        android:scrollbarStyle="insideInset"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDuration="1000"
+        style="?android:attr/progressBarStyleLargeInverse"/>
+
+</LinearLayout>

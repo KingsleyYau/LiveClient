@@ -8,7 +8,7 @@
 
 #import "BookPrivateBroadcastSucceedViewController.h"
 #import "BookPrivateBroadcastSucceedHeadView.h"
-#import "LiveGiftDownloadManager.h"
+#import "LSGiftManager.h"
 #import "LSImageViewLoader.h"
 #import "LSMyReservationsViewController.h"
 #import "LiveModule.h"
@@ -17,7 +17,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray * titleArray;
-@property (nonatomic, strong) LiveGiftDownloadManager *giftDownloadManager;
+@property (nonatomic, strong) LSGiftManager *giftDownloadManager;
 @end
 
 @implementation BookPrivateBroadcastSucceedViewController
@@ -32,7 +32,7 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
         
-    self.giftDownloadManager = [LiveGiftDownloadManager manager];
+    self.giftDownloadManager = [LSGiftManager manager];
     
     self.titleArray = @[NSLocalizedStringFromSelf(@"BROAD_CASTER"),NSLocalizedStringFromSelf(@"RESER_TIME"),NSLocalizedStringFromSelf(@"VIRTUAL_GIFT")];
     
@@ -147,7 +147,9 @@
         }
         else
         {
-            NSString * giftUrl = [self.giftDownloadManager backMiddleImgUrlWithGiftID:self.giftId];
+            
+            LSGiftManagerItem *item = [self.giftDownloadManager getGiftItemWithId:self.giftId];
+            NSString *giftUrl = item.infoItem.middleImgUrl;
             
             UIImageView * icon = [[UIImageView alloc]initWithFrame:CGRectMake(self.tableView.frame.size.width - 80, 10, 30, 30)];
             icon.layer.cornerRadius = 4;

@@ -12,6 +12,7 @@
 #import "VouchersListViewController.h"
 #import "GiftListViewController.h"
 #import "MyRidesViewController.h"
+#import "PostStampViewController.h"
 
 @interface MyBackpackViewController () <JDSegmentControlDelegate, LSUserUnreadCountManagerDelegate, LSPZPagingScrollViewDelegate>
 @property (weak, nonatomic) IBOutlet UIView *topView;
@@ -23,8 +24,7 @@
 
 @implementation MyBackpackViewController
 
-- (void)dealloc
-{
+- (void)dealloc {
     [self.unreadCountManager removeDelegate:self];
 }
 
@@ -33,17 +33,21 @@
 
     self.title = NSLocalizedStringFromSelf(@"My Backpack");
 
-    NSArray *title = @[NSLocalizedStringFromSelf(@"Vouchers"), NSLocalizedStringFromSelf(@"My Gifts"), NSLocalizedStringFromSelf(@"My Rides")];
+    NSArray *title = @[NSLocalizedStringFromSelf(@"Post Stamp"), NSLocalizedStringFromSelf(@"Vouchers"), NSLocalizedStringFromSelf(@"My Gifts"), NSLocalizedStringFromSelf(@"My Rides")];
 
-    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES];
+    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES isShowbottomLine:YES];
     [self.topView addSubview:self.segment];
 
+    PostStampViewController *vc4 = [[PostStampViewController alloc] initWithNibName:nil bundle:nil];
+    vc4.view.frame = self.view.frame;
+    [self addChildViewController:vc4];
+    
     VouchersListViewController *vc1 = [[VouchersListViewController alloc] initWithNibName:nil bundle:nil];
     vc1.view.frame = self.view.frame;
     vc1.mainVC = self;
     [self addChildViewController:vc1];
 
-    GiftListViewController * vc2 = [[GiftListViewController alloc]initWithNibName:nil bundle:nil];
+    GiftListViewController * vc2 = [[GiftListViewController alloc] initWithNibName:nil bundle:nil];
     vc2.view.frame = self.view.frame;
     vc2.mainVC = self;
     [self addChildViewController:vc2];
@@ -53,7 +57,7 @@
     vc3.mainVC = self;
     [self addChildViewController:vc3];
 
-    self.viewControllers = [NSArray arrayWithObjects:vc1, vc2, vc3, nil];
+    self.viewControllers = [NSArray arrayWithObjects:vc4, vc1, vc2, vc3, nil];
 
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
@@ -92,7 +96,8 @@
 
 - (void)onGetBackpackUnreadCount:(GetBackPackUnreadNumItemObject *)item {
     //self.view.userInteractionEnabled = YES;
-    NSArray *count = @[ [NSString stringWithFormat:@"%d", item.voucherUnreadNum],
+    NSArray *count = @[ [NSString stringWithFormat:@"%d", 0], // 邮票
+                        [NSString stringWithFormat:@"%d", item.voucherUnreadNum],
                         [NSString stringWithFormat:@"%d", item.giftUnreadNum],
                         [NSString stringWithFormat:@"%d", item.rideUnreadNum] ];
 
@@ -119,7 +124,6 @@
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
     UIViewController *vc = [self.viewControllers objectAtIndex:index];
     if (vc.view != nil) {
         [vc.view removeFromSuperview];
@@ -131,7 +135,6 @@
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
-    self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.curIndex = index;
     [self.segment selectButtonTag:self.curIndex];
 }

@@ -7,6 +7,7 @@
 //
 
 #import "ShowListView.h"
+#import "LSYYWebImage/Categories/UIImageView+LSYYWebImage.h"
 
 @interface ShowListView ()
 //type 1是进入直播间，2是买点 3女士详情
@@ -37,6 +38,9 @@
     
     self.headImage.layer.cornerRadius = self.headImage.frame.size.height/2;
     self.headImage.layer.masksToBounds = YES;
+    
+    self.headImage.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.headImage.layer.borderWidth = 1;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -76,7 +80,7 @@
 
 - (void)loadLadyInfo:(LSProgramItemObject *)item
 {
-    [self.imageViewLoader stop];
+    //[self.imageViewLoader stop];
     if (!self.imageViewLoader) {
         self.imageViewLoader = [LSImageViewLoader loader];
     }
@@ -87,10 +91,11 @@
         self.bgImageViewLoader = [LSImageViewLoader loader];
     }
 
-    [self.bgImageViewLoader loadImageWithImageView:self.showBGView options:0 imageUrl:item.cover placeholderImage:nil];
-    
+    [self.bgImageViewLoader loadImageWithImageView:self.showBGView options:0 imageUrl:item.cover placeholderImage:[UIImage imageNamed:@"ShowBG"]];
+
     self.showBGView.layer.masksToBounds = YES;
  
+
     self.nameLabel.text = item.anchorNickName;
     
     self.titleLabel.text = item.showTitle;
@@ -123,48 +128,41 @@
     self.button.userInteractionEnabled = NO;
     self.subButton.hidden = YES;
     self.otherShowBtn.hidden = YES;
+    self.onGingView.hidden = YES;
+    BOOL isShowGoing = NO;
     //审核通过
     if (item.status == PROGRAMSTATUS_VERIFYPASS) {
-        
         //未开始
         NSInteger time = item.leftSecToEnter;
         if (time > 0) {
             self.infoLabel.text = @"";
             self.onGingView.hidden = YES;
             
-            //是否已满座
-            if (!item.isTicketFull) {
-                //是否已买票
-                if (item.ticketStatus == PROGRAMTICKETSTATUS_BUYED) {
-                    //未开始，已购票的节目，点击可查看详情
-                    //reserved按钮禁用
-                    [self updateButtonTitle:@"Reserved" AndColor:COLOR_WITH_16BAND_RGB(0xFDB75E)];
-                }
-                else
-                {
+            //是否已买票
+            if (item.ticketStatus == PROGRAMTICKETSTATUS_BUYED) {
+                //未开始，已购票的节目，点击可查看详情
+                //reserved按钮禁用
+                [self updateButtonTitle:@"Reserved" AndColor:COLOR_WITH_16BAND_RGB(0xFDB75E)];
+            }
+            else
+            {
+                //是否已满座
+                if (!item.isTicketFull) {
                     //未开始，可购票的节目
                     [self updateButtonTitle:@"Get Ticket" AndColor:COLOR_WITH_16BAND_RGB(0xFC8707)];
                     self.type = 2;
                     self.button.userInteractionEnabled = YES;
                 }
-            }
-            else
-            {
-                //满座
-                //未开始，门票已购完的节目，置灰禁用按钮
-                [self updateButtonTitle:@"My Other Shows" AndColor:COLOR_WITH_16BAND_RGB(0xFC8707)];
-                 self.type = 3;
-                self.infoLabel.text = @"";
-                self.subButton.hidden = NO;
-                self.otherShowBtn.hidden = NO;
-                self.button.userInteractionEnabled = YES;
-            }
-            
-            //开播前30分钟
-            if (time <= 30 * 60) {
-                self.onGingView.hidden = NO;
-                self.onGingLabel.text = [NSString stringWithFormat:@"Starting in %0.fmin",ceilf(time/60.0)];
-                self.onGingIcon.image = [UIImage imageNamed:@"ShowTimeIcon"];
+                else
+                {
+                    //满座
+                    //未开始，门票已购完的节目，置灰禁用按钮
+                    self.type = 3;
+                    self.infoLabel.text = @"";
+                    self.subButton.hidden = NO;
+                    self.otherShowBtn.hidden = NO;
+                    self.button.userInteractionEnabled = YES;
+                }
             }
         }
         else
@@ -175,6 +173,7 @@
             self.infoLabel.text = @"";
             self.onGingIcon.image = [UIImage imageNamed:@"ShowOnGoingIcon"];
             self.type = 1;
+             isShowGoing = YES;
             //是否已买票
             if (item.ticketStatus == PROGRAMTICKETSTATUS_BUYED) {
                 //已购票且可以进入的节目
@@ -185,6 +184,14 @@
             
             self.button.userInteractionEnabled = YES;
         }
+        
+        NSInteger startTime = item.leftSecToStart;
+        //开播前30分钟
+        if (!isShowGoing && startTime <= 30 * 60) {
+            self.onGingView.hidden = NO;
+            self.onGingLabel.text = [NSString stringWithFormat:@"Starting in %0.fmin",ceilf(startTime/60.0)];
+            self.onGingIcon.image = [UIImage imageNamed:@"ShowTimeIcon"];
+        }
     }
     //取消或者失约
     else if (item.status == PROGRAMSTATUS_PROGRAMCALCEL ||
@@ -194,7 +201,8 @@
         self.onGingView.hidden = YES;
         self.infoLabel.text = @"";
         //是否已买票
-        if (item.ticketStatus == PROGRAMTICKETSTATUS_BUYED) {
+        if (item.ticketStatus == PROGRAMTICKETSTATUS_BUYED ||
+            item.ticketStatus == PROGRAMTICKETSTATUS_OUT) {
             //已购票且可以进入的节目
             self.infoLabel.text = @"Ticket Refunded";
         }
@@ -208,6 +216,7 @@
         //置灰禁用按钮
         [self updateButtonTitle:@"Cancelled" AndColor:COLOR_WITH_16BAND_RGB(0xA3A3A3)];
     }
+
 }
 
 - (void)updateHistoryUI:(LSProgramItemObject *)item {

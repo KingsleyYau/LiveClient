@@ -26,6 +26,7 @@ public class LiveRoomCreditRebateManager {
 
     private double mCredit = 0.0;
     private long mLastRebatUpdate = 0;
+    private int mLastTimeValue = 0;
     private IMRebateItem imRebateItem = null;
 
     /**
@@ -35,8 +36,18 @@ public class LiveRoomCreditRebateManager {
     public void setImRebateItem(IMRebateItem rebateItem){
         mLastRebatUpdate = System.currentTimeMillis();
         this.imRebateItem = rebateItem;
+        if(rebateItem != null) {
+            this.mLastTimeValue = rebateItem.cur_time;
+        }
         Log.i(TAG, "setImRebateItem cur_time: " + imRebateItem.cur_time + " cur_credit: " + imRebateItem.cur_credit +
                 " pre_time: " + imRebateItem.pre_time + " mLastRebatUpdate: " + mLastRebatUpdate);
+    }
+
+    /**
+     * 刷新倒计时开始时间（解决进入直播间主播未推流时，需等待通知推流，返点倒计时才开始）
+     */
+    public void refreshRebateLastUpdate(){
+        mLastRebatUpdate = System.currentTimeMillis();
     }
 
     /**
@@ -44,20 +55,30 @@ public class LiveRoomCreditRebateManager {
      * @return
      */
     public IMRebateItem getImRebateItem(){
-        int leftSeconds = 0;
-        Log.i(TAG, "getImRebateItem reset before cur_time: " + imRebateItem.cur_time + " cur_credit: " + imRebateItem.cur_credit +
-                        " pre_time: " + imRebateItem.pre_time + " mLastRebatUpdate: " + mLastRebatUpdate);
         if(imRebateItem != null){
-            long currTime = System.currentTimeMillis();
-            leftSeconds = imRebateItem.cur_time - (int)((currTime - mLastRebatUpdate)/1000);
-            if(leftSeconds <0){
-                leftSeconds = 0;
+            synchronized (imRebateItem){
+                int leftSeconds = 0;
+                Log.i(TAG, "getImRebateItem reset before cur_time: " + imRebateItem.cur_time
+                        + " cur_credit: " + imRebateItem.cur_credit
+                        + " pre_time: " + imRebateItem.pre_time
+                        + " mLastRebatUpdate: " + mLastRebatUpdate);
+
+                long currTime = System.currentTimeMillis();
+                int timeChanged = (int)((currTime - mLastRebatUpdate)/1000);
+                leftSeconds = mLastTimeValue - timeChanged;
+                Log.i(TAG,"getImRebateItem-currTime:"+currTime+" mLastRebatUpdate:"+mLastRebatUpdate
+                        +" leftSeconds:"+leftSeconds+" timeChanged:"+timeChanged);
+                if(leftSeconds <0){
+                    leftSeconds = 0;
+                }
+                imRebateItem.cur_time = leftSeconds;
             }
-            imRebateItem.cur_time = leftSeconds;
-            mLastRebatUpdate = currTime;
+            Log.i(TAG, "getImRebateItem reset after cur_time: " + imRebateItem.cur_time
+                    + " cur_credit: " + imRebateItem.cur_credit +
+                    " pre_time: " + imRebateItem.pre_time
+                    + " mLastRebatUpdate: " + mLastRebatUpdate);
         }
-        Log.i(TAG, "getImRebateItem reset after cur_time: " + imRebateItem.cur_time + " cur_credit: " + imRebateItem.cur_credit +
-                " pre_time: " + imRebateItem.pre_time + " mLastRebatUpdate: " + mLastRebatUpdate);
+
         return imRebateItem;
     }
 

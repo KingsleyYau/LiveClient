@@ -87,6 +87,14 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetUserInfo
   (JNIEnv *, jclass, jstring, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetMainUnreadNum
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetMainUnreadNumCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetMainUnreadNum
+        (JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

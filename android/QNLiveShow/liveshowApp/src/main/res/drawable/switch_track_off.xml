@@ -10,7 +10,7 @@
 
     <!-- 变化率  定义从左到右的颜色不变 -->
     <gradient
-        android:endColor="#888888"
-        android:startColor="#888888" />
+        android:endColor="@color/black3"
+        android:startColor="@color/black3" />
 
 </shape>

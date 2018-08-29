@@ -40,7 +40,7 @@ public:
             
             /* emoType */
             if( root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE].isNumeric()) {
-                emoType = (EmoticonActionType)root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE].asInt();
+                emoType = GetIntToEmoticonActionType(root[LIVEROOM_EMOTICON_LIST_EMOLIST_EMOTYPE].asInt());
             }
             
             /* emoIconUrl */

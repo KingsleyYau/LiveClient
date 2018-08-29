@@ -20,6 +20,7 @@
 @optional
 - (void)onSetupViewController:(PrivateViewController *)vc;
 - (void)setUpLiveRoomType:(PrivateViewController *)vc;
+- (void)showHangoutTipView:(PrivateViewController *)vc;
 @end
 
 @interface PrivateViewController : LSGoogleAnalyticsViewController
@@ -32,7 +33,7 @@
 /**
  <#Description#>
  */
-@property (nonatomic, weak) id<PrivateViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<PrivateViewControllerDelegate> vcDelegate;
 
 /**
  播放控制器

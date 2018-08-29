@@ -32,7 +32,7 @@
 /** 错误按钮文字 */
 @property (nonatomic, copy) NSString *failBtnText;
 /** 代理 */
-@property (nonatomic, weak) id<LSListViewControllerDelegate> delegate;
+@property (nonatomic, weak) id<LSListViewControllerDelegate> listDelegate;
 @property (nonatomic, assign) SEL delegateSelect;
 - (void)reloadFailViewContent;
 

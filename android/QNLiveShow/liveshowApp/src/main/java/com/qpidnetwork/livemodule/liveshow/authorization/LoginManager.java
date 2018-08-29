@@ -1,10 +1,13 @@
 package com.qpidnetwork.livemodule.liveshow.authorization;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.OnRequestLoginCallback;
@@ -13,12 +16,13 @@ import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
 import com.qpidnetwork.livemodule.httprequest.RequestJniOther;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
+import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.httprequest.item.RegionType;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SpeedTestManager;
 import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
@@ -26,11 +30,13 @@ import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.bean.AdWebObj;
+import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.qpidnetwork.qnbridgemodule.interfaces.IQNService;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_TOKEN_EXPIRE;
 
@@ -57,9 +63,11 @@ public class LoginManager {
 
     private Context mContext;
     private static LoginManager mLoginManager;
+    //edit by Jagger 2018-3-7,由List改为CopyOnWriteArrayList,因为有时候会报java.util.ConcurrentModificationException
     private List<IAuthorizationListener> mListenerList;
     private LoginStatus mLoginStatus;
     private LoginItem mLoginItem;       //保存当前用户信息
+    private LoginParam mQNLoginParam;   //QN传入的登录信息,用于重登录
 
     //同步配置信息
     private ConfigItem mConfigItem;     //同步配置返回信息
@@ -68,6 +76,7 @@ public class LoginManager {
     //存储当前登陆token
     private String mUserId;
     private String mQNToken;
+    private int mQNWebsiteId;
     private Handler mHandler;
 
     public static LoginManager getInstance(){
@@ -86,9 +95,10 @@ public class LoginManager {
         return mLoginManager;
     }
 
+    @SuppressLint("HandlerLeak")
     private LoginManager(Context context){
         mContext = context;
-        mListenerList = new ArrayList<IAuthorizationListener>();
+        mListenerList = new CopyOnWriteArrayList<>();
         mLoginStatus = LoginStatus.Default;
 
         mHandler = new Handler(){
@@ -109,20 +119,31 @@ public class LoginManager {
                                     item.userId, item.token, item.nickName, item.isPushAd?1:0, item.svrList!=null?item.svrList.length:0);
                             //登录成功则先本地缓存登录信息
                             mLoginStatus = LoginStatus.Logined;
-                            LoginParam param = new LoginParam(mUserId, mQNToken);
+                            LoginParam param = new LoginParam(mUserId, mQNToken, mQNWebsiteId);
                             saveAccountInfo(param);
                             mLoginItem = item;
 
-                            //通知主模块显示广告界面
+                            //通知主模块显示广告界面(4格推荐主播广告)
                             if(!isAdvertShow && item.isPushAd){
                                 //一次启动登录仅显示一次广告
                                 LiveService.getInstance().onAdvertShowNotify(item.isPushAd);
                             }
 
-                            //更新礼物配置信息
-                            if(!NormalGiftManager.getInstance().isLocalAllGiftConfigExisted()){
-                                NormalGiftManager.getInstance().getAllGiftItems(null);
+                            //test
+//                            item.qnMainAdId = "1";
+//                            item.qnMainAdTitle = "title";
+//                            item.qnMainAdUrl = "http://www.sina.com";
+                            //通知主模块显示URL浮层广告
+                            if(!TextUtils.isEmpty(item.qnMainAdId) && !TextUtils.isEmpty(item.qnMainAdUrl)){
+                                AdWebObj adWeb = new AdWebObj();
+                                adWeb.id = item.qnMainAdId;
+                                adWeb.url = item.qnMainAdUrl;
+                                adWeb.title = TextUtils.isEmpty(item.qnMainAdTitle)?"":item.qnMainAdTitle;
+                                LiveService.getInstance().onURLAdvertShowNotify(true , adWeb);
                             }
+
+                            //更新礼物配置信息
+                            NormalGiftManager.getInstance().getAllGiftItems(null);
 
                             //表情配置
                             ChatEmojiManager.getInstance().getEmojiList(null);
@@ -141,15 +162,17 @@ public class LoginManager {
                             if(TextUtils.isEmpty(mQNToken) || IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_TOKEN_EXPIRE){
                                 //token异常时通知服务器,自动重登录
                                 onModuleSessionOverTime();
-                            }else{
-                                //普通错误，无限重新登录
-                                postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        login(mUserId, mQNToken);
-                                    }
-                                }, RELOGIN_STAMP);
                             }
+                            //del by Jagger 2018-3-6
+//                            else{
+//                                //普通错误，无限重新登录
+//                                postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        login(mUserId, mQNToken);
+//                                    }
+//                                }, RELOGIN_STAMP);
+//                            }
                         }
                         //通知登录返回结果
                         notifyAllListenerLgoined(response.isSuccess, response.errCode, response.errMsg, item);
@@ -170,13 +193,12 @@ public class LoginManager {
                         if(response.isSuccess){
                             //主模块登录成功，子模块直接登录
                             LoginParam param = (LoginParam)response.data;
-                            login(param.userId, param.qnToken);
+                            login(param.userId, param.qnToken, param.qnWebsiteId);
+
+                            mQNLoginParam = param;
                         }else{
                             //通知子模块监听登录listener登录失败（主模块失败即子模块失败），ps:session过期等处理
-                            for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                                IAuthorizationListener listener = iter.next();
-                                listener.onLogin(false, 0, "", null);
-                            }
+                            notifyAllListenerLgoined(response.isSuccess, response.errCode, response.errMsg, null);
                         }
 
                     }break;
@@ -209,7 +231,7 @@ public class LoginManager {
                                 postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        login(mUserId, mQNToken);
+                                        login(mUserId, mQNToken, mQNWebsiteId);
                                     }
                                 }, RELOGIN_STAMP);
                             }
@@ -284,7 +306,7 @@ public class LoginManager {
         LoginParam param = getAccountInfo();
         if(param != null && !TextUtils.isEmpty(param.qnToken)){
             result = true;
-            login(param.userId, param.qnToken);
+            login(param.userId, param.qnToken, param.qnWebsiteId);
         }
         return result;
     }
@@ -294,9 +316,10 @@ public class LoginManager {
      * @param userId
      * @param qnToken
      */
-    public void login(String userId,  final String qnToken){
+    public void login(String userId,  final String qnToken, int mQNWebsiteId){
         this.mQNToken = qnToken;
         this.mUserId = userId;
+        this.mQNWebsiteId = mQNWebsiteId;
         switch (mLoginStatus){
             case Default:{
                 //未登录状态
@@ -310,14 +333,20 @@ public class LoginManager {
             }break;
             case Logined:{
                 //已登录成功，直接回调
-                for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                    IAuthorizationListener listener = iter.next();
-                    listener.onLogin(true, 0, "", mLoginItem);
-                }
+                notifyAllListenerLgoined(true, 0, "", mLoginItem);
             }break;
             case Logining:{
                 //登陆中不处理
             }break;
+        }
+    }
+
+    /**
+     * 模块内部重登录接口
+     */
+    public void reLogin(){
+        if(mQNLoginParam != null){
+            login(mQNLoginParam.userId, mQNLoginParam.qnToken, mQNLoginParam.qnWebsiteId);
         }
     }
 
@@ -347,11 +376,10 @@ public class LoginManager {
     private void loginInternal(){
         mLoginStatus = LoginStatus.Logining;
         String deviceId = SystemUtils.getDeviceId(mContext);
-        RequestJniAuthorization.Login(mUserId, mQNToken, deviceId, new OnRequestLoginCallback() {
+        RequestJniAuthorization.Login(mUserId, mQNToken, deviceId, RegionType.valueOf(mQNWebsiteId), new OnRequestLoginCallback() {
             public void onRequestLogin(boolean isSuccess,
                                        int errCode, String errMsg, LoginItem item) {
-                Log.d(TAG,"onRequestLogin-isSuccess:"+isSuccess+" errCode:"+errCode
-                        +" errMsg:"+errMsg+" item:"+item);
+                Log.d(TAG,"onRequestLogin-isSuccess:"+isSuccess+" errCode:" + errCode +" errMsg:" + errMsg+" item:"+item);
                 Message msg = Message.obtain();
                 msg.what = LOGIN_CALLBACK;
                 HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, item);
@@ -368,6 +396,7 @@ public class LoginManager {
     public void logout(boolean isManual){
         mLoginStatus = LoginStatus.Default;
         mLoginItem = null;
+//        mConfigItem = null;
 
         Message msg = Message.obtain();
         msg.what = LOGOUT_CALLBACK;
@@ -390,7 +419,6 @@ public class LoginManager {
             if(unreadManager != null) {
                 unreadManager.clearResetSelf();
             }
-            PackageGiftManager.getInstance().clear();
         }
     }
 
@@ -428,6 +456,14 @@ public class LoginManager {
 
     public ConfigItem getLocalConfigItem(){
         return mConfigItem;
+    }
+
+    /**
+     * 获取当前登录状态
+     * @return
+     */
+    public LoginStatus getLoginStatus() {
+        return mLoginStatus;
     }
 
     /**
@@ -477,14 +513,21 @@ public class LoginManager {
      * @param isSuccess
      * @param token
      */
-    public void onMainMoudleLogin(boolean isSuccess, String userId, String token, String ga_uid){
+    public void onMainMoudleLogin(boolean isSuccess, String userId, String token, String ga_uid, int websiteId){
         //提交GA统计ga_uid
         AnalyticsManager.newInstance().setGAUserId(ga_uid);
 
         Log.d(TAG,"onMainMoudleLogin-isSuccess:" + isSuccess + " userId: " + userId + " token:" + token);
         Message msg = Message.obtain();
         msg.what = EVENT_MAINMODULE_LOGIN;
-        HttpRespObject response = new HttpRespObject(isSuccess, 0, "", new LoginParam(userId, token));
+        //add by Jagger 2018-5-23 添加默认错误提示
+        HttpLccErrType errType = HttpLccErrType.HTTP_LCC_ERR_SUCCESS;
+        if(isSuccess){
+            errType = HttpLccErrType.HTTP_LCC_ERR_SUCCESS;
+        }else{
+            errType = HttpLccErrType.HTTP_LCC_ERR_FAIL;
+        }
+        HttpRespObject response = new HttpRespObject(isSuccess, errType.ordinal(), mContext.getString(R.string.system_notice_qn_login_fail), new LoginParam(userId, token, websiteId));
         msg.obj = response;
         mHandler.sendMessage(msg);
     }
@@ -507,14 +550,20 @@ public class LoginManager {
      * session过期通知
      */
     public void onModuleSessionOverTime(){
-        if(mLoginStatus == LoginStatus.Logining){
-            //登录中，拦截session timeout事件
-            return;
+        if(mLoginStatus == LoginStatus.Logined) {
+            //直播未登录不处理token过期逻辑（和Samson确认过）
+            if (mLoginStatus == LoginStatus.Logining) {
+                //登录中，拦截session timeout事件
+                return;
+            }
+            if (mLoginStatus == LoginStatus.Logined) {
+                logout(false);
+            }
+
+            //发送广播通知界面
+            Intent intent = new Intent(CommonConstant.ACTION_SESSION_TIMEOUT);
+            mContext.sendBroadcast(intent);
         }
-        if(mLoginStatus == LoginStatus.Logined){
-            logout(false);
-        }
-        LiveService.getInstance().onModuleSessionOverTime();
     }
 
 }

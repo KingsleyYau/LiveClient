@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:maxWidth="220dp"
+    android:layout_height="@dimen/liveroom_bullet_height"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_liveroom_bulletscreen"
+    android:orientation="horizontal">
+
+    <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+        android:src="@drawable/ic_default_photo_man"
+        android:id="@+id/civ_bullletIcon"
+        android:layout_marginLeft="1dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"/>
+
+    <TextView
+        android:id="@+id/tv_bulletName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="60dp"
+        android:textSize="13sp"
+        style="@style/Text_Shadow"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_marginLeft="6dp"
+        android:textColor="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/tv_bulletContent"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textColor="@android:color/white"
+        android:singleLine="true"
+        android:layout_marginRight="18dp"
+        android:textSize="13sp" />
+</LinearLayout>

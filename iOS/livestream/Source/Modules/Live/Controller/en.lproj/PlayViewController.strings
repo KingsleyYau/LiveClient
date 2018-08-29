@@ -2,32 +2,8 @@
 /* Class = "UIButton"; normalTitle = "Send"; ObjectID = "msj-HT-Fvg"; */
 "msj-HT-Fvg.normalTitle" = "Send";
 
-"INPUT_LOUDER_PLACEHOLDER" = "0.05 credit per pop-up message";
-
-"INPUT_PLACEHOLDER" = "Say something...";
-
-"SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
-
-"NO_TENOUGH_LOVE" = "This gift is only available for viewers with an Intimacy Level of ";
-
-"NO_TENOUGH_LEVEL" = "This gift is only available for viewers of level ";
-
-"OR_HIGHER" = " or higher.";
-
-"CANNOT_SEND_TIP" = "Sorry, this gift could not be sent in this broadcast room.";
-
 "STANDARD" = "Standard";
 
 "ADVANCE" = "Advanced";
-
-"STORE" = "  Store";
-
-"BACKPACK" = "  Backpack";
-
-"DONT_HAVE_ENOUGH" = "You don't have enough %@ to send.";
-
-"BIG_GIFT_SEND_FAIL" = "Failed to send %@. Please try again.";
-
-"COPY_LINK_SUCCESS" = "The link has been copied to pasteboard";
 
 "SPEAK_TOO_FAST" = "Please do not send repeatedly";

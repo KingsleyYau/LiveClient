@@ -40,6 +40,8 @@
 #include "HttpAnchorGetHangoutKnockStatusTask.h"
 #include "HttpAnchorCancelHangoutKnockTask.h"
 #include "HttpAnchorHangoutGiftListTask.h"
+#include "HttpAddAnchorFriendTask.h"
+#include "HttpGetFriendRelationTask.h"
 
 #include "HttpAnchorGetNoReadNumProgramTask.h"
 #include "HttpAnchorGetProgramListTask.h"
@@ -563,6 +565,36 @@ public:
                                    const string& roomId,
                                    IRequestAnchorHangoutGiftListCallback* callback = NULL
                                    );
+    
+    /**
+     * 6.9.请求添加好友
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param userId                        主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AddAnchorFriend(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& userId,
+                              IRequestAddAnchorFriendCallback* callback = NULL
+                                );
+    
+    /**
+     * 6.10.请求添加好友
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetFriendRelation(
+                              HttpRequestManager *pHttpRequestManager,
+                              const string& anchorId,
+                              IRequestGetFriendRelationCallback* callback = NULL
+                              );
     
     
     /**

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--common-->
+    <color name="listview_divider_grey">#16000000</color>
+    <color name="blue_color">#0099FF</color>
+    <color name="text_color_dark">#333333</color>
+    <color name="text_color_grey">#666666</color>
+    <color name="darked_green_color">#00CC33</color>
+    
+    <color name="online_normal_green">#8EDB2B</color>
+    <color name="offline_normal_grey">#B5B5B5</color>
+
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="bg_MainActivity">#f8f9fb</color>
+    <color name="bg_MainButtomTabView">#b3000000</color>
+    <color name="bg_title_bar">#5d0e86</color>
+
+    <color name="txt_color_next_usable">#232323</color>
+
+    <color name="txt_color_oninput">#5d0e86</color>
+
+    <color name="style_color_primary">#d32f2f</color>
+    <color name="style_color_primary_dark">#b71c1c</color>
+    <color name="style_color_primary_light">#FFCDD2</color>
+    <color name="style_color_accent">#d32f2f</color>
+    <color name="style_window_background">#212121</color>
+    <color name="style_window_background_light">#ffffff</color>
+
+    <color name="list_gift_count_selected">#f7cd3a</color>
+    <color name="cover_state_use">#5d0e86</color>
+
+    <color name="dialog_background">#00000000</color>
+    <color name="color_giftcount_item">#6b6b6b</color>
+
+    <color name="text_shadow_color">#B2000000</color>
+    <color name="messagelist_shadow_color">#000000</color>
+
+    <!-- holo light button background -->
+    <color name="holo_light_btn_bg_n">#00FFFFFF</color>
+    <color name="holo_light_btn_bg_a">#16FFFFFF</color>
+    <color name="holo_light_btn_bg_p">#32000000</color>
+
+    <color name="hotlist_divider_color">#B4A5FF</color>
+    <color name="normal_purple">#501B75</color>
+    <color name="hangout_divider_color">#CCCCCC</color>
+
+    <color name="liveroom_top_barcolor_freepublic">#cdb4b9</color>
+    <color name="liveroom_top_barcolor_normalprivate">#5d5c5c</color>
+    <color name="liveroom_top_barcolor_paidpublicRoom">#5d5c5c</color>
+    <color name="liveroom_top_barcolor_advancedprivate">#5d5c5c</color>
+
+    <color name="live_book_bg">#f5f5f5</color>
+
+    <color name="dark_gray">#5E5E5E</color>
+
+    <color name="text_light_white">#C2C2C2</color>
+
+    <!-- process button -->
+    <color name="progress_bg">#fff2c0</color>
+    <color name="purple_progress">#03a9f4</color>
+    <color name="blue_pressed">#7cb342</color>
+    <color name="blue_normal">#ffffbb33</color>
+
+    <!--统一样式 自定义对话框-->
+    <color name="custom_dialog_txt_color_simple">#383838</color>
+    <color name="custom_dialog_txt_color_btn_yes">@android:color/white</color>
+    <color name="custom_dialog_txt_color_btn_no">#3c3c3c</color>
+    <color name="custom_dialog_btn_color_ok">#297af3</color>
+    <color name="custom_dialog_btn_color_dark">#bfbfbf</color>
+
+    <color name="talent_confirm_dialog_confirm">#724602</color>
+
+    <!-- 登录 -->
+    <color name="login_light_violet">#f989ff</color>
+    <color name="login_light_violet2">#bbf989ff</color>
+    <color name="login_violet">#1f4e96</color>
+    <color name="login_violet2">#bb1f4e96</color>
+
+    <!--个人资料-->
+    <color name="personal_item_devide">#61db96ff</color>
+    <!--profile-->
+    <color name="profile_photo_status_pending">#00a0e9</color>
+    <color name="profile_photo_status_rejecte">#ff4747</color>
+    <color name="profile_nickname_status_pending">#00a0e9</color>
+    <color name="profile_item_value">#838383</color>
+    <!--edit nickname-->
+    <color name="profile_save_no">#9573AD</color>
+    <color name="profile_save_yes">#ffffff</color>
+    <!--feedback-->
+    <color name="feedback_hint_tips">#995d0e86</color>
+    <color name="feedback_edit_area">#f1d7ff</color>
+    <!--about us-->
+    <color name="about_us_version">#a279bc</color>
+
+    <!--邮箱注册界面-->
+    <color name="email_sign_up_hint_txt">#bfbfbf</color>
+    <color name="email_sign_up_devide">#959595</color>
+    <color name="submit_unusable">#fffefe</color>
+
+    <color name="email_sign_in_password_tips">#383838</color>
+
+    <color name="login_button_bg">#D0ECFF</color>
+
+    <!--自定义颜色-->
+    <color name="actionbar_title_right_text_color">#383838</color>
+
+    <color name="bg_grey_white">#ECEDF1</color>
+    <color name="bg_light_blue">#297AFC</color>
+    <color name="bg_white_alpha_46">#75FFFFFF</color>
+    <color name="text_color_white">#FFFDFD</color>
+    <color name="text_color_white_alpha_62">#9DFFFFFF</color>
+    <color name="text_color_light_grey">#FFFDFD</color>
+    <color name="text_color_black1">#383838</color>
+    <color name="text_color_light_black">#666666</color>
+    <color name="progress_bg_grey_aphla_77">#C4C0D9FF</color>
+    <color name="live_transition_bg_color">#3D3D3D</color>
+
+
+    <color name="public_tran_color_sb_checked">#297AF3</color>
+    <color name="public_tran_color_sb_unchecked">#292929</color>
+    <color name="public_tran_txt_color">#383838</color>
+    <color name="public_tran_tips_color">#666666</color>
+
+    <color name="public_liveroom_audience_list_unselected">#CE297AF3</color>
+    <color name="public_liveroom_audience_list_selected">#CE000000</color>
+    <color name="public_liveroom_audience_list_txt">#FEFEFF</color>
+    <color name="public_liveroom_audience_current">#297AF3</color>
+    <color name="public_liveroom_audience_total_bg">#9BBEBEBE</color>
+    <color name="public_liveroom_msglist_bg">#ECEDF1</color>
+    <color name="public_liveroom_giftlist_count">#F7CD3A</color>
+    <color name="private_liveroom_sendmsg_bg">#3D3D3D</color>
+    <color name="private_liveroom_sendmsg_hint">#9EFFFFFF</color>
+    <color name="private_liveroom_msglist_bg">#252525</color>
+
+    <color name="liveroom_warnging_dialog_title">#FF4747</color>
+
+    <color name="common_button_blue_backgroud">#297AF3</color>
+
+    <!-- 节目 -->
+    <color name="live_programme_list_btn_start_show">#297AF3</color>
+    <color name="live_programme_list_btn_canceled">#bfbfbf</color>
+    <color name="live_programme_list_group_gray">#eeecedf1</color>
+
+    <!-- 推荐 -->
+    <color name="live_msg_list_recommend_bg">#05c775</color>
+
+</resources>

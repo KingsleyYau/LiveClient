@@ -14,6 +14,9 @@ public class LocalPreferenceConstant {
     public final static String KEY_FIRST_START = "AppFirstLaunch";
     public final static String KEY_LOGIN_ACCOUNT_INFO = "LoginAccountInFo";
     public final static String KEY_DEFAULT_COUNTRY_CODE = "DefaultCountryCode";
+    public final static String KEY_FACEBOOK_LOGIN_ACCOUNT = "FaceBookLoginAccount";
+    public final static String KEY_EMAIL_LOGIN_ACCOUNT = "EmailLoginAccount";
+    public final static String KEY_LOGIN_TYPE = "LoginType";
 
     //system key
     public final static String KEY_SYSTEM_STATUS_BAR_HEIGHT = "statusBarHeight";

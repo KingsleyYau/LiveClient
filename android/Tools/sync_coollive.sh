@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Synchronize coollive source code and export jar file
+# Author:	Max.Chiu
+
 # change dir
 CUR_PATH=$(dirname $0)
 cd $CUR_PATH

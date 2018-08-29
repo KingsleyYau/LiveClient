@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,20 +40,23 @@ public class CarView extends LinearLayout{
 
     public CarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
-    }
-
-    private void init(Context context){
         mContext = context;
-        initView(context);
     }
 
-    private void initView(Context context){
+    public void init(int txtColor, int bgResId){
         // 加载布局
-        LayoutInflater.from(context).inflate(R.layout.view_liveroom_car, this);
+        LayoutInflater.from(mContext).inflate(R.layout.view_liveroom_car, this);
+        View ll_carView = findViewById(R.id.ll_carView);
+        if(0 != bgResId){
+            ll_carView.setBackgroundDrawable(mContext.getResources().getDrawable(bgResId));
+        }
+
         tv_carMaster = (TextView) findViewById(R.id.tv_carMaster);
         tv_joined = (TextView) findViewById(R.id.tv_joined);
-        tv_joined.setText(context.getResources().getString(R.string.liveroom_entrancecar_joined,""));
+        if(0 != bgResId){
+            tv_joined.setTextColor(txtColor);
+        }
+        tv_joined.setText(mContext.getResources().getString(R.string.liveroom_entrancecar_joined,""));
         iv_carImg = (ImageView) findViewById(R.id.iv_carImg);
     }
 

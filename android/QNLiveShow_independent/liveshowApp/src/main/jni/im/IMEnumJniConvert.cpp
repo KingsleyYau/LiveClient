@@ -9,7 +9,8 @@
 
 int IMErrorTypeToInt(LCC_ERR_TYPE errType)
 {
-	int value = 0;
+	// 默认是HTTP_LCC_ERR_FAIL，当服务器返回未知的错误码时
+	int value = 1;
 	int i = 0;
 	for (i = 0; i < _countof(IMErrorTypeArray); i++)
 	{

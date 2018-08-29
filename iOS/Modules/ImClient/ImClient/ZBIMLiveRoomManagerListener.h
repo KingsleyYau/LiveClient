@@ -416,6 +416,32 @@
  */
 - (void)onRecvAnchorGiftNotice:(IMAnchorRecvGiftItemObject *_Nonnull)item;
 
+/**
+ *  10.13.接收多人互动直播间观众启动/关闭视频互动通知回调
+ *
+ *  @param item            互动切换
+ *
+ */
+- (void)onRecvAnchorControlManPushHangoutNotice:(ZBImControlPushItemObject *_Nonnull)item;
+
+/**
+ *  10.14.发送多人互动直播间文本消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendAnchorHangoutLiveChat:(SEQ_T)reqId success:(BOOL)success err:(ZBLCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+
+/**
+ *  10.15.接收直播间文本消息回调
+ *
+ *  @param item            接收直播间的文本消息
+ *
+ */
+-(void)onRecvAnchorHangoutChatNotice:(IMRecvAnchorHangoutChatItemObject* _Nonnull)item;
+
 // ------------- 节目 -------------
 /**
  *  11.1.接收节目开播通知接口 回调

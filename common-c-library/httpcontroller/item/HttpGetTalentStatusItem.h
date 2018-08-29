@@ -36,10 +36,27 @@ public:
             /* credit */
             if (root[LIVEROOM_GETTALENTSTATUS_CREDIT].isNumeric()) {
                 credit = root[LIVEROOM_GETTALENTSTATUS_CREDIT].asDouble();
-            }            /* credit */
-            if (root[LIVEROOM_GETTALENTSTATUS_STATUS].isInt()) {
-                status = (HTTPTalentStatus)root[LIVEROOM_GETTALENTSTATUS_STATUS].asInt();
             }
+            /* status */
+            if (root[LIVEROOM_GETTALENTSTATUS_STATUS].isInt()) {
+                status = GetIntToHTTPTalentStatus(root[LIVEROOM_GETTALENTSTATUS_STATUS].asInt());
+            }
+            
+            /* giftId */
+            if (root[LIVEROOM_GETTALENTSTATUS_GIFTID].isString()) {
+                giftId = root[LIVEROOM_GETTALENTSTATUS_GIFTID].asString();
+            }
+            
+            /* giftName */
+            if (root[LIVEROOM_GETTALENTSTATUS_GIFTNAME].isString()) {
+                giftName = root[LIVEROOM_GETTALENTSTATUS_GIFTNAME].asString();
+            }
+            
+            /* giftNum */
+            if (root[LIVEROOM_GETTALENTSTATUS_GIFTNUM].isNumeric()) {
+                giftNum = root[LIVEROOM_GETTALENTSTATUS_GIFTNUM].asInt();
+            }
+            
         }
         if (!talentId.empty()) {
             result = true;
@@ -54,6 +71,9 @@ public:
         name = "";
         credit = 0.0;
         status = HTTPTALENTSTATUS_UNREPLY;
+        giftId = "";
+        giftName = "";
+        giftNum = 0;
     }
     
     virtual ~HttpGetTalentStatusItem() {
@@ -67,12 +87,18 @@ public:
      * name               才艺名称
      * credit             发送礼物所需的信用点
      * status             状态（0:未回复 1:已接受 2:拒绝）
+     * giftId             礼物ID
+     * giftName           礼物名称
+     * giftNum            礼物数量
      */
     string talentInviteId;
     string talentId;
     string name;
     double credit;
     HTTPTalentStatus status;
+    string giftId;
+    string giftName;
+    int giftNum;
 };
 
 

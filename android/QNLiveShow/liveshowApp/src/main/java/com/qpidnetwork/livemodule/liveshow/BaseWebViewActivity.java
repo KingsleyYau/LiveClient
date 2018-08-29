@@ -2,8 +2,8 @@ package com.qpidnetwork.livemodule.liveshow;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
@@ -30,7 +30,8 @@ import android.widget.ProgressBar;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
-import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
+import com.qpidnetwork.livemodule.framework.services.LiveService;
+import com.qpidnetwork.livemodule.framework.widget.OpenFileWebChromeClient;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
@@ -39,11 +40,18 @@ import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
 import com.qpidnetwork.livemodule.liveshow.model.js.JSCallbackListener;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.MediaUtility;
+import com.qpidnetwork.livemodule.utils.SystemUtils;
+
+import java.io.File;
 
 /**
  * Created by Hunter Mun on 2017/11/10.
@@ -87,6 +95,11 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     //解决主播页操作后，中间跳转买点页面，返回主播页面由于removeAllCookie 导致页面cookie丢失
     private boolean mIsNeedResume = false;              //标志是否stop后返回
 
+    private OpenFileWebChromeClient mOpenFileWebChromeClient;   //chromeClient.支持图库及文件夹访问
+
+    //resume 调用js刷新界面标志位
+    private boolean mResumecbFlags = false;
+
     /**
      * 接口消息
      */
@@ -116,7 +129,6 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         if(mIsNeedResume){
             syncCookie();
         }
-        mIsNeedResume = false;
         //add by Jagger
 //        try {
 //            mWebView.getClass().getMethod("onResume" , new Class<?>[]{}).invoke(mWebView,(Object[])null);
@@ -124,6 +136,17 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 //            Log.i("Jagger" , "直播webview onResume Exception: " + e.toString());
 //        }
 //        mWebView.resumeTimers();
+      
+        fl_commTitleBar.getBackground().setAlpha(255);
+        tv_commTitle.setAlpha(1f);
+
+        //判断是否通知网页刷新
+        if(mResumecbFlags && mIsNeedResume){
+            notifyResume();
+        }
+
+        //最后重置标志位
+        mIsNeedResume = false;
     }
 
     @Override
@@ -148,12 +171,6 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
      */
     public void initView() {
         setCustomContentView(R.layout.activity_normal_webview);
-        //状态栏颜色
-        StatusBarUtil.setColor(this, Color.parseColor("#5d0e86"),0);
-//        fl_commTitleBar = findViewById(R.id.fl_commTitleBar);
-//        tv_commTitle = (TextView) findViewById(R.id.tv_commTitle);
-//        iv_commBack = (ImageView) findViewById(R.id.iv_commBack);
-//        iv_commBack.setOnClickListener(this);
         view_errorpage = findViewById(R.id.view_errorpage);
         view_errorpage.setVisibility(View.GONE);
         btnRetry = (Button) findViewById(R.id.btnRetry);
@@ -176,8 +193,8 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         webSettings.setJavaScriptEnabled(true);
         //开启图片等懒加载逻辑
         webSettings.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        webSettings.setBlockNetworkImage(true);
-        isBlockLoadingNetworkImage=true;
+//        webSettings.setBlockNetworkImage(true);
+//        isBlockLoadingNetworkImage=true;
         //自适应屏幕,两者合用
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -187,14 +204,41 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         webSettings.setBuiltInZoomControls(true);
         //隐藏原生的缩放控件
         webSettings.setDisplayZoomControls(false);
+
+        //参考http://www.jb51.net/article/67044.htm,fly那边需要增加以下设置
+        // 开启DOM缓存，开启LocalStorage存储(html5的本地存储方式)
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCacheMaxSize(1024*1024*8);
+        String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+        Log.d(TAG,"initWebView-appCachePath:"+appCachePath);
+        webSettings.setAppCachePath(appCachePath);
+        //开启 Application Caches 功能
+        webSettings.setAppCacheEnabled(true);
+        //开启 database storage API 功能
+        webSettings.setDatabaseEnabled(true);
+        //设置可以访问文件
+        webSettings.setAllowFileAccess(true);
+        //支持通过JS打开新窗口
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        //支持自动加载图片
+        webSettings.setLoadsImagesAutomatically(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            webSettings.setMediaPlaybackRequiresUserGesture(false);
+        }
+        //以下设置为配合Chrome DevTools调试webview的h5页面[setWebContentsDebuggingEnabled是静态方法，针对整个app的WebView]
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(LiveApplication.isDemo);
+        }
         //Android 4.2以下存在漏洞问题,待解决
         mJSCallback = new CallbackAppGAEventJSObj(this.getApplicationContext());
         mJSCallback.setJSCallbackListener(this);
         mWebView.addJavascriptInterface(mJSCallback, "LiveApp");
-        mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
-        mWebView.removeJavascriptInterface("accessibility");
-        mWebView.removeJavascriptInterface("accessibilityTraversal");
+//        mWebView.removeJavascriptInterface("searchBoxJavaBridge_");
+//        mWebView.removeJavascriptInterface("accessibility");
+//        mWebView.removeJavascriptInterface("accessibilityTraversal");
         mWebView.setWebViewClient(new MyWebViewClient());
+        mOpenFileWebChromeClient = new OpenFileWebChromeClient(this);
+        mWebView.setWebChromeClient(mOpenFileWebChromeClient);
         //add by Jagger 针对视频的问题,加了些代码,并未使用.如有问题可使用试试效果
 //        mWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
 //        mWebView.setWebChromeClient(new WebChromeClient());
@@ -208,6 +252,10 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             mUrl = bundle.getString(WEB_URL,mUrl);
+            //增加device和appver公共头
+            if(!TextUtils.isEmpty(mUrl)){
+                mUrl = packageWebViewUrl(mUrl);
+            }
             Log.d(TAG,"initViewData-mUrl:"+mUrl);
             mTitle = bundle.getString(WEB_TITLE,mTitle);
             Log.d(TAG,"initViewData-mTitle:"+mTitle);
@@ -215,10 +263,16 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             Log.d(TAG,"initViewData-showTitleBarWhenLoadSuc:"+showTitleBarWhenLoadSuc);
         }
 
+        //解析设置screenname
+        setCurrentScreenName(URL2ActivityManager.parseScreenNameByUrl(mUrl));
+
+        //读取resumecb标志位
+        mResumecbFlags = URL2ActivityManager.getInstance().getResumecbFlags(mUrl);
+
         if(!TextUtils.isEmpty(mTitle)) {
 //            tv_commTitle.setText(mTitle);
             //设置头
-            setTitle(mTitle, Color.WHITE);
+            setTitle(mTitle, R.color.theme_default_black);
         }
 
         //初始化加载
@@ -239,7 +293,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && mIsPageLoadFinish) {
+        if ( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && mIsPageLoadFinish && !isLoadError) {
 //            if( mWebView.canGoBack() ) {
 //                mWebView.goBack();
 //            } else {
@@ -260,6 +314,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         super.handleUiMessage(msg);
         switch (msg.what) {
             case LOGIN_CALLBACK:{
+                pb_loading.setVisibility(View.GONE);
                 HttpRespObject response = (HttpRespObject)msg.obj;
                 if(response.isSuccess){
                     //session 过期重新登陆
@@ -278,10 +333,11 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
      * @param isSessionTimeout
      */
     private void loadUrl(boolean isReload, boolean isSessionTimeout){
+        Log.logD(TAG,"loadUrl-isReload:"+isReload+" isSessionTimeout:"+isSessionTimeout);
         isLoadError = false;
         this.isReload = isReload;
         if(!isReload || isSessionTimeout){
-            mWebView.clearCache(true);
+//            mWebView.clearCache(true);
             syncCookie();
             if(!TextUtils.isEmpty(mUrl)) {
                 mWebView.loadUrl(mUrl);
@@ -293,6 +349,8 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
+
         LoginManager loginManager = LoginManager.getInstance();
         if(null != loginManager){
             loginManager.unRegister(this);
@@ -310,7 +368,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             mWebView.stopLoading();
             // 退出时调用此方法，移除绑定的服务，否则某些特定系统会报错
             mWebView.getSettings().setJavaScriptEnabled(false);
-            mWebView.clearCache(true);
+//            mWebView.clearCache(true);
             mWebView.clearHistory();//清理历史记录
             mWebView.freeMemory();//释放内存
             mWebView.clearFormData();//仅仅清除自动完成填充的表单数据,并不会清理存储到本地的数据
@@ -327,7 +385,6 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             }
             mWebView = null;
         }
-        super.onDestroy();
     }
 
     /*************************** 对子类开放url重定向处理 ****************************/
@@ -378,14 +435,31 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     }
 
     @Override
-    public void onEventPageError(String errorcode) {
-        if(!TextUtils.isEmpty(errorcode)
-                && errorcode.equals("10004")){
-            pb_loading.setVisibility(View.VISIBLE);
-            handleSessionTimeout();
-        }else{
-            loadUrl(true, false);
-        }
+    public void onEventPageError(final String errorcode, final String errMsg, final NoMoneyParamsBean params) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(!TextUtils.isEmpty(errorcode)
+                        && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
+                    pb_loading.setVisibility(View.VISIBLE);
+                    handleSessionTimeout();
+                }else if(!TextUtils.isEmpty(errorcode)
+                        && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_NOCREDIT_ERROR_NO)){
+                    if(!TextUtils.isEmpty(errMsg)){
+                        showCreditNoEnoughDialog(errMsg, params);
+                    }else{
+                        LiveService.getInstance().onAddCreditClick(params);
+                        //GA统计点击充值
+                        AnalyticsManager.getsInstance().ReportEvent(
+                                BaseWebViewActivity.this.getResources().getString(R.string.Live_Global_Category),
+                                BaseWebViewActivity.this.getResources().getString(R.string.Live_Global_Action_AddCredit),
+                                BaseWebViewActivity.this.getResources().getString(R.string.Live_Global_Label_AddCredit));
+                    }
+                }else{
+                    loadUrl(false, false);
+                }
+            }
+        });
     }
 
     /*************************** webview相关 ************************************/
@@ -420,7 +494,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             //这里的url可能由于编码问题，在间接调用到String.format方法时会跑错
             //参考:http://blog.csdn.net/cyanflxy/article/details/46274003
             //因此使用System.out.print而非Log.d
-            System.err.println("onPageStarted url:"+url);
+            Log.logD(TAG,"onPageStarted url:"+url);
             mIsPageLoadFinish = false;
             pb_loading.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
@@ -429,7 +503,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            System.err.println("onPageFinished url:"+url);
+            Log.logD(TAG,"onPageFinished url:"+url);
             mIsPageLoadFinish = true;
 
             //add by Jagger 2017-12-15
@@ -470,7 +544,11 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            System.err.println("shouldOverrideUrlLoading-url:"+url);
+            Log.logD(TAG,"shouldOverrideUrlLoading-url:"+url);
+
+            //读取resumecb标志位
+            mResumecbFlags = URL2ActivityManager.getInstance().getResumecbFlags(mUrl);
+
             //url重定向以及点击页面中的某些链接(get)会执行该方法
             //复写该方法,使得load url时不会打开系统浏览器而是在mWebView中显示
             //协议拦截-参考文档<<App-Webview交互说明>>
@@ -509,9 +587,9 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             System.err.println("onReceivedError-errorCode:"+errorCode+" description:"+description
                     +" failingUrl:"+failingUrl);
             //普通页面错误
-            if(!TextUtils.isEmpty(failingUrl) && failingUrl.contains(mUrl)) {
+//            if(!TextUtils.isEmpty(failingUrl) && failingUrl.contains(mUrl)) {
                 onLoadError();
-            }
+//            }
         }
 
         //del by Jagger 2017-12-14 在6.0以下会死先去掉
@@ -562,13 +640,13 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                     //隐藏进度条
                     pb_loading.setVisibility(View.GONE);
 
-                    //添加延时加载
-                    if (isBlockLoadingNetworkImage) {
-                        if (mWebView != null) {
-                            mWebView.getSettings().setBlockNetworkImage(false);
-                        }
-                        isBlockLoadingNetworkImage = false;
-                    }
+//                    //添加延时加载
+//                    if (isBlockLoadingNetworkImage) {
+//                        if (mWebView != null) {
+////                            mWebView.getSettings().setBlockNetworkImage(false);
+//                        }
+//                        isBlockLoadingNetworkImage = false;
+//                    }
 
                     //reload时清除历史
                     if (isReload) {
@@ -610,4 +688,75 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     public void onLogout(boolean isMannual) {
 
     }
+
+    /*************************** 重新组装url增加device和appver字段  *****************************/
+    /**
+     * url添加公共头appver和device
+     * @param url
+     * @return
+     */
+    private String packageWebViewUrl(String url){
+        StringBuilder sb = new StringBuilder(url);
+        //增加device
+        if(url.contains("?")){
+            sb.append("&device=30");
+        }else{
+            sb.append("?device=30");
+        }
+        //增加appver
+        sb.append("&appver=");
+        int versionCode = SystemUtils.getVersionCode(this);
+        sb.append(String.valueOf(versionCode));
+        return sb.toString();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.d(TAG,"onActivityResult-requestCode:"+requestCode+" resultCode:"+resultCode);
+        //需要回调onReceiveValue方法防止下次无法响应js方法
+        if (resultCode != RESULT_OK) {
+            if (mOpenFileWebChromeClient.mFilePathCallback != null) {
+                mOpenFileWebChromeClient.mFilePathCallback.onReceiveValue(null);
+                mOpenFileWebChromeClient.mFilePathCallback = null;
+            }
+            if (mOpenFileWebChromeClient.mFilePathCallbacks != null) {
+                mOpenFileWebChromeClient.mFilePathCallbacks.onReceiveValue(null);
+                mOpenFileWebChromeClient.mFilePathCallbacks = null;
+            }
+            return;
+        }
+        Uri result = intent == null ? null : intent.getData();
+        Uri uri = null;
+        if (result != null) {
+            String path = MediaUtility.getPath(getApplicationContext(), result);
+            uri = Uri.fromFile(new File(path));
+        }
+        if(null == uri && requestCode == OpenFileWebChromeClient.REQUEST_CAPTURE_PHOTO){
+            //因为拍照在红米note2手机上返回的intent为null，因此需要自己处理uri
+            uri = Uri.fromFile(new File(FileCacheManager.getInstance().getTempCameraImageUrl()));
+        }
+        Log.logD(TAG,"onActivityResult-result:"+result+" uri:"+uri);
+        if(null != mOpenFileWebChromeClient.mFilePathCallback){
+            mOpenFileWebChromeClient.mFilePathCallback.onReceiveValue(uri);
+            //避免下一次js执行无响应
+            mOpenFileWebChromeClient.mFilePathCallback = null;
+        }
+        if(mOpenFileWebChromeClient.mFilePathCallbacks != null){
+            mOpenFileWebChromeClient.mFilePathCallbacks.onReceiveValue(null == uri ? null : new Uri[] {uri});
+            //避免下一次js执行无响应
+            mOpenFileWebChromeClient.mFilePathCallbacks = null;
+        }
+    }
+
+    /**
+     * 通知页面用户返回
+     */
+    public void notifyResume() {
+        String url = "javascript:notifyResume()";
+        if(mWebView != null) {
+            mWebView.loadUrl(url);
+        }
+    }
+
 }

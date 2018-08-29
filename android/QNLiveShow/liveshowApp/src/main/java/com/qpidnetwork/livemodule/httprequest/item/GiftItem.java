@@ -10,7 +10,9 @@ public class GiftItem {
 	public enum GiftType{
 		Unknown,
 		Normal,
-		Advanced
+		Advanced,
+		Bar,
+		Celebrate
 	}
 	
 	public GiftItem(){

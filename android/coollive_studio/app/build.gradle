@@ -5,7 +5,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "net.qdating.coollive"
-        minSdkVersion 21
+        minSdkVersion 9
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -41,7 +41,7 @@ tasks.withType(JavaCompile) {
 
 task ndkBuild(type: Exec) {
     workingDir file('src/main')
-    commandLine getNdkBuildCmd()
+    commandLine getNdkBuildCmd(), 'NDK_DEBUG=1'
 }
 
 task cleanNative(type: Exec) {

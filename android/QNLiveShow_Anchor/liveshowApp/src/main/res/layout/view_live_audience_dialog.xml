@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="13dp"
+        android:paddingLeft="13dp"
+        android:layout_gravity="right"
+        android:src="@drawable/ic_liveroom_audience_dialog_close"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="22dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+        
+        <FrameLayout
+            android:layout_gravity="center_horizontal"
+            android:layout_width="70dp"
+            android:layout_height="72dp"
+            >
+            <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/civ_audiencePic"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
+                android:layout_gravity="top|left"
+                android:src="@drawable/ic_default_photo_man"/>
+
+            <ImageView
+                android:id="@+id/iv_audienceCar"
+                android:layout_width="39dp"
+                android:layout_height="39dp"
+                android:src="@drawable/ic_liveroom_car"
+                android:scaleType="fitCenter"
+                android:visibility="visible"
+                android:layout_gravity="right|bottom"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_audienceNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:textSize="12sp"
+                android:textColor="@color/common_bottom_item_simple"
+                android:text="ChristMart"/>
+
+            <ImageView
+                android:id="@+id/iv_audienceLevel"
+                android:layout_width="34dp"
+                android:layout_height="14dp"
+                android:src="@drawable/ic_level_icon_1"
+                android:scaleType="fitCenter"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_invitePriLive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="207dp"
+            android:minHeight="35dp"
+            android:textSize="14sp"
+            android:text="@string/public_live_audience_invite_priv"
+            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:layout_marginTop="11dp"
+            android:background="@drawable/bg_btn_invite_private"/>
+
+    </LinearLayout>
+
+</FrameLayout>

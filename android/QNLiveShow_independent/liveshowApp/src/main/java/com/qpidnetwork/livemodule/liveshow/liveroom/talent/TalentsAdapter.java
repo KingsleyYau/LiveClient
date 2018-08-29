@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.TalentInfoItem;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.List;
@@ -58,7 +59,8 @@ public class TalentsAdapter extends RecyclerView.Adapter<TalentsAdapter.ViewHold
         viewHolder.mBtnRequest.setEnabled(true);
 
         viewHolder.mTextViewName.setText(item.talentName);
-        viewHolder.mTextViewCredits.setText(mContext.getString(R.string.live_talent_credits, String.valueOf(item.talentCredit)));
+        viewHolder.mTextViewCredits.setText(mContext.getString(R.string.live_talent_credits,
+                ApplicationSettingUtil.formatCoinValue(item.talentCredit)));
         viewHolder.mBtnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -101,15 +101,15 @@ RtmpPlayer::~RtmpPlayer() {
     }
 }
 
-bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath) {
+bool RtmpPlayer::PlayUrl(const string& recordFilePath) {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                 "RtmpPlayer::PlayUrl( "
-                "url : %s "
+                "this : %p "
                 ")",
-                url.c_str()
+                this
                 );
 
     mClientMutex.lock();
@@ -117,7 +117,6 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath) {
         Stop();
     }
     
-//    bFlag = mpRtmpDump->PlayUrl(url, recordFilePath);
     bFlag = true;
     if( bFlag ) {
         // 开始播放
@@ -136,12 +135,10 @@ bool RtmpPlayer::PlayUrl(const string& url, const string& recordFilePath) {
             KLog::LOG_WARNING,
             "RtmpPlayer::PlayUrl( "
             "this : %p, "
-            "[%s], "
-            "url : %s "
+            "[%s] "
             ")",
             this,
-            bFlag?"Success":"Fail",
-            url.c_str()
+            bFlag?"Success":"Fail"
             );
     
     return bFlag;
@@ -161,22 +158,12 @@ void RtmpPlayer::Stop() {
     if( mbRunning ) {
         mbRunning = false;
         
-        // 停止接收
-//        mpRtmpDump->Stop();
-        
         // 停止播放
         mPlayVideoThread.Stop();
         mPlayAudioThread.Stop();
         
         // 清除缓存
         FrameBuffer* frame = NULL;
-        
-//        FileLog("rtmpdump", "RtmpPlayer::Stop( "
-//        		"[Clean Video Buffer], "
-//        		"this : %p "
-//        		")",
-//    			this
-//    			);
 
         // 清除视频缓存帧
         mVideoBufferList.lock();
@@ -201,13 +188,6 @@ void RtmpPlayer::Stop() {
             }
         }
         mVideoBufferList.unlock();
-        
-//        FileLog("rtmpdump", "RtmpPlayer::Stop( "
-//        		"[Clean Audio Buffer], "
-//        		"this : %p "
-//        		")",
-//    			this
-//    			);
 
         // 清除音视频缓存帧
         mAudioBufferList.lock();
@@ -233,13 +213,6 @@ void RtmpPlayer::Stop() {
         }
         mAudioBufferList.unlock();
         
-//        FileLog("rtmpdump", "RtmpPlayer::Stop( "
-//        		"[Clean Cache Buffer], "
-//        		"this : %p "
-//        		")",
-//    			this
-//    			);
-
         // 清除内存池Buffer
         while( (frame = (FrameBuffer *)mCacheBufferQueue.PopBuffer()) != NULL ) {
             delete frame;

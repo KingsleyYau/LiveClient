@@ -39,9 +39,9 @@ public class SelectCountryActivity extends BaseActionBarFragmentActivity impleme
 		setCustomContentView(R.layout.activity_live_select_country);
 
 		//设置头
-		setTitle(getString(R.string.live_book_choose_country_code_title), Color.WHITE);
+		setTitle(getString(R.string.live_book_choose_country_code_title), R.color.theme_default_black);
 
-		//
+		//view
 		InitView();
 	}
 	

@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "LSAnchorRequestManager.h"
-#import "LSLoginItemObject.h"
-#import "LSRegisterItemObject.h"
 #import "LiveModule.h"
 @class LSLoginManager;
 @protocol LoginManagerDelegate <NSObject>

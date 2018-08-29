@@ -63,10 +63,6 @@ bool HttpGetGiftDetailTask::ParseData(const string& url, bool bFlag, const char*
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpGetGiftDetailTask::ParseData( buf : %s )", buf);
-    }
-    
     HttpGiftInfoItem item;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

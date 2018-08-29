@@ -354,7 +354,7 @@ public class JDateSelectorWheelView extends RelativeLayout implements
      * 显示年份数
      */
     protected String[] years ;//= new String[141];
-    private String maxYear = "2018";
+    private String maxYear = "2018";//随便设定的, 外部可设置
     private String minYear = "1960";
     /**
      * 显示月份数
@@ -551,8 +551,9 @@ public class JDateSelectorWheelView extends RelativeLayout implements
         if (isBigMonth(getTodayMonth() + 1)) {
             wvDay.setAdapter(bigDaysAdapter);
         } else if (getTodayMonth() == 1
-                && isLeapYear(wvYear.getCurrentItemValue().subSequence(0, 4)
-                .toString().trim())) {
+//                && isLeapYear(wvYear.getCurrentItemValue().subSequence(0, 4)  //初始化没选中,这个为null
+//                .toString().trim())) {
+                && isLeapYear(String.valueOf(getTodayYear()))){
             wvDay.setAdapter(smallDaysAdapter);
         } else if (getTodayMonth() == 1) {
             wvDay.setAdapter(tinyDaysAdapter);

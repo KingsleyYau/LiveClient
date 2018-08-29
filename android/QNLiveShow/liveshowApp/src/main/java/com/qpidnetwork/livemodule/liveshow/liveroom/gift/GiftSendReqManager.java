@@ -164,7 +164,7 @@ public class GiftSendReqManager implements IMLiveRoomEventListener {
     @Override
     public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl,
                                       String riderId, String riderName, String riderUrl, int fansNum,
-                                      String honorImg) {}
+                                      String honorImg, boolean isHasTicket) {}
 
     @Override
     public void OnRecvLeaveRoomNotice(String roomId, String userId, String nickName, String photoUrl,
@@ -209,12 +209,17 @@ public class GiftSendReqManager implements IMLiveRoomEventListener {
     public void OnRecvRoomToastNotice(IMMessageItem msgItem) {}
 
     @Override
-    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {}
+    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String talentInviteId, String talentId) {}
 
     @Override
     public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId,
                                        String name, double credit, IMClientListener.TalentInviteStatus status,
-                                       double rebateCredit) {}
+                                       double rebateCredit, String giftId, String giftName, int giftNum) {}
+
+    @Override
+    public void OnRecvTalentPromptNotice(String roomId, String introduction) {
+
+    }
 
     @Override
     public void OnRecvHonorNotice(String honorId, String honorUrl) {}

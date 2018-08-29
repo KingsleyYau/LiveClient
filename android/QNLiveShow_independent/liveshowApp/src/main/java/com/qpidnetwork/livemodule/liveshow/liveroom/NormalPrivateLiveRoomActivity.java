@@ -2,13 +2,20 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 
 import android.os.Bundle;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -36,6 +43,8 @@ public class NormalPrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
         super.initData();
         //互动模块初始化
         initPublishData();
+        //查询头像列表
+        LiveRequestOperator.getInstance().GetAudienceListInRoom(mIMRoomInItem.roomId,0,0,this);
     }
 
     @Override
@@ -45,7 +54,9 @@ public class NormalPrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
         IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
                 mIMManager.mMsgIdIndex.getAndIncrement(),"",
                 IMMessageItem.MessageType.SysNotice,
-                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,String.format ("%.2f", rebateGranted)),
+                new IMSysNoticeMessageContent(
+                        getResources().getString(R.string.system_notice_recv_rebate,
+                                ApplicationSettingUtil.formatCoinValue(rebateGranted)),
                         null, IMSysNoticeMessageContent.SysNoticeType.Normal));
         Log.d(TAG,"addRebateGrantedMsg-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
         sendMessageUpdateEvent(imMessageItem);
@@ -64,6 +75,42 @@ public class NormalPrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    protected void handleUiMessage(Message msg) {
+        super.handleUiMessage(msg);
+        switch(msg.what){
+            case EVENT_MESSAGE_UPDATE_ONLINEFANS:{
+                HttpRespObject httpRespObject= (HttpRespObject) msg.obj;
+                if(httpRespObject.isSuccess){
+                    AudienceInfoItem[] audienceList = (AudienceInfoItem[])httpRespObject.data;
+                    if(null != audienceList && audienceList.length==1){
+                        AudienceInfoItem myAudienceInfoItem = audienceList[0];
+                        Log.d(TAG,"EVENT_MESSAGE_UPDATE_ONLINEFANS-myAudienceInfoItem:"+myAudienceInfoItem);
+                        Picasso.with(getApplicationContext())
+                                .load(myAudienceInfoItem.photoUrl)
+                                .error(R.drawable.ic_default_photo_man)
+                                .placeholder(R.drawable.ic_default_photo_man)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .into(civ_prvUserIcon);
+                    }
+
+                }
+            }break;
+        }
+    }
+
+    @Override
+    public void onGetAudienceList(boolean isSuccess, int errCode, String errMsg, AudienceInfoItem[] audienceList) {
+        super.onGetAudienceList(isSuccess,errCode,errMsg,audienceList);
+        if(isSuccess && null != audienceList){
+            HttpRespObject imRespObject = new HttpRespObject(isSuccess,errCode,errMsg,audienceList);
+            Message msg = Message.obtain();
+            msg.what = EVENT_MESSAGE_UPDATE_ONLINEFANS;
+            msg.obj = imRespObject;
+            sendUiMessage(msg);
         }
     }
 

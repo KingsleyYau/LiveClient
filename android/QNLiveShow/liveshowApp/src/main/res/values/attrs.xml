@@ -24,8 +24,8 @@
         <attr name="digitalHintTextColor" format="color" />
         <!--提示数字组件的背景色-->
         <attr name="digitalHintTextBgColor" format="color" />
-        <!--是否有数字提示-->
-        <attr name="hasDigitalHint" format="boolean" />
+        <!--标题是否加粗显示-->
+        <attr name="isTitleTxtBold" format="boolean" />
         <!--底部指示器颜色-->
         <attr name="indicatorColor" format="color" />
         <!--底部指示器高度-->
@@ -52,7 +52,19 @@
         <attr name="lineNumbPerPage" format="integer"/>
         <attr name="gridViewVerticalSpacing" format="dimension"/>
         <attr name="gridViewHorizontalSpacing" format="dimension"/>
-
+        <attr name="gridViewItemWidth" format="dimension"/>
+        <attr name="gridViewItemHeight" format="dimension"/>
+        <attr name="gridViewItemIconWidth" format="dimension"/>
+        <attr name="gridViewItemIconHeight" format="dimension"/>
+        <attr name="pageIndicatorHeight" format="dimension"/>
+        <attr name="pageIndicatorSpace" format="dimension"/>
+        <attr name="pageIndicatorTopMargin" format="dimension"/>
+        <attr name="pageIndicatorBottomMargin" format="dimension"/>
+        <attr name="emojiPanelHeight" format="dimension"/>
+        <attr name="showTabPageIndicator" format="boolean"/>
+        <attr name="emojiPanelAutoFitWindow" format="boolean"/>
+        <!--面板[表情页]背景色-->
+        <attr name="emojiBgColor" format="color" />
     </declare-styleable>
 
     <declare-styleable name="LiveRoomHeaderBezierView">
@@ -99,6 +111,7 @@
         <attr name="touch_feedback" format="reference"/>
         <attr name="elevation"/>
         <attr name="raisebutton_radius" format="dimension"/>
+        <attr name="title_text_size" format="dimension"/>
     </declare-styleable>
 
     <!-- ProgressButton -->

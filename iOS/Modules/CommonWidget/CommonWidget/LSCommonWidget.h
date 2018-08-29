@@ -17,6 +17,8 @@
 #import "LSTimer.h"
 #import "NSDate+ToString.h"
 
+#import "NSString+Check.h"
+
 #import "LSDevice.h"
 
 @interface LSCommonWidget : NSObject

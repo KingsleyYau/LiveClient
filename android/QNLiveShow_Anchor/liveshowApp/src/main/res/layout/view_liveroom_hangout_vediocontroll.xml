@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_controll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="13dp"
+    android:gravity="right|bottom"
+    android:orientation="vertical"
+    android:background="#B2000000">
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/ll_exitHangout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hangout_liveroom_controll_exit"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_marginRight="12dp"/>
+
+        <ImageView
+            android:id="@+id/iv_exitHangout"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_hangout_vediocontroll_exit"/>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/ll_silent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hangout_liveroom_controll_silent"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_marginRight="12dp"/>
+
+        <ImageView
+            android:id="@+id/iv_silent"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/selected_hangout_silent"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/ll_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hangout_liveroom_controll_mute"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:layout_marginRight="12dp"/>
+
+        <ImageView
+            android:id="@+id/iv_mute"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:background="@drawable/selected_hangout_mute"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <ImageView
+        android:id="@+id/iv_closeVedioControll"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:scaleType="fitCenter"
+        android:visibility="visible"
+        android:layout_marginBottom="58dp"
+        android:src="@drawable/ic_hangout_vediocontroll_close"/>
+</LinearLayout>

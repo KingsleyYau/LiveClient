@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_talents"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/talent_dialog_bg"
+    android:orientation="vertical">
+
+    <!--&lt;!&ndash; 毛玻璃 (作为背景 也 决定整个VIEW的大小)&ndash;&gt;-->
+    <!--<com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView-->
+        <!--android:id="@+id/blurring_view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/live_talent_dialog_height"-->
+        <!--android:layout_gravity="center"-->
+        <!--app:blurRadius="6"-->
+        <!--app:downsampleFactor="6"-->
+        <!--app:overlayColor="#bb000000" />-->
+
+    <!-- 内容 (高度不写死会占满屏) -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/live_talent_dialog_height"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/fl_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_alignParentBottom="true">
+
+            <!-- 毛玻璃 (作为背景 透的是 输入栏)-->
+            <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+                android:id="@+id/blurring_view_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:blurRadius="3"
+                app:downsampleFactor="6"
+                app:overlayColor="@color/talent_burring_bg" />
+
+            <!-- 按钮部分 -->
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 请求 -->
+                <Button
+                    android:id="@+id/btnRequest"
+                    android:layout_width="@dimen/live_size_220dp"
+                    android:layout_height="34dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/live_size_20dp"
+                    android:background="@drawable/bg_live_talent_request_selected"
+                    android:textColor="@color/white"
+                    android:text="@string/live_talent_request_btn"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:textAllCaps="false"
+                    android:elevation="4dp"
+                    />
+
+                <!-- 描述 -->
+                <TextView
+                    android:id="@+id/tv_talentCredits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/live_size_40dp"
+                    android:layout_marginLeft="@dimen/live_size_40dp"
+                    android:layout_marginRight="@dimen/live_size_40dp"
+                    android:layout_marginStart="@dimen/live_size_40dp"
+                    android:layout_marginTop="@dimen/live_size_2dp"
+                    android:gravity="center"
+                    android:lines="2"
+                    android:text="@string/live_talent_tips2"
+                    android:textColor="@color/black3"
+                    android:textSize="@dimen/live_size_12sp" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/fl_bottom">
+
+            <!-- 毛玻璃 (作为背景 透的是 消息列表)-->
+            <com.qpidnetwork.qnbridgemodule.view.blur_500px.BlurringView
+                android:id="@+id/blurring_view_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                app:blurRadius="6"
+                app:downsampleFactor="6"
+                app:overlayColor="@color/talent_burring_bg" />
+
+            <!-- 内容 (其它 fragment) -->
+            <com.qpidnetwork.qnbridgemodule.view.viewPage.NoScrollViewPager
+                android:id="@+id/vpContent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ZBImHeader.h"
-
+#import "LSAnchorProgramItemObject.h"
 typedef enum LiveRoomType {
     LiveRoomType_Unknow = 0,
     LiveRoomType_Public,
@@ -20,6 +20,7 @@ typedef enum LiveRoomType {
 @interface LiveRoom : NSObject
 
 @property (strong) NSString *roomId;
+@property (strong) NSString *showId;
 @property (strong) NSString *userId;
 @property (strong) NSString *userName;
 @property (strong) NSString *photoUrl;
@@ -34,6 +35,8 @@ typedef enum LiveRoomType {
 @property (strong, readonly) NSString *publishUrl;
 
 @property (strong) ZBImLiveRoomObject *imLiveRoom;
+
+@property (nonatomic, strong) LSAnchorProgramItemObject * showInfo;
 
 @property (nonatomic, weak) UIViewController *superController;
 @property (nonatomic, weak) UIView *superView;

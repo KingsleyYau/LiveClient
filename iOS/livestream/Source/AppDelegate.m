@@ -19,7 +19,7 @@
 #import "LiveModule.h"
 
 #import "GCDWebDAVServer.h"
-
+#import "LSBackgroudReloadManager.h"
 @interface AppDelegate ()
 @property (strong) GCDWebServer *httpServer;
 @end
@@ -94,14 +94,11 @@
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-    NSLog(@"AppDelegate::applicationDidEnterBackground()");
-    
+
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    NSLog(@"AppDelegate::applicationWillEnterForeground()");
-    
+
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {

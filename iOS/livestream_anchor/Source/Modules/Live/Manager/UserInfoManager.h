@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "AudienModel.h"
-#import "LSSessionRequestManager.h"
 @interface UserInfoManager : NSObject
 
 #pragma mark - 获取实例

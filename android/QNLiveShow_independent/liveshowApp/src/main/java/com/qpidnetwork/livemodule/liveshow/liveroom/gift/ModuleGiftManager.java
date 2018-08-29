@@ -23,6 +23,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftItemView
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftView;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
@@ -189,6 +190,7 @@ public class ModuleGiftManager {
                                 .load(imUserBaseInfoItem.photoUrl)
                                 .placeholder(R.drawable.ic_default_photo_man)
                                 .error(R.drawable.ic_default_photo_man)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                 .into(civ_photo);
                     }
                     GiftItem giftItem = NormalGiftManager.getInstance().

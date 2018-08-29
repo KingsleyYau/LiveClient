@@ -23,22 +23,37 @@ public class RoomThemeManager {
     /**
      * 直播间-顶部状态栏(通知栏)背景色
      * @param liveRoomType
-     * @param context
      * @return
      */
-    public int getRootViewTopColor(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
-        int colorResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            colorResId = R.color.liveroom_top_barcolor_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            colorResId = R.color.liveroom_top_barcolor_paidpublicRoom;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            colorResId = R.color.liveroom_top_barcolor_normalprivate;
+    public int getRootViewTopColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int statusBarColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            statusBarColor = Color.parseColor("#3FFFFFFF");
+//        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+//            statusBarColor = R.color.liveroom_top_barcolor_paidpublicRoom;
+//        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
+//            statusBarColor = R.color.liveroom_top_barcolor_normalprivate;
         }else {
-            colorResId = R.color.liveroom_top_barcolor_advancedprivate;
+            statusBarColor = Color.parseColor("#252525");
         }
 
-        return context.getResources().getColor(colorResId);
+        return statusBarColor;
+    }
+
+    /**
+     * 直播间关闭按钮图标
+     * @return
+     */
+    public Drawable getCloseRoomImgResId(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable closeRoomDrawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            closeRoomDrawable = context.getResources().getDrawable(R.drawable.ic_live_close_public_room);
+        }else {
+            closeRoomDrawable = context.getResources().getDrawable(R.drawable.ic_live_close_private_room);
+        }
+        return closeRoomDrawable;
     }
 
     /**
@@ -68,14 +83,11 @@ public class RoomThemeManager {
      */
     public Drawable getRoomFlagDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         int drawableResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawableResId = R.drawable.ic_live_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawableResId = R.drawable.ic_live_paypublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawableResId = R.drawable.ic_live_normalprivate;
-        }else {
-            drawableResId = R.drawable.ic_live_advanceprv;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawableResId = R.drawable.ic_live_public_flag;
+        }else{
+            drawableResId = R.drawable.ic_live_private_flag;
         }
 
         return context.getResources().getDrawable(drawableResId);
@@ -121,45 +133,70 @@ public class RoomThemeManager {
         return (int)context.getResources().getDimension(heightResId);
     }
 
-
-
     /**
-     * 直播间-头部背景
+     * 直播间-头部主播信息块-背景
      * @param liveRoomType
      * @return
      */
-    public Drawable getRoomHeaderViewBgDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+    public Drawable getRoomHeaderHostInfoViewBg(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#8144a0"));
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#5d0e86"));
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_headbg_normalprivate);
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                ||IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.bg_live_header_host_public);
         }else {
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_headbg_advanceprivate);
+            drawable = context.getResources().getDrawable(R.drawable.bg_live_header_host_private);
         }
         return drawable;
     }
 
     /**
-     * 直播间-头部view层-底部分割线-高度
+     * 获取直播间头部-主播信息块-直播间类型提示文案资源ID
      * @param liveRoomType
      * @return
      */
-    public int getRoomHeadViewButtomLineHeight(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
-        int heightResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            heightResId = R.dimen.headerview_bottomlineheight_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            heightResId = R.dimen.headerview_bottomlineheight_paidpublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            heightResId = R.dimen.headerview_bottomlineheight_normalprivate;
+    public int getRoomHeaderRoomFlagStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int strResId = 0;
+        if(liveRoomType == IMRoomInItem.IMLiveRoomType.PaidPublicRoom
+                || liveRoomType == IMRoomInItem.IMLiveRoomType.FreePublicRoom){
+            //公开直播间
+          strResId = R.string.live_room_public_flag;
+        }else{
+            strResId = R.string.live_room_private_flag;
+        }
+        return strResId;
+    }
+
+    /**
+     * 获取直播间头部-主播信息块-返点提示颜色
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomHeaderRebateTipsTxtColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int txtColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                ||IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            txtColor = Color.parseColor("#383838");
         }else {
-            heightResId = R.dimen.headerview_bottomlineheight_advanceprivate;
+            txtColor = Color.WHITE;
+        }
+        return txtColor;
+    }
+
+    /**
+     * 直播间-头部view层-分割线-背景色
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getRoomHeadDeviderLineDrawable(IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable deviderLineDrawable = null;
+        if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
+            deviderLineDrawable = new ColorDrawable(Color.parseColor("#e5e5e5"));
+        }else{
+            deviderLineDrawable = new ColorDrawable(Color.parseColor("#2b2b2b"));
         }
 
-        return (int)context.getResources().getDimension(heightResId);
+        return deviderLineDrawable;
     }
 
     /**
@@ -187,7 +224,7 @@ public class RoomThemeManager {
         Drawable drawable = null;
         if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
             drawable = context.getResources().getDrawable(
-                    R.drawable.bg_liveroom_creditstips_b03a0953);
+                    R.drawable.bg_liveroom_creditstips_70434343);
         }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
             drawable = context.getResources().getDrawable(
                     R.drawable.bg_liveroom_creditstips_b0293fac);
@@ -208,9 +245,9 @@ public class RoomThemeManager {
     public Drawable getRoomPriLiveNowBtnDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
         if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_privatelive_freepublic);
+            drawable = context.getResources().getDrawable(R.drawable.ic_live_privatelive_public);
         }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_privatelive_paypublic);
+            drawable = context.getResources().getDrawable(R.drawable.ic_live_privatelive_public);
         }
 
         return drawable;
@@ -224,6 +261,28 @@ public class RoomThemeManager {
         }
     }
 
+    public int getRoomCarViewBgDrawableResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int bgResId = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            bgResId = R.drawable.bg_entrance_car_master_public;
+        }else{
+            bgResId = R.drawable.bg_entrance_car_master_private;
+        }
+        return bgResId;
+    }
+
+    public int getRoomCarViewTxtColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int txtColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            txtColor = Color.parseColor("#FFFFD205");
+        }else{
+            txtColor = Color.WHITE;
+        }
+        return txtColor;
+    }
+
     /**
      * 直播间-主题背景
      * @param liveRoomType
@@ -231,14 +290,11 @@ public class RoomThemeManager {
      */
     public Drawable getRoomThemeDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#f8f8f8"));
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#530d78"));
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_roomtheme_normalpri);
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = new ColorDrawable(Color.parseColor("#ECEDF1"));
         }else {
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_roomtheme_advancepri);
+            drawable = new ColorDrawable(Color.parseColor("#2b2b2b"));
         }
         return drawable;
     }
@@ -260,6 +316,7 @@ public class RoomThemeManager {
 
         return drawable;
     }
+
 
     /**
      * 私密直播间-亲密度等级-图标
@@ -323,14 +380,11 @@ public class RoomThemeManager {
      */
     public Drawable getRoomGiftBtnDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_freepublic);
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_paypublic);
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_liveroom_buttom_gift_normalprv);
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_public);
         }else{
-            drawable = context.getResources().getDrawable(R.drawable.ic_liveroom_buttom_gift_advanceprv);
+            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_gift_private);
         }
         return drawable;
     }
@@ -342,18 +396,51 @@ public class RoomThemeManager {
      */
     public int getRoomGiftBtnLeftMargin(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         int heightResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            heightResId = R.dimen.live_buttomgift_leftmargin_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            heightResId = R.dimen.live_buttomgift_leftmargin_paypublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            heightResId = R.dimen.live_buttomgift_leftmargin_normalprv;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            heightResId = R.dimen.live_buttomgift_leftmargin_public;
+
         }else {
-            heightResId = R.dimen.live_buttomgift_leftmargin_advanceprv;
+            heightResId = R.dimen.live_buttomgift_leftmargin_private;
         }
 
         return (int)context.getResources().getDimension(heightResId);
     }
+
+    /**
+     * 直播间底部-礼物按钮-rightmargin
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomGiftBtnRightMargin(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+        int heightResId = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            heightResId = R.dimen.live_buttomgift_rightmargin_public;
+        }else {
+            heightResId = R.dimen.live_buttomgift_rightmargin_private;
+        }
+
+        return (int)context.getResources().getDimension(heightResId);
+    }
+
+    /**
+     * 直播间底部-礼物按钮-rightmargin
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomGiftBtnButtomMargin(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+        int heightResId = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            heightResId = R.dimen.live_buttomgift_buttommargin_public;
+        }else {
+            heightResId = R.dimen.live_buttomgift_buttommargin_private;
+        }
+
+        return (int)context.getResources().getDimension(heightResId);
+    }
+
 
     /**
      * 直播间-底部推荐礼物按钮样式
@@ -362,10 +449,9 @@ public class RoomThemeManager {
      */
     public Drawable getRoomRecommGiftFloatDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_recomgift_float_normalprv);
-        }else if(IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_recomgift_float_advanceprv);
+        if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.ic_recomgift_float_private);
         }
         return drawable;
     }
@@ -375,13 +461,41 @@ public class RoomThemeManager {
      * @param liveRoomType
      * @return
      */
-    public int getRoomRecommGiftBtnLeftMargin(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
-        if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            return (int)context.getResources().getDimension(R.dimen.live_buttomrecommgift_leftmargin_normalprv);
-        }else if(IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom == liveRoomType) {
-            return (int)context.getResources().getDimension(R.dimen.live_buttomrecommgift_leftmargin_advanceprv);
+    public int getRoomRecommGiftBtnRightMargin(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom == liveRoomType) {
+            return (int) context.getResources().getDimension(R.dimen.live_buttomrecommgift_rightmargin_private);
         }
         return 0;
+    }
+
+    /**
+     * 直播间-消息列表-TopMargin
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomMsgListTopMargin(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+
+        if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom == liveRoomType){
+            return (int)context.getResources().getDimension(R.dimen.live_msglist_topmargin_private);
+        }
+
+        return 0;
+    }
+
+    /**直播间-消息列表-顶部渐进色
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomMsgListTopGradualColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int color = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            color = Color.WHITE;
+        }else{
+            color = Color.parseColor("#2b2b2b");
+        }
+        return color;
     }
 
     /**直播间底部-Say something控件样式
@@ -390,17 +504,26 @@ public class RoomThemeManager {
      */
     public Drawable getRoomInputBtnDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_input_freepublic);
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_input_paypublic);
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_input_normalprivate);
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.bg_live_buttom_input_public);
+
         }else{
-            drawable = context.getResources().getDrawable(R.drawable.ic_live_buttom_input_advanceprivate);
+            drawable = context.getResources().getDrawable(R.drawable.bg_live_buttom_input_private);
         }
 
         return drawable;
+    }
+
+    public int getRoomInputTipsTxtColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int txtColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            txtColor = Color.WHITE;
+        }else{
+            txtColor = Color.parseColor("#AAFFFFFF");
+        }
+        return txtColor;
     }
 
     /**直播间-软键盘弹起-输入控件整体背景样式
@@ -532,115 +655,147 @@ public class RoomThemeManager {
      */
     public Drawable getRoomRepeatGiftAnimBgDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_freepublic);
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_paypublic);
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_normalprivate);
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_public);
         }else{
-            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_advanceprivate);
+            drawable = context.getResources().getDrawable(R.drawable.bg_liveroom_giftanim_private);
         }
         return drawable;
     }
 
     /**
-     * 直播间-聊天列表-用户进入直播间消息-文字样式
+     * 系统公告:带连接或者不带连接普通文本文字颜色
      * @param liveRoomType
      * @return
      */
-    public int getRoomMsgListMedalRoomInMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
-        int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_paidpublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_normalprv;
+    public int getRoomMsgListSysNoticeNormalTxtColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int txtColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            txtColor = Color.parseColor("#297AF3");
         }else{
-            strResId = R.string.liveroom_message_template_roomin_advanceprv;
+            txtColor = Color.parseColor("#FF6D00");
         }
-        return strResId;
+        return txtColor;
     }
 
-    public int getRoomMsgListNoMedalRoomInMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
-        int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_freepublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_paidpublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_roomin_normalprv_nomedal;
+    /**
+     * 系统公告-警告文本文字颜色
+     * @param liveRoomType
+     * @return
+     */
+    public int getRoomMsgListSysNoticeWarningTxtColor(IMRoomInItem.IMLiveRoomType liveRoomType){
+        int txtColor = 0;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            txtColor = Color.parseColor("#FF4D4D");
         }else{
-            strResId = R.string.liveroom_message_template_roomin_advanceprv_nomedal;
+            txtColor = Color.parseColor("#FF4D4D");
+        }
+        return txtColor;
+    }
+
+    /**
+     * 直播间消息列表-礼物消息类型对应的资源id
+     * @param liveRoomType
+     * @param isAnchor
+     * @param isMySelf
+     * @return
+     */
+    public int getRoomMsgListGiftMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType,boolean isAnchor,boolean isMySelf){
+        int strResId = 0;
+        if(null != liveRoomType){
+            if(liveRoomType == IMRoomInItem.IMLiveRoomType.PaidPublicRoom
+                    || liveRoomType == IMRoomInItem.IMLiveRoomType.FreePublicRoom){
+                //公开直播间
+                if(isMySelf){
+                    strResId = R.string.livemsg_temp_gift_public_self;
+                }else if(isAnchor){
+                    strResId = R.string.livemsg_temp_gift_public_anchor;
+                }else{
+                    strResId = R.string.livemsg_temp_gift_public;
+                }
+            }else{
+                //私密直播间
+                if(isMySelf){
+                    strResId = R.string.livemsg_temp_gift_private_self;
+                }else if(isAnchor){
+                    strResId = R.string.livemsg_temp_gift_private_anchor;
+                }
+            }
         }
         return strResId;
     }
 
     /**
-     * 直播间-聊天列表-文本/弹幕消息-文字样式
+     * 直播间消息列表-入场信息类型对应的资源id
      * @param liveRoomType
+     * @param isMySelf
      * @return
      */
-    public int getRoomMsgListMedalTxtMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+    public int getRoomMsgListRoomInMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType,boolean isMySelf){
         int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_paidpublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_normalprv;
-        }else{
-            strResId = R.string.liveroom_message_template_normal_advanceprv;
-        }
-        return strResId;
-    }
-
-    public int getRoomMsgListNoMedalTxtMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
-        int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_freepublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_paidpublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_normal_normalprv_nomedal;
-        }else{
-            strResId = R.string.liveroom_message_template_normal_advanceprv_nomedal;
+        if(null != liveRoomType){
+            if(liveRoomType == IMRoomInItem.IMLiveRoomType.PaidPublicRoom
+                    || liveRoomType == IMRoomInItem.IMLiveRoomType.FreePublicRoom){
+                //公开直播间
+                if(isMySelf){
+                    strResId = R.string.livemsg_temp_roomin_public_self;
+                }else{
+                    strResId = R.string.livemsg_temp_roomin_public;
+                }
+            }else{
+                //私密直播间
+                strResId = R.string.livemsg_temp_roomin_private_self;
+            }
         }
         return strResId;
     }
 
     /**
-     * 直播间-聊天列表-礼物消息-文字样式
+     * 直播间消息列表-普通文本消息/弹幕资源ID
      * @param liveRoomType
+     * @param isAnchor
+     * @param isMySelf
      * @return
      */
-    public int getRoomMsgListMedalGiftMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
+    public int getRoomMsgListNormalStrResId(IMRoomInItem.IMLiveRoomType liveRoomType, boolean isAnchor, boolean isMySelf){
         int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_freepublic;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_paidpublic;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_normalprv;
-        }else{
-            strResId = R.string.liveroom_message_template_gift_advanceprv;
+        if(null != liveRoomType){
+            if(liveRoomType == IMRoomInItem.IMLiveRoomType.PaidPublicRoom
+                    || liveRoomType == IMRoomInItem.IMLiveRoomType.FreePublicRoom){
+                if(isMySelf){
+                    strResId = R.string.livemsg_temp_normal_public_self;
+                }else if(isAnchor){
+                    strResId = R.string.livemsg_temp_normal_public_anchor;
+                }else{
+                    //其他观众的消息，目前是看不到的
+                }
+            }else{
+                if(isMySelf){
+                    strResId = R.string.livemsg_temp_normal_private_self;
+                }else if(isAnchor){
+                    strResId = R.string.livemsg_temp_normal_private_anchor;
+                }else{
+                    //其他观众的消息，目前是看不到的
+                }
+            }
         }
         return strResId;
     }
 
-    public int getRoomMsgListNoMedalGiftMsgStrResId(IMRoomInItem.IMLiveRoomType liveRoomType){
-        int strResId = 0;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_freepublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_paidpublic_nomedal;
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            strResId = R.string.liveroom_message_template_gift_normalprv_nomedal;
+
+
+    public Drawable getRoomMsgListGiftItemBgDrawable(Context context, IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_public);
         }else{
-            strResId = R.string.liveroom_message_template_gift_advanceprv_nomedal;
+            drawable=context.getResources().getDrawable(R.drawable.bg_live_msg_item_gift_private);
         }
-        return strResId;
+        return drawable;
     }
 
     /**
@@ -650,14 +805,11 @@ public class RoomThemeManager {
      */
     public Drawable getRoomBarrageBgDrawable(IMRoomInItem.IMLiveRoomType liveRoomType){
         Drawable drawable = null;
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType
+                || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
             drawable = new ColorDrawable(Color.parseColor("#deffffff"));
-        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#de530d78"));
-        }else if(IMRoomInItem.IMLiveRoomType.NormalPrivateRoom == liveRoomType){
-            drawable = new ColorDrawable(Color.parseColor("#de293fac"));
         }else{
-            drawable = new ColorDrawable(Color.parseColor("#de644c3b"));
+            drawable = new ColorDrawable(Color.parseColor("#E5252525"));
         }
 
         return drawable;

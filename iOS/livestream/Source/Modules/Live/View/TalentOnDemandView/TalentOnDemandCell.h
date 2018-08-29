@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface TalentOnDemandCell : UITableViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *subLabel;
-@property (weak, nonatomic) IBOutlet UIButton *requestBtn;
-
+@property (weak, nonatomic) IBOutlet UIButton *detialsBtn;
 
 + (NSString *)cellIdentifier;
 + (NSInteger)cellHeight;
-+ (id)getUITableViewCell:(UITableView*)tableView;
++ (id)getUITableViewCell:(UITableView *)tableView;
 @end

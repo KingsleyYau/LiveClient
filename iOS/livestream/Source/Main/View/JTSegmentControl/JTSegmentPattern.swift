@@ -23,7 +23,7 @@ struct JTSegmentPattern {
     
     //MARK - slider
     static let sliderColor = UIColor.orange
-    static let sliderHeight : CGFloat = 5.0
+    static let sliderHeight : CGFloat = 3.0
     
     //MARK - bridge
     static let bridgeColor = UIColor.red

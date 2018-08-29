@@ -1,11 +1,8 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 import com.qpidnetwork.livemodule.utils.Log;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
@@ -23,16 +20,16 @@ public class GiftRecommandManager {
     private static final int RECOMMAND_DURATION = 5 * 60 * 1000;    //每5分钟随机推荐一个礼物
     private final String TAG = GiftRecommandManager.class.getSimpleName();
 
-    private WeakReference<BaseCommonLiveRoomActivity> mContext;
     private Timer mRandomRecommandTimer;
     private OnGiftRecommandListener mRecommandListener;
-    private NormalGiftManager mNormalGiftManager;
+    private RoomSendableGiftManager mRoomSendableGiftManager;
 
-    public GiftRecommandManager(BaseCommonLiveRoomActivity context){
-        Log.d(TAG,"GiftRecommandManager");
-        this.mContext = new WeakReference<BaseCommonLiveRoomActivity>(context);
+    //标记推荐是否开启,防止重复启动
+    private boolean mRecommandStarted = false;
+
+    public GiftRecommandManager(RoomSendableGiftManager roomSendableGiftManager){
+        this.mRoomSendableGiftManager = roomSendableGiftManager;
         mRandomRecommandTimer = new Timer();
-        mNormalGiftManager = NormalGiftManager.getInstance();
     }
 
     /**
@@ -49,19 +46,18 @@ public class GiftRecommandManager {
      */
     public void startRecommand(){
         Log.d(TAG,"startRecommand");
-        if(mRandomRecommandTimer != null){
+        //启动推荐逻辑
+        if (mRandomRecommandTimer != null && !mRecommandStarted) {
+            mRecommandStarted = true;
             mRandomRecommandTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if(null != mContext && null != mContext.get() && null != mContext.get().mIMRoomInItem){
-                        IMRoomInItem currIMRoomInItem =mContext.get().mIMRoomInItem;
-                        List<GiftItem> giftList = NormalGiftManager.getInstance().getLocalSendabelRecomGiftList(
-                                currIMRoomInItem.roomId,currIMRoomInItem.manLevel,currIMRoomInItem.loveLevel);
-                        if(null != giftList && giftList.size()>0){
-                            int position = new Random().nextInt(giftList.size()-1);
-                            GiftItem recomGiftItem = giftList.get(position);
-                            Log.d(TAG,"startRecommand-recomGiftItem.id:"+recomGiftItem.id+" recomGiftItem.name:"+recomGiftItem.name);
-                            if(mRecommandListener != null){
+                    if(mRoomSendableGiftManager != null){
+                        List<GiftItem> recommandGiftList = mRoomSendableGiftManager.getFilterRecommandGiftList();
+                        if(recommandGiftList != null && recommandGiftList.size() > 0){
+                            int position = new Random().nextInt(recommandGiftList.size() - 1);
+                            GiftItem recomGiftItem = recommandGiftList.get(position);
+                            if (mRecommandListener != null) {
                                 mRecommandListener.onGiftRecommand(recomGiftItem);
                             }
                         }
@@ -76,6 +72,7 @@ public class GiftRecommandManager {
      */
     public void stopRecommand(){
         Log.d(TAG,"stopRecommand");
+        mRecommandStarted = false;
         if(mRandomRecommandTimer != null){
             mRandomRecommandTimer.cancel();
         }

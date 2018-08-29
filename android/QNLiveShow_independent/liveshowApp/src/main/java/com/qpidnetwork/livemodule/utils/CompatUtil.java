@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 
 import java.io.File;
@@ -43,7 +42,7 @@ public class CompatUtil {
 	}
 
 	/**
-	 * 解决4.4及以上版本与4.4一下版本读取系统相册差异化问题
+	 * 解决4.4及以上版本与4.4以下版本读取系统相册差异化问题
 	 * @return
 	 */
 	public static String getSelectedPhotoPath(Context context, Uri contentUri){
@@ -55,7 +54,6 @@ public class CompatUtil {
 			    String[] projection = { MediaStore.Images.Media.DATA };
 			    try{
 				    Cursor cursor = context.getContentResolver().query(contentUri, projection, null, null, null);
-				    
 				    if( cursor != null ) {
 				    	cursor.moveToFirst();
 				    	int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -63,7 +61,7 @@ public class CompatUtil {
 				    	cursor.close();
 				    }
 			    }catch(Exception e){
-		    	
+		    		e.printStackTrace();
 			    }
 			}else{
 				String tempfilePath = contentUri.getPath();

@@ -8,7 +8,8 @@
 
 
     <!-- 背景不随软键盘切换部分：视频播放view-->
-    <ScrollView
+    <com.qpidnetwork.livemodule.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -38,7 +39,7 @@
                     android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.qpidnetwork.livemodule.view.LiveRoomScrollView>
 
     <!--覆盖在视频上的业务层-->
     <LinearLayout

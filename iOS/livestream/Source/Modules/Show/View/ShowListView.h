@@ -22,8 +22,8 @@
 
 @property (weak, nonatomic) IBOutlet UIView *onGingView;
 @property (weak, nonatomic) IBOutlet UILabel *onGingLabel;
-@property (weak, nonatomic) IBOutlet UIImageView *showBGView;
-@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *headImage;
+@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *showBGView;
+@property (weak, nonatomic) IBOutlet UIImageView *headImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
 @property (weak, nonatomic) IBOutlet UIButton *subButton;
@@ -35,6 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *priceLabel;
 @property (weak, nonatomic) IBOutlet UIButton *otherShowBtn;
 @property (weak, nonatomic) IBOutlet UIImageView *onGingIcon;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (nonatomic, strong) LSImageViewLoader * imageViewLoader;
 @property (nonatomic, strong) LSImageViewLoader * bgImageViewLoader;
 - (void)updateUI:(LSProgramItemObject *)item;

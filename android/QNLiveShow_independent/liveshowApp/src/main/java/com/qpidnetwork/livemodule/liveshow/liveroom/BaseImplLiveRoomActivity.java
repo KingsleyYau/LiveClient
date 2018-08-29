@@ -12,12 +12,14 @@ import com.qpidnetwork.livemodule.httprequest.OnGetAudienceDetailInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetSendableGiftListCallback;
+import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
+import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.im.IMLoginStatusListener;
@@ -31,7 +33,7 @@ import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftRecommandManager;
+import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftRecommandManager.OnGiftRecommandListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
@@ -57,7 +59,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         OnGetAudienceListCallback, NormalGiftManager.OnRoomShowSendableGiftDataChangeListener,
         PackageGiftManager.OnPackageGiftDataChangeListener,OnGetGiftListCallback,
         OnGetSendableGiftListCallback,OnGetAudienceDetailInfoCallback, IMLoginStatusListener,
-        OnRoomRebateCountTimeEndListener,GiftRecommandManager.OnGiftRecommandListener {
+        OnRoomRebateCountTimeEndListener,OnGiftRecommandListener , OnGetUserInfoCallback {
 
     //数据及管理
     public IMRoomInItem mIMRoomInItem;    //房间信息
@@ -615,6 +617,12 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         Log.d(TAG,"onGiftRecommand-giftItem.id:"+giftItem.id
                 +" giftItem.name:"+giftItem.name
                 +" giftItem.middleImgUrl:"+giftItem.middleImgUrl);
+    }
+
+    @Override
+    public void onGetUserInfo(boolean isSuccess, int errCode, String errMsg, UserInfoItem userItem) {
+        Log.d(TAG,"onGetUserInfo-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg
+                +" userItem:"+userItem);
     }
 
     //------------------勋章---------------------------------

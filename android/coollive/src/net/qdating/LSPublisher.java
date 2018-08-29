@@ -3,7 +3,9 @@ package net.qdating;
 import java.io.File;
 import java.util.Arrays;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,11 +22,13 @@ import net.qdating.publisher.LSVideoCapture;
 import net.qdating.publisher.LSVideoHardEncoder;
 import net.qdating.utils.Log;
 
+import static android.content.Context.ACTIVITY_SERVICE;
+
 /**
  * RTMP流推流器
  * @author max
  */
-public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallback, ILSAudioRecorderCallback {
+public class LSPublisher {
 	/**
 	 * RTMP模块
 	 */
@@ -77,6 +81,32 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	// 消息定义
 	private final int MSG_CONNECT = 0;
 
+	/**
+	 * 检查设备是否支持推流
+	 * @return true:成功/false:失败
+	 */
+	public static boolean checkDeviceSupport(Context context) {
+		boolean bFlag = false;
+		ActivityManager activityManager = (ActivityManager)context.getSystemService(ACTIVITY_SERVICE);
+		ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+		int major = ((configurationInfo.reqGlEsVersion & 0xffff0000) >> 16);
+		bFlag = (major >= 3);
+
+		Log.i(LSConfig.TAG,
+				String.format("LSPublisher::checkDeviceSupport( "
+								+ "[%s], "
+								+ "reqGlEsVersion : 0x%x, "
+								+ "major : %d "
+								+ ")",
+						bFlag?"Success":"Fail",
+						configurationInfo.reqGlEsVersion,
+						major
+				)
+		);
+
+		return bFlag;
+	}
+
 	/***
 	 * 初始化流推送器
 	 * @param surfaceView	显示界面
@@ -92,7 +122,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 						GLSurfaceView surfaceView,
 						int rotation,
 						FillMode fillMode,
-						ILSPublisherStatusCallback statusCallback,
+						final ILSPublisherStatusCallback statusCallback,
 						LSConfig.VideoConfigType videoConfigType,
 						int fps,
 						int keyFrameInterval,
@@ -100,10 +130,13 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	) {
 		boolean bFlag = true;
 
-		File path = Environment.getExternalStorageDirectory();
-		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
-		Log.initFileLog(filePath);
-		Log.setWriteFileLog(true);
+		if( LSConfig.LOGDIR != null && LSConfig.LOGDIR.length() > 0 ) {
+			File path = Environment.getExternalStorageDirectory();
+			String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
+			Log.initFileLog(filePath);
+			Log.setWriteFileLog(true);
+			LSPublisherJni.SetLogDir(filePath);
+		}
 
 		Log.i(LSConfig.TAG,
 				String.format("LSPublisher::init( "
@@ -132,6 +165,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		LSPublishConfig publishConfig = new LSPublishConfig();
 		bFlag = publishConfig.updateVideoConfig(videoConfigType, fps, keyFrameInterval, videoBitrate);
 
+		// 编码模式选择
 //        if( LSConfig.encodeMode == LSConfig.EncodeMode.EncodeModeAuto ) {
 //            if( LSVideoHardEncoder.supportHardEncoder(publishConfig) ) {
 //                // 判断可以使用硬解码
@@ -142,19 +176,73 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 //            useHardEncoder = true;
 //        }
 
+		final LSPublisher lsPublisher = this;
 		// 初始化推流器
 		if( bFlag ) {
-			bFlag = publisher.Create(this, useHardEncoder, videoHardEncoder, publishConfig);
+			bFlag = publisher.Create(new ILSPublisherCallback() {
+				@Override
+				public void onConnect(LSPublisherJni publisher) {
+					Log.i(LSConfig.TAG, String.format("LSPublisher::onConnect( this : 0x%x )", lsPublisher.hashCode()));
+
+					// 通知外部监听
+					if( statusCallback != null ) {
+						statusCallback.onConnect(lsPublisher);
+					}
+				}
+
+				@Override
+				public void onDisconnect(LSPublisherJni publisher) {
+					Log.i(LSConfig.TAG, String.format("LSPublisher::onDisconnect( this : 0x%x )", lsPublisher.hashCode()));
+
+					// 通知外部监听
+					if( statusCallback != null ) {
+						statusCallback.onDisconnect(lsPublisher);
+					}
+
+					synchronized (lsPublisher) {
+						if( isRuning ) {
+							// 非手动断开, 发送重连消息
+							Message msg = Message.obtain();
+							msg.what = MSG_CONNECT;
+							msg.obj = lsPublisher;
+							handler.sendMessageDelayed(msg, LSConfig.RECONNECT_SECOND);
+						}
+					}
+				}
+			}, useHardEncoder, videoHardEncoder, publishConfig);
 		}
 		
 		// 初始化视频采集
 		if( bFlag ) {
-			bFlag = videoCapture.init(surfaceView, this, rotation, fillMode, useHardEncoder, publishConfig);
+			bFlag = videoCapture.init(surfaceView, new ILSVideoCaptureCallback() {
+                @Override
+                public void onChangeRotation(int rotation) {
+                    Log.i(LSConfig.TAG, String.format("LSPublisher::onChangeRotation( this : 0x%x, rotation : %d )", lsPublisher.hashCode(), rotation));
+                    publisher.ChangeVideoRotate(rotation);
+                }
+
+                @Override
+                public void onVideoCapture(byte[] data, int size, int width, int height) {
+                    if( isRuning ) {
+                        publisher.PushVideoFrame(data, size, width, height);
+                    }
+                }
+            }, rotation, fillMode, useHardEncoder, publishConfig);
 		}
 		
 		// 初始化音频录制
 		if( bFlag ) {
-			bFlag = audioRecorder.init(this, publishConfig);
+			bFlag = audioRecorder.init(new ILSAudioRecorderCallback() {
+				@Override
+				public void onAudioRecord(byte[] data, int size) {
+					if( isRuning ) {
+						if( isMute ) {
+							Arrays.fill(data, (byte)0);
+						}
+						publisher.PushAudioFrame(data, size);
+					}
+				}
+			}, publishConfig);
 		}
 
 		if( bFlag ) {
@@ -176,6 +264,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 							synchronized (this) {
 								if( isRuning ) {
 									// 非手动停止, 准备重连
+									publisher.Stop();
 									start();
 								}
 							}
@@ -227,7 +316,6 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		videoCapture.uninit();
 		// 销毁音频录制
 		audioRecorder.uninit();
-		
 	}
 	
 	/**
@@ -278,7 +366,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		
 		return bFlag;
 	}
-	
+
 	/**
 	 * 停止推送
 	 */
@@ -305,11 +393,13 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		if( publisher != null ) {
 			publisher.Stop();
 		}
+
+		Log.i(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x, [Success] )", hashCode()));
 	}
 
 	/**
 	 * 当前是否静音
-	 * @return
+	 * @return true:静音/false:不静音
 	 */
 	public boolean getMute() {
 		return isMute;
@@ -326,6 +416,7 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 	
 	/**
 	 * 切换前后摄像头
+	 * @return true:成功/false:失败
 	 */
 	public boolean rotateCamera() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::rotateCamera( this : 0x%x )", hashCode()));
@@ -336,7 +427,11 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		}
 		return bFlag;
 	}
-	
+
+	/**
+	 * 开启预览
+	 * @return true:成功/false:失败
+	 */
 	public boolean startPreview() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::startPreview( this : 0x%x )", hashCode()));
 		boolean bFlag = videoCapture.start();
@@ -345,94 +440,34 @@ public class LSPublisher implements ILSPublisherCallback, ILSVideoCaptureCallbac
 		}
 		return bFlag;
 	}
-	
+
+	/**
+	 * 停止预览
+	 */
 	public void stopPreview() {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::stopPreview( this : 0x%x )", hashCode()));
 		publisher.PausePushVideo();
 		videoCapture.stop();
 	}
-	
+
 	/**
 	 * 开始推送
-	 * @return 成功失败
+	 * @return true:成功/false:失败
 	 */
 	private boolean start() {
 		boolean bFlag = false;
-		
+
 		Log.i(LSConfig.TAG, String.format("LSPublisher::start( this : 0x%x, url : %s )", hashCode(), url));
-		
-    	bFlag = publisher.PublishUrl(url, recordH264FilePath, recordAACFilePath);
+
+		bFlag = publisher.PublishUrl(url, recordH264FilePath, recordAACFilePath);
 		if( !bFlag ) {
 			publisher.Stop();
 		}
-		
+
 		if( !bFlag ) {
 			Log.e(LSConfig.TAG, String.format("LSPublisher::start( this : 0x%x, [Fail], url : %s )", hashCode(), url));
 		}
-		
+
 		return bFlag;
 	}
-	
-
-	@Override
-	public void onConnect(LSPublisherJni publisher) {
-		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, String.format("LSPublisher::onConnect( this : 0x%x )", hashCode()));
-		
-		// 通知外部监听
-		if( statusCallback != null ) {
-			statusCallback.onConnect(this);
-		}
-	}
-	
-	@Override
-	public void onDisconnect(LSPublisherJni publisher) {
-		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, String.format("LSPublisher::onDisconnect( this : 0x%x )", hashCode()));
-		
-		// 通知外部监听
-		if( statusCallback != null ) {
-			statusCallback.onDisconnect(this);
-		}
-
-		synchronized (this) {
-			if( isRuning ) {
-				// 非手动断开, 发送重连消息
-				Message msg = Message.obtain();
-				msg.what = MSG_CONNECT;
-				msg.obj = this;
-				handler.sendMessageDelayed(msg, LSConfig.RECONNECT_SECOND);
-			}
-		}
-	}
-
-	@Override
-	public void onVideoCapture(byte[] data, int size, int width, int height) {
-		// TODO Auto-generated method stub
-		// 不需要准, 不要锁
-    	if( isRuning ) {
-    		publisher.PushVideoFrame(data, size, width, height);
-    	}
-	}
-
-	@Override
-	public void onChangeRotation(int rotation) {
-		// TODO Auto-generated method stub
-		Log.i(LSConfig.TAG, String.format("LSPublisher::onChangeRotation( this : 0x%x, rotation : %d )", hashCode(), rotation));
-		
-		publisher.ChangeVideoRotate(rotation);
-	}
-
-	@Override
-	public void onAudioRecord(byte[] data, int size) {
-		// TODO Auto-generated method stub
-		// 不需要准, 不要锁
-		if( isRuning ) {
-			if( isMute ) {
-				Arrays.fill(data, (byte)0);
-			}
-			publisher.PushAudioFrame(data, size);
-		}
-	}
-	
 }

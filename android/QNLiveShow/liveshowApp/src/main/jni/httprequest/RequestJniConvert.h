@@ -32,11 +32,13 @@ static const int HTTPErrorTypeArray[] = {
 	    HTTP_LCC_ERR_TOKEN_EXPIRE, 		// Token 过期了
 	    HTTP_LCC_ERR_NOT_FOUND_ROOM, 	// 进入房间失败 找不到房间信息or房间关闭
 	    HTTP_LCC_ERR_CREDIT_FAIL, 		// 远程扣费接口调用失败
+
 	    HTTP_LCC_ERR_ROOM_CLOSE,  		// 房间已经关闭
 	    HTTP_LCC_ERR_KICKOFF, 			// 被挤掉线 默认通知内容
 	    HTTP_LCC_ERR_NO_AUTHORIZED, 	// 不能操作 不是对应的userid
 	    HTTP_LCC_ERR_LIVEROOM_NO_EXIST, // 直播间不存在
 	    HTTP_LCC_ERR_LIVEROOM_CLOSED, 	// 直播间已关闭
+
 	    HTTP_LCC_ERR_ANCHORID_INCONSISTENT, 	// 主播id与直播场次的主播id不合
 	    HTTP_LCC_ERR_CLOSELIVE_DATA_FAIL, 		// 关闭直播场次,数据表操作出错
 	    HTTP_LCC_ERR_CLOSELIVE_LACK_CODITION, 	// 主播立即关闭私密直播间, 不满足关闭条件
@@ -46,12 +48,14 @@ static const int HTTPErrorTypeArray[] = {
 	    HTTP_LCC_ERR_NOT_FIND_ANCHOR, 			// 主播机构信息找不到
 	    HTTP_LCC_ERR_NOTCAN_REFUND, 			// 立即私密退点失败，已经定时扣费不能退点
 	    HTTP_LCC_ERR_NOT_FIND_PRICE_INFO, 		// 找不到price_setting表信息
-	    HTTP_LCC_ERR_ANCHOR_BUSY,			  	// 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
+
+        HTTP_LCC_ERR_ANCHOR_BUSY,			  	// 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
 	    HTTP_LCC_ERR_CHOOSE_TIME_ERR, 			// 预约时间错误 /*important*/
 	    HTTP_LCC_ERR_BOOK_EXIST, 				// 用户预约时间段已经存在预约 /*important*/
 	    HTTP_LCC_ERR_BIND_PHONE, 				// 手机号码已绑定
-	    HTTP_LCC_ERR_RETRY_PHONE, 				// 请稍后再重试
-	    HTTP_LCC_ERR_MORE_TWENTY_PHONE, 		// 60分钟内验证超过20次，请24小时后再试
+        HTTP_LCC_ERR_RETRY_PHONE, 				// 请稍后再重试
+
+        HTTP_LCC_ERR_MORE_TWENTY_PHONE, 		// 60分钟内验证超过20次，请24小时后再试
 	    HTTP_LCC_ERR_UPDATE_PHONE_FAIL, 		// 更新失败
 	    HTTP_LCC_ERR_ANCHOR_OFFLIVE,            // 主播不在线，不能操作
 		HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING, 	// 观众已同意预约
@@ -111,8 +115,10 @@ int ImmediateInviteReplyTypeToInt(HttpReplyType giftType);
 /* 礼物类型  */
 static const int GiftTypeArray[]{
 	GIFTTYPE_UNKNOWN,
-	GIFTTYPE_COMMON,   // 普通礼物
-	GIFTTYPE_Heigh  // 高级礼物（动画）
+	GIFTTYPE_COMMON,    // 普通礼物
+	GIFTTYPE_Heigh,     // 高级礼物（动画）
+    GIFTTYPE_BAR,       // 吧台礼物
+    GIFTTYPE_CELEBRATE  // 庆祝礼物
 };
 
 // 底层状态转换JAVA坐标
@@ -149,7 +155,9 @@ int BookInviteStatusToInt(BookingReplyType replyType);
 static const int TalentInviteStatusArray[]{
 	HTTPTALENTSTATUS_UNREPLY,               // 未回复
 	HTTPTALENTSTATUS_ACCEPT,                // 已接受
-	HTTPTALENTSTATUS_REJECT                 // 拒绝
+	HTTPTALENTSTATUS_REJECT,                // 拒绝
+	HTTPTALENTSTATUS_OUTTIME,				// 已超时
+	HTTPTALENTSTATUS_CANCEL					// 已取消
 };
 
 // 底层状态转换JAVA坐标
@@ -212,6 +220,83 @@ static const int PromoAnchorTypeArray[] = {
 //Java层转底层枚举
 PromoAnchorType IntToPromoAnchorType(int value);
 
+
+/*地区ID的类型*/
+static const int RegionIdTypeArray[] = {
+        REGIONIDTYPE_UNKNOW,                             // 未知
+        REGIONIDTYPE_CD,                           		 // CD
+        REGIONIDTYPE_LD,		                     	 // LD
+        REGIONIDTYPE_AME
+};
+//Java层转底层枚举
+RegionIdType IntToRegionIdType(int value);
+
+/*多人邀请类型 */
+static const int HangoutInviteStatusArray[] = {
+		HANGOUTINVITESTATUS_UNKNOW,             // 未知
+		HANGOUTINVITESTATUS_PENDING,            // 待确定
+		HANGOUTINVITESTATUS_ACCEPT,             // 已接受
+		HANGOUTINVITESTATUS_REJECT,				// 已拒绝
+		HANGOUTINVITESTATUS_OUTTIME,			// 已超时
+		HANGOUTINVITESTATUS_CANCLE,             // 观众取消邀
+		HANGOUTINVITESTATUS_NOCREDIT,           // 余额不足
+		HANGOUTINVITESTATUS_BUSY                // 主播繁忙
+};
+int HangoutInviteStatusToInt(HangoutInviteStatus type);
+
+/*列表类型*/
+static const int HangoutAnchorListTypeArray[] = {
+		HANGOUTANCHORLISTTYPE_UNKNOW,                    // 未知
+		HANGOUTANCHORLISTTYPE_FOLLOW,                   // 已关注
+		HANGOUTANCHORLISTTYPE_WATCHED,		            // Watched(看过的)
+		HANGOUTANCHORLISTTYPE_FRIEND,					// 主播好友
+        HANGOUTANCHORLISTTYPE_ONLINEANCHOR              // 在线主播
+};
+//Java层转底层枚举
+HangoutAnchorListType IntToHangoutAnchorListType(int value);
+
+
+/*列表类型*/
+static const int ProgramListTypeArray[] = {
+		PROGRAMLISTTYPE_UNKNOW,             // 未知
+		PROGRAMLISTTYPE_STARTTIEM,          // 按节目开始时间排序
+		PROGRAMLISTTYPE_VERIFYTIEM,         // 按节目审核时间排序
+		PROGRAMLISTTYPE_FEATURE,            // 按广告排序
+		PROGRAMLISTTYPE_BUYTICKET,          // 已购票列表
+        PROGRAMLISTTYPE_HISTORY            // 购票历史列表
+};
+//Java层转底层枚举
+ProgramListType IntToProgramListType(int value);
+
+/*节目状态类型 */
+static const int ProgramStatusArray[] = {
+		PROGRAMSTATUS_UNVERIFY,             // 未审核
+		PROGRAMSTATUS_VERIFYPASS,           // 审核通过
+		PROGRAMSTATUS_VERIFYREJECT,         // 审核被拒
+		PROGRAMSTATUS_PROGRAMEND,           // 节目正常结束
+		PROGRAMSTATUS_PROGRAMCALCEL,        // 节目已取消
+		PROGRAMSTATUS_OUTTIME               // 节目已超时
+};
+int ProgramStatusToInt(ProgramStatus type);
+
+/*节目推荐列表类型*/
+static const int ShowRecommendListTypeArray[] = {
+		SHOWRECOMMENDLISTTYPE_UNKNOW,                    // 未知
+		SHOWRECOMMENDLISTTYPE_ENDRECOMMEND,              // 直播结束推荐<包括指定主播及其它主播
+		SHOWRECOMMENDLISTTYPE_PERSONALRECOMMEND,         // 主播个人节目推荐<仅包括指定主播>
+		SHOWRECOMMENDLISTTYPE_NOHOSTRECOMMEND           // 不包括指定主播
+};
+//Java层转底层枚举
+ShowRecommendListType IntToShowRecommendListType(int value);
+
+/*节目购票状态 */
+static const int ProgramTicketStatusArray[] = {
+		PROGRAMTICKETSTATUS_NOBUY,      // 未购票
+		PROGRAMTICKETSTATUS_BUYED,      // 已购票
+		PROGRAMTICKETSTATUS_OUT         // 已退票
+};
+int ProgramTicketStatusToInt(ProgramTicketStatus type);
+
 //c++对象转Java对象
 jobjectArray getJavaStringArray(JNIEnv *env, const list<string>& sourceList);
 jintArray getJavaIntArray(JNIEnv *env, const list<int>& sourceList);
@@ -219,6 +304,8 @@ jintArray getInterestJavaIntArray(JNIEnv *env, const list<InterestType>& sourceL
 
 jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item);
 
+
+jobjectArray getAdListArray(JNIEnv *env, const AdItemList& listItem);
 jobjectArray getHotListArray(JNIEnv *env, const HotItemList& listItem);
 jobjectArray getFollowingListArray(JNIEnv *env, const FollowItemList& listItem);
 jobjectArray getValidRoomArray(JNIEnv *env, const HttpGetRoomInfoItem::RoomItemList& listItem);
@@ -247,5 +334,18 @@ jobject getServerItem(JNIEnv *env, const HttpLoginItem::SvrItem& item);
 
 jobject getUserInfoItem(JNIEnv *env, const HttpUserInfoItem& item);
 jobject getAnchorInfoItem(JNIEnv *env, const HttpAnchorInfoItem& item);
+
+jobject getBindAnchorItem(JNIEnv *env, const HttpVoucherInfoItem::BindAnchorItem& item);
+jobjectArray getBindAnchorArray(JNIEnv *env, const HttpVoucherInfoItem::BindAnchorList& list);
+jobject getVoucherInfoItem(JNIEnv *env, const HttpVoucherInfoItem& item);
+
+jobject getHangoutAnchorInfoItem(JNIEnv *env, const HttpHangoutAnchorItem& item);
+jobjectArray getHangoutAnchorInfoArray(JNIEnv *env, const HangoutAnchorList& list);
+jobject getHangoutGiftListItem(JNIEnv *env, const HttpHangoutGiftListItem& item);
+
+jobject getProgramInfoItem(JNIEnv *env, const HttpProgramInfoItem& item);
+jobjectArray getProgramInfoArray(JNIEnv *env, const ProgramInfoList& list);
+
+jobject getMainNoReadNumItem(JNIEnv *env, const HttpMainNoReadNumItem& item);
 
 #endif

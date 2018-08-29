@@ -18,6 +18,14 @@
 - (void)publisherOnDisconnect:(LiveStreamPublisher * _Nonnull)publisher;
 @end
 
+typedef enum LiveStreamType {
+    LiveStreamType_Audience_Private = 0,    // 观众私密    240x320, 10fps, 10kfi, 400kbps
+    LiveStreamType_Audience_Mutiple,        // 观众多人互动 240x240, 10fps, 10kfi, 400kbps
+    LiveStreamType_ShowHost_Public,         // 主播公开    320x320, 12fps, 10kfi, 700kbps
+    LiveStreamType_ShowHost_Private,        // 主播私密    240x320, 12fps, 10kfi, 700kbps
+    LiveStreamType_ShowHost_Mutiple,        // 主播多人互动 240x240, 12fps, 10kfi, 500kbps
+} LiveStreamType;
+
 @interface LiveStreamPublisher : NSObject
 /**
  显示界面
@@ -49,7 +57,7 @@
  *
  *  @return 实例
  */
-+ (instancetype _Nonnull)instance;
++ (instancetype _Nonnull)instance:(LiveStreamType)liveStreamType;
 
 /**
  初始化采集

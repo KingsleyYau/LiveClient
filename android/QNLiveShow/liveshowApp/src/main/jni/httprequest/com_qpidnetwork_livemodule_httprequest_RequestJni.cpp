@@ -248,6 +248,22 @@ JNIEXPORT jobjectArray JNICALL Java_com_qpidnetwork_livemodule_httprequest_Reque
 }
 
 
+/*
+ * Class:     com_qpidnetwork_request_RequestJni
+ * Method:    SetProxy
+ * Signature: (Ljava/lang/String;I)V
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetProxy
+  (JNIEnv *env, jclass cls, jstring proxyUrl) {
+	const char *cpProxyUrl = env->GetStringUTFChars(proxyUrl, 0);
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetProxy ( proxyUrl : %s ) ", cpProxyUrl);
+
+	HttpClient::SetProxy(cpProxyUrl);
+
+	env->ReleaseStringUTFChars(proxyUrl, cpProxyUrl);
+}
+
+
 
 
 

@@ -1,6 +1,8 @@
 package com.qpidnetwork.livemodule.httprequest;
 
 
+import com.qpidnetwork.livemodule.httprequest.item.RegionType;
+
 /**
  * 5. 其他接口
  * @author Hunter Mun
@@ -39,7 +41,8 @@ public class RequestJniOther {
 	 * @return
 	 */
 	static public native long GetAdAnchorList(int number, OnGetAdAnchorListCallback callback);
-	
+
+
 	/**
 	 * 6.5.关闭QN广告列表
 	 * @param callback
@@ -91,4 +94,11 @@ public class RequestJniOther {
 	 * @return
 	 */
 	static public native long GetUserInfo(String userId, OnGetUserInfoCallback callback);
+
+	/**
+	 * 6.17.获取主界面未读数量
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetMainUnreadNum(OnGetMainUnreadNumCallback callback);
 }

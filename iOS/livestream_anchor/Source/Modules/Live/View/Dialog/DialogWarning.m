@@ -41,15 +41,17 @@
     [view addSubview:self];
     [view bringSubviewToFront:self];
     
-    [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(view.mas_width).offset(-60);
-        make.center.equalTo(view);
-    }];
-    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(view);
-    }];
-    
-    [self sizeToFit];
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(view.mas_width).offset(-60);
+            make.center.equalTo(view);
+        }];
+        [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(view);
+        }];
+        
+        [self sizeToFit];
+    }
 }
 
 
@@ -57,6 +59,10 @@
     if( self.actionBlock ) {
         self.actionBlock();
     }
+    [self hidenDialog];
+}
+
+- (void)hidenDialog {
     [self.backBtn removeFromSuperview];
     [self removeFromSuperview];
 }

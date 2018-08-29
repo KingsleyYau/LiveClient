@@ -140,4 +140,12 @@ public class RequestJniOther {
 	 */
 	static public native long SetManBaseInfo(String nickName, OnRequestLSSetManBaseInfoCallback callback);
 
+	/**
+	 * 6.16.提交crash dump文件（仅独立）
+	 * @param deviceId   	     昵称）
+	 * @param crashFile
+	 * @return
+	 */
+	static public native long UploadCrashFile(String deviceId, String directory, String tmpDirectory, OnRequestLSUploadCrashFileCallback callback);
+
 }

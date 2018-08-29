@@ -105,10 +105,6 @@ bool ZBHttpLoginTask::ParseData(const string& url, bool bFlag, const char* buf, 
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "ZBHttpLoginTask::ParseData( buf : %s )", buf);
-    }
-    
     ZBHttpLoginItem item;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

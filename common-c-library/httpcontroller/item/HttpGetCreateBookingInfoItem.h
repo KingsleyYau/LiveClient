@@ -34,7 +34,7 @@ public:
             
             /* status */
             if (root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKTIME_STATUS].isInt()) {
-                status = (BookTimeStatus)root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKTIME_STATUS].asInt();
+                status = GetIntToBookTimeStatus(root[LIVEROOM_GETCREATEBOOKINGINFO_BOOKTIME_STATUS].asInt());
             }
 //            if (!timeId.empty()) {
                 result = true;

@@ -149,7 +149,7 @@
                                   self.isFirstSend = YES;
 
                                   // 发送大礼物失败回调
-                                  if (item.giftItem.infoItem.type == GIFTTYPE_Heigh) {
+                                  if (item.giftItem.infoItem.type == ZBGIFTTYPE_HEIGH) {
                                       if ([self.delegate respondsToSelector:@selector(sendGiftFailWithItem:)]) {
                                           [self.delegate sendGiftFailWithItem:item];
                                       }
@@ -166,7 +166,7 @@
         }
         self.isFirstSend = YES;
         // 发送大礼物失败回调
-        if (item.giftItem.infoItem.type == GIFTTYPE_Heigh) {
+        if (item.giftItem.infoItem.type == ZBGIFTTYPE_HEIGH) {
             if ([self.delegate respondsToSelector:@selector(sendGiftFailWithItem:)]) {
                 [self.delegate sendGiftFailWithItem:item];
             }

@@ -79,6 +79,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     //提示
     private LinearLayout ll_loading;
     private LinearLayout ll_emptyData;
+    private TextView tvEmptyDesc;
     private LinearLayout ll_errorRetry;
     private TextView tv_reloadGiftList;
     //dialog和adapters共用的数据
@@ -196,6 +197,7 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
         ll_loading = (LinearLayout) rootView.findViewById(R.id.ll_loading);
         ll_loading.setVisibility(View.GONE);
         ll_emptyData = (LinearLayout) rootView.findViewById(R.id.ll_emptyData);
+        tvEmptyDesc = (TextView) rootView.findViewById(R.id.tvEmptyDesc);
         ll_emptyData.setVisibility(View.GONE);
         ll_errorRetry = (LinearLayout) rootView.findViewById(R.id.ll_errorRetry);
         ll_errorRetry.setVisibility(View.GONE);
@@ -438,6 +440,13 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     private void showDataTipsViewByStatus(boolean isLoading, boolean isEmpty, boolean isError){
         ll_loading.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         ll_emptyData.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
+        if(isEmpty && tvEmptyDesc != null){
+            if(lastClickedGiftTab == GiftTab.GiftTabFlag.STORE){
+                tvEmptyDesc.setText(R.string.liveroom_gift_store_empty);
+            }else{
+                tvEmptyDesc.setText(R.string.liveroom_gift_pack_empty);
+            }
+        }
         ll_errorRetry.setVisibility(isError ? View.VISIBLE : View.GONE);
     }
 
@@ -696,6 +705,37 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
     }
 
     /**
+     * 发送礼物按钮点击事件
+     * 判断当前背包礼物是否可发送
+     */
+    private void sendGift() {
+        Log.d(TAG,"sendGift");
+        //这个按钮可点击的时候，说明要么是刚开始送礼，要么是上个连送礼物动画播放过程中，切换了选择的礼物
+        if (null != lastSelectedGiftItem) {
+            boolean giftSendable = null != packagGiftItems && packagGiftItems.size()>0
+                && lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK
+                && null != sendableGiftItemMap
+                && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)
+                && packagGiftItems.contains(lastSelectedGiftItem);
+            Log.d(TAG, "sendGift-giftSendable:" + giftSendable);
+            if (giftSendable) {
+                mActivity.get().showThreeSecondTips(mActivity.get().getResources().getString(
+                        R.string.liveroom_gift_pack_notsendable),
+                        Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
+                return;
+            }
+
+            String numStr = tv_giftCount.getText().toString();
+            Log.d(TAG, "sendGift-numStr:" + numStr);
+            if (!TextUtils.isEmpty(numStr)) {
+                int num = Integer.valueOf(numStr);
+                sendGift(lastSelectedGiftItem, false, num);
+            }
+        }
+        lv_giftCount.setVisibility(View.GONE);
+    }
+
+    /**
      * 送礼(调接口)
      * @param isRepeat 连送标识
      */
@@ -845,28 +885,10 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener,GiftS
             sendGift(lastRepeatSentGiftItem, true, lastGiftSendNum);
 
         } else if (i == R.id.tv_sendGift || i == R.id.ll_sendGift) {
-            //这个按钮可点击的时候，说明要么是刚开始送礼，要么是上个连送礼物动画播放过程中，切换了选择的礼物
-            if (null != lastSelectedGiftItem) {
-                if (null != packagGiftItems && packagGiftItems.size()>0
-                        && lastClickedGiftTab == GiftTab.GiftTabFlag.BACKPACK
-                        && null != sendableGiftItemMap
-                        && !sendableGiftItemMap.containsKey(lastSelectedGiftItem.id)
-                        && packagGiftItems.contains(lastSelectedGiftItem)) {
-                    mActivity.get().showThreeSecondTips(mActivity.get().getResources().getString(
-                            R.string.liveroom_gift_pack_notsendable),
-                            Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL);
-                    return;
-                }
-
-                String numStr = tv_giftCount.getText().toString();
-                Log.d(TAG, "onClick-sendGift-numStr:" + numStr);
-                if (!TextUtils.isEmpty(numStr)) {
-                    int num = Integer.valueOf(numStr);
-                    sendGift(lastSelectedGiftItem, false, num);
-                }
+            //修复不可发送的礼物也会调发送礼物接口的bug
+            if(tv_sendGift.isEnabled()){
+                sendGift();
             }
-            lv_giftCount.setVisibility(View.GONE);
-
         } else if (i == R.id.ll_countChooser) {
             if (ll_repeatSendAnim.getVisibility() == View.GONE && canOpenNumberSelector) {
                 boolean isShowing = lv_giftCount.getVisibility() == View.VISIBLE;

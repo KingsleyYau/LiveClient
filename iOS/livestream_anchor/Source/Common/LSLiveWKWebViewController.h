@@ -8,10 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "IntroduceView.h"
-#import "LSRequestManager.h"
 #import "LSConfigManager.h"
 #import "LiveUrlHandler.h"
-#import "IntroduceViewController.h"
 
 @interface LSLiveWKWebViewController : NSObject
 /**
@@ -39,6 +37,7 @@
  */
 @property (nonatomic, assign) BOOL isRequestWeb;
 
+- (NSString *)setupCommonConfig:(NSString *)baseUrl;
 // 清理所有cookies
 - (void)clearAllCookies;
 

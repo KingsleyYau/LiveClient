@@ -28,7 +28,7 @@ public:
             
             /* roomType */
             if (root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE].isIntegral()) {
-                roomType = (HttpRoomType)root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE].asInt();
+                roomType = GetIntToHttpRoomType(root[LIVEROOM_ACCEPTINSTACEINVITE_ROOMTYPE].asInt());
             }
         }
         result = true;

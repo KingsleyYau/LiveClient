@@ -2,17 +2,26 @@ package com.qpidnetwork.livemodule.liveshow.googleanalytics;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.ActionMode;
 
 /**
  * 仅用于跟踪统计的FragmentActivity基类（如：GoogleAnalytics）
  * @author Samson Fan
  *
+ * @Edit by Jagger 2018-1-25
+ * 把 extends FragmentActivity 改为 extends AppCompatActivity, 解决兼容性
+ * support v7 AppCompatActivity 兼容2.x模式下使用Fragment和ActionBar，ActionBarActivity
  */
-public class AnalyticsFragmentActivity extends FragmentActivity
+public class AnalyticsFragmentActivity extends AppCompatActivity
 {
 	private ActionMode mActionMode;
+
+	/**
+	 * 扩展支持指定screenName(兼容webview url获取screenName统计方式),此screenName优先级最高，请在oncreate中设置
+	 */
+	private String mScreenName = "";
 	
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -158,7 +167,27 @@ public class AnalyticsFragmentActivity extends FragmentActivity
 	{
 		AnalyticsManager.newInstance().SetPageActivity(this, isPageActivity);
 	}
-	
+
+	/********************************** 手动设置screenName ******************************/
+
+	/**
+	 * 设置ScreenName
+	 * @param screenName
+	 */
+	public void setCurrentScreenName(String screenName) {
+		if(!TextUtils.isEmpty(screenName)){
+			mScreenName = screenName;
+		}
+	}
+
+	/**
+	 * 获取当前screenName
+	 * @return
+	 */
+	public String getCurrentScreenName(){
+		return mScreenName;
+	}
+
 	/****************** 解决 FloatingActionMode BadToken问题 （Samsung） ******************************/
 	
 	@Override

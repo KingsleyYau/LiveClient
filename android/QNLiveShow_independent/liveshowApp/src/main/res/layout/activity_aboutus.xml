@@ -14,12 +14,20 @@
         android:paddingTop="66dp"
         android:paddingBottom="18dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_about_us_logo"/>
+
         <TextView
+            android:id="@+id/tv_currVersionName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/about_us_version_code"
+            android:text="@string/about_us_version_name"
+            android:layout_marginTop="55dp"
             android:textColor="@color/about_us_version"/>
 
     </LinearLayout>
@@ -27,10 +35,12 @@
     <TextView
         android:id="@+id/tv_termsOfUse"
         android:layout_width="match_parent"
-        android:text="@string/live_webview_user_terms_title"
+        android:text="@string/about_us_terms"
         android:gravity="center_vertical|left"
         android:paddingLeft="13dp"
         android:drawableRight="@drawable/ic_right_arrow"
+        android:clickable="true"
+        android:onClick="onClick"
         android:paddingRight="13dp"
         android:layout_height="49dp" />
 
@@ -46,6 +56,8 @@
         android:layout_width="match_parent"
         android:text="@string/about_us_privacy_policy"
         android:gravity="center_vertical|left"
+        android:clickable="true"
+        android:onClick="onClick"
         android:paddingLeft="13dp"
         android:drawableRight="@drawable/ic_right_arrow"
         android:paddingRight="13dp"

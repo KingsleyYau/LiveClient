@@ -89,7 +89,7 @@ public:
         
     }
     /**
-     * 其它主播列表
+     * 直播间中的主播列表
      * @anchorId                主播ID
      * @nickName                主播昵称
      * @photoUrl                主播头像url

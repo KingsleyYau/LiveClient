@@ -1,8 +1,6 @@
 package com.qpidnetwork.livemodule.utils;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Html;
@@ -15,9 +13,6 @@ import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.regex.Pattern;
 
 /**
@@ -31,8 +26,10 @@ public class HtmlImageGetter implements Html.ImageGetter {
     public enum HtmlImageType{
         Unknow,
         Gift,
-        Medal,
-        Emoji
+        Emoji,
+        AnchorA,
+        AnchorB,
+        TicketTag
     }
 
     private Context context;
@@ -41,28 +38,30 @@ public class HtmlImageGetter implements Html.ImageGetter {
 
     private int giftImgWidth;
     private int giftImgHeight;
-    private int medalImgWidth = 0;
-    private int medalImgHeight = 0;
+    private int anchorFlagImgWidth = 0;
+    private int anchorFlagImgHeight = 0;
 
     public HtmlImageGetter(Context context) {
         this.context = context;
         this.p = Pattern.compile("\\[img:[0-9]+\\]");
     }
 
-    public HtmlImageGetter(Context context,int giftImgWidth,int giftImgHeight,int medalImgWidth,int medalImgHeight) {
+    public HtmlImageGetter(Context context,int giftImgWidth,int giftImgHeight,int anchorFlagImgWidth,int anchorFlagImgHeight) {
         this(context);
         this.giftImgWidth = giftImgWidth;
         this.giftImgHeight = giftImgHeight;
-        this.medalImgWidth = medalImgWidth;
-        this.medalImgHeight = medalImgHeight;
+        this.anchorFlagImgWidth = anchorFlagImgWidth;
+        this.anchorFlagImgHeight = anchorFlagImgHeight;
+        Log.d(TAG,"HtmlImageGetter-anchorFlagImgWidth:"+anchorFlagImgWidth+" anchorFlagImgHeight:"+anchorFlagImgHeight);
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public Drawable getDrawable(String source) {
-        Log.i(TAG, "getDrawable-source: " + source);
+        Log.d(TAG, "getDrawable-source: " + source);
         Drawable drawable = null;
         HtmlImageType imageType = getImageType(source);
+        Log.d(TAG,"getDrawable-imageType:"+imageType);
         try {
             switch (imageType){
                 case Gift:{
@@ -77,19 +76,6 @@ public class HtmlImageGetter implements Html.ImageGetter {
                     }
 
                 }break;
-                case Medal:{
-                    String medalUrl = source.substring(5, source.length());
-                    Log.d(TAG,"getDrawable-Medal-medalUrl:"+medalUrl);
-                    if(!TextUtils.isEmpty(medalUrl)){
-                        drawable = getHonorDrawable(medalUrl);
-                        Log.d(TAG,"getDrawable-Medal-drawable is null:"+(null == drawable));
-                    }
-                    if(drawable == null){
-                        drawable = context.getResources().getDrawable(R.drawable.ic_default_medal);
-                        drawable.setBounds(0, 0, (medalImgWidth == 0 ? drawable.getIntrinsicWidth() : medalImgWidth),
-                                (medalImgHeight == 0 ? drawable.getIntrinsicHeight() : medalImgHeight));
-                    }
-                }break;
                 case Emoji:{
                     String emojiUrl = source.substring(5,source.length());
                     Log.d(TAG,"getDrawable-Emoji-emojiUrl:"+emojiUrl);
@@ -97,6 +83,21 @@ public class HtmlImageGetter implements Html.ImageGetter {
                         drawable = getEmojiDrawable(emojiUrl);
                     }
                 }break;
+                case AnchorA:
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_room_msgitem_anchor_flag_public);
+                    drawable.setBounds(0, 0, (anchorFlagImgWidth == 0 ? drawable.getIntrinsicWidth() : anchorFlagImgWidth),
+                            (anchorFlagImgHeight == 0 ? drawable.getIntrinsicHeight() : anchorFlagImgHeight));
+                    break;
+                case AnchorB:
+                    drawable = context.getResources().getDrawable(R.drawable.ic_live_room_msgitem_anchor_flag_private);
+                    drawable.setBounds(0, 0, (anchorFlagImgWidth == 0 ? drawable.getIntrinsicWidth() : anchorFlagImgWidth),
+                            (anchorFlagImgHeight == 0 ? drawable.getIntrinsicHeight() : anchorFlagImgHeight));
+                    break;
+                case TicketTag:
+                    drawable = context.getResources().getDrawable(R.drawable.list_program_ticket);
+                    drawable.setBounds(0, 0, (anchorFlagImgWidth == 0 ? drawable.getIntrinsicWidth() : anchorFlagImgWidth),
+                            (anchorFlagImgHeight == 0 ? drawable.getIntrinsicHeight() : anchorFlagImgHeight));
+                    break;
             }
 
         } catch (Exception e) {
@@ -127,7 +128,7 @@ public class HtmlImageGetter implements Html.ImageGetter {
     private Drawable getGiftDrawable(String giftId){
         Log.d(TAG,"getGiftDrawable-giftId:"+giftId+" giftImgWidth:"+giftImgWidth+" giftImgHeight:"+giftImgHeight);
         Drawable drawable = null;
-        GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(giftId);
+        GiftItem giftItem = NormalGiftManager.getInstance().getLocalGiftDetail(giftId);
         if(giftItem != null && !TextUtils.isEmpty(giftItem.smallImgUrl)){
             String smallImageLocalPath = FileCacheManager.getInstance().getGiftLocalPath(giftId, giftItem.smallImgUrl);
             Log.d(TAG,"getGiftDrawable-smallImageLocalPath:"+smallImageLocalPath);
@@ -143,71 +144,41 @@ public class HtmlImageGetter implements Html.ImageGetter {
         return drawable;
     }
 
-    /**
-     * 根据勋章Url获取drawable
-     * @param honorUrl
-     * @return
-     */
-    private Drawable getHonorDrawable(String honorUrl){
-        Log.d(TAG,"getHonorDrawable-honorUrl:"+honorUrl+" medalImgWidth:"+medalImgWidth+" medalImgHeight:"+medalImgHeight);
-        Drawable drawable = null;
-        String localHonorUrl = FileCacheManager.getInstance().parseHonorImgLocalPath(honorUrl);
-        Log.d(TAG,"getHonorDrawable-localHonorUrl:"+localHonorUrl);
-        if(SystemUtils.fileExists(localHonorUrl)){
-            drawable = new BitmapDrawable(ImageUtil.decodeSampledBitmapFromFile(
-                    localHonorUrl,medalImgWidth, medalImgHeight));
-            drawable.setBounds(0, 0, medalImgWidth,medalImgHeight);
-        }
-        return drawable;
-    }
-
-    /**
-     * 根据勋章Url获取drawable
-     * @param honorUrl
-     * @return
-     */
-    private Drawable getMedalDrawable(String honorUrl){
-        Log.d(TAG,"getHonorDrawable-honorUrl:"+honorUrl+" medalImgWidth:"+medalImgWidth+" medalImgHeight:"+medalImgHeight);
-        Drawable drawable = null;
-        InputStream is = null;
-        try {
-            is = (InputStream) new URL(honorUrl).getContent();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Bitmap bmp = BitmapFactory.decodeStream(is);
-        drawable = new BitmapDrawable(bmp);
-        drawable.setBounds(0, 0, medalImgWidth,medalImgHeight);
-        return drawable;
-    }
-
-
-
     private HtmlImageType getImageType(String source){
+        Log.d(TAG,"getImageType-source:"+source);
         HtmlImageType imageType = HtmlImageType.Unknow;
         if (source.startsWith("gift")) {
             imageType = HtmlImageType.Gift;
-        } else if (source.startsWith("medal")) {// 勋章
-            imageType = HtmlImageType.Medal;
         } else if (source.startsWith("emoji")){
             imageType = HtmlImageType.Emoji;
+        }else if (source.equals("anchor1")){
+            imageType = HtmlImageType.AnchorA;
+        }else if (source.equals("anchor2")){
+            imageType = HtmlImageType.AnchorB;
+        }else if (source.equals("ticket")){
+            imageType = HtmlImageType.TicketTag;
         }
         return imageType;
     }
 
     /**
-     * 获取表情文本（HTML格式）
-     *
-     * @param input
+     * * 获取表情文本（HTML格式）
+     * @param input 未格式化的文本内容
+     * @param giftMsg 是否为发礼物消息
      * @return
      */
-    public Spanned getExpressMsgHTML(String input) {
-        Log.logD(TAG,"getExpressMsgHTML-input:"+input);
-        String msg = input.replace("[gift:", "<img src=\"gift");
-        msg = msg.replace("]", "\">");
-        msg = msg.replace("[medal:", "<img src=\"medal");
+    public Spanned getExpressMsgHTML(String input, boolean giftMsg) {
+        Log.logD(TAG,"getExpressMsgHTML-input:"+input+" giftMsg:"+giftMsg);
+        String msg = null;
+        msg = input.replace("[gift:", "<jimg src=\"gift");
+        //为了避免误将实际消息文本中的]替换为">，这里根据消息类型同string资源中对应的格式化字符串匹配检索
+        if(giftMsg){
+            msg = msg.replaceFirst("] </font>", "\"> </font>");
+        }
         Log.logD(TAG,"getExpressMsgHTML-output:"+msg);
+
         Spanned span = Html.fromHtml(msg, this, null);
+
         return span;
     }
 }

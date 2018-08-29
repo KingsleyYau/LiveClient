@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="defaultTabIndex">0</integer>
+    <integer name="autoLoginMaxTime">3000</integer>
+    <!--密码最小长度-->
+    <integer name="passwordMaxLength">20</integer>
+    <!--Peacock页登录校验超时时间-->
+    <integer name="verifLoginInfoTimeOut">3000</integer>
+    <integer name="peacockStayMinTime">300</integer>
+    <integer name="liveMsgMaxLength">70</integer>
+    <!--倒计时-->
+    <integer name="maxTimeCount">60</integer>
+    <integer name="minPasswordLength">6</integer>
+    <integer name="giftNumPerPage">8</integer>
+    <integer name="giftColumnNumPerPage">4</integer>
+    <integer name="emojiColumnNumPerPage">5</integer>
+    <integer name="emojiLineNumPerPage">3</integer>
+    <integer name="repeatSendStartCount">30</integer>
+    <integer name="repeatSendAnimTime">3000</integer>
+    <!--聊天栏最大的信息条目数-->
+    <integer name="liveMsgListMaxNum">500</integer>
+    <!--聊天栏单个条目数的最大停留时间-->
+    <integer name="liveMsgListItemHoldTime">5000</integer>
+    <!--Toast失败弹出时长-->
+    <integer name="toast_failed_max_show_time">2000</integer>
+    <!--连击动画播放速度-->
+    <integer name="multiAnimationDuration">550</integer>
+    <!--消息最小发送时间间隔-->
+    <integer name="minMsgSendTimeInterval">1000</integer>
+    <!--直播间互动视频 高斯模糊 迭代次数，越大越魔化-->
+    <integer name="gaussian_blur_iterations">3</integer>
+    <!--直播间互动视频 高斯模糊 半径-->
+    <integer name="gaussian_blur_publish">20</integer>
+    <integer name="gaussian_blur_tran">2</integer>
+
+    <integer name="liveroom_online_step">6</integer>
+
+    <integer name="celebGiftNumPerPage">3</integer>
+    <integer name="celebGiftColumnNumPerPage">3</integer>
+</resources>

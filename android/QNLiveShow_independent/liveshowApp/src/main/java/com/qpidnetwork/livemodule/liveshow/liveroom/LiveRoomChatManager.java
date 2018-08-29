@@ -160,7 +160,7 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                                     TextUtils.htmlEncode(liveMsgItem.textMsgContent.message)),
                             ChatEmojiManager.PATTERN_MODEL_SIMPLESIGN);
                 }
-                span = mImageGetter.getExpressMsgHTML(emoParseStr);
+                span = mImageGetter.getExpressMsgHTML(emoParseStr,false,honorImgExists);
             }break;
             case Gift:{
                 //检测礼物小图片存在与否，不存在自动下载，更新列表
@@ -178,13 +178,13 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                             liveMsgItem.honorUrl,
                             liveMsgItem.nickName,
                             liveMsgItem.giftMsgContent.giftName,
-                            liveMsgItem.giftMsgContent.giftId, giftNum));
+                            liveMsgItem.giftMsgContent.giftId, giftNum),true,honorImgExists);
                 }else{
                     span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
                             mActivity.get().roomThemeManager.getRoomMsgListNoMedalGiftMsgStrResId(mActivity.get().mIMRoomInItem.roomType),
                             liveMsgItem.nickName,
                             liveMsgItem.giftMsgContent.giftName,
-                            liveMsgItem.giftMsgContent.giftId, giftNum));
+                            liveMsgItem.giftMsgContent.giftId, giftNum),true,honorImgExists);
                 }
             }break;
             //FollowHost系统以公告方式推送给客户端
@@ -198,12 +198,12 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                             mActivity.get().roomThemeManager.getRoomMsgListMedalRoomInMsgStrResId(
                                     mActivity.get().mIMRoomInItem.roomType),
                             liveMsgItem.honorUrl,
-                            liveMsgItem.nickName));
+                            liveMsgItem.nickName),false,honorImgExists);
                 }else{
                     span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
                             mActivity.get().roomThemeManager.getRoomMsgListNoMedalRoomInMsgStrResId(
                                     mActivity.get().mIMRoomInItem.roomType),
-                            liveMsgItem.nickName));
+                            liveMsgItem.nickName),false,honorImgExists);
                 }
 
             }break;
@@ -243,11 +243,12 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                             if(honorImgExists){
                                 span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
                                         R.string.system_notice_unlink_carin,
-                                        liveMsgItem.honorUrl,msgContent.message));
+                                        liveMsgItem.honorUrl,msgContent.message),false,honorImgExists);
                             }else{
                                 span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
                                         R.string.system_notice_unlink_carin_nomedal,
-                                        msgContent.message));
+                                        msgContent.message),
+                                        false,honorImgExists);
                             }
                         }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Warning){
                             span = Html.fromHtml(mContext.getResources().getString(

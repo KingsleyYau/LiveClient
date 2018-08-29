@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:button="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context="com.qpidnetwork.livemodule.liveshow.home.EditProfileActivity">
-
+    <!--2018年1月18日 15:04:55 samson说资料编辑界面暂时只更改控件本身的颜色、字体大小等属性，
+    整体布局暂时先不对效果图-->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,8 +25,8 @@
                 android:layout_marginTop="@dimen/live_size_40dp"
                 android:fontFamily="sans-serif"
                 android:text="@string/live_edit_profile_title"
-                android:textColor="@color/login_violet"
-                android:textSize="@dimen/live_size_22sp"
+                android:textColor="@color/txt_color_oninput"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:typeface="normal" />
 
@@ -34,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/live_size_30dp"
                 android:text="@string/live_edit_profile_tips1"
-                android:textColor="@color/black"
-                android:textSize="@dimen/live_size_14sp" />
+                android:textColor="@color/common_bottom_item_simple"
+                android:textSize="11sp" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -80,7 +81,7 @@
             <RadioGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/live_size_8dp"
+                android:layout_marginTop="@dimen/live_size_16dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -101,28 +102,43 @@
             <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
                 android:id="@+id/et_birthday"
                 android:layout_width="@dimen/live_size_180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/live_size_8dp" />
+                android:layout_height="wrap_content"/>
 
             <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
                 android:id="@+id/et_invite_code"
                 android:layout_width="@dimen/live_size_180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/live_size_8dp" />
+                android:visibility="invisible"/>
 
-            <com.qpidnetwork.livemodule.view.ButtonRaised
-                android:id="@+id/btn_Summit"
-                android:layout_width="@dimen/live_size_180dp"
-                android:layout_height="@dimen/live_size_40dp"
+            <!--宽度高度最好不要写死，以适配各种机型-->
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/live_size_40dp"
+                android:minWidth="@dimen/live_size_180dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="@dimen/live_size_16dp"
-                android:layout_marginTop="@dimen/live_size_16dp"
-                button:background="@color/bg_title_bar"
-                button:raisebutton_radius="@dimen/live_size_16dp"
-                button:title="@string/live_enjoy"
-                button:title_color="@color/white"
-                button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+                android:layout_marginTop="@dimen/live_size_40dp"
+                android:text="@string/live_enjoy"
+                android:textAllCaps="false"
+                android:singleLine="true"
+                android:textColor="@color/submit_unusable"
+                android:enabled="true"
+                android:background="@drawable/selector_live_enjoynow"
+                android:textSize="15sp"
+                />
 
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+
+    <!--add by hunter-->
+    <ImageView
+        android:id="@+id/btnBack"
+        android:src="@drawable/ic_left_arrow"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp" />
+
+</RelativeLayout>

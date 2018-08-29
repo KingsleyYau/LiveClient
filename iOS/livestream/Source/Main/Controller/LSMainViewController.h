@@ -11,18 +11,8 @@
 #import "LSGoogleAnalyticsViewController.h"
 #import "LiveRoom.h"
 
-@interface LSMainViewController : LSGoogleAnalyticsViewController <UITabBarDelegate>
+@interface LSMainViewController : LSGoogleAnalyticsViewController
 
-/**
- 内容界面
- */
-@property (weak) IBOutlet UIView* tabContainView;
-
-/**
- 底部TabBar
- */
-@property (weak) IBOutlet UITabBar* tabBar;
-
-@property (weak) IBOutlet NSLayoutConstraint* tabBarHeight;
+@property (nonatomic, assign) NSInteger curIndex;
 
 @end

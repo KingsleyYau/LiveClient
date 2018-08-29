@@ -622,20 +622,28 @@ public:
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+			string signure = "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;[BLjava/lang/String;)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvRoomMsg", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvRoomMsg() callback now");
 				jstring jroomId = env->NewStringUTF(roomId.c_str());
 				jstring jfromId = env->NewStringUTF(fromId.c_str());
 				jstring jnickName = env->NewStringUTF(nickName.c_str());
-				jstring jmsg = env->NewStringUTF(msg.c_str());
+
+//				jstring jmsg = env->NewStringUTF(msg.c_str());
+				const char *pMessage = msg.c_str();
+				int strLen = strlen(pMessage);
+				jbyteArray byteArray = env->NewByteArray(strLen);
+				env->SetByteArrayRegion(byteArray, 0, strLen, reinterpret_cast<const jbyte*>(pMessage));
+
+
+
 				jstring jhonorUrl = env->NewStringUTF(honorUrl.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, level, jfromId, jnickName, jmsg, jhonorUrl);
+				env->CallVoidMethod(gListener, jCallback, jroomId, level, jfromId, jnickName, byteArray, jhonorUrl);
 				env->DeleteLocalRef(jroomId);
 				env->DeleteLocalRef(jfromId);
 				env->DeleteLocalRef(jnickName);
-				env->DeleteLocalRef(jmsg);
+				env->DeleteLocalRef(byteArray);
 				env->DeleteLocalRef(jhonorUrl);
 				FileLog(TAG, "OnRecvRoomMsg() callback ok");
 			}
@@ -774,20 +782,26 @@ public:
 		//callback 回调
 		if(NULL != gListener){
 			jclass jCallbackCls = env->GetObjectClass(gListener);
-			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V";
+			string signure = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[BLjava/lang/String;)V";
 			jmethodID jCallback = env->GetMethodID(jCallbackCls, "OnRecvRoomToastNotice", signure.c_str());
 			if(NULL != jCallback){
 				FileLog(TAG, "OnRecvRoomToastNotice() callback now");
 				jstring jroomId = env->NewStringUTF(roomId.c_str());
 				jstring jfromId = env->NewStringUTF(fromId.c_str());
 				jstring jnickName = env->NewStringUTF(nickName.c_str());
-				jstring jmsg = env->NewStringUTF(msg.c_str());
+
+//				jstring jmsg = env->NewStringUTF(msg.c_str());
+				const char *pMessage = msg.c_str();
+				int strLen = strlen(pMessage);
+				jbyteArray byteArray = env->NewByteArray(strLen);
+				env->SetByteArrayRegion(byteArray, 0, strLen, reinterpret_cast<const jbyte*>(pMessage));
+
 				jstring jhonorUrl = env->NewStringUTF(honorUrl.c_str());
-				env->CallVoidMethod(gListener, jCallback, jroomId, jfromId, jnickName, jmsg, jhonorUrl);
+				env->CallVoidMethod(gListener, jCallback, jroomId, jfromId, jnickName, byteArray, jhonorUrl);
 				env->DeleteLocalRef(jroomId);
 				env->DeleteLocalRef(jfromId);
 				env->DeleteLocalRef(jnickName);
-				env->DeleteLocalRef(jmsg);
+				env->DeleteLocalRef(byteArray);
 				env->DeleteLocalRef(jhonorUrl);
 				FileLog(TAG, "OnRecvRoomToastNotice() callback ok");
 			}

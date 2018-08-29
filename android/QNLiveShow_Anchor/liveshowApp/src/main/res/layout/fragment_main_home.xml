@@ -1,0 +1,165 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_grey_white"
+    android:orientation="vertical">
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_light_blue"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:textColor="@color/text_color_white"
+            android:textSize="16sp"
+            android:text="@string/live_main_home_title"
+            android:textStyle="bold"/>
+
+        <RelativeLayout
+            android:id="@+id/rlMonthProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_white_alpha_62"
+                android:text="@string/live_home_month_task_progress_tips"
+                android:textSize="13sp" />
+            <TextView
+                android:id="@+id/tvMonthlyProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_white"
+                android:text="@string/live_home_month_task_progress_desc"
+                android:textSize="13sp"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+
+        <!-- 进度 -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            android:max="100"
+            android:padding="@dimen/live_size_8dp"
+            android:progress="0"
+            android:progressDrawable="@drawable/bg_live_home_progress" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color_white_alpha_62"
+                    android:text="@string/live_home_coins_tips"
+                    android:textSize="13sp"
+                    android:layout_alignParentRight="true"/>
+                <TextView
+                    android:id="@+id/tvCoins"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="18sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/bg_white_alpha_46"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"/>
+            <LinearLayout
+                android:id="@+id/llScheduledBooking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color_white_alpha_62"
+                    android:text="@string/live_home_scheduled_bookings_tips"
+                    android:textSize="13sp"
+                    android:layout_alignParentRight="true"/>
+                <TextView
+                    android:id="@+id/tvScheduled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color_white"
+                    android:textSize="18sp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingLeft="13dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/text_color_black1"
+            android:text="@string/live_home_todos_title"
+            android:textSize="13sp"
+            android:textStyle="bold"/>
+        <View
+            android:layout_width="42dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/bg_light_blue"/>
+
+    </LinearLayout>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/adapter_home_todos_item"
+        android:layout_marginTop="2dp"/>
+
+    <include
+        layout="@layout/adapter_home_calendar_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp" />
+
+    <include
+        layout="@layout/adapter_home_hangout_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:visibility="gone"/>
+
+</LinearLayout>

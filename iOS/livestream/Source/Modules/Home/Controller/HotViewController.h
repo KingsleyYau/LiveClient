@@ -14,4 +14,10 @@
 
 @property (weak) IBOutlet HotTableView* tableView;
 
+- (void)setupLoadData:(BOOL)isLoadData;
+- (void)setupFirstLogin:(BOOL)isFirstLogin;
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite;
+
+- (void)reloadUnreadNum;
+- (void)reloadHotHeadView;
 @end

@@ -96,49 +96,51 @@
     _userButton.backgroundColor = [UIColor whiteColor];
 }
 
-- (void)setCellCoverImage:(CoverPhotoItemObject *)object {
 
-    //    NSString *imageId = object.photoId;
-    NSString *imageUrl = object.photoUrl;
-    NSInteger statu = object.status;
-    BOOL isUse = object.in_use;
+//- (void)setCellCoverImage:(CoverPhotoItemObject *)object {
+//
+//    //    NSString *imageId = object.photoId;
+//    NSString *imageUrl = object.photoUrl;
+//    NSInteger statu = object.status;
+//    BOOL isUse = object.in_use;
+//
+//    if (statu == 2 && !isUse) {
+//
+//        self.deleteBtn.hidden = NO;
+//
+//    } else {
+//        self.deleteBtn.hidden = YES;
+//    }
+//
+//    if (statu == 1) {
+//        self.userButton.hidden = YES;
+//        self.maskView.hidden = NO;
+//        self.label.hidden = NO;
+//
+//    } else {
+//        self.userButton.hidden = NO;
+//        self.maskView.hidden = YES;
+//        self.label.hidden = YES;
+//    }
+//
+//    if (isUse) {
+//        self.userButton.hidden = NO;
+//        [self imageisUsingCover];
+//
+//    } else {
+//
+//        if (statu == 2) {
+//            self.userButton.hidden = NO;
+//            [self imageisnoUseCover];
+//
+//        } else {
+//            self.userButton.hidden = YES;
+//        }
+//    }
+//
+//    [self.loader loadImageWithImageView:self.imageView options:0 imageUrl:imageUrl placeholderImage:nil];
+//}
 
-    if (statu == 2 && !isUse) {
-
-        self.deleteBtn.hidden = NO;
-
-    } else {
-        self.deleteBtn.hidden = YES;
-    }
-
-    if (statu == 1) {
-        self.userButton.hidden = YES;
-        self.maskView.hidden = NO;
-        self.label.hidden = NO;
-
-    } else {
-        self.userButton.hidden = NO;
-        self.maskView.hidden = YES;
-        self.label.hidden = YES;
-    }
-
-    if (isUse) {
-        self.userButton.hidden = NO;
-        [self imageisUsingCover];
-
-    } else {
-
-        if (statu == 2) {
-            self.userButton.hidden = NO;
-            [self imageisnoUseCover];
-
-        } else {
-            self.userButton.hidden = YES;
-        }
-    }
-
-    [self.loader loadImageWithImageView:self.imageView options:0 imageUrl:imageUrl placeholderImage:nil];
-}
 
 - (UIView *)snapshotView {
     UIView *snapshotView = [[UIView alloc] init];

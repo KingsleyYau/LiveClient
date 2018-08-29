@@ -14,7 +14,7 @@
 @interface LSStreamSpeedManager () <LoginManagerDelegate, NSURLSessionDelegate>
 
 @property (nonatomic, strong) LSLoginManager *loginManager;
-@property (strong, nonatomic) LSSessionRequestManager *sessionManager;
+
 
 @end
 
@@ -25,7 +25,6 @@
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
 
-        self.sessionManager = [LSSessionRequestManager manager];
     }
     return self;
 }

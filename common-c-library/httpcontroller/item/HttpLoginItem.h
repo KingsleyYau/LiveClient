@@ -103,7 +103,7 @@ public:
             
             /* userType */
             if(root[LOGIN_USERTYPE].isNumeric()) {
-                userType = (UserType)root[LOGIN_USERTYPE].asInt();
+                userType = GetIntToUserType(root[LOGIN_USERTYPE].asInt());
             }
             
             /* qnMainAdUrl */

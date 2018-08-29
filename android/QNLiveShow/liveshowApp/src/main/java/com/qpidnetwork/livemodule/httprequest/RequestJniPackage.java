@@ -41,4 +41,11 @@ public class RequestJniPackage {
 	 * @return
 	 */
 	static public native long GetPackageUnreadCount(OnGetPackageUnreadCountCallback callback);
+
+	/**
+	 * 5.6.获取试用券可用信息
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetVoucherAvailableInfo(OnGetVoucherAvailableInfoCallback callback);
 }

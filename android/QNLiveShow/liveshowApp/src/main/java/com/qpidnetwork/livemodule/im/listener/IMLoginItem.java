@@ -8,13 +8,16 @@ public class IMLoginItem {
 	
 	public IMLoginItem(IMLoginRoomItem[] roomList,
 					IMInviteListItem[] inviteList,
-					IMScheduleRoomItem[] scheduleRoomList){
+					IMScheduleRoomItem[] scheduleRoomList,
+					IMOngoingShowItem[] ongoingShowList){
 		this.roomList = roomList;
 		this.inviteList = inviteList;
 		this.scheduleRoomList = scheduleRoomList;
+		this.ongoingShowList = ongoingShowList;
 	}
 	
 	public IMLoginRoomItem[] roomList;
 	public IMInviteListItem[] inviteList;
 	public IMScheduleRoomItem[] scheduleRoomList;
+	public IMOngoingShowItem[] ongoingShowList;
 }

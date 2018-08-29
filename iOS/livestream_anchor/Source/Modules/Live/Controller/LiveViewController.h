@@ -30,6 +30,10 @@
 #import "LiveRoomMsgManager.h"
 #import "RoomStyleItem.h"
 
+#import "LiveStreamPublisher.h"
+#import "LiveStreamPlayer.h"
+#import "LiveStreamSession.h"
+
 #define PlaceholderFontSize DESGIN_TRANSFORM_3X(14)
 #define PlaceholderFont [UIFont boldSystemFontOfSize:PlaceholderFontSize]
 
@@ -41,7 +45,7 @@
 - (void)onReEnterRoom:(LiveViewController *)vc;
 - (void)liveViewIsPlay:(LiveViewController *)vc;
 - (void)liveRoomIsClose:(LiveViewController *)vc;
-- (void)audidenveViewDidSelectItem:(AudienModel *)model indexPath:(NSIndexPath *)indexPath;
+- (void)audidenveViewDidSelectItem:(AudienModel *)model;
 - (void)liveFinshViewIsShow:(LiveViewController *)vc;
 @end
 
@@ -49,10 +53,11 @@
 #pragma mark - 调试信息
 @property (nonatomic, weak) IBOutlet UILabel *debugLabel;
 
+#pragma mark - 推流属性
+@property (nonatomic, assign) LiveStreamType liveStreamType;
+
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
-
-
 
 #pragma mark - 登录管理器
 @property (nonatomic, strong) LSLoginManager *loginManager;
@@ -68,6 +73,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *startOneViewHeigh;
 @property (weak, nonatomic) IBOutlet UIView *viewersNumView;
 @property (weak, nonatomic) IBOutlet UILabel *viewersNumLabel;
+@property (weak, nonatomic) IBOutlet UILabel *viewersTotalNumLabel;
 @property (weak, nonatomic) IBOutlet VIPAudienceView *audienceView;
 
 #pragma mark - 弹幕控件

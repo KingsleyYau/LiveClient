@@ -200,8 +200,7 @@
  *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
  *
  */
-//- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl userId:(NSString* _Nonnull)userId;
-- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl;
+- (void)onRecvChangeVideoUrl:(NSString* _Nonnull)roomId  isAnchor:(BOOL)isAnchor playUrl:(NSArray<NSString*>* _Nonnull)playUrl userId:(NSString* _Nonnull)userId;
 
 #pragma mark - 直播间文本消息信息
 /**
@@ -398,9 +397,10 @@
  *  @param err               结果类型
  *  @param errMsg            结果描述
  *  @param talentInviteId    才艺邀请ID
+ *  @param talentId          才艺ID
  *
  */
-- (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg talentInviteId:(NSString* _Nonnull)talentInviteId;
+- (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg talentInviteId:(NSString* _Nonnull)talentInviteId talentId:(NSString* _Nonnull)talentId;
 
 /**
  *  8.2.接收直播间才艺点播回复通知 回调
@@ -409,6 +409,15 @@
  *
  */
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject* _Nonnull)item;
+
+/**
+ *  8.3.接收直播间才艺点播提示公告通知 回调
+ *
+ *  @param roomId          直播间ID
+ *  @param introduction    公告描述
+ *
+ */
+- (void)onRecvTalentPromptNotice:(NSString* _Nonnull)roomId introduction:(NSString* _Nonnull)introduction;
 
 #pragma mark - 公共
 /**
@@ -422,10 +431,10 @@
 /**
  *  9.2.观众亲密度升级通知
  *
- *  @param loveLevel           当前等级
+ *  @param loveLevelItem           观众亲密度信息
  *
  */
-- (void)onRecvLoveLevelUpNotice:(int)loveLevel;
+- (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *  _Nonnull)loveLevelItem;
 
 /**
  *  9.3.背包更新通知
@@ -504,9 +513,10 @@
  *  @param success          操作是否成功
  *  @param reqId            请求序列号
  *  @param errMsg           结果描述
+ *  @param credit           信用点（浮点型）（若小于0，则表示信用点不变）
  *
  */
-- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
+- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg credit:(double)credit;
 
 /**
  *  10.8.接收多人互动直播间礼物通知接口 回调
@@ -531,6 +541,45 @@
  *
  */
 - (void)onRecvLackCreditHangoutNotice:(IMLackCreditHangoutItemObject * _Nonnull)item;
+
+/**
+ *  10.11.多人互动观众开始/结束视频互动接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *  @param manPushUrl       观众视频流url
+ *
+ */
+- (void)onControlManPushHangout:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg manPushUrl:(NSArray<NSString*>* _Nonnull)manPushUrl;
+
+/**
+ *  10.12.发送多人互动直播间文本消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+- (void)onSendHangoutLiveChat:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString * _Nonnull)errMsg;
+
+/**
+ *  10.13.接收直播间文本消息接口 回调
+ *
+ *  @param item         接收直播间文本消息
+ *
+ */
+- (void)onRecvHangoutChatNotice:(IMRecvHangoutChatItemObject * _Nonnull)item;
+
+/**
+ *  10.14.接收进入多人互动直播间倒数通知接口 回调
+ *
+ *  @param roomId         待进入的直播间ID
+ *  @param anchorId       主播ID
+ *  @param leftSecond     进入直播间的剩余秒数
+ *
+ */
+- (void)onRecvAnchorCountDownEnterHangoutRoomNotice:(NSString * _Nonnull)roomId anchorId:(NSString * _Nonnull)anchorId leftSecond:(int)leftSecond;
 
 // ------------- 节目 -------------
 /**
@@ -559,5 +608,24 @@
  *
  */
 - (void)onRecvRetTicketNotice:(IMProgramItemObject *_Nonnull)item leftCredit:(double)leftCredit;
+
+// ------------- 信件 -------------
+/**
+ *  13.1.接收意向信通知接口 回调
+ *
+ *  @param anchorId                  主播ID
+ *  @param loiId                     意向信ID
+ *
+ */
+- (void)onRecvLoiNotice:(NSString * _Nonnull)anchorId loiId:(NSString * _Nonnull)loiId;
+
+/**
+ *  13.2.接收EMF通知接口 回调
+ *
+ *  @param anchorId                  主播ID
+ *  @param emfId                     信件ID
+ *
+ */
+- (void)onRecvEMFNotice:(NSString * _Nonnull)anchorId emfId:(NSString * _Nonnull)emfId;
 
 @end

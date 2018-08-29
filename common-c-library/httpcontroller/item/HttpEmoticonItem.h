@@ -22,7 +22,7 @@ public:
             
             /* type */
             if( root[LIVEROOM_EMOTICON_LIST_EMOTYPE].isInt() ) {
-                type = (EmoticonType)root[LIVEROOM_EMOTICON_LIST_EMOTYPE].asInt();
+                type = GetIntToEmoticonType(root[LIVEROOM_EMOTICON_LIST_EMOTYPE].asInt());
             }
             /* name */
             if( root[LIVEROOM_EMOTICON_LIST_NAME].isString() ) {

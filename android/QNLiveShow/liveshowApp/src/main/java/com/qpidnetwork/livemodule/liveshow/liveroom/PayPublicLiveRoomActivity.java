@@ -10,7 +10,9 @@ import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
+import com.qpidnetwork.livemodule.liveshow.liveroom.online.AudienceHeadItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
 
     private void initPayPublicRoomViews(){
         ll_publicRoomHeader.setVisibility(View.VISIBLE);
-        rl_vipPublic.setVisibility(View.VISIBLE);
+        ll_freePublic.setVisibility(View.VISIBLE);
         include_audience_area.setVisibility(View.VISIBLE);
         ll_buttom_audience.setVisibility(View.VISIBLE);
     }
@@ -65,11 +67,32 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
                 HttpRespObject httpRespObject= (HttpRespObject) msg.obj;
                 if(httpRespObject.isSuccess){
                     AudienceInfoItem[] audienceList = (AudienceInfoItem[])httpRespObject.data;
-                    List<String> photoUrls = new ArrayList<>();
-                    for(AudienceInfoItem item : audienceList){
-                        photoUrls.add(item.photoUrl);
+                    Log.d(TAG,"EVENT_MESSAGE_UPDATE_ONLINEFANS-audienceList.length:"+audienceList.length);
+                    List<AudienceHeadItem> audienceHeadItems = new ArrayList<AudienceHeadItem>();
+                    int maxAudienceNum = 6;
+                    if(mIMRoomInItem != null && mIMRoomInItem.audienceLimitNum > 0){
+                        maxAudienceNum = mIMRoomInItem.audienceLimitNum;
                     }
-                    cihsv_onlineVIPPublic.setList(photoUrls);
+                    for(int index = 0;index < maxAudienceNum;index++){
+                        if(index<audienceList.length){
+                            //edit by Jagger 2018-5-3 加上是否已购票的属性
+                            AudienceHeadItem audienceHeadItem = new AudienceHeadItem(audienceList[index].photoUrl,
+                                    AudienceHeadItem.DEFAULT_ID_AUDIENCEHEAD);
+                            audienceHeadItem.setHasTicket(audienceList[index].isHasTicket);
+                            audienceHeadItems.add(audienceHeadItem);
+                        }else{
+                            Log.d(TAG,"EVENT_MESSAGE_UPDATE_ONLINEFANS-defaultPhotoUrl:我是"
+                                    +(index-audienceList.length+1)+"号群众演员");
+                            //edit by Jagger 2018-5-3 加上是否已购票的属性
+                            AudienceHeadItem audienceHeadItem = new AudienceHeadItem(null,
+                                    AudienceHeadItem.DEFAULT_ID_PLACEHOLDER);
+                            audienceHeadItem.setHasTicket(false);
+                            audienceHeadItems.add(audienceHeadItem);
+                        }
+                    }
+                    //2018年2月8日 14:35:54目前直播间改版为只有付费公开，观众头像列表使用原来免费公开直播间的控件ID，
+                    //以最小化样式修改，后续如果公开直播间改为免费和付费且样式有比较大的出入，那么需要重新改xml布局并改resId
+                    cihsv_onlineFreePublic.setList(audienceHeadItems);
                 }
             }break;
         }
@@ -95,7 +118,7 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
             if(null != mIMManager){
                 for(AudienceInfoItem audienceInfoItem : audienceList){
                     mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(audienceInfoItem.userId,
-                            audienceInfoItem.nickName,audienceInfoItem.photoUrl));
+                            audienceInfoItem.nickName,audienceInfoItem.photoUrl,audienceInfoItem.isHasTicket));
                 }
             }
         }
@@ -108,7 +131,8 @@ public class PayPublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
         IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
                 mIMManager.mMsgIdIndex.getAndIncrement(),"",
                 IMMessageItem.MessageType.SysNotice,
-                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,String.format ("%.2f", rebateGranted)),
+                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,
+                        ApplicationSettingUtil.formatCoinValue(rebateGranted)),
                         null, IMSysNoticeMessageContent.SysNoticeType.Normal));
         Log.d(TAG,"addRebateGrantedMsg-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
         sendMessageUpdateEvent(imMessageItem);

@@ -81,7 +81,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
     /**
      * 指示线的高度
      */
-    private int indicatorHeight = 4;
+    private int indicatorHeight = 0;
     /**
      * 默认指示线的颜色
      */
@@ -89,7 +89,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
     /**
      * 导航栏底部分割线的高度
      */
-    private int underlineHeight = 1;
+    private int underlineHeight = 0;
     /**
      * 分割线的颜色
      */
@@ -138,6 +138,12 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
      * 标题的字体大小
      */
     private int titleTextSize = 8;
+
+    /**
+     * 字体是否加粗
+     */
+    private boolean isTitleTxtBold = false;
+
     /**
      *  标题未被选中时字体颜色
      */
@@ -166,10 +172,6 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
      * 提示数字的字体大小
      */
     private int digitalHintTextSize = 10;
-    /**
-     * 是否包含数字提示组件
-     */
-    private boolean hasDigitalHint = false;
     /**
      * 定义6种模式
      */
@@ -261,7 +263,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
         digitalHintTextColor = a.getColor(R.styleable.TabPageIndicator_digitalHintTextColor, digitalHintTextColor);
         digitalHintTextBgColor = a.getColor(R.styleable.TabPageIndicator_digitalHintTextBgColor, digitalHintTextBgColor);
         digitalHintTextSize = a.getDimensionPixelSize(R.styleable.TabPageIndicator_digitalHintTextSize, digitalHintTextSize);
-        hasDigitalHint = a.getBoolean(R.styleable.TabPageIndicator_hasDigitalHint, hasDigitalHint);
+        isTitleTxtBold = a.getBoolean(R.styleable.TabPageIndicator_isTitleTxtBold, isTitleTxtBold);
         a.recycle();
         rectPaint = new Paint();
         rectPaint.setAntiAlias(true);
@@ -386,7 +388,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
         DotView dv_digitalHint = (DotView)tabItemView.findViewById(R.id.dv_digitalHint);
         dv_digitalHint.setTextSize(TypedValue.COMPLEX_UNIT_PX,digitalHintTextSize);
         dv_digitalHint.setTextColor(digitalHintTextColor);
-        dv_digitalHint.setVisibility(hasDigitalHint ? View.GONE : View.GONE);
+        dv_digitalHint.setVisibility(View.GONE);
         if (isExpand && !isExpandSameLine) {
             tabItemView.setPadding(tabPadding, 0, tabPadding, 0);
         } else {
@@ -397,24 +399,20 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
     }
 
     /**
-     * 更新position位置的tab，设置其未读提示的数字为unReadNumb
+     * 更改红点未读数字提示显示状态
      * @param position
+     * @param showHint
+     * @param onlyShowRedPoint
      * @param unReadNumb
      */
-    public void updateTabDiginalHintNumb(final int position, int unReadNumb){
+    public void updateTabDiginalHint(final int position, boolean showHint, boolean onlyShowRedPoint, int unReadNumb){
         View tabItemView = tabsContainer.getChildAt(position);
-//        TextView tv_digitalHint = (TextView)tabItemView.findViewById(R.id.tv_digitalHint);
-//        if(hasDigitalHint){
-//            tv_digitalHint.setText(String.valueOf(unReadNumb>99 ? 99 : unReadNumb));
-//            tv_digitalHint.setVisibility(0 == unReadNumb ? View.GONE : View.VISIBLE);
-//        }else{
-//            tv_digitalHint.setVisibility(View.GONE);
-//        }
-        //edit by Jagger 2017-12-13
         DotView dv_digitalHint = (DotView)tabItemView.findViewById(R.id.dv_digitalHint);
-        if(hasDigitalHint){
-            dv_digitalHint.setText(String.valueOf(unReadNumb));
-            dv_digitalHint.setVisibility(0 == unReadNumb ? View.GONE : View.VISIBLE);
+        if(showHint){
+            if(!onlyShowRedPoint && unReadNumb>0){
+                dv_digitalHint.setText(String.valueOf(unReadNumb));
+            }
+            dv_digitalHint.setVisibility(View.VISIBLE);
         }else{
             dv_digitalHint.setVisibility(View.GONE);
         }
@@ -433,6 +431,7 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
 
             TextView tv_tabTitle = (TextView)tabItemView.findViewById(R.id.tv_tabTitle);
             tv_tabTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, titleTextSize);
+            tv_tabTitle.getPaint().setFakeBoldText(isTitleTxtBold);
             tv_tabTitle.setTextColor(i == position ? titleTextColorSelected : titleTextColorUnselected);
             //大小写切换
             if (textAllCaps) {
@@ -789,7 +788,6 @@ public class TabPageIndicator<T> extends HorizontalScrollView {
      * @param hasDigitalHint
      */
     public void setHasDigitalHint(boolean hasDigitalHint){
-        this.hasDigitalHint = hasDigitalHint;
         invalidate();
     }
 

@@ -4,11 +4,13 @@
     android:id="@+id/flContentBody"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_live_roomtheme_advancepri">
+    android:background="#2b2b2b"
+    android:fitsSystemWindows="true">
 
 
     <!-- 背景不随软键盘切换部分：视频播放view-->
-    <ScrollView
+    <com.qpidnetwork.livemodule.view.LiveRoomScrollView
+        android:id="@+id/lrsv_roomBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -30,15 +32,9 @@
                     android:layout_height="match_parent"
                     android:visibility="gone" />
 
-                <include
-                    android:id="@+id/include_anchor_area"
-                    layout="@layout/include_liveroom_anchor"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
             </FrameLayout>
         </LinearLayout>
-    </ScrollView>
+    </com.qpidnetwork.livemodule.view.LiveRoomScrollView>
 
     <!--覆盖在视频上的业务层-->
     <LinearLayout
@@ -61,62 +57,6 @@
                 android:layout_gravity="bottom"
                 android:visibility="visible" />
 
-            <!--主播端底部操作界面,包含发言，送礼，直播控制-->
-            <RelativeLayout
-                android:id="@+id/rl_anchorOperate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible">
-
-                <include
-                    android:id="@+id/rl_buttom_broadcast"
-                    layout="@layout/view_live_buttom_broadcast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="12dp"
-                    android:layout_marginRight="12dp"
-                    android:visibility="visible" />
-
-                <!--按钮展开区域-->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/rl_buttom_broadcast"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="13dp"
-                    android:orientation="vertical">
-
-                    <Button
-                        android:id="@+id/btn_switchCamera"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/ic_live_buttom_camera_switch"
-                        android:onClick="onClick"
-                        android:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_switchFlash"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/selector_live_buttom_flash"
-                        android:onClick="onClick"
-                        android:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/btn_switchBeauty"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/selector_live_buttom_beauty"
-                        android:onClick="onClick"
-                        android:visibility="visible" />
-                </LinearLayout>
-            </RelativeLayout>
-
             <!--最上层消息控制等-->
             <FrameLayout
                 android:layout_width="match_parent"
@@ -126,7 +66,7 @@
 
                 <include
                     android:id="@+id/view_roomHeader"
-                    layout="@layout/view_liveshow_header"
+                    layout="@layout/view_liveshow_header_new"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -138,16 +78,6 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="bottom"
                     android:visibility="visible" />
-
-                <include
-                    android:id="@+id/ll_rebate"
-                    layout="@layout/view_room_rebate_tips"
-                    android:layout_width="116dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:visibility="invisible"
-                    android:layout_marginRight="13dp"
-                    android:layout_marginTop="@dimen/liveroom_rebate_tips_margintop" />
 
                 <include
                     android:id="@+id/view_tariff_prompt"
@@ -187,8 +117,18 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:visibility="gone"
+            custom:emojiPanelHeight="220dp"
             custom:columnNumbPerPage="5"
-            custom:lineNumbPerPage="3" />
+            custom:lineNumbPerPage="3"
+            custom:pageIndicatorHeight="6dp"
+            custom:pageIndicatorSpace="4dp"
+            custom:pageIndicatorTopMargin="13dp"
+            custom:pageIndicatorBottomMargin="12dp"
+            custom:emojiBgColor="#2b2b2b"
+            custom:gridViewItemWidth="@dimen/live_emoji_item_width"
+            custom:gridViewItemHeight="@dimen/live_emoji_item_height"
+            custom:gridViewItemIconWidth="@dimen/live_emoji_item_icon_width"
+            custom:gridViewItemIconHeight="@dimen/live_emoji_item_icon_height"/>
     </LinearLayout>
 
     <!--视频上传区域-->
@@ -199,6 +139,7 @@
         android:layout_height="125dp"
         android:layout_gravity="bottom|right"
         android:layout_marginBottom="76dp"
-        android:layout_marginRight="13dp" />
+        android:layout_marginRight="13dp"
+        android:visibility="gone"/>
 
 </com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout>

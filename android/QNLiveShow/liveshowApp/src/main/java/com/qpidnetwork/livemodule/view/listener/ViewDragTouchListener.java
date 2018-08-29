@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.view.listener;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +53,10 @@ public class ViewDragTouchListener implements View.OnTouchListener {
                 Log.d(TAG,"onTouch-ACTION_DOWN");
                 downX = event.getX();
                 downY = event.getY();
+                l = 0;
+                t = 0;
+                r = 0;
+                b = 0;
                 downTime = System.currentTimeMillis();
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -89,15 +92,16 @@ public class ViewDragTouchListener implements View.OnTouchListener {
                             b = screenHeight;
                         }
                         //end
-
                         v.layout(l, t, r, b);
                     }
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                Log.d(TAG,"onTouch-ACTION_UP");
-                if(null != listener){
-                    listener.onViewDragged(l,t,r,b);
+                Log.d(TAG,"onTouch-ACTION_UP-l:"+l+" t:"+t+" r:"+r+" b:"+b);
+                if(0 != l || 0!=t || 0 != r || 0 != b){
+                    if(null != listener){
+                        listener.onViewDragged(l,t,r,b);
+                    }
                 }
                 break;
         }

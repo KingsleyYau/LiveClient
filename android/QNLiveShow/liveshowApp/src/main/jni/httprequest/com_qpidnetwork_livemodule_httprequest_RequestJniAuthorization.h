@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
  * Method:    Login
- * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jint, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization

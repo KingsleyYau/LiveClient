@@ -60,8 +60,10 @@ public:
      
      @param width 视频宽
      @param height 视频高
+     @param fps 帧率
+     @param keyInterval 关键帧间隔
      */
-    void SetVideoParam(int width, int height);
+    void SetVideoParam(int width, int height, int fps, int keyInterval);
     
     /**
      发布流连接
@@ -91,6 +93,16 @@ public:
      @param frame 音频帧数据
      */
     void PushAudioFrame(void* data, int size, void* frame = NULL);
+    
+    /**
+     暂停推送视频
+     */
+    void PausePushVideo();
+    
+    /**
+     恢复推送视频
+     */
+    void ResumePushVideo();
     
     /**
      增加采集视频卡顿造成的时间
@@ -151,6 +163,26 @@ private:
     // 录制模块
     VideoRecorderH264 mVideoRecorderH264;
     AudioRecorderAAC mAudioRecorderAAC;
+    
+    // 视频控制
+    KMutex mPublisherMutex;
+    // 第一次处理帧时间
+    long long mVideoFrameStartPushTime;
+    long long mVideoFrameLastPushTime;
+    // 由帧率得出的帧间隔(ms)
+    int mVideoFps;
+    int mVideoFrameInterval;
+    
+    int mVideoFrameIndex;
+    // 视频是否暂停采集
+    bool mVideoPause;
+    // 视频是否已经恢复采集
+    bool mVideoResume;
+    // 视频总暂停时长
+    long long mVideoFramePauseTime;
+    // 视频时间戳余数同步
+    unsigned int mVideoTimestampSyncMod;
+    unsigned int mVideoTimestampSyncTotal;
 };
 }
 #endif /* PublisherController_h */

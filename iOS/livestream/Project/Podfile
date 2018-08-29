@@ -10,6 +10,7 @@ def shared_pods
 	pod 'Masonry', '0.6.4'
 	pod 'YYText', '1.0.7'
 	pod 'SDWebImage/WebP'
+	pod 'MJRefresh', '~> 3.1.15'
 end
 
 target 'livestream' do

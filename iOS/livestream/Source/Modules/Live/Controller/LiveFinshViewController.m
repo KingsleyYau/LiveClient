@@ -72,7 +72,10 @@
     [self.backgroundImageloader loadImageWithImageView:self.backgroundImageView options:0 imageUrl:self.liveRoom.roomPhotoUrl placeholderImage:
      nil];
     
-    self.nameLabel.text = self.liveRoom.userName;
+    if (self.liveRoom.liveShowType ==IMPUBLICROOMTYPE_PROGRAM) {
+        self.nameLabel.hidden = NO;
+        self.nameLabel.text = self.liveRoom.userName;
+    }
 }
 
 #pragma mark - 根据错误码显示界面
@@ -80,7 +83,7 @@
     
     switch (errType) {
             
-        // TOOP:1 没钱
+        // TODO:1 没钱
         case LCC_ERR_NO_CREDIT:
         case LCC_ERR_COUPON_FAIL:{
             self.recommandView.hidden = YES;
@@ -90,7 +93,7 @@
             self.tipLabel.text = NSLocalizedStringFromSelf(@"WATCHING_ERR_ADD_CREDIT");
         } break;
             
-        // TOOP:2 退入后台60s超时
+        // TODO:2 退入后台60s超时
         case LCC_ERR_BACKGROUND_TIMEOUT:{
             self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = YES;
@@ -99,10 +102,10 @@
             self.tipLabel.text = NSLocalizedStringFromSelf(@"TIMEOUT_A_MINUTE");
         } break;
         
-        // TOOP:3 正常关闭直播间,显示推荐主播列表
+        // TODO:3 正常关闭直播间,显示推荐主播列表
         case LCC_ERR_RECV_REGULAR_CLOSE_ROOM:{
             
-            if (self.liveRoom.httpLiveRoom.showInfo.showLiveId.length == 0) {
+            if (self.liveRoom.showId.length == 0) {
                [self getAdvisementList];
                 // 正常结束界面
                 [self reportDidShowPage:0];
@@ -119,7 +122,7 @@
             self.tipLabel.text = self.errMsg;
         } break;
         
-        // TOOP:4 被踢出直播间
+        // TODO:4 被踢出直播间
         case LCC_ERR_ROOM_LIVEKICKOFF:{
             self.recommandView.hidden = YES;
             self.bookPrivateBtn.hidden = YES;
@@ -256,23 +259,30 @@
     NSURL *url = [[LiveUrlHandler shareInstance] createUrlToLookLadyAnchorId:item.userId];
     [LiveUrlHandler shareInstance].url = url;
     
-    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
     [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 }
 
 - (IBAction)cancleAction:(id)sender {
-    [self.navigationController dismissViewControllerAnimated:YES
-                                                  completion:^{
-
-                                                  }];
+//    [self.navigationController dismissViewControllerAnimated:YES
+//                                                  completion:^{
+//
+//                                                  }];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
 }
 
 - (IBAction)bookPrivateAction:(id)sender {
     // 跳转预约
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
     BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
     vc.userId = self.liveRoom.userId;
     vc.userName = self.liveRoom.userName;
-    [self.navigationController pushViewController:vc animated:YES];
+    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
 }
 
 
@@ -281,7 +291,9 @@
 //    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
 //    [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
     
-    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
     NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:1];
     [LiveUrlHandler shareInstance].url = url;
     [[LiveUrlHandler shareInstance] handleOpenURL];
@@ -289,16 +301,22 @@
 
 
 - (IBAction)addCreditAction:(id)sender {
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
+    [[LiveModule module].moduleVC.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
 }
+
 
 - (IBAction)pushShowDetailVC:(id)sender {
     [[LiveModule module].analyticsManager reportActionEvent:ShowCalendarClickRecommendShow eventCategory:EventCategoryShowCalendar];
-    [self.navigationController dismissViewControllerAnimated:NO completion:^{
-        ShowDetailViewController * vc = [[ShowDetailViewController alloc]init];
-        vc.item = self.showItem;
-        [self.navigationController pushViewController:vc animated:YES];
-    }];
+//    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
+    LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
+    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
+    
+    ShowDetailViewController * vc = [[ShowDetailViewController alloc]init];
+    vc.item = self.showItem;
+    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
 }
 
 @end

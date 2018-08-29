@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_main_backgroud"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:id="@+id/llContent">
+
+
+    <!--LOGO图片UI设计师后需会更换，所以给的切图并未成比例-->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="240dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_charm_live" />
+
+    <LinearLayout
+        android:id="@+id/llInputArea"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="56dp"
+        android:gravity="center_horizontal"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/login_login_instruct"
+                android:layout_marginLeft="10dp"/>
+            <EditText
+                android:id="@+id/etBroadcaterId"
+                android:layout_marginLeft="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/live_login_account_hint_tips"
+                android:background="@null"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:ellipsize="end"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/login_password_instruct"
+                android:layout_marginLeft="10dp"/>
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_marginLeft="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/live_login_password_hint_tips"
+                android:background="@null"
+                android:singleLine="true"
+                android:inputType="textPassword"
+                android:textSize="15sp"
+                android:ellipsize="end"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#DDDDDD"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@drawable/login_verifycode_instruct"
+                android:layout_marginLeft="10dp"/>
+            <EditText
+                android:layout_marginLeft="8dp"
+                android:id="@+id/etVerifyCode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:hint="@string/live_login_verifycode_hint_tips"
+                android:maxLength="4"
+                android:layout_weight="1"
+                android:background="@null"
+                android:singleLine="true"
+                android:textSize="15sp"
+                android:ellipsize="end"/>
+            <ImageView
+                android:id="@+id/ivVerifyCode"
+                android:layout_width="115dp"
+                android:layout_height="35dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnLogin"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/login_button_50dp_height_25_radius"
+        android:text="@string/live_login_sign_in_tips"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"/>
+
+    <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginLeft="12dp"-->
+        <!--android:layout_marginRight="12dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:text="By using our service,you agree to our terms and Polocies"/>-->
+
+</LinearLayout>

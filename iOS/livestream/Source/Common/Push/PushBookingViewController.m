@@ -7,13 +7,14 @@
 //
 
 #import "PushBookingViewController.h"
-#import "LiveService.h"
+#import "LiveMutexService.h"
 #import "LiveModule.h"
 #import "UserInfoManager.h"
 #import "LSImageViewLoader.h"
 #import "LSTimer.h"
+#import "LiveGobalManager.h"
 
-@interface PushBookingViewController ()
+@interface PushBookingViewController ()<UIAlertViewDelegate>
 @property (nonatomic, strong) UserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (strong) LSTimer *removeTimer;
@@ -33,6 +34,8 @@
     self.imageViewLoader = [LSImageViewLoader loader];
     
     self.removeTimer = [[LSTimer alloc] init];
+    
+    self.tipsLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_BROADCAST_TIP"),self.userId];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -58,17 +61,57 @@
     [self timingRemoveView];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    // 停止定时器
+    [self.removeTimer stopTimer];
+}
+
 #pragma mark - 界面事件
 - (IBAction)acceptAction:(id)sender {
     NSLog(@"PushBookingViewController::acceptAction: url:%@",self.url);
     
-    [self.removeTimer stopTimer];
-    [[LiveService service] openUrlByLive:self.url];
-    
-    [[LiveModule module].analyticsManager reportActionEvent:ClickBooking eventCategory:EventCategoryGobal];
+    if ([LiveGobalManager manager].isHangouting) {
+        
+        UIAlertView * alertView = [[UIAlertView alloc]initWithTitle:@"" message:NSLocalizedStringFromSelf(@"Alert_Msg") delegate:self cancelButtonTitle:NSLocalizedString(@"CANCEL", nil) otherButtonTitles:NSLocalizedString(@"SURE", nil), nil];
+        [alertView show];
+    }
+    else
+    {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        // 跳转预约倒计时
+        [[LiveMutexService service] openUrlByLive:self.url];
+        // TODO:Google Analyze - ClickBooking
+        [[LiveModule module].analyticsManager reportActionEvent:ClickBooking eventCategory:EventCategoryGobal];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+}
 
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+#pragma mark - AlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == alertView.cancelButtonIndex) {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
+    else
+    {
+        // 停止定时器
+        [self.removeTimer stopTimer];
+        // 跳转预约倒计时
+        [[LiveMutexService service] openUrlByLive:self.url];
+        // TODO:Google Analyze - ClickBooking
+        [[LiveModule module].analyticsManager reportActionEvent:ClickBooking eventCategory:EventCategoryGobal];
+        // 移除界面
+        [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+    }
 }
 
 - (IBAction)cancelAction:(id)sender {

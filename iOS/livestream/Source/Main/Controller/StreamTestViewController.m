@@ -43,17 +43,17 @@
 
     // 初始化播放
     self.playerPreviewArray = @[
-                                self.previewView0,
-                                self.previewView1,
-                                self.previewView2
-                                ];
+        self.previewView0,
+        self.previewView1,
+        self.previewView2
+    ];
     self.playerUrlArray = @[
-                            @"rtmp://172.25.32.17:19351/live/max0",
-                            @"rtmp://172.25.32.17:19351/live/max1",
-                            @"rtmp://172.25.32.17:19351/live/max2"
-                            ];
+        @"rtmp://172.25.32.17:19351/live/max0",
+        @"rtmp://172.25.32.17:19351/live/max1",
+        @"rtmp://172.25.32.17:19351/live/max2"
+    ];
     NSMutableArray *playerArray = [NSMutableArray array];
-    for(int i = 0; i < self.playerPreviewArray.count; i++) {
+    for (int i = 0; i < self.playerPreviewArray.count; i++) {
         LiveStreamPlayer *player = [LiveStreamPlayer instance];
         player.playView = self.playerPreviewArray[i];
         player.playView.fillMode = kGPUImageFillModePreserveAspectRatio;
@@ -61,23 +61,52 @@
     }
     self.playerArray = playerArray;
     [self play:nil];
-    
+
     // 初始化推送
     self.publishUrl = @"rtmp://172.25.32.17:19351/live/maxi";
-    self.publisher = [LiveStreamPublisher instance];
-    [self.publisher initCapture];
-    self.publisher.publishView = self.previewPublishView;
+    self.publisher = [LiveStreamPublisher instance:LiveStreamType_Audience_Mutiple];
     self.previewPublishView.fillMode = kGPUImageFillModePreserveAspectRatio;
-    
+    self.publisher.publishView = self.previewPublishView;
+
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", self.playerUrlArray[0], nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
-    
+
     // 计算StatusBar高度
     if ([LSDevice iPhoneXStyle]) {
         self.previewTop.constant = 44;
     } else {
         self.previewTop.constant = 20;
     }
+
+    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!granted) {
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *_Nonnull action){
+
+                                                                 }];
+                [alertVC addAction:actionOK];
+                [self presentViewController:alertVC animated:NO completion:nil];
+            }
+        });
+    }];
+
+    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!granted) {
+                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *_Nonnull action){
+
+                                                                 }];
+                [alertVC addAction:actionOK];
+                [self presentViewController:alertVC animated:NO completion:nil];
+            }
+        });
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -95,13 +124,12 @@
     // 添加键盘事件
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
+
     // 添加手势
     [self addSingleTap];
-    
+
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -110,14 +138,14 @@
     // 去除键盘事件
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    
+
     // 去除手势
     [self removeSingleTap];
 
     // 停止流
     [self stopPlay:nil];
     [self stopPush:nil];
-    
+
     // 允许锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
 }
@@ -142,29 +170,29 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
-    NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
+    NSString *recordH264FilePath = @""; //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.h264"];
+    NSString *recordAACFilePath = @"";  //[NSString stringWithFormat:@"%@/%@", recordDir, @"publish.aac"];
 
     BOOL bFlag = NO;
 
-    bFlag = [[LiveStreamSession session] canCapture];
-    if (bFlag) {
+    //    bFlag = [[LiveStreamSession session] canCapture];
+    //    if (bFlag) {
+    //
+    //    } else {
+    //        // 无权限
+    //        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头和录音权限" preferredStyle:UIAlertControllerStyleAlert];
+    //        UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+    //                                                           style:UIAlertActionStyleDefault
+    //                                                         handler:^(UIAlertAction *_Nonnull action){
+    //
+    //                                                         }];
+    //        [alertVC addAction:actionOK];
+    //        [self presentViewController:alertVC animated:NO completion:nil];
+    //    }
 
-    } else {
-        // 无权限
-        UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头和录音权限" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-                                                           style:UIAlertActionStyleDefault
-                                                         handler:^(UIAlertAction *_Nonnull action){
-
-                                                         }];
-        [alertVC addAction:actionOK];
-        [self presentViewController:alertVC animated:NO completion:nil];
-    }
-
-    if (bFlag) {
-        bFlag = [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
-    }
+    //    if (bFlag) {
+    bFlag = [self.publisher pushlishUrl:self.textFieldPublishAddress.text recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+    //    }
 
     if (bFlag) {
         // 发布成功
@@ -180,14 +208,13 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
-
-    for(int i = 0; i < self.playerArray.count; i++) {
+    for (int i = 0; i < self.playerArray.count; i++) {
         // 开始转菊花
-        NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
+//        NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
+        NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
         NSString *recordH264FilePath = [NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
-        NSString *recordAACFilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
-        
+        NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+
         BOOL bFlag = [self.playerArray[i] playUrl:self.playerUrlArray[i] recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
         if (bFlag) {
             // 播放成功
@@ -195,11 +222,10 @@
             // 播放失败
         }
     }
-
 }
 
 - (IBAction)stopPlay:(id)sender {
-    for(int i = 0; i < self.playerArray.count; i++) {
+    for (int i = 0; i < self.playerArray.count; i++) {
         [self.playerArray[i] stop];
     }
 }
@@ -263,7 +289,7 @@
 
     self.navigationController.navigationBar.alpha = 0.7;
     self.navigationController.navigationBar.hidden = NO;
-    
+
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [UIView animateWithDuration:1
             animations:^{
@@ -277,28 +303,28 @@
 
 #pragma mark - 处理键盘回调
 - (void)moveInputBarWithKeyboardHeight:(CGFloat)height withDuration:(NSTimeInterval)duration {
-    BOOL bFlag = NO;
-    
+//    BOOL bFlag = NO;
+
     // Ensures that all pending layout operations have been completed
     [self.view layoutIfNeeded];
-    
+
     if (height != 0) {
         // 弹出键盘
         self.playBottom.constant = -(height + 20);
-        
+
     } else {
         // 收起键盘
         self.playBottom.constant = -20;
     }
-    
+
     [UIView animateWithDuration:duration
                      animations:^{
                          // Make all constraint changes here, Called on parent view
                          [self.view layoutIfNeeded];
-                         
+
                      }
                      completion:^(BOOL finished){
-                         
+
                      }];
 }
 
@@ -314,7 +340,7 @@
 }
 
 - (void)keyboardWillHide:(NSNotification *)notification {
-    NSDictionary* userInfo = [notification userInfo];
+    NSDictionary *userInfo = [notification userInfo];
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];

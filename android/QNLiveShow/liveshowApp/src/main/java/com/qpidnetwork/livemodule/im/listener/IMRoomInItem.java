@@ -14,7 +14,14 @@ public class IMRoomInItem implements Serializable{
 		FreePublicRoom,			//免费公开直播间
 		NormalPrivateRoom,		//普通私密直播间
 		PaidPublicRoom,			//付费公开直播间
-		AdvancedPrivateRoom		//豪华私密直播间
+		AdvancedPrivateRoom,	//豪华私密直播间
+		HangoutRoom				//多人互动直播间
+	}
+
+	public enum IMPublicRoomType {
+		Unknown,				//未知
+		Common,				    //普通公开
+		Program				    //节目
 	}
 	
 	private static final long serialVersionUID = -2781675685594191161L;
@@ -44,6 +51,8 @@ public class IMRoomInItem implements Serializable{
 	 * @param honorId           勋章ID
      * @param honorImg          勋章图片url
 	 * @param popPrice			直播间的POP消息资费
+	 * @param liveShowType		公开直播间类型
+	 * @param isHasTalent		是否有才艺
 	 */	
 	public IMRoomInItem(String userId,
 						String nickName,
@@ -68,7 +77,9 @@ public class IMRoomInItem implements Serializable{
 						String honorId,
 						String honorImg,
 						double popPrice,
-						int useCoupon){
+						int useCoupon,
+						int liveShowType,
+						boolean isHasTalent){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -99,6 +110,12 @@ public class IMRoomInItem implements Serializable{
 		this.honorImg = honorImg;
 		this.popPrice = popPrice;
 		this.useCoupon = useCoupon;
+		if( liveShowType < 0 || liveShowType >= IMPublicRoomType.values().length ) {
+			this.liveShowType = IMPublicRoomType.Unknown;
+		} else {
+			this.liveShowType = IMPublicRoomType.values()[liveShowType];
+		}
+		this.isHasTalent = isHasTalent;
 	}
 	
 	public String userId; 
@@ -125,6 +142,9 @@ public class IMRoomInItem implements Serializable{
 	public String honorImg;
 	public double popPrice;
 	public int useCoupon;
+	public IMPublicRoomType liveShowType;
+	public boolean isHasTalent;
+
 
 	@Override
 	public String toString() {
@@ -133,6 +153,8 @@ public class IMRoomInItem implements Serializable{
 		sb.append(honorId);
 		sb.append(" honorImg:");
 		sb.append(honorImg);
+		sb.append(" isHasTalent:");
+		sb.append(isHasTalent);
 		sb.append("]");
 		return sb.toString();
 	}

@@ -8,10 +8,8 @@ import android.text.TextUtils;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
-import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
@@ -60,6 +58,9 @@ public class URL2ActivityManager {
     public static final String KEY_URL_PARAM_KEY_ROOMTYPE = "roomtype";
     public static final String KEY_URL_PARAM_KEY_INVITATIONID = "invitationid";
     public static final String KEY_URL_PARAM_KEY_ANCHORTYPE = "anchor_type";
+
+    //公共字段
+    private static final String KEY_URL_PARAM_KEY_TEST = "test";
 
     public static URL2ActivityManager getInstance() {
         if (singleton == null) {
@@ -519,14 +520,56 @@ public class URL2ActivityManager {
      * @param uri
      */
     private static void URL4AddCredit(Context context, Uri uri){
-        LiveService.getInstance().onAddCreditClick();
+        LiveService.getInstance().onAddCreditClick(context);
     }
 
+    /**
+     * 跳转到我的等级页面
+     * @param context
+     * @param uri
+     */
     private static void URL4MyLevel(Context context, Uri uri){
         String myLevelTitle = context.getResources().getString(R.string.my_level_title);
         context.startActivity(WebViewActivity.getIntent(context,
                 myLevelTitle,
                 WebViewActivity.UrlIntent.View_Audience_Level,null, true));
+    }
+
+    /**
+     * 读取forTest字段
+     * @param url
+     * @return
+     */
+    public static boolean readForTestFlags(String url){
+        boolean forTest = false;
+        if(!TextUtils.isEmpty(url)){
+            Uri uri = Uri.parse(url);
+            String temp = uri.getQueryParameter(KEY_URL_PARAM_KEY_TEST);
+            if(!TextUtils.isEmpty(temp)){
+                forTest = Integer.valueOf(temp) == 0?false:true;
+            }
+        }
+        return forTest;
+    }
+
+
+    /**
+     * uri转url
+     * @param uri
+     * @return
+     */
+    public static String uriToUrl(Uri uri){
+        String url = "";
+        if(uri != null){
+            url = KEY_URL_SCHEME + "://"
+                    + KEY_URL_AUTHORITY
+                    + KEY_URL_PATH;
+            String queryStr = uri.getQuery();
+            if(!TextUtils.isEmpty(queryStr)){
+                url += "?" + queryStr;
+            }
+        }
+        return url;
     }
 
 }

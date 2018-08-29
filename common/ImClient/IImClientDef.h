@@ -211,12 +211,14 @@ typedef enum {
     TALENTSTATUS_UNKNOW = 0, // 未知
     TALENTSTATUS_AGREE = 1,  // 已接受
     TALENTSTATUS_REJECT = 2, // 拒绝
+    TALENTSTATUS_OUTTIEM = 3, // 已超时
+    TALENTSTATUS_CANCEL = 4,  // 已取消
     TALENTSTATUS_BEGIN = TALENTSTATUS_UNKNOW,
-    TALENTSTATUSE_END = TALENTSTATUS_REJECT
+    TALENTSTATUSE_END = TALENTSTATUS_CANCEL
 } TalentStatus;
 
 // int 转换 RoomType
-inline TalentStatus GetTalentStatus(int value) {
+inline TalentStatus GetIntToTalentStatus(int value) {
     return TALENTSTATUS_BEGIN <= value && value <= TALENTSTATUSE_END ? (TalentStatus)value : TALENTSTATUS_UNKNOW;
 }
 
@@ -267,8 +269,10 @@ typedef enum {
     IMREPLYINVITETYPE_REJECT = 3,           // 拒绝
     IMREPLYINVITETYPEE_OUTTIME = 4,         // 邀请超时
     IMREPLYINVITETYPE_CANCEL = 5,           // 观众取消邀请
+    IMREPLYINVITETYPE_NOCREDIT = 6,         // 余额不足
+    IMREPLYINVITETYPE_BUSY = 7,             // 主播繁忙
     IMREPLYINVITETYPE_BEGIN = IMREPLYINVITETYPE_AGREE,
-    IMREPLYINVITETYPE_END = IMREPLYINVITETYPE_CANCEL
+    IMREPLYINVITETYPE_END = IMREPLYINVITETYPE_BUSY
 } IMReplyInviteType;
 
 // int 转换 IMReplyInviteType
@@ -356,5 +360,18 @@ inline IMProgramTicketStatus GetIMProgramTicketStatus(int value) {
     return IMPROGRAMTICKETSTATUS_BEGIN < value && value <= IMPROGRAMTICKETSTATUS_END ? (IMProgramTicketStatus)value : IMPROGRAMTICKETSTATUS_UNKNOW;
 }
 
+// 私信消息类型
+typedef enum {
+    IMPRIVATEMSGTYPE_UNKNOW = 0,    // 未知
+    IMPRIVATEMSGTYPE_TEXT = 1,      // 私信文本
+    IMPRIVATEMSGTYPE_Dynamic = 2,   // 动态
+    IMPRIVATEMSGTYPE_BEGIN = IMPRIVATEMSGTYPE_UNKNOW,
+    IMPRIVATEMSGTYPE_END = IMPRIVATEMSGTYPE_Dynamic
+    
+}IMPrivateMsgType;
 
+// int 转换 IMProgramTicketStatus
+inline IMPrivateMsgType GetIntToIMPrivateMsgType(int value) {
+    return IMPRIVATEMSGTYPE_BEGIN <= value && value <= IMPRIVATEMSGTYPE_END ? (IMPrivateMsgType)value : IMPRIVATEMSGTYPE_UNKNOW;
+}
 

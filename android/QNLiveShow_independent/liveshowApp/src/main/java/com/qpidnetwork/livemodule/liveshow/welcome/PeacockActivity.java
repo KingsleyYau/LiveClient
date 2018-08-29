@@ -14,12 +14,11 @@ import android.widget.Toast;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.home.EditProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.login.LiveLoginActivity;
-import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 
 /**
@@ -59,7 +58,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
                 }
                 String token = et_token.getText().toString();
                 showToast(getResources().getString(R.string.tip_waitlogin));
-                LoginManager.getInstance().login("", token);
+//                LoginManager.getInstance().login("", token);
             }
         });
 
@@ -78,26 +77,25 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditProfileActivity.show(mContext);
             }
         });
     }
 
     private void initData(){
-        LoginManager.getInstance().register(this);
-//        if(LoginManager.getInstance().autoLogin()){
+        LoginManager.getInstance().addListener(this);
+//        if(LoginManager1.getInstance().autoLogin()){
 //            //上次成功登录未注销，自动登录
 //            showProgressDialog(getResources().getString(R.string.tip_waitlogin));
 //            sendUiMessageDelayed(MESSAGE_AUTOLOGIN_OVERTIME, getResources().getInteger(R.integer.autoLoginMaxTime));
 //        }else{
         ll_handlerLogin.setVisibility(View.VISIBLE);
-        LoginParam param = LoginManager.getInstance().getAccountInfo();
-        if(param != null && !TextUtils.isEmpty(param.qnToken)){
-            et_token.setText(param.qnToken);
-        }
+//        LoginParam param = LoginManager.getInstance().getAccountInfo();
+//        if(param != null && !TextUtils.isEmpty(param.qnToken)){
+//            et_token.setText(param.qnToken);
+//        }
 //            String token = "Harry_HHeEoKeotNFp";
 //            showProgressDialog(getResources().getString(R.string.tip_waitlogin));
-//            LoginManager.getInstance().login(token);
+//            LoginManager1.getInstance().login(token);
 //        }
     }
 
@@ -138,7 +136,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LoginManager.getInstance().unRegister(this);
+        LoginManager.getInstance().removeListener(this);
 
     }
 

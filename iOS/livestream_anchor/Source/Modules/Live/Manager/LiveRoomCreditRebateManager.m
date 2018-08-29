@@ -8,12 +8,10 @@
 
 #import "LiveRoomCreditRebateManager.h"
 #import "LSLoginManager.h"
-#import "LSImManager.h"
-#import "GetLeftCreditRequest.h"
+//#import "LSImManager.h"
 
-@interface LiveRoomCreditRebateManager () <LoginManagerDelegate, IMLiveRoomManagerDelegate>
+@interface LiveRoomCreditRebateManager () <LoginManagerDelegate>
 
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 @property (nonatomic, strong) LSLoginManager *loginManager;
 @property (nonatomic, strong) NSMutableArray *delegates;
@@ -37,7 +35,6 @@
 
     if (self) {
         self.loginManager = [LSLoginManager manager];
-        self.sessionManager = [LSSessionRequestManager manager];
         [self.loginManager addDelegate:self];
         self.mCredit = 0.0;
         self.imRebateItem = [[IMRebateItem alloc] init];
@@ -56,7 +53,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if (success) {
             // 请求账号余额
-            [self getLeftCreditRequest];
+//            [self getLeftCreditRequest];
         }
     });
 }
@@ -106,23 +103,6 @@
 }
 
 #pragma mark - 请求账号余额
-- (void)getLeftCreditRequest {
-
-    GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit) {
-
-        NSLog(@"LiveRoomCreditRebateManager::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
-
-        dispatch_async(dispatch_get_main_queue(), ^{
-
-            if (success) {
-                [self setCredit:credit];
-            } else {
-            }
-        });
-    };
-    [self.sessionManager sendRequest:request];
-}
 
 // 设置信用点
 - (void)setCredit:(double)credit {

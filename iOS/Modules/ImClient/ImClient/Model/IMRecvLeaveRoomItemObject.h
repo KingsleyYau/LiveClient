@@ -8,6 +8,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#include "IImClientDef.h"
 
 @interface IMRecvLeaveRoomItemObject : NSObject
 
@@ -26,7 +27,7 @@
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
 @property (nonatomic, copy) NSString *_Nonnull photoUrl;
-@property (nonatomic, assign) int errNo;
+@property (nonatomic, assign) LCC_ERR_TYPE errNo;
 @property (nonatomic, copy) NSString *_Nonnull errMsg;
 
 @end

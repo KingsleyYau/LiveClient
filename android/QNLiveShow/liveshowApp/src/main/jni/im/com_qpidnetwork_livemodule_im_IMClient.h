@@ -152,6 +152,54 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_InstantIn
 JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendTalentInvite
   (JNIEnv *, jclass, jint, jstring, jstring);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    EnterHangoutRoom
+ * Signature: (ILjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_EnterHangoutRoom
+        (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    LeaveHangoutRoom
+ * Signature: (ILjava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_LeaveHangoutRoom
+        (JNIEnv *, jclass, jint, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    SendHangoutGift
+ * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZIZIII)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendHangoutGift
+        (JNIEnv *, jclass, jint, jstring, jstring, jstring, jstring, jstring, jboolean, jboolean, jint, jboolean, jint, jint, jint);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    ControlManPushHangout
+ * Signature: (ILjava/lang/String;I)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_ControlManPushHangout
+        (JNIEnv *, jclass, jint, jstring, jint);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    SendHangoutRoomMsg
+ * Signature: (ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)Z
+ */
+JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_SendHangoutRoomMsg
+        (JNIEnv *, jclass, jint, jstring, jstring, jstring, jobjectArray);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_im_IMClient
+ * Method:    GetIMClient
+ * Signature: ()Z
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_im_IMClient_GetIMClient
+        (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

@@ -1,0 +1,76 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/flContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/ll_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+        </LinearLayout>
+
+        <include
+            android:id="@+id/view_errorpage"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/live_layout_error_page" />
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="51dp"
+            android:layout_height="51dp"
+            android:scrollbarStyle="insideInset"
+            android:indeterminateDrawable="@drawable/live_loading_progress"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDuration="1000"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+    </FrameLayout>
+
+    <!--titlebar-->
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fl_commTitleBar"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_height="56dp">
+
+        <TextView
+            android:id="@+id/tv_commTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:textStyle="bold"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            android:maxWidth="@dimen/live_size_220dp" />
+
+        <ImageView
+            android:id="@+id/iv_commBack"
+            android:src="@drawable/ic_arrow_back"
+            android:paddingLeft="13dp"
+            android:paddingRight="18dp"
+            android:layout_gravity="center_vertical|left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" />
+
+        <View
+            android:id="@+id/viewShadow"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E4E4E4"
+            android:layout_gravity="bottom"/>
+    </FrameLayout>
+
+</FrameLayout>

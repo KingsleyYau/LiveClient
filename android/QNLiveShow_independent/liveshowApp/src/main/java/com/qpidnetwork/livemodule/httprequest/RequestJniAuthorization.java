@@ -3,6 +3,7 @@ package com.qpidnetwork.livemodule.httprequest;
 
 import com.qpidnetwork.livemodule.httprequest.item.GenderType;
 import com.qpidnetwork.livemodule.httprequest.item.VerifyCodeType;
+import com.qpidnetwork.livemodule.httprequest.item.RegionType;
 
 /**
  * 注册登录等认证模块接口
@@ -19,10 +20,10 @@ public class RequestJniAuthorization {
      * @param callback
      * @return
      */
-    static public long Login(String manId, String qnTokenId, String deviceId, OnRequestLoginCallback callback){
-    	return Login(manId, qnTokenId, deviceId, android.os.Build.MODEL, android.os.Build.MANUFACTURER, callback);
+    static public long Login(String manId, String qnTokenId, String deviceId,  RegionType regionType, OnRequestLoginCallback callback){
+    	return Login(manId, qnTokenId, deviceId, android.os.Build.MODEL, android.os.Build.MANUFACTURER, regionType.ordinal(), callback);
     }
-    static private native long Login(String manId, String userSid, String deviceId, String model, String manufacturer, OnRequestLoginCallback callback);
+    static private native long Login(String manId, String userSid, String deviceId, String model, String manufacturer, int regionId, OnRequestLoginCallback callback);
     
     /**
      * 注销
@@ -42,7 +43,7 @@ public class RequestJniAuthorization {
     /**
      * 2.4.Facebook注册及登录（仅独立）
      * @param fToken                              Facebook登录返回的accessToken
-     * @param versionCode                         客户端内部版本号
+     * @param nickName                            昵称
      * @param utmReferrer                         APP推广参数（google play返回的referrer，格式：UrlEncode(referrer)）
      * @param model                               设备型号
      * @param deviceId                            设备唯一标识
@@ -51,10 +52,14 @@ public class RequestJniAuthorization {
      * @param email                               用户注册的邮箱（可无）
      * @param passWord                            登录密码（可无）
      * @param birthDay                            出生日期（可无，但未绑定时必须提交，格式为：2015-02-20）
+     * @param gender                              性别
      * @param callback
      * @return
      */
-    static public native long FackBookLogin(String fToken, String versionCode, String utmReferrer, String model, String deviceId, String manufacturer, String inviteCode, String email, String passWord, String birthDay, OnRequestFackBookLoginCallback callback);
+    static public long FackBookLogin(String fToken, String nickName, String utmReferrer, String model, String deviceId, String manufacturer, String inviteCode, String email, String passWord, String birthDay, GenderType gender, OnRequestFackBookLoginCallback callback){
+        return FackBookLogin(fToken, nickName, utmReferrer, model, deviceId, manufacturer, inviteCode, email, passWord, birthDay, gender.ordinal(), callback);
+    }
+    static public native long FackBookLogin(String fToken, String nickName, String utmReferrer, String model, String deviceId, String manufacturer, String inviteCode, String email, String passWord, String birthDay, int gender, OnRequestFackBookLoginCallback callback);
 
     /**
      * 2.5.邮箱注册（仅独立）
@@ -80,15 +85,13 @@ public class RequestJniAuthorization {
      * 2.6.邮箱登录（仅独立）
      * @param email                         用户的email或id
      * @param passWord                      登录密码
-     * @param versionCode                   客户端内部版本号
      * @param model                         设备型号（格式：设备型号-系统版本号-API版本号-分辨率）
      * @param deviceid                      设备唯一标识
      * @param manufacturer                  制造厂商
-     * @param checkCode                     验证码
      * @param callback
      * @return
      */
-    static public native long LSMailLogin(String email, String passWord, String versionCode, String model, String deviceid, String manufacturer, String checkCode, OnRequestMailLoginCallback callback);
+    static public native long LSMailLogin(String email, String passWord, String model, String deviceid, String manufacturer, OnRequestMailLoginCallback callback);
 
     /**
      * 2.7.找回密码（仅独立）

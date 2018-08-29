@@ -15,6 +15,9 @@
 #pragma mark - Button
 #import "LSBadgeButton.h"
 #import "LSCheckButton.h"
+#import "LSHighlightedButton.h"
+#import "UIBarButtonItem+SXCreate.h"
+#import "UINavigationItem+SXFixSpace.h"
 
 #pragma mark - NSBundle
 #import "NSBundle+DeviceFamily.h"
@@ -59,6 +62,7 @@
 
 #pragma mark - progress
 #import "LSProgressView.h"
+#import "TXScrollLabelView.h"
 
 @interface LSUIWidget : NSObject
 

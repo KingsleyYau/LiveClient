@@ -37,6 +37,8 @@
     [self.tableView unInitPullRefresh];
     [self.timer invalidate];
     self.timer = nil;
+    
+    [self.dialogTipView stopTimer];
 }
 
 - (void)viewDidLoad {
@@ -205,26 +207,25 @@
     cell.delegate = self;
     
     if (self.data.count > 0) {
-        BookingPrivateInviteItemObject *obj = self.data[indexPath.row];
-        
+        ZBBookingPrivateInviteItemObject *obj = self.data[indexPath.row];
         cell.nameLabel.text = obj.oppositeNickName;
-        
+
         [cell.imageViewLoader stop];
         if (!cell.imageViewLoader) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-        
+
         [cell.imageViewLoader refreshCachedImage:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
-        
+
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
         } else {
             cell.subLabel.font = [UIFont systemFontOfSize:12];
         }
         cell.subLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedStringFromSelf(@"Reservation_Time"), [cell getTime:obj.bookTime]];
-        
+
         cell.redIcon.hidden = obj.read;
-        
+
         NSString *timeStr = [cell compareCurrentTime:obj.bookTime];
         NSArray *array = [timeStr componentsSeparatedByString:@" "];
         if (array.count > 1) {
@@ -232,7 +233,7 @@
             cell.historyLabel.hidden = NO;
             [cell setTimeStr:timeStr];
         } else {
-            
+
             if (!self.isShowStartNowBtn) {
                 self.isShowStartNowBtn = YES;
             }
@@ -241,6 +242,7 @@
             [cell startCountdown:obj.bookTime];
         }
     }
+
     return result;
 }
 
@@ -249,7 +251,7 @@
 {
     if (self.data.count > 0) {
         //进入女士详情
-        BookingPrivateInviteItemObject *obj = self.data[row];
+        ZBBookingPrivateInviteItemObject *obj = self.data[row];
         NSString * userId = @"";
         if ([[LSLoginManager manager].loginItem.userId isEqualToString:obj.fromId])
         {
@@ -270,7 +272,7 @@
 {
     if (self.data.count > 0) {
         //进入女士详情
-        BookingPrivateInviteItemObject *obj = self.data[row];
+        ZBBookingPrivateInviteItemObject *obj = self.data[row];
         NSString * userId = @"";
         if ([[LSLoginManager manager].loginItem.userId isEqualToString:obj.fromId])
         {
@@ -291,8 +293,8 @@
 - (void)scheduledStartNowDidForRow:(NSInteger)row
 {
     if (self.data.count > 0) {
-        BookingPrivateInviteItemObject *obj = self.data[row];
-        
+        ZBBookingPrivateInviteItemObject *obj = self.data[row];
+
         PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
         LiveRoom *liveRoom = [[LiveRoom alloc] init];
         liveRoom.roomId = obj.roomId;
@@ -303,7 +305,6 @@
         vc.liveRoom = liveRoom;
         vc.status = PreLiveStatus_Enter;
         [self navgationControllerPresent:vc];
-        
         NSLog(@"点击进入预约直播%@",obj.roomId);
     }
 }

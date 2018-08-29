@@ -7,22 +7,18 @@
 //
 
 #import "LSLiveWKWebViewController.h"
-#import "LSRequestManager.h"
 #import "PreLiveViewController.h"
-#import "BookPrivateBroadcastViewController.h"
 #import "LSLoginManager.h"
-#import "LiveRoomCreditRebateManager.h"
-#import "GetAnchorListRequest.h"
 #import "LiveModule.h"
 #import "LSAnchorRequestManager.h"
 #import "DialogTip.h"
 #import "LSProfileViewController.h"
-
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 @interface LSLiveWKWebViewController ()<WKUIDelegate,WKNavigationDelegate, WebViewJSDelegate, LoginManagerDelegate,LSListViewControllerDelegate>
 /**
  网络请求管理器
  */
-@property (nonatomic, strong) LSRequestManager *requestManager;
+@property (nonatomic, strong) LSAnchorRequestManager *requestManager;
 
 /**
  解析url
@@ -34,10 +30,6 @@
  */
 @property (nonatomic, strong) LSLoginManager *loginManager;
 
-/**
- *  接口管理器
- */
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
 
 /** 错误信息 */
 @property (nonatomic, strong) NSString* errmsg;
@@ -49,16 +41,17 @@
 - (void)dealloc {
     NSLog(@"LSLiveWKWebViewController::dealloc()");
     [self.loginManager removeDelegate:self];
+    
+    [[DialogTip dialogTip] stopTimer];
 }
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         // 设置失败显示代理
-        self.requestManager = [LSRequestManager manager];
+        self.requestManager = [LSAnchorRequestManager manager];
         self.configManager = [LSConfigManager manager];
         self.urlHandler = [LiveUrlHandler shareInstance];
-        self.sessionManager = [LSSessionRequestManager manager];
         self.loginManager = [LSLoginManager manager];
         [self.loginManager addDelegate:self];
     }
@@ -77,6 +70,23 @@
     }
 }
 
+- (NSString *)setupCommonConfig:(NSString *)baseUrl {
+    NSString *url;
+    NSString *device; // 设备类型
+    NSString *appVer = [NSString stringWithFormat:@"appver=%@",[LSAnchorRequestManager manager].versionCode]; // 设备类型
+    if (IS_IPAD) {
+        device = [NSString stringWithFormat:@"device=32"];
+    } else {
+        device = [NSString stringWithFormat:@"device=31"];
+    }
+    if ([baseUrl containsString:@"?"]) {
+        url = [NSString stringWithFormat:@"%@&%@%@",baseUrl,device,appVer];
+    }else {
+        url = [NSString stringWithFormat:@"%@?%@&%@",baseUrl,device,appVer];
+    }
+    return url;
+}
+
 // 请求webview
 - (void)requestWebview
 {
@@ -86,6 +96,7 @@
     // 清cookies和http缓存
     [self clearAllCookies];
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
     
     NSString *webSiteUrl = self.baseUrl;
     // webview请求url
@@ -267,16 +278,8 @@
             vc.liveRoom = liveRoom;
             [self navgationControllerPresent:vc];
             
-        } else if ([urlStr containsString:@"newbooking"]) {
-            
-            if (item.userName.length > 0 || item.userId.length > 0) {
-                // 跳转预约
-                BookPrivateBroadcastViewController *vc = [[BookPrivateBroadcastViewController alloc] initWithNibName:nil bundle:nil];
-                vc.userId = item.userId;
-                vc.userName = item.userName;
-                [self.controller.navigationController pushViewController:vc animated:YES];
-            }
         }
+        
         result = NO;
     }
     else if ([urlStr containsString:@"opentype"]) {
@@ -296,6 +299,21 @@
             result = NO;
         }
  
+    }  else if ([urlStr containsString:@"liveshowid"]) {
+        LSUrlParmItem *item = [self.urlHandler parseUrlParms:url];
+        // 进入节目直播间
+        PreLiveViewController *preLive = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
+        
+        LiveRoom *liveRoom = [[LiveRoom alloc] init];
+        liveRoom.roomId = item.roomId;
+        liveRoom.userId = [LSLoginManager manager].loginItem.userId;
+        liveRoom.userName = [LSLoginManager manager].loginItem.nickName;
+        liveRoom.photoUrl = [LSLoginManager manager].loginItem.photoUrl;
+        preLive.liveRoom = liveRoom;
+        preLive.liveShowId = item.showId;
+        preLive.status = PreLiveStatus_Show;
+        [self navgationControllerPresent:preLive];
+        result = NO;
     }
     
     if (result) {
@@ -425,7 +443,7 @@
             isReLoad = NO;
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self.controller showLoading];
-                [self getAnchorListRequest];
+               // [self getAnchorListRequest];
             });
         }
     }
@@ -458,25 +476,25 @@
     self.errmsg = errmsg;
 }
 
-// 为了重登录（由Web通知App页面加载失败，token过期，调用hot列表接口因为token过期应该返回错误的就会重登录）
-- (BOOL)getAnchorListRequest {
-    BOOL bFlag = NO;
-    GetAnchorListRequest *request = [[GetAnchorListRequest alloc] init];
-    request.start = 0;
-    request.step = 10;
-    request.hasWatch = NO;
-    // 调用接口
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.controller hideLoading];
-            if (success) {
-                [self reloadWebview];
-            }
-        });
-    };
-    bFlag = [self.sessionManager sendRequest:request];
-    return bFlag;
-}
+//// 为了重登录（由Web通知App页面加载失败，token过期，调用hot列表接口因为token过期应该返回错误的就会重登录）
+//- (BOOL)getAnchorListRequest {
+//    BOOL bFlag = NO;
+//    GetAnchorListRequest *request = [[GetAnchorListRequesFt alloc] init];
+//    request.start = 0;
+//    request.step = 10;
+//    request.hasWatch = NO;
+//    // 调用接口
+//    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, NSArray<LiveRoomInfoItemObject *> *_Nullable array) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [self.controller hideLoading];
+//            if (success) {
+//                [self reloadWebview];
+//            }
+//        });
+//    };
+//    bFlag = [self.sessionManager sendRequest:request];
+//    return bFlag;
+//}
 
 // 登录回调
 - (void)manager:(LSLoginManager *)manager onLogin:(BOOL)success loginItem:(ZBLSLoginItemObject *)loginItem errnum:(ZBHTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {

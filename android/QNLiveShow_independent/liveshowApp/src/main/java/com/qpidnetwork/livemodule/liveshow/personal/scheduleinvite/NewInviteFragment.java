@@ -88,6 +88,9 @@ public class NewInviteFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_NEW_INVITE_CALLBACK:{
                 hideLoadingProcess();

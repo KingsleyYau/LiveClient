@@ -22,5 +22,4 @@
 @property (weak, nonatomic) IBOutlet UIButton *reloadBtn;
 @property (weak, nonatomic) IBOutlet UIButton *bookBtn;
 @property (weak, nonatomic) IBOutlet UIButton *addBtn;
-@property (weak, nonatomic) IBOutlet ShowListView *showView;
 @end

@@ -28,10 +28,9 @@ public:
     /**
      发布流连接
      
-     @param url 连接
      @return 成功／失败
      */
-    bool PublishUrl(const string& url);
+    bool PublishUrl();
     
     /**
      停止

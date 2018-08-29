@@ -13,6 +13,7 @@ import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.utils.Log;
 
@@ -243,7 +244,7 @@ public class ScheduleInvitePackageUnreadManager implements IMOtherEventListener{
     }
 
     @Override
-    public void OnRecvLoveLevelUpNotice(int lovelevel) {
+    public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem) {
     }
 
     @Override

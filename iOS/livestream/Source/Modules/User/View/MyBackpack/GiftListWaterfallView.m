@@ -8,10 +8,10 @@
 
 #import "GiftListWaterfallView.h"
 #import "GiftListCell.h"
-#import "LiveGiftDownloadManager.h"
+#import "LSGiftManager.h"
 
 @interface GiftListWaterfallView()
-@property (nonatomic, strong) LiveGiftDownloadManager *giftDownloadManager;
+@property (nonatomic, strong) LSGiftManager *giftDownloadManager;
 @end
 
 @implementation GiftListWaterfallView
@@ -30,7 +30,7 @@
     [self registerNib:[UINib nibWithNibName:@"GiftListCell" bundle:[LiveBundle mainBundle]]  forCellWithReuseIdentifier:[GiftListCell cellIdentifier]];
     [self registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
     
-    self.giftDownloadManager = [LiveGiftDownloadManager manager];
+    self.giftDownloadManager = [LSGiftManager manager];
 }
 
 
@@ -60,7 +60,7 @@
         
         cell.timeLabel.text = [NSString stringWithFormat:@"%@:\n%@ - %@",NSLocalizedString(@"Vaild_Time", @"Vaild_Time"),[cell getTime:obj.startValidDate],[cell getTime:obj.expDate]];
         
-       AllGiftItem *giftItem = [self.giftDownloadManager backGiftItemWithGiftID:obj.giftId];
+       LSGiftManagerItem *giftItem = [self.giftDownloadManager getGiftItemWithId:obj.giftId];
         
         cell.giftNameLabel.text = giftItem.infoItem.name;
         

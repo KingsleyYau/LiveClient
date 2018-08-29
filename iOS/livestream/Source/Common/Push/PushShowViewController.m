@@ -11,7 +11,7 @@
 #import "UserInfoManager.h"
 #import "LSTimer.h"
 #import "LiveModule.h"
-#import "LiveService.h"
+#import "LiveMutexService.h"
 @interface PushShowViewController ()
 @property (nonatomic, strong) UserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
@@ -81,6 +81,8 @@
 
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+    
+    [LiveModule module].pushCount = 0;
 }
 
 - (IBAction)tipTap:(UITapGestureRecognizer *)sender {
@@ -88,10 +90,12 @@
     NSLog(@"PushShowViewController::acceptAction: url:%@",self.url);
     [self.removeTimer stopTimer];
     // 跳转接收邀请界面
-    [[LiveService service] openUrlByLive:self.url];
+    [[LiveMutexService service] openUrlByLive:self.url];
     [[LiveModule module].analyticsManager reportActionEvent:ClickShowStart eventCategory:EventCategoryShowCalendar];
     [self.view removeFromSuperview];
     [self removeFromParentViewController];
+    
+    [LiveModule module].pushCount = 0;
 }
 
 - (void)timingRemoveView {

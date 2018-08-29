@@ -2,6 +2,8 @@ package com.qpidnetwork.livemodule.im.listener;
 
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 
+import java.nio.charset.Charset;
+
 
 /**
  * IM Client事件监听器
@@ -471,6 +473,10 @@ public abstract class IMClientListener {
 	 * @param honorUrl
 	 */
 	public abstract void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, String msg, String honorUrl);
+	public void OnRecvRoomMsg(String roomId, int level, String fromId, String nickName, byte[] msg, String honorUrl){
+		//解决emoji6.0以下jni使用NewStringUTF越界读（或者crash问题）
+		OnRecvRoomMsg(roomId, level, fromId, nickName, new String(msg, Charset.forName("UTF-8")), honorUrl);
+	}
 	
 	/**
 	 * 4.3.接收直播间公告消息
@@ -511,6 +517,10 @@ public abstract class IMClientListener {
 	 * @param honorUrl
 	 */
 	public abstract void OnRecvRoomToastNotice(String roomId, String fromId, String nickName, String msg, String honorUrl);
+	public void OnRecvRoomToastNotice(String roomId, String fromId, String nickName, byte[] msg, String honorUrl){
+		//解决emoji6.0以下jni使用NewStringUTF越界读（或者crash问题）
+		OnRecvRoomToastNotice(roomId, fromId, nickName, new String(msg, Charset.forName("UTF-8")), honorUrl);
+	}
 	
 	/**
 	 * 7.3.接收立即私密邀请回复通知

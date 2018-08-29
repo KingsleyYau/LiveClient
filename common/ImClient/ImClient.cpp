@@ -35,6 +35,9 @@ const long long HEARTBEAT_TIMEOUT = 25*1000;     // 心跳超时（毫秒）
 #include "EnterHangoutRoomTask.h"
 #include "LeaveHangoutRoomTask.h"
 #include "SendHangoutGiftTask.h"
+#include "ControlManPushHangoutTask.h"
+#include "SendHangoutLiveChatTask.h"
+#include "SendPrivateMessageTask.h"
 
 ImClient::ImClient()
 {
@@ -1045,14 +1048,14 @@ bool ImClient::SendTalent(SEQ_T reqId, const string& roomId, const string& talen
  *  @param errMsg            结果描述
  *
  */
-void ImClient::OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& talentInviteId)
+void ImClient::OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& talentInviteId, const string& talentId)
 {
-    FileLog("ImClient", "ImClient::OnSendPrivateLiveInvite() begin, ImClient:%p reqId:%d err:%d errMsg:%s talentInviteId:%s", this, reqId, err, errMsg.c_str(), talentInviteId.c_str());
+    FileLog("ImClient", "ImClient::OnSendPrivateLiveInvite() begin, ImClient:%p reqId:%d err:%d errMsg:%s talentInviteId:%s talentId:%s", this, reqId, err, errMsg.c_str(), talentInviteId.c_str(), talentId.c_str());
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end(); itr++) {
         IImClientListener* callback = *itr;
-        callback->OnSendTalent(reqId, success,err, errMsg, talentInviteId);
+        callback->OnSendTalent(reqId, success,err, errMsg, talentInviteId, talentId);
     }
     FileLog("ImClient", "ImClient::OnSendPrivateLiveInvite() end, ImClient:%p reqId:%d err:%d errMsg:%s talentInviteId:%s", this, reqId, err, errMsg.c_str(), talentInviteId.c_str());
     
@@ -1222,16 +1225,167 @@ bool ImClient::SendHangoutGift(SEQ_T reqId, const string& roomId, const string& 
  *  @param errMsg           结果描述
  *
  */
-void ImClient::OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
-    FileLog("ImClient", "ImClient::OnSendHangoutGift() begin, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+void ImClient::OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double credit) {
+    FileLog("ImClient", "ImClient::OnSendHangoutGift() begin, ImClient:%p reqId:%d err:%d errMsg:%s credit:%f", this, reqId, err, errMsg.c_str(), credit);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end(); itr++) {
         IImClientListener* callback = *itr;
-        callback->OnSendHangoutGift(reqId, success,err, errMsg);
+        callback->OnSendHangoutGift(reqId, success,err, errMsg, credit);
     }
     FileLog("ImClient", "ImClient::OnSendHangoutGift() end, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
 
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  10.11.多人互动观众开始/结束视频互动接口
+ *
+ *  @param reqId            请求序列号
+ *  @param roomId           直播间ID
+ *  @param control          视频操作（IMCONTROLTYPE_START：开始 IMCONTROLTYPE_CLOSE：关闭）
+ *
+ */
+bool ImClient::ControlManPushHangout(SEQ_T reqId, const string& roomId, IMControlType control) {
+    bool result = false;
+    m_loginStatusLock->Lock();
+    LoginStatus loginStatus = m_loginStatus;
+    m_loginStatusLock->Unlock();
+    FileLog("ImClient", "ImClient::ControlManPushHangout() begin, m_taskManager:%p roomId:%s control;%d", m_taskManager, roomId.c_str(), control);
+    // 若为已登录状态
+    if (LOGINED == loginStatus) {
+        ControlManPushHangoutTask* task = new ControlManPushHangoutTask();
+        if (NULL != task) {
+            task->Init(this);
+            task->InitParam(roomId, control);
+            
+            task->SetSeq(reqId);
+            result = m_taskManager->HandleRequestTask(task);
+        }
+    }
+    else
+    {
+        // 没有登录
+        result = false;
+    }
+    FileLog("ImClient", "ImClient::ControlManPushHangout() end, m_taskManager:%p roomId:%s control;%d result:%d", m_taskManager, roomId.c_str(), control, result);
+    return result;
+}
+
+/**
+ *  10.11.多人互动观众开始/结束视频互动接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *  @param manPushUrl       观众视频流url
+ *
+ */
+void ImClient::OnControlManPushHangout(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) {
+    FileLog("ImClient", "ImClient::OnControlManPushHangout() begin, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end(); itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnControlManPushHangout(reqId, success,err, errMsg, manPushUrl);
+    }
+    FileLog("ImClient", "ImClient::OnControlManPushHangout() end, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+    
+    m_listenerListLock->Unlock();
+}
+
+/**
+ *  10.12.发送多人互动直播间文本消息接口
+ *
+ *  @param reqId            请求序列号
+ *  @param roomId           直播间ID
+ *  @param nickName         发送者昵称
+ *  @param msg              发送的信息
+ *  @param at               用户ID，用于指定接收者（字符串数组）（可无，无则表示发送给直播间所有人）
+ *
+ */
+bool ImClient::SendHangoutLiveChat(SEQ_T reqId, const string& roomId, const string& nickName, const string& msg, const list<string>& at) {
+    bool result = false;
+    m_loginStatusLock->Lock();
+    LoginStatus loginStatus = m_loginStatus;
+    m_loginStatusLock->Unlock();
+    FileLog("ImClient", "ImClient::SendHangoutLiveChat() begin, m_taskManager:%p roomId:%s nickName;%s msg:%s", m_taskManager, roomId.c_str(), nickName.c_str(), msg.c_str());
+    // 若为已登录状态
+    if (LOGINED == loginStatus) {
+        SendHangoutLiveChatTask* task = new SendHangoutLiveChatTask();
+        if (NULL != task) {
+            task->Init(this);
+            task->InitParam(roomId, nickName, msg, at);
+            
+            task->SetSeq(reqId);
+            result = m_taskManager->HandleRequestTask(task);
+        }
+    }
+    else
+    {
+        // 没有登录
+        result = false;
+    }
+    FileLog("ImClient", "ImClient::SendHangoutLiveChat() end, m_taskManager:%p roomId:%s result:%d", m_taskManager, roomId.c_str(), result);
+    return result;
+}
+/**
+ *  10.12.发送多人互动直播间文本消息接口 回调
+ *
+ *  @param success          操作是否成功
+ *  @param reqId            请求序列号
+ *  @param errMsg           结果描述
+ *
+ */
+void ImClient::OnSendHangoutLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+    FileLog("ImClient", "ImClient::OnSendHangoutLiveChat() begin, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end(); itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnSendHangoutLiveChat(reqId, success,err, errMsg);
+    }
+    FileLog("ImClient", "ImClient::OnSendHangoutLiveChat() end, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+    
+    m_listenerListLock->Unlock();
+}
+
+bool ImClient::SendPrivateMessage(SEQ_T reqId, const string& toId, const string& content, int sendMsgId) {
+    bool result = false;
+    m_loginStatusLock->Lock();
+    LoginStatus loginStatus = m_loginStatus;
+    m_loginStatusLock->Unlock();
+    FileLog("ImClient", "ImClient::SendPrivateMessage() begin, m_taskManager:%p toId:%s content:%s sendMsgId:%d", m_taskManager, toId.c_str(), content.c_str(), sendMsgId);
+    // 若为已登录状态
+    if (LOGINED == loginStatus) {
+        SendPrivateMessageTask* task = new SendPrivateMessageTask();
+        if (NULL != task) {
+            task->Init(this);
+            task->InitParam(toId, content, sendMsgId);
+            
+            task->SetSeq(reqId);
+            result = m_taskManager->HandleRequestTask(task);
+        }
+    }
+    else
+    {
+        // 没有登录
+        result = false;
+    }
+    FileLog("ImClient", "ImClient::SendPrivateMessage() end, m_taskManager:%p toId:%s result:%d", m_taskManager, toId.c_str(), result);
+    return result;
+}
+
+void ImClient::OnSendPrivateMessage(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, int messageId, double credit, const string& toId, int sendMsgId) {
+    FileLog("ImClient", "ImClient::OnSendPrivateMessage() begin, ImClient:%p reqId:%d err:%d errMsg:%s messageId:%d credit;%f toId:%s sendMsgId:%d", this, reqId, err, errMsg.c_str(), messageId, credit, toId.c_str(), sendMsgId);
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end(); itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnSendPrivateMessage(reqId, success,err, errMsg, messageId, credit, toId, sendMsgId);
+    }
+    FileLog("ImClient", "ImClient::OnSendPrivateMessage() end, ImClient:%p reqId:%d err:%d errMsg:%s", this, reqId, err, errMsg.c_str());
+    
     m_listenerListLock->Unlock();
 }
 
@@ -1370,51 +1524,28 @@ void ImClient::OnRecvWaitStartOverNotice(const StartOverRoomItem& item)
     m_listenerListLock->Unlock();
 }
 
-///**
-// *  3.12.接收观众／主播切换视频流通知接口 回调
-// *
-// *  @param roomId       房间ID
-// *  @param isAnchor     是否是主播推流（1:是 0:否）
-// *  @param playUrl      播放url
-// *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
-// *
-// */
-//void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl, const string& userId)
-//{
-//    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() begin, ImClient:%p roomId:%s isAnchor:%d userId:%s", this, roomId.c_str(), isAnchor, userId.c_str());
-//    m_listenerListLock->Lock();
-//    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
-//         itr != m_listenerList.end();
-//         itr++) {
-//        IImClientListener* callback = *itr;
-//        callback->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl, userId);
-//    }
-//    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() end, ImClient:%p roomId:%s isAnchor:%d userId:%s", this, roomId.c_str(), isAnchor, userId.c_str());
-//    m_listenerListLock->Unlock();
-//}
-
 /**
  *  3.12.接收观众／主播切换视频流通知接口 回调
  *
  *  @param roomId       房间ID
  *  @param isAnchor     是否是主播推流（1:是 0:否）
  *  @param playUrl      播放url
+ *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
  *
  */
-void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl)
+void ImClient::OnRecvChangeVideoUrl(const string& roomId, bool isAnchor, const list<string>& playUrl, const string& userId)
 {
-    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() begin, ImClient:%p roomId:%s isAnchor:%d", this, roomId.c_str(), isAnchor);
+    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() begin, ImClient:%p roomId:%s isAnchor:%d userId:%s", this, roomId.c_str(), isAnchor, userId.c_str());
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
+        callback->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl, userId);
     }
-    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() end, ImClient:%p roomId:%s isAnchor:%d", this, roomId.c_str(), isAnchor);
+    FileLog("ImClient", "ImClient::OnRecvChangeVideoUrl() end, ImClient:%p roomId:%s isAnchor:%d userId:%s", this, roomId.c_str(), isAnchor, userId.c_str());
     m_listenerListLock->Unlock();
 }
-
 
 
 // 4.2.接收直播间文本消息通知
@@ -1611,6 +1742,20 @@ void ImClient::OnRecvSendTalentNotice(const TalentReplyItem& item)
     m_listenerListLock->Unlock();
 }
 
+void ImClient::OnRecvTalentListNotice(const string& roomId, const string& introduction)
+{
+    FileLog("ImClient", "ImClient::OnRecvTalentListNotice() begin, ImClient:%p roomId:%s introduction:%s", this, roomId.c_str(), introduction.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvTalentListNotice(roomId, introduction);
+    }
+    FileLog("ImClient", "ImClient::OnRecvTalentListNotice() end,  ImClient:%p roomId:%s introduction:%s", this, roomId.c_str(), introduction.c_str());
+    m_listenerListLock->Unlock();
+}
+
 /**
  *  9.1.观众等级升级通知 回调
  *
@@ -1631,23 +1776,18 @@ void ImClient::OnRecvLevelUpNotice(int level)
     m_listenerListLock->Unlock();
 }
 
-/**
- *  9.2.观众亲密度升级通知
- *
- *  @param loveLevel           当前等级
- *
- */
-void ImClient::OnRecvLoveLevelUpNotice(int loveLevel)
+
+void ImClient::OnRecvLoveLevelUpNotice(const IMLoveLevelItem& loveLevelItem)
 {
-    FileLog("ImClient", "ImClient::OnRecvLoveLevelUpNotice() begin, ImClient:%p loveLevel:%d", this, loveLevel);
+    FileLog("ImClient", "ImClient::OnRecvLoveLevelUpNotice() begin, ImClient:%p", this);
     m_listenerListLock->Lock();
     for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();
          itr++) {
         IImClientListener* callback = *itr;
-        callback->OnRecvLoveLevelUpNotice(loveLevel);
+        callback->OnRecvLoveLevelUpNotice(loveLevelItem);
     }
-    FileLog("ImClient", "ImClient::OnRecvLoveLevelUpNotice() end,  ImClient:%p loveLevel:%d", this, loveLevel);
+    FileLog("ImClient", "ImClient::OnRecvLoveLevelUpNotice() end,  ImClient:%p", this);
     m_listenerListLock->Unlock();
 }
 
@@ -1826,6 +1966,38 @@ void ImClient::OnRecvLackCreditHangoutNotice(const IMLackCreditHangoutItem& item
     m_listenerListLock->Unlock();
 }
 
+/**
+ *  10.13.接收直播间文本消息接口 回调
+ *
+ *  @param item         接收直播间文本消息
+ *
+ */
+void ImClient::OnRecvHangoutChatNotice(const IMRecvHangoutChatItem& item) {
+    FileLog("ImClient", "ImClient::OnRecvHangoutChatNotice() begin, ImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvHangoutChatNotice(item);
+    }
+    FileLog("ImClient", "ImClient::OnRecvHangoutChatNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ImClient::OnRecvAnchorCountDownEnterHangoutRoomNotice(const string& roomId, const string& anchorId, int leftSecond) {
+    FileLog("ImClient", "ImClient::OnRecvAnchorCountDownEnterHangoutRoomNotice() begin, ImClient:%p roomId:%s anchorId:%s leftSecond:%d", this, roomId.c_str(), anchorId.c_str(), leftSecond);
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvAnchorCountDownEnterHangoutRoomNotice(roomId, anchorId, leftSecond);
+    }
+    FileLog("ImClient", "ImClient::OnRecvAnchorCountDownEnterHangoutRoomNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
 // ------------- 节目 -------------
 /**
  *  11.1.接收节目开播通知接口 回调
@@ -1884,6 +2056,45 @@ void ImClient::OnRecvRetTicketNotice(const IMProgramItem& item, double leftCredi
         callback->OnRecvRetTicketNotice(item, leftCredit);
     }
     FileLog("ImClient", "ImClient::OnRecvRetTicketNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ImClient::OnRecvPrivateMessageNotice(const IMPrivateMessageItem& item) {
+    FileLog("ImClient", "ImClient::OnRecvPrivateMessageNotice() begin, ImClient:%p", this);
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvPrivateMessageNotice(item);
+    }
+    FileLog("ImClient", "ImClient::OnRecvPrivateMessageNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ImClient::OnRecvLoiNotice(const string& anchorId, const string& loiId) {
+    FileLog("ImClient", "ImClient::OnRecvLoiNotice() begin, ImClient:%p anchorId:%s loiId:%s", this, anchorId.c_str(), loiId.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvLoiNotice(anchorId, loiId);
+    }
+    FileLog("ImClient", "ImClient::OnRecvLoiNotice() end, ImClient:%p", this);
+    m_listenerListLock->Unlock();
+}
+
+void ImClient::OnRecvEMFNotice(const string& anchorId, const string& emfId) {
+    FileLog("ImClient", "ImClient::OnRecvEMFNotice() begin, ImClient:%p anchorId:%s emfId:%s", this, anchorId.c_str(), emfId.c_str());
+    m_listenerListLock->Lock();
+    for (ImClientListenerList::const_iterator itr = m_listenerList.begin();
+         itr != m_listenerList.end();
+         itr++) {
+        IImClientListener* callback = *itr;
+        callback->OnRecvEMFNotice(anchorId, emfId);
+    }
+    FileLog("ImClient", "ImClient::OnRecvEMFNotice() end, ImClient:%p", this);
     m_listenerListLock->Unlock();
 }
 

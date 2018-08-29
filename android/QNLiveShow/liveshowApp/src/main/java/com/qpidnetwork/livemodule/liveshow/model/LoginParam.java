@@ -13,11 +13,13 @@ public class LoginParam implements Serializable{
 
     }
 
-    public LoginParam(String userId, String qnToken){
+    public LoginParam(String userId, String qnToken, int qnWebsiteId){
         this.userId = userId;
         this.qnToken = qnToken;
+        this.qnWebsiteId = qnWebsiteId;
     }
 
     public String qnToken;
     public String userId;
+    public int qnWebsiteId;
 }

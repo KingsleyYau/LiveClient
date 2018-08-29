@@ -123,7 +123,7 @@ void AudioHardEncoder::EncodeAudioFrame(void* data, int size, void* frame) {
     
     double diff = value - mLastPresentationTime;
     mTotalPresentationTime += diff;
-    UInt32 timestamp = (UInt32)lround(1000 * mTotalPresentationTime);
+    UInt32 timestamp = (UInt32)floor(1000 * mTotalPresentationTime);
     mLastPresentationTime = value;
     
     dispatch_async(mAudioEncodeQueue, ^{

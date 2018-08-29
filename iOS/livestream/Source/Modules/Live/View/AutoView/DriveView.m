@@ -63,7 +63,7 @@
     
     
     [self.driveImageView sd_setImageWithURL:[NSURL URLWithString:model.riderurl]
-                           placeholderImage:[UIImage imageNamed:@"live_room_car"]
+                           placeholderImage:[UIImage imageNamed:@"Live_Room_Car"]
                                     options:0
                                   completed:^(UIImage *_Nullable image, NSError *_Nullable error, SDImageCacheType cacheType, NSURL *_Nullable imageURL) {
                                       if (self.delegate && [self.delegate respondsToSelector:@selector(canPlayDirve:audienceModel:offset:ifError:)]) {

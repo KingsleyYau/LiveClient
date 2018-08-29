@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="demo" type="bool">false</item>
+    <!--参考svn://192.168.8.177:8034/client/docs/项目管理文档/年后App工作计划/主播端1.0.0功能点文档.xlsx-->
+    <!--正式环境-->
+    <item name="webHost" type="string">https://www.charmlive.com</item>
+
+</resources>

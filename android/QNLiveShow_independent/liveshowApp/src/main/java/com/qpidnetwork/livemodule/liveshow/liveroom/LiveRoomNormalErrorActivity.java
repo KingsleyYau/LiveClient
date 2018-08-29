@@ -31,6 +31,7 @@ import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL;
@@ -174,6 +175,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
             Picasso.with(getApplicationContext()).load(anchorPhotoUrl)
                     .placeholder(R.drawable.ic_default_photo_woman)
                     .error(R.drawable.ic_default_photo_woman)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                     .into(civPhoto);
         }
 
@@ -234,7 +236,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
             startActivity(BookPrivateActivity.getIntent(mContext, mAnchorId, mAnchorName));
             finish();
         } else if (i == R.id.btnAddCredit) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(this);
             finish();
         } else if (i == R.id.btnViewHot) {
             Intent intent = new Intent(this, MainFragmentActivity.class);
@@ -279,6 +281,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
                                                 .load(anchorList[0].photoUrl)
                                                 .placeholder(R.drawable.ic_default_photo_woman)
                                                 .error(R.drawable.ic_default_photo_woman)
+                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                 .into(civRecommand1);
                                     }
                                     civRecommand1.setTag(anchorList[0].userId);
@@ -294,6 +297,7 @@ public class LiveRoomNormalErrorActivity extends BaseFragmentActivity{
                                                     .load(anchorList[1].photoUrl)
                                                     .placeholder(R.drawable.ic_default_photo_woman)
                                                     .error(R.drawable.ic_default_photo_woman)
+                                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
                                                     .into(civRecommand2);
                                         }
                                         tvRecommandName2.setText(anchorList[1].nickName);

@@ -23,6 +23,8 @@
 @property (nonatomic, retain) NSString *customDefaultBackTitle;
 @property (atomic, assign) BOOL canReceiveTouch;
 @property (nonatomic, strong) UIImage *customDefaultBackHighlightImage;
+/** 在present的控制器上会调用多一次dismiss,用于判断是否需要dismiss的,默认是正常dissmiss的 */
+@property (nonatomic, assign) BOOL flag;
 
 /**
  *  加入栈之前先添加手势
@@ -32,6 +34,12 @@
  *  @param gesture        是否使用手势
  */
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated gesture:(BOOL)gesture;
+
+/**
+ 用于present界面弹出拍照之后,当前present的界面无法消失的问题
+ @param force 是否强制
+ */
+- (void)forceToDismiss:(BOOL)force animated:(BOOL)flag completion:(void (^)(void))completion;
 
 @end
 

@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "LSAnchorRequestManager.h"
-#import "GetConfigRequest.h"
 
 @interface LSConfigManager : NSObject
 @property (assign) BOOL dontShow2WayVideoDialog;

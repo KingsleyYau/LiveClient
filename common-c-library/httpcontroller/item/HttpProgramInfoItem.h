@@ -78,12 +78,12 @@ public:
             }
             /* status */
             if (root[LIVEROOM_HOT_PROGRAMLIST_STATUS].isNumeric()) {
-                status = (ProgramStatus)root[LIVEROOM_HOT_PROGRAMLIST_STATUS].asInt();
+                status = GetIntToProgramStatus(root[LIVEROOM_HOT_PROGRAMLIST_STATUS].asInt());
             }
             
             /* ticketStatus */
             if (root[LIVEROOM_HOT_PROGRAMLIST_TICKETSTATUS].isNumeric()) {
-                ticketStatus = (ProgramTicketStatus)root[LIVEROOM_HOT_PROGRAMLIST_TICKETSTATUS].asInt();
+                ticketStatus = GetIntToProgramTicketStatus(root[LIVEROOM_HOT_PROGRAMLIST_TICKETSTATUS].asInt());
             }
 
             /* isHasFollow */

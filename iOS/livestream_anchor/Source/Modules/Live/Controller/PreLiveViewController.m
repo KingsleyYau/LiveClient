@@ -12,7 +12,6 @@
 #import "PublicVipViewController.h"
 #import "PrivateViewController.h"
 #import "PrivateVipViewController.h"
-#import "BookPrivateBroadcastViewController.h"
 #import "LiveFinshViewController.h"
 #import "AnchorPersonalViewController.h"
 
@@ -61,6 +60,8 @@
 @property (nonatomic, strong) PreShowRoomInHandler *showRoomInHandler;
 
 @property (nonatomic, strong) LSAnchorProgramItemObject *programItem;
+/** 节目退出弹窗 */
+@property (nonatomic, strong) UIAlertController *alertVc;
 
 @end
 
@@ -130,6 +131,16 @@
     // 禁止导航栏后退手势
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
+    if (self.status == PreLiveStatus_Show) {
+        self.ladyNameLabel.hidden = YES;
+        self.cancelButton.hidden = NO;
+    }
+    else
+    {
+        // 显示loadingView
+        [self showTipLoadingView];
+    }
+    
     // 更新用户头像名字
     if (self.liveRoom.photoUrl) {
         [self.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
@@ -149,10 +160,6 @@
             [weakSelf.imageViewLoader refreshCachedImage:self.ladyImageView options:SDWebImageRefreshCached imageUrl:self.liveRoom.photoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Man_Circyle"]];
         });
     }];
-    
-    // 显示loadingView
-    [self showTipLoadingView];
-    
     
     // 清除浮窗
     [[LiveModule module].notificationVC.view removeFromSuperview];
@@ -221,20 +228,21 @@
         case PreLiveStatus_Inviting:{
             self.statusLabel.text = DEBUG_STRING([NSString stringWithFormat:@"请求私密邀请..."]);
             BOOL bFlag = [self.inviteHandler instantInviteWithUserid:self.liveRoom.userId finshHandler:^(BOOL success, ZBLCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull inviteid, NSString * _Nonnull roomid) {
-                if (success) {
-                    
-                    self.inviteId = inviteid;
-                    if (roomid.length) {
-                        self.liveRoom.roomId = roomid;
-                        // 进入直播间
-                        [self enterRoom:self.liveRoom.roomId];
-                    } else {
-                        [self showTip:NSLocalizedStringFromSelf(@"INVITING_VIEWR_START")];
-                    }
-                } else {
-                    self.statusLabel.text = DEBUG_STRING(@"请求私密邀请失败");
-                    [self handleError:errnum errMsg:errmsg];
-                }
+                 dispatch_async(dispatch_get_main_queue(), ^{
+                     if (success) {
+                         self.inviteId = inviteid;
+                         if (roomid.length) {
+                             self.liveRoom.roomId = roomid;
+                             // 进入直播间
+                             [self enterRoom:self.liveRoom.roomId];
+                         } else {
+                             [self showTip:NSLocalizedStringFromSelf(@"INVITING_VIEWR_START")];
+                         }
+                     } else {
+                         self.statusLabel.text = DEBUG_STRING(@"请求私密邀请失败");
+                         [self handleError:errnum errMsg:errmsg];
+                     }
+                    });
             }];
             if (!bFlag) {
                 [self handleError:ZBLCC_ERR_CONNECTFAIL errMsg:nil];
@@ -251,29 +259,35 @@
         case PreLiveStatus_Accept:{
             self.statusLabel.text = DEBUG_STRING(@"正在接受私密邀请");
             [self.acceptHandler acceptInviteWithId:self.inviteId finshHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSString * _Nonnull roomId, ZBHttpRoomType roomType) {
-                if (success) {
-                    self.liveRoom.roomId = roomId;
-                    NSLog(@"PreLiveViewController::startRequest( [PreLiveStatus_Accept roomID : %@] )",self.liveRoom.roomId);
-                    [self enterRoom:self.liveRoom.roomId];
-                } else {
-                    self.statusLabel.text = DEBUG_STRING(@"接受私密邀请失败");
-                    [self httpHandelError:errnum errmsg:errmsg];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (success) {
+                        self.liveRoom.roomId = roomId;
+                        NSLog(@"PreLiveViewController::startRequest( [PreLiveStatus_Accept roomID : %@] )",self.liveRoom.roomId);
+                        [self enterRoom:self.liveRoom.roomId];
+                    } else {
+                        self.statusLabel.text = DEBUG_STRING(@"接受私密邀请失败");
+                        [self httpHandelError:errnum errmsg:errmsg];
+                    }
+                });
             }];
         }break;
         case PreLiveStatus_Show:{
+            self.ladyNameLabel.hidden = YES;
             [self.showRoomInHandler getShowRoomInfo:self.liveShowId finshHandler:^(BOOL success, LSAnchorProgramItemObject * _Nonnull item, NSString * _Nonnull roomId, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-                if (success) {
-                    self.cancelButton.hidden = NO;
-                    self.programItem = item;
-                    NSLog(@"PreLiveViewController::startRequest( [getShowRoomInfo roomID : %@] )",roomId);
-//                    [self changeShowLeftTime:item.leftSecToStart roomId:roomId];
-                    [self changeShowLeftTime:60 roomId:roomId];
-                } else {
-                    self.statusLabel.text = DEBUG_STRING(@"获取节目信息失败");
-                    [self httpHandelError:errnum errmsg:errmsg];
-   
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self hiddenTipLoadingView];
+                    if (success) {
+                        self.programItem = item;
+                        self.liveRoom.roomId = roomId;
+                        self.liveRoom.showInfo = item;
+                        NSLog(@"PreLiveViewController::startRequest( [getShowRoomInfo roomID : %@] )",roomId);
+                        [self changeShowLeftTime:item.leftSecToStart roomId:roomId];
+                    } else {
+                        self.statusLabel.text = DEBUG_STRING(@"获取节目信息失败");
+                        [self httpHandelError:errnum errmsg:errmsg];
+       
+                    }
+                });
             }];
         }break;
         
@@ -298,9 +312,10 @@
     switch (errType) {
         case ZBLCC_ERR_CONNECTFAIL: {
             // TODO:1.请求超时/网络失败
-            if (self.liveRoom.roomId.length) {
-                [self showRetry];
-            }
+                if (self.liveRoom.roomId.length) {
+                    [self showRetry];
+                }
+
             [self.tipsLabel setText:NSLocalizedStringFromSelf(@"CONNECTION_SERVER_FAILED")];
         } break;
             
@@ -378,19 +393,13 @@
 
 #pragma mark - 界面事件
 - (void)enterRoom:(NSString *)roomId {
+    
     BOOL bFlag = [self.roominHandler sendRoomIn:roomId finshHandler:^(BOOL success, ZBLCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBImLiveRoomObject * _Nonnull item) {
+          NSLog(@"PreLiveViewController::[进入指定直播间 节目状态%d  节目类型%d 房间id%@]",item.status,item.liveShowType,item.roomId);
+
         self.statusLabel.text = [NSString stringWithFormat:DEBUG_STRING(@"请求进入指定直播间%@"),(success == YES) ? @"成功" : @"失败"];
         if (success) {
-            if ([self.liveRoom.roomId isEqualToString:item.roomId]) {
-                self.liveRoom.roomType = [[LSAnchorImManager manager] roomTypeToLiveRoomType:item.roomType];
-                self.liveRoom.imLiveRoom = item;
-                // 视频流url
-                self.liveRoom.playUrlArray = item.pullUrl;
-                self.liveRoom.publishUrlArray = item.pushUrl;
-                
-                // 直接进入直播间
-                [self enterPrivateVipRoom];
-            }else if (item.liveShowType == IMANCHORPUBLICROOMTYPE_PROGRAM && item.roomId.length > 0) {
+            if ((item.liveShowType == IMANCHORPUBLICROOMTYPE_PROGRAM) && item.roomId.length > 0) {
                 PublicVipViewController *vc = [[PublicVipViewController alloc] initWithNibName:nil bundle:nil];
                 LiveRoom *room = [[LiveRoom alloc] init];
                 room.userId = item.anchorId;
@@ -401,6 +410,34 @@
                 room.leftSeconds = item.leftSeconds;
                 room.maxFansiNum = item.maxFansiNum;
                 room.imLiveRoom = item;
+                room.showId = self.liveShowId;
+                vc.liveRoom = room;
+                if (self.alertVc) {
+                    [self dismissViewControllerAnimated:NO completion:nil];
+                }
+                [self.navigationController pushViewController:vc animated:YES];
+            } else if((((item.roomType == ZBROOMTYPE_CHARGEPUBLICLIVEROOM))||(item.roomType == ZBROOMTYPE_LUXURYPRIVATELIVEROOM)) && [self.liveRoom.roomId isEqualToString:item.roomId] ) {
+                self.liveRoom.roomType = [[LSAnchorImManager manager] roomTypeToLiveRoomType:item.roomType];
+                self.liveRoom.imLiveRoom = item;
+                // 视频流url
+                self.liveRoom.playUrlArray = item.pullUrl;
+                self.liveRoom.publishUrlArray = item.pushUrl;
+                
+                //TODO: 直接进入直播间
+                [self enterPrivateVipRoom];
+            }else {
+                // 默认进入公开直播间
+                PublicVipViewController *vc = [[PublicVipViewController alloc] initWithNibName:nil bundle:nil];
+                LiveRoom *room = [[LiveRoom alloc] init];
+                room.userId = item.anchorId;
+                room.roomId = item.roomId;
+                room.roomType = [[LSAnchorImManager manager] roomTypeToLiveRoomType:item.roomType];
+                room.playUrlArray = item.pullUrl;
+                room.publishUrlArray = item.pushUrl;
+                room.leftSeconds = item.leftSeconds;
+                room.maxFansiNum = item.maxFansiNum;
+                room.imLiveRoom = item;
+                room.showId = self.liveShowId;
                 vc.liveRoom = room;
                 [self.navigationController pushViewController:vc animated:YES];
             }
@@ -422,9 +459,11 @@
 }
 
 - (void)showRetry {
-    // TODO:显示重试按钮
-    self.retryButtonTop.constant = 20;
-    self.retryButtonHeight.constant = 35;
+    if (self.liveRoom.showId.length) {
+        // TODO:显示重试按钮
+        self.retryButtonTop.constant = 20;
+        self.retryButtonHeight.constant = 35;
+    }
     [self hiddenTipLoadingView];
 }
 
@@ -439,22 +478,29 @@
             } else {
                 self.tipsLabel.text = NSLocalizedStringFromSelf(@"FAILED_TO_CANCEL");
             }
+            // 清空邀请
+            self.inviteId = nil;
+            self.liveRoom.roomId = nil;
         }];
     } else if (self.status == PreLiveStatus_Show){
-        UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"CLOSE_LIVE_SHOW") preferredStyle:UIAlertControllerStyleAlert];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Close", @"Close") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-        }]];
-        [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            
-        }]];
-        [self presentViewController:alert animated:YES completion:nil];
+            self.alertVc = [UIAlertController alertControllerWithTitle:nil message:NSLocalizedStringFromSelf(@"CLOSE_LIVE_SHOW") preferredStyle:UIAlertControllerStyleAlert];
+            [self.alertVc addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Close", @"Close") style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if (self.liveRoom.roomId.length > 0) {
+                    [self.imManager leaveRoom:self.liveRoom.roomId];
+                    // 清空邀请
+                    self.inviteId = nil;
+                    self.liveRoom.roomId = nil;
+                }
+                [self.navigationController dismissViewControllerAnimated:YES completion:nil];
+            }]];
+            [self.alertVc addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"Cancel", @"Cancel") style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+                self.alertVc = nil;
+            }]];
+            [self presentViewController:self.alertVc animated:YES completion:nil];
     } else {
         [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     }
-    // 清空邀请
-    self.inviteId = nil;
-    self.liveRoom.roomId = nil;
+
 }
 
 - (IBAction)closeClick:(id)sender {
@@ -480,10 +526,13 @@
     } else {
         if (self.inviteId.length) {
             self.status = PreLiveStatus_Accept;
+        }else {
+            self.status = PreLiveStatus_Show;
         }
     }
     [self startRequest:self.status];
 }
+
 
 #pragma mark - CheckPrivacyManagerDelegate
 - (void)cancelPrivacy {
@@ -550,19 +599,19 @@
 }
 
 - (void)changeTimeLabel:(NSString *)roomId {
- 
-    NSInteger minutes = (self.timeCount + 59) / 60;
-    NSInteger min = self.timeCount / 60;
-    NSInteger sec = self.timeCount % 60;
-    NSString *str = [NSString stringWithFormat:@"%ld.%ld",min,sec];
-
     
+    // 向上取整
+    NSInteger minutes = ceilf(self.timeCount/60.0);
     //    NSString *str = [NSString stringWithFormat:@"%lds", (long)self.timeCount];
 //    NSAttributedString *countStr = [self parseMessage:str font:[UIFont systemFontOfSize:18] color:[UIColor whiteColor]];
 //    NSMutableAttributedString *timeStr = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromSelf(@"ENTER_LIVE_SHOW")];
 //    [timeStr appendAttributedString:countStr];
 //    self.tipsLabel.attributedText = timeStr;
     NSString *timeCountTips = [NSString stringWithFormat:@"Your show \"%@\" is starting in %ld minutes.Please do not leave this page.",self.programItem.showTitle,minutes];
+//    if (minutes <= 1) {
+//        timeCountTips = [NSString stringWithFormat:@"Your show \"%@\" is starting in 1 minutes.Please do not leave this page.",self.programItem.showTitle];
+//    }
+
     self.tipsLabel.text = timeCountTips;
     self.timeCount -= 1;
     
@@ -612,5 +661,6 @@
 - (void)stopHandleTimer {
     [self.handleTimer stopTimer];
 }
+
 
 @end

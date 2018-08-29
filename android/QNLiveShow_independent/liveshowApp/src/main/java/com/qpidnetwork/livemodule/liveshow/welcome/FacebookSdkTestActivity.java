@@ -20,12 +20,11 @@ import com.facebook.FacebookCallback;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.share.widget.ShareButton;
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.httprequest.item.ShareType;
 import com.qpidnetwork.livemodule.liveshow.authorization.FacebookSDKManager;
-import com.qpidnetwork.livemodule.liveshow.authorization.SDKPlatform;
 import com.qpidnetwork.livemodule.liveshow.authorization.ThirdPlatformUserInfo;
+import com.qpidnetwork.livemodule.liveshow.share.LiveShareManager;
 import com.qpidnetwork.livemodule.liveshow.share.ShareContentInfo;
-import com.qpidnetwork.livemodule.utils.ActivityUtil;
-import com.qpidnetwork.livemodule.utils.SystemUtils;
 
 import java.io.File;
 
@@ -93,6 +92,8 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
 
     private ShareButton sb_fbShare;
 
+    private LiveShareManager liveShareManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,6 +126,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
         };
 
         sbLog = new StringBuilder();
+        liveShareManager = new LiveShareManager(this);
     }
 
     public void initFBLoginButton(){
@@ -181,7 +183,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
         shareContentInfo.contentUrl = "https://live.charmdate.com:443/uploadfiles/cover_photo/big/201711/a63db7024fc6b8664a41ef1fed9e0abf.jpg";
         shareContentInfo.hashTag = "#share4Test";
         shareContentInfo.quote="Dev by hkercn";
-        FacebookSDKManager.getInstance().share(this, SDKPlatform.FACEBOOK, shareContentInfo, shareCallBack);
+        FacebookSDKManager.getInstance().share(this, ShareType.faceBook, shareContentInfo, shareCallBack);
     }
 
     public void onFacebookShareImgClick(View view){
@@ -189,7 +191,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
         ShareContentInfo shareContentInfo = new ShareContentInfo();
         shareContentInfo.shareContentType = ShareContentInfo.ShareContentType.Img;
         shareContentInfo.bitmap = ((BitmapDrawable)getResources().getDrawable(R.drawable.live_guide_a_1)).getBitmap();
-        FacebookSDKManager.getInstance().share(this, SDKPlatform.FACEBOOK, shareContentInfo, shareCallBack);
+        FacebookSDKManager.getInstance().share(this, ShareType.faceBook, shareContentInfo, shareCallBack);
     }
 
     public void onFacebookShareVedioClick(View view){
@@ -198,7 +200,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
         ShareContentInfo shareContentInfo = new ShareContentInfo();
         shareContentInfo.shareContentType = ShareContentInfo.ShareContentType.Vedio;
         shareContentInfo.vedioUrl = videoFileUri.toString();
-        FacebookSDKManager.getInstance().share(this, SDKPlatform.FACEBOOK, shareContentInfo, shareCallBack);
+        FacebookSDKManager.getInstance().share(this, ShareType.faceBook, shareContentInfo, shareCallBack);
     }
 
     public void onFacebookShareMediaClick(View view){
@@ -216,7 +218,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
      */
     public void onShareTxtLink(View view){
         Log.d(TAG,"onShareTxtLink");
-        ActivityUtil.getShareIntent(this,"Share coollive to u");
+        liveShareManager.getShareIntent(this,"Share coollive to u");
     }
 
     /**
@@ -229,12 +231,12 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
                 "://" + getResources().getResourcePackageName(R.drawable.ic_launcher)
                 + '/' + getResources().getResourceTypeName(R.drawable.ic_launcher)
                 + '/' + getResources().getResourceEntryName(R.drawable.ic_launcher) );
-        ActivityUtil.getShareIntent(this,imageUri,"share u","Share coollive to u");
+        liveShareManager.getShareIntent(this,imageUri,"share u","Share coollive to u");
     }
 
     public void onCopyLink(View view){
         Log.d(TAG,"onCopyLink");
-        SystemUtils.copyMessageToClipboard(this,"www.baidu.com");
+        liveShareManager.copyMessageToClipboard(this,"www.baidu.com");
         Toast.makeText(this,"has copy www.baidu.com to clipboard",Toast.LENGTH_SHORT).show();
     }
 
@@ -260,7 +262,7 @@ public class FacebookSdkTestActivity extends Activity implements FacebookSDKMana
     @Override
     public void onLogin(FacebookSDKManager.OpearResultCode opearResultCode,
                         String message, ThirdPlatformUserInfo userInfo) {
-        Log.d(TAG,"onLogin-opearResultCode:"+opearResultCode.name()+" message:"+message);
+        Log.d(TAG,"onLoginResult-opearResultCode:"+opearResultCode.name()+" message:"+message);
         switch (opearResultCode){
             case SUCCESS:
                 if(null != handler){

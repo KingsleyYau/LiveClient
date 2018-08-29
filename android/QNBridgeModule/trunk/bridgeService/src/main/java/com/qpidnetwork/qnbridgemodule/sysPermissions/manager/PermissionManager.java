@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by Jagger on 2017/10/23.
+ * 权限管理工具
+ * Gradle:targetSdkVersion 23 //权限API要求23+
  */
 
 public class PermissionManager {
@@ -35,7 +37,7 @@ public class PermissionManager {
     public void requestBase() {
         AndPermission.with(mContext)
                 .requestCode(REQUEST_CODE_PERMISSION)
-                .permission(Permission.PHONE, Permission.STORAGE)
+                .permission(Permission.PHONE , Permission.STORAGE)
                 .callback(this)
                 // rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框；
                 // 这样避免用户勾选不再提示，导致以后无法申请权限。
@@ -86,6 +88,24 @@ public class PermissionManager {
                 .start();
     }
 
+    public void requestAudio() {
+        AndPermission.with(mContext)
+                .requestCode(REQUEST_CODE_PERMISSION)
+                .permission(Permission.STORAGE, Permission.AUDIO)
+                .callback(this)
+                // rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框；
+                // 这样避免用户勾选不再提示，导致以后无法申请权限。
+                // 你也可以不设置。
+                .rationale(new RationaleListener() {
+                    @Override
+                    public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+                        // 这里的对话框可以自定义，只要调用rationale.resume()就可以继续申请。
+                        AndPermission.rationaleDialog(mContext, rationale).show();
+                    }
+                })
+                .start();
+    }
+
     @PermissionYes(REQUEST_CODE_PERMISSION)
     public void yes(List<String> permissions) {
         this.mCallback.onSuccessful();
@@ -114,8 +134,14 @@ public class PermissionManager {
     }
 
     public interface PermissionCallback {
+        /**
+         * 所有权限都允许了，才返回成功
+         */
         void onSuccessful();
 
+        /**
+         * 只要拒绝其中一个权限就回调失败
+         */
         void onFailure();
     }
 }

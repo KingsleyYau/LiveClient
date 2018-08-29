@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_discover"
+        android:icon="@drawable/selector_live_nav_item_home"
+        android:title="Home" />
+
+    <!-- 因为中间突出的按钮不属于NAV, 为了看起来半分3等分, 所以在中间加一个空的ITEM -->
+    <item
+        android:id="@+id/menu_null"
+        android:title=""
+        android:enabled="false"/>
+
+    <!--<item-->
+        <!--android:id="@+id/navigation_follow"-->
+        <!--android:icon="@drawable/selector_live_nav_item_follow"-->
+        <!--android:title="Follow" />-->
+
+    <!--<item-->
+        <!--android:id="@+id/navigation_message"-->
+        <!--android:icon="@drawaselector_live_nav_item_discovertem1"-->
+        <!--android:title="Message" />-->
+
+    <item
+        android:id="@+id/navigation_me"
+        android:icon="@drawable/selector_live_nav_item_me"
+        android:title="Me" />
+
+
+
+</menu>

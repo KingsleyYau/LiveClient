@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp"/>
+            <solid android:color="#FF7100"/>
+        </shape>
+    </item>
+    <!--按照UI设计规范要求，btn按压状态应在原有背景色上覆盖一层15%的#000000-->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="5dp"/>
+            <solid android:color="#26000000"/>
+        </shape>
+    </item>
+</layer-list>

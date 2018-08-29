@@ -9,10 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "LSLoginManager.h"
-#import "LSRequestManager.h"
+#import "LSAnchorRequestManager.h"
 #import "LSConfigManager.h"
 #import "LiveBundle.h"
-#import "Country.h"
 
 static LSLoginManager* gManager = nil;
 
@@ -69,7 +68,7 @@ static LSLoginManager* gManager = nil;
 - (LoginStatus)login:(NSString *)user password:(NSString *)password checkcode:(NSString *)checkcode  {
     NSLog(@"LSLoginManager::login( [Http登录], user : %@  password : %@ )", user, password);
     
-    LSRequestManager* manager = [LSRequestManager manager];
+    LSAnchorRequestManager* manager = [LSAnchorRequestManager manager];
 
     switch (self.status) {
         case NONE:{
@@ -151,7 +150,7 @@ static LSLoginManager* gManager = nil;
                         {
                             NSInteger requestId = [manager anchorLogin:user password:password code:checkcode deviceid:[manager getDeviceId] model:[[UIDevice currentDevice] model] manufacturer:@"Apple" finishHandler:loginFinishHandler];
                             
-                            if( requestId != [LSRequestManager manager].invalidRequestId ) {
+                            if( requestId != [LSAnchorRequestManager manager].invalidRequestId ) {
                                 // TODO:2.开始登陆
                             } else {
                                 // 开始登陆失败
@@ -203,7 +202,7 @@ static LSLoginManager* gManager = nil;
         NSLog(@"LSLoginManager::logout( [Http注销], kick : %@, msg : %@, status : %d )", kick ? @"YES":@"NO", msg, self.status);
         
         if (self.status != NONE) {
-            [[LSRequestManager manager] cleanCookies];
+            [[LSAnchorRequestManager manager] cleanCookies];
             if( kick ) {
                 // 主动注销(被踢)
                 // 标记不能自动重
@@ -269,21 +268,21 @@ static LSLoginManager* gManager = nil;
     _password = [userDefaults stringForKey:@"password"];
 }
 
-- (void)loadUserWhere {
-    NSString *countryStr = [[NSLocale currentLocale]objectForKey:NSLocaleCountryCode];
-    
-    NSString *profilePlistPath = [[LiveBundle mainBundle] pathForResource:@"Country" ofType:@"plist"];
-    NSArray *profileArray = [[NSArray alloc] initWithContentsOfFile:profilePlistPath];
-    Country  *countryItem = nil;
-    
-    for (NSDictionary *dict in profileArray) {
-        countryItem = [[Country alloc] initWithDict:dict];
-        if ([countryStr isEqualToString:countryItem.shortName]) {
-            self.fullName = countryItem.fullName;
-            self.zipCode = countryItem.zipCode;
-        }
-    }
-}
+//- (void)loadUserWhere {
+//    NSString *countryStr = [[NSLocale currentLocale]objectForKey:NSLocaleCountryCode];
+//    
+//    NSString *profilePlistPath = [[LiveBundle mainBundle] pathForResource:@"Country" ofType:@"plist"];
+//    NSArray *profileArray = [[NSArray alloc] initWithContentsOfFile:profilePlistPath];
+//    Country  *countryItem = nil;
+//    
+//    for (NSDictionary *dict in profileArray) {
+//        countryItem = [[Country alloc] initWithDict:dict];
+//        if ([countryStr isEqualToString:countryItem.shortName]) {
+//            self.fullName = countryItem.fullName;
+//            self.zipCode = countryItem.zipCode;
+//        }
+//    }
+//}
 
 - (void)callbackLoginStatus:(BOOL)success errnum:(ZBHTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     NSLog(@"LSLoginManager::login( [Http登录, %@], user : %@ )", success ? @"成功" : @"失败", self.email);

@@ -106,7 +106,7 @@ public:
             if (root[LIVEROOM_HANGOUT].isObject()) {
                 Json::Value element = root[LIVEROOM_HANGOUT];
                 if (element[LIVEROOM_HANGOUT_CREDITPERMINUTE].isString()) {
-                    hangoutCredirMsg = element[hangoutCredirMsg].asString();
+                    hangoutCredirMsg = element[LIVEROOM_HANGOUT_CREDITPERMINUTE].asString();
                 }
             }
             
@@ -118,6 +118,26 @@ public:
             /* showDescription */
             if (root[LIVEROOM_SHOWDESCRIPTION].isString()) {
                 showDescription = root[LIVEROOM_SHOWDESCRIPTION].asString();
+            }
+            
+            /* loiH5Url */
+            if (root[LIVEROOM_LOIHURL].isString()) {
+                loiH5Url = root[LIVEROOM_LOIHURL].asString();
+            }
+            
+            /* emfH5Url */
+            if (root[LIVEROOM_EMFHURL].isString()) {
+                emfH5Url = root[LIVEROOM_EMFHURL].asString();
+            }
+            
+            /* pmStartNotice */
+            if (root[LIVEROOM_PMSTARTNOTICE].isString()) {
+                pmStartNotice = root[LIVEROOM_PMSTARTNOTICE].asString();
+            }
+            
+            /* postStampUrl */
+            if (root[LIVEROOM_POSTSTAMPURL].isString()) {
+                postStampUrl = root[LIVEROOM_POSTSTAMPURL].asString();
             }
             
         }
@@ -145,6 +165,11 @@ public:
         hangoutCredirMsg = "";
         showDetailPage = "";
         showDescription = "";
+        loiH5Url = "";
+        emfH5Url = "";
+        pmStartNotice = "";
+        postStampUrl = "";
+        
     }
     
     virtual ~HttpConfigItem() {
@@ -170,6 +195,10 @@ public:
      * hangoutCredirMsg           多人互动资费提示
      * showDetailPage              节目详情页URL
      * showDescription             节目介绍
+     * loiH5Url                     意向信页URL
+     * emfH5Url                     EMF页URL
+     * pmStartNotice                私信聊天界面没有聊天记录时的提示（New）
+     * postStampUrl                 背包邮票页URL
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -189,6 +218,10 @@ public:
     string hangoutCredirMsg;
     string showDetailPage;
     string showDescription;
+    string loiH5Url;
+    string emfH5Url;
+    string pmStartNotice;
+    string postStampUrl;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

@@ -139,7 +139,7 @@ private:
         
         // 创建流推送器
         self.publisher = new PublisherController();
-        self.publisher->SetVideoParam(_width, _height);
+        self.publisher->SetVideoParam(self.width, self.height, self.fps, self.keyInterval);
         self.statusCallback = new PublisherStatusCallbackImp(self);
         self.publisher->SetStatusCallback(self.statusCallback);
         
@@ -214,94 +214,27 @@ recordH264FilePath:(NSString *)recordH264FilePath
 
 - (void)stop {
     NSLog(@"RtmpPublisherOC::stop()");
-    
     // 停止推流
     self.publisher->Stop();
-    
-    // 复位帧率控制
-    self.videoFrameStartPushTime = 0;
-    self.videoFrameIndex = 0;
-    self.videoFramePauseTime = 0;
-    self.videoFrameLastPushTime = 0;
-    @synchronized(self) {
-        self.videoResume = YES;
-    }
 }
 
 - (void)pushVideoFrame:(CVPixelBufferRef _Nonnull)pixelBuffer {
-    @synchronized(self) {
-        // 视频是否暂停录制
-        if( !self.videoPause ) {
-            long long now = getCurrentTime();
-            
-            // 视频是否恢复
-            if( !self.videoResume ) {
-                // 视频未恢复
-                self.videoResume = YES;
-                // 更新上次暂停导致的时间差
-                long long videoFrameDiffTime = now - self.videoFrameLastPushTime;
-                videoFrameDiffTime -= self.videoFrameInterval;
-                NSLog(@"RtmpPublisherOC::pushVideoFrame( [Video capture is resume], videoFrameDiffTime : %lld )", videoFrameDiffTime);
-                self.publisher->AddVideoTimestamp((unsigned int)videoFrameDiffTime);
-                self.videoFramePauseTime += videoFrameDiffTime;
-            }
-            
-            // 控制帧率
-            if( self.videoFrameStartPushTime == 0 ) {
-                self.videoFrameStartPushTime = now;
-            }
-            long long diffTime = now - self.videoFrameStartPushTime;
-            diffTime -= self.videoFramePauseTime;
-            long long videoFrameInterval = diffTime - (self.videoFrameIndex * self.videoFrameInterval);
-            
-            if( videoFrameInterval >= 0 ) {
-//                FileLevelLog(
-//                             "rtmpdump",
-//                             KLog::LOG_MSG,
-//                             "RtmpPublisherOC::pushVideoFrame( "
-//                             "[Video frame can be pushed], "
-//                             "videoFrameInterval : %lld, "
-//                             "diffTime : %lld, "
-//                             "videoFrameIndex : %d "
-//                             ")",
-//                             videoFrameInterval,
-//                             diffTime,
-//                             self.videoFrameIndex
-//                             );
-                
-                // 放到推流器
-                CVPixelBufferLockBaseAddress(pixelBuffer, 0);
-                char* data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
-                int size = (int)CVPixelBufferGetDataSize(pixelBuffer);
-                self.publisher->PushVideoFrame(data, size, (void *)pixelBuffer);
-                CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
-                
-                // 更新最后处理帧数目
-                self.videoFrameIndex++;
-                // 更新最后处理时间
-                self.videoFrameLastPushTime = now;
-            }
-        } else {
-           NSLog(@"RtmpPublisherOC::pushVideoFrame( [Video capture is pausing] )");
-        }
-    }
+    // 放到推流器
+    CVPixelBufferLockBaseAddress(pixelBuffer, 0);
+    char* data = (char *)CVPixelBufferGetBaseAddress(pixelBuffer);
+    int size = (int)CVPixelBufferGetDataSize(pixelBuffer);
+    self.publisher->PushVideoFrame(data, size, (void *)pixelBuffer);
+    CVPixelBufferUnlockBaseAddress(pixelBuffer, 0);
 }
 
 - (void)pausePushVideo {
     NSLog(@"RtmpPublisherOC::pausePushVideo()");
-    
-    @synchronized(self) {
-        self.videoPause = YES;
-        self.videoResume = NO;
-    }
+    self.publisher->PausePushVideo();
 }
 
 - (void)resumePushVideo {
     NSLog(@"RtmpPublisherOC::resumePushVideo()");
-    
-    @synchronized(self) {
-        self.videoPause = NO;
-    }
+    self.publisher->ResumePushVideo();
 }
 
 - (void)pushAudioFrame:(CMSampleBufferRef _Nonnull)sampleBuffer {

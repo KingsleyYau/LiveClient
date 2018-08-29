@@ -1,7 +1,11 @@
 package com.qpidnetwork.livemodule.framework.base;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.barlibrary.ImmersionBar;
+import com.qpidnetwork.livemodule.liveshow.LoadingDialog;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.CustomShowTimeToast;
 import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.CreditsTipsDialog;
@@ -21,6 +26,7 @@ import com.qpidnetwork.livemodule.utils.EToast2;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.MaterialProgressDialog;
 import com.qpidnetwork.livemodule.view.SimpleDoubleBtnTipsDialog;
+import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 import java.lang.ref.WeakReference;
 
@@ -57,6 +63,8 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         customToast.setView(View.inflate(this,R.layout.view_custom_toast, null));
         //礼物相关的3秒提示，显示在屏幕底部，其他的3秒提示包括非自定义时间的toast全部显示在屏幕中间
         customShowTimeToast = new CustomShowTimeToast(this,3000l);
+        //被踢下线广播接收器
+        initKickedOffReceiver();
     }
 
     @Override
@@ -80,8 +88,49 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
     protected void onDestroy(){
         super.onDestroy();
 		/*防止异常杀死界面重启后，dialog 失去windowDecor导致调用Dismiss IllegalArgumentException*/
-        hideProgressDialog();
+        dimissLoadingDialog();
+        //反注册被踢下线广播接收器
+        if(mKickedOffReceiver != null){
+            unregisterReceiver(mKickedOffReceiver);
+        }
     }
+
+    /**
+     * 设置 被踢下线广播接收器是否生效
+     * @param enable
+     */
+    public void setKickedOffReceiverEnable(boolean enable){
+        if(!enable){
+            //反注册被踢下线广播接收器
+            unregisterReceiver(mKickedOffReceiver);
+            mKickedOffReceiver = null;
+        }
+    }
+
+    /**
+     * 注册 被踢下线广播接收器
+     */
+    private void initKickedOffReceiver(){
+        //注册广播
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(CommonConstant.ACTION_KICKED_OFF);
+        registerReceiver(mKickedOffReceiver, filter);
+    }
+
+    /**
+     * 广播接收器
+     */
+    private BroadcastReceiver mKickedOffReceiver = new BroadcastReceiver(){
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            if(intent.getAction().equals(CommonConstant.ACTION_KICKED_OFF)){
+                finish();
+            }
+        }
+
+    };
 
     /**
      * @param msg
@@ -119,6 +168,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
     /**
      * 显示progressDialog
+     * @deprecated 最好使用showLoadingDialog吧，方面界面展现统一(Samson要求loading使用系统组件,也即ProgressBar)
      * @param tips 提示文字
      */
     public void showProgressDialog(String tips){
@@ -131,6 +181,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
     /**
      * 显示progressDialog
+     * @deprecated 最好使用showLoadingDialog吧，方面界面展现统一(Samson要求loading使用系统组件,也即ProgressBar)
      * @param tips 提示文字
      */
     public void showProgressDialogBgTranslucent(String tips){
@@ -142,6 +193,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
 
     /**
      * 隐藏progressDialog
+     * @deprecated 最好使用showLoadingDialog吧，方面界面展现统一(Samson要求loading使用系统组件,也即ProgressBar)
      */
     public void hideProgressDialog(){
         try {
@@ -178,6 +230,7 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
                 .init();                                  //必须调用方可沉浸式
     }
 
+    @SuppressLint("HandlerLeak")
     protected Handler mHandler = new UiHandler(this) {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
@@ -320,4 +373,50 @@ public class BaseFragmentActivity extends AnalyticsFragmentActivity implements V
         }
     }
 
+    protected LoadingDialog loadingDialog;
+
+    /**
+     * 统一loading样式
+     *
+     * 通过new ProgressBar的形式，不太方便调试界面loading动画的周期时间及效果，
+     * xml则比较方便，因此将ProgressBar挪到dialog里面来展示
+     */
+    public void showLoadingDialog(){
+        Log.d(TAG,"showLoadingDialog");
+        if(null == loadingDialog){
+            loadingDialog = new LoadingDialog(this);
+            loadingDialog.setCanceledOnTouchOutside(false);
+            loadingDialog.setCancelable(true);
+        }
+        mProgressDialogCount++;
+        boolean isShowing = loadingDialog.isShowing();
+        Log.d(TAG,"showLoadingDialog-mProgressDialogCount:"+mProgressDialogCount+" isShowing0:"+isShowing);
+        if(!isShowing/* && isActivityVisible*/){
+            loadingDialog.show();
+            isShowing = loadingDialog.isShowing();
+            Log.d(TAG,"showLoadingDialog-isShowing1:"+isShowing);
+        }
+    }
+
+    private void dimissLoadingDialog(){
+        Log.d(TAG,"dimissLoadingDialog");
+        if(null != loadingDialog && loadingDialog.isShowing() ) {
+            loadingDialog.dismiss();
+        }
+    }
+
+    public void hideLoadingDialog(){
+        Log.d(TAG,"hideLoadingDialog");
+        try {
+            if( mProgressDialogCount > 0 ) {
+                mProgressDialogCount--;
+                Log.d(TAG,"hideLoadingDialog-mProgressDialogCount:"+mProgressDialogCount);
+                if(mProgressDialogCount == 0 && null != loadingDialog && loadingDialog.isShowing() ) {
+                    loadingDialog.dismiss();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

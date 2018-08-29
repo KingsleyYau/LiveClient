@@ -11,6 +11,7 @@ import android.text.style.ForegroundColorSpan;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
@@ -63,7 +64,7 @@ public class TariffPromptManager {
         }
         String tariffPrompt = null;
         boolean isNeedUserConfirm = true;
-
+        String roomPrice = ApplicationSettingUtil.formatCoinValue(currIMRoomInItem.roomPrice);
         switch (currIMRoomInItem.roomType){
             case FreePublicRoom:
                 tariffPrompt = mContext.getResources()
@@ -72,21 +73,22 @@ public class TariffPromptManager {
             case PaidPublicRoom:
                 tariffPrompt = mContext.getResources()
                         .getString(R.string.liveroom_tariff_prompt_pre_public,
-                            String.valueOf(currIMRoomInItem.roomPrice));
+                                roomPrice);
                 break;
             case NormalPrivateRoom:
                 tariffPrompt = mContext.getResources()
                         .getString(R.string.liveroom_tariff_prompt_silver_private,
-                            String.valueOf(currIMRoomInItem.roomPrice));
+                                roomPrice);
                 break;
             case AdvancedPrivateRoom:
                 tariffPrompt = mContext.getResources()
                         .getString(R.string.liveroom_tariff_prompt_golden_private,
-                            String.valueOf(currIMRoomInItem.roomPrice));
+                                roomPrice);
                 break;
         }
         boolean hasTariffChanged = true;
-        String roomPrice = String.valueOf(currIMRoomInItem.roomPrice);
+
+        Log.d(TAG,"getRoomTariffInfo-roomPrice:"+roomPrice);
         if(null == roomTypeTariffInfos){
             roomTypeTariffInfos = new HashMap<>();
         }
@@ -99,7 +101,7 @@ public class TariffPromptManager {
         isNeedUserConfirm = hasTariffChanged|| localTariffPrompt.isFirstTimeIn;
         Log.d(TAG,"getRoomTariffInfo-isNeedUserConfirm:"+isNeedUserConfirm+" roomType:"+currIMRoomInItem.roomType.toString());
         if(null != listener){
-            listener.onGetRoomTariffInfo(getTariffPromptStyle(tariffPrompt,String.valueOf(currIMRoomInItem.roomPrice)),isNeedUserConfirm);
+            listener.onGetRoomTariffInfo(getTariffPromptStyle(tariffPrompt, roomPrice), isNeedUserConfirm);
         }
     }
 

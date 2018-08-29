@@ -7,7 +7,6 @@
 //
 
 #import "LSGoogleAnalyticsViewController.h"
-#import "LSHomePageViewController.h"
 #import "HotTableView.h"
 
 /**
@@ -20,4 +19,8 @@
 @interface FollowingViewController : LSGoogleAnalyticsViewController
 @property (weak, nonatomic) IBOutlet HotTableView *tableView;
 @property (weak, nonatomic) id<FollowingViewControllerDelegate> followVCDelegate;
+
+- (void)setupLoadData:(BOOL)isLoadData;
+- (void)setupFirstLogin:(BOOL)isFirstLogin;
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite;
 @end

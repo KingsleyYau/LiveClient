@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dialogBg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bridge_dialog_shape_wihte_round_corner"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="16dp"
+            android:gravity="center_horizontal"
+            android:padding="24dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@android:color/darker_gray"/>
+
+        <LinearLayout
+            android:id="@+id/ll_container_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnOk"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/bridge_dialog_selector_left_bottom"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:text="OK"
+                android:textColor="@android:color/black"
+                android:textSize="16dp"/>
+
+
+            <View
+                android:id="@+id/line_btn3"
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@android:color/darker_gray"/>
+
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@drawable/bridge_dialog_selector_right_bottom"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:text="Cancel"
+                android:textColor="@android:color/black"
+                android:textSize="16dp"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

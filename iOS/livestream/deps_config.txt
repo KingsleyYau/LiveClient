@@ -1,0 +1,6 @@
+common_c_library_ver=1.0.0
+common_ver=1.0.0
+livemessage_ver=1.0.0
+
+
+

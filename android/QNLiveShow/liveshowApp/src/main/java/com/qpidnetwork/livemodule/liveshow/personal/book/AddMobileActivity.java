@@ -1,12 +1,10 @@
 package com.qpidnetwork.livemodule.liveshow.personal.book;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -17,6 +15,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
+import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 
 /**
@@ -33,10 +32,11 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
     //验证号码
     private static final int RESULT_VERIFY_MOBILE = 3;
 
-    //
-    private String mCountry , mAreaCode , mPhone , mFullNumber;
+    private String mCountry;
+    private String mAreaCode;
+    private String mPhone;
+    private String mFullNumber;
 
-    //
     private TextView mTvTextCode;
     private EditText  mEditTextNumber;
     private ImageView mIvSelectCountryCode;
@@ -46,16 +46,13 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCustomContentView(R.layout.activity_live_add_mobile);
-
+        TAG = AddMobileActivity.class.getSimpleName();
         //设置头
-        setTitle(getString(R.string.live_book_add_mobile_title), Color.WHITE);
-
-        //
+        setTitle(getString(R.string.live_book_add_mobile_title), R.color.theme_default_black);
         initUI();
     }
 
     private void initUI(){
-        //
         TextWatcher textWatcher = new TextWatcher() {
 
             @Override
@@ -105,6 +102,7 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
                 onSummit();
             }
         });
+        mBtnSend.setEnabled(false);
 
     }
 
@@ -117,7 +115,6 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
                 if( resultCode == RESULT_OK ) {
                     String countryCode = data.getExtras().getString(SelectCountryActivity.RESULT_COUNTRY_CODE);
                     mTvTextCode.setText(countryCode);
-
                     if(countryCode.indexOf("+")>0){
                         String[] cc = countryCode.split("\\+");
                         mCountry = cc[0];
@@ -156,8 +153,10 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
     private void doCheckData(){
         if(mTvTextCode.getText().length() < 1 || mEditTextNumber.getText().length() < 1){
             mBtnSend.setButtonBackground(getResources().getColor(R.color.black3));
+            mBtnSend.setEnabled(false);
         }else{
-            mBtnSend.setButtonBackground(getResources().getColor(R.color.talent_violet));
+            mBtnSend.setButtonBackground(getResources().getColor(R.color.theme_sky_blue));
+            mBtnSend.setEnabled(true);
         }
     }
 
@@ -172,13 +171,15 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
         if (mEditTextNumber.getText().length() < 1){
             return;
         }
-
         mPhone = mEditTextNumber.getText().toString();
-        mFullNumber = "+" + mAreaCode + "-" + mPhone;
-
+        mFullNumber = getResources().getString(R.string.live_book_fullnumber,mAreaCode,mPhone);
+        Log.d(TAG,"onSummit-mPhone:"+mPhone+" mFullNumber:"+mFullNumber+" mBtnSend.enable:"+mBtnSend.isEnabled());
+        //因为没有正则规则校验等耗时逻辑，所以无需增加额外的boolean变量开关来进行控制
+        mBtnSend.setEnabled(false);
         LiveRequestOperator.getInstance().GetPhoneVerifyCode(mCountry, mAreaCode, mPhone, new OnRequestCallback() {
             @Override
             public void onRequest(boolean isSuccess, int errCode, String errMsg) {
+                Log.d(TAG,"onSummit-onRequest-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
                 if(isSuccess){
                     sendEmptyUiMessage(REQUEST_SUCCESS);
                 }else{
@@ -198,6 +199,7 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
         if(msg != null){
             switch (msg.what) {
                 case REQUEST_SUCCESS:
+                    mBtnSend.setEnabled(true);
                     Intent intent = new Intent(mContext, VerifyMobileActivity.class);
                     intent.putExtra(VerifyMobileActivity.KEY_IS_SUCCESS , true);
                     intent.putExtra(VerifyMobileActivity.KEY_COUNTRY , mCountry);
@@ -207,6 +209,7 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
 
                     break;
                 case REQUEST_FAILED:
+                    mBtnSend.setEnabled(true);
                     if(msg.arg1 == 10066){
                         Intent intentError = new Intent(mContext, VerifyMobileActivity.class);
                         intentError.putExtra(VerifyMobileActivity.KEY_IS_SUCCESS , false);

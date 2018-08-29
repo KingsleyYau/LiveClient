@@ -19,16 +19,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     // 跟踪屏幕创建
-    [[LiveModule module].analyticsManager reportAllocScreen:self];
+    [[LiveModule module].analyticsManager reportAllocScreen:self assignScreenName:self.gaScreenName];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
     // 跟踪显示屏幕
-    [[LiveModule module].analyticsManager reportShowScreen:self];
+    [[LiveModule module].analyticsManager reportShowScreen:self assignScreenName:self.gaScreenName];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

@@ -17,9 +17,10 @@ public interface IQNService {
      * @param userId
      * @param token
      * @param ga_uid
+     * @param websiteId
      * @param configDomain      //用于同步配置的域名
      */
-    void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, String configDomain);
+    void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, int websiteId ,String configDomain);
 
 	enum LogoutType {
         AutoLogout,         //session过期等导致后台注销自动登录
@@ -50,8 +51,9 @@ public interface IQNService {
      * 处理完冲突／换站／登录后，调用打开模块页面跳转
      * @param context
      * @param url
+     * @return url是否被捕捉处理
      */
-    void openUrl(Context context, String url);
+    boolean openUrl(Context context, String url);
 
     /**
      * 检查url是否需要登录后才可以操作
@@ -66,18 +68,24 @@ public interface IQNService {
      * @return
      */
     boolean checkServiceConflict(String url);
+
+    /**
+     * 服务冲突统一提示
+     * @return
+     */
+    String getServiceConflictTips();
 	
 	/**
      * 获取当前操作与本服务冲突时的错误提示
      * @return
      */
-    String getServiceConflictTips();
+    String getServiceConflictTips(String url);
 
     /**
-     * 切换服务等操作，终止服务
+     * 切换服务等操作，终止某些功能
      * @return
      */
-    boolean stopService();
+    boolean stopFunctions();
 
     /**
      * 同步系统通知设置
@@ -87,8 +95,9 @@ public interface IQNService {
     /**
      * 启动界面广告
      * @param context
+     * @param websiteLocalIDInQN  WebSiteManager中站点本地ID,可查看ParsingWebSiteLocalId()
      */
-    void launchAdvertActivity(Context context);
+    void launchAdvertActivity(Context context , int websiteLocalIDInQN);
 
     /**
      * push点击时间GA统计接口
@@ -107,5 +116,21 @@ public interface IQNService {
      * @param isForTest
      */
     void setForTest(boolean isForTest);
+
+    /**
+     * 设置代理服务器
+     * @param proxyUrl
+     */
+    void setProxy(String proxyUrl);
+
+    /**
+     * 服务被启动时触发的事件
+     */
+    void onServiceStart();
+
+    /**
+     * 服务被停止时触发的事件
+     */
+    void onServiceEnd();
 
 }

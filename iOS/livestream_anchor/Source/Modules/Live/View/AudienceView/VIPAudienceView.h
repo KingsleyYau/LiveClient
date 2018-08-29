@@ -12,7 +12,7 @@
 @class VIPAudienceView;
 @protocol VIPAudienceViewDelegate <NSObject>
 
-- (void)vipLiveAudidenveViewDidSelectItem:(AudienModel *)model indexPath:(NSIndexPath *)indexPath;
+- (void)vipLiveAudidenveViewDidSelectItem:(AudienModel *)model;
 
 @end
 
@@ -21,4 +21,5 @@
 @property(nonatomic, weak) id<VIPAudienceViewDelegate> delegate;
 @property(nonatomic, strong) NSMutableArray *audienceArray;
 
+- (void)updateUserInfo;
 @end

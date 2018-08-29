@@ -90,11 +90,11 @@ public class PackageRidersAdapter extends BaseAdapter{
         }
 
         if(item.isUsing){
-            holder.btnRide.setBackgroundResource(R.drawable.rectangle_radius6_connor_solid_orange);
+            holder.btnRide.setBackgroundResource(R.drawable.rectangle_radius6_connor_solid_sky_blue);
             holder.btnRide.setTextColor(mContext.getResources().getColor(R.color.white));
             holder.btnRide.setText(mContext.getResources().getString(R.string.my_package_rider_riding));
         }else{
-            holder.btnRide.setBackgroundResource(R.drawable.rectangle_radius6_connor_solid_white_stroke_orange);
+            holder.btnRide.setBackgroundResource(R.drawable.rectangle_radius6_connor_solid_white_stroke_sky_blue);
             holder.btnRide.setTextColor(mContext.getResources().getColor(R.color.text_color_dark));
             holder.btnRide.setText(mContext.getResources().getString(R.string.my_package_rider_ride));
         }

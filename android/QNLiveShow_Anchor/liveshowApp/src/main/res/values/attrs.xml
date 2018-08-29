@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--滑动头像组件的参数设置-->
+    <declare-styleable name="CircleImageHorizontScrollView">
+        <!--gridview的水平间距-->
+        <attr name="horizontSpace" format="dimension"/>
+        <!--每个item的宽度-高度-->
+        <attr name="itemWidth" format="dimension"/>
+    </declare-styleable>
+
+    <!--TabIndicator的参数设置-->
+    <declare-styleable name="TabPageIndicator">
+        <!--tab页未被选中时title的颜色-->
+        <attr name="titleTextColorUnselected" format="color" />
+        <!--tab页被选中时title的颜色-->
+        <attr name="titleTextColorSelected" format="color" />
+        <!--tab页标题字体大小-->
+        <attr name="titleTextSize" format="dimension" />
+        <!--tab页中提示数字的字体大小-->
+        <attr name="digitalHintTextSize" format="dimension" />
+        <!--提示数字的字体颜色-->
+        <attr name="digitalHintTextColor" format="color" />
+        <!--提示数字组件的背景色-->
+        <attr name="digitalHintTextBgColor" format="color" />
+        <!--是否有数字提示-->
+        <attr name="hasDigitalHint" format="boolean" />
+        <!--底部指示器颜色-->
+        <attr name="indicatorColor" format="color" />
+        <!--底部指示器高度-->
+        <attr name="indicatorHeight" format="dimension" />
+        <!--底部分割线颜色-->
+        <attr name="underlineColor" format="color" />
+        <!--底部分割线高度-->
+        <attr name="underlineHeight" format="dimension" />
+        <!--Tab页选中时的背景色-->
+        <attr name="tabSelectedBgColor" format="color" />
+        <!--Tab页选中时的背景色-->
+        <attr name="tabUnselectedBgColor" format="color" />
+        <attr name="dividerColor" format="color" />
+        <attr name="scrollOffset" format="dimension" />
+        <attr name="tabPaddingLeftRight" format="dimension" />
+        <attr name="dividerTopBottomPadding" format="dimension" />
+        <attr name="txtAllCaps" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="EmojiTabScrollLayout">
+        <!--gridView的背景色-->
+        <attr name="columnNumbPerPage" format="integer"/>
+        <attr name="lineNumbPerPage" format="integer"/>
+        <attr name="gridViewVerticalSpacing" format="dimension"/>
+        <attr name="gridViewHorizontalSpacing" format="dimension"/>
+
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomHeaderBezierView">
+        <!--背景色-->
+        <attr name="roomHeaderBgColor" format="color"/>
+        <attr name="bezierXWidth" format="dimension"/>
+        <attr name="controllX1" format="dimension"/>
+        <attr name="controllY1" format="dimension"/>
+        <attr name="controllX2" format="dimension"/>
+        <attr name="controllY2" format="dimension"/>
+        <attr name="useThreeOrderBesselCurve" format="boolean"/>
+        <attr name="showTestCirclePath" format="boolean"/>
+        <attr name="fillAndStroke" format="boolean"/>
+    </declare-styleable>
+
+    <declare-styleable name="LiveRoomFollowBtnView">
+        <attr name="followBgColor" format="color"/>
+        <attr name="followColor" format="color"/>
+        <attr name="circleR" format="dimension"/>
+        <attr name="followPlusHeight" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="RespDrawClickEventAutoSplitTextView">
+        <attr name="autoSpliteTextEnable" format="boolean"/>
+    </declare-styleable>
+    <!--Material attributes-->
+    <declare-styleable name="ProgressWheel">
+        <attr name="matProg_progressIndeterminate" format="boolean" />
+        <attr name="matProg_barColor" format="color" />
+        <attr name="matProg_rimColor" format="color" />
+        <attr name="matProg_rimWidth" format="dimension" />
+        <attr name="matProg_spinSpeed" format="float" />
+        <attr name="matProg_barSpinCycleTime" format="integer" />
+        <attr name="matProg_circleRadius" format="dimension" />
+        <attr name="matProg_fillRadius" format="boolean" />
+        <attr name="matProg_barWidth" format="dimension" />
+        <attr name="matProg_linearProgress" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="RaisedButton">
+        <attr name="icon"/>
+        <attr name="title" />
+        <attr name="title_color" format="color"/>
+        <attr name="background" />
+        <attr name="touch_feedback" format="reference"/>
+        <attr name="elevation"/>
+        <attr name="raisebutton_radius" format="dimension"/>
+        <attr name="title_text_size" format="dimension"/>
+    </declare-styleable>
+
+    <!-- ProgressButton -->
+    <declare-styleable name="progressbutton">
+        <attr name="progressColor" format="color" />
+        <attr name="progressBgColor" format="color" />
+        <attr name="buttonNormalColor" format="color" />
+        <attr name="buttonPressedColor" format="color" />
+        <attr name="buttonCornerRadius" format="dimension"/>
+        <attr name="showProgressNum" format="boolean"/>
+    </declare-styleable>
+
+</resources>

@@ -8,7 +8,18 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
+
+@class ShowListViewController;
+@protocol ShowListViewControllerDelegate <NSObject>
+@optional
+- (void)reloadNowShowList;
+@end
+
 @interface ShowListViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, assign) BOOL isLoadData; //是否加载数据
+@property (nonatomic, weak) id<ShowListViewControllerDelegate> showDelegate;
+
+- (void)setupLoadData:(BOOL)isLoadData;
+- (void)setupFirstLogin:(BOOL)isFirstLogin;
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite;
 @end

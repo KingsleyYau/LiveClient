@@ -11,7 +11,7 @@
 #import "CalvinSwitch.h"
 #import "LSGiftItemObject.h"
 #import "GiftNumItemObject.h"
-#import "LiveGiftDownloadManager.h"
+#import "LSGiftManager.h"
 #import "LiveBundle.h"
 
 #import <UIButton+WebCache.h>
@@ -20,7 +20,7 @@
 
 @property (nonatomic, strong) UIButton *oldButton;
 @property (nonatomic, strong) UIButton *oldNumButton;
-@property (nonatomic, strong) LiveGiftDownloadManager *giftDownloadManager;
+@property (nonatomic, strong) LSGiftManager *giftDownloadManager;
 @property (nonatomic, strong) NSArray *data;
 @property (nonatomic, assign) CGFloat credit;
 @end
@@ -40,7 +40,7 @@
     self.numView.layer.cornerRadius = 10;
     self.numView.layer.masksToBounds = YES;
 
-    self.giftDownloadManager = [LiveGiftDownloadManager manager];
+    self.giftDownloadManager = [LSGiftManager manager];
 
     self.data = [NSArray array];
 }
@@ -105,7 +105,7 @@
 
         LSGiftItemObject *item = [array objectAtIndex:i];
 
-        AllGiftItem *giftItem = [self.giftDownloadManager backGiftItemWithGiftID:item.giftId];
+        LSGiftManagerItem *giftItem = [self.giftDownloadManager getGiftItemWithId:item.giftId];
 
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
         button.backgroundColor = COLOR_WITH_16BAND_RGB(0xdadada);
@@ -131,7 +131,7 @@
     self.scrollView.contentSize = CGSizeMake(52 * array.count, 47);
 }
 
-- (void)loadVGNum:(NSArray *)array forGiftItem:(AllGiftItem *)giftItem {
+- (void)loadVGNum:(NSArray *)array forGiftItem:(LSGiftManagerItem *)giftItem {
     self.numView.hidden = YES;
     [self.numView removeAllSubviews];
     for (int i = 0; i < array.count; i++) {
@@ -177,7 +177,7 @@
 
     LSGiftItemObject *item = [self.data objectAtIndex:button.tag - 88];
 
-    AllGiftItem *giftItem = [self.giftDownloadManager backGiftItemWithGiftID:item.giftId];
+    LSGiftManagerItem *giftItem = [self.giftDownloadManager getGiftItemWithId:item.giftId];
 
     self.giftId = item.giftId;
 

@@ -10,13 +10,13 @@
 #import "LSProgramItemObject.h"
 @protocol ShowAddCreditsViewDelegate <NSObject>
 
-- (void)pushAddCreditVc;
+- (void)showAddCreditsViewGetTicketBtnDid:(NSString *)showId;
 
-- (void)buyProgramSuccess:(LSProgramItemObject *)item;
 @end
 
 @interface ShowAddCreditsView : UIView 
 
+@property (nonatomic, strong) LSProgramItemObject * obj;
 @property (nonatomic, weak) id<ShowAddCreditsViewDelegate> delegate;
 
 - (void)updateUI:(LSProgramItemObject *)item;

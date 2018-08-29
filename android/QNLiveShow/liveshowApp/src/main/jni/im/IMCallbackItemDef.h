@@ -22,5 +22,23 @@
 #define IM_PACKAGE_UPDATE_VOUCHER_ITEM_CLASS	"com/qpidnetwork/livemodule/im/listener/IMUpdateVoucherItem"
 #define IM_PACKAGE_UPDATE_RIDE_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMUpdateRideItem"
 
+#define IM_PROGRAM_PROGRAMINFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMProgramInfoItem"
+#define IM_PROGRAM_ONGOINGSHOW_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMOngoingShowItem"
+
+#define IM_HANGOUT_IMLOVELEVEL_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMLoveLeveItem"
+
+#define IM_HANGOUT_RECOMMEND_ITEM_CLASS 		    "com/qpidnetwork/livemodule/im/listener/IMHangoutRecommendItem"
+#define IM_HANGOUT_IMDEALINVITE_ITEM_CLASS 		    "com/qpidnetwork/livemodule/im/listener/IMDealInviteItem"
+#define IM_HANGOUT_IMGIFTNUM_ITEM_CLASS 		    "com/qpidnetwork/livemodule/im/listener/IMGiftNumItem"
+#define IM_HANGOUT_IMRECVBUYFORGIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMRecvBuyforGiftItem"
+#define IM_HANGOUT_IMHANGOUTANCHOR_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMHangoutAnchorItem"
+#define IM_HANGOUT_IMHANGOUTROOM_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMHangoutRoomItem"
+#define IM_HANGOUT_IMRECVENTERROOM_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMRecvEnterRoomItem"
+#define IM_HANGOUT_IMUSERINFO_ITEM_CLASS 		    "com/qpidnetwork/livemodule/im/listener/IMUserInfoItem"
+#define IM_HANGOUT_IMRECVLEAVEROOM_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMRecvLeaveRoomItem"
+#define IM_HANGOUT_IMRECVHANGOUTGIFT_ITEM_CLASS 	"com/qpidnetwork/livemodule/im/listener/IMRecvHangoutGiftItem"
+#define IM_HANGOUT_IMRECVKNOCKREQUEST_ITEM_CLASS 	"com/qpidnetwork/livemodule/im/listener/IMRecvKnockRequestItem"
+#define IM_HANGOUT_IMHANGOUTMSG_ITEM_CLASS 	        "com/qpidnetwork/livemodule/im/listener/IMHangoutMsgItem"
+#define IM_HANGOUT_IMHANGOUTCOUNTDOWN_ITEM_CLASS 	"com/qpidnetwork/livemodule/im/listener/IMHangoutCountDownItem"
 
 #endif

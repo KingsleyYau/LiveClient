@@ -23,6 +23,16 @@ public class DateUtil {
     public static String FORMAT_SHOW_TIME_12 =  "h:mm aa";
     public static String FORMAT_SHOW_DATE =  "MMM dd|h:mm aa";
     public static String FORMAT_MMDDhmmaa =  "MMM dd . h:mm aa";
+    public static String FORMAT_MM_DDhmm_24 =  "MM-dd H:mm";
+    public static String FORMAT_MMMDDhmm_24 =  "MMM dd, H:mm";
+
+    public enum DateTimeType{
+        Default,                //默认
+        Today,                  //今天
+        Yestoday,               //昨天
+        InWeek,                 //一周以内（排除今天，昨天）
+        WeekBefore              //一周以前
+    }
 
     /**
      * 将时间戳转为　小时（9:00 am）
@@ -69,4 +79,54 @@ public class DateUtil {
         }
         return dateStr;
     }
+
+    /**
+     * 获取指定时间所处于的时间段，具体参考enum DateTimeType分段描述
+     * @param time
+     * @return
+     */
+    public static DateTimeType getDateTimeType(long time){
+        DateTimeType timeType = DateTimeType.Default;
+        //现在时间
+        long now = new Date().getTime();
+        long day=(60*60*24)*1000;
+        //时间点比当天零点早
+        if (time <= now) {
+            Date date = new Date(time);
+            if (time < getTimesmorning()) {
+                if (time >= getTimesmorning() - day) {
+                    //比昨天零点晚
+                    timeType = DateTimeType.Yestoday;
+                } else {//比昨天零点早
+                    if (time >= getTimesmorning() - 6 * day) {
+                        //比七天前的零点晚，距离当前一周内
+                        timeType = DateTimeType.InWeek;
+                    } else {
+                        //距离今天一周以前
+                        timeType = DateTimeType.WeekBefore;
+                    }
+                }
+
+            } else {
+                //当天时间
+                timeType = DateTimeType.Today;
+            }
+
+        }
+        return timeType;
+    }
+
+    /**
+     * 获取当天零点unix时间戳
+     * @return
+     */
+    private static long getTimesmorning(){
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTimeInMillis();
+    }
+
 }

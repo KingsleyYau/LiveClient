@@ -1,0 +1,18 @@
+
+/* Class = "UILabel"; text = "You will use credits to buy the required gifts to request shows.Detials"; ObjectID = "1zm-79-8jH"; */
+"1zm-79-8jH.text" = "You will use credits to buy the required gifts to request shows.Details";
+
+/* Class = "UIButton"; normalTitle = "Request Live Talent Show"; ObjectID = "hq7-XW-hwN"; */
+"hq7-XW-hwN.normalTitle" = "Request Live Talent Show";
+
+"Talent_Detail_Msg" = "You will use credits to buy the required gifts to request shows. If the broadcasters accept your gift, they will perform the show immediately otherwise you will not be charged.";
+
+"Details" = "Details";
+
+"Talent_SubTitle" = "This show requires a \"%@\"";
+
+"Price_label" = "(You will use %0.1f credits to buy this gift.)";
+
+"Note" = "Note";
+
+"Show description" = "Show description";

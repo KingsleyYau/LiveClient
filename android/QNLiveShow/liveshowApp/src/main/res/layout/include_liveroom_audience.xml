@@ -10,7 +10,7 @@
         android:background="#BFBFBF"
         android:scaleType="centerCrop" />
 
-    <SurfaceView
+    <android.opengl.GLSurfaceView
         android:id="@+id/sv_player"
         android:layout_width="match_parent"
         android:layout_height="@dimen/defaultVedioPlayerHeight"

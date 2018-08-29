@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="gray" indentationWidth="10" reuseIdentifier="LSChatAddCreditsTableViewCell" id="0q5-cx-L7f" customClass="LSChatAddCreditsTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0q5-cx-L7f" id="L1Y-Ic-ixq">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="49.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GCa-0F-p8u">
+                        <rect key="frame" x="20" y="5" width="280" height="39.5"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ChatWarningIcon" translatesAutoresizingMaskIntoConstraints="NO" id="whB-wp-yoJ">
+                                <rect key="frame" x="8" y="9.5" width="22" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="22" id="Xid-Ol-oyZ"/>
+                                    <constraint firstAttribute="width" secondItem="whB-wp-yoJ" secondAttribute="height" multiplier="1:1" id="hRN-4T-uhu"/>
+                                    <constraint firstAttribute="width" constant="22" id="nuN-L0-IkT"/>
+                                </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="hRN-4T-uhu"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" usesAttributedText="YES" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="0.0" translatesAutoresizingMaskIntoConstraints="NO" id="P8r-xl-lDn" userLabel="Detail Label">
+                                <rect key="frame" x="38" y="2" width="224" height="35.5"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <attributedString key="attributedText">
+                                    <fragment content="You are out of credits">
+                                        <attributes>
+                                            <color key="NSColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.66666668650000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" metaFont="system"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content=",">
+                                        <attributes>
+                                            <color key="NSColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.66666668650000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" size="13" name=".PingFangSC-Regular"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content=" please ">
+                                        <attributes>
+                                            <color key="NSColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.66666668650000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" metaFont="system"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content="add credits">
+                                        <attributes>
+                                            <color key="NSColor" red="0.66274509803921566" green="0.81960784313725488" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" metaFont="system"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                    <fragment content=" to continue.">
+                                        <attributes>
+                                            <color key="NSColor" red="0.66666668650000005" green="0.66666668650000005" blue="0.66666668650000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                            <font key="NSFont" metaFont="system"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.91614583329999999" green="0.91614583329999999" blue="0.91614583329999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="P8r-xl-lDn" firstAttribute="leading" secondItem="whB-wp-yoJ" secondAttribute="trailing" constant="8" id="LH9-pA-SyH"/>
+                            <constraint firstItem="P8r-xl-lDn" firstAttribute="top" secondItem="GCa-0F-p8u" secondAttribute="top" constant="2" id="LYg-43-F6d"/>
+                            <constraint firstItem="whB-wp-yoJ" firstAttribute="centerY" secondItem="GCa-0F-p8u" secondAttribute="centerY" id="RhF-yg-5Ah"/>
+                            <constraint firstAttribute="bottom" secondItem="P8r-xl-lDn" secondAttribute="bottom" constant="2" id="YKm-dh-wAe"/>
+                            <constraint firstItem="whB-wp-yoJ" firstAttribute="leading" secondItem="GCa-0F-p8u" secondAttribute="leading" constant="8" id="dbf-FE-4cR"/>
+                            <constraint firstAttribute="trailing" secondItem="P8r-xl-lDn" secondAttribute="trailing" constant="18" id="yLM-Yi-Drz"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="GCa-0F-p8u" firstAttribute="leading" secondItem="L1Y-Ic-ixq" secondAttribute="leading" constant="20" id="8RC-tU-9jI"/>
+                    <constraint firstItem="GCa-0F-p8u" firstAttribute="bottom" secondItem="L1Y-Ic-ixq" secondAttribute="bottom" constant="-5" id="OWz-QD-s37"/>
+                    <constraint firstItem="GCa-0F-p8u" firstAttribute="top" secondItem="L1Y-Ic-ixq" secondAttribute="top" constant="5" id="SdJ-aC-SOL"/>
+                    <constraint firstItem="GCa-0F-p8u" firstAttribute="trailing" secondItem="L1Y-Ic-ixq" secondAttribute="trailing" constant="-20" id="kVT-io-YCb"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <inset key="separatorInset" minX="64" minY="0.0" maxX="0.0" maxY="0.0"/>
+            <connections>
+                <outlet property="bgView" destination="GCa-0F-p8u" id="e58-f5-ZzE"/>
+                <outlet property="detailLabel" destination="P8r-xl-lDn" id="2yR-Jp-mk0"/>
+            </connections>
+            <point key="canvasLocation" x="408" y="398"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="ChatWarningIcon" width="24" height="24"/>
+    </resources>
+</document>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 
 
@@ -23,6 +24,9 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
     private TextView tv_balanceTips;
     private String creditsTips;
     private TextView tv_getCredits;
+
+    //没钱参数配置
+    private NoMoneyParamsBean mNoMoneyParamsBean;
 
     public CreditsTipsDialog(Context context) {
         super(context, R.style.CustomTheme_SimpleDialog);
@@ -43,6 +47,7 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
         setCanceledOnTouchOutside(false);
         setCancelable(true);
+        mNoMoneyParamsBean = new NoMoneyParamsBean();
     }
 
     private void initView() {
@@ -68,7 +73,7 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
             dismiss();
 
         } else if (i == R.id.tv_getCredits) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(mNoMoneyParamsBean);
             //GA统计点击充值
             AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
                     context.getResources().getString(R.string.Live_Global_Action_AddCredit),
@@ -85,5 +90,13 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
 
     public void setCreditsTips(String creditsTips){
         this.creditsTips = creditsTips;
+    }
+
+    /**
+     * 设置没钱传递参数
+     * @param params
+     */
+    public void setmNoMoneyParamsBean(NoMoneyParamsBean params){
+        mNoMoneyParamsBean = params;
     }
 }

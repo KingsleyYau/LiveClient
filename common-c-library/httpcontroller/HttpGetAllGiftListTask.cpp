@@ -50,10 +50,6 @@ bool HttpGetAllGiftListTask::ParseData(const string& url, bool bFlag, const char
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpGetAllGiftListTask::ParseData( buf : %s )", buf);
-    }
-    
     GiftItemList itemList;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

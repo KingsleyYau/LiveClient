@@ -54,7 +54,7 @@
 - (instancetype)initLineView:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         CGFloat lineWidth = 2;
-        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, frame.size.height, frame.size.width, lineWidth)];
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0, frame.size.height - lineWidth, frame.size.width, lineWidth)];
         // 设置初始状态
         lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
         _lineView = lineView;
@@ -109,7 +109,7 @@
 
 @implementation JDSegmentControl
 
-- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isRegularWidth:(BOOL)isRegularWidth{
+- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isRegularWidth:(BOOL)isRegularWidth isHasBottomView:(BOOL)isHasBottomView{
     if (self = [super initWithFrame:frame]) {
         // 设置代理
         self.delegate = delegate;
@@ -129,6 +129,16 @@
             symmetryW =  frame.size.width/titles.count;
         }
         
+        if (isHasBottomView) {
+            // 底部是否有间距与按钮底部颜色高度一致
+            CGFloat bottom = self.frame.origin.y + self.frame.size.height - 2;
+            UIView * bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, bottom, frame.size.width, 2)];
+            bottomView.backgroundColor = COLOR_WITH_16BAND_RGB(0xECEDF1);
+            _bottomView = bottomView;
+            [self addSubview:bottomView];
+        }
+
+        
         for (int i = 0; i < titles.count; i ++) {
             CGFloat x = [array[i] floatValue] + oldW;
             oldW = x;
@@ -136,11 +146,12 @@
             JDUnreadButton *button = nil;
             
             if (isSymmetry) {
-                button = [[JDUnreadButton alloc] initLineView:CGRectMake(i*symmetryW, 0, symmetryW, frame.size.height)];;
+                button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(i*symmetryW, 0, symmetryW, frame.size.height)];;
+
             }
             else
             {
-                button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], frame.size.height)];;
+                button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], frame.size.height)];
             }
             
             // 默认选中第一个 设置状态
@@ -158,10 +169,6 @@
             
         }
         
-        CGFloat bottom = self.frame.origin.y + self.frame.size.height;
-        UIView * bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, bottom, self.frame.size.width, 1)];
-        //        bottomView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
-        [self addSubview:bottomView];
     }
     
     return self;

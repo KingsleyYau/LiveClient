@@ -61,7 +61,7 @@ public:
             }
             /* replyType */
             if (root[LIVEROOM_CHECKROOM_INVITELIST_REPLYTYPE].isInt()) {
-                replyType = (HttpReplyType)root[LIVEROOM_CHECKROOM_INVITELIST_REPLYTYPE].asInt();
+                replyType = GetIntToHttpReplyType(root[LIVEROOM_CHECKROOM_INVITELIST_REPLYTYPE].asInt());
             }
             /* validTime */
             if (root[LIVEROOM_CHECKROOM_INVITELIST_VALIDTIME].isInt()) {

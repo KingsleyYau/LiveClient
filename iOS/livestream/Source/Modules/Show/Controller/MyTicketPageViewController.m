@@ -21,9 +21,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = NSLocalizedStringFromSelf(@"My Ticket");
+    self.title = NSLocalizedStringFromSelf(@"My Tickets");
     NSArray *title = @[ NSLocalizedStringFromSelf(@"Unused"), NSLocalizedStringFromSelf(@"History")];
-    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES];
+    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES isShowbottomLine:YES];
     [self.topView addSubview:self.segment];
     
     MyTicketsViewController * vc1 = [[MyTicketsViewController alloc]initWithNibName:nil bundle:nil];
@@ -58,13 +58,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self hideNavgationBarBottomLine:YES];
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self hideNavgationBarBottomLine:NO];
 }
 
 #pragma mark 头部点击事件

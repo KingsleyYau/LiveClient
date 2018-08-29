@@ -17,5 +17,6 @@
 + (DialogTip *)dialogTip;
 - (void)showDialogTip:(UIView *)view tipText:(NSString *)tip;
 - (void)removeShow;
+- (void)stopTimer;
 
 @end

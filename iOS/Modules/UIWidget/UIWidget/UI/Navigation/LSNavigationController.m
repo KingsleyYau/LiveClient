@@ -31,6 +31,9 @@
  */
 - (void)setupNavigationBar:(UIViewController *)viewController;
 
+
+
+
 @end
 
 @implementation LSNavigationController
@@ -52,6 +55,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.canReceiveTouch = YES;
+    self.flag = NO;
     [self initDelegate];
 }
 
@@ -83,14 +87,55 @@
     if (self.kkDelegate && [self.kkDelegate respondsToSelector:@selector(navigationController:willShowViewController:animated:)]) {
         [self.kkDelegate navigationController:self willShowViewController:viewController animated:animated];
     }
+    
+    // 获取导航控制器的顶部控制的的转场动画
+    id <UIViewControllerTransitionCoordinator>tc = navigationController.topViewController.transitionCoordinator;
+    
+    NSString *version = [UIDevice currentDevice].systemVersion;
+    if (version.doubleValue >= 10.0) {
+        // 针对 10.0 以上的iOS系统进行处理
+        // 监听事件转变
+        [tc notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            // 获取事件是否被取消
+            BOOL result = [context isCancelled];
+            // 被取消恢复导航栏的交互
+            if (result) {
+                self.navigationBar.userInteractionEnabled = YES;
+                self.view.userInteractionEnabled = YES;
+                self.navigationItem.leftBarButtonItem.enabled = YES;
+            }
+            
+        }];
+    } else {
+        // 针对 10.0 以下的iOS系统进行处理
+        [tc notifyWhenInteractionEndsUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+            // 获取事件是否被取消
+            BOOL result = [context isCancelled];
+            // 被取消恢复导航栏的交互
+            if (result) {
+                self.navigationBar.userInteractionEnabled = YES;
+                self.view.userInteractionEnabled = YES;
+                self.navigationItem.leftBarButtonItem.enabled = YES;
+            }
+        }];
+    }
+    
+    // 界面即将切换的状态禁止导航栏操作,防止在为完成点击操作导致导航栏错乱
+    self.navigationBar.userInteractionEnabled = NO;
+    self.view.userInteractionEnabled = NO;
+    self.navigationItem.leftBarButtonItem.enabled = NO;
 }
 
 - (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     if (self.kkDelegate && [self.kkDelegate respondsToSelector:@selector(navigationController:didShowViewController:animated:)]) {
         [self.kkDelegate navigationController:self didShowViewController:viewController animated:animated];
     }
-
+    
     self.canReceiveTouch = YES;
+    // 界面切换成功恢复导航栏操作状态
+    self.navigationBar.userInteractionEnabled = YES;
+    self.view.userInteractionEnabled = YES;
+    self.navigationItem.leftBarButtonItem.enabled = YES;
 }
 
 - (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated gesture:(BOOL)gesture {
@@ -108,7 +153,6 @@
     } else if (self.customDefaultBackTitle) {
         title = self.customDefaultBackTitle;
     }
-
     if ((viewController.navigationItem.hidesBackButton == NO) &&
         (self.customDefaultBackImage || title)) {
         // 自定义默认返回按钮
@@ -233,6 +277,34 @@
     }
 }
 
+
+
+/**
+ 
+ 当前界面时在present弹出时,调用相册和拍照消失会回调这方法,在ios10.0以下,会把当前present的界面都消失掉
+ @param flag 是否需要动画
+ @param completion 完成操作
+ */
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
+    if (self.flag) {
+        if (self.presentedViewController) {
+            [super dismissViewControllerAnimated:flag completion:completion];
+        }
+    }else {
+        [super dismissViewControllerAnimated:flag completion:completion];
+    }
+}
+
+- (void)forceToDismiss:(BOOL)force animated:(BOOL)flag completion:(void (^)(void))completion{
+    if (force) {
+        [super dismissViewControllerAnimated:flag completion:completion];
+    }else {
+        [self dismissViewControllerAnimated:flag completion:completion];
+    }
+}
+
+
+
 @end
 
 @implementation UIViewController (LSNavigationControllerNavigationBarItem)
@@ -246,5 +318,6 @@ static NSString *customBackTitle = @"customBackTitle";
 - (NSString *)customBackTitle {
     return objc_getAssociatedObject(self, &customBackTitle);
 }
+
 
 @end

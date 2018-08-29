@@ -28,6 +28,8 @@ typedef enum LiveRoomType {
 @property (strong) NSString *userId;
 @property (strong) NSString *userName;
 @property (assign) LiveRoomType roomType;
+ //公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
+@property (nonatomic, assign) IMPublicRoomType liveShowType;
 @property (strong) NSString * showTitle;
 @property (strong, nonatomic) NSArray<NSString *> *playUrlArray;
 @property (strong, readonly) NSString *playUrl;

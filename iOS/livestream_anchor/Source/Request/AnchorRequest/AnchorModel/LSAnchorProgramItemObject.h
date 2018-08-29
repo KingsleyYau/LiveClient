@@ -42,5 +42,5 @@
 @property (nonatomic, assign) int ticketNum;
 @property (nonatomic, assign) int followNum;
 @property (nonatomic, assign) BOOL isTicketFull;
-
+ 
 @end

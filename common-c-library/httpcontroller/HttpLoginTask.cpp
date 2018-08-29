@@ -145,10 +145,6 @@ bool HttpLoginTask::ParseData(const string& url, bool bFlag, const char* buf, in
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpLoginTask::ParseData( buf : %s )", buf);
-    }
-    
     HttpLoginItem item;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

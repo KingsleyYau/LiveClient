@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.View;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.Log;
 
 
@@ -45,7 +47,8 @@ public class AdvancePrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
         IMMessageItem imMessageItem = new IMMessageItem(mIMRoomInItem.roomId,
                 mIMManager.mMsgIdIndex.getAndIncrement(),"",
                 IMMessageItem.MessageType.SysNotice,
-                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,String.format ("%.2f", rebateGranted)),
+                new IMSysNoticeMessageContent(getResources().getString(R.string.system_notice_recv_rebate,
+                        ApplicationSettingUtil.formatCoinValue(rebateGranted)),
                         null, IMSysNoticeMessageContent.SysNoticeType.Normal));
         Log.d(TAG,"addRebateGrantedMsg-msg:"+imMessageItem.sysNoticeContent.message+" link:"+imMessageItem.sysNoticeContent.link);
         sendMessageUpdateEvent(imMessageItem);

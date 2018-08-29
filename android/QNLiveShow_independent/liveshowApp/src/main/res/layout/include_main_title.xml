@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/actionbar_height"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -21,9 +21,11 @@
             android:layout_marginLeft="13dp"/>
     </FrameLayout>
     <FrameLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1">
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp">
         <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
             android:id="@+id/tabPageIndicator"
             android:layout_width="match_parent"
@@ -39,7 +41,7 @@
             custom:digitalHintTextSize="12sp"
             custom:hasDigitalHint="false"
             custom:underlineColor="@android:color/transparent"
-            custom:underlineHeight="2dp"
+            custom:underlineHeight="14dp"
             custom:indicatorColor="#FFF600"
             custom:indicatorHeight="2dp"
             />
@@ -51,7 +53,8 @@
         android:layout_height="match_parent"
         android:clickable="true"
         android:layout_marginRight="4dp"
-        android:onClick="onClick">
+        android:onClick="onClick"
+        android:layout_alignParentRight="true">
 
         <com.qpidnetwork.livemodule.view.DotView.DotLayout
             android:id="@+id/dl_UnReadNum"
@@ -61,6 +64,7 @@
             app:dotTextSize="@dimen/live_size_12sp"
             app:dotOverPadding="8dp"
             app:dotPadding="3dp"
+            app:dotColor="#ff4747"
             app:dotLocation="rightBottom">
 
             <ImageView
@@ -87,4 +91,4 @@
         <!--android:text="99+"/>-->
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

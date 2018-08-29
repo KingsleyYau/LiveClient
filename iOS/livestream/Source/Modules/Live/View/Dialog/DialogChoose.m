@@ -65,16 +65,19 @@
     [view bringSubviewToFront:self.backBtn];
     [view addSubview:self];
     [view bringSubviewToFront:self];
-    [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(view.mas_width).offset(-60);
-        make.centerY.equalTo(view.mas_centerY);
-        make.centerX.equalTo(view);
-    }];
-    [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(view);
-    }];
     
-    [self sizeToFit];
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(view.mas_width).offset(-60);
+            make.centerY.equalTo(view.mas_centerY);
+            make.centerX.equalTo(view);
+        }];
+        [self.backBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(view);
+        }];
+        
+        [self sizeToFit];
+    }
 }
 
 - (IBAction)cancelCancel:(id)sender {

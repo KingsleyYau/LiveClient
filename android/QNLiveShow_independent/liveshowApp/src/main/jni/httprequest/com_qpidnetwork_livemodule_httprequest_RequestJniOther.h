@@ -128,6 +128,15 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_SetManBaseInfo
         (JNIEnv *, jclass, jstring, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    UploadCrashFile
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLSUploadCrashFileCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UploadCrashFile
+        (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
+
+
 #ifdef __cplusplus
 }
 #endif

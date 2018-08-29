@@ -79,7 +79,7 @@
 
 @implementation JDSegmentControl
 
-- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry{
+- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isShowbottomLine:(BOOL)isBottom{
     if (self = [super initWithFrame:frame]) {
         // 设置代理
         self.delegate = delegate;
@@ -122,10 +122,12 @@
 
         }
         
-        CGFloat bottom = self.frame.origin.y + self.frame.size.height;
-        UIView * bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, bottom, self.frame.size.width, 1)];
-        bottomView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
-        [self addSubview:bottomView];
+        if (isBottom) {
+            CGFloat bottom = self.frame.origin.y + self.frame.size.height;
+            UIView * bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, bottom, self.frame.size.width, 1)];
+            bottomView.backgroundColor = COLOR_WITH_16BAND_RGB(0xdb96ff);
+            [self addSubview:bottomView];
+        }
     }
     
     return self;

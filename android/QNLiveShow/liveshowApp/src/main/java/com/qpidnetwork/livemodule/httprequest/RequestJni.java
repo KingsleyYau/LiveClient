@@ -81,4 +81,10 @@ public class RequestJni {
      * @param deviceId
      */
     static public native void SetDeviceId(String deviceId);
+
+	/**
+	 * 设置代理服务器
+	 * @param proxyUrl		URL
+	 */
+	static public native void SetProxy(String proxyUrl);
 }

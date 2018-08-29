@@ -12,7 +12,7 @@
 #import "LSSessionRequestManager.h"
 #import "ManBookingUnreadUnhandleNumRequest.h"
 #import "LSImManager.h"
-@interface LSMyReservationsViewController () <JTSegmentControlDelegate, JDSegmentControlDelegate, LSPZPagingScrollViewDelegate,IMLiveRoomManagerDelegate>
+@interface LSMyReservationsViewController () <JDSegmentControlDelegate, LSPZPagingScrollViewDelegate,IMLiveRoomManagerDelegate>
 @property (nonatomic, strong) LSPZPagingScrollView * pagingScrollView;
 @property (nonatomic, strong) NSArray<UIViewController *> *viewControllers;
 @property (weak, nonatomic) IBOutlet UIView *topView;
@@ -38,7 +38,7 @@
 
     self.title = NSLocalizedStringFromSelf(@"MY_TITLE");
     NSArray *title = @[ NSLocalizedStringFromSelf(@"NEW"), NSLocalizedStringFromSelf(@"SEND"), NSLocalizedStringFromSelf(@"SCHED"), NSLocalizedStringFromSelf(@"HISTORY") ];
-    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES];
+    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 50) delegate:self isSymmetry:YES isShowbottomLine:YES];
     [self.topView addSubview:self.segment];
 
     LSMyReservationsPageViewController *vc1 = [[LSMyReservationsPageViewController alloc] initWithNibName:nil bundle:nil];
@@ -133,7 +133,6 @@
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView preparePageViewForDisplay:(UIView *)pageView forIndex:(NSUInteger)index {
-    self.navigationController.navigationBar.userInteractionEnabled = NO;
     UIViewController *vc = [self.viewControllers objectAtIndex:index];
     if (vc.view != nil) {
         [vc.view removeFromSuperview];
@@ -145,7 +144,6 @@
 }
 
 - (void)pagingScrollView:(LSPZPagingScrollView *)pagingScrollView didShowPageViewForDisplay:(NSUInteger)index {
-    self.navigationController.navigationBar.userInteractionEnabled = YES;
     self.curIndex = index;
     [self reportDidShowPage:index];
     [self.segment selectButtonTag:self.curIndex];

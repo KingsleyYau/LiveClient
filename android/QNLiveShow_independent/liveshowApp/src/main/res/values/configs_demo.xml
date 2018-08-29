@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="demo" type="bool">true</item>
+    <!--独立app host由http://demo-live.charmdate.com更改为https://demo.live-techs.com-->
+    <item name="webHost" type="string">www.charm-tech.net</item>
+
+</resources>

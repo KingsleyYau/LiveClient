@@ -5,14 +5,14 @@
             <solid android:color="#32FFFFFF"/>
         </shape>
     </item>
-    
+
     <item android:state_focused="false" android:state_pressed="true">
         <shape android:shape="oval">
             <solid android:color="#32FFFFFF"/>
         </shape>
     </item>
-    
-    
+
+
     <item android:state_focused="true">
         <shape android:shape="oval">
             <solid android:color="#32FFFFFF"/>
@@ -24,6 +24,6 @@
             <solid android:color="#00FFFFFF"/>
         </shape>
     </item>
-    
-    
+
+
 </selector>

@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     net_qdating_player_LSPlayerJni
+ * Method:    SetLogDir
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogDir
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     net_qdating_player_LSPlayerJni
  * Method:    Create
  * Signature: (Lnet/qdating/player/ILSPlayerCallbackJni;ZLnet/qdating/player/ILSVideoRendererJni;Lnet/qdating/player/ILSAudioRendererJni;Lnet/qdating/player/ILSVideoHardDecoderJni;Lnet/qdating/player/ILSVideoHardRendererJni;)J
  */

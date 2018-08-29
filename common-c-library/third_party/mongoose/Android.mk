@@ -13,8 +13,11 @@ LOCAL_MODULE := mongoose
 LOCAL_MODULE_FILENAME := libmongoose
 
 LOCAL_C_INCLUDES += $(COMMON_C_THIRDY_PARTY_PATH)/openssl/android/include
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/../..
 
 LOCAL_CPPFLAGS  := -std=c++11
+
+LOCAL_STATIC_LIBRARIES += common
 
 REAL_PATH := $(realpath $(LOCAL_PATH))
 #LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "LSImageViewLoader.h"
-#import "TXScrollLabelView/TXScrollLabelView.h"
+
 @class HotTableViewCell;
 @protocol HotTableViewCellDelegate <NSObject>
 @optional
@@ -47,6 +47,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *onlineStatus;
 @property (weak, nonatomic) IBOutlet UIView *titleView;
 @property (nonatomic, strong) TXScrollLabelView *scrollLabelView;
+@property (weak, nonatomic) IBOutlet UIImageView *showIcon;
 
 /** 代理 */
 @property (nonatomic, weak) id<HotTableViewCellDelegate> hotCellDelegate;

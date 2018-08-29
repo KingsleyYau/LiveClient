@@ -42,12 +42,12 @@ public class BookSuccessActivity extends BaseActionBarFragmentActivity {
         setCustomContentView(R.layout.activity_live_book_success);
 
         //设置头
-        setTitle(getString(R.string.live_book_title), Color.WHITE);
+        setTitle(getString(R.string.live_book_title), R.color.theme_default_black);
 
         //
         initIntent();
 
-        //
+        //ui
         initUI();
     }
 

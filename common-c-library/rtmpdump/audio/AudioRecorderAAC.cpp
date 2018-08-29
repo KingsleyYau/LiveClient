@@ -62,7 +62,7 @@ void AudioRecorderAAC::ChangeAudioFormat(
     
 bool AudioRecorderAAC::RecordAudioFrame(const char* data, int size) {
     bool bFlag = false;
-    
+
     if( mpFile ) {
         // 增加ADTS头部
         mAudioFrame.ResetFrame();

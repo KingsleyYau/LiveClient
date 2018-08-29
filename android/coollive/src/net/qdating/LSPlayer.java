@@ -78,7 +78,12 @@ public class LSPlayer implements ILSPlayerCallback {
 	// 消息定义
 	private final int MSG_CONNECT = 0;
 	private final int MSG_DISCONNECT = 1;
-	
+
+	/**
+	 * 正在断开
+	 */
+	private boolean isDisconnecting = false;
+
 	/***
 	 * 初始化流播放器
 	 * @param surfaceView	显示界面
@@ -87,11 +92,14 @@ public class LSPlayer implements ILSPlayerCallback {
 	 */
 	public boolean init(GLSurfaceView surfaceView, FillMode fillMode, ILSPlayerStatusCallback statusCallback) {
 		boolean bFlag = true;
-		
-		File path = Environment.getExternalStorageDirectory();
-		String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
-		Log.initFileLog(filePath);
-		Log.setWriteFileLog(true);
+
+		if( LSConfig.LOGDIR != null && LSConfig.LOGDIR.length() > 0 ) {
+			File path = Environment.getExternalStorageDirectory();
+			String filePath = path.getAbsolutePath() + "/" + LSConfig.LOGDIR + "/";
+			Log.initFileLog(filePath);
+			Log.setWriteFileLog(true);
+			LSPlayerJni.SetLogDir(filePath);
+		}
 		
 		Log.i(LSConfig.TAG, String.format("LSPlayer::init( this : 0x%x )", hashCode()));
 		
@@ -137,6 +145,7 @@ public class LSPlayer implements ILSPlayerCallback {
 						synchronized (this) {
 							if( isRuning ) {
 								// 非手动停止, 准备重连
+								player.Stop();
 								start();
 							}
 						}
@@ -151,7 +160,10 @@ public class LSPlayer implements ILSPlayerCallback {
 										(msg.obj!=null)?msg.obj.hashCode():0
 								)
 						);
+
 				    	player.Stop();
+						isDisconnecting = false;
+
 					}break;
 					default:
 						break;
@@ -394,8 +406,10 @@ public class LSPlayer implements ILSPlayerCallback {
 				));
 		
 		synchronized (this) {
-			if( isRuning ) {
+			if( isRuning && !isDisconnecting ) {
 				// 断开连接
+				isDisconnecting = true;
+
 				Message msg = Message.obtain();
 				msg.what = MSG_DISCONNECT;
 				msg.obj = this;

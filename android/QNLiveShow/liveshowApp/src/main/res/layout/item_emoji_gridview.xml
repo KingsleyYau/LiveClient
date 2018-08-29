@@ -3,13 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rl_emojiContainer"
     android:layout_gravity="center"
-    android:layout_width="59dp"
-    android:layout_height="49dp">
+    android:layout_width="@dimen/live_emoji_item_width"
+    android:layout_height="@dimen/live_emoji_item_height">
 
     <ImageView
         android:id="@+id/iv_emoji"
-        android:layout_width="@dimen/live_emoji_width"
-        android:layout_height="@dimen/live_emoji_height"
+        android:layout_width="@dimen/live_emoji_item_icon_width"
+        android:layout_height="@dimen/live_emoji_item_icon_height"
         android:layout_centerInParent="true"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_live_chat_emoji_default"/>

@@ -9,9 +9,9 @@
 #import "LSTodosViewController.h"
 #import "LSTodosTableViewCell.h"
 #import "LSMyReservationsPageViewController.h"
-
+#import "MyTicketPageViewController.h"
 @interface LSTodosViewController ()<UITableViewDelegate,UITableViewDataSource>
-
+@property (nonatomic, strong) NSArray *titleArray;
 @end
 
 @implementation LSTodosViewController
@@ -20,6 +20,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self setupTableFooterView];
+   
+    self.titleArray = @[
+                        @{ @"title" :  NSLocalizedStringFromSelf(@"Book"),
+                           @"icon" : @"Main_Booking",
+                           @"detail": NSLocalizedStringFromSelf(@"Book_Detail")},
+                        @{ @"title" :  NSLocalizedStringFromSelf(@"Show"),
+                           @"icon" : @"Main_Show",
+                            @"detail":NSLocalizedStringFromSelf(@"Show_Detail")}
+                        ];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,7 +67,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger number = 1;
+    NSInteger number = self.titleArray.count;
     return number;
 }
 
@@ -70,17 +79,32 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *tableViewCell = nil;
     LSTodosTableViewCell *cell = [LSTodosTableViewCell getUITableViewCell:tableView];
-    NSString *titleText = @"Bookings";
-    NSString *detailText = @"Upcoming One-on-One bookings";
-    cell.titleLabel.text = titleText;
-    cell.detailLabel.text = detailText;
-    [cell setTextW:titleText];
-    [cell setDetailTextW:detailText];
-    if (self.unReadBookingCount == 0) {
-        cell.redLabel.hidden = YES;
+    cell.titleLabel.text = [[self.titleArray objectAtIndex:indexPath.row] objectForKey:@"title"];
+    cell.detailLabel.text = [[self.titleArray objectAtIndex:indexPath.row] objectForKey:@"detail"];
+    cell.settingImageView.image = [UIImage imageNamed:[[self.titleArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+    [cell setTextW:cell.titleLabel.text];
+    [cell setDetailTextW:cell.detailLabel.text];
+
+    switch (indexPath.row) {
+        case 0:{
+            if (self.unReadBookingCount == 0) {
+                cell.redLabel.hidden = YES;
+            }
+            [cell updateRedLabelW:self.unReadBookingCount];
+            
+        }break;
+        case 1:{
+            if (self.unReadShowCount == 0) {
+                cell.redLabel.hidden = YES;
+            }
+            [cell updateRedLabelW:self.unReadShowCount];
+        }break;
+            
+        default:
+            break;
     }
-    [cell updateRedLabelW:self.unReadBookingCount];
-    cell.settingImageView.image = [UIImage imageNamed:@"Main_Booking"];
+
+
     tableViewCell = cell;
 
     return tableViewCell;
@@ -89,6 +113,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row == 0) {
         LSMyReservationsPageViewController *vc = [[LSMyReservationsPageViewController alloc] initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:vc animated:YES];
+    }else if (indexPath.row == 1) {
+        MyTicketPageViewController * vc = [[MyTicketPageViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:vc animated:YES];
     }
 }

@@ -12,12 +12,11 @@
 
 #import "MeLevelViewController.h"
 #import "LSLiveWKWebViewController.h"
-#import "LSLiveGuideViewController.h"
 
 
-#define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
-@interface AnchorPersonalViewController ()<LSLiveGuideViewControllerDelegate>
+
+@interface AnchorPersonalViewController ()
 
 @property (nonatomic, strong) LSLiveWKWebViewController *urlController;
 @property (weak, nonatomic) IBOutlet UIButton *backBtn;
@@ -45,23 +44,20 @@
     self.urlController.isShowTaBar = YES;
     self.urlController.isRequestWeb = YES;
     
+   
     NSString *anchorPage = self.urlController.configManager.item.manPageUrl;
-    NSString *device; // 设备类型
+    anchorPage = [self.urlController setupCommonConfig:anchorPage];
     NSString *anchorid = [NSString stringWithFormat:@"manid=%@",self.anchorId]; // 主播id;
     NSString *showinvite = [NSString stringWithFormat:@"&showinvite=%d",self.showInvite];
-    
-    if (anchorPage.length > 0) {
-        if (IS_IPAD) {
-            device = [NSString stringWithFormat:@"device=32"];
-        } else {
-            device = [NSString stringWithFormat:@"device=31"];
-        }
-        if ([anchorPage containsString:@"?"]) {
-            anchorPage = [NSString stringWithFormat:@"%@&%@&%@%@",anchorPage,device,anchorid,showinvite];
-        } else {
-            anchorPage = [NSString stringWithFormat:@"%@?%@&%@%@",anchorPage,device,anchorid,showinvite];
-        }
-    }
+     anchorPage = [NSString stringWithFormat:@"%@&%@%@",anchorPage,anchorid,showinvite];
+//    if (anchorPage.length > 0) {
+
+//        if ([anchorPage containsString:@"?"]) {
+//            anchorPage = [NSString stringWithFormat:@"%@&%@&%@%@",anchorPage,device,anchorid,showinvite];
+//        } else {
+//            anchorPage = [NSString stringWithFormat:@"%@?%@&%@%@",anchorPage,device,anchorid,showinvite];
+//        }
+//    }
     self.urlController.baseUrl = anchorPage;
 }
 
@@ -133,9 +129,6 @@
     [super viewDidDisappear:animated];
 }
 
-#pragma mark - LSLiveGuideViewControllerDelegate
-- (void)lsLiveGuideViewControllerDidFinishGuide:(LSLiveGuideViewController *)guideViewController {
-    
-}
+
 
 @end

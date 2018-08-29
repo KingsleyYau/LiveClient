@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_height="73dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="13dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+            android:id="@+id/civUserPhoto"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/ic_default_photo_man"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvHangoutTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="Hosted by Jackson"
+                android:textColor="@color/text_color_dark"
+                android:textSize="13sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civAnchor1"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_default_blank_photo"
+                    android:visibility="visible" />
+
+                <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civAnchor2"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_default_blank_photo"
+                    android:visibility="visible" />
+
+                <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/civAnchor3"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="4dp"
+                    android:src="@drawable/ic_default_blank_photo"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnKnock"
+            android:layout_width="67dp"
+            android:layout_height="27dp"
+            android:layout_marginRight="13dp"
+            android:background="@drawable/rectangle_rounded_angle_silod_green_radius_18"
+            android:focusable="false"
+            android:text="@string/hangout_list_knock_button_desc"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</FrameLayout>

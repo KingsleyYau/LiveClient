@@ -16,10 +16,6 @@
 #import "LiveService.h"
 #import "LiveGobalManager.h"
 
-#import "LiveStreamPublisher.h"
-#import "LiveStreamPlayer.h"
-#import "LiveStreamSession.h"
-
 #import "MsgTableViewCell.h"
 #import "MsgItem.h"
 
@@ -215,9 +211,7 @@ typedef enum RoomTipType {
     self.player.delegate = self;
     self.playerReconnectTime = 0;
 
-    self.publishUrl = @"rtmp://172.25.32.133:7474/test_flash/max_i";
-    self.publisher = [LiveStreamPublisher instance];
-    self.publisher.delegate = self;
+    self.liveStreamType = LiveStreamType_ShowHost_Public;
     self.publisherReconnectTime = 0;
 
     // 初始化消息
@@ -292,7 +286,7 @@ typedef enum RoomTipType {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(invitationCountdown:) name:@"LivePushInviteNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(bookingCountdown:) name:@"LivePushBookingNotification" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showCountdown:) name:@"LiveShowNotification" object:nil];
     // 初始化计时器
     self.videoBtnTimer = [[LSTimer alloc] init];
     
@@ -316,12 +310,14 @@ typedef enum RoomTipType {
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LivePushInviteNotification" object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LivePushBookingNotification" object:nil];
-    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"LiveShowNotification" object:nil];
     [self.giftComboManager removeManager];
 
     for (GiftComboView *giftView in self.giftComboViews) {
         [giftView stopGiftCombo];
     }
+    
+    [[DialogTip dialogTip] stopTimer];
     
     // 移除直播间后台代理监听
     [[LiveGobalManager manager] removeDelegate:self];
@@ -334,7 +330,7 @@ typedef enum RoomTipType {
     [LiveGobalManager manager].liveRoom = nil;
     [LiveGobalManager manager].player = nil;
     [LiveGobalManager manager].publisher = nil;
-    
+        
     // 停止流
     [self stopPlay];
     [self stopPublish];
@@ -453,7 +449,7 @@ typedef enum RoomTipType {
     
      // 添加手势
     [self addSingleTap];
-    
+
 //    [self test];
 }
 
@@ -467,10 +463,6 @@ typedef enum RoomTipType {
     [self removeSingleTap];
     
 //    [self stopTest];
-}
-
-- (void)initialiseSubwidge {
-    [super initialiseSubwidge];
 }
 
 - (void)setupContainView {
@@ -511,6 +503,13 @@ typedef enum RoomTipType {
     if (item.roomId.length) {
         [self sendSetRoomCountDown:item.roomId pushUrl:url];
     }
+}
+
+#pragma mark - 接收确认预约通知 (LiveShowNotification)
+- (void)showCountdown:(NSNotification *)notification  {
+    NSLog(@"LiveViewController::LiveShowNotification( %@ ) ",notification.object);
+    NSDictionary * dic = notification.object;
+    [self sendSetRoomCountDown:[dic objectForKey:@"roomId"] pushUrl:[dic objectForKey:@"rul"]];
 }
 
 #pragma mark - 控件层次
@@ -636,8 +635,14 @@ typedef enum RoomTipType {
 - (void)initPublish {
     NSLog(@"LiveViewController::initPublish( [初始化推送流] )");
     
+    if( self.publisher == nil ) {
+        self.publisher = [LiveStreamPublisher instance:self.liveStreamType];
+        self.publisher.delegate = self;
+    }
+    
     // 初始化采集
     [self.publisher initCapture];
+    
     // 初始化预览界面
     self.publisher.publishView = self.videoView;
     self.publisher.publishView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;
@@ -807,6 +812,10 @@ typedef enum RoomTipType {
 #pragma mark - 初始化头部控件
 - (void)setupLiveHeadView {
     self.liveHeadView.delegate = self;
+    
+    self.liveHeadView.closeBtn.hidden = self.liveRoom.showId.length > 0?YES:NO;
+    
+    self.viewersTotalNumLabel.text = [NSString stringWithFormat:@" / %d",self.liveRoom.imLiveRoom.maxFansiNum];
 }
 
 #pragma mark - 初始化座驾控件
@@ -842,6 +851,7 @@ typedef enum RoomTipType {
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
                     model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
+                    model.isHasTicket = item.isHasTicket;
                     [self.audienceArray addObject:model];
                     [self.chatAudienceArray addObject:model];
                     
@@ -853,8 +863,8 @@ typedef enum RoomTipType {
                 self.viewersNumLabel.text = [NSString stringWithFormat:@"%ld",(unsigned long)self.audienceArray.count];
                 
                 // 默认六个头像
-                if (self.audienceArray.count < 6) {
-                    NSUInteger count = 6 - self.audienceArray.count;
+                if (self.audienceArray.count < self.liveRoom.imLiveRoom.maxFansiNum) {
+                    NSUInteger count = self.liveRoom.imLiveRoom.maxFansiNum - self.audienceArray.count;
                     for (NSUInteger num = 0; num < count; num++) {
                         AudienModel *model = [[AudienModel alloc] init];
                         model.image = [UIImage imageNamed:@"Default_Img_Noman_Circyle"];
@@ -864,6 +874,7 @@ typedef enum RoomTipType {
                 if (self.reloadAudience) {
                     self.reloadAudience = NO;
                     self.audienceView.audienceArray = self.audienceArray;
+                    [self.audienceView updateUserInfo];
                 }
             }
         });
@@ -871,9 +882,9 @@ typedef enum RoomTipType {
 }
 
 #pragma mark - VIPAudienceViewDelegate
-- (void)vipLiveAudidenveViewDidSelectItem:(AudienModel *)model indexPath:(NSIndexPath *)indexPath {
-    if ([self.liveDelegate respondsToSelector:@selector(audidenveViewDidSelectItem:indexPath:)]) {
-        [self.liveDelegate audidenveViewDidSelectItem:model indexPath:indexPath];
+- (void)vipLiveAudidenveViewDidSelectItem:(AudienModel *)model {
+    if ([self.liveDelegate respondsToSelector:@selector(audidenveViewDidSelectItem:)]) {
+        [self.liveDelegate audidenveViewDidSelectItem:model];
     }
 }
 
@@ -1270,7 +1281,8 @@ typedef enum RoomTipType {
 #pragma mark - 聊天文本消息管理
 // 插入普通聊天消息
 - (void)addChatMessageNickName:(NSString *)name userLevel:(NSInteger)level text:(NSString *)text honorUrl:(NSString *)honorUrl
-                        fromId:(NSString *)fromId {
+                        fromId:(NSString *)fromId
+                   isHasTicket:(BOOL)isHasTicket {
     NSLog(@"LiveViewController::addChatMessage( [插入文本消息], text : %@ )", text);
 
     // 发送普通消息
@@ -1287,6 +1299,7 @@ typedef enum RoomTipType {
     item.name = name;
     item.text = text;
     item.honorUrl = honorUrl;
+    item.isHasTicket = isHasTicket;
     if ( text.length > 0 && text != nil ) {
         NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:item];
         item.attText = [self.emotionManager parseMessageAttributedTextEmotion:attributeString font:MessageFont];
@@ -1297,7 +1310,8 @@ typedef enum RoomTipType {
 
 // 插入送礼消息
 - (void)addGiftMessageNickName:(NSString *)nickName giftID:(NSString *)giftID giftNum:(int)giftNum honorUrl:(NSString *)honorUrl
-                        fromId:(NSString *)fromId {
+                        fromId:(NSString *)fromId
+                   isHasTicket:(BOOL)isHasTicket{
     AllGiftItem *item = [[LiveGiftDownloadManager manager] backGiftItemWithGiftID:giftID];
 
     MsgItem *msgItem = [[MsgItem alloc] init];
@@ -1314,25 +1328,26 @@ typedef enum RoomTipType {
     msgItem.smallImgUrl = [self.giftDownloadManager backSmallImgUrlWithGiftID:giftID];
     msgItem.giftNum = giftNum;
     msgItem.honorUrl = honorUrl;
-
+    msgItem.isHasTicket = isHasTicket;
     // 增加文本消息
     NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
     msgItem.attText = attributeString;
     [self addMsg:msgItem replace:NO scrollToEnd:YES animated:YES];
 }
 
-- (MsgItem *)addJoinMessageNickName:(NSString *)nickName honorUrl:(NSString *)honorUrl fromId:(NSString *)fromId {
+- (MsgItem *)addJoinMessageNickName:(NSString *)nickName honorUrl:(NSString *)honorUrl fromId:(NSString *)fromId isHasTicket:(BOOL)isHasTicket{
     MsgItem *msgItem = [[MsgItem alloc] init];
     msgItem.usersType = UsersType_Audience;
     msgItem.msgType = MsgType_Join;
     msgItem.name = nickName;
     msgItem.honorUrl = honorUrl;
+    msgItem.isHasTicket = isHasTicket;
     NSMutableAttributedString *attributeString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:msgItem];
     msgItem.attText = attributeString;
     return msgItem;
 }
 
-- (void)addRiderJoinMessageNickName:(NSString *)nickName riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl honorUrl:(NSString *)honorUrl fromId:(NSString *)fromId {
+- (void)addRiderJoinMessageNickName:(NSString *)nickName riderName:(NSString *)riderName riderUrl:(NSString *)riderUrl honorUrl:(NSString *)honorUrl fromId:(NSString *)fromId isHasTicket:(BOOL)isHasTicket{
     // 用户座驾入场信息
     MsgItem *riderItem = [[MsgItem alloc] init];
     riderItem.usersType = UsersType_Audience;
@@ -1341,6 +1356,7 @@ typedef enum RoomTipType {
     riderItem.riderName = riderName;
     riderItem.riderUrl = riderUrl;
     riderItem.honorUrl = honorUrl;
+    riderItem.isHasTicket = isHasTicket;
     NSMutableAttributedString *riderString = [self.msgManager presentTheRoomStyleItem:self.roomStyleItem msgItem:riderItem];
     riderItem.attText = riderString;
     [self addMsg:riderItem replace:NO scrollToEnd:YES animated:YES];
@@ -1699,14 +1715,8 @@ typedef enum RoomTipType {
     NSLog(@"LiveViewController::onZBLogin( [IM登陆, %@], errType : %d, errmsg : %@ )", (errType == ZBLCC_ERR_SUCCESS) ? @"成功" : @"失败", errType, errmsg);
     if (errType == ZBLCC_ERR_SUCCESS) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            BOOL bFlag = NO;
-            for (ZBImLoginRoomObject *roomItem in item.roomList) {
-                if ([self.liveRoom.roomId isEqualToString:roomItem.roomId]) {
-                    bFlag = YES;
-                }
-            }
             
-            if (bFlag) {
+            if (self.liveRoom.roomId) {
                 [self.imManager enterRoom:self.liveRoom.roomId finishHandler:^(BOOL success, ZBLCC_ERR_TYPE errType, NSString * _Nonnull errMsg, ZBImLiveRoomObject * _Nonnull roomItem) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if (success) {
@@ -1801,8 +1811,11 @@ typedef enum RoomTipType {
                         }
                     }
                 }
-                // 插入送礼文本消息
-                [self addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId];
+
+                [self.userInfoManager getFansBaseInfo:fromId finishHandler:^(AudienModel * _Nonnull item) {
+                    // 插入送礼文本消息
+                    [self addGiftMessageNickName:nickName giftID:giftId giftNum:giftNum honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+                }];
 
             } else {
                 // 获取礼物详情
@@ -1818,8 +1831,11 @@ typedef enum RoomTipType {
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
             self.barrageView.hidden = NO;
-            // 插入普通文本消息
-            [self addChatMessageNickName:nickName userLevel:false text:msg honorUrl:honorUrl fromId:fromId];
+
+            [self.userInfoManager getFansBaseInfo:fromId finishHandler:^(AudienModel * _Nonnull item) {
+                // 插入普通文本消息
+                [self addChatMessageNickName:nickName userLevel:false text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+            }];
 
             // 插入到弹幕
             BarrageModel *bgItem = [BarrageModel barrageModelForName:nickName message:msg urlWihtUserID:fromId];
@@ -1833,8 +1849,11 @@ typedef enum RoomTipType {
     NSLog(@"LiveViewController::onZBRecvSendChatNotice( [接收直播间文本消息通知], roomId : %@, nickName : %@, msg : %@ )", roomId, nickName, msg);
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([roomId isEqualToString:self.liveRoom.roomId]) {
-            // 插入聊天消息到列表
-            [self addChatMessageNickName:nickName userLevel:level text:msg honorUrl:honorUrl fromId:fromId];
+            
+            [self.userInfoManager getFansBaseInfo:fromId finishHandler:^(AudienModel * _Nonnull item) {
+                // 插入聊天消息到列表
+                [self addChatMessageNickName:nickName userLevel:level text:msg honorUrl:honorUrl fromId:fromId isHasTicket:item.isHasTicket];
+            }];
         }
     });
 }
@@ -1855,7 +1874,7 @@ typedef enum RoomTipType {
             } else {
                 
                 if (self.dialogWarning) {
-                    [self.dialogWarning removeFromSuperview];
+                    [self.dialogWarning hidenDialog];
                 }
                 //            WeakObject(self, weakSelf);
                 self.dialogWarning = [DialogWarning dialog];
@@ -1899,11 +1918,11 @@ typedef enum RoomTipType {
                 }
 
                 // 用户座驾入场信息
-                [self addRiderJoinMessageNickName:nickName riderName:riderName riderUrl:riderUrl honorUrl:nil fromId:userId];
+                [self addRiderJoinMessageNickName:nickName riderName:riderName riderUrl:riderUrl honorUrl:nil fromId:userId isHasTicket:isHasTicket];
 
             } else { // 如果没座驾
                 // 插入入场消息到列表
-                MsgItem *msgItem = [self addJoinMessageNickName:nickName honorUrl:nil fromId:userId];
+                MsgItem *msgItem = [self addJoinMessageNickName:nickName honorUrl:nil fromId:userId isHasTicket:isHasTicket];
 
                 // (插入/替换)到到消息列表
                 BOOL replace = NO;
@@ -1911,7 +1930,7 @@ typedef enum RoomTipType {
                     MsgItem *lastItem = [self.msgArray lastObject];
                     if (lastItem.msgType == msgItem.msgType) {
                         // 同样是入场消息, 替换最后一条
-                        replace = YES;
+                        replace = NO;
                     }
                 }
                 [self addMsg:msgItem replace:replace scrollToEnd:YES animated:YES];
@@ -2238,7 +2257,7 @@ typedef enum RoomTipType {
     NSString* msg = [NSString stringWithFormat:@"msg%ld", (long)self.msgId++];
 //    [self sendMsg:msg isLounder:NO];
     
-    [self addChatMessageNickName:@"randy" userLevel:6 text:msg honorUrl:nil fromId:nil];
+    [self addChatMessageNickName:@"randy" userLevel:6 text:msg honorUrl:nil fromId:nil isHasTicket:YES];
 }
 
 - (void)testMethod4 {

@@ -10,8 +10,6 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetAccountBalanceCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceDetailInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceListCallback;
-import com.qpidnetwork.livemodule.httprequest.OnGetGiftListCallback;
-import com.qpidnetwork.livemodule.httprequest.OnGetSendableGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
@@ -25,6 +23,7 @@ import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
@@ -32,15 +31,11 @@ import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftRecommandManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.OnRoomRebateCountTimeEndListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout;
-
-import java.util.List;
 
 /**
  * Description:直播间接口实现基类
@@ -54,17 +49,15 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         implements View.OnClickListener, SoftKeyboradListenFrameLayout.InputWindowListener,
         IFileDownloadedListener, IMInviteLaunchEventListener,IMLiveRoomEventListener,
         IMOtherEventListener, TariffPromptManager.OnGetRoomTariffInfoListener,
-        OnGetAudienceListCallback, NormalGiftManager.OnRoomShowSendableGiftDataChangeListener,
-        PackageGiftManager.OnPackageGiftDataChangeListener,OnGetGiftListCallback,
-        OnGetSendableGiftListCallback,OnGetAudienceDetailInfoCallback, IMLoginStatusListener,
-        OnRoomRebateCountTimeEndListener,GiftRecommandManager.OnGiftRecommandListener {
+        OnGetAudienceListCallback, OnGetAudienceDetailInfoCallback, IMLoginStatusListener,
+        OnRoomRebateCountTimeEndListener {
 
     //数据及管理
     public IMRoomInItem mIMRoomInItem;    //房间信息
     protected int mRoomAudienceNum = 0;
     protected String roomPhotoUrl = null;
     protected LoginItem loginItem = null;
-
+    protected boolean isHasPermission;
 
     //管理房间信用点及返点
     public LiveRoomCreditRebateManager mLiveRoomCreditRebateManager;
@@ -93,6 +86,10 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
             if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL)){
                 roomPhotoUrl = bundle.getString(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL);
                 Log.d(TAG,"initData-roomPhotoUrl:"+roomPhotoUrl);
+            }
+
+            if(bundle.containsKey(LiveRoomTransitionActivity.KEY_HAS_PERMISSION)){
+                isHasPermission = bundle.getBoolean(LiveRoomTransitionActivity.KEY_HAS_PERMISSION);
             }
         }
 
@@ -186,7 +183,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     /**
      * 清除IM底层类相关监听事件
      */
-    private void clearIMListener(){
+    protected void clearIMListener(){
         mIMManager.unregisterIMInviteLaunchEventListener(this);
         mIMManager.unregisterIMLiveRoomEventListener(this);
         mIMManager.unregisterIMOtherEventListener(this);
@@ -284,7 +281,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     @Override
     public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl,
                                       String riderId, String riderName,
-                                      String riderUrl, final int fansNum, String honorImg) {
+                                      String riderUrl, final int fansNum, String honorImg, boolean isHasTicket) {
         if(!isCurrentRoom(roomId)){
             return;
         }
@@ -445,13 +442,13 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
-        Log.d(TAG,"OnSendTalent-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+errMsg);
+    public void OnSendTalent(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String talentInviteId, String talentId ) {
+        Log.d(TAG,"OnSendTalent-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+errMsg + " talentInviteId: " + talentInviteId + ",talentId:" + talentId);
     }
 
     @Override
     public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name,
-                                       double credit, IMClientListener.TalentInviteStatus status, double rebateCredit) {
+                                       double credit, IMClientListener.TalentInviteStatus status, double rebateCredit, String giftId, String giftName, int giftNum) {
         Log.d(TAG,"OnRecvSendTalentNotice-roomId:"+roomId+" talentInviteId:"+talentInviteId+" talentId:"+talentId
                 +" name:"+name+" credit:"+credit+" status:"+status+" rebateCredit:"+rebateCredit);
         if(!isCurrentRoom(roomId)){
@@ -470,6 +467,11 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
             mLiveRoomCreditRebateManager.updateRebateCredit(rebateCredit);
             onRebateUpdate();
         }
+    }
+
+    @Override
+    public void OnRecvTalentPromptNotice(String roomId, String introduction) {
+
     }
 
     @Override
@@ -549,9 +551,11 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvLoveLevelUpNotice(int lovelevel) {
-        Log.d(TAG,"OnRecvLoveLevelUpNotice-lovelevel:"+lovelevel);
-        mIMRoomInItem.loveLevel = lovelevel;
+    public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem) {
+        if(lovelevelItem != null){
+            Log.d(TAG,"OnRecvLoveLevelUpNotice-lovelevel:"+lovelevelItem.loveLevel);
+            mIMRoomInItem.loveLevel = lovelevelItem.loveLevel;
+        }
     }
 
     @Override
@@ -573,28 +577,6 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void onPkgGiftDataChanged(boolean isSuccess, String currRoomId) {
-        Log.d(TAG,"onPkgGiftDataChanged-currRoomId:"+currRoomId
-                +" mIMRoomItem.roomId:"+mIMRoomInItem.roomId
-                +" isSuccess:"+isSuccess);
-    }
-
-    @Override
-    public void onGetGiftList(boolean isSuccess, int errCode, String errMsg, GiftItem[] giftList) {
-        Log.d(TAG,"onGetGiftList-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
-    }
-
-    @Override
-    public void onGetSendableGiftList(boolean isSuccess, int errCode, String errMsg, SendableGiftItem[] giftIds) {
-        Log.d(TAG,"onGetSendableGiftList-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
-    }
-
-    @Override
-    public void onRoomSendableGiftChanged(String roomId, List<GiftItem> sendableGiftItemList) {
-        Log.d(TAG,"onRoomSendableGiftChanged-roomId:"+roomId);
-    }
-
-    @Override
     public void onGetAudienceDetailInfo(boolean isSuccess, int errCode, String errMsg, AudienceBaseInfoItem audienceInfo) {
         Log.d(TAG,"onGetAudienceDetailInfo-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg+" audienceInfo:"+audienceInfo);
     }
@@ -608,13 +590,6 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     @Override
     public void onRoomRebateCountTimeEnd() {
         Log.d(TAG,"onRoomRebateCountTimeEnd");
-    }
-
-    @Override
-    public void onGiftRecommand(GiftItem giftItem) {
-        Log.d(TAG,"onGiftRecommand-giftItem.id:"+giftItem.id
-                +" giftItem.name:"+giftItem.name
-                +" giftItem.middleImgUrl:"+giftItem.middleImgUrl);
     }
 
     //------------------勋章---------------------------------

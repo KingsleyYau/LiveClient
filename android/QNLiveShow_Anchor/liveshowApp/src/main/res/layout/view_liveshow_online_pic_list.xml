@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--付费公开直播间-->
+<RelativeLayout
+    android:id="@+id/rl_vipPublic"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="right"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:visibility="visible"
+    android:background="@android:color/white">
+
+    <com.qpidnetwork.anchor.view.CircleImageHorizontScrollView
+        android:id="@+id/cihsv_onlineVIPPublic"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:scrollbars="none"
+        android:visibility="visible"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@+id/ll_vipGuest"
+        android:layout_centerVertical="true"
+        custom:horizontSpace = "6dp"
+        custom:itemWidth="40dp"/>
+
+    <LinearLayout
+        android:id="@+id/ll_vipGuest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="3dp"
+        android:paddingBottom="3dp"
+        android:background="@drawable/bg_live_header_online_left"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/public_liveroom_audience_current"
+            android:textSize="12sp"
+            android:text="@string/liveroom_vipguest"/>
+
+        <TextView
+            android:id="@+id/tv_vipGuestData"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/public_liveroom_audience_current"
+            android:layout_marginTop="2dp"
+            android:textSize="12sp"
+            android:text="@string/liveroom_header_vipguestdata"/>
+    </LinearLayout>
+</RelativeLayout>

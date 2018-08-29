@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="CeleBrationGiftView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="227"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We have prepared champagne, fireworks and more to help all of you celebrate and enjoy a good time." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zT2-fD-dgQ">
+                    <rect key="frame" x="30" y="28" width="315" height="26.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                    <color key="textColor" red="0.019607843140000001" green="0.78039215689999997" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="fvN-IJ-1tf">
+                    <rect key="frame" x="0.0" y="80.5" width="375" height="112.5"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="fvN-IJ-1tf" secondAttribute="height" multiplier="10:3" id="MaP-MN-svw"/>
+                    </constraints>
+                    <collectionViewLayout key="collectionViewLayout" id="V4X-rZ-Ib3" customClass="CeleBrationGiftLayout"/>
+                </collectionView>
+                <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="RzD-BL-78o">
+                    <rect key="frame" x="168" y="190" width="39" height="37"/>
+                    <color key="pageIndicatorTintColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.74901960784313726" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                    <color key="currentPageIndicatorTintColor" red="0.70980392156862748" green="0.70980392156862748" blue="0.70980392156862748" alpha="1" colorSpace="calibratedRGB"/>
+                </pageControl>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dSN-di-fJ4" userLabel="Mask View">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="227"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cdz-Jx-t7s" userLabel="Retry Button">
+                            <rect key="frame" x="136" y="101.5" width="103" height="25"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <state key="normal" title=" Tap to retry" image="Hangout_Invite_Fail">
+                                <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Gge-Sv-pcb" userLabel="Noyet Button">
+                            <rect key="frame" x="135.5" y="101.5" width="104" height="25"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <state key="normal" title=" No gifts yet" image="Live_No_Yet_Gifts">
+                                <color key="titleColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <state key="selected" image="Live_No_Yet_Gifts"/>
+                            <state key="highlighted" title=" No gifts yet" image="Live_No_Yet_Gifts"/>
+                        </button>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="4IX-DJ-iDs" userLabel="LoadingView">
+                            <rect key="frame" x="177.5" y="103.5" width="20" height="20"/>
+                            <color key="color" red="0.16862745100000001" green="0.16862745100000001" blue="0.16862745100000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.91372549020000005" green="0.91764705879999997" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="cdz-Jx-t7s" firstAttribute="centerX" secondItem="dSN-di-fJ4" secondAttribute="centerX" id="2o4-sb-JN9"/>
+                        <constraint firstItem="4IX-DJ-iDs" firstAttribute="centerY" secondItem="dSN-di-fJ4" secondAttribute="centerY" id="8j8-cT-7gA"/>
+                        <constraint firstItem="Gge-Sv-pcb" firstAttribute="centerY" secondItem="dSN-di-fJ4" secondAttribute="centerY" id="9GN-zf-MJJ"/>
+                        <constraint firstItem="Gge-Sv-pcb" firstAttribute="centerX" secondItem="dSN-di-fJ4" secondAttribute="centerX" id="XAg-jI-tpO"/>
+                        <constraint firstItem="cdz-Jx-t7s" firstAttribute="centerY" secondItem="dSN-di-fJ4" secondAttribute="centerY" id="eEj-s6-f0i"/>
+                        <constraint firstItem="4IX-DJ-iDs" firstAttribute="centerX" secondItem="dSN-di-fJ4" secondAttribute="centerX" id="hkw-YS-TFU"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="fvN-IJ-1tf" firstAttribute="top" secondItem="zT2-fD-dgQ" secondAttribute="bottom" constant="26" id="0EY-dg-VPe"/>
+                <constraint firstItem="dSN-di-fJ4" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="J2c-J2-h1H"/>
+                <constraint firstAttribute="bottom" secondItem="dSN-di-fJ4" secondAttribute="bottom" id="SsA-yc-szz"/>
+                <constraint firstItem="zT2-fD-dgQ" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Vou-8Z-cKo"/>
+                <constraint firstAttribute="trailing" secondItem="zT2-fD-dgQ" secondAttribute="trailing" constant="30" id="Z16-nb-Gtx"/>
+                <constraint firstAttribute="trailing" secondItem="dSN-di-fJ4" secondAttribute="trailing" id="aUh-cn-1oI"/>
+                <constraint firstItem="fvN-IJ-1tf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="clm-mo-G4J"/>
+                <constraint firstAttribute="bottom" secondItem="RzD-BL-78o" secondAttribute="bottom" id="dna-cf-0R5"/>
+                <constraint firstItem="zT2-fD-dgQ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="30" id="nj1-b9-zbZ"/>
+                <constraint firstItem="RzD-BL-78o" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ryq-jw-Zxl"/>
+                <constraint firstAttribute="trailing" secondItem="fvN-IJ-1tf" secondAttribute="trailing" id="shb-uu-gGO"/>
+                <constraint firstItem="dSN-di-fJ4" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="srb-iQ-OUr"/>
+                <constraint firstItem="zT2-fD-dgQ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="28" id="zYN-6R-4hk"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="collectionView" destination="fvN-IJ-1tf" id="trm-ua-83z"/>
+                <outlet property="loadingView" destination="4IX-DJ-iDs" id="d20-3O-g8C"/>
+                <outlet property="maskView" destination="dSN-di-fJ4" id="Ava-Ao-QUt"/>
+                <outlet property="noyetButton" destination="Gge-Sv-pcb" id="3MQ-8D-x60"/>
+                <outlet property="pageView" destination="RzD-BL-78o" id="GOM-9k-9DA"/>
+                <outlet property="retryButton" destination="cdz-Jx-t7s" id="zep-au-ce8"/>
+            </connections>
+            <point key="canvasLocation" x="24.5" y="52.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Hangout_Invite_Fail" width="25" height="25"/>
+        <image name="Live_No_Yet_Gifts" width="25" height="25"/>
+    </resources>
+</document>

@@ -139,6 +139,8 @@
             make.left.top.height.equalTo(self);
         }];
         self.linkUrl = item.linkStr;
+    } else {
+        self.tapBtn.hidden = YES;
     }
 }
 

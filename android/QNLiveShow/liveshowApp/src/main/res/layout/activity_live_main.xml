@@ -1,19 +1,261 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--xmlns:button="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent">-->
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewPagerContent"
+    <!--&lt;!&ndash; Title &ndash;&gt;-->
+    <!--<include-->
+        <!--android:id="@+id/includeTitle"-->
+        <!--layout="@layout/include_main_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/actionbar_height"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true" />-->
+
+    <!--&lt;!&ndash; 列表 &ndash;&gt;-->
+    <!--<RelativeLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@id/includeTitle"-->
+        <!--android:background="@color/white">-->
+        <!--&lt;!&ndash; tab &ndash;&gt;-->
+        <!--<com.qpidnetwork.livemodule.view.BottomNavigationViewEx-->
+            <!--android:id="@+id/navigation"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="@color/white"-->
+            <!--app:itemIconTint="@color/selector_nav_item_color"-->
+            <!--app:itemTextColor="@color/selector_nav_item_color"-->
+            <!--app:menu="@menu/live_main_navigation" />-->
+
+        <!--<android.support.v4.view.ViewPager-->
+            <!--android:id="@+id/viewPagerContent"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_above="@id/navigation" />-->
+
+    <!--</RelativeLayout>-->
+
+    <!--&lt;!&ndash; 登录中遮罩 &ndash;&gt;-->
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_login_loading"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@id/includeTitle"-->
+        <!--android:background="@color/white">-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_main_login"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical">-->
+            <!--<ProgressBar-->
+                <!--android:id="@+id/progressBar1"-->
+                <!--style="@android:style/Widget.ProgressBar.Small"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+                <!--android:text="@string/tip_loading"/>-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+            <!--android:id="@+id/ll_main_login_fail"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerInParent="true"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical"-->
+            <!--android:visibility="gone">-->
+
+            <!--<ImageView-->
+                <!--android:layout_width="@dimen/live_size_60dp"-->
+                <!--android:layout_height="@dimen/live_size_60dp"-->
+                <!--android:src="@drawable/icon_data_empty"/>-->
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+                <!--android:text="@string/tip_failed_to_load"/>-->
+
+            <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+                <!--android:id="@+id/btn_reload"-->
+                <!--android:layout_width="@dimen/live_size_140dp"-->
+                <!--android:layout_height="@dimen/live_size_40dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+                <!--button:background="@color/blue_color"-->
+                <!--button:title="@string/tip_reload"-->
+                <!--button:title_color="@color/white"-->
+                <!--button:raisebutton_radius="@dimen/live_size_16dp"-->
+                <!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />-->
+
+        <!--</LinearLayout>-->
+
+    <!--</RelativeLayout>-->
+
+
+<!--</RelativeLayout>-->
+
+<!-- 改版 1 -->
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/actionbar_height"
-        />
-    
-    <include
-        android:id="@+id/includeTitle"
-        layout="@layout/include_main_title"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/actionbar_height"/>
+        android:background="@android:color/white"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <!-- Title -->
+        <LinearLayout
+            android:id="@+id/ll_title"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:layout_gravity="top"
+            android:background="@android:color/white"
+            android:outlineProvider="bounds"
+            android:elevation="4dp">
+
+            <FrameLayout
+                android:id="@+id/fl_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_menu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp"
+                    android:src="@drawable/live_main_nav_menu"/>
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator
+                    xmlns:custom="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/tabPageIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:minHeight="44dp"
+                    custom:digitalHintTextBgColor="@android:color/holo_red_light"
+                    custom:digitalHintTextColor="@android:color/white"
+                    custom:digitalHintTextSize="7sp"
+                    custom:isTitleTxtBold="true"
+                    custom:tabPaddingLeftRight="10dp"
+                    custom:tabSelectedBgColor="@android:color/transparent"
+                    custom:tabUnselectedBgColor="@android:color/transparent"
+                    custom:titleTextColorSelected="#297AF3"
+                    custom:titleTextColorUnselected="#383838"
+                    custom:titleTextSize="14sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:src="@drawable/ic_live_main_tab_devide"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <!-- 内容 -->
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPagerContent"
+            android:layout_marginTop="44dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- 登录中遮罩 -->
+        <RelativeLayout
+            android:id="@+id/rl_login_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="44dp"
+            android:background="@color/white">
+
+            <LinearLayout
+                android:id="@+id/ll_main_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ProgressBar
+                    android:id="@+id/progressBar1"
+                    style="@android:style/Widget.ProgressBar.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/live_size_8dp"
+                    android:text="@string/tip_loading" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_main_login_fail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="@dimen/live_size_60dp"
+                    android:layout_height="@dimen/live_size_60dp"
+                    android:src="@drawable/icon_data_empty" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/live_size_8dp"
+                    android:text="@string/tip_failed_to_load" />
+
+                <com.qpidnetwork.livemodule.view.ButtonRaised
+                    android:id="@+id/btn_reload"
+                    android:layout_width="@dimen/live_size_140dp"
+                    android:layout_height="@dimen/live_size_40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/live_size_8dp"
+                    button:background="@color/blue_color"
+                    button:raisebutton_radius="@dimen/live_size_16dp"
+                    button:title="@string/tip_reload"
+                    button:title_color="@color/white"
+                    button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </FrameLayout>
+
+    <!-- 左则菜单 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_drawer"
+        android:layout_width="297dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/white" />
+
+
+</android.support.v4.widget.DrawerLayout>

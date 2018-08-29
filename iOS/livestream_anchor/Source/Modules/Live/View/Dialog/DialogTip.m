@@ -8,9 +8,11 @@
 
 #import "DialogTip.h"
 #import "LiveBundle.h"
+#import "LSTimer.h"
 
 @interface DialogTip ()
 @property (weak) UIView *view;
+@property (nonatomic, strong) LSTimer *timer;
 @end
 
 @implementation DialogTip
@@ -35,30 +37,45 @@
         [self removeShow];
     }
 
-//    UIWindow *window = [UIApplication sharedApplication].delegate.window;
-//    self.view = view;
     self.tipsLabel.text = tip;
-    //    self.view.userInteractionEnabled = NO;
     [view addSubview:self];
     [view bringSubviewToFront:self];
 
-    [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(view.mas_width).offset(-100);
-        make.centerY.equalTo(view.mas_centerY);
-        make.centerX.equalTo(view);
+    
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(view.mas_width).offset(-100);
+            make.centerY.equalTo(view.mas_centerY);
+            make.centerX.equalTo(view);
+        }];
+        
+        self.isShow = YES;
+        
+        [self sizeToFit];
+    }
+    
+    // 初始化倒数关闭直播间计时器
+    self.timer = [[LSTimer alloc] init];
+    WeakObject(self, weakSelf);
+    [self.timer startTimer:nil timeInterval:3.0 * NSEC_PER_SEC starNow:NO action:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf removeShow];
+        });
     }];
-
-    self.isShow = YES;
-
-    [self sizeToFit];
-    [self performSelector:@selector(removeShow) withObject:nil afterDelay:3.0];
 }
 
 - (void)removeShow {
     self.isShow = NO;
     [self removeFromSuperview];
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
-    //    self.view.userInteractionEnabled = YES;
+    [self stopTimer];
+}
+
+- (void)stopTimer {
+    if (self.timer) {
+        [self.timer stopTimer];
+        self.timer = nil;
+    }
 }
 
 @end

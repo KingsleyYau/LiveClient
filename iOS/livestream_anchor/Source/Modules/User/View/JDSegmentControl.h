@@ -17,14 +17,14 @@
 @interface JDSegmentControl : UIView
 
 @property (nonatomic, weak) id<JDSegmentControlDelegate> delegate;
-
+@property (nonatomic, strong) UIView *bottomView;
 
 
 + (CGFloat)getSegmentControlW:(NSArray *)titles;
 
 - (void)selectButtonTag:(NSInteger)tag;
 
-- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isRegularWidth:(BOOL)isRegularWidth;//是否对称
+- (instancetype)initWithNumberOfTitles:(NSArray *)titles andFrame:(CGRect)frame delegate:(id<JDSegmentControlDelegate>)delegate isSymmetry:(BOOL)isSymmetry isRegularWidth:(BOOL)isRegularWidth isHasBottomView:(BOOL)isHasBottomView;//是否对称
 
 - (void)updateBtnUnreadCount:(NSArray * )countArray;
 @end

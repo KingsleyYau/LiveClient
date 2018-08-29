@@ -59,8 +59,13 @@ public enum HttpLccErrType {
     HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX,          // 邮箱已在QN注册
     HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX,          // 邮箱已在直播独立站注册
     HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN,        // 年龄小于18岁
-    HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL,            // 参数错误
+    HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL,            // 参数错误(61005)
     HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT,           // 密码不正确
     HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL,              // 邮箱未注册
-    HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL           // 邮箱未注册
+    HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL,           // 邮箱未注册
+    HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG,         // 验证码错误
+
+
+    //本地错误(服务器错误码,请在上面增加)
+    LOCAL_ERR_FACEBOOL_LOGIN_FAIL                       // facebook登录错误
 }

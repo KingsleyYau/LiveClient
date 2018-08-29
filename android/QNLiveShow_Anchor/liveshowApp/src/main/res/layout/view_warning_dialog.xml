@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <LinearLayout
+        android:background="@drawable/bg_custom_dialog_warning"
+        android:id="@+id/ll_warnContent"
+        android:layout_marginLeft="@dimen/custom_dialog_left_right_margin"
+        android:layout_marginRight="@dimen/custom_dialog_left_right_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_system_notice_warning"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/system_notice_warning_title"
+                android:textColor="@color/liveroom_warnging_dialog_title"
+                android:textStyle="bold"
+                android:textSize="13sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_warningContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="18dp"
+            android:layout_marginTop="13dp"
+            android:lineSpacingExtra="2dp"
+            android:text="You have violated our Broadcaster Code of Conduct. Please rectify any misconduct immediately."
+
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:textSize="@dimen/custom_dialog_text_size_simple"/>
+
+        <TextView
+            android:id="@+id/tv_OK"
+            android:layout_width="wrap_content"
+            android:minWidth="105dp"
+            android:layout_height="wrap_content"
+            android:minHeight="30dp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:background="@drawable/bg_warning_dialog_confirm"
+            android:text="@string/common_btn_ok"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="22dp"
+            />
+    </LinearLayout>
+
+</LinearLayout>

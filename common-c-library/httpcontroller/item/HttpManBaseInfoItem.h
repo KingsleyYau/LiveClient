@@ -57,7 +57,7 @@ public:
             }
             /* userType */
             if(root[LIVEROOM_GETMANBASEINFO_USERTYPE].isNumeric()) {
-                userType = (UserType)root[LIVEROOM_GETMANBASEINFO_USERTYPE].asInt();
+                userType = GetIntToUserType(root[LIVEROOM_GETMANBASEINFO_USERTYPE].asInt());
             }
             /* gaUid */
             if (root[LIVEROOM_GETMANBASEINFO_GAUID].isString()) {

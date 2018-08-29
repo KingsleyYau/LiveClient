@@ -24,7 +24,7 @@
     self = [super initWithCoder:aDecoder];
     
     if (self) {
-        self.imageLoader = [LSImageViewLoader loader];
+       
     }
     return self;
 }
@@ -38,13 +38,9 @@
     }
     self.headImageView.layer.masksToBounds = YES;
     
-    if (!audienModel.photoUrl.length) {
-        [self.headImageView setImage:audienModel.image];
-    } else {
-        [self.imageLoader stop];
-        [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
-                            placeholderImage:audienModel.image];
-    }
+     self.imageLoader = [LSImageViewLoader loader];
+    [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
+                        placeholderImage:audienModel.image];
     
     if (audienModel.isHasTicket) {
         self.showIcon.hidden = NO;

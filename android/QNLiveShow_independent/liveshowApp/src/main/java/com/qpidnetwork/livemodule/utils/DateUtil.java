@@ -69,4 +69,21 @@ public class DateUtil {
         }
         return dateStr;
     }
+
+    /**
+     * 将时间戳转为　你喜欢的格式
+     * @param dateStr 日期字符串 (2018-01-01)
+     * @return 如果失败,则返回Null
+     */
+    public static Date getDate(String dateStr , String format){
+        Date date = null;
+
+        DateFormat dateFormat = new SimpleDateFormat(format , Locale.ENGLISH);
+        try {
+            date = dateFormat.parse(dateStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 }

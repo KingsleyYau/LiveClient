@@ -7,8 +7,8 @@
     <corners android:radius="@dimen/live_swicth_book_radius" />
     <!-- 变化率 -->
     <gradient
-        android:endColor="@color/talent_violet"
-        android:startColor="@color/talent_violet" />
+        android:endColor="@color/live_switch_on_bg"
+        android:startColor="@color/live_switch_on_bg" />
 
 
 </shape>

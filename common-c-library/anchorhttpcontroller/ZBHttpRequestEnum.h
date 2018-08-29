@@ -39,41 +39,11 @@ typedef enum {
     ZBHTTP_ERR_IDENTITY_FAILURE = 16173,        // 身份失效
     ZBHTTP_LCC_ERR_VERIFICATIONCODE        = 1,     // 验证码错误
     ZBHTTP_LCC_ERR_CANCEL_FAIL_INVITE = 16205, // 取消失败，观众已接受
-    
-//    /* 其它错误码*/
-//    HTTP_LCC_ERR_USED_OUTLOG = 10051, // 退出登录 (用户主动退出登录)
-//    HTTP_LCC_ERR_NOTCAN_CANCEL_INVITATION = 10036, // 取消立即私密邀请失败 状态不是带确认 /*important*/
-//    HTTP_LCC_ERR_NOT_FIND_ANCHOR = 10026, // 主播机构信息找不到
-//    HTTP_LCC_ERR_NOTCAN_REFUND = 10032, // 立即私密退点失败，已经定时扣费不能退点
-//    HTTP_LCC_ERR_NOT_FIND_PRICE_INFO = 10024, // 找不到price_setting表信息
-//    HTTP_LCC_ERR_ANCHOR_BUSY = 10035, // 立即私密邀请失败 主播繁忙--存在即将开始的预约 /*important*/
-//    HTTP_LCC_ERR_CHOOSE_TIME_ERR = 10042, // 预约时间错误 /*important*/
-//    HTTP_LCC_ERR_BOOK_EXIST = 10043, // 用户预约时间段已经存在预约 /*important*/
-//    HTTP_LCC_ERR_BIND_PHONE = 10064, // 手机号码已绑定
-//    HTTP_LCC_ERR_RETRY_PHONE = 10065, // 请稍后再重试
-//    HTTP_LCC_ERR_MORE_TWENTY_PHONE = 10066, // 60分钟内验证超过20次，请24小时后再试
-//    HTTP_LCC_ERR_UPDATE_PHONE_FAIL = 10067, // 更新失败
-//    HTTP_LCC_ERR_ANCHOR_OFFLIVE = 10059,       // 主播不在线，不能操作
-//    HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING = 10072, // 观众已同意预约
-//    HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING = 10073, // 预约邀请已超时（当观众拒绝时）
-//    HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING = 10078,   // 预约邀请已超时（当观众同意时）
-//    HTTP_LCC_ERR_FACEBOOK_NO_MAILBOX = 61001,     // Facebook没有邮箱（需要提交邮箱）
-//    HTTP_LCC_ERR_FACEBOOK_EXIST_QN_MAILBOX = 61002, // Facebook邮箱已在QN注册（需要换邮箱）
-//    HTTP_LCC_ERR_FACEBOOK_EXIST_LS_MAILBOX = 61003,  // Facebook邮箱已在直播独立站注册（需要输入密码）
-//    HTTP_LCC_ERR_FACEBOOK_TOKEN_INVALID = 61004,     // Facebook token无效登录失败
-//    HTTP_LCC_ERR_FACEBOOK_PARAMETER_FAIL = 61005,    // 参数错误
-//    HTTP_LCC_ERR_FACEBOOK_ALREADY_REGISTER = 61006,  // Facebook帐号已在QN注册（提示错误）
-//    HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX = 62001,          // 邮箱已在QN注册
-//    HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX = 62002,          // 邮箱已在直播独立站注册
-//    HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN = 62003,        // 年龄小于18岁
-//    HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL = 62004,            // 参数错误
-//    HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT = 63001,           // 密码不正确
-//    HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL = 63002,              // 邮箱未注册
-//    HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL = 64001,           // 邮箱未注册
-//    HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG = 4,            // 验证码错误
+
     ZBHTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
     ZBHTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE = -22335,                 // 其他设备登录，这里时本地返回的，仅用于ios
 //    HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN = -22336         // 其他设备登录，这里时本地返回的，仅用于ios
+    ZBHTTP_LCC_ERR_VIEWER_OPEN_KNOCK = 10137,                 // 观众已开门
  } ZBHTTP_LCC_ERR_TYPE;
 
 
@@ -185,5 +155,27 @@ typedef enum {
     ANCHORPUBLICROOMTYPE_PROGRAM = 1            // 节目
     
 }AnchorPublicRoomType;
+
+// 多人朋友类型
+typedef enum {
+    ANCHORFRIENDTYPE_REQUESTING = 0,        // 请求中
+    ANCHORFRIENDTYPE_YES = 1,               // 是
+    ANCHORFRIENDTYPE_NO = 2,                 // 否
+    ANCHORFRIENDTYPE_BEGIN = ANCHORFRIENDTYPE_REQUESTING,
+    ANCHORFRIENDTYPE_END = ANCHORFRIENDTYPE_NO
+}AnchorFriendType;
+
+// int 转换 UserType
+inline AnchorFriendType GetIntToAnchorFriendType(int value) {
+    return ANCHORFRIENDTYPE_BEGIN <= value && value <= ANCHORFRIENDTYPE_END ? (AnchorFriendType)value : ANCHORFRIENDTYPE_REQUESTING;
+}
+
+// 在线状态
+typedef enum {
+    ANCHORONLINESTATUS_UNKNOW = -1,     // 未知
+    ANCHORONLINESTATUS_OFF = 0,         // 离线
+    ANCHORONLINESTATUS_ON = 1           // 在线
+    
+}AnchorOnlineStatus;
 
 #endif

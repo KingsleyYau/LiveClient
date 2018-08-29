@@ -32,11 +32,13 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.widget.statusbar.StatusBarUtil;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
+import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
+import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
@@ -50,6 +52,7 @@ import com.qpidnetwork.livemodule.utils.Log;
 public class BaseWebViewActivity extends BaseActionBarFragmentActivity implements IAuthorizationListener, JSCallbackListener {
 
     private static final int LOGIN_CALLBACK = 10001;
+    private static final int PAGE_ERROR_BUTTON_EVENT = 10002;
 
     public static final String WEB_URL = "web_url";
     public static final String WEB_TITLE = "web_title";
@@ -82,6 +85,9 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     //页面是否load成功
     private boolean mIsPageLoadFinish = false;      //解决页面load未完成，物理返回键被hold住问题(js 无响应)
 
+    //解决主播页操作后，中间跳转买点页面，返回主播页面由于removeAllCookie 导致页面cookie丢失
+    private boolean mIsNeedResume = false;              //标志是否stop后返回
+
     /**
      * 接口消息
      */
@@ -98,7 +104,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         initViewData();
         LoginManager loginManager = LoginManager.getInstance();
         if(null != loginManager){
-            loginManager.register(this);
+            loginManager.addListener(this);
         }
 
     }
@@ -108,6 +114,10 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         super.onResume();
         //激活webview为活跃状态,能正常执行网页的响应
         mWebView.onResume();
+        if(mIsNeedResume){
+            syncCookie();
+        }
+        mIsNeedResume = false;
         //add by Jagger
 //        try {
 //            mWebView.getClass().getMethod("onResume" , new Class<?>[]{}).invoke(mWebView,(Object[])null);
@@ -123,6 +133,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         //当页面被失去焦点/被切换到后台不可见状态，需要执行onPause，通过onPause动作通知内核暂停所有动作，比如DOM的解析，
         //plugin的执行，Javascript的执行
         mWebView.onPause();
+        mIsNeedResume = true;
         //add by Jagger
 //        try {
 //            mWebView.getClass().getMethod("onPause", new Class<?>[]{}).invoke(mWebView,  (Object[])null);
@@ -148,6 +159,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         view_errorpage.setVisibility(View.GONE);
         btnRetry = (Button) findViewById(R.id.btnRetry);
         btnRetry.setOnClickListener(this);
+        btnRetry.setText(getString(R.string.common_btn_tap_to_retry));
         pb_loading = (ProgressBar) findViewById(R.id.pb_loading);
         LinearLayout.LayoutParams webviewLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -177,6 +189,17 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
         webSettings.setBuiltInZoomControls(true);
         //隐藏原生的缩放控件
         webSettings.setDisplayZoomControls(false);
+
+        //参考http://www.jb51.net/article/67044.htm,fly那边需要增加以下设置
+        // 开启DOM缓存，开启LocalStorage存储(html5的本地存储方式)
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setAppCacheMaxSize(1024*1024*8);
+        String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();
+        Log.d(TAG,"initWebView-appCachePath:"+appCachePath);
+        webSettings.setAppCachePath(appCachePath);
+        webSettings.setAllowFileAccess(true);
+        webSettings.setAppCacheEnabled(true);
+
         //Android 4.2以下存在漏洞问题,待解决
         mJSCallback = new CallbackAppGAEventJSObj(this.getApplicationContext());
         mJSCallback.setJSCallbackListener(this);
@@ -229,7 +252,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && mIsPageLoadFinish) {
+        if ( keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN && mIsPageLoadFinish && !isLoadError) {
 //            if( mWebView.canGoBack() ) {
 //                mWebView.goBack();
 //            } else {
@@ -254,6 +277,17 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                 if(response.isSuccess){
                     //session 过期重新登陆
                     loadUrl(true, true);
+                }
+            }break;
+
+            case PAGE_ERROR_BUTTON_EVENT:{
+                String errorCode = (String)msg.obj;
+                if(!TextUtils.isEmpty(errorCode)
+                        && errorCode.equals("10004")){
+                    pb_loading.setVisibility(View.VISIBLE);
+                    handleSessionTimeout();
+                }else{
+                    loadUrl(false, false);
                 }
             }break;
 
@@ -285,7 +319,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
     protected void onDestroy() {
         LoginManager loginManager = LoginManager.getInstance();
         if(null != loginManager){
-            loginManager.unRegister(this);
+            loginManager.removeListener(this);
         }
         if(null != mWebView){
             //清除绑定，防止泄露
@@ -344,7 +378,12 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
      * 利用接口和webview共用cookie，通过接口cookie过期自动重登陆实现session过期重登陆，刷新cookie
      */
     private void handleSessionTimeout(){
-        LiveRequestOperator.getInstance().GetHotLiveList(0, 10, false, false, null);
+        LiveRequestOperator.getInstance().GetHotLiveList(0, 10, false, false, new OnGetHotListCallback() {
+            @Override
+            public void onGetHotList(boolean isSuccess, int errCode, String errMsg, HotListItem[] hotList) {
+
+            }
+        });
     }
 
     /*************************** webview JS交互 *********************************/
@@ -364,13 +403,10 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
 
     @Override
     public void onEventPageError(String errorcode) {
-        if(!TextUtils.isEmpty(errorcode)
-                && errorcode.equals("10004")){
-            pb_loading.setVisibility(View.VISIBLE);
-            handleSessionTimeout();
-        }else{
-            loadUrl(true, false);
-        }
+        Message msg = Message.obtain();
+        msg.what = PAGE_ERROR_BUTTON_EVENT;
+        msg.obj = errorcode;
+        sendUiMessage(msg);
     }
 
     /*************************** webview相关 ************************************/
@@ -389,7 +425,7 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
                 if(item != null){
                     String sessionString = item.cName + "=" + item.value;
                     cookieManager.setCookie(item.domain, sessionString);
-                    Log.d(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
+                    Log.logD(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
                 }
             }
         }
@@ -494,9 +530,9 @@ public class BaseWebViewActivity extends BaseActionBarFragmentActivity implement
             System.err.println("onReceivedError-errorCode:"+errorCode+" description:"+description
                     +" failingUrl:"+failingUrl);
             //普通页面错误
-            if(!TextUtils.isEmpty(failingUrl) && failingUrl.contains(mUrl)) {
+//            if(!TextUtils.isEmpty(failingUrl) && failingUrl.contains(mUrl)) {
                 onLoadError();
-            }
+//            }
         }
 
         //del by Jagger 2017-12-14 在6.0以下会死先去掉

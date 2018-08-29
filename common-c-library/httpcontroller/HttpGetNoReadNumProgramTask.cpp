@@ -49,10 +49,6 @@ bool HttpGetNoReadNumProgramTask::ParseData(const string& url, bool bFlag, const
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpGetNoReadNumProgramTask::ParseData( buf : %s )", buf);
-    }
-    
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;

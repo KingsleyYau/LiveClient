@@ -186,7 +186,7 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
                 //未开始
                 leftDay = (bookTime - currTime)/(24 * 60 * 60);
                 leftHour = ((bookTime - currTime)/(60 * 60))%24;
-                leftMinute = ((bookTime - currTime)/60%(60*24));
+                leftMinute = ((((bookTime - currTime)/60)%(60*24))%60);
                 leftSecond = (bookTime - currTime) % 60;
             }
             Log.d(TAG,"calculateAndUpdateLeftTime-bookTime:"+bookTime+" leftDay:"+leftDay

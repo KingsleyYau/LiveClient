@@ -31,6 +31,7 @@
 #include "ZBitem/IMAnchorRecvLeaveRoomItem.h"
 #include "ZBitem/IMAnchorRecvGiftItem.h"
 #include "ZBitem/IMAnchorProgramInfoItem.h"
+#include "ZBitem/IMAnchorRecvHangoutChatItem.h"
 
 using namespace std;
 
@@ -528,6 +529,43 @@ public:
      */
     virtual void OnRecvAnchorGiftNotice(const IMAnchorRecvGiftItem& item) {};
     
+    /**
+     *  10.13.接收多人互动直播间观众启动/关闭视频互动通知回调
+     *
+     *  @param item            互动切换
+     *
+     */
+    virtual void OnRecvAnchorControlManPushHangoutNotice(const ZBControlPushItem item) {};
+    
+    /**
+     *  10.14.发送多人互动直播间文本消息接口 回调
+     *
+     *  @param success          操作是否成功
+     *  @param reqId            请求序列号
+     *  @param errMsg           结果描述
+     *
+     */
+    virtual void OnSendAnchorHangoutLiveChat(SEQ_T reqId, bool success, ZBLCC_ERR_TYPE err, const string& errMsg) {};
+    
+    /**
+     *  10.15.接收直播间文本消息回调
+     *
+     *  @param item            接收直播间的文本消息
+     *
+     */
+    virtual void OnRecvAnchorHangoutChatNotice(const IMAnchorRecvHangoutChatItem& item) {};
+    
+    /**
+     *  10.16.接收进入多人互动直播间倒数通知回调
+     *
+     *  @param roomId            待进入的直播间ID
+     *  @param anchorId          主播ID
+     *  @param leftSecond       进入直播间的剩余秒数
+     *
+     */
+    virtual void OnRecvAnchorCountDownEnterRoomNotice(const string& roomId, const string& anchorId, int leftSecond) {};
+
+    
     // ------------- 节目 -------------
     /**
      *  11.1.接收节目开播通知接口 回调
@@ -716,6 +754,19 @@ public:
      *
      */
     virtual bool SendAnchorHangoutGift(SEQ_T reqId, const string& roomId, const string& nickName, const string& toUid, const string& giftId, const string& giftName, bool isBackPack, int giftNum, bool isMultiClick, int multiClickStart, int multiClickEnd, int multiClickId, bool isPrivate)  = 0;
+    
+    /**
+     *  10.14.发送多人互动直播间文本消息
+     *
+     *  @param reqId         请求序列号
+     *  @param roomId        直播间ID
+     *  @param nickName      发送者昵称
+     *  @param msg           发送的信息
+     *  @param at           用户ID，用于指定接收者（字符串数组）
+     *
+     */
+    virtual bool SendAnchorHangoutLiveChat(SEQ_T reqId, const string& roomId, const string& nickName, const string& msg, const list<string> at) = 0;
+
     
 public:
 	// 获取用户账号

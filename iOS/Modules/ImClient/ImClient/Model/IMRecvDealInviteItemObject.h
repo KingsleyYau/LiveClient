@@ -20,7 +20,6 @@
  * @nickName            主播昵称
  * @photoUrl            主播头像
  * @type                邀请回复（IMANCHORREPLYINVITETYPE_AGREE：接受，IMANCHORREPLYINVITETYPE_REJECT：拒绝，IMANCHORREPLYINVITETYPEE_OUTTIME：邀请超时，IMANCHORREPLYINVITETYPE_CANCEL：观众取消邀请）
- * @expires             主播进入直播间的倒数秒数
  */
 @property (nonatomic, copy) NSString *_Nonnull inviteId;
 @property (nonatomic, copy) NSString *_Nonnull roomId;
@@ -28,5 +27,4 @@
 @property (nonatomic, copy) NSString *_Nonnull nickName;
 @property (nonatomic, copy) NSString *_Nonnull photoUrl;
 @property (nonatomic, assign) IMReplyInviteType type;
-@property (nonatomic, assign) int expires;
 @end

@@ -95,7 +95,11 @@
         return CGSizeZero;
     NSUInteger count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
 
-    return CGSizeMake(self.bounds.size.width * count, self.bounds.size.height);
+    if (self.alwaysBounceVertical) {
+        return CGSizeMake(self.bounds.size.width * count, self.bounds.size.height);
+    } else {
+        return CGSizeMake(self.bounds.size.width * count, 0);
+    }
 }
 
 - (CGPoint)scrollPositionForIndex:(NSUInteger)index {
@@ -142,7 +146,9 @@
     CGRect visibleBounds = self.bounds;
     visibleBounds = CGRectMake(self.contentOffset.x, 0, self.bounds.size.width, 0);
     int firstNeededPageIndex = floorf(CGRectGetMinX(visibleBounds) / CGRectGetWidth(visibleBounds));
-    int lastNeededPageIndex = floorf((CGRectGetMaxX(visibleBounds) - 1) / CGRectGetWidth(visibleBounds));
+    float xIndex = CGRectGetMaxX(visibleBounds) - 1;
+    xIndex = (xIndex > 0)?xIndex:0;
+    int lastNeededPageIndex = floorf(xIndex / CGRectGetWidth(visibleBounds));
     firstNeededPageIndex = MAX(firstNeededPageIndex, 0);
     lastNeededPageIndex = MIN(lastNeededPageIndex, (int)count - 1);
 

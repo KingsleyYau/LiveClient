@@ -40,6 +40,7 @@ using namespace std;
 #define POPPRICE_PARAM         "pop_price"
 #define USECOUPON_PARAM        "use_coupon"
 #define SHARELINK_PARAM        "share_link"
+#define HASTALENT_PARAM        "has_talent"
 
 class RoomInfoItem {
 public:
@@ -162,6 +163,11 @@ public:
             if (root[LIVESHOWTYPE_PARAM].isNumeric()) {
                 liveShowType = GetIMPublicRoomType(root[LIVESHOWTYPE_PARAM].asInt());
             }
+            
+            if (root[HASTALENT_PARAM].isNumeric()) {
+                isHasTalent = root[HASTALENT_PARAM].asInt() == 0 ? false : true;
+            }
+            
         }
 
         result = true;
@@ -192,6 +198,7 @@ public:
         useCoupon = 0;
         shareLink = "";
         liveShowType = IMPUBLICROOMTYPE_COMMON;
+        isHasTalent = false;
     }
     
     virtual ~RoomInfoItem() {
@@ -199,7 +206,7 @@ public:
     }
     
     /**
-     * 礼物列表结构体
+     * 结构体
      * userId                   主播ID
      * nickName                 主播昵称
      * photoUrl                 主播头像url
@@ -226,6 +233,7 @@ public:
      * useCoupon                试聊卷分钟数
      * shareLink                默认分享链接
      * liveShowType             公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
+     * isHasTalent              是否有才艺（false：否，ture：是）
      */
     string          userId;
     string          nickName;
@@ -254,6 +262,7 @@ public:
     int             useCoupon;
     string          shareLink;
     IMPublicRoomType liveShowType;
+    bool            isHasTalent;
 };
 
 

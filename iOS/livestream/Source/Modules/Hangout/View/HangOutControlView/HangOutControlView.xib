@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="HangOutControlView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="300"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k8L-qf-ycy" userLabel="Close Button">
+                    <rect key="frame" x="333" y="210" width="32" height="32"/>
+                    <state key="normal" image="Live_Close_More_HangOut"/>
+                    <connections>
+                        <action selector="closeAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="B19-2g-TjW"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GZg-Cs-ecS" userLabel="Mute Button">
+                    <rect key="frame" x="333" y="167" width="32" height="32"/>
+                    <state key="normal" image="Live_Talkative_HangOut"/>
+                    <connections>
+                        <action selector="muteAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="mk2-Ms-Zas"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m7F-ci-52g" userLabel="Slient Button">
+                    <rect key="frame" x="333" y="124" width="32" height="32"/>
+                    <state key="normal" image="Live_Loud_HangOut"/>
+                    <connections>
+                        <action selector="silentAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="yJ0-Aj-hCU"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xue-Wl-7we" userLabel="End Button">
+                    <rect key="frame" x="333" y="81" width="32" height="32"/>
+                    <state key="normal" image="Live_Exit_HangOut"/>
+                    <connections>
+                        <action selector="endAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="0x0-bV-uyK"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mute" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iez-l6-qDZ">
+                    <rect key="frame" x="291" y="176.5" width="29" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Silent" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DKB-52-GqF">
+                    <rect key="frame" x="288" y="133.5" width="32" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End Hang-out" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SeB-p6-q3m">
+                    <rect key="frame" x="241" y="90.5" width="79" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="Xue-Wl-7we" firstAttribute="leading" secondItem="SeB-p6-q3m" secondAttribute="trailing" constant="13" id="F0f-Pf-J3E"/>
+                <constraint firstItem="k8L-qf-ycy" firstAttribute="trailing" secondItem="GZg-Cs-ecS" secondAttribute="trailing" id="JT1-fW-DrP"/>
+                <constraint firstItem="m7F-ci-52g" firstAttribute="leading" secondItem="DKB-52-GqF" secondAttribute="trailing" constant="13" id="JVD-OY-JXj"/>
+                <constraint firstItem="m7F-ci-52g" firstAttribute="centerY" secondItem="DKB-52-GqF" secondAttribute="centerY" id="Lkq-dq-CAH"/>
+                <constraint firstItem="GZg-Cs-ecS" firstAttribute="leading" secondItem="iez-l6-qDZ" secondAttribute="trailing" constant="13" id="MNW-aq-P3I"/>
+                <constraint firstAttribute="trailing" secondItem="k8L-qf-ycy" secondAttribute="trailing" constant="10" id="OHq-9k-FnG"/>
+                <constraint firstAttribute="bottom" secondItem="k8L-qf-ycy" secondAttribute="bottom" constant="58" id="azK-4I-zbS"/>
+                <constraint firstItem="GZg-Cs-ecS" firstAttribute="trailing" secondItem="m7F-ci-52g" secondAttribute="trailing" id="bCt-z2-Rqk"/>
+                <constraint firstItem="GZg-Cs-ecS" firstAttribute="top" secondItem="m7F-ci-52g" secondAttribute="bottom" constant="11" id="dmH-P8-X73"/>
+                <constraint firstItem="m7F-ci-52g" firstAttribute="trailing" secondItem="Xue-Wl-7we" secondAttribute="trailing" id="ij1-k5-jS2"/>
+                <constraint firstItem="GZg-Cs-ecS" firstAttribute="centerY" secondItem="iez-l6-qDZ" secondAttribute="centerY" id="ldp-xe-9F4"/>
+                <constraint firstItem="m7F-ci-52g" firstAttribute="top" secondItem="Xue-Wl-7we" secondAttribute="bottom" constant="11" id="vjl-AX-Rmt"/>
+                <constraint firstItem="k8L-qf-ycy" firstAttribute="top" secondItem="GZg-Cs-ecS" secondAttribute="bottom" constant="11" id="y4p-QH-TOZ"/>
+                <constraint firstItem="Xue-Wl-7we" firstAttribute="centerY" secondItem="SeB-p6-q3m" secondAttribute="centerY" id="z4x-1Q-1xr"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="closeButton" destination="k8L-qf-ycy" id="wZt-mr-jqE"/>
+                <outlet property="endButton" destination="Xue-Wl-7we" id="zOc-oh-mwG"/>
+                <outlet property="muteButton" destination="GZg-Cs-ecS" id="Xsi-iQ-Ght"/>
+                <outlet property="silentButton" destination="m7F-ci-52g" id="rEb-4Y-yJZ"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="Live_Close_More_HangOut" width="32" height="32"/>
+        <image name="Live_Exit_HangOut" width="32" height="32"/>
+        <image name="Live_Loud_HangOut" width="32" height="32"/>
+        <image name="Live_Talkative_HangOut" width="32" height="32"/>
+    </resources>
+</document>

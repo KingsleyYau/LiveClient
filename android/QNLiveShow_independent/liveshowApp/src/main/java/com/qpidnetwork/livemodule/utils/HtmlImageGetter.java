@@ -196,16 +196,24 @@ public class HtmlImageGetter implements Html.ImageGetter {
     }
 
     /**
-     * 获取表情文本（HTML格式）
-     *
-     * @param input
+     * * 获取表情文本（HTML格式）
+     * @param input 未格式化的文本内容
+     * @param giftMsg 是否为发礼物消息
+     * @param hasHonor  是否含有勋章
      * @return
      */
-    public Spanned getExpressMsgHTML(String input) {
-        Log.logD(TAG,"getExpressMsgHTML-input:"+input);
-        String msg = input.replace("[gift:", "<img src=\"gift");
-        msg = msg.replace("]", "\">");
+    public Spanned getExpressMsgHTML(String input, boolean giftMsg, boolean hasHonor) {
+        Log.logD(TAG,"getExpressMsgHTML-input:"+input+" giftMsg:"+giftMsg+" hasHonor:"+hasHonor);
+        String msg = null;
+        msg = input.replace("[gift:", "<img src=\"gift");
         msg = msg.replace("[medal:", "<img src=\"medal");
+        //为了避免误将实际消息文本中的]替换为">，这里根据消息类型同string资源中对应的格式化字符串匹配检索
+        if(giftMsg){
+            msg = msg.replaceFirst("] </font>", "\"> </font>");
+        }
+        if(hasHonor){
+            msg = msg.replaceFirst("]<b>", "\"><b>");
+        }
         Log.logD(TAG,"getExpressMsgHTML-output:"+msg);
         Spanned span = Html.fromHtml(msg, this, null);
         return span;

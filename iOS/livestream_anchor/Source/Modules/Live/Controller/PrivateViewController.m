@@ -17,16 +17,14 @@
 #import "LSConfigManager.h"
 #import "LSAnchorImManager.h"
 
-#import "DialogTip.h"
+#import "DialogTip.h"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
 #import "DialogOK.h"
 #import "DialogChoose.h"
 #import "TalentDialog.h"
 
-#import "SetFavoriteRequest.h"
 
 #import "RandomGiftModel.h"
 #import "UserInfoManager.h"
-
 
 @interface PrivateViewController () <LiveViewControllerDelegate, PlayViewControllerDelegate, ZBIMManagerDelegate,
                                         ZBIMLiveRoomManagerDelegate, UIAlertViewDelegate>
@@ -70,6 +68,8 @@
     if (self.closeDialogTipView) {
         [self.closeDialogTipView removeFromSuperview];
     }
+    
+    [[DialogTip dialogTip] stopTimer];
     
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
@@ -173,6 +173,9 @@
     self.playVC.liveVC.roomStyleItem.warningStrColor = Color(255, 77, 77, 1);
     self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
     
+    // 视频属性
+    self.playVC.liveVC.liveStreamType = LiveStreamType_ShowHost_Private;
+    
     // 双向视频默认图
     [self.playVC.liveVC.previewImageView setImage:[UIImage imageNamed:@"Interact_Video_Icon"]];
 
@@ -194,9 +197,6 @@
     CGRect frame = self.playVC.chooseGiftListView.frame;
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
-
-    // 初始化推流
-    [self.playVC.liveVC initPublish];
 }
 
 #pragma mark - PlayViewControllerDelegate

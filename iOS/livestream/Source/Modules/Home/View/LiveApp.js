@@ -1,9 +1,9 @@
 var LiveApp ={
     
 callbackAppGAEvent:function(params){
-        var message;
+    var message;
     message = {'CallBack':"callbackAppGAEvent",'Event':params};
-        window.webkit.messageHandlers.LiveApp.postMessage(message);
+    window.webkit.messageHandlers.LiveApp.postMessage(message);
 },
     
 callbackAppCloseWebView:function(){
@@ -30,12 +30,13 @@ callbackWebRechange:function(params){
     window.webkit.messageHandlers.LiveApp.postMessage(message);
 },
     
-callbackAppPublicGAEvent:function(params){
+callbackAppPublicGAEvent:function(parameter1, parameter2, parameter3){
     var message;
-    message = {'CallBack':"callbackAppPublicGAEvent",'Errno':params};
+    message = {'CallBack':"callbackAppPublicGAEvent",'category':parameter1,'event':parameter2,'label':parameter3};
     window.webkit.messageHandlers.LiveApp.postMessage(message);
 }
 };
+
 
 
 

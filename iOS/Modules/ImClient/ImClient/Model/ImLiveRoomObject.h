@@ -44,6 +44,7 @@
  * popPrice                 直播间的POP消息资费
  * useCoupon                试聊卷分钟数
  * shareLink                默认分享链接
+ * isHasTalent              是否有才艺（NO：否，YES：是）
  */
 @property (nonatomic, copy) NSString *_Nonnull userId;
 @property (nonatomic, copy) NSString *_Nonnull nickName;
@@ -71,6 +72,7 @@
 @property (nonatomic, assign) double popPrice;
 @property (nonatomic, assign) int useCoupon;
 @property (nonatomic, copy) NSString *_Nonnull shareLink;
+@property (nonatomic, assign) BOOL isHasTalent;
 
 
 @end

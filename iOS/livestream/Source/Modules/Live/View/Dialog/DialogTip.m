@@ -42,16 +42,18 @@
     [view addSubview:self];
     [view bringSubviewToFront:self];
 
-    [self mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.equalTo(view.mas_width).offset(-DESGIN_TRANSFORM_3X(100));
-        make.centerY.equalTo(view.mas_centerY);
-        make.centerX.equalTo(view);
-    }];
-
-    self.isShow = YES;
-
-    [self sizeToFit];
-    [self performSelector:@selector(removeShow) withObject:nil afterDelay:3.0];
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.equalTo(view.mas_width).offset(-DESGIN_TRANSFORM_3X(100));
+            make.centerY.equalTo(view.mas_centerY);
+            make.centerX.equalTo(view);
+        }];
+        
+        self.isShow = YES;
+        
+        [self sizeToFit];
+        [self performSelector:@selector(removeShow) withObject:nil afterDelay:3.0];
+    }
 }
 
 - (void)removeShow {

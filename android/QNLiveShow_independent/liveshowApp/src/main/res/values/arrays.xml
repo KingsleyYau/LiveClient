@@ -32,7 +32,7 @@
     <!--我的背包-->
     <string-array name="myPackageTags">
         <item>Vouchers</item>
-        <item>Received Gifts</item>
+        <item>My Gifts</item>
         <item>My Rides</item>
     </string-array>
 

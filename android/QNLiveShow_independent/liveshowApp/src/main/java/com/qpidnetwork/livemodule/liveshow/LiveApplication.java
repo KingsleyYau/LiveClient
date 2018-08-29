@@ -7,6 +7,8 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.BuildConfig;
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.picassocompat.PicassoHttpsSupportUtil;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.liveshow.authorization.FacebookSDKManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
@@ -36,18 +38,24 @@ public class LiveApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
+        // 获取是否demo标志
+        isDemo = getResources().getBoolean(R.bool.demo);
+
         //FileCacheManager 单例初始化
         FileCacheManager.newInstance(this);
         // Jni错误捕捉(需要咸鱼httprequest库加载，httprequest库对CrashHandler库有依赖)
         CrashHandlerJni.SetCrashLogDirectory(FileCacheManager.getInstance().getCrashInfoPath());
 
         //Application初始化
-         LiveService.newInstance(this);
+        LiveService.newInstance(this);
 
         //Java Crash日志管理
         CrashHandler.newInstance(this);
         CrashHandler.getInstance().SaveAppVersionFile();
         FacebookSDKManager.getInstance().init(this);
+
+        //Picasso 单例支持https和本地缓存
+        PicassoHttpsSupportUtil.openHttpsSupport(this);
     }
 
     private void setStrictMode() {

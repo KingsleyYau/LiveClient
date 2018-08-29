@@ -19,6 +19,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *infoLabel;
 @property (weak, nonatomic) IBOutlet UIButton *infoBtn;
 @property (nonatomic, strong) DialogTip *dialogTipView;
+@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @end
 
 @implementation MyRidesViewController
@@ -110,6 +111,12 @@
     self.infoBtn.layer.masksToBounds = YES;
     self.infoLabel.text = msg;
     self.infoBtn.hidden = hidden;
+    // 是否没有数据
+    if (hidden) {
+        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
+    }else {
+        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
+    }
     //self.myRidesWaterfallView.hidden = YES;
 }
 

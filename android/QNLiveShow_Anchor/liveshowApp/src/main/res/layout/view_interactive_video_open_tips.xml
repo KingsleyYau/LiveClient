@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_custom_dialog"
+    android:paddingLeft="@dimen/custom_dialog_left_right_margin"
+    android:paddingRight="@dimen/custom_dialog_left_right_margin">
+
+    <RelativeLayout
+        android:paddingBottom="19dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/tv_openTips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="23dp"
+            android:layout_centerHorizontal="true"
+            android:textSize="@dimen/custom_dialog_text_size_simple"
+            android:textColor="@color/custom_dialog_txt_color_simple"
+            android:text="@string/live_inter_video_open"/>
+
+        <LinearLayout
+            android:id="@+id/ll_showTipsChooser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_below="@id/tv_openTips"
+            android:layout_alignRight="@id/tv_openTips"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp">
+            <ImageView
+                android:id="@+id/iv_neverShowAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_interactive_video_never_show_again"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:textSize="11sp"
+                android:textColor="#8a8a8a"
+                android:text="@string/live_inter_video_never_show_again"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_showTipsChooser"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_cancelVideo"
+                android:layout_width="73dp"
+                android:layout_height="30dp"
+                android:background="@drawable/bg_interactive_video_cancel"
+                android:textSize="@dimen/custom_dialog_text_size_simple"
+                android:textColor="@color/custom_dialog_txt_color_btn_no"
+                android:text="@string/live_inter_video_no"
+                android:textAllCaps="false"/>
+            <Button
+                android:id="@+id/btn_confirmVideo"
+                android:layout_width="73dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="48dp"
+                android:background="@drawable/bg_interactive_video_confirm"
+                android:textSize="@dimen/custom_dialog_text_size_simple"
+                android:textColor="@color/custom_dialog_txt_color_btn_yes"
+                android:text="@string/live_inter_video_yes"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

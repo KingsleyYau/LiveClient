@@ -76,6 +76,9 @@ public class LSVideoHardDecoderFrame {
 //			);
 //		}
 
+		// 解码器输出是否字节对齐
+		boolean bStride = (stride == 0);
+
         byteBuffer.position(0);
 		int size = width * height;
 		byteSizeY = size;
@@ -83,7 +86,7 @@ public class LSVideoHardDecoderFrame {
 			byteBufferY = new byte[byteSizeY];
 		}
 
-		if( stride == 0 ) {
+		if( bStride ) {
 			// 不需要字节对齐
 			byteBuffer.get(byteBufferY, 0, byteSizeY);
 		} else {
@@ -104,7 +107,7 @@ public class LSVideoHardDecoderFrame {
 					byteBufferU = new byte[byteSizeU];
 				}
 
-				if( stride == 0 ) {
+				if( bStride ) {
 					// 不需要字节对齐
 					byteBuffer.get(byteBufferU, 0, byteSizeU);
 				} else {
@@ -122,7 +125,7 @@ public class LSVideoHardDecoderFrame {
 					byteBufferV = new byte[byteSizeV];
 				}
 
-				if( stride == 0 ) {
+				if( bStride ) {
 					// 不需要字节对齐
 					byteBuffer.get(byteBufferV, 0, byteSizeV);
 				} else {
@@ -162,7 +165,7 @@ public class LSVideoHardDecoderFrame {
 					byteBufferUV = new byte[byteSizeUV];
 				}
 
-				if( stride == 0 ) {
+				if( bStride ) {
 					// 不需要字节对齐
 					byteBuffer.get(byteBufferUV, 0, byteSizeUV);
 				} else {

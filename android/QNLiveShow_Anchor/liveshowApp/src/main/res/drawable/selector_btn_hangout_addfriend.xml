@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_btn_hangout_anchor_addfriend" android:state_enabled="true"/>
+    <item android:drawable="@drawable/bg_btn_hangout_anchor_friend" android:state_enabled="false"/>
+</selector>

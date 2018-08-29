@@ -11,7 +11,7 @@
 
 @interface IntroduceViewController : LSListViewController
 
-@property (weak, nonatomic) IBOutlet IntroduceView *introduceView;
+@property (weak, nonatomic) IBOutlet IntroduceView *webView;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *introduceTop;
 

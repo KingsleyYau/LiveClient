@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/live_transition_bg_color"
+        android:gravity="center_horizontal">
+        <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+            android:id="@+id/civ_photo"
+            android:layout_width="123dp"
+            android:layout_height="123dp"
+            android:layout_marginTop="72dp"
+            android:src="@drawable/ic_default_photo_man" />
+        <TextView
+            android:id="@+id/tv_manNickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/tv_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginRight="13dp"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="37dp"
+            android:gravity="center"
+            android:text="@string/hangout_liveroom_end"/>
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clear_disabled"
+        android:layout_gravity="right|top"
+        android:padding="16dp" />
+</FrameLayout>

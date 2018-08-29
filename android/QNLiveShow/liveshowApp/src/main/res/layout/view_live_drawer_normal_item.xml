@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="46dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingRight="8dp"
+    android:background="@drawable/touch_feedback_holo_light">
+
+    <ImageView
+        android:id="@+id/iv_itemIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_live_menu_item_message"
+        android:layout_marginLeft="24dp" />
+
+    <FrameLayout
+        android:layout_marginLeft="14dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_itemTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="left|center_vertical"
+            android:textColor="#383838"
+            android:textSize="16sp" />
+
+        <com.qpidnetwork.livemodule.view.DotView.DotView
+            android:id="@+id/dv_digitalHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="6dp"
+            android:minWidth="6dp"
+            android:maxHeight="14dp"
+            android:text="1"
+            android:layout_gravity="center_vertical|right"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:layout_marginRight="8dp"
+            app:dotPadding="3dp"/>
+
+    </FrameLayout>
+
+
+</LinearLayout>

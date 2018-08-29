@@ -2,6 +2,7 @@ package com.qpidnetwork.livemodule.im;
 
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 
 /**
@@ -93,9 +94,9 @@ public interface IMOtherEventListener {
 
 	/**
 	 * 9.2.观众亲密度升级通知
-	 * @param lovelevel
+	 * @param lovelevelItem
 	 */
-	public void OnRecvLoveLevelUpNotice(int lovelevel);
+	public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem);
 
 	/**
 	 * 9.3.背包更新通知

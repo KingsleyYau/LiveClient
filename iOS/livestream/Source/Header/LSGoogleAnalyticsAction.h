@@ -76,4 +76,16 @@
 #define ShowCalendarClickRecommendShow @"click_RecommendShow"
 #define ShowShowStart @"show_ShowStart"
 #define ClickShowStart @"click_ShowStart"
+
+//多人直播
+#define ClickHangOut @"click_HangOut"
+#define EnterHangOut @"enter_HangOutBroadcast"
+
+#define InviteHangOut @"Invite_ToHangOut"
+#define ClickTwoWay @"click_TwoWayVideo"
+#define ClickHangOutInviteBroadcaster @"click_InviteBroadcaster"
+#define ClickSendInviteBroadcast @"send_HangOutInvitation"
+#define ClickHangOutNow @"click_HangOutNow"
+#define ClickOpenDoor @"click_OpenDoor"
+
 #endif /* LSGoogleAnalyticsAction_h */

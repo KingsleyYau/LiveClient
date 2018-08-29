@@ -16,6 +16,10 @@ public class PushNotificationIdGenerator {
     private static final int NOTIFICATION_SCHEDULE_INVITE_BASE_ID = 100000;
     private static final int NOTIFICATION_SCHEDULE_INVITE_MAX_COUNT = 10;
 
+    //节目开播通知默认设置
+    private static final int NOTIFICATION_SHOW_START_BASE_ID = 110000;
+    private static final int NOTIFICATION_SHOW_START_MAX_COUNT = 10;
+
     private HashMap<PushMessageType, Integer> mTypeCurrentIdMap;
 
 
@@ -40,6 +44,9 @@ public class PushNotificationIdGenerator {
             case Schedule_Invite_Expired:{
                 currentNotificationId = NOTIFICATION_SCHEDULE_INVITE_BASE_ID + ++currentNotificationId%NOTIFICATION_SCHEDULE_INVITE_MAX_COUNT;
             }break;
+            case Program_Show_Start:{
+                currentNotificationId = NOTIFICATION_SHOW_START_BASE_ID + ++currentNotificationId%NOTIFICATION_SHOW_START_MAX_COUNT;
+            }break;
         }
         mTypeCurrentIdMap.put(type, currentNotificationId);
         return currentNotificationId;
@@ -55,6 +62,9 @@ public class PushNotificationIdGenerator {
             case Schedule_Invite_Expired:{
                 baseId = NOTIFICATION_SCHEDULE_INVITE_BASE_ID;
             }break;
+            case Program_Show_Start:{
+                baseId = NOTIFICATION_SHOW_START_BASE_ID;
+            }break;
         }
         return baseId;
     }
@@ -67,6 +77,9 @@ public class PushNotificationIdGenerator {
             }break;
             case Schedule_Invite_Expired:{
                 maxCount = NOTIFICATION_SCHEDULE_INVITE_MAX_COUNT;
+            }break;
+            case Program_Show_Start:{
+                maxCount = NOTIFICATION_SHOW_START_MAX_COUNT;
             }break;
         }
         return maxCount;

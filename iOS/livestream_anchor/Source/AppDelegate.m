@@ -18,7 +18,6 @@
 #import "LiveUrlHandler.h"
 #import "LiveModule.h"
 #import "CrashLogManager.h"
-#import "LSRequestManager.h"
 
 #pragma mark - Http Server
 #import "GCDWebDAVServer.h"
@@ -176,8 +175,8 @@
     // 配置假服务器路径
     if( self.demo ) {
         webSite = @"https://demo.charmlive.com";
-//        webSite = @"http://192.168.88.17:8817";
-        webSite = @"http://172.25.32.17:8817";
+ //       webSite = @"http://192.168.88.17:8817";
+//        webSite = @"http://172.25.32.17:8817";
         
     } else {
         // 配置真是环境
@@ -242,7 +241,7 @@
     
    NSString *proxy = [LSURLQueryParam urlParamForKey:@"httpproxy" url:url];
     if (proxy) {
-       [LSRequestManager setProxy:proxy];
+       [LSAnchorRequestManager setProxy:proxy];
     }
 }
 

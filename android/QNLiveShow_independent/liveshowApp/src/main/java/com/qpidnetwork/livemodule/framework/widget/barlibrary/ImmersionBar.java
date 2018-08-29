@@ -1788,7 +1788,7 @@ public class ImmersionBar {
 
     /**
      * 取消注册emui3.1导航栏监听函数
-     * Un register emui 3 1.
+     * Un addListener emui 3 1.
      */
     private void unRegisterEMUI3_1() {
         if (OSUtils.isEMUI3_1()) {

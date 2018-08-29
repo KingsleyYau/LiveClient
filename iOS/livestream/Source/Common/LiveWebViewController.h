@@ -6,9 +6,9 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSListViewController.h"
+#import "LSGoogleAnalyticsViewController.h"
 
-@interface LiveWebViewController : LSListViewController
+@interface LiveWebViewController : LSGoogleAnalyticsViewController
 
 @property (nonatomic, copy) NSString *url;
 

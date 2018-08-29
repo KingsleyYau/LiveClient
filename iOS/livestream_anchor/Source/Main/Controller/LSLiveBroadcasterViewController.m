@@ -58,6 +58,7 @@
 - (void)dealloc
 {
     [self.unreadCountManager removeDelegate:self];
+    [self.dialogTipView stopTimer];
 }
 
 - (void)viewDidLoad {
@@ -72,7 +73,9 @@
     self.requestManager = [LSAnchorRequestManager manager];
     
     NSArray *title =  @[@"Todos"];
-    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH - 20, 35) delegate:self isSymmetry:YES isRegularWidth:YES];
+    self.segment = [[JDSegmentControl alloc] initWithNumberOfTitles:title andFrame:CGRectMake(10, 0, SCREEN_WIDTH, 35) delegate:self isSymmetry:YES isRegularWidth:YES isHasBottomView:YES];
+    CGRect frame = self.segment.bottomView.frame;
+    self.segment.bottomView.frame = frame;
     [self.topView addSubview:self.segment];
     
     [self.bottomView addSubview:self.badge];
@@ -106,6 +109,7 @@
     [self getTodayCredit];
     [self getUnreadSheduledBooking];
     [self getCornfirmScheduledBooking];
+    [self.unreadCountManager getUnreadShowCalendar];
     self.navigationController.navigationBar.hidden = NO;
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.navigationBar.barTintColor = COLOR_WITH_16BAND_RGB(0x297AF3);
@@ -197,6 +201,16 @@
 
     }];
 }
+
+- (void)onGetUnreadShowCalendar:(int)count {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        LSTodosViewController *vc = (LSTodosViewController *)[self.viewControllers objectAtIndex:0];
+        vc.unReadShowCount = count;
+        [vc.tableView reloadData];
+    });
+}
+
+
 
 - (void)getReservationList {
     [[LSAnchorRequestManager manager] anchorManHandleBookingList:ZBBOOKINGLISTTYPE_COMFIRMED start:0 step:20 finishHandler:^(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, ZBBookingPrivateInviteListObject * _Nonnull item ) {

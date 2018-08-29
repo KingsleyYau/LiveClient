@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_input_edit_body"
+    android:layout_width="match_parent"
+    android:layout_height="49dp"
+    android:background="@color/private_liveroom_sendmsg_bg"
+    android:gravity="center"
+    android:clickable="true"
+    android:visibility="visible"
+    android:onClick="onClick"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/et_liveMsg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:ellipsize="end"
+            android:hint="@string/txt_hint_input_general"
+            android:textColorHint="@color/private_liveroom_sendmsg_hint"
+            android:textColor="@color/private_liveroom_sendmsg_hint"
+            android:textSize="13sp"
+            android:gravity="center_vertical"
+            android:imeOptions="actionSend"
+            android:singleLine="true"/>
+        <ImageView
+            android:id="@+id/iv_emojiSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_liveroom_emojiswitch"
+            android:paddingRight="8dp"
+            android:paddingLeft="2dp"
+            android:visibility="gone"
+            android:scaleType="centerInside"
+            android:onClick="onClick"
+            />
+        <ImageView
+            android:id="@+id/iv_gift"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_liveroom_buttom_gift_private"
+            android:onClick="onClick" />
+
+        <ImageView
+            android:id="@+id/iv_recommend"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_hangout"
+            android:onClick="onClick"
+            android:visibility="gone"/>
+</LinearLayout>
+

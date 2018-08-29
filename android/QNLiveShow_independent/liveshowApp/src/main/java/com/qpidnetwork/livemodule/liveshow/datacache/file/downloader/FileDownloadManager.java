@@ -296,7 +296,7 @@ public class FileDownloadManager {
 
         @Override
         protected void error(BaseDownloadTask task, Throwable e) {
-//            Log.d(TAG,"error-task.url:"+task.getUrl()+" errmsg:"+e.getMessage());
+//            Log.d(TAG,"error-task.url:"+task.getUrl()+" errMsg:"+e.getMessage());
             e.printStackTrace();
             //清除监听器
             removeSingleTaskListener(task.getUrl());

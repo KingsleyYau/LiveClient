@@ -57,10 +57,6 @@ bool HttpGetHangoutInvitStatusTask::ParseData(const string& url, bool bFlag, con
             bFlag?"true":"false"
             );
     
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpGetHangoutInvitStatusTask::ParseData( buf : %s )", buf);
-    }
-    
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     bool bParse = false;
@@ -72,7 +68,7 @@ bool HttpGetHangoutInvitStatusTask::ParseData(const string& url, bool bFlag, con
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             if (dataJson[LIVEROOM_GETHANGOUTINVITSTATUS_STATUS].isNumeric()) {
-                status = (HangoutInviteStatus)dataJson[LIVEROOM_GETHANGOUTINVITSTATUS_STATUS].asInt();
+                status = GetIntToHangoutInviteStatus(dataJson[LIVEROOM_GETHANGOUTINVITSTATUS_STATUS].asInt());
             }
             if (dataJson[LIVEROOM_GETHANGOUTINVITSTATUS_ROOMID].isString()) {
                 roomId = dataJson[LIVEROOM_GETHANGOUTINVITSTATUS_ROOMID].asString();

@@ -141,11 +141,7 @@ bool HttpOwnRegisterTask::ParseData(const string& url, bool bFlag, const char* b
             url.c_str(),
             bFlag?"true":"false"
             );
-    
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpOwnRegisterTask::ParseData( buf : %s )", buf);
-    }
-    
+
     string sessionId = "";
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";

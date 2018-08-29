@@ -18,7 +18,6 @@
         self.nickName = [coder decodeObjectForKey:@"nickName"];
         self.photoUrl = [coder decodeObjectForKey:@"photoUrl"];
         self.type = [coder decodeIntForKey:@"type"];
-        self.expires = [coder decodeIntForKey:@"expires"];
     }
     return self;
 }
@@ -30,7 +29,6 @@
     [coder encodeObject:self.nickName forKey:@"nickName"];
     [coder encodeObject:self.photoUrl forKey:@"photoUrl"];
     [coder encodeInt:self.type forKey:@"type"];
-    [coder encodeInt:self.expires forKey:@"expires"];
 
 }
 

@@ -70,6 +70,7 @@
 #include "HttpCancelInviteHangoutTask.h"
 #include "HttpGetHangoutInvitStatusTask.h"
 #include "HttpDealKnockRequestTask.h"
+#include "HttpGetHangoutGiftListTask.h"
 
 #include "HttpChangeFavouriteTask.h"
 #include "HttpBuyProgramTask.h"
@@ -77,6 +78,11 @@
 #include "HttpGetNoReadNumProgramTask.h"
 #include "HttpGetShowRoomInfoTask.h"
 #include "HttpShowListWithAnchorIdTask.h"
+#include "HttpGetPrivateMsgFriendListTask.h"
+#include "HttpGetFollowPrivateMsgFriendListTask.h"
+#include "HttpGetPrivateMsgHistoryByIdTask.h"
+#include "HttpGetTotalNoreadNumTask.h"
+#include "HttpSetPrivateMsgReadedTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -994,6 +1000,19 @@ public:
                              );
     
     /**
+     * 6.17.获取私信消息列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetTotalNoreadNum(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestGetTotalNoreadNumCallback* callback = NULL
+                                );
+    
+    /**
      * 7.1.获取买点信息（仅独立）（仅iOS）
      *
      * @param pHttpRequestManager           http管理器
@@ -1138,6 +1157,21 @@ public:
                                 );
     
     /**
+     * 8.6.获取多人互动直播间可发送的礼物列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param roomId                        直播间ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetHangoutGiftList(
+                               HttpRequestManager *pHttpRequestManager,
+                               const string& roomId,
+                               IRequestGetHangoutGiftListCallback* callback = NULL
+                               );
+    
+    /**
      * 9.1.获取节目未读数
      *
      * @param pHttpRequestManager           http管理器
@@ -1238,6 +1272,72 @@ public:
                              ShowRecommendListType sortType,
                              IRequestShowListWithAnchorIdTCallback* callback = NULL
                              );
+    
+    /**
+     * 10.1.获取私信联系人列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPrivateMsgFriendList(
+                                      HttpRequestManager *pHttpRequestManager,
+                                      IRequestGetPrivateMsgFriendListCallback* callback = NULL
+                                   );
+    
+    /**
+     * 10.2.获取私信Follow联系人列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetFollowPrivateMsgFriendList(
+                                            HttpRequestManager *pHttpRequestManager,
+                                            IRequestGetFollowPrivateMsgFriendListCallback* callback = NULL
+                                            );
+    
+    /**
+     * 10.3.获取私信消息列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param toId                          私信联系人ID
+     * @param startMsgId                    起始私信消息ID（可无，无或空则表示从最新获取批定条数）
+     * @param order                         排序类型（PRIVATEMSGORDERTYPE_OLD：获取比start_msgid旧的消息，PRIVATEMSGORDERTYPE_NEW：获取比start_msgid新的消息）（整型）（可无，仅当start_msgid不为空时有效）
+     * @param limit                         消息数量（整型）（可无，当start_msgid不为空且order=1时无效）
+     * @param reqId                         请求ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPrivateMsgHistoryById(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   const string& toId,
+                                   const string& startMsgId,
+                                   PrivateMsgOrderType order,
+                                   int limit,
+                                   int reqId,
+                                   IRequestGetPrivateMsgHistoryByIdCallback* callback = NULL
+                                   );
+    
+    /**
+     * 10.4.标记私信已读
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param toId                          私信联系人ID
+     * @param msgId                         最后一条消息id
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SetPrivateMsgReaded(
+                                       HttpRequestManager *pHttpRequestManager,
+                                       const string& toId,
+                                       const string& msgId,
+                                       IRequestSetPrivateMsgReadedCallback* callback = NULL
+                                       );
     
 private:
     void OnTaskFinish(IHttpTask* task);

@@ -21,6 +21,9 @@ using namespace std;
 #define CREDIT_PARAM                "credit"
 #define STATUS_PARAM                "status"
 #define REBATECREDIT                "rebate_credit"
+#define GIFTID_PARAM                "gift_id"
+#define GIFTNAME_PARAM              "gift_name"
+#define GIFTNUM_PARAM               "gift_num"
 
 
 class TalentReplyItem {
@@ -50,11 +53,26 @@ public:
             }
             /* status */
             if (root[STATUS_PARAM].isIntegral()) {
-                status = GetTalentStatus(root[STATUS_PARAM].asInt());
+                status = GetIntToTalentStatus(root[STATUS_PARAM].asInt());
             }
             /* rebateCredit */
             if (root[REBATECREDIT].isNumeric()) {
                 rebateCredit = root[REBATECREDIT].asDouble();
+            }
+
+            /* giftId */
+            if (root[GIFTID_PARAM].isString()) {
+                giftId = root[GIFTID_PARAM].asString();
+            }
+            
+            /* giftName */
+            if (root[GIFTNAME_PARAM].isString()) {
+                giftName = root[GIFTNAME_PARAM].asString();
+            }
+            
+            /* giftNum */
+            if (root[GIFTNUM_PARAM].isNumeric()) {
+                giftNum = root[GIFTNUM_PARAM].asInt();
             }
             
         }
@@ -70,6 +88,9 @@ public:
         credit = 0.0;
         status = TALENTSTATUS_UNKNOW;
         rebateCredit = 0.0;
+        giftId = "";
+        giftName = "";
+        giftNum = 0;
     }
     
     virtual ~TalentReplyItem() {
@@ -84,6 +105,9 @@ public:
      * credit                 信用点
      * status                 状态（1:已接受 2:拒绝）
      * rebateCredit           返点
+     * giftId                 礼物ID
+     * giftName               礼物名称
+     * giftNum                礼物数量
      */
     string                roomId;
     string                talentInviteId;
@@ -92,6 +116,9 @@ public:
     double                credit;
     TalentStatus          status;
     double                rebateCredit;
+    string                giftId;
+    string                giftName;
+    int                   giftNum;
     
 };
 

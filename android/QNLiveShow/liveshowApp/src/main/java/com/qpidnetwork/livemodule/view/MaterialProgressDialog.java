@@ -1,6 +1,7 @@
 package com.qpidnetwork.livemodule.view;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -41,7 +42,13 @@ public class MaterialProgressDialog extends BaseDialog {
 	}
 	
 	public void setMessage(CharSequence text){
-		getMessage().setText(text);
+		//edit by Jagger 2018-2-6 没文字就隐藏TextView
+		if(TextUtils.isEmpty(text)){
+			getMessage().setVisibility(View.GONE);
+		}else{
+			getMessage().setVisibility(View.VISIBLE);
+			getMessage().setText(text);
+		}
 	}
 	
 	@Override public void show(){

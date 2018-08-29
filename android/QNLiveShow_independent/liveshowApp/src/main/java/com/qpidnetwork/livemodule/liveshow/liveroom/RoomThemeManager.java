@@ -216,14 +216,6 @@ public class RoomThemeManager {
         return drawable;
     }
 
-    public int getRoomPrvLiveNowBtnVisibility(IMRoomInItem.IMLiveRoomType liveRoomType){
-        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType || IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
-            return View.VISIBLE;
-        }else{
-            return View.GONE;
-        }
-    }
-
     /**
      * 直播间-主题背景
      * @param liveRoomType
@@ -332,6 +324,23 @@ public class RoomThemeManager {
         }else{
             drawable = context.getResources().getDrawable(R.drawable.ic_liveroom_buttom_gift_advanceprv);
         }
+        return drawable;
+    }
+
+    /**
+     * 直播间-底部分享按钮样式
+     * @param liveRoomType
+     * @return
+     */
+    public Drawable getRoomShareBtnDrawable(Context context,IMRoomInItem.IMLiveRoomType liveRoomType){
+        Drawable drawable = null;
+        if(IMRoomInItem.IMLiveRoomType.FreePublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.ic_liveroom_share_freepublic);
+        }else if(IMRoomInItem.IMLiveRoomType.PaidPublicRoom == liveRoomType){
+            drawable = context.getResources().getDrawable(R.drawable.ic_liveroom_share_paypublic);
+        }
+        //暂时屏蔽分享按钮
+        drawable = null;
         return drawable;
     }
 

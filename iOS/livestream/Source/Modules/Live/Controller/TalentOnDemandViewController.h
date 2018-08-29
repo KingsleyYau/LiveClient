@@ -22,7 +22,6 @@
 
 @property (nonatomic, weak) id<TalentOnDemandVCDelegate> delegate;
 
-@property (weak, nonatomic) IBOutlet UIButton *closeBtn;
 
 @property (weak, nonatomic) IBOutlet UIView *failedView;
 

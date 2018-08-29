@@ -2,7 +2,7 @@
  * author: Alex
  *   date: 2018-05-04
  *   file: RecvAnchorShowMsgNoticeTask.cpp
- *   desc: 11.3.节目取消通知Task实现类
+ *   desc: 11.3.接收无操作的提示通知Task实现类
  */
 
 #include "RecvAnchorShowMsgNoticeTask.h"
@@ -113,7 +113,7 @@ bool RecvAnchorShowMsgNoticeTask::GetSendData(Json::Value& data)
 // 获取命令号
 string RecvAnchorShowMsgNoticeTask::GetCmdCode() const
 {
-	return ZB_CMD_RECVANCHORSTATUSCHANGENOTICE;
+	return ZB_CMD_RECVSHOWMSGNOTICE;
 }
 
 // 设置seq

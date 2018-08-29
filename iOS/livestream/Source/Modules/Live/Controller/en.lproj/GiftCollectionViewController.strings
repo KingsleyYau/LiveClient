@@ -1,0 +1,12 @@
+
+/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "3gk-JB-KxF"; */
+"3gk-JB-KxF.normalTitle" = "Reload";
+
+/* Class = "UILabel"; text = "No More Gift"; ObjectID = "D7W-wp-agH"; */
+"D7W-wp-agH.text" = "No More Gift";
+
+/* Class = "UILabel"; text = "Failed to load"; ObjectID = "nA5-HP-9tX"; */
+"nA5-HP-9tX.text" = "Failed to load";
+
+"NORMAL_NO_LIST_TIP" = "No gifts yet.";
+"BACKPACK_NO_LIST_TIP" = "Your backpack is empty.";

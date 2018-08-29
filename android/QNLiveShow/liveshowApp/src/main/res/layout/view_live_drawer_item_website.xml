@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:clickable="true"
+    android:background="@drawable/touch_feedback_holo_light">
+
+
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+        android:id="@+id/civ_hostIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="24dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="11dp">
+
+        <TextView
+            android:id="@+id/tv_hostName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#383838"
+            android:text="AsizMe.com"
+            android:singleLine="true"/>
+
+
+        <TextView
+            android:id="@+id/tv_hostDes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:text="Meet elite singles from Asia"/>
+
+    </LinearLayout>
+
+</LinearLayout>

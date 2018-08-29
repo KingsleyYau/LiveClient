@@ -7,13 +7,13 @@
 //
 
 #import "HomeVouchersManager.h"
-#import "LSGetVoucherAvailableInfoRequest.h"
+
 static HomeVouchersManager* homeVouchersManager = nil;
 
 @interface HomeVouchersManager ()
 
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
-@property (nonatomic, strong) LSVoucherAvailableInfoItemObject * item;
+
 @end
 
 @implementation HomeVouchersManager
@@ -32,17 +32,10 @@ static HomeVouchersManager* homeVouchersManager = nil;
     return self;
 }
 
-- (void)getVouchersData
+- (void)getVouchersData:(GetVoucherAvailableInfoFinishHandler)finishHandler
 {
     LSGetVoucherAvailableInfoRequest * request = [[LSGetVoucherAvailableInfoRequest alloc]init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * errmsg, LSVoucherAvailableInfoItemObject * item) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (success) {
-                self.item = item;
-                  [[NSNotificationCenter defaultCenter]postNotificationName:@"updateTableViewVouchersData" object:nil];
-            }
-        });
-    };
+    request.finishHandler = finishHandler;
     [self.sessionManager sendRequest:request];
 }
 

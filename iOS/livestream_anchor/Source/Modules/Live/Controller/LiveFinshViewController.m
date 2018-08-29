@@ -7,10 +7,8 @@
 //
 
 #import "LiveFinshViewController.h"
-#import "BookPrivateBroadcastViewController.h"
 
 #import "RecommandCollectionViewCell.h"
-#import "GetPromoAnchorListRequest.h"
 #import "LSImageViewLoader.h"
 #import "LiveBundle.h"
 #import "LiveModule.h"

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialogui_shape_wihte_round_corner"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <!-- ps:对话框边距在 Customdialog子项目中的 style.dialogui_datepick_tran 中处理 -->
+    <TextView
+        android:id="@+id/dialogui_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/live_size_12dp"
+        android:layout_marginRight="@dimen/live_size_12dp"
+        android:layout_marginTop="@dimen/live_size_12dp"
+        android:text="title"
+        android:textColor="@color/custom_dialog_txt_color_simple"
+        android:textSize="@dimen/live_size_16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/dialogui_tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/live_size_12dp"
+        android:layout_marginRight="@dimen/live_size_12dp"
+        android:layout_marginTop="@dimen/live_size_12dp"
+        android:gravity="center"
+        android:lineSpacingExtra="8sp"
+        android:text="text"
+        android:textColor="@color/custom_dialog_txt_color_simple"
+        android:textSize="@dimen/live_size_14sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginLeft="@dimen/live_size_12dp"
+        android:layout_marginRight="@dimen/live_size_12dp"
+        android:layout_marginBottom="@dimen/live_size_16dp"
+        android:layout_marginTop="@dimen/live_size_30dp">
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_left"
+            android:layout_width="@dimen/live_size_100dp"
+            android:layout_height="@dimen/live_size_40dp"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:layout_marginRight="@dimen/live_size_12dp"
+            button:raisebutton_radius="5dp"
+            button:background="@color/email_sign_up_hint_txt"
+            button:title="left"
+            button:title_color="#3c3c3c"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle_for_dialog" />
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/btn_right"
+            android:layout_width="@dimen/live_size_100dp"
+            android:layout_height="@dimen/live_size_40dp"
+            button:raisebutton_radius="5dp"
+            android:layout_marginLeft="@dimen/live_size_12dp"
+            android:layout_marginRight="@dimen/live_size_12dp"
+            button:background="@color/custom_dialog_btn_color_ok"
+            button:title="right"
+            button:title_color="@android:color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle_for_dialog" />
+    </LinearLayout>
+
+
+
+</LinearLayout>
+
+
+

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/live_size_120dp"
+    android:orientation="vertical"
+    android:background="#a0b0c0">
+
+    <FrameLayout
+        android:id="@+id/fl_blank"
+        android:layout_width="match_parent"
+        android:background="@color/blue_color"
+        android:layout_height="1dp">
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imgMessage"
+                android:layout_width="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_40dp"
+                android:src="@drawable/ic_default_photo_woman"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Message"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imgMail"
+                android:layout_width="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_40dp"
+                android:src="@drawable/ic_default_photo_woman"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mail"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imgGreetingMail"
+                android:layout_width="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_40dp"
+                android:src="@drawable/ic_default_photo_woman"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Greeting Mail"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/imgHangOut"
+                android:layout_width="@dimen/live_size_40dp"
+                android:layout_height="@dimen/live_size_40dp"
+                android:src="@drawable/ic_default_photo_woman"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hang-out"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

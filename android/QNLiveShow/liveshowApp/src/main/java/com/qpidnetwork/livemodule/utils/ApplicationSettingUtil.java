@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 
+import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
@@ -54,5 +55,16 @@ public class ApplicationSettingUtil {
             }
         }
         return defaultCountryCode;
+    }
+
+    /**
+     * 全局格式化金币值的显示方式
+     * @param coinsValue
+     * @return
+     */
+    public static String formatCoinValue(double coinsValue){
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setGroupingUsed(false);
+        return String.valueOf(nf.format(coinsValue));
     }
 }

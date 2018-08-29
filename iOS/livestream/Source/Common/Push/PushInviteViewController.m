@@ -12,7 +12,7 @@
 #import "UserInfoManager.h"
 #import "LSImageViewLoader.h"
 #import "LiveModule.h"
-#import "LiveService.h"
+#import "LiveMutexService.h"
 #import "LSSessionRequestManager.h"
 #import "AcceptInstanceInviteRequest.h"
 
@@ -36,6 +36,8 @@
     self.imageViewLoader = [LSImageViewLoader loader];
     
     self.removeTimer = [[LSTimer alloc] init];
+    
+    self.tipsLabel.text = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"PUSH_INVITE_TIP"),self.anchorId];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -67,7 +69,7 @@
     NSLog(@"PushInviteViewController::acceptAction: url:%@",self.url);
     [self.removeTimer stopTimer];
     // 跳转接收邀请界面
-    [[LiveService service] openUrlByLive:self.url];
+    [[LiveMutexService service] openUrlByLive:self.url];
     
     [[LiveModule module].analyticsManager reportActionEvent:ClickInvitation eventCategory:EventCategoryGobal];
     [self.view removeFromSuperview];

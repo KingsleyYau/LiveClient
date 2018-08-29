@@ -27,6 +27,8 @@
 
 
     <style name="CustomTheme.LiveGiftDialog" parent="@android:style/Theme.Dialog">
+        <!--无边框-->
+        <item name="android:windowFrame">@null</item>
         <!--没有标题-->
         <item name="android:windowNoTitle">true</item>
         <!--窗口浮动-->
@@ -135,4 +137,13 @@
         <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
         <item name="android:backgroundDimAmount">0.6</item>
     </style>
+
+    <!--QN广告 Theme-->
+    <style name="themeAD" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
 </resources>

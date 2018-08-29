@@ -79,7 +79,7 @@ public class PublisherManager implements ILSPublisherStatusCallback {
         mPublisherRecordH264FilePath = recordH264FilePath;
         mPublisherRecordAACFilePath = recordAACFilePath;
         if(mLSPublisher != null){
-//            mLSPublisher.stop();
+            mLSPublisher.stop();
             startPublisherInternal();
         }
     }
@@ -131,7 +131,10 @@ public class PublisherManager implements ILSPublisherStatusCallback {
                         //重连次数达标，需要换url
                         mPublisherReconnectCount = 0;
                         mPublisherUrlCurPosition++;
-                        startPublisherInternal();
+                        if(mLSPublisher != null){
+                            mLSPublisher.stop();
+                            startPublisherInternal();
+                        }
                     }
                 }
             });

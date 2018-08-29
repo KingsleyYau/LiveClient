@@ -3,7 +3,7 @@
     android:layout_width="94dp"
     android:layout_height="125dp">
 
-    <SurfaceView
+    <android.opengl.GLSurfaceView
         android:id="@+id/svPublisher"
         android:visibility="visible"
         android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_height="17dp"
             android:src="@drawable/ic_live_publish_stop"
             android:layout_gravity="bottom|left"
-            android:layout_marginLeft="17dp"
+            android:layout_marginLeft="18dp"
             android:clickable="true"/>
 
 
@@ -48,7 +48,7 @@
             android:layout_height="17dp"
             android:src="@drawable/ic_live_publish_sound_on"
             android:layout_gravity="bottom|right"
-            android:layout_marginRight="17dp"
+            android:layout_marginRight="18dp"
             android:clickable="true"/>
     </FrameLayout>
 

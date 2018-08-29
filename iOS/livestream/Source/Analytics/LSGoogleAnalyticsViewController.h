@@ -10,7 +10,8 @@
 #import "LSViewController.h"
 
 @interface LSGoogleAnalyticsViewController : LSListViewController
-
+/** 指定的ga跟踪屏幕 */
+@property (nonatomic, copy) NSString *gaScreenName;
 /**
  显示分页
 

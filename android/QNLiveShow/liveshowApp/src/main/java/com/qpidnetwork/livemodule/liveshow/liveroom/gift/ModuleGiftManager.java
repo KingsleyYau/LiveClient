@@ -23,6 +23,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftItemView
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftView;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.lang.ref.WeakReference;
@@ -50,8 +51,6 @@ public class ModuleGiftManager {
         this.mActivity = new WeakReference<BaseCommonLiveRoomActivity>(activity);
     }
 
-
-
     /************************************** 消息分发器  ********************************************/
     /**
      * 分发礼物消息
@@ -60,14 +59,14 @@ public class ModuleGiftManager {
     public void dispatchIMMessage(IMMessageItem msgItem){
         if(msgItem != null && msgItem.msgType == IMMessageItem.MessageType.Gift){
             String giftId = msgItem.giftMsgContent.giftId;
-            GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(giftId);
+            GiftItem giftItem = NormalGiftManager.getInstance().getLocalGiftDetail(giftId);
             if(giftItem != null){
                 //本地已存在
                 switch (giftItem.giftType){
                     case Normal: {
                         //分发给连击动画模块
                         Log.d(TAG,"dispatchIMMessage-本地详情存在，分发给连击动画模块");
-                        addToNoramlGifatManager(msgItem);
+                        addToNoramlGiftManager(msgItem);
                     }break;
                     case Advanced:{
                         //分发给大礼物动画
@@ -90,7 +89,7 @@ public class ModuleGiftManager {
      * 发送或收到连击动画添加到连接动画模块
      * @param msgItem
      */
-    private void addToNoramlGifatManager(IMMessageItem msgItem){
+    private void addToNoramlGiftManager(IMMessageItem msgItem){
         LiveGift liveGift = new LiveGift();
         liveGift.setGiftId(createUniqueMultiGiftIdentify(msgItem.userId,
                 msgItem.giftMsgContent.giftId, String.valueOf(msgItem.giftMsgContent.multi_click_id)));
@@ -126,7 +125,7 @@ public class ModuleGiftManager {
     private void addToAdvanceGiftManager(IMMessageItem msgItem){
         if(msgItem != null && msgItem.msgType == IMMessageItem.MessageType.Gift){
             //IMGiftMessageContent包含了gift的id、name、num等信息，且是大礼物，因此重点关注的是img
-            GiftItem giftItem = NormalGiftManager.getInstance().queryLocalGiftDetailById(msgItem.giftMsgContent.giftId);
+            GiftItem giftItem = NormalGiftManager.getInstance().getLocalGiftDetail(msgItem.giftMsgContent.giftId);
             if(giftItem != null && giftItem.giftType == GiftItem.GiftType.Advanced){
                 String localPath = FileCacheManager.getInstance().getGiftLocalPath(giftItem.id, giftItem.srcWebpUrl);
                 if(SystemUtils.fileExists(localPath)){
@@ -170,10 +169,6 @@ public class ModuleGiftManager {
         if(null != mActivity && null != mActivity.get()){
             LayoutInflater inflater = LayoutInflater.from(mActivity.get());
             View view = inflater.inflate(R.layout.item_multiclick_gift_anim , null);
-            View rl_giftAnimContainer = view.findViewById(R.id.rl_giftAnimContainer);
-            rl_giftAnimContainer.setBackgroundDrawable(
-                    mActivity.get().roomThemeManager.getRoomRepeatGiftAnimBgDrawable(mActivity.get(),
-                        mActivity.get().mIMRoomInItem.roomType));
             CircleImageView civ_photo = (CircleImageView)view.findViewById(R.id.civ_photo);
             TextView tvNickName = (TextView)view.findViewById(R.id.tvNickName);
             TextView tvGiftName = (TextView)view.findViewById(R.id.tvGiftName);
@@ -189,10 +184,11 @@ public class ModuleGiftManager {
                                 .load(imUserBaseInfoItem.photoUrl)
                                 .placeholder(R.drawable.ic_default_photo_man)
                                 .error(R.drawable.ic_default_photo_man)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
                                 .into(civ_photo);
                     }
                     GiftItem giftItem = NormalGiftManager.getInstance().
-                            queryLocalGiftDetailById(msgItem.giftMsgContent.giftId);
+                            getLocalGiftDetail(msgItem.giftMsgContent.giftId);
                     if(giftItem != null && !TextUtils.isEmpty(giftItem.name)){
                         tvGiftName.setText(giftItem.name);
                     }else{

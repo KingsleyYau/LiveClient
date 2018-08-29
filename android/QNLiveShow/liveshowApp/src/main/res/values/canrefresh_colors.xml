@@ -8,6 +8,7 @@
     <color name="google_yellow">#FBBC05</color>
     <color name="google_orange">#ed6d64</color>
 
+    <color name="transparent_full">#00000000</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="transparent_7">#77000000</color>
     <color name="window_background">#FFF5F5F5</color>
@@ -53,10 +54,6 @@
     <color name="tag_bg_color">#6479f0</color>
     <color name="shadow">#25808080</color>
 
-    <color name="talent_yellow">#ffd205</color>
-    <color name="talent_violet">#f25d0e86</color>
-    <color name="talent_btn_txt">#724602</color>
-    <color name="talent_light_violet">#f94ceb</color>
-    <color name="book_live_light_violet">#0291ff</color>
+    <color name="live_switch_on_bg">#297af3</color>
 
 </resources>

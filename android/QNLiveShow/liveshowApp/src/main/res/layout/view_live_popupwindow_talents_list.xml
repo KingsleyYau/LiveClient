@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/ll_talents"
-    android:background="@color/talent_violet">
+    android:id="@+id/ll_talents">
 
     <!-- Title -->
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/black">
         <TextView
+            android:id="@+id/tv_listTitle"
             android:layout_width="wrap_content"
             android:layout_centerInParent="true"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
+            android:ellipsize="end"
             android:gravity="center_horizontal"
-            android:paddingTop="15dp"
-            android:paddingBottom="15dp"
-            android:textSize="14dp"
+            android:maxWidth="230dp"
+            android:lines="1"
+            android:paddingTop="13dp"
+            android:paddingBottom="13dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             android:text="@string/live_talent_title"/>
 
         <ImageView
@@ -36,29 +41,29 @@
     <!-- 分割线 -->
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/white"/>
+        android:layout_height="1px"
+        android:background="@color/talent_divider"/>
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="match_parent">
 
         <!-- List -->
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_talentList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="13dp"
-            android:paddingRight="13dp"
             android:overScrollMode="never"
             android:visibility="gone"
             />
+
+        <!-- loading -->
         <LinearLayout
             android:id="@+id/ll_loading"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom|center_horizontal"
             android:orientation="vertical">
 
             <ProgressBar
@@ -85,9 +90,9 @@
         <!-- 出错界面　-->
         <LinearLayout
             android:id="@+id/ll_errorRetry"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom|center_horizontal"
             android:visibility="visible"
             android:gravity="center_horizontal"
             android:orientation="vertical">
@@ -96,34 +101,40 @@
                 android:layout_width="49dp"
                 android:layout_height="49dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_view_data_sosad"/>
+                android:src="@drawable/ic_talent_empty"/>
 
             <TextView
+                android:id="@+id/tv_error_msg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tip_failed_to_load"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
-                android:textColor="#a3ffffff"
+                android:textColor="@color/black3"
                 android:textSize="@dimen/custom_dialog_text_size_simple"/>
 
-            <TextView
-                android:id="@+id/tv_reloadTalentList"
-                android:layout_width="88dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="20dp"
-                android:textColor="#3c3c3c"
-                android:gravity="center"
-                android:background="@drawable/bg_btn_reload_giftlist"
-                android:textSize="@dimen/custom_dialog_text_size_simple"
-                android:text="@string/tip_reload"/>
+            <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+                <!--android:id="@+id/btnReloadTalentList"-->
+                <!--android:layout_width="@dimen/live_size_120dp"-->
+                <!--android:layout_height="@dimen/live_size_40dp"-->
+                <!--android:layout_marginBottom="@dimen/live_size_10dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginTop="70dp"-->
+                <!--button:background="@color/live_programme_list_btn_canceled"-->
+                <!--button:elevation="2dp"-->
+                <!--button:raisebutton_radius="16dp"-->
+                <!--button:title="@string/tip_reload"-->
+                <!--button:title_color="#3c3c3c"-->
+                <!--button:title_text_size="@dimen/live_size_14sp"-->
+                <!--button:touch_feedback="@drawable/touch_feedback_holo_dark"/>-->
 
         </LinearLayout>
 
+        <!-- 无数据界面　-->
         <LinearLayout
             android:id="@+id/ll_emptyData"
             android:visibility="gone"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom|center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -132,7 +143,7 @@
                 android:layout_width="49dp"
                 android:layout_height="49dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/ic_view_data_sosad"/>
+                android:src="@drawable/ic_talent_empty"/>
 
             <TextView
                 android:layout_width="wrap_content"

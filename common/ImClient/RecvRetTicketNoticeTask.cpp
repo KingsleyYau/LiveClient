@@ -2,7 +2,7 @@
  * author: Alex
  *   date: 2018-04-19
  *   file: RecvRetTicketNoticeTask.cpp
- *   desc: 10.3.接收节目已退票通知Task实现类
+ *   desc: 11.3.接收节目已退票通知Task实现类
  */
 
 #include "RecvRetTicketNoticeTask.h"

@@ -159,6 +159,19 @@ void AudioEncoderAAC::Pause() {
 }
 
 void AudioEncoderAAC::EncodeAudioFrame(void* data, int size, void* frame) {
+//	FileLevelLog("rtmpdump",
+//				 KLog::LOG_MSG,
+//				 "AudioEncoderAAC::EncodeAudioFrame( "
+//				 "this : %p, "
+//				 "data : %p "
+//                 "size : %d, "
+//				 "[1] "
+//				 ")",
+//				 this,
+//				 data,
+//                 size
+//				 );
+
     mRuningMutex.lock();
     if( mbRunning ) {
     	mFreeBufferList.lock();
@@ -179,19 +192,20 @@ void AudioEncoderAAC::EncodeAudioFrame(void* data, int size, void* frame) {
     	AudioFrameSoundType soundType = (mChannelsPerFrame == 2)?AFST_STEREO:AFST_MONO;
     	srcFrame->InitFrame(AFF_AAC, soundRate, soundSize, soundType);
 
-    	FileLevelLog("rtmpdump",
-    				 KLog::LOG_STAT,
-    				 "AudioEncoderAAC::EncodeAudioFrame( "
-    				 "this : %p, "
-    				 "srcFrame : %p, "
-                     "size : %d, "
-    				 "frame : %p "
-    				 ")",
-    				 this,
-    				 srcFrame,
-                     size,
-    				 frame
-    				 );
+//    	FileLevelLog("rtmpdump",
+//    				 KLog::LOG_MSG,
+//    				 "AudioEncoderAAC::EncodeAudioFrame( "
+//    				 "this : %p, "
+//    				 "srcFrame : %p, "
+//                     "size : %d, "
+//    				 "frame : %p, "
+//					 "[2] "
+//    				 ")",
+//    				 this,
+//    				 srcFrame,
+//                     size,
+//    				 frame
+//    				 );
 
     	// 放进编码队列
     	mEncodeBufferList.lock();
@@ -199,6 +213,19 @@ void AudioEncoderAAC::EncodeAudioFrame(void* data, int size, void* frame) {
     	mEncodeBufferList.unlock();
     }
     mRuningMutex.unlock();
+
+//	FileLevelLog("rtmpdump",
+//				 KLog::LOG_MSG,
+//				 "AudioEncoderAAC::EncodeAudioFrame( "
+//				 "this : %p, "
+//				 "frame : %p "
+//                 "size : %d, "
+//				 "[3] "
+//				 ")",
+//				 this,
+//				 frame,
+//                 size
+//				 );
 }
 
 bool AudioEncoderAAC::Start() {
@@ -239,11 +266,11 @@ bool AudioEncoderAAC::Start() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioEncoderAAC::Start( "
-                 "[%s], "
-                 "this : %p "
+                 "this : %p, "
+				 "[%s] "
                  ")",
-				 bFlag?"Success":"Fail",
-                 this
+				 this,
+				 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -297,8 +324,8 @@ void AudioEncoderAAC::Stop() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioEncoderAAC::Stop( "
-                 "[Success], "
-                 "this : %p "
+                 "this : %p, "
+				 "[Success] "
                  ")",
                  this
                  );
@@ -342,8 +369,8 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame* srcFrame, AudioFrame* dstFram
                  "rtmpdump",
                  KLog::LOG_STAT,
                  "AudioEncoderAAC::EncodeAudioFrame( "
-                 "[Encode Frame], "
                  "this : %p, "
+				 "[Encode Frame], "
                  "ret : %d, "
                  "bGotFrame : %d, "
                  "srcFrame : %p, "
@@ -373,8 +400,8 @@ bool AudioEncoderAAC::EncodeAudioFrame(AudioFrame* srcFrame, AudioFrame* dstFram
                      "rtmpdump",
                      KLog::LOG_STAT,
                      "AudioEncoderAAC::EncodeAudioFrame( "
-                     "[Got Audio Frame], "
                      "this : %p, "
+					 "[Got Audio Frame], "
                      "srcFrame : %p, "
                      "dstFrame : %p, "
                      "timestamp : %u, "
@@ -406,8 +433,8 @@ bool AudioEncoderAAC::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioEncoderAAC::CreateContext( "
-                    "[Codec not found], "
-                    "this : %p "
+					 "this : %p, "
+                    "[Codec not found] "
                     ")",
                     this
                     );
@@ -440,8 +467,8 @@ bool AudioEncoderAAC::CreateContext() {
             		"rtmpdump",
 					KLog::LOG_MSG,
                     "AudioEncoderAAC::CreateContext( "
+					"this : %p, "
                     "[Codec opened], "
-                    "this : %p, "
                     "sample_fmt : %d, "
                     "sample_rate : %d, "
                     "channels : %d, "
@@ -467,8 +494,8 @@ bool AudioEncoderAAC::CreateContext() {
             FileLevelLog("rtmpdump",
                         KLog::LOG_ERR_SYS,
                         "AudioEncoderAAC::CreateContext( "
+						"this : %p, "
                         "[Could not open codec], "
-                        "this : %p, "
                         "ret : %d, "
                         "errbuf : %s "
                         ")",
@@ -486,8 +513,8 @@ bool AudioEncoderAAC::CreateContext() {
         FileLevelLog("rtmpdump",
                      KLog::LOG_ERR_SYS,
                      "AudioEncoderAAC::CreateContext( "
+					 "this : %p "
                      "[Fail], "
-                     "this : %p "
                      ")",
                      this
                      );
@@ -520,12 +547,10 @@ void AudioEncoderAAC::ReleaseAudioFrame(AudioFrame* audioFrame) {
                  KLog::LOG_STAT,
                  "AudioEncoderAAC::ReleaseAudioFrame( "
                  "this : %p, "
-                 "audioFrame : %p, "
-                 "mFreeBufferList.size() : %d "
+                 "audioFrame : %p "
                  ")",
                  this,
-				 audioFrame,
-                 mFreeBufferList.size()
+				 audioFrame
                  );
 
     mFreeBufferList.lock();
@@ -537,8 +562,8 @@ void AudioEncoderAAC::EncodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "AudioEncoderAAC::EncodeAudioHandle( "
-                "[Start], "
-                "this : %p "
+				 "this : %p, "
+                "[Start] "
                 ")",
                 this
                 );
@@ -553,16 +578,6 @@ void AudioEncoderAAC::EncodeAudioHandle() {
 
         mEncodeBufferList.lock();
         if( !mEncodeBufferList.empty() ) {
-            FileLevelLog("rtmpdump",
-                         KLog::LOG_STAT,
-                         "AudioEncoderAAC::EncodeAudioHandle( "
-                         "this : %p, "
-                         "mEncodeBufferList.size() : %d "
-                         ")",
-                         this,
-                         mEncodeBufferList.size()
-                         );
-
             srcFrame = (AudioFrame* )mEncodeBufferList.front();
             mEncodeBufferList.pop_front();
         }
@@ -595,8 +610,8 @@ void AudioEncoderAAC::EncodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                 "AudioEncoderAAC::EncodeAudioHandle( "
-                "[Exit], "
-                "this : %p "
+				 "this : %p, "
+                "[Exit] "
                 ")",
                 this
                 );

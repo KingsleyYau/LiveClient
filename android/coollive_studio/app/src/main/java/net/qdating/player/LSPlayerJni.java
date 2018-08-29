@@ -28,7 +28,12 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	 * 状态回调
 	 */
 	ILSPlayerCallback playerCallback = null;
-	
+
+	/**
+	 * 初始化日志目录
+	 */
+	public native static void SetLogDir(String logDir);
+
 	/**
 	 * 创建实例
 	 * @param playerCallback		状态回调

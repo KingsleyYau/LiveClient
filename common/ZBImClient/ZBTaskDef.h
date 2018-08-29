@@ -81,6 +81,10 @@ static const string ZB_CMD_LEAVEHANGOUTROOMNOTICE = "imShare/leaveHangoutRoomNot
 static const string ZB_CMD_CHANGEVIDEOURL = "imShare/changeVideoUrl";       // 10.10.接收观众/主播多人互动直播间视频切换通知
 static const string ZB_CMD_SENDHANGOUTGIFT = "imShare/sendHangoutGift";     // 10.11.发送多人互动直播间礼物消息
 static const string ZB_CMD_SENDGIFTNOTICE = "imShare/sendHangoutGiftNotice";       // 10.12.接收多人互动直播间礼物通知
+static const string ZB_CMD_CONTROLMANPUSHHANGOUTNOTICE = "imShare/controlManPushHangoutNotice";       // 10.13.接收多人互动直播间礼物通知
+static const string ZB_CMD_HANGOUTSENDLIVECHAT = "imShare/hangoutSendLiveChat";                       // 10.14.发送多人互动直播间文本消息
+static const string ZB_CMD_RECVHANGOUTSENDCHATNOTICE = "imShare/hangoutSendChatNotice";               // 10.15.接收直播间文本消息
+static const string ZB_CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE = "imShare/receiveAnchorCountDownEnterRoomNotice";               // 10.16.接收进入多人互动直播间倒数通知
 
 // ------------- 节目 -------------
 static const string ZB_CMD_RECVANCHORPROGRAMPLAYNOTICE = "imLady/showToStartNotice";    // 11.1.接收节目开播通知
@@ -106,6 +110,7 @@ inline bool ZBIsRequestCmd(const string& cmd)
         || cmd == ZB_CMD_ENTERHANGOUTROOM               // 10.1.进入多人互动直播间
         || cmd == ZB_CMD_LEAVEHANGOUTROOM               // 10.2.退出多人互动直播间
         || cmd == ZB_CMD_SENDHANGOUTGIFT                // 10.11.发送多人互动直播间礼物消息
+        || cmd == ZB_CMD_HANGOUTSENDLIVECHAT            // 10.14.发送多人互动直播间文本消息
         )
     {
         result = true;

@@ -45,11 +45,11 @@ public class SimpleDoubleBtnTipsDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 int i = v.getId();
-                if (i == R.id.tv_cancel || i == R.id.iv_closeSimpleTips) {
+                if (i == R.id.tv_cancel) {
                     if(null != listener){
                         listener.onCancelBtnClick();
                     }
-                } else if (i == R.id.tv_confirm) {
+                }else if (i == R.id.tv_confirm) {
                     if(null != listener){
                         listener.onConfirmBtnClick();
                     }

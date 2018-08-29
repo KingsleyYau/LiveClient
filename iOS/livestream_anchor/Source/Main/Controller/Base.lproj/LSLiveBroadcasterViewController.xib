@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -135,14 +135,14 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1P4-kc-sQH">
-                                    <rect key="frame" x="0.0" y="39" width="375" height="561"/>
+                                    <rect key="frame" x="0.0" y="35" width="375" height="565"/>
                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </view>
                             </subviews>
                             <color key="backgroundColor" red="0.92549019607843142" green="0.92941176470588238" blue="0.94509803921568625" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="1P4-kc-sQH" secondAttribute="trailing" id="0gi-uI-yta"/>
-                                <constraint firstItem="1P4-kc-sQH" firstAttribute="top" secondItem="COa-d0-p6s" secondAttribute="bottom" constant="4" id="2QF-O9-7fE"/>
+                                <constraint firstItem="1P4-kc-sQH" firstAttribute="top" secondItem="COa-d0-p6s" secondAttribute="bottom" id="2QF-O9-7fE"/>
                                 <constraint firstAttribute="trailing" secondItem="COa-d0-p6s" secondAttribute="trailing" id="3BF-CJ-3Ff"/>
                                 <constraint firstItem="COa-d0-p6s" firstAttribute="leading" secondItem="Nog-Pg-2O2" secondAttribute="leading" id="Mne-pV-2bW"/>
                                 <constraint firstAttribute="height" constant="600" id="NFZ-BG-3ew"/>

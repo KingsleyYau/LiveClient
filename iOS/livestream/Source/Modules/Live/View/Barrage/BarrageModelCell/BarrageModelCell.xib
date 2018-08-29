@@ -39,7 +39,7 @@
                     <color key="textColor" red="0.36862745098039218" green="0.36862745098039218" blue="0.36862745098039218" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q" customClass="LSUIImageViewTopFit">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Man_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="LPv-ng-f9Q">
                     <rect key="frame" x="0.0" y="0.0" width="38" height="38"/>
                     <color key="backgroundColor" red="0.049599532500000001" green="0.5141839051" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>

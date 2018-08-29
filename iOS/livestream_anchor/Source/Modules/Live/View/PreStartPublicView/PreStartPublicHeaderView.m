@@ -33,7 +33,7 @@
 
 
 - (void)setupVideoPlay {
-    self.publisher = [LiveStreamPublisher instance];
+    self.publisher = [LiveStreamPublisher instance:LiveStreamType_ShowHost_Public];
     [self.publisher initCapture];
     self.publisher.publishView = self.videoView;
     self.videoView.fillMode = kGPUImageFillModePreserveAspectRatioAndFill;

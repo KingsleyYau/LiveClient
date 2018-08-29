@@ -94,8 +94,8 @@ bool RecvChangeVideoUrlTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        //m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl, userId);
-        m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
+        m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl, userId);
+        //m_listener->OnRecvChangeVideoUrl(roomId, isAnchor, playUrl);
 		FileLog("ImClient", "RecvChangeVideoUrlTask::Handle() callback end, result:%d", result);
 	}
 	

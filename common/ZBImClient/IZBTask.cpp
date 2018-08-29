@@ -36,6 +36,9 @@
 #include "RecvAnchorLeaveHangoutRoomNoticeTask.h"
 #include "RecvAnchorChangeVideoUrlTask.h"
 #include "RecvAnchorGiftHangoutNoticeTask.h"
+#include "RecvAnchorControlManPushHangoutNoticeTask.h"
+#include "RecvAnchorHangoutChatNoticeTask.h"
+#include "RecvZBAnchorCountDownEnterRoomNoticeTask.h"
 
 #include "RecvAnchorProgramPlayNoticeTask.h"
 #include "RecvAnchorChangeStatusNoticeTask.h"
@@ -115,43 +118,54 @@ IZBTask* IZBTask::CreateTaskWithCmd(const string& cmd)
         // 9.6.接收观众接受预约通知
         task = new ZBRecvInvitationAcceptNoticeTask();
     }
-    else if (cmd == ZB_CMD_RECEIVEINVITATIONHANGOUTNOTICE) {
-        // 10.3.接收观众邀请多人互动通知
-        task = new RecvAnchorInvitationHangoutNoticeTask();
-    }
-    else if (cmd == ZB_CMD_RECEIVERECOMMENDHANGOUTNOTICE) {
-        // 10.4.接收推荐好友通知
-        task = new RecvAnchorRecommendHangoutNoticeTask();
-    }
-    else if (cmd == ZB_CMD_RECEIVEDEALKNOCKREQUESTNOTICE) {
-        // 10.5.接收敲门回复通知
-        task = new RecvAnchorDealKnockRequestNoticeTask();
-    }
-    else if (cmd == ZB_CMD_RECEIVEOTHERINVITHANGOUTNOTICE) {
-        // 10.6.接收观众邀请其它主播加入多人互动通知
-        task = new RecvAnchorOtherInviteHangoutNoticeTask();
-    }
-    else if (cmd == ZB_CMD_RECEIVEDEALINVITATIONHANGOUTNOTICE) {
-        // 10.7.接收主播回复观众多人互动邀请通知
-        task = new RecvAnchorDealInviteHangoutNoticeTask();
-    }
-    else if (cmd == ZB_CMD_ENTERHANGOUTROOMNOTICE) {
-        // 10.8.接收主播回复观众多人互动邀请通知
-        task = new RecvAnchorEnterHangoutRoomNoticeTask();
-    }
-    else if (cmd == ZB_CMD_LEAVEHANGOUTROOMNOTICE) {
-         // 10.9.接收观众/主播退出多人互动直播间通知
-        task = new RecvAnchorLeaveHangoutRoomNoticeTask();
-    }
-    else if (cmd == ZB_CMD_CHANGEVIDEOURL) {
-        // 10.10.接收观众/主播多人互动直播间视频切换通知
-        task = new RecvAnchorChangeVideoUrlTask();
-    }
-    else if (cmd == ZB_CMD_SENDGIFTNOTICE) {
-        // 10.12.接收多人互动直播间礼物通知
-        task = new RecvAnchorGiftHangoutNoticeTask();
-    }
-    
+//    else if (cmd == ZB_CMD_RECEIVEINVITATIONHANGOUTNOTICE) {
+//        // 10.3.接收观众邀请多人互动通知
+//        task = new RecvAnchorInvitationHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECEIVERECOMMENDHANGOUTNOTICE) {
+//        // 10.4.接收推荐好友通知
+//        task = new RecvAnchorRecommendHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECEIVEDEALKNOCKREQUESTNOTICE) {
+//        // 10.5.接收敲门回复通知
+//        task = new RecvAnchorDealKnockRequestNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECEIVEOTHERINVITHANGOUTNOTICE) {
+//        // 10.6.接收观众邀请其它主播加入多人互动通知
+//        task = new RecvAnchorOtherInviteHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECEIVEDEALINVITATIONHANGOUTNOTICE) {
+//        // 10.7.接收主播回复观众多人互动邀请通知
+//        task = new RecvAnchorDealInviteHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_ENTERHANGOUTROOMNOTICE) {
+//        // 10.8.接收主播回复观众多人互动邀请通知
+//        task = new RecvAnchorEnterHangoutRoomNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_LEAVEHANGOUTROOMNOTICE) {
+//         // 10.9.接收观众/主播退出多人互动直播间通知
+//        task = new RecvAnchorLeaveHangoutRoomNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_CHANGEVIDEOURL) {
+//        // 10.10.接收观众/主播多人互动直播间视频切换通知
+//        task = new RecvAnchorChangeVideoUrlTask();
+//    }
+//    else if (cmd == ZB_CMD_SENDGIFTNOTICE) {
+//        // 10.12.接收多人互动直播间礼物通知
+//        task = new RecvAnchorGiftHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_CONTROLMANPUSHHANGOUTNOTICE) {
+//        // 10.13.接收多人互动直播间观众启动/关闭视频互动通知
+//        task = new RecvAnchorControlManPushHangoutNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECVHANGOUTSENDCHATNOTICE) {
+//        // 10.15.接收直播间文本消息
+//        task = new RecvAnchorHangoutChatNoticeTask();
+//    }
+//    else if (cmd == ZB_CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE) {
+//        // 10.16.接收进入多人互动直播间倒数通知
+//        task = new RecvZBAnchorCountDownEnterRoomNoticeTask();
+//    }
     else if (cmd == ZB_CMD_RECVANCHORPROGRAMPLAYNOTICE) {
         // 11.1.节目开播通知
         task = new RecvAnchorProgramPlayNoticeTask();

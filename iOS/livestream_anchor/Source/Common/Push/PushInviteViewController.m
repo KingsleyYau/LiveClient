@@ -28,6 +28,11 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
 
 @implementation PushInviteViewController
 
+- (void)dealloc {
+    NSLog(@"PushInviteViewController::dealloc()");
+    [[DialogTip dialogTip] stopTimer];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
@@ -136,7 +141,7 @@ typedef void(^AcceptInviteHandler)(BOOL success, ZBHTTP_LCC_ERR_TYPE errnum, NSS
                 // 发送通知
                 [[NSNotificationCenter defaultCenter] postNotificationName:@"LivePushInviteNotification" object:self.url];
             } else {
-                [[DialogTip dialogTip]showDialogTip:ZBAppDelegate.window tipText:errmsg];
+                [[DialogTip dialogTip] showDialogTip:ZBAppDelegate.window tipText:errmsg];
             }
         }];
         // 移除界面

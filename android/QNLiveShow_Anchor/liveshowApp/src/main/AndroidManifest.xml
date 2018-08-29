@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.qpidnetwork.anchor">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 在一些4.2左右或者以下的手机有这个问题:this requires android.permission.INTERACT_ACROSS_USERS_FULL -->
+    <permission
+        android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
+        android:protectionLevel="signature" />
+
+    <!-- 独立版 -->
+    <application
+        android:name=".liveshow.LiveApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_liveshow_anchor_app"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_liveshow_anchor_app"
+        android:supportsRtl="true"
+        android:theme="@style/CustomTheme.App">
+
+        <!-- 嵌入版 -->
+        <!-- <application -->
+        <!-- android:allowBackup="true" -->
+        <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
+        <!-- android:supportsRtl="true"> -->
+
+
+        <!-- 　拍照功能　buildsdk>=24时报android.os.FileUriExposedException: -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <!-- 文件下载器进程 -->
+        <service android:name="com.liulishuo.filedownloader.services.FileDownloadService$SharedMainProcessService" />
+        <service
+            android:name="com.liulishuo.filedownloader.services.FileDownloadService$SeparateProcessService"
+            android:process=":filedownloader" />
+
+        <!-- Add by hunter for utm_reference -->
+        <receiver
+            android:name=".liveshow.promotion.InstallReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <!-- end -->
+
+        <!-- 清除通知服务 -->
+        <service
+            android:name=".framework.services.KillNotificationsService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <!-- Add by Samson for Google Play Services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!--
+             Optionally, register AnalyticsReceiver and AnalyticsService to support background
+             dispatching on non-Google Play devices
+        -->
+        <receiver
+            android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <!--
+             Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
+             installation campaign reporting
+        -->
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+
+        <receiver
+            android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <!-- end -->
+
+
+        <!-- add by hunter for push click receive -->
+        <receiver
+            android:name=".liveshow.pushmanager.NocificationOptReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="action.anchor.push.notification" />
+            </intent-filter>
+        </receiver>
+        <!-- end -->
+
+        <activity
+            android:name=".liveshow.login.LiveLoginActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+
+            <!-- 独立版 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- 外部Url支持 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:pathPrefix="/open"
+                    android:scheme="qpidnetwork-anchor" />
+            </intent-filter>
+        </activity>
+
+        <!-- 屏幕尺寸警告 -->
+        <activity
+            android:name=".liveshow.login.WarningActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.home.MainFragmentActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+
+        <!-- <activity -->
+        <!-- android:name=".liveshow.TestActivity" -->
+        <!-- android:launchMode="singleTop" -->
+        <!-- android:screenOrientation="portrait" /> -->
+
+
+        <!-- 直播间 -->
+
+        <activity
+            android:name=".liveshow.liveroom.PublicTransitionActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+
+        <!-- android:hardwareAccelerated="true" -->
+        <!-- add by Jagger 视频有问题可加上试试 -->
+        <activity
+            android:name=".liveshow.WebViewActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.personal.scheduleinvite.ScheduleInviteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.member.MemberProfileActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
+
+        <!--节目-->
+        <activity
+            android:name=".liveshow.personal.shows.MyShowsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.personal.shows.ProgramDetailActivity"
+            android:screenOrientation="portrait" />
+
+        <!-- 软键盘弹出后的高度后面通过自定义EditText细调节 -->
+        <activity
+            android:name=".liveshow.liveroom.LiveRoomTransitionActivity"
+            android:screenOrientation="portrait">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".liveshow.liveroom.ProgramLiveTransitionActivity"
+            android:screenOrientation="portrait">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".liveshow.liveroom.LiveRoomEndActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".liveshow.liveroom.PublicLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".liveshow.liveroom.PrivateLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!--多人互动-->
+
+        <activity
+            android:name=".liveshow.hangout.OngoingHangoutListActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".liveshow.liveroom.HangOutRoomTransActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
+
+        <activity
+            android:name=".liveshow.liveroom.HangOutLiveRoomActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".liveshow.liveroom.HangOutRoomEndActivity"
+            android:screenOrientation="portrait" />
+        <!-- 广告 -->
+
+
+        <!-- 预约直播　 -->
+
+
+        <!-- 　引导　 -->
+
+
+        <!--
+         android:launchMode="singleTop"
+         android:process=":AnchorProfileWebView"
+         android:screenOrientation="portrait"
+        -->
+
+
+        <!-- 登录,注册 -->
+
+
+        <!-- 填写资料 -->
+
+
+        <!-- 服务冲突提示框 -->
+        <activity
+            android:name=".liveshow.pushmanager.ServiceConflictDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent"/>
+        <!-- Facebook sdk -->
+        <!-- <activity -->
+        <!-- android:name=".liveshow.welcome.FacebookSdkTestActivity" -->
+        <!-- android:screenOrientation="portrait"> -->
+        <!-- &lt;!&ndash; 独立版 &ndash;&gt; -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
+
+        <!-- <provider -->
+        <!-- android:name="com.facebook.FacebookContentProvider" -->
+        <!-- android:authorities="com.facebook.app.FacebookContentProvider145949329397789" -->
+        <!-- android:exported="true" /> -->
+
+    </application>
+
+</manifest>

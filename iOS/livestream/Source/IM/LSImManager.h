@@ -50,6 +50,30 @@
  @param ongoingShowList 显示可以进入的节目
  */
 - (void)onHandleLoginOnGingShowList:(NSArray<IMOngoingShowItemObject*> * _Nullable) ongoingShowList;
+
+/**
+ 接收到多人互动主播推荐好友通知
+ 
+ @param firendItem 推荐好友的信息
+ */
+- (void)onHandleRecommendHangoutFriend:(IMRecommendHangoutItemObject* _Nullable)firendItem;
+
+/**
+ 在多人直播间接收多人互动主播敲门通知
+ 
+ @param knockItem 推荐好友的信息
+ */
+- (void)onHandleKnockRequest:(IMKnockRequestItemObject* _Nullable)knockItem;
+
+/**
+ 在多人直播间接收进入多人互动直播间倒数通知
+ 
+ @param roomId 待进入的直播间ID
+ @param anchorId 主播ID
+ @param leftSecond 进入直播间的剩余秒数
+ */
+- (void)onHandleEnterHangoutCountDown:(NSString* _Nonnull)roomId anchorId:(NSString* _Nonnull)anchorId leftSecond:(int)leftSecond;
+
 @end
 
 @interface LSImManager : NSObject
@@ -228,7 +252,7 @@ typedef void (^LeaveHangoutRoomHandler)(BOOL success, LCC_ERR_TYPE errType, NSSt
  */
 - (BOOL)leaveHangoutRoom:(NSString* _Nonnull)roomId finishHandler:(LeaveHangoutRoomHandler _Nullable)finishHandler;
 
-typedef void (^SendHangoutGiftHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg);
+typedef void (^SendHangoutGiftHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, double credit);
 /**
  *  10.7.发送多人互动直播间礼物消息接口
  *
@@ -248,5 +272,25 @@ typedef void (^SendHangoutGiftHandler)(BOOL success, LCC_ERR_TYPE errType, NSStr
  */
 - (BOOL)sendHangoutGift:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName toUid:(NSString* _Nonnull)toUid giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate finishHandler:(SendHangoutGiftHandler _Nullable)finishHandler;
 
+typedef void (^ControlManPushHangoutHandler)(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, NSArray<NSString *> *_Nonnull manPushUrl);
+/**
+ 10.11.多人互动观众开始/结束视频互动
+ 
+ @param roomId 直播间ID
+ @param control 视频操作
+ @return YES:成功/NO:失败
+ */
+-(BOOL)controlManPushHangout:(NSString *_Nonnull)roomId control:(IMControlType)control finishHandler:(ControlManPushHangoutHandler _Nullable )finishHandler;
+
+/**
+ *  10.12.发送多人互动直播间文本消息接口
+ *
+ *  @param roomId           直播间ID
+ *  @param nickName         发送者昵称
+ *  @param msg              发送的信息
+ *  @param at               用户ID，用于指定接收者（字符串数组）（可无，无则表示发送给直播间所有人）
+ *
+ */
+- (BOOL)sendHangoutLiveChat:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at;
 
 @end

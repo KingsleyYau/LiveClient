@@ -122,7 +122,11 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
                         //重连次数达标，需要换url
                         mPlayerReconnectCount = 0;
                         mPlayerUrlCurPosition++;
-                        startPlayerInternal();
+                        //替换url需先停止再启动
+                        if(mLSPlayer != null){
+                            mLSPlayer.stop();
+                            startPlayerInternal();
+                        }
                     }
                 }
             });

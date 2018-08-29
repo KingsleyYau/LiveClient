@@ -29,7 +29,7 @@ public:
             }
             /* useRoomType */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_USEROOMTYPE].isNumeric()) {
-                useRoomType = (UseRoomType)root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_USEROOMTYPE].asInt();
+                useRoomType = GetIntToUseRoomType(root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_USEROOMTYPE].asInt());
             }
             /* expTime */
             if (root[LIVEROOM_GETVOUCHERAVAILABLEINFO_BINDANCHOR_EXPTIME].isNumeric()) {

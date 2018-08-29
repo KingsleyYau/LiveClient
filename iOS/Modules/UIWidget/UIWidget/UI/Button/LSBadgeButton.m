@@ -36,6 +36,7 @@
             badgeLabel.font = labelFont;
             badgeLabel.textAlignment = NSTextAlignmentCenter;
             badgeLabel.tag = BADGE_LABEL_TAG;
+            [badgeLabel sizeToFit];
             [badgeView addSubview:badgeLabel];
         }
 
@@ -50,12 +51,11 @@
 
         // place badgeView on top right corner
         if (size.width > 12) {
-            frame.size = CGSizeMake(size.width + 12, 12);
+            frame.size = CGSizeMake(ceil(size.width)+ 12, 12);
         } else {
             frame.size = CGSizeMake(12, 12);
         }
-        frame.origin = CGPointMake(self.frame.size.width - floor(frame.size.width / 2),
-                                   floor(frame.size.height / 2) + 5);
+        frame.origin = CGPointMake(self.frame.size.width - floor(frame.size.width / 2), 0);
         badgeView.frame = frame;
 
         badgeView.layer.cornerRadius = badgeView.frame.size.height * 0.5;

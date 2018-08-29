@@ -1,0 +1,17 @@
+
+/* Class = "UIButton"; normalTitle = "My Balance"; ObjectID = "hru-sp-1Lb"; */
+"hru-sp-1Lb.normalTitle" = "My Balance";
+
+"SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
+
+"NO_TENOUGH_LOVE" = "This gift is only available for viewers with an Intimacy Level of ";
+"NO_TENOUGH_LEVEL" = "This gift is only available for viewers of level ";
+
+"OR_HIGHER" = " or higher.";
+
+"BIG_GIFT_SEND_FAIL" = "Failed to send %@. Please try again.";
+
+"STORE" = "Store";
+"BACKPACK" = "Backpack";
+
+"SENDGIFT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";

@@ -94,11 +94,11 @@ static LSAnchorRequestManager *gManager = nil;
 + (void)setLogDirectory:(NSString *)directory {
     KLog::SetLogDirectory(directory?[directory UTF8String]:"");
     HttpClient::SetCookiesDirectory(directory?[directory UTF8String]:"");
-//    CleanDir([directory UTF8String]);
+    //    CleanDir([directory UTF8String]);
 }
 
 + (void)setProxy:(NSString * _Nullable)proxyUrl {
-   // HttpClient::SetProxy(proxyUrl?[proxyUrl UTF8String]:"");
+    // HttpClient::SetProxy(proxyUrl?[proxyUrl UTF8String]:"");
 }
 
 - (void)setConfigWebSite:(NSString * _Nonnull)webSite {
@@ -703,7 +703,7 @@ public:
 };
 RequestZBGetGiftDetailCallbackImp gRequestZBGetGiftDetailCallbackImp;
 - (NSInteger)anchorGetGiftDetail:(NSString *_Nonnull)giftId
-             finishHandler:(ZBGetGiftDetailFinishHandler _Nullable)finishHandler {
+                   finishHandler:(ZBGetGiftDetailFinishHandler _Nullable)finishHandler {
     string strGiftId = "";
     if (nil != giftId) {
         strGiftId = [giftId UTF8String];
@@ -895,9 +895,9 @@ public:
 };
 RequestZBManHandleBookingListCallbackImp gRequestZBManHandleBookingListCallbackImp;
 - (NSInteger)anchorManHandleBookingList:(ZBBookingListType)type
-                            start:(int)start
-                             step:(int)step
-                    finishHandler:(ZBManHandleBookingListFinishHandler _Nullable)finishHandler {
+                                  start:(int)start
+                                   step:(int)step
+                          finishHandler:(ZBManHandleBookingListFinishHandler _Nullable)finishHandler {
     NSInteger request = (NSInteger)mHttpRequestController.ZBManHandleBookingList(&mHttpRequestManager, type, start, step, &gRequestZBManHandleBookingListCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -929,7 +929,7 @@ public:
 };
 RequestZBAcceptScheduledInviteCallbackImp gRequestZBAcceptScheduledInviteCallbackImp;
 - (NSInteger)anchorAcceptScheduledInvite:(NSString *_Nonnull)inviteId
-                          finishHandler:(ZBAcceptScheduledInviteFinishHandler _Nullable)finishHandler {
+                           finishHandler:(ZBAcceptScheduledInviteFinishHandler _Nullable)finishHandler {
     string strTalentInviteId = "";
     if (nil != inviteId) {
         strTalentInviteId = [inviteId UTF8String];
@@ -1071,7 +1071,7 @@ public:
 };
 RequestZBAcceptInstanceInviteCallbackImp gRequestZBAcceptInstanceInviteCallbackImp;
 - (NSInteger)anchorAcceptInstanceInvite:(NSString *_Nullable)inviteId
-                    finishHandler:(ZBAcceptInstanceInviteFinishHandler _Nullable)finishHandler {
+                          finishHandler:(ZBAcceptInstanceInviteFinishHandler _Nullable)finishHandler {
     string strInviteId = "";
     if (nil != inviteId) {
         strInviteId = [inviteId UTF8String];
@@ -1150,12 +1150,12 @@ public:
 };
 RequestZBCancelInstantInviteUserCallbackImp gRequestZBCancelInstantInviteUserCallbackImp;
 - (NSInteger)anchorCancelInstantInvite:(NSString* _Nullable)inviteId
-                           finishHandler:(ZBCancelInstantInviteFinishHandler _Nullable)finishHandler {
+                         finishHandler:(ZBCancelInstantInviteFinishHandler _Nullable)finishHandler {
     string strInviteId = "";
     if (nil != inviteId) {
         strInviteId = [inviteId UTF8String];
     }
-
+    
     NSInteger request = (NSInteger)mHttpRequestController.ZBCancelInstantInviteUser(&mHttpRequestManager, strInviteId, &gRequestZBCancelInstantInviteUserCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -1276,7 +1276,7 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-
+        
         if (handler) {
             handler(success, [[LSAnchorRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], obj);
         }
@@ -1316,8 +1316,8 @@ public:
 };
 RequestZBServerSpeedCallbackImp gRequestZBServerSpeedCallbackImp;
 - (NSInteger)anchorServerSpeed:(NSString *_Nonnull)sid
-                     res:(int)res
-           finishHandler:(ZBServerSpeedFinishHandler _Nullable)finishHandler {
+                           res:(int)res
+                 finishHandler:(ZBServerSpeedFinishHandler _Nullable)finishHandler {
     NSInteger request = (NSInteger)mHttpRequestController.ZBServerSpeed(&mHttpRequestManager, [sid UTF8String], res, &gRequestZBServerSpeedCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -1580,7 +1580,7 @@ public:
     RequestAnchorSendKnockRequestCallbackImp(){};
     ~RequestAnchorSendKnockRequestCallbackImp(){};
     void OnAnchorSendKnockRequest(HttpAnchorSendKnockRequestTask* task, bool success, int errnum, const string& errmsg, const string& knockId, int expire) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetOngoingHangoutList( task : %p, success : %s, errnum : %d, errmsg : %s knockId : %s expire : %d)", task, success ? "true" : "false", errnum, errmsg.c_str(), knockId.c_str(), expire);
+        NSLog(@"LSAnchorRequestManager::OnAnchorSendKnockRequest( task : %p, success : %s, errnum : %d, errmsg : %s knockId : %s expire : %d)", task, success ? "true" : "false", errnum, errmsg.c_str(), knockId.c_str(), expire);
         
         
         AnchorSendKnockRequestFinishHandler handler = nil;
@@ -1591,7 +1591,7 @@ public:
         }
         
         if (handler) {
-           handler(success, [[LSAnchorRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:knockId.c_str()], expire);
+            handler(success, [[LSAnchorRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], [NSString stringWithUTF8String:knockId.c_str()], expire);
         }
     }
 };
@@ -1618,7 +1618,7 @@ public:
     RequestAnchorGetHangoutKnockStatusCallbackImp(){};
     ~RequestAnchorGetHangoutKnockStatusCallbackImp(){};
     void OnAnchorGetHangoutKnockStatus(HttpAnchorGetHangoutKnockStatusTask* task, bool success, int errnum, const string& errmsg, const string& roomId, AnchorMultiKnockType status, int expire) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetOngoingHangoutList( task : %p, success : %s, errnum : %d, errmsg : %s roomId : %s status : %d expire : %d)", task, success ? "true" : "false", errnum, errmsg.c_str(), roomId.c_str(), status, expire);
+        NSLog(@"LSAnchorRequestManager::OnAnchorGetHangoutKnockStatus( task : %p, success : %s, errnum : %d, errmsg : %s roomId : %s status : %d expire : %d)", task, success ? "true" : "false", errnum, errmsg.c_str(), roomId.c_str(), status, expire);
         
         
         AnchorGetHangoutKnockStatusFinishHandler handler = nil;
@@ -1657,7 +1657,7 @@ public:
     RequestAnchorCancelHangoutKnockCallbackCallbackImp(){};
     ~RequestAnchorCancelHangoutKnockCallbackCallbackImp(){};
     void OnAnchorCancelHangoutKnock(HttpAnchorCancelHangoutKnockTask* task, bool success, int errnum, const string& errmsg) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetOngoingHangoutList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSLog(@"LSAnchorRequestManager::OnAnchorCancelHangoutKnock( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         
         AnchorCancelHangoutKnockFinishHandler handler = nil;
@@ -1695,7 +1695,7 @@ public:
     RequestAnchorHangoutGiftListCallbackImp(){};
     ~RequestAnchorHangoutGiftListCallbackImp(){};
     void OnAnchorHangoutGiftList(HttpAnchorHangoutGiftListTask* task, bool success, int errnum, const string& errmsg, const HttpAnchorHangoutGiftListItem& hangoutGiftItem) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetOngoingHangoutList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSLog(@"LSAnchorRequestManager::OnAnchorHangoutGiftList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         AnchorHangoutGiftListObject *obj = [[AnchorHangoutGiftListObject alloc] init];
         NSMutableArray *buyArray = [NSMutableArray array];
@@ -1763,7 +1763,7 @@ public:
     ~RequestAnchorGetProgramListCallbackImp(){};
     void OnAnchorGetProgramList(HttpAnchorGetProgramListTask* task, bool success, int errnum, const string& errmsg, const AnchorProgramInfoList& list) {
         NSLog(@"LSAnchorRequestManager::OnAnchorGetProgramList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
-
+        
         NSMutableArray* array = [NSMutableArray array];
         for(AnchorProgramInfoList::const_iterator iter = list.begin(); iter != list.end(); iter++) {
             LSAnchorProgramItemObject* item = [[LSAnchorProgramItemObject alloc] init];
@@ -1791,7 +1791,7 @@ public:
             handler = [manager.delegateDictionary objectForKey:@((NSInteger)task)];
             [manager.delegateDictionary removeObjectForKey:@((NSInteger)task)];
         }
-
+        
         if (handler) {
             handler(success, [[LSAnchorRequestManager manager] intToHttpLccErrType:errnum], [NSString stringWithUTF8String:errmsg.c_str()], array);
         }
@@ -1803,15 +1803,15 @@ RequestAnchorGetProgramListCallbackImp gRequestAnchorGetProgramListCallbackImp;
                              step:(int)step
                            status:(AnchorProgramListType)status
                     finishHandler:(AnchorGetProgramListFinishHandler _Nullable)finishHandler {
-
-        NSInteger request = (NSInteger)mHttpRequestController.AnchorGetProgramList(&mHttpRequestManager, start, step, status, &gRequestAnchorGetProgramListCallbackImp);
-        if (request != HTTPREQUEST_INVALIDREQUESTID) {
-            @synchronized(self.delegateDictionary) {
-                [self.delegateDictionary setObject:finishHandler forKey:@(request)];
-            }
-        }
     
-        return request;
+    NSInteger request = (NSInteger)mHttpRequestController.AnchorGetProgramList(&mHttpRequestManager, start, step, status, &gRequestAnchorGetProgramListCallbackImp);
+    if (request != HTTPREQUEST_INVALIDREQUESTID) {
+        @synchronized(self.delegateDictionary) {
+            [self.delegateDictionary setObject:finishHandler forKey:@(request)];
+        }
+    }
+    
+    return request;
 }
 
 class RequestAnchorGetNoReadNumProgramCallbackImp : public IRequestAnchorGetNoReadNumProgramCallback {
@@ -1819,7 +1819,7 @@ public:
     RequestAnchorGetNoReadNumProgramCallbackImp(){};
     ~RequestAnchorGetNoReadNumProgramCallbackImp(){};
     void OnAnchorGetNoReadNumProgram(HttpAnchorGetNoReadNumProgramTask* task, bool success, int errnum, const string& errmsg, int num) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetOngoingHangoutList( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSLog(@"LSAnchorRequestManager::OnAnchorGetNoReadNumProgram( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         AnchorGetNoReadNumProgramFinishHandler handler = nil;
         LSAnchorRequestManager *manager = [LSAnchorRequestManager manager];
@@ -1888,9 +1888,9 @@ RequestAnchorGetShowRoomInfoCallbackImp gRequestAnchorGetShowRoomInfoCallbackImp
 - (NSInteger)anchorGetShowRoomInfo:(NSString* _Nonnull)liveShowId
                      finishHandler:(AnchorGetShowRoomInfoFinishHandler _Nullable)finishHandler {
     string strLiveShowId = "";
-        if (nil != liveShowId) {
-            strLiveShowId = [liveShowId UTF8String];
-        }
+    if (nil != liveShowId) {
+        strLiveShowId = [liveShowId UTF8String];
+    }
     NSInteger request = (NSInteger)mHttpRequestController.AnchorGetShowRoomInfo(&mHttpRequestManager, strLiveShowId, &gRequestAnchorGetShowRoomInfoCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {
@@ -1906,7 +1906,7 @@ public:
     RequestAnchorCheckIsPlayProgramCallbackImp(){};
     ~RequestAnchorCheckIsPlayProgramCallbackImp(){};
     void OnAnchorCheckPublicRoomType(HttpAnchorCheckIsPlayProgramTask* task, bool success, int errnum, const string& errmsg, AnchorPublicRoomType liveShowType, const string& liveShowId) {
-        NSLog(@"LSAnchorRequestManager::OnAnchorGetShowRoomInfo( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
+        NSLog(@"LSAnchorRequestManager::OnAnchorCheckPublicRoomType( task : %p, success : %s, errnum : %d, errmsg : %s)", task, success ? "true" : "false", errnum, errmsg.c_str());
         
         NSString* strLiveShowId = [NSString stringWithUTF8String:liveShowId.c_str()];
         
@@ -1925,7 +1925,7 @@ public:
 
 RequestAnchorCheckIsPlayProgramCallbackImp gRequestAnchorCheckIsPlayProgramCallbackImp;
 - (NSInteger)anchorCheckPublicRoomType:(AnchorCheckPublicRoomTypeFinishHandler _Nullable)finishHandler {
-
+    
     NSInteger request = (NSInteger)mHttpRequestController.AnchorCheckPublicRoomType(&mHttpRequestManager, &gRequestAnchorCheckIsPlayProgramCallbackImp);
     if (request != HTTPREQUEST_INVALIDREQUESTID) {
         @synchronized(self.delegateDictionary) {

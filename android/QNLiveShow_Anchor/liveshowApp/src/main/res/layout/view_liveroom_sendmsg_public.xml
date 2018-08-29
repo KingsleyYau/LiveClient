@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_input_edit_body"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="49dp"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:clickable="true"
+    android:visibility="visible"
+    android:onClick="onClick"
+    android:paddingLeft="13dp"
+    android:paddingRight="13dp"
+    android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/ll_audienceChooser"
+            android:layout_width="77dp"
+            android:layout_height="wrap_content"
+            android:minHeight="24dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/bg_public_choosed_user"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="7dp"
+            android:paddingRight="9dp">
+
+                <TextView
+                    android:id="@+id/tv_audienceNickname"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@android:color/white"
+                    android:text="Hello"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textSize="@dimen/custom_dialog_text_size_simple" />
+
+                <ImageView
+                    android:id="@+id/iv_audienceIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/selector_live_buttom_audience_indicator" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_liveMsg"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:ellipsize="end"
+            android:hint="@string/txt_hint_input_general"
+            android:textColorHint="@color/public_tran_tips_color"
+            android:textColor="@android:color/black"
+            android:textSize="13sp"
+            android:gravity="center_vertical"
+            android:imeOptions="actionSend"
+            android:singleLine="true"/>
+        <ImageView
+            android:id="@+id/iv_emojiSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_liveroom_emojiswitch"
+            android:paddingRight="8dp"
+            android:paddingLeft="2dp"
+            android:visibility="gone"
+            android:scaleType="centerInside"
+            android:onClick="onClick"
+            />
+        <ImageView
+            android:id="@+id/iv_gift"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/ic_liveroom_buttom_gift_public"
+            android:onClick="onClick" />
+</LinearLayout>

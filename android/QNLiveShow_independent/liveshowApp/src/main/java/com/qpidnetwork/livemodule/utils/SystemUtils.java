@@ -1,9 +1,6 @@
 package com.qpidnetwork.livemodule.utils;
 
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -90,15 +87,23 @@ public class SystemUtils {
 	}
 
 	/**
-	 * 复制信息到粘贴板上
-	 *
+	 * 取VersionName
 	 * @param context
-	 * @param message
+	 * @return
 	 */
-	@SuppressLint("NewApi")
-	public static void copyMessageToClipboard(Context context, String message) {
-		ClipboardManager cmb = (ClipboardManager) context
-				.getSystemService(Context.CLIPBOARD_SERVICE);
-		cmb.setPrimaryClip(ClipData.newPlainText(null, message));
+	public static String getVersionName(Context context) {
+		String versionName = "";
+		PackageManager pm = context.getPackageManager();
+		PackageInfo pi = null;
+		try {
+			pi = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_ACTIVITIES);
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		if (pi != null) {
+			// 版本号
+			versionName = pi.versionName;
+		}
+		return versionName;
 	}
 }

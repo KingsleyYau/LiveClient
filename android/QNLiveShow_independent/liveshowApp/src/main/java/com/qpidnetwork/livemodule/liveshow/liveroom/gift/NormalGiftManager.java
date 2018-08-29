@@ -429,7 +429,7 @@ public class NormalGiftManager {
             giftItem = allGiftItems.get(giftId);
         }
         if(allUnkonwGiftItems != null && allUnkonwGiftItems.containsKey(giftId)){
-            giftItem = allGiftItems.get(giftId);
+            giftItem = allUnkonwGiftItems.get(giftId);
         }
         return giftItem;
     }

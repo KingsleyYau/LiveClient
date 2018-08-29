@@ -9,11 +9,12 @@
 #import "PrivateViewController.h"
 #import "LiveWebViewController.h"
 #import "AnchorPersonalViewController.h"
+#import "StartHangOutTipView.h"
 
-#import "LSImageViewLoader.h"
-
-#import "LSLoginManager.h"
 #import "LiveModule.h"
+
+#import "UserInfoManager.h"
+#import "LSLoginManager.h"
 #import "LSConfigManager.h"
 #import "LSImManager.h"
 
@@ -23,11 +24,10 @@
 
 #import "SetFavoriteRequest.h"
 
-#import "RandomGiftModel.h"
-#import "UserInfoManager.h"
+#import "LSImageViewLoader.h"
 
-
-@interface PrivateViewController () <LiveViewControllerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate,IMManagerDelegate>
+@interface PrivateViewController () <LiveViewControllerDelegate, IMLiveRoomManagerDelegate, PlayViewControllerDelegate,IMManagerDelegate,
+                                        StartHangOutTipViewDelegate>
 // IM管理器
 @property (nonatomic, strong) LSImManager *imManager;
 // 资费提示小时计时器
@@ -47,10 +47,8 @@
 
 #pragma mark - 随机礼物控制
 @property (strong) LSTimer *randomGiftTimer;
-@property (atomic, strong) NSArray *giftArray;
+@property (atomic, strong) NSArray<LSGiftManagerItem *> *giftArray;
 @property (atomic, assign) NSInteger randomGiftIndex;
-// 是否第一次随机礼物
-@property (nonatomic, assign) BOOL firstRandom;
 
 // 对话框控件
 @property (strong) DialogTip *dialogTipView;
@@ -94,7 +92,6 @@
 
     self.dialogTipView = [DialogTip dialogTip];
 
-    self.firstRandom = YES;
     self.canPublish = NO;
 
     // 初始化计时器
@@ -131,6 +128,9 @@
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
 
+    // 隐藏亲密度控件
+    self.intimacyHeadView.hidden = YES;
+    
     // 初始化播放界面
     [self setupPlayController];
 }
@@ -178,8 +178,8 @@
     [self setupHeaderImageView];
 
     // 通知外部处理
-    if ([self.delegate respondsToSelector:@selector(onSetupViewController:)]) {
-        [self.delegate onSetupViewController:self];
+    if ([self.vcDelegate respondsToSelector:@selector(onSetupViewController:)]) {
+        [self.vcDelegate onSetupViewController:self];
     }
 }
 
@@ -211,8 +211,8 @@
     self.playVC.liveVC.roomStyleItem.textBackgroundViewColor = Color(191, 191, 191, 0.17);
     
     // 修改高级私密直播间样式
-    if ([self.delegate respondsToSelector:@selector(setUpLiveRoomType:)]) {
-        [self.delegate setUpLiveRoomType:self];
+    if ([self.vcDelegate respondsToSelector:@selector(setUpLiveRoomType:)]) {
+        [self.vcDelegate setUpLiveRoomType:self];
     }
 
     [self.view addSubview:self.playVC.view];
@@ -404,16 +404,25 @@
     [self.closeDialogTipView showDialog:self.view cancelBlock:^{
         
     } actionBlock:^{
-        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+//        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
+        LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
+        [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
     }];
+}
+
+- (IBAction)hangoutAction:(id)sender {
+    // TODO:点击显示Hangout提示框
+    if ([self.vcDelegate respondsToSelector:@selector(showHangoutTipView:)]) {
+        [self.vcDelegate showHangoutTipView:self];
+    }
 }
 
 - (IBAction)randomGiftAction:(id)sender {
     // TODO:点击随机礼物
     [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickRecommendGift eventCategory:EventCategoryBroadcast];
     if (self.randomGiftIndex != -1) {
-        RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
-        [self.playVC.presentView randomSelect:gift.randomInteger];
+        LSGiftManagerItem *item = [self.giftArray objectAtIndex:self.randomGiftIndex];
+        [self.playVC.giftVC selectItem:item];
     }
 
     // 打开礼物界面
@@ -633,11 +642,11 @@
 }
 
 #pragma mark - IM回调
-- (void)onRecvLoveLevelUpNotice:(int)loveLevel {
-    NSLog(@"PrivateViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d )", loveLevel);
+- (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *  _Nonnull)loveLevelItem {
+    NSLog(@"PrivateViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d, anchorId: %@, anchorName: %@ )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
     dispatch_async(dispatch_get_main_queue(), ^{
         // TODO:刷新亲密度
-        NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d", loveLevel];
+        NSString *imageName = [NSString stringWithFormat:@"Live_Private_Img_Intimacy_Head_%d",  loveLevelItem.loveLevel];
         UIImage *image = [UIImage imageNamed:imageName];
         if (image) {
             self.intimacyImageView.image = image;
@@ -658,32 +667,37 @@
 }
 
 #pragma mark - 播放界面回调
-- (void)onGetLiveRoomGiftList:(NSArray<LiveRoomGiftModel *> *)array {
-    NSLog(@"PrivateViewController::onGetLiveRoomGiftList( count : %lu )", (unsigned long)array.count);
-    // 更新礼物数组
-    self.giftArray = array;
-
-    if (self.firstRandom) {
-        int randValue = rand();
-        self.randomGiftIndex = randValue % self.giftArray.count;
-        RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
-        LiveRoomGiftModel *giftModel = gift.giftModel;
-
-        WeakObject(self, weakSelf);
-        [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:giftModel.allItem.infoItem.smallImgUrl]
-            options:0
-            progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *_Nullable targetURL) {
-
-            }
-            completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
-                if (image) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
-                    });
-                }
-            }];
-        self.firstRandom = NO;
-    }
+- (void)didChangeGiftList:(PlayViewController *)vc {
+    NSLog(@"PrivateViewController::didChangeGiftList()");
+    
+    LSGiftManager *giftManager = [LSGiftManager manager];
+    [giftManager getRoomRandomGiftList:self.liveRoom.roomId finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+        // 更新礼物数组
+        self.giftArray = giftList;
+        self.randomGiftIndex = -1;
+        
+        if (self.giftArray.count > 0) {
+            int randValue = rand();
+            self.randomGiftIndex = randValue % self.giftArray.count;
+            LSGiftManagerItem *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
+            
+            NSLog(@"PrivateViewController::didChangeGiftList( [Update random gift], count : %d, randomGiftIndex : %d )", (int)giftList.count, (int)self.randomGiftIndex);
+            
+            WeakObject(self, weakSelf);
+            [[SDWebImageManager sharedManager] loadImageWithURL:[NSURL URLWithString:gift.infoItem.smallImgUrl]
+                                                        options:0
+                                                       progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL *_Nullable targetURL) {
+                                                           
+                                                       }
+                                                      completed:^(UIImage *_Nullable image, NSData *_Nullable data, NSError *_Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL *_Nullable imageURL) {
+                                                          if (image) {
+                                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                                  [weakSelf.playVC.randomGiftBtn setImage:image forState:UIControlStateNormal];
+                                                              });
+                                                          }
+                                                      }];
+        }
+    }];
 }
 
 #pragma mark - 倒数控制
@@ -696,10 +710,9 @@
         if (self.giftArray.count > 0) {
             int randValue = rand();
             self.randomGiftIndex = randValue % self.giftArray.count;
-            self.playVC.presentRow = self.randomGiftIndex;
-            RandomGiftModel *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
-            LiveRoomGiftModel *giftModel = gift.giftModel;
-            NSString *url = [[LiveGiftDownloadManager manager] backMiddleImgUrlWithGiftID:giftModel.giftId];
+
+            LSGiftManagerItem *gift = [self.giftArray objectAtIndex:self.randomGiftIndex];
+            NSString *url = gift.infoItem.middleImgUrl;
 
             WeakObject(self, weakSelf);
             SDWebImageManager *manager = [SDWebImageManager sharedManager];
@@ -717,6 +730,7 @@
                 }];
         } else {
             // 没有随机礼物
+            NSLog(@"PrivateViewController::randomGiftCountDown( [No random gift] )");
             self.randomGiftIndex = -1;
         }
     });

@@ -10,11 +10,13 @@
 
 #import "PrivateViewController.h"
 #import "TalentOnDemandViewController.h"
+#import "StartHangOutTipView.h"
 #import "LiveModule.h"
 #import "RoomTypeIsFirstManager.h"
 
-@interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate>
+@interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate, StartHangOutTipViewDelegate>
 @property (strong) PrivateViewController *vc;
+@property (strong) UINavigationController *navVC;
 @property (strong) TalentOnDemandViewController *talentVC;
 @property (nonatomic, strong) UIButton *backBtn;
 #pragma mark - 直播间管理器
@@ -22,6 +24,12 @@
 @property (nonatomic, strong) RoomTypeIsFirstManager *firstManager;
 
 @property (nonatomic, assign) BOOL haveCome;
+
+@property (nonatomic, strong) UIImageView * talentIcon;
+
+// Hangout提示框
+@property (nonatomic, strong) StartHangOutTipView *hangoutTipView;
+@property (nonatomic, strong) UIButton *closeHangoutTipBtn;
 @end
 
 @implementation PrivateVipViewController
@@ -34,11 +42,14 @@
     self.firstManager = [RoomTypeIsFirstManager manager];
     
     self.vc = [[PrivateViewController alloc] initWithNibName:nil bundle:nil];
-    self.vc.delegate = self;
+    self.vc.vcDelegate = self;
     [self addChildViewController:self.vc];
     
     self.talentVC = [[TalentOnDemandViewController alloc] initWithNibName:nil bundle:nil];
-    [self addChildViewController:self.talentVC];
+    self.talentVC.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, 300);
+    self.navVC = [[UINavigationController alloc] initWithRootViewController:self.talentVC];
+     self.navVC.navigationBar.barTintColor = [UIColor blackColor];
+     self.navVC.view.frame = CGRectMake(0, SCREEN_HEIGHT - self.talentVC.view.frame.size.height, SCREEN_WIDTH, self.talentVC.view.frame.size.height);
 }
 
 - (void)dealloc {
@@ -48,6 +59,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self setupHangOutTipView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -72,8 +84,29 @@
     
     self.talentVC.liveRoom = self.liveRoom;
     self.talentVC.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(showTalentList) name:@"showTalentList" object:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:@"showTalentList" object:nil];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    CGFloat y = 150;
+    CGFloat x = ([UIScreen mainScreen].bounds.size.width - 310) / 2;
+    self.hangoutTipView.frame = CGRectMake(x, y, 310, 228);
+}
+
+#pragma mark 接收showTalentList 通知
+- (void)showTalentList {
+    [self talentAction:nil];
+}
+
+#pragma mark 设置界面
 - (void)setupContainView {
     [super setupContainView];
 
@@ -94,15 +127,17 @@
         make.edges.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.talentVC.view];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.view addSubview:self.navVC.view];
+    [self addChildViewController: self.navVC];
+    [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_bottom);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
-        make.height.equalTo(@(220));
+        make.height.equalTo(@(self.navVC.view.frame.size.height));
     }];
 }
 
+#pragma mark - PrivateViewControllerDelegate
 - (void)setUpLiveRoomType:(PrivateViewController *)vc {
     // 连击礼物
     self.vc.playVC.liveVC.roomStyleItem.comboViewBgImage = [UIImage imageNamed:@"Live_Private_Vip_Bg_Combo"];
@@ -125,18 +160,6 @@
 }
 
 - (void)onSetupViewController:(PrivateViewController *)vc {
-    // 底部背景
-//    self.vc.bgImageView.image = nil;//[UIImage imageNamed:@"Live_Private_Vip_Bg_Bottom"];
-    // 房间类型
-//    self.vc.roomTypeImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Type"];
-//    [self.vc.roomTypeImageView sizeToFit];
-    // 标题背景
-//    self.vc.titleBackGroundView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Title"];
-//    // 头像背景
-//    self.vc.manHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Man_Head"];
-//    self.vc.ladyHeadBgImageView.image = [UIImage imageNamed:@"Live_Private_Vip_Bg_Lady_Head"];
-//    // 关注按钮
-//    [self.vc.followBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Follow"] forState:UIControlStateNormal];
     // 返点界面
     self.vc.playVC.liveVC.rewardedBgView.backgroundColor = COLOR_WITH_16BAND_RGB(0X644C3B);//Color(61, 51, 44, 1.0);
     // 才艺点播
@@ -147,6 +170,27 @@
     [self.vc.playVC.giftBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Gift"] forState:UIControlStateNormal];
     // 输入栏目
     [self.vc.playVC.chatBtn setImage:[UIImage imageNamed:@"Live_Private_Vip_Btn_Chat"]];
+    
+    
+    self.talentIcon = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 36, 36)];
+    self.talentIcon.userInteractionEnabled = YES;
+    [self.talentIcon addGestureRecognizer:[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(talentAction:)]];
+    [self.vc.playVC.talentBtn addSubview:self.talentIcon];
+
+    NSMutableArray * array = [NSMutableArray array];
+    for (int i = 1; i <= 12; i++) {
+        [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"TalentIcon%d",i]]];
+    }
+    for (int i = 1; i <= 6; i++) {
+        [array addObject:[UIImage imageNamed:[NSString stringWithFormat:@"TalentIcon%d",12]]];
+    }
+    
+    self.talentIcon.animationImages = array;
+    self.talentIcon.animationDuration = 0.9;
+    self.talentIcon.animationRepeatCount = 5;
+    [self.talentIcon startAnimating];
+    [self performSelector:@selector(hidenTalentIcon) withObject:self afterDelay:4.5];
+    
     // 房间类型提示
 //    self.vc.tipView.gotBtn.backgroundColor = COLOR_WITH_16BAND_RGB(0X5D0E86);
 //    [self.vc.tipView setTipWithRoomPrice:self.liveRoom.imLiveRoom.roomPrice
@@ -174,16 +218,56 @@
     self.vc.playVC.liveVC.barrageViewTop.constant = -6;
 }
 
+- (void)showHangoutTipView:(PrivateViewController *)vc {
+    [self showHangoutTipView];
+}
+
+- (void)hidenTalentIcon {
+    self.talentIcon.hidden = YES;
+}
+
+- (void)setupHangOutTipView {
+    self.hangoutTipView = [[StartHangOutTipView alloc] init];
+    self.hangoutTipView.hidden = YES;
+    self.hangoutTipView.delegate = self;
+    self.hangoutTipView.layer.shadowColor = Color(0, 0, 0, 1).CGColor;
+    self.hangoutTipView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.hangoutTipView.layer.shadowRadius = 1;
+    self.hangoutTipView.layer.shadowOpacity = 0.1;
+    [self.view addSubview:self.hangoutTipView];
+    
+    self.closeHangoutTipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.closeHangoutTipBtn.hidden = YES;
+    [self.closeHangoutTipBtn addTarget:self action:@selector(removeHangoutTip:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.closeHangoutTipBtn];
+    [self.closeHangoutTipBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view);
+    }];
+}
+
+- (void)showHangoutTipView {
+    [self.view bringSubviewToFront:self.closeHangoutTipBtn];
+    [self.view bringSubviewToFront:self.hangoutTipView];
+    [self.hangoutTipView showLiveRoomHangoutTip];
+    self.closeHangoutTipBtn.hidden = NO;
+    self.hangoutTipView.hidden = NO;
+}
+
+- (void)removeHangoutTip:(id)sender {
+    self.closeHangoutTipBtn.hidden = YES;
+    self.hangoutTipView.hidden = YES;
+}
+
 #pragma mark - 按钮事件
 - (IBAction)talentAction:(id)sender {
     
     [[LiveModule module].analyticsManager reportActionEvent:PrivateBroadcastClickTalent eventCategory:EventCategoryBroadcast];
     // 隐藏底部输入框
     [self.vc.playVC hiddenBottomView];
-    
+    [self.talentVC getTalentList:self.liveRoom.roomId];
     [self.view layoutIfNeeded];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_bottom).offset(-220);
+    [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.view.mas_bottom).offset(-self.navVC.view.frame.size.height);
     }];
     
     [UIView animateWithDuration:0.25
@@ -197,12 +281,24 @@
 
 }
 
+#pragma mark - StartHangOutTipViewDelegate
+- (void)requestHangout:(StartHangOutTipView *)view {
+    [[LiveModule module].analyticsManager reportActionEvent:InviteHangOut eventCategory:EventCategoryBroadcast];
+    // TODO:邀请当前主播hangout
+    [self.vc.playVC.liveVC inviteAnchorWithHangout:nil anchorId:self.liveRoom.userId anchorName:self.liveRoom.userName];
+    [self removeHangoutTip:nil];
+}
+
+- (void)closeHangoutTip:(StartHangOutTipView *)view {
+    [self removeHangoutTip:nil];
+}
+
 #pragma mark - TalentOnDemandVCDelegate
 - (void)talentOnDemandVCCancelButtonDid {
     [self.vc.playVC showBottomView];
     
     [self.view layoutIfNeeded];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
+    [self.navVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view.mas_bottom);
     }];
     

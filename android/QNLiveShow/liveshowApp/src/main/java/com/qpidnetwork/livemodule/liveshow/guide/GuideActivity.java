@@ -237,12 +237,12 @@ public class GuideActivity extends Activity {
         mTextView = (TextView)findViewById(R.id.txt_guide_link);
 //        mTextView.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG); //下划线
 //        mTextView.getPaint().setAntiAlias(true);//抗锯齿
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onClickedLink();
-            }
-        });
+//        mTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onClickedLink();
+//            }
+//        });
         //最后一页底部文字
         SpannableString spanText=new SpannableString(getString(R.string.live_guide_tips2));
         spanText.setSpan(new ClickableSpan() {

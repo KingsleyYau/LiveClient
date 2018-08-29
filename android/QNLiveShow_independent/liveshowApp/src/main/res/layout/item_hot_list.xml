@@ -85,14 +85,14 @@
                     android:id="@+id/ivOnlineStatus"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:background="@drawable/circle_solid_green"/>
+                    android:background="@drawable/circle_solid_green"
+                    android:visibility="gone"/>
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:textColor="#FEFEFE"
-                    android:textStyle="bold"
                     android:layout_marginLeft="4dp"
                     android:singleLine="true"
                     android:ellipsize="middle"/>
@@ -109,7 +109,6 @@
                     android:id="@+id/btnPrivate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/list_button_start_normal_private_broadcast"
                     android:clickable="true" />
                 <ImageView
                     android:id="@+id/btnPublic"

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <!--corners - 边角弧度-->
+    <corners
+        android:radius="13dp"/>
+
+    <solid
+        android:color="@color/live_main_top_menu_unread_bg"/>
+
+</shape>

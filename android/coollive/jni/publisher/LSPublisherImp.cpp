@@ -25,7 +25,6 @@ LSPublisherImp::LSPublisherImp(
 		int keyFrameInterval,
 		int fps
 		)
-:mPublisherMutex(KMutex::MutexType_Recursive)
 {
 	// TODO Auto-generated constructor stub
 	FileLevelLog("rtmpdump", KLog::LOG_MSG, "LSPublisherImp::LSPublisherImp( this : %p )", this);
@@ -36,18 +35,6 @@ LSPublisherImp::LSPublisherImp(
     mBitRate = bitRate;
     mKeyFrameInterval = keyFrameInterval;
     mFPS = fps;
-
-    mVideoFrameLastPushTime = 0;
-    mVideoFrameStartPushTime = 0;
-    mVideoFrameIndex = 0;
-	mVideoFrameInterval = 8;
-	if( fps > 0 ) {
-		mVideoFrameInterval = 1000.0 / fps;
-	}
-
-    mVideoPause = false;
-    mVideoResume = true;
-    mVideoFramePauseTime = 0;
 
     // 音频参数
     mSampleRate = 44100;
@@ -72,8 +59,7 @@ LSPublisherImp::LSPublisherImp(
 	mpAudioEncoder = NULL;
 
 	mPublisher.SetStatusCallback(this);
-	mPublisher.SetVideoParam(width, height);
-//	mPublisher.SetAudioParam(44100, 1, 16);
+	mPublisher.SetVideoParam(width, height, fps, keyFrameInterval);
 
 	mUseHardEncoder = useHardEncoder;
 
@@ -115,16 +101,6 @@ bool LSPublisherImp::PublishUrl(const string& url, const string& recordH264FileP
 
 void LSPublisherImp::Stop() {
 	mPublisher.Stop();
-
-    // 复位帧率控制
-    mVideoFrameStartPushTime = 0;
-    mVideoFrameIndex = 0;
-    mVideoFramePauseTime = 0;
-    mVideoFrameLastPushTime = 0;
-
-    mPublisherMutex.lock();
-	mVideoResume = true;
-	mPublisherMutex.unlock();
 }
 
 void LSPublisherImp::SetUseHardEncoder(bool useHardEncoder) {
@@ -138,62 +114,8 @@ void LSPublisherImp::SetUseHardEncoder(bool useHardEncoder) {
 }
 
 void LSPublisherImp::PushVideoFrame(void* data, int size, int width, int height) {
-	mPublisherMutex.lock();
-    // 视频是否暂停录制
-    if( !mVideoPause ) {
-        long long now = getCurrentTime();
-
-        // 视频是否恢复
-        if( !mVideoResume ) {
-            // 视频未恢复
-            mVideoResume = true;
-            // 更新上次暂停导致的时间差
-            long long videoFrameDiffTime = now - mVideoFrameLastPushTime;
-            videoFrameDiffTime -= mVideoFrameInterval;
-        	FileLevelLog(
-        			"rtmpdump",
-        			KLog::LOG_WARNING,
-        			"LSPublisherImp::PushVideoFrame( "
-        			"[Video capture is resume], "
-        			"this : %p, "
-        			"videoFrameDiffTime : %lld "
-        			")",
-        			this,
-					videoFrameDiffTime
-        			);
-        	mPublisher.AddVideoTimestamp((unsigned int)videoFrameDiffTime);
-            mVideoFramePauseTime += videoFrameDiffTime;
-        }
-
-        // 控制帧率
-        if( mVideoFrameStartPushTime == 0 ) {
-            mVideoFrameStartPushTime = now;
-        }
-        long long diffTime = now - mVideoFrameStartPushTime;
-        diffTime -= mVideoFramePauseTime;
-        long long videoFrameInterval = diffTime - (mVideoFrameIndex * mVideoFrameInterval);
-
-        if( videoFrameInterval >= 0 ) {
-        	// 放到推流器
-        	mPublisher.PushVideoFrame(data, size, NULL);
-
-            // 更新最后处理帧数目
-            mVideoFrameIndex++;
-            // 更新最后处理时间
-            mVideoFrameLastPushTime = now;
-        }
-    } else {
-    	FileLevelLog(
-    			"rtmpdump",
-    			KLog::LOG_MSG,
-				"LSPublisherImp::PushVideoFrame( "
-				"[Video capture is pausing], "
-				"this : %p "
-				")",
-				this
-				);
-    }
-    mPublisherMutex.unlock();
+    // 放到推流器
+    mPublisher.PushVideoFrame(data, size, NULL);
 }
 
 void LSPublisherImp::PausePushVideo() {
@@ -205,10 +127,7 @@ void LSPublisherImp::PausePushVideo() {
 			")",
 			this
 			);
-	mPublisherMutex.lock();
-    mVideoPause = true;
-    mVideoResume = false;
-	mPublisherMutex.unlock();
+    mPublisher.PausePushVideo();
 }
 
 void LSPublisherImp::ResumePushVideo() {
@@ -220,9 +139,7 @@ void LSPublisherImp::ResumePushVideo() {
 			")",
 			this
 			);
-	mPublisherMutex.lock();
-    mVideoPause = false;
-	mPublisherMutex.unlock();
+    mPublisher.ResumePushVideo();
 }
 
 void LSPublisherImp::PushAudioFrame(void* data, int size) {
@@ -233,7 +150,7 @@ void LSPublisherImp::PushAudioFrame(void* data, int size) {
 void LSPublisherImp::ChangeVideoRotate(int rotate) {
 	FileLevelLog(
 			"rtmpdump",
-			KLog::LOG_STAT,
+			KLog::LOG_WARNING,
 			"LSPublisherImp::ChangeVideoRotate( "
 			"this : %p, "
 			"rotate : %d "
@@ -241,7 +158,6 @@ void LSPublisherImp::ChangeVideoRotate(int rotate) {
 			this,
 			rotate
 			);
-
 //	mVideoRotateFilter.ChangeRotate(rotate);
 }
 
@@ -277,8 +193,8 @@ void LSPublisherImp::CreateEncoders() {
 
 	FileLog("rtmpdump",
 			"LSPublisherImp::CreateEncoders( "
-			"[Success], "
 			"this : %p, "
+			"[Success], "
 			"mUseHardEncoder : %s, "
 			"mpVideoEncoder : %p, "
 			"mpAudioEncoder : %p "
@@ -354,7 +270,7 @@ void LSPublisherImp::OnPublisherDisconnect(PublisherController* pc) {
 	FileLevelLog(
 			"rtmpdump",
 			KLog::LOG_WARNING,
-			"LSPublisherImp::OnPublisherConnect( "
+			"LSPublisherImp::OnPublisherDisconnect( "
 			"this : %p "
 			")",
 			this

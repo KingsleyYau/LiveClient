@@ -65,6 +65,9 @@
     <dimen name="headerview_height_public">75dp</dimen>
     <dimen name="headerview_height_private">90dp</dimen>
 
+    <!--因暂时屏蔽分享，UI界面暂时保持同QN嵌入直播相同-->
+    <!--<dimen name="live_buttomgift_leftmargin_freepublic">10dp</dimen>-->
+    <!--<dimen name="live_buttomgift_leftmargin_paypublic">6dp</dimen>-->
     <dimen name="live_buttomgift_leftmargin_freepublic">15dp</dimen>
     <dimen name="live_buttomgift_leftmargin_paypublic">13dp</dimen>
     <dimen name="live_buttomgift_leftmargin_normalprv">15dp</dimen>

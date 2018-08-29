@@ -6,7 +6,9 @@ public class TalentInviteItem {
 	public enum TalentInviteStatus{
 		NoReplied,
 		Accept,
-		Denied
+		Denied,
+		OutTime,
+		Cancel
 	}
 	
 	public TalentInviteItem(){
@@ -20,12 +22,18 @@ public class TalentInviteItem {
 	 * @param name
 	 * @param credit
 	 * @param inviteStatus
+	 * @param giftId			礼物ID
+	 * @param giftName			礼物名称
+	 * @param giftNum			礼物数量
 	 */
 	public TalentInviteItem(String talentInviteId,
 							String talentId,
 							String name,
 							double credit,
-							int inviteStatus){
+							int inviteStatus,
+							String giftId,
+							String giftName,
+							int giftNum){
 		this.talentInviteId = talentInviteId;
 		this.talentId = talentId;
 		this.name = name;
@@ -36,6 +44,9 @@ public class TalentInviteItem {
 		} else {
 			this.inviteStatus = TalentInviteStatus.values()[inviteStatus];
 		}
+		this.giftId = giftId;
+		this.giftName = giftName;
+		this.giftNum = giftNum;
 	}
 	
 	public String talentInviteId;
@@ -43,6 +54,9 @@ public class TalentInviteItem {
 	public String name;
 	public double credit;
 	public TalentInviteStatus inviteStatus;
+	public String giftId;
+	public String giftName;
+	public int    giftNum;
 
 	@Override
 	public String toString() {
@@ -57,6 +71,12 @@ public class TalentInviteItem {
 		sb.append(credit);
 		sb.append(" inviteStatus:");
 		sb.append(inviteStatus);
+		sb.append(" giftId:");
+		sb.append(giftId);
+		sb.append(" giftName:");
+		sb.append(giftName);
+		sb.append(" giftNum:");
+		sb.append(giftNum);
 		sb.append("]");
 		return sb.toString();
 	}

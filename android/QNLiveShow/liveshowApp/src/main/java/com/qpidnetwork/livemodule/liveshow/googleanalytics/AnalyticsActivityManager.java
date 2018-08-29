@@ -529,12 +529,17 @@ public class AnalyticsActivityManager {
 		// 尝试组合获取
 		AnalyticsActivityItem item = GetActivityItem(activity);
 		if (null != item) 
-		{	
+		{
+			//hunter修改，优先使用本地设置screenName
+			if(activity != null && activity instanceof AnalyticsFragmentActivity){
+				screenName = ((AnalyticsFragmentActivity)activity).getCurrentScreenName();
+			}
+
 			// 获取tag路径
 			String tagName = item.GetCurrTagPath();
 			
 			// 尝试activity + tag路径
-			if (screenName.isEmpty()
+			if (TextUtils.isEmpty(screenName)
 				&& !TextUtils.isEmpty(tagName))
 			{
 				String temp = activityName + item.GetCurrTagPath();
@@ -545,7 +550,7 @@ public class AnalyticsActivityManager {
 			String preActivityScreenName = GetPreActivityScreenName(activity);
 			
 			// 尝试仅父activity + activity
-			if (screenName.isEmpty()
+			if (TextUtils.isEmpty(screenName)
 				&& !TextUtils.isEmpty(preActivityScreenName))
 			{
 				String temp =  preActivityScreenName + ACTIVITYNAME_SEPARATOR + activityName;
@@ -553,7 +558,7 @@ public class AnalyticsActivityManager {
 			}
 			
 			// 尝试父acitivty + activity + tag路径
-			if (screenName.isEmpty()
+			if (TextUtils.isEmpty(screenName)
 				&& !TextUtils.isEmpty(preActivityScreenName)
 				&& !TextUtils.isEmpty(tagName))
 			{
@@ -562,7 +567,7 @@ public class AnalyticsActivityManager {
 			}
 			
 			// 尝试只用tag路径
-			if (screenName.isEmpty()
+			if (TextUtils.isEmpty(screenName)
 				&& !TextUtils.isEmpty(tagName))
 			{
 				screenName = ActivityNameToScreenName(tagName);
@@ -572,7 +577,7 @@ public class AnalyticsActivityManager {
 			String successTagName = "";
 			// 尝试使用各tag节点
 			ArrayList<String> tagNameList = item.GetCurrTagNamesWithoutID();
-			if (screenName.isEmpty()
+			if (TextUtils.isEmpty(screenName)
 				&& null != tagNameList 
 				&& !tagNameList.isEmpty())
 			{
@@ -586,7 +591,7 @@ public class AnalyticsActivityManager {
 					}
 					
 					screenName = ActivityNameToScreenName(tagNodeName);
-					if (!screenName.isEmpty()) {
+					if (!TextUtils.isEmpty(screenName)) {
 						successTagName = tagNodeName;
 						break;
 					}
@@ -594,7 +599,7 @@ public class AnalyticsActivityManager {
 			}
 			
 			// 替换关键字
-			if (!screenName.isEmpty()) 
+			if (!TextUtils.isEmpty(screenName))
 			{
 				String keyWord = GetScreenNameParentKeyWords();
 				if (!TextUtils.isEmpty(keyWord)
@@ -617,11 +622,11 @@ public class AnalyticsActivityManager {
 		}
 		
 		// 尝试获取activity的screenName
-		if (screenName.isEmpty()) {
+		if (TextUtils.isEmpty(screenName)) {
 			screenName = ActivityNameToScreenName(activityName);
 		}
 		
-		if (screenName.isEmpty()) {
+		if (TextUtils.isEmpty(screenName)) {
 			Log.e("AnalyticsManager", "GetScreenName() is empty, activity:%s, activityName:%s", activity.getClass().getName(), activityName);
 		}
 		

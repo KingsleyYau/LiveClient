@@ -38,6 +38,7 @@
         self.useCoupon = [coder decodeIntForKey:@"useCoupon"];
         self.shareLink = [coder decodeObjectForKey:@"shareLink"];
         self.liveShowType = [coder decodeIntForKey:@"liveShowType"];
+        self.isHasTalent = [coder decodeBoolForKey:@"isHasTalent"];
     }
     return self;
 }
@@ -69,6 +70,7 @@
     [coder encodeInt:self.useCoupon forKey:@"useCoupon"];
     [coder encodeObject:self.shareLink forKey:@"shareLink"];
     [coder encodeInt:self.liveShowType forKey:@"liveShowType"];
+    [coder encodeBool:self.isHasTalent forKey:@"isHasTalent"];
 }
 
 

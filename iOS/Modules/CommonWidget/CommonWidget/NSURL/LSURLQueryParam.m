@@ -21,8 +21,8 @@
 + (NSDictionary *)urlParameters:(NSURL *)url {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
 
-    NSString *query = [LSURLQueryParam urlDecodedString:[url query]];
-    NSArray *values = [query componentsSeparatedByString:@"&"];
+//    NSString *query = [LSURLQueryParam urlDecodedString:[url query]];
+    NSArray *values = [[url query] componentsSeparatedByString:@"&"];
 
     if (values == nil || values.count == 0)
         return nil;
@@ -30,7 +30,7 @@
     for (NSString *value in values) {
         NSArray *param = [value componentsSeparatedByString:@"="];
         if (param == nil || param.count == 2) {
-            [parameters setObject:param[1] forKey:param[0]];
+            [parameters setObject:[LSURLQueryParam urlDecodedString:param[1]] forKey:[LSURLQueryParam urlDecodedString:param[0]]];
         }
     }
 

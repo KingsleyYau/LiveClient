@@ -62,17 +62,18 @@ RequestLoginCallback gRequestLoginCallback;
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *env, jclass cls, jstring manId, jstring userSid, jstring deviceId, jstring model, jstring manufacturer, jobject callback){
+  (JNIEnv *env, jclass cls, jstring manId, jstring userSid, jstring deviceId, jstring model, jstring manufacturer, jint regionId, jobject callback){
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Login( manId : %s, userSid : %s )",
             JString2String(env, manId).c_str(), JString2String(env, userSid).c_str());
     jlong taskId = -1;
-
+    RegionIdType type = IntToRegionIdType(regionId);
     taskId = gHttpRequestController.Login(&gHttpRequestManager,
     									JString2String(env, manId),
                                         JString2String(env, userSid),
                                         JString2String(env, deviceId),
                                         JString2String(env, model),
                                         JString2String(env, manufacturer),
+                                        type,
                                         &gRequestLoginCallback);
 
     jobject obj = env->NewGlobalRef(callback);
@@ -235,9 +236,9 @@ RequestOwnFackBookLoginCallback gRequestOwnFackBookLoginCallback;
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestFackBookLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_FackBookLogin
-		(JNIEnv *env, jclass cls, jstring fToken, jstring versionCode, jstring utmReferrer, jstring model, jstring deviceId, jstring manufacturer, jstring inviteCode, jstring email, jstring passWord, jstring birthDay, jobject callback) {
+		(JNIEnv *env, jclass cls, jstring fToken, jstring nickName, jstring utmReferrer, jstring model, jstring deviceId, jstring manufacturer, jstring inviteCode, jstring email, jstring passWord, jstring birthDay, jint  gender, jobject callback) {
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::FackBookLogin( fToken : %s ) "
-					"versionCode : %s"
+					"nickName : %s"
 					"utmReferrer : %s"
 					"model : %s"
 					"deviceId : %s"
@@ -245,9 +246,10 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
 					"inviteCode : %s"
 					"email : %s"
 					"passWord : %s"
-					"birthDay : %s",
+					"birthDay : %s"
+                    "gender : %d",
 			JString2String(env, fToken).c_str(),
-			JString2String(env, versionCode).c_str(),
+			JString2String(env, nickName).c_str(),
 			JString2String(env, utmReferrer).c_str(),
 			JString2String(env, model).c_str(),
 			JString2String(env, deviceId).c_str(),
@@ -255,19 +257,22 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
 			JString2String(env, inviteCode).c_str(),
 			JString2String(env, email).c_str(),
 			JString2String(env, passWord).c_str(),
-			JString2String(env, birthDay).c_str());
+			JString2String(env, birthDay).c_str(),
+            gender);
 	jlong taskId = -1;
+    GenderType jgender = IntToGenderTypeOperateType(gender);
 	taskId = gHttpRequestController.OwnFackBookLogin(&gHttpRequestManager,
-													 JString2String(env, model),
+                                                     JString2String(env, fToken),
+                                                     JString2String(env, nickName),
+                                                     JString2String(env, utmReferrer),
+                                                     JString2String(env, model),
 													 JString2String(env, deviceId),
 													 JString2String(env, manufacturer),
-													 JString2String(env, fToken),
+                                                     JString2String(env, inviteCode),
 													 JString2String(env, email),
 													 JString2String(env, passWord),
 													 JString2String(env, birthDay),
-													 JString2String(env, inviteCode),
-													 JString2String(env, versionCode),
-												     JString2String(env, utmReferrer),
+                                                     jgender,
 												     &gRequestOwnFackBookLoginCallback);
 
 	jobject obj = env->NewGlobalRef(callback);
@@ -403,31 +408,25 @@ RequestOwnEmailLoginCallback gRequestOwnEmailLoginCallback;
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestMailLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_LSMailLogin
-		(JNIEnv *env, jclass cls, jstring email, jstring passWord, jstring versionCode, jstring model, jstring deviceid, jstring manufacturer, jstring checkCode, jobject callback) {
+		(JNIEnv *env, jclass cls, jstring email, jstring passWord, jstring model, jstring deviceid, jstring manufacturer, jobject callback) {
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::LSMailLogin( ) "
 					"email : %s"
 					"passWord : %s"
-					"versionCode : %s"
 					"model : %s"
 					"deviceid : %s"
-					"manufacturer : %s"
-					"checkCode : %s",
+					"manufacturer : %s",
 			JString2String(env, email).c_str(),
 			JString2String(env, passWord).c_str(),
-			JString2String(env, versionCode).c_str(),
 			JString2String(env, model).c_str(),
 			JString2String(env, deviceid).c_str(),
-			JString2String(env, manufacturer).c_str(),
-			JString2String(env, checkCode).c_str());
+			JString2String(env, manufacturer).c_str());
 	jlong taskId = -1;
 	taskId = gHttpRequestController.OwnEmailLogin(&gHttpRequestManager,
 												JString2String(env, email),
 												JString2String(env, passWord),
-												JString2String(env, versionCode),
 												JString2String(env, model),
 												JString2String(env, deviceid),
 												JString2String(env, manufacturer),
-												JString2String(env, checkCode),
 												&gRequestOwnEmailLoginCallback);
 
 	jobject obj = env->NewGlobalRef(callback);

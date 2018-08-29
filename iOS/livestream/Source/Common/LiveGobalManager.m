@@ -47,6 +47,8 @@ static LiveGobalManager *gManager = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
         _canShowInvite = YES;
+        
+        _isHangouting = NO;
     }
     return self;
 }
@@ -119,7 +121,15 @@ static LiveGobalManager *gManager = nil;
                                      expirationHandler:^{
                                          // Clean up any unfinished task business by marking where you
                                          // stopped or ending the task outright.
-                                         [self stopLive];
+//                                         [self stopLive];
+                                         @synchronized(self) {
+                                             for(NSValue* value in self.delegates) {
+                                                 id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
+                                                 if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
+                                                     [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
+                                                 }
+                                             }
+                                         }
 
                                          NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired]] )");
                                          
@@ -148,7 +158,14 @@ static LiveGobalManager *gManager = nil;
 
                 // 后台进入直播间超过60秒
                 if (enterRoomBgTime > BACKGROUND_TIMEOUT) {
-                    [self stopLive];
+                    @synchronized(self) {
+                        for(NSValue* value in self.delegates) {
+                            id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
+                            if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
+                                [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
+                            }
+                        }
+                    }
                     break;
                 }
 
@@ -174,34 +191,4 @@ static LiveGobalManager *gManager = nil;
     }
 }
 
-- (void)stopLive {
-    @synchronized(self) {
-        if (self.liveRoom) {
-            NSLog(@"LiveGobalManager::stopLive( [发送退出直播间:%@] )",self.liveRoom.roomId);
-            
-            @synchronized(self) {
-                for(NSValue* value in self.delegates) {
-                    id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
-                    if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
-                        [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
-                    }
-                }
-            }
-            
-            // 发送IM退出直播间命令
-            [[LSImManager manager] leaveRoom:self.liveRoom.roomId];
-            self.liveRoom = nil;
-        }
-        if (self.player) {
-            // 停止播放器
-            [self.player stop];
-            self.player = nil;
-        }
-        if (self.publisher) {
-            // 停止推流器
-            [self.publisher stop];
-            self.publisher = nil;
-        }
-    }
-}
 @end

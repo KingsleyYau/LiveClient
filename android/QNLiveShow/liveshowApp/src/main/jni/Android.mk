@@ -11,8 +11,11 @@ MAIN_PATH := $(call my-dir)
 LIBRARY_PATH := $(MAIN_PATH)/../../../../../../common-c-library
 LIBRARY_THIRDY_PARTY_PATH := $(LIBRARY_PATH)/third_party
 LIBRARY_IM_HOME_PATH := $(MAIN_PATH)/../../../../../../common/ImClient
+LIBRARY_IMMESSAGE_HOME_PATH := $(MAIN_PATH)/../../../../../../livemessage/LiveMessagemanmanager
+LIBRARY_IM_COMMON_HOME_PATH := $(MAIN_PATH)/../../../../../../common
 
 include $(LIBRARY_PATH)/Android.mk
 include $(LIBRARY_IM_HOME_PATH)/Android.mk
+include $(LIBRARY_IMMESSAGE_HOME_PATH)/Android.mk
 
 include $(call all-makefiles-under, $(MAIN_PATH))

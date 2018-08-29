@@ -31,6 +31,8 @@
 - (void)dealloc
 {
     [self.loginManager removeDelegate:self];
+    
+    [[DialogTip dialogTip] stopTimer];
 }
 
 - (void)viewDidLoad {
@@ -133,10 +135,6 @@
 
 #pragma mark 登录按钮点击方法
 - (IBAction)loginBtnDid:(UIButton *)sender {
-    StreamTestViewController *vc = [[StreamTestViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
-    return;
-    
     [self.view endEditing:YES];
     
     if (self.emailTextField.text.length == 0) {
@@ -151,10 +149,10 @@
         [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"CODE_MSG", nil)];
         return;
     }
-    if (!ZBAppDelegate.isNetwork) {
-        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"NO_NETWORK", nil)];
-        return;
-    }
+//    if (!ZBAppDelegate.isNetwork) {
+//        [[DialogTip dialogTip]showDialogTip:self.view tipText:NSLocalizedString(@"NO_NETWORK", nil)];
+//        return;
+//    }
     // 保存输入
     self.token = self.emailTextField.text;
     

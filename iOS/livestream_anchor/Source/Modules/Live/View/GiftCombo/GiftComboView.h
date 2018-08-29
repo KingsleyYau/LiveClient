@@ -22,7 +22,7 @@
 
 @property (weak, nonatomic) IBOutlet UIView *backView;
 @property (weak, nonatomic) IBOutlet UIImageView *backImageView; /**< 背景图 */
-@property (weak, nonatomic) IBOutlet LSUIImageViewTopFit *iconImageView; /**< 头像 */
+@property (weak, nonatomic) IBOutlet UIImageView *iconImageView; /**< 头像 */
 @property (weak, nonatomic) LSImageViewLoader* imageViewHeaderLoader;
 @property (weak, nonatomic) IBOutlet UIImageView *giftImageView; /**< 礼物图片 */
 @property (weak, nonatomic) LSImageViewLoader* imageViewGiftLoader;

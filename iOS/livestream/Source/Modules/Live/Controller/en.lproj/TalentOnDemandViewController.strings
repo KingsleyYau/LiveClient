@@ -1,28 +1,42 @@
 
-/* Class = "UILabel"; text = "Fail To load"; ObjectID = "2dn-Se-Mia"; */
-"2dn-Se-Mia.text" = "Fail To load";
+/* Class = "UILabel"; text = "Trouble...Tap to retry."; ObjectID = "2dn-Se-Mia"; */
+"2dn-Se-Mia.text" = "Trouble connecting to the server. Tap to retry.";
 
-/* Class = "UILabel"; text = "Broadcaster's talents"; ObjectID = "4tz-ll-4As"; */
-"4tz-ll-4As.text" = "Broadcaster's talents";
+/* Class = "UIButton"; normalTitle = "Request Live Talent Show"; ObjectID = "DNq-KI-092"; */
+"DNq-KI-092.normalTitle" = "Request Live Talent Show";
 
-/* Class = "UIButton"; normalTitle = "Reload"; ObjectID = "nIm-a6-pne"; */
-"nIm-a6-pne.normalTitle" = "Reload";
+/* Class = "UILabel"; text = "You will use credits to buy the required gifts to request shows.Detials"; ObjectID = "K18-Zo-kqk"; */
+"K18-Zo-kqk.text" = "You will use credits to buy the required gifts to request shows.Details";
+
+/* Class = "UIButton"; normalTitle = "ReLoad"; ObjectID = "uPi-v9-B2I"; */
+"uPi-v9-B2I.normalTitle" = "ReLoad";
 
 "TALENT_ERR_ADD_CREDIT" = "You don't have enough credits, please buy more.";
 
-"CANT_REPEAT_TIP" = "Sorry. Can not send duplicated performance requests in a row";
+"CANT_REPEAT_TIP" = "Which talent show do you want to request? Tap the name.";
 
 "SEND_TALENT_FAILED" = "Failed to send the talent request.Please try again later.";
 
 "SEND_TALENT_SUCCESS" = "Your talent request \"%@\" has been sent successfully. Please wait for response.";
 
-"NO_RESPONE_FROM" = "No response from the broadcaster";
+//"NO_RESPONE_FROM" = "No response from the broadcaster";
 
 "ACCEPT_YOUR_REQUEST" = "%@ has accepted your request \"%@\"";
 
 "DECLINED_YOUR_REQUEST" = "%@ has declined your request  \"%@\"";
 
-"NO_TALENT_LIST" = "The broadcaster has not added any talent yet.";
+//"SEND_TALENT_ERROR" = "You cannot send a performance request while the broadcast is ending.";
 
-"SEND_TALENT_ERROR" = "You cannot send a performance request while the broadcast is ending.";
+"Talent_Detail_Msg" = "You will use credits to buy the required gifts to request shows. If the broadcasters accept your gift, they will perform the show immediately otherwise you will not be charged.";
 
+"Note" = "Note";
+
+"Details" = "Details";
+
+"Talent_SubTitle" = "This show requires a \"%@\"";
+
+"Talent_Title" = "%@'s Live Talent Show";
+
+"Talent_NoNetwork" = "Trouble connecting to the server. Tap to retry.";
+
+"Fail_To_load" = "The broadcaster has not added any talent yet.";

@@ -32,7 +32,6 @@
 #import "DialogOK.h"
 #import "DialogTip.h"
 
-#import "TalentOnDemandViewController.h"
 #import "AnchorPersonalViewController.h"
 
 #import "LSAnchorImManager.h"
@@ -114,9 +113,6 @@
 /** 背包礼物管理类 */
 @property (nonatomic, strong) BackpackSendGiftManager *backGiftManager;
 
-/** 接口管理器 **/
-@property (nonatomic, strong) LSSessionRequestManager *sessionManager;
-
 // 礼物列表管理器
 @property (nonatomic, strong) LiveGiftListManager *listManager;
 
@@ -173,13 +169,16 @@
     // 初始化管理器
     // 初始化余额及返点信息管理器
     self.loginManager = [LSLoginManager manager];
-    self.sessionManager = [LSSessionRequestManager manager];
+
     self.emotionManager = [LSChatEmotionManager emotionManager];
-    self.backGiftManager = [BackpackSendGiftManager backpackGiftManager];
     self.listManager = [LiveGiftListManager manager];
     self.loadManager = [LiveGiftDownloadManager manager];
     self.loadManager.managerDelegate = self;
     self.userInfoManager = [UserInfoManager manager];
+    
+    self.backGiftManager = [BackpackSendGiftManager backpackGiftManager];
+    self.backGiftManager.isFirstSend = YES;
+    self.backGiftManager.isIMNetWork = YES;
     
     // 初始化控制变量
     self.isFirstLike = NO;    // 第一次点赞
@@ -211,6 +210,8 @@
     
     // 停止连击
     [self.backpackView.comboBtn stop];
+    
+    [[DialogTip dialogTip] stopTimer];
 }
 
 - (void)viewDidLoad {
@@ -241,6 +242,18 @@
     [self.view bringSubviewToFront:self.liveVC.tableSuperView];
     [self.view bringSubviewToFront:self.liveVC.previewVideoView];
 
+    // 初始化表情控件
+    //    [self setupEmotionInputView];
+    
+    // 初始化礼物列表
+    [self setupGiftListView];
+    
+    // 初始化信用点详情控件
+    [self initManDetailView];
+    
+    // 初始化多功能按钮
+    [self setupButtonBar];
+    
     // 初始化礼物列表界面
     //    self.chooseGiftListView.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_WIDTH * 0.5 + 99);
     self.chooseGiftListViewWidth.constant = SCREEN_WIDTH;
@@ -253,6 +266,15 @@
     
     // 初始化聊天框被选中名字
     self.selectName = self.audienceNameLabel.text;
+    
+    // 初始化礼物列表
+    [self setupGiftListView];
+    
+    // 初始化信用点详情控件
+    [self initManDetailView];
+    
+    // 初始化多功能按钮
+    [self setupButtonBar];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -301,22 +323,6 @@
         [self closeChooseGiftListView];
     }
     self.comboBtn.hidden = YES;
-}
-
-- (void)initialiseSubwidge {
-    [super initialiseSubwidge];
-    
-    // 初始化表情控件
-//    [self setupEmotionInputView];
-    
-    // 初始化礼物列表
-    [self setupGiftListView];
-    
-    // 初始化信用点详情控件
-    [self initManDetailView];
-    
-    // 初始化多功能按钮
-    [self setupButtonBar];
 }
 
 - (void)setupContainView {
@@ -651,7 +657,7 @@
     }
 }
 
-- (void)audidenveViewDidSelectItem:(AudienModel *)model indexPath:(NSIndexPath *)indexPath {
+- (void)audidenveViewDidSelectItem:(AudienModel *)model {
     if (model.userId.length) {
         if (self.manDetailOffset < 0) {
             [self closeManDetailView];
@@ -727,7 +733,7 @@
 - (void)onZBLogout:(ZBLCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
     NSLog(@"PlayViewController::onZBLogout( [IM注销通知], errType : %d, errmsg : %@ )", errType, errmsg);
     dispatch_async(dispatch_get_main_queue(), ^{
-            // 重置背包礼物请求标志位
+        // 重置背包礼物请求标志位
         self.backGiftManager.isIMNetWork = NO;
         self.backGiftManager.isFirstSend = NO;
         
@@ -753,7 +759,7 @@
     
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickGiftList eventCategory:EventCategoryBroadcast];
     // 请求礼物列表
-    [self sendBackpackGiftListRequest];
+//    [self sendBackpackGiftListRequest];
 
     // 隐藏底部输入框
     [self hiddenBottomView];
@@ -818,6 +824,7 @@
 - (void)showManDetailView {
     self.liveVC.isCanTouch = NO;
     self.manDetailView.hidden = NO;
+    self.manDetailView.inviteToOneBtn.hidden = self.liveRoom.showId.length > 0?YES:NO;
     [self.manDetailViewBottom uninstall];
     self.manDetailOffset = -173;
     [self.manDetailView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -990,7 +997,7 @@
         // 生成连击ID
         [self getTheClickID];
 
-        if (backpackView.selectCellItem.infoItem.type == GIFTTYPE_COMMON) {
+        if (backpackView.selectCellItem.infoItem.type == ZBGIFTTYPE_COMMON) {
             if (backpackView.selectCellItem.infoItem.multiClick) {
                 // 连击礼物
                 [self backpackPresentViewComboBtnInside:backpackView andSender:backpackView.comboBtn];

@@ -45,7 +45,15 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPa
  * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetPackageUnreadCountCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPackage_GetPackageUnreadCount
-  (JNIEnv *, jclass, jobject);
+        (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniPackage
+ * Method:    GetVoucherAvailableInfo
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetVoucherAvailableInfoCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPackage_GetVoucherAvailableInfo
+        (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

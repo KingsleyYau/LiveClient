@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,12 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.utils.Log;
 
 
 public class ButtonRaised extends CardView{
 	
 	private float desity = this.getContext().getResources().getDisplayMetrics().density;
-	private int txt_size = (int)(16.00);
+	private float txt_size = 16.00f;
 	private int space = (int)(8.00 * desity);
 	private int elevation = (int)(2.00 * desity);
 	private int radius = (int)(2.00 * desity);
@@ -57,6 +60,9 @@ public class ButtonRaised extends CardView{
 			touch_feedback = a.getResourceId(R.styleable.RaisedButton_touch_feedback, 0);
 			elevation  = (int)a.getDimension(R.styleable.RaisedButton_elevation, elevation);
 			radius = (int)a.getDimension(R.styleable.RaisedButton_raisebutton_radius, radius);
+			txt_size = a.getDimensionPixelSize(R.styleable.RaisedButton_title_text_size,
+					(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, txt_size, getResources().getDisplayMetrics()));
+			txt_size = px2sp(txt_size);
 			a.recycle();
 		}
 		
@@ -121,6 +127,11 @@ public class ButtonRaised extends CardView{
 		TextView t = (TextView)this.findViewById(android.R.id.title);
 		t.setText(text);
 	}
+
+	public void setButtonTitleColor(@ColorInt int color){
+		TextView t = (TextView)this.findViewById(android.R.id.title);
+		t.setTextColor(color);
+	}
 	
 	public TextView getTitleTextView(){
 		return title;
@@ -131,6 +142,9 @@ public class ButtonRaised extends CardView{
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 		setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec));
 	}
-	
 
+	private int px2sp(float pxValue) {
+		final float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
+		return (int) (pxValue / fontScale + 0.5f);
+	}
 }

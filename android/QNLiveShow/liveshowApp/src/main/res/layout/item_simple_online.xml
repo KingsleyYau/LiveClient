@@ -13,14 +13,22 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_width="25dp"
+    android:layout_height="25dp"
     >
         <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
             android:id="@+id/civ_userHeader"
             android:layout_width="25dp"
-            android:layout_height="25dp" />
-</LinearLayout>
+            android:layout_height="25dp"
+            android:src="@drawable/ic_default_photo_man"/>
+
+        <ImageView
+            android:id="@+id/img_has_ticket"
+            android:layout_width="@dimen/live_size_14dp"
+            android:layout_height="@dimen/live_size_14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_hasticket"/>
+</RelativeLayout>

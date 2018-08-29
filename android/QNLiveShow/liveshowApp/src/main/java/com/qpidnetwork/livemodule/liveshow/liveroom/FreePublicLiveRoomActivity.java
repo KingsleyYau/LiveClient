@@ -7,7 +7,9 @@ import android.view.View;
 
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
+import com.qpidnetwork.livemodule.liveshow.liveroom.online.AudienceHeadItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,11 +64,31 @@ public class FreePublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
                 HttpRespObject httpRespObject= (HttpRespObject) msg.obj;
                 if(httpRespObject.isSuccess){
                     AudienceInfoItem[] audienceList = (AudienceInfoItem[])httpRespObject.data;
-                    List<String> photoUrls = new ArrayList<>();
-                    for(AudienceInfoItem item : audienceList){
-                        photoUrls.add(item.photoUrl);
+                    Log.d(TAG,"EVENT_MESSAGE_UPDATE_ONLINEFANS-audienceList.length:"+audienceList.length);
+                    List<AudienceHeadItem> audienceHeadItems = new ArrayList<AudienceHeadItem>();
+
+                    int maxAudienceNum = 6;
+                    if(mIMRoomInItem != null && mIMRoomInItem.audienceLimitNum > 0){
+                        maxAudienceNum = mIMRoomInItem.audienceLimitNum;
                     }
-                    cihsv_onlineFreePublic.setList(photoUrls);
+                    for(int index = 0;index < maxAudienceNum;index++){
+                        if(index<audienceList.length){
+                            //edit by Jagger 2018-5-3 加上是否已购票的属性
+                            AudienceHeadItem audienceHeadItem = new AudienceHeadItem(audienceList[index].photoUrl,
+                                    AudienceHeadItem.DEFAULT_ID_AUDIENCEHEAD);
+                            audienceHeadItem.setHasTicket(audienceList[index].isHasTicket);
+                            audienceHeadItems.add(audienceHeadItem);
+                        }else{
+                            Log.d(TAG,"EVENT_MESSAGE_UPDATE_ONLINEFANS-defaultPhotoUrl:我是"
+                                    +(index-audienceList.length+1)+"号群众演员");
+                            //edit by Jagger 2018-5-3 加上是否已购票的属性
+                            AudienceHeadItem audienceHeadItem = new AudienceHeadItem(null,
+                                    AudienceHeadItem.DEFAULT_ID_PLACEHOLDER);
+                            audienceHeadItem.setHasTicket(false);
+                            audienceHeadItems.add(audienceHeadItem);
+                        }
+                    }
+                    cihsv_onlineFreePublic.setList(audienceHeadItems);
                 }
             }break;
         }
@@ -91,8 +113,9 @@ public class FreePublicLiveRoomActivity extends BaseCommonLiveRoomActivity {
             sendUiMessage(msg);
             if(null != mIMManager){
                 for(AudienceInfoItem audienceInfoItem : audienceList){
+                    //edit by Jagger 2018-5-4
                     mIMManager.updateOrAddUserBaseInfo(new IMUserBaseInfoItem(audienceInfoItem.userId,
-                            audienceInfoItem.nickName,audienceInfoItem.photoUrl));
+                            audienceInfoItem.nickName,audienceInfoItem.photoUrl,audienceInfoItem.isHasTicket));
                 }
             }
         }

@@ -29,7 +29,12 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	 * 状态回调
 	 */
 	ILSPublisherCallback publisherCallback = null;
-	
+
+	/**
+	 * 初始化日志目录
+	 */
+	public native static void SetLogDir(String logDir);
+
 	/**
 	 * 创建实例
 	 * @param publisherCallback		状态回调

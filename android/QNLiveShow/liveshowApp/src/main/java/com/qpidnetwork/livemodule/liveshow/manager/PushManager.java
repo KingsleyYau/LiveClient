@@ -142,6 +142,10 @@ public class PushManager {
                 instance.ReportEvent(mContext.getResources().getString(R.string.Live_Global_Category),
                         mContext.getResources().getString(R.string.Live_Global_Action_ShowBookingStart),
                         mContext.getResources().getString(R.string.Live_Global_Label_ShowBookingStart));
+            } else if(type == PushMessageType.Program_Show_Start){
+                instance.ReportEvent(mContext.getResources().getString(R.string.Live_Calendar_Category),
+                        mContext.getResources().getString(R.string.Live_Calendar_Action_showStart_notify),
+                        mContext.getResources().getString(R.string.Live_Calendar_Label_showStart_notify));
             }
         }
     }

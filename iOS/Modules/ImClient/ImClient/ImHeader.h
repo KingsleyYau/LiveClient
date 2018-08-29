@@ -28,5 +28,7 @@
 #import "Model/IMKnockRequestItemObject.h"
 #import "Model/IMLackCreditHangoutItemObject.h"
 #import "Model/IMProgramItemObject.h"
+#import "Model/IMRecvHangoutChatItemObject.h"
+#import "Model/IMLoveLevelItemObject.h"
 
 #endif /* ImHeader_h */

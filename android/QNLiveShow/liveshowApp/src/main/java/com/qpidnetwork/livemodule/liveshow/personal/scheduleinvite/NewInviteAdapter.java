@@ -108,8 +108,8 @@ public class NewInviteAdapter extends BaseAdapter{
                 }
                 //跳转到主播详情页
                 if(!TextUtils.isEmpty(userId)){
-                    mContext.startActivity(AnchorProfileActivity.getAnchorInfoIntent(mContext, mContext.getResources().getString(R.string.live_webview_anchor_profile_title),
-                            userId, false));
+                    AnchorProfileActivity.launchAnchorInfoActivty(mContext, mContext.getResources().getString(R.string.live_webview_anchor_profile_title),
+                            userId, false, AnchorProfileActivity.TagType.Album);
                 }
             }
         });

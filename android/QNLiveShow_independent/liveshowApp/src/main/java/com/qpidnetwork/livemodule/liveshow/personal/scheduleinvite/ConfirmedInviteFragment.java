@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -78,8 +77,8 @@ public class ConfirmedInviteFragment extends BaseListFragment{
                     //GA统计预约到期，点击进入直播间
                     if(getActivity() != null && getActivity() instanceof AnalyticsFragmentActivity){
                         ((AnalyticsFragmentActivity)getActivity()).onAnalyticsEvent(getResources().getString(R.string.Live_EnterBroadcast_Category),
-                                getResources().getString(R.string.Live_EnterBroadcast_Action_NormalEnterBroadcast),
-                                getResources().getString(R.string.Live_EnterBroadcast_Label_NormalEnterBroadcast));
+                                getResources().getString(R.string.Live_EnterBroadcast_Action_PrivateBroadcast),
+                                getResources().getString(R.string.Live_EnterBroadcast_Label_PrivateBroadcast));
                     }
                 }
             }
@@ -141,6 +140,9 @@ public class ConfirmedInviteFragment extends BaseListFragment{
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         HttpRespObject response = (HttpRespObject)msg.obj;
+        if(getActivity() == null){
+            return;
+        }
         switch (msg.what){
             case GET_COMFIRMED_INVITE_CALLBACK:{
                 hideLoadingProcess();

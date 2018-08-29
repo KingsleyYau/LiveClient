@@ -91,13 +91,21 @@ public class GiftRepeatSendTimerManager {
     }
 
     /**
+     * 定时器是否运行中
+     * @return
+     */
+    public boolean isRunning(){
+        return executeStatus != ExecuteStatus.End;
+    }
+
+    /**
      * 关闭定时器
      */
     public void stop(){
         Log.d(TAG,"stop");
         executeStatus = ExecuteStatus.End;
         //回收资源
-        if(null != repeatSendTimer){
+        if(null != repeatSendTimer ){
             //停止定时器
             repeatSendTimer.cancel();
         }

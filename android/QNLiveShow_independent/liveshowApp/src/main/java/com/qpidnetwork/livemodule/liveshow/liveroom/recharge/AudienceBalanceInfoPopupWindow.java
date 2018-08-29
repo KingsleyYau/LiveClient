@@ -17,10 +17,9 @@ import android.widget.TextView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +35,10 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     private TextView tv_userBalance;
     private ImageView iv_userLevel;
     private TextView tv_gotoRecharge;
+    private String userId = "";
     private int manLevel = 0;
+    private String nickName=null;
+    private String photoUrl = null;
     private View rootView;
 
     public AudienceBalanceInfoPopupWindow(Context context) {
@@ -93,46 +95,55 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     public void updateBalanceViewData(){
         if(null != context){
             String userBalance =context.getResources().getString(R.string.live_balance_credits,
-                    String.valueOf(LiveRoomCreditRebateManager.getInstance().getCredit()));
+                    ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
             SpannableString spannableString = new SpannableString(userBalance);
             ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
                     context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
             int index = userBalance.indexOf(":");
-            spannableString.setSpan(foregroundColorSpan1,0,index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-            ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
-            spannableString.setSpan(foregroundColorSpan2,index,userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            if(tv_userBalance != null){
-                tv_userBalance.setText(spannableString);
+            if(index >= 0) {
+                spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
+                spannableString.setSpan(foregroundColorSpan2, index+1, userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (tv_userBalance != null) {
+                    tv_userBalance.setText(spannableString);
+                }
             }
         }
     }
 
     private void updateViewData() {
-        LoginItem loginItem = LoginManager.getInstance().getLoginItem();
-        if (null != loginItem) {
-            tv_userNickName.setText(loginItem.nickName);
-            String userId = context.getResources().getString(R.string.live_balance_userId, loginItem.userId);
-            Log.d(TAG,"updateViewData-nickName:"+loginItem.nickName+" userId:"+userId);
-            tv_userId.setText(userId);
-            if (!TextUtils.isEmpty(loginItem.photoUrl)) {
-                Picasso.with(context).load(loginItem.photoUrl)
-                        .placeholder(R.drawable.ic_default_photo_man)
-                        .error(R.drawable.ic_default_photo_man)
-                        .fit().
-                        into(civ_userIcon);
-            }
+       if(!TextUtils.isEmpty(userId)){
+           tv_userId.setText(context.getResources().getString(R.string.live_balance_userId, userId));
+       }
+
+        //昵称/头像/等级就外部传递进来，跟接口同步
+        if(!TextUtils.isEmpty(nickName)){
+            tv_userNickName.setText(nickName);
         }
+
+        if (!TextUtils.isEmpty(photoUrl)) {
+            Picasso.with(context).load(photoUrl)
+                    .placeholder(R.drawable.ic_default_photo_man)
+                    .error(R.drawable.ic_default_photo_man)
+                    .fit().
+                    into(civ_userIcon);
+        }
+        //等级在baseactivity的creditsUpdate和show方法里面更i性能
         iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(context,manLevel));
+
+        //userBalance就拿manager里面的实时数据即可
         String userBalance =context.getResources().getString(R.string.live_balance_credits,
-                String.valueOf(LiveRoomCreditRebateManager.getInstance().getCredit()));
+                ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
         SpannableString spannableString = new SpannableString(userBalance);
         ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
                 context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
         int index = userBalance.indexOf(":");
-        spannableString.setSpan(foregroundColorSpan1,0,index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
-        spannableString.setSpan(foregroundColorSpan2,index,userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        tv_userBalance.setText(spannableString);
+        if(index >= 0) {
+            spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+            ForegroundColorSpan foregroundColorSpan2 = new ForegroundColorSpan(Color.parseColor("#ffd205"));
+            spannableString.setSpan(foregroundColorSpan2, index + 1, userBalance.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            tv_userBalance.setText(spannableString);
+        }
     }
 
     @Override
@@ -142,7 +153,7 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
             dismiss();
 
         } else if (i == R.id.tv_gotoRecharge) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(context);
 
             //GA统计点击充值
             AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
@@ -159,7 +170,22 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     }
 
     public void setUserLevel(int manLevel) {
-        Log.d(TAG, "setUserLevel");
+        Log.d(TAG, "setUserLevel-manLevel:"+manLevel);
         this.manLevel = manLevel;
+    }
+
+    public void setNickName(String nickName){
+        Log.d(TAG, "setNickName-nickName:"+nickName);
+        this.nickName = nickName;
+    }
+
+    public void setPhotoUrl(String photoUrl){
+        Log.d(TAG, "setPhotoUrl-photoUrl:"+photoUrl);
+        this.photoUrl = photoUrl;
+    }
+
+    public void setUserId(String userId){
+        Log.d(TAG, "setUserId-userId:"+userId);
+        this.userId = userId;
     }
 }

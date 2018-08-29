@@ -20,16 +20,6 @@
 #define VIDEO_CAPTURE_HEIGHT 640
 #define VIDEO_CAPTURE_FPS 30
 
-#pragma mark - 上传分辨率
-#define VIDEO_WIDTH 240
-#define VIDEO_HEIGHT 320
-// 帧率
-#define VIDEO_FPS 10
-// 关键帧间隔(每VIDEO_KEY_INTERVAL个帧就有一个关键帧)
-#define VIDEO_KEY_INTERVAL VIDEO_FPS
-// 视频码率
-#define VIDEO_BIT_RATE 400 * 1000
-
 @interface LiveStreamPublisher () <AVCaptureAudioDataOutputSampleBufferDelegate, RtmpPublisherOCDelegate>
 
 @property (strong) NSString *_Nonnull url;
@@ -39,6 +29,12 @@
 @property (assign) BOOL isStart;
 @property (assign) BOOL isConnected;
 @property (assign) BOOL isPreview;
+
+@property (assign) NSInteger videoWidth;
+@property (assign) NSInteger videoHeight;
+@property (assign) NSInteger videoFps;
+@property (assign) NSInteger videoKpi;
+@property (assign) NSInteger videoBitFate;
 
 #pragma mark - 传输处理
 /**
@@ -100,16 +96,20 @@
 
 @implementation LiveStreamPublisher
 #pragma mark - 获取实例
-+ (instancetype)instance {
-    LiveStreamPublisher *obj = [[[self class] alloc] init];
++ (instancetype)instance:(LiveStreamType)liveStreamType {
+    LiveStreamPublisher *obj = [[[self class] alloc] initWithType:liveStreamType];
     return obj;
 }
 
-- (instancetype)init {
+- (instancetype)initWithType:(LiveStreamType)liveStreamType {
     if (self = [super init]) {
-        NSLog(@"LiveStreamPublisher::init( self : %p )", self);
-
-        self.publisher = [RtmpPublisherOC instance:VIDEO_WIDTH height:VIDEO_HEIGHT fps:VIDEO_FPS keyInterval:VIDEO_KEY_INTERVAL bitRate:VIDEO_BIT_RATE];
+        NSLog(@"LiveStreamPublisher::initWithType( self : %p, liveStreamType : %d )", self, liveStreamType);
+        
+        // 初始化推流参数
+        [self initStreamParam:liveStreamType];
+        
+        // 创建推流器
+        self.publisher = [RtmpPublisherOC instance:self.videoWidth height:self.videoHeight fps:self.videoFps keyInterval:self.videoKpi bitRate:self.videoBitFate];
         self.publisher.delegate = self;
 
         self.isPreview = NO;
@@ -230,6 +230,42 @@
 }
 
 #pragma mark - 私有方法
+- (void)initStreamParam:(LiveStreamType)liveStreamType {
+    switch (liveStreamType) {
+        case LiveStreamType_Audience_Private: {
+            self.videoWidth = 240;
+            self.videoHeight = 320;
+            self.videoFps = 10;
+            self.videoKpi = 10;
+            self.videoBitFate = 400 * 1000;
+        }break;
+        case LiveStreamType_Audience_Mutiple: {
+            self.videoWidth = 240;
+            self.videoHeight = 240;
+            self.videoFps = 10;
+            self.videoKpi = 10;
+            self.videoBitFate = 400 * 1000;
+        }break;
+        case LiveStreamType_ShowHost_Public:
+        case LiveStreamType_ShowHost_Private: {
+            self.videoWidth = 320;
+            self.videoHeight = 320;
+            self.videoFps = 12;
+            self.videoKpi = 12;
+            self.videoBitFate = 700 * 1000;
+        }break;
+        case LiveStreamType_ShowHost_Mutiple: {
+            self.videoWidth = 240;
+            self.videoHeight = 240;
+            self.videoFps = 12;
+            self.videoKpi = 12;
+            self.videoBitFate = 500 * 1000;
+        }break;
+        default:
+            break;
+    }
+}
+
 - (void)setPublishView:(GPUImageView *)publishView {
     if (_publishView != publishView) {
         _publishView = publishView;
@@ -385,7 +421,7 @@
         // TODO:5.设置帧数
         self.videoCaptureSession.frameRate = VIDEO_CAPTURE_FPS;
         // TODO:6.创建输出处理
-        self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(VIDEO_WIDTH, VIDEO_HEIGHT) resultsInBGRAFormat:YES];
+        self.output = [[GPUImageRawDataOutput alloc] initWithImageSize:CGSizeMake(self.videoWidth, self.videoHeight) resultsInBGRAFormat:YES];
 
         WeakObject(self, weakSelf);
         WeakObject(self.output, weakOutput);
@@ -399,7 +435,7 @@
                 CVPixelBufferRef pixelBuffer = NULL;
                 CVReturn ret = kCVReturnSuccess;
 
-                ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, VIDEO_WIDTH, VIDEO_HEIGHT, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
+                ret = CVPixelBufferCreateWithBytes(kCFAllocatorDefault, weakSelf.videoWidth, weakSelf.videoHeight, kCVPixelFormatType_32BGRA, outputBytes, bytesPerRow, nil, nil, nil, &pixelBuffer);
                 if (ret == kCVReturnSuccess) {
                     // 将视频帧放进推流器
                     [weakSelf.publisher pushVideoFrame:pixelBuffer];
@@ -415,11 +451,11 @@
         // TODO:7.创建美颜滤镜
         self.beautyFilter = [[LFGPUImageBeautyFilter alloc] init];
         self.beautyFilter.beautyLevel = 0.5;
-        //    self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
+//        self.beautyFilter = [[GPUImageBeautifyFilter alloc] init];
 
         // TODO:8.创建裁剪滤镜
         // 目标比例
-        double radioPreview = 1.0 * VIDEO_WIDTH / VIDEO_HEIGHT;
+        double radioPreview = 1.0 * self.videoWidth / self.videoHeight;
         // 源比例
         double radioImage = 1.0 * VIDEO_CAPTURE_WIDTH / VIDEO_CAPTURE_HEIGHT;
         if (radioPreview < radioImage) {

@@ -54,17 +54,15 @@ RtmpPublisher::~RtmpPublisher() {
     }
 }
 
-bool RtmpPublisher::PublishUrl(const string& url) {
+bool RtmpPublisher::PublishUrl() {
     bool bFlag = false;
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::PublishUrl( "
-                 "this : %p, "
-                 "url : %s "
+                 "this : %p "
                  ")",
-                 this,
-                 url.c_str()
+                 this
                  );
     
     mClientMutex.lock();
@@ -74,29 +72,23 @@ bool RtmpPublisher::PublishUrl(const string& url) {
     
     InitBuffer();
     
-    bFlag = mpRtmpDump->PublishUrl(url);
-    if( bFlag ) {
-        // 开始播放
-        mbRunning = true;
-        
-        mPublishThread.Start(mpPublishRunnable);
-        
-    } else {
-        Stop();
-    }
+	// 开始播放
+	mbRunning = true;
+
+	mPublishThread.Start(mpPublishRunnable);
     
+	bFlag = true;
+
     mClientMutex.unlock();
     
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "RtmpPublisher::PublishUrl( "
                  "this : %p, "
-                 "[%s], "
-                 "url : %s "
+                 "[%s] "
                  ")",
                  this,
-                 bFlag?"Success":"Fail",
-                 url.c_str()
+                 bFlag?"Success":"Fail"
                  );
     
     return bFlag;
@@ -167,9 +159,6 @@ void RtmpPublisher::Stop() {
         while( (audioFrame = (AudioFrame *)mCacheAudioBufferQueue.PopBuffer()) != NULL ) {
             delete audioFrame;
         }
-        
-        // 停止接收
-        mpRtmpDump->Stop();
     }
     
     mClientMutex.unlock();
@@ -191,15 +180,6 @@ void RtmpPublisher::SendVideoFrame(char* data, int size, u_int32_t timestamp) {
         VideoFrame* videoFrame = (VideoFrame *)mCacheVideoBufferQueue.PopBuffer();
         if( !videoFrame ) {
 //            videoFrame = new VideoFrame();
-//            FileLevelLog("rtmpdump",
-//                         KLog::LOG_MSG,
-//                         "RtmpPublisher::SendVideoFrame( "
-//                         "[New Video frame], "
-//                         "videoFrame : %p "
-//                         ")",
-//                         videoFrame
-//                         );
-            
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendVideoFrame( "
@@ -239,14 +219,6 @@ void RtmpPublisher::SendAudioFrame(
         AudioFrame* audioFrame = (AudioFrame *)mCacheAudioBufferQueue.PopBuffer();
         if( !audioFrame ) {
 //            audioFrame = new AudioFrame();
-//            FileLevelLog("rtmpdump",
-//                         KLog::LOG_MSG,
-//                         "RtmpPublisher::SendAudioFrame( "
-//                         "[New Audio frame], "
-//                         "audioFrame : %p "
-//                         ")",
-//                         audioFrame
-//                         );
             FileLevelLog("rtmpdump",
                          KLog::LOG_WARNING,
                          "RtmpPublisher::SendAudioFrame( "
@@ -309,7 +281,9 @@ void RtmpPublisher::PublishHandle() {
                          videoFrame->GetBuffer()[0]
                          );
             
-            mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTimestamp);
+            if(mpRtmpDump) {
+            	mpRtmpDump->SendVideoFrame((char *)videoFrame->GetBuffer(), videoFrame->mBufferLen, videoFrame->mTimestamp);
+            }
             
             // 回收资源
             if( !mCacheVideoBufferQueue.PushBuffer(videoFrame) ) {
@@ -351,14 +325,16 @@ void RtmpPublisher::PublishHandle() {
                          audioFrame->mTimestamp
                          );
             
-            mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
-                                       audioFrame->mSoundRate,
-                                       audioFrame->mSoundSize,
-                                       audioFrame->mSoundType,
-                                       (char *)audioFrame->GetBuffer(),
-                                       audioFrame->mBufferLen,
-                                       audioFrame->mTimestamp
-                                       );
+            if(mpRtmpDump) {
+				mpRtmpDump->SendAudioFrame(audioFrame->mSoundFormat,
+										   audioFrame->mSoundRate,
+										   audioFrame->mSoundSize,
+										   audioFrame->mSoundType,
+										   (char *)audioFrame->GetBuffer(),
+										   audioFrame->mBufferLen,
+										   audioFrame->mTimestamp
+										   );
+            }
             
             // 回收资源
             if( !mCacheAudioBufferQueue.PushBuffer(audioFrame) ) {

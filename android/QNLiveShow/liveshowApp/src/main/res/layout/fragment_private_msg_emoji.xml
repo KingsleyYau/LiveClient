@@ -1,0 +1,30 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--最底部为表情选择器-->
+    <com.qpidnetwork.livemodule.liveshow.personal.chatemoji.EmojiTabScrollLayout
+        xmlns:custom="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/etsl_emojiContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:layout_gravity="center"
+        android:visibility="visible"
+        custom:emojiPanelHeight="220dp"
+        custom:columnNumbPerPage="5"
+        custom:lineNumbPerPage="3"
+        custom:pageIndicatorHeight="6dp"
+        custom:pageIndicatorSpace="8dp"
+        custom:pageIndicatorTopMargin="4dp"
+        custom:pageIndicatorBottomMargin="30dp"
+        custom:showTabPageIndicator="false"
+        custom:emojiPanelAutoFitWindow="true"
+        custom:emojiBgColor="#ffffff"
+        custom:gridViewItemWidth="@dimen/mesage_emoji_item_width"
+        custom:gridViewItemHeight="@dimen/mesage_emoji_item_height"
+        custom:gridViewItemIconWidth="@dimen/live_emoji_item_icon_width"
+        custom:gridViewItemIconHeight="@dimen/live_emoji_item_icon_height"/>
+
+</FrameLayout>

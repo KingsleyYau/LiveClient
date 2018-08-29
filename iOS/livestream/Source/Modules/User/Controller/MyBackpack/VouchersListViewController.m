@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) NSArray * array;
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
+@property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @end
 
 @implementation VouchersListViewController
@@ -106,6 +107,12 @@
     self.infoBtn.layer.masksToBounds = YES;
     self.infoLabel.text = msg;
     self.infoBtn.hidden = hidden;
+    // 是否没有数据
+    if (hidden) {
+        self.noDataIcon.image = [UIImage imageNamed:@"Common_NoDataIcon"];
+    }else {
+        self.noDataIcon.image = [UIImage imageNamed:@"Home_Hot&follow_fail"];
+    }
     //self.tableView.hidden = YES;
 }
 

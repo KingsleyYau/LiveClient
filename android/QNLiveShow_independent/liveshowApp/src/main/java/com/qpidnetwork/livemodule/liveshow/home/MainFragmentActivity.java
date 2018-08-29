@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -14,8 +15,6 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
-import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
-import com.qpidnetwork.livemodule.httprequest.OnBannerCallback;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserType;
@@ -23,10 +22,12 @@ import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.guide.GuideActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.manager.UpdateManager;
 import com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity;
 import com.qpidnetwork.livemodule.liveshow.welcome.PeacockActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.view.Dialogs.DialogNormal;
 import com.qpidnetwork.livemodule.view.DotView.DotLayout;
 import com.qpidnetwork.livemodule.view.MaterialDialogAlert;
 
@@ -100,39 +101,17 @@ public class MainFragmentActivity extends BaseActionBarFragmentActivity implemen
         mScheduleInvitePackageUnreadManager.GetCountOfUnreadAndPendingInvite();
         mScheduleInvitePackageUnreadManager.GetPackageUnreadCount();
         setCenterUnReadNumAndStyle();
-        initData();
 
         //引导页
         if(mNeedShowGuide){
             showGuideView();
         }
 
+        //更新
+        doCheckUpdate();
+
         //test
 //        showEditProfile();
-    }
-
-    private void initData(){
-        Log.d(TAG,"initData");
-        LiveRequestOperator.getInstance().Banner(new OnBannerCallback() {
-            @Override
-            public void onBanner(boolean isSuccess, int errCode, String errMsg,
-                                 String bannerImg, String bannerLink, String bannerName) {
-                Log.d(TAG,"onBanner-isSuccess:"+isSuccess+" errCode:"+errCode
-                        +" errMsg:"+errMsg+" bannerImg:"+bannerImg+" bannerLink:"+bannerLink
-                        +" bannerName:"+bannerName);
-                if(isSuccess){
-                    final BannerItem bannerItem = new BannerItem(bannerImg,bannerLink,bannerName);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(null != mAdapter){
-                                mAdapter.notifyBannerImgChanged(bannerItem);
-                            }
-                        }
-                    });
-                }
-            }
-        });
     }
 
     @Override
@@ -196,6 +175,7 @@ public class MainFragmentActivity extends BaseActionBarFragmentActivity implemen
     private void initView(){
         Log.d(TAG,"initView");
         btnBack = (FrameLayout) findViewById(R.id.btnBack);
+        btnBack.setVisibility(View.GONE);
         btnBack.setOnClickListener(this);
         tabPageIndicator = (TabPageIndicator) findViewById(R.id.tabPageIndicator);
         viewPagerContent = (ViewPager) findViewById(R.id.viewPagerContent);
@@ -211,6 +191,8 @@ public class MainFragmentActivity extends BaseActionBarFragmentActivity implemen
         tabPageIndicator.setHasDigitalHint(false);
         //设置中间竖线上下的padding值
         tabPageIndicator.setDividerPadding(DisplayUtil.dip2px(this, 10));
+        //设置页面切换处理
+        tabPageIndicator.setOnPageChangeListener(this);
 
 //        tv_centerUnReadNum = (TextView) findViewById(R.id.tv_centerUnReadNum);
         dl_UnReadNum = (DotLayout)findViewById(R.id.dl_UnReadNum);
@@ -265,11 +247,21 @@ public class MainFragmentActivity extends BaseActionBarFragmentActivity implemen
         super.onClick(v);
         int i = v.getId();
         if (i == R.id.btnBack) {
-            finish();
+            moveTaskToBack(false);
+//            finish();
         } else if (i == R.id.rlPersonalCenter) {
             Intent intent = new Intent(this, PersonalCenterActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     /**
@@ -304,10 +296,50 @@ public class MainFragmentActivity extends BaseActionBarFragmentActivity implemen
     }
 
     /**
-     * 编写资料
+     * 检测更新
      */
-    private void showEditProfile(){
-        EditProfileActivity.show(mContext);
+    private void doCheckUpdate(){
+        UpdateManager.UpdateType updateType = UpdateManager.getInstance(mContext).getUpdateType(LoginManager.getInstance().getSynConfig());
+        if(updateType == UpdateManager.UpdateType.NORMAL){
+            showNormalUpdateDialog();
+        }
+    }
+
+    /**
+     * 提示 普通更新
+     */
+    private void showNormalUpdateDialog(){
+        final UpdateManager.UpdateMessage updateMessage = UpdateManager.getInstance(mContext).getUpdateMessage();
+
+        DialogNormal.Builder builder = new DialogNormal.Builder()
+                .setContext(mContext)
+                .setTitle(getString(R.string.live_update_title))
+                .setContent(getString(R.string.live_update_default_text))
+                .cancleable(false)
+                .outsideTouchable(false)
+                .btnLeft(new DialogNormal.Button(
+                        getString(R.string.live_not_now),
+                        true,
+                        null
+                ))
+                .btnRight(new DialogNormal.Button(
+                        getString(R.string.live_update),
+                        false,
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(!TextUtils.isEmpty(updateMessage.downloadAppUrl)){
+                                    Uri uri = Uri.parse(updateMessage.downloadAppUrl);
+                                    Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_VIEW);
+                                    intent.setData(uri);
+                                    startActivity(intent);
+                                }
+                            }
+                        }
+                ));
+
+        DialogNormal.setBuilder(builder).show();
     }
 
     @Override

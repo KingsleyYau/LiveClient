@@ -52,7 +52,7 @@ public:
             }
             /* errNo */
             if (root[IMANCHORRECVLEAVEROOMITEM_ERRNO_PARAM].isNumeric()) {
-                errNo = root[IMANCHORRECVLEAVEROOMITEM_ERRNO_PARAM].asInt();
+                errNo = (ZBLCC_ERR_TYPE)root[IMANCHORRECVLEAVEROOMITEM_ERRNO_PARAM].asInt();
             }
             /* errMsg */
             if (root[IMANCHORRECVLEAVEROOMITEM_ERRMSG_PARAM].isString()) {
@@ -69,7 +69,7 @@ public:
         userId = "";
         nickName = "";
         photoUrl = "";
-        errNo = 0;
+        errNo = ZBLCC_ERR_FAIL;
         errMsg = "";
     }
     
@@ -91,7 +91,7 @@ public:
     string                      userId;
     string                      nickName;
     string                      photoUrl;
-    int                         errNo;
+    ZBLCC_ERR_TYPE                         errNo;
     string                      errMsg;
 
 };

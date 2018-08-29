@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.constraint.ConstraintLayout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,7 +35,7 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
     private final int COUNT_DOWN = 2;
     private final int REQUEST_RESNED_SUCCESS = 3;
     private final int REQUEST_RESNED_FAILED = 4;
-    private final int MAX_RESEND_TIME = 30;
+    private final int MAX_RESEND_TIME = 30; //秒
 
     //变量
     private boolean mIsSuccess ;
@@ -56,7 +58,7 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
         setCustomContentView(R.layout.activity_verify_mobile);
 
         //设置头
-        setTitle(getString(R.string.live_book_verify_num_title), Color.WHITE);
+        setTitle(getString(R.string.live_book_verify_num_title), R.color.theme_default_black);
 
         //
         initIntent();
@@ -116,6 +118,7 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
                 onSummit();
             }
         });
+        mBtnSummit.setEnabled(false);
 
         mBtnErrorBack = (ButtonRaised) findViewById(R.id.btn_error_back);
         mBtnErrorBack.setOnClickListener(new View.OnClickListener() {
@@ -125,8 +128,27 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
             }
         });
 
+        //
+        TextWatcher textWatcher = new TextWatcher() {
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                                      int count) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                doCheckData();
+            }
+        };
         mEtVerifyCode = (MaterialTextField)findViewById(R.id.et_code);
+        mEtVerifyCode.setHint(getResources().getString(R.string.live_book_verifycode_hint_tips));
+        mEtVerifyCode.getEditor().addTextChangedListener(textWatcher);
 
         mConstraintLayoutContent = (ConstraintLayout) findViewById(R.id.cly_content);
         mConstraintLayoutError = (ConstraintLayout) findViewById(R.id.cly_error);
@@ -164,9 +186,13 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
                 case COUNT_DOWN:
                     if(mResendTime > 0){
                         mBtnResend.setButtonTitle(getString(R.string.live_book_resend_in , String.valueOf(mResendTime)));
+                        mBtnResend.setButtonBackground(getResources().getColor(R.color.white));
+                        mBtnResend.setButtonTitleColor(getResources().getColor(R.color.text_color_grey));
                         mBtnResend.setEnabled(false);
                     }else{
                         mBtnResend.setButtonTitle(getString(R.string.live_book_resend));
+                        mBtnResend.setButtonBackground(getResources().getColor(R.color.theme_sky_blue));
+                        mBtnResend.setButtonTitleColor(getResources().getColor(R.color.white));
                         mBtnResend.setEnabled(true);
                     }
 
@@ -208,6 +234,19 @@ public class VerifyMobileActivity extends BaseActionBarFragmentActivity {
         };
 
         new Thread(r).start();
+    }
+
+    /**
+     * 检查数据是否完整
+     */
+    private void doCheckData(){
+        if(mEtVerifyCode.getText().length() < 1){
+            mBtnSummit.setButtonBackground(getResources().getColor(R.color.black3));
+            mBtnSummit.setEnabled(false);
+        }else{
+            mBtnSummit.setButtonBackground(getResources().getColor(R.color.theme_sky_blue));
+            mBtnSummit.setEnabled(true);
+        }
     }
 
     /**

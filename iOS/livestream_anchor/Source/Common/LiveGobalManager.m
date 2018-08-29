@@ -19,7 +19,7 @@ static LiveGobalManager *gManager = nil;
 @property (strong) NSDate *startTime;
 @property (strong) dispatch_queue_t backgroundQueue;
 @property (assign) UIBackgroundTaskIdentifier bgTask;
-@property (nonatomic, strong) NSMutableArray* delegates;
+@property (nonatomic, strong) NSMutableArray *delegates;
 @end
 ;
 
@@ -39,14 +39,14 @@ static LiveGobalManager *gManager = nil;
         if (!self.backgroundQueue) {
             self.backgroundQueue = dispatch_queue_create("liveBackgroundQueue", DISPATCH_QUEUE_SERIAL);
         }
-        
+
         self.delegates = [NSMutableArray array];
-        
+
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+
         _canShowInvite = YES;
     }
     return self;
@@ -54,7 +54,7 @@ static LiveGobalManager *gManager = nil;
 
 - (void)dealloc {
     NSLog(@"LiveGobalManager::dealloc()");
-    
+
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -68,9 +68,9 @@ static LiveGobalManager *gManager = nil;
 
 - (void)removeDelegate:(id<LiveGobalManagerDelegate>)delegate {
     @synchronized(self) {
-        for(NSValue* value in self.delegates) {
+        for (NSValue *value in self.delegates) {
             id<LiveGobalManagerDelegate> item = (id<LiveGobalManagerDelegate>)value.nonretainedObjectValue;
-            if( item == delegate ) {
+            if (item == delegate) {
                 [self.delegates removeObject:value];
                 break;
             }
@@ -80,13 +80,13 @@ static LiveGobalManager *gManager = nil;
 
 - (BOOL)canShowInvite:(NSString *)uesrId {
     BOOL bFlag = NO;
-    
-    if( _canShowInvite ) {
-        if( self.liveRoom ) {
+
+    if (_canShowInvite) {
+        if (self.liveRoom) {
             // 当前存在直播间
-            if( self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP ) {
+            if (self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP) {
                 // 当前是公开直播间, 是否和邀请的主播Id一样
-                if( [self.liveRoom.userId isEqualToString:uesrId] ) {
+                if ([self.liveRoom.userId isEqualToString:uesrId]) {
                     bFlag = YES;
                 }
             } else {
@@ -120,11 +120,11 @@ static LiveGobalManager *gManager = nil;
                                      expirationHandler:^{
                                          // Clean up any unfinished task business by marking where you
                                          // stopped or ending the task outright.
+                                         NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired]] )");
+
                                          [self stopLive];
 
-                                         NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired]] )");
-                                         
-                                         if( self.bgTask != UIBackgroundTaskInvalid ) {
+                                         if (self.bgTask != UIBackgroundTaskInvalid) {
                                              [app endBackgroundTask:self.bgTask];
                                              self.bgTask = UIBackgroundTaskInvalid;
                                          }
@@ -145,7 +145,7 @@ static LiveGobalManager *gManager = nil;
                 }
                 NSUInteger enterRoomBgTime = enterRoomTimeInterval;
 
-                NSLog(@"LiveGobalManager::willEnterBackground( bgTime : %lu, enterRoomBgTime : %lu )", (unsigned long)bgTime, (unsigned long)enterRoomBgTime);
+                //                NSLog(@"LiveGobalManager::willEnterBackground( bgTime : %lu, enterRoomBgTime : %lu )", (unsigned long)bgTime, (unsigned long)enterRoomBgTime);
 
                 // 后台进入直播间超过60秒
                 if (enterRoomBgTime > BACKGROUND_TIMEOUT) {
@@ -153,10 +153,10 @@ static LiveGobalManager *gManager = nil;
                     break;
                 }
 
-                sleep(1);
+                usleep(100 * 1000);
             }
 
-            if( self.bgTask != UIBackgroundTaskInvalid  ) {
+            if (self.bgTask != UIBackgroundTaskInvalid) {
                 [app endBackgroundTask:self.bgTask];
                 self.bgTask = UIBackgroundTaskInvalid;
             }
@@ -170,7 +170,7 @@ static LiveGobalManager *gManager = nil;
         _isBackground = NO;
 
         self.enterRoomBackgroundTime = nil;
-        
+
         NSLog(@"LiveGobalManager::willEnterForeground()");
     }
 }
@@ -178,17 +178,17 @@ static LiveGobalManager *gManager = nil;
 - (void)stopLive {
     @synchronized(self) {
         if (self.liveRoom) {
-            NSLog(@"LiveGobalManager::stopLive( [发送退出直播间:%@] )",self.liveRoom.roomId);
-            
+            NSLog(@"LiveGobalManager::stopLive( [发送退出直播间:%@] )", self.liveRoom.roomId);
+
             @synchronized(self) {
-                for(NSValue* value in self.delegates) {
+                for (NSValue *value in self.delegates) {
                     id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
-                    if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
+                    if ([delegate respondsToSelector:@selector(enterBackgroundTimeOut:)]) {
                         [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
                     }
                 }
             }
-            
+
             // 发送IM退出直播间命令
             [[LSAnchorImManager manager] leaveRoom:self.liveRoom.roomId];
             self.liveRoom = nil;

@@ -122,7 +122,6 @@
                     android:id="@+id/btnStartPrivate"
                     android:layout_width="@dimen/live_size_200dp"
                     android:layout_height="@dimen/live_size_40dp"
-                    android:background="@drawable/button_start_private_broadcast"
                     android:visibility="gone"
                     android:clickable="true"
                     android:layout_marginBottom="16dp"/>

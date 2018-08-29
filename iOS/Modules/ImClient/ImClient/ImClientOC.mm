@@ -21,552 +21,137 @@ class ImClientCallback;
 @property (nonatomic, assign) ImClientCallback *imClientCallback;
 
 #pragma mark - 登录/注销回调
-/**
- *  登录回调
- *
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *  @param item        登录返回结构体
- */
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg item:(const LoginReturnItem &)item;
 
-/**
- *  注销回调
- *
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- */
 - (void)onLogout:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
 
-/**
- *  2.4.用户被挤掉线回调
- *
- */
 - (void)onKickOff:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
 
 #pragma mark - 直播间主动操作回调
-/**
- *  3.1.观众进入直播间回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *  @param item        直播间信息
- *
- */
-
 - (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg item:(const RoomInfoItem &)item;
-/**
- *  3.2.观众退出直播间回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *
- */
+
 - (void)onRoomOut:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
 
 #pragma mark - 直播间接收操作回调
-/**
- *  3.3.接收直播间关闭通知(观众)回调
- *
- *  @param roomId      直播间ID
- *
- */
 - (void)onRecvRoomCloseNotice:(const string &)roomId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
 
-/**
- *  3.4.接收观众进入直播间通知回调
- *
- *  @param roomId      直播间ID
- *  @param userId      观众ID
- *  @param nickName    观众昵称
- *  @param photoUrl    观众头像url
- *  @param riderId     座驾ID
- *  @param riderName   座驾名称
- *  @param riderUrl    座驾图片url
- *  @param fansNum     观众人数
- *  @param honorImg    勋章图片url
- *  @param isHasTicket 是否已购票（No：否，Yes：是）
- *
- */
 - (void)onRecvEnterRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl riderId:(const string &)riderId riderName:(const string &)riderName riderUrl:(const string &)riderUrl fansNum:(int)fansNum honorImg:(const string &)honorImg isHasTicket:(BOOL)isHasTicket;
 
-/**
- *  3.5.接收观众退出直播间通知回调
- *
- *  @param roomId      直播间ID
- *  @param userId      观众ID
- *  @param nickName    观众昵称
- *  @param photoUrl    观众头像url
- *
- */
 - (void)onRecvLeaveRoomNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName photoUrl:(const string &)photoUrl fansNum:(int)fansNum;
 
-/**
- *  3.6.接收返点通知回调
- *
- *  @param roomId      直播间ID
- *  @param rebateInfo  返点信息
- *
- */
 - (void)onRecvRebateInfoNotice:(const string &)roomId rebateInfo:(const RebateInfoItem &)rebateInfo;
 
-/**
- *  3.7.接收关闭直播间倒数通知回调
- *
- *  @param roomId      直播间ID
- *  @param leftSeconds 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
- *  @param err         错误码
- *  @param errMsg      倒数原因描述
- *
- */
 - (void)onRecvLeavingPublicRoomNotice:(const string &)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg;
 
-/**
- *  3.8.接收踢出直播间通知回调
- *
- *  @param roomId     直播间ID
- *  @param errType    踢出原因错误码
- *  @param errmsg     踢出原因描述
- *  @param credit     信用点
- *
- */
 - (void)onRecvRoomKickoffNotice:(const string &)roomId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg credit:(double)credit;
 
-/**
- *  3.9.接收充值通知回调
- *
- *  @param roomId     直播间ID
- *  @param msg        充值提示
- *  @param credit     信用点
- *
- */
 - (void)onRecvLackOfCreditNotice:(const string &)roomId msg:(const string &)msg credit:(double)credit;
 
-/**
- *  3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）回调
- *
- *  @param roomId     直播间ID
- *  @param credit     信用点
- *
- */
 - (void)onRecvCreditNotice:(const string &)roomId credit:(double)credit;
 
-/**
- *  3.11.直播间开播通知 回调
- *
- *  @param roomId       直播间ID
- *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
- *
- */
 - (void)onRecvWaitStartOverNotice:(const StartOverRoomItem &)item;
 
-/**
- *  3.12.接收观众／主播切换视频流通知接口 回调
- *
- *  @param roomId       房间ID
- *  @param isAnchor     是否是主播推流（1:是 0:否）
- *  @param playUrl      播放url
- *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
- *
- */
-//- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl userId:(const string &)userId;
-- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl;
+- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl userId:(const string &)userId;
 
-/**
- *  3.13.观众进入公开直播间接口 回调
- *
- *  @param success      操作是否成功
- *  @param reqId        请求序列号
- *  @param item         直播间信息
- *
- */
 - (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg item:(const RoomInfoItem &)item;
 
-/**
- *  3.14.观众开始／结束视频互动接口 回调
- *
- *  @param success          操作是否成功
- *  @param reqId            请求序列号
- *  @param errMsg           结果描述
- *  @param manPushUrl       观众视频流url
- *
- */
 - (void)onControlManPush:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg manPushUrl:(const list<string> &)manPushUrl;
 
-/**
- *  3.15.获取指定立即私密邀请信息接口 回调
- *
- *  @param success          操作是否成功
- *  @param reqId            请求序列号
- *  @param errMsg           结果描述
- *  @param item             立即私密邀请
- *
- */
 - (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg item:(const PrivateInviteItem &)item;
 
 #pragma mark - 直播间文本消息信息
-/**
- *  4.1.发送直播间文本消息回调
- *
- *  @param success     操作是否成功
- *  @param reqId       请求序列号
- *  @param errType     结果类型
- *  @param errmsg      结果描述
- *
- */
+
 - (void)onSendLiveChat:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg;
-/**
- *  4.2.接收直播间文本消息通知回调
- *
- *  @param roomId      直播间ID
- *  @param level       发送方级别
- *  @param fromId      发送方的用户ID
- *  @param nickName    发送方的昵称
- *  @param msg         文本消息内容
- *  @param honorUrl    勋章图片url
- *
- */
+
 - (void)onRecvSendChatNotice:(const string &)roomId level:(int)level fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg honorUrl:(const string &)honorUrl;
 
-/**
- *  4.3.接收直播间公告消息回调
- *
- *  @param roomId      直播间ID
- *  @param msg         公告消息内容
- *  @param link        公告链接（可无，无则表示不是带链接的公告消息）
- *  @param type        公告类型（0：普通，1：警告）
- *
- */
 - (void)onRecvSendSystemNotice:(const string &)roomId msg:(const string &)msg link:(const string &)link type:(IMSystemType)type;
 
 #pragma mark - 直播间礼物消息操作回调
-/**
- *  5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）回调
- *
- *  @param success       操作是否成功
- *  @param reqId         请求序列号
- *  @param errType       结果类型
- *  @param errmsg        结果描述
- *  @param credit        信用点
- *  @param rebateCredit  返点
- *
- */
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg credit:(double)credit rebateCredit:(double)rebateCredit;
-/**
- *  5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）回调
- *
- *  @param roomId               直播间ID
- *  @param fromId               发送方的用户ID
- *  @param nickName             发送方的昵称
- *  @param giftId               礼物ID
- *  @param giftName             礼物名字
- *  @param giftNum              本次发送礼物的数量
- *  @param multi_click          是否连击礼物
- *  @param multi_click_start    连击起始数
- *  @param multi_click_end      连击结束数
- *  @param multi_click_id       连击ID相同则表示同一次连击
- *  @param honorUrl             勋章图片url
- *
- */
+
 - (void)onRecvSendGiftNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName giftId:(const string &)giftId giftName:(const string &)giftName giftNum:(int)giftNum multi_click:(BOOL)multi_click multi_click_start:(int)multi_click_start multi_click_end:(int)multi_click_end multi_click_id:(int)multi_click_id honorUrl:(const string &)honorUrl;
 
 #pragma mark - 直播间弹幕消息操作回调
-/**
- *  6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）回调
- *
- *  @param success       操作是否成功
- *  @param reqId         请求序列号
- *  @param errType       结果类型
- *  @param errmsg        结果描述
- *  @param credit        信用点
- *  @param rebateCredit  返点
- *
- */
 - (void)onSendToast:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(const string &)errmsg credit:(double)credit rebateCredit:(double)rebateCredit;
-/**
- *  6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）回调
- *
- *  @param roomId               直播间ID
- *  @param fromId               发送方的用户ID
- *  @param nickName             发送方的昵称
- *  @param msg                  消息内容
- *  @param honorUrl             勋章图片url
- *
- */
+
 - (void)onRecvSendToastNotice:(const string &)roomId fromId:(const string &)fromId nickName:(const string &)nickName msg:(const string &)msg honorUrl:(const string &)honorUrl;
 
 #pragma mark - 邀请私密直播
-// ------------- 邀请私密直播 -------------
-/**
- *  7.1.观众立即私密邀请 回调
- *
- *  @param success       操作是否成功
- *  @param reqId         请求序列号
- *  @param err           结果类型
- *  @param errMsg        结果描述
- *  @param invitationId      邀请ID
- *  @param timeOut           邀请的剩余有效时间
- *  @param roomId            直播间ID
- *
- */
 - (void)onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg invitationId:(const string &)invitationId timeOut:(int)timeOut roomId:(const string &)roomId;
 
-/**
- *  7.2.观众取消立即私密邀请 回调
- *
- *  @param success       操作是否成功
- *  @param reqId         请求序列号
- *  @param err           结果类型
- *  @param errMsg        结果描述
- *  @param roomId        直播间ID
- *
- */
 - (void)onSendCancelPrivateLiveInvite:(bool)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg roomId:(const string &)roomId;
 
-/**
- *  7.3.接收立即私密邀请回复通知 回调
- *
- *  @param inviteId      邀请ID
- *  @param replyType     主播回复 （0:拒绝 1:同意）
- *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
- *  @param roomType      直播间类型
- *  @param anchorId      主播ID
- *  @param nickName      主播昵称
- *  @param avatarImg     主播头像
- *  @param msg           提示文字
- *
- */
 - (void)onRecvInstantInviteReplyNotice:(const string &)inviteId replyType:(ReplyType)replyType roomId:(const string &)roomId roomType:(RoomType)roomType anchorId:(const string &)anchorId nickName:(const string &)nickName avatarImg:(const string &)avatarImg msg:(const string &)msg;
 
-/**
- *  7.4.接收主播立即私密邀请通知 回调
- *
- *  @param inviteId     邀请ID
- *  @param anchorId     主播ID
- *  @param nickName     主播昵称
- *  @param avatarImg    主播头像url
- *  @param msg          提示文字
- *
- */
 - (void)onRecvInstantInviteUserNotice:(const string &)inviteId anchorId:(const string &)anchorId nickName:(const string &)nickName avatarImg:(const string &)avatarImg msg:(const string &)msg;
 
-/**
- *  7.5.接收主播预约私密邀请通知 回调
- *
- *  @param inviteId     邀请ID
- *  @param anchorId     主播ID
- *  @param nickName     主播昵称
- *  @param avatarImg    主播头像url
- *  @param msg          提示文字
- *
- */
 - (void)onRecvScheduledInviteUserNotice:(const string &)inviteId anchorId:(const string &)anchorId nickName:(const string &)nickName avatarImg:(const string &)avatarImg msg:(const string &)msg;
 
-/**
- *  7.6.接收预约私密邀请回复通知 回调
- *
- *  @param item     预约私密邀请回复知结构体
- *
- */
 - (void)onRecvSendBookingReplyNotice:(const BookingReplyItem &)item;
 
-/**
- *  7.7.接收预约开始倒数通知 回调
- *
- *  @param roomId       直播间ID
- *  @param userId       对端ID
- *  @param nickName     对端昵称
- *  @param avatarImg    对端头像url
- *  @param leftSeconds  倒数时间（秒）
- *
- */
 - (void)onRecvBookingNotice:(const string &)roomId userId:(const string &)userId nickName:(const string &)nickName avatarImg:(const string &)avatarImg leftSeconds:(int)leftSeconds;
 
-/**
- *  7.8.观众端是否显示主播立即私密邀请 回调
- *
- *  @param success       操作是否成功
- *  @param reqId         请求序列号
- *  @param err           结果类型
- *  @param errMsg        结果描述
- *
- */
 - (void)onSendInstantInviteUserReport:(bool)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg;
-#pragma mark - 直播间才艺点播邀请
-/**
- *  8.1.发送直播间才艺点播邀请 回调
- *
- *  @param success           操作是否成功
- *  @param reqId             请求序列号
- *  @param err               结果类型
- *  @param errMsg            结果描述
- *
- */
-- (void)onSendTalent:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg talentInviteId:(const string &)talentInviteId;
 
-/**
- *  8.2.接收直播间才艺点播回复通知 回调
- *
- *  @param item          才艺回复通知结构体
- *
- */
+#pragma mark - 直播间才艺点播邀请
+- (void)onSendTalent:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string &)errMsg talentInviteId:(const string &)talentInviteId talentId:(const string &)talentId;
+
 - (void)onRecvSendTalentNotice:(const TalentReplyItem &)item;
 
+- (void)onRecvTalentListNotice:(const string&)roomId introduction:(const string&)introduction;
+
 #pragma mark - 公共
-/**
- *  9.1.观众等级升级通知 回调
- *
- *  @param level           当前等级
- *
- */
+
 - (void)onRecvLevelUpNotice:(int)level;
 
-/**
- *  9.2.观众亲密度升级通知
- *
- *  @param loveLevel           当前等级
- *
- */
-- (void)onRecvLoveLevelUpNotice:(int)loveLevel;
+- (void)onRecvLoveLevelUpNotice:(const IMLoveLevelItem &)loveLevel;
 
-/**
- *  9.3.背包更新通知
- *
- *  @param item          新增的背包礼物
- *
- */
 - (void)onRecvBackpackUpdateNotice:(const BackpackInfo &)item;
 
-/**
- *  9.4.观众勋章升级通知
- *
- *  @param honorId          勋章ID
- *  @param honorUrl         勋章图片url
- *
- */
 - (void)onRecvGetHonorNotice:(const string &)honorId honorUrl:(const string &)honorUrl;
 
 // ------------- 多人互动直播间 -------------
-/**
- *  10.1.接收主播推荐好友通知接口 回调
- *
- *  @param item         接收主播推荐好友通知
- *
- */
+
 - (void)onRecvRecommendHangoutNotice:(const IMRecommendHangoutItem&)item;
 
-/**
- *  10.2.接收主播回复观众多人互动邀请通知接口 回调
- *
- *  @param item         接收主播回复观众多人互动邀请信息
- *
- */
 - (void)onRecvDealInviteHangoutNotice:(const IMRecvDealInviteItem&)item;
 
-/**
- *  10.3.观众新建/进入多人互动直播间接口 回调
- *
- *  @param success      操作是否成功
- *  @param reqId        请求序列号
- *  @param errMsg      结果描述
- *  @param item        进入多人互动直播间信息
- *
- */
 - (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg item:(const IMHangoutRoomItem&)item;
 
-/**
- *  10.4.退出多人互动直播间接口 回调
- *
- *  @param success      操作是否成功
- *  @param reqId        请求序列号
- *  @param errMsg      结果描述
- *
- */
 - (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg;
 
-/**
- *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
- *
- *  @param item         接收主播回复观众多人互动邀请信息
- *
- */
 - (void)onRecvEnterHangoutRoomNotice:(const IMRecvEnterRoomItem&)item;
 
-/**
- *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
- *
- *  @param item         接收观众/主播退出多人互动直播间信息
- *
- */
 - (void)onRecvLeaveHangoutRoomNotice:(const IMRecvLeaveRoomItem&)item;
 
-/**
- *  10.7.发送多人互动直播间礼物消息接口 回调
- *
- *  @param success          操作是否成功
- *  @param reqId            请求序列号
- *  @param errMsg           结果描述
- *
- */
-- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg;
+- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg credit:(double)credit;
 
-/**
- *  10.8.接收多人互动直播间礼物通知接口 回调
- *
- *  @param item         接收多人互动直播间礼物信息
- *
- */
 - (void)onRecvHangoutGiftNotice:(const IMRecvHangoutGiftItem&)item;
 
-/**
- *  10.9.接收主播敲门通知接口 回调
- *
- *  @param item         接收主播发起的敲门信息
- *
- */
 - (void)onRecvKnockRequestNotice:(const IMKnockRequestItem&)item;
 
-/**
- *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
- *
- *  @param item         观众账号余额不足信息
- *
- */
 - (void)onRecvLackCreditHangoutNotice:(const IMLackCreditHangoutItem&)item;
 
+- (void)onControlManPushHangout:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg manPushUrl:(const list<string>&)manPushUrl;
+
+- (void)onSendHangoutLiveChat:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg;
+
+- (void)onRecvHangoutChatNotice:(const IMRecvHangoutChatItem&)item;
+
+- (void)onRecvAnchorCountDownEnterHangoutRoomNotice:(const string&)roomId anchorId:(const string&)anchorId leftSecond:(int)leftSecond;
+
 // ------------- 节目 -------------
-/**
- *  11.1.接收节目开播通知接口 回调
- *
- *  @param item         节目
- *  @param type         通知类型（1：已购票的开播通知，2：仅关注的开播通知）
- *  @param msg          消息提示文字
- *
- */
+
 - (void)onRecvProgramPlayNotice:(const IMProgramItem&)item type:(IMProgramNoticeType)type msg:(const string&)msg;
 
-/**
- *  11.2.接收节目已取消通知接口 回调
- *
- *  @param item         节目
- *
- */
 - (void)onRecvCancelProgramNotice:(const IMProgramItem&)item;
 
-/**
- *  11.3.接收节目已退票通知接口 回调
- *
- *  @param item         节目
- *  @param leftCredit   当前余额
- *
- */
 - (void)onRecvRetTicketNotice:(const IMProgramItem&)item leftCredit:(double)leftCredit;
 
-// ------------- 节目 -------------
+// ------------- 信件 -------------
+- (void)onRecvLoiNotice:(const string&)anchorId loiId:(const string&)loiId;
+- (void)onRecvEMFNotice:(const string&)anchorId emfId:(const string&)emfId;
 
 @end
 
@@ -578,588 +163,361 @@ class ImClientCallback : public IImClientListener {
     virtual ~ImClientCallback(){};
 
   public:
-    virtual void OnLogin(LCC_ERR_TYPE err, const string &errmsg, const LoginReturnItem &item) {
+    virtual void OnLogin(LCC_ERR_TYPE err, const string &errmsg, const LoginReturnItem &item) override {
         if (nil != clientOC) {
             [clientOC onLogin:err errMsg:errmsg item:item];
+            
         }
     }
-    virtual void OnLogout(LCC_ERR_TYPE err, const string &errmsg) {
+    virtual void OnLogout(LCC_ERR_TYPE err, const string &errmsg) override {
         if (nil != clientOC) {
             [clientOC onLogout:err errMsg:errmsg];
         }
     }
-    virtual void OnKickOff(LCC_ERR_TYPE err, const string &errmsg) {
+    virtual void OnKickOff(LCC_ERR_TYPE err, const string &errmsg) override {
         if (nil != clientOC) {
             [clientOC onKickOff:err errMsg:errmsg];
         }
     }
-    virtual void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const RoomInfoItem &item) {
+    virtual void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const RoomInfoItem &item) override {
         if (nil != clientOC) {
             [clientOC onRoomIn:success reqId:reqId errType:err errMsg:errMsg item:item];
         }
     }
-    virtual void OnRoomOut(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) {
+    virtual void OnRoomOut(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) override {
         if (nil != clientOC) {
             [clientOC onRoomOut:success reqId:reqId errType:err errMsg:errMsg];
         }
     }
 
-    // 4.1.发送直播间文本消息
-    virtual void OnSendLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) {
+    virtual void OnSendLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg) override {
         if (nil != clientOC) {
             [clientOC onSendLiveChat:success reqId:reqId errType:err errMsg:errMsg];
         }
     }
-    virtual void OnRecvRoomCloseNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg) {
+    virtual void OnRecvRoomCloseNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg) override {
         if (nil != clientOC) {
             [clientOC onRecvRoomCloseNotice:roomId errType:err errMsg:errMsg];
         }
     }
 
-    virtual void OnRecvEnterRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, const string &riderId, const string &riderName, const string &riderUrl, int fansNum, const string &honorImg, bool isHasTicket) {
+    virtual void OnRecvEnterRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, const string &riderId, const string &riderName, const string &riderUrl, int fansNum, const string &honorImg, bool isHasTicket) override {
         if (nil != clientOC) {
             [clientOC onRecvEnterRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl riderId:riderId riderName:riderName riderUrl:riderUrl fansNum:fansNum honorImg:honorImg isHasTicket:isHasTicket];
         }
     }
-    virtual void OnRecvLeaveRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, int fansNum) {
+    virtual void OnRecvLeaveRoomNotice(const string &roomId, const string &userId, const string &nickName, const string &photoUrl, int fansNum) override {
         if (nil != clientOC) {
             [clientOC onRecvLeaveRoomNotice:roomId userId:userId nickName:nickName photoUrl:photoUrl fansNum:fansNum];
         }
     }
 
-    virtual void OnRecvRebateInfoNotice(const string &roomId, const RebateInfoItem &item) {
+    virtual void OnRecvRebateInfoNotice(const string &roomId, const RebateInfoItem &item) override {
         if (nil != clientOC) {
             [clientOC onRecvRebateInfoNotice:roomId rebateInfo:item];
         }
     }
 
-    // 3.7.接收关闭直播间倒数通知
-    virtual void OnRecvLeavingPublicRoomNotice(const string &roomId, int leftSeconds, LCC_ERR_TYPE err, const string &errMsg) {
+    virtual void OnRecvLeavingPublicRoomNotice(const string &roomId, int leftSeconds, LCC_ERR_TYPE err, const string &errMsg) override {
         if (nil != clientOC) {
             [clientOC onRecvLeavingPublicRoomNotice:roomId leftSeconds:leftSeconds err:err errMsg:errMsg];
         }
     }
 
-    virtual void OnRecvRoomKickoffNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg, double credit) {
+    virtual void OnRecvRoomKickoffNotice(const string &roomId, LCC_ERR_TYPE err, const string &errMsg, double credit) override {
         if (nil != clientOC) {
             [clientOC onRecvRoomKickoffNotice:roomId errType:err errMsg:errMsg credit:credit];
         }
     }
 
-    // 3.9.接收充值通知
-    virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit) {
+    virtual void OnRecvLackOfCreditNotice(const string &roomId, const string &msg, double credit) override {
         if (nil != clientOC) {
             [clientOC onRecvLackOfCreditNotice:roomId msg:msg credit:credit];
         }
     }
 
-    // 3.10.接收定时扣费通知 （观众端在付费公开直播间，普通私密直播间，豪华私密直播间时，接收服务器定时扣费通知）
-    virtual void OnRecvCreditNotice(const string &roomId, double credit) {
+    virtual void OnRecvCreditNotice(const string &roomId, double credit) override {
         if (nil != clientOC) {
             [clientOC onRecvCreditNotice:roomId credit:credit];
         }
     }
 
-    /**
-     *  3.11.直播间开播通知 回调
-     *
-     *  @param roomId       直播间ID
-     *  @param leftSeconds  开播前的倒数秒数（可无，无或0表示立即开播）
-     *
-     */
-    virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem &item) {
+    virtual void OnRecvWaitStartOverNotice(const StartOverRoomItem &item) override {
         //        NSLog(@"ImClientCallback::OnRecvWaitStartOverNotice() roomId:%s leftSeconds;%d", roomId.c_str(), leftSeconds);
         if (nil != clientOC) {
             [clientOC onRecvWaitStartOverNotice:item];
         }
     }
 
-    /**
-     *  3.12.接收观众／主播切换视频流通知接口 回调
-     *
-     *  @param roomId       房间ID
-     *  @param isAnchor     是否是主播推流（1:是 0:否）
-     *  @param playUrl      播放url
-     *  @param userId       主播/观众ID（可无，仅在多人互动直播间才存在）
-     *
-     */
-//    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const list<string> &playUrl, const string& userId) {
-//        if (nil != clientOC) {
-//            [clientOC onRecvChangeVideoUrl:roomId isAnchor:isAnchor playUrl:playUrl userId:userId];
-//        }
-//    };
-    
-    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const list<string> &playUrl) {
+    virtual void OnRecvChangeVideoUrl(const string &roomId, bool isAnchor, const list<string> &playUrl, const string& userId) override {
         if (nil != clientOC) {
-            [clientOC onRecvChangeVideoUrl:roomId isAnchor:isAnchor playUrl:playUrl];
+            [clientOC onRecvChangeVideoUrl:roomId isAnchor:isAnchor playUrl:playUrl userId:userId];
         }
     };
-
-    /**
-     *  3.13.观众进入公开直播间接口 回调
-     *
-     *  @param success      操作是否成功
-     *  @param reqId        请求序列号
-     *  @param item         直播间信息
-     *
-     */
-    virtual void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const RoomInfoItem &item) {
+    
+    virtual void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const RoomInfoItem &item) override {
         if (nil != clientOC) {
             [clientOC onPublicRoomIn:reqId success:success err:err errMsg:errMsg item:item];
         }
     }
 
-    virtual void OnRecvSendChatNotice(const string &roomId, int level, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) {
+    virtual void OnRecvSendChatNotice(const string &roomId, int level, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) override {
         if (nil != clientOC) {
             [clientOC onRecvSendChatNotice:roomId level:level fromId:fromId nickName:nickName msg:msg honorUrl:honorUrl];
         }
     }
 
-    /**
-     *  3.14.观众开始／结束视频互动接口 回调
-     *
-     *  @param success          操作是否成功
-     *  @param reqId            请求序列号
-     *  @param errMsg           结果描述
-     *  @param manPushUrl       直播间信息
-     *
-     */
-    virtual void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const list<string> &manPushUrl) {
+    virtual void OnControlManPush(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const list<string> &manPushUrl) override {
         if (nil != clientOC) {
             [clientOC onControlManPush:reqId success:success err:err errMsg:errMsg manPushUrl:manPushUrl];
         }
     };
 
-    /**
-     *  3.15.获取指定立即私密邀请信息接口 回调
-     *
-     *  @param success          操作是否成功
-     *  @param reqId            请求序列号
-     *  @param errMsg           结果描述
-     *  @param manPushUrl       直播间信息
-     *
-     */
-    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const PrivateInviteItem &item) {
+    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const PrivateInviteItem &item) override {
         if (nil != clientOC) {
             [clientOC onGetInviteInfo:reqId success:success err:err errMsg:errMsg item:item];
         }
     };
 
-    /**
-     *  4.3.接收直播间公告消息回调
-     *
-     *  @param roomId      直播间ID
-     *  @param msg         公告消息内容
-     *  @param link        公告链接（可无，无则表示不是带链接的公告消息）（仅当type=0有效）
-     *  @param type        公告类型（0：普通，1：警告）
-     *
-     */
-    virtual void OnRecvSendSystemNotice(const string &roomId, const string &msg, const string &link, IMSystemType type) {
+    virtual void OnRecvSendSystemNotice(const string &roomId, const string &msg, const string &link, IMSystemType type) override {
         if (nil != clientOC) {
             [clientOC onRecvSendSystemNotice:roomId msg:msg link:link type:type];
         }
     }
 
     // ------------- 直播间点赞 -------------
-    // 5.1.发送直播间礼物消息（观众端发送直播间礼物消息，包括连击礼物）
-    virtual void OnSendGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) {
+    virtual void OnSendGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) override {
         if (nil != clientOC) {
             [clientOC onSendGift:success reqId:reqId errType:err errMsg:errMsg credit:credit rebateCredit:rebateCredit];
         }
     }
 
-    // 5.2.接收直播间礼物通知（观众端／主播端接收直播间礼物消息，包括连击礼物）
-    virtual void OnRecvSendGiftNotice(const string &roomId, const string &fromId, const string &nickName, const string &giftId, const string &giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string &honorUrl) {
+    virtual void OnRecvSendGiftNotice(const string &roomId, const string &fromId, const string &nickName, const string &giftId, const string &giftName, int giftNum, bool multi_click, int multi_click_start, int multi_click_end, int multi_click_id, const string &honorUrl) override {
         if (nil != clientOC) {
             [clientOC onRecvSendGiftNotice:roomId fromId:fromId nickName:nickName giftId:giftId giftName:giftName giftNum:giftNum multi_click:multi_click multi_click_start:multi_click_start multi_click_end:multi_click_end multi_click_id:multi_click_id honorUrl:honorUrl];
         }
     }
 
     // ------------- 直播间弹幕消息 -------------
-    // 6.1.发送直播间弹幕消息（观众端发送直播间弹幕消息）
-    virtual void OnSendToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) {
+    virtual void OnSendToast(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, double credit, double rebateCredit) override {
         if (nil != clientOC) {
             [clientOC onSendToast:success reqId:reqId errType:err errMsg:errMsg credit:credit rebateCredit:rebateCredit];
         }
     }
-    // 6.2.接收直播间弹幕通知（观众端／主播端接收直播间弹幕消息）
-    virtual void OnRecvSendToastNotice(const string &roomId, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) {
+
+    virtual void OnRecvSendToastNotice(const string &roomId, const string &fromId, const string &nickName, const string &msg, const string &honorUrl) override {
         if (nil != clientOC) {
             [clientOC onRecvSendToastNotice:roomId fromId:fromId nickName:nickName msg:msg honorUrl:honorUrl];
         }
     }
 
     // ------------- 邀请私密直播 -------------
-    /**
-     *  7.1.观众立即私密邀请 回调
-     *
-     *  @param success       操作是否成功
-     *  @param reqId         请求序列号
-     *  @param err           结果类型
-     *  @param errMsg        结果描述
-     *  @param invitationId      邀请ID
-     *  @param timeOut           邀请的剩余有效时间
-     *  @param roomId            直播间ID
-     *
-     */
-    virtual void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &invitationId, int timeOut, const string &roomId) {
+    virtual void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &invitationId, int timeOut, const string &roomId) override {
         if (nil != clientOC) {
             [clientOC onSendPrivateLiveInvite:success reqId:reqId err:err errMsg:errMsg invitationId:invitationId timeOut:timeOut roomId:roomId];
         }
     }
 
-    /**
-     *  7.2.观众取消立即私密邀请 回调
-     *
-     *  @param success       操作是否成功
-     *  @param reqId         请求序列号
-     *  @param err           结果类型
-     *  @param errMsg        结果描述
-     *  @param roomId        直播间ID
-     *
-     */
-    virtual void OnSendCancelPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &roomId) {
+    virtual void OnSendCancelPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &roomId) override {
         if (nil != clientOC) {
             [clientOC onSendCancelPrivateLiveInvite:success reqId:reqId err:err errMsg:errMsg roomId:roomId];
         }
     }
 
-    /**
-     *  7.3.接收立即私密邀请回复通知 回调
-     *
-     *  @param inviteId      邀请ID
-     *  @param replyType     主播回复 （0:拒绝 1:同意）
-     *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
-     *  @param roomType      直播间类型
-     *  @param anchorId      主播ID
-     *  @param nickName      主播昵称
-     *  @param avatarImg     主播头像
-     *  @param msg           提示文字
-     *
-     */
-    virtual void OnRecvInstantInviteReplyNotice(const string &inviteId, ReplyType replyType, const string &roomId, RoomType roomType, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
+    virtual void OnRecvInstantInviteReplyNotice(const string &inviteId, ReplyType replyType, const string &roomId, RoomType roomType, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) override {
         if (nil != clientOC) {
             [clientOC onRecvInstantInviteReplyNotice:inviteId replyType:replyType roomId:roomId roomType:roomType anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
     }
 
-    /**
-     *  7.4.接收主播立即私密邀请通知 回调
-     *
-     *  @param inviteId     邀请ID
-     *  @param anchorId     主播ID
-     *  @param nickName     主播昵称
-     *  @param avatarImg    主播头像url
-     *  @param msg          提示文字
-     *
-     */
-    virtual void OnRecvInstantInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
+    virtual void OnRecvInstantInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) override {
         if (nil != clientOC) {
             [clientOC onRecvInstantInviteUserNotice:inviteId anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
     }
 
-    /**
-     *  7.5.接收主播预约私密邀请通知 回调
-     *
-     *  @param inviteId     邀请ID
-     *  @param anchorId     主播ID
-     *  @param nickName     主播昵称
-     *  @param avatarImg    主播头像url
-     *  @param msg          提示文字
-     *
-     */
-    virtual void OnRecvScheduledInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) {
+    virtual void OnRecvScheduledInviteUserNotice(const string &inviteId, const string &anchorId, const string &nickName, const string &avatarImg, const string &msg) override {
         if (nil != clientOC) {
             [clientOC onRecvScheduledInviteUserNotice:inviteId anchorId:anchorId nickName:nickName avatarImg:avatarImg msg:msg];
         }
     }
 
-    /**
-     *  7.6.接收预约私密邀请回复通知 回调
-     *
-     *  @param item     预约私密邀请回复知结构体
-     *
-     */
-    virtual void OnRecvSendBookingReplyNotice(const BookingReplyItem &item) {
+    virtual void OnRecvSendBookingReplyNotice(const BookingReplyItem &item) override {
         if (nil != clientOC) {
             [clientOC onRecvSendBookingReplyNotice:item];
         }
     }
 
-    /**
-     *  7.7.接收预约开始倒数通知 回调
-     *
-     *  @param roomId       直播间ID
-     *  @param userId       对端ID
-     *  @param nickName     对端昵称
-     *  @param avatarImg    对端头像url
-     *  @param leftSeconds  倒数时间（秒）
-     *
-     */
-    virtual void OnRecvBookingNotice(const string &roomId, const string &userId, const string &nickName, const string &avatarImg, int leftSeconds) {
+    virtual void OnRecvBookingNotice(const string &roomId, const string &userId, const string &nickName, const string &avatarImg, int leftSeconds) override {
         if (nil != clientOC) {
             [clientOC onRecvBookingNotice:roomId userId:userId nickName:nickName avatarImg:avatarImg leftSeconds:leftSeconds];
         }
     }
     
-    /**
-     *  7.8.观众端是否显示主播立即私密邀请 回调
-     *
-     *  @param success       操作是否成功
-     *  @param reqId         请求序列号
-     *  @param err           结果类型
-     *  @param errMsg        结果描述
-     *
-     */
-    virtual void OnSendInstantInviteUserReport(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+    virtual void OnSendInstantInviteUserReport(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override {
         if (nil != clientOC) {
             [clientOC onSendInstantInviteUserReport:success reqId:reqId err:err errMsg:errMsg];
         }
     }
     // ------------- 直播间才艺点播邀请 -------------
-    /**
-     *  8.1.发送直播间才艺点播邀请 回调
-     *
-     *  @param success           操作是否成功
-     *  @param reqId             请求序列号
-     *  @param err               结果类型
-     *  @param errMsg            结果描述
-     *
-     */
-    virtual void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &talentInviteId) {
+    virtual void OnSendTalent(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string &errMsg, const string &talentInviteId, const string &talentId) override {
         if (nil != clientOC) {
-            [clientOC onSendTalent:reqId success:success err:err errMsg:errMsg talentInviteId:talentInviteId];
+            [clientOC onSendTalent:reqId success:success err:err errMsg:errMsg talentInviteId:talentInviteId talentId:talentId];
         }
     }
 
-    /**
-     *  8.2.接收直播间才艺点播回复通知 回调
-     *
-     *  @param item          才艺回复通知结构体
-     *
-     */
-    virtual void OnRecvSendTalentNotice(const TalentReplyItem &item) {
+    virtual void OnRecvSendTalentNotice(const TalentReplyItem &item) override {
         if (nil != clientOC) {
             [clientOC onRecvSendTalentNotice:item];
         }
     }
+    
+    virtual void OnRecvTalentListNotice(const string& roomId, const string& introduction) override{
+        if (nil != clientOC) {
+            [clientOC onRecvTalentListNotice:roomId introduction:introduction];
+        }
+    }
 
     // ------------- 公共 -------------
-    /**
-     *  9.1.观众等级升级通知 回调
-     *
-     *  @param level           当前等级
-     *
-     */
-    virtual void OnRecvLevelUpNotice(int level) {
+
+    virtual void OnRecvLevelUpNotice(int level) override {
         if (nil != clientOC) {
             [clientOC onRecvLevelUpNotice:level];
         }
     }
 
-    /**
-     *  9.2.观众亲密度升级通知
-     *
-     *  @param loveLevel           当前等级
-     *
-     */
-    virtual void OnRecvLoveLevelUpNotice(int loveLevel) {
+    virtual void OnRecvLoveLevelUpNotice(const IMLoveLevelItem& loveLevelItem) override {
         if (nil != clientOC) {
-            [clientOC onRecvLoveLevelUpNotice:loveLevel];
+            [clientOC onRecvLoveLevelUpNotice:loveLevelItem];
         }
     }
 
-    /**
-     *  9.3.背包更新通知
-     *
-     *  @param item          新增的背包礼物
-     *
-     */
-    virtual void OnRecvBackpackUpdateNotice(const BackpackInfo &item) {
+    virtual void OnRecvBackpackUpdateNotice(const BackpackInfo &item) override {
         if (nil != clientOC) {
             [clientOC onRecvBackpackUpdateNotice:item];
         }
     }
     
-    /**
-     *  9.4.观众勋章升级通知
-     *
-     *  @param honorId          勋章ID
-     *  @param honorUrl         勋章图片url
-     *
-     */
-    virtual void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) {
+    virtual void OnRecvGetHonorNotice(const string& honorId, const string& honorUrl) override {
         if (nil != clientOC) {
             [clientOC onRecvGetHonorNotice:honorId honorUrl:honorUrl];
         }
     }
     
     // ------------- 多人互动直播间 -------------
-    /**
-     *  10.1.接收主播推荐好友通知接口 回调
-     *
-     *  @param item         接收主播推荐好友通知
-     *
-     */
-    virtual void OnRecvRecommendHangoutNotice(const IMRecommendHangoutItem& item) {
+    virtual void OnRecvRecommendHangoutNotice(const IMRecommendHangoutItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvRecommendHangoutNotice:item];
         }
     }
 
-    /**
-     *  10.2.接收主播回复观众多人互动邀请通知接口 回调
-     *
-     *  @param item         接收主播回复观众多人互动邀请信息
-     *
-     */
-    virtual void OnRecvDealInviteHangoutNotice(const IMRecvDealInviteItem& item) {
+    virtual void OnRecvDealInviteHangoutNotice(const IMRecvDealInviteItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvDealInviteHangoutNotice:item];
         }
     }
 
-    /**
-     *  10.3.观众新建/进入多人互动直播间接口 回调
-     *
-     *  @param success      操作是否成功
-     *  @param reqId        请求序列号
-     *  @param errMsg      结果描述
-     *  @param item        进入多人互动直播间信息
-     *
-     */
-    virtual void OnEnterHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const IMHangoutRoomItem& item) {
+    virtual void OnEnterHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const IMHangoutRoomItem& item) override {
         if (nil != clientOC) {
             [clientOC onEnterHangoutRoom:reqId succes:success err:err errMsg:errMsg item:item];
         }
     }
 
-    /**
-     *  10.4.退出多人互动直播间接口 回调
-     *
-     *  @param success      操作是否成功
-     *  @param reqId        请求序列号
-     *  @param errMsg      结果描述
-     *
-     */
-    virtual void OnLeaveHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+    virtual void OnLeaveHangoutRoom(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override {
         if (nil != clientOC) {
             [clientOC onLeaveHangoutRoom:reqId success:success err:err errMsg:errMsg];
         }
     }
 
-    /**
-     *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
-     *
-     *  @param item         接收主播回复观众多人互动邀请信息
-     *
-     */
-    virtual void OnRecvEnterHangoutRoomNotice(const IMRecvEnterRoomItem& item) {
+    virtual void OnRecvEnterHangoutRoomNotice(const IMRecvEnterRoomItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvEnterHangoutRoomNotice:item];
         }
     }
 
-    /**
-     *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
-     *
-     *  @param item         接收观众/主播退出多人互动直播间信息
-     *
-     */
-    virtual void OnRecvLeaveHangoutRoomNotice(const IMRecvLeaveRoomItem& item) {
+    virtual void OnRecvLeaveHangoutRoomNotice(const IMRecvLeaveRoomItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvLeaveHangoutRoomNotice:item];
         }
     }
 
-    /**
-     *  10.7.发送多人互动直播间礼物消息接口 回调
-     *
-     *  @param success          操作是否成功
-     *  @param reqId            请求序列号
-     *  @param errMsg           结果描述
-     *
-     */
-    virtual void OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) {
+    virtual void OnSendHangoutGift(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, double credit) override {
         if (nil != clientOC) {
-            [clientOC onSendHangoutGift:reqId success:success err:err errMsg:errMsg];
+            [clientOC onSendHangoutGift:reqId success:success err:err errMsg:errMsg credit:credit];
         }
     }
 
-    /**
-     *  10.8.接收多人互动直播间礼物通知接口 回调
-     *
-     *  @param item         接收多人互动直播间礼物信息
-     *
-     */
-    virtual void OnRecvHangoutGiftNotice(const IMRecvHangoutGiftItem& item) {
+    virtual void OnRecvHangoutGiftNotice(const IMRecvHangoutGiftItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvHangoutGiftNotice:item];
         }
     }
 
-    /**
-     *  10.9.接收主播敲门通知接口 回调
-     *
-     *  @param item         接收主播发起的敲门信息
-     *
-     */
-    virtual void OnRecvKnockRequestNotice(const IMKnockRequestItem& item) {
+    virtual void OnRecvKnockRequestNotice(const IMKnockRequestItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvKnockRequestNotice:item];
         }
     }
 
-    /**
-     *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
-     *
-     *  @param item         观众账号余额不足信息
-     *
-     */
-    virtual void OnRecvLackCreditHangoutNotice(const IMLackCreditHangoutItem& item) {
+    virtual void OnRecvLackCreditHangoutNotice(const IMLackCreditHangoutItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvLackCreditHangoutNotice:item];
         }
     }
+    
+    virtual void OnControlManPushHangout(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const list<string>& manPushUrl) override {
+        if (nil != clientOC) {
+            [clientOC onControlManPushHangout:reqId success:success err:err errMsg:errMsg manPushUrl:manPushUrl];
+        }
+    }
+    
+    virtual void OnSendHangoutLiveChat(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg) override {
+        if (nil != clientOC) {
+            [clientOC onSendHangoutLiveChat:reqId success:success err:err errMsg:errMsg];
+        }
+    }
+    
+    virtual void OnRecvHangoutChatNotice(const IMRecvHangoutChatItem& item) override {
+        if (nil != clientOC) {
+            [clientOC onRecvHangoutChatNotice:item];
+        }
+    }
+    
+    virtual void OnRecvAnchorCountDownEnterHangoutRoomNotice(const string& roomId, const string& anchorId, int leftSecond) override {
+        if (nil != clientOC) {
+            [clientOC onRecvAnchorCountDownEnterHangoutRoomNotice:roomId anchorId:anchorId leftSecond:leftSecond];
+        }
+    }
 
     // ------------- 节目 -------------
-    /**
-     *  11.1.接收节目开播通知接口 回调
-     *
-     *  @param item          节目信息
-     *  @param type          通知类型（1：已购票的开播通知，2：仅关注的开播通知）
-     *  @param msg          消息提示文字
-     *
-     */
-    virtual void OnRecvProgramPlayNotice(const IMProgramItem& item, IMProgramNoticeType type, const string& msg) {
+    virtual void OnRecvProgramPlayNotice(const IMProgramItem& item, IMProgramNoticeType type, const string& msg) override {
         if (nil != clientOC) {
             [clientOC onRecvProgramPlayNotice:item type:type msg:msg];
         }
     }
-    
-    /**
-     *  11.2.接收节目已取消通知接口 回调
-     *
-     *  @param item         节目
-     *
-     */
-    virtual void OnRecvCancelProgramNotice(const IMProgramItem& item) {
+
+    virtual void OnRecvCancelProgramNotice(const IMProgramItem& item) override {
         if (nil != clientOC) {
             [clientOC onRecvCancelProgramNotice:item];
         }
     }
-    
-    /**
-     *  11.3.接收节目已退票通知接口 回调
-     *
-     *  @param item         节目
-     *  @param leftCredit   当前余额
-     *
-     */
-    virtual void OnRecvRetTicketNotice(const IMProgramItem& item, double leftCredit) {
+
+    virtual void OnRecvRetTicketNotice(const IMProgramItem& item, double leftCredit) override {
         if (nil != clientOC) {
             [clientOC onRecvRetTicketNotice:item leftCredit:leftCredit];
+        }
+    }
+    
+   // ------------- 信件 -------------
+   virtual void OnRecvLoiNotice(const string& anchorId, const string& loiId) override {
+       if (nil != clientOC) {
+           [clientOC onRecvLoiNotice:anchorId loiId:loiId];
+       }
+   }
+    
+    virtual void OnRecvEMFNotice(const string& anchorId, const string& emfId) override {
+        if (nil != clientOC) {
+            [clientOC onRecvEMFNotice:anchorId emfId:emfId];
         }
     }
 
@@ -1276,7 +634,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strToken;
+        string strToken = "";
         if (nil != token) {
             strToken = [token UTF8String];
         }
@@ -1298,7 +656,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
@@ -1312,7 +670,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
@@ -1326,7 +684,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strUserId;
+        string strUserId = "";
         if (nil != userId) {
             strUserId = [userId UTF8String];
         }
@@ -1340,7 +698,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
@@ -1354,7 +712,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strInvitationId;
+        string strInvitationId = "";
         if (nil != invitationId) {
             strInvitationId = [invitationId UTF8String];
         }
@@ -1367,15 +725,15 @@ class ImClientCallback : public IImClientListener {
 - (BOOL)sendLiveChat:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at {
     BOOL result = NO;
     if (NULL != self.client) {
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
-        string strName;
+        string strName = "";
         if (nil != nickName) {
             strName = [nickName UTF8String];
         }
-        string strMsg;
+        string strMsg = "";
         if (nil != msg) {
             strMsg = [msg UTF8String];
         }
@@ -1396,22 +754,22 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
 
-        string strNickName;
+        string strNickName = "";
         if (nil != nickName) {
             strNickName = [nickName UTF8String];
         }
 
-        string strGiftId;
+        string strGiftId = "";
         if (nil != giftId) {
             strGiftId = [giftId UTF8String];
         }
 
-        string strGiftName;
+        string strGiftName = "";
         if (nil != giftName) {
             strGiftName = [giftName UTF8String];
         }
@@ -1425,17 +783,17 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
 
-        string strNickName;
+        string strNickName = "";
         if (nil != nickName) {
             strNickName = [nickName UTF8String];
         }
 
-        string strMsg;
+        string strMsg = "";
         if (nil != msg) {
             strMsg = [msg UTF8String];
         }
@@ -1449,11 +807,11 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strUserId;
+        string strUserId = "";
         if (nil != userId) {
             strUserId = [userId UTF8String];
         }
-        string strLogId;
+        string strLogId = "";
         if (nil != userId) {
             strLogId = [logId UTF8String];
         }
@@ -1468,7 +826,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strInviteId;
+        string strInviteId = "";
         if (nil != inviteId) {
             strInviteId = [inviteId UTF8String];
         }
@@ -1483,7 +841,7 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
         
-        string strInviteId;
+        string strInviteId = "";
         if (nil != inviteId) {
             strInviteId = [inviteId UTF8String];
         }
@@ -1498,12 +856,12 @@ class ImClientCallback : public IImClientListener {
     BOOL result = NO;
     if (NULL != self.client) {
 
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
 
-        string strTalentId;
+        string strTalentId = "";
         if (nil != talentId) {
             strTalentId = [talentId UTF8String];
         }
@@ -1515,18 +873,11 @@ class ImClientCallback : public IImClientListener {
 }
 
 // ------------- 多人互动 -------------
-/**
- *  10.3.观众新建/进入多人互动直播间接口
- *
- *  @param reqId            请求序列号
- *  @param roomId           直播间ID
- *
- */
 - (BOOL)enterHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId {
     BOOL result = NO;
     if (NULL != self.client) {
         
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
@@ -1537,18 +888,11 @@ class ImClientCallback : public IImClientListener {
     return result;
 }
 
-/**
- *  10.4.退出多人互动直播间接口
- *
- *  @param reqId            请求序列号
- *  @param roomId           直播间ID
- *
- */
 - (BOOL)leaveHangoutRoom:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId {
     BOOL result = NO;
     if (NULL != self.client) {
         
-        string strRoomId;
+        string strRoomId = "";
         if (nil != roomId) {
             strRoomId = [roomId UTF8String];
         }
@@ -1559,24 +903,6 @@ class ImClientCallback : public IImClientListener {
     return result;
 }
 
-/**
- *  10.7.发送多人互动直播间礼物消息接口
- *
- * @param reqId         请求序列号
- * @roomId              直播间ID
- * @nickName            发送人昵称
- * @toUid               接收者ID
- * @giftId              礼物ID
- * @giftName            礼物名称
- * @isBackPack          是否背包礼物（1：是，0：否）
- * @giftNum             本次发送礼物的数量
- * @isMultiClick        是否连击礼物（1：是，0：否）
- * @multiClickStart     连击起始数（整型）（可无，multi_click=0则无）
- * @multiClickEnd       连击结束数（整型）（可无，multi_click=0则无）
- * @multiClickId        连击ID，相同则表示是同一次连击（整型）（可无，multi_click=0则无）
- * @isPrivate           是否私密发送（1：是，0：否）
- *
- */
 - (BOOL)sendHangoutGift:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId nickName:(NSString* _Nonnull)nickName toUid:(NSString* _Nonnull)toUid giftId:(NSString* _Nonnull)giftId giftName:(NSString* _Nonnull)giftName isBackPack:(BOOL)isBackPack giftNum:(int)giftNum isMultiClick:(BOOL)isMultiClick multiClickStart:(int)multiClickStart multiClickEnd:(int)multiClickEnd multiClickId:(int)multiClickId isPrivate:(BOOL)isPrivate{
     BOOL result = NO;
     if (NULL != self.client) {
@@ -1602,6 +928,47 @@ class ImClientCallback : public IImClientListener {
         }
         
         result = self.client->SendHangoutGift(reqId, strRoomId, strNickName, strToUid, strGiftId, strGiftName, isBackPack, giftNum, isMultiClick, multiClickStart, multiClickEnd, multiClickId, isPrivate);
+    }
+    return result;
+}
+
+- (BOOL)controlManPushHangout:(SEQ_T)reqId roomId:(NSString* _Nonnull)roomId control:(IMControlType)control {
+    BOOL result = NO;
+    if (NULL != self.client) {
+        string strRoomId = "";
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+
+        result = self.client->ControlManPushHangout(reqId, strRoomId, control);
+    }
+    return result;
+}
+
+- (BOOL)SendHangoutLiveChat:(SEQ_T)reqId roomId:(NSString *_Nonnull)roomId nickName:(NSString *_Nonnull)nickName msg:(NSString *_Nonnull)msg at:(NSArray<NSString *> *_Nullable)at {
+    BOOL result = NO;
+    if (NULL != self.client) {
+        string strRoomId = "";
+        if (nil != roomId) {
+            strRoomId = [roomId UTF8String];
+        }
+        string strName = "";
+        if (nil != nickName) {
+            strName = [nickName UTF8String];
+        }
+        string strMsg = "";
+        if (nil != msg) {
+            strMsg = [msg UTF8String];
+        }
+        
+        list<string> strAts;
+        for (NSString *strId in at) {
+            if (nil != strId) {
+                strAts.push_back([strId UTF8String]);
+            }
+        }
+        
+        result = self.client->SendHangoutLiveChat(reqId, strRoomId, strName, strMsg, strAts);
     }
     return result;
 }
@@ -1776,6 +1143,7 @@ class ImClientCallback : public IImClientListener {
     obj.useCoupon = item.useCoupon;
     obj.shareLink = @"";
     obj.liveShowType = item.liveShowType;
+    obj.isHasTalent = item.isHasTalent;
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
@@ -1854,6 +1222,7 @@ class ImClientCallback : public IImClientListener {
     obj.useCoupon = item.useCoupon;
     obj.shareLink = [NSString stringWithUTF8String:item.shareLink.c_str()];
     obj.liveShowType = item.liveShowType;
+    obj.isHasTalent = NO;
 
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
@@ -2058,28 +1427,9 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-//- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl userId:(const string &)userId {
-//    NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-//    NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
-//    NSMutableArray *nsPlayUrl = [NSMutableArray array];
-//    for (list<string>::const_iterator iter = playUrl.begin(); iter != playUrl.end(); iter++) {
-//        string strUrl = (*iter);
-//        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
-//        [nsPlayUrl addObject:pushUrl];
-//    }
-//    @synchronized(self) {
-//        for (NSValue *value in self.delegates) {
-//            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-//            if ([delegate respondsToSelector:@selector(onRecvChangeVideoUrl:isAnchor:playUrl:userId:)]) {
-//                [delegate onRecvChangeVideoUrl:nsRoomId isAnchor:isAnchor playUrl:nsPlayUrl userId:nsUserId];
-//            }
-//        }
-//    }
-//}
-
-- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl {
+- (void)onRecvChangeVideoUrl:(const string &)roomId isAnchor:(bool)isAnchor playUrl:(const list<string> &)playUrl userId:(const string &)userId {
     NSString *nsRoomId = [NSString stringWithUTF8String:roomId.c_str()];
-    //NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
+    NSString *nsUserId = [NSString stringWithUTF8String:userId.c_str()];
     NSMutableArray *nsPlayUrl = [NSMutableArray array];
     for (list<string>::const_iterator iter = playUrl.begin(); iter != playUrl.end(); iter++) {
         string strUrl = (*iter);
@@ -2089,8 +1439,8 @@ class ImClientCallback : public IImClientListener {
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onRecvChangeVideoUrl:isAnchor:playUrl:)]) {
-                [delegate onRecvChangeVideoUrl:nsRoomId isAnchor:isAnchor playUrl:nsPlayUrl];
+            if ([delegate respondsToSelector:@selector(onRecvChangeVideoUrl:isAnchor:playUrl:userId:)]) {
+                [delegate onRecvChangeVideoUrl:nsRoomId isAnchor:isAnchor playUrl:nsPlayUrl userId:nsUserId];
             }
         }
     }
@@ -2330,15 +1680,16 @@ class ImClientCallback : public IImClientListener {
 }
 
 #pragma mark - 直播间才艺点播邀请
-- (void)onSendTalent:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg talentInviteId:(const string&)talentInviteId{
+- (void)onSendTalent:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg talentInviteId:(const string&)talentInviteId talentId:(const string &)talentId{
     NSString* nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
     NSString* nsTalentInviteId = [NSString stringWithUTF8String:talentInviteId.c_str()];
+    NSString* nsTalentId = [NSString stringWithUTF8String:talentId.c_str()];
     @synchronized(self) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if( [delegate respondsToSelector:@selector(onSendTalent:success:err:errMsg:talentInviteId:)] ) {
-                [delegate onSendTalent:reqId success:success err:err errMsg:nsErrMsg talentInviteId:nsTalentInviteId];
+            if( [delegate respondsToSelector:@selector(onSendTalent:success:err:errMsg:talentInviteId:talentId:)] ) {
+                [delegate onSendTalent:reqId success:success err:err errMsg:nsErrMsg talentInviteId:nsTalentInviteId talentId:nsTalentId];
             }
         }
     }
@@ -2353,12 +1704,29 @@ class ImClientCallback : public IImClientListener {
     obj.credit = item.credit;
     obj.status = item.status;
     obj.rebateCredit = item.rebateCredit;
+    obj.giftId = [NSString stringWithUTF8String:item.giftId.c_str()];
+    obj.giftName = [NSString stringWithUTF8String:item.giftName.c_str()];
+    obj.giftNum = item.giftNum;
     @synchronized(self) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if( [delegate respondsToSelector:@selector(onRecvSendTalentNotice:)] ) {
                 [delegate onRecvSendTalentNotice:obj];
+            }
+        }
+    }
+}
+
+- (void)onRecvTalentListNotice:(const string&)roomId introduction:(const string&)introduction {
+    NSString* strRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* strIntroduction = [NSString stringWithUTF8String:introduction.c_str()];
+    @synchronized(self) {
+        for (NSValue* value in self.delegates)
+        {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if( [delegate respondsToSelector:@selector(onRecvTalentPromptNotice:introduction:)] ) {
+                [delegate onRecvTalentPromptNotice:strRoomId introduction:strIntroduction];
             }
         }
     }
@@ -2377,13 +1745,19 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-- (void)onRecvLoveLevelUpNotice:(int)loveLevel {
+- (void)onRecvLoveLevelUpNotice:(const IMLoveLevelItem &)loveLevel {
+    
+    IMLoveLevelItemObject* itemObject = [[IMLoveLevelItemObject alloc] init];
+    itemObject.loveLevel = loveLevel.loveLevel;
+    itemObject.anchorId = [NSString stringWithUTF8String:loveLevel.anchorId.c_str()];
+    itemObject.anchorName = [NSString stringWithUTF8String:loveLevel.anchorName.c_str()];
+    
     @synchronized(self) {
         for (NSValue* value in self.delegates)
         {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if( [delegate respondsToSelector:@selector(onRecvLoveLevelUpNotice:)] ) {
-                [delegate onRecvLoveLevelUpNotice:loveLevel];
+                [delegate onRecvLoveLevelUpNotice:itemObject];
             }
         }
     }
@@ -2434,12 +1808,6 @@ class ImClientCallback : public IImClientListener {
 }
 
 // ------------- 多人互动直播间 -------------
-/**
- *  10.1.接收主播推荐好友通知接口 回调
- *
- *  @param item         接收主播推荐好友通知
- *
- */
 - (void)onRecvRecommendHangoutNotice:(const IMRecommendHangoutItem&)item {
     IMRecommendHangoutItemObject* obj = [[IMRecommendHangoutItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2463,12 +1831,6 @@ class ImClientCallback : public IImClientListener {
 
 }
 
-/**
- *  10.2.接收主播回复观众多人互动邀请通知接口 回调
- *
- *  @param item         接收主播回复观众多人互动邀请信息
- *
- */
 - (void)onRecvDealInviteHangoutNotice:(const IMRecvDealInviteItem&)item {
     IMRecvDealInviteItemObject* obj = [[IMRecvDealInviteItemObject alloc] init];
     obj.inviteId = [NSString stringWithUTF8String:item.inviteId.c_str()];
@@ -2477,7 +1839,6 @@ class ImClientCallback : public IImClientListener {
     obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
     obj.photoUrl = [NSString stringWithUTF8String:item.photoUrl.c_str()];
     obj.type = item.type;
-    obj.expires = item.expires;
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
@@ -2488,15 +1849,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.3.观众新建/进入多人互动直播间接口 回调
- *
- *  @param success      操作是否成功
- *  @param reqId        请求序列号
- *  @param errMsg      结果描述
- *  @param item        进入多人互动直播间信息
- *
- */
 - (void)onEnterHangoutRoom:(SEQ_T)reqId succes:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg item:(const IMHangoutRoomItem&)item {
     NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
     IMHangoutRoomItemObject *obj = [[IMHangoutRoomItemObject alloc] init];
@@ -2504,6 +1856,7 @@ class ImClientCallback : public IImClientListener {
     obj.roomType = item.roomType;
     obj.manLevel = item.manLevel;
     obj.manPushPrice = item.manPushPrice;
+    obj.credit = item.credit;
     NSMutableArray *nsPushUrl = [NSMutableArray array];
     for (list<string>::const_iterator iter = item.pushUrl.begin(); iter != item.pushUrl.end(); iter++) {
         string strUrl = (*iter);
@@ -2541,9 +1894,11 @@ class ImClientCallback : public IImClientListener {
         for (GiftNumList::const_iterator iter1 = (*iter).buyforList.begin(); iter1 != (*iter).buyforList.end(); iter1++) {
             IMGiftNumItemObject *numObj = [[IMGiftNumItemObject alloc] init];
             numObj.giftId = [NSString stringWithUTF8String:(*iter1).giftId.c_str()];
-            numObj.giftNum = numObj.giftNum;
+            numObj.giftNum = (*iter1).giftNum;
             [nsNumList addObject:numObj];
+           
         }
+         buyforObj.buyforList = nsNumList;
         [nsBuyforList addObject:buyforObj];
     }
     obj.buyforList = nsBuyforList;
@@ -2559,14 +1914,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.4.退出多人互动直播间接口 回调
- *
- *  @param success      操作是否成功
- *  @param reqId        请求序列号
- *  @param errMsg      结果描述
- *
- */
 - (void)onLeaveHangoutRoom:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg {
     NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
 
@@ -2580,12 +1927,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.5.接收观众/主播进入多人互动直播间通知接口 回调
- *
- *  @param item         接收主播回复观众多人互动邀请信息
- *
- */
 - (void)onRecvEnterHangoutRoomNotice:(const IMRecvEnterRoomItem&)item {
     IMRecvEnterRoomItemObject* obj = [[IMRecvEnterRoomItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2624,12 +1965,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.6.接收观众/主播退出多人互动直播间通知接口 回调
- *
- *  @param item         接收观众/主播退出多人互动直播间信息
- *
- */
 - (void)onRecvLeaveHangoutRoomNotice:(const IMRecvLeaveRoomItem&)item {
     IMRecvLeaveRoomItemObject* obj = [[IMRecvLeaveRoomItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2649,32 +1984,18 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.7.发送多人互动直播间礼物消息接口 回调
- *
- *  @param success          操作是否成功
- *  @param reqId            请求序列号
- *  @param errMsg           结果描述
- *
- */
-- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg {
+- (void)onSendHangoutGift:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg credit:(double)credit{
     NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
     @synchronized(self) {
         for (NSValue *value in self.delegates) {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
-            if ([delegate respondsToSelector:@selector(onSendHangoutGift:success:err:errMsg:)]) {
-                [delegate onSendHangoutGift:reqId success:success err:err errMsg:nsErrMsg];
+            if ([delegate respondsToSelector:@selector(onSendHangoutGift:success:err:errMsg:credit:)]) {
+                [delegate onSendHangoutGift:reqId success:success err:err errMsg:nsErrMsg credit:credit];
             }
         }
     }
 }
 
-/**
- *  10.8.接收多人互动直播间礼物通知接口 回调
- *
- *  @param item         接收多人互动直播间礼物信息
- *
- */
 - (void)onRecvHangoutGiftNotice:(const IMRecvHangoutGiftItem&)item {
     IMRecvHangoutGiftItemObject* obj = [[IMRecvHangoutGiftItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2699,12 +2020,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.9.接收主播敲门通知接口 回调
- *
- *  @param item         接收主播发起的敲门信息
- *
- */
 - (void)onRecvKnockRequestNotice:(const IMKnockRequestItem&)item {
     IMKnockRequestItemObject* obj = [[IMKnockRequestItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2725,12 +2040,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  10.10.接收多人互动余额不足导致主播将要离开的通知接口 回调
- *
- *  @param item         观众账号余额不足信息
- *
- */
 - (void)onRecvLackCreditHangoutNotice:(const IMLackCreditHangoutItem&)item {
     IMLackCreditHangoutItemObject* obj = [[IMLackCreditHangoutItemObject alloc] init];
     obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
@@ -2749,15 +2058,77 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
+- (void)onControlManPushHangout:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg manPushUrl:(const list<string>&)manPushUrl {
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    NSMutableArray *nsManPushUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = manPushUrl.begin(); iter != manPushUrl.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsManPushUrl addObject:pushUrl];
+    }
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onControlManPushHangout:success:err:errMsg:manPushUrl:)]) {
+                [delegate onControlManPushHangout:reqId success:success err:err errMsg:nsErrMsg manPushUrl:nsManPushUrl];
+            }
+        }
+    }
+}
+
+- (void)onSendHangoutLiveChat:(SEQ_T)reqId success:(bool)success err:(LCC_ERR_TYPE)err errMsg:(const string&)errMsg {
+    NSString *nsErrMsg = [NSString stringWithUTF8String:errMsg.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onSendHangoutLiveChat:success:err:errMsg:)]) {
+                [delegate onSendHangoutLiveChat:reqId success:success err:err errMsg:nsErrMsg];
+            }
+        }
+    }
+}
+
+- (void)onRecvHangoutChatNotice:(const IMRecvHangoutChatItem&)item {
+    IMRecvHangoutChatItemObject* obj = [[IMRecvHangoutChatItemObject alloc] init];
+    obj.roomId = [NSString stringWithUTF8String:item.roomId.c_str()];
+    obj.level = item.level;
+    obj.fromId = [NSString stringWithUTF8String:item.fromId.c_str()];
+    obj.nickName = [NSString stringWithUTF8String:item.nickName.c_str()];
+    obj.msg = [NSString stringWithUTF8String:item.msg.c_str()];
+    obj.honorUrl = [NSString stringWithUTF8String:item.honorUrl.c_str()];
+    NSMutableArray *nsManPushUrl = [NSMutableArray array];
+    for (list<string>::const_iterator iter = item.at.begin(); iter != item.at.end(); iter++) {
+        string strUrl = (*iter);
+        NSString *pushUrl = [NSString stringWithUTF8String:strUrl.c_str()];
+        [nsManPushUrl addObject:pushUrl];
+    }
+    obj.at = nsManPushUrl;
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvHangoutChatNotice:)]) {
+                [delegate onRecvHangoutChatNotice:obj];
+            }
+        }
+    }
+}
+
+- (void)onRecvAnchorCountDownEnterHangoutRoomNotice:(const string&)roomId anchorId:(const string&)anchorId leftSecond:(int)leftSecond {
+    
+    NSString* strRoomId = [NSString stringWithUTF8String:roomId.c_str()];
+    NSString* strAnchorId = [NSString stringWithUTF8String:anchorId.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvAnchorCountDownEnterHangoutRoomNotice:anchorId:leftSecond:)]) {
+                [delegate onRecvAnchorCountDownEnterHangoutRoomNotice:strRoomId anchorId:strAnchorId leftSecond:leftSecond];
+            }
+        }
+    }
+    
+}
+
 // ------------- 节目 -------------
-/**
- *  11.1.接收节目开播通知接口 回调
- *
- *  @param item          节目信息
- *  @param type          通知类型（1：已购票的开播通知，2：仅关注的开播通知）
- *  @param msg          消息提示文字
- *
- */
 - (void)onRecvProgramPlayNotice:(const IMProgramItem&)item type:(IMProgramNoticeType)type msg:(const string &)msg{
     IMProgramItemObject* obj = [[IMProgramItemObject alloc] init];
     obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
@@ -2790,12 +2161,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  11.2.接收节目已取消通知接口 回调
- *
- *  @param item         节目
- *
- */
 - (void)onRecvCancelProgramNotice:(const IMProgramItem&)item {
     IMProgramItemObject* obj = [[IMProgramItemObject alloc] init];
     obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
@@ -2825,13 +2190,6 @@ class ImClientCallback : public IImClientListener {
     }
 }
 
-/**
- *  11.3.接收节目已退票通知接口 回调
- *
- *  @param item         节目
- *  @param leftCredit   当前余额
- *
- */
 - (void)onRecvRetTicketNotice:(const IMProgramItem&)item leftCredit:(double)leftCredit {
     IMProgramItemObject* obj = [[IMProgramItemObject alloc] init];
     obj.showLiveId = [NSString stringWithUTF8String:item.showLiveId.c_str()];
@@ -2856,6 +2214,32 @@ class ImClientCallback : public IImClientListener {
             id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
             if ([delegate respondsToSelector:@selector(onRecvRetTicketNotice:leftCredit:)]) {
                 [delegate onRecvRetTicketNotice:obj leftCredit:leftCredit];
+            }
+        }
+    }
+}
+
+- (void)onRecvLoiNotice:(const string&)anchorId loiId:(const string&)loiId {
+    NSString* strAnchorId = [NSString stringWithUTF8String:anchorId.c_str()];
+    NSString* strLoiId = [NSString stringWithUTF8String:loiId.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvLoiNotice:loiId:)]) {
+                [delegate onRecvLoiNotice:strAnchorId loiId:strLoiId];
+            }
+        }
+    }
+}
+
+- (void)onRecvEMFNotice:(const string&)anchorId emfId:(const string&)emfId {
+    NSString* strAnchorId = [NSString stringWithUTF8String:anchorId.c_str()];
+    NSString* strEmfId = [NSString stringWithUTF8String:emfId.c_str()];
+    @synchronized(self) {
+        for (NSValue *value in self.delegates) {
+            id<IMLiveRoomManagerDelegate> delegate = (id<IMLiveRoomManagerDelegate>)value.nonretainedObjectValue;
+            if ([delegate respondsToSelector:@selector(onRecvEMFNotice:emfId:)]) {
+                [delegate onRecvEMFNotice:strAnchorId emfId:strEmfId];
             }
         }
     }

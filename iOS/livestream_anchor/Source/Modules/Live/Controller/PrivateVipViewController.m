@@ -9,13 +9,11 @@
 #import "PrivateVipViewController.h"
 
 #import "PrivateViewController.h"
-#import "TalentOnDemandViewController.h"
 #import "LiveModule.h"
 #import "RoomTypeIsFirstManager.h"
 
-@interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate>
+@interface PrivateVipViewController () <PrivateViewControllerDelegate>
 @property (strong) PrivateViewController *vc;
-@property (strong) TalentOnDemandViewController *talentVC;
 @property (nonatomic, strong) UIButton *backBtn;
 #pragma mark - 直播间管理器
 // 是否第一次进类型直播间管理器
@@ -37,8 +35,6 @@
     self.vc.privateDelegate = self;
     [self addChildViewController:self.vc];
     
-    self.talentVC = [[TalentOnDemandViewController alloc] initWithNibName:nil bundle:nil];
-    [self addChildViewController:self.talentVC];
 }
 
 - (void)dealloc {
@@ -53,7 +49,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.talentVC getTalentList:self.liveRoom.roomId];
     
     self.haveCome = [self.firstManager getThisTypeHaveCome:@"Private_VIP_Join"];
 }
@@ -63,9 +58,7 @@
     
     self.liveRoom.superView = self.view;
     self.liveRoom.superController = self;
-    
-    self.talentVC.liveRoom = self.liveRoom;
-    self.talentVC.delegate = self;
+
 }
 
 - (void)setupContainView {
@@ -88,13 +81,6 @@
         make.edges.equalTo(self.view);
     }];
     
-    [self.view addSubview:self.talentVC.view];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_bottom);
-        make.left.equalTo(self.view);
-        make.width.equalTo(self.view);
-        make.height.equalTo(@(220));
-    }];
 }
 
 - (void)setUpLiveRoomType:(PrivateViewController *)vc {
@@ -139,9 +125,6 @@
     [self.vc.playVC hiddenBottomView];
     
     [self.view layoutIfNeeded];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_bottom).offset(-220);
-    }];
     
     [UIView animateWithDuration:0.25
                      animations:^{
@@ -159,9 +142,7 @@
     [self.vc.playVC showBottomView];
     
     [self.view layoutIfNeeded];
-    [self.talentVC.view mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.view.mas_bottom);
-    }];
+
     
     [UIView animateWithDuration:0.25
                      animations:^{

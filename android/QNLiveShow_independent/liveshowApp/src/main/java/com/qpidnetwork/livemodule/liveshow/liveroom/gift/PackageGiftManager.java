@@ -173,14 +173,14 @@ public class PackageGiftManager {
     private Map<String,OnPackageGiftDataChangeListener> listeners = new HashMap<>();
 
     public void registerListener(String roomId,OnPackageGiftDataChangeListener listener){
-        Log.d(TAG,"registerListener-roomId:"+roomId);
+        Log.d(TAG,"addListener-roomId:"+roomId);
         if(null != listeners && !listeners.containsKey(roomId)){
             listeners.put(roomId,listener);
         }
     }
 
     public void unregisterListener(String roomId){
-        Log.d(TAG,"unregisterListener-roomId:"+roomId);
+        Log.d(TAG,"removeListener-roomId:"+roomId);
         if(null != listeners && listeners.containsKey(roomId)){
             listeners.remove(roomId);
         }

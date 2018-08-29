@@ -18,4 +18,5 @@
 @property (nonatomic, copy) NSString *userName;
 @property (nonatomic, strong) NSString *apptitle;
 @property (nonatomic, assign) NSString *opentype;
+@property (nonatomic, copy) NSString *showId;
 @end

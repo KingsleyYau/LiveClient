@@ -11,7 +11,6 @@ import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +37,11 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 	private ThisTextWatcher mTextWatcher;
 	private OnEditorCallback mEditorEvent;
 	private OnFocuseChangedCallback mFocuseChangedCallback;
-	
+
+	/**
+	 * EditText控件获取焦点时底部分割线是否加粗
+	 */
+	public boolean boldDevideOnFocus = true;
 	
 	public MaterialTextField(Context context, AttributeSet attrs){
 		super(context, attrs);
@@ -72,18 +75,11 @@ public class MaterialTextField extends LinearLayout implements OnClickListener{
 
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				// TODO Auto-generated method stub
-				if (hasFocus){
-					FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDivider().getLayoutParams();
-					params.height = (int)(2.0f * density);
-					getDivider().setLayoutParams(params);
-					getDivider().setBackgroundColor(focus_color);
-				}else{
-					FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDivider().getLayoutParams();
-					params.height = (int)(1.0f * density);
-					getDivider().setLayoutParams(params);
-					getDivider().setBackgroundColor(normal_color);
-				}
+				FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) getDivider().getLayoutParams();
+				//获取焦点并且加粗显示那么分割线高度就是2dp,否则就是1dp
+				params.height = (int)(hasFocus && boldDevideOnFocus ? 2.0f * density : 1.0f * density);
+				getDivider().setLayoutParams(params);
+				getDivider().setBackgroundColor(hasFocus ? focus_color : normal_color);
 				
 				if (mFocuseChangedCallback != null) mFocuseChangedCallback.onFocuseChanged(v, hasFocus);
 			}

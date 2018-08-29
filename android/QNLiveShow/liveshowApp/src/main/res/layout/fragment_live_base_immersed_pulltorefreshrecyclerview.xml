@@ -1,0 +1,58 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_baseListContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:elevation="0dp">
+            <!--这里必须给出一个最大高度layout_height和一个最小高度minHeight-->
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_main_top_menu_max_height"
+                android:minHeight="@dimen/live_main_top_menu_min_height"
+                android:gravity="bottom"
+                app:contentInsetStart="0dp"
+                app:layout_scrollFlags="scroll|snap|exitUntilCollapsed"/>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.qpidnetwork.livemodule.view.RefreshRecyclerView
+        android:id="@+id/refreshRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    <!--Empty提示图-->
+    <com.qpidnetwork.livemodule.view.ErrorView
+        android:id="@+id/errorView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+    <com.qpidnetwork.livemodule.view.EmptyView
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/live_main_top_menu_max_height"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="51dp"
+        android:layout_height="51dp"
+        android:layout_gravity="center"
+        android:scrollbarStyle="insideInset"
+        android:visibility="gone"
+        android:indeterminateDrawable="@drawable/live_loading_progress"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDuration="1000"/>
+
+</android.support.design.widget.CoordinatorLayout>

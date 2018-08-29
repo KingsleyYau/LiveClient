@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
+import com.qpidnetwork.livemodule.utils.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -56,6 +57,9 @@ public class BarrageManager<T> {
         View usableView = getUsableView();
         if(usableView != null && !isBarrageViewOutAnimPlaying){
             startAnimation(usableView, barrageItem);
+            if(null != onBarrageEventListener){
+                onBarrageEventListener.onRecvBarrageEvent(true);
+            }
         }else{
             synchronized (mBarrageDataList){
                 mBarrageDataList.add(barrageItem);
@@ -80,7 +84,9 @@ public class BarrageManager<T> {
 
     public synchronized void changeBulletScreenBg(boolean isNeedShowBg){
         isSolftInputShow = isNeedShowBg;
-        if(null != ll_bulletScreen && View.VISIBLE == ll_bulletScreen.getVisibility()){
+        Log.d(TAG,"changeBulletScreenBg-isNeedShowBg:"+isNeedShowBg);
+        if(null != ll_bulletScreen){
+            Log.d(TAG,"changeBulletScreenBg-ll_bulletScreen.visibility:"+ll_bulletScreen.getVisibility());
             if(null != mActivity && null != mActivity.get() && null != mActivity.get().mIMRoomInItem){
                 ll_bulletScreen.setBackgroundDrawable(isNeedShowBg ?
                         mActivity.get().roomThemeManager.getRoomBarrageBgDrawable(
@@ -143,7 +149,6 @@ public class BarrageManager<T> {
 
     private void playBarrageViewEnterAnim(){
         if(View.INVISIBLE == ll_bulletScreen.getVisibility()){
-            ll_bulletScreen.setBackgroundColor(isSolftInputShow ? Color.parseColor("#deffffff") : Color.TRANSPARENT);
             AnimationSet animationSet1 = (AnimationSet) AnimationUtils.loadAnimation(mActivity.get(), R.anim.barrage_view_enter);
             animationSet1.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -172,13 +177,15 @@ public class BarrageManager<T> {
             animationSet1.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
-
                 }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     isBarrageViewOutAnimPlaying = false;
                     ll_bulletScreen.setVisibility(View.INVISIBLE);
+                    if(null != onBarrageEventListener){
+                        onBarrageEventListener.onRecvBarrageEvent(false);
+                    }
                     synchronized (mBarrageDataList){
                         if(null != mBarrageDataList && mBarrageDataList.size()>0){
                             T barrageItem = mBarrageDataList.remove(0);
@@ -231,5 +238,22 @@ public class BarrageManager<T> {
 
         //清除动画View绑定
         mAnimationViewMap.clear();
+    }
+
+    /**
+     * 弹幕动画播放事件监听器
+     */
+    public interface OnBarrageEventListener{
+        /**
+         * 弹幕播放事件状态发生更改
+         * @param startOrOver true 弹幕列表为空，刚开始播放|false 弹幕列表播放完毕
+         */
+        void onRecvBarrageEvent(boolean startOrOver);
+    }
+
+    private OnBarrageEventListener onBarrageEventListener;
+
+    public void setOnBarrageEventListener(OnBarrageEventListener onBarrageEventListener){
+        this.onBarrageEventListener = onBarrageEventListener;
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
-    <device id="retina5_5" orientation="portrait">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,6 @@
                 <outlet property="chooseGiftListView" destination="6Cv-cc-5Pn" id="Tsn-YM-9Qg"/>
                 <outlet property="chooseGiftListViewHeight" destination="eko-YN-Fea" id="zae-jX-71D"/>
                 <outlet property="chooseGiftListViewTop" destination="4IA-8Y-Mc5" id="XmB-Ux-Obe"/>
-                <outlet property="chooseGiftListViewWidth" destination="nN5-Vg-j8K" id="fKi-Vd-O1N"/>
                 <outlet property="giftBtn" destination="78D-5d-u6A" id="cOV-jE-p7v"/>
                 <outlet property="inputMessageView" destination="Hef-sh-jU8" id="CjV-1V-7Ls"/>
                 <outlet property="inputMessageViewBottom" destination="s5I-ml-e8g" id="XVH-ys-FkE"/>
@@ -35,44 +34,44 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hef-sh-jU8" userLabel="Input Message View">
-                    <rect key="frame" x="0.0" y="683" width="414" height="48"/>
+                    <rect key="frame" x="0.0" y="614" width="375" height="48"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tgx-Js-2aq" customClass="LiveSendBarView">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="48"/>
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="48"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         </view>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Public_Btn_Chat" translatesAutoresizingMaskIntoConstraints="NO" id="QEE-ZY-SOL" userLabel=" Chat Button" customClass="LSUITapImageView">
-                            <rect key="frame" x="10" y="8" width="253" height="32"/>
+                            <rect key="frame" x="10" y="8" width="214" height="32"/>
                             <rect key="contentStretch" x="0.90000000000000002" y="0.0" width="0.01" height="1"/>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I1n-mD-AK2" userLabel="Talents Button">
-                            <rect key="frame" x="273" y="4" width="36" height="36"/>
+                            <rect key="frame" x="234" y="4" width="36" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="36" id="9Rt-Q9-iS3"/>
                                 <constraint firstAttribute="width" secondItem="I1n-mD-AK2" secondAttribute="height" multiplier="1:1" id="Wjw-GC-OaX"/>
                             </constraints>
-                            <state key="normal" image="Live_Private_Vip_Btn_Talent"/>
+                            <state key="normal" image="TalentIcon12"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mWm-Fg-0cw" userLabel="Random Gift Button">
-                            <rect key="frame" x="371" y="10" width="24" height="24"/>
+                            <rect key="frame" x="332" y="10" width="24" height="24"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="mWm-Fg-0cw" secondAttribute="height" multiplier="1:1" id="RoQ-eH-Z75"/>
                             </constraints>
                             <state key="normal" image="Live_Publish_Btn_Gift"/>
                         </button>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Live_Play_Btn_Gift_Random" translatesAutoresizingMaskIntoConstraints="NO" id="WaC-Y7-pqd" userLabel="Random Gift Image View">
-                            <rect key="frame" x="365" y="4" width="36" height="36"/>
+                            <rect key="frame" x="326" y="4" width="36" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="36" id="PKj-vZ-tK9"/>
                                 <constraint firstAttribute="width" secondItem="WaC-Y7-pqd" secondAttribute="height" multiplier="1:1" id="QnI-16-WTq"/>
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78D-5d-u6A" userLabel="Gift Button">
-                            <rect key="frame" x="319" y="4" width="36" height="36"/>
+                            <rect key="frame" x="280" y="4" width="36" height="36"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="78D-5d-u6A" secondAttribute="height" multiplier="1:1" id="Yrg-oO-eBi"/>
                                 <constraint firstAttribute="width" constant="36" id="uO1-1e-nbJ"/>
@@ -104,29 +103,29 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Cv-cc-5Pn">
-                    <rect key="frame" x="0.0" y="736" width="375" height="326"/>
+                    <rect key="frame" x="0.0" y="667" width="375" height="326"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="326" id="eko-YN-Fea"/>
-                        <constraint firstAttribute="width" constant="375" id="nN5-Vg-j8K"/>
                     </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="6Cv-cc-5Pn" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="2bK-op-fBl"/>
                 <constraint firstItem="6Cv-cc-5Pn" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="4IA-8Y-Mc5"/>
                 <constraint firstItem="Hef-sh-jU8" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="Muv-Rf-iFe"/>
                 <constraint firstItem="6Cv-cc-5Pn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="psh-O0-ByM"/>
                 <constraint firstItem="Hef-sh-jU8" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-5" id="s5I-ml-e8g"/>
                 <constraint firstItem="Hef-sh-jU8" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tAB-n9-MQq"/>
             </constraints>
-            <point key="canvasLocation" x="23.5" y="51.5"/>
+            <point key="canvasLocation" x="23" y="51"/>
         </view>
     </objects>
     <resources>
         <image name="Live_Play_Btn_Gift_Random" width="40" height="40"/>
-        <image name="Live_Private_Vip_Btn_Talent" width="40" height="40"/>
         <image name="Live_Public_Btn_Chat" width="160" height="32"/>
         <image name="Live_Public_Btn_Gift" width="41" height="45"/>
         <image name="Live_Publish_Btn_Gift" width="37" height="44"/>
+        <image name="TalentIcon12" width="40" height="40"/>
     </resources>
 </document>

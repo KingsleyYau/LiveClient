@@ -5,8 +5,10 @@ import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
+import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
+import com.qpidnetwork.livemodule.im.listener.IMProgramInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.utils.Log;
@@ -20,7 +22,7 @@ import java.util.Iterator;
  * @since 2017-6-1
  */
 public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLiveRoomEventListener,
-										IMOtherEventListener,IMLoginStatusListener{
+										IMOtherEventListener,IMLoginStatusListener, IMShowEventListener{
 	
 	private static final String TAG = IMEventListenerManager.class.getName();
 	
@@ -304,11 +306,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvLoveLevelUpNotice(int lovelevel) {
+	public void OnRecvLoveLevelUpNotice(IMLoveLeveItem lovelevelItem) {
 		synchronized(mIMOtherListener){
 			for (Iterator<IMOtherEventListener> iter = mIMOtherListener.iterator(); iter.hasNext(); ) {
 				IMOtherEventListener listener = iter.next();
-				listener.OnRecvLoveLevelUpNotice(lovelevel);
+				listener.OnRecvLoveLevelUpNotice(lovelevelItem);
 			}
 		}
 	}
@@ -334,11 +336,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum, String honorImg) {
+	public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl, String riderId, String riderName, String riderUrl, int fansNum, String honorImg, boolean isHasTicket) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum, honorImg);
+				listener.OnRecvEnterRoomNotice(roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum, honorImg, isHasTicket);
 			}
 		}
 	}
@@ -478,22 +480,32 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg) {
+	public void OnSendTalent(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String talentInviteId, String talentId) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnSendTalent(reqId, success, errType, errMsg);
+				listener.OnSendTalent(reqId, success, errType, errMsg, talentInviteId, talentId);
 			}
 		}
 	}
 
 	@Override
 	public void OnRecvSendTalentNotice(String roomId, String talentInviteId, String talentId, String name, double credit,
-									   IMClientListener.TalentInviteStatus status, double rebateCredit) {
+									   IMClientListener.TalentInviteStatus status, double rebateCredit, String giftId, String giftName, int giftNum) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status, rebateCredit);
+				listener.OnRecvSendTalentNotice(roomId, talentInviteId, talentId, name, credit, status, rebateCredit, giftId, giftName, giftNum);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvTalentPromptNotice(String roomId, String introduction) {
+		synchronized(mIMLiveRoomListeners){
+			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
+				IMLiveRoomEventListener listener = iter.next();
+				listener.OnRecvTalentPromptNotice(roomId, introduction);
 			}
 		}
 	}
@@ -640,6 +652,82 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 			for (Iterator<IMLoginStatusListener> iter = mIMLoginStatusListeners.iterator(); iter.hasNext(); ) {
 				IMLoginStatusListener listener = iter.next();
 				listener.onIMAutoReLogined();
+			}
+		}
+	}
+
+	/************************************ 节目相关回调  *******************************************/
+
+	/**
+	 * 节目事件监听listener列表
+	 */
+	private ArrayList<IMShowEventListener>  mIMShowEventListeners = new ArrayList<IMShowEventListener>();
+
+	/**
+	 * 注册节目事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean registerIMShowEventListener(IMShowEventListener listener){
+		boolean result = false;
+		synchronized(mIMShowEventListeners) {
+			if (null != listener) {
+				boolean isExist = false;
+				for (Iterator<IMShowEventListener> iter = mIMShowEventListeners.iterator(); iter.hasNext(); ) {
+					IMShowEventListener theListener = iter.next();
+					if (theListener == listener) {
+						isExist = true;
+						break;
+					}
+				}
+
+				if (!isExist) {
+					result = mIMShowEventListeners.add(listener);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 注销节目事件监听器
+	 * @param listener
+	 * @return
+	 */
+	public boolean unregisterIMShowEventListener(IMShowEventListener listener) {
+		boolean result = false;
+		synchronized(mIMShowEventListeners) {
+			result = mIMShowEventListeners.remove(listener);
+		}
+		return result;
+	}
+
+	@Override
+	public void OnRecvProgramPlayNotice(IMProgramInfoItem showinfo, IMClientListener.IMProgramPlayType type, String msg) {
+		synchronized(mIMShowEventListeners){
+			for (Iterator<IMShowEventListener> iter = mIMShowEventListeners.iterator(); iter.hasNext(); ) {
+				IMShowEventListener listener = iter.next();
+				listener.OnRecvProgramPlayNotice(showinfo, type, msg);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvCancelProgramNotice(IMProgramInfoItem showinfo) {
+		synchronized(mIMShowEventListeners){
+			for (Iterator<IMShowEventListener> iter = mIMShowEventListeners.iterator(); iter.hasNext(); ) {
+				IMShowEventListener listener = iter.next();
+				listener.OnRecvCancelProgramNotice(showinfo);
+			}
+		}
+	}
+
+	@Override
+	public void OnRecvRetTicketNotice(IMProgramInfoItem showinfo, double leftCredit) {
+		synchronized(mIMShowEventListeners){
+			for (Iterator<IMShowEventListener> iter = mIMShowEventListeners.iterator(); iter.hasNext(); ) {
+				IMShowEventListener listener = iter.next();
+				listener.OnRecvRetTicketNotice(showinfo, leftCredit);
 			}
 		}
 	}

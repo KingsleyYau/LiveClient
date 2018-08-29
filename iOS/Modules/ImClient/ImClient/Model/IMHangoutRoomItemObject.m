@@ -16,6 +16,7 @@
         self.roomType = [coder decodeIntForKey:@"roomType"];
         self.manLevel = [coder decodeIntForKey:@"manLevel"];
         self.manPushPrice = [coder decodeDoubleForKey:@"manPushPrice"];
+        self.credit = [coder decodeDoubleForKey:@"credit"];
         self.pushUrl = [coder decodeObjectForKey:@"pushUrl"];
         self.otherAnchorList = [coder decodeObjectForKey:@"otherAnchorList"];
         self.buyforList = [coder decodeObjectForKey:@"buyforList"];
@@ -28,6 +29,7 @@
     [coder encodeInt:self.roomType forKey:@"roomType"];
     [coder encodeInt:self.manLevel forKey:@"manLevel"];
     [coder encodeDouble:self.manPushPrice forKey:@"manPushPrice"];
+    [coder encodeDouble:self.credit forKey:@"credit"];
     [coder encodeObject:self.pushUrl forKey:@"pushUrl"];
     [coder encodeObject:self.otherAnchorList forKey:@"otherAnchorList"];
     [coder encodeObject:self.buyforList forKey:@"buyforList"];

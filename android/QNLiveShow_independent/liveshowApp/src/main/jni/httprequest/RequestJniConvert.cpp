@@ -11,7 +11,8 @@
 
 int HTTPErrorTypeToInt(HTTP_LCC_ERR_TYPE errType)
 {
-	int value = 0;
+    // 默认是HTTP_LCC_ERR_FAIL，当服务器返回未知的错误码时
+	int value = 1;
 	int i = 0;
 	for (i = 0; i < _countof(HTTPErrorTypeArray); i++)
 	{
@@ -188,6 +189,20 @@ GenderType IntToGenderTypeOperateType(int value)
 {
 	return (GenderType)(value < _countof(GenderTypeOperateTypeArray) ? GenderTypeOperateTypeArray[value] : GenderTypeOperateTypeArray[0]);
 }
+// 底层状态转换JAVA坐标
+int HTTPGenderTypeToInt(GenderType type) {
+    int value = 0;
+    int i = 0;
+    for (i = 0; i < _countof(GenderTypeOperateTypeArray); i++)
+    {
+        if (type == GenderTypeOperateTypeArray[i]) {
+            value = i;
+            break;
+        }
+    }
+    return value;
+}
+
 //Java层转底层枚举分享渠道
 ShareType IntToShareTypeOperateType(int value)
 {
@@ -230,6 +245,10 @@ int HTTPPhotoVerifyStatusToInt(PhotoVerifyStatus errType) {
 VerifyCodeType IntToVerifyCodeTypeOperateType(int value)
 {
 	return (VerifyCodeType)(value < _countof(VerifyCodeTypeArray) ? VerifyCodeTypeArray[value] : VerifyCodeTypeArray[0]);
+}
+
+RegionIdType IntToRegionIdType(int value) {
+	return (RegionIdType)(value < _countof(RegionIdTypeArray) ? RegionIdTypeArray[value] : RegionIdTypeArray[0]);
 }
 
 /**************************** c++转Java对象    ****************************************/
@@ -303,7 +322,7 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 		signature += "[L";
 		signature += SERVER_ITEM_CLASS;
 		signature += ";";
-		signature += "I";
+		signature += "ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;";
 		signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>",
 				signature.c_str());
@@ -313,6 +332,9 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
 		jobjectArray jsvrArray = getServerArray(env, item.svrList);
 		jint type = UserTypeToInt(item.userType);
+        jstring jqnMainAdUrl = env->NewStringUTF(item.qnMainAdUrl.c_str());
+        jstring jqnMainAdTitle = env->NewStringUTF(item.qnMainAdUrl.c_str());
+        jstring jqnMainAdId = env->NewStringUTF(item.qnMainAdId.c_str());
 		jItem = env->NewObject(jItemCls, init,
 							juserId,
 							jtoken,
@@ -322,12 +344,18 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 							jphotoUrl,
 							item.isPushAd,
 							jsvrArray,
-							type
+							type,
+                            jqnMainAdUrl,
+                            jqnMainAdTitle,
+                            jqnMainAdId
 					);
         env->DeleteLocalRef(juserId);
         env->DeleteLocalRef(jtoken);
         env->DeleteLocalRef(jnickName);
         env->DeleteLocalRef(jphotoUrl);
+        env->DeleteLocalRef(jqnMainAdUrl);
+        env->DeleteLocalRef(jqnMainAdTitle);
+        env->DeleteLocalRef(jqnMainAdId);
         if(NULL != jsvrArray){
         	env->DeleteLocalRef(jsvrArray);
         }
@@ -907,7 +935,12 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, OTHER_CONFIG_ITEM_CLASS);
 	if (NULL != jItemCls){
-		jmethodID init = env->GetMethodID(jItemCls, "<init>", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILjava/lang/String;Ljava/lang/String;";
+		signature += "[L";
+		signature += SERVER_ITEM_CLASS;
+		signature += ";";
+		signature += ")V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		jstring jimServerUrl = env->NewStringUTF(item.imSvrUrl.c_str());
 		jstring jhttpServerUrl = env->NewStringUTF(item.httpSvrUrl.c_str());
 		jstring jaddCreditsUrl = env->NewStringUTF(item.addCreditsUrl.c_str());
@@ -915,6 +948,12 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 		jstring juserLevel = env->NewStringUTF(item.userLevel.c_str());
 		jstring jintimacy = env->NewStringUTF(item.intimacy.c_str());
 		jstring juserProtocol = env->NewStringUTF(item.userProtocol.c_str());
+        jstring jtermsOfUse = env->NewStringUTF(item.termsOfUse.c_str());
+        jstring jprivacyPolicy = env->NewStringUTF(item.privacyPolicy.c_str());
+        jstring jminAvailableMsg = env->NewStringUTF(item.minAvailableMsg.c_str());
+        jstring jnewestMsg = env->NewStringUTF(item.newestMsg.c_str());
+        jstring jdownloadAppUrl = env->NewStringUTF(item.downloadAppUrl.c_str());
+		jobjectArray jsvrArray = getServerArray(env, item.svrList);
 		jItem = env->NewObject(jItemCls, init,
 				jimServerUrl,
 				jhttpServerUrl,
@@ -922,7 +961,16 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 				janchorPage,
 				juserLevel,
 				jintimacy,
-				juserProtocol);
+				juserProtocol,
+                jtermsOfUse,
+                jprivacyPolicy,
+                item.minAavilableVer,
+                jminAvailableMsg,
+                item.newestVer,
+                jnewestMsg,
+                jdownloadAppUrl,
+				jsvrArray
+        );
         env->DeleteLocalRef(jimServerUrl);
         env->DeleteLocalRef(jhttpServerUrl);
         env->DeleteLocalRef(jaddCreditsUrl);
@@ -930,6 +978,14 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
         env->DeleteLocalRef(juserLevel);
         env->DeleteLocalRef(jintimacy);
 		env->DeleteLocalRef(juserProtocol);
+        env->DeleteLocalRef(jtermsOfUse);
+        env->DeleteLocalRef(jprivacyPolicy);
+        env->DeleteLocalRef(jminAvailableMsg);
+        env->DeleteLocalRef(jnewestMsg);
+        env->DeleteLocalRef(jdownloadAppUrl);
+		if(NULL != jsvrArray){
+			env->DeleteLocalRef(jsvrArray);
+		}
 	}
 	return jItem;
 }
@@ -1278,7 +1334,7 @@ jobject getManBaseInfoItem(JNIEnv *env, const HttpManBaseInfoItem& item) {
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, OTHER_MANBASEINFO_ITEM_CLASS);
 	if (NULL != jItemCls) {
-		string signature = "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILjava/lang/String;I)V";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;ILjava/lang/String;IIILjava/lang/String;)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		jstring juserId = env->NewStringUTF(item.userId.c_str());
 		jstring jnickName = env->NewStringUTF(item.nickName.c_str());
@@ -1286,12 +1342,16 @@ jobject getManBaseInfoItem(JNIEnv *env, const HttpManBaseInfoItem& item) {
 		jstring jphotoUrl = env->NewStringUTF(item.photoUrl.c_str());
 		jint jphotoStatus = HTTPPhotoVerifyStatusToInt(item.photoStatus);
 		jstring jbirthday = env->NewStringUTF(item.birthday.c_str());
+        jint jgender = HTTPGenderTypeToInt(item.gender);
+		jint type = UserTypeToInt(item.userType);
+        jstring jgaUid = env->NewStringUTF(item.gaUid.c_str());
 		jItem = env->NewObject(jItemCls, init, juserId, jnickName, jnickNameStatus, jphotoUrl, jphotoStatus, jbirthday,
-							   item.userlevel);
+							   item.userlevel, jgender, type, jgaUid);
 		env->DeleteLocalRef(juserId);
 		env->DeleteLocalRef(jnickName);
 		env->DeleteLocalRef(jphotoUrl);
 		env->DeleteLocalRef(jbirthday);
+        env->DeleteLocalRef(jgaUid);
 	}
 	return jItem;
 }

@@ -40,6 +40,7 @@
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="viewersNumLabel" destination="uqp-JI-Mh9" id="RnM-8F-xMW"/>
                 <outlet property="viewersNumView" destination="97O-BX-HFR" id="Y5l-cE-eaN"/>
+                <outlet property="viewersTotalNumLabel" destination="Hth-Wh-kn2" id="qaB-v1-dJN"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

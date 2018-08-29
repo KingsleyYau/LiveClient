@@ -1,41 +1,52 @@
 package com.qpidnetwork.livemodule.framework.services;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
 import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.IMManager;
+import com.qpidnetwork.livemodule.livemessage.LMClient;
 import com.qpidnetwork.livemodule.liveshow.ad.AD4QNActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.login.AutoLoginTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.PushManager;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
+import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.bean.AdWebObj;
 import com.qpidnetwork.qnbridgemodule.bean.MainModuleConfig;
+import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
 import com.qpidnetwork.qnbridgemodule.interfaces.IQNService;
 import com.qpidnetwork.qnbridgemodule.interfaces.OnServiceEventListener;
+
+import net.qdating.LSConfig;
+
+import java.util.List;
 
 /**
  * Created by Jagger on 2017/9/18.
  */
 
-public class LiveService implements IQNService, ScheduleInvitePackageUnreadManager.OnUnreadListener {
+public class LiveService implements IQNService, ScheduleInvitePackageUnreadManager.OnUnreadListener, IAuthorizationListener {
 
     private static final String TAG = LiveService.class.getName();
 
@@ -49,6 +60,8 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
 
     //是否第一次启动
     public static boolean mIsFirstLaunch = false;
+
+    private List<WebSiteBean> mLocalWebSettings;    //本地站点配置
 
     public static LiveService newInstance(Application c){
         if(mQNService == null){
@@ -97,6 +110,9 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
                 RequestJni.SetLogDirectory(FileCacheManager.getInstance().getLogPath());
                 //IM本地log
                 IMClient.IMSetLogDirectory(FileCacheManager.getInstance().getIMLogPath());
+                //增加私信本地打印log路径
+                LMClient.LMSetLogDirectory(FileCacheManager.getInstance().getLMLogPath());
+
 //                RequestJni.SetWebSite(IPConfigUtil.getTestWebSiteUrl());
 //                RequestJni.SetPhotoUploadSite("http://172.25.32.17:82");
 //                RequestJni.SetWebSite("http://192.168.88.90:8881");
@@ -110,6 +126,20 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
             e.printStackTrace();
         }
 
+        // 设置log级别（demo环境才打印log）
+        if (isDebug) {
+            Log.SetLevel(android.util.Log.DEBUG);
+            //配置处理推流播流器demo环境打开log
+            LSConfig.LOG_LEVEL = android.util.Log.DEBUG;
+            LSConfig.LOGDIR = FileCacheManager.getInstance().GetPublisherPlayerLogLocalPath();
+        }
+        else {
+            Log.SetLevel(android.util.Log.ERROR);
+            //配置处理推流播流器正式环境关闭Log
+            LSConfig.LOG_LEVEL = android.util.Log.ERROR;
+            LSConfig.LOGDIR = "";
+        }
+
         // 初始化GA管理器
         if (isDebug) {
             AnalyticsManager.newInstance().init(mApplicationContext, R.xml.live_tracker_demo);
@@ -120,13 +150,14 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
 
         //初始化LoginManager单例
         LoginManager loginManager = LoginManager.newInstance(mApplicationContext);
+        loginManager.register(this);
 
         //初始化IMManager
         IMManager imManager = IMManager.newInstance(mApplicationContext);
         loginManager.register(imManager);
-
+        ShowUnreadManager.newInstance(mApplicationContext);
         //Fresco库初始化
-        Fresco.initialize(mApplicationContext);
+//        Fresco.initialize(mApplicationContext);
 
         //http请求工具类
         LiveRequestOperator.newInstance(mApplicationContext);
@@ -143,11 +174,13 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     }
 
     @Override
-    public void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, String configDomain) {
-        Log.i(TAG, "onMainServiceLogin isSucess:%d userId:%s token:%s ga_uid:%s configDomain:%s", isSucess?1:0, userId, token, ga_uid, configDomain);
+    public void onMainServiceLogin(boolean isSucess, String userId, String token, String ga_uid, int websiteId ,String configDomain) {
+        Log.i(TAG, "onMainServiceLogin isSucess:%d userId:%s token:%s ga_uid:%s configDomain:%s websiteId:%d", isSucess?1:0, userId, token, ga_uid, configDomain, websiteId);
 //        String domain = "http://demo-live.charmdate.com:3007";      //客户端https支持有问题，先写死http环境
+//        configDomain = "172.25.32.17:8817";      //直播相关写死本地环境调试
+//        token = "Jagger_CMTS09564";
         RequestJni.SetConfigSite(configDomain);
-        LoginManager.getInstance().onMainMoudleLogin(isSucess, userId, token, ga_uid);
+        LoginManager.getInstance().onMainMoudleLogin(isSucess, userId, token, ga_uid, websiteId);
     }
 
     @Override
@@ -176,10 +209,25 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     }
 
     @Override
-    public void openUrl(Context context, String url) {
+    public boolean openUrl(Context context, String url) {
         //传递Url给MainFragmentActivity
         Log.i(TAG, "openUrl url:%s ", url);
-        MainFragmentActivity.launchActivityWIthUrl(context, url);
+//        MainFragmentActivity.launchActivityWIthUrl(context, url);
+
+        //edit by Jagger 2018-8-16
+        if(LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Logining){
+            //如果登录中, 只看到loading
+            AutoLoginTransitionActivity.launchActivity(context, url);
+
+        }else if(LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Default){
+            //如果登录失败, 看到loading，它会再登录
+            AutoLoginTransitionActivity.launchActivity(context, url);
+
+        }else{
+            //如果登录成功，去主HOME
+            MainFragmentActivity.launchActivityWIthUrl(context, url);
+        }
+        return true;
     }
 
     /**
@@ -197,6 +245,11 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     public void setForTest(boolean isForTest) {
         Log.i(TAG, "setForTest isForTest: " + isForTest);
         this.isForTest = isForTest;
+    }
+
+    @Override
+    public void setProxy(String proxyUrl) {
+        RequestJni.SetProxy(proxyUrl);
     }
 
     /**
@@ -219,10 +272,12 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
       * @param context
      */
     @Override
-    public void launchAdvertActivity(Context context){
-        Intent intent = new Intent(context, AD4QNActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+    public void launchAdvertActivity(Context context, int websiteLocalIDInQN){
+//        Intent intent = new Intent(context, AD4QNActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//        context.startActivity(intent);
+
+        AD4QNActivity.show(context , websiteLocalIDInQN);
     }
 
     /***************************** 服务状态统计  *****************************************/
@@ -243,7 +298,14 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     }
 
     @Override
-    public boolean stopService() {
+    public String getServiceConflictTips(String url) {
+        return "";
+    }
+
+    @Override
+    public boolean stopFunctions() {
+        Log.i("Jagger" , "LiveService stopFunctions");
+        //
         IMManager.getInstance().stopLiveServiceLocal();
         return true;
     }
@@ -285,7 +347,12 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
         if(moduleName.equals(URL2ActivityManager.KEY_URL_MODULE_NAME_LIVE_ROOM)){
             AnalyticsManager instance = AnalyticsManager.getsInstance();
             if(instance != null) {
-                if(TextUtils.isEmpty(URL2ActivityManager.getInstance().getRoomIdByUrl(url))){
+                if(!TextUtils.isEmpty(URL2ActivityManager.getInstance().getShowLiveIdByUrl(url))){
+                    //节目push点击
+                    instance.ReportEvent(mApplicationContext.getResources().getString(R.string.Live_Calendar_Category),
+                            mApplicationContext.getResources().getString(R.string.Live_Calendar_Action_showStart_click),
+                            mApplicationContext.getResources().getString(R.string.Live_Calendar_Label_showStart_click));
+                }else if(TextUtils.isEmpty(URL2ActivityManager.getInstance().getRoomIdByUrl(url))){
                     //房间号为空，则为主播邀请
                     instance.ReportEvent(mApplicationContext.getResources().getString(R.string.Live_Global_Category),
                             mApplicationContext.getResources().getString(R.string.Live_Global_Action_ClickInvitation),
@@ -320,6 +387,33 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     }
 
     /**
+     * 同步站点配置
+     * @param webSiteSetting
+     */
+    public void setDefaultAvailableWebSettings(List<WebSiteBean> webSiteSetting){
+        mLocalWebSettings = webSiteSetting;
+    }
+
+    /**
+     * 读取本地可用站点配置
+     * @return
+     */
+    public List<WebSiteBean> getDefaultAvailableWebSettings(){
+        return mLocalWebSettings;
+    }
+
+    /**
+     * 站点切换
+     * @param webSiteBean
+     */
+    public void doChangeWebSite(WebSiteBean webSiteBean){
+        Log.i(TAG, "doChangeWebSite event");
+        if(mOnServiceStatusChangeListener != null){
+            mOnServiceStatusChangeListener.doChangeWebSite(webSiteBean);
+        }
+    }
+
+    /**
      * 模块session过期处理
      */
     public void onModuleSessionOverTime() {
@@ -342,9 +436,23 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     /**
      * 模块开始
      */
-        public void onMoudleServiceStart() {
-        Log.i(TAG, "onMoudleServiceStart event");
+    public void startService() {
+        Log.i(TAG, "startService event");
         isModuleServiceEnd = false;
+        if(mOnServiceStatusChangeListener != null){
+            mOnServiceStatusChangeListener.onServiceStart(this);
+        }
+    }
+
+    /**
+     * 模块开始
+     */
+    public void onServiceStart() {
+        Log.i(TAG, "onServiceStart event");
+        isModuleServiceEnd = false;
+        //TODO
+
+        //
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onServiceStart(this);
         }
@@ -353,9 +461,13 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     /**
      * 模块结束
      */
-    public void onModuleServiceEnd() {
-        Log.i(TAG, "onModuleServiceEnd event");
+    public void onServiceEnd() {
+        Log.i(TAG, "onServiceEnd event");
+        //
         isModuleServiceEnd = true;
+        //TODO
+
+        //
         if(mOnServiceStatusChangeListener != null){
             mOnServiceStatusChangeListener.onServiceEnd(this);
         }
@@ -364,10 +476,20 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     /**
      * 添加买点跳转由主模块处理
      */
-    public void onAddCreditClick(){
+    public void onAddCreditClick(NoMoneyParamsBean params){
         Log.i(TAG, "onAddCreditClick event");
         if(mOnServiceStatusChangeListener != null){
-            mOnServiceStatusChangeListener.onAddCreditClick(this);
+            int order_type = 0;
+            String clickFrom = "";
+            String number = "";
+            if(params != null){
+                if(!TextUtils.isEmpty(params.orderType)){
+                    order_type = Integer.valueOf(params.orderType);
+                }
+                clickFrom = params.clickFrom;
+                number = params.number;
+            }
+            mOnServiceStatusChangeListener.onAddCreditClick(this, order_type, clickFrom, number);
         }
     }
 
@@ -380,6 +502,18 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
         if(mOnServiceStatusChangeListener != null){
             Log.i(TAG, "onAdvertShowNotify isShow");
             mOnServiceStatusChangeListener.onAdvertShowNotify(this, isShow);
+        }
+    }
+
+    /**
+     * 通知主模块是否显示URL浮层广告
+     * @param isShow
+     */
+    public void onURLAdvertShowNotify(boolean isShow, AdWebObj adWeb){
+        Log.i(TAG, "onURLAdvertShowNotify event isShow: " + isShow + ",url:" + adWeb.url + ",adId:" + adWeb.url);
+        if(mOnServiceStatusChangeListener != null){
+            Log.i(TAG, "onURLAdvertShowNotify isShow");
+            mOnServiceStatusChangeListener.onURLAdvertShowNotify(this, isShow, adWeb);
         }
     }
 
@@ -401,6 +535,28 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
         }
     }
 
+    /**
+     * 在直播端 显示换站对话框
+     */
+    public void onChangeWebsiteDialogShow(Activity activityTarget){
+        Log.i(TAG, "onChangeWebsiteDialogShow");
+        if(mOnServiceStatusChangeListener != null){
+            Log.i(TAG, "onChangeWebsiteDialog needShow");
+            mOnServiceStatusChangeListener.onChangeWebsiteDialogShowNotify(this, activityTarget ,true);
+        }
+    }
+
+    /**
+     * 在直播端 QN个人资料界面
+     */
+    public void onShowQNMyProfile(Activity activityTarget){
+        Log.i(TAG, "onShowQNMyProfile");
+        if(mOnServiceStatusChangeListener != null){
+            Log.i(TAG, "onShowQNMyProfile needShow");
+            mOnServiceStatusChangeListener.onShowMyProfileNotify(this, activityTarget);
+        }
+    }
+
     /*********************************** 统计直播模块未读标志  **********************************************/
     @Override
     public void onScheduleInviteUnreadUpdate(ScheduleInviteUnreadItem item) {
@@ -410,5 +566,19 @@ public class LiveService implements IQNService, ScheduleInvitePackageUnreadManag
     @Override
     public void onPackageUnreadUpdate(PackageUnreadCountItem item) {
 //        onModuleUnreadNotify();
+    }
+
+    /*********************************** 认证模块登录注销监听  **********************************************/
+
+    @Override
+    public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        if(mOnServiceStatusChangeListener != null){
+            mOnServiceStatusChangeListener.onModuleLogin(this, isSuccess);
+        }
+    }
+
+    @Override
+    public void onLogout(boolean isMannual) {
+
     }
 }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/live_transition_bg_color">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+        <ImageView
+            android:id="@+id/btn_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clear_disabled"
+            android:layout_alignParentRight="true"
+            android:padding="16dp" />
+
+        <LinearLayout
+            android:id="@+id/llAnchorInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="100dp">
+            <com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/civPhoto"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/ic_default_photo_man"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:id="@+id/tvAnchorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_light_white"
+                android:layout_marginLeft="48dp"
+                android:layout_marginRight="48dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="@string/liveroom_end_tips1"/>
+
+            <!-- Close　-->
+            <!--<com.qpidnetwork.anchor.view.ButtonRaised-->
+                <!--android:id="@+id/btn_close"-->
+                <!--android:layout_width="@dimen/live_size_220dp"-->
+                <!--android:layout_height="@dimen/live_size_40dp"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:layout_marginBottom="@dimen/live_size_16dp"-->
+                <!--android:layout_marginTop="@dimen/live_size_30dp"-->
+                <!--android:layout_marginLeft="@dimen/live_size_8dp"-->
+                <!--android:layout_marginRight="@dimen/live_size_8dp"-->
+                <!--button:background="@color/blue_color"-->
+                <!--button:raisebutton_radius="@dimen/btn_radius_min"-->
+                <!--button:title="@string/txt_close"-->
+                <!--button:title_color="@color/white"-->
+                <!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle"/>-->
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>

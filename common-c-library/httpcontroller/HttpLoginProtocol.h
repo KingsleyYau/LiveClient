@@ -402,6 +402,10 @@
 #define LIVEROOM_GETTALENTLIST_LIST_ID               "id"
 #define LIVEROOM_GETTALENTLIST_LIST_NAME             "name"
 #define LIVEROOM_GETTALENTLIST_LIST_CREDIT           "credit"
+#define LIVEROOM_GETTALENTLIST_LIST_DESCRIPTION      "description"
+#define LIVEROOM_GETTALENTLIST_LIST_GIFTID           "gift_id"
+#define LIVEROOM_GETTALENTLIST_LIST_GIFTNAME         "gift_name"
+#define LIVEROOM_GETTALENTLIST_LIST_GIFTNUM          "gift_num"
 
 /* 3.11.获取才艺点播邀请状态 */
 /* 接口路径 */
@@ -421,6 +425,10 @@
 #define LIVEROOM_GETTALENTSTATUS_NAME                       "name"
 #define LIVEROOM_GETTALENTSTATUS_CREDIT                     "credit"
 #define LIVEROOM_GETTALENTSTATUS_STATUS                     "status"
+#define LIVEROOM_GETTALENTSTATUS_STATUS                     "status"
+#define LIVEROOM_GETTALENTSTATUS_GIFTID                     "gift_id"
+#define LIVEROOM_GETTALENTSTATUS_GIFTNAME                   "gift_name"
+#define LIVEROOM_GETTALENTSTATUS_GIFTNUM                    "gift_num"
 
 /* 3.12.获取指定观众信息 */
 /* 接口路径 */
@@ -731,6 +739,10 @@
 #define LIVEROOM_SVRLIST_TURL                                   "turl"
 #define LIVEROOM_HANGOUT                        "hangout"
 #define LIVEROOM_HANGOUT_CREDITPERMINUTE                        "credit_per_minute"
+#define LIVEROOM_LOIHURL                        "loi_h5_url"
+#define LIVEROOM_EMFHURL                        "emf_h5_url"
+#define LIVEROOM_PMSTARTNOTICE                  "pm_start_notice"
+#define LIVEROOM_POSTSTAMPURL                   "post_stamp_url"
 
 /* 6.2.获取账号余额 */
 /* 接口路径 */
@@ -912,6 +924,20 @@
 #define LIVEROOM_CRASHFILE_DEVICEID                          "deviceId"
 #define LIVEROOM_CRASHFILE_CRASHFILE                         "crashfile"
 
+/* 6.17.获取主界面未读数量 */
+/* 接口路径 */
+#define LIVEROOM_GETTOTALNOREADNUM                                "/pman/common/api/getTotalUnreadNum"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETTOTALNOREADNUM_SHOWTICKETUNREADNUM           "show_ticket_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_LOIUNREADNUM                   "loi_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_EMFUNREADNUM                   "emf_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_PRIVATEMESSAGEUNREADNUM        "private_message_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_BOOKINGUNREADNUM               "booking_unread_num"
+#define LIVEROOM_GETTOTALNOREADNUM_BACKPACKUNREADNUM              "backpack_unread_num"
+
 
 /* ########################   支付 模块  ######################## */
 
@@ -990,6 +1016,7 @@
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_PHOTOURL                              "photourl"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_AGE                                   "age"
 #define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_COUNTRY                               "country"
+#define LIVEROOM_GETCANHANGOUTANCHORLIST_LIST_ONLINESTATUS                          "online_status"
 
 /* 8.2.发起多人互动邀请*/
 /* 接口路径 */
@@ -1041,6 +1068,23 @@
  *  请求
  */
 #define LIVEROOM_DEALKNOCKREQUEST_KNOCKID                               "knock_id"
+
+/* 8.6.获取多人互动直播间可发送的礼物列表*/
+/* 接口路径 */
+#define LIVEROOM_HANGOUTGIFTLIST                                       "/man/v1/hangoutGiftList"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_HANGOUTGIFTLIST_ROOMID                                "roomid"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_HANGOUTGIFTLIST_BUYFORLIST                            "buyfor_list"
+#define LIVEROOM_HANGOUTGIFTLIST_NORMALLIST                            "normal_list"
+#define LIVEROOM_HANGOUTGIFTLIST_CELEBRATIONLIST                       "celebration_list"
+#define LIVEROOM_HANGOUTGIFTLIST_BUYFORLIST_ID                                              "id"
 
 /* 9.1.获取节目列表未读 */
 /* 接口路径 */
@@ -1125,5 +1169,75 @@
  *  返回
  */
 #define  SHOWLISTWITHANCHORI_LIST                                                "list"
+
+/* 10.1.获取私信联系人列表 */
+/* 接口路径 */
+#define GETPRIVATEMSGFRIENDLIST_PATH                                              "/share/v1/getPrivateMsgFriendList"
+
+/**
+ *  返回
+ */
+#define GETPRIVATEMSGFRIENDLIST_DBTIME                                              "dbtime"
+#define GETPRIVATEMSGFRIENDLIST_LIST                                                "list"
+#define GETPRIVATEMSGFRIENDLIST_LIST_USERID                                                     "user_id"
+#define GETPRIVATEMSGFRIENDLIST_LIST_NICKNAME                                                   "nick_name"
+#define GETPRIVATEMSGFRIENDLIST_LIST_AVATARIMG                                                  "avatar_img"
+#define GETPRIVATEMSGFRIENDLIST_LIST_ONLINESTATUS                                               "online_status"
+#define GETPRIVATEMSGFRIENDLIST_LIST_LASTMSG                                                    "last_msg"
+#define GETPRIVATEMSGFRIENDLIST_LIST_UPDATETIME                                                 "update_time"
+#define GETPRIVATEMSGFRIENDLIST_LIST_UNREADNUM                                                  "unread_num"
+#define GETPRIVATEMSGFRIENDLIST_LIST_ANCHORTYPE                                                 "anchor_type"
+
+/* 10.2.获取私信Follow联系人列表 */
+/* 接口路径 */
+#define GETFOLLOWPRIVATEMSGFRIENDLIST_PATH                                              "/share/v1/getFollowPrivateMsgFriendList"
+
+/**
+ *  返回
+ */
+#define GETFOLLOWPRIVATEMSGFRIENDLIST_LIST                                                "list"
+
+
+/* 10.3.获取私信消息列表 */
+/* 接口路径 */
+#define GETPRIVATEMESSAGEHISTORYBYID_PATH                                              "/share/v1/getPrivateMessageHistoryByid"
+
+/**
+ *  请求
+ */
+#define GETPRIVATEMESSAGEHISTORYBYID_TOID                                               "to_id"
+#define GETPRIVATEMESSAGEHISTORYBYID_STARTMSGID                                         "start_msgid"
+#define GETPRIVATEMESSAGEHISTORYBYID_ORDER                                              "order"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIMIT                                              "limit"
+
+/**
+ *  返回
+ */
+#define GETPRIVATEMESSAGEHISTORYBYID_DBTIME                                              "dbtime"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST                                                "list"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_ID                                             "id"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_FROMID                                         "from_id"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_TOID                                           "to_id"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_NICKNAME                                       "nick_name"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_AVATARIMG                                      "avatar_img"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_CONTENT                                        "content"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_ISREAD                                         "is_read"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_ADDTIME                                        "add_time"
+#define GETPRIVATEMESSAGEHISTORYBYID_LIST_MSGTYPE                                        "msg_type"
+
+/* 10.4.标记私信已读 */
+/* 接口路径 */
+#define SETPRIVATEMESSAGEREADED_PATH                                              "/share/v1/setPrivateMessageReaded"
+
+/**
+ *  请求
+ */
+#define SETPRIVATEMESSAGEREADED_TOID                                               "to_id"
+#define SETPRIVATEMESSAGEREADED_MSGID                                         "msg_id"
+
+/**
+ *  返回
+ */
+#define SETPRIVATEMESSAGEREADED_RESULT                                             "result"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

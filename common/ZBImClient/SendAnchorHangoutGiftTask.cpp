@@ -176,6 +176,7 @@ bool SendAnchorHangoutGiftTask::InitParam(const string& roomId, const string& ni
         m_nickName = nickName;
         m_toUid = toUid;
         m_giftId = giftId;
+        m_giftName = giftName;
         m_isBackPack = isBackPack;
         m_isPrivate = isPrivate;
         m_giftNum = giftNum;

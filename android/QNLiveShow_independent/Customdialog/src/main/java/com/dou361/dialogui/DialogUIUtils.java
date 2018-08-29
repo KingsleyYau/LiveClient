@@ -61,45 +61,51 @@ public class DialogUIUtils {
      * 关闭弹出框
      */
     public static void dismiss(DialogInterface... dialogs) {
-        if (dialogs != null && dialogs.length > 0) {
-            for (DialogInterface dialog : dialogs) {
-                if (dialog instanceof Dialog) {
-                    Dialog dialog1 = (Dialog) dialog;
-                    if (dialog1.isShowing()) {
-                        dialog1.dismiss();
-                    }
-                } else if (dialog instanceof AppCompatDialog) {
-                    AppCompatDialog dialog2 = (AppCompatDialog) dialog;
-                    if (dialog2.isShowing()) {
-                        dialog2.dismiss();
+        try{
+            if (dialogs != null && dialogs.length > 0) {
+                for (DialogInterface dialog : dialogs) {
+                    if (dialog instanceof Dialog) {
+                        Dialog dialog1 = (Dialog) dialog;
+                        if (dialog1.isShowing()) {
+                            dialog1.dismiss();
+                        }
+                    } else if (dialog instanceof AppCompatDialog) {
+                        AppCompatDialog dialog2 = (AppCompatDialog) dialog;
+                        if (dialog2.isShowing()) {
+                            dialog2.dismiss();
+                        }
                     }
                 }
-            }
 
-        }
+            }
+        }catch (Exception e){}
     }
 
     /**
      * 关闭弹出框
      */
     public static void dismiss(BuildBean buildBean) {
-        if (buildBean != null) {
-            if (buildBean.dialog != null && buildBean.dialog.isShowing()) {
-                buildBean.dialog.dismiss();
+        try{
+            if (buildBean != null) {
+                if (buildBean.dialog != null && buildBean.dialog.isShowing()) {
+                    buildBean.dialog.dismiss();
+                }
+                if (buildBean.alertDialog != null && buildBean.alertDialog.isShowing()) {
+                    buildBean.alertDialog.dismiss();
+                }
             }
-            if (buildBean.alertDialog != null && buildBean.alertDialog.isShowing()) {
-                buildBean.alertDialog.dismiss();
-            }
-        }
+        }catch (Exception e){}
     }
 
     /**
      * 关闭弹出框
      */
     public static void dismiss(Dialog dialog) {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
+        try{
+            if (dialog != null && dialog.isShowing()) {
+                dialog.dismiss();
+            }
+        }catch (Exception e){}
     }
 
     /***

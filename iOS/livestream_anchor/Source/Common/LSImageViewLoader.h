@@ -47,11 +47,11 @@ typedef void (^SDWebImageCallBack)( UIImage *image );
 /**
  加载图片,处理304url缓存
 
- @param view 加载图片view
+ @param imageView 加载图片view
  @param url 图片URL
- @param image 加载回调
+ @param placeholderImage 加载回调
  */
-- (void)refreshCachedImage:(UIView *)view options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage;
+- (void)refreshCachedImage:(UIImageView *)imageView options:(SDWebImageOptions)option imageUrl:(NSString *)url placeholderImage:(UIImage *)placeholderImage;
 
 
 //- (BOOL)loadImage;

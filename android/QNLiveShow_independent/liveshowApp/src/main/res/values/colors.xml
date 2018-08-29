@@ -68,6 +68,7 @@
     <color name="custom_dialog_txt_color_simple">#383838</color>
     <color name="custom_dialog_txt_color_btn_yes">@android:color/white</color>
     <color name="custom_dialog_txt_color_btn_no">#3c3c3c</color>
+    <color name="custom_dialog_btn_color_ok">#5d0e85</color>
 
     <color name="talent_confirm_dialog_confirm">#724602</color>
 
@@ -82,6 +83,7 @@
     <!--profile-->
     <color name="profile_photo_status_pending">#00a0e9</color>
     <color name="profile_photo_status_rejecte">#ff4747</color>
+    <color name="profile_nickname_status_pending">#00a0e9</color>
     <color name="profile_item_value">#838383</color>
     <!--edit nickname-->
     <color name="profile_save_no">#9573AD</color>
@@ -91,4 +93,12 @@
     <color name="feedback_edit_area">#f1d7ff</color>
     <!--about us-->
     <color name="about_us_version">#a279bc</color>
+
+    <!--邮箱注册界面-->
+    <color name="email_sign_up_hint_txt">#bfbfbf</color>
+    <color name="email_sign_up_devide">#959595</color>
+    <color name="submit_unusable">#fffefe</color>
+
+    <color name="email_sign_in_password_tips">#383838</color>
+
 </resources>

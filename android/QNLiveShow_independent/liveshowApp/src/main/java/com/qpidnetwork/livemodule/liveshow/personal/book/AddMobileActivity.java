@@ -105,6 +105,7 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
                 onSummit();
             }
         });
+        mBtnSend.setEnabled(false);
 
     }
 
@@ -156,8 +157,10 @@ public class AddMobileActivity extends BaseActionBarFragmentActivity {
     private void doCheckData(){
         if(mTvTextCode.getText().length() < 1 || mEditTextNumber.getText().length() < 1){
             mBtnSend.setButtonBackground(getResources().getColor(R.color.black3));
+            mBtnSend.setEnabled(false);
         }else{
             mBtnSend.setButtonBackground(getResources().getColor(R.color.talent_violet));
+            mBtnSend.setEnabled(true);
         }
     }
 

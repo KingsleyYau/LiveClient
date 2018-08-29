@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?><!--注:如果最外层设置layout_margin会同时影响分组头的边距 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/live_programme_list_group_gray"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <!-- cardview为了搞个阴影 -->
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_button"
+        app:cardCornerRadius="6dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="240dp">
+            <!-- 封面 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="145dp">
+
+                <!-- 相片 -->
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/img_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    fresco:actualImageScaleType="centerCrop"
+                    fresco:backgroundImage="@color/black4"
+                    fresco:placeholderImage="@drawable/ic_live_programme_default_bg"
+                    fresco:placeholderImageScaleType="centerCrop"
+                    fresco:roundTopLeft="true"
+                    fresco:roundTopRight="true"
+                    fresco:roundedCornerRadius="6dp"/>
+
+                <!-- on going show-->
+                <TextView
+                    android:id="@+id/tv_on_show"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/live_size_20dp"
+                    android:layout_margin="6dp"
+                    android:background="@drawable/rectangle_radius14_transparent_7"
+                    android:drawableLeft="@drawable/ic_live_programme_countdown"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="@dimen/live_size_8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="2dp"
+                    android:text="@string/live_programme_on_show_countdown"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/live_size_12sp" />
+
+                <!-- 房间名 -->
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="6dp">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/img_room_logo"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:layout_centerVertical="true"
+                        fresco:actualImageScaleType="focusCrop"
+                        fresco:backgroundImage="@color/black4"
+                        fresco:placeholderImage="@drawable/ic_default_photo_woman"
+                        fresco:roundAsCircle="true"
+                        fresco:roundBottomLeft="true"
+                        fresco:roundBottomRight="true"
+                        fresco:roundTopLeft="true"
+                        fresco:roundTopRight="true"
+                        fresco:roundedCornerRadius="30dp"
+                        fresco:roundingBorderColor="@color/white"
+                        fresco:roundingBorderWidth="2dp" />
+
+                    <TextView
+                        android:id="@+id/tv_room_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/img_room_logo"
+                        android:text="title"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_anchor_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tv_room_title"
+                        android:layout_marginLeft="6dp"
+                        android:layout_toRightOf="@id/img_room_logo"
+                        android:text="name"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_12sp" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <!-- 下半部分 -->
+            <LinearLayout
+                android:id="@+id/ll_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/rectangle_radius6_connor_bottom_solid_white"
+                android:orientation="vertical">
+
+                <!-- 数据 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Date -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/live_date"
+                            android:textColor="@color/black3"
+                            android:textSize="@dimen/live_size_10sp" />
+
+                        <TextView
+                            android:id="@+id/tv_start_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12:04 14:00"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/live_size_12sp" />
+                    </LinearLayout>
+
+                    <!-- Duration -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/live_duration"
+                            android:textColor="@color/black3"
+                            android:textSize="@dimen/live_size_10sp" />
+
+                        <TextView
+                            android:id="@+id/tv_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="10min"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/live_size_12sp" />
+                    </LinearLayout>
+
+                    <!-- Price -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/live_tickets_sold"
+                            android:textColor="@color/black3"
+                            android:textSize="@dimen/live_size_10sp" />
+
+                        <TextView
+                            android:id="@+id/tv_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0.4 credits"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/live_size_12sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- 分割线 -->
+                <LinearLayout
+                    android:id="@+id/viewCalendarDivider"
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="@dimen/live_size_16dp"
+                    android:layout_marginRight="@dimen/live_size_16dp"
+                    android:background="@color/live_programme_list_group_gray" />
+
+                <!-- 按钮和状态-->
+                <RelativeLayout
+                    android:id="@+id/rlCalendarButtonArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:paddingEnd="@dimen/live_size_16dp"
+                    android:paddingLeft="@dimen/live_size_16dp"
+                    android:paddingRight="@dimen/live_size_16dp"
+                    android:paddingStart="@dimen/live_size_16dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:gravity="center_vertical">
+
+                        <!--<TextView-->
+                        <!--android:id="@+id/tv_tips"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginRight="@dimen/live_size_10dp"-->
+                        <!--android:text="@string/live_programme_reserved"-->
+                        <!--android:textColor="@color/black3"-->
+                        <!--android:textSize="@dimen/live_size_10sp" />-->
+
+                        <com.qpidnetwork.anchor.view.ButtonRaised
+                            android:id="@+id/btn_show"
+                            android:layout_width="110dp"
+                            android:layout_height="@dimen/live_size_40dp"
+                            button:background="@color/live_programme_list_btn_start_show"
+                            button:raisebutton_radius="@dimen/raise_button_radius"
+                            button:title="@string/live_programme_btn_start_show"
+                            button:title_color="@color/white"
+                            button:title_text_size="@dimen/live_size_14sp"
+                            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+                        <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+                        <!--android:id="@+id/btn_other_shows"-->
+                        <!--android:layout_width="130dp"-->
+                        <!--android:layout_height="@dimen/live_size_40dp"-->
+                        <!--button:background="@color/live_programme_list_btn_get_ticket"-->
+                        <!--button:raisebutton_radius="@dimen/raise_button_radius"-->
+                        <!--button:title="@string/live_programme_btn_other_shows"-->
+                        <!--button:title_color="@color/white"-->
+                        <!--button:title_text_size="@dimen/live_size_14sp"-->
+                        <!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />-->
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+            <!-- 虚线 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_above="@id/ll_bottom"
+                android:background="@drawable/ic_live_programme_driver" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

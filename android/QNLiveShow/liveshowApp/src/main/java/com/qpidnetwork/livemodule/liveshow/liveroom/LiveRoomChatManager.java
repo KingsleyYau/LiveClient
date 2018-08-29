@@ -3,8 +3,8 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
-import android.text.Html;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -12,30 +12,37 @@ import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
 import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListAdapter;
 import com.qpidnetwork.livemodule.framework.livemsglist.LiveMessageListView;
 import com.qpidnetwork.livemodule.framework.livemsglist.MessageRecyclerView;
 import com.qpidnetwork.livemodule.framework.livemsglist.ViewHolder;
+import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
+import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
+import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftImageType;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
+import com.qpidnetwork.livemodule.liveshow.model.LiveRoomMsgListItem;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
-import com.qpidnetwork.livemodule.utils.HtmlImageGetter;
+import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
+import com.qpidnetwork.livemodule.utils.DynamicDrawableSpanJ;
+import com.qpidnetwork.livemodule.utils.HtmlSpannedHandler;
+import com.qpidnetwork.livemodule.utils.ImageSpanJ;
 import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.livemodule.utils.SystemUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
+
+import io.reactivex.observers.DisposableObserver;
 
 /**
  * Description:
@@ -46,19 +53,46 @@ import java.lang.ref.WeakReference;
 public class LiveRoomChatManager implements IFileDownloadedListener {
 
     private final String TAG = LiveRoomChatManager.class.getSimpleName();
+
     private WeakReference<BaseCommonLiveRoomActivity> mActivity;
-    private HtmlImageGetter mImageGetter;
+//    private HtmlImageGetter mImageGetter;
+    private CustomerHtmlTagHandler.Builder mBuilder;
     private LiveMessageListView lvlv_roomMsgList;
     private LiveMessageListAdapter lmlAdapter;
     private TextView tv_unReadTip;
     private int giftImgWidth = 0;
     private int giftImgHeight = 0;
-    private int medalImgWidth = 0;
-    private int medalImgHeight = 0;
+    private int anchorFlagImgWidth = 0;
+    private int anchorFlagImgHeight = 0;
     private Context mContext;
+    private LiveRoomChatMsglistItemManager mLiveRoomChatMsglistItemManager;
 
-    public LiveRoomChatManager(Context context){
+    //新增消息列表item点击事件
+    private LiveMessageListItemClickListener mLiveMessageListItemClickListener;
+
+    /**
+     * 当前直播间类型
+     */
+    private IMRoomInItem.IMLiveRoomType currLiveRoomType;
+    /**
+     * 当前主播ID
+     */
+    private String currAnchorId = null;
+    /**
+     * 用户自己的ID
+     */
+    private String mySelfId = null;
+
+    private RoomThemeManager roomThemeManager;
+
+    public LiveRoomChatManager(Context context, IMRoomInItem.IMLiveRoomType currLiveRoomType,
+                               String currAnchorId,String mySelfId,RoomThemeManager roomThemeManager){
+        Log.d(TAG,"LiveRoomChatManager-currLiveRoomType:"+currLiveRoomType+" currAnchorId:"+currAnchorId+" mySelfId:"+mySelfId);
         mContext = context;
+        this.currLiveRoomType = currLiveRoomType;
+        this.currAnchorId = currAnchorId;
+        this.mySelfId = mySelfId;
+        this.roomThemeManager = roomThemeManager;
     }
 
     public void init(BaseCommonLiveRoomActivity roomActivity, View container){
@@ -66,9 +100,15 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
         //初始化Html图片解析器
         giftImgWidth = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_gift_width);
         giftImgHeight = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_gift_height);
-        medalImgWidth = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_medal_width);
-        medalImgHeight = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_medal_height);
-        mImageGetter = new HtmlImageGetter(roomActivity.getApplicationContext(), giftImgWidth, giftImgHeight,medalImgWidth,medalImgHeight);
+        anchorFlagImgWidth = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_anchor_flag_width);
+        anchorFlagImgHeight = (int)roomActivity.getResources().getDimension(R.dimen.liveroom_messagelist_anchor_flag_height);
+//        mImageGetter = new HtmlImageGetter(roomActivity.getApplicationContext(), giftImgWidth, giftImgHeight, anchorFlagImgWidth, anchorFlagImgHeight);
+        mBuilder = new CustomerHtmlTagHandler.Builder();
+        mBuilder.setContext(mContext)
+                .setAnchorFlagImgHeight(this.anchorFlagImgHeight)
+                .setAnchorFlagImgWidth(this.anchorFlagImgWidth)
+                .setGiftImgHeight(this.giftImgHeight)
+                .setGiftImgWidth(this.giftImgWidth);
         lvlv_roomMsgList = (LiveMessageListView) container.findViewById(R.id.lvlv_roomMsgList);
         tv_unReadTip = (TextView) container.findViewById(R.id.tv_unReadTip);
         tv_unReadTip.setOnClickListener(new View.OnClickListener() {
@@ -90,11 +130,11 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
             }
         });
 
-        lmlAdapter = new LiveMessageListAdapter<IMMessageItem>(roomActivity,
+        lmlAdapter = new LiveMessageListAdapter<LiveRoomMsgListItem>(roomActivity,
                 R.layout.item_live_room_msglist) {
             @Override
-            public void convert(ViewHolder holder, IMMessageItem liveMsgItem) {
-                refreshViewByMessageItem(holder, liveMsgItem);
+            public void convert(ViewHolder holder, LiveRoomMsgListItem liveMsgItem) {
+                doDrawItem(holder, liveMsgItem);
             }
         };
 
@@ -102,6 +142,26 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
         lvlv_roomMsgList.setMaxMsgSum(mContext.getResources().getInteger(R.integer.liveMsgListMaxNum));
         lvlv_roomMsgList.setHoldingTime(mContext.getResources().getInteger(R.integer.liveMsgListItemHoldTime));
         lvlv_roomMsgList.setVerticalSpace(Float.valueOf(mContext.getResources().getDimension(R.dimen.listmsgview_item_decoration)).intValue());
+        lvlv_roomMsgList.setGradualColor(roomThemeManager.getRoomMsgListTopGradualColor(currLiveRoomType));
+
+        initMsgListCache();
+    }
+
+    /**
+     * 一定要调用
+     */
+    public void destroy(){
+        if(mLiveRoomChatMsglistItemManager != null){
+            mLiveRoomChatMsglistItemManager.destroy();
+        }
+    }
+
+    /**
+     * 设置点击事件监听器
+     * @param listener
+     */
+    public void setLiveMessageListItemClickListener(LiveMessageListItemClickListener listener){
+        this.mLiveMessageListItemClickListener = listener;
     }
 
     /**
@@ -123,153 +183,299 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
      * @param holder
      * @param liveMsgItem
      */
-    private void refreshViewByMessageItem(ViewHolder holder,
-                                          IMMessageItem liveMsgItem){
-        String localHonorImgPath =null;
-        boolean honorImgFileExists = false;
-        boolean honorImgExists = !TextUtils.isEmpty(liveMsgItem.honorUrl);
-        if(honorImgExists){
-            localHonorImgPath = FileCacheManager.getInstance().parseHonorImgLocalPath(liveMsgItem.honorUrl);
-            honorImgFileExists = SystemUtils.fileExists(localHonorImgPath);
-            Log.d(TAG,"refreshViewByMessageItem-localHonorImgPath:"+localHonorImgPath+" honorImgFileExists:"+honorImgFileExists);
-            if(!honorImgFileExists){
-                FileDownloadManager.getInstance().start(liveMsgItem.honorUrl,localHonorImgPath,null);
-            }
-        }
+//    private void refreshViewByMessageItem(ViewHolder holder,
+//                                          final IMMessageItem liveMsgItem){
+//        TextView ll_userLevel = holder.getView(R.id.tvMsgDescription);
+//        View ll_msgItemContainer = holder.getView(R.id.ll_msgItemContainer);
+//        //避免itemview循环利用时背景色混乱
+//        ll_msgItemContainer.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        Spanned span = null;
+//        //解决才艺推荐被隐藏重用问题
+//        View llRecommended = holder.getView(R.id.llRecommended);
+//        ll_userLevel.setVisibility(View.VISIBLE);
+//        llRecommended.setVisibility(View.GONE);
+//
+//        switch (liveMsgItem.msgType){
+//            case Normal:
+//            case Barrage:{
+//                boolean isAnchor = !TextUtils.isEmpty(currAnchorId) && liveMsgItem.userId.equals(currAnchorId);
+//                boolean isMySelf = !TextUtils.isEmpty(mySelfId) && liveMsgItem.userId.equals(mySelfId);
+//                //弹幕或者普通文本消息
+//                String emoParseStr = null;
+//                int strResId = roomThemeManager.getRoomMsgListNormalStrResId(currLiveRoomType,isAnchor,isMySelf);
+//                if(0 != strResId){
+//                    //把数据填入HTML模块中
+//                    String htmlStr = mContext.getResources().getString(strResId,
+//                            liveMsgItem.nickName,
+//                            TextUtils.htmlEncode(liveMsgItem.textMsgContent.message));
+//
+//                    //处理是否有购票标识
+//                    //非主播(Ps:与strResId对应，主播的模板是没有<jimg src=\"ticket\"/>的) 且 info不为空
+//                    if(!isAnchor && IMManager.getInstance().getUserInfo(liveMsgItem.userId)!= null){
+//                        htmlStr = doCheckHasTicketTag(htmlStr , IMManager.getInstance().getUserInfo(liveMsgItem.userId).isHasTicket);
+//                    }
+//
+//                    //生成真正的文本
+//                    emoParseStr = ChatEmojiManager.getInstance().parseEmojiStr(mActivity.get(),
+//                            htmlStr,
+//                            ChatEmojiManager.PATTERN_MODEL_SIMPLESIGN);
+////                    span = mImageGetter.getExpressMsgHTML(emoParseStr,false);
+//                    span = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder , emoParseStr,false);
+//                }
+//            }break;
+//            case Gift:{
+//                boolean isAnchor = !TextUtils.isEmpty(currAnchorId) && liveMsgItem.userId.equals(currAnchorId);
+//                boolean isMySelf = !TextUtils.isEmpty(mySelfId) && liveMsgItem.userId.equals(mySelfId);
+//                //检测礼物小图片存在与否，不存在自动下载，更新列表
+//                NormalGiftManager.getInstance().getGiftImage(liveMsgItem.giftMsgContent.giftId,
+//                        GiftImageType.MsgListIcon, this);
+//                ll_msgItemContainer.setBackgroundDrawable(
+//                        roomThemeManager.getRoomMsgListGiftItemBgDrawable(
+//                                mContext, currLiveRoomType));
+//                //礼物消息列表展示
+//                int strResId = roomThemeManager.getRoomMsgListGiftMsgStrResId(currLiveRoomType,isAnchor,isMySelf);
+//                String giftNum = "";
+//
+//                if(liveMsgItem.giftMsgContent.giftNum > 1){
+//                    giftNum = mContext.getResources().getString(R.string.liveroom_message_gift_x,
+//                            liveMsgItem.giftMsgContent.giftNum);
+//                }
+//
+////                span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
+////                        strResId,
+////                        liveMsgItem.nickName,
+////                        liveMsgItem.giftMsgContent.giftName,
+////                        liveMsgItem.giftMsgContent.giftId,
+////                        giftNum),true);
+//
+//                //把数据填入HTML模块中
+//                String htmlStr = mContext.getResources().getString(
+//                        strResId,
+//                        liveMsgItem.nickName,
+//                        liveMsgItem.giftMsgContent.giftName,
+//                        liveMsgItem.giftMsgContent.giftId,
+//                        giftNum);
+//
+//                //处理是否有购票标识
+//                //非主播(Ps:与strResId对应，主播的模板是没有<jimg src=\"ticket\"/>的) 且 info不为空
+//                if(!isAnchor && IMManager.getInstance().getUserInfo(liveMsgItem.userId)!= null){
+//                    htmlStr = doCheckHasTicketTag(htmlStr , IMManager.getInstance().getUserInfo(liveMsgItem.userId).isHasTicket);
+//                }
+//
+//                //生成真正的文本
+//                span = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder ,
+//                        htmlStr,true);
+//            }break;
+//            case FollowHost:{
+//                //FollowHost系统以公告方式推送给客户端
+//            }break;
+//            case RoomIn:{//入场消息类型
+//                boolean isAnchor = !TextUtils.isEmpty(currAnchorId) && liveMsgItem.userId.equals(currAnchorId);
+//                boolean isMySelf = !TextUtils.isEmpty(mySelfId) && liveMsgItem.userId.equals(mySelfId);
+//                Log.d(TAG,"RoomIn-userId:"+liveMsgItem.userId+" isAnchor:"+isAnchor+" isMySelf:"+isMySelf);
+//                if(null != currLiveRoomType){
+//                    int strResId = roomThemeManager.getRoomMsgListRoomInMsgStrResId(currLiveRoomType,isMySelf);
+//                   if(0 != strResId){
+////                       span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
+////                               strResId, liveMsgItem.nickName,liveMsgItem.textMsgContent.message),
+////                               false);
+//
+//                       //把数据填入HTML模块中
+//                       String htmlStr = mContext.getResources().getString(
+//                               strResId, liveMsgItem.nickName,liveMsgItem.textMsgContent.message);
+//
+//                       //处理是否有购票标识
+//                       //非主播(Ps:与strResId对应) 且 info不为空
+//                       if(!isAnchor && IMManager.getInstance().getUserInfo(liveMsgItem.userId)!= null){
+//                           htmlStr = doCheckHasTicketTag(htmlStr , IMManager.getInstance().getUserInfo(liveMsgItem.userId).isHasTicket);
+//                       }
+//
+//                       //生成真正的文本
+//                       span = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder ,
+//                               htmlStr,false);
+//                   }
+//                }
+//            }break;
+//            case SysNotice: {
+//                final IMSysNoticeMessageContent msgContent = liveMsgItem.sysNoticeContent;
+//                if (msgContent != null) {
+//                    if (!TextUtils.isEmpty(msgContent.link)) {
+//                        SpannableString spanString = new SpannableString(msgContent.message);
+//                        //下划线
+//                        UnderlineSpan underlineSpan = new UnderlineSpan();
+//                        spanString.setSpan(underlineSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+//                        ClickableSpan clickableSpan = new ClickableSpan() {
+//                            @Override
+//                            public void onClick(View widget) {
+//                                //加载成功没有导航栏同主播个人页
+//                                mContext.startActivity(WebViewActivity.getIntent(
+//                                        mContext, "", msgContent.link, true));
+//                            }
+//                        };
+//                        spanString.setSpan(clickableSpan,0,spanString.length(),Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+//                        //字体颜色
+//                        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(
+//                                mActivity.get().roomThemeManager.getRoomMsgListSysNoticeNormalTxtColor(
+//                                        mActivity.get().mIMRoomInItem.roomType
+//                                ));
+//                        spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+//                        ll_userLevel.setText(spanString);
+//                    }else{
+//                        if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Normal){
+//                            SpannableString spanString = new SpannableString(msgContent.message);
+//                            //字体颜色
+//                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(
+//                                    mActivity.get().roomThemeManager.getRoomMsgListSysNoticeNormalTxtColor(
+//                                            mActivity.get().mIMRoomInItem.roomType
+//                                    ));
+//                            spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+//
+//                            //
+//                            ll_userLevel.setText(spanString);
+//                        }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.CarIn){
+//                            //座驾入场从公告类型修改为RoomIn类型
+//                        }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Warning){
+//                            SpannableString spanString = new SpannableString(msgContent.message);
+//                            //字体颜色
+//                            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(
+//                                    mActivity.get().roomThemeManager.getRoomMsgListSysNoticeWarningTxtColor(
+//                                            mActivity.get().mIMRoomInItem.roomType
+//                                    ));
+//                            spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+//
+//                            //
+//                            ll_userLevel.setText(spanString);
+//                        }
+//                    }
+//                }
+//            }break;
+//
+//            case TalentRecommand:{
+//                ll_userLevel.setVisibility(View.GONE);
+//                llRecommended.setVisibility(View.VISIBLE);
+//                SimpleDraweeView imgMsgAnchorPhoto = holder.getView(R.id.imgMsgAnchorPhoto);
+//                TextView tvDesc = holder.getView(R.id.tvDesc);
+//                IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(liveMsgItem.userId);
+//                if(imUserBaseInfoItem != null){
+//                    imgMsgAnchorPhoto.setImageURI(imUserBaseInfoItem.photoUrl);
+//                }
+//                if(liveMsgItem.textMsgContent != null){
+//                    tvDesc.setText(liveMsgItem.textMsgContent.message);
+//                }
+//                ll_msgItemContainer.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if(mLiveMessageListItemClickListener != null){
+//                            mLiveMessageListItemClickListener.onItemClick(liveMsgItem);
+//                        }
+//                    }
+//                });
+//            }break;
+//            default:
+//                break;
+//        }
+//        ll_userLevel.setMovementMethod(liveMsgItem.msgType == IMMessageItem.MessageType.SysNotice
+//                ? LinkMovementMethod.getInstance() : null);
+//        if(null != span){
+//            ll_userLevel.setText(span);
+//        }
+//    }
 
+    /**
+     * 初始化列表ITEM缓冲处理Spanned工具
+     */
+    private void initMsgListCache(){
+        mLiveRoomChatMsglistItemManager = new LiveRoomChatMsglistItemManager(mContext , currLiveRoomType , mBuilder , roomThemeManager, currAnchorId , mySelfId);
+        mLiveRoomChatMsglistItemManager.setListItemSpannedListener(new LiveRoomChatMsglistItemManager.onMsgItemSpannedListener() {
+            @Override
+            public void onSpanned(LiveRoomMsgListItem liveRoomMsgListItem) {
+                //接收处理从缓冲区回来的数据
+                lvlv_roomMsgList.addNewLiveMsg(liveRoomMsgListItem);
+            }
+        });
+    }
+
+    /**
+     * 给列表控件赋值
+     * @param holder
+     * @param msgListItem
+     */
+    private void doDrawItem(ViewHolder holder,
+                            final LiveRoomMsgListItem msgListItem){
         TextView ll_userLevel = holder.getView(R.id.tvMsgDescription);
-        Spanned span = null;
-        switch (liveMsgItem.msgType){
+        View ll_msgItemContainer = holder.getView(R.id.ll_msgItemContainer);
+        //避免itemview循环利用时背景色混乱
+        ll_msgItemContainer.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        //解决才艺推荐被隐藏重用问题
+        View llRecommended = holder.getView(R.id.llRecommended);
+        ll_userLevel.setVisibility(View.VISIBLE);
+        llRecommended.setVisibility(View.GONE);
+
+        switch (msgListItem.imMessageItem.msgType){
             case Normal:
             case Barrage:{
-                //弹幕或者普通文本消息
-                String emoParseStr = null;
-                if(honorImgExists){
-                    emoParseStr = ChatEmojiManager.getInstance().parseEmojiStr(mActivity.get(),
-                            mContext.getResources().getString(mActivity.get().roomThemeManager.getRoomMsgListMedalTxtMsgStrResId(
-                                    mActivity.get().mIMRoomInItem.roomType),
-                                    liveMsgItem.honorUrl,
-                                    liveMsgItem.nickName,
-                                    TextUtils.htmlEncode(liveMsgItem.textMsgContent.message)),
-                            ChatEmojiManager.PATTERN_MODEL_SIMPLESIGN);
-                }else{
-                    emoParseStr = ChatEmojiManager.getInstance().parseEmojiStr(mActivity.get(),
-                            mContext.getResources().getString(mActivity.get().roomThemeManager.getRoomMsgListNoMedalTxtMsgStrResId(
-                                    mActivity.get().mIMRoomInItem.roomType),
-                                    liveMsgItem.nickName,
-                                    TextUtils.htmlEncode(liveMsgItem.textMsgContent.message)),
-                            ChatEmojiManager.PATTERN_MODEL_SIMPLESIGN);
-                }
-                span = mImageGetter.getExpressMsgHTML(emoParseStr);
+
             }break;
             case Gift:{
-                //检测礼物小图片存在与否，不存在自动下载，更新列表
-                NormalGiftManager.getInstance().getGiftImage(liveMsgItem.giftMsgContent.giftId,
-                        GiftImageType.MsgListIcon, this);
-                //礼物消息列表展示
-                String giftNum = "";
-                if(liveMsgItem.giftMsgContent.giftNum > 1){
-                    giftNum = mContext.getResources().getString(R.string.liveroom_message_gift_x,
-                            liveMsgItem.giftMsgContent.giftNum);
-                }
-                if(honorImgExists){
-                    span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                            mActivity.get().roomThemeManager.getRoomMsgListMedalGiftMsgStrResId(mActivity.get().mIMRoomInItem.roomType),
-                            liveMsgItem.honorUrl,
-                            liveMsgItem.nickName,
-                            liveMsgItem.giftMsgContent.giftName,
-                            liveMsgItem.giftMsgContent.giftId, giftNum));
-                }else{
-                    span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                            mActivity.get().roomThemeManager.getRoomMsgListNoMedalGiftMsgStrResId(mActivity.get().mIMRoomInItem.roomType),
-                            liveMsgItem.nickName,
-                            liveMsgItem.giftMsgContent.giftName,
-                            liveMsgItem.giftMsgContent.giftId, giftNum));
-                }
+                ll_msgItemContainer.setBackgroundDrawable(
+                        roomThemeManager.getRoomMsgListGiftItemBgDrawable(
+                                mContext, currLiveRoomType));
             }break;
-            //FollowHost系统以公告方式推送给客户端
-//            case FollowHost:{
-//                span = Html.fromHtml(mContext.getResources().getString(
-//                        R.string.liveroom_message_template_follow_freepublic, liveMsgItem.nickName));
-//            }break;
-            case RoomIn:{
-                if(honorImgExists){
-                    span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                            mActivity.get().roomThemeManager.getRoomMsgListMedalRoomInMsgStrResId(
-                                    mActivity.get().mIMRoomInItem.roomType),
-                            liveMsgItem.honorUrl,
-                            liveMsgItem.nickName));
-                }else{
-                    span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                            mActivity.get().roomThemeManager.getRoomMsgListNoMedalRoomInMsgStrResId(
-                                    mActivity.get().mIMRoomInItem.roomType),
-                            liveMsgItem.nickName));
-                }
+            case FollowHost:{
+                //FollowHost系统以公告方式推送给客户端
+            }break;
+            case RoomIn:{//入场消息类型
 
             }break;
             case SysNotice: {
-                final IMSysNoticeMessageContent msgContent = liveMsgItem.sysNoticeContent;
+                final IMSysNoticeMessageContent msgContent = msgListItem.imMessageItem.sysNoticeContent;
                 if (msgContent != null) {
                     if (!TextUtils.isEmpty(msgContent.link)) {
-                        SpannableString spanString = new SpannableString(msgContent.message);
-                        //下划线
-                        UnderlineSpan underlineSpan = new UnderlineSpan();
-                        spanString.setSpan(underlineSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                        //超链接
-//                        URLSpan urlSpan = new URLSpan(msgContent.link);
-//                        spanString.setSpan(urlSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                        ClickableSpan clickableSpan = new ClickableSpan() {
-                            @Override
-                            public void onClick(View widget) {
-                                //加载成功没有导航栏同主播个人页
-                                mContext.startActivity(WebViewActivity.getIntent(
-                                        mContext, "", msgContent.link, true));
-                            }
-                        };
-                        spanString.setSpan(clickableSpan,0,spanString.length(),Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-                        //字体颜色
-                        ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.parseColor("#0CD7DE"));
-                        spanString.setSpan(foregroundColorSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                        //加粗
-                        StyleSpan styleSpan = new StyleSpan(Typeface.BOLD);
-                        spanString.setSpan(styleSpan, 0, spanString.length(), Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
-                        ll_userLevel.setText(spanString);
+
+                        ll_userLevel.setText(msgListItem.spanned);
                     }else{
                         if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Normal){
-                            span = Html.fromHtml(mContext.getResources().getString(
-                                    R.string.system_notice_unlink_normal,
-                                    msgContent.message));
+                            ll_userLevel.setText(msgListItem.spanned);
                         }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.CarIn){
-                            if(honorImgExists){
-                                span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                                        R.string.system_notice_unlink_carin,
-                                        liveMsgItem.honorUrl,msgContent.message));
-                            }else{
-                                span = mImageGetter.getExpressMsgHTML(mContext.getResources().getString(
-                                        R.string.system_notice_unlink_carin_nomedal,
-                                        msgContent.message));
-                            }
+                            //座驾入场从公告类型修改为RoomIn类型
                         }else if(msgContent.sysNoticeType == IMSysNoticeMessageContent.SysNoticeType.Warning){
-                            span = Html.fromHtml(mContext.getResources().getString(
-                                    R.string.system_notice_warning,
-                                    msgContent.message));
-                        }else{
-                            span = Html.fromHtml(mContext.getResources().getString(
-                                    R.string.system_notice_unlink_chat,
-                                    msgContent.message));
+                            ll_userLevel.setText(msgListItem.spanned);
                         }
                     }
                 }
             }break;
+
+            case TalentRecommand:{
+                ll_userLevel.setVisibility(View.GONE);
+                llRecommended.setVisibility(View.VISIBLE);
+                SimpleDraweeView imgMsgAnchorPhoto = holder.getView(R.id.imgMsgAnchorPhoto);
+                TextView tvDesc = holder.getView(R.id.tvDesc);
+                IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(msgListItem.imMessageItem.userId);
+                if(imUserBaseInfoItem != null){
+                    imgMsgAnchorPhoto.setImageURI(imUserBaseInfoItem.photoUrl);
+                }
+                if(msgListItem.imMessageItem.textMsgContent != null){
+                    tvDesc.setText(msgListItem.imMessageItem.textMsgContent.message);
+                }
+                ll_msgItemContainer.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(mLiveMessageListItemClickListener != null){
+                            mLiveMessageListItemClickListener.onItemClick(msgListItem.imMessageItem);
+                        }
+                    }
+                });
+            }break;
             default:
                 break;
         }
-        ll_userLevel.setMovementMethod(liveMsgItem.msgType == IMMessageItem.MessageType.SysNotice
+        ll_userLevel.setMovementMethod(msgListItem.imMessageItem.msgType == IMMessageItem.MessageType.SysNotice
                 ? LinkMovementMethod.getInstance() : null);
-        if(null != span){
-            ll_userLevel.setText(span);
+        if(null != msgListItem.spanned){
+            ll_userLevel.setText(msgListItem.spanned);
         }
     }
+
 
     @Override
     public void onCompleted(boolean isSuccess, String localFilePath, String fileUrl) {
@@ -327,24 +533,47 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
     }
 
     public void addMessageToList(IMMessageItem msgItem){
-        boolean isUpdate = false;
-
-        //最后一条消息是RoomIn时，更新
-        if(msgItem.msgType == IMMessageItem.MessageType.RoomIn){
-            Object dataItem = lvlv_roomMsgList.getLastData();
-            if(dataItem != null && dataItem instanceof IMMessageItem){
-                IMMessageItem lastMsgitem = (IMMessageItem)dataItem;
-                if(lastMsgitem.msgType == IMMessageItem.MessageType.RoomIn){
-                    isUpdate = true;
-                    lastMsgitem.copy(msgItem);
-                }
-            }
+        if(IMMessageItem.MessageType.RoomIn == msgItem.msgType){
+            Log.d(TAG,"addMessageToList-msgItem.txtMsg:"+msgItem.textMsgContent);
         }
+        boolean isUpdate = false;
+        //最后一条消息是RoomIn时，更新
+//        if(msgItem.msgType == IMMessageItem.MessageType.RoomIn){
+//            Object dataItem = lvlv_roomMsgList.getLastData();
+//            if(dataItem != null && dataItem instanceof IMMessageItem){
+//                IMMessageItem lastMsgitem = (IMMessageItem)dataItem;
+//                if(lastMsgitem.msgType == IMMessageItem.MessageType.RoomIn){
+//                    isUpdate = true;
+//                    lastMsgitem.copy(msgItem);
+//                }
+//            }
+//        }
 
-        if(lvlv_roomMsgList != null && !isUpdate){
-            lvlv_roomMsgList.addNewLiveMsg(msgItem);
+        //del by Jagger 2018-6-21
+//        if(lvlv_roomMsgList != null && !isUpdate){
+//            Log.d(TAG,"addMessageToList-插入RoomIn消息");
+//            lvlv_roomMsgList.addNewLiveMsg(msgItem);
+//        }else{
+//            Log.d(TAG,"addMessageToList-更新RoomIn消息");
+//            lmlAdapter.notifyDataSetChanged();
+//        }
+
+        //edit by Jagger 2018-6-21 交由管理器异步转化HTML文本
+        if(lvlv_roomMsgList != null){
+            Log.d(TAG,"addMessageToList-插入RoomIn消息");
+            //放放缓冲区
+            if(mLiveRoomChatMsglistItemManager != null){
+                mLiveRoomChatMsglistItemManager.addMsgListItem(msgItem);
+            }
         }else{
+            Log.d(TAG,"addMessageToList-更新RoomIn消息");
             lmlAdapter.notifyDataSetChanged();
         }
+        //end
+    }
+
+
+    public interface LiveMessageListItemClickListener{
+        public void onItemClick(IMMessageItem item);
     }
 }

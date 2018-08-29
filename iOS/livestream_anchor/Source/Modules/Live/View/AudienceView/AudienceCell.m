@@ -34,12 +34,16 @@
     self.headImageView.layer.cornerRadius = radius * 0.5;
     self.headImageView.layer.masksToBounds = YES;
     
-    if (!audienModel.photoUrl.length) {
-        [self.headImageView setImage:audienModel.image];
-    } else {
-        [self.imageLoader stop];
-        [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
-                            placeholderImage:audienModel.image];
+    [self.imageLoader stop];
+    [self.imageLoader refreshCachedImage:self.headImageView options:SDWebImageRefreshCached imageUrl:audienModel.photoUrl
+                        placeholderImage:audienModel.image];
+    
+    if (audienModel.isHasTicket) {
+        self.showIcon.hidden = NO;
+    }
+    else
+    {
+        self.showIcon.hidden = YES;
     }
 }
 

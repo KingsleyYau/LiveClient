@@ -34,8 +34,11 @@
 #import "LSUserInfoItemObject.h"
 #import "LSVoucherAvailableInfoItemObject.h"
 #import "LSHangoutAnchorItemObject.h"
+#import "LSHangoutGiftListObject.h"
 
 #import "LSProgramItemObject.h"
+//#import "LSPrivateMsgContactItemObject.h"
+#import "LSMainUnreadNumItemObject.h"
 
 #include <httpcontroller/HttpRequestEnum.h>
 
@@ -1011,6 +1014,25 @@ typedef void (^GetUserInfoFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum,
            finishHandler:(GetUserInfoFinishHandler _Nullable)finishHandler;
 
 /**
+ *  6.17.获取私信消息列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param userInfoItem 观众/主播信息
+ */
+typedef void (^GetTotalNoreadNumFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSMainUnreadNumItemObject * _Nullable userInfoItem);
+
+/**
+ *  6.17.获取私信消息列表接口
+ *
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getTotalNoreadNum:(GetTotalNoreadNumFinishHandler _Nullable)finishHandler;
+
+/**
  *  8.1.获取可邀请多人互动的主播列表接口回调
  *
  *  @param success      成功失败
@@ -1128,7 +1150,28 @@ typedef void (^DealKnockRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE er
                 finishHandler:(DealKnockRequestFinishHandler _Nullable)finishHandler;
 
 /**
- *  9.1.获取节目未读数接口回调
+ *  8.6.获取多人互动直播间可发送的礼物列表接口回调
+ *
+ *  @param success      成功失败
+ *  @param errnum       错误码
+ *  @param errmsg       错误提示
+ *  @param item         可发送的礼物列表
+ */
+typedef void (^GetHangoutGiftListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSHangoutGiftListObject* _Nonnull item);
+
+/**
+ *  8.6.获取多人互动直播间可发送的礼物列表接口
+ *
+ *  @param roomId           直播间ID
+ *  @param finishHandler    接口回调
+ *
+ *  @return 成功请求Id
+ */
+- (NSInteger)getHangoutGiftList:(NSString *_Nullable)roomId
+                finishHandler:(GetHangoutGiftListFinishHandler _Nullable)finishHandler;
+
+/**
+ *  9.1.获取节目未读数接口回调(已废弃)
  *
  *  @param success      成功失败
  *  @param errnum       错误码
@@ -1138,7 +1181,7 @@ typedef void (^DealKnockRequestFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE er
 typedef void (^GetNoReadNumProgramFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, int num);
 
 /**
- *  9.1.获取节目未读数接口
+ *  9.1.获取节目未读数接口(已废弃)
  *
  *  @param finishHandler    接口回调
  *
@@ -1262,5 +1305,46 @@ typedef void (^ShowListWithAnchorIdFinishHandler)(BOOL success, HTTP_LCC_ERR_TYP
                               step:(int)step
                         sortType:(ShowRecommendListType)sortType
                      finishHandler:(ShowListWithAnchorIdFinishHandler _Nullable)finishHandler;
+
+///**
+// *  10.1.获取私信联系人列表接口回调
+// *
+// *  @param success      成功失败
+// *  @param errnum       错误码
+// *  @param errmsg       错误提示
+// *  @param array        节目列表
+// */
+//typedef void (^GetPrivateMsgFriendListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSPrivateMsgContactItemObject *>* _Nullable array);
+//
+//
+///**
+// *  10.1.获取私信联系人列表接口
+// *
+// *  @param finishHandler    接口回调
+// *
+// *  @return 成功请求Id
+// */
+//- (NSInteger)getPrivateMsgFriendList:(GetPrivateMsgFriendListFinishHandler _Nullable)finishHandler;
+//
+///**
+// *  10.2.获取私信Follow联系人列表接口回调
+// *
+// *  @param success      成功失败
+// *  @param errnum       错误码
+// *  @param errmsg       错误提示
+// *  @param array        节目列表
+// */
+//typedef void (^GetFollowPrivateMsgFriendListFinishHandler)(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, NSArray<LSPrivateMsgContactItemObject *>* _Nullable array);
+//
+//
+///**
+// *  10.2.获取私信Follow联系人列表接口
+// *
+// *  @param finishHandler    接口回调
+// *
+// *  @return 成功请求Id
+// */
+//- (NSInteger)getFollowPrivateMsgFriendList:(GetFollowPrivateMsgFriendListFinishHandler _Nullable)finishHandler;
+
 
 @end

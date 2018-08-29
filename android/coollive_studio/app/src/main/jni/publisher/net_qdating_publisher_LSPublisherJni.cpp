@@ -21,16 +21,20 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 		return -1;
 	}
 
-	KLog::SetLogDirectory("/sdcard/coollive");
-	KLog::SetLogLevel(KLog::LOG_WARNING);
+	KLog::SetLogLevel(KLog::LOG_MSG);
 
 	jobject jLSHardEncodeVideoFrameItem;
 	InitClassHelper(env, LS_ENCODE_VIDEO_ITEM_CLASS, &jLSHardEncodeVideoFrameItem);
 
-	FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
-
 	return JNI_VERSION_1_4;
 }
+
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_SetLogDir
+  (JNIEnv *env, jclass cls, jstring jLogDir) {
+      string logDir = JString2String(env, jLogDir);
+      KLog::SetLogDirectory(logDir);
+      FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
+  }
 
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
   (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardEncoder, jobject videoEncoder, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {
@@ -188,8 +192,8 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_Stop
 			"rtmpdump",
 			KLog::LOG_WARNING,
 			"LSPublisherJni::Stop( "
-			"[Success], "
-			"publisher : %p "
+			"publisher : %p, "
+			"[Success] "
 			")",
 			publisher
 			);

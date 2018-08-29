@@ -20,6 +20,11 @@
  * userProtocol               观众协议页URL
  * showDetailPage             节目详情页URL
  * showDescription            节目介绍
+ * hangoutCredirMsg           多人互动资费提示
+ * loiH5Url                   意向信页URL
+ * emfH5Url                   EMF页URL
+ * pmStartNotice              私信聊天界面没有聊天记录时的提示
+ * pmStartNotice              背包邮票页URL
  */
 @property (nonatomic, copy) NSString *_Nonnull imSvrUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrUrl;
@@ -30,5 +35,10 @@
 @property (nonatomic, copy) NSString *_Nonnull userProtocol;
 @property (nonatomic, copy) NSString *_Nonnull showDetailPage;
 @property (nonatomic, copy) NSString *_Nonnull showDescription;
+@property (nonatomic, copy) NSString *_Nonnull hangoutCredirMsg;
+@property (nonatomic, copy) NSString *_Nonnull loiH5Url;
+@property (nonatomic, copy) NSString *_Nonnull emfH5Url;
+@property (nonatomic, copy) NSString *_Nonnull pmStartNotice;
+@property (nonatomic, copy) NSString *_Nonnull postStampUrl;
 
 @end

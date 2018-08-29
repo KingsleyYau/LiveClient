@@ -62,17 +62,19 @@ RequestLoginCallback gRequestLoginCallback;
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *env, jclass cls, jstring manId, jstring userSid, jstring deviceId, jstring model, jstring manufacturer, jobject callback){
+  (JNIEnv *env, jclass cls, jstring manId, jstring userSid, jstring deviceId, jstring model, jstring manufacturer, jint regionId, jobject callback){
 	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::Login( manId : %s, userSid : %s )",
             JString2String(env, manId).c_str(), JString2String(env, userSid).c_str());
     jlong taskId = -1;
 
+	RegionIdType type = IntToRegionIdType(regionId);
     taskId = gHttpRequestController.Login(&gHttpRequestManager,
     									JString2String(env, manId),
                                         JString2String(env, userSid),
                                         JString2String(env, deviceId),
                                         JString2String(env, model),
                                         JString2String(env, manufacturer),
+										type,
                                         &gRequestLoginCallback);
 
     jobject obj = env->NewGlobalRef(callback);

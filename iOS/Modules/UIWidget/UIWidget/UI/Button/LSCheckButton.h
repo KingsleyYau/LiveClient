@@ -14,5 +14,5 @@
 @end
 
 @interface LSCheckButton : UIButton
-@property (nonatomic, assign) IBOutlet id<LSCheckButtonDelegate> selectedChangeDelegate;
+@property (nonatomic, weak) id<LSCheckButtonDelegate> selectedChangeDelegate;
 @end

@@ -96,7 +96,9 @@ public class GiftSender {
                 Log.d(TAG,"sendBackpackGift-未处于断网重连过程，真发送");
                 sendGift(giftItem, isRepeat, sendNum,true);
             }
-            listener.onPackReqSend(giftItem,ErrorCode.SUCCESS,"",isRepeat,sendNum);
+            if(listener != null){
+                listener.onPackReqSend(giftItem,ErrorCode.SUCCESS,"",isRepeat,sendNum);
+            }
         }else{
             if(null != listener){
                 listener.onPackReqSend(giftItem,ErrorCode.FAILED_NUMBS_NOTENOUGHT,

@@ -535,7 +535,7 @@ void AudioDecoderAAC::DecodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DecodeAudioHandle( "
-				 "this : %p "
+				 "this : %p, "
                  "[Start] "
                  ")",
                  this
@@ -595,7 +595,7 @@ void AudioDecoderAAC::DecodeAudioHandle() {
     FileLevelLog("rtmpdump",
                  KLog::LOG_MSG,
                  "AudioDecoderAAC::DecodeAudioHandle( "
-				 "this : %p. "
+				 "this : %p, "
                  "[Exit] "
                  ")",
                  this

@@ -1,0 +1,21 @@
+<resources >
+
+    <string name="switch_4barrageanim_open">Play4Bage</string>
+    <string name="switch_4barrageanim_close">Stop4Bage</string>
+    <string name="switch_4bataianim_open">Play4Pic</string>
+    <string name="switch_4bataianim_close">Stop4Pic</string>
+    <string name="switch_giftanim_open">Play</string>
+    <string name="switch_giftanim_close">Stop</string>
+
+    <string name="switch_1giftanim_normal_open">PlayGift</string>
+    <string name="switch_1giftanim_normal_close">StopGift</string>
+    <string name="switch_1giftanim_advance_open">PlayMove</string>
+    <string name="switch_1giftanim_advance_close">StopMove</string>
+    <string name="switch_1barrageanim_open">PlayBage</string>
+    <string name="switch_1barrageanim_close">StopBage</string>
+    <string name="switch_1bataianim_open">PlayPic</string>
+    <string name="switch_1bataianim_close">StopPic</string>
+
+    <string name="switch_decodemode_auto">自动</string>
+    <string name="switch_decodemode_soft">软解</string>
+</resources>

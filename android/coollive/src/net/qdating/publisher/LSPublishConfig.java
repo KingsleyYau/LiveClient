@@ -53,22 +53,31 @@ public class LSPublishConfig {
     public boolean updateVideoConfig(LSConfig.VideoConfigType videoConfigType, int fps, int keyFrameInterval, int videoBitrate) {
         boolean bFlag = true;
         switch (videoConfigType) {
-            case VideoConfigType120x160:{
-                videoCaptureWidth = 480;
-                videoCaptureHeight = 640;
-                videoWidth = 120;
-                videoHeight = 160;
-            }break;
             case VideoConfigType240x240:{
                 videoCaptureWidth = 480;
                 videoCaptureHeight = 640;
                 videoWidth = 240;
                 videoHeight = 240;
             }break;
+            case VideoConfigType240x320:{
+                videoCaptureWidth = 480;
+                videoCaptureHeight = 640;
+                videoWidth = 240;
+                videoHeight = 320;
+            }break;
+            case VideoConfigType320x320:{
+                videoCaptureWidth = 480;
+                videoCaptureHeight = 640;
+                videoWidth = 320;
+                videoHeight = 320;
+            }break;
             default:{
                 bFlag = false;
             }break;
         }
+        videoFps = fps;
+        videoKeyFrameInterval = keyFrameInterval;
+        videoBitrate = videoBitrate;
         return bFlag;
     }
 }

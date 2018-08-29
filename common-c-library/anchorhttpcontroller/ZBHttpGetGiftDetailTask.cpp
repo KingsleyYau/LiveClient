@@ -62,10 +62,7 @@ bool ZBHttpGetGiftDetailTask::ParseData(const string& url, bool bFlag, const cha
             url.c_str(),
             bFlag?"true":"false"
             );
-    
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "ZBHttpGetGiftDetailTask::ParseData( buf : %s )", buf);
-    }
+
     
     ZBHttpGiftInfoItem item;
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;

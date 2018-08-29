@@ -18,9 +18,13 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.im.IMManager;
+import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
+import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +40,6 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     private TextView tv_userBalance;
     private ImageView iv_userLevel;
     private TextView tv_gotoRecharge;
-    private int manLevel = 0;
     private View rootView;
 
     public AudienceBalanceInfoPopupWindow(Context context) {
@@ -93,7 +96,7 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     public void updateBalanceViewData(){
         if(null != context){
             String userBalance =context.getResources().getString(R.string.live_balance_credits,
-                    String.valueOf(LiveRoomCreditRebateManager.getInstance().getCredit()));
+                    ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
             SpannableString spannableString = new SpannableString(userBalance);
             ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
                     context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
@@ -112,21 +115,32 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     private void updateViewData() {
         LoginItem loginItem = LoginManager.getInstance().getLoginItem();
         if (null != loginItem) {
-            tv_userNickName.setText(loginItem.nickName);
+            IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(loginItem.userId);
+            if(null != imUserBaseInfoItem){
+                //昵称从缓存获取
+                if(!TextUtils.isEmpty(imUserBaseInfoItem.nickName)){
+                    tv_userNickName.setText(imUserBaseInfoItem.nickName);
+                }
+                //头像从缓存获取
+                if (!TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)) {
+                    Picasso.with(context).load(imUserBaseInfoItem.photoUrl)
+                            .placeholder(R.drawable.ic_default_photo_man)
+                            .error(R.drawable.ic_default_photo_man)
+                            .fit().
+                            into(civ_userIcon);
+                }
+            }
+            // level使用外部的直播间外部(loginItem)的数据
+            iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(context,loginItem.level));
+            //userId
             String userId = context.getResources().getString(R.string.live_balance_userId, loginItem.userId);
             Log.d(TAG,"updateViewData-nickName:"+loginItem.nickName+" userId:"+userId);
             tv_userId.setText(userId);
-            if (!TextUtils.isEmpty(loginItem.photoUrl)) {
-                Picasso.with(context).load(loginItem.photoUrl)
-                        .placeholder(R.drawable.ic_default_photo_man)
-                        .error(R.drawable.ic_default_photo_man)
-                        .fit().
-                        into(civ_userIcon);
-            }
+
         }
-        iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(context,manLevel));
+        //金币余额-userBalance
         String userBalance =context.getResources().getString(R.string.live_balance_credits,
-                String.valueOf(LiveRoomCreditRebateManager.getInstance().getCredit()));
+                ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
         SpannableString spannableString = new SpannableString(userBalance);
         ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
                 context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
@@ -146,7 +160,7 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
             dismiss();
 
         } else if (i == R.id.tv_gotoRecharge) {
-            LiveService.getInstance().onAddCreditClick();
+            LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
 
             //GA统计点击充值
             AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
@@ -160,10 +174,5 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     public void showAtLocation(View parent, int gravity, int x, int y) {
         super.showAtLocation(parent, gravity, x, y);
         updateViewData();
-    }
-
-    public void setUserLevel(int manLevel) {
-        Log.d(TAG, "setUserLevel");
-        this.manLevel = manLevel;
     }
 }

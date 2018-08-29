@@ -75,11 +75,6 @@ bool HttpSendInvitationHangoutTask::ParseData(const string& url, bool bFlag, con
             url.c_str(),
             bFlag?"true":"false"
             );
-    
-    if ( bFlag && size < MAX_LOG_BUFFER ) {
-        FileLog(LIVESHOW_HTTP_LOG, "HttpSendInvitationHangoutTask::ParseData( buf : %s )", buf);
-    }
-    
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
@@ -100,7 +95,7 @@ bool HttpSendInvitationHangoutTask::ParseData(const string& url, bool bFlag, con
                     inviteId = dataJson[LIVEROOM_SENDINVITATIONHANGOUT_INVITEID].asString();
                 }
                 if (dataJson[LIVEROOM_SENDINVITATIONHANGOUT_EXPIRE].isNumeric()) {
-                    expire = dataJson[LIVEROOM_SENDINVITATIONHANGOUT_EXPIRE].isInt();
+                    expire = dataJson[LIVEROOM_SENDINVITATIONHANGOUT_EXPIRE].asInt();
                 }
             }
 

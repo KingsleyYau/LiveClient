@@ -1,4 +1,5 @@
 #include "mongoose.h"
+#include <common/KLogWrapper.h>
 #ifdef MG_MODULE_LINES
 #line 1 "mongoose/src/internal.h"
 #endif
@@ -6,6 +7,9 @@
  * Copyright (c) 2014 Cesanta Software Limited
  * All rights reserved
  */
+
+// add by Alex use tcp connect blocking mode
+#define MG_ESP8266
 
 #ifndef CS_MONGOOSE_SRC_INTERNAL_H_
 #define CS_MONGOOSE_SRC_INTERNAL_H_
@@ -256,10 +260,28 @@ void cs_log_printf(const char *fmt, ...);
 #define DBG(x)
 
 #endif
+    
+    void cs_printf_log(const char *fmt, ...);
+    void cs_printf_log(const char *fmt, ...) {
+        va_list ap;
+        va_start(ap, fmt);
+        vfprintf(stderr, fmt, ap);
+        va_end(ap);
+        fputc('\n', stderr);
+        fflush(stderr);
+    }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+#ifdef MONGOOSE_LOG
+
+#define MONGOOSELOG(l, fmt, ...)   PrintLog(l, fmt,  ## __VA_ARGS__);
+
+#else
+#define MONGOOSELOG(l, fmt, ...)
+#endif
 
 #endif /* CS_COMMON_CS_DBG_H_ */
 #ifdef MG_MODULE_LINES
@@ -1099,8 +1121,10 @@ size_t mbuf_append(struct mbuf *a, const void *buf, size_t len) {
 void mbuf_remove(struct mbuf *mb, size_t n) WEAK;
 void mbuf_remove(struct mbuf *mb, size_t n) {
   if (n > 0 && n <= mb->len) {
+  MONGOOSELOG(__FUNCTION__, "mongoose::mbuf_remove(mb:%p)begin mb->len:%d", mb, mb->len);
     memmove(mb->buf, mb->buf + n, mb->len - n);
     mb->len -= n;
+  MONGOOSELOG(__FUNCTION__, "mongoose::mbuf_remove(mb:%p)end mb->len:%d", mb, mb->len);
   }
 }
 
@@ -2301,6 +2325,7 @@ MG_INTERNAL struct mg_connection *mg_create_connection_base(
   struct mg_connection *conn;
 
   if ((conn = (struct mg_connection *) MG_CALLOC(1, sizeof(*conn))) != NULL) {
+      
     conn->sock = INVALID_SOCKET;
     conn->handler = callback;
     conn->mgr = mgr;
@@ -2315,6 +2340,7 @@ MG_INTERNAL struct mg_connection *mg_create_connection_base(
      * doesn't compile with pedantic ansi flags.
      */
     conn->recv_mbuf_limit = ~0;
+    conn->webSocketSendDataLock = NULL;
   } else {
     MG_SET_PTRPTR(opts.error_string, "failed to create connection");
   }
@@ -2574,7 +2600,6 @@ MG_INTERNAL struct mg_connection *mg_do_connect(struct mg_connection *nc,
                                                 union socket_address *sa) {
   DBG(("%p %s://%s:%hu", nc, proto == SOCK_DGRAM ? "udp" : "tcp",
        inet_ntoa(sa->sin.sin_addr), ntohs(sa->sin.sin_port)));
-
   nc->flags |= MG_F_CONNECTING;
   if (proto == SOCK_DGRAM) {
     nc->iface->vtable->connect_udp(nc);
@@ -2643,6 +2668,7 @@ static void resolve_cb(struct mg_dns_message *msg, void *data,
 
 struct mg_connection *mg_connect(struct mg_mgr *mgr, const char *address,
                                  mg_event_handler_t callback) {
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect(mgr:%p address:%s callback:%p)", mgr, address, callback);
   struct mg_connect_opts opts;
   memset(&opts, 0, sizeof(opts));
   return mg_connect_opt(mgr, address, callback, opts);
@@ -2651,6 +2677,7 @@ struct mg_connection *mg_connect(struct mg_mgr *mgr, const char *address,
 struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
                                      mg_event_handler_t callback,
                                      struct mg_connect_opts opts) {
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect_opt(mgr:%p address:%s callback:%p) begin", mgr, address, callback);
   struct mg_connection *nc = NULL;
   int proto, rc;
   struct mg_add_sock_opts add_sock_opts;
@@ -2661,7 +2688,7 @@ struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
   if ((nc = mg_create_connection(mgr, callback, add_sock_opts)) == NULL) {
     return NULL;
   }
-
+ MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect_opt(nc:%p)", nc);
   if ((rc = mg_parse_address(address, &nc->sa, &proto, host, sizeof(host))) <
       0) {
     /* Address is malformed */
@@ -2669,7 +2696,7 @@ struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
     mg_destroy_conn(nc, 1 /* destroy_if */);
     return NULL;
   }
-
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect_opt(proto:%d rc:%d) ", proto, rc);
   nc->flags |= opts.flags & _MG_ALLOWED_CONNECT_FLAGS_MASK;
   nc->flags |= (proto == SOCK_DGRAM) ? MG_F_UDP : 0;
   nc->user_data = opts.user_data;
@@ -2712,7 +2739,7 @@ struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
     nc->flags |= MG_F_SSL;
   }
 #endif /* MG_ENABLE_SSL */
-
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect_opt(rc:%d)", rc);
   if (rc == 0) {
 #if MG_ENABLE_ASYNC_RESOLVER
     /*
@@ -2739,8 +2766,10 @@ struct mg_connection *mg_connect_opt(struct mg_mgr *mgr, const char *address,
 #endif
   } else {
     /* Address is parsed and resolved to IP. proceed with connect() */
+   MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_connect_opt(mg_do_connect())");
     return mg_do_connect(nc, proto, &nc->sa);
   }
+
 }
 
 /*
@@ -3127,10 +3156,20 @@ void mg_socket_if_connect_tcp(struct mg_connection *nc,
     return;
   }
 #if !defined(MG_ESP8266)
-  mg_set_non_blocking_mode(nc->sock);
+ mg_set_non_blocking_mode(nc->sock);
 #endif
   rc = connect(nc->sock, &sa->sa, sizeof(sa->sin));
-  nc->err = mg_is_error(rc) ? mg_get_errno() : 0;
+  // add by Samson 2018-08-21 blocking connect success to set socket non-blocking(for non-blocking receive)
+  //nc->err = mg_is_error(rc) ? mg_get_errno() : 0;
+  if (mg_is_error(rc)) {
+    nc->err = mg_get_errno();
+  }
+  else {
+    nc->err = 0;
+    mg_set_non_blocking_mode(nc->sock);
+  }
+  MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_socket_if_connect_tcp()%p sock %d rc %d errno %d err %d", nc, nc->sock, rc, mg_get_errno(),
+             nc->err);
   DBG(("%p sock %d rc %d errno %d err %d", nc, nc->sock, rc, mg_get_errno(),
        nc->err));
 }
@@ -3154,7 +3193,10 @@ void mg_socket_if_connect_udp(struct mg_connection *nc) {
  * for shutdown conntion's socket
  */
 void mg_socket_if_shutdown(struct mg_connection *nc) {
-  shutdown(nc->sock, 2);
+  MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_socket_if_shutdown() nc:%p nc->sock:%d begin", nc, nc->sock);
+  //shutdown(nc->sock, 2);
+    int result = shutdown(nc->sock, SHUT_RDWR);
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_socket_if_shutdown() result:%d end", result);
 }
 
 int mg_socket_if_listen_tcp(struct mg_connection *nc,
@@ -3284,6 +3326,7 @@ static sock_t mg_open_listening_socket(union socket_address *sa, int type,
 }
 
 static void mg_write_to_socket(struct mg_connection *nc) {
+MONGOOSELOG(__FUNCTION__, "mongoose::mg_write_to_socket() begin");
   struct mbuf *io = &nc->send_mbuf;
   int n = 0;
 
@@ -3321,6 +3364,7 @@ static void mg_write_to_socket(struct mg_connection *nc) {
         nc->flags &= ~(MG_F_WANT_READ | MG_F_WANT_WRITE);
       }
     } else {
+        MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_handle_tcp_read() nc:%p", nc);
       mg_ssl_begin(nc);
       return;
     }
@@ -3340,6 +3384,7 @@ static void mg_write_to_socket(struct mg_connection *nc) {
     mbuf_remove(io, n);
     mg_if_sent_cb(nc, n);
   }
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_write_to_socket() end");
 }
 
 MG_INTERNAL size_t recv_avail_size(struct mg_connection *conn, size_t max) {
@@ -3377,6 +3422,7 @@ static void mg_handle_tcp_read(struct mg_connection *conn) {
       if (n < 0 && n != MG_SSL_WANT_READ) conn->flags |= MG_F_CLOSE_IMMEDIATELY;
     } else {
       MG_FREE(buf);
+        MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_handle_tcp_read() conn:%p", conn);
       mg_ssl_begin(conn);
       return;
     }
@@ -3431,6 +3477,7 @@ static void mg_ssl_begin(struct mg_connection *nc) {
   int server_side = (nc->listener != NULL);
   enum mg_ssl_if_result res = mg_ssl_if_handshake(nc);
   DBG(("%p %d res %d", nc, server_side, res));
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_ssl_begin() nc:%p server_side:%d res:%d", nc, server_side, res);
 
   if (res == MG_SSL_OK) {
     nc->flags |= MG_F_SSL_HANDSHAKE_DONE;
@@ -3488,6 +3535,7 @@ void mg_mgr_handle_conn(struct mg_connection *nc, int fd_flags, double now) {
 #endif
 #if MG_ENABLE_SSL
       if ((nc->flags & MG_F_SSL) && err == 0) {
+          MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_handle_tcp_read() nc:%p", nc);
         mg_ssl_begin(nc);
       } else {
         mg_if_connect_cb(nc, err);
@@ -3519,7 +3567,17 @@ void mg_mgr_handle_conn(struct mg_connection *nc, int fd_flags, double now) {
 
   if (!(nc->flags & MG_F_CLOSE_IMMEDIATELY)) {
     if ((fd_flags & _MG_F_FD_CAN_WRITE) && nc->send_mbuf.len > 0) {
-      mg_write_to_socket(nc);
+        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->webSocketSendDataLock:%p)Lock begin", nc, nc->webSocketSendDataLock);
+        if (nc->webSocketSendDataLock != NULL) {
+            Lock(&(nc->webSocketSendDataLock));
+        }
+	
+        mg_write_to_socket(nc);
+        if (nc->webSocketSendDataLock != NULL) {
+            UnLock(&(nc->webSocketSendDataLock));
+        }
+	
+        MONGOOSELOG(__FUNCTION__, "mongoose::mg_mgr_handle_conn() nc:%p mg_write_to_socket(nc->webSocketSendDataLock:%p)UnLock end", nc, nc->webSocketSendDataLock);
     }
     mg_if_poll(nc, (time_t) now);
     mg_if_timer(nc, now);
@@ -3644,6 +3702,7 @@ time_t mg_socket_if_poll(struct mg_iface *iface, int timeout_ms) {
 
       if (((nc->flags & MG_F_CONNECTING) && !(nc->flags & MG_F_WANT_READ)) ||
           (nc->send_mbuf.len > 0 && !(nc->flags & MG_F_CONNECTING))) {
+          MONGOOSELOG(__FUNCTION__, "mongoose::mg_socket_if_poll()");
         mg_add_to_set(nc->sock, &write_set, &max_fd);
         mg_add_to_set(nc->sock, &err_set, &max_fd);
       }
@@ -3739,6 +3798,7 @@ int mg_socketpair(sock_t sp[2], int sock_type) {
   } else if (getsockname(sock, &sa.sa, &len) != 0) {
   } else if ((sp[0] = socket(AF_INET, sock_type, 0)) == INVALID_SOCKET) {
   } else if (connect(sp[0], &sa.sa, len) != 0) {
+      MONGOOSELOG(__FUNCTION__, "mongoose::mg_socket_if_poll");
   } else if (sock_type == SOCK_DGRAM &&
              (getsockname(sp[0], &sa.sa, &len) != 0 ||
               connect(sock, &sa.sa, len) != 0)) {
@@ -5841,7 +5901,6 @@ static void mg_http_multipart_begin(struct mg_connection *nc,
     }
 
     mg_call(nc, pd->endpoint_handler, MG_EV_HTTP_MULTIPART_REQUEST, hm);
-
     mbuf_remove(io, req_len);
   }
 exit_mp:
@@ -7615,6 +7674,7 @@ MG_INTERNAL int mg_http_common_url_parse(const char *url, const char *schema,
                                          const char *schema_tls, int *use_ssl,
                                          char **user, char **pass, char **addr,
                                          int *port_i, const char **path) {
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_http_common_url_parse(url:%s address:%s) begin", url, *addr);
   int addr_len = 0;
   int auth_sep_pos = -1;
   int user_sep_pos = -1;
@@ -7684,6 +7744,7 @@ MG_INTERNAL int mg_http_common_url_parse(const char *url, const char *schema,
   }
 
   DBG(("%s %s", *addr, *path));
+ MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_http_common_url_parse(address:%s) end", *addr);
 
   return 0;
 
@@ -8992,25 +9053,44 @@ static void mg_send_ws_header(struct mg_connection *nc, int op, size_t len,
 }
 
 static void mg_ws_mask_frame(struct mbuf *mbuf, struct ws_mask_ctx *ctx) {
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_ws_mask_frame() begin");
   size_t i;
   if (ctx->pos == 0) return;
+  MONGOOSELOG(__FUNCTION__, "mongoose::mg_ws_mask_frame(mbuf:%p len:%d, ctx->pos:%d, size:%d mbuf->len - ctx->pos:%lld)", mbuf, mbuf->len, ctx->pos, mbuf->size, mbuf->len - ctx->pos);
   for (i = 0; i < (mbuf->len - ctx->pos); i++) {
+      if ((mbuf->len - ctx->pos) <= 0) {
+              MONGOOSELOG(__FUNCTION__, "mongoose::mg_ws_mask_frame(mbuf:%p len:%d, ctx->pos:%d, size:%d i:%d mbuf->len - ctx->pos:%lld)", mbuf, mbuf->len, ctx->pos, mbuf->size, i, mbuf->len - ctx->pos);
+      }
+
     mbuf->buf[ctx->pos + i] ^= ((char *) &ctx->mask)[i % 4];
   }
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_ws_mask_frame() end");
 }
 
 void mg_send_websocket_frame(struct mg_connection *nc, int op, const void *data,
                              size_t len) {
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame() begin");
   struct ws_mask_ctx ctx;
   DBG(("%p %d %d", nc, op, (int) len));
+MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame(nc:%p) mg_ws_mask_frame()Lock begin", nc);
+if (nc->webSocketSendDataLock != NULL) {
+    Lock(&(nc->webSocketSendDataLock));
+}
   mg_send_ws_header(nc, op, len, &ctx);
   mg_send(nc, data, len);
 
+	
   mg_ws_mask_frame(&nc->send_mbuf, &ctx);
+    
+    if (nc->webSocketSendDataLock != NULL) {
+        UnLock(&(nc->webSocketSendDataLock));
+    }
 
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame(nc:%p) mg_ws_mask_frame()UnLock end", nc);
   if (op == WEBSOCKET_OP_CLOSE) {
     nc->flags |= MG_F_SEND_AND_CLOSE;
   }
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_send_websocket_frame() end");
 }
 
 void mg_send_websocket_framev(struct mg_connection *nc, int op,
@@ -9177,6 +9257,7 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
                                         struct mg_connect_opts opts,
                                         const char *url, const char *protocol,
                                         const char *extra_headers) {
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_connect_ws_opt(mgr:%p)", mgr);
   char *user = NULL, *pass = NULL, *addr = NULL;
   const char *path = NULL;
   struct mg_connection *nc =
@@ -9184,6 +9265,8 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
                            &user, &pass, &addr);
 
   if (nc != NULL) {
+            // alex 初始化锁
+            nc->webSocketSendDataLock = GetNewAutoLock();
     mg_send_websocket_handshake3(nc, path, addr, protocol, extra_headers, user,
                                  pass);
   }
@@ -9191,6 +9274,7 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
   MG_FREE(addr);
   MG_FREE(user);
   MG_FREE(pass);
+    MONGOOSELOG(__FUNCTION__, "mongoose::mg_connect_ws_opt(nc:%p)", nc);
   return nc;
 }
 
@@ -9198,7 +9282,9 @@ struct mg_connection *mg_connect_ws_opt(struct mg_mgr *mgr,
 // for shutdown connection's socket
 void mg_connect_ws_shutdown(struct mg_connection *nc) {
   if (nc != NULL) {
+	ReleaseAutoLock(&nc->webSocketSendDataLock);
     mg_shutdown(nc);
+    //nc->flags |= MG_F_CLOSE_IMMEDIATELY;
   }
 }
 
@@ -10754,6 +10840,7 @@ int mg_resolve_from_hosts_file(const char *name, union socket_address *usa) {
 }
 
 static void mg_resolve_async_eh(struct mg_connection *nc, int ev, void *data) {
+  MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_resolve_async_eh()%p ev:%d begin", nc, ev);
   time_t now = (time_t) mg_time();
   struct mg_resolve_async_request *req;
   struct mg_dns_message *msg;
@@ -10788,6 +10875,7 @@ static void mg_resolve_async_eh(struct mg_connection *nc, int ev, void *data) {
       msg = (struct mg_dns_message *) MG_MALLOC(sizeof(*msg));
       if (mg_parse_dns(nc->recv_mbuf.buf, *(int *) data, msg) == 0 &&
           msg->num_answers > 0) {
+          
         req->callback(msg, req->data, MG_RESOLVE_OK);
         nc->user_data = NULL;
         MG_FREE(req);
@@ -10818,6 +10906,7 @@ static void mg_resolve_async_eh(struct mg_connection *nc, int ev, void *data) {
       }
       break;
   }
+    MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_resolve_async_eh()%p ev:%d end", nc, ev);
 }
 
 int mg_resolve_async(struct mg_mgr *mgr, const char *name, int query,
@@ -10830,6 +10919,7 @@ int mg_resolve_async(struct mg_mgr *mgr, const char *name, int query,
 int mg_resolve_async_opt(struct mg_mgr *mgr, const char *name, int query,
                          mg_resolve_callback_t cb, void *data,
                          struct mg_resolve_async_opts opts) {
+  MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_resolve_async_opt()begin");
   struct mg_resolve_async_request *req;
   struct mg_connection *dns_nc;
   const char *nameserver = opts.nameserver_url;
@@ -10870,7 +10960,7 @@ int mg_resolve_async_opt(struct mg_mgr *mgr, const char *name, int query,
   if (opts.dns_conn != NULL) {
     *opts.dns_conn = dns_nc;
   }
-
+MONGOOSELOG(__FUNCTION__, "TransportClient::mongoose::mg_resolve_async_opt()end");
   return 0;
 }
 

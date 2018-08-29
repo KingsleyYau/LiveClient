@@ -40,14 +40,14 @@
                         <constraint firstAttribute="width" secondItem="zXJ-bM-bMb" secondAttribute="height" multiplier="1:1" id="xbn-kV-2kH"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast has been ended.   Please come again later." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUq-oa-6Jg" userLabel="Tip Label">
-                    <rect key="frame" x="30" y="225" width="315" height="36"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Broadcast has been ended." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RUq-oa-6Jg" userLabel="Tip Label">
+                    <rect key="frame" x="30" y="225" width="315" height="18"/>
                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DKC-mw-Vbw" userLabel="View Hot Button">
-                    <rect key="frame" x="98.5" y="297" width="178" height="35"/>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DKC-mw-Vbw" userLabel="View Hot Button">
+                    <rect key="frame" x="98.5" y="279" width="178" height="35"/>
                     <color key="backgroundColor" red="0.16078431372549018" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="178" id="EwU-Wd-Y84"/>
@@ -58,10 +58,22 @@
                         <action selector="viewHotAction:" destination="-1" eventType="touchUpInside" id="uKt-tR-RjY"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JXK-U8-ups">
+                    <rect key="frame" x="335" y="30" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="JXK-U8-ups" secondAttribute="height" multiplier="1:1" id="HIf-pw-qD1"/>
+                        <constraint firstAttribute="width" constant="30" id="Rff-TJ-idi"/>
+                    </constraints>
+                    <state key="normal" image="Live_Finish_Close"/>
+                    <connections>
+                        <action selector="viewHotAction:" destination="-1" eventType="touchUpInside" id="TqL-WK-YyD"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="DKC-mw-Vbw" firstAttribute="top" secondItem="RUq-oa-6Jg" secondAttribute="bottom" constant="36" id="5Ed-yC-3C0"/>
+                <constraint firstItem="JXK-U8-ups" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30" id="6KS-9U-WzW"/>
                 <constraint firstItem="8gc-mu-wNH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="D7C-ac-1cs"/>
                 <constraint firstItem="lS3-dB-erL" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="DHS-LS-KXO"/>
                 <constraint firstItem="8gc-mu-wNH" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" id="DYW-Gg-590"/>
@@ -72,6 +84,7 @@
                 <constraint firstItem="lS3-dB-erL" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="TfG-F8-qxe"/>
                 <constraint firstItem="RUq-oa-6Jg" firstAttribute="top" secondItem="zXJ-bM-bMb" secondAttribute="bottom" constant="22" id="Tga-el-z4d"/>
                 <constraint firstItem="zXJ-bM-bMb" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="VRR-eG-trv"/>
+                <constraint firstAttribute="trailing" secondItem="JXK-U8-ups" secondAttribute="trailing" constant="10" id="YMb-FD-wda"/>
                 <constraint firstItem="RUq-oa-6Jg" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="30" id="ZA9-PK-uDF"/>
                 <constraint firstItem="8gc-mu-wNH" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="cGu-Wg-0Dg"/>
                 <constraint firstItem="zXJ-bM-bMb" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="dEZ-aH-giC"/>
@@ -84,5 +97,6 @@
     </objects>
     <resources>
         <image name="Default_Img_Man_Circyle" width="100" height="100"/>
+        <image name="Live_Finish_Close" width="12" height="12"/>
     </resources>
 </document>

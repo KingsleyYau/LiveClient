@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@android:color/white"
     tools:context="com.qpidnetwork.livemodule.liveshow.login.LiveEmailSignUpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/live_size_16dp"
-        android:background="@color/white"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="37dp"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
@@ -23,20 +25,25 @@
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/live_size_16dp" />
+            android:layout_marginTop="37dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/email_sign_up_devide"
+            android:textSize="9sp"
+            android:layout_marginTop="10dp"
+            android:text="@string/live_sign_up_et_tips2_enter_password"/>
 
-        <com.qpidnetwork.livemodule.view.ButtonRaised
-            android:id="@+id/btn_Summit"
-            android:layout_width="@dimen/live_size_140dp"
-            android:layout_height="@dimen/live_size_40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/live_size_16dp"
-            android:layout_marginTop="@dimen/live_size_30dp"
-            button:background="@color/login_violet"
-            button:title="@string/live_sign_up"
-            button:title_color="@color/white"
-            button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+        <!--宽度高度最好不要写死，以适配各种机型-->
+        <Button
+            android:id="@+id/btn_submit"
+            android:text="@string/live_sign_up"
+            android:textColor="@color/submit_unusable"
+            android:enabled="false"
+            style="@style/CustomTheme.Btn.Submit"
+            />
+
     </LinearLayout>
 
 </LinearLayout>

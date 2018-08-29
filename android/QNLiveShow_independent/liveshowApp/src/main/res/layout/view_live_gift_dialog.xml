@@ -225,6 +225,7 @@
                 android:src="@drawable/ic_view_data_sosad"/>
 
             <TextView
+                android:id="@+id/tvEmptyDesc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/liveroom_gift_pack_empty"

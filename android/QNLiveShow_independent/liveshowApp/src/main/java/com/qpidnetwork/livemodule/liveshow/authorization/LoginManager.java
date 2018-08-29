@@ -1,240 +1,195 @@
 package com.qpidnetwork.livemodule.liveshow.authorization;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.qpidnetwork.livemodule.framework.services.LiveService;
-import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
-import com.qpidnetwork.livemodule.httprequest.OnRequestLoginCallback;
-import com.qpidnetwork.livemodule.httprequest.OnSynConfigCallback;
-import com.qpidnetwork.livemodule.httprequest.RequestJni;
-import com.qpidnetwork.livemodule.httprequest.RequestJniAuthorization;
-import com.qpidnetwork.livemodule.httprequest.RequestJniOther;
+import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
-import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
+import com.qpidnetwork.livemodule.httprequest.item.GenderType;
+import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.httprequest.item.ManBaseInfoItem;
+import com.qpidnetwork.livemodule.httprequest.item.UserType;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.IAuthorizationListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.ILoginHandler;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.ILoginHandlerListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.interfaces.onRegisterListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.loginHandler.FacebookLoginHandler;
+import com.qpidnetwork.livemodule.liveshow.authorization.loginHandler.MailLoginHandler;
 import com.qpidnetwork.livemodule.liveshow.datacache.preference.LocalPreferenceManager;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.PackageGiftManager;
+import com.qpidnetwork.livemodule.liveshow.login.LiveLoginActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.manager.SpeedTestManager;
-import com.qpidnetwork.livemodule.liveshow.model.LoginParam;
+import com.qpidnetwork.livemodule.liveshow.manager.SynConfigManager;
+import com.qpidnetwork.livemodule.liveshow.model.LoginAccount;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
-import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.livemodule.utils.SystemUtils;
-import com.qpidnetwork.qnbridgemodule.interfaces.IQNService;
+import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-import static com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_TOKEN_EXPIRE;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 /**
- * 登录管理类
- * Created by Hunter Mun on 2017/5/26.
+ * 登录工具类
+ * Created by Jagger on 2017/12/26.
  */
 
-public class  LoginManager {
+public class LoginManager implements ILoginHandlerListener {
 
     private static final String TAG = LoginManager.class.getName();
-    private static final int LOGIN_CALLBACK = 1;
-    private static final int LOGOUT_CALLBACK = 2;
-    private static final int EVENT_MAINMODULE_LOGIN = 3;
-    private static final int EVENT_MAINMODULE_LOGOUT = 4;
-    private static final int SYNCONFIG_CALLBACK = 5;
-    private static final int RELOGIN_STAMP = 5 * 1000; //每5秒重新重登录一次
-
-    public enum LoginStatus{
-        Default,
-        Logining,
-        Logined
-    }
 
     private Context mContext;
-    private static LoginManager mLoginManager;
-    private List<IAuthorizationListener> mListenerList;
-    private LoginStatus mLoginStatus;
-    private LoginItem mLoginItem;       //保存当前用户信息
-
+    //登录工具类
+//    private FacebookLoginHandler mFacebookLoginHandler;
+//    private MailLoginHandler mMailLoginHandler;
+    private ILoginHandler mLoginHandler;
+    //登录类型
+    private LoginType mLoginType;
+    //监听器
+    private ArrayList<IAuthorizationListener> mListListener = new ArrayList<>();
+    //登录成功，本地数据
+    private LoginItem mLoginItem;
     //同步配置信息
     private ConfigItem mConfigItem;     //同步配置返回信息
-    private boolean isAdvertShow = false;       //QN展示广告一次启动仅显示一次
+    //登录状态
+    private LoginStatus mLoginStatus = LoginStatus.Logout;
 
-    //存储当前登陆token
-    private String mUserId;
-    private String mQNToken;
-    private Handler mHandler;
-
-    public static LoginManager getInstance(){
-        return mLoginManager;
+    /**
+     * 登录类型
+     */
+    public enum LoginType{
+        EMAIL,
+        FACEBOOK
     }
 
     /**
-     * 构建单例
-     * @param context
-     * @return
+     * 登录状态
      */
-    public static LoginManager newInstance(Context context){
-        if(mLoginManager == null){
-            mLoginManager = new LoginManager(context);
-        }
-        return mLoginManager;
+    private enum LoginStatus{
+        Logout,
+        Logging,
+        Logged
     }
 
-    private LoginManager(Context context){
-        mContext = context;
-        mListenerList = new ArrayList<IAuthorizationListener>();
-        mLoginStatus = LoginStatus.Default;
+    private static LoginManager singleton;
 
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
+    public static LoginManager getInstance(){
+        return singleton;
+    }
+
+    public static LoginManager newInstance(Context c) {
+        if (singleton == null) {
+            singleton = new LoginManager(c);
+        }
+
+        return singleton;
+    }
+
+    /**
+     * 初始化
+     * @param c
+     */
+    private LoginManager(Context c) {
+        mContext = c.getApplicationContext();
+    }
+
+    /**
+     * 取用户信息结果处理
+     */
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            if(msg.obj != null ){
                 HttpRespObject response = (HttpRespObject)msg.obj;
-                Log.i(TAG, "handleMessage msg.what:%d", msg.what);
-                switch (msg.what){
-                    case LOGIN_CALLBACK:{
-                        if(mLoginStatus == LoginStatus.Default){
-                            //处理登录中注销，由于停止不一定成功，即登录成功返回忽略不处理
-                            return;
-                        }
-                        LoginItem item = (LoginItem)response.data;
-                        if(response.isSuccess){
-                            Log.i(TAG, "LOGIN_CALLBACK userId:%s token:%s nickname:%s isPushAd:%d srvlist.length:%d",
-                                    item.userId, item.token, item.nickName, item.isPushAd?1:0, item.svrList!=null?item.svrList.length:0);
-                            //登录成功则先本地缓存登录信息
-                            mLoginStatus = LoginStatus.Logined;
-                            LoginParam param = new LoginParam(mUserId, mQNToken);
-                            saveAccountInfo(param);
-                            mLoginItem = item;
+                ManBaseInfoItem baseInfo = MainBaseInfoManager.getInstance().getLocalMainBaseInfo();
 
-                            //通知主模块显示广告界面
-                            if(!isAdvertShow && item.isPushAd){
-                                //一次启动登录仅显示一次广告
-                                LiveService.getInstance().onAdvertShowNotify(item.isPushAd);
-                            }
+                if(response.isSuccess && (baseInfo != null)){
+                    //保存这次登录方式
+                    LocalPreferenceManager localPreferenceManager = new LocalPreferenceManager(mContext);
+                    localPreferenceManager.saveLoginType(mLoginType);
 
-                            //更新礼物配置信息
-                            if(!NormalGiftManager.getInstance().isLocalAllGiftConfigExisted()){
-                                NormalGiftManager.getInstance().getAllGiftItems(null);
-                            }
+                    //构建登录信息，兼容旧版本LoginItem
+                    Log.i("Jagger" , "mLoginType: " + mLoginType.name());
+                    createLocalLoginItem(getLoginHandler(mLoginType).getSessionId(), baseInfo);
 
-                            //表情配置
-                            ChatEmojiManager.getInstance().getEmojiList(null);
 
-                            //刷新预约列表未读数目
-                            ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
 
-                            //测速
-                            if(mLoginItem.svrList.length > 0){
-                                SpeedTestManager.getInstance(mContext).doTest(mLoginItem.svrList);
-                            }
+                    //提交GA统计ga_uid
+                    if(!TextUtils.isEmpty(baseInfo.gaUid)) {
+                        AnalyticsManager.newInstance().setGAUserId(baseInfo.gaUid);
+                    }
 
-                        }else{
-                            mLoginStatus = LoginStatus.Default;
-                            //登录失败，如果为Token无效时，通知主模块重新登录
-                            if(TextUtils.isEmpty(mQNToken) || IntToEnumUtils.intToHttpErrorType(response.errCode) == HTTP_LCC_ERR_TOKEN_EXPIRE){
-                                //token异常时通知服务器,自动重登录
-                                onModuleSessionOverTime();
-                            }else{
-                                //普通错误，无限重新登录
-                                postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        login(mUserId, mQNToken);
-                                    }
-                                }, RELOGIN_STAMP);
-                            }
-                        }
-                        //通知登录返回结果
-                        notifyAllListenerLgoined(response.isSuccess, response.errCode, response.errMsg, item);
-                    }break;
+                    //更新礼物配置信息
+                    if(!NormalGiftManager.getInstance().isLocalAllGiftConfigExisted()){
+                        NormalGiftManager.getInstance().getAllGiftItems(null);
+                    }
 
-                    case LOGOUT_CALLBACK:{
-                        //注销分发事件
-                        boolean isMannual = msg.arg1 == 1 ? true:false;
-                        notifyAllListenerLogout(isMannual);
-                    }break;
+                    //表情配置
+                    ChatEmojiManager.getInstance().getEmojiList(null);
 
-                    case EVENT_MAINMODULE_LOGIN:{
-                        //主模块登录通知
-                        if(mLoginStatus == LoginStatus.Logined){
-                            //如果子模块当前登录状态，先注销再登录
-                            logout(false);
-                        }
-                        if(response.isSuccess){
-                            //主模块登录成功，子模块直接登录
-                            LoginParam param = (LoginParam)response.data;
-                            login(param.userId, param.qnToken);
-                        }else{
-                            //通知子模块监听登录listener登录失败（主模块失败即子模块失败），ps:session过期等处理
-                            for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                                IAuthorizationListener listener = iter.next();
-                                listener.onLogin(false, 0, "", null);
-                            }
-                        }
+                    //刷新预约列表未读数目
+                    ScheduleInvitePackageUnreadManager.getInstance().GetCountOfUnreadAndPendingInvite();
 
-                    }break;
+                    //测速
+                    if(mConfigItem != null && mConfigItem.svrList != null && mConfigItem.svrList.length > 0){
+                        SpeedTestManager.getInstance(mContext).doTest(mConfigItem.svrList);
+                    }
 
-                    case EVENT_MAINMODULE_LOGOUT:{
-                        //主模块注销
-                        IQNService.LogoutType type = IQNService.LogoutType.values()[(Integer) response.data];
-                        logout(type == IQNService.LogoutType.ManualLogout);
-                    }break;
-
-                    case SYNCONFIG_CALLBACK:{
-                        //同步配置返回
-                        ConfigItem item = (ConfigItem)response.data;
-                        if(response.isSuccess && (item != null)){
-                            //同步配置成功，继续登录逻辑
-                            mConfigItem = item;
-                            Log.i(TAG, "SYNCONFIG_CALLBACK ConfigItem imServerUrl:%s httpServerUrl:%s addCreditsUrl:%s anchorPage:%s userLevel:%s intimacy:%s",
-                                    mConfigItem.imServerUrl, mConfigItem.httpServerUrl, mConfigItem.addCreditsUrl, mConfigItem.anchorPage, mConfigItem.userLevel, mConfigItem.intimacy);
-                            //设置app域名
-                            RequestJni.SetWebSite(item.httpServerUrl);
-
-                            if(mLoginStatus == LoginStatus.Logining){
-                                //继续登录逻辑
-                                loginInternal();
-                            }
-                        }else{
-                            if(mLoginStatus == LoginStatus.Logining){
-                                //登录中即为登录失败，启动延时重登录逻辑
-                                mLoginStatus = LoginStatus.Default;
-                                postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        login(mUserId, mQNToken);
-                                    }
-                                }, RELOGIN_STAMP);
-                            }
-                        }
-                    }break;
-                    default:
-                        break;
+                    //更新当前登录状态
+                    doUpdateLoginStatus(LoginStatus.Logged);
+                    doLoginResultCallBack(true , response.errCode , response.errMsg , mLoginItem);
+                }else{
+                    //更新当前登录状态
+                    doUpdateLoginStatus(LoginStatus.Logout);
+                    //如果错误
+                    doLoginResultCallBack(false , response.errCode , response.errMsg , null);
+//                    HttpLccErrType errType = IntToEnumUtils.intToHttpErrorType(response.errCode);
+//                    switch (errType){
+//                        case :
+//                            break;
+//                        default:
+//                            //请求错误
+//                            break;
+//                    }
                 }
             }
-        };
-    }
+
+        }
+    };
 
     /**
      * 注册监听器
      * @param listener
      * @return
      */
-    public boolean register(IAuthorizationListener listener){
+    public boolean addListener(IAuthorizationListener listener){
         boolean result = false;
-        synchronized(mListenerList)
+        synchronized(mListListener)
         {
             if (null != listener) {
                 boolean isExist = false;
 
-                for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
+                for (Iterator<IAuthorizationListener> iter = mListListener.iterator(); iter.hasNext(); ) {
                     IAuthorizationListener theListener = iter.next();
                     if (theListener == listener) {
                         isExist = true;
@@ -243,16 +198,16 @@ public class  LoginManager {
                 }
 
                 if (!isExist) {
-                    result = mListenerList.add(listener);
+                    result = mListListener.add(listener);
                 }else {
-                    Log.d(TAG, String.format("%s::%s() fail, listener:%s is exist",
-                            "OnLoginManagerListener", "register",
+                    com.qpidnetwork.livemodule.utils.Log.d(TAG, String.format("%s::%s() fail, listener:%s is exist",
+                            "OnLoginManagerListener", "addListener",
                             listener.getClass().getSimpleName()));
                 }
             }
             else {
-                Log.e(TAG, String.format("%s::%s() fail, listener is null",
-                        "OnLoginManagerListener", "register"));
+                com.qpidnetwork.livemodule.utils.Log.e(TAG, String.format("%s::%s() fail, listener is null",
+                        "OnLoginManagerListener", "addListener"));
             }
         }
         return result;
@@ -263,137 +218,26 @@ public class  LoginManager {
      * @param listener
      * @return
      */
-    public boolean unRegister(IAuthorizationListener listener){
+    public boolean removeListener(IAuthorizationListener listener){
         boolean result = false;
-        synchronized(mListenerList) {
-            result = mListenerList.remove(listener);
+        synchronized(mListListener) {
+            result = mListListener.remove(listener);
         }
 
         if (!result) {
-            Log.e(TAG, String.format("%s::%s() fail, listener:%s",
-                    "OnLoginManagerListener", "unRegister",
+            com.qpidnetwork.livemodule.utils.Log.e(TAG, String.format("%s::%s() fail, listener:%s",
+                    "OnLoginManagerListener", "removeListener",
                     listener.getClass().getSimpleName()));
         }
         return result;
     }
 
     /**
-     * 自动登录
+     * 获取登录状态（是否登录了）
      * @return
      */
-    public boolean autoLogin(){
-        boolean result = false;
-        LoginParam param = getAccountInfo();
-        if(param != null && !TextUtils.isEmpty(param.qnToken)){
-            result = true;
-            login(param.userId, param.qnToken);
-        }
-        return result;
-    }
-
-    /**
-     * 模块内部登录接口
-     * @param userId
-     * @param qnToken
-     */
-    public void login(String userId,  final String qnToken){
-        this.mQNToken = qnToken;
-        this.mUserId = userId;
-        switch (mLoginStatus){
-            case Default:{
-                //未登录状态
-                mLoginStatus = LoginStatus.Logining;
-                if(mConfigItem != null) {
-                    //本地有配置文件，不需要再同步配置
-                    loginInternal();
-                }else{
-                    startLogin();
-                }
-            }break;
-            case Logined:{
-                //已登录成功，直接回调
-                for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                    IAuthorizationListener listener = iter.next();
-                    listener.onLogin(true, 0, "", mLoginItem);
-                }
-            }break;
-            case Logining:{
-                //登陆中不处理
-            }break;
-        }
-    }
-
-    /**
-     * 启动登录逻辑，登录逻辑主要分为两步：
-     *  1.获取同步配置；
-     *  2.调用登录
-     * 中间失败当成登录失败
-     */
-    private void startLogin(){
-
-        RequestJniOther.SynConfig(new OnSynConfigCallback() {
-            @Override
-            public void onSynConfig(boolean isSuccess, int errCode, String errMsg, ConfigItem configItem) {
-                Message msg = Message.obtain();
-                msg.what = SYNCONFIG_CALLBACK;
-                HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, configItem);
-                msg.obj = response;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    /**
-     * 指定登录逻辑
-     */
-    private void loginInternal(){
-        mLoginStatus = LoginStatus.Logining;
-        String deviceId = SystemUtils.getDeviceId(mContext);
-        RequestJniAuthorization.Login(mUserId, mQNToken, deviceId, new OnRequestLoginCallback() {
-            public void onRequestLogin(boolean isSuccess,
-                                       int errCode, String errMsg, LoginItem item) {
-                Log.d(TAG,"onRequestLogin-isSuccess:"+isSuccess+" errCode:"+errCode
-                        +" errMsg:"+errMsg+" item:"+item);
-                Message msg = Message.obtain();
-                msg.what = LOGIN_CALLBACK;
-                HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, item);
-                msg.obj = response;
-                mHandler.sendMessage(msg);
-            }
-        });
-    }
-
-    /**
-     * 注销
-     * @param isManual  是否手动
-     */
-    public void logout(boolean isManual){
-        mLoginStatus = LoginStatus.Default;
-        mLoginItem = null;
-
-        Message msg = Message.obtain();
-        msg.what = LOGOUT_CALLBACK;
-        msg.arg1 = isManual?1:0;
-        mHandler.sendMessage(msg);
-
-        if(isManual) {
-            isAdvertShow = false;
-            RequestJni.CleanCookies();
-            clearAccountInfo();
-            RequestJniAuthorization.Logout(new OnRequestCallback() {
-                @Override
-                public void onRequest(boolean isSuccess, int errCode, String errMsg) {
-
-                }
-            });
-
-            //清除本地缓存
-            ScheduleInvitePackageUnreadManager unreadManager = ScheduleInvitePackageUnreadManager.getInstance();
-            if(unreadManager != null) {
-                unreadManager.clearResetSelf();
-            }
-            PackageGiftManager.getInstance().clear();
-        }
+    public boolean isLogined(){
+        return mLoginStatus == LoginStatus.Logged;
     }
 
     /**
@@ -409,114 +253,490 @@ public class  LoginManager {
      * @return
      */
     public ConfigItem getSynConfig(){
-        return mConfigItem;
+        return SynConfigManager.getSynConfigItem();
     }
 
     /**
-     * 保存已登录账号信息
-     * @param loginParam
-     */
-    private void saveAccountInfo(LoginParam loginParam){
-        new LocalPreferenceManager(mContext).saveLoginAccountInfoItem(loginParam);
-    }
-
-    /**
-     * 获取上次登录成功账号信息
+     * 获取登录记录信息
+     * @param loginType
      * @return
      */
-    public LoginParam getAccountInfo(){
-        return new LocalPreferenceManager(mContext).getLoginAccountInfoItem();
-    }
-
-    public ConfigItem getLocalConfigItem(){
-        return mConfigItem;
+    public LoginAccount getLoginAccount(LoginType loginType){
+        return getLoginHandler(loginType).getLoginAccount();
     }
 
     /**
-     * 通知监听器，登录结果
+     * 构建loginItem
+     * @param session
+     * @param baseInfoItem
+     */
+    public void createLocalLoginItem(String session, ManBaseInfoItem baseInfoItem){
+        mLoginItem = new LoginItem(baseInfoItem.userId,
+                                session,
+                                baseInfoItem.nickName,
+                                baseInfoItem.userlevel,
+                                0,
+                                baseInfoItem.photoUrl,
+                                false,
+                                null,
+                                baseInfoItem.userType.ordinal());
+    }
+
+    /**
+     * 第三方受权登录
+     * @param activity
+     */
+    public void authorizedLogin(final LoginType loginType , final Activity activity){
+        if(mLoginStatus == LoginStatus.Logging || mLoginStatus == LoginStatus.Logged){
+            return;
+        }
+
+        mLoginType = loginType;
+
+        final SynConfigManager synConfigManager = new SynConfigManager(mContext);
+        synConfigManager.setSynConfigResultObserver(new Consumer<SynConfigManager.ConfigResult>() {
+            @Override
+            public void accept(SynConfigManager.ConfigResult configResult) throws Exception {
+                if(configResult.isSuccess){
+                    //取同步配置成功
+                    mConfigItem = configResult.item;
+
+                    //登录去
+                    getLoginHandler(loginType).authorizedLogin(activity);
+                }else {
+                    //取同步配置失败
+                    onLoginServer(false , HttpLccErrType.HTTP_LCC_ERR_FAIL.ordinal() , mContext.getString(R.string.liveroom_transition_audience_invite_network_error) ,null);
+                }
+
+                //取消监听
+                synConfigManager.dispose();
+            }
+        }).doRequestSynConfig();
+    }
+
+    /**
+     * 使用email登录
+     */
+    public void login(final LoginType loginType, final String email, final String password){
+        if(mLoginStatus == LoginStatus.Logging || mLoginStatus == LoginStatus.Logged){
+            return;
+        }
+
+        mLoginType = loginType;
+        //更新当前登录状态
+        doUpdateLoginStatus(LoginStatus.Logging);
+
+        final SynConfigManager synConfigManager = new SynConfigManager(mContext);
+        synConfigManager.setSynConfigResultObserver(new Consumer<SynConfigManager.ConfigResult>() {
+            @Override
+            public void accept(SynConfigManager.ConfigResult configResult) throws Exception {
+                if(configResult.isSuccess){
+                    //取同步配置成功
+                    mConfigItem = configResult.item;
+
+                    //登录去
+                    getLoginHandler(loginType).login(email , password);
+                }else {
+                    //取同步配置失败
+                    onLoginServer(false , HttpLccErrType.HTTP_LCC_ERR_FAIL.ordinal() , mContext.getString(R.string.liveroom_transition_audience_invite_network_error) ,null);
+                }
+
+                //取消监听
+                synConfigManager.dispose();
+            }
+        }).doRequestSynConfig();
+
+    }
+
+    /**
+     * 能否自动更新
+     * @return
+     */
+    public boolean isCanAutoLogin(){
+        //优先使用最近操作过的登录方式
+        if(mLoginType != null){
+            Log.i("Jagger" , "LoginManager isCanAutoLogin mLoginType:" + mLoginType.name());
+            return getLoginHandler(mLoginType).isCanAutoLogin();
+        }
+
+        //再使用最近登录成功过的方式
+        LocalPreferenceManager localPreferenceManager = new LocalPreferenceManager(mContext);
+        LoginType loginType = localPreferenceManager.getLoginType();
+        if(loginType != null){
+            Log.i("Jagger" , "LoginManager isCanAutoLogin loginType:" + loginType.name());
+            return getLoginHandler(loginType).isCanAutoLogin();
+        }
+
+        Log.i("Jagger" , "LoginManager isCanAutoLogin false");
+        return false;
+    }
+
+    /**
+     * 自动登录
+     * @return 能否自动登录
+     */
+    public void autoLogin(){
+        //优先使用最近操作过的登录方式
+        if(mLoginType != null){
+            Log.i("Jagger" , "LoginManager autoLogin mLoginType:" + mLoginType.name());
+            autoLogin(mLoginType);
+            return;
+        }
+
+        //再使用最近登录成功过的方式
+        LocalPreferenceManager localPreferenceManager = new LocalPreferenceManager(mContext);
+        mLoginType = localPreferenceManager.getLoginType();
+        if(mLoginType != null){
+            Log.i("Jagger" , "LoginManager autoLogin loginType:" + mLoginType.name());
+            autoLogin(mLoginType);
+            return;
+        }
+    }
+
+    /**
+     * 自动登录(内部方法)
+     * @param loginType
+     */
+    private void autoLogin(final LoginType loginType){
+        if(mLoginStatus == LoginStatus.Logging || mLoginStatus == LoginStatus.Logged){
+            return;
+        }
+
+        //更新当前登录状态
+        doUpdateLoginStatus(LoginStatus.Logging);
+
+        final SynConfigManager synConfigManager = new SynConfigManager(mContext);
+        synConfigManager.setSynConfigResultObserver(new Consumer<SynConfigManager.ConfigResult>() {
+            @Override
+            public void accept(SynConfigManager.ConfigResult configResult) throws Exception {
+                Log.i("Jagger" , "SynConfigManager onSynConfig:" + configResult.isSuccess + ",loginType:" + loginType.name());
+
+                if(configResult.isSuccess){
+                    //取同步配置成功
+                    mConfigItem = configResult.item;
+
+                    //自动登录去
+                    getLoginHandler(loginType).autoLogin();
+                }else {
+                    //取同步配置失败
+                    onLoginServer(false , HttpLccErrType.HTTP_LCC_ERR_FAIL.ordinal() , mContext.getString(R.string.liveroom_transition_audience_invite_network_error) ,null);
+                }
+
+                //取消监听
+                synConfigManager.dispose();
+            }
+        }).doRequestSynConfig();
+    }
+
+    /**
+     * 注销
+     */
+    public void logout(){
+        Log.i("Jagger" , "logout");
+        mLoginItem = null;
+        //更新当前登录状态
+        doUpdateLoginStatus(LoginStatus.Logout);
+        //通知子模块注销
+        getLoginHandler(mLoginType).logout(true);
+        //回调到监听器
+        doLogOutResultCallBack();
+    }
+
+    /**
+     * 注册
+     * @param loginType
+     * @param email
+     * @param password
+     * @param gender
+     * @param nickName
+     * @param birthday
+     * @param inviteCode
+     * @param listener
+     * @return
+     */
+    public void register(final LoginType loginType, final String email, final String password, final GenderType gender, final String nickName,
+                            final String birthday, final String inviteCode , final onRegisterListener listener){
+        //用于注册成功后,能使用正确的方式自动登录
+        mLoginType = loginType;
+
+        final SynConfigManager synConfigManager = new SynConfigManager(mContext);
+        synConfigManager.setSynConfigResultObserver(new Consumer<SynConfigManager.ConfigResult>() {
+            @Override
+            public void accept(SynConfigManager.ConfigResult configResult) throws Exception {
+                if(configResult.isSuccess){
+                    //取同步配置成功
+                    mConfigItem = configResult.item;
+
+                    //注册去
+                    getLoginHandler(loginType).register(email , password , gender , nickName , birthday , inviteCode , listener);
+                }else {
+                    //取同步配置失败
+                    onLoginServer(false , HttpLccErrType.HTTP_LCC_ERR_FAIL.ordinal(), mContext.getString(R.string.liveroom_transition_audience_invite_network_error) ,null);
+                }
+
+                //取消监听
+                synConfigManager.dispose();
+            }
+        }).doRequestSynConfig();
+    }
+
+
+    /**
+     * 被踢下线处理
+     * @param kickOffMsg
+     */
+    public void onKickedOff(String kickOffMsg){
+        //注销
+        logout();
+        //打开登录界面
+        LiveLoginActivity.show(mContext , LiveLoginActivity.OPEN_TYPE_KICK_OFF, kickOffMsg);
+        //关掉其它界面
+        mContext.sendBroadcast(new Intent(CommonConstant.ACTION_KICKED_OFF));
+    }
+
+    /**
+     * 取Facebook邮箱
+     * @return
+     */
+    public String getAuthorizedEmail(LoginType loginType){
+        String email = "";
+        if(loginType == LoginType.FACEBOOK){
+            ThirdPlatformUserInfo info = (ThirdPlatformUserInfo)getLoginHandler(LoginType.FACEBOOK).getAuthorizedUserInfo();
+            if(info != null){
+                email = info.email;
+            }
+        }
+        return email;
+    }
+
+    /**
+     * 取第三方平台资料--性别
+     * @return
+     */
+    public GenderType getAuthorizedGender(LoginType loginType){
+        GenderType genderType = GenderType.Man;
+        if(loginType == LoginType.FACEBOOK) {
+            ThirdPlatformUserInfo info = (ThirdPlatformUserInfo) getLoginHandler(LoginType.FACEBOOK).getAuthorizedUserInfo();
+            if (info != null) {
+                genderType = info.gender.equals("female") ? GenderType.Lady : GenderType.Man;
+            }
+        }
+        return genderType;
+    }
+
+    /**
+     * 取第三方平台资料--NickName
+     * @return
+     */
+    public String getAuthorizedNickName(LoginType loginType){
+        String name = "";
+        if(loginType == LoginType.FACEBOOK) {
+            ThirdPlatformUserInfo info = (ThirdPlatformUserInfo) getLoginHandler(LoginType.FACEBOOK).getAuthorizedUserInfo();
+            if (info != null) {
+                name = info.name;
+            }
+        }
+        return name;
+    }
+
+    //--------------------------------------------------------------------------------
+    //----------------------------------以下是内部方法----------------------------------
+    //--------------------------------------------------------------------------------
+
+    /**
+     * 返回对应登录方法的工具类
+     * @param loginType
+     * @return
+     */
+    private ILoginHandler getLoginHandler(LoginType loginType){
+//        if(loginType == LoginType.FACEBOOK){
+//            if(mFacebookLoginHandler == null){
+//                mFacebookLoginHandler = new FacebookLoginHandler (mContext);
+//                mFacebookLoginHandler.addLoginListener(this);
+//            }
+//            return mFacebookLoginHandler;
+//        }else {
+//            //默认用邮箱
+//            if(mMailLoginHandler == null){
+//                mMailLoginHandler = new MailLoginHandler (mContext);
+//                mMailLoginHandler.addLoginListener(this);
+//            }
+//            return mMailLoginHandler;
+//        }
+
+        if(loginType == LoginType.FACEBOOK){
+            //Facebook
+            if(mLoginHandler != null){
+                if( mLoginHandler instanceof FacebookLoginHandler){
+                    return mLoginHandler;
+                }else{
+                    mLoginHandler.destroy();
+                }
+            }
+
+            Log.i("Jagger" , "LoginManager new FacebookLoginHandler");
+            mLoginHandler = new FacebookLoginHandler (mContext);
+            mLoginHandler.addLoginListener(this);
+        }else {
+            //默认用邮箱
+            if(mLoginHandler != null){
+                if( mLoginHandler instanceof MailLoginHandler){
+                    return mLoginHandler;
+                }else{
+                    mLoginHandler.destroy();
+                }
+            }
+
+            Log.i("Jagger" , "LoginManager new MailLoginHandler");
+            mLoginHandler = new MailLoginHandler (mContext);
+            mLoginHandler.addLoginListener(this);
+        }
+        return mLoginHandler;
+    }
+
+    /**
+     * 取用户信息
+     */
+    private void doGetUserMsg(){
+
+        MainBaseInfoManager.getInstance().getMainBaseInfoFromServ(new MainBaseInfoManager.OnGetMainBaseInfoListener() {
+            @Override
+            public void onGetMainBaseInfo(boolean isSuccess, int errCode, String errMsg) {
+                Log.i("Jagger" , "LoginManager doGetUserMsg isSuccess:" + isSuccess + ",errCode:" + errCode + ",errMsg:" + errMsg);
+                //到这里才是真正登录结果
+                HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, MainBaseInfoManager.getInstance().getLocalMainBaseInfo());
+
+                Message msg = new Message();
+                msg.obj = response;
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
+
+    /**
+     * 这里是Handler里 登录接口返回的结果,并不代表整个登录流程结束
      * @param isSuccess
      * @param errCode
      * @param errMsg
      * @param item
      */
-    private void notifyAllListenerLgoined(boolean isSuccess, int errCode, String errMsg, LoginItem item){
-        //通知登录返回结果
-        synchronized (mListenerList) {
-            for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                IAuthorizationListener listener = iter.next();
-                listener.onLogin(isSuccess, errCode, errMsg, item);
+    @Override
+    public void onLoginServer(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        //将结果封装一下
+        final HttpRespObject response = new HttpRespObject(isSuccess, errCode, errMsg, item);
+
+        //RxJava(这样不需要在mHandler里处理,不需要定义额外的结果代号造成混乱)
+        //创建一个上游 Observable：
+        Observable<HttpRespObject> observable = Observable.create(new ObservableOnSubscribe<HttpRespObject>() {
+            @Override
+            public void subscribe(ObservableEmitter<HttpRespObject> emitter) throws Exception {
+                Log.i("Jagger" , "LoginManager onLoginServer 发射登录接口的结果");
+                //发射登录接口的结果
+                emitter.onNext(response);
+                emitter.onComplete();
             }
-        }
+        });
+
+        //建立连接
+        observable
+                .observeOn(AndroidSchedulers.mainThread())	//转由主线程处理结果
+                .subscribe(getLoginServerResultObserver());
     }
 
     /**
-     * 通知监听器，注销结果
+     * 生成一个监听器,处理Handler里登录接口结果
+     * RxJava
+     * @return
      */
-    private void notifyAllListenerLogout(boolean isMannual){
-        synchronized (mListenerList) {
-            for (Iterator<IAuthorizationListener> iter = mListenerList.iterator(); iter.hasNext(); ) {
-                IAuthorizationListener listener = iter.next();
-                listener.onLogout(isMannual);
+    private Observer<HttpRespObject> getLoginServerResultObserver (){
+        //创建一个下游 Observer
+        Observer<HttpRespObject> observer = new Observer<HttpRespObject>() {
+            private Disposable mDisposable;
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                mDisposable = d;
             }
-        }
+
+            @Override
+            public void onNext(HttpRespObject response) {
+                Log.i("Jagger" , "LoginManager getLoginServerResultObserver 接收的结果:" + response.isSuccess);
+
+                if(response.isSuccess){
+                    //登录接口返回成功, 下一步去获取用户信息
+
+                    //保存这次登录方式
+//                    LocalPreferenceManager localPreferenceManager = new LocalPreferenceManager(mContext);
+//                    localPreferenceManager.saveLoginType(mLoginType);
+
+                    //取用户信息
+                    Log.i("Jagger" , "LoginManager 取用户信息");
+                    doGetUserMsg();
+                }else {
+                    //更新当前登录状态
+                    doUpdateLoginStatus(LoginStatus.Logout);
+                    //登录接口返回失败, 就是真的失败了, 回调到外面
+                    doLoginResultCallBack(response.isSuccess , response.errCode , response.errMsg , null);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+                //监听结束
+                mDisposable.dispose();
+            }
+        };
+
+        return observer;
+    }
+
+    @Override
+    public void onLogout() {
+        Log.i("Jagger" , "onLogout mListListener");
+//        //
+//        mLoginItem = null;
+//        //回调到监听器
+//        doLogOutResultCallBack();
+//        //打开登录界面
+//        LiveLoginActivity.show(mContext , LiveLoginActivity.OPEN_TYPE_LOGOUT);
+//        //关掉其它界面
+//        mContext.sendBroadcast(new Intent(CommonConstant.ACTION_KICKED_OFF));
+//        //更新当前登录状态
+//        doUpdateLoginStatus(LoginStatus.Logout);
     }
 
     /**
-     * 注销时清除本地保存账号信息（仅清除密码）
-     */
-    private void clearAccountInfo(){
-        LoginParam param = getAccountInfo();
-        if(param != null){
-            param.qnToken = "";
-            saveAccountInfo(param);
-        }
-    }
-
-    /**************************  模块对接管理  ********************************/
-
-    /**
-     * 主模块登录成功
+     * 回调登录结果到外面
      * @param isSuccess
-     * @param token
+     * @param errCode
+     * @param errMsg
+     * @param item
      */
-    public void onMainMoudleLogin(boolean isSuccess, String userId, String token, String ga_uid){
-        //提交GA统计ga_uid
-        AnalyticsManager.newInstance().setGAUserId(ga_uid);
-
-        Log.d(TAG,"onMainMoudleLogin-isSuccess:" + isSuccess + " userId: " + userId + " token:" + token);
-        Message msg = Message.obtain();
-        msg.what = EVENT_MAINMODULE_LOGIN;
-        HttpRespObject response = new HttpRespObject(isSuccess, 0, "", new LoginParam(userId, token));
-        msg.obj = response;
-        mHandler.sendMessage(msg);
+    private void doLoginResultCallBack(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        for(int i = 0 ; i < mListListener.size(); i ++){
+            mListListener.get(i).onLogin(isSuccess , errCode , errMsg , item);
+        }
     }
 
     /**
-     * 主模块注销
-     * @param type  手动／自动
-     * @param tips
+     * 回调注销结果到外面
      */
-    public void onMainMoudleLogout(IQNService.LogoutType type, String tips){
-        Log.d(TAG,"onMainMoudleLogout-type:" + type.name() + " tips:" + tips);
-        Message msg = Message.obtain();
-        msg.what = EVENT_MAINMODULE_LOGOUT;
-        HttpRespObject response = new HttpRespObject(true, 0, "", Integer.valueOf(type.ordinal()));
-        msg.obj = response;
-        mHandler.sendMessage(msg);
+    private void doLogOutResultCallBack() {
+        for(int i = 0 ; i < mListListener.size(); i ++){
+            mListListener.get(i).onLogout(true);
+        }
     }
 
     /**
-     * session过期通知
+     * 更新登录状态
+     * @param loginStatus
      */
-    public void onModuleSessionOverTime(){
-        if(mLoginStatus == LoginStatus.Logining){
-            //登录中，拦截session timeout事件
-            return;
-        }
-        if(mLoginStatus == LoginStatus.Logined){
-            logout(false);
-        }
-        LiveService.getInstance().onModuleSessionOverTime();
+    private void doUpdateLoginStatus(LoginStatus loginStatus){
+        mLoginStatus = loginStatus;
     }
 
 }

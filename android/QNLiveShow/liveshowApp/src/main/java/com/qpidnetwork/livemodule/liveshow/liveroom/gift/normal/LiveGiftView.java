@@ -49,7 +49,6 @@ public abstract class LiveGiftView implements LiveGiftManager.onGiftStateChangeL
         mRootView = (ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT);
         mLiveGiftManager = new LiveGiftManager();
         mLiveGiftManager.registerOnGiftStateChangeLinstener(this);
-
     }
 
     public void bind(View anchorView){
@@ -87,7 +86,7 @@ public abstract class LiveGiftView implements LiveGiftManager.onGiftStateChangeL
 //                topMargin = midY-(itemHeight*itemLocal)- DisplayUtil.dip2px(mContext,12f);
             }else{
                 //增加的dip2px部分为适应礼物连送animView的间距
-                topMargin = itemHeight + DisplayUtil.dip2px(mContext,8f);
+                topMargin = itemHeight + DisplayUtil.dip2px(mContext,7f);
 //                topMargin = midY+(itemHeight*(itemLocal/2-1))+ DisplayUtil.dip2px(mContext,8f)-DisplayUtil.dip2px(mContext,12f);
             }
             Log.d(TAG,"show-itemLocal:"+itemLocal+" topMargin:" + topMargin);
@@ -125,6 +124,8 @@ public abstract class LiveGiftView implements LiveGiftManager.onGiftStateChangeL
     public void setDuration4NumShow(int mDuration4NumShow) {
         this.mDuration4NumShow = mDuration4NumShow;
     }
+
+
 
     /**
      * 加入礼物
@@ -216,6 +217,7 @@ public abstract class LiveGiftView implements LiveGiftManager.onGiftStateChangeL
     public void onAddNewGift(LiveGift liveGift) {
         LiveGiftItemView itemView = new LiveGiftItemView(mContext);
         itemView.setLiveGift(liveGift);
+
         itemView.setDuration4NumShow(mDuration4NumShow);
 
         //让外部构造子VIEW

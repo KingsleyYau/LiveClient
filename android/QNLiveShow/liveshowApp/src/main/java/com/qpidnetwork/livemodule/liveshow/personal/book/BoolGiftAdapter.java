@@ -67,9 +67,9 @@ public class BoolGiftAdapter extends RecyclerView.Adapter<BoolGiftAdapter.ViewHo
         }
 
         if (selectedPosition == position) {
-            viewHolder.mLlBg.setBackgroundResource(R.drawable.rectangle_rounded_angle_light_violet_bg);
+            viewHolder.mLlBg.setBackgroundResource(R.drawable.live_book_gift_item_boder_bg_selected);
         } else {
-            viewHolder.mLlBg.setBackgroundResource(R.drawable.rectangle_rounded_angle_gray_bg);
+            viewHolder.mLlBg.setBackgroundResource(R.drawable.live_book_gift_item_boder_bg_normal);
         }
 
         viewHolder.mImgPhoto.setOnClickListener(new View.OnClickListener() {
