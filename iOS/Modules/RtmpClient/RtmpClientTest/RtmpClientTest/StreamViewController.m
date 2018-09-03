@@ -209,38 +209,105 @@
     self.playerArray[2].mute = !self.playerArray[2].mute;
 }
 
+#pragma mark - 播放
+- (IBAction)play0:(id)sender {
+    int i = 0;
+    
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
+    NSString *recordFilePath = [NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+    
+    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
+    [self.playerArray[0] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+}
+
+- (IBAction)play1:(id)sender {
+    int i = 1;
+    
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
+    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+    
+    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
+    [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+}
+
+- (IBAction)play2:(id)sender {
+    int i = 2;
+    
+    NSString *cacheDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSString *recordDir = [NSString stringWithFormat:@"%@/record", cacheDir];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
+    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+    NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
+    
+    NSString *playUrl = [NSString stringWithFormat:@"%@%d", self.textFieldAddress.text, i];
+    [self.playerArray[i] playUrl:playUrl recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];
+}
+
+- (IBAction)stop0:(id)sender {
+    int i = 0;
+    [self.playerArray[i] stop];
+}
+
+- (IBAction)stop1:(id)sender {
+    int i = 1;
+    [self.playerArray[i] stop];
+}
+
+- (IBAction)stop2:(id)sender {
+    int i = 2;
+    [self.playerArray[i] stop];
+}
+
 #pragma mark - 单击屏幕
 - (void)addSingleTap {
-    if (self.singleTap == nil) {
-        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
-        [self.view addGestureRecognizer:self.singleTap];
-    }
+//    if (self.singleTap == nil) {
+//        self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapAction)];
+//        [self.view addGestureRecognizer:self.singleTap];
+//    }
 }
 
 - (void)removeSingleTap {
-    if (self.singleTap) {
-        [self.view removeGestureRecognizer:self.singleTap];
-        self.singleTap = nil;
-        self.singleTap.delegate = nil;
-    }
+//    if (self.singleTap) {
+//        [self.view removeGestureRecognizer:self.singleTap];
+//        self.singleTap = nil;
+//        self.singleTap.delegate = nil;
+//    }
 }
 
 - (void)singleTapAction {
-    [self.textFieldAddress resignFirstResponder];
-    [self.textFieldPublishAddress resignFirstResponder];
-
-    self.navigationController.navigationBar.alpha = 0.7;
-    self.navigationController.navigationBar.hidden = NO;
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:1
-            animations:^{
-                self.navigationController.navigationBar.alpha = 0;
-            }
-            completion:^(BOOL finished) {
-                self.navigationController.navigationBar.hidden = YES;
-            }];
-    });
+//    [self.textFieldAddress resignFirstResponder];
+//    [self.textFieldPublishAddress resignFirstResponder];
+//
+//    self.navigationController.navigationBar.alpha = 0.7;
+//    self.navigationController.navigationBar.hidden = NO;
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [UIView animateWithDuration:1
+//            animations:^{
+//                self.navigationController.navigationBar.alpha = 0;
+//            }
+//            completion:^(BOOL finished) {
+//                self.navigationController.navigationBar.hidden = YES;
+//            }];
+//    });
 }
 
 #pragma mark - 处理键盘回调
@@ -289,6 +356,19 @@
     
     // 动画收起键盘
     [self moveInputBarWithKeyboardHeight:0.0 withDuration:animationDuration];
+}
+
+- (NSString *)toStringYMDHMSWithUnderLine:(NSDate *)date {
+    NSUInteger componentFlags = NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond;
+    NSDateComponents *comoponents = [[NSCalendar currentCalendar] components:componentFlags fromDate:date];
+    NSInteger year = [comoponents year];
+    NSInteger month = [comoponents month];
+    NSInteger day = [comoponents day];
+    NSInteger hour = [comoponents hour];
+    NSInteger minute = [comoponents minute];
+    NSInteger second = [comoponents second];
+    
+    return [NSString stringWithFormat:@"%ld_%ld_%ld_%ld_%.2ld_%.2ld", (long)year, (long)month, (long)day, (long)hour, (long)minute, (long)second];
 }
 
 @end

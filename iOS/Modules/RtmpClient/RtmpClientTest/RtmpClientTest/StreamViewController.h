@@ -26,6 +26,12 @@
 - (IBAction)mute0:(id)sender;
 - (IBAction)mute1:(id)sender;
 - (IBAction)mute2:(id)sender;
+- (IBAction)play0:(id)sender;
+- (IBAction)play1:(id)sender;
+- (IBAction)play2:(id)sender;
+- (IBAction)stop0:(id)sender;
+- (IBAction)stop1:(id)sender;
+- (IBAction)stop2:(id)sender;
 
 - (IBAction)play:(id)sender;
 - (IBAction)publish:(id)sender;
