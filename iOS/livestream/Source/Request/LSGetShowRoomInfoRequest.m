@@ -24,7 +24,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getShowRoomInfo:self.liveShowId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSProgramItemObject * _Nullable item, NSString * _Nonnull roomId) {
+        NSInteger request = [self.manager getShowRoomInfo:self.liveShowId finishHandler:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSProgramItemObject * _Nullable item, NSString * _Nonnull roomId, LSHttpAuthorityItemObject *_Nonnull privItem) {
             BOOL bFlag = NO;
 
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -34,7 +34,7 @@
             }
 
             if( !bFlag && weakSelf.finishHandler ) {
-                weakSelf.finishHandler(success, errnum, errmsg, item, roomId);
+                weakSelf.finishHandler(success, errnum, errmsg, item, roomId, privItem);
                 [weakSelf finishRequest];
             }
         }];
@@ -46,7 +46,8 @@
 - (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
         LSProgramItemObject * item = [[LSProgramItemObject alloc] init];
-        self.finishHandler(NO, errnum, errmsg, item, @"");
+        LSHttpAuthorityItemObject * privItem = [[LSHttpAuthorityItemObject alloc] init];
+        self.finishHandler(NO, errnum, errmsg, item, @"", privItem);
     }
     
     [super callRespond:success errnum:errnum errmsg:errmsg];

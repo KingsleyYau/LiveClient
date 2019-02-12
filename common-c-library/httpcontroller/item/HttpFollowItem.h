@@ -17,6 +17,7 @@ using namespace std;
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
 #include "HttpProgramInfoItem.h"
+#include "HttpAuthorityItem.h"
 
 typedef list<InterestType> FollowInterestList;
 
@@ -92,6 +93,15 @@ public:
                     showInfo->Parse(root[LIVEROOM_HOT_SHOWINFO]);
                 }
             }
+            
+            /* priv */
+            if ( root[LIVEROOM_HOT_PROGRAMLIST_PRIV].isObject()) {
+                priv.Parse(root[LIVEROOM_HOT_PROGRAMLIST_PRIV]);
+            }
+            
+            if (root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].isNumeric()) {
+                chatOnlineStatus = GetIntToIMChatOnlineStatus(root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].asInt());
+            }
 
         }
     }
@@ -107,6 +117,7 @@ public:
         addDate = 0;
         anchorType = ANCHORLEVELTYPE_UNKNOW;
         showInfo = NULL;
+        chatOnlineStatus = IMCHATONLINESTATUS_OFF;
 	}
 
 	virtual ~HttpFollowItem() {
@@ -128,6 +139,7 @@ public:
      * interest         爱好ID列表
      * anchorType        主播类型（1:白银 2:黄金）
      * showInfo         节目信息
+     * priv             权限
      */
     string userId;
 	string nickName;
@@ -140,6 +152,8 @@ public:
     FollowInterestList interest;
     AnchorLevelType anchorType;
     HttpProgramInfoItem* showInfo;
+    HttpAuthorityItem    priv;
+    IMChatOnlineStatus   chatOnlineStatus;
 };
 
 typedef list<HttpFollowItem*> FollowItemList;

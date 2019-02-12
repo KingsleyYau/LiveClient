@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsPageViewController.h"
 
-@interface LSMyReservationsViewController : LSGoogleAnalyticsViewController
+@interface LSMyReservationsViewController : LSGoogleAnalyticsPageViewController
 @property (nonatomic, assign) NSInteger curIndex;
 - (void)getunreadCount;
 @end

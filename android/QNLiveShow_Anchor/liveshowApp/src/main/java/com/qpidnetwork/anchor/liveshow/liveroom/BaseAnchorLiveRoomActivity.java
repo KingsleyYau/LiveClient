@@ -441,7 +441,7 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
      */
     public void closeLiveRoom(){
         Log.d(TAG,"closeLiveRoom");
-        isActivityFinishByUser = true;
+//        isActivityFinishByUser = true;
         if(null != mIMRoomInItem && !TextUtils.isEmpty(mIMRoomInItem.roomId) && null != mIMManager){
             mIMManager.RoomOut(mIMRoomInItem.roomId);
         }
@@ -1102,7 +1102,7 @@ public class BaseAnchorLiveRoomActivity extends BaseImplLiveRoomActivity impleme
         LiveRequestOperator.getInstance().AcceptInstanceInvite(invitationId, new OnAcceptInstanceInviteCallback() {
             @Override
             public void onAcceptInstanceInvite(final boolean isSuccess, final int errCode,
-                                               final String errMsg, final String roomId, final int roomType) {
+                                               final String errMsg, final String         roomId, final int roomType) {
                 Log.d(TAG,"onAudienceInvitePushNotify-onAcceptInstanceInvite isSuccess:"+isSuccess
                         +" errCode:"+errCode+" errMsg:"+errMsg+" roomId:"+roomId+" roomType:"+roomType);
                 runOnUiThread(new Runnable() {

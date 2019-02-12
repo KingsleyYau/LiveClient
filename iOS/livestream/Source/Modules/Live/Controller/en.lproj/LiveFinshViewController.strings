@@ -13,3 +13,4 @@
 
 "WATCHING_ERR_ADD_CREDIT" = "You don't have enough credits to continue watching this broadcast.";
 
+"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";

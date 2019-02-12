@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/live_size_70dp"
+    android:background="@color/white"
+    android:clickable="true">
+    <!--android:layout_height="@dimen/listmsgview_item_height_63"-->
+
+    <LinearLayout
+        android:id="@+id/rlItemRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_contact_item_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/live_size_16dp"
+        android:paddingRight="@dimen/live_size_16dp">
+
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="45dp">
+
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/civAnchor"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_default_photo_woman" />
+
+            <View
+                android:id="@+id/ivOnline"
+                android:layout_width="@dimen/live_size_10dp"
+                android:layout_height="@dimen/live_size_10dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginRight="@dimen/live_size_2dp"
+                android:background="@drawable/bg_green_online" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/live_size_16dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="@dimen/live_size_30dp">
+
+                <!--<LinearLayout-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center_vertical"-->
+                <!--android:orientation="horizontal">-->
+
+                <!--<TextView-->
+                <!--android:id="@+id/tvName"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:ellipsize="end"-->
+                <!--android:singleLine="true"-->
+                <!--tools:text="JenniferJenniferJenniferJenniferJennifer"-->
+                <!--android:maxWidth="@dimen/live_size_200dp"-->
+                <!--android:textColor="@color/live_message_textcolor_black"-->
+                <!--android:textSize="@dimen/live_size_16sp"-->
+                <!--android:textStyle="bold" />-->
+
+                <!--<ImageView-->
+                <!--android:id="@+id/ivFavoriate"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="6dp"-->
+                <!--android:src="@drawable/ic_chat_green_circle"-->
+                <!--android:visibility="gone"-->
+                <!--tools:visibility="visible" />-->
+                <!--</LinearLayout>-->
+
+                <!--2018/11/29 Hardy-->
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:paddingRight="@dimen/live_size_20dp"
+                        android:singleLine="true"
+                        android:textColor="@color/live_message_textcolor_black"
+                        android:textSize="@dimen/live_size_16sp"
+                        android:textStyle="bold"
+                        tools:text="JenniferJenniferJenniferJenniferJenniferJennifer" />
+
+                    <ImageView
+                        android:id="@+id/ivFavoriate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/tvName"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="6dp"
+                        android:src="@drawable/ic_chat_green_circle"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:textColor="@color/text_gray"
+                    android:textSize="@dimen/live_size_14sp"
+                    android:visibility="gone"
+                    tools:text="12:30"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="@dimen/live_size_2dp"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/live_size_20dp"
+                android:orientation="horizontal">
+                <!--android:layout_marginRight="13dp"-->
+
+                <TextView
+                    android:id="@+id/tvDesc"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/live_size_20dp"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/live_message_textcolor_black"
+                    android:textSize="@dimen/live_size_14sp"
+                    tools:text="Hi, Sweety~Hi, Sweety~Hi, Sweety~Hi, Sweety~" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="76dp"
+        android:background="@color/live_message_contact_list_background_color" />
+    <!--android:layout_marginLeft="64dp"-->
+</RelativeLayout>

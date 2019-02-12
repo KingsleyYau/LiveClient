@@ -1,5 +1,5 @@
 //
-//  LSGetNoReadNumProgramRequest.m
+//  LSGetNoReadNumProgramRequest.m(已废弃)
 //  dating
 //
 //  Created by Max on 18/04/18.

@@ -10,95 +10,51 @@
 #import "LSRequestManager.h"
 #import "LSConfigManager.h"
 #import "IntroduceView.h"
-#import "LSLiveWKWebViewManager.h"
 #import "LiveModule.h"
 
-@interface PostStampViewController ()<LSLiveWKWebViewManagerDelegate>
+@interface PostStampViewController ()
 
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
-
-@property (strong, nonatomic) LSLiveWKWebViewManager *urlManager;
-
-@property (nonatomic, assign) BOOL isResume;
-@property (nonatomic, assign) BOOL didFinshNav;
 @end
 
 @implementation PostStampViewController
 
 - (void)dealloc {
     NSLog(@"PostStampViewController::dealloc()");
-    [self.webView stopLoading];
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:NSStringFromClass([self.superclass class]) bundle:nibBundleOrNil];
+    return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.isResume = NO;
-    self.didFinshNav = NO;
-    
-    self.urlManager = [[LSLiveWKWebViewManager alloc] init];
-    self.urlManager.isShowTaBar = YES;
-    self.urlManager.isFirstProgram = YES;
-    self.urlManager.delegate = self;
-    self.urlManager.baseUrl = [LSConfigManager manager].item.postStampUrl;
-}
-
-- (void)initCustomParam {
-    [super initCustomParam];
-}
-
-- (void)setupContainView {
-    [super setupContainView];
-}
-
-- (void)setupNavigationBar {
-    [super setupNavigationBar];
+    self.isShowTaBar = YES;
+    self.isFirstProgram = YES;
+    self.requestUrl = [LSConfigManager manager].item.postStampUrl;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    self.urlManager.isFirstProgram = YES;
-    if (!self.viewDidAppearEver) {
-        self.urlManager.liveWKWebView = self.webView;
-        self.urlManager.controller = self;
-        self.urlManager.isShowTaBar = YES;
-        [self.urlManager requestWebview];
-    }
+}
+
+- (void)setupRequestWebview {
+    [super setupRequestWebview];
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self nativeTransferJavaScript];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self hideAndResetLoading];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 }
 
-- (void)nativeTransferJavaScript {
-    if (self.isResume && self.didFinshNav) {
-        [self.webView webViewTransferResumeHandler:^(id  _Nullable response, NSError * _Nullable error) {
-        }];
-    }
-}
-
-#pragma mark - LSLiveWKWebViewManagerDelegate
-- (void)webViewTransferJSIsResume:(BOOL)isResume {
-    self.isResume = isResume;
-}
-
-- (void)webViewDidFinishNavigation {
-    self.didFinshNav = YES;
-    if (self.viewDidAppearEver) {
-        [self nativeTransferJavaScript];
-    }
-}
 
 @end

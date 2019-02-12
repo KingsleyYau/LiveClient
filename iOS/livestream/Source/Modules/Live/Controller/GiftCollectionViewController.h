@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSListViewController.h"
 
 #import "GiftItemCollectionViewCell.h"
 
@@ -22,7 +22,7 @@
 - (void)didChangeGiftList:(GiftCollectionViewController *)vc;
 @end
 
-@interface GiftCollectionViewController : LSGoogleAnalyticsViewController
+@interface GiftCollectionViewController : LSListViewController
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 // 选择礼物的委托

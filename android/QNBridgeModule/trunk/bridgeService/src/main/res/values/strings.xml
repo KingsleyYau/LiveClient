@@ -15,4 +15,8 @@
     <string name="no">NO</string>
     <string name="title_dialog">Tips</string>
     <string name="message_permission_failed">We need some of the necessary authority to be prohibited, please authorize us.</string>
+
+    <!-- 浮窗 -->
+    <string name="permission_title_float_window">Keep CamShare on the window</string>
+    <string name="permission_message_float_window">Please allow our app display over other apps to keep CamShare float on the window while you put the app to the background.</string>
 </resources>

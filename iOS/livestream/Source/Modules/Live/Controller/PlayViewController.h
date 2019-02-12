@@ -6,7 +6,7 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSListViewController.h"
 
 #import "GiftPageViewController.h"
 #import "LiveViewController.h"
@@ -33,7 +33,7 @@
 - (void)showPubilcHangoutTipView:(PlayViewController *)vc;
 @end
 
-@interface PlayViewController : LSGoogleAnalyticsViewController
+@interface PlayViewController : LSListViewController
 @property (nonatomic, weak) id<PlayViewControllerDelegate> playDelegate;
 
 #pragma mark - 直播间信息

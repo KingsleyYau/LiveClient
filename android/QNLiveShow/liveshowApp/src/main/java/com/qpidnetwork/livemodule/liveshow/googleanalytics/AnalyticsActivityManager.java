@@ -7,7 +7,7 @@ import android.app.Application;
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 
 /**
@@ -646,9 +646,9 @@ public class AnalyticsActivityManager {
 //			// 获取站点名称
 //			String webName = "";
 //			if (null != WebSiteManager.getInstance()
-//				&& null != WebSiteManager.getInstance().GetWebSite())
+//				&& null != WebSiteConfigManager.getInstance().getCurrentWebSite())
 //			{
-//				WebSite webSite =  WebSiteManager.getInstance().GetWebSite();
+//				WebSite webSite =  WebSiteConfigManager.getInstance().getCurrentWebSite();
 //				webName = webSite.getSiteShortName();
 //			}
 //

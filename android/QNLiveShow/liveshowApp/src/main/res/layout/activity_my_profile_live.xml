@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/theme_default_activity_bg_grey"
+    android:fadingEdge="none"
+    android:overScrollMode="never"
+    android:scrollbars="none"
+    tools:context=".liveshow.personal.MyProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/my_profile_head_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_profile_live"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/live_size_24dp"
+            android:paddingRight="@dimen/live_size_16dp">
+
+            <!--头部-->
+            <LinearLayout
+                android:id="@+id/my_profile_titleBar_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/my_profile_buttonCancel"
+                    android:layout_width="@dimen/actionbar_height"
+                    android:layout_height="@dimen/actionbar_height"
+                    android:background="@drawable/touch_feedback_holo_dark_circle"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/my_profile"
+                    android:textColor="@color/white"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!--用户头像-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/live_size_16dp"
+                android:layout_marginTop="@dimen/live_size_16dp"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/live_size_16dp">
+
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/my_profile_iv_userIcon"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_user_icon"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="@dimen/menu_photo_border" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/live_size_16dp"
+                    android:paddingRight="@dimen/live_size_16dp">
+
+                    <TextView
+                        android:id="@+id/my_profile_tv_userName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_18sp"
+                        android:textStyle="bold"
+                        tools:text="Your name" />
+
+                    <TextView
+                        android:id="@+id/my_profile_tv_userAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/live_size_10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:textStyle="bold"
+                        tools:text="Age" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_arrow_right_grey"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <!--My Follow-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/my_profile_ll_my_follow"
+                layout="@layout/my_profile_info_item_live" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/my_profile_rl_my_follow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+
+        <!--2 item-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/my_profile_ll_Credit_Balance"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/my_profile_ll_Live_Vouchers"
+                layout="@layout/my_profile_info_item_live" />
+        </LinearLayout>
+
+
+        <!--1 item-->
+        <!--为什么嵌套 FrameLayout？因为 my_profile_info_item_live 的点击水波纹效果，默认是透明背景，而 item 是需要白色背景-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/live_size_20dp"
+            android:background="@color/white">
+
+            <include
+                android:id="@+id/my_profile_ll_setting"
+                layout="@layout/my_profile_info_item_live" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_100dp" />
+    </LinearLayout>
+</ScrollView>

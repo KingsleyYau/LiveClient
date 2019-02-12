@@ -46,38 +46,44 @@ public class LSVideoHardDecoderFrame {
 	 * @param byteBuffer
 	 * @param timestamp
 	 * @param format
-	 * @param width
-	 * @param height
+	 * @param width				宽
+	 * @param height			高
+	 * @param stride			行对齐
+	 * @param sliceHeight		高对齐
 	 */
-	public void updateImage(ByteBuffer byteBuffer, int timestamp, int format, int width, int height, int stride) {
+	public void updateImage(ByteBuffer byteBuffer, int timestamp, int format, int width, int height, int stride, int sliceHeight) {
 		this.timestamp = timestamp;
 		this.format = format;
 		this.width = width;
 		this.height = height;
 
-//		if( LSConfig.DEBUG ) {
-//			Log.d(LSConfig.TAG,
-//					String.format("LSVideoHardDecoderFrame::updateImage( "
-//									+ "this : 0x%x, "
-//									+ "[Image info], "
-//									+ "format : 0x%x, "
-//									+ "width : %d, "
-//									+ "height : %d, "
-//									+ "stride : %d, "
-//									+ "timestamp : %d "
-//									+ ")",
-//							hashCode(),
-//							format,
-//							width,
-//							height,
-//							stride,
-//							timestamp
-//					)
-//			);
-//		}
+		if( LSConfig.DEBUG ) {
+			Log.d(LSConfig.TAG,
+					String.format("LSVideoHardDecoderFrame::updateImage( "
+									+ "this : 0x%x, "
+									+ "[Image info], "
+									+ "format : 0x%x, "
+									+ "width : %d, "
+									+ "height : %d, "
+									+ "stride : %d, "
+									+ "sliceHeight : %d, "
+									+ "timestamp : %d "
+									+ ")",
+							hashCode(),
+							format,
+							width,
+							height,
+							stride,
+							sliceHeight,
+							timestamp
+					)
+			);
+		}
 
-		// 解码器输出是否字节对齐
-		boolean bStride = (stride == 0);
+		// 解码器输出是否行字节对齐
+		int rowStride = (stride - width);
+		// 行字节对齐
+		boolean bRowStride = (rowStride == 0);
 
         byteBuffer.position(0);
 		int size = width * height;
@@ -86,17 +92,34 @@ public class LSVideoHardDecoderFrame {
 			byteBufferY = new byte[byteSizeY];
 		}
 
-		if( bStride ) {
-			// 不需要字节对齐
+		if( bRowStride ) {
+			// 不需要行字节对齐
 			byteBuffer.get(byteBufferY, 0, byteSizeY);
 		} else {
-			// 需要字节对齐
+			// 需要行字节对齐
 			int position = 0;
 			for(int i = 0; i < height; i++) {
 				byteBuffer.get(byteBufferY, position, width);
-				byteBuffer.position(byteBuffer.position() + stride);
+				byteBuffer.position(byteBuffer.position() + rowStride);
 				position += width;
 			}
+		}
+
+		// 高字节对齐, 跳过Y到UV的字节数
+		int uvOffset = sliceHeight * stride;
+		byteBuffer.position(uvOffset);
+
+		if( LSConfig.DEBUG ) {
+			Log.d(LSConfig.TAG,
+					String.format("LSVideoHardDecoderFrame::updateImage( "
+									+ "this : 0x%x, "
+									+ "[Image info], "
+									+ "uvOffset : %d "
+									+ ")",
+							hashCode(),
+							uvOffset
+					)
+			);
 		}
 
 		switch ( format ) {
@@ -107,15 +130,15 @@ public class LSVideoHardDecoderFrame {
 					byteBufferU = new byte[byteSizeU];
 				}
 
-				if( bStride ) {
-					// 不需要字节对齐
+				if( bRowStride ) {
+					// 不需要行字节对齐
 					byteBuffer.get(byteBufferU, 0, byteSizeU);
 				} else {
-					// 需要字节对齐
+					// 需要行字节对齐
 					int position = 0;
 					for(int i = 0; i < height / 4; i++) {
 						byteBuffer.get(byteBufferU, position, width);
-						byteBuffer.position(byteBuffer.position() + stride);
+						byteBuffer.position(byteBuffer.position() + rowStride);
 						position += width;
 					}
 				}
@@ -125,15 +148,15 @@ public class LSVideoHardDecoderFrame {
 					byteBufferV = new byte[byteSizeV];
 				}
 
-				if( bStride ) {
-					// 不需要字节对齐
+				if( bRowStride ) {
+					// 不需要行字节对齐
 					byteBuffer.get(byteBufferV, 0, byteSizeV);
 				} else {
-					// 需要字节对齐
+					// 需要行字节对齐
 					int position = 0;
 					for(int i = 0; i < height / 4; i++) {
 						byteBuffer.get(byteBufferV, position, width);
-						byteBuffer.position(byteBuffer.position() + stride);
+						byteBuffer.position(byteBuffer.position() + rowStride);
 						position += width;
 					}
 				}
@@ -165,15 +188,15 @@ public class LSVideoHardDecoderFrame {
 					byteBufferUV = new byte[byteSizeUV];
 				}
 
-				if( bStride ) {
-					// 不需要字节对齐
+				if( bRowStride ) {
+					// 不需要行字节对齐
 					byteBuffer.get(byteBufferUV, 0, byteSizeUV);
 				} else {
-					// 需要字节对齐
+					// 需要行字节对齐
 					int position = 0;
 					for(int i = 0; i < height / 2; i++) {
 						byteBuffer.get(byteBufferUV, position, width);
-						byteBuffer.position(byteBuffer.position() + stride);
+						byteBuffer.position(byteBuffer.position() + rowStride);
 						position += width;
 					}
 				}

@@ -204,6 +204,20 @@ open class JTSegmentControl: UIControl {
         }
     }
     
+    // Add by lance
+    open var itemLineWidthCustom : CGFloat = -1 {
+        didSet{
+            
+        }
+    }
+    
+    // Add by lance
+    open var customLineWidth = false {
+        didSet{
+            
+        }
+    }
+    
     open var autoAdjustWidth = false {
         didSet{
             
@@ -229,6 +243,22 @@ open class JTSegmentControl: UIControl {
             return segementWidth()
         }
     }
+    
+    open func segmentLineWidth(index:Int) -> CGFloat {
+        guard index >= 0 && index < itemViews.count else {
+            return 0.0
+        }
+        if customLineWidth {
+            if( itemLineWidthCustom == -1 ) {
+                return itemViews[index].itemWidth()
+            } else {
+                return itemLineWidthCustom
+            }
+        }else{
+            return segementWidth()
+        }
+    }
+    
     
     open var selectedIndex = 0 {
         willSet{
@@ -442,11 +472,22 @@ open class JTSegmentControl: UIControl {
         if animated {
             UIView.animate(withDuration: 0.2, animations: {
                 self.sliderView.center.x = position
-                self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentWidth(index: index), height: self.sliderView.bounds.height)
+                
+                if self.customLineWidth {
+                    self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentLineWidth(index: index), height: self.sliderView.bounds.height)
+                }else {
+                    self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentWidth(index: index), height: self.sliderView.bounds.height)
+                }
             })
         }else{
             self.sliderView.center.x = position
-            self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentWidth(index: index), height: self.sliderView.bounds.height)
+            
+            if self.customLineWidth {
+                self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentLineWidth(index: index), height: self.sliderView.bounds.height)
+            }else {
+                self.sliderView.bounds = CGRect(x: 0.0, y: 0.0, width: self.segmentWidth(index: index), height: self.sliderView.bounds.height)
+            }
+            
         }
         
         delegate?.didSelected?(segement: self, index: index)
@@ -487,7 +528,17 @@ open class JTSegmentControl: UIControl {
                 }
             }
         }else{
-            index = Int(location.x / sliderView.bounds.size.width)
+            if customLineWidth {
+                for (i,itemView) in itemViews.enumerated() {
+                    if itemView.frame.contains(location) {
+                        index = i
+                        break
+                    }
+                }
+            }else {
+                index = Int(location.x / sliderView.bounds.size.width)
+            }
+            
         }
         
         if index < 0 {
@@ -496,6 +547,8 @@ open class JTSegmentControl: UIControl {
         if index > numberOfSegments - 1 {
             index = numberOfSegments - 1
         }
+        
+        print("index", index);
         return index
     }
     
@@ -536,10 +589,19 @@ open class JTSegmentControl: UIControl {
         
         var x:CGFloat = 0.0
         let y:CGFloat = 0.0
-        var width:CGFloat = segmentWidth(index: selectedIndex)
+        var width:CGFloat = 0
+        if customLineWidth {
+            width = segmentLineWidth(index: selectedIndex)
+        }else {
+            width = segmentWidth(index: selectedIndex)
+        }
+        
         let height:CGFloat = bounds.size.height
         
         sliderView.frame = CGRect(x: currentItemX(index: selectedIndex), y: contentView.bounds.size.height - JTSegmentPattern.sliderHeight, width: width, height: JTSegmentPattern.sliderHeight)
+        if customLineWidth {
+            sliderView.center.x = (CGFloat(0) + 0.5)*segementWidth();
+        }
         
         var contentWidth:CGFloat = 0.0
         

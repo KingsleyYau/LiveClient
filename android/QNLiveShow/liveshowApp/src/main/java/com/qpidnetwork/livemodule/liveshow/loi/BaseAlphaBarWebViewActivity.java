@@ -27,28 +27,32 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.ObservableWebView;
 import com.qpidnetwork.livemodule.framework.widget.OpenFileWebChromeClient;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
-import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
+import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
-import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
+import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
 import com.qpidnetwork.livemodule.liveshow.model.js.JSCallbackListener;
+import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.ImageUtil;
 import com.qpidnetwork.livemodule.utils.MediaUtility;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.File;
 
@@ -210,7 +214,10 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
         }
 
         //Android 4.2以下存在漏洞问题,待解决
-        mJSCallback = new CallbackAppGAEventJSObj(this.getApplicationContext());
+//        mJSCallback = new CallbackAppGAEventJSObj(this.getApplicationContext());
+        // 2018/11/6 Hardy
+        mJSCallback = new CallbackAppGAEventJSObj(this);
+
         mJSCallback.setJSCallbackListener(this);
         owv_content.addJavascriptInterface(mJSCallback, "LiveApp");
 //        owv_content.removeJavascriptInterface("searchBoxJavaBridge_");
@@ -294,8 +301,8 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
         if(bundle != null){
             mUrl = bundle.getString(WEB_URL,mUrl);
             //增加device和appver公共头
-            if(!TextUtils.isEmpty(mUrl)){
-                mUrl = packageWebViewUrl(mUrl);
+            if (!TextUtils.isEmpty(mUrl)) {
+                mUrl = CoreUrlHelper.packageWebviewUrl(this, mUrl);
             }
             Log.d(TAG,"initViewData-mUrl:"+mUrl);
             mTitle = bundle.getString(WEB_TITLE,mTitle);
@@ -455,9 +462,9 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
      * 利用接口和webview共用cookie，通过接口cookie过期自动重登陆实现session过期重登陆，刷新cookie
      */
     private void handleSessionTimeout(){
-        LiveRequestOperator.getInstance().GetHotLiveList(0, 10, false, false, new OnGetHotListCallback() {
+        LiveRequestOperator.getInstance().GetFollowingLiveList(0, 10, new OnGetFollowingListCallback() {
             @Override
-            public void onGetHotList(boolean isSuccess, int errCode, String errMsg, HotListItem[] hotList) {
+            public void onGetFollowingList(boolean isSuccess, int errCode, String errMsg, FollowingListItem[] followingList) {
 
             }
         });
@@ -485,14 +492,19 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
             public void run() {
                 if(!TextUtils.isEmpty(errorcode)
                         && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
-                    pb_loading.setVisibility(View.VISIBLE);
-                    handleSessionTimeout();
+                    LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
+                    if(loginStatus == LoginManager.LoginStatus.Logined){
+                        RegisterActivity.launchRegisterActivity(mContext);
+                    }else{
+                        pb_loading.setVisibility(View.VISIBLE);
+                        handleSessionTimeout();
+                    }
                 }else if(!TextUtils.isEmpty(errorcode)
                         && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_NOCREDIT_ERROR_NO)){
                     if(!TextUtils.isEmpty(errMsg)){
                         showCreditNoEnoughDialog(errMsg, params);
                     }else{
-                        LiveService.getInstance().onAddCreditClick(params);
+                        LiveModule.getInstance().onAddCreditClick(mContext, params);
                         //GA统计点击充值
                         AnalyticsManager.getsInstance().ReportEvent(
                                 BaseAlphaBarWebViewActivity.this.getResources().getString(R.string.Live_Global_Category),
@@ -501,6 +513,22 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                     }
                 }else{
                     loadUrl(false, false);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onEventShowNavigation(final String isShow) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (!TextUtils.isEmpty(isShow)){
+                    if(isShow.equals("0")){
+                        setTitleVisible(View.GONE);
+                    }else if(isShow.equals("1")){
+                        setTitleVisible(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -522,7 +550,7 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                 if(item != null){
                     String sessionString = item.cName + "=" + item.value;
                     cookieManager.setCookie(item.domain, sessionString);
-                    Log.d(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
+                    Log.logD(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
                 }
             }
         }
@@ -605,7 +633,7 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
                 finish();
                 return true;
             }
-            if(URL2ActivityManager.getInstance().URL2Activity(BaseAlphaBarWebViewActivity.this,url)){
+            if(new AppUrlHandler(BaseAlphaBarWebViewActivity.this).urlHandle(url)){
                 return  true;
             }
             return super.shouldOverrideUrlLoading(view, url);
@@ -734,25 +762,6 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
     }
 
     /*************************** 重新组装url增加device和appver字段  *****************************/
-    /**
-     * url添加公共头appver和device
-     * @param url
-     * @return
-     */
-    private String packageWebViewUrl(String url){
-        StringBuilder sb = new StringBuilder(url);
-        //增加device
-        if(url.contains("?")){
-            sb.append("&device=30");
-        }else{
-            sb.append("?device=30");
-        }
-        //增加appver
-        sb.append("&appver=");
-        int versionCode = SystemUtils.getVersionCode(this);
-        sb.append(String.valueOf(versionCode));
-        return sb.toString();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -773,13 +782,24 @@ public class BaseAlphaBarWebViewActivity extends BaseAlphaBarWebViewFragmentActi
         Uri uri = null;
         if (result != null) {
             String path = MediaUtility.getPath(getApplicationContext(), result);
-            uri = Uri.fromFile(new File(path));
+            if(!TextUtils.isEmpty(path)){
+                uri = Uri.fromFile(new File(path));
+            }
         }
         if(null == uri && requestCode == OpenFileWebChromeClient.REQUEST_CAPTURE_PHOTO){
             //因为拍照在红米note2手机上返回的intent为null，因此需要自己处理uri
-            uri = Uri.fromFile(new File(FileCacheManager.getInstance().getTempCameraImageUrl()));
+            uri = Uri.fromFile(new File(FileCacheManager.getInstance().GetTempCameraImageUrl()));
         }
         Log.logD(TAG,"onActivityResult-result:"+result+" uri:"+uri);
+
+        // 2018/11/27 Hardy
+        if (uri != null && requestCode == OpenFileWebChromeClient.REQUEST_CAPTURE_PHOTO) {
+            String path = FileCacheManager.getInstance().GetTempCameraImageUrl();
+//            String fileName = "file_choose" + "_" + System.currentTimeMillis() + ".jpg";
+//            Log.logD(TAG,"onActivityResult-result:"+result+" path:"+ path +"----> fileName: "+"");
+            ImageUtil.SaveImageToGallery(this, path);
+        }
+
         if(null != mOpenFileWebChromeClient.mFilePathCallback){
             mOpenFileWebChromeClient.mFilePathCallback.onReceiveValue(uri);
             //避免下一次js执行无响应

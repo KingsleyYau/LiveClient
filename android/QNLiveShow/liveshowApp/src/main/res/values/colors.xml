@@ -8,6 +8,7 @@
     <color name="text_color_grey">#666666</color>
     
     <color name="online_normal_green">#8EDB2B</color>
+    <color name="online_green_chat_live">#1BCD05</color>
     <color name="offline_normal_grey">#B5B5B5</color>
 
 
@@ -74,6 +75,9 @@
 
     <color name="talent_confirm_dialog_confirm">#724602</color>
 
+    <color name="live_dialog_default_btn_txt">#bfbfbf</color>
+    <color name="live_dialog_high_light_btn_txt">#5E5E5E</color>
+
     <!--改版统一蓝色-->
     <color name="hotlist_item_default_bg_color">#ECEDF1</color>
     <color name="theme_sky_blue">#297AF3</color>
@@ -124,4 +128,17 @@
     <color name="live_message_textcolor_orange">#FF7100</color>
     <color name="live_message_textcolor_black">#383838</color>
     <color name="live_message_edit_area_bg">#dae9ff</color>
+
+    <!--Hardy -->
+    <color name="credits_text_color_orange">#FF6600</color>
+    <color name="text_color_grey_light">#999999</color>
+    <color name="red_light">#FF4040</color>
+    <color name="thin_grey">#16000000</color>
+
+    <color name="green">#0f9d58</color>
+    <color name="standard_grey">#32000000</color>
+
+    <!--个人兴趣-->
+    <color name="interest_label_select">#08BBFF</color>
+    <color name="interest_label_select_no">#F0F0F0</color>
 </resources>

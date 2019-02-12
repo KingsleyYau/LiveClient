@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.Log;
 
 
 public class ButtonRaised extends CardView{

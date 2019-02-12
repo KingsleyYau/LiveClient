@@ -9,25 +9,30 @@
 
 JavaVM* gJavaVM = NULL;
 JavaItemMap gJavaItemMap;
+#define TAG "IMClientJni"
 
 bool GetEnv(JNIEnv** env, bool* isAttachThread)
 {
 	*isAttachThread = false;
+	FileLog(TAG, "GetEnv() begin, env:%p", env);
 	jint iRet = JNI_ERR;
 	iRet = gJavaVM->GetEnv((void**) env, JNI_VERSION_1_4);
+	FileLog(TAG, "GetEnv() gJavaVM->GetEnv(&gEnv, JNI_VERSION_1_4), iRet:%d", iRet);
 	if( iRet == JNI_EDETACHED ) {
 		iRet = gJavaVM->AttachCurrentThread(env, NULL);
 		*isAttachThread = (iRet == JNI_OK);
 	}
-
+	FileLog(TAG, "GetEnv() end, env:%p, gIsAttachThread:%d, iRet:%d", *env, *isAttachThread, iRet);
 	return (iRet == JNI_OK);
 }
 
 bool ReleaseEnv(bool isAttachThread)
 {
+	FileLog(TAG, "ReleaseEnv(bool) begin, isAttachThread:%d", isAttachThread);
 	if (isAttachThread) {
 		gJavaVM->DetachCurrentThread();
 	}
+	FileLog(TAG, "ReleaseEnv(bool) end");
 	return true;
 }
 
@@ -111,6 +116,9 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 	InsertJObjectClassToMap(env, IM_ROOMIN_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_REBATE_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_BOOKINGREPLY_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_AUTHORITY_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_INVITE_REPLY_ITEM_CLASS);
+	InsertJObjectClassToMap(env, IM_INVITE_ERR_ITEM_CLASS);
 
 	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_ITEM_CLASS);
 	InsertJObjectClassToMap(env, IM_PACKAGE_UPDATE_GIFT_ITEM_CLASS);

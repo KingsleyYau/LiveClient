@@ -1,0 +1,15 @@
+
+/* Class = "UILabel"; text = "Mail Attachments"; ObjectID = "SPp-m1-sbo"; */
+"SPp-m1-sbo.text" = "Mail Attachments";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "uet-vf-UvY"; */
+"uet-vf-UvY.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "zZj-2W-HDF"; */
+"zZj-2W-HDF.text" = "Label";
+
+"MAIL_ID" = "%@(Mail ID:%@)";
+
+"TO_NAME" = "To: %@";
+
+"Mail_Viewer" = "Mail Viewer";

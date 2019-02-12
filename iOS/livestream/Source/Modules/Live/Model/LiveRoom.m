@@ -37,19 +37,24 @@
     if (self = [super init]) {
         _playUrlIndex = 0;
         _publishUrlIndex = 0;
+        _active = YES;
     }
     return self;
 }
 
 #pragma mark - Get/Set方法
 - (NSString *)roomId {
-    if (!_roomId) {
-        _roomId = _imLiveRoom.roomId;
+    NSString *retRoomId = nil;
+    if( _active ) {
+        if (!_roomId) {
+            _roomId = _imLiveRoom.roomId;
+        }
+        if (!_roomId) {
+            _roomId = _hangoutLiveRoom.roomId;
+        }
+        retRoomId = _roomId;
     }
-    if (!_roomId) {
-        _roomId = _hangoutLiveRoom.roomId;
-    }
-    return _roomId;
+    return retRoomId;
 }
 
 - (void)setRoomId:(NSString *)roomId {
@@ -274,6 +279,22 @@
     }
 
     return self.publishUrl;
+}
+
+- (ImAuthorityItemObject *)priv {
+    
+    if (!_priv) {
+        ImAuthorityItemObject * obj = [[ImAuthorityItemObject alloc]init];
+        obj.isHasBookingAuth = _httpLiveRoom.priv.isHasBookingAuth;
+        obj.isHasOneOnOneAuth = _httpLiveRoom.priv.isHasOneOnOneAuth;
+        _priv = obj;
+    }
+    if (!_priv) {
+        ImAuthorityItemObject * obj = [[ImAuthorityItemObject alloc]init];
+        _priv = obj;
+    }
+    
+    return _priv;
 }
 
 @end

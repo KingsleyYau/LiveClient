@@ -2,7 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import static com.qpidnetwork.livemodule.im.IMManager.hasIMReconnected;
 import static com.qpidnetwork.livemodule.im.IMManager.imReconnecting;

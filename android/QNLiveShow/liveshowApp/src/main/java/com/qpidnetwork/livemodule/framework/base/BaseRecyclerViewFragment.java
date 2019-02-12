@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.framework.base;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 带上拉和下拉刷新的RecyclerViewFragment（设置默认无数据显示)

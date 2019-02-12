@@ -5,7 +5,6 @@ import net.qdating.LSConfig.FillMode;
 import net.qdating.filter.LSImageFilter;
 import net.qdating.filter.LSImageInputYuvFilter;
 import net.qdating.filter.LSImageOutputFilter;
-import net.qdating.filter.LSImageOutputYuvFilter;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -46,37 +45,69 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 	 */
 	private LSImageInputYuvFilter inputYuvFilter = null;
 	private LSImageOutputFilter outputFilter = null;
-	private LSImageOutputYuvFilter outputYuvFilter = null;
+
+	private LSImageFilter customFilter = null;
+	private boolean bCustomFilterChange = false;
 
 	public LSVideoHardPlayerRenderer(FillMode fillMode) {
-//        inputYuvFilter = new LSImageInputYuvFilter();
-//		outputFilter = new LSImageOutputFilter();
-//		outputFilter.fillMode = fillMode;
+        inputYuvFilter = new LSImageInputYuvFilter();
 
-		outputYuvFilter = new LSImageOutputYuvFilter();
-		outputYuvFilter.fillMode = fillMode;
+		outputFilter = new LSImageOutputFilter();
+		outputFilter.fillMode = fillMode;
 	}
-	
+
+	/**
+	 * 初始化
+	 */
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::init( this : 0x%x )", hashCode()));
 
-//		inputYuvFilter.setFilter(outputFilter);
+		inputYuvFilter.setFilter(outputFilter);
 	}
-	
+
+	/**
+	 * 反初始化
+	 */
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoHardPlayerRenderer::uninit( this : 0x%x )", hashCode()));
+	}
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		synchronized (this) {
+			if( this.customFilter != customFilter ) {
+				this.customFilter = customFilter;
+				bCustomFilterChange = true;
+
+				if (this.customFilter != null) {
+					inputYuvFilter.setFilter(this.customFilter);
+					this.customFilter.setFilter(outputFilter);
+				} else {
+					inputYuvFilter.setFilter(outputFilter);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		return this.customFilter;
 	}
 
 	public void updateDecodeFrame(LSVideoHardDecoderFrame videoFrame) {
 		synchronized (this) {
 			switch ( videoFrame.format ) {
 				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Planar: {
-//					inputYuvFilter.updateYuv420PFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferU, videoFrame.byteSizeU, videoFrame.byteBufferV, videoFrame.byteSizeV);
-					outputYuvFilter.updateYuv420PFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferU, videoFrame.byteSizeU, videoFrame.byteBufferV, videoFrame.byteSizeV);
+					inputYuvFilter.updateYuv420PFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferU, videoFrame.byteSizeU, videoFrame.byteBufferV, videoFrame.byteSizeV);
 				}break;
 				case MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420SemiPlanar: {
-//					inputYuvFilter.updateYuv420SPFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferUV, videoFrame.byteSizeUV);
-					outputYuvFilter.updateYuv420SPFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferUV, videoFrame.byteSizeUV);
+					inputYuvFilter.updateYuv420SPFrame(videoFrame.byteBufferY, videoFrame.byteSizeY, videoFrame.byteBufferUV, videoFrame.byteSizeUV);
 				}break;
 			}
 		}
@@ -108,8 +139,14 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT );
 		    
 		synchronized (this) {
-//			inputYuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
-			outputYuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
+			if( bCustomFilterChange ) {
+				if( customFilter != null ) {
+					customFilter.init();
+				}
+				bCustomFilterChange = false;
+			}
+
+			inputYuvFilter.draw(glTextureId[0], originalWidth, originalHeight);
 		}
 	}
 
@@ -131,8 +168,7 @@ public class LSVideoHardPlayerRenderer implements Renderer {
         previewWidth = width;
         previewHeight = height;
 
-//		outputFilter.changeViewPointSize(previewWidth, previewHeight);
-		outputYuvFilter.changeViewPointSize(previewWidth, previewHeight);
+		outputFilter.changeViewPointSize(previewWidth, previewHeight);
 	}
 
 	@Override
@@ -143,9 +179,8 @@ public class LSVideoHardPlayerRenderer implements Renderer {
 		// 创建纹理
 		glTextureId = LSImageFilter.genPixelTexture();
         
-//		inputYuvFilter.init();
-//		outputFilter.init();
-		outputYuvFilter.init();
+		inputYuvFilter.init();
+		outputFilter.init();
 	}
 
 }

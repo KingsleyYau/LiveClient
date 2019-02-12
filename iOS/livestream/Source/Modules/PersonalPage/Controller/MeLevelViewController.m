@@ -7,28 +7,23 @@
 //
 
 #import "MeLevelViewController.h"
-#import "IntroduceView.h"
-#import "LSLiveWKWebViewManager.h"
 #import "LSRequestManager.h"
-#import "LiveModule.h"
+#import "LSConfigManager.h"
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
-@interface MeLevelViewController () <WKUIDelegate,WKNavigationDelegate,LSLiveWKWebViewManagerDelegate>
-// 内嵌web
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
+@interface MeLevelViewController () <WKUIDelegate,WKNavigationDelegate>
 
-@property (nonatomic, strong) LSLiveWKWebViewManager *urlManager;
-
-@property (nonatomic, assign) BOOL isResume;
-@property (nonatomic, assign) BOOL didFinshNav;
 @end
 
 @implementation MeLevelViewController
 
 - (void)dealloc {
     NSLog(@"MeLevelViewController::dealloc()");
-    [self.webView stopLoading];
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:NSStringFromClass([self.superclass class]) bundle:nibBundleOrNil];
+    return self;
 }
 
 - (void)viewDidLoad {
@@ -36,71 +31,33 @@
     
     self.title = @"My Level";
     
-    self.isResume = NO;
-    self.didFinshNav = NO;
+    self.isShowTaBar = YES;
+    self.isFirstProgram = YES;
     
-    self.urlManager = [[LSLiveWKWebViewManager alloc] init];
-    self.urlManager.isShowTaBar = YES;
-    self.urlManager.delegate = self;
-    NSString *webSiteUrl = self.urlManager.configManager.item.userLevel;
-    self.urlManager.baseUrl = webSiteUrl;
-}
-
-- (void)initCustomParam {
-    [super initCustomParam];
-}
-
-- (void)setupNavigationBar {
-    [super setupNavigationBar];
-}
-
-- (void)setupContainView{
-    [super setupContainView];
+    NSString *webSiteUrl = [LSConfigManager manager].item.userLevel;
+    self.requestUrl = webSiteUrl;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.hidden = NO;
-    if (!self.viewDidAppearEver) {
-        self.urlManager.liveWKWebView = self.webView;
-        self.urlManager.controller = self;
-        self.urlManager.isShowTaBar = YES;
-        [self.urlManager requestWebview];
-    }
+}
+
+- (void)setupRequestWebview {
+    [super setupRequestWebview];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self nativeTransferJavaScript];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self hideAndResetLoading];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-}
-
-- (void)nativeTransferJavaScript {
-    if (self.isResume && self.didFinshNav) {
-        [self.webView webViewTransferResumeHandler:^(id  _Nullable response, NSError * _Nullable error) {
-        }];
-    }
-}
-
-#pragma mark - LSLiveWKWebViewManagerDelegate
-- (void)webViewTransferJSIsResume:(BOOL)isResume {
-    self.isResume = isResume;
-}
-
-- (void)webViewDidFinishNavigation {
-    self.didFinshNav = YES;
-    if (self.viewDidAppearEver) {
-        [self nativeTransferJavaScript];
-    }
 }
 
 @end

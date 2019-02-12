@@ -9,6 +9,7 @@
 #import "PublicViewController.h"
 #import "LSMainViewController.h"
 #import "AnchorPersonalViewController.h"
+#import "LSAddCreditsViewController.h"
 
 #import "LiveUrlHandler.h"
 
@@ -20,7 +21,7 @@
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
 #import "LiveRoomCreditRebateManager.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "DialogTip.h"
 
 #define PageSize 10
@@ -119,7 +120,7 @@
 
 - (void)setupHeaderImageView {
     // 计算StatusBar高度
-    if ([LSDevice iPhoneXStyle]) {
+    if (IS_IPHONE_X) {
         self.titleBgImageTop.constant = 44;
     } else {
         self.titleBgImageTop.constant = 20;
@@ -216,7 +217,7 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
 
-    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM || !self.liveRoom.priv.isHasOneOnOneAuth) {
         // 隐藏立即私密邀请控件
         self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     }
@@ -255,7 +256,7 @@
 
 // 获取观众列表
 - (void)setupAudienView {
-
+    WeakObject(self, weakSelf);
     LiveFansListRequest *request = [[LiveFansListRequest alloc] init];
     request.roomId = self.liveRoom.roomId;
     request.start = 0;
@@ -265,7 +266,7 @@
         NSLog(@"PublicViewController::LiveFansListRequest( [请求观众列表], success : %d, errnum : %ld, errmsg : %@, array : %u )", success, (long)errnum, errmsg, (unsigned int)array.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                [self.audienceArray removeAllObjects];
+                [weakSelf.audienceArray removeAllObjects];
                 // 遍历，更新观众列表
                 for (ViewerFansItemObject *item in array) {
                     AudienModel *model = [[AudienModel alloc] init];
@@ -276,7 +277,7 @@
                     model.mountUrl = item.mountUrl;
                     model.level = item.level;
                     model.isHasTicket = item.isHasTicket;
-                    [self.audienceArray addObject:model];
+                    [weakSelf.audienceArray addObject:model];
                     
                     // 更新并缓存本地观众数据
                     LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
@@ -288,11 +289,11 @@
                     infoItem.userLevel = item.level;
                     infoItem.isAnchor = 0;
                     infoItem.isHasTicket = item.isHasTicket;
-                    [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
+                    [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
                 
-                self.audienceView.audienceArray = self.audienceArray;
-                [self.peopleNumBtn setTitle:[NSString stringWithFormat:@" %u", (unsigned int)array.count] forState:UIControlStateNormal];
+                weakSelf.audienceView.audienceArray = weakSelf.audienceArray;
+                [weakSelf.peopleNumBtn setTitle:[NSString stringWithFormat:@" %u", (unsigned int)array.count] forState:UIControlStateNormal];
             }
         });
     };
@@ -310,7 +311,8 @@
 
 #pragma mark - PlayViewControllerDelegate
 - (void)pushToAddCredit:(PlayViewController *)vc {
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *addVC = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:addVC animated:YES];
 }
 
 #pragma mark - 按钮事件
@@ -322,13 +324,14 @@
 //}
 
 - (IBAction)pushLiveHomePage:(id)sender {
-    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
+    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = self.liveRoom.userId;
     listViewController.enterRoom = 0;
     [self.navigationController pushViewController:listViewController animated:YES];
 }
 
 - (IBAction)followLiverAction:(id)sender {
+    WeakObject(self, weakSelf);
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickFollow eventCategory:EventCategoryBroadcast];
     SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
     request.userId = self.liveRoom.userId;
@@ -337,11 +340,11 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                self.followBtnWidth.constant = 0;
+                weakSelf.followBtnWidth.constant = 0;
                 //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
 
             } else {
-                [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
+                [weakSelf.dialogTipView showDialogTip:weakSelf.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
             }
             NSLog(@"PublicViewController::followLiverAction( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
         });
@@ -352,7 +355,7 @@
 - (IBAction)closeAction:(id)sender {
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+    [nvc forceToDismissAnimated:YES completion:nil];
 }
 
 #pragma mark - 请求数据逻辑
@@ -369,6 +372,7 @@
 #pragma mark - IM回调
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新并缓存本地观众数据
         LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
@@ -379,18 +383,18 @@
         infoItem.riderName = riderName;
         infoItem.riderUrl = riderUrl;
         infoItem.isAnchor = 0;
-        [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
+        [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
         
         // 刷观众列表
-        [self setupAudienView];
+        [weakSelf setupAudienView];
     });
 }
 
 - (void)onRecvLeaveRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl fansNum:(int)fansNum {
     NSLog(@"PublicViewController::onRecvLeaveRoomNotice( [接收观众退出直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, fansNum);
-
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setupAudienView];
+        [weakSelf setupAudienView];
     });
 }
 

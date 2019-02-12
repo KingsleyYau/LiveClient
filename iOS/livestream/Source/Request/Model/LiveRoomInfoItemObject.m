@@ -12,6 +12,23 @@
 
 
 @implementation LiveRoomInfoItemObject
+- (id)init {
+    if( self = [super init] ) {
+        self.userId = @"";
+        self.nickName = @"";
+        self.photoUrl = @"";
+        self.onlineStatus = ONLINE_STATUS_OFFLINE;
+        self.roomPhotoUrl = @"";
+        self.roomType = HTTPROOMTYPE_NOLIVEROOM;
+        self.anchorType = ANCHORLEVELTYPE_UNKNOW;
+        self.loveLevel = 0;
+        self.addDate = 0;
+        self.chatOnlineStatus = IMCHATONLINESTATUS_OFF;
+        self.priv = [[LSHttpAuthorityItemObject alloc] init];
+    }
+ return self;
+}
+
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         self.userId = [coder decodeObjectForKey:@"userId"];
@@ -23,6 +40,8 @@
         self.interest = [coder decodeObjectForKey:@"interest"];
         self.anchorType = [coder decodeIntForKey:@"anchorType"];
         self.showInfo = [coder decodeObjectForKey:@"showInfo"];
+        self.priv = [coder decodeObjectForKey:@"priv"];
+        self.chatOnlineStatus = [coder decodeIntForKey:@"chatOnlineStatus"];
     }
     return self;
 }
@@ -37,6 +56,8 @@
     [coder encodeObject:self.interest forKey:@"interest"];
     [coder encodeInt:self.anchorType forKey:@"anchorType"];
     [coder encodeObject:self.showInfo forKey:@"showInfo"];
+    [coder encodeObject:self.priv forKey:@"priv"];
+    [coder encodeInt:self.chatOnlineStatus forKey:@"chatOnlineStatus"];
 }
 
 //- (void)SetInterestWithIndex:(InterestType)type index:(int)index {

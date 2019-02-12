@@ -21,10 +21,13 @@
  * showDetailPage             节目详情页URL
  * showDescription            节目介绍
  * hangoutCredirMsg           多人互动资费提示
+ * hangoutCreditPrice         多人互动信用点资费价格
  * loiH5Url                   意向信页URL
  * emfH5Url                   EMF页URL
  * pmStartNotice              私信聊天界面没有聊天记录时的提示
  * pmStartNotice              背包邮票页URL
+ * httpSvrMobileUrl           http mobile服务器的URL（包括mobile.charmlive.com或demo-mobile.charmlive.com）
+ * sendLetter                 发送信件页URL
  */
 @property (nonatomic, copy) NSString *_Nonnull imSvrUrl;
 @property (nonatomic, copy) NSString *_Nonnull httpSvrUrl;
@@ -36,9 +39,23 @@
 @property (nonatomic, copy) NSString *_Nonnull showDetailPage;
 @property (nonatomic, copy) NSString *_Nonnull showDescription;
 @property (nonatomic, copy) NSString *_Nonnull hangoutCredirMsg;
+@property (nonatomic, assign) double hangoutCreditPrice;
 @property (nonatomic, copy) NSString *_Nonnull loiH5Url;
 @property (nonatomic, copy) NSString *_Nonnull emfH5Url;
 @property (nonatomic, copy) NSString *_Nonnull pmStartNotice;
 @property (nonatomic, copy) NSString *_Nonnull postStampUrl;
+@property (nonatomic, copy) NSString *_Nonnull httpSvrMobileUrl;
+@property (nonatomic, copy) NSString *_Nonnull sendLetter;
+
+/*
+     test QNLiveChat
+ */
+@property (nonatomic, copy) NSString *_Nonnull socketHost;
+@property (nonatomic, copy) NSString *_Nonnull socketHostDomain;
+@property (nonatomic, assign) int socketPort;
+@property (nonatomic, copy) NSString *_Nonnull chatVoiceHostUrl;
+@property (nonatomic, assign) double minBalanceForChat;
+@property (nonatomic, copy) NSString *_Nonnull  webSite;
+@property (nonatomic, copy) NSString *_Nonnull appSite;
 
 @end

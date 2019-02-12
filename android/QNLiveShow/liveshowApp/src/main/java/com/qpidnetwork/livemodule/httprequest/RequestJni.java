@@ -52,6 +52,19 @@ public class RequestJni {
 	 * @param configSite
 	 */
 	static public native void SetConfigSite(String configSite);
+
+	/**
+	 * 设置域名(使用mobile.charmlive.com或demo-mobile.charmlive.com域名访问)
+	 * @param domainSite
+	 */
+	static public native void SetDomainSite(String domainSite);
+
+	/**
+	 * 设置认证
+	 * @param user		账号
+	 * @param password  密码
+	 */
+	static public native void SetAuthorization(String user, String password);
     
     /**
      * 停止请求
@@ -87,4 +100,10 @@ public class RequestJni {
 	 * @param proxyUrl		URL
 	 */
 	static public native void SetProxy(String proxyUrl);
+
+	/**
+	 * 设置pp唯一标识
+	 * @param appId		pp唯一标识
+	 */
+	static public native void SetAppId(String appId);
 }

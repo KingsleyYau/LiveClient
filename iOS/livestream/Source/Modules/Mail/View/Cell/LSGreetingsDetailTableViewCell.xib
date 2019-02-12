@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSGreetingsDetailIdentifier" id="KGk-i7-Jjw" customClass="LSGreetingsDetailTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="232"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="231.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eBS-CQ-TR6">
+                        <rect key="frame" x="0.0" y="10" width="320" height="221.5"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pGj-e9-qcy">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="221.5"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Greeting_Video_Play" translatesAutoresizingMaskIntoConstraints="NO" id="98a-B4-r4O">
+                                <rect key="frame" x="136" y="85" width="48" height="50"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Greeting_Image_Loading" translatesAutoresizingMaskIntoConstraints="NO" id="Rul-K1-3dD" userLabel="Placeholder Image View">
+                                <rect key="frame" x="97.5" y="59" width="125" height="102"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.21960784310000001" green="0.21960784310000001" blue="0.21960784310000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="pGj-e9-qcy" firstAttribute="top" secondItem="eBS-CQ-TR6" secondAttribute="top" id="EEK-Bf-Ego"/>
+                            <constraint firstItem="Rul-K1-3dD" firstAttribute="centerX" secondItem="eBS-CQ-TR6" secondAttribute="centerX" id="dEf-Qk-jjs"/>
+                            <constraint firstItem="pGj-e9-qcy" firstAttribute="leading" secondItem="eBS-CQ-TR6" secondAttribute="leading" id="feI-gD-BMx"/>
+                            <constraint firstItem="Rul-K1-3dD" firstAttribute="centerY" secondItem="eBS-CQ-TR6" secondAttribute="centerY" id="fu0-Ky-Dcq"/>
+                            <constraint firstAttribute="bottom" secondItem="pGj-e9-qcy" secondAttribute="bottom" id="kP0-e3-Hk1"/>
+                            <constraint firstItem="98a-B4-r4O" firstAttribute="centerY" secondItem="eBS-CQ-TR6" secondAttribute="centerY" id="lGK-LK-FoB"/>
+                            <constraint firstItem="98a-B4-r4O" firstAttribute="centerX" secondItem="eBS-CQ-TR6" secondAttribute="centerX" id="pc4-VV-Vxc"/>
+                            <constraint firstAttribute="trailing" secondItem="pGj-e9-qcy" secondAttribute="trailing" id="qNO-LU-5AE"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="eBS-CQ-TR6" secondAttribute="trailing" id="10J-At-JVR"/>
+                    <constraint firstItem="eBS-CQ-TR6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="Pa9-TT-iEc"/>
+                    <constraint firstItem="eBS-CQ-TR6" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="Z4o-B8-6wz"/>
+                    <constraint firstAttribute="bottom" secondItem="eBS-CQ-TR6" secondAttribute="bottom" id="dcj-9P-18s"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="backGroundView" destination="eBS-CQ-TR6" id="zeq-vj-9tQ"/>
+                <outlet property="contentImageView" destination="pGj-e9-qcy" id="cBj-xa-HoT"/>
+                <outlet property="placeholderImageView" destination="Rul-K1-3dD" id="AdW-yI-yJc"/>
+                <outlet property="playImageView" destination="98a-B4-r4O" id="r6W-Tk-cMP"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Greeting_Image_Loading" width="125" height="102"/>
+        <image name="Greeting_Video_Play" width="48" height="50"/>
+    </resources>
+</document>

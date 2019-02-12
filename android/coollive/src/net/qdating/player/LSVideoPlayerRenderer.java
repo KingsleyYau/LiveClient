@@ -46,22 +46,59 @@ public class LSVideoPlayerRenderer implements Renderer {
 	private LSImageBmpFilter bmpFilter = null;
 	private LSImageOutputFilter outputFilter = null;
 
+	private LSImageFilter customFilter = null;
+	private boolean bCustomFilterChange = false;
+
 	public LSVideoPlayerRenderer(FillMode fillMode) {
 		bmpFilter = new LSImageBmpFilter();
 		outputFilter = new LSImageOutputFilter();
 		outputFilter.fillMode = fillMode;
 	}
-	
+
+	/**
+	 * 初始化
+	 */
 	public void init() {
 		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::init( this : 0x%x )", hashCode()));
 
 		bmpFilter.setFilter(outputFilter);
 	}
-	
+
+	/**
+	 * 反初始化
+	 */
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoPlayerRenderer::uninit( this : 0x%x )",  hashCode()));
 	}
-	
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		synchronized (this) {
+			if( this.customFilter != customFilter ) {
+				this.customFilter = customFilter;
+				bCustomFilterChange = true;
+
+				if (this.customFilter != null) {
+					bmpFilter.setFilter(this.customFilter);
+					this.customFilter.setFilter(outputFilter);
+				} else {
+					bmpFilter.setFilter(outputFilter);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		return this.customFilter;
+	}
+
 	public void updateBmpFrame(Bitmap bitmap) {
 		synchronized (this) {
 			bmpFilter.updateBmpFrame(bitmap);
@@ -83,6 +120,13 @@ public class LSVideoPlayerRenderer implements Renderer {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		synchronized (this) {
+			if( bCustomFilterChange ) {
+				if( customFilter != null ) {
+					customFilter.init();
+				}
+				bCustomFilterChange = false;
+			}
+
 			bmpFilter.draw(glTextureId[0], originalWidth, originalHeight);
 		}
 	}

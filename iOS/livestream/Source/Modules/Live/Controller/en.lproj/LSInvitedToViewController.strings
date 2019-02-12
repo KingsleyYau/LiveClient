@@ -34,7 +34,7 @@
 // 主播已拒绝有留言
 "PRELIVE_ERR_INVITE_REJECT" = "Sorry, the broadcaster has declined your invitation and left you a message as below:\n%@";
 // 服务器统一错误
-"SERVER_BACK_ERROR" = "A problem occur while communicating with the server.";
+"SERVER_ERROR_TIP" = "A problem occur while communicating with the server.";
 
-"INVITE_NO_RESPOND" = "Trouble connecting to the server, please try again later.";
+"INVITE_NO_RESPOND" = "Failed to enter the broadcast room, please try again later.";
 

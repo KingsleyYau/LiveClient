@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,7 +205,7 @@ public class TalentListFragment extends Fragment {
      * 请求才艺列表数据
      */
     private void getTalentsData(){
-        Log.d(TAG,"getTalentList-roomId:"+mRoomId);
+//        Log.d(TAG,"getTalentList-roomId:"+mRoomId);
         getTalentListSuccess = false;
         TalentManager.getInstance().getTalentList();
     }

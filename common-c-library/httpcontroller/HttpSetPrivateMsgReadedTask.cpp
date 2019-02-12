@@ -29,7 +29,6 @@ void HttpSetPrivateMsgReadedTask::SetParam(
                                                 const string& toId,
                                                 const string& lastMsgId
                                       ) {
-    char temp[16];
 	mHttpEntiy.Reset();
 	mHttpEntiy.SetSaveCookie(true);
     
@@ -73,7 +72,6 @@ bool HttpSetPrivateMsgReadedTask::ParseData(const string& url, bool bFlag, const
     string errmsg = "";
     bool bParse = false;
     bool result = false;
-    long dbtime = 0;
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;

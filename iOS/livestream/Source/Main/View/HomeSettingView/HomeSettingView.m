@@ -12,7 +12,7 @@
 #import "LiveSettingLineCell.h"
 #import "LSHomeSettingHaedView.h"
 #import "LSLoginManager.h"
-#import "UnreadNumManager.h"
+#import "LSUserUnreadCountManager.h"
 
 @interface HomeSettingView () <LSHomeSettingHaedViewDelegate>
 @property (nonatomic, strong) NSArray * iconArray;
@@ -21,7 +21,7 @@
 @property (nonatomic, strong) NSArray * imageArray;
 @property (nonatomic, strong) NSArray * headArray;
 
-@property (nonatomic, strong) UnreadNumManager *unreadManager;
+@property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 @end
 
 @implementation HomeSettingView
@@ -31,7 +31,7 @@
     self = [super init];
     if (self) {
         self =  [[LiveBundle mainBundle] loadNibNamed:@"HomeSettingView" owner:self options:nil].firstObject;
-        self.unreadManager = [UnreadNumManager manager];
+        self.unreadManager = [LSUserUnreadCountManager shareInstance];
     }
     return self;
 }
@@ -234,7 +234,7 @@
                 LSHomeSettingCell *setCell = [LSHomeSettingCell  getUITableViewCell:tableView];
                 setCell.settingIcon.image = [UIImage imageNamed:[self.iconArray objectAtIndex:indexPath.row]];
                 setCell.contentLabel.text = [self.titleArray objectAtIndex:indexPath.row];
-                [setCell showUnreadNum:[self.unreadManager getUnreadNum:(UnreadType)indexPath.row]];
+                [setCell showUnreadNum:[self.unreadManager getUnreadNum:(LSUnreadType)indexPath.row]];
                 cell = setCell;
             }
         }break;
@@ -244,7 +244,7 @@
             myCell.settingIcon.image = [UIImage imageNamed:[self.imageArray objectAtIndex:indexPath.row]];
             myCell.contentLabel.text = [self.headArray objectAtIndex:indexPath.row];
             NSInteger type = indexPath.row + 3;
-            [myCell showUnreadPoint:[self.unreadManager getUnreadNum:(UnreadType)type]];
+            [myCell showUnreadPoint:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
             cell = myCell;
         }break;
     }

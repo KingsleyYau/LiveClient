@@ -72,6 +72,7 @@
     return @"HangoutGiftCellCollectionViewCellIdentifier";
 }
 
+// 防止cell重用图片显示错乱
 - (void)prepareForReuse {
     [super prepareForReuse];
     [self.imageLoader stop];

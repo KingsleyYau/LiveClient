@@ -1,0 +1,54 @@
+
+/* Class = "UILabel"; text = "Mail Attachments"; ObjectID = "0PN-Cz-SU5"; */
+"0PN-Cz-SU5.text" = "Mail Attachments";
+
+/* Class = "UIButton"; normalTitle = "send"; ObjectID = "3aI-mV-YSI"; */
+"3aI-mV-YSI.normalTitle" = "send";
+
+/* Class = "UILabel"; text = "You are replying to this mail bu Post Stamps(1 stamp).If you wish to use Qpid Credits instead,please tap here."; ObjectID = "Dgh-sx-uu9"; */
+"Dgh-sx-uu9.text" = "You are replying to this mail bu Post Stamps(1 stamp).If you wish to use Qpid Credits instead,please tap here.";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Qg2-QA-nGF"; */
+"Qg2-QA-nGF.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "aWZ-rS-ELh"; */
+"aWZ-rS-ELh.text" = "Label";
+
+/* Class = "UILabel"; text = "Quick Reply"; ObjectID = "idx-jk-w6R"; */
+"idx-jk-w6R.text" = "Quick Reply";
+
+/* Class = "UIButton"; normalTitle = "Full Screen"; ObjectID = "rpN-QT-Ktz"; */
+"rpN-QT-Ktz.normalTitle" = "Full Screen";
+
+"TITLE" = "Mail Viewer";
+
+"POST_STAMPS" = "Post Stamps (1 stamp)";
+
+"SEND_CREDITS" = "Credits (0.8 credits)";
+
+"TAP_HERE" = "tap here.";
+
+"TYPE_YOUR_MSG" = "Type your message here...";
+
+"DEAR" = "Dear %@,\n";
+
+"FROM_ANCHOR" = "From: %@";
+
+"MAIL_ID" = "%@ (Mail ID: %@)";
+//没点提示
+"NO_CREDITS" = "You have insufficient credits to reply this letter.";
+
+//发信成功
+"SEND_MAIL_SUCCESSFULLY" = "Your mail has been sent successfully!";
+
+//发信时图片上传中
+"SEND_MAIL_UPLOADING" = "Please ensure that your photos are uploaded successfully before sending this mail.";
+
+//发信二次提示
+"SEND_MAIL_TIP" = "Do you wish to send this mail?";
+
+//回复框默认填写“Dear {主播昵称},” 若回复时判断文本框只有“Dear{主播昵称},” 则toast提示
+"NO_MAIL_TEXT" = "You haven't enter any message yet. Please enter your message before sending this mail.";
+
+//返回草稿箱提示
+"Back_Tip" = "If you choose save draft, draft will be reloaded next time when you write a mail to this member.";

@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
+import com.qpidnetwork.livemodule.livechathttprequest.item.LCRequestEnum.LivechatInviteRiskType;
+
 /**
  * Created by Hunter Mun on 2017/5/17.
  */
@@ -24,6 +26,7 @@ public class LoginItem {
      * @param qnMainAdUrl   QN主界面广告浮层的URL（可无，无则表示不弹广告）
      * @param qnMainAdTitle QN主界面广告浮层的标题（可无）
      * @param qnMainAdId    QN主界面广告浮层的ID（可无，无则表示不弹广告）
+     * @param gaUid         GA统计用户ID
 	 */
     public LoginItem(
             String userId,
@@ -37,7 +40,12 @@ public class LoginItem {
             int userType,
             String qnMainAdUrl,
             String qnMainAdTitle,
-            String qnMainAdId) {
+            String qnMainAdId,
+            String gaUid,
+            String sessionId,
+            boolean livechat,
+            int livechatInvite
+            ) {
         this.userId = userId;
         this.token = token;
         this.nickName = nickName;
@@ -54,6 +62,16 @@ public class LoginItem {
 		this.qnMainAdUrl = qnMainAdUrl;
         this.qnMainAdTitle = qnMainAdTitle;
         this.qnMainAdId = qnMainAdId;
+        this.gaUid = gaUid;
+
+        this.sessionId = sessionId;
+        this.livechat = livechat;
+        if( livechatInvite < 0 || livechatInvite >= LivechatInviteRiskType.values().length ) {
+            this.livechatInvite = LivechatInviteRiskType.UNLIMITED;
+        } else {
+            this.livechatInvite = LivechatInviteRiskType.values()[livechatInvite];
+        }
+
     }
 
     public String userId;
@@ -68,4 +86,24 @@ public class LoginItem {
     public String qnMainAdUrl;
     public String qnMainAdTitle;
     public String qnMainAdId;
+    public String gaUid;
+
+    //LiveChat相关
+    public String  sessionId; //= "dj649q56iuc5k7u3nvqc05umpu";
+    public boolean livechat;// = true;
+    public LivechatInviteRiskType livechatInvite;// = LivechatInviteRiskType.UNLIMITED;
+
+    //本地默认初始化，解决代码移植问题
+    public boolean photosend = false;
+    public boolean photoreceived = false;
+    public boolean videoreceived = false;
+
+    public boolean premit = true;
+    public boolean ladyprofile = true;
+    public boolean camshare = false;
+
+    public boolean admirer = true;
+    public boolean bpemf = true;
+    public int rechargeCredit = 0; //默认关闭自动充值权限
+
 }

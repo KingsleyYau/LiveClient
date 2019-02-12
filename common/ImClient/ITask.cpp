@@ -48,6 +48,7 @@
 #include "RecvAnchorCountDownEnterRoomNoticeTask.h"
 #include "RecvTalentListNoticeTask.h"
 #include "RecvPrivateMessageNoticeTask.h"
+#include "RecvHandoutInviteNoticeTask.h"
 #include "IImClientDef.h"
 
 #include "RecvEMFNoticeTask.h"
@@ -162,42 +163,46 @@ ITask* ITask::CreateTaskWithCmd(const string& cmd)
         // 9.4.观众勋章升级通知
         task = new RecvGetHonorNoticeTask();
     }
-//    else if (cmd == CMD_RECVRECOMMENDHANGOUTNOTICE) {
-//        // 10.1.接收主播推荐好友通知
-//        task = new RecvRecommendHangoutNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVDEALINVITATIONHANGOUTNOTICE) {
-//        // 10.2.接收主播回复观众多人互动邀请通知
-//        task = new RecvDealInviteHangoutNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVENTERHANGOUTROOMNOTICE) {
-//        // 10.5.接收观众/主播进入多人互动直播间通知
-//        task = new RecvEnterHangoutRoomNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVLEAVEHANGOUTROOMNOTICE) {
-//        // 10.6.接收观众/主播退出多人互动直播间通知
-//        task = new RecvLeaveHangoutRoomNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVHANGOUTGIFTNOTICE) {
-//        // 10.8.接收多人互动直播间礼物通知
-//        task = new RecvHangoutGiftNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVKNOCKREQUESTNOTICE) {
-//        // 10.9.接收主播敲门通知
-//        task = new RecvKnockRequestNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVLACKCREDITHANGOUTNOTICE) {
-//        // 10.10.接收多人互动余额不足导致主播将要离开的通知
-//        task = new RecvLackCreditangoutNoticeTask();
-//    }
-//    else if (cmd == CMD_HANGOUTSENDCHATNOTICE) {
-//        // 10.13.接收直播间文本消息
-//        task = new RecvHangoutChatNoticeTask();
-//    }
-//    else if (cmd == CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE) {
-//        // 10.14.接收进入多人互动直播间倒数通知
-//        task = new RecvAnchorCountDownEnterRoomNoticeTask();
-//    }
+    else if (cmd == CMD_RECVRECOMMENDHANGOUTNOTICE) {
+        // 10.1.接收主播推荐好友通知
+        task = new RecvRecommendHangoutNoticeTask();
+    }
+    else if (cmd == CMD_RECVDEALINVITATIONHANGOUTNOTICE) {
+        // 10.2.接收主播回复观众多人互动邀请通知
+        task = new RecvDealInviteHangoutNoticeTask();
+    }
+    else if (cmd == CMD_RECVENTERHANGOUTROOMNOTICE) {
+        // 10.5.接收观众/主播进入多人互动直播间通知
+        task = new RecvEnterHangoutRoomNoticeTask();
+    }
+    else if (cmd == CMD_RECVLEAVEHANGOUTROOMNOTICE) {
+        // 10.6.接收观众/主播退出多人互动直播间通知
+        task = new RecvLeaveHangoutRoomNoticeTask();
+    }
+    else if (cmd == CMD_RECVHANGOUTGIFTNOTICE) {
+        // 10.8.接收多人互动直播间礼物通知
+        task = new RecvHangoutGiftNoticeTask();
+    }
+    else if (cmd == CMD_RECVKNOCKREQUESTNOTICE) {
+        // 10.9.接收主播敲门通知
+        task = new RecvKnockRequestNoticeTask();
+    }
+    else if (cmd == CMD_RECVLACKCREDITHANGOUTNOTICE) {
+        // 10.10.接收多人互动余额不足导致主播将要离开的通知
+        task = new RecvLackCreditangoutNoticeTask();
+    }
+    else if (cmd == CMD_HANGOUTSENDCHATNOTICE) {
+        // 10.13.接收直播间文本消息
+        task = new RecvHangoutChatNoticeTask();
+    }
+    else if (cmd == CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE) {
+        // 10.14.接收进入多人互动直播间倒数通知
+        task = new RecvAnchorCountDownEnterRoomNoticeTask();
+    }
+    else if (cmd == CMD_RECVHANGOURINVITENOTICE) {
+        // 10.15.接收主播Hang-out邀请通知Task实现类
+        task = new RecvHandoutInviteNoticeTask();
+    }
     else if (cmd == CMD_RECVPROGRAMPLAYNOTICE) {
         // 11.1.节目开播通知
         task = new RecvProgramPlayNoticeTask();

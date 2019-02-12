@@ -28,7 +28,7 @@
 		<key>MJRefresh.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>20</integer>
 		</dict>
 		<key>Masonry.xcscheme</key>
 		<dict>
@@ -57,6 +57,11 @@
 			<false/>
 			<key>orderHint</key>
 			<integer>10</integer>
+		</dict>
+		<key>TTTAttributedLabel.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>21</integer>
 		</dict>
 		<key>YYText.xcscheme</key>
 		<dict>

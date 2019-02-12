@@ -20,7 +20,7 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.liveshow.liveroom.online.AudienceHeadItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -106,15 +106,20 @@ public class CircleImageHorizontScrollView extends HorizontalScrollView {
                 imageViewLp.height = itemWidth;
                 civ_userHeader.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 if(!TextUtils.isEmpty(bean.photoUrl)){
-                    Picasso.with(getContext().getApplicationContext())
-                            .load(bean.photoUrl).noFade()
+//                    Picasso.with(getContext().getApplicationContext())
+                    Picasso.get()
+                            .load(bean.photoUrl)
+                            .noFade()
                             .error(bean.defaultPhotoResId)
                             .memoryPolicy(MemoryPolicy.NO_CACHE)
                             .noPlaceholder()
                             .into(civ_userHeader);
+
                 }else{
-                    Picasso.with(getContext().getApplicationContext())
-                            .load(bean.defaultPhotoResId).noFade()
+//                    Picasso.with(getContext().getApplicationContext())
+                    Picasso.get()
+                            .load(bean.defaultPhotoResId)
+                            .noFade()
                             .into(civ_userHeader);
                 }
                 //是否购票

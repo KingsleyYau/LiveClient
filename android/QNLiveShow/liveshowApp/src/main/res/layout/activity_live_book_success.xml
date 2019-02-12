@@ -68,17 +68,20 @@
             app:layout_constraintTop_toTopOf="parent"
             button:layout_constraintLeft_toLeftOf="parent" />
 
+        <!-- layout_width="0dp" 会不会覆盖左边的TextView -->
         <TextView
             android:id="@+id/tv_broadcaster_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="24dp"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="right"
             android:textColor="@color/text_color_grey"
             button:layout_constraintBaseline_toBaselineOf="@+id/textView11"
-            button:layout_constraintHorizontal_bias="1.0"
             button:layout_constraintLeft_toRightOf="@+id/textView11"
             button:layout_constraintRight_toRightOf="parent" />
 
@@ -111,12 +114,15 @@
 
         <TextView
             android:id="@+id/tv_book_time"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="24dp"
             android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:gravity="right"
             android:textColor="@color/text_color_grey"
             button:layout_constraintBaseline_toBaselineOf="@+id/textView13"
             button:layout_constraintHorizontal_bias="1.0"

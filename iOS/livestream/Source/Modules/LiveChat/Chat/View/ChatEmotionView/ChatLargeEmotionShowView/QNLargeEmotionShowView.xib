@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="QNLargeEmotionShowView">
+            <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LS_Chat_LargeEmotionDefault" translatesAutoresizingMaskIntoConstraints="NO" id="eMW-KV-Caj" customClass="QNGIFImageView">
+                    <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+                </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d9O-5M-pOu">
+                    <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="UwW-Da-FJ5">
+                            <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+                            <color key="color" red="0.66666666666666663" green="0.66666666666666663" blue="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="UwW-Da-FJ5" firstAttribute="leading" secondItem="d9O-5M-pOu" secondAttribute="leading" id="Xek-oF-I50"/>
+                        <constraint firstItem="UwW-Da-FJ5" firstAttribute="top" secondItem="d9O-5M-pOu" secondAttribute="top" id="j0h-K1-peo"/>
+                        <constraint firstAttribute="bottom" secondItem="UwW-Da-FJ5" secondAttribute="bottom" id="nUZ-Uu-Gxp"/>
+                        <constraint firstAttribute="trailing" secondItem="UwW-Da-FJ5" secondAttribute="trailing" id="pxH-QX-3Lx"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="eMW-KV-Caj" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="6nr-Ig-YbK"/>
+                <constraint firstItem="d9O-5M-pOu" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="7cZ-4G-Vlg"/>
+                <constraint firstAttribute="trailing" secondItem="d9O-5M-pOu" secondAttribute="trailing" id="G3m-AE-xcR"/>
+                <constraint firstItem="d9O-5M-pOu" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="WyK-A9-nSs"/>
+                <constraint firstAttribute="bottom" secondItem="d9O-5M-pOu" secondAttribute="bottom" id="Z2p-is-4IE"/>
+                <constraint firstAttribute="trailing" secondItem="eMW-KV-Caj" secondAttribute="trailing" id="bKI-AF-5WO"/>
+                <constraint firstAttribute="bottom" secondItem="eMW-KV-Caj" secondAttribute="bottom" id="moP-DV-PBv"/>
+                <constraint firstItem="eMW-KV-Caj" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="oc2-Ip-cDG"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="activityView" destination="UwW-Da-FJ5" id="tYn-at-Sy8"/>
+                <outlet property="imageView" destination="eMW-KV-Caj" id="3Wo-uH-mde"/>
+                <outlet property="loadingImageView" destination="d9O-5M-pOu" id="bQF-If-aHW"/>
+            </connections>
+            <point key="canvasLocation" x="348" y="375"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="LS_Chat_LargeEmotionDefault" width="84" height="84"/>
+    </resources>
+</document>

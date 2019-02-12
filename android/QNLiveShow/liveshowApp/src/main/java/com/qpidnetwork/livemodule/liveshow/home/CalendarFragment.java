@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,16 +24,19 @@ import com.qpidnetwork.livemodule.httprequest.OnBuyProgramCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetProgramListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniProgram;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramTicketStatus;
+import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.tickets.TicketHistoryAdapter;
 import com.qpidnetwork.livemodule.utils.DateUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import com.qpidnetwork.qnbridgemodule.view.stickyDecoration4Recyclerview.PowerfulStickyDecoration;
 import com.qpidnetwork.qnbridgemodule.view.stickyDecoration4Recyclerview.listener.PowerGroupListener;
 
@@ -47,20 +49,17 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * 节目
  * Created by Jagger on 2018/4/18.
  */
 
-public class CalendarFragment extends BaseRecyclerViewFragment implements CalendarAdapter.OnItemClickedListener{
+public class CalendarFragment extends BaseRecyclerViewFragment implements CalendarAdapter.OnItemClickedListener, IAuthorizationListener {
 
     //展示界面
     public enum ShowType{
@@ -134,6 +133,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
         }else if(mShowType == ShowType.HISTORY){
             doInitView4TypeHistory();
         }
+        LoginManager.getInstance().register(this);
 
         //del by Jagger
         //无节目时要看到列表头同时也要看到EmptyView,不能设置背景色，透明才可以看到EmptyView
@@ -286,6 +286,7 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
     public void onDestroy() {
         super.onDestroy();
         doCancelUpdateEnterTime();
+        LoginManager.getInstance().unRegister(this);
     }
 
     @Override
@@ -476,10 +477,19 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                     //无数据显示空页
                     showEmptyView();
                 }else{
-                    if(mIsHeaderShow && mAdapter.getItemCount() == 1){
-                        //当有描述时
-                        //无数据显示空页
-                        showEmptyView();
+                    if(mAdapter.getItemCount() == 1){
+                        //只有一条数据且它是描述时
+                        boolean hasIntroductionButProgramme = true;
+                        for(ProgramInfoItem programInfoItem:mList){
+                            if(programInfoItem.type == ProgramInfoItem.TYPE.Programme.ordinal()){
+                                hasIntroductionButProgramme = false;
+                            }
+                        }
+
+                        //显示空页
+                        if(hasIntroductionButProgramme){
+                            showEmptyView();
+                        }
                     }else{
                         //有数据 且 不是更多, 才开始本地倒计时
                         if(msg.arg1 == 0){
@@ -619,17 +629,24 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
 //            refreshRecyclerView.getRecyclerView().addHeaderView(headerView);
 //        }
 
-        if(LoginManager.getInstance().getSynConfig() != null && !TextUtils.isEmpty(LoginManager.getInstance().getSynConfig().showDescription)){
+//        if(LoginManager.getInstance().getSynConfig() != null && !TextUtils.isEmpty(LoginManager.getInstance().getSynConfig().showDescription)){
             ProgramInfoItem item = new ProgramInfoItem();
             item.type = ProgramInfoItem.TYPE.Introduction.ordinal();
-            item.des = LoginManager.getInstance().getSynConfig().showDescription;
-
+            //edit by Jagger 2018-11-1 改为写死 Samson已确认
+            item.des = getString(R.string.live_program_des); //LoginManager.getInstance().getSynConfig().showDescription;
             mList.add(item);
-        }
+//        }
     }
 
     @Override
     public void onDetailClicked(ProgramInfoItem programInfoItem) {
+        //add by Jagger 2018-9-29
+        //优先登录
+        if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
+            RegisterActivity.launchRegisterActivity(mContext);
+            return;
+        }
+
         mContext.startActivity(LiveProgramDetailActivity.getProgramInfoIntent(mContext,
                 getResources().getString(R.string.live_program_detail_title),
                 programInfoItem.showLiveId,
@@ -643,6 +660,13 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
 
     @Override
     public void onWatchClicked(ProgramInfoItem programInfoItem) {
+        //add by Jagger 2018-9-29
+        //优先登录
+        if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
+            RegisterActivity.launchRegisterActivity(mContext);
+            return;
+        }
+
         mContext.startActivity(LiveRoomTransitionActivity.getProgramShowIntent(mContext,
                 LiveRoomTransitionActivity.CategoryType.Enter_Program_Public_Room,
                 programInfoItem.anchorId,
@@ -657,6 +681,13 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
 
     @Override
     public void onGetTicketClicked(ProgramInfoItem item) {
+        //add by Jagger 2018-9-29
+        //优先登录
+        if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined){
+            RegisterActivity.launchRegisterActivity(mContext);
+            return;
+        }
+
         doGetTicket(item);
         //GA统计点击买票
         uploadGoogleAnalyticsData(getResources().getString(R.string.Live_Calendar_Category),
@@ -679,7 +710,11 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                 Gravity.CENTER, true, true,
                 null).show();
         //VIEW内事件
-        ImageView imgClose = (ImageView)rootView.findViewById(R.id.img_close) ;
+//        ImageView imgClose = (ImageView)rootView.findViewById(R.id.img_close) ;
+//        imgClose.setOnClickListener(new View.OnClickListener() {
+
+        // 2018/12/1 Hardy 增大点击面积
+        View imgClose = rootView.findViewById(R.id.fl_close) ;
         imgClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -763,5 +798,17 @@ public class CalendarFragment extends BaseRecyclerViewFragment implements Calend
                 return 0;
             }
         }
+    }
+
+    @Override
+    public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        //
+        refreshByData(false);
+    }
+
+    @Override
+    public void onLogout(boolean isMannual) {
+        //
+        refreshByData(false);
     }
 }

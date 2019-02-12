@@ -17,8 +17,16 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_SetLogDir
 
 /*
  * Class:     net_qdating_publisher_LSPublisherJni
+ * Method:    SetLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_SetLogLevel
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     net_qdating_publisher_LSPublisherJni
  * Method:    Create
- * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;ZLnet/qdating/publisher/ILSVideoEncoderJni;IIIII)J
+ * Signature: (Lnet/qdating/publisher/ILSPublisherCallbackJni;ZLnet/qdating/publisher/ILSVideoHardEncoderJni;IIIII)J
  */
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
   (JNIEnv *, jobject, jobject, jboolean, jobject, jint, jint, jint, jint, jint);

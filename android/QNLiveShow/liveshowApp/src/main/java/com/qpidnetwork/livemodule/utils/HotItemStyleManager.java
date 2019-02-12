@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:

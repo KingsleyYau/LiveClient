@@ -50,6 +50,8 @@ public abstract class IMClientListener {
 		LCC_ERR_SEND_GIFT_BACKPACK_NO_EXIST,		// 主播发礼物,背包礼物不存在(16151)
 		LCC_ERR_SEND_GIFT_BACKPACK_LESSTHAN,	 	// 主播发礼物,背包礼物数量不足(16152)
 		LCC_ERR_SEND_GIFT_PARAM_ERR, 				// 发礼物,参数错误(16153)
+		LCC_ERR_PRIVTE_INVITE_AUTHORITY,            // 主播无立即私密邀请权限(17002)
+		LCC_ERR_NO_PUBLIC_LIVE_AUTHORITY,           // 主播无公开开播权限(17004)
 	}
 
 	//邀请答复类型

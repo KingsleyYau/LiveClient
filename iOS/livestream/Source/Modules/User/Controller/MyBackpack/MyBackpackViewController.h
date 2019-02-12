@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsPageViewController.h"
 
-@interface MyBackpackViewController : LSGoogleAnalyticsViewController
+@interface MyBackpackViewController : LSGoogleAnalyticsPageViewController
 @property (nonatomic, assign) NSInteger curIndex;
-- (void)getunreadCount;
+
 @end

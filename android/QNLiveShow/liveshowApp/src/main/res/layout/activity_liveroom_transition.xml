@@ -153,6 +153,20 @@
                     android:background="@drawable/button_view_anchor_profile"
                     android:visibility="gone"
                     android:layout_marginBottom="16dp"/>
+                <Button
+                    android:id="@+id/btnChat"
+                    android:layout_width="@dimen/live_size_200dp"
+                    android:layout_height="@dimen/live_size_40dp"
+                    android:background="@drawable/list_button_chat_now"
+                    android:visibility="gone"
+                    android:layout_marginBottom="16dp"/>
+                <Button
+                    android:id="@+id/btnSendMail"
+                    android:layout_width="@dimen/live_size_200dp"
+                    android:layout_height="@dimen/live_size_40dp"
+                    android:background="@drawable/list_button_send_mail"
+                    android:visibility="gone"
+                    android:layout_marginBottom="16dp"/>
             </LinearLayout>
 
             <!--推荐区域-->

@@ -21,9 +21,7 @@ import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
 import com.qpidnetwork.livemodule.utils.DateUtil;
-import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.HtmlSpannedHandler;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.MaterialProgressBar;
 
 import java.text.SimpleDateFormat;
@@ -123,7 +121,6 @@ public class ChatTextAdapter extends RecyclerView.Adapter<ChatTextAdapter.Drawer
     public void onBindViewHolder(DrawerViewHolder holder, int position) {
         //选项
         final LiveMessageItem item = mMsgList.get(position);
-        Log.i("hunter", "onBindViewHolder item: " +  item.toString());
 
         if (holder instanceof RecvTextTypeViewHolder) {
 
@@ -174,7 +171,6 @@ public class ChatTextAdapter extends RecyclerView.Adapter<ChatTextAdapter.Drawer
 
                     @Override
                     public void onClick(View widget) {
-                        Log.i("hunter", "clickableSpan click");
                         if(listener != null){
                             listener.onAddCreditClick();
                         }

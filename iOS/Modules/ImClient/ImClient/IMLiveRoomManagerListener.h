@@ -50,7 +50,7 @@
  *  @param item         直播间信息
  *
  */
-- (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ImLiveRoomObject* _Nonnull)item;
+- (void)onRoomIn:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg item:(ImLiveRoomObject* _Nonnull)item priv:(ImAuthorityItemObject* _Nonnull)priv;
 /**
  *  3.2.观众退出直播间回调
  *
@@ -70,7 +70,7 @@
  *  @param item         直播间信息
  *
  */
-- (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImLiveRoomObject* _Nonnull)item;
+- (void)onPublicRoomIn:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImLiveRoomObject* _Nonnull)item priv:(ImAuthorityItemObject* _Nonnull)priv;
 
 /**
  *  3.14.观众开始／结束视频互动接口 回调
@@ -90,18 +90,20 @@
  *  @param reqId            请求序列号
  *  @param errMsg           结果描述
  *  @param item             立即私密邀请
+ *  @param priv             错误权限提示
  *
  */
-- (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImInviteIdItemObject *_Nonnull)item;
+- (void)onGetInviteInfo:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg item:(ImInviteIdItemObject *_Nonnull)item priv:(ImAuthorityItemObject* _Nonnull)priv;
 
 #pragma mark - 直播间接收操作回调
 /**
  *  3.3.接收直播间关闭通知(观众)回调
  *
  *  @param roomId      直播间ID
+ *  @param priv        权限
  *
  */
-- (void)onRecvRoomCloseNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg;
+- (void)onRecvRoomCloseNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString* _Nonnull)errmsg priv:(ImAuthorityItemObject * _Nonnull)priv;
 
 /**
  *  3.4.接收观众进入直播间通知回调
@@ -148,9 +150,10 @@
  *  @param leftSeconds 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
  *  @param err         错误码
  *  @param errMsg      错误描述
+ *  @param priv        权限
  *
  */
-- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg;
+- (void)onRecvLeavingPublicRoomNotice:(NSString* _Nonnull)roomId leftSeconds:(int)leftSeconds err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg priv:(ImAuthorityItemObject * _Nonnull)priv;
 
 
 /**
@@ -160,9 +163,10 @@
  *  @param errType     踢出原因错误码
  *  @param errmsg      踢出原因描述
  *  @param credit      信用点
+ *  @param priv        权限
  *
  */
-- (void)onRecvRoomKickoffNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString* _Nonnull)errmsg credit:(double)credit;
+- (void)onRecvRoomKickoffNotice:(NSString* _Nonnull)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString* _Nonnull)errmsg credit:(double)credit priv:(ImAuthorityItemObject * _Nonnull)priv;
 
 /**
  *  3.9.接收充值通知回调
@@ -303,9 +307,10 @@
  *  @param invitationId      邀请ID
  *  @param timeOut           邀请的剩余有效时间
  *  @param roomId            直播间ID
+ *  @param chatOnlineStatus  Chat在线状态（IMCHATONLINESTATUS_OFF：离线，IMCHATONLINESTATUS_ONLINE：在线）
  *
  */
-- (void) onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId;
+- (void)onSendPrivateLiveInvite:(BOOL)success reqId:(SEQ_T)reqId err:(LCC_ERR_TYPE)err errMsg:(NSString* _Nonnull)errMsg invitationId:(NSString* _Nonnull)invitationId timeOut:(int)timeOut roomId:(NSString* _Nonnull)roomId inviteErr:(ImInviteErrItemObject* _Nonnull)inviteErr;
 
 /**
  *  7.2.观众取消立即私密邀请 回调
@@ -322,17 +327,10 @@
 /**
  *  7.3.接收立即私密邀请回复通知 回调
  *
- *  @param inviteId      邀请ID
- *  @param replyType     主播回复 （0:拒绝 1:同意）
- *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
- *  @param roomType      直播间类型
- *  @param anchorId      主播ID
- *  @param nickName      主播昵称
- *  @param avatarImg     主播头像
- *  @param msg           提示文字
+ *  @param replyItem     邀请回复信息
  *
  */
-- (void)onRecvInstantInviteReplyNotice:(NSString* _Nonnull)inviteId replyType:(ReplyType)replyType roomId:(NSString* _Nonnull)roomId roomType:(RoomType)roomType anchorId:(NSString* _Nonnull)anchorId nickName:(NSString* _Nonnull)nickName avatarImg:(NSString* _Nonnull)avatarImg msg:(NSString* _Nonnull)msg;
+- (void)onRecvInstantInviteReplyNotice:(ImInviteReplyItemObject* _Nonnull)replyItem;
 
 /**
  *  7.4.接收主播立即私密邀请通知 回调
@@ -580,6 +578,14 @@
  *
  */
 - (void)onRecvAnchorCountDownEnterHangoutRoomNotice:(NSString * _Nonnull)roomId anchorId:(NSString * _Nonnull)anchorId leftSecond:(int)leftSecond;
+
+/**
+ *  10.15.接收主播Hang-out邀请通知接口 回调
+ *
+ *  @param item         主播Hang-out邀请消息
+ *
+ */
+- (void)onRecvHandoutInviteNotice:(IMHangoutInviteItemObject * _Nonnull)item;
 
 // ------------- 节目 -------------
 /**

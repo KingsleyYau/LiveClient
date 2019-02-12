@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QNChatMoonFeeTableViewCell" rowHeight="116" id="KGk-i7-Jjw" customClass="QNChatMoonFeeTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="311" height="116"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="311" height="115.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gf7-qu-hvY" userLabel="bg">
+                        <rect key="frame" x="30" y="5" width="251" height="105.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Access Premium Service" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gLO-Wr-ylR">
+                                <rect key="frame" x="31" y="5" width="189" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$14.99 / month" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Di-7w-ngL">
+                                <rect key="frame" x="73" y="82.5" width="105" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" red="0.43529411759999997" green="0.4431372549" blue="0.47450980390000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hup-dO-zDQ">
+                                <rect key="frame" x="31" y="37" width="189" height="32"/>
+                                <color key="backgroundColor" red="0.31970278819999998" green="0.70146367529999998" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="32" id="NTW-8L-PpN"/>
+                                    <constraint firstAttribute="width" constant="160" id="eVi-1o-Ojj"/>
+                                </constraints>
+                                <state key="normal" title="Go Premium">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="eVi-1o-Ojj"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="goPremium:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="V6g-0Y-kY5"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="gLO-Wr-ylR" firstAttribute="centerX" secondItem="gf7-qu-hvY" secondAttribute="centerX" id="Bzp-ss-NZP"/>
+                            <constraint firstItem="8Di-7w-ngL" firstAttribute="centerX" secondItem="gf7-qu-hvY" secondAttribute="centerX" id="Mtp-An-HLp"/>
+                            <constraint firstItem="hup-dO-zDQ" firstAttribute="top" secondItem="gLO-Wr-ylR" secondAttribute="bottom" constant="5" id="N5G-vj-zNB"/>
+                            <constraint firstItem="gLO-Wr-ylR" firstAttribute="top" secondItem="gf7-qu-hvY" secondAttribute="top" constant="5" id="cFf-N6-ce1"/>
+                            <constraint firstItem="hup-dO-zDQ" firstAttribute="centerY" secondItem="gf7-qu-hvY" secondAttribute="centerY" id="dWG-Ar-vEU"/>
+                            <constraint firstItem="8Di-7w-ngL" firstAttribute="top" secondItem="hup-dO-zDQ" secondAttribute="bottom" constant="5" id="hNU-l4-gjL"/>
+                            <constraint firstItem="hup-dO-zDQ" firstAttribute="width" secondItem="gLO-Wr-ylR" secondAttribute="width" id="hw4-T1-cMf"/>
+                            <constraint firstItem="hup-dO-zDQ" firstAttribute="centerX" secondItem="gf7-qu-hvY" secondAttribute="centerX" id="mLz-Lw-ftE"/>
+                            <constraint firstAttribute="bottom" secondItem="8Di-7w-ngL" secondAttribute="bottom" constant="5" id="t15-Kl-VIx"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="N5G-vj-zNB"/>
+                                <exclude reference="hNU-l4-gjL"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="gf7-qu-hvY" secondAttribute="bottom" constant="5" id="0cb-mh-8g9"/>
+                    <constraint firstItem="gf7-qu-hvY" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="4cd-gV-vac"/>
+                    <constraint firstItem="gf7-qu-hvY" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="30" id="Ewb-Mh-fAu"/>
+                    <constraint firstAttribute="trailing" secondItem="gf7-qu-hvY" secondAttribute="trailing" constant="30" id="fgt-Vm-mM4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.96362179489999999" green="0.96362179489999999" blue="0.96362179489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <connections>
+                <outlet property="bgView" destination="gf7-qu-hvY" id="9aI-oQ-f1A"/>
+                <outlet property="premiumBtn" destination="hup-dO-zDQ" id="c9K-hH-UcF"/>
+                <outlet property="priceLabel" destination="8Di-7w-ngL" id="KYP-8s-33E"/>
+                <outlet property="titleLabel" destination="gLO-Wr-ylR" id="aBo-86-av1"/>
+            </connections>
+            <point key="canvasLocation" x="481.5" y="353"/>
+        </tableViewCell>
+    </objects>
+</document>

@@ -191,6 +191,20 @@ int LiveAnchorStatusToInt(LiveAnchorStatus type) {
 
 }
 
+// 底层状态转换JAVA坐标
+int IMChatOnlineStatusToInt(IMChatOnlineStatus type) {
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(IMChatOnlineStatusArray); i++)
+	{
+		if (type == IMChatOnlineStatusArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
 jobject getRebateItem(JNIEnv *env, const RebateInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_REBATE_ITEM_CLASS);
@@ -296,7 +310,8 @@ jobject getRoomInItem(JNIEnv *env, const RoomInfoItem& item){
 		string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;Ljava/lang/String;IDZI[II";
 		signature += "L";
 		signature += IM_REBATE_ITEM_CLASS;
-		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;DIIZ)V";
+		signature += ";ZIZ[Ljava/lang/String;IDDILjava/lang/String;Ljava/lang/String;DIIZ";
+        signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
         if (NULL != init) {
@@ -1438,6 +1453,112 @@ jobject getHangoutCountDownItem(JNIEnv *env, const string& roomId, const string&
 								   leftSecond);
 			env->DeleteLocalRef(jroomId);
 			env->DeleteLocalRef(janchorId);
+		}
+	}
+    if (NULL != jItemCls) {
+        env->DeleteLocalRef(jItemCls);
+    }
+
+	return jItem;
+}
+
+jobject getIMAuthorityItemItem(JNIEnv *env, const IMAuthorityItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_AUTHORITY_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string	signature = "(ZZ)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+
+			jItem = env->NewObject(jItemCls, init,
+								   item.isHasOneOnOneAuth,
+								   item.isHasBookingAuth);
+		}
+	}
+    if (NULL != jItemCls) {
+        env->DeleteLocalRef(jItemCls);
+    }
+
+	return jItem;
+}
+
+jobject getIMInviteReplyItem(JNIEnv *env, const IMInviteReplyItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_INVITE_REPLY_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string	signature = "(Ljava/lang/String;ILjava/lang/String;";
+		        signature += "ILjava/lang/String;Ljava/lang/String;";
+		        signature += "Ljava/lang/String;Ljava/lang/String;I";
+		        signature += "L";
+		        signature += IM_AUTHORITY_ITEM_CLASS;
+		        signature += ";";
+		        signature += ")V";
+
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+			jstring jinviteId = env->NewStringUTF(item.inviteId.c_str());
+			jstring jroomId = env->NewStringUTF(item.roomId.c_str());
+			jstring janchorId = env->NewStringUTF(item.anchorId.c_str());
+            jstring jnickName = env->NewStringUTF(item.nickName.c_str());
+            jstring javatarImg = env->NewStringUTF(item.avatarImg.c_str());
+            jstring jmsg = env->NewStringUTF(item.msg.c_str());
+            int jtype = InviteReplyTypeToInt(item.replyType);
+            int jroomType = RoomTypeToInt(item.roomType);
+            int jstatus = IMChatOnlineStatusToInt(item.status);
+            jobject jpriv = getIMAuthorityItemItem(env, item.priv);
+			jItem = env->NewObject(jItemCls, init,
+								  jinviteId,
+								  jtype,
+								  jroomId,
+								  jroomType,
+								  janchorId,
+								  jnickName,
+								  javatarImg,
+								  jmsg,
+								  jstatus,
+								  jpriv);
+			env->DeleteLocalRef(jinviteId);
+            env->DeleteLocalRef(jroomId);
+            env->DeleteLocalRef(janchorId);
+            env->DeleteLocalRef(jnickName);
+            env->DeleteLocalRef(javatarImg);
+            env->DeleteLocalRef(jmsg);
+            if (NULL != jpriv) {
+                 env->DeleteLocalRef(jpriv);
+             }
+
+		}
+	}
+    if (NULL != jItemCls) {
+        env->DeleteLocalRef(jItemCls);
+    }
+
+	return jItem;
+}
+
+jobject getIMInviteErrItem(JNIEnv *env, const IMInviteErrItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, IM_INVITE_ERR_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string	signature = "(I";
+		        signature += "L";
+		        signature += IM_AUTHORITY_ITEM_CLASS;
+		        signature += ";";
+		        signature += ")V";
+
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+
+            int jstatus = IMChatOnlineStatusToInt(item.status);
+            jobject jpriv = getIMAuthorityItemItem(env, item.priv);
+			jItem = env->NewObject(jItemCls, init,
+								  jstatus,
+								  jpriv);
+
+            if (NULL != jpriv) {
+                 env->DeleteLocalRef(jpriv);
+             }
+
 		}
 	}
     if (NULL != jItemCls) {

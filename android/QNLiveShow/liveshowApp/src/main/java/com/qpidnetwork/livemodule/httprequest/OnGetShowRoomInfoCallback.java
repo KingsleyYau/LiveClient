@@ -1,4 +1,5 @@
 package com.qpidnetwork.livemodule.httprequest;
+import com.qpidnetwork.livemodule.httprequest.item.HttpAuthorityItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 
 /**
@@ -11,6 +12,7 @@ public interface OnGetShowRoomInfoCallback {
 	 * 获取可进入的节目信息回调
 	 * @item 			节目信息
 	 * @roomId			直播间ID
+	 * @privItem		错误权限信息
 	 */
-	public void onGetShowRoomInfo(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem item, String roomId);
+	public void onGetShowRoomInfo(boolean isSuccess, int errCode, String errMsg, ProgramInfoItem item, String roomId, HttpAuthorityItem privItem);
 }

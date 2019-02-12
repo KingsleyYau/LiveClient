@@ -78,7 +78,7 @@ static const int IMErrorTypeArray[] = {
         
 	LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
 	LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间
-
+    LCC_ERR_PRIVTE_INVITE_AUTHORITY,    // 主播无立即私密邀请权限 (17002)
 };
 
 // 底层状态转换JAVA坐标
@@ -235,6 +235,17 @@ static const int LiveAnchorStatusArray[] = {
 // 底层状态转换JAVA坐标
 int LiveAnchorStatusToInt(LiveAnchorStatus type);
 
+/*主播状态类型*/
+static const int IMChatOnlineStatusArray[] = {
+    IMCHATONLINESTATUS_UNKNOW,    // 未知
+    IMCHATONLINESTATUS_OFF,      // 离线
+    IMCHATONLINESTATUS_ONLINE   // 在线
+
+};
+
+// 底层状态转换JAVA坐标
+int IMChatOnlineStatusToInt(IMChatOnlineStatus type);
+
 
 jobject getLoginItem(JNIEnv *env, const LoginReturnItem& item);
 
@@ -264,5 +275,8 @@ jobject getKnockRequestItem(JNIEnv *env, const IMKnockRequestItem& item);
 jobject getLackCreditHangoutItem(JNIEnv *env, const IMLackCreditHangoutItem& item);
 jobject getHangoutChatItem(JNIEnv *env, const IMRecvHangoutChatItem& item);
 jobject getHangoutCountDownItem(JNIEnv *env, const string& roomId, const string& anchorId, int leftSecond);
+jobject getIMAuthorityItemItem(JNIEnv *env, const IMAuthorityItem& item);
+jobject getIMInviteReplyItem(JNIEnv *env, const IMInviteReplyItem& item);
+jobject getIMInviteErrItem(JNIEnv *env, const IMInviteErrItem& item);
 
 #endif

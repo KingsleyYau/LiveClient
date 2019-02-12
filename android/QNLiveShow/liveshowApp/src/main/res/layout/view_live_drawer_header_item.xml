@@ -1,115 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="167dp"
-    android:gravity="bottom"
-    android:background="@drawable/ic_live_menu_header_bg"
-    android:orientation="vertical">
-
+    android:background="@drawable/ic_live_menu_header_bg">
 
     <LinearLayout
-        android:id="@+id/ll_userInfo"
-        android:layout_width="wrap_content"
+        android:id="@+id/ll_header_root"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
         android:clickable="true"
         android:focusable="true"
-        android:layout_marginBottom="14dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginRight="25dp">
+        android:minHeight="167dp"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/live_size_24dp"
+            android:layout_marginTop="@dimen/live_size_6dp">
 
-        <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
-            android:id="@+id/civ_userPhoto"
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            android:src="@drawable/ic_default_photo_man"/>
-
+            <ImageView
+                android:id="@+id/img_setting"
+                android:layout_width="@dimen/live_size_24dp"
+                android:layout_height="@dimen/live_size_24dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="25dp"
+                android:src="@drawable/ic_settings_white" />
+        </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/ll_userInfo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="@dimen/live_size_24dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="14dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tv_userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="18sp"
-                android:textColor="#FFFEFE"
-                android:textStyle="bold"
-                android:lines="1"
-                android:ellipsize="end" />
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/civ_userPhoto"
+                android:layout_width="68dp"
+                android:layout_height="68dp"
+                android:src="@drawable/ic_default_photo_man"
+                app:civ_border_color="@color/white"
+                app:civ_border_width="@dimen/menu_photo_border" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="15dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_userId"
+                    android:id="@+id/tv_userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:lines="1"
                     android:text=""
-                    android:textSize="12sp"
-                    android:textColor="#FFFEFE"/>
+                    android:textColor="#FFFEFE"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/iv_userLevel"
-                    android:paddingTop="6dp"
-                    android:paddingBottom="6dp"
-                    android:paddingLeft="9dp"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_level_icon_1"/>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_userId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textColor="#FFFEFE"
+                        android:textSize="12sp" />
+
+                    <ImageView
+                        android:id="@+id/iv_userLevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="9dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:src="@drawable/ic_level_icon_1" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/ll_changeWebSite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/bg_live_menu_header_changewebsite"
+            android:gravity="center_vertical"
+            android:minHeight="28dp"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/tv_currWebSite"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="13sp"
+                android:layout_weight="1"
+                android:text="CharmLive.com"
+                android:textColor="#383838"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="8dp"
+                android:minWidth="11dp"
+                android:minHeight="11dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_live_menu_header_changewebsite_switch" />
+
+        </LinearLayout>
     </LinearLayout>
 
 
-    <LinearLayout
-        android:id="@+id/ll_changeWebSite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="28dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="14dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:background="@drawable/bg_live_menu_header_changewebsite">
-
-        <TextView
-            android:id="@+id/tv_currWebSite"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="13sp"
-            android:textColor="#383838"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="CharmLive.com"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dp"
-            android:minHeight="11dp"
-            android:minWidth="11dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_live_menu_header_changewebsite_switch"/>
-
-    </LinearLayout>
 
 
 </LinearLayout>

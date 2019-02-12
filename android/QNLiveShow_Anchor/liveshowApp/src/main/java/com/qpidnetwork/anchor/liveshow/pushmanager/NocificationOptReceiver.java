@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.framework.services.LiveService;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
 import com.qpidnetwork.anchor.liveshow.login.LiveLoginActivity;
-import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 /**
  * 处理通知栏事件的静态广播

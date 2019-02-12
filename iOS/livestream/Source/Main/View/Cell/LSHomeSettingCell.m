@@ -53,7 +53,7 @@
 - (void)showUnreadNum:(int)num {
     if (num) {
         if (num > 99) {
-            self.unreadLabel.text =@"99+";
+            self.unreadLabel.text = @"99+";
         }
         else {
             self.unreadLabel.text = [NSString stringWithFormat:@"%d",num];
@@ -62,6 +62,29 @@
         self.unreadView.hidden = NO;
         self.redLabel.hidden = YES;
     } else {
+        self.unreadView.hidden = YES;
+        self.redLabel.hidden = YES;
+    }
+}
+
+- (void)showChatListUnreadNum:(int)num {
+    if (num > 0) {
+        if (num > 99) {
+            self.unreadLabel.text = @"99+";
+        }
+        else {
+            self.unreadLabel.text = [NSString stringWithFormat:@"%d",num];
+        }
+        
+        self.unreadView.hidden = NO;
+        // 是否显示
+        self.redLabel.hidden = YES;
+    } else if(num < 0) {
+        self.unreadView.hidden = YES;
+        self.unreadLabel.text = @"";
+        // 是否显示红点
+        self.redLabel.hidden = NO;
+    }else {
         self.unreadView.hidden = YES;
         self.redLabel.hidden = YES;
     }

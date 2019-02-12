@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina5_5" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSContactListTableViewCell" id="KGk-i7-Jjw" customClass="LSContactListTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="350" height="72"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="350" height="71.666666666666671"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3dp-4Q-eNT" userLabel="leftView">
+                        <rect key="frame" x="0.0" y="0.0" width="350" height="71.666666666666671"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Default_Img_Lady_Circyle" translatesAutoresizingMaskIntoConstraints="NO" id="aoZ-QR-Rl9" customClass="UIImageViewTopFit">
+                                <rect key="frame" x="8" y="12" width="48" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="j37-RB-A6M"/>
+                                    <constraint firstAttribute="width" constant="48" id="xB6-mk-Wi4"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Jennifer" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ih1-IY-ZBc">
+                                <rect key="frame" x="76" y="17.666666666666668" width="57.666666666666657" height="17.000000000000004"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E0x-SS-YG8">
+                                <rect key="frame" x="76" y="46" width="224" height="0.0"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LiveChatList_InChatIcon" translatesAutoresizingMaskIntoConstraints="NO" id="6Aa-nl-gww">
+                                <rect key="frame" x="143.66666666666666" y="18.666666666666668" width="15" height="15.000000000000004"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="6Aa-nl-gww" secondAttribute="height" multiplier="1:1" id="8bT-My-4Mr"/>
+                                    <constraint firstAttribute="width" constant="15" id="Mne-7j-Jqe"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="99+" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jJH-Sa-t5s">
+                                <rect key="frame" x="324" y="28" width="16" height="16"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="Kt4-a6-31I"/>
+                                    <constraint firstAttribute="width" constant="16" id="W5k-zt-gPv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="svC-Ph-sdy">
+                                <rect key="frame" x="39" y="43" width="16" height="16"/>
+                                <color key="backgroundColor" red="0.29411764709999999" green="0.49803921569999998" blue="0.015686274510000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="16" id="IIe-dd-fWI"/>
+                                    <constraint firstAttribute="width" constant="16" id="edI-mT-ZzY"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="jJH-Sa-t5s" secondAttribute="trailing" constant="10" id="19T-w4-oiF"/>
+                            <constraint firstItem="jJH-Sa-t5s" firstAttribute="centerY" secondItem="3dp-4Q-eNT" secondAttribute="centerY" id="Ima-WT-KAE"/>
+                            <constraint firstItem="aoZ-QR-Rl9" firstAttribute="leading" secondItem="3dp-4Q-eNT" secondAttribute="leading" constant="8" id="V6C-3U-ii6"/>
+                            <constraint firstItem="svC-Ph-sdy" firstAttribute="trailing" secondItem="aoZ-QR-Rl9" secondAttribute="trailing" constant="-1" id="VHt-Hh-AGj"/>
+                            <constraint firstItem="E0x-SS-YG8" firstAttribute="centerY" secondItem="aoZ-QR-Rl9" secondAttribute="centerY" constant="10" id="anj-Cg-ivM"/>
+                            <constraint firstItem="ih1-IY-ZBc" firstAttribute="leading" secondItem="aoZ-QR-Rl9" secondAttribute="trailing" constant="20" id="eaY-cM-kJ1"/>
+                            <constraint firstItem="svC-Ph-sdy" firstAttribute="bottom" secondItem="aoZ-QR-Rl9" secondAttribute="bottom" constant="-1" id="epo-xX-1wR"/>
+                            <constraint firstItem="aoZ-QR-Rl9" firstAttribute="centerY" secondItem="3dp-4Q-eNT" secondAttribute="centerY" id="f6U-qf-2vX"/>
+                            <constraint firstItem="ih1-IY-ZBc" firstAttribute="centerY" secondItem="aoZ-QR-Rl9" secondAttribute="centerY" constant="-10" id="jJd-wJ-p0h"/>
+                            <constraint firstItem="E0x-SS-YG8" firstAttribute="leading" secondItem="ih1-IY-ZBc" secondAttribute="leading" id="m9R-63-x0R"/>
+                            <constraint firstAttribute="trailing" secondItem="E0x-SS-YG8" secondAttribute="trailing" constant="50" id="qvR-aH-20a"/>
+                            <constraint firstItem="6Aa-nl-gww" firstAttribute="leading" secondItem="ih1-IY-ZBc" secondAttribute="trailing" constant="10" id="w0N-fx-YRN"/>
+                            <constraint firstItem="6Aa-nl-gww" firstAttribute="centerY" secondItem="ih1-IY-ZBc" secondAttribute="centerY" id="x1X-Te-3ho"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="3dp-4Q-eNT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="3fd-YI-HPH"/>
+                    <constraint firstItem="3dp-4Q-eNT" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="88p-wm-xkD"/>
+                    <constraint firstItem="3dp-4Q-eNT" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottom" id="IFY-4g-ODe"/>
+                    <constraint firstItem="3dp-4Q-eNT" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailing" id="wvh-XP-dd6"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="inchatIcon" destination="6Aa-nl-gww" id="bt8-hg-10f"/>
+                <outlet property="ladyImage" destination="aoZ-QR-Rl9" id="ihX-TY-z8b"/>
+                <outlet property="ladyLastContact" destination="E0x-SS-YG8" id="UdK-IT-mvM"/>
+                <outlet property="ladyName" destination="ih1-IY-ZBc" id="e5v-pP-2ox"/>
+                <outlet property="onlineImage" destination="svC-Ph-sdy" id="b9u-Wa-kLJ"/>
+                <outlet property="unreadCountIcon" destination="jJH-Sa-t5s" id="P0N-ec-TBj"/>
+            </connections>
+            <point key="canvasLocation" x="-168" y="47"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="LiveChatList_InChatIcon" width="22" height="22"/>
+    </resources>
+</document>

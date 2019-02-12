@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -232,12 +233,23 @@ public class PublicTransitionActivity extends BaseActionBarFragmentActivity impl
                     startActivity(intent);
                     finish();
                 }else{
-                    if(!TextUtils.isEmpty(errMsg)){
-                        showToast(errMsg);
-                    }else if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL){
-                        showToast(R.string.liveroom_transition_audience_invite_network_error);
+                    if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_PUBLIC_LIVE_AUTHORITY){
+                        String tips = getResources().getString(R.string.public_tran_startlive_nopermission_tips);
+                        if(!TextUtils.isEmpty(errMsg)){
+                            tips = errMsg;
+                        }
+                        //主播无公开直播间权限
+                        AlertDialog.Builder builder = new AlertDialog.Builder(PublicTransitionActivity.this)
+                                .setMessage(tips)
+                                .setPositiveButton(getResources().getString(R.string.common_btn_ok), null);
+                        builder.create().show();
+                    }else{
+                        if(!TextUtils.isEmpty(errMsg)){
+                            showToast(errMsg);
+                        }else if(errType == IMClientListener.LCC_ERR_TYPE.LCC_ERR_CONNECTFAIL){
+                            showToast(R.string.liveroom_transition_audience_invite_network_error);
+                        }
                     }
-
                 }
             }
         });

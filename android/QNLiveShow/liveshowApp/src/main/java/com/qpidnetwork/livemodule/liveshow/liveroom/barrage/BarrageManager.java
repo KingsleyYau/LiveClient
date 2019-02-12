@@ -9,7 +9,7 @@ import android.view.animation.AnimationUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

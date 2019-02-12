@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">CharmLive</string>
+    <string name="app_name">Qpid Dating</string>
 
     <!--peacockActivity-->
     <string name="txt_splash_dec">This is my sologan !</string>
@@ -8,6 +8,10 @@
     <string name="tip_failed_to_load">Failed to load.</string>
     <string name="tip_reload">Reload</string>
     <string name="txt_hint_input_general">Say something...</string>
+    <string name="txt_forget_password">Forgotten Password</string>
+    <string name="txt_continue">Continue</string>
+    <string name="txt_almost_done">Almost Done!</string>
+    <string name="txt_done">Done</string>
 
     <string name="tip_emoji_unusable">You need to have an Intimacy Level of at least 10 to use advanced emoticions</string>
     <string name="tip_roomGiftCredit">Credit rebate: %1$s</string>
@@ -19,11 +23,33 @@
     <string name="common_hotlist_guide">Watch Hot Broadcasts</string>
     <string name="live_credits">%1$s credits</string>
 
+    <!-- 更新 -->
+    <string name="live_upgrade_title">New Version Availble</string>
+    <string name="live_upgrade_msg">Please upgrade your app.</string>
+    <string name="live_upgrade_btn">Upgrade</string>
+
+    <!-- 登录（login）-->
+    <string name="txt_login">Login</string>
+    <string name="live_login_email_or_id">Login email or ID</string>
+    <string name="live_login_password">Password</string>
+    <string name="live_login_secure_code">Verification code</string>
+    <string name="live_login_by_using_our_app_your_agree_to_the_term_of_user">By using our app, your agree to the Terms of Use and Privacy Policy</string>
+    <string name="live_kickoff_by_im">You have been signed out because your account is logged in elsewhere.</string>
+    <string name="txt_login_loading">Login...</string>
+
+    <!-- 忘记密码 -->
+    <string name="live_enter_your_email">Enter your email</string>
+    <string name="live_enter_verification_code">Enter verification code</string>
+    <string name="live_reset_Password">Forgotten Password</string>
+    <string name="live_forgot_password">Forgotten password</string>
+    <string name="a_password_reset_link_has_been_sent_to">A password retrieval email has been sent to your email account:</string>
+    <string name="please_check_your_email_to_reset_password">Please check your email and follow the instructions to reset your login password.</string>
+
     <!--首页列表-->
     <string name="live_main_title">CharmLive</string>
     <string name="anchor_list_empty">View Hot Broadcasts</string>
     <string name="hot_follow_program_desc_tips">%1$s · %2$s</string>
-    <string name="live_main_drawer_menu_Message">Private Message</string>
+    <string name="live_main_drawer_menu_Message">Message</string>
     <string name="live_main_drawer_menu_Mail">Mail</string>
     <string name="live_main_drawer_menu_GreetMail">Greeting Mail</string>
     <string name="live_main_drawer_menu_showtickets">My Show Tickets</string>
@@ -111,6 +137,7 @@
     <string name="common_empty_text">No content yet.</string>
     <string name="common_btn_tap_to_retry">Reload</string>
     <string name="followinglist_empty_text">No following broadcasters.</string>
+    <string name="followinglist_logout_text">Login and view my following broadcasters.</string>
     <string name="live_common_noenough_money_tips">You don\'t have enough credits, please buy more.</string>
 
     <!--room transition-->
@@ -183,20 +210,20 @@
     <string name="my_tickets_invite_title">My Tickets</string>
 
     <string name="invite_empty_hot_broadcasters">Hot Broadcasters</string>
-    <string name="newinvite_empty_tips">No new bookings pending your action.Go to request a booking now.</string>
+    <string name="newinvite_empty_tips">No new bookings pending your action. Go to request a booking now.</string>
     <string name="newinvite_confirm_success_tips">Booking has been confirmed successfully</string>
     <string name="newinvite_confirm_failed_timeout_tips">Could not confirm the booking due to the booking request has been expired.</string>
     <string name="newinvite_confirm_failed_tips">Failed to confirm. Please try again later.</string>
     <string name="newinvite_confirm_nocredits_tips">You don\'t have enough credits, please buy more.</string>
     <string name="newinvite_cancel_tips">Are you sure you wish to decline this booking?</string>
     <string name="newinvite_cancel_success_tips">Booking has been declined successfully</string>
-    <string name="sent_empty_tips">No unconfirmed bookings.Go to request a booking now.</string>
+    <string name="sent_empty_tips">No unconfirmed bookings. Go to request a booking now.</string>
     <string name="sent_cancel_tips">Are you sure you wish to cancel this booking?</string>
     <string name="sent_cancel_success_tips">Your booking has been canceled successfully</string>
     <string name="sent_cancel_failed_confirmed_tips">Could not cancel the booking due to the booking has been confirmed by the broadcaster.</string>
     <string name="sent_cancel_failed_tips">Failed to cancel. Please try again later.</string>
-    <string name="scheduled_empty_tips">No scheduled bookings.Go to request a booking now.</string>
-    <string name="history_empty_tips">No booking history.Go to browse live broadcasts now.</string>
+    <string name="scheduled_empty_tips">No scheduled bookings. Go to request a booking now.</string>
+    <string name="history_empty_tips">No booking history. Go to browse live broadcasts now.</string>
     <!--背包-->
     <string name="my_package_voucher_default_desc">Premium session Voucher</string>
     <string name="my_package_voucher_nolimit_session">No limit sessions</string>
@@ -247,7 +274,7 @@
 
     <!--WebView Normal-->
     <string name="common_webview_load_error">Oh no! A problem was encountered please try again.</string>
-
+    <string name="common_webview_api_limit">Sorry, the payment page does not support Android version lower than 4.4.0. Please use desktop web version to place you orders.</string>
 
     <!-- giff -->
     <string name="live_gift_send_failed">Failed to send %1$s. Please try again.</string>
@@ -365,7 +392,7 @@
         \nEach gift sent goes toward moving up to the next level, and you will unlock different privileges and services. Intimacy with the broadcaster may decrease if you don\'t regularly view their One-on-One broadcasts.
     </string>
 
-    <string name="live_serving_conflict_tips">Are you sure to leave the broadcast room?</string>
+    <string name="live_serving_conflict_tips">Are you sure to leave the current broadcast room?</string>
     <string name="live_inter_video_open">2-way video is billed at %1$s credit per minute.\nAre you sure to turn it on?</string>
     <string name="live_inter_video_never_show_again">Don\'t show again</string>
     <string name="live_inter_video_yes">Yes</string>
@@ -422,6 +449,7 @@
     <!--节目过度页-->
     <string name="livemsg_program_transition_reciprocal_tips">Show \"%1$s\" is starting in show is %2$ss.Please wait...</string>
     <string name="live_program_detail_title">Show</string>
+    <string name="live_program_des">Show Calendar are the calendars of specially scheduled broadcasts arranged by broadcasters.</string>
 
     <!-- 私信 -->
     <string name="my_message_title">Private Message</string>
@@ -430,7 +458,7 @@
     <string name="message_contactlist_no_enoughmoney_tips">You are out of credits, please add credits to continue.</string>
     <string name="message_contactlist_no_enoughmoney_span_key">add credits</string>
     <string name="message_senderror_connect_fail_tips">Trouble connecting to the server,please try again later.</string>
-    <string name="message_senderror_other_fail_tips">Your message was not send.</string>
+    <string name="message_senderror_other_fail_tips">Your message was not sent.</string>
 
 
     <!--直播模块主界面改版-->
@@ -447,4 +475,73 @@
     <string name="live_webview_mail_title">Mail</string>
 
     <string name="live_session_timeout_desc">Your login session has expired. Please login again.</string>
+
+
+    <!--个人中心-->
+    <string name="my_profile">My profile</string>
+    <string name="log_out">Log out</string>
+    <string name="Private_Messages">Private Messages</string>
+    <string name="Mails_from_CharmLive">Mails from CharmLive</string>
+    <string name="One_on_One_Invitation">One-on-One Invitation</string>
+
+    <!-- 找回密码界面  -->
+    <string name="Change_Password">Change Password</string>
+    <string name="Your_current_password_is_incorrect">Your current password is incorrect.</string>
+    <string name="Your_current_password">Your current password</string>
+    <string name="New_password">New password</string>
+    <string name="Confirm_password">Confirm password</string>
+    <string name="Change">Change</string>
+    <!-- 找回密码界面  end -->
+
+    <!--hardy-->
+    <string name="my_interest">Your Interests</string>
+    <string name="My_selfintro">About You</string>
+    <string name="Your_Information">Your Information</string>
+    <string name="more">Show more</string>
+    <string name="less">Show less</string>
+    <string name="my_profile_change_profile_failed_tip">Failed to submit your personal description change. Please try again later.</string>
+    <!--个人兴趣-->
+    <string name="my_profile_going_to_restaurants">Going to Restaurants</string>
+    <string name="my_profile_cooking">Cooking</string>
+    <string name="my_profile_travel">Travel</string>
+    <string name="my_profile_hiking_outdoor_activities">Hiking/outdoor activities</string>
+    <string name="my_profile_dancing">Dancing</string>
+    <string name="my_profile_watching_movies">Watching movies</string>
+    <string name="my_profile_shopping">Shopping</string>
+    <string name="my_profile_having_pets">Having pets</string>
+    <string name="my_profile_reading">Reading</string>
+    <string name="my_profile_sports_exercise">Sports/exercise</string>
+    <string name="my_profile_playing_cards_chess">Playing cards/chess</string>
+    <string name="my_profile_Music_play_instruments">Music/play instruments</string>
+
+    <string name="myprofile_sure_clean_cache">Are you sure you wish to clean the app cache?</string>
+
+    <!-- liveChat -->
+    <string name="Chat">Chat</string>
+    <string name="live_chat_camshare_switch_to_livechat_tips">Camshare is going. Do you want to switch to LiveChat?</string>
+    <string name="live_chat_common_risk_control_notify">Sorry, we can not process your request right now, please try later.</string>
+    <string name="chat_list_empty_title">Your Chat List is empty.</string>
+    <string name="chat_list_empty_desc">How to add a member here?\nContact them via our Chat service.</string>
+    <string name="chat_invitation_empty_title">Your Invitation is empty.</string>
+    <string name="chat_invitation_empty_desc">Why not take the initiative to chat with the\nbroadcasters?</string>
+    <string name="livechat_charge_terms">Live chat billed at 0.5 credit per 5 mins. Billing begins after your first message is sent.</string>
+    <string name="live_chat_emotion_preview_price">%s credits</string>
+    <string name="live_chat_download_voice_fail">Voice message loading failed.</string>
+    <string name="live_chat_download_magicicon_fail">Premium stickers loading failed.</string>
+    <string name="live_chat_magicIcon_price_desc">Animating stickers (%s credits each time sent)</string>
+    <string name="live_chat_magicIcon_home_price_desc">Premium stickers (0.1 credit each time sent)</string>
+    <string name="live_chat_voice_record">Hold to\nSpeak</string>
+    <string name="live_chat_voice_record_tips">00:00</string>
+    <string name="live_chat_voice_record_payment">0.3 credits for each voice message sent.</string>
+    <string name="live_chat_voice_record_speak">Speak</string>
+    <string name="live_chat_voice_record_cancel">Release to cancel</string>
+    <string name="live_chat_price_info">Live chat billed at 0.5 credit per 5mins. Billing begins after your first message is sent.</string>
+    <string name="live_chat_try_tips">send your first message to start free chat now.</string>
+    <string name="live_chat_lady_illeage_message">Your message may contain prohibited information which has violated our Terms of Use. Your message will not be delivered.</string>
+    <string name="live_chat_kickoff_by_sever_update">You have been disconnected due to the server is now under maintenance.</string>
+    <string name="live_chat_end_chat">End Chat</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

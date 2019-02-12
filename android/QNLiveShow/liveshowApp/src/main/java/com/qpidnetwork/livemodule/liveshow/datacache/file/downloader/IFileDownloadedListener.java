@@ -15,4 +15,11 @@ public interface IFileDownloadedListener {
      * @param fileUrl 文件下载链接
      */
     void onCompleted(boolean isSuccess, String localFilePath, String fileUrl);
+
+    /**
+     * 文件下载进度
+     * @param fileUrl       文件下载Url
+     * @param progress      下载进度（0～100）
+     */
+    void onProgress(String fileUrl, int progress);
 }

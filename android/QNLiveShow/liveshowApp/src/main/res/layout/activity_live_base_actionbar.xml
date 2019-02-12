@@ -1,16 +1,18 @@
+<!-- android:background 决定状态栏颜色-->
+<!-- android:fitsSystemWindows="true" 决定在状态栏下方-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/theme_default_white"
     android:orientation="vertical">
-
-
 
     <LinearLayout
         android:id="@+id/llContainer"
         android:layout_marginTop="@dimen/actionbar_height"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/bg_MainActivity"
         android:orientation="vertical" />
 
     <include

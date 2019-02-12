@@ -24,6 +24,7 @@
 #import "SendGiftTheQueueManager.h"
 #import "LSLoginManager.h"
 #import "LSGiftManager.h"
+#import "LSImManager.h"
 
 @interface GiftPageViewController () <JTSegmentControlDelegate, LSPZPagingScrollViewDelegate, LSCheckButtonDelegate, LiveRoomCreditRebateManagerDelegate, GiftCollectionViewControllerDelegate, IMManagerDelegate, IMLiveRoomManagerDelegate, SendGiftTheQueueManagerDelegate>
 
@@ -403,7 +404,7 @@
     NSLog(@"GiftPageViewController::sendNormalGift( [发送普通礼物], giftId : %@, mCredit : %f, curCredit : %f, userCredit : %f )", item.giftId, self.creditRebateManager.mCredit, self.liveRoom.imLiveRoom.rebateInfo.curCredit, userCredit);
 
     // 判断本地信用点是否够送礼
-    if (userCredit - item.infoItem.credit > 0) {
+    if (userCredit - item.infoItem.credit >= 0) {
         [self sendLSGiftManagerItem:item isBack:NO];
         bFlag = YES;
         
@@ -717,15 +718,17 @@
 #pragma mark - Im通知
 - (void)onRecvLevelUpNotice:(int)level {
     NSLog(@"GiftPageViewController::onRecvLevelUpNotice( [接收观众等级升级通知], level : %d )", level);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.liveRoom.imLiveRoom.manLevel = level;
+        weakSelf.liveRoom.imLiveRoom.manLevel = level;
     });
 }
 
 - (void)onRecvLoveLevelUpNotice:(IMLoveLevelItemObject *  _Nonnull)loveLevelItem {
     NSLog(@"GiftPageViewController::onRecvLoveLevelUpNotice( [接收观众亲密度升级通知], loveLevel : %d, anchorId: %@, anchorName: %@ )", loveLevelItem.loveLevel, loveLevelItem.anchorId, loveLevelItem.anchorName);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
+        weakSelf.liveRoom.imLiveRoom.loveLevel = loveLevelItem.loveLevel;
     });
 }
 
@@ -743,10 +746,11 @@
 
 - (void)onSendGift:(BOOL)success reqId:(SEQ_T)reqId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg credit:(double)credit rebateCredit:(double)rebateCredit {
     NSLog(@"LiveViewController::onSendGift( [发送直播间礼物消息], errmsg : %@, credit : %f, rebateCredit : %f )", errmsg, credit, rebateCredit);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (!success && errType == LCC_ERR_NO_CREDIT) {
             // 钱不够清队列
-            [self.sendGiftTheQueueManager removeAllSendGift];
+            [weakSelf.sendGiftTheQueueManager removeAllSendGift];
         }
     });
 }

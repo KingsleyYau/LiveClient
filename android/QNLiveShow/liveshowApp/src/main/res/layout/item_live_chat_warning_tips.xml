@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:orientation="horizontal">
+    <ImageView 
+	    android:layout_width="24dp"
+	    android:layout_height="24dp"
+	    android:src="@drawable/ic_warning_grey600_24dp"
+	    android:scaleType="fitXY"
+	    android:id="@+id/ivNotify"/>    
+	    
+    <TextView 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Your free chat is ended. Add credit to continue."
+        android:id="@+id/tvNotifyMsg"
+        android:textSize="14sp"
+        android:textColor="@color/text_color_grey"/>
+</LinearLayout>

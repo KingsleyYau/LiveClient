@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:

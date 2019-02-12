@@ -10,6 +10,36 @@
 
 @implementation ImLiveRoomObject
 
+- (id)init {
+    if( self = [super init] ) {
+        self.userId = @"";
+        self.nickName = @"";
+        self.roomId = @"";
+        self.photoUrl = @"";
+        self.roomType = ROOMTYPE_NOLIVEROOM;
+        self.liveShowType = IMPUBLICROOMTYPE_UNKNOW;
+        self.credit = 0.0;
+        self.usedVoucher = NO;
+        self.fansNum = 0;
+        self.loveLevel = 0;
+        self.favorite = NO;
+        self.leftSeconds = 0;
+        self.waitStart = NO;
+        self.manLevel = 0;
+        self.roomPrice = 0.0;
+        self.manPushPrice = 0.0;
+        self.maxFansiNum = 0;
+        self.honorId = @"";
+        self.honorImg = @"";
+        self.popPrice = 0.0;
+        self.useCoupon = 0;
+        self.shareLink = @"";
+        self.isHasTalent = NO;
+        
+    }
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         self.userId = [coder decodeObjectForKey:@"userId"];

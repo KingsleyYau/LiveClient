@@ -9,6 +9,7 @@
 #import "StartHangOutTipView.h"
 #import "LiveBundle.h"
 #import "LSConfigManager.h"
+#import "LSShadowView.h"
 
 @implementation StartHangOutTipView
 
@@ -27,12 +28,25 @@
     self.hangoutButton.layer.masksToBounds = YES;
     self.bottomView.layer.cornerRadius = 5;
     self.bottomView.layer.masksToBounds = YES;
+    LSShadowView *shadowView = [[LSShadowView alloc] init];
+    [shadowView showShadowAddView:self.bottomView];
 }
 
-- (void)showMainHangoutTip {
-    self.closeButton.hidden = YES;
-    self.closeImageView.hidden = NO;
+- (void)showMainHangoutTip:(UIView *)view {
     self.hangoutTipLabel.text = [LSConfigManager manager].item.hangoutCredirMsg;
+    [view addSubview:self];
+    [view bringSubviewToFront:self];
+
+    if (self && view) {
+        [self mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(view.mas_centerY);
+            make.centerX.equalTo(view.mas_centerX);
+            make.height.width.equalTo(@(310));
+            make.height.height.equalTo(@(222));
+        }];
+        
+    }
+
 }
 
 - (void)showLiveRoomHangoutTip {
@@ -42,12 +56,14 @@
 }
 
 - (IBAction)hangoutAction:(id)sender {
+    [self removeFromSuperview];
     if ([self.delegate respondsToSelector:@selector(requestHangout:)]) {
         [self.delegate requestHangout:self];
     }
 }
 
 - (IBAction)closeAction:(id)sender {
+  
     if ([self.delegate respondsToSelector:@selector(closeHangoutTip:)]) {
         [self.delegate closeHangoutTip:self];
     }

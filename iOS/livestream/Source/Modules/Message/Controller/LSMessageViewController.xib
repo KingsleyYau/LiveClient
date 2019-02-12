@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSMessageViewController">
             <connections>
                 <outlet property="noDataView" destination="hPB-k0-ITq" id="RwK-kB-6MG"/>
+                <outlet property="searchBtn" destination="24K-od-bKg" id="sVr-C3-UjH"/>
                 <outlet property="tableView" destination="arf-GB-Shh" id="SkO-ox-Mu9"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -21,18 +22,32 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="arf-GB-Shh">
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="arf-GB-Shh">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
-                <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hPB-k0-ITq">
-                    <rect key="frame" x="0.0" y="250" width="375" height="166"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPB-k0-ITq">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNc-AM-pCM">
-                            <rect key="frame" x="8" y="103" width="359" height="55"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Common_NoDataIcon" translatesAutoresizingMaskIntoConstraints="NO" id="ibK-TN-4Ws">
+                            <rect key="frame" x="146" y="128" width="82" height="77"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24K-od-bKg">
+                            <rect key="frame" x="103" y="288.5" width="168" height="44"/>
+                            <color key="backgroundColor" red="0.16078431372549018" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="168" id="Sgu-L8-jyf"/>
+                                <constraint firstAttribute="height" constant="44" id="Ys5-0p-k7a"/>
+                            </constraints>
+                            <state key="normal" title="Search">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                            <connections>
+                                <action selector="searchClick:" destination="-1" eventType="touchUpInside" id="e34-NH-aAI"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QNc-AM-pCM">
+                            <rect key="frame" x="20" y="225" width="335" height="33.5"/>
                             <string key="text">Your chat list is empty.
 Find someone to chat</string>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -41,10 +56,33 @@ Find someone to chat</string>
                         </label>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="ibK-TN-4Ws" firstAttribute="top" secondItem="hPB-k0-ITq" secondAttribute="top" constant="128" id="NQQ-uZ-IXf"/>
+                        <constraint firstAttribute="trailing" secondItem="QNc-AM-pCM" secondAttribute="trailing" constant="20" id="UvU-ri-p6G"/>
+                        <constraint firstItem="QNc-AM-pCM" firstAttribute="leading" secondItem="hPB-k0-ITq" secondAttribute="leading" constant="20" id="cIn-LY-Lu7"/>
+                        <constraint firstItem="ibK-TN-4Ws" firstAttribute="centerX" secondItem="hPB-k0-ITq" secondAttribute="centerX" id="dih-ZK-wzY"/>
+                        <constraint firstItem="24K-od-bKg" firstAttribute="top" secondItem="QNc-AM-pCM" secondAttribute="bottom" constant="30" id="pAD-Qr-Cl3"/>
+                        <constraint firstItem="QNc-AM-pCM" firstAttribute="top" secondItem="ibK-TN-4Ws" secondAttribute="bottom" constant="20" id="v2q-dc-fiT"/>
+                        <constraint firstItem="QNc-AM-pCM" firstAttribute="centerX" secondItem="hPB-k0-ITq" secondAttribute="centerX" id="xHA-hQ-tcP"/>
+                        <constraint firstItem="24K-od-bKg" firstAttribute="centerX" secondItem="hPB-k0-ITq" secondAttribute="centerX" id="yR5-hR-3ad"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hPB-k0-ITq" secondAttribute="trailing" id="Dy0-06-Elc"/>
+                <constraint firstItem="arf-GB-Shh" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="GMC-Pd-ZIG"/>
+                <constraint firstAttribute="bottom" secondItem="hPB-k0-ITq" secondAttribute="bottom" id="MXy-70-6xD"/>
+                <constraint firstItem="hPB-k0-ITq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="V82-gH-AeG"/>
+                <constraint firstItem="arf-GB-Shh" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gCv-V4-tU9"/>
+                <constraint firstItem="hPB-k0-ITq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gsk-A7-h15"/>
+                <constraint firstAttribute="bottom" secondItem="arf-GB-Shh" secondAttribute="bottom" id="n17-ZW-dD7"/>
+                <constraint firstAttribute="trailing" secondItem="arf-GB-Shh" secondAttribute="trailing" id="s2u-eF-Nv3"/>
+            </constraints>
             <point key="canvasLocation" x="25.5" y="51.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="Common_NoDataIcon" width="82" height="77"/>
+    </resources>
 </document>

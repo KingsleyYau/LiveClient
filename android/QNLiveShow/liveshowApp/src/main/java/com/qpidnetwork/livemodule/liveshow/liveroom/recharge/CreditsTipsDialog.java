@@ -3,22 +3,22 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.recharge;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 
 
 public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
 
     private final String TAG = CreditsTipsDialog.class.getSimpleName();
-    private Context context;
+    private Context mContext;
     private View rootView;
     private ImageView iv_closeCreditsTips;
     private TextView tv_balanceTips;
@@ -31,7 +31,7 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
     public CreditsTipsDialog(Context context) {
         super(context, R.style.CustomTheme_SimpleDialog);
         Log.d(TAG, "CreditsTipsDialog");
-        this.context = context;
+        this.mContext = context;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
 //                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL);
 //        getWindow().setFlags(WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
 //                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH);
-        this.rootView = View.inflate(context, R.layout.view_credits_tips, null);
+        this.rootView = View.inflate(mContext, R.layout.view_credits_tips, null);
         initView();
         setContentView(rootView);
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT);
@@ -73,11 +73,11 @@ public class CreditsTipsDialog extends Dialog implements View.OnClickListener {
             dismiss();
 
         } else if (i == R.id.tv_getCredits) {
-            LiveService.getInstance().onAddCreditClick(mNoMoneyParamsBean);
+            LiveModule.getInstance().onAddCreditClick(mContext, mNoMoneyParamsBean);
             //GA统计点击充值
-            AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
-                    context.getResources().getString(R.string.Live_Global_Action_AddCredit),
-                    context.getResources().getString(R.string.Live_Global_Label_AddCredit));
+            AnalyticsManager.getsInstance().ReportEvent(mContext.getResources().getString(R.string.Live_Global_Category),
+                    mContext.getResources().getString(R.string.Live_Global_Action_AddCredit),
+                    mContext.getResources().getString(R.string.Live_Global_Label_AddCredit));
             dismiss();
         }
     }

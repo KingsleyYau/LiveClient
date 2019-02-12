@@ -10,7 +10,7 @@
 #import "LSLoginManager.h"
 #import "UserInfoListCell.h"
 #import "LSUserUnreadCountManager.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LSLoginManager.h"
 #import "LSMyReservationsViewController.h"
 #import "MyBackpackViewController.h"
@@ -23,7 +23,7 @@
 @property (nonatomic, assign) int myReservationsCount;
 @property (nonatomic, assign) int myBackpackCount;
 #pragma mark - 用户信息管理器
-@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSLoginManager *loginManager;
 @end
 
@@ -57,7 +57,7 @@
 
     self.unreadCountManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadCountManager addDelegate:self];
-    self.userInfoManager = [UserInfoManager manager];
+    self.userInfoManager = [LSUserInfoManager manager];
     self.loginManager = [LSLoginManager manager];
     
     self.titleArray = @[

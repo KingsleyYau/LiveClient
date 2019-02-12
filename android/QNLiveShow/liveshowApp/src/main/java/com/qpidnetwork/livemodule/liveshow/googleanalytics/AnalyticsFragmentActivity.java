@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.ActionMode;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
+
 /**
  * 仅用于跟踪统计的FragmentActivity基类（如：GoogleAnalytics）
  * @author Samson Fan
@@ -16,6 +18,8 @@ import android.view.ActionMode;
  */
 public class AnalyticsFragmentActivity extends AppCompatActivity
 {
+	private static final String TAG = AnalyticsFragmentActivity.class.getName();
+
 	private ActionMode mActionMode;
 
 	/**
@@ -175,6 +179,7 @@ public class AnalyticsFragmentActivity extends AppCompatActivity
 	 * @param screenName
 	 */
 	public void setCurrentScreenName(String screenName) {
+		Log.i(TAG, "setCurrentScreenName screenName: " +  screenName);
 		if(!TextUtils.isEmpty(screenName)){
 			mScreenName = screenName;
 		}
@@ -185,6 +190,7 @@ public class AnalyticsFragmentActivity extends AppCompatActivity
 	 * @return
 	 */
 	public String getCurrentScreenName(){
+		Log.i(TAG, "getCurrentScreenName screenName: " +  mScreenName);
 		return mScreenName;
 	}
 

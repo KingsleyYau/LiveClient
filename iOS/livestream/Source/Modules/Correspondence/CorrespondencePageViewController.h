@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSGoogleAnalyticsViewController.h"
-@interface CorrespondencePageViewController : LSGoogleAnalyticsViewController
+#import "LSGoogleAnalyticsPageViewController.h"
+
+@interface CorrespondencePageViewController : LSGoogleAnalyticsPageViewController
 
 @end

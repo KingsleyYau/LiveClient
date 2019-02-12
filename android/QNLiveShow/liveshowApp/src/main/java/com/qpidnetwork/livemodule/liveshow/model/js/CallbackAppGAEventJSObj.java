@@ -6,9 +6,9 @@ import android.util.JsonReader;
 import android.webkit.JavascriptInterface;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -99,6 +99,14 @@ public class CallbackAppGAEventJSObj extends Object {
         }
     }
 
+    @JavascriptInterface
+    public void callbackShowNavigation(String isShow){
+        Log.d(TAG,":callbackShowNavigation isShow: " + isShow);
+        if(mListener != null){
+            mListener.onEventShowNavigation(isShow);
+        }
+    }
+
     /****************************** JS带回没点参数解析 **********************************************/
 
     private static final String JSON_PARAM_KEY_ORDER_TYPE = "order_type";
@@ -118,7 +126,7 @@ public class CallbackAppGAEventJSObj extends Object {
         while(jsReader.hasNext()){
             String tagName = jsReader.nextName();
             if (tagName.equals(JSON_PARAM_KEY_ORDER_TYPE)) {
-                params.orderType = jsReader.nextString();
+                params.setOrderTyp(jsReader.nextString());
             }else if (tagName.equals(JSON_PARAM_KEY_CLICK_FROM)) {
                 params.clickFrom = jsReader.nextString();
             }else if (tagName.equals(JSON_PARAM_KEY_NUMBER)) {

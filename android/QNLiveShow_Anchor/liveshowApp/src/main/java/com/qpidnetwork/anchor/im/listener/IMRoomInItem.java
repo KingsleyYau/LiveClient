@@ -53,6 +53,8 @@ public class IMRoomInItem implements Serializable{
 	 * @param leftSeconds		开播前的倒数秒数
 	 * @param audienceLimitNum	最大人数限制
 	 * @param pullRtmpUrls      男士视频流url(可无，无或空表示男士没有启动视频互动)
+	 * @param isHasOneOnOneAuth 是否有私密直播开播权限
+	 * @param isHasBookingAuth 是否有预约私密直播开播权限
 	 */	
 	public IMRoomInItem(String anchorId,
 						String roomId,
@@ -62,7 +64,9 @@ public class IMRoomInItem implements Serializable{
 						int audienceLimitNum,
 						String[] pullRtmpUrls,
 						int status,
-						int liveShowType){
+						int liveShowType,
+						boolean isHasOneOnOneAuth,
+						boolean isHasBookingAuth){
 		this.anchorId = anchorId;
 		this.roomId = roomId;
 		if( roomType < 0 || roomType >= IMLiveRoomType.values().length ) {
@@ -84,6 +88,8 @@ public class IMRoomInItem implements Serializable{
 		} else {
 			this.liveShowType = IMPublicRoomType.values()[liveShowType];
 		}
+		this.isHasOneOnOneAuth = isHasOneOnOneAuth;
+		this.isHasBookingAuth = isHasBookingAuth;
 	}
 
 	public String anchorId;
@@ -95,6 +101,8 @@ public class IMRoomInItem implements Serializable{
 	public String [] pullRtmpUrls;
 	public IMLiveStatus status;
 	public IMPublicRoomType liveShowType;
+	public boolean isHasOneOnOneAuth;
+	public boolean isHasBookingAuth;
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("IMRoomInItem[");
@@ -106,6 +114,10 @@ public class IMRoomInItem implements Serializable{
 		sb.append(leftSeconds);
 		sb.append(" status:");
 		sb.append(status);
+		sb.append(" isHasOneOnOneAuth:");
+		sb.append(isHasOneOnOneAuth);
+		sb.append(" isHasBookingAuth:");
+		sb.append(isHasBookingAuth);
 		sb.append("]");
 		return sb.toString();
 	}

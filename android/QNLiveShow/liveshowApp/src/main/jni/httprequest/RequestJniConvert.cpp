@@ -11,7 +11,7 @@
 
 int HTTPErrorTypeToInt(HTTP_LCC_ERR_TYPE errType)
 {
-	int value = 0;
+	int value = 1;
 	int i = 0;
 	for (i = 0; i < _countof(HTTPErrorTypeArray); i++)
 	{
@@ -178,6 +178,19 @@ int  VoucherAnchorTypeToInt(AnchorType voucherAnchorType){
 	return value;
 }
 
+int LSHttpLiveChatInviteRiskTypeToInt(LSHttpLiveChatInviteRiskType type) {
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(LSHttpLiveChatInviteRiskTypeArray); i++)
+	{
+		if (type == LSHttpLiveChatInviteRiskTypeArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
+
 ControlType IntToInteractiveOperateType(int value)
 {
 	return (ControlType)(value < _countof(InteractiveOperateTypeArray) ? InteractiveOperateTypeArray[value] : InteractiveOperateTypeArray[0]);
@@ -240,6 +253,19 @@ int ProgramTicketStatusToInt(ProgramTicketStatus type) {
 	return value;
 }
 
+// 底层状态转换JAVA坐标
+int ComIMChatOnlineStatusToInt(IMChatOnlineStatus type) {
+	int value = 0;
+	int i = 0;
+	for (i = 0; i < _countof(ComIMChatOnlineStatusArray); i++)
+	{
+		if (type == ComIMChatOnlineStatusArray[i]) {
+			value = i;
+			break;
+		}
+	}
+	return value;
+}
 
 /**************************** c++转Java对象    ****************************************/
 
@@ -308,6 +334,18 @@ RegionIdType IntToRegionIdType(int value) {
 	return (RegionIdType)(value < _countof(RegionIdTypeArray) ? RegionIdTypeArray[value] : RegionIdTypeArray[0]);
 }
 
+LSLoginSidType IntToLSLoginSidType(int value) {
+	return (LSLoginSidType)(value < _countof(LSLoginSidTypeArray) ? LSLoginSidTypeArray[value] : LSLoginSidTypeArray[0]);
+}
+
+LSValidateCodeType IntToLSValidateCodeType(int value) {
+    return (LSValidateCodeType)(value < _countof(LSValidateCodeTypeArray) ? LSValidateCodeTypeArray[value] : LSValidateCodeTypeArray[0]);
+}
+
+LSOrderType IntToLSOrderType(int value) {
+	return (LSOrderType)(value < _countof(LSOrderTypeArray) ? LSOrderTypeArray[value] : LSOrderTypeArray[0]);
+}
+
 jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, LOGIN_ITEM_CLASS);
@@ -316,7 +354,8 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 		signature += "[L";
 		signature += SERVER_ITEM_CLASS;
 		signature += ";";
-		signature += "ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;";
+		signature += "ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
+		signature += "Ljava/lang/String;ZI";
 		signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>",
 				signature.c_str());
@@ -330,6 +369,9 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 			jstring jqnMainAdUrl = env->NewStringUTF(item.qnMainAdUrl.c_str());
 			jstring jqnMainAdTitle = env->NewStringUTF(item.qnMainAdUrl.c_str());
 			jstring jqnMainAdId = env->NewStringUTF(item.qnMainAdTitle.c_str());
+			jstring jgaUid = env->NewStringUTF(item.gaUid.c_str());
+			jstring jsessionId = env->NewStringUTF(item.sessionId.c_str());
+			jint jriskType = LSHttpLiveChatInviteRiskTypeToInt(item.liveChatInviteRiskType);
 			jItem = env->NewObject(jItemCls, init,
 								   juserId,
 								   jtoken,
@@ -342,7 +384,11 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 								   type,
 								   jqnMainAdUrl,
 								   jqnMainAdTitle,
-								   jqnMainAdId
+								   jqnMainAdId,
+								   jgaUid,
+								   jsessionId,
+								   item.isLiveChatRisk,
+								   jriskType
 			);
 			env->DeleteLocalRef(juserId);
 			env->DeleteLocalRef(jtoken);
@@ -351,6 +397,8 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 			env->DeleteLocalRef(jqnMainAdUrl);
 			env->DeleteLocalRef(jqnMainAdTitle);
 			env->DeleteLocalRef(jqnMainAdId);
+			env->DeleteLocalRef(jgaUid);
+			env->DeleteLocalRef(jsessionId);
 			if(NULL != jsvrArray){
 				env->DeleteLocalRef(jsvrArray);
 			}
@@ -366,11 +414,16 @@ jobject getLoginItem(JNIEnv *env, const HttpLoginItem& item){
 jobject getAdListItem(JNIEnv *env, const HttpLiveRoomInfoItem& item){
     jobject jItem = NULL;
     jclass jItemCls = GetJClass(env, HOTLIST_ITEM_CLASS);
+    jobject jprivItem = NULL;
     if (NULL != jItemCls){
         string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I[II";
         signature += "L";
         signature += PROGRAM_PROGRAMINFO_ITEM_CLASS;
         signature += ";";
+        signature += "L";
+        signature += HTTP_AUTHORITY_ITEM_CLASS;
+        signature += ";";
+        signature += "I";
         signature += ")V";
         jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		if (NULL != init) {
@@ -386,6 +439,8 @@ jobject getAdListItem(JNIEnv *env, const HttpLiveRoomInfoItem& item){
 			if (item.showInfo != NULL) {
 				jProgramItem = getProgramInfoItem(env, *(item.showInfo));
 			}
+			jprivItem = getHttpAuthorityItem(env, item.priv);
+			jint jstatus = ComIMChatOnlineStatusToInt(item.chatOnlineStatus);
 			jItem = env->NewObject(jItemCls, init,
 								   juserId,
 								   jnickName,
@@ -395,7 +450,9 @@ jobject getAdListItem(JNIEnv *env, const HttpLiveRoomInfoItem& item){
 								   jroomType,
 								   jinterestArray,
 								   janchorType,
-								   jProgramItem
+								   jProgramItem,
+								   jprivItem,
+								   jstatus
 			);
 			env->DeleteLocalRef(juserId);
 			env->DeleteLocalRef(jnickName);
@@ -413,17 +470,25 @@ jobject getAdListItem(JNIEnv *env, const HttpLiveRoomInfoItem& item){
 	if (NULL != jItemCls) {
 		env->DeleteLocalRef(jItemCls);
 	}
+	if (NULL != jprivItem) {
+       env->DeleteLocalRef(jprivItem);
+    }
     return jItem;
 }
 
 jobject getHotListItem(JNIEnv *env, const HttpLiveRoomInfoItem* item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, HOTLIST_ITEM_CLASS);
+	jobject jprivItem = NULL;
 	if (NULL != jItemCls){
         string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;I[II";
         signature += "L";
         signature += PROGRAM_PROGRAMINFO_ITEM_CLASS;
         signature += ";";
+        signature += "L";
+        signature += HTTP_AUTHORITY_ITEM_CLASS;
+        signature += ";";
+        signature += "I";
         signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		if (NULL != init) {
@@ -439,6 +504,8 @@ jobject getHotListItem(JNIEnv *env, const HttpLiveRoomInfoItem* item){
 			if (item->showInfo != NULL) {
 				jProgramItem = getProgramInfoItem(env, *(item->showInfo));
 			}
+			jprivItem = getHttpAuthorityItem(env, item->priv);
+			jint jstatus = ComIMChatOnlineStatusToInt(item->chatOnlineStatus);
 			jItem = env->NewObject(jItemCls, init,
 								   juserId,
 								   jnickName,
@@ -448,7 +515,9 @@ jobject getHotListItem(JNIEnv *env, const HttpLiveRoomInfoItem* item){
 								   jroomType,
 								   jinterestArray,
 								   janchorType,
-								   jProgramItem
+								   jProgramItem,
+								   jprivItem,
+								   jstatus
 			);
 			env->DeleteLocalRef(juserId);
 			env->DeleteLocalRef(jnickName);
@@ -466,17 +535,25 @@ jobject getHotListItem(JNIEnv *env, const HttpLiveRoomInfoItem* item){
 	if (NULL != jItemCls) {
 		env->DeleteLocalRef(jItemCls);
 	}
+	if (NULL != jprivItem) {
+    	env->DeleteLocalRef(jprivItem);
+    }
 	return jItem;
 }
 
 jobject getFollowingListItem(JNIEnv *env, const HttpFollowItem* item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, FOLLOWINGLIST_ITEM_CLASS);
+	jobject privItem = NULL;
 	if (NULL != jItemCls){
         string signature = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;III[II";
         signature += "L";
         signature += PROGRAM_PROGRAMINFO_ITEM_CLASS;
         signature += ";";
+        signature += "L";
+        signature += HTTP_AUTHORITY_ITEM_CLASS;
+        signature += ";";
+        signature += "I";
         signature += ")V";
         jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		if (NULL != init) {
@@ -492,6 +569,8 @@ jobject getFollowingListItem(JNIEnv *env, const HttpFollowItem* item){
 			if (item->showInfo != NULL) {
 				jProgramItem = getProgramInfoItem(env, *(item->showInfo));
 			}
+			privItem = getHttpAuthorityItem(env, item->priv);
+			jint jstatus = ComIMChatOnlineStatusToInt(item->chatOnlineStatus);
 			jItem = env->NewObject(jItemCls, init,
 								   juserId,
 								   jnickName,
@@ -503,7 +582,9 @@ jobject getFollowingListItem(JNIEnv *env, const HttpFollowItem* item){
 								   (int)item->addDate,
 								   jinterestArray,
 								   janchorType,
-								   jProgramItem
+								   jProgramItem,
+								   privItem,
+								   jstatus
 			);
 			env->DeleteLocalRef(juserId);
 			env->DeleteLocalRef(jnickName);
@@ -521,6 +602,10 @@ jobject getFollowingListItem(JNIEnv *env, const HttpFollowItem* item){
 	if (NULL != jItemCls) {
 		env->DeleteLocalRef(jItemCls);
 	}
+
+	if (NULL != privItem) {
+    	env->DeleteLocalRef(privItem);
+    }
 	return jItem;
 }
 
@@ -1159,7 +1244,9 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 		signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
 		signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
 		signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
-		signature += "Ljava/lang/String;Ljava/lang/String;";
+		signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
+        signature += "Ljava/lang/String;Ljava/lang/String;I";
+        signature += "DLjava/lang/String;Ljava/lang/String;";
 		signature += ")V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 		if (NULL != init) {
@@ -1177,6 +1264,11 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 			jstring jemfH5Url = env->NewStringUTF(item.emfH5Url.c_str());
 			jstring jpmStartNotice = env->NewStringUTF(item.pmStartNotice.c_str());
 			jstring jpostStampUrl = env->NewStringUTF(item.postStampUrl.c_str());
+			jstring jhttpSvrMobileUrl = env->NewStringUTF(item.httpSvrMobileUrl.c_str());
+            jstring jsocketHost = env->NewStringUTF(item.socketHost.c_str());
+            jstring jsocketHostDomain = env->NewStringUTF(item.socketHostDomain.c_str());
+            jstring jchatVoiceHostUrl = env->NewStringUTF(item.chatVoiceHostUrl.c_str());
+            jstring jsendLetter = env->NewStringUTF(item.sendLetter.c_str());
             jItem = env->NewObject(jItemCls, init,
                                    jimServerUrl,
                                    jhttpServerUrl,
@@ -1191,7 +1283,14 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 								   jloiH5Url,
 								   jemfH5Url,
 								   jpmStartNotice,
-								   jpostStampUrl);
+								   jpostStampUrl,
+								   jhttpSvrMobileUrl,
+								   jsocketHost,
+								   jsocketHostDomain,
+								   item.socketPort,
+								   item.minBalanceForChat,
+								   jchatVoiceHostUrl,
+								   jsendLetter);
             env->DeleteLocalRef(jimServerUrl);
             env->DeleteLocalRef(jhttpServerUrl);
             env->DeleteLocalRef(jaddCreditsUrl);
@@ -1206,6 +1305,11 @@ jobject getSynConfigItem(JNIEnv *env, const HttpConfigItem& item){
 			env->DeleteLocalRef(jemfH5Url);
 			env->DeleteLocalRef(jpmStartNotice);
 			env->DeleteLocalRef(jpostStampUrl);
+			env->DeleteLocalRef(jhttpSvrMobileUrl);
+			env->DeleteLocalRef(jsocketHost);
+			env->DeleteLocalRef(jsocketHostDomain);
+            env->DeleteLocalRef(jchatVoiceHostUrl);
+            env->DeleteLocalRef(jsendLetter);
         }
 
 
@@ -1927,5 +2031,321 @@ jobject getMainNoReadNumItem(JNIEnv *env, const HttpMainNoReadNumItem& item) {
 	if (NULL != jItemCls) {
 		env->DeleteLocalRef(jItemCls);
 	}
+	return jItem;
+}
+
+jobject getValidSiteIdItem(JNIEnv *env, const HttpValidSiteIdItem& item){
+	jobject jItem = NULL;
+	jclass cls = GetJClass(env, LSVALIDSITEID_ITEM_CLASS);
+	if( cls != NULL) {
+		jmethodID init = env->GetMethodID(cls, "<init>", "("
+				"I"
+				"Z"
+				")V"
+		);
+
+		if( init != NULL ) {
+			jItem = env->NewObject(cls, init,
+								   item.siteId,
+								   item.isLive
+			);
+
+		}
+	}
+
+	if (NULL != cls) {
+		env->DeleteLocalRef(cls);
+	}
+	return jItem;
+}
+
+jobjectArray getValidSiteIdListArray(JNIEnv *env, HttpValidSiteIdList siteIdList) {
+	jobjectArray jItemArray = NULL;
+
+	jclass jItemCls = GetJClass(env, LSVALIDSITEID_ITEM_CLASS);
+	if (NULL != jItemCls && siteIdList.size() > 0) {
+		jItemArray = env->NewObjectArray(siteIdList.size(), jItemCls, NULL);
+		int i = 0;
+		for(HttpValidSiteIdList::const_iterator itr = siteIdList.begin(); itr != siteIdList.end(); itr++, i++) {
+			jobject item = getValidSiteIdItem(env, *itr);
+			env->SetObjectArrayElement(jItemArray, i, item);
+			env->DeleteLocalRef(item);
+		}
+	}
+	if (NULL != jItemCls) {
+		env->DeleteLocalRef(jItemCls);
+	}
+
+	return jItemArray;
+}
+
+jobject getMyProfileItem(JNIEnv *env, const HttpProfileItem& item) {
+	jobject jItem = NULL;
+	jclass cls = GetJClass(env, OTHER_LSPROFILE_ITEM_CLASS);
+	if( cls != NULL) {
+
+		string signature = "(";
+		signature += 		"Ljava/lang/String;"
+				"I"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+				"I"
+
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"I"
+
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+				"Ljava/lang/String;"
+
+				"I"
+				"I"
+				"Ljava/lang/String;"
+				"I"
+
+				"Ljava/lang/String;"
+				"I"
+				"I"
+
+				"Ljava/lang/String;"
+				"I"
+				"Ljava/lang/String;"
+				"I"
+
+				"Ljava/util/ArrayList;"
+				"I";
+		signature += ")V";
+
+		jmethodID init = env->GetMethodID(cls, "<init>", signature.c_str()
+		);
+
+		if( init != NULL ) {
+			jstring manid = env->NewStringUTF(item.manid.c_str());
+			jstring birthday = env->NewStringUTF(item.birthday.c_str());
+			jstring firstname = env->NewStringUTF(item.firstname.c_str());
+			jstring lastname = env->NewStringUTF(item.lastname.c_str());
+			jstring email = env->NewStringUTF(item.email.c_str());
+
+			jstring resume = env->NewStringUTF(item.resume.c_str());
+			jstring resume_content = env->NewStringUTF(item.resume_content.c_str());
+
+			jstring address1 = env->NewStringUTF(item.address1.c_str());
+			jstring address2 = env->NewStringUTF(item.address2.c_str());
+			jstring city = env->NewStringUTF(item.city.c_str());
+			jstring province = env->NewStringUTF(item.province.c_str());
+			jstring zipcode = env->NewStringUTF(item.zipcode.c_str());
+			jstring telephone = env->NewStringUTF(item.telephone.c_str());
+			jstring fax = env->NewStringUTF(item.fax.c_str());
+			jstring alternate_email = env->NewStringUTF(item.alternate_email.c_str());
+			jstring money = env->NewStringUTF(item.money.c_str());
+
+			jstring photoURL = env->NewStringUTF(item.photoURL.c_str());
+			jstring mobile = env->NewStringUTF(item.mobile.c_str());
+			jstring landline = env->NewStringUTF(item.landline.c_str());
+			jstring landline_ac = env->NewStringUTF(item.landline_ac.c_str());
+
+			jclass jArrayList = env->FindClass("java/util/ArrayList");
+			jmethodID jArrayListInit = env->GetMethodID(jArrayList, "<init>", "()V");
+			jmethodID jArrayListAdd = env->GetMethodID(jArrayList, "add", "(Ljava/lang/Object;)Z");
+			FileLog("httprequest", "Profile.Native::onGetMyProfile( "
+							"jArrayList : %p, "
+							"jArrayListInit : %p, "
+							"jArrayListAdd : %p "
+							")",
+					jArrayList,
+					jArrayListInit,
+					jArrayListAdd
+			);
+
+			FileLog("httprequest", "Profile.Native::onGetMyProfile( "
+							"item.interests.size() : %d "
+							")",
+					item.interests.size()
+			);
+
+			int i = 0;
+			jobject jInterestList = NULL;
+			jInterestList = env->NewObject(jArrayList, jArrayListInit);
+			if( item.interests.size() > 0 ) {
+				i = 0;
+				for(list<string>::const_iterator itr = item.interests.begin(); itr != item.interests.end(); itr++, i++) {
+					jstring value = env->NewStringUTF((*itr).c_str());
+					env->CallBooleanMethod(jInterestList, jArrayListAdd, value);
+					env->DeleteLocalRef(value);
+				}
+			}
+
+			jItem = env->NewObject(cls, init,
+								   manid,
+								   item.age,
+								   birthday,
+								   firstname,
+								   lastname,
+								   email,
+
+								   item.gender,
+								   item.country,
+								   item.marry,
+								   item.height,
+								   item.weight,
+								   item.smoke,
+								   item.drink,
+								   item.language,
+								   item.religion,
+								   item.education,
+								   item.profession,
+								   item.ethnicity,
+								   item.income,
+								   item.children,
+
+								   resume,
+								   resume_content,
+								   item.resume_status,
+
+								   address1,
+								   address2,
+								   city,
+								   province,
+								   zipcode,
+								   telephone,
+								   fax,
+								   alternate_email,
+								   money,
+
+								   item.v_id,
+								   item.photo,
+								   photoURL,
+								   item.integral,
+
+								   mobile,
+								   item.mobile_cc,
+								   item.mobile_status,
+
+								   landline,
+								   item.landline_cc,
+								   landline_ac,
+								   item.landline_status,
+
+								   jInterestList,
+								   item.zodiac
+			);
+
+
+			env->DeleteLocalRef(manid);
+			env->DeleteLocalRef(birthday);
+			env->DeleteLocalRef(firstname);
+			env->DeleteLocalRef(lastname);
+			env->DeleteLocalRef(email);
+			env->DeleteLocalRef(resume);
+			env->DeleteLocalRef(resume_content);
+			env->DeleteLocalRef(address1);
+			env->DeleteLocalRef(address2);
+			env->DeleteLocalRef(city);
+			env->DeleteLocalRef(province);
+			env->DeleteLocalRef(zipcode);
+			env->DeleteLocalRef(telephone);
+			env->DeleteLocalRef(fax);
+			env->DeleteLocalRef(alternate_email);
+			env->DeleteLocalRef(money);
+			env->DeleteLocalRef(photoURL);
+			env->DeleteLocalRef(mobile);
+			env->DeleteLocalRef(landline);
+			env->DeleteLocalRef(landline_ac);
+
+			if( jInterestList != NULL ) {
+				env->DeleteLocalRef(jInterestList);
+			}
+
+
+		}
+	}
+
+	if (NULL != cls) {
+		env->DeleteLocalRef(cls);
+	}
+	return jItem;
+}
+
+jobject getVersionCheckItem(JNIEnv *env, const HttpVersionCheckItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, OTHER_LSVERSIONCHECK_ITEM_CLASS);
+	if (NULL != jItemCls){
+		string signature = "(ILjava/lang/String;Ljava/lang/String;";
+		signature += "Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;";
+		signature += "IZ";
+		signature += ")V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+
+			jstring versionName = env->NewStringUTF(item.versionName.c_str());
+			jstring versionDesc = env->NewStringUTF(item.versionDesc.c_str());
+			jstring url = env->NewStringUTF(item.url.c_str());
+			jstring storeUrl = env->NewStringUTF(item.storeUrl.c_str());
+			jstring pubTime = env->NewStringUTF(item.pubTime.c_str());
+			jItem = env->NewObject(jItemCls, init,
+								   item.versionCode,
+								   versionName,
+								   versionDesc,
+								   url,
+								   storeUrl,
+								   pubTime,
+								   item.checkTime,
+								   item.isForceUpdate
+
+			);
+			env->DeleteLocalRef(versionName);
+			env->DeleteLocalRef(versionDesc);
+			env->DeleteLocalRef(url);
+			env->DeleteLocalRef(storeUrl);
+			env->DeleteLocalRef(pubTime);
+		}
+
+	}
+	if (NULL != jItemCls) {
+		env->DeleteLocalRef(jItemCls);
+	}
+	return jItem;
+}
+
+jobject getHttpAuthorityItem(JNIEnv *env, const HttpAuthorityItem& item) {
+	jobject jItem = NULL;
+	jclass jItemCls = GetJClass(env, HTTP_AUTHORITY_ITEM_CLASS);
+	if (NULL != jItemCls) {
+		string	signature = "(ZZ)V";
+		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
+		if (NULL != init) {
+
+			jItem = env->NewObject(jItemCls, init,
+								   item.privteLiveAuth,
+								   item.bookingPriLiveAuth);
+		}
+	}
+    if (NULL != jItemCls) {
+        env->DeleteLocalRef(jItemCls);
+    }
+
 	return jItem;
 }

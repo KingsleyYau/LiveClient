@@ -1,0 +1,191 @@
+<!-- 注:android:fitsSystemWindows="true"配合adjustResize 为了实现当弹出键盘时,能把整个界面向上弹能看到登录按钮 -->
+<com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sl_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent_7"
+    android:fitsSystemWindows="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp">
+
+        <LinearLayout xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/ll_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_rounded_angle_white_bg"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:padding="24dp"
+            tools:context="${relativePackage}.${activityClass}">
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/layoutHeader"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:visibility="gone">-->
+
+            <!--<ImageView-->
+            <!--android:layout_width="40dp"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:src="@drawable/u58" />-->
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="16dp"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Qpid Network Dating"-->
+            <!--android:textColor="@color/text_color_dark"-->
+            <!--android:textSize="20sp"-->
+            <!--android:textStyle="bold" />-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ellipsize="end"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="@string/login_x_ladies_are_online_now"-->
+            <!--android:textColor="#6B6B6B"-->
+            <!--android:textSize="16sp" />-->
+            <!--</LinearLayout>-->
+            <!--</LinearLayout>-->
+
+            <LinearLayout
+                android:id="@+id/layoutEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+                    android:id="@+id/editTextName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+                        android:id="@+id/editTextPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword" />
+
+                    <ImageButton
+                        android:id="@+id/imageViewForget"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@drawable/touch_feedback_holo_light_round_rectangle"
+                        android:onClick="onClickForget"
+                        android:src="@drawable/ic_help_grey600_24dp" />
+
+                    <ImageButton
+                        android:id="@+id/imageViewVisiblePassword"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="8dp"
+                        android:layout_toLeftOf="@id/imageViewForget"
+                        android:background="@drawable/touch_feedback_holo_light_round_rectangle"
+                        android:onClick="onClickVisiblePassword"
+                        android:src="@drawable/ic_visible_grey600_24dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/layoutCheckCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <com.qpidnetwork.livemodule.framework.widget.MaterialTextField
+                        android:id="@+id/editTextCheckCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true" />
+
+                    <com.qpidnetwork.livemodule.view.ButtonRaised
+                        android:id="@+id/buttonRetry"
+                        android:layout_width="80dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2dp"
+                        android:clickable="true"
+                        android:onClick="onClickCheckCode"
+                        button:background="@color/blue_color"
+                        button:elevation="0dp"
+                        button:title="Reload"
+                        button:title_color="@color/white"
+                        button:touch_feedback="@drawable/touch_feedback_holo_dark" />
+
+                    <ImageView
+                        android:id="@+id/imageViewCheckCode"
+                        android:layout_width="80dp"
+                        android:layout_height="28dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="2dp"
+                        android:adjustViewBounds="true"
+                        android:onClick="onClickCheckCode" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <com.qpidnetwork.livemodule.view.ButtonRaised
+                android:id="@+id/buttonLogin"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:onClick="onClickLogin"
+                button:background="@color/blue_color"
+                button:elevation="2dp"
+                button:title="@string/txt_login"
+                button:title_color="@color/white"
+                button:touch_feedback="@drawable/touch_feedback_holo_dark" />
+
+            <com.qpidnetwork.livemodule.view.ButtonRaised
+                android:id="@+id/buttonForget"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="8dp"
+                android:clickable="true"
+                android:onClick="onClickForget"
+                button:background="@color/white"
+                button:elevation="1dp"
+                button:title="@string/txt_forget_password"
+                button:title_color="@color/text_color_dark"
+                button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+
+            <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+            <!--android:id="@+id/buttonLoginWithFacebook"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="40dp"-->
+            <!--android:layout_gravity="right"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--android:clickable="true"-->
+            <!--android:onClick="onClickLoginWithFacebook"-->
+            <!--button:background="@color/white"-->
+            <!--button:elevation="1dp"-->
+            <!--button:title="@string/login_connect_with_facebook"-->
+            <!--button:title_color="@color/text_color_dark"-->
+            <!--button:touch_feedback="@drawable/touch_feedback_round_border_white" />-->
+
+        </LinearLayout>
+
+    </FrameLayout>
+</com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout>

@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.manager;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;

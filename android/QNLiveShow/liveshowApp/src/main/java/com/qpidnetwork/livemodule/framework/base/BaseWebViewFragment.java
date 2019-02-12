@@ -26,25 +26,25 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.OpenFileWebChromeClient;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
-import com.qpidnetwork.livemodule.httprequest.OnGetHotListCallback;
+import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.CookiesItem;
-import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
+import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.liveshow.LiveApplication;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.recharge.CreditsTipsDialog;
-import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.model.js.CallbackAppGAEventJSObj;
 import com.qpidnetwork.livemodule.liveshow.model.js.JSCallbackListener;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Created by Harry52 on 18/8/16.
@@ -53,8 +53,8 @@ import com.qpidnetwork.livemodule.utils.Log;
 public class BaseWebViewFragment extends BaseFragment implements IAuthorizationListener, JSCallbackListener {
     protected LinearLayout ll_webview;
     protected WebView mWebView;
-    protected View view_errorpage;
-    protected Button btnRetry;
+    protected View view_errorpage, view_apiLimitPage;
+    protected Button btnRetry, btnOk;
     protected ProgressBar pb_loading;
 
     private CallbackAppGAEventJSObj mJSCallback;
@@ -96,6 +96,12 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
         view_errorpage.setVisibility(View.GONE);
         btnRetry = (Button) view.findViewById(R.id.btnRetry);
         btnRetry.setOnClickListener(this);
+
+        view_apiLimitPage = view.findViewById(R.id.view_api_limit_page);
+        view_apiLimitPage.setVisibility(View.GONE);
+        btnOk = (Button) view.findViewById(R.id.btnOk);
+        btnOk.setOnClickListener(this);
+
         pb_loading = (ProgressBar) view.findViewById(R.id.pb_loading);
         LinearLayout.LayoutParams webviewLp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
@@ -160,7 +166,7 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
         //以下设置为配合Chrome DevTools调试webview的h5页面
         // [setWebContentsDebuggingEnabled是静态方法，针对整个app的WebView]
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WebView.setWebContentsDebuggingEnabled(LiveApplication.isDemo);
+            WebView.setWebContentsDebuggingEnabled(LiveModule.mIsDebug);
         }
         //Android 4.2以下存在漏洞问题,待解决
         mJSCallback = new CallbackAppGAEventJSObj(mContext);
@@ -193,7 +199,7 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
                 if(item != null){
                     String sessionString = item.cName + "=" + item.value;
                     cookieManager.setCookie(item.domain, sessionString);
-                    Log.d(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
+                    Log.logD(TAG,"syncCookie-domain:"+item.domain+" sessionString:"+sessionString);
                 }
             }
         }
@@ -371,7 +377,7 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
             if(url.equals("qpidnetwork://app/closewindow")){
                 return true;
             }
-            if(URL2ActivityManager.getInstance().URL2Activity(getActivity(),url)){
+            if(new AppUrlHandler(mContext).urlHandle(url)){
                 return  true;
             }
             return super.shouldOverrideUrlLoading(view, url);
@@ -495,14 +501,19 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
                     @Override
                     public void run() {
                         if(!TextUtils.isEmpty(errorcode) && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_SESSION_ERROR_NO)){
-                            pb_loading.setVisibility(View.VISIBLE);
-                            handleSessionTimeout();
+                            LoginManager.LoginStatus loginStatus = LoginManager.getInstance().getLoginStatus();
+                            if(loginStatus == LoginManager.LoginStatus.Logined){
+                                RegisterActivity.launchRegisterActivity(mContext);
+                            }else{
+                                pb_loading.setVisibility(View.VISIBLE);
+                                handleSessionTimeout();
+                            }
                         }else if(!TextUtils.isEmpty(errorcode)
                                 && errorcode.equals(CallbackAppGAEventJSObj.WEBVIEW_NOCREDIT_ERROR_NO)){
                             if(!TextUtils.isEmpty(errMsg)){
                                 showCreditNoEnoughDialog(errMsg);
                             }else{
-                                LiveService.getInstance().onAddCreditClick(params);
+                                LiveModule.getInstance().onAddCreditClick(mContext, params);
                                 //GA统计点击充值
                                 AnalyticsManager.getsInstance().ReportEvent(
                                         mContext.getResources().getString(R.string.Live_Global_Category),
@@ -517,13 +528,31 @@ public class BaseWebViewFragment extends BaseFragment implements IAuthorizationL
             }
     }
 
+    @Override
+    public void onEventShowNavigation(final String isShow) {
+        if(null != getActivity()) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!TextUtils.isEmpty(isShow)) {
+//                        if (isShow.equals("0")) {
+//                            setTitleVisible(View.GONE);
+//                        } else if (isShow.equals("1")) {
+//                            setTitleVisible(View.VISIBLE);
+//                        }
+                    }
+                }
+            });
+        }
+    }
+
     /**
      * 利用接口和webview共用cookie，通过接口cookie过期自动重登陆实现session过期重登陆，刷新cookie
      */
     private void handleSessionTimeout(){
-        LiveRequestOperator.getInstance().GetHotLiveList(0, 10, false, false, new OnGetHotListCallback() {
+        LiveRequestOperator.getInstance().GetFollowingLiveList(0, 10, new OnGetFollowingListCallback() {
             @Override
-            public void onGetHotList(boolean isSuccess, int errCode, String errMsg, HotListItem[] hotList) {
+            public void onGetFollowingList(boolean isSuccess, int errCode, String errMsg, FollowingListItem[] followingList) {
 
             }
         });

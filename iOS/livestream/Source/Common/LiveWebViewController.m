@@ -10,50 +10,36 @@
 #import "LSRequestManager.h"
 #import "LSConfigManager.h"
 #import "IntroduceView.h"
-#import "LSLiveWKWebViewManager.h"
 #import "LiveModule.h"
 
 #define IS_IPAD (UI_USER_INTERFACE_IDIOM() != UIUserInterfaceIdiomPhone)
 
-@interface LiveWebViewController ()<LSLiveWKWebViewManagerDelegate>
+@interface LiveWebViewController ()
 
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
-
-@property (nonatomic, strong) LSLiveWKWebViewManager *urlManager;
-
-@property (nonatomic, assign) BOOL isResume;
-@property (nonatomic, assign) BOOL didFinshNav;
 @end
 
 @implementation LiveWebViewController
 - (void)dealloc {
     NSLog(@"LiveWebViewController::dealloc()");
-    [self.webView stopLoading];
-    [self.webView.configuration.userContentController removeScriptMessageHandlerForName:@"LiveApp"];
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:NSStringFromClass([self.superclass class]) bundle:nibBundleOrNil];
+    return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.isResume = NO;
-    self.didFinshNav = NO;
     
-    self.urlManager = [[LSLiveWKWebViewManager alloc] init];
-    self.urlManager.isShowTaBar = YES;
-    self.urlManager.isFirstProgram = YES;
-    self.urlManager.delegate = self;
+    self.isShowTaBar = YES;
+    self.isFirstProgram = YES;
     
     NSString *intimacyUrl; // 拼接url
-//    NSString *appVer = [NSString stringWithFormat:@"appver=%@",[LiveModule module].appVerCode];
     NSString *anchorID = [NSString stringWithFormat:@"&anchorid=%@",self.anchorId];
-//    NSString *device; // 设备类型
-//    if (IS_IPAD) {
-//        device = [NSString stringWithFormat:@"device=32"];
-//    } else {
-//        device = [NSString stringWithFormat:@"device=31"];
-//    }
-    
+
     if (self.isIntimacy) {
-        NSString *webSiteUrl = self.urlManager.configManager.item.intimacy;
+        // 亲密度
+        NSString *webSiteUrl = [LSConfigManager manager].item.intimacy;
         if (webSiteUrl.length > 0) {
             if ([webSiteUrl containsString:@"?"]) {
                 intimacyUrl = [NSString stringWithFormat:@"%@&%@",webSiteUrl,anchorID];
@@ -67,22 +53,10 @@
             if (![intimacyUrl containsString:@"?"])
                 intimacyUrl = [NSString stringWithFormat:@"%@?%@",intimacyUrl,anchorID];
             }
-
     }
-    self.urlManager.baseUrl = intimacyUrl;
+    self.requestUrl = intimacyUrl;
 }
 
-- (void)initCustomParam {
-    [super initCustomParam];
-}
-
-- (void)setupContainView {
-    [super setupContainView];
-}
-
-- (void)setupNavigationBar {
-    [super setupNavigationBar];
-}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -91,47 +65,23 @@
     [self.navigationController setNavigationBarHidden:NO];
     self.navigationController.navigationBar.translucent = NO;
      [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName : [UIColor blackColor], NSFontAttributeName : [UIFont systemFontOfSize:19]}];
-//    self.edgesForExtendedLayout = UIRectEdgeNone;
-    self.urlManager.isFirstProgram = YES;
-    if (!self.viewDidAppearEver) {
-        self.urlManager.liveWKWebView = self.webView;
-        self.urlManager.controller = self;
-        self.urlManager.isShowTaBar = YES;
-        [self.urlManager requestWebview];
-    }
+}
+
+- (void)setupRequestWebview {
+    [super setupRequestWebview];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self nativeTransferJavaScript];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self hideAndResetLoading];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 }
 
-- (void)nativeTransferJavaScript {
-    if (self.isResume && self.didFinshNav) {
-        [self.webView webViewTransferResumeHandler:^(id  _Nullable response, NSError * _Nullable error) {
-        }];
-    }
-}
-
-#pragma mark - LSLiveWKWebViewManagerDelegate
-- (void)webViewTransferJSIsResume:(BOOL)isResume {
-    self.isResume = isResume;
-}
-
-- (void)webViewDidFinishNavigation {
-    self.didFinshNav = YES;
-    if (self.viewDidAppearEver) {
-        [self nativeTransferJavaScript];
-    }
-}
 
 @end

@@ -1,0 +1,114 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    xmlns:button="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" 
+    android:id="@+id/rlRoot">
+
+    <ImageView
+        android:id="@+id/back_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <com.qpidnetwork.livemodule.view.MovingImageView
+        android:id="@+id/floatingBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#36000000" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:clickable="true"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="@string/live_login_by_using_our_app_your_agree_to_the_term_of_user"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:visibility="gone"/>
+
+    <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+        <!--android:id="@+id/buttonFacebook"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:layout_above="@+id/buttonRegister"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClickFacebook"-->
+        <!--android:text="@string/continue_with_facebook"-->
+        <!--android:visibility="gone"-->
+        <!--button:background="@color/blue_color"-->
+        <!--button:elevation="2dp"-->
+        <!--button:icon="@drawable/ic_facebook_white_24dp"-->
+        <!--button:title="@string/continue_with_facebook"-->
+        <!--button:title_color="@color/white"-->
+        <!--button:touch_feedback="@drawable/touch_feedback_holo_dark" />-->
+
+    <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+        <!--android:id="@+id/buttonRegister"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="48dp"-->
+        <!--android:layout_above="@+id/login_buttons"-->
+        <!--android:layout_marginLeft="32dp"-->
+        <!--android:layout_marginRight="32dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:clickable="true"-->
+        <!--android:onClick="onClickRegister"-->
+        <!--button:background="@color/white"-->
+        <!--button:elevation="1dp"-->
+        <!--button:title="@string/register_with_email"-->
+        <!--button:title_color="@color/text_color_dark"-->
+        <!--button:touch_feedback="@drawable/touch_feedback_holo_light" />-->
+
+    <LinearLayout
+        android:id="@+id/login_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+
+        <com.qpidnetwork.livemodule.view.ButtonRaised
+            android:id="@+id/buttonLogin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:onClick="onClickLogin"
+            button:background="@color/blue_color"
+            button:elevation="2dp"
+            button:title="@string/txt_login"
+            button:title_color="@color/white"
+            button:touch_feedback="@drawable/touch_feedback_holo_dark" />
+
+        <!--<TextView-->
+            <!--android:id="@+id/textLogin"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="16dp"-->
+            <!--android:layout_marginLeft="32dp"-->
+            <!--android:layout_marginRight="32dp"-->
+            <!--android:layout_marginTop="16dp"-->
+            <!--android:background="@drawable/touch_feedback_holo_light_round_rectangle"-->
+            <!--android:clickable="true"-->
+            <!--android:gravity="center"-->
+            <!--android:onClick="onClickLogin"-->
+            <!--android:padding="4dp"-->
+            <!--android:text="@string/if_you_have_an_account_login_here"-->
+            <!--android:textColor="#FFFFFF"-->
+            <!--android:textSize="16sp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:visibility="gone" />-->
+    </LinearLayout>
+
+</RelativeLayout>

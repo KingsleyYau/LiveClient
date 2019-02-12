@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/live_size_30dp"
+    android:layout_marginTop="@dimen/live_size_10dp">
+
+    <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+        android:id="@+id/item_my_profile_follow_iv_userIcon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_default_photo_woman"
+        app:civ_border_color="@color/white"
+        app:civ_border_width="2dp" />
+
+    <ImageView
+        android:id="@+id/item_my_profile_follow_iv_status"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="6dp"
+        android:src="@drawable/anchor_status_online"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/item_my_profile_follow_iv_living"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:visibility="gone" />
+</FrameLayout>

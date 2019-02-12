@@ -1,8 +1,13 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    google()
+    jcenter()
+}
+
 android {
     compileSdkVersion 25
-    buildToolsVersion "27.0.3"
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "net.qdating.coollive"
         minSdkVersion 9
@@ -27,12 +32,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:25.3.1'
+
+    // Adds a remote binary dependency only for local tests.
+    testImplementation 'junit:junit:4.12'
+    // Adds a remote binary dependency only for the instrumented test APK.
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
 }
 
 tasks.withType(JavaCompile) {

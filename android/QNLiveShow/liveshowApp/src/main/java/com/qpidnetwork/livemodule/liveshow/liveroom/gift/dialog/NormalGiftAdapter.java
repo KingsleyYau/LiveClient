@@ -14,12 +14,12 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftTab;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.List;
 
@@ -96,11 +96,12 @@ public class NormalGiftAdapter <T> extends CanAdapter {
         giftIconLp.height = giftIconWidth;
         iv_giftIcon.setLayoutParams(giftIconLp);
         if(!TextUtils.isEmpty(item.middleImgUrl)){
-            Picasso.with(mContext)
-                    .load(item.middleImgUrl)
-                    .placeholder(R.drawable.ic_default_gift)
-                    .error(R.drawable.ic_default_gift)
-                    .into(iv_giftIcon);
+//            Picasso.with(mContext)
+//                    .load(item.middleImgUrl)
+//                    .placeholder(R.drawable.ic_default_gift)
+//                    .error(R.drawable.ic_default_gift)
+//                    .into(iv_giftIcon);
+            PicassoLoadUtil.loadUrl(iv_giftIcon,item.middleImgUrl,R.drawable.ic_default_gift);
         }
 
         TextView tv_giftName = helper.getTextView(R.id.tv_giftName);

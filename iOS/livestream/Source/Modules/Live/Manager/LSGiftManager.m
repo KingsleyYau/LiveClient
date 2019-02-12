@@ -94,8 +94,8 @@
         if (success) {
             if (self.isFirstLogin) {
                 // 第一次登录成功, 获取所有礼物列表
-                NSLog(@"LSGiftManager::onLogin( [第一次登录成功, 获取背包礼物及所有礼物列表] )");
-                [self getAllBackpackGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
+                NSLog(@"LSGiftManager::onLogin( [HTTP登陆, 成功(第一次), 获取背包礼物及所有礼物列表] )");
+                [self getAllGiftList:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
                 }];
             }
         }
@@ -267,17 +267,19 @@
                             NSLog(@"LSGiftManager::getAllBackpackGiftList( [获取所有背包礼物列表, %@], errnum : %ld, errmsg : %@, totalCount : %d )", BOOL2SUCCESS(success), (long)errnum, errmsg, totalCount);
                             if (success) {
                                 // 清空旧数据
-                                for (LSGiftManagerItem *LSGiftManagerItem in self.giftBackpackMutableArray) {
-                                    LSGiftManagerItem.backpackTotal = 0;
+                                for (LSGiftManagerItem *giftManagerItem in self.giftBackpackMutableArray) {
+                                    giftManagerItem.backpackTotal = 0;
                                 }
                                 [self.giftBackpackMutableArray removeAllObjects];
                                 
                                 // 新增数据, 并根据Id做合并
                                 for (BackGiftItemObject *item in array) {
-                                    LSGiftManagerItem *LSGiftManagerItem = [self getGiftItemWithId:item.giftId];
-                                    LSGiftManagerItem.backpackTotal += item.num;
-                                    if (LSGiftManagerItem.infoItem) {
-                                        [self.giftBackpackMutableArray addObject:LSGiftManagerItem];
+                                    LSGiftManagerItem *giftManagerItem = [self getGiftItemWithId:item.giftId];
+                                    giftManagerItem.backpackTotal += item.num;
+                                    // 判断队列是否包含该对象
+                                    BOOL isContains = [self.giftBackpackMutableArray containsObject:giftManagerItem];
+                                    if (giftManagerItem.infoItem && !isContains) {
+                                        [self.giftBackpackMutableArray addObject:giftManagerItem];
                                     }
                                 }
                             }
@@ -341,7 +343,7 @@
                 LSGetHangoutGiftListRequest *request = [[LSGetHangoutGiftListRequest alloc] init];
                 request.roomId = roomId;
                 request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSHangoutGiftListObject * _Nonnull item) {
-                    NSLog(@"LSGiftManager::( [请求多人互动可发送礼物列表 %@], roomId : %@, errnum : %d, errmsg : %@, buyforList : %lu, normalList : %lu, celebrationList : %lu )",success == YES ? @"成功" : @"失败" , roomId, errnum, errmsg, item.buyforList.count, item.normalList.count, item.celebrationList.count);
+                    NSLog(@"LSGiftManager::( [请求多人互动可发送礼物列表 %@], roomId : %@, errnum : %d, errmsg : %@, buyforList : %lu, normalList : %lu, celebrationList : %lu )",BOOL2SUCCESS(success) , roomId, errnum, errmsg, item.buyforList.count, item.normalList.count, item.celebrationList.count);
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if( self.hangoutGiftListRequest == request ) {
                             self.hangoutGiftListRequest = nil;
@@ -423,14 +425,13 @@
     NSLog(@"LSGiftManager::removeAllGiftList( [清除所有缓存礼物列表] )");
     
     [self removeRoomGiftList];
-    [self.giftBackpackMutableArray removeAllObjects];
     [self.giftMutableArray removeAllObjects];
 }
 
 - (void)removeRoomGiftList {
     // TODO:清除直播间缓存礼物列表
     NSLog(@"LSGiftManager::removeRoomGiftList( [清除直播间缓存礼物列表], request : %p )", self.giftRoomRequest);
-    
+    [self.giftBackpackMutableArray removeAllObjects];
     self.giftRoomRequest = nil;
     [self.giftRoomMutableArray removeAllObjects];
     self.giftRoomBackpackRequest = nil;

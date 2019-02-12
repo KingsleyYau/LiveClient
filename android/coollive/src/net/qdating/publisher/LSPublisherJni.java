@@ -36,6 +36,19 @@ public class LSPublisherJni implements ILSPublisherCallbackJni {
 	public native static void SetLogDir(String logDir);
 
 	/**
+	 * 设置日志等级 <br/>
+	 * {@link android.util.Log#VERBOSE} <br/>
+	 * {@link android.util.Log#DEBUG} <br/>
+	 * {@link android.util.Log#INFO} <br/>
+	 * {@link android.util.Log#WARN} <br/>
+	 * {@link android.util.Log#ERROR} <br/>
+	 */
+	public static void SetJniLogLevel(int logLevel) {
+		SetLogLevel(logLevel - android.util.Log.DEBUG);
+	}
+	private native static void SetLogLevel(int logLevel);
+
+	/**
 	 * 创建实例
 	 * @param publisherCallback		状态回调
 	 * @param useHardEncoder		是否使用硬编码器

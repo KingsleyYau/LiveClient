@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.utils;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
+
 /**
  * Description:
  * <p>
@@ -10,9 +12,6 @@ public class IPConfigUtil {
 
     public static boolean isSimulatorEnv = false;
 
-//    移动端http: 3107->7717
-//    websocket: 3106->7716
-
     //真机
     private static final String testVedioUrlInRealDevice = "rtmp://172.25.32.17:1936/aac/hunter";
     private static final String testIMServerUrlInRealDevice = "ws://demo-live.charmdate.com:3006";  //"ws://172.25.32.17:7716";     //"ws://demo-live.charmdate.com:3006"
@@ -20,8 +19,8 @@ public class IPConfigUtil {
 
     //模拟器
     private static final String testVedioUrlInSimulator = "rtmp://192.168.88.17:1936/speex/hunter";
-    private static final String testIMServerUrlInSimulator = "ws://192.168.88.17:7716";
-    private static final String testWebSiteUrlInSimulator = "http://192.168.88.17:7717";
+    private static final String testIMServerUrlInSimulator = "ws://192.168.88.17:3106";
+    private static final String testWebSiteUrlInSimulator = "http://192.168.88.17:3107";
 
     /**
      * 视频流url

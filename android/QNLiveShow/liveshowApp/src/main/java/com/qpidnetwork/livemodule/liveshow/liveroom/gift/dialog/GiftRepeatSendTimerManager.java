@@ -1,11 +1,9 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift.dialog;
 
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static java.lang.System.currentTimeMillis;
 
 /**
  * Description:礼物列表连送按钮倒计时定时器管理类

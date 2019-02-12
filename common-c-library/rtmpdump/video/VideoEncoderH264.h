@@ -51,13 +51,6 @@ private:
     void Stop();
 
     /**
-     释放视频帧Buffer
-
-     @param videoFrame 视频帧
-     */
-    void ReleaseVideoFrame(VideoFrame* videoFrame);
-    
-    /**
      重采样一个视频帧
 
      @param srcFrame 输入视频帧
@@ -87,6 +80,13 @@ private:
      销毁编码器
      */
     void DestroyContext();
+    
+    /**
+     释放视频帧Buffer
+     
+     @param videoFrame 视频帧
+     */
+    void ReleaseBuffer(VideoFrame* videoFrame);
     
     /**
      寻找Nalu的开始位置

@@ -95,6 +95,47 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetMainUnreadNum
         (JNIEnv *, jclass, jobject);
 
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    GetMyProfile
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnGetMyProfileCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetMyProfile
+        (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniProfile
+ * Method:    UpdateProfile
+ * Signature: (IIIIIIIIIIILjava/lang/String;[Ljava/lang/String;Lcom/qpidnetwork/request/OnUpdateMyProfileCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UpdateProfile
+        (JNIEnv *, jclass, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jint, jstring, jobjectArray, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+ * Method:    VersionCheck
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnOtherVersionCheckCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_VersionCheck
+        (JNIEnv *, jclass, jint, jobject);
+
+ /*
+  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+  * Method:    StartEditResume
+  * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnOtherVersionCheckCallback;)J
+  */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_StartEditResume
+          (JNIEnv *, jclass, jobject);
+
+ /*
+  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniOther
+  * Method:    PhoneInfo
+  * Signature: (Ljava/lang/String;ILjava/lang/String;IIDIILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;Lcom/qpidnetwork/request/OnOtherPhoneInfoCallback;)J
+  */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_PhoneInfo
+           (JNIEnv *, jclass, jstring, jint, jstring, jint, jint, jdouble, jint, jint, jstring, jstring, jstring, jstring, jstring, jint, jint, jstring, jobject);
+
+
 #ifdef __cplusplus
 }
 #endif

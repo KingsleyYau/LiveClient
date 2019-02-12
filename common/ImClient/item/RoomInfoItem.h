@@ -14,6 +14,7 @@ using namespace std;
 
 #include <json/json/json.h>
 #include "RebateInfoItem.h"
+#include "IMAuthorityItem.h"
 #define USERID_PARAM           "userid"
 #define NICKNAME_PARAM         "nickname"
 #define PHOTOURL_PARAM         "photourl"
@@ -41,6 +42,7 @@ using namespace std;
 #define USECOUPON_PARAM        "use_coupon"
 #define SHARELINK_PARAM        "share_link"
 #define HASTALENT_PARAM        "has_talent"
+#define PRIV_PARAM             "priv"
 
 class RoomInfoItem {
 public:
@@ -168,6 +170,10 @@ public:
                 isHasTalent = root[HASTALENT_PARAM].asInt() == 0 ? false : true;
             }
             
+            if (root[PRIV_PARAM].isObject()) {
+                priv.Parse(root[PRIV_PARAM]);
+            }
+            
         }
 
         result = true;
@@ -234,6 +240,7 @@ public:
      * shareLink                默认分享链接
      * liveShowType             公开直播间类型（IMPUBLICROOMTYPE_COMMON：普通公开，IMPUBLICROOMTYPE_PROGRAM：节目）
      * isHasTalent              是否有才艺（false：否，ture：是）
+     * priv                     权限
      */
     string          userId;
     string          nickName;
@@ -263,6 +270,7 @@ public:
     string          shareLink;
     IMPublicRoomType liveShowType;
     bool            isHasTalent;
+    IMAuthorityItem priv;
 };
 
 

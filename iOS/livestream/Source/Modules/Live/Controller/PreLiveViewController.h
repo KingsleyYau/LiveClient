@@ -51,5 +51,6 @@
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *recommandViewHeight;
 @property (nonatomic, weak) IBOutlet UIView *recommandView;
 @property (nonatomic, weak) IBOutlet UICollectionView *recommandCollectionView;
+@property (weak, nonatomic) IBOutlet UIButton *chatNowBtn;
 
 @end

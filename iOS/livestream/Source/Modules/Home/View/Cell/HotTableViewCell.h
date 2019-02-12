@@ -18,6 +18,8 @@
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickBookPrivateBtn:(UIButton *)sender;
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickVipPrivateBtn:(UIButton *)sender;
 - (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewPublicFeeBtn:(UIButton *)sender;
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewChatNowBtn:(UIButton *)sender;
+- (void)hotTableViewCell:(HotTableViewCell *)cell didClickViewSendMailBtn:(UIButton *)sender;
 
 @end
 
@@ -37,6 +39,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *vipPrivateBtn;
 /** 付费私密直播间 */
 @property (weak, nonatomic) IBOutlet UIButton *viewPublicFeeBtn;
+@property (weak, nonatomic) IBOutlet UIButton *chatNowBtn;
+@property (weak, nonatomic) IBOutlet UIButton *sendMailBtn;
 /** 播放数组 */
 @property (nonatomic, strong) NSMutableArray *animationArray;
 

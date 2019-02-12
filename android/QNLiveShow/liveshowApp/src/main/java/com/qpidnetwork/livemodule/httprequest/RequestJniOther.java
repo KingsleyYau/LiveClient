@@ -2,6 +2,21 @@ package com.qpidnetwork.livemodule.httprequest;
 
 
 import com.qpidnetwork.livemodule.httprequest.item.RegionType;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Children;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Country;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Drink;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Education;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Ethnicity;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.HandleEmailType;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Height;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Income;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Language;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Profession;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Religion;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Smoke;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Weight;
+import com.qpidnetwork.livemodule.httprequest.item.LSRequestEnum.Zodiac;
 
 /**
  * 5. 其他接口
@@ -101,4 +116,137 @@ public class RequestJniOther {
 	 * @return
 	 */
 	static public native long GetMainUnreadNum(OnGetMainUnreadNumCallback callback);
+
+	/**
+	 * 6.18.查询个人信息
+	 * @param callback
+	 * @return
+	 */
+	static public native long GetMyProfile(OnGetMyProfileCallback callback);
+
+	/**
+	 * 2.2.修改个人信息
+	 * @param weight		体重
+	 * @param height		身高
+	 * @param language		语言
+	 * @param ethnicity		人种
+	 * @param religion		宗教
+	 * @param education		教育程度
+	 * @param profession	职业
+	 * @param income		收入情况
+	 * @param children		子女状况
+	 * @param smoke			吸烟情况
+	 * @param drink			喝酒情况
+	 * @param resume		个人简介
+	 * @param interest		兴趣爱好
+	 * @param zodiac		星座
+	 * @return				请求唯一标识
+	 */
+	static public long UpdateProfile(
+			Weight weight,
+			Height height,
+			Language language,
+			Ethnicity ethnicity,
+			Religion religion,
+			Education education,
+			Profession profession,
+			Income income,
+			Children children,
+			Smoke smoke,
+			Drink drink,
+			String resume,
+			String[] interest,
+			Zodiac zodiac,
+			OnUpdateMyProfileCallback callback
+	) {
+		return UpdateProfile(
+				weight.ordinal(),
+				height.ordinal(),
+				language.ordinal(),
+				ethnicity.ordinal(),
+				religion.ordinal(),
+				education.ordinal(),
+				profession.ordinal(),
+				income.ordinal(),
+				children.ordinal(),
+				smoke.ordinal(),
+				drink.ordinal(),
+				resume,
+				interest,
+				zodiac.ordinal(),
+				callback
+		);
+	}
+	static protected native long UpdateProfile(
+			int weight,
+			int height,
+			int language,
+			int ethnicity,
+			int religion,
+			int education,
+			int profession,
+			int income,
+			int children,
+			int smoke,
+			int drink,
+			String resume,
+			String[] interest,
+			int zodiac,
+			OnUpdateMyProfileCallback callback
+	);
+
+	/**
+	 * 6.20.检查客户端更新
+	 * @param currVer	当前客户端内部版本号
+	 * @param callback
+	 * @return
+	 */
+	static public native long VersionCheck(int currVer, OnOtherVersionCheckCallback callback);
+
+	/**
+	 * 6.21.开始编辑简介触发计时
+	 * @param callback
+	 * @return
+	 */
+	static public native long StartEditResume(OnRequestCallback callback);
+
+	public enum LSActionType {
+		SETUP,		// 新安装
+		NEWUSER		// 新用户
+	}
+	/**
+	 * 6.22.收集手机硬件信息
+	 * @param manId			男士ID
+	 * @param verCode		客户端内部版本号
+	 * @param verName		客户端显示版本号
+	 * @param action		新用户类型
+	 * @param siteId		站点ID
+	 * @param density		屏幕密度
+	 * @param width			屏幕宽度
+	 * @param height		屏幕高度
+	 * @param lineNumber	电话号码
+	 * @param simOptName	sim卡服务商名字
+	 * @param simOpt		sim卡移动国家码
+	 * @param simCountryIso	sim卡ISO国家码
+	 * @param simState		sim卡状态
+	 * @param phoneType		手机类型
+	 * @param networkType	网络类型
+	 * @param deviceId		设备唯一标识
+	 * @param callback
+	 * @return
+	 */
+	static public long PhoneInfo(String manId, int verCode, String verName, LSActionType action, int siteId
+			, double density, int width, int height, String lineNumber, String simOptName, String simOpt, String simCountryIso
+			, String simState, int phoneType, int networkType, String deviceId
+			, OnRequestCallback callback) {
+		return PhoneInfo(manId, verCode, verName, action.ordinal(), siteId
+				, density, width, height, lineNumber, simOptName, simOpt, simCountryIso
+				, simState, phoneType, networkType, deviceId
+				, callback);
+	}
+		static protected native long PhoneInfo(String manId, int verCode, String verName, int action, int siteId
+				, double density, int width, int height, String lineNumber, String simOptName, String simOpt, String simCountryIso
+				, String simState, int phoneType, int networkType, String deviceId
+				, OnRequestCallback callback);
+
 }

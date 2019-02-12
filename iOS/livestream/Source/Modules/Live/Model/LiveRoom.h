@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import "LSImManager.h"
-
 #import "ImHeader.h"
+
+#import "LiveRoomInfoItemObject.h"
 
 typedef enum LiveRoomType {
     LiveRoomType_Unknow = 0,
@@ -22,6 +22,8 @@ typedef enum LiveRoomType {
 } LiveRoomType;
 
 @interface LiveRoom : NSObject
+// 是否可用, 如果退出直播间则标记为不可用
+@property (assign) BOOL active;
 
 @property (strong) NSString *roomId;
 @property (strong) NSString *showId;
@@ -46,6 +48,8 @@ typedef enum LiveRoomType {
 @property (nonatomic, weak) UIViewController *superController;
 @property (nonatomic, weak) UIView *superView;
 
+// 私密直播/私密预约 权限
+@property (nonatomic, strong) ImAuthorityItemObject* priv;
 /**
  重置
  */

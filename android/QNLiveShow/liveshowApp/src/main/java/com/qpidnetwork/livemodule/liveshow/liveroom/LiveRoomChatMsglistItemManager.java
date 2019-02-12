@@ -275,7 +275,12 @@ public class LiveRoomChatMsglistItemManager {
                                         obj4DownloadRefresh.mHtmlStr,true);
                             }
                         }
-                    });
+
+                            @Override
+                            public void onProgress(String fileUrl, int progress) {
+
+                            }
+                        });
 
                 //生成真正的文本
                 msgListItem.spanned = HtmlSpannedHandler.getLiveRoomMsgHTML(mBuilder ,

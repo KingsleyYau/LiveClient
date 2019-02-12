@@ -14,17 +14,16 @@ import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.BaseCommonLiveRoomActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.advance.AdvanceGiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.advance.AdvanceGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGift;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftItemView;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.normal.LiveGiftView;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.WeakReference;
 
@@ -180,12 +179,13 @@ public class ModuleGiftManager {
                     IMUserBaseInfoItem imUserBaseInfoItem = IMManager.getInstance().getUserInfo(msgItem.userId);
                     if(null != imUserBaseInfoItem && !TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)){
                         Log.d(TAG,"getGiftView-userId:"+msgItem.userId+" photoUrl:"+imUserBaseInfoItem.photoUrl);
-                        Picasso.with(mActivity.get())
-                                .load(imUserBaseInfoItem.photoUrl)
-                                .placeholder(R.drawable.ic_default_photo_man)
-                                .error(R.drawable.ic_default_photo_man)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(civ_photo);
+//                        Picasso.with(mActivity.get())
+//                                .load(imUserBaseInfoItem.photoUrl)
+//                                .placeholder(R.drawable.ic_default_photo_man)
+//                                .error(R.drawable.ic_default_photo_man)
+//                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                .into(civ_photo);
+                        PicassoLoadUtil.loadUrlNoMCache(civ_photo,imUserBaseInfoItem.photoUrl,R.drawable.ic_default_photo_man);
                     }
                     GiftItem giftItem = NormalGiftManager.getInstance().
                             getLocalGiftDetail(msgItem.giftMsgContent.giftId);
@@ -195,11 +195,12 @@ public class ModuleGiftManager {
                         tvGiftName.setText(msgItem.giftMsgContent.giftId);
                     }
                     if(!TextUtils.isEmpty(giftItem.bigImageUrl)){
-                        Picasso.with(mActivity.get())
-                                .load(giftItem.bigImageUrl)
-                                .placeholder(R.drawable.ic_default_gift)
-                                .error(R.drawable.ic_default_gift)
-                                .into(ivGift);
+//                        Picasso.with(mActivity.get())
+//                                .load(giftItem.bigImageUrl)
+//                                .placeholder(R.drawable.ic_default_gift)
+//                                .error(R.drawable.ic_default_gift)
+//                                .into(ivGift);
+                        PicassoLoadUtil.loadUrl(ivGift,giftItem.bigImageUrl,R.drawable.ic_default_gift);
                     }
                 }
             }

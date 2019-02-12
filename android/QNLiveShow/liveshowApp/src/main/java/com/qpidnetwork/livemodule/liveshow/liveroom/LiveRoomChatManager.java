@@ -4,15 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,22 +23,12 @@ import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
-import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftImageType;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.model.LiveRoomMsgListItem;
-import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
-import com.qpidnetwork.livemodule.utils.DynamicDrawableSpanJ;
-import com.qpidnetwork.livemodule.utils.HtmlSpannedHandler;
-import com.qpidnetwork.livemodule.utils.ImageSpanJ;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.WeakReference;
-import java.util.List;
-
-import io.reactivex.observers.DisposableObserver;
 
 /**
  * Description:
@@ -406,6 +392,7 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
         View ll_msgItemContainer = holder.getView(R.id.ll_msgItemContainer);
         //避免itemview循环利用时背景色混乱
         ll_msgItemContainer.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        ll_msgItemContainer.setOnClickListener(null);
         //解决才艺推荐被隐藏重用问题
         View llRecommended = holder.getView(R.id.llRecommended);
         ll_userLevel.setVisibility(View.VISIBLE);
@@ -494,6 +481,11 @@ public class LiveRoomChatManager implements IFileDownloadedListener {
                 });
             }
         }
+    }
+
+    @Override
+    public void onProgress(String fileUrl, int progress) {
+
     }
 
     /**

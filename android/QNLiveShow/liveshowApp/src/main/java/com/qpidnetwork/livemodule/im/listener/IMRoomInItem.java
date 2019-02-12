@@ -53,6 +53,7 @@ public class IMRoomInItem implements Serializable{
 	 * @param popPrice			直播间的POP消息资费
 	 * @param liveShowType		公开直播间类型
 	 * @param isHasTalent		是否有才艺
+	 * @param
 	 */	
 	public IMRoomInItem(String userId,
 						String nickName,
@@ -144,7 +145,6 @@ public class IMRoomInItem implements Serializable{
 	public int useCoupon;
 	public IMPublicRoomType liveShowType;
 	public boolean isHasTalent;
-
 
 	@Override
 	public String toString() {

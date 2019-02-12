@@ -14,12 +14,26 @@
 namespace coollive {
 AudioHardDecoder::AudioHardDecoder()
 {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "AudioHardDecoder::AudioHardDecoder( "
+                 "this : %p "
+                 ")",
+                 this);
+    
     mpCallback = NULL;
     audioFileStream = NULL;
 }
 
 AudioHardDecoder::~AudioHardDecoder()
 {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "AudioHardDecoder::~AudioHardDecoder( "
+                 "this : %p "
+                 ")",
+                 this);
+    
     Pause();
 }
 

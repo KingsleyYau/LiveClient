@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="smoke_live">
+		<item>--</item>
+		<item>Nonsmoker</item>
+		<item>Occasionally</item>
+		<item>Daily</item>
+		<item>Trying to quit</item>  
+    </string-array> 
+</resources>

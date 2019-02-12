@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QNChatLargeEmotionSelfTableViewCell" rowHeight="120" id="GSn-Zx-P3z" userLabel="QNChatLargeEmotionSelfTableViewCell" customClass="QNChatLargeEmotionSelfTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="305" height="120"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GSn-Zx-P3z" id="8bq-V8-nAg">
+                <rect key="frame" x="0.0" y="0.0" width="305" height="119.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PKy-3D-cKs" userLabel="Large Emotion Image View" customClass="QNLargeEmotionShowView">
+                        <rect key="frame" x="199" y="12" width="96" height="96"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="96" id="QWc-33-qYq"/>
+                            <constraint firstAttribute="height" constant="96" id="b9N-lL-ky1"/>
+                        </constraints>
+                    </view>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YHx-k6-jO3">
+                        <rect key="frame" x="144" y="40" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="g5e-fA-ULb"/>
+                            <constraint firstAttribute="width" constant="40" id="hBl-s7-JAg"/>
+                        </constraints>
+                        <state key="normal" image="LS_Chat_RetryButton"/>
+                        <connections>
+                            <action selector="retryBtnClick:" destination="GSn-Zx-P3z" eventType="touchUpInside" id="Xcp-0I-3Wr"/>
+                        </connections>
+                    </button>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="2bR-Jz-EQv">
+                        <rect key="frame" x="164" y="88" width="20" height="20"/>
+                        <color key="color" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </activityIndicatorView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="PKy-3D-cKs" firstAttribute="centerY" secondItem="8bq-V8-nAg" secondAttribute="centerY" id="4T1-Ig-fWY"/>
+                    <constraint firstItem="PKy-3D-cKs" firstAttribute="leading" secondItem="YHx-k6-jO3" secondAttribute="trailing" constant="15" id="Giu-gI-Or3"/>
+                    <constraint firstItem="2bR-Jz-EQv" firstAttribute="trailing" secondItem="YHx-k6-jO3" secondAttribute="trailing" id="Lel-pa-Frx"/>
+                    <constraint firstItem="PKy-3D-cKs" firstAttribute="trailing" secondItem="8bq-V8-nAg" secondAttribute="trailing" constant="-10" id="pdi-ct-CbO"/>
+                    <constraint firstItem="YHx-k6-jO3" firstAttribute="centerY" secondItem="8bq-V8-nAg" secondAttribute="centerY" id="sMs-mo-X3a"/>
+                    <constraint firstItem="2bR-Jz-EQv" firstAttribute="bottom" secondItem="PKy-3D-cKs" secondAttribute="bottom" id="ty9-x0-kag"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <connections>
+                <outlet property="retryBtn" destination="YHx-k6-jO3" id="pe0-uc-73m"/>
+                <outlet property="sendingLoadingView" destination="2bR-Jz-EQv" id="9QD-Ba-183"/>
+                <outlet property="view" destination="PKy-3D-cKs" id="1Ri-on-mXW"/>
+            </connections>
+            <point key="canvasLocation" x="479.5" y="342.5"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="LS_Chat_RetryButton" width="24" height="24"/>
+    </resources>
+</document>

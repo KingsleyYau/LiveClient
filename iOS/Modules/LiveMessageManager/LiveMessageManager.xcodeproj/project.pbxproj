@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FA32878520F5984A002A4C6A /* HttpRequestPrivateMsgController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA32878320F59849002A4C6A /* HttpRequestPrivateMsgController.cpp */; };
+		FA3F5DD1213FC0EC00EEFA38 /* LMSystemNoticeItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3F5DD0213FC0EC00EEFA38 /* LMSystemNoticeItemObject.m */; };
+		FA3F5DD6213FC23F00EEFA38 /* LMTimeMsgItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3F5DD4213FC23F00EEFA38 /* LMTimeMsgItemObject.m */; };
+		FA3F5DD7213FC23F00EEFA38 /* LMWarningItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FA3F5DD5213FC23F00EEFA38 /* LMWarningItemObject.m */; };
+		FA7098B220DE411B00ABD915 /* LMMessageFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098A020DE411A00ABD915 /* LMMessageFilter.cpp */; };
+		FA7098B320DE411B00ABD915 /* ILiveMessageManManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098A220DE411A00ABD915 /* ILiveMessageManManager.cpp */; };
+		FA7098B520DE411B00ABD915 /* LiveMessageItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098A620DE411A00ABD915 /* LiveMessageItem.cpp */; };
+		FA7098B620DE411B00ABD915 /* LMUserManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098A920DE411A00ABD915 /* LMUserManager.cpp */; };
+		FA7098B720DE411B00ABD915 /* LMPrivateContactManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098AA20DE411A00ABD915 /* LMPrivateContactManager.cpp */; };
+		FA7098B820DE411B00ABD915 /* LMUserItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098AB20DE411B00ABD915 /* LMUserItem.cpp */; };
+		FA7098B920DE411B00ABD915 /* LiveMessageManManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098AC20DE411B00ABD915 /* LiveMessageManManager.cpp */; };
+		FA7098BA20DE411B00ABD915 /* LMPrivateMsgItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7098B020DE411B00ABD915 /* LMPrivateMsgItem.cpp */; };
+		FA7189822106BA230056E99D /* LMWarningItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA71897E2106BA220056E99D /* LMWarningItem.cpp */; };
+		FA7189842106BA230056E99D /* LMSystemItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA7189812106BA220056E99D /* LMSystemItem.cpp */; };
+		FA718987210756220056E99D /* LMTimeMsgItem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FA718985210756210056E99D /* LMTimeMsgItem.cpp */; };
+		FAE79CEE20E0D668004FF95D /* LMManagerOC.mm in Sources */ = {isa = PBXBuildFile; fileRef = FAE79CEC20E0D668004FF95D /* LMManagerOC.mm */; };
+		FAE79CF420E0DD75004FF95D /* LMPrivateMsgContactObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE79CF220E0DD75004FF95D /* LMPrivateMsgContactObject.m */; };
+		FAE79CF720E0E814004FF95D /* LMMessageItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE79CF620E0E814004FF95D /* LMMessageItemObject.m */; };
+		FAE79CFA20E0EAF5004FF95D /* LMPrivateMsgItemObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAE79CF920E0EAF5004FF95D /* LMPrivateMsgItemObject.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		50F383301EE68807003D2765 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		50F383321EE68807003D2765 /* libLiveMessageManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libLiveMessageManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA32878320F59849002A4C6A /* HttpRequestPrivateMsgController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpRequestPrivateMsgController.cpp; sourceTree = "<group>"; };
+		FA32878420F59849002A4C6A /* HttpRequestPrivateMsgController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpRequestPrivateMsgController.h; sourceTree = "<group>"; };
+		FA3F5DCF213FC0EC00EEFA38 /* LMSystemNoticeItemObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMSystemNoticeItemObject.h; sourceTree = "<group>"; };
+		FA3F5DD0213FC0EC00EEFA38 /* LMSystemNoticeItemObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMSystemNoticeItemObject.m; sourceTree = "<group>"; };
+		FA3F5DD2213FC23E00EEFA38 /* LMWarningItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMWarningItemObject.h; sourceTree = "<group>"; };
+		FA3F5DD3213FC23E00EEFA38 /* LMTimeMsgItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTimeMsgItemObject.h; sourceTree = "<group>"; };
+		FA3F5DD4213FC23F00EEFA38 /* LMTimeMsgItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMTimeMsgItemObject.m; sourceTree = "<group>"; };
+		FA3F5DD5213FC23F00EEFA38 /* LMWarningItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMWarningItemObject.m; sourceTree = "<group>"; };
+		FA70986C20DDE24B00ABD915 /* LiveMessageManager-PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LiveMessageManager-PrefixHeader.pch"; sourceTree = "<group>"; };
+		FA70989D20DE411900ABD915 /* LiveMessageItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveMessageItem.h; sourceTree = "<group>"; };
+		FA70989E20DE411900ABD915 /* LMUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUserManager.h; sourceTree = "<group>"; };
+		FA7098A020DE411A00ABD915 /* LMMessageFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMMessageFilter.cpp; sourceTree = "<group>"; };
+		FA7098A120DE411A00ABD915 /* LMUserItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUserItem.h; sourceTree = "<group>"; };
+		FA7098A220DE411A00ABD915 /* ILiveMessageManManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ILiveMessageManManager.cpp; sourceTree = "<group>"; };
+		FA7098A320DE411A00ABD915 /* LiveMessageManManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LiveMessageManManager.h; sourceTree = "<group>"; };
+		FA7098A520DE411A00ABD915 /* LMPrivateContactManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPrivateContactManager.h; sourceTree = "<group>"; };
+		FA7098A620DE411A00ABD915 /* LiveMessageItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LiveMessageItem.cpp; sourceTree = "<group>"; };
+		FA7098A820DE411A00ABD915 /* LMPrivateMsgItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPrivateMsgItem.h; sourceTree = "<group>"; };
+		FA7098A920DE411A00ABD915 /* LMUserManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMUserManager.cpp; sourceTree = "<group>"; };
+		FA7098AA20DE411A00ABD915 /* LMPrivateContactManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMPrivateContactManager.cpp; sourceTree = "<group>"; };
+		FA7098AB20DE411B00ABD915 /* LMUserItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMUserItem.cpp; sourceTree = "<group>"; };
+		FA7098AC20DE411B00ABD915 /* LiveMessageManManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LiveMessageManManager.cpp; sourceTree = "<group>"; };
+		FA7098AD20DE411B00ABD915 /* LMMessageFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMessageFilter.h; sourceTree = "<group>"; };
+		FA7098AF20DE411B00ABD915 /* ILiveMessageManManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILiveMessageManManager.h; sourceTree = "<group>"; };
+		FA7098B020DE411B00ABD915 /* LMPrivateMsgItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMPrivateMsgItem.cpp; sourceTree = "<group>"; };
+		FA71897D2106BA220056E99D /* LMWarningItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMWarningItem.h; sourceTree = "<group>"; };
+		FA71897E2106BA220056E99D /* LMWarningItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMWarningItem.cpp; sourceTree = "<group>"; };
+		FA7189802106BA220056E99D /* LMSystemItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMSystemItem.h; sourceTree = "<group>"; };
+		FA7189812106BA220056E99D /* LMSystemItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMSystemItem.cpp; sourceTree = "<group>"; };
+		FA718985210756210056E99D /* LMTimeMsgItem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LMTimeMsgItem.cpp; sourceTree = "<group>"; };
+		FA718986210756210056E99D /* LMTimeMsgItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMTimeMsgItem.h; sourceTree = "<group>"; };
+		FA7B657421ED8ADB006F481B /* common_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = common_release.xcconfig; path = ../../Config/common_release.xcconfig; sourceTree = "<group>"; };
+		FA7B657521ED8ADB006F481B /* common_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = common_debug.xcconfig; path = ../../Config/common_debug.xcconfig; sourceTree = "<group>"; };
+		FAE79CEC20E0D668004FF95D /* LMManagerOC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LMManagerOC.mm; sourceTree = "<group>"; };
+		FAE79CED20E0D668004FF95D /* LMManagerOC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMManagerOC.h; sourceTree = "<group>"; };
+		FAE79CEF20E0D80D004FF95D /* LMMessageManagerListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMessageManagerListener.h; sourceTree = "<group>"; };
+		FAE79CF020E0D80D004FF95D /* LMHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHeader.h; sourceTree = "<group>"; };
+		FAE79CF220E0DD75004FF95D /* LMPrivateMsgContactObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPrivateMsgContactObject.m; sourceTree = "<group>"; };
+		FAE79CF320E0DD75004FF95D /* LMPrivateMsgContactObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPrivateMsgContactObject.h; sourceTree = "<group>"; };
+		FAE79CF520E0E813004FF95D /* LMMessageItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMessageItemObject.h; sourceTree = "<group>"; };
+		FAE79CF620E0E814004FF95D /* LMMessageItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMMessageItemObject.m; sourceTree = "<group>"; };
+		FAE79CF820E0EAF5004FF95D /* LMPrivateMsgItemObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPrivateMsgItemObject.h; sourceTree = "<group>"; };
+		FAE79CF920E0EAF5004FF95D /* LMPrivateMsgItemObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPrivateMsgItemObject.m; sourceTree = "<group>"; };
+		FAE79CFB20E0F03F004FF95D /* ILiveMessageDef.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ILiveMessageDef.h; sourceTree = "<group>"; };
+		FAEBE8C9217F318D00674CAB /* LMHandleHttpListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHandleHttpListener.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		50F3832F1EE68807003D2765 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		50F383291EE68807003D2765 = {
+			isa = PBXGroup;
+			children = (
+				FA7B657521ED8ADB006F481B /* common_debug.xcconfig */,
+				FA7B657421ED8ADB006F481B /* common_release.xcconfig */,
+				FA70984B20DDE0E200ABD915 /* LiveMessageManager */,
+				50F383331EE68807003D2765 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		50F383331EE68807003D2765 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50F383321EE68807003D2765 /* libLiveMessageManager.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FA70984B20DDE0E200ABD915 /* LiveMessageManager */ = {
+			isa = PBXGroup;
+			children = (
+				FAEBE8C9217F318D00674CAB /* LMHandleHttpListener.h */,
+				FAE79CF120E0DD75004FF95D /* Model */,
+				FAE79CF020E0D80D004FF95D /* LMHeader.h */,
+				FAE79CEF20E0D80D004FF95D /* LMMessageManagerListener.h */,
+				FAE79CED20E0D668004FF95D /* LMManagerOC.h */,
+				FAE79CEC20E0D668004FF95D /* LMManagerOC.mm */,
+				FA70986C20DDE24B00ABD915 /* LiveMessageManager-PrefixHeader.pch */,
+				FA70984C20DDE10700ABD915 /* LiveMessagemanmanager */,
+			);
+			path = LiveMessageManager;
+			sourceTree = "<group>";
+		};
+		FA70984C20DDE10700ABD915 /* LiveMessagemanmanager */ = {
+			isa = PBXGroup;
+			children = (
+				FA718985210756210056E99D /* LMTimeMsgItem.cpp */,
+				FA718986210756210056E99D /* LMTimeMsgItem.h */,
+				FA7189812106BA220056E99D /* LMSystemItem.cpp */,
+				FA7189802106BA220056E99D /* LMSystemItem.h */,
+				FA71897E2106BA220056E99D /* LMWarningItem.cpp */,
+				FA71897D2106BA220056E99D /* LMWarningItem.h */,
+				FA32878320F59849002A4C6A /* HttpRequestPrivateMsgController.cpp */,
+				FA32878420F59849002A4C6A /* HttpRequestPrivateMsgController.h */,
+				FAE79CFB20E0F03F004FF95D /* ILiveMessageDef.h */,
+				FA7098A220DE411A00ABD915 /* ILiveMessageManManager.cpp */,
+				FA7098AF20DE411B00ABD915 /* ILiveMessageManManager.h */,
+				FA7098A620DE411A00ABD915 /* LiveMessageItem.cpp */,
+				FA70989D20DE411900ABD915 /* LiveMessageItem.h */,
+				FA7098AC20DE411B00ABD915 /* LiveMessageManManager.cpp */,
+				FA7098A320DE411A00ABD915 /* LiveMessageManManager.h */,
+				FA7098A020DE411A00ABD915 /* LMMessageFilter.cpp */,
+				FA7098AD20DE411B00ABD915 /* LMMessageFilter.h */,
+				FA7098AA20DE411A00ABD915 /* LMPrivateContactManager.cpp */,
+				FA7098A520DE411A00ABD915 /* LMPrivateContactManager.h */,
+				FA7098B020DE411B00ABD915 /* LMPrivateMsgItem.cpp */,
+				FA7098A820DE411A00ABD915 /* LMPrivateMsgItem.h */,
+				FA7098AB20DE411B00ABD915 /* LMUserItem.cpp */,
+				FA7098A120DE411A00ABD915 /* LMUserItem.h */,
+				FA7098A920DE411A00ABD915 /* LMUserManager.cpp */,
+				FA70989E20DE411900ABD915 /* LMUserManager.h */,
+			);
+			name = LiveMessagemanmanager;
+			path = ../../../../livemessage/LiveMessagemanmanager;
+			sourceTree = "<group>";
+		};
+		FAE79CF120E0DD75004FF95D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FA3F5DD3213FC23E00EEFA38 /* LMTimeMsgItemObject.h */,
+				FA3F5DD4213FC23F00EEFA38 /* LMTimeMsgItemObject.m */,
+				FA3F5DD2213FC23E00EEFA38 /* LMWarningItemObject.h */,
+				FA3F5DD5213FC23F00EEFA38 /* LMWarningItemObject.m */,
+				FA3F5DCF213FC0EC00EEFA38 /* LMSystemNoticeItemObject.h */,
+				FA3F5DD0213FC0EC00EEFA38 /* LMSystemNoticeItemObject.m */,
+				FAE79CF820E0EAF5004FF95D /* LMPrivateMsgItemObject.h */,
+				FAE79CF920E0EAF5004FF95D /* LMPrivateMsgItemObject.m */,
+				FAE79CF520E0E813004FF95D /* LMMessageItemObject.h */,
+				FAE79CF620E0E814004FF95D /* LMMessageItemObject.m */,
+				FAE79CF220E0DD75004FF95D /* LMPrivateMsgContactObject.m */,
+				FAE79CF320E0DD75004FF95D /* LMPrivateMsgContactObject.h */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		50F383311EE68807003D2765 /* LiveMessageManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50F3833B1EE68807003D2765 /* Build configuration list for PBXNativeTarget "LiveMessageManager" */;
+			buildPhases = (
+				50F3832E1EE68807003D2765 /* Sources */,
+				50F3832F1EE68807003D2765 /* Frameworks */,
+				50F383301EE68807003D2765 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LiveMessageManager;
+			productName = ImClient;
+			productReference = 50F383321EE68807003D2765 /* libLiveMessageManager.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		50F3832A1EE68807003D2765 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0830;
+				ORGANIZATIONNAME = net.qdating;
+				TargetAttributes = {
+					50F383311EE68807003D2765 = {
+						CreatedOnToolsVersion = 8.3.2;
+						DevelopmentTeam = MK37J4UMHH;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 50F3832D1EE68807003D2765 /* Build configuration list for PBXProject "LiveMessageManager" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 50F383291EE68807003D2765;
+			productRefGroup = 50F383331EE68807003D2765 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				50F383311EE68807003D2765 /* LiveMessageManager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		50F3832E1EE68807003D2765 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FA718987210756220056E99D /* LMTimeMsgItem.cpp in Sources */,
+				FA7098B520DE411B00ABD915 /* LiveMessageItem.cpp in Sources */,
+				FA7098B220DE411B00ABD915 /* LMMessageFilter.cpp in Sources */,
+				FA7098B320DE411B00ABD915 /* ILiveMessageManManager.cpp in Sources */,
+				FA32878520F5984A002A4C6A /* HttpRequestPrivateMsgController.cpp in Sources */,
+				FA7189822106BA230056E99D /* LMWarningItem.cpp in Sources */,
+				FA7098B620DE411B00ABD915 /* LMUserManager.cpp in Sources */,
+				FA3F5DD6213FC23F00EEFA38 /* LMTimeMsgItemObject.m in Sources */,
+				FAE79CFA20E0EAF5004FF95D /* LMPrivateMsgItemObject.m in Sources */,
+				FAE79CF420E0DD75004FF95D /* LMPrivateMsgContactObject.m in Sources */,
+				FAE79CEE20E0D668004FF95D /* LMManagerOC.mm in Sources */,
+				FA3F5DD7213FC23F00EEFA38 /* LMWarningItemObject.m in Sources */,
+				FA7098B720DE411B00ABD915 /* LMPrivateContactManager.cpp in Sources */,
+				FA7098B920DE411B00ABD915 /* LiveMessageManManager.cpp in Sources */,
+				FA7098B820DE411B00ABD915 /* LMUserItem.cpp in Sources */,
+				FAE79CF720E0E814004FF95D /* LMMessageItemObject.m in Sources */,
+				FA3F5DD1213FC0EC00EEFA38 /* LMSystemNoticeItemObject.m in Sources */,
+				FA7189842106BA230056E99D /* LMSystemItem.cpp in Sources */,
+				FA7098BA20DE411B00ABD915 /* LMPrivateMsgItem.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		50F383391EE68807003D2765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA7B657521ED8ADB006F481B /* common_debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		50F3833A1EE68807003D2765 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA7B657421ED8ADB006F481B /* common_release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		50F3833C1EE68807003D2765 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = MK37J4UMHH;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/LiveMessageManager-PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${IMCLIENT_SRC_ROOT}",
+				);
+				IMCLIENT_SRC_ROOT = "${SRCROOT}/../../../common";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DMG_ENABLE_SSL",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		50F3833D1EE68807003D2765 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = MK37J4UMHH;
+				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/LiveMessageManager-PrefixHeader.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"${IMCLIENT_SRC_ROOT}",
+				);
+				IMCLIENT_SRC_ROOT = "${SRCROOT}/../../../common";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-DMG_ENABLE_SSL",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		50F3832D1EE68807003D2765 /* Build configuration list for PBXProject "LiveMessageManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50F383391EE68807003D2765 /* Debug */,
+				50F3833A1EE68807003D2765 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50F3833B1EE68807003D2765 /* Build configuration list for PBXNativeTarget "LiveMessageManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50F3833C1EE68807003D2765 /* Debug */,
+				50F3833D1EE68807003D2765 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 50F3832A1EE68807003D2765 /* Project object */;
+}

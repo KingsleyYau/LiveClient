@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
+
 import java.lang.reflect.Method;
 
 import static android.os.Build.VERSION_CODES.LOLLIPOP;

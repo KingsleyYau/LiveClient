@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,10 +19,10 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="TMN-wZ-hyV" userLabel="Header Image View" customClass="LSUIImageViewTopFit">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="319.5"/>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Fl-SM-fA8">
-                        <rect key="frame" x="0.0" y="235" width="320" height="84"/>
+                        <rect key="frame" x="0.0" y="235.5" width="320" height="84"/>
                         <color key="backgroundColor" red="0.49019607843137253" green="0.49019607843137253" blue="0.48627450980392156" alpha="0.0" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="84" id="jgR-QR-X4n"/>
@@ -35,7 +35,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Home_HotAndFollow_ImageView_Live1" translatesAutoresizingMaskIntoConstraints="NO" id="0Zy-aq-O5U">
-                        <rect key="frame" x="0.0" y="13" width="70" height="21"/>
+                        <rect key="frame" x="0.0" y="13" width="70" height="18"/>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hpf-jw-cB7" userLabel="viewPublicFree">
                         <rect key="frame" x="56.5" y="271.5" width="207" height="35"/>
@@ -45,7 +45,7 @@
                         </connections>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GJ5-xQ-cdu" userLabel="BookPrivateBtn">
-                        <rect key="frame" x="57" y="271.5" width="207" height="35"/>
+                        <rect key="frame" x="56.5" y="271.5" width="207" height="35"/>
                         <state key="normal" image="Home_HotAndFollow_Btn_BookPrivateBroadcast"/>
                         <connections>
                             <action selector="bookPrivateBtnClick:" destination="3" eventType="touchUpInside" id="xP7-JL-NSK"/>
@@ -80,20 +80,37 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nuR-U4-cpe" userLabel="chatNow">
+                        <rect key="frame" x="56.5" y="270.5" width="207" height="36"/>
+                        <state key="normal" image="Home_ChatNow"/>
+                        <connections>
+                            <action selector="chatNowBtnClick:" destination="3" eventType="touchUpInside" id="07E-9B-G43"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GfV-RY-XDM" userLabel="sendMail">
+                        <rect key="frame" x="56.5" y="270.5" width="207" height="36"/>
+                        <state key="normal" image="Home_SendＭail"/>
+                        <connections>
+                            <action selector="sendNowBtnClick:" destination="3" eventType="touchUpInside" id="VjR-Yt-LPa"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="GfV-RY-XDM" secondAttribute="bottom" constant="13" id="1bo-vg-grC"/>
                     <constraint firstItem="hpf-jw-cB7" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" constant="-13" id="2d3-10-5cy"/>
                     <constraint firstItem="nK9-2S-OJq" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="2jJ-jZ-d1S"/>
                     <constraint firstItem="0Zy-aq-O5U" firstAttribute="top" secondItem="QWp-yv-M5I" secondAttribute="top" constant="13" id="6qq-Mw-hRF"/>
                     <constraint firstItem="zae-cO-nfk" firstAttribute="leading" secondItem="QWp-yv-M5I" secondAttribute="leading" id="7Cy-4b-mdO"/>
                     <constraint firstItem="0Fl-SM-fA8" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" id="7ZX-Rz-P1n"/>
+                    <constraint firstItem="GfV-RY-XDM" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="7c6-3F-a39"/>
                     <constraint firstAttribute="trailing" secondItem="57y-9Q-pMd" secondAttribute="trailing" constant="14" id="7nj-YV-sIT"/>
                     <constraint firstItem="TMN-wZ-hyV" firstAttribute="leading" secondItem="QWp-yv-M5I" secondAttribute="leading" id="87X-Z2-zj6"/>
                     <constraint firstItem="TMN-wZ-hyV" firstAttribute="trailing" secondItem="QWp-yv-M5I" secondAttribute="trailing" id="8Uw-es-w2q"/>
                     <constraint firstItem="0Fl-SM-fA8" firstAttribute="trailing" secondItem="QWp-yv-M5I" secondAttribute="trailing" id="9jh-Gs-32I"/>
                     <constraint firstItem="nK9-2S-OJq" firstAttribute="top" secondItem="2VE-ln-Oie" secondAttribute="top" id="9uz-Ju-zWu"/>
                     <constraint firstItem="GJ5-xQ-cdu" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" constant="-13" id="AfH-8j-Obg"/>
+                    <constraint firstAttribute="bottom" secondItem="nuR-U4-cpe" secondAttribute="bottom" constant="13" id="Dje-xy-2pc"/>
                     <constraint firstItem="hpf-jw-cB7" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="L8v-hG-4Kt"/>
                     <constraint firstItem="2VE-ln-Oie" firstAttribute="centerX" secondItem="57y-9Q-pMd" secondAttribute="centerX" id="Pfh-cL-IoY"/>
                     <constraint firstItem="zae-cO-nfk" firstAttribute="top" secondItem="QWp-yv-M5I" secondAttribute="top" constant="13" id="SgI-6j-9Lj"/>
@@ -110,6 +127,7 @@
                     <constraint firstItem="nK9-2S-OJq" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" constant="-13" id="hlN-gY-CRr"/>
                     <constraint firstItem="2VE-ln-Oie" firstAttribute="top" secondItem="57y-9Q-pMd" secondAttribute="bottom" constant="9" id="jY4-qH-3yM"/>
                     <constraint firstItem="57y-9Q-pMd" firstAttribute="leading" secondItem="QWp-yv-M5I" secondAttribute="leading" constant="14" id="kFC-6l-D3q"/>
+                    <constraint firstItem="nuR-U4-cpe" firstAttribute="centerX" secondItem="TMN-wZ-hyV" secondAttribute="centerX" id="mPu-wj-mL4"/>
                     <constraint firstItem="TMN-wZ-hyV" firstAttribute="bottom" secondItem="QWp-yv-M5I" secondAttribute="bottom" id="mdQ-Rs-MST"/>
                     <constraint firstItem="hpf-jw-cB7" firstAttribute="top" secondItem="57y-9Q-pMd" secondAttribute="bottom" constant="9" id="qio-pp-QpF"/>
                     <constraint firstItem="nK9-2S-OJq" firstAttribute="centerX" secondItem="57y-9Q-pMd" secondAttribute="centerX" id="urc-61-XBi"/>
@@ -122,11 +140,13 @@
             <connections>
                 <outlet property="bookPrivateBtn" destination="GJ5-xQ-cdu" id="uGG-Tx-kOQ"/>
                 <outlet property="bottomView" destination="0Fl-SM-fA8" id="F51-7v-BaI"/>
+                <outlet property="chatNowBtn" destination="nuR-U4-cpe" id="lMY-mO-cm3"/>
                 <outlet property="imageViewHeader" destination="TMN-wZ-hyV" id="aGi-17-ha5"/>
                 <outlet property="labelRoomTitle" destination="57y-9Q-pMd" id="aEC-dn-Gqv"/>
                 <outlet property="liveStatus" destination="0Zy-aq-O5U" id="SDd-0e-CLm"/>
                 <outlet property="onlineStatus" destination="zae-cO-nfk" id="HoW-3L-DBk"/>
                 <outlet property="roomType" destination="fuk-dI-1Kd" id="fGj-6d-2mm"/>
+                <outlet property="sendMailBtn" destination="GfV-RY-XDM" id="Qnf-X6-SNj"/>
                 <outlet property="showIcon" destination="38W-TW-uH6" id="ZlZ-4d-J62"/>
                 <outlet property="titleView" destination="8OQ-6B-VRA" id="Bfr-5g-Xl6"/>
                 <outlet property="viewBtnTopDistance" destination="jY4-qH-3yM" id="Ji9-pi-EXy"/>
@@ -134,16 +154,18 @@
                 <outlet property="viewPublicFreeBtn" destination="hpf-jw-cB7" id="vcj-Zv-S9s"/>
                 <outlet property="vipPrivateBtn" destination="nK9-2S-OJq" id="RLd-Bf-CKn"/>
             </connections>
-            <point key="canvasLocation" x="328" y="333"/>
+            <point key="canvasLocation" x="280" y="317"/>
         </tableViewCell>
     </objects>
     <resources>
+        <image name="Home_ChatNow" width="207" height="36"/>
         <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="207" height="35"/>
         <image name="Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition" width="207" height="35"/>
         <image name="Home_HotAndFollow_Btn_ViewNow" width="207" height="35"/>
-        <image name="Home_HotAndFollow_ImageView_Live1" width="70" height="21"/>
+        <image name="Home_HotAndFollow_ImageView_Live1" width="70" height="18"/>
         <image name="Home_HotAndFollow_ImageView_Premium_Public" width="109" height="18"/>
         <image name="Home_HotAndFollow_OnLine" width="70" height="21"/>
+        <image name="Home_SendＭail" width="207" height="36"/>
         <image name="Home_Show" width="68" height="18"/>
     </resources>
 </document>

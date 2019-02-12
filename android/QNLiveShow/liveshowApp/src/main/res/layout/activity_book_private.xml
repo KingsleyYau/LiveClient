@@ -265,7 +265,7 @@
                     android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:checked="true"
+                    android:checked="false"
                     android:switchMinWidth="20dp"
                     android:textOff=" "
                     android:textOn=" "
@@ -316,7 +316,7 @@
                     android:paddingBottom="@dimen/live_size_4dp"
                     android:layout_below="@id/txt_book_number"
                     android:gravity="right"
-                    android:text="@string/live_book_change_num"
+                    android:text="@string/live_book_add_num"
                     android:textColor="@color/theme_sky_blue"
                     android:textSize="@dimen/live_size_14sp" />
             </RelativeLayout>

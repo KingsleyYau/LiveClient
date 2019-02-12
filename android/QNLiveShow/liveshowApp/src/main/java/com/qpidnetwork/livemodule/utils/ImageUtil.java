@@ -1,10 +1,12 @@
 package com.qpidnetwork.livemodule.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,6 +18,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -24,12 +27,12 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-
-import static com.qpidnetwork.livemodule.utils.ActivityUtil.TAG;
+import java.nio.channels.FileLock;
 
 /**
  * Description:
@@ -41,8 +44,9 @@ public class ImageUtil {
 
     /**
      * 高效获取指定路径下图片文件Bitmap（压缩处理，防止过大导致内存溢出）
-     * @param filePath 源文件地址
-     * @param reqWidth 目标文件宽度
+     *
+     * @param filePath  源文件地址
+     * @param reqWidth  目标文件宽度
      * @param reqHeight 目标文件高度
      * @return
      */
@@ -63,6 +67,7 @@ public class ImageUtil {
 
     /**
      * 计算缩放比例
+     *
      * @param options
      * @param reqWidth
      * @param reqHeight
@@ -74,7 +79,7 @@ public class ImageUtil {
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if(reqHeight == -1){
+        if (reqHeight == -1) {
             if (width > reqWidth) {
                 // Calculate the largest inSampleSize value that is a power of 2 and keeps both
                 // height and width larger than the requested height and width.
@@ -82,15 +87,15 @@ public class ImageUtil {
                     inSampleSize *= 2;
                 }
             }
-        }else if(reqWidth == -1){
-            if (height > reqHeight ) {
+        } else if (reqWidth == -1) {
+            if (height > reqHeight) {
                 // Calculate the largest inSampleSize value that is a power of 2 and keeps both
                 // height and width larger than the requested height and width.
                 while ((height / inSampleSize) > reqHeight) {
                     inSampleSize *= 2;
                 }
             }
-        }else{
+        } else {
             if (height > reqHeight || width > reqWidth) {
                 // Calculate the largest inSampleSize value that is a power of 2 and keeps both
                 // height and width larger than the requested height and width.
@@ -107,6 +112,7 @@ public class ImageUtil {
 
     /**
      * Gets the content:// URI  from the given corresponding path to a file
+     *
      * @param context
      * @param filePath
      * @return content Uri
@@ -117,18 +123,18 @@ public class ImageUtil {
         ContentResolver resolver = context.getContentResolver();
         Cursor cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[] { MediaStore.Images.Media._ID },
+                new String[]{MediaStore.Images.Media._ID},
                 MediaStore.Images.Media.DATA + "=? ",
-                new String[] { filePath }, null);
+                new String[]{filePath}, null);
         if (cursor != null && cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
             Uri baseUri = Uri.parse("content://media/external/images/media");
             resultUri = Uri.withAppendedPath(baseUri, "" + id);
             cursor.close();
         } else if (imageFile.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                resultUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DATA, filePath);
+            resultUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
 
         return resultUri;
@@ -136,17 +142,18 @@ public class ImageUtil {
 
     /**
      * 测底删除文件
+     *
      * @param context
      * @param filePath
      * @return
      */
-    public static boolean realDeleteFile(Context context, String filePath){
+    public static boolean realDeleteFile(Context context, String filePath) {
         File deleteFile = new File(filePath);
         ContentResolver mContentResolver = context.getContentResolver();
-        if(null != deleteFile && deleteFile.exists()){
+        if (null != deleteFile && deleteFile.exists()) {
             String where = MediaStore.Images.Media.DATA + "='" + filePath + "'";
-            Uri uri = getContentUriFromFile(context,filePath);
-            return mContentResolver.delete(uri,where,null) != 0;
+            Uri uri = getContentUriFromFile(context, filePath);
+            return mContentResolver.delete(uri, where, null) != 0;
         }
         return false;
     }
@@ -159,7 +166,7 @@ public class ImageUtil {
      * @return the file path as a string
      */
     public static String getFilePathFromContentUri(Context context
-            , Uri selectedVideoUri,ContentResolver contentResolver) {
+            , Uri selectedVideoUri, ContentResolver contentResolver) {
         String filePath;
         String[] filePathColumn = {MediaStore.MediaColumns.DATA};
         Cursor cursor = contentResolver.query(selectedVideoUri, filePathColumn, null, null, null);
@@ -185,12 +192,12 @@ public class ImageUtil {
                 if ("primary".equalsIgnoreCase(type)) {
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-            }else if (isDownloadsDocument(uri)) {// DownloadsProvider
+            } else if (isDownloadsDocument(uri)) {// DownloadsProvider
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
                 return getDataColumn(context, contentUri, null, null);
-            }else if (isMediaDocument(uri)) {// MediaProvider
+            } else if (isMediaDocument(uri)) {// MediaProvider
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -203,19 +210,19 @@ public class ImageUtil {
                     contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
-        }else if ("content".equalsIgnoreCase(uri.getScheme())) {// MediaStore (and general)
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {// MediaStore (and general)
             // Return the remote address
-            if (isGooglePhotosUri(uri)){
+            if (isGooglePhotosUri(uri)) {
                 return uri.getLastPathSegment();
             }
             return getDataColumn(context, uri, null, null);
-        }else if ("file".equalsIgnoreCase(uri.getScheme())) {// File
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {// File
             return uri.getPath();
         }
 
@@ -226,9 +233,9 @@ public class ImageUtil {
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
-     * @param context The context.
-     * @param uri The Uri to query.
-     * @param selection (Optional) Filter used in the query.
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
      */
@@ -294,13 +301,12 @@ public class ImageUtil {
     public static void adjustImageDegree(String filePath) {
         try {
             int degree = readImageDegree(filePath);
-            Log.d(TAG, "degree:" + degree);
             if (degree != 0) {
                 BitmapFactory.Options opts = new BitmapFactory.Options();//获取缩略图显示到屏幕上
-                opts.inJustDecodeBounds=true;
+                opts.inJustDecodeBounds = true;
                 BitmapFactory.decodeFile(filePath, opts);
                 opts.inSampleSize = 2;
-                opts.inJustDecodeBounds=false;
+                opts.inJustDecodeBounds = false;
                 Bitmap cbitmap = BitmapFactory.decodeFile(filePath, opts);
                 /**
                  * 把图片旋转为正的方向
@@ -310,7 +316,9 @@ public class ImageUtil {
                 FileCacheManager.getInstance().saveImage(filePath, newbitmap, Bitmap.CompressFormat.JPEG, 100);
                 newbitmap.recycle();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
+        } catch (OutOfMemoryError e) {
             e.printStackTrace();
         }
     }
@@ -349,17 +357,22 @@ public class ImageUtil {
 
 
     /* 旋转图片
-      * @param angle
-      * @param bitmap
-      * @return Bitmap
-      */
+     * @param angle
+     * @param bitmap
+     * @return Bitmap
+     */
     public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
         //旋转图片 动作
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
 //        System.out.println("angle2=" + angle);
         // 创建新的图片
-        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        Bitmap resizedBitmap = null;
+        try {
+            resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+        }
         return resizedBitmap;
     }
 
@@ -368,8 +381,7 @@ public class ImageUtil {
             // 读取uri所在的图片
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
             return bitmap;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -377,10 +389,11 @@ public class ImageUtil {
 
     /**
      * 根据图片名称获取资源ID
+     *
      * @param resName
      * @return
      */
-    public static int getImageResoursceByName(String resName){
+    public static int getImageResoursceByName(String resName) {
         int imgId = 0;
         try {
             imgId = R.drawable.class.getField(resName).getInt(null); // 图片的对应为R.drawable.e5
@@ -393,7 +406,7 @@ public class ImageUtil {
     /**
      * 转换图片成圆形
      *
-     * @param bitmap　传入Bitmap对象
+     * @param bitmap 　传入Bitmap对象
      * @return
      */
     public static Bitmap toRoundBitmap(Bitmap bitmap) {
@@ -449,5 +462,167 @@ public class ImageUtil {
         canvas.drawBitmap(bitmap, src, dst, paint);
         return output;
     }
+
+    /**
+     * 把Bitmap保存为文件
+     *
+     * @param filePath 文件路径
+     * @param bitmap   Bitmap
+     * @param format   图片格式
+     * @param quality  图片压缩质量
+     * @return
+     */
+    public static boolean saveBitmapToFile(String filePath, Bitmap bitmap, Bitmap.CompressFormat format, int quality) {
+        if (filePath.isEmpty()
+                || bitmap == null
+                || quality <= 0) {
+            return false;
+        }
+
+        boolean result = false;
+
+        try {
+            File file = new File(filePath);
+
+            // 删除已存在的文件
+            if (file.exists() && file.isFile()) {
+                file.delete();
+            }
+
+            // 写入压纹图片数据
+            FileOutputStream fOut = null;
+            fOut = new FileOutputStream(file);
+            FileLock fl = ((FileOutputStream) fOut).getChannel().tryLock();
+            if (fl != null) {
+                bitmap.compress(format, quality, fOut);
+                fl.release();
+            }
+            fOut.close();
+
+            // 标记成功
+            result = true;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public static Bitmap decodeHeightDependedBitmapFromFile(String filePath, int reqHeight) {
+        /*初步使用inSampleSize方式缩放，防止读取大图直接导致溢出*/
+        Bitmap resizeBitmap = null;
+        Bitmap tempBitmap = decodeSampledBitmapFromFile(filePath, reqHeight, reqHeight);
+        if (null != tempBitmap) {
+            /*使用Matrix再处理生成图片，以长边缩放*/
+            int bmpWidth = tempBitmap.getWidth();
+            int bmpHeight = tempBitmap.getHeight();
+            Matrix matrix = new Matrix();
+            float scaleHeight = (float) reqHeight / bmpHeight;
+            matrix.postScale(scaleHeight, scaleHeight);
+            resizeBitmap = Bitmap.createBitmap(tempBitmap, 0, 0, bmpWidth, bmpHeight, matrix, false);
+            if (resizeBitmap != tempBitmap) {
+                //解决createBitmap 与原图一样，回收导致recycled异常
+                tempBitmap.recycle();
+            }
+        }
+        return resizeBitmap;
+    }
+
+    public static Bitmap decodeHeightDependedBitmapFromFile(Bitmap inBmp, int reqHeight) {
+
+        /*使用Matrix再处理生成图片，以长边缩放*/
+        int bmpWidth = inBmp.getWidth();
+        int bmpHeight = inBmp.getHeight();
+        Matrix matrix = new Matrix();
+        float scaleHeight = (float) reqHeight / bmpHeight;
+        matrix.postScale(scaleHeight, scaleHeight);
+        Bitmap resizeBitmap = Bitmap.createBitmap(inBmp, 0, 0, bmpWidth, bmpHeight, matrix, false);
+        if (resizeBitmap != inBmp) {
+            //解决createBitmap 与原图一样，回收导致recycled异常
+            inBmp.recycle();
+        }
+        return resizeBitmap;
+    }
+
+    public static Bitmap get2DpRoundedImage(Context context, Bitmap inBmp) {
+        if (inBmp == null) {
+            return null;
+        }
+
+        final float roundPx = 2.0f * context.getResources().getDisplayMetrics().density;
+
+        if (inBmp.getWidth() <= roundPx || inBmp.getHeight() <= roundPx) {
+            return inBmp;
+        }
+
+        Bitmap output = Bitmap.createBitmap(inBmp.getWidth(), inBmp
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, inBmp.getWidth(), inBmp.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(inBmp, rect, rect, paint);
+        inBmp.recycle();
+        return output;
+    }
+
+
+    /**
+     * 2018/11/27 Hardy
+     * 参考 QN 的 ImageUtil.SaveImageToGallery()
+     * 并参考以下链接资料，稍微改造整理
+     * https://stackoverflow.com/questions/9414955/trigger-mediascanner-on-specific-path-folder-how-to/25086535#25086535
+     * @param activity
+     * @param filePath
+     * @return
+     */
+    public static boolean SaveImageToGallery(Activity activity,String filePath){
+        if (null == activity
+                || TextUtils.isEmpty(filePath)) {
+            return false;
+        }
+
+        boolean result = false;
+
+        // 插入图片文件
+        ContentResolver cr = activity.getContentResolver();
+        try {
+            String path = MediaStore.Images.Media.insertImage(cr, filePath, "", "");
+
+            // 获取插入后的文件路径
+            Uri uri = Uri.parse(path);
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor actualimagecursor = activity.managedQuery(uri, proj, null, null, null);
+            int actual_image_column_index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            actualimagecursor.moveToFirst();
+            String img_path = actualimagecursor.getString(actual_image_column_index);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                MediaScannerConnection.scanFile(activity, new String[]{img_path}, null, null);
+            } else {
+                activity.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + filePath)));
+            }
+
+            // 完成
+            result = true;
+
+        } catch (Throwable e) {
+            /*添加OOM捕捉，防止异常死机问题*/
+            e.printStackTrace();
+        }
+
+
+        return result;
+    }
+
 
 }

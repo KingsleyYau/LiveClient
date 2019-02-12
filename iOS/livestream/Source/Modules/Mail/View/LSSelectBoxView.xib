@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSSelectBoxView">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NTx-Xc-v5A" userLabel="Shadow View">
+                    <rect key="frame" x="1" y="1" width="158" height="78"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BXD-I9-nzV" userLabel="Inbox View">
+                            <rect key="frame" x="0.0" y="0.0" width="158" height="39"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Inbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KcT-DC-dZN">
+                                    <rect key="frame" x="20" y="8.5" width="42" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Book_select_icon" translatesAutoresizingMaskIntoConstraints="NO" id="WAY-5S-neW">
+                                    <rect key="frame" x="130" y="16.5" width="8" height="5"/>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uDC-SZ-9C3" userLabel="Inbox Button">
+                                    <rect key="frame" x="0.0" y="0.0" width="158" height="39"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal">
+                                        <color key="titleColor" red="0.011764705882352941" green="0.011764705882352941" blue="0.011764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="inboxAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="YYC-BU-aIB"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="KcT-DC-dZN" firstAttribute="leading" secondItem="BXD-I9-nzV" secondAttribute="leading" constant="20" id="Cvw-VQ-PKc"/>
+                                <constraint firstAttribute="bottom" secondItem="uDC-SZ-9C3" secondAttribute="bottom" id="Jxk-vs-bGt"/>
+                                <constraint firstItem="uDC-SZ-9C3" firstAttribute="top" secondItem="BXD-I9-nzV" secondAttribute="top" id="L9U-v9-c6T"/>
+                                <constraint firstItem="KcT-DC-dZN" firstAttribute="centerY" secondItem="BXD-I9-nzV" secondAttribute="centerY" id="T7k-Sg-UQT"/>
+                                <constraint firstAttribute="trailing" secondItem="WAY-5S-neW" secondAttribute="trailing" constant="20" id="Wzl-fp-3g3"/>
+                                <constraint firstAttribute="trailing" secondItem="uDC-SZ-9C3" secondAttribute="trailing" id="jI1-cN-YDR"/>
+                                <constraint firstItem="WAY-5S-neW" firstAttribute="centerY" secondItem="BXD-I9-nzV" secondAttribute="centerY" id="yS2-3h-x4e"/>
+                                <constraint firstItem="uDC-SZ-9C3" firstAttribute="leading" secondItem="BXD-I9-nzV" secondAttribute="leading" id="zfp-G4-TM7"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nf3-wA-yTe" userLabel="Outbox View">
+                            <rect key="frame" x="0.0" y="40" width="158" height="38"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Outbox" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uqp-9b-PrP">
+                                    <rect key="frame" x="20" y="8.5" width="56" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Book_select_icon" translatesAutoresizingMaskIntoConstraints="NO" id="7vv-Wi-ryi">
+                                    <rect key="frame" x="130" y="16.5" width="8" height="5"/>
+                                </imageView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="izj-Ir-sjJ" userLabel="Outbox Button">
+                                    <rect key="frame" x="0.0" y="0.0" width="158" height="38"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <state key="normal">
+                                        <color key="titleColor" red="0.011764705882352941" green="0.011764705882352941" blue="0.011764705882352941" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="outboxAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="XVQ-r1-T2j"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="izj-Ir-sjJ" firstAttribute="top" secondItem="Nf3-wA-yTe" secondAttribute="top" id="0fg-rr-Y17"/>
+                                <constraint firstAttribute="bottom" secondItem="izj-Ir-sjJ" secondAttribute="bottom" id="3Z1-vs-LK0"/>
+                                <constraint firstItem="7vv-Wi-ryi" firstAttribute="centerY" secondItem="Nf3-wA-yTe" secondAttribute="centerY" id="7YV-rm-aaW"/>
+                                <constraint firstAttribute="trailing" secondItem="izj-Ir-sjJ" secondAttribute="trailing" id="AO7-ci-SEH"/>
+                                <constraint firstItem="izj-Ir-sjJ" firstAttribute="leading" secondItem="Nf3-wA-yTe" secondAttribute="leading" id="Cd3-4T-stB"/>
+                                <constraint firstItem="uqp-9b-PrP" firstAttribute="centerY" secondItem="Nf3-wA-yTe" secondAttribute="centerY" id="Kg2-uV-WyW"/>
+                                <constraint firstAttribute="trailing" secondItem="7vv-Wi-ryi" secondAttribute="trailing" constant="20" id="Y2u-wF-ctu"/>
+                                <constraint firstItem="uqp-9b-PrP" firstAttribute="leading" secondItem="Nf3-wA-yTe" secondAttribute="leading" constant="20" id="m8q-T5-daV"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="0.92549019607843142" green="0.93333333333333335" blue="0.94509803921568625" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="Nf3-wA-yTe" firstAttribute="top" secondItem="BXD-I9-nzV" secondAttribute="bottom" constant="1" id="JoK-FJ-K9G"/>
+                        <constraint firstAttribute="trailing" secondItem="Nf3-wA-yTe" secondAttribute="trailing" id="Min-Lw-sVM"/>
+                        <constraint firstItem="BXD-I9-nzV" firstAttribute="top" secondItem="NTx-Xc-v5A" secondAttribute="top" id="XYw-ex-vKJ"/>
+                        <constraint firstAttribute="trailing" secondItem="BXD-I9-nzV" secondAttribute="trailing" id="YPX-WZ-3Oh"/>
+                        <constraint firstAttribute="centerY" secondItem="BXD-I9-nzV" secondAttribute="bottom" id="a46-so-RZu"/>
+                        <constraint firstItem="Nf3-wA-yTe" firstAttribute="leading" secondItem="NTx-Xc-v5A" secondAttribute="leading" id="fED-0L-i8s"/>
+                        <constraint firstAttribute="bottom" secondItem="Nf3-wA-yTe" secondAttribute="bottom" id="izE-vR-s8v"/>
+                        <constraint firstItem="BXD-I9-nzV" firstAttribute="leading" secondItem="NTx-Xc-v5A" secondAttribute="leading" id="mCU-Qy-9ef"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="NTx-Xc-v5A" secondAttribute="bottom" constant="1" id="4qX-Bo-USf"/>
+                <constraint firstAttribute="trailing" secondItem="NTx-Xc-v5A" secondAttribute="trailing" constant="1" id="Dcz-bU-rMK"/>
+                <constraint firstItem="NTx-Xc-v5A" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="TYB-rk-hbZ"/>
+                <constraint firstItem="NTx-Xc-v5A" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="1" id="b3T-oC-uin"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="inboxIcon" destination="WAY-5S-neW" id="6Rd-dM-JOQ"/>
+                <outlet property="outboxIcon" destination="7vv-Wi-ryi" id="ePV-rL-ATC"/>
+                <outlet property="shadowView" destination="NTx-Xc-v5A" id="iMa-MJ-URv"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="Book_select_icon" width="8" height="5"/>
+    </resources>
+</document>

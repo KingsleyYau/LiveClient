@@ -35,6 +35,19 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	public native static void SetLogDir(String logDir);
 
 	/**
+	 * 设置日志等级 <br/>
+	 * {@link android.util.Log#VERBOSE} <br/>
+	 * {@link android.util.Log#DEBUG} <br/>
+	 * {@link android.util.Log#INFO} <br/>
+	 * {@link android.util.Log#WARN} <br/>
+	 * {@link android.util.Log#ERROR} <br/>
+	 */
+	public static void SetJniLogLevel(int logLevel) {
+		SetLogLevel(logLevel - android.util.Log.DEBUG);
+	}
+	private native static void SetLogLevel(int logLevel);
+
+	/**
 	 * 创建实例
 	 * @param playerCallback		状态回调
 	 * @param useHardDecoder 		是否使用硬解码器
@@ -83,6 +96,7 @@ public class LSPlayerJni implements ILSPlayerCallbackJni {
 	public void Destroy() {
 		if( client != INVALID_CLIENT ) {
 			Destroy(client);
+			client = INVALID_CLIENT;
 		}
 	}
 	/**

@@ -19,9 +19,9 @@
 #define FROMID_PARAM                "fromid"
 #define NICKNAME_GIFT_PARAM         "nickname"
 #define HONORURL_PARAM              "honor_url"
-#define GIFTID_PARAM                "giftid"
-#define GIFTNAME_PARAM              "giftname"
-#define GIFTNUM_PARAM               "giftnum"
+#define RECV_SGNT_GIFTID_PARAM                "giftid"
+#define RECV_SGNT_GIFTNAME_PARAM              "giftname"
+#define RECV_SGNT_GIFTNUM_PARAM               "giftnum"
 #define MULTI_CLICK_PARAM           "multi_click"
 #define MULTI_CLICK_START_PARAM     "multi_click_start"
 #define MULTI_CLICK_END_PARAM       "multi_click_end"
@@ -91,14 +91,14 @@ bool RecvSendGiftNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[HONORURL_PARAM].isString()) {
             m_honorUrl = tp.m_data[HONORURL_PARAM].asString();
         }
-        if (tp.m_data[GIFTID_PARAM].isString()) {
-            m_giftId = tp.m_data[GIFTID_PARAM].asString();
+        if (tp.m_data[RECV_SGNT_GIFTID_PARAM].isString()) {
+            m_giftId = tp.m_data[RECV_SGNT_GIFTID_PARAM].asString();
         }
-        if (tp.m_data[GIFTNAME_PARAM].isString()) {
-        	m_giftName = tp.m_data[GIFTNAME_PARAM].asString();
+        if (tp.m_data[RECV_SGNT_GIFTNAME_PARAM].isString()) {
+        	m_giftName = tp.m_data[RECV_SGNT_GIFTNAME_PARAM].asString();
         }
-        if (tp.m_data[GIFTNUM_PARAM].isInt()) {
-            m_giftNum = tp.m_data[GIFTNUM_PARAM].asInt();
+        if (tp.m_data[RECV_SGNT_GIFTNUM_PARAM].isInt()) {
+            m_giftNum = tp.m_data[RECV_SGNT_GIFTNUM_PARAM].asInt();
         }
         if (tp.m_data[MULTI_CLICK_PARAM].isInt()) {
             m_multi_click = tp.m_data[MULTI_CLICK_PARAM].asInt() == 0 ? false : true;

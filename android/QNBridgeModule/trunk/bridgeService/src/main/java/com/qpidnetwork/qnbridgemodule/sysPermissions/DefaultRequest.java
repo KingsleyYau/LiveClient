@@ -22,7 +22,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import com.qpidnetwork.qnbridgemodule.sysPermissions.target.Target;
 
@@ -117,7 +117,7 @@ class DefaultRequest implements
                 PermissionActivity.setRationaleListener(this);
                 Intent intent = new Intent(target.getContext(), PermissionActivity.class);
                 intent.putExtra(PermissionActivity.KEY_INPUT_PERMISSIONS, mDeniedPermissions);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 target.startActivity(intent);
             } else { // All permission granted.
                 callbackSucceed();
@@ -158,7 +158,7 @@ class DefaultRequest implements
         PermissionActivity.setPermissionListener(this);
         Intent intent = new Intent(target.getContext(), PermissionActivity.class);
         intent.putExtra(PermissionActivity.KEY_INPUT_PERMISSIONS, mDeniedPermissions);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         target.startActivity(intent);
     }
 

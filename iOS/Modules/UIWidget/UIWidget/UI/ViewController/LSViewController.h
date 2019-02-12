@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface LSViewController : UIViewController
-@property (nonatomic, assign) BOOL viewDidAppearEver;
-@property (nonatomic, strong) NSString* backTitle;
-@property (nonatomic, strong) UIView *loadActivityView;
-@property (nonatomic, strong) NSString *navigationTitle;
-@property (nonatomic, assign) BOOL viewIsAppear;
+@property (strong) NSString* backTitle;
+@property (strong) UIView *loadActivityView;
+@property (strong) NSString *navigationTitle;
+
+@property (assign, readonly) BOOL viewDidAppearEver;
+@property (assign, readonly) BOOL viewIsAppear;
 
 #pragma mark - 横屏切换
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation;

@@ -14,7 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 
 import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;

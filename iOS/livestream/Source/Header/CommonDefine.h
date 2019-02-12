@@ -18,6 +18,9 @@
 #define BOOL2YES(flag) flag?@"YES":@"NO"
 #define BOOL2SUCCESS(flag) flag?@"Success":@"Fail"
 
+#define ROW_TYPE @"ROW_TYPE"
+#define ROW_SIZE @"ROW_SIZE"
+
 #define WeakObject(Obj, weakObj) __weak typeof(Obj) weakObj = Obj
 
 #ifdef DEBUG
@@ -46,6 +49,8 @@
 #define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
 #define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
 #define ViewBoundsSize self.view.bounds.size
+
+#define IS_IPHONE_X ([[UIApplication sharedApplication] statusBarFrame].size.height != 20.0f) ? YES : NO
 
 #define deviceTokenStringKEY @"deviceTokenString"
 #define DialogTag -1

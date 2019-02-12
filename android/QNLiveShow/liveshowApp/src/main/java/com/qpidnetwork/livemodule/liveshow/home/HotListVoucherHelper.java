@@ -2,11 +2,10 @@ package com.qpidnetwork.livemodule.liveshow.home;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetVoucherAvailableInfoCallback;
-import com.qpidnetwork.livemodule.httprequest.RequestJniPackage;
 import com.qpidnetwork.livemodule.httprequest.item.BindAnchorItem;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
 import com.qpidnetwork.livemodule.httprequest.item.VouchorAvailableInfoItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Created by Hunter Mun on 2018/1/24.

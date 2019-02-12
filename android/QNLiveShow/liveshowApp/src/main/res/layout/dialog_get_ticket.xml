@@ -5,24 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/rectangle_radius8_connor_solid_white_stoke_transparent"
-    android:orientation="vertical"
     android:gravity="center_horizontal"
+    android:orientation="vertical"
     android:paddingLeft="14dp"
+    android:paddingTop="4dp"
     android:paddingRight="14dp"
-    android:paddingBottom="14dp"
-    android:paddingTop="4dp">
+    android:paddingBottom="14dp">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!--2018/12/1 Hardy 增大点击面积-->
+    <FrameLayout
+        android:id="@+id/fl_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:paddingLeft="@dimen/live_size_10dp"
+        android:paddingBottom="@dimen/live_size_10dp">
+
         <ImageView
             android:id="@+id/img_close"
             android:layout_width="@dimen/live_size_14dp"
             android:layout_height="@dimen/live_size_14dp"
-            android:src="@drawable/ic_credits_dialog_close"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
+            android:layout_gravity="right"
+            android:src="@drawable/ic_credits_dialog_close" />
+    </FrameLayout>
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/img_room_logo"
@@ -46,10 +51,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/live_size_14dp"
-        android:gravity="center"
-        android:text="The Show"
-        android:singleLine="true"
         android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="The Show"
         android:textColor="@color/text_color_dark"
         android:textSize="@dimen/live_size_18sp"
         android:textStyle="bold" />
@@ -80,16 +85,15 @@
         android:id="@+id/btn_get_ticket"
         android:layout_width="@dimen/live_size_140dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         button:background="@color/live_programme_list_btn_get_ticket"
-        button:raisebutton_radius="6dp"
         button:elevation="1dp"
+        button:raisebutton_radius="6dp"
         button:title="@string/live_programme_btn_get_ticket"
         button:title_color="@color/white"
         button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
-
 
 
 </LinearLayout>

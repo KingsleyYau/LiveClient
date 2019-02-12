@@ -295,7 +295,7 @@
                         android:visibility="visible"
                         android:src="@drawable/ic_liveroom_header_intimacy_1"/>
 
-                </LinearLayout>>
+                </LinearLayout>
 
             </LinearLayout>
 

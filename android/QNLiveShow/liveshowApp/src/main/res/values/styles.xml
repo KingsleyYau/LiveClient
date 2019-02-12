@@ -139,7 +139,7 @@
     </style>
 
     <!--QN广告 Theme-->
-    <style name="themeAD" parent="@style/Theme.AppCompat.Light.NoActionBar">
+    <style name="CustomTheme.Translucent.NoTitleBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
         <item name="android:windowNoTitle">true</item><!-- 无标题 -->
         <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->

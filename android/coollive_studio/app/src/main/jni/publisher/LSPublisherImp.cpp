@@ -119,14 +119,6 @@ void LSPublisherImp::PushVideoFrame(void* data, int size, int width, int height)
 }
 
 void LSPublisherImp::PausePushVideo() {
-	FileLevelLog(
-			"rtmpdump",
-			KLog::LOG_WARNING,
-			"LSPublisherImp::PausePushVideo( "
-			"this : %p "
-			")",
-			this
-			);
     mPublisher.PausePushVideo();
 }
 

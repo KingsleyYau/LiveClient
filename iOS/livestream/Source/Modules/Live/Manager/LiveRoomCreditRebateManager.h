@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "IMRebateItem.h"
+#import "GetLeftCreditRequest.h"
 
 @class LiveRoomCreditRebateManager;
 
-typedef void (^GetCreditFinshtHandler)(BOOL success, double credit);
+typedef void (^GetCreditFinshtHandler)(BOOL success, double credit, int coupon, double postStamp,HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg);
 
 @protocol LiveRoomCreditRebateManagerDelegate <NSObject>
 @optional
@@ -22,6 +23,8 @@ typedef void (^GetCreditFinshtHandler)(BOOL success, double credit);
 @interface LiveRoomCreditRebateManager : NSObject
 
 @property (nonatomic, assign) double mCredit;
+@property (nonatomic, assign) int mCoupon;
+@property (nonatomic, assign) double mPostStamp;
 @property (nonatomic, strong) IMRebateItem * _Nullable imRebateItem;
 @property (nonatomic, weak) id <LiveRoomCreditRebateManagerDelegate> delegate;
 

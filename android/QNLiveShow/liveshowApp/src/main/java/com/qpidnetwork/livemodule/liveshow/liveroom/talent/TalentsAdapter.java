@@ -27,7 +27,7 @@ import java.util.List;
  */
 
 public class TalentsAdapter extends RecyclerView.Adapter<TalentsAdapter.ViewHolder> {
-    private final String TAG = "Jagger";//TalentsAdapter.class.getSimpleName();
+//    private final String TAG = "Jagger";//TalentsAdapter.class.getSimpleName();
 
     private final int REQUEST_GIFT_ICON_DOWNLOAD_SUCCESS = 1010;
 

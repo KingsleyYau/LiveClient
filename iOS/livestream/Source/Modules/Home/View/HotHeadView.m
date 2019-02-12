@@ -8,11 +8,11 @@
 
 #import "HotHeadView.h"
 #import "HotHeadViewCell.h"
-#import "UnreadNumManager.h"
+#import "LSUserUnreadCountManager.h"
 #import "GiftItemLayout.h"
 
 @interface HotHeadView ()<UICollectionViewDelegate, UICollectionViewDataSource>
-@property (nonatomic, strong) UnreadNumManager *unreadManager;
+@property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 @end
 
 @implementation HotHeadView
@@ -21,8 +21,9 @@
     self = [super initWithFrame:frame];
     if (self) {
        self =  [[LiveBundle mainBundle] loadNibNamedWithFamily:@"HotHeadView" owner:self options:0].firstObject;
+
         self.frame = frame;
-        self.unreadManager = [UnreadNumManager manager];
+        self.unreadManager = [LSUserUnreadCountManager shareInstance];
     }
     return self;
 }
@@ -63,9 +64,13 @@
     cell.iconImageView.image = [UIImage imageNamed:self.iconArray[indexPath.row]];
     cell.titleLabel.text = [NSString stringWithFormat:@"%@",self.titleArray[indexPath.row]];
     if (indexPath.row != self.iconArray.count - 1) {
-        NSInteger type = indexPath.row + 1;
-        int unreadNum = [self.unreadManager getUnreadNum:(UnreadType)type];
-        [cell setUnreadNum:unreadNum];
+        NSInteger type = indexPath.row;
+        int unreadNum = [self.unreadManager getUnreadNum:(LSUnreadType)type];
+        if (type == LSUnreadType_Private_Chat) {
+            [cell showChatListUnreadNum:unreadNum];
+        }else {
+            [cell setUnreadNum:unreadNum];
+        }
     } else {
         [cell setUnreadNum:0];
     }

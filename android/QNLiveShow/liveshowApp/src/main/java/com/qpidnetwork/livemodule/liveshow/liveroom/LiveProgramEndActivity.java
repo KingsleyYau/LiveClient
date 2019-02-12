@@ -21,22 +21,21 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragmentActivity;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnShowListWithAnchorIdCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniProgram;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramStatus;
-import com.qpidnetwork.livemodule.httprequest.item.ProgramTicketStatus;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.home.LiveProgramDetailActivity;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
 import com.qpidnetwork.livemodule.utils.DateUtil;
-import com.qpidnetwork.livemodule.utils.Log;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import static com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL;
 
@@ -52,6 +51,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
     private static final String LIVEROOM_PAGE_TYPE = "pageType";
     private static final String LIVEROOM_PAGE_ERROR_MSG = "errMsg";
     private static final String LIVEROOM_PAGE_SHOW_RECOMMAND = "recommandFlag";
+    private static final String LIVEROOM_AUTH = "auth";
 
     private CircleImageView civPhoto;
     private TextView tvAnchorName;
@@ -71,9 +71,10 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
 
     //当前推荐节目
     private ProgramInfoItem mProgramInfoItem;
+    private IMAuthorityItem mAuthorityItem;
 
     public static Intent getIntent(Context context, LiveRoomNormalErrorActivity.PageErrorType type, String errMsg, String anchorId
-            , String anchorName, String anchorPhotoUrl, String roomPhotoUrl, boolean isShowRecommand){
+            , String anchorName, String anchorPhotoUrl, String roomPhotoUrl, boolean isShowRecommand, IMAuthorityItem priv){
         Intent intent = new Intent(context, LiveProgramEndActivity.class);
         intent.putExtra(LIVEROOM_PAGE_TYPE, type.ordinal());
         intent.putExtra(LIVEROOM_PAGE_ERROR_MSG, errMsg);
@@ -82,6 +83,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
         intent.putExtra(ANCHOR_PHOTOURL, anchorPhotoUrl);
         intent.putExtra(LIVEROOM_ROOMINFO_ROOMPHOTOURL, roomPhotoUrl);
         intent.putExtra(LIVEROOM_PAGE_SHOW_RECOMMAND, isShowRecommand?1:0);
+        intent.putExtra(LIVEROOM_AUTH, priv);
         return intent;
     }
 
@@ -146,13 +148,19 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
             if(bundle.containsKey(LIVEROOM_PAGE_SHOW_RECOMMAND)){
                 isRecommand = bundle.getInt(LIVEROOM_PAGE_SHOW_RECOMMAND)==1?true:false;
             }
+            if(bundle.containsKey(LIVEROOM_AUTH)){
+                mAuthorityItem = (IMAuthorityItem) bundle.getSerializable(LIVEROOM_AUTH);
+            }
         }
         if(!TextUtils.isEmpty(anchorPhotoUrl)) {
-            Picasso.with(getApplicationContext()).load(anchorPhotoUrl)
-                    .placeholder(R.drawable.ic_default_photo_woman)
-                    .error(R.drawable.ic_default_photo_woman)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(civPhoto);
+//            Picasso.with(getApplicationContext())
+//                    .load(anchorPhotoUrl)
+//                    .placeholder(R.drawable.ic_default_photo_woman)
+//                    .error(R.drawable.ic_default_photo_woman)
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                    .into(civPhoto);
+
+            PicassoLoadUtil.loadUrlNoMCache(civPhoto,anchorPhotoUrl,R.drawable.ic_default_photo_woman);
         }
 
         if(!TextUtils.isEmpty(roomPhotoUrl)) {
@@ -173,6 +181,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
             }
         }
         tvAnchorName.setText(mAnchorName);
+        Log.i("Jagger" , "节目结束页 initData PAGE_ERROR_LIEV_EDN book:" + (mAuthorityItem == null?"null":mAuthorityItem.isHasBookingAuth));
         switch (errType){
             case PAGE_ERROR_LIEV_EDN:{
                 if(TextUtils.isEmpty(errorMsg)) {
@@ -180,7 +189,11 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
                 }else{
                     tvDesc.setText(errorMsg);
                 }
-                btnBook.setVisibility(View.VISIBLE);
+                if(mAuthorityItem != null && mAuthorityItem.isHasBookingAuth){  //add by Jagger 2018-12-5 增加权限
+                    btnBook.setVisibility(View.VISIBLE);
+                }else {
+                    btnBook.setVisibility(View.GONE);
+                }
                 //获取推荐列表
                 if(isRecommand) {
                     getPromoAnchorList();
@@ -213,7 +226,7 @@ public class LiveProgramEndActivity extends BaseFragmentActivity {
             startActivity(BookPrivateActivity.getIntent(mContext, mAnchorId, mAnchorName));
             finish();
         } else if (i == R.id.btnAddCredit) {
-            LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
+            LiveModule.getInstance().onAddCreditClick(mContext, new NoMoneyParamsBean());
             finish();
         } else if (i == R.id.btnViewHot) {
             Intent intent = new Intent(this, MainFragmentActivity.class);

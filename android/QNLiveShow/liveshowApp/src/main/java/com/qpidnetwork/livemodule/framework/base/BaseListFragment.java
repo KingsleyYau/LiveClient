@@ -10,9 +10,9 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.MartinListView;
 import com.qpidnetwork.livemodule.view.MartinListView.OnPullRefreshListener;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 带上拉和下拉刷新的ListFragment（设置默认无数据显示)
@@ -45,6 +45,13 @@ public class BaseListFragment extends BaseLoadingFragment implements OnPullRefre
 		return view;
 	}
 
+	/**
+	 * 2018/11/20 Hardy
+	 * @param colorResId
+	 */
+	public void setListViewBackgroundColor(int colorResId){
+		refreshListview.setBackgroundColorRes(colorResId);
+	}
 
 	/**
 	 * 设置背景颜色

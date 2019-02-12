@@ -1,0 +1,11 @@
+
+/* Class = "UILabel"; text = "Say something about you."; ObjectID = "6DK-I0-pA6"; */
+"6DK-I0-pA6.text" = "Say something about you.";
+
+"Tips_About_Confirm" = "After you save your description, edit will be disable until it's approved.";
+"Tips_About_Min" = "Minimum 100 characters required.";
+"Tips_About_Max" = "Maximum 2000 characters required.";
+"Tips_Update_Done" = "Done";
+"Tips_Update_Fail" = "Failed to submit your personal description change. Please try again later.";
+"Save" = "Save";
+"About_You" = "About You";

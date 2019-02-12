@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSCreditTableViewCell" rowHeight="74" id="KGk-i7-Jjw" userLabel="LSCreditTableViewCell" customClass="LSCreditTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="342" height="90"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="342" height="89.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SJ0-vW-XIa" userLabel="Creadit Balance">
+                        <rect key="frame" x="10" y="6" width="322" height="80.5"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Credit Balance" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cHA-Sx-RGC">
+                                <rect key="frame" x="16" y="0.0" width="200" height="80.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="PaF-7o-1hD"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <color key="textColor" red="1" green="0.40000000000000002" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y5w-p1-7hK">
+                                <rect key="frame" x="271" y="26.5" width="35" height="28"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <inset key="contentEdgeInsets" minX="6" minY="4" maxX="6" maxY="4"/>
+                                <state key="normal" title="0.0">
+                                    <color key="titleColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="cHA-Sx-RGC" firstAttribute="leading" secondItem="SJ0-vW-XIa" secondAttribute="leading" constant="16" id="42Y-MN-qvR"/>
+                            <constraint firstItem="cHA-Sx-RGC" firstAttribute="height" secondItem="SJ0-vW-XIa" secondAttribute="height" id="DWH-km-ag7"/>
+                            <constraint firstItem="y5w-p1-7hK" firstAttribute="centerY" secondItem="cHA-Sx-RGC" secondAttribute="centerY" id="Enf-fx-qJ6"/>
+                            <constraint firstAttribute="height" constant="64" id="PPt-xk-FBD"/>
+                            <constraint firstAttribute="trailing" secondItem="y5w-p1-7hK" secondAttribute="trailing" constant="16" id="Z4o-Jf-f4q"/>
+                            <constraint firstItem="cHA-Sx-RGC" firstAttribute="top" secondItem="SJ0-vW-XIa" secondAttribute="top" id="uFV-4t-4dL"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="PPt-xk-FBD"/>
+                            </mask>
+                        </variation>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="SJ0-vW-XIa" secondAttribute="trailing" constant="10" id="Vwc-kN-WMG"/>
+                    <constraint firstItem="SJ0-vW-XIa" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="6" id="XQX-1l-UxL"/>
+                    <constraint firstItem="SJ0-vW-XIa" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="pl7-3h-DPc"/>
+                    <constraint firstAttribute="bottom" secondItem="SJ0-vW-XIa" secondAttribute="bottom" constant="3" id="qek-xH-Wt4"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <connections>
+                <outlet property="bgView" destination="SJ0-vW-XIa" id="7qV-hV-d7Q"/>
+                <outlet property="creditBtn" destination="y5w-p1-7hK" id="YX7-9H-xAK"/>
+                <outlet property="titleLabel" destination="cHA-Sx-RGC" id="Tuc-8C-dyO"/>
+            </connections>
+            <point key="canvasLocation" x="548" y="395"/>
+        </tableViewCell>
+    </objects>
+</document>

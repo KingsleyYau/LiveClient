@@ -18,8 +18,7 @@
 #define ROOMID_PARAM           "roomid"
 #define ERRNO_PARAM				"errno"
 #define ERRMSG_PARAM       		"errmsg"
-
-
+#define RECV_LPRNT_PRIV_PATAM   "priv"
 
 RecvLeavingPublicRoomNoticeTask::RecvLeavingPublicRoomNoticeTask(void)
 {
@@ -58,6 +57,7 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
 	FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
+    IMAuthorityItem priv;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -75,6 +75,9 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ERRMSG_PARAM].isString()) {
         	m_errMsg = tp.m_data[ERRMSG_PARAM].asString();
         }
+        if (tp.m_data[RECV_LPRNT_PRIV_PATAM].isObject()) {
+            priv.Parse(tp.m_data[RECV_LPRNT_PRIV_PATAM]);
+        }
     }
     
     // 协议解析失败
@@ -87,7 +90,7 @@ bool RecvLeavingPublicRoomNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvLeavingPublicRoomNotice(m_roomId, m_leftSeconds, m_errType, m_errMsg);
+        m_listener->OnRecvLeavingPublicRoomNotice(m_roomId, m_leftSeconds, m_errType, m_errMsg, priv);
 		FileLog("ImClient", "RecvLeavingPublicRoomNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

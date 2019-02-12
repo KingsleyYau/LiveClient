@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="DialogIconTips">
+            <rect key="frame" x="0.0" y="0.0" width="137" height="110"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Done" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JlN-UY-cQR">
+                    <rect key="frame" x="47" y="72.5" width="43" height="21"/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Common_Dialog_OK" translatesAutoresizingMaskIntoConstraints="NO" id="q7S-aZ-NWR">
+                    <rect key="frame" x="50.5" y="27.5" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="35" id="3bT-Pp-rLH"/>
+                        <constraint firstAttribute="height" constant="35" id="QrH-AH-7Jk"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.59999999999999998" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="q7S-aZ-NWR" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="36u-vW-2Su"/>
+                <constraint firstItem="q7S-aZ-NWR" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-10" id="Hwe-rn-Xf7"/>
+                <constraint firstItem="JlN-UY-cQR" firstAttribute="top" secondItem="q7S-aZ-NWR" secondAttribute="bottom" constant="10" id="Ms6-iV-8sf"/>
+                <constraint firstItem="JlN-UY-cQR" firstAttribute="centerX" secondItem="q7S-aZ-NWR" secondAttribute="centerX" id="gX4-L5-3Au"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="iconImageView" destination="q7S-aZ-NWR" id="SWg-Bw-RgF"/>
+                <outlet property="tipLabel" destination="JlN-UY-cQR" id="2bq-AR-zqr"/>
+            </connections>
+            <point key="canvasLocation" x="21.5" y="-155"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Common_Dialog_OK" width="24" height="24"/>
+    </resources>
+</document>

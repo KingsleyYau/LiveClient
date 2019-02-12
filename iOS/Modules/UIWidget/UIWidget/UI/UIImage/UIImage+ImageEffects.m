@@ -376,7 +376,7 @@
     
     float newHeight = self.size.height * (width / self.size.width);
     CGSize size     = CGSizeMake(width, newHeight);
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 1);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     
@@ -398,7 +398,7 @@
     float newWidth = self.size.width * (height / self.size.height);
     CGSize size    = CGSizeMake(newWidth, height);
     
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    UIGraphicsBeginImageContextWithOptions(size, NO, 1);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
     

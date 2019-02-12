@@ -39,6 +39,16 @@ public:
             if (root[LIVEROOM_PREMIUM_MEMBERSHIP_MORE].isString()) {
                 more = root[LIVEROOM_PREMIUM_MEMBERSHIP_MORE].asString();
             }
+            
+            /* title */
+            if (root[LIVEROOM_IOSPREMIUM_MEMBERSHIP_TITLE].isString()) {
+                title = root[LIVEROOM_IOSPREMIUM_MEMBERSHIP_TITLE].asString();
+            }
+
+            /* subTitle */
+            if (root[LIVEROOM_IOSPREMIUM_MEMBERSHIP_SUBTITLE].isString()) {
+                subTitle = root[LIVEROOM_IOSPREMIUM_MEMBERSHIP_SUBTITLE].asString();
+            }
         }
 
         return result;
@@ -48,7 +58,8 @@ public:
 
         desc = "";
         more = "";
-
+        title = "";
+        subTitle = "";
     }
     
     virtual ~HttpOrderProductItem() {
@@ -59,10 +70,15 @@ public:
      * list             产品列表
      * desc             描述
      * more             详情描述
+     * title            主标题
+     * subTitle         副标题
      */
     ProductItemList list;
     string  desc;
     string  more;
+    string title;
+    string subTitle;
+    
 };
 
 #endif /* HTTPORDERPRODUCTTITEM_H_*/

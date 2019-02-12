@@ -14,7 +14,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -107,10 +107,11 @@ public class VoucherListAdapter extends BaseAdapter {
                 holder.tvAnchorName.setText(item.anchorNickname);
                 holder.civAnchor.setImageResource(R.drawable.ic_default_photo_woman);
                 if(!TextUtils.isEmpty(item.anchorPhotoUrl)) {
-                    Picasso.with(mContext).load(item.anchorPhotoUrl)
-                            .error(R.drawable.ic_default_photo_woman)
-                            .placeholder(R.drawable.ic_default_photo_woman)
-                            .into(holder.civAnchor);
+//                    Picasso.with(mContext).load(item.anchorPhotoUrl)
+//                            .error(R.drawable.ic_default_photo_woman)
+//                            .placeholder(R.drawable.ic_default_photo_woman)
+//                            .into(holder.civAnchor);
+                    PicassoLoadUtil.loadUrl(holder.civAnchor,item.anchorPhotoUrl,R.drawable.ic_default_photo_woman);
                 }
             }break;
         }
@@ -124,10 +125,11 @@ public class VoucherListAdapter extends BaseAdapter {
         //试聊券图片加载
         holder.ivThumb.setImageResource(R.drawable.bg_covermanager_tran);
         if(!TextUtils.isEmpty(item.voucherPhotoUrlMobile)) {
-            Picasso.with(mContext).load(item.voucherPhotoUrlMobile)
-                    .error(R.drawable.bg_covermanager_tran)
-                    .placeholder(R.drawable.bg_covermanager_tran)
-                    .into(holder.ivThumb);
+//            Picasso.with(mContext).load(item.voucherPhotoUrlMobile)
+//                    .error(R.drawable.bg_covermanager_tran)
+//                    .placeholder(R.drawable.bg_covermanager_tran)
+//                    .into(holder.ivThumb);
+            PicassoLoadUtil.loadUrl(holder.ivThumb,item.voucherPhotoUrlMobile,R.drawable.bg_covermanager_tran);
         }
 
         return convertView;

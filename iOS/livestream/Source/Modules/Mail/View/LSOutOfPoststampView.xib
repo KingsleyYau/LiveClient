@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSOutOfPoststampView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Am6-wb-Rxq" userLabel="BgView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.40000000000000002" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ThS-pY-Lxg">
+                    <rect key="frame" x="20" y="243" width="335" height="183.5"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oops, you have insufficient Post Stamps to send this mail." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TJS-hh-wI4">
+                            <rect key="frame" x="20" y="20" width="295" height="38.5"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dNN-In-oaA">
+                            <rect key="frame" x="20" y="78.5" width="295" height="44"/>
+                            <color key="backgroundColor" red="0.12549019607843137" green="0.65490196078431373" blue="0.14901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="295" id="NjR-Xd-HNA"/>
+                                <constraint firstAttribute="height" constant="44" id="eUQ-vJ-fgj"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="Send by Credits(2.4 credits)">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="sendByCreditAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="VhQ-qU-nnr"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Later" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcR-Vk-jCQ" customClass="TTTAttributedLabel">
+                            <rect key="frame" x="148" y="142.5" width="39.5" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="bcR-Vk-jCQ" firstAttribute="centerX" secondItem="ThS-pY-Lxg" secondAttribute="centerX" id="1Xv-KJ-XUa"/>
+                        <constraint firstAttribute="bottom" secondItem="bcR-Vk-jCQ" secondAttribute="bottom" constant="20" id="76b-h8-Dip"/>
+                        <constraint firstItem="dNN-In-oaA" firstAttribute="leading" secondItem="ThS-pY-Lxg" secondAttribute="leading" constant="20" id="APU-28-gnY"/>
+                        <constraint firstAttribute="trailing" secondItem="TJS-hh-wI4" secondAttribute="trailing" constant="20" id="HSs-xM-cMz"/>
+                        <constraint firstItem="TJS-hh-wI4" firstAttribute="leading" secondItem="ThS-pY-Lxg" secondAttribute="leading" constant="20" id="ICe-r5-q6L"/>
+                        <constraint firstItem="bcR-Vk-jCQ" firstAttribute="top" secondItem="dNN-In-oaA" secondAttribute="bottom" constant="20" id="d2j-zm-C49"/>
+                        <constraint firstItem="TJS-hh-wI4" firstAttribute="top" secondItem="ThS-pY-Lxg" secondAttribute="top" constant="20" id="eOI-iC-8x9"/>
+                        <constraint firstAttribute="trailing" secondItem="dNN-In-oaA" secondAttribute="trailing" constant="20" id="kUC-gx-wwc"/>
+                        <constraint firstItem="dNN-In-oaA" firstAttribute="top" secondItem="TJS-hh-wI4" secondAttribute="bottom" constant="20" id="yR1-D2-hYW"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="ThS-pY-Lxg" secondAttribute="trailing" constant="20" id="036-4l-Ho1"/>
+                <constraint firstItem="Am6-wb-Rxq" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="33u-au-lk2"/>
+                <constraint firstItem="ThS-pY-Lxg" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="ESx-6e-BDV"/>
+                <constraint firstItem="ThS-pY-Lxg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="243" id="Kcc-Dq-fM6"/>
+                <constraint firstAttribute="bottom" secondItem="Am6-wb-Rxq" secondAttribute="bottom" id="NL3-h9-EcC"/>
+                <constraint firstItem="Am6-wb-Rxq" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="YnJ-gp-MrQ"/>
+                <constraint firstAttribute="trailing" secondItem="Am6-wb-Rxq" secondAttribute="trailing" id="qRm-VJ-gyk"/>
+            </constraints>
+            <connections>
+                <outlet property="addCreditBtn" destination="dNN-In-oaA" id="0lI-JD-aWm"/>
+                <outlet property="bgView" destination="Am6-wb-Rxq" id="FyF-Sv-URH"/>
+                <outlet property="laterLabel" destination="bcR-Vk-jCQ" id="BjN-Wb-TdJ"/>
+                <outlet property="tipView" destination="ThS-pY-Lxg" id="vMC-na-86h"/>
+            </connections>
+            <point key="canvasLocation" x="0.5" y="0.0"/>
+        </view>
+    </objects>
+</document>

@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Paint;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;

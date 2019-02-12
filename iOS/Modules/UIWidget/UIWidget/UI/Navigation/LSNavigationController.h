@@ -39,7 +39,7 @@
  用于present界面弹出拍照之后,当前present的界面无法消失的问题
  @param force 是否强制
  */
-- (void)forceToDismiss:(BOOL)force animated:(BOOL)flag completion:(void (^)(void))completion;
+- (void)forceToDismissAnimated:(BOOL)flag completion:(void (^)(void))completion;
 
 @end
 

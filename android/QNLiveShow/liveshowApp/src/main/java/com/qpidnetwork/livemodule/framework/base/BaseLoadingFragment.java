@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -170,6 +169,7 @@ public abstract class BaseLoadingFragment extends BaseFragment implements SwipeR
     public void showErrorPage(){
         if(llErrorContainer != null) {
             llErrorContainer.setVisibility(View.VISIBLE);
+            hideNodataPage();
         }
     }
 
@@ -189,6 +189,7 @@ public abstract class BaseLoadingFragment extends BaseFragment implements SwipeR
         if(llEmpty != null) {
             llEmpty.setVisibility(View.VISIBLE);
             hideEmptyViewReloadProgress();
+            hideErrorPage();
         }
     }
 
@@ -271,6 +272,15 @@ public abstract class BaseLoadingFragment extends BaseFragment implements SwipeR
             llEmpty.removeAllViews();
             llEmpty.addView(view);
         }
+    }
+
+    /**
+     * 2018/11/17 Hardy
+     * 获取 empty root view
+     * @return
+     */
+    protected ViewGroup getEmptyRootView(){
+        return llEmpty;
     }
 
     /**

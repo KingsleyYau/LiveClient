@@ -117,8 +117,9 @@
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     _token = [userDefaults stringForKey:@"QNToken"];
     if (!_token || _token.length == 0) {
-        _token = RANDY_TOKEN;
+        _token = MAX_TOKEN;
     }
+    _token = CALVIN_TOKEN;
 }
 
 - (void)moduleOnLogin:(LiveModule *)module {
@@ -127,8 +128,7 @@
         self.activityView.hidden = YES;
 
         // 设置模块主界面
-        UIViewController *vc = [LiveModule module].moduleVC;
-        [LiveModule module].fromVC = self;
+        UIViewController *vc = [LiveModule module].mainVC;
 
         // 推进界面
         LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
@@ -185,13 +185,4 @@
     self.window = nil;
 }
 
-- (void)moduleOnAdViewController:(LiveModule *)module {
-    NSLog(@"LSTestViewController::moduleOnAdViewController()");
-    dispatch_async(dispatch_get_main_queue(), ^{
-                       //        UIWindow *parentView = [UIApplication sharedApplication].keyWindow;
-                       //        UIViewController *vc = [LiveModule module].adVc;
-                       //        [parentView.rootViewController addChildViewController:vc];
-
-                   });
-}
 @end

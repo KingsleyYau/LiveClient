@@ -101,8 +101,10 @@
 #pragma mark - LSChatEmotionManagerDelegate
 - (void)downLoadStanListFinshHandle:(NSInteger)index {
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-    [self.emotionCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
+    if (self.stanListItem.emoList.count > 0) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
+        [self.emotionCollectionView reloadItemsAtIndexPaths:[NSArray arrayWithObjects:indexPath, nil]];
+    }
 }
 
 - (void)downLoadAdvanListFinshHandle:(NSInteger)index{

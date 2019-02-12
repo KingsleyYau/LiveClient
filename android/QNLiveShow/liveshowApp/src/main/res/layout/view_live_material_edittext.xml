@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         android:minHeight="32dp"
         android:textSize="16sp"
+        android:textColor="@color/black_text_87"
         android:singleLine="true"
         android:paddingBottom="16dp"
         android:textCursorDrawable="@drawable/material_live_text_field_cursor"/>

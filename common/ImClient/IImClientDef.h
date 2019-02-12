@@ -8,6 +8,7 @@
 #pragma once
 
 #include <ProtocolCommon/DeviceTypeDef.h>
+#include <common_item/CommonItemDef.h>
 
 #define SEQ_T unsigned int
 
@@ -91,7 +92,7 @@ typedef enum {
     LCC_ERR_NO_FOUND_CRONJOB = 10040,                  // cronjob 里找不到对应的定时器函数
     LCC_ERR_REPEAT_INVITEING_TALENT = 10052,           // 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/
     LCC_ERR_RECV_REGULAR_CLOSE_ROOM = 10088,           // 用户接收正常关闭直播间
-
+    LCC_ERR_PRIVTE_INVITE_AUTHORITY = 17002,           // 主播无立即私密邀请权限
 } LCC_ERR_TYPE;
 
 // 客户端端类型
@@ -104,10 +105,10 @@ typedef enum {
     CLIENTTYPE_END = CLIENTTYPE_UNKNOW // 有效范围结束值
 } ClientType;
 
-// int 转换 CLIENT_TYPE
-inline ClientType GetClientType(int value) {
-    return CLIENTTYPE_BEGIN <= value && value < CLIENTTYPE_END ? (ClientType)value : CLIENTTYPE_UNKNOW;
-}
+//// int 转换 CLIENT_TYPE
+//inline ClientType GetClientType(int value) {
+//    return CLIENTTYPE_BEGIN <= value && value < CLIENTTYPE_END ? (ClientType)value : CLIENTTYPE_UNKNOW;
+//}
 
 // socket所在的页面
 typedef enum {
@@ -374,4 +375,19 @@ typedef enum {
 inline IMPrivateMsgType GetIntToIMPrivateMsgType(int value) {
     return IMPRIVATEMSGTYPE_BEGIN <= value && value <= IMPRIVATEMSGTYPE_END ? (IMPrivateMsgType)value : IMPRIVATEMSGTYPE_UNKNOW;
 }
+
+//// 私信消息类型
+//typedef enum {
+//    IMCHATONLINESTATUS_UNKNOW = 0,    // 未知
+//    IMCHATONLINESTATUS_OFF = 1,      // 离线
+//    IMCHATONLINESTATUS_ONLINE = 2,   // 在线
+//    IMCHATONLINESTATUS_BEGIN = IMCHATONLINESTATUS_UNKNOW,
+//    IMCHATONLINESTATUS_END = IMCHATONLINESTATUS_ONLINE
+//
+//}IMChatOnlineStatus;
+//
+//// int 转换 IMProgramTicketStatus
+//inline IMChatOnlineStatus GetIntToIMChatOnlineStatus(int value) {
+//    return IMCHATONLINESTATUS_BEGIN < value && value <= IMCHATONLINESTATUS_END ? (IMChatOnlineStatus)value : IMCHATONLINESTATUS_UNKNOW;
+//}
 

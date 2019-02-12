@@ -1,0 +1,20 @@
+"Credits" = "Secure Payment";
+"ADD_MORE_CREDITS" = "Buy credits and get surprising features";
+"CREDITS_BALANCE" = "Credits Balance";
+
+"CREDIT_FIRST_LEVEL" = "3 credits";
+"CREDIT_FIRST_LEVEL_PRICE" = "USD $29.99";
+"CREDIT_SECOND_LEVEL" = "8 credits";
+"CREDIT_SECOND_LEVEL_PRICE" = "USD $74.99";
+
+"PAY_ERROR_NORMAL" = "We can not process your order at the moment, please try again later.";
+//"20038" = "You have reached the maximum amount of daily orders. Please try tomorrow.";
+"PAY_ERROR_TECHNICAl" = "Sorry,we are currently encountering technical difficulties. Please try again later.";
+"20046" = "You do not have to purchase credits, you already certain amount of them. Please spend them before making further orders.";
+"40005" = "Unexpected errors encountered, please login to the desktop version to solve the problem.";
+"50000" = "Please do not please multiple orders at the same time.";
+"PAY_ERROR_OTHER" = "Failed to place your order. Would you like to retry?";
+
+"PAY_SUCCESS" = "Congratulation! Add credits finish.";
+"PAY_FAIL_OR_CANCEL" = "Payment failed.";
+

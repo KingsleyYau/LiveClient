@@ -7,6 +7,7 @@
 //
 
 #import "StreamViewController.h"
+#import "PlayViewController.h"
 
 #import "LiveStreamSession.h"
 #import "LiveStreamPlayer.h"
@@ -60,44 +61,39 @@
     self.textFieldAddress.text = [NSString stringWithFormat:@"%@", @"rtmp://172.25.32.17:19351/live/max", nil];
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
-    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!granted) {
-                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-                                                                   style:UIAlertActionStyleDefault
-                                                                 handler:^(UIAlertAction *_Nonnull action){
-
-                                                                 }];
-                [alertVC addAction:actionOK];
-                [self presentViewController:alertVC animated:NO completion:nil];
-            }
-        });
-    }];
-
-    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!granted) {
-                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
-                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
-                                                                   style:UIAlertActionStyleDefault
-                                                                 handler:^(UIAlertAction *_Nonnull action){
-
-                                                                 }];
-                [alertVC addAction:actionOK];
-                [self presentViewController:alertVC animated:NO completion:nil];
-            }
-        });
-    }];
+//    [[LiveStreamSession session] checkAudio:^(BOOL granted) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!granted) {
+//                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启麦克风权限" preferredStyle:UIAlertControllerStyleAlert];
+//                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+//                                                                   style:UIAlertActionStyleDefault
+//                                                                 handler:^(UIAlertAction *_Nonnull action){
+//
+//                                                                 }];
+//                [alertVC addAction:actionOK];
+//                [self presentViewController:alertVC animated:NO completion:nil];
+//            }
+//        });
+//    }];
+//
+//    [[LiveStreamSession session] checkVideo:^(BOOL granted) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!granted) {
+//                UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:nil message:@"请开启摄像头权限" preferredStyle:UIAlertControllerStyleAlert];
+//                UIAlertAction *actionOK = [UIAlertAction actionWithTitle:NSLocalizedString(@"OK", @"OK")
+//                                                                   style:UIAlertActionStyleDefault
+//                                                                 handler:^(UIAlertAction *_Nonnull action){
+//
+//                                                                 }];
+//                [alertVC addAction:actionOK];
+//                [self presentViewController:alertVC animated:NO completion:nil];
+//            }
+//        });
+//    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
-//    self.navigationController.navigationBar.alpha = 0.7;
-//    self.navigationController.navigationBar.hidden = YES;
-//    self.navigationController.navigationBar.translucent = YES;
-//    self.edgesForExtendedLayout = UIRectEdgeAll;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -196,6 +192,11 @@
     [self.publisher stopPreview];
 }
 
+- (IBAction)newPage:(id)sender {
+    PlayViewController *vc = [[PlayViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
 #pragma mark - 静音
 - (IBAction)mute0:(id)sender {
     self.playerArray[0].mute = !self.playerArray[0].mute;
@@ -219,7 +220,7 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
     
     NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = [NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
     NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
     NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
     
@@ -236,7 +237,7 @@
     [fileManager createDirectoryAtPath:recordDir withIntermediateDirectories:YES attributes:nil error:nil];
     
     NSString *dateString = [self toStringYMDHMSWithUnderLine:[NSDate date]];
-    NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
+    NSString *recordFilePath = @"";//[NSString stringWithFormat:@"%@/record%d_%@.flv", recordDir, i, dateString];
     NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
     NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
     

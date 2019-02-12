@@ -133,17 +133,14 @@
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-//    NSLog(@"application::handleOpenURL( url : %@ )", url);
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-//    NSLog(@"application::openURL( sourceApplication : %@ )", sourceApplication);
     return YES;
 }
 
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString*, id> *)options {
-//    NSLog(@"application::openURL( options : %@ )", options);
     return YES;
 }
 

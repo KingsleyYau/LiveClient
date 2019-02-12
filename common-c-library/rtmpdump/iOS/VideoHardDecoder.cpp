@@ -27,7 +27,13 @@ typedef struct _tagDecodeItem {
 VideoHardDecoder::VideoHardDecoder()
     :mRuningMutex(KMutex::MutexType_Recursive)
 {
-    FileLog("rtmpdump", "VideoHardDecoder::VideoHardDecoder( decoder : %p )", this);
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardDecoder::VideoHardDecoder( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
     
     mpCallback = NULL;
     mSession = NULL;
@@ -43,7 +49,13 @@ VideoHardDecoder::VideoHardDecoder()
 
 VideoHardDecoder::~VideoHardDecoder()
 {
-    FileLog("rtmpdump", "VideoHardDecoder::~VideoHardDecoder( decoder : %p )", this);
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardDecoder::~VideoHardDecoder( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
     
     DestroyContext();
     
@@ -296,12 +308,32 @@ void VideoHardDecoder::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 }
 
 void VideoHardDecoder::ReleaseVideoFrame(void* frame) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "VideoHardDecoder::ReleaseVideoFrame( "
+                 "this : %p, "
+                 "frame : %p "
+                 ")",
+                 this,
+                 frame
+                 );
+    
     CVImageBufferRef imageBuffer = (CVImageBufferRef)frame;
     CFRelease(imageBuffer);
 }
     
 void VideoHardDecoder::StartDropFrame() {
     
+}
+    
+void VideoHardDecoder::ClearVideoFrame() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoHardDecoder::ClearVideoFrame( "
+                 "this : %p "
+                 ")",
+                 this
+                 );
 }
     
 // 硬解码callback

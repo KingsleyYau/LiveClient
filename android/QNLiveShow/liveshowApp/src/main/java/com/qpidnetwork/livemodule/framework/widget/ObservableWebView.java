@@ -2,7 +2,7 @@ package com.qpidnetwork.livemodule.framework.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.webkit.WebView;
 
 

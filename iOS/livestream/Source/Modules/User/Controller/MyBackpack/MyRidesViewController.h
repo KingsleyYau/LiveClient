@@ -10,5 +10,4 @@
 #import "MyBackpackViewController.h"
 @interface MyRidesViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, strong) MyBackpackViewController * mainVC;
 @end

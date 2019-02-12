@@ -72,7 +72,7 @@
     self.textFieldPublishAddress.text = [NSString stringWithFormat:@"%@", self.publishUrl, nil];
 
     // 计算StatusBar高度
-    if ([LSDevice iPhoneXStyle]) {
+    if (IS_IPHONE_X) {
         self.previewTop.constant = 44;
     } else {
         self.previewTop.constant = 20;
@@ -212,7 +212,7 @@
         // 开始转菊花
 //        NSString *dateString = [LSDateFormatter toStringYMDHMSWithUnderLine:[NSDate date]];
         NSString *recordFilePath = @""; //[NSString stringWithFormat:@"%@/%@.flv", recordDir, dateString];
-        NSString *recordH264FilePath = [NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
+        NSString *recordH264FilePath = @"";//[NSString stringWithFormat:@"%@/play_%d.h264", recordDir, i];
         NSString *recordAACFilePath = @""; //[NSString stringWithFormat:@"%@/play_%d.aac", recordDir, i];
 
         BOOL bFlag = [self.playerArray[i] playUrl:self.playerUrlArray[i] recordFilePath:recordFilePath recordH264FilePath:recordH264FilePath recordAACFilePath:recordAACFilePath];

@@ -9,6 +9,9 @@
 #import "LSListViewController.h"
 #import "LSUIWidgetBundle.h"
 
+#define List_Reload @"Reload"
+#define List_FailTips @"Failed to load"
+
 @interface LSListViewController()
 @end
 
@@ -51,13 +54,14 @@
         [UIView setAnimationsEnabled:YES];
         [self setupNavigationBar];
         [self setupFailView];
+        // 失败页默认提示
+        [self reloadFailViewFailTipsText:List_FailTips failBtnText:List_Reload];
     }
     
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.viewDidAppearEver = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -129,12 +133,25 @@
     
 }
 
-- (void)reloadFailViewContent {
-    self.failTips.text = self.failTipsText;
-    [self.failBtn setTitle:self.failBtnText forState:UIControlStateNormal];
-
+- (void)reloadFailViewFailTipsText:(NSString *)failTipsText failBtnText:(NSString *)failBtnText {
+    self.failTips.text = failTipsText;
+    [self.failBtn setTitle:failBtnText forState:UIControlStateNormal];
 }
 
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite {
+    
+}
 
+- (void)setupLoadData:(BOOL)isLoadData {
+    
+}
+
+- (void)setupFirstLogin:(BOOL)isFirstLogin {
+    
+}
+
+- (void)reloadUnreadNum {
+    
+}
 
 @end

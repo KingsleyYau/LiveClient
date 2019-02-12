@@ -6,10 +6,11 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsPageViewController.h"
 #import "LiveRoom.h"
 #import "ShowListView.h"
-@interface LiveFinshViewController : LSGoogleAnalyticsViewController
+
+@interface LiveFinshViewController : LSGoogleAnalyticsPageViewController
 
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 

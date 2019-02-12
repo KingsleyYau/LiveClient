@@ -2,7 +2,7 @@ package com.qpidnetwork.livemodule.liveshow.googleanalytics;
 
 import android.text.TextUtils;
 
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;

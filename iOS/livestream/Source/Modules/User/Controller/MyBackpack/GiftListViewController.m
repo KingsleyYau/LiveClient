@@ -34,6 +34,7 @@
 
 - (void)dealloc {
     [self.giftListWaterfallView unInitPullRefresh];
+    NSLog(@"GiftListViewController dealloc");
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -57,6 +58,8 @@
 {
     [super viewWillDisappear:animated];
     self.isRequstData = NO;
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 /**
@@ -87,7 +90,7 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 [self.giftListWaterfallView finishPullDown:YES];
-                [self.mainVC getunreadCount];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
                 
                 self.giftListWaterfallView.items = array;
                 

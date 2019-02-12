@@ -108,6 +108,9 @@ public:
                 if (element[LIVEROOM_HANGOUT_CREDITPERMINUTE].isString()) {
                     hangoutCredirMsg = element[LIVEROOM_HANGOUT_CREDITPERMINUTE].asString();
                 }
+                if (element[LIVEROOM_HANGOUT_CREDITPRICE].isNumeric()) {
+                    hangoutCreditPrice = element[LIVEROOM_HANGOUT_CREDITPRICE].asDouble();
+                }
             }
             
             /* showDetailPage */
@@ -140,6 +143,40 @@ public:
                 postStampUrl = root[LIVEROOM_POSTSTAMPURL].asString();
             }
             
+            /* httpSvrMobileUrl */
+            if (root[LIVEROOM_HTTPSVR_MOBILE_URL].isString()) {
+                httpSvrMobileUrl = root[LIVEROOM_HTTPSVR_MOBILE_URL].asString();
+            }
+            
+            /* socketHost */
+            if (root[LIVEROOM_SOCKET_HOST].isString()) {
+                socketHost = root[LIVEROOM_SOCKET_HOST].asString();
+            }
+            
+            /* socketHostDomain */
+            if (root[LIVEROOM_SOCKET_HOST_DOMAIN].isString()) {
+                socketHostDomain = root[LIVEROOM_SOCKET_HOST_DOMAIN].asString();
+            }
+            
+            /* socketPort */
+            if (root[LIVEROOM_SOCKET_PORT].isNumeric()) {
+                socketPort = root[LIVEROOM_SOCKET_PORT].asInt();
+            }
+            
+            /* minBalanceForChat */
+            if (root[LIVEROOM_MIN_BALANCE_FOR_CHAT].isString()) {
+                minBalanceForChat = atof(root[LIVEROOM_MIN_BALANCE_FOR_CHAT].asString().c_str());
+            }
+            
+            /* chatVoiceHostUrl */
+            if (root[LIVEROOM_CHAT_VOICE_HOSTURL].isString()) {
+                chatVoiceHostUrl = root[LIVEROOM_CHAT_VOICE_HOSTURL].asString();
+            }
+            
+            /* sendLetter */
+            if (root[LIVEROOM_SEND_LETTER].isString()) {
+                sendLetter = root[LIVEROOM_SEND_LETTER].asString();
+            }
         }
 
         result = true;
@@ -163,13 +200,20 @@ public:
         newestMsg = "";
         downloadAppUrl = "";
         hangoutCredirMsg = "";
+        hangoutCreditPrice = 0.0;
         showDetailPage = "";
         showDescription = "";
         loiH5Url = "";
         emfH5Url = "";
         pmStartNotice = "";
         postStampUrl = "";
-        
+        httpSvrMobileUrl = "";
+        socketHost = "";
+        socketHostDomain = "";
+        socketPort = 0;
+        minBalanceForChat = 0.0;
+        chatVoiceHostUrl = "";
+        sendLetter = "";
     }
     
     virtual ~HttpConfigItem() {
@@ -193,12 +237,20 @@ public:
      * downloadAppUrl             下载App的url
      * svrList                    流媒体服务器ID
      * hangoutCredirMsg           多人互动资费提示
+     * hangoutCreditPrice         多人互动信用点资费价格
      * showDetailPage              节目详情页URL
      * showDescription             节目介绍
      * loiH5Url                     意向信页URL
      * emfH5Url                     EMF页URL
      * pmStartNotice                私信聊天界面没有聊天记录时的提示（New）
      * postStampUrl                 背包邮票页URL
+     * httpSvrMobileUrl             http mobile服务器的URL（包括mobile.charmlive.com或demo-mobile.charmlive.com）
+     * socketHost                   LiveChat服务器IP
+     * socketHostDomain             sLiveChat服务器域名
+     * socketPort                   LiveChat服务器端口
+     * minBalanceForChat            使用LiveChat的最少点数
+     * chatVoiceHostUrl             LiveChat上传/下载语音的URL
+     * sendLetter                   发送信件页URL
      */
     string imSvrUrl;
     string httpSvrUrl;
@@ -216,12 +268,20 @@ public:
     string downloadAppUrl;
     HttpLoginItem::SvrList svrList;
     string hangoutCredirMsg;
+    double hangoutCreditPrice;
     string showDetailPage;
     string showDescription;
     string loiH5Url;
     string emfH5Url;
     string pmStartNotice;
     string postStampUrl;
+    string httpSvrMobileUrl;
+    string socketHost;
+    string socketHostDomain;
+    int socketPort;
+    double minBalanceForChat;
+    string chatVoiceHostUrl;
+    string sendLetter;
 };
 
 #endif /* HTTPCONFIGITEM_H_*/

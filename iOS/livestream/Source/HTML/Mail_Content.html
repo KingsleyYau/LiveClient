@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+<meta charset="utf-8">
+<meta name="renderer" content="webkit">
+<meta name="apple-mobile-web-app-capable" content="yes" /> 
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0,viewport-fit=cover,maximum-scale=1"/>
+<title></title>
+<style type="text/css">
+@charset "utf-8";
+@media screen and (max-width: 320px) {
+      body{font-size: 14px;} 
+  }
+  @media screen and (min-width: 321px) and (max-width: 413px) {
+      body{font-size: 16px;}
+  }
+  @media screen and (min-width: 414px) and (max-width: 639px) {
+      body{font-size: 17px;}
+  }
+  @media screen and (min-width: 640px) {
+      body{font-size: 18px;}
+  }
+
+/* reset */
+html{
+  -ms-text-size-adjust:100%;
+  -webkit-text-size-adjust:100%;
+}
+body, html {
+/*	height: 100%;*/
+	-webkit-tap-highlight-color: transparent;
+}
+body,textarea{
+	font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+  	font-family:-apple-system-font, "Open Sans", sans-serif;
+  	line-height:1.6;
+}
+ul {
+	list-style: none
+}
+
+*{
+  margin:0;
+  padding:0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+a img{
+  border:0;
+}
+img{
+  border:0; vertical-align:middle; 
+}
+a{
+  text-decoration:none;
+  -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+}
+button{
+ border-radius: 0; border:0;
+} 
+input:focus{
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-user-modify:read-write-plaintext-only;
+}
+input:focus, textarea:focus ,button{
+  outline: none;
+}
+
+#detials .content{ line-height:34px;font-size:.24rem; background: url(under_line.png) repeat 0rem 0rem; background-size: 6px 34px;position: relative;background-color: #ffffff;word-wrap: break-word;}
+#detials .pd_inner{padding: .4rem;}
+</style>
+</head>
+<body>
+
+
+
+<div id="detials">
+<div class="pd_inner">
+	<div class="content">
+			
+		 My name’s Karolina, I’m single. My hobbies are listening to music, watching movies, traveling, I am currently studying music, I love to sing!My name’s Karolina, I’m single. My hobbies are listening to music, watching movies, traveling, I am currently studying music, I love to sing!My name’s Karolina, I’m single. My hobbies are listening to music, watching movies, traveling, I am currently studying music, I love to sing!My name’s Karolina, I’m single. My hobbies are listening to music, watching movies, traveling, I am currently studying music, I love to sing!My name’s Karolina, I’m single. My hobbies are listening to music, watching movies, traveling, I am currently studying music, I love to sing!
+
+	</div>
+	</div><!-- detail_main -->
+</div><!-- content -->
+
+
+
+<script type="text/javascript">
+	(function(doc, win) {
+  var docEl = doc.documentElement,
+    resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+    recalc = function() {
+      var clientWidth = docEl.clientWidth;
+      if (!clientWidth) return;
+      if (clientWidth >= 750) {
+        docEl.style.fontSize = '100px';
+      } else {
+        docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+      }
+    };
+
+  if (!doc.addEventListener) return;
+  win.addEventListener(resizeEvt, recalc, false);
+  doc.addEventListener('DOMContentLoaded', recalc, false);
+})(document, window);
+
+</script>
+</body>
+</html>

@@ -8,15 +8,21 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
-#import "LSMainViewController.h"
 #import "LSHomeSettingHaedView.h"
-@interface LSHomeSettingViewController : LSGoogleAnalyticsViewController
+
+@class LSHomeSettingViewController;
+@protocol LSHomeSettingViewControllerDelegate <NSObject>
+
+- (void)lsHomeSettingViewControllerDidRemoveVC:(LSHomeSettingViewController *)homeSettingVc;
+
+@end
+
+@interface LSHomeSettingViewController : LSListViewController
 
 @property (weak, nonatomic) IBOutlet UIView *bgView;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
- 
-@property (strong, nonatomic) LSMainViewController* mainVC;
-
+/** 代理 */
+@property (nonatomic, weak) id<LSHomeSettingViewControllerDelegate> homeDelegate;
 - (void)showSettingView;
 - (void)hideSettingView;
 - (void)removeHomeSettingVC;

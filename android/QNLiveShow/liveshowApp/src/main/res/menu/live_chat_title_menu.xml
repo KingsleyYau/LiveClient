@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/chat_menu_cancel_invitation"
+        android:title="@string/livechat_cancel_invitation_menu" />
+
+</menu>

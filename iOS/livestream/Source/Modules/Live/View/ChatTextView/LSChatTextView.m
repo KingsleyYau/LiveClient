@@ -8,8 +8,37 @@
 
 #import "LSChatTextView.h"
 #import "LSChatTextAttachment.h"
+#import "LSSendMessageManager.h"
+
+@interface LSChatTextView ()
+
+@property (nonatomic, assign) BOOL isPaste;
+
+@end
 
 @implementation LSChatTextView
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"text"];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+
+    }
+    return self;
+}
+
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     return (action == @selector(copy:) || action == @selector(selectAll:) || action == @selector(cut:) || action == @selector(paste:));
 }
@@ -19,48 +48,16 @@
 }
 
 - (void)copy:(id)sender {
-//    UIPasteboard *pboard = [UIPasteboard pasteboardWithName:@"myPboard" create:YES];
-//    
-//    LCSession *session = [[LCSession alloc] init];
-//    
-//    if (self.selectedRange.length > 0) {
-//        NSAttributedString *atts = [self.attributedText attributedSubstringFromRange:self.selectedRange];
-//        session.fullText = [self copyText:atts];
-//    } else {
-//        session.fullText = self.fullText;
-//    }
-//    NSData *sessionData = [NSKeyedArchiver archivedDataWithRootObject:session];
-//    [pboard setData:sessionData forPasteboardType:@"session"];
     [super copy:sender];
 }
 
 - (void)cut:(id)sender {
-//    UIPasteboard *pboard = [UIPasteboard pasteboardWithName:@"myPboard" create:YES];
-//    LCSession *session = [[LCSession alloc] init];
-//    NSAttributedString *atts = [self.attributedText attributedSubstringFromRange:self.selectedRange];
-//    session.fullText = [self copyText:atts];
-//    
-//    NSData *sessionData = [NSKeyedArchiver archivedDataWithRootObject:session];
-//    [pboard setData:sessionData forPasteboardType:@"session"];
-    
     [super cut:sender];
 }
 
 - (void)paste:(id)sender {
-//    UIPasteboard *pboard = [UIPasteboard pasteboardWithName:@"myPboard" create:YES];
-//    
-//    LCSession *session = [NSKeyedUnarchiver unarchiveObjectWithData:[pboard dataForPasteboardType:@"session"]];
-//    if (session == nil) return;
-//    
-//    NSMutableAttributedString *attStr = [[NSMutableAttributedString alloc] init];
-//    [attStr appendAttributedString:self.attributedText];
-//    NSUInteger loc = self.selectedRange.location;
-//    self.selectedRange = NSMakeRange(loc, 0);
-//    [attStr replaceCharactersInRange:self.selectedRange withAttributedString:[session.fullText emotionStringWithWH:24]];
-//    
-//    self.attributedText = [attStr copy];
-//    self.font = [UIFont systemFontOfSize:20];
     [super paste:sender];
+    self.isPaste = YES;
 }
 
 - (void)insertEmotion:(LSChatEmotion *)emotion {
@@ -70,10 +67,9 @@
         
         // 计算表情位置
         LSChatTextAttachment *attachment = [[LSChatTextAttachment alloc] init];
-        attachment.bounds = CGRectMake(0, -4, self.font.lineHeight, self.font.lineHeight);
+        attachment.bounds = CGRectMake(0, -4, 21, 21);
         attachment.text = emotion.text;
         attachment.image = emotion.image;
-//        attachment.emotion = emotion;
         NSAttributedString *imgAtt = [NSAttributedString attributedStringWithAttachment:attachment];
         
         // 插入
@@ -90,40 +86,59 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+
+    self.isPaste = NO;
+    // KVO监听(settext方法)
+    [self addObserver:self forKeyPath:@"text" options:NSKeyValueObservingOptionNew context:nil];
     // 注册通知
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textChange:) name:UITextViewTextDidChangeNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(menuControllerDidHide) name:UIMenuControllerDidHideMenuNotification object:nil];
+}
+
+- (void)menuControllerDidHide {
+    [self scrollRangeToVisible:self.selectedRange];
 }
 
 - (void)textChange:(NSNotification* )notice {
-    
-
-    
     // 刷新界面
     [self setNeedsDisplay];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context{
+    if (object == self && [keyPath isEqualToString:@"text"]) {
+        // 刷新界面
+        [self setNeedsDisplay];
+    }
 }
 
 - (NSString* )text {
     NSMutableString *fullText = [NSMutableString string];
     
     [self.attributedText enumerateAttributesInRange:NSMakeRange(0, self.attributedText.length) options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
-        LSChatTextAttachment *attachment = attrs[@"NSAttachment"];
-        if( attachment ) {
+        NSObject *obj = attrs[NSAttachmentAttributeName];
+        if( obj && [obj isKindOfClass:[LSChatTextAttachment class]] ) {
+            // 替换样式
+            LSChatTextAttachment *attachment = (LSChatTextAttachment *)obj;
             [fullText appendString:attachment.text];
-
         } else {
-            NSAttributedString *str = [self.attributedText attributedSubstringFromRange:range];
-            [fullText appendString:str.string];
+            if (!obj) {
+                NSAttributedString *str = [self.attributedText attributedSubstringFromRange:range];
+                [fullText appendString:str.string];
+            }
         }
     }];
-    
     return [fullText copy];
+}
+
+- (void)cleanText {
+    self.text = nil;
+    [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect {
     [super drawRect:rect];
     
-    CGFloat x = 5;
+    CGFloat x = 8;
     CGFloat w = rect.size.width - 2 * x;
     CGFloat y = 8;
     CGFloat h;
@@ -137,17 +152,17 @@
         NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
         attrs[NSFontAttributeName] = self.font;
         attrs[NSForegroundColorAttributeName] = self.placeholderColor?self.placeholderColor:[UIColor grayColor];
-        
+
         attributedText = [[NSMutableAttributedString alloc] initWithString:self.placeholder attributes:attrs];
-        
+
         // 计算高度
         textRect = [attributedText boundingRectWithSize:CGSizeMake(self.frame.size.width - 2 * x, MAXFLOAT)
                                                             options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
         h = ceil(textRect.size.height);
-        
+
         drawRect = CGRectMake(x, y, w, h);
         [attributedText drawInRect:drawRect];
-        
+
         h += y * 2;
     
     } else {
@@ -157,7 +172,6 @@
         textRect = [attributedText boundingRectWithSize:CGSizeMake(self.frame.size.width - 2 * x, MAXFLOAT)
                                                      options:(NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading) context:nil];
         h = ceil(textRect.size.height);
-
         h += y * 2;
     }
 
@@ -167,7 +181,10 @@
         }
         self.height = h;
     }
-    
+    if (self.isPaste) {
+        self.isPaste = NO;
+        [self scrollRangeToVisible:self.selectedRange];
+    }
 }
 
 

@@ -19,6 +19,7 @@
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveMutexService.h"
 #import "LiveUrlHandler.h"
+#import "LSAddCreditsViewController.h"
 #define MAXNum 20
 
 @interface LSMyReservationsPageViewController () <UITableViewDelegate, UITableViewDataSource, NewInvitesCellDelegate, UIScrollViewRefreshDelegate>
@@ -33,10 +34,10 @@
 @property (nonatomic, assign) BOOL isReload;
 @property (nonatomic, strong) DialogTip *dialogTipView;
 @property (strong) DialogOK *dialogReservationAddCredit;
-@property (nonatomic, strong) NSTimer * timer;
+@property (nonatomic, strong) NSTimer *timer;
 @property (nonatomic, assign) BOOL isShowStartNowBtn;
 @property (nonatomic, assign) BOOL isRequstData;
-@property (nonatomic, strong) NSTimer * loadtimer;
+@property (nonatomic, strong) NSTimer *loadtimer;
 @property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
 @end
 
@@ -45,7 +46,7 @@
     if (self.dialogReservationAddCredit) {
         [self.dialogReservationAddCredit removeFromSuperview];
     }
-        [self.tableView unInitPullRefresh];
+    [self.tableView unInitPullRefresh];
 }
 
 - (void)viewDidLoad {
@@ -53,26 +54,22 @@
 
     [self.tableView setTableFooterView:[UIView new]];
     self.sessionManager = [LSSessionRequestManager manager];
-    self.infoBtn.layer.cornerRadius = self.infoBtn.frame.size.height/2;
+    self.infoBtn.layer.cornerRadius = self.infoBtn.frame.size.height / 2;
     self.infoBtn.layer.masksToBounds = YES;
     self.data = [NSMutableArray array];
     self.dialogTipView = [DialogTip dialogTip];
-    [self hideNavgationBarBottomLine:YES];
     [self.tableView initPullRefresh:self pullDown:YES pullUp:YES];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
+
     if (self.type == BOOKINGLISTTYPE_WAITANCHORHANDLEING ||
         self.type == BOOKINGLISTTYPE_COMFIRMED) {
         self.isRequstData = YES;
         self.loadtimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadData) userInfo:nil repeats:NO];
-    }
-    else
-    {
-//       [self getListDataIsLoadMore:NO];
+    } else {
+        //       [self getListDataIsLoadMore:NO];
         // 没有数据时候执行下拉刷新,隐藏提示信息view lance motify
         if (self.data.count == 0) {
             [self hideInfoView];
@@ -80,16 +77,16 @@
         } else {
             [self getListDataIsLoadMore:NO];
         }
-     
     }
 }
 
-- (void)loadData
-{
+
+
+- (void)loadData {
     [self.loadtimer invalidate];
     self.loadtimer = nil;
     if (self.isRequstData) {
-//       [self getListDataIsLoadMore:NO];
+        //       [self getListDataIsLoadMore:NO];
         // 没有数据时候执行下拉刷新,隐藏提示信息view lance motify
         if (self.data.count == 0) {
             [self hideInfoView];
@@ -107,8 +104,7 @@
     self.timer = nil;
 }
 
-- (void)countdown
-{
+- (void)countdown {
     [self.tableView reloadData];
 }
 
@@ -155,8 +151,8 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, BookingPrivateInviteListObject *_Nonnull item) {
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self hideLoading];
-           // self.mainVC.view.userInteractionEnabled = YES;
-            
+            // self.mainVC.view.userInteractionEnabled = YES;
+
             if (isLoadMore) {
                 [self.tableView finishPullUp:YES];
 
@@ -171,43 +167,38 @@
                 }
                 self.page = self.page + (int)item.list.count;
 
-                if (self.type == BOOKINGLISTTYPE_COMFIRMED ) {
+                if (self.type == BOOKINGLISTTYPE_COMFIRMED) {
                     if (!self.timer) {
                         self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countdown) userInfo:nil repeats:YES];
                     }
-                    
-                    NSMutableArray * list = item.list;
-                    NSMutableArray * array = [NSMutableArray array];
-                    for (BookingPrivateInviteItemObject * obj in list) {
-                        
-                        if (obj.bookTime + 180 > [[NSDate new]timeIntervalSince1970])
-                        {
+
+                    NSMutableArray *list = item.list;
+                    NSMutableArray *array = [NSMutableArray array];
+                    for (BookingPrivateInviteItemObject *obj in list) {
+
+                        if (obj.bookTime + 180 > [[NSDate new] timeIntervalSince1970]) {
                             [array addObject:obj];
                         }
                     }
-                    
+
                     [self.data addObjectsFromArray:array];
-                }
-                else
-                {
-                    
+                } else {
+
                     [self.data addObjectsFromArray:item.list];
                 }
-                
+
                 if (self.data.count == 0) {
                     [self showInfoViewIsReload:NO];
                 }
             } else {
                 if (self.data.count == 0) {
                     [self showInfoViewIsReload:YES];
-                }
-                else
-                {
+                } else {
                     [self showDialog:NSLocalizedStringFromErrorCode(@"LOCAL_ERROR_CODE_TIMEOUT")];
                 }
             }
-            
-                [self.tableView reloadData];
+
+            [self.tableView reloadData];
         });
     };
 
@@ -243,14 +234,11 @@
 }
 
 - (IBAction)infoBtnDid:(UIButton *)sender {
-
     if (self.isReload) {
         [self getListDataIsLoadMore:NO];
     } else {
-
-         NSURL *url = [NSURL URLWithString:@"qpidnetwork://app/open?site:4&service=live&module=main"];
-        [LiveUrlHandler shareInstance].url = url;
-        [[LiveUrlHandler shareInstance]handleOpenURL];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:LiveUrlMainListTypeHot];
+        [[LiveUrlHandler shareInstance] handleOpenURL:url];
     }
 }
 
@@ -287,18 +275,18 @@
         if (!cell.imageViewLoader) {
             cell.imageViewLoader = [LSImageViewLoader loader];
         }
-//        cell.imageViewLoader.url = obj.oppositePhotoUrl;
-//        cell.imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
-//        cell.imageViewLoader.view = cell.headImage;
-//        [cell.imageViewLoader loadImage];
-//        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
+        //        cell.imageViewLoader.url = obj.oppositePhotoUrl;
+        //        cell.imageViewLoader.path = [[LSFileCacheManager manager] imageCachePathWithUrl:cell.imageViewLoader.url];
+        //        cell.imageViewLoader.view = cell.headImage;
+        //        [cell.imageViewLoader loadImage];
+        //        [cell.imageViewLoader sdWebImageLoadView:cell.headImage options:0 imageUrl:obj.oppositePhotoUrl placeholderImage:nil finishHandler:nil];
 
         [cell.imageViewLoader loadImageWithImageView:cell.headImage options:SDWebImageRefreshCached imageUrl:obj.oppositePhotoUrl placeholderImage:[UIImage imageNamed:@"Default_Img_Lady_Circyle"]];
-        
+
         if (SCREEN_WIDTH == 320) {
             cell.subLabel.font = [UIFont systemFontOfSize:10];
         } else {
-           cell.subLabel.font = [UIFont systemFontOfSize:12];
+            cell.subLabel.font = [UIFont systemFontOfSize:12];
         }
         cell.subLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedStringFromSelf(@"Reservation_Time"), [cell getTime:obj.bookTime]];
 
@@ -329,7 +317,7 @@
                 cell.historyLabel.hidden = NO;
                 [cell setTimeStr:timeStr];
             } else {
-                
+
                 if (!self.isShowStartNowBtn) {
                     self.isShowStartNowBtn = YES;
                 }
@@ -376,18 +364,14 @@
 }
 
 #pragma mark 点击进入女士详情
-- (void)myReservationsHeadDidForRow:(NSInteger)row
-{
+- (void)myReservationsHeadDidForRow:(NSInteger)row {
     if (self.data.count > 0) {
         //进入女士详情
         BookingPrivateInviteItemObject *obj = self.data[row];
-        NSString * userId = @"";
-        if ([[LSLoginManager manager].loginItem.userId isEqualToString:obj.fromId])
-        {
+        NSString *userId = @"";
+        if ([[LSLoginManager manager].loginItem.userId isEqualToString:obj.fromId]) {
             userId = obj.toId;
-        }
-        else
-        {
+        } else {
             userId = obj.fromId;
         }
         AnchorPersonalViewController *vc = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
@@ -398,11 +382,10 @@
 }
 
 #pragma mark 点击进入直播
-- (void)myReservationsStartNowDidForRow:(NSInteger)row
-{
+- (void)myReservationsStartNowDidForRow:(NSInteger)row {
     if (self.data.count > 0) {
         BookingPrivateInviteItemObject *obj = self.data[row];
-        
+
         PreLiveViewController *vc = [[PreLiveViewController alloc] initWithNibName:nil bundle:nil];
         LiveRoom *liveRoom = [[LiveRoom alloc] init];
         liveRoom.roomId = obj.roomId;
@@ -410,14 +393,13 @@
         liveRoom.userName = obj.oppositeNickName;
         vc.liveRoom = liveRoom;
         [self navgationControllerPresent:vc];
-        
-        NSLog(@"点击进入预约直播%@",obj.roomId);
+
+        NSLog(@"点击进入预约直播%@", obj.roomId);
     }
 }
 
 #pragma mark 倒计时完成
-- (void)myReservationsCountdownEnd
-{
+- (void)myReservationsCountdownEnd {
     [self getListDataIsLoadMore:NO];
 }
 
@@ -430,16 +412,16 @@
 }
 
 - (void)myReservationsDeclineBtnDidForRow:(NSInteger)row {
- 
+
     if (self.data.count > 0) {
         BookingPrivateInviteItemObject *obj = self.data[row];
-        
+
         JDAlertView *alertView = [[JDAlertView alloc] initWithMessage:NSLocalizedStringFromSelf(@"Decline_Reservation")
                                                         noButtonTitle:NSLocalizedStringFromSelf(@"NO")
                                                        yesButtonTitle:NSLocalizedStringFromSelf(@"YES")
                                                               onBlock:nil
                                                              yesBlock:^{
-                                                                 
+
                                                                  [self getMyReservationsInvites:NO forInviteId:obj.invitationId];
                                                              }];
         [alertView show];
@@ -474,15 +456,12 @@
                                                         NSLog(@"跳转到充值界面");
                                                         dispatch_async(dispatch_get_main_queue(), ^{
                                                             [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                                            UIViewController *vc = [LiveModule module].addCreditVc;
-                                                            if (vc) {
-                                                                [weakSelf.navigationController pushViewController:vc animated:YES];
-                                                            }
+                                                            LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+                                                            [weakSelf.navigationController pushViewController:vc animated:YES];
                                                         });
                                                     }];
                 } else {
                     [self showDialog:errmsg];
-
                 }
             }
         });
@@ -494,13 +473,13 @@
 - (void)myReservationsCancelBtnDidForRow:(NSInteger)row {
     if (self.data.count > 0) {
         BookingPrivateInviteItemObject *obj = self.data[row];
-        
+
         JDAlertView *alertView = [[JDAlertView alloc] initWithMessage:NSLocalizedStringFromSelf(@"Cancel_Reservation")
                                                         noButtonTitle:NSLocalizedStringFromSelf(@"NO")
                                                        yesButtonTitle:NSLocalizedStringFromSelf(@"YES")
                                                               onBlock:nil
                                                              yesBlock:^{
-                                                                 
+
                                                                  [self getCancelPrivate:obj.invitationId];
                                                              }];
         [alertView show];
@@ -529,10 +508,8 @@
     [self.sessionManager sendRequest:request];
 }
 
-
 #pragma mark 显示浮窗提示
-- (void)showDialog:(NSString *)message
-{
+- (void)showDialog:(NSString *)message {
     [self.dialogTipView showDialogTip:self.view tipText:message];
 }
 
@@ -542,7 +519,7 @@
     nvc.navigationBar.tintColor = self.navigationController.navigationBar.tintColor;
     nvc.navigationBar.barTintColor = self.navigationController.navigationBar.barTintColor;
     nvc.navigationBar.backgroundColor = self.navigationController.navigationBar.backgroundColor;
-    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor],NSForegroundColorAttributeName,nil];
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor], NSForegroundColorAttributeName, nil];
     [nvc.navigationBar setTitleTextAttributes:attributes];
     [nvc.navigationItem setHidesBackButton:YES];
     [self.navigationController presentViewController:nvc animated:YES completion:nil];

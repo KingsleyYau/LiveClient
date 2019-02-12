@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Message;
 import net.qdating.LSConfig.DecodeMode;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageFilter;
 import net.qdating.player.ILSPlayerCallback;
 import net.qdating.player.ILSPlayerStatusCallback;
 import net.qdating.player.LSAudioPlayer;
@@ -87,6 +88,7 @@ public class LSPlayer implements ILSPlayerCallback {
 	/***
 	 * 初始化流播放器
 	 * @param surfaceView	显示界面
+	 * @param fillMode 渲染模式
 	 * @param statusCallback 状态回调接口
 	 * @return true:成功/false:失败
 	 */
@@ -99,6 +101,7 @@ public class LSPlayer implements ILSPlayerCallback {
 			Log.initFileLog(filePath);
 			Log.setWriteFileLog(true);
 			LSPlayerJni.SetLogDir(filePath);
+			LSPlayerJni.SetJniLogLevel(LSConfig.LOG_LEVEL);
 		}
 		
 		Log.i(LSConfig.TAG, String.format("LSPlayer::init( this : 0x%x )", hashCode()));
@@ -142,7 +145,7 @@ public class LSPlayer implements ILSPlayerCallback {
 										isRuning?"true":"false"
 								)
 						);
-						synchronized (this) {
+						synchronized (msg.obj) {
 							if( isRuning ) {
 								// 非手动停止, 准备重连
 								player.Stop();
@@ -194,7 +197,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		return bFlag;
 	}
 	
-	/**
+	/***
 	 * 反初始化流播放器
 	 */
 	public void uninit() {
@@ -216,8 +219,34 @@ public class LSPlayer implements ILSPlayerCallback {
 			videoPlayer.uninit();
 		}
 	}
-	
+
 	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		if( useHardDecoder ) {
+			videoHardPlayer.setCustomFilter(customFilter);
+		} else {
+			videoPlayer.setCustomFilter(customFilter);
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		LSImageFilter filter = null;
+		if( useHardDecoder ) {
+			filter = videoHardPlayer.getCustomFilter();
+		} else {
+			filter = videoPlayer.getCustomFilter();
+		}
+		return filter;
+	}
+
+	/***
 	 * 开始流播放
 	 * @param url					流播放地址
 	 * @param recordFilePath		FLV文件录制绝对路径
@@ -276,7 +305,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		return bFlag;
 	}
 	
-	/**
+	/***
 	 * 停止播放
 	 */
 	public void stop() {
@@ -339,7 +368,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		return bFlag;
 	}
 
-	/**
+	/***
 	 * 当前是否静音
 	 * @return
 	 */
@@ -347,7 +376,7 @@ public class LSPlayer implements ILSPlayerCallback {
 		return audioPlayer.getMute();
 	}
 
-	/**
+	/***
 	 * 设置是否静音
 	 * @param isMute 是否静音
 	 */

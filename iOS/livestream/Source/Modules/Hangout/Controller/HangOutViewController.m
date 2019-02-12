@@ -17,7 +17,7 @@
 #import "LSGiftManager.h"
 #import "LSChatEmotionManager.h"
 #import "LiveStreamSession.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "HangoutMsgManager.h"
 #import "LiveModule.h"
@@ -47,6 +47,7 @@
 #import "LSDealKnockRequest.h"
 #import "LSGetHangoutGiftListRequest.h"
 #import "SendGiftTheQueueManager.h"
+#import "LSAddCreditsViewController.h"
 
 #import <objc/runtime.h>
 
@@ -116,7 +117,7 @@
 @property (nonatomic, strong) LSChatEmotionManager *chatEmotionManager;
 
 // 个人信息管理器
-@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
 
 #pragma mark - 消息管理器
 @property (nonatomic, strong) HangoutMsgManager *msgManager;
@@ -220,8 +221,6 @@
     [self.imManager.client removeDelegate:self];
     
     [[LiveGobalManager manager] removeDelegate:self];
-    // 赋值到全局变量, 用于前台计时
-    [LiveGobalManager manager].liveRoom = nil;
     
     [self.hangoutArray removeAllObjects];
     [self.hangoutDic removeAllObjects];
@@ -272,7 +271,7 @@
     self.chatEmotionManager = [LSChatEmotionManager emotionManager];
     
     // 初始化用户信息管理器
-    self.userInfoManager = [UserInfoManager manager];
+    self.userInfoManager = [LSUserInfoManager manager];
     
     // 初始化信用点管理器
     self.creditManager = [LiveRoomCreditRebateManager creditRebateManager];
@@ -329,7 +328,7 @@
     // 初始化直播间文本样式
     [self setUpLiveRoomType];
     
-    if ([LSDevice iPhoneXStyle]) {
+    if (IS_IPHONE_X) {
         self.inputMessageViewBottom.constant = 35;
         self.videoBottomViewTop.constant = 44;
         self.openControlBtnBottom.constant = 93;
@@ -575,7 +574,8 @@
         [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
                                  actionBlock:^{
                                      [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     [weakSelf.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+                                     [weakSelf.navigationController pushViewController:vc animated:YES];
                                  }];
     }
 }
@@ -619,7 +619,8 @@
                                  actionBlock:^{
                                      NSLog(@"没钱了。。");
                                      [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     [weakSelf.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+                                     [weakSelf.navigationController pushViewController:vc animated:YES];
                                  }];
     }
 }
@@ -692,7 +693,8 @@
 }
 
 - (void)rechargeCreditAction:(CreditView *)creditView {
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - 初始化控制台
@@ -752,7 +754,7 @@
     // TODO:关闭Hangout直播间
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+    [nvc forceToDismissAnimated:YES completion:nil];
 }
 
 #pragma mark - 文本和表情输入控件管理
@@ -1585,7 +1587,8 @@
         [self.dialogGiftAddCredit showDialog:self.liveRoom.superView
                                  actionBlock:^{
                                      [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                     [weakSelf.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+                                     LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+                                     [weakSelf.navigationController pushViewController:vc animated:YES];
                                  }];
     } else {
         [self showdiaLog:errmsg];
@@ -1596,7 +1599,8 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:NO];
+        LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:vc animated:NO];
     }
 }
 
@@ -1798,7 +1802,7 @@
 
 /** 收起聊天选择框 **/
 - (void)hiddenButtonBar {
-    if ([LSDevice iPhoneXStyle]) {
+    if (IS_IPHONE_X) {
         if (self.inputMessageViewBottom.constant == 35) {
             self.backgroundBtn.hidden = YES;
         }
@@ -2042,8 +2046,8 @@
 // 请求账号余额
 - (void)getLeftCreditRequest {
     GetLeftCreditRequest *request = [[GetLeftCreditRequest alloc] init];
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit) {
-        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f )", success, (long)errnum, errmsg, credit);
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, double credit, int coupon, double postStamp) {
+        NSLog(@"HangOutViewController::getLeftCreditRequest( [获取账号余额请求结果], success:%d, errnum : %ld, errmsg : %@ credit : %f coupon:%d, postStamp:%d)", success, (long)errnum, errmsg, credit, coupon, postStamp);
         dispatch_async(dispatch_get_main_queue(), ^{
             
             if (success) {
@@ -2158,7 +2162,7 @@
             if (self.liveRoom.roomId.length > 0) {
                 [self.imManager enterHangoutRoom:self.liveRoom.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull Item) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                       NSLog(@"HangOutViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", success == YES ? @"成功" : @"失败", errType, errMsg, Item.roomId);
+                       NSLog(@"HangOutViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, Item.roomId);
                         if (success) {
                             if (Item.roomType == ROOMTYPE_HANGOUTROOM) {
                                 self.liveRoom.roomType = LiveRoomType_Hang_Out;
@@ -2514,9 +2518,10 @@
     });
 }
 
-- (void)onRecvRoomCloseNotice:(NSString *)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg {
-    NSLog(@"HangOutViewController::onRecvRoomCloseNotice( [接收关闭直播间回调], roomId : %@, errType : %d, errMsg : %@ )", roomId, errType, errmsg);
+- (void)onRecvRoomCloseNotice:(NSString *)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg priv:(ImAuthorityItemObject * _Nonnull)priv {
+    NSLog(@"HangOutViewController::onRecvRoomCloseNotice( [接收关闭直播间回调], roomId : %@, errType : %d, errMsg : %@ , isHasOneOnOneAuth : %d, isHasOneOnOneAuth : %d )", roomId, errType, errmsg, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.liveRoom.priv = priv;
         BOOL isEqualRoomId = [self.liveRoom.roomId isEqualToString:roomId];
         if (isEqualRoomId && !self.isBackground) {
             if (errType == LCC_ERR_NO_CREDIT) {
@@ -2528,11 +2533,12 @@
     });
 }
 
-- (void)onRecvRoomKickoffNotice:(NSString *)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString *)errmsg credit:(double)credit {
+- (void)onRecvRoomKickoffNotice:(NSString *)roomId errType:(LCC_ERR_TYPE)errType errmsg:(NSString *)errmsg credit:(double)credit priv:(ImAuthorityItemObject * _Nonnull)priv{
     NSLog(@"LiveViewController::onRecvRoomKickoffNotice( [接收踢出直播间通知], roomId : %@ credit:%f", roomId, credit);
     dispatch_async(dispatch_get_main_queue(), ^{
         BOOL isEqualRoomId = [self.liveRoom.roomId isEqualToString:roomId];
         if (isEqualRoomId) {
+            self.liveRoom.priv = priv;
             // 设置余额及返点信息管理器
             if (credit >= 0) {
                 [self.creditManager setCredit:credit];
@@ -2562,7 +2568,7 @@
         [self.view bringSubviewToFront:self.inputMessageView];
     } else {
         self.backgroundBtn.hidden = YES;
-        if ([LSDevice iPhoneXStyle]) {
+        if (IS_IPHONE_X) {
             self.inputMessageViewBottom.constant = 35;
         } else {
             self.inputMessageViewBottom.constant = 0;

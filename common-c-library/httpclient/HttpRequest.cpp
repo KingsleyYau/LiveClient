@@ -226,3 +226,9 @@ void HttpRequest::SetCustom(void *custom) {
 void* HttpRequest::GetCustom() {
     return mpCustom;
 }
+
+long HttpRequest::GetLivechatRequsetId() {
+    long requestId = -1;
+    requestId = (long long)mKThread.GetThreadId();
+    return requestId;
+}

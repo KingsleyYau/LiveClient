@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSGoogleAnalyticsPageViewController.h"
 #import "LiveRoom.h"
 
-@interface LSMainViewController : LSGoogleAnalyticsViewController
+@interface LSMainViewController : LSGoogleAnalyticsPageViewController
 
 @property (nonatomic, assign) NSInteger curIndex;
 

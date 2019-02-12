@@ -247,16 +247,17 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniPr
 /*********************************** 9.5.获取可进入的节目信息  ****************************************/
 
 class RequestGetShowRoomInfoCallback : public IRequestGetShowRoomInfoCallback{
-    void OnGetShowRoomInfo(HttpGetShowRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpProgramInfoItem& item, const string& roomId) {
+    void OnGetShowRoomInfo(HttpGetShowRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpProgramInfoItem& item, const string& roomId, const HttpAuthorityItem& priv) {
         JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
 
-        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetShowRoomInfo( success : %s, task : %p, isAttachThread:%d  roomId:%s)", success?"true":"false", task, isAttachThread, roomId.c_str());
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetShowRoomInfo( success : %s, task : %p, isAttachThread:%d  roomId:%s oneonone:%d booking:%d)", success?"true":"false", task, isAttachThread, roomId.c_str(), priv.privteLiveAuth, priv.bookingPriLiveAuth);
 
         jobject jItem = getProgramInfoItem(env, item);
         int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 
+        jobject jprivItem = getHttpAuthorityItem(env, priv);
         /*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
         if(callBackObject != NULL){
@@ -265,6 +266,9 @@ class RequestGetShowRoomInfoCallback : public IRequestGetShowRoomInfoCallback{
             signature += "L";
             signature += PROGRAM_PROGRAMINFO_ITEM_CLASS;
             signature += ";Ljava/lang/String;";
+            signature += "L";
+            signature += HTTP_AUTHORITY_ITEM_CLASS;
+            signature += ";";
             signature += ")V";
             jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetShowRoomInfo", signature.c_str());
             FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetShowRoomInfo( callback : %p, signature : %s )",
@@ -272,7 +276,7 @@ class RequestGetShowRoomInfoCallback : public IRequestGetShowRoomInfoCallback{
             if(callbackMethod != NULL){
                 jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
                 jstring jroomId = env->NewStringUTF(roomId.c_str());
-                env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem, jroomId);
+                env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem, jroomId, jprivItem);
                 env->DeleteLocalRef(jerrmsg);
                 env->DeleteLocalRef(jroomId);
             }

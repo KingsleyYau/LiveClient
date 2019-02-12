@@ -36,6 +36,14 @@ JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogDir
     FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "SetLogDir( lsplayer, version : %s )", LS_VERSION);
   }
 
+JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogLevel
+  (JNIEnv *env, jclass cls, jint jLogLevel) {
+    if( jLogLevel >= KLog::LOG_OFF && jLogLevel <= KLog::LOG_STAT ) {
+        int level = KLog::LOG_STAT - jLogLevel;
+        KLog::SetLogLevel((KLog::LogLevel)level);
+    }
+}
+
 JNIEXPORT jlong JNICALL Java_net_qdating_player_LSPlayerJni_Create
   (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardDecoder, jobject videoRenderer, jobject audioRenderer, jobject videoHardDecoder, jobject videoHardRenderer) {
 	// RTMP播放器

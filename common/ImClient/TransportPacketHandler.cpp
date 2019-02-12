@@ -121,6 +121,10 @@ UNPACKET_RESULT_TYPE CTransportPacketHandler::Unpacket(const void* data, size_t 
                     tp.m_errmsg = resData[ROOT_ERRMSG].asString();
                 }
                 tp.m_data = resData[ROOT_DATA];
+                
+                if (resData[ROOT_ERRDATA].isObject()) {
+                    tp.m_errData = resData[ROOT_ERRDATA];
+                }
             
                 result = UNPACKET_SUCCESS;
             }

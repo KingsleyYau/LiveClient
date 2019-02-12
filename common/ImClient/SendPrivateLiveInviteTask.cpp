@@ -67,6 +67,7 @@ bool SendPrivateLiveInviteTask::Handle(const TransportProtocol& tp)
     string invitationId = "";
     int    timeOut = 0;
     string roomId = "";
+    IMInviteErrItem item;
     // 协议解析
     if (tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -80,6 +81,11 @@ bool SendPrivateLiveInviteTask::Handle(const TransportProtocol& tp)
         }
         if (tp.m_data[ROOMID_PARAM].isString()) {
             roomId = tp.m_data[ROOMID_PARAM].asString();
+        }
+        if (m_errType != LCC_ERR_SUCCESS) {
+            if (tp.m_errData.isObject()) {
+                item.Parse(tp.m_errData);
+            }
         }
         
     }
@@ -95,7 +101,7 @@ bool SendPrivateLiveInviteTask::Handle(const TransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnSendPrivateLiveInvite(GetSeq(), success, m_errType, m_errMsg, invitationId, timeOut, roomId);
+        m_listener->OnSendPrivateLiveInvite(GetSeq(), success, m_errType, m_errMsg, invitationId, timeOut, roomId, item);
 		FileLog("ImClient", "SendPrivateLiveInviteTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -177,6 +183,7 @@ bool SendPrivateLiveInviteTask::InitParam(const string& userId, const string& lo
 void SendPrivateLiveInviteTask::OnDisconnect()
 {
     if (NULL != m_listener) {
-        m_listener->OnSendPrivateLiveInvite(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "", 0, "");
+        IMInviteErrItem item;
+        m_listener->OnSendPrivateLiveInvite(GetSeq(), false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, "", 0, "", item);
     }
 }

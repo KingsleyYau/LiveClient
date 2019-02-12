@@ -68,7 +68,6 @@
         android:id="@+id/fl_inputArea"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:background="@color/light_gray"
         android:layout_height="0dp">
         <!-- 表情区 -->
         <FrameLayout
@@ -113,7 +112,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/btn_send"/>
 
-        <EditText
+        <com.qpidnetwork.livemodule.view.CustomEditText
             android:id="@+id/edt_msg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -126,10 +125,10 @@
             android:padding="@dimen/live_size_4dp"
             android:text=""
             android:textSize="@dimen/live_size_16sp"
+            android:imeOptions="actionSend"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/img_emoji"
-            app:layout_constraintStart_toStartOf="parent"
-            android:imeOptions="actionSend" />
+            app:layout_constraintLeft_toLeftOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <!-- 信息列表 -->

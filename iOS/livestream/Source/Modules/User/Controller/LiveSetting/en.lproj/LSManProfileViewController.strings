@@ -1,0 +1,39 @@
+
+/* Class = "UILabel"; text = "About You"; ObjectID = "2i8-td-xJc"; */
+"2i8-td-xJc.text" = "About You";
+
+/* Class = "UILabel"; text = "Your Interests"; ObjectID = "IRl-Ru-LF1"; */
+"IRl-Ru-LF1.text" = "Your Interests";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut "; ObjectID = "OYK-yl-lS5"; */
+"OYK-yl-lS5.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut ";
+
+/* Class = "UILabel"; text = "Your Information"; ObjectID = "WZR-cL-ZyY"; */
+"WZR-cL-ZyY.text" = "Your Information";
+
+/* Class = "UILabel"; text = "Select your interests."; ObjectID = "Xud-Tt-w40"; */
+"Xud-Tt-w40.text" = "Select your interests.";
+
+/* Class = "UILabel"; text = "Micheal  28  US"; ObjectID = "tpi-ug-OKc"; */
+"tpi-ug-OKc.text" = "Micheal  28  US";
+
+/* Class = "UIButton"; normalTitle = "edit"; ObjectID = "wiK-YH-S3z"; */
+"wiK-YH-S3z.normalTitle" = "edit";
+
+
+"Update_Fail_Tips" = "Tips";
+"Tips_Update_Fail" = "Failed to submit your personal description change. Please try again later.";
+"Tips_Upload_Photo_Fail" = "Failed to upload your photo. Please try again later.";
+"OK" = "OK";
+
+
+"Photo_Type_Choose" = "Choose personal photo";
+"Photo_Library" = "Photo Library";
+"Photo_Taking" = "Take Photo";
+"Cancel" = "Cancel";
+
+"PERSONAL_DESCRIPTION" = "YOUR SELF-DESCRIPTION";
+
+"Tips_About_Min" = "Minimum 100 characters required.";
+"Tips_About_Max" = "Maximum 2000 characters required.";
+"Fail_Tips" = "Failed to Load.\nPlease try again later.";

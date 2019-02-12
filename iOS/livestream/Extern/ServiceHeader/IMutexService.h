@@ -6,8 +6,14 @@
 //  Copyright © 2018年 qpidnetwork. All rights reserved.
 //
 
+#ifndef IMutexService_h
+#define IMutexService_h
+
 #import <Foundation/Foundation.h>
 
+/**
+ 互斥服务接口类
+ */
 @protocol IMutexService <NSObject>
 /**
  服务名称
@@ -24,6 +30,13 @@
 - (NSString *)serviceConflictTips;
 
 /**
+ 站点Id
+ 
+ @param siteId 站点Id
+ */
+- (void)setSiteId:(NSString *)siteId;
+
+/**
  停止互斥服务
  */
 - (void)stopService;
@@ -32,9 +45,10 @@
  是否需要停止互斥服务
  
  @param url 将要打开的URL
+ @param siteId 站点Id
  @return 是否
  */
-- (BOOL)isStopService:(NSURL *)url;
+- (BOOL)isStopService:(NSURL *)url siteId:(NSString *)siteId;
 
 /**
  解析调用过来的URL
@@ -46,3 +60,5 @@
 - (BOOL)handleOpenURL:(NSURL *)url fromVC:(UIViewController *)fromVC;
 
 @end
+
+#endif

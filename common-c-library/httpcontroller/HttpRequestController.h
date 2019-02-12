@@ -83,6 +83,42 @@
 #include "HttpGetPrivateMsgHistoryByIdTask.h"
 #include "HttpGetTotalNoreadNumTask.h"
 #include "HttpSetPrivateMsgReadedTask.h"
+#include "HttpDoLoginTask.h"
+#include "HttpGetProductListTask.h"
+#include "HttpGetMyProfileTask.h"
+#include "HttpGetValidsiteIdTask.h"
+#include "HttpUpdateProfileTask.h"
+#include "HttpVersionCheckTask.h"
+#include "HttpAddTokenTask.h"
+#include "HttpDestroyTokenTask.h"
+#include "HttpFindPasswordTask.h"
+#include "HttpChangePasswordTask.h"
+#include "HttpIOSPremiumMemberShipTask.h"
+#include "HttpIOSGetPayTask.h"
+#include "HttpIOSCheckPayCallTask.h"
+#include "HttpGetTokenTask.h"
+#include "HttpPasswordLoginTask.h"
+#include "HttpTokenLoginTask.h"
+#include "HttpGetValidateCodeTask.h"
+#include "HttpGetPushConfigTask.h"
+#include "HttpSetPushConfigTask.h"
+#include "HttpStartEditResumeTask.h"
+#include "HttpMobilePayGotoTask.h"
+#include "HttpPhoneInfoTask.h"
+#include "HttpGetSendMailPriceTask.h"
+#include "HttpBuyPrivatePhotoVideoTask.h"
+#include "HttpUploadLetterPhotoTask.h"
+#include "HttpSendEmfTask.h"
+#include "HttpGetEmfDetailTask.h"
+#include "HttpGetEmfListTask.h"
+#include "HttpGetLoiDetailTask.h"
+#include "HttpGetLoiListTask.h"
+#include "HttpCanSendEmfTask.h"
+#include "HttpGetHangoutOnlineAnchorTask.h"
+#include "HttpGetHangoutFriendsTask.h"
+#include "HttpAutoInvitationClickLogTask.h"
+#include "HttpAutoInvitationHangoutLiveDisplayTask.h"
+#include "HttpGetHangoutStatusTask.h"
 #include <common/KSafeMap.h>
 
 #include <stdio.h>
@@ -111,7 +147,6 @@ public:
      * @param deviceid                      设备唯一标识
      * @param model                         设备型号（格式：设备型号－系统版本号）
      * @param manufacturer                  制造厂商
-     * @param regionId                      站点ID（REGIONIDTYPE_CD：CD、REGIONIDTYPE_LD：LD、REGIONIDTYPE_AME6：AME）（整型）（可无，无则默认为4）
      *  @param callback                     接口回调
      *
      *  @return                             成功请求Id
@@ -123,7 +158,7 @@ public:
                         const string& deviceid,
                         const string& model,
                         const string& manufacturer,
-                        RegionIdType regionId = REGIONIDTYPE_CD,
+                        LSLoginSidType userSidType = LSLOGINSIDTYPE_QNLOGIN,
                         IRequestLoginCallback* callback = NULL
                         );
     
@@ -319,7 +354,188 @@ public:
                                   IRequestGetVerificationCodeCallback* callback = NULL
                                   );
     
-
+    /**
+     *  2.13.可登录的站点列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param email                         用户的email或id
+     * @param password                      登录密码
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetValidsiteId(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  const string& email,
+                                  const string& password,
+                                  IRequestGetValidsiteIdCallback* callback = NULL
+                                  );
+    
+    /**
+     *  2.14.添加App token
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param token                         app token值
+     * @param appId                         app唯一标识（App包名或iOS App ID，详情参考《“App ID”对照表》）
+     * @param deviceId                      设备id
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AddToken(
+                       HttpRequestManager *pHttpRequestManager,
+                       const string token,
+                       const string appId,
+                       const string deviceId,
+                       IRequestAddTokenCallback* callback = NULL
+                       );
+    
+    /**
+     *  2.15.销毁App token
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long DestroyToken(
+                       HttpRequestManager *pHttpRequestManager,
+                       IRequestDestroyTokenCallback* callback = NULL
+                       );
+    
+    /**
+     *  2.16.找回密码
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param sendMail                      用户注册的邮箱
+     * @param checkCode                     验证码（ver3.0起）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long FindPassword(
+                       HttpRequestManager *pHttpRequestManager,
+                       const string sendMail,
+                       const string checkCode,
+                       IRequestFindPasswordCallback* callback = NULL
+                       );
+    
+    /**
+     *  2.17.修改密码
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param passwordNew                   新密码
+     * @param passwordOld                   旧密码
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long ChangePassword(
+                           HttpRequestManager *pHttpRequestManager,
+                           const string passwordNew,
+                           const string passwordOld,
+                           IRequestChangePasswordCallback* callback = NULL
+                           );
+    
+    /**
+     * 2.18.token登录认证
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param token                         用于登录其他站点的加密串
+     * @param memberId                      会员id
+     * @param deviceId                      设备唯一标识
+     * @param versionCode                   客户端内部版本号
+     * @param model                         设备型号（格式：设备型号-系统版本号-API版本号-分辨率）
+     * @param manufacturer                  制造厂商
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long DoLogin(
+                      HttpRequestManager *pHttpRequestManager,
+                      const string& token,
+                      const string& memberId,
+                      const string& deviceId,
+                      const string& versionCode,
+                      const string& model,
+                      const string& manufacturer,
+                      IRequestDoLoginCallback* callback = NULL
+                      );
+    
+    /**
+     * 2.19.获取认证token
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param url                           用于Web跳转，App默认为“/app?siteid=站点ID”
+     * @param siteId                        站点ID（参考《11.10.“站点ID”对照表》）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetToken(
+                      HttpRequestManager *pHttpRequestManager,
+                      const string& url,
+                      HTTP_OTHER_SITE_TYPE siteId,
+                      IRequestGetTokenCallback* callback = NULL
+                      );
+    
+    /**
+     * 2.20.帐号密码登录
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param email                         用户的email或id
+     * @param password                      登录密码
+     * @param authcode                      验证码
+     * @param siteId                        登录的站点id，默认为41
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long PasswordLogin(
+                       HttpRequestManager *pHttpRequestManager,
+                       const string& email,
+                       const string& password,
+                       const string& authcode,
+                       HTTP_OTHER_SITE_TYPE siteId,
+                       const string& afDeviceId,
+                       const string& gaid,
+                       const string& deviceId,
+                       IRequestPasswordLoginCallback* callback = NULL
+                       );
+    
+    /**
+     * 2.21.token登录
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param memberId                      用户id
+     * @param sid                           用于登录其他站点的加密串，即其它站点获取的token
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long TokenLogin(
+                            HttpRequestManager *pHttpRequestManager,
+                            const string& memberId,
+                            const string& sid,
+                            IRequestTokenLoginCallback* callback = NULL
+                            );
+    
+    /**
+     * 2.22.获取验证码
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param validateCodeType              操作描述（login：登录获取，findpw：找回密码获取）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetValidateCode(
+                         HttpRequestManager *pHttpRequestManager,
+                         LSValidateCodeType validateCodeType,
+                         IRequestGetValidateCodeCallback* callback = NULL
+                         );
+    
     /**
      *  3.1.获取Hot列表接口
      *
@@ -1000,7 +1216,7 @@ public:
                              );
     
     /**
-     * 6.17.获取私信消息列表
+     * 6.17.获取主界面未读数量
      *
      * @param pHttpRequestManager           http管理器
      * @param callback                      接口回调
@@ -1011,6 +1227,110 @@ public:
                                 HttpRequestManager *pHttpRequestManager,
                                 IRequestGetTotalNoreadNumCallback* callback = NULL
                                 );
+    
+    /**
+     * 6.18.查询个人信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetMyProfile(
+                           HttpRequestManager *pHttpRequestManager,
+                           IRequestGetMyProfileCallback* callback = NULL
+                           );
+    
+    /**
+     * 6.19.修改个人信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param weight                        体重
+     * @param height                        身高
+     * @param language                      语言
+     * @param ethnicity                     人种
+     * @param religion                      宗教
+     * @param education                     教育程度
+     * @param profession                    职业
+     * @param income                        收入情况
+     * @param children                      子女状况
+     * @param smoke                         吸烟情况
+     * @param drink                         喝酒情况
+     * @param resume                        个人描述
+     * @param interests                     兴趣爱好（多项以,分隔）
+     * @param zodiac                        星座
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UpdateProfile(
+                            HttpRequestManager *pHttpRequestManager,
+                            int weight,
+                            int height,
+                            int language,
+                            int ethnicity,
+                            int religion,
+                            int education,
+                            int profession,
+                            int income,
+                            int children,
+                            int smoke,
+                            int drink,
+                            const string resume,
+                            list<string> interests,
+                            int zodiac,
+                            IRequestUpdateProfileCallback* callback = NULL
+                            );
+    
+    /**
+     * 6.20.检查客户端更新
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param currVersion                   当前客户端内部版本号
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long VersionCheck(
+                           HttpRequestManager *pHttpRequestManager,
+                           int currVersion,
+                           IRequestVersionCheckCallback* callback = NULL
+                           );
+    
+    /**
+     * 6.21.开始编辑简介触发计时
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long StartEditResume(
+                           HttpRequestManager *pHttpRequestManager,
+                           IRequestStartEditResumeCallback* callback = NULL
+                           );
+    
+    /**
+     * 6.22.收集手机硬件信息
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long PhoneInfo(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& manId, int verCode, const string& verName,
+                        int action, HTTP_OTHER_SITE_TYPE siteId, double density,
+                        int width, int height, const string& densityDpi,
+                        const string& model, const string& manufacturer, const string& os,
+                        const string& release, const string& sdk, const string& language,
+                        const string& region, const string& lineNumber, const string& simOptName,
+                        const string& simOpt, const string& simCountryIso, const string& simState,
+                        int phoneType, int networkType, const string& deviceId,
+                        IRequestPhoneInfoCallback* callback = NULL
+                      );
+    
     
     /**
      * 7.1.获取买点信息（仅独立）（仅iOS）
@@ -1070,6 +1390,84 @@ public:
                         AppStorePayCodeType code,
                         IRequestIOSPayCallCallback* callback = NULL
                         );
+    
+    /**
+     * 7.4.获取订单信息（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param manid            男士ID
+     * @param sid              跨服务器唯一标识
+     * @param number           信用点套餐ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long IOSGetPay(
+                        HttpRequestManager *pHttpRequestManager,
+                        const string& manid,
+                        const string& sid,
+                        const string& number,
+                        IRequestIOSGetPayCallback* callback = NULL
+                        );
+    
+    /**
+     * 7.5.验证订单信息（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * manid            男士ID
+     * sid              跨服务器唯一标识
+     * receipt          AppStore支付成功返回的receipt参数
+     * orderNo          订单号
+     * code             AppStore支付完成返回的状态code（APPSTOREPAYTYPE_PAYSUCCES：支付成功，APPSTOREPAYTYPE_PAYFAIL：支付失败，APPSTOREPAYTYPE_PAYRECOVERY：恢复交易(仅非消息及自动续费商品)，APPSTOREPAYTYPE_NOIMMEDIATELYPAY：无法立即支付）（可无，默认：APPSTOREPAYTYPE_PAYSUCCES）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long IOSCheckPayCall(
+                         HttpRequestManager *pHttpRequestManager,
+                         const string& manid,
+                         const string& sid,
+                         const string& receipt,
+                         const string& orderNo,
+                         AppStorePayCodeType code,
+                         IRequestIOSCheckPayCallCallback* callback = NULL
+                         );
+    
+    /**
+     * 7.6.获取产品列表（仅iOS）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long IOSPremiumMemberShip(
+                                HttpRequestManager *pHttpRequestManager,
+                                IRequestIOSPremiumMemberShipCallback* callback = NULL
+                                );
+    
+    /**
+     * 7.7.获取h5买点页面URL（仅Android）
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param url                           用于Web跳转，App默认为“/app?siteid=站点ID”
+     * @param siteId                        站点ID（固定为97，参考《“站点ID”对照表》）
+     * @param orderType                     购买产品类型（0：信用点，5：月费服务，7：邮票）
+     * @param clickFrom                     点击来源（Axx表示不可切换，Bxx表示可切换）（可无，无或空则表示不指定）
+     * @param number                        已选中的充值包ID（可无，无或空表示不指定充值包）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long MobilePayGoto(
+                           HttpRequestManager *pHttpRequestManager,
+                            const string& url,
+                            HTTP_OTHER_SITE_TYPE siteId,
+                            LSOrderType orderType,
+                            const string& clickFrom,
+                            const string& number,
+                           IRequestMobilePayGotoCallback* callback = NULL
+                           );
     
     /**
      * 8.1.获取可邀请多人互动的主播列表
@@ -1170,6 +1568,81 @@ public:
                                const string& roomId,
                                IRequestGetHangoutGiftListCallback* callback = NULL
                                );
+    
+    /**
+     * 8.7.获取Hang-out在线主播列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetHangoutOnlineAnchor(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 IRequestGetHangoutOnlineAnchorCallback* callback = NULL
+                                 );
+    
+    /**
+     * 8.8.获取指定主播的Hang-out好友列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetHangoutFriends(
+                                 HttpRequestManager *pHttpRequestManager,
+                                 const string& anchorId,
+                                 IRequestGetHangoutFriendsCallback* callback = NULL
+                                 );
+    
+    /**
+     * 8.9.自动邀请Hangout直播邀請展示條件
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AutoInvitationHangoutLiveDisplay(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& anchorId,
+                                IRequestAutoInvitationHangoutLiveDisplayCallback* callback = NULL
+                                );
+    
+    /**
+     * 8.10.自动邀请hangout点击记录
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long AutoInvitationClickLog(
+                                HttpRequestManager *pHttpRequestManager,
+                                const string& anchorId,
+                                IRequestAutoInvitationClickLogCallback* callback = NULL
+                                );
+    
+    /**
+     * 8.11.获取当前会员Hangout直播状态
+     *
+     * @param pHttpRequestManager           http管理器
+     
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetHangoutStatus(
+                             HttpRequestManager *pHttpRequestManager,
+                             IRequestGetHangoutStatusCallback* callback = NULL
+                             );
     
     /**
      * 9.1.获取节目未读数
@@ -1338,6 +1811,198 @@ public:
                                        const string& msgId,
                                        IRequestSetPrivateMsgReadedCallback* callback = NULL
                                        );
+    
+    /**
+     * 11.1.获取推送设置
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetPushConfig(
+                              HttpRequestManager *pHttpRequestManager,
+                              IRequestGetPushConfigCallback* callback = NULL
+                              );
+    
+    /**
+     * 11.2.修改推送设置
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param isPriMsgAppPush               是否接收私信推送通知
+     * @param isMailAppPush                 是否接收私信推送通知
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SetPushConfig(
+                                  HttpRequestManager *pHttpRequestManager,
+                                  bool isPriMsgAppPush,
+                                  bool isMailAppPush,
+                                  IRequestSetPushConfigCallback* callback = NULL
+                                  );
+    
+    /**
+     * 13.1.获取意向信列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param tag                           tag类型（1：所有，2：未读，3：未回复，4：已回复，5：已Follow）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetLoiList(
+                        HttpRequestManager *pHttpRequestManager,
+                         LSLetterTag tag,
+                         int start,
+                         int step,
+                        IRequestGetLoiListCallback* callback = NULL
+                        );
+    
+    /**
+     * 13.2.获取意向信详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param loiId                         意向信ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetLoiDetail(
+                         HttpRequestManager *pHttpRequestManager,
+                         string loiId,
+                         IRequestGetLoiDetailCallback* callback = NULL
+                         );
+    
+
+    
+    /**
+     * 13.3.获取信件列表
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param tag                           tag类型（1：所有，2：未读，3：未回复，4：已回复，5：已Follow）
+     * @param start                         起始，用于分页，表示从第几个元素开始获取
+     * @param step                          步长，用于分页，表示本次请求获取多少个元素
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetEmfboxList(
+                         HttpRequestManager *pHttpRequestManager,
+                         LSEMFType type,
+                         LSLetterTag tag,
+                         int start,
+                         int step,
+                         IRequestGetEmfListCallback* callback = NULL
+                         );
+    
+    /**
+     * 13.4.获取信件详情
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param emfId                         意向信ID
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetEmfDetail(
+                           HttpRequestManager *pHttpRequestManager,
+                           string emfId,
+                           IRequestGetEmfDetailCallback* callback = NULL
+                           );
+    
+    /**
+     * 13.5.发送信件
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                      主播ID
+     * @param loiId                         回复的意向信ID（可无，无则为不是回复）
+     * @param emfId                         回复的信件ID（可无，无则为不是回复）
+     * @param content                       回复信件内容
+     * @param imgList                       附件数组
+     * @param comsumeType                   付费类型（LSLETTERCOMSUMETYPE_CREDIT：信用点，LSLETTERCOMSUMETYPE_STAMP：邮票）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long SendEmf(
+                           HttpRequestManager *pHttpRequestManager,
+                           string anchorId,
+                           string loiId,
+                           string emfId,
+                           string content,
+                           list<string> imgList,
+                           LSLetterComsumeType comsumeType,
+                           IRequestSendEmfCallback* callback = NULL
+                           );
+    
+    /**
+     * 13.6.上传附件
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param file                          上传头像文件名
+     * @param fileName                      上传头像名（用于ios的返回，记录上传那张图片）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long UploadLetterPhoto(
+                      HttpRequestManager *pHttpRequestManager,
+                      string file,
+                      string fileName = "",
+                      IRequestUploadLetterPhotoCallback* callback = NULL
+                      );
+    
+    /**
+     * 13.7.购买信件附件
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param emfId                         信件ID
+     * @param resourceId                    附件ID
+     * @param comsumeType                   付费类型（LSLETTERCOMSUMETYPE_CREDIT：信用点，LSLETTERCOMSUMETYPE_STAMP：邮票）
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long BuyPrivatePhotoVideo(
+                                   HttpRequestManager *pHttpRequestManager,
+                                   string emfId,
+                                   string resourceId,
+                                   LSLetterComsumeType comsumeType,
+                                   IRequestBuyPrivatePhotoVideoCallback* callback = NULL
+                                );
+    
+    /**
+     * 13.8.获取发送信件所需的余额
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param imgNumber                     发送图片附件数
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long GetSendMailPrice(
+                               HttpRequestManager *pHttpRequestManager,
+                               int imgNumber,
+                               IRequestGetSendMailPriceCallback* callback = NULL
+                               );
+    
+    /**
+     * 13.9.获取主播信件权限
+     *
+     * @param pHttpRequestManager           http管理器
+     * @param anchorId                     发送图片附件数
+     * @param callback                      接口回调
+     *
+     * @return                              成功请求Id
+     */
+    long long CanSendEmf(
+                         HttpRequestManager *pHttpRequestManager,
+                         const string& anchorId,
+                         IRequestCanSendEmfCallback* callback = NULL
+                         );
     
 private:
     void OnTaskFinish(IHttpTask* task);

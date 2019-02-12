@@ -6,10 +6,21 @@
 //  Copyright © 2017年 qpidnetwork. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#ifndef IMutexServiceManager_h
+#define IMutexServiceManager_h
 
+#import <Foundation/Foundation.h>
 #import "IMutexService.h"
 
+#pragma mark - 消息中心通知
+/**
+ 换站通知Key
+ */
+#define ASMNotificationReload @"ASMNotificationReload"
+
+/**
+ 互斥服务管理器接口类
+ */
 @protocol IMutexServiceManager <NSObject>
 /**
  增加互斥服务
@@ -40,6 +51,14 @@
 - (void)stopService:(id<IMutexService>)service;
 
 /**
+ 是否App内部处理的URL
+ 
+ @param url 原始链接
+ @return 处理结果[YES:链接可以被内部模块处理/NO:链接不能被内部模块处理]
+ */
+- (BOOL)canOpenURL:(NSURL *)url;
+
+/**
  解析调用过来的URL
  
  @param url 原始链接
@@ -50,3 +69,4 @@
 
 @end
 
+#endif

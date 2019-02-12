@@ -10,7 +10,7 @@
 #define HTTPREQUEST_H_
 
 #include "HttpClient.h"
-
+#include "HttpRequestDefine.h"
 #include <common/KThread.h>
 
 #define MAX_RESPONED_BUFFER 4 * 1024
@@ -62,6 +62,10 @@ public:
     // 自定义数据
     void SetCustom(void *custom);
     void* GetCustom();
+    
+    // 获取requestId(也是线程id，为了兼容Qn的httpRequestManager回调用到的requestId)
+    long GetLivechatRequsetId();
+    
     
 protected:
 	void OnReceiveBody(HttpClient* client, const char* buf, int size);

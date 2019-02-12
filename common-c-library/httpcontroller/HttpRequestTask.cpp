@@ -134,6 +134,60 @@ bool HttpRequestTask::ParseCommon(const char* buf, int size, string &errnum, str
 	return bFlag;
 }
 
+
+bool HttpRequestTask::ParseNewLiveCommon(const char* buf, int size, int &errnum, string &errmsg, Json::Value *data, Json::Value *errdata) {
+    bool bFlag = false;
+    
+    // 默认错误码是解析错误
+    errnum = LOCAL_LIVE_ERROR_CODE_PARSEFAIL;
+    errmsg = LOCAL_ERROR_CODE_PARSEFAIL_DESC;
+    
+    // Try Parse JSON
+    Json::Value root;
+    Json::Reader reader;
+    
+    if( reader.parse(buf, root, false) ) {
+        FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseNewLiveCommon( [Parse Json Finish], task : %p )", this);
+        if( root.isObject() ) {
+            if( root[COMMON_LIVE_NEW_RESULT].isInt() && root[COMMON_LIVE_NEW_RESULT].asInt() == 1 ) {
+                // 解析公共结果, 返回成功
+                errnum = LOCAL_LIVE_ERROR_CODE_SUCCESS;
+                errmsg = "";
+
+                if( data != NULL ) {
+                    *data = root;
+                }
+                bFlag = true;
+                
+            } else {
+                // 解析公共结果, 返回错误
+                if( root[COMMON_LIVE_NEW_CODE].isNumeric() ) {
+                    errnum = root[COMMON_LIVE_NEW_CODE].asInt();
+                    
+                }
+                
+                // 错误消息
+                if( root[COMMON_LIVE_NEW_MESSAGE].isString() ) {
+                    errmsg = root[COMMON_LIVE_NEW_MESSAGE].asString();
+                }
+                
+                if( errdata != NULL ) {
+                    *errdata = root[COMMON_ERRDATA];
+                }
+                
+                bFlag = false;
+            }
+        }
+    }
+    
+    mErrCode = errnum;
+    
+    FileLog(LIVESHOW_HTTP_LOG, "HttpRequestTask::ParseCommon( [Handle Json %s], task : %p, errnum : %d )", bFlag?"Success":"Fail", this, errnum);
+    
+    return bFlag;
+}
+
+
 bool HttpRequestTask::ParseLiveCommon(const char* buf, int size, int &errnum, string &errmsg, Json::Value *data, Json::Value *errdata) {
     bool bFlag = false;
     
@@ -167,6 +221,13 @@ bool HttpRequestTask::ParseLiveCommon(const char* buf, int size, int &errnum, st
                     if( root[COMMON_ERRMSG].isString() ) {
                         errmsg = root[COMMON_ERRMSG].asString();
                     }
+                    if( errdata != NULL ) {
+                        *errdata = root[COMMON_ERRDATA];
+                    }
+                    if( data != NULL ) {
+                        *data = root[COMMON_DATA];
+                    }
+                    
                     bFlag = false;
                 }
                 

@@ -29,7 +29,6 @@
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity_1">MyTicket.History</string>
 
 	<!--personal center-->
-    <string name="com.qpidnetwork.livemodule.liveshow.personal.PersonalCenterActivity">Live.PersonalCenter</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_0">MySchedules.New</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_1">MySchedules.Sent</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity_2">MySchedules.Scheduled</string>
@@ -60,23 +59,30 @@
 	<string name="com.qpidnetwork.livemodule.liveshow.message.MessageContactListActivity">Live.MessageList</string>
 	<string name="com.qpidnetwork.livemodule.liveshow.message.ChatTextActivity">MessageDetail</string>
 
-	<!--QN外部广告页-->
-	<string name="com.qpidnetwork.livemodule.liveshow.ad.AD4QNActivity">Home.LiveAd</string>
+	<!--个人中心-->
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.MyProfileActivity">Live.PersonalCenter</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.MyProfileDetailNewLiveActivity">PersonalCenter.Profile</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.MyProfileDetailInterestActivity">Profile.YourInterests</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.MyProfileDetailSelfIntroActivity">Profile.AboutYou</string>
+
+	<!--设置-->
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.SettingsActivity">Live.Settings</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.PushSettingsActivity">Settings.PushNotifications</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.personal.MyProfileChangePasswordActivity">Settings.ChangePassword</string>
+
+	<!--登陆-->
+	<string name="com.qpidnetwork.livemodule.liveshow.authorization.LoginActivity">Live.Login</string>
+
+	<!--订单-->
+	<string name="com.qpidnetwork.livemodule.liveshow.pay.LiveBuyCreditActivity">Live.GetCredit</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.pay.LiveBuyStampActivity">Live.GetStamp</string>
+
+	<!--LiveChat-->
+	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity_0">Live.LiveChat.ChatList</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatMainActivity_1">Live.LiveChat.Invitation</string>
+	<string name="com.qpidnetwork.livemodule.liveshow.livechat.LiveChatTalkActivity">LiveChatDetail</string>
 
 	<!-- Event Define -->
-	<!--QN展示相关-->
-	<string name="LiveQN_Category">QN</string>
-	<string name="LiveQN_Action_CloseAD">close_Ad</string>
-	<string name="LiveQN_Label_CloseAD">QN.close_Ad</string>
-	<string name="LiveQN_Action_BroadcasterCover">click_BroadcasterCover</string>
-	<string name="LiveQN_Label_BroadcasterCover">QN.click_BroadcasterCover</string>
-	<string name="LiveQN_Action_GoWatch">click_GoWatch</string>
-	<string name="LiveQN_Label_GoWatch">QN.click_GoWatch</string>
-	<string name="LiveQN_Action_Banner">click_LiveAd</string>
-	<string name="LiveQN_Label_Banner">QN.click_LiveAd</string>
-	<string name="LiveQN_Action_AdvertBanner">click_Livebanner</string>
-	<string name="LiveQN_Label_AdvertBanner">QN.click_Livebanner</string>
-
 	<!--列表点击相关-->
 	<string name="Live_EnterBroadcast_Category">enterBroadcast</string>
 	<string name="Live_EnterBroadcast_Action_PublicBroadcast">enter_PublicBroadcast</string>
@@ -105,8 +111,6 @@
 	<string name="Live_Broadcast_Label_MyBalance">Broadcast.click_MyBalance</string>
 	<string name="Live_Broadcast_Action_BroadcastInfo">click_BroadcastInfo</string>
 	<string name="Live_Broadcast_Label_BroadcastInfo">Broadcast.click_BroadcastInfo</string>
-	<string name="Live_Broadcast_Action_AddCredit">add_Credit</string>
-	<string name="Live_Broadcast_Label_AddCredit">Broadcast.add_Credit</string>
 	<string name="Live_Broadcast_Action_RewardedCredit">click_RewardedCredit</string>
 	<string name="Live_Broadcast_Label_RewardedCredit">Broadcast.click_RewardedCredit</string>
 	<string name="Live_Broadcast_Action_TwoWayVideo">click_TwoWayVideo</string>
@@ -148,9 +152,40 @@
 	<string name="Live_CalendarEnd_Label_Recommend">showCalendar.click_RecommendShow</string>
 
 	<!--私信-->
-	<string name="Live_Message_Category">message</string>
+	<string name="Live_Message_Category">Message</string>
 	<string name="Live_Message_Action_Send">send_message</string>
-	<string name="Live_Message_Label_Send">message.send_message</string>
+	<string name="Live_Message_Label_Send">Message.send_message</string>
+	<string name="Live_Message_Action_Setting_PushOn">turnon_MessagePush</string>
+	<string name="Live_Message_Label_Setting_PushOn">Message.turnon_MessagePush</string>
+	<string name="Live_Message_Action_Setting_PushOff">turnoff_MessagePush</string>
+	<string name="Live_Message_Label_Setting_PushOff">Message.turnoff_MessagePush</string>
+	<string name="Live_Message_Action_Push_Click">click_NewMsgPush</string>
+	<string name="Live_Message_Label_Push_Click">Message.click_NewMsgPush</string>
+
+	<!--mail-->
+	<string name="Live_Mail_Category">Mail</string>
+	<string name="Live_Mail_Action_Setting_PushOn">turnon_MailPush</string>
+	<string name="Live_Mail_Label_Setting_PushOn">Mail.turnon_MailPush</string>
+	<string name="Live_Mail_Action_Setting_PushOff">turnoff__MailPush</string>
+	<string name="Live_Mail_Label_Setting_PushOff">Mail.turnoff__MailPush</string>
+	<string name="Live_Mail_Action_Push_Click">click_NewMailPush</string>
+	<string name="Live_Mail_Label_Push_Click">Mail.click_NewMailPush</string>
+
+	<!--设置点击事件-->
+	<string name="Live_Settings_Category">Settings</string>
+	<string name="Live_Settings_Action_Logout">click_LogOut</string>
+	<string name="Live_Settings_Label_Logout">Settings.click_LogOut</string>
+
+	<!--LiveChat-->
+	<string name="Live_LiveChat_Category">LiveChat</string>
+	<string name="Live_LiveChat_Action_SendMessage">send_message</string>
+	<string name="Live_LiveChat_Label_SendMessage">LiveChat.send_message</string>
+	<string name="Live_LiveChat_Action_SendSticker">send_Sticker</string>
+	<string name="Live_LiveChat_Label_SendSticker">LiveChat.send_Sticker</string>
+	<string name="Live_LiveChat_Action_SendVoice">send_VoiceMessage</string>
+	<string name="Live_LiveChat_Label_SendVoice">LiveChat.send_VoiceMessage</string>
+	<string name="Live_LiveChat_Action_PushClick">click_LiveChatPush</string>
+	<string name="Live_LiveChat_Label_PushClick">LiveChat.click_LiveChatPush</string>
 
 	<!--Global-->
 	<string name="Live_Global_Category">Global</string>

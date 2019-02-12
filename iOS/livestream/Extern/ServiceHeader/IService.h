@@ -8,12 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-#ifndef IService
-    #define IService
+#ifndef IService_h
+#define IService_h
 
-    #import "IAnalyticsManager.h"
-    #import "ILoginService.h"
-    #import "IMutexService.h"
-    #import "IMutexServiceManager.h"
-    #import "ISiteManager.h"
+#import "IErrorType.h"
+#import "IAnalyticsManager.h"
+#import "ILoginService.h"
+#import "IMutexService.h"
+#import "IMutexServiceManager.h"
+#import "ISiteManager.h"
+#import "ISiteService.h"
+#import "INotificationsService.h"
+
 #endif

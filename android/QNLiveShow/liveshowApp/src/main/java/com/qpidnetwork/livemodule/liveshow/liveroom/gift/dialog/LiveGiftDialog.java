@@ -36,6 +36,7 @@ import com.qpidnetwork.livemodule.liveshow.liveroom.gift.RoomGiftManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
+import com.qpidnetwork.qnbridgemodule.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -179,7 +180,18 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener{
      * @param recommandGiftId  指定的推荐礼物id
      */
     public void show(String recommandGiftId){
-        super.show();
+        // 2018/12/28 Hardy 防止在退出直播间时，继续操作发送礼物，导致窗口没关闭而内存泄漏
+        if (!UIUtils.isActExist(mContext)) {
+            return;
+        }
+
+        try {
+            super.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+//            super.show();
         //dialog是否创建即是否走过onCreate
         if(sl_giftPagerContainer != null){
             boolean isStoreListUpdate = false;
@@ -746,13 +758,6 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener{
         lv_giftCount.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                giftCountSelectorAdapter.notifyDataSetChanged();
-                return false;
-            }
-        });
-        lv_giftCount.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
                 //harry确定为解决点击item效果
                 giftCountSelectorAdapter.notifyDataSetChanged();
                 return false;
@@ -1059,6 +1064,10 @@ public class LiveGiftDialog extends Dialog implements View.OnClickListener{
             tvDesc.setText(R.string.liveroom_gift_pack_empty);
         }
         tv_reloadGiftList.setVisibility(View.GONE);
+
+
+        //停止连击动画
+        stopRepeatSendGift();
 
         //无数据按钮不可点击
         setSendGiftBtnEnable(false);

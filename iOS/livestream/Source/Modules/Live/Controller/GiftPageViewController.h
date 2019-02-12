@@ -6,7 +6,7 @@
 //  Copyright © 2018年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSListViewController.h"
 
 #import "LiveRoom.h"
 #import "LSGiftManagerItem.h"
@@ -19,7 +19,7 @@
 - (void)didChangeGiftList:(GiftPageViewController *)vc;
 @end
 
-@interface GiftPageViewController : LSGoogleAnalyticsViewController
+@interface GiftPageViewController : LSListViewController
 #pragma mark - 直播间信息
 @property (nonatomic, strong) LiveRoom *liveRoom;
 @property (nonatomic, weak) id<GiftPageViewControllerDelegate> vcDelegate;

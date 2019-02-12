@@ -15,8 +15,8 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 新增号码

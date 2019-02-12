@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QNChatSmallEmotionLadyTableViewCell" rowHeight="120" id="RZO-Gh-P1k" userLabel="QNChatSmallEmotionLadyTableViewCell" customClass="QNChatSmallEmotionLadyTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="341" height="120"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RZO-Gh-P1k" id="Qjs-bg-h4W">
+                <rect key="frame" x="0.0" y="0.0" width="341" height="119.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="RlP-Vj-GAg" userLabel="SmallEmotionView">
+                        <rect key="frame" x="26" y="12" width="96" height="96"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="96" id="ofL-qt-1Jg"/>
+                            <constraint firstAttribute="height" constant="96" id="yNf-EB-CiK"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="RlP-Vj-GAg" firstAttribute="centerY" secondItem="Qjs-bg-h4W" secondAttribute="centerY" id="TvU-ft-5bM"/>
+                    <constraint firstItem="RlP-Vj-GAg" firstAttribute="leading" secondItem="Qjs-bg-h4W" secondAttribute="leadingMargin" constant="10" id="VpW-Uf-bhQ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+            <connections>
+                <outlet property="smallEmotonImageView" destination="RlP-Vj-GAg" id="gKj-Cd-90e"/>
+            </connections>
+            <point key="canvasLocation" x="466.5" y="360"/>
+        </tableViewCell>
+    </objects>
+</document>

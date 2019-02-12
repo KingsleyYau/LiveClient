@@ -28,19 +28,19 @@ using namespace std;
 namespace coollive {
 class PlayerController;
 class PlayerStatusCallback {
-public:
-    virtual ~PlayerStatusCallback() {};
-    virtual void OnPlayerConnect(PlayerController* pc) = 0;
-    virtual void OnPlayerDisconnect(PlayerController* pc) = 0;
-    virtual void OnPlayerOnDelayMaxTime(PlayerController* pc) = 0;
+  public:
+    virtual ~PlayerStatusCallback(){};
+    virtual void OnPlayerConnect(PlayerController *pc) = 0;
+    virtual void OnPlayerDisconnect(PlayerController *pc) = 0;
+    virtual void OnPlayerOnDelayMaxTime(PlayerController *pc) = 0;
 };
-    
+
 class PlayerController : public RtmpDumpCallback, VideoDecoderCallback, AudioDecoderCallback, RtmpPlayerCallback {
-        
-public:
+
+  public:
     PlayerController();
     ~PlayerController();
-    
+
     /**
      设置缓存时间
 
@@ -52,34 +52,34 @@ public:
 
      @param videoRenderer 视频渲染器
      */
-    void SetVideoRenderer(VideoRenderer* videoRenderer);
+    void SetVideoRenderer(VideoRenderer *videoRenderer);
     /**
      设置音频渲染器
      
      @param audioRenderer 音频渲染器
      */
-    void SetAudioRenderer(AudioRenderer* audioRenderer);
-    
+    void SetAudioRenderer(AudioRenderer *audioRenderer);
+
     /**
      设置视频解码器
 
      @param videoDecoder 视频解码器
      */
-    void SetVideoDecoder(VideoDecoder* videoDecoder);
+    void SetVideoDecoder(VideoDecoder *videoDecoder);
     /**
      设置音频解码器
 
      @param audioDecoder 音频解码器
      */
-    void SetAudioDecoder(AudioDecoder* audioDecoder);
-    
+    void SetAudioDecoder(AudioDecoder *audioDecoder);
+
     /**
      设置状态回调
 
      @param pc 状态回调
      */
-    void SetStatusCallback(PlayerStatusCallback* pc);
-    
+    void SetStatusCallback(PlayerStatusCallback *pc);
+
     /**
      播放流连接
      
@@ -88,66 +88,71 @@ public:
      @param recordH264FilePath H264录制路径
      @return 成功／失败
      */
-    bool PlayUrl(const string& url, const string& recordFilePath, const string& recordH264FilePath, const string& recordAACFilePath);
-    
+    bool PlayUrl(const string &url, const string &recordFilePath, const string &recordH264FilePath, const string &recordAACFilePath);
+
     /**
      停止
      */
     void Stop();
-        
-private:
+
+  private:
     // 传输器回调
-    void OnConnect(RtmpDump* rtmpDump);
-    void OnDisconnect(RtmpDump* rtmpDump);
-    void OnChangeVideoSpsPps(RtmpDump* rtmpDump, const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize);
-    void OnRecvVideoFrame(RtmpDump* rtmpDump, const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
-    void OnChangeAudioFormat(RtmpDump* rtmpDump,
+    void OnConnect(RtmpDump *rtmpDump);
+    void OnDisconnect(RtmpDump *rtmpDump);
+    void OnChangeVideoSpsPps(RtmpDump *rtmpDump, const char *sps, int sps_size, const char *pps, int pps_size, int naluHeaderSize);
+    void OnRecvVideoFrame(RtmpDump *rtmpDump, const char *data, int size, u_int32_t timestamp, VideoFrameType video_type);
+    void OnChangeAudioFormat(RtmpDump *rtmpDump,
                              AudioFrameFormat format,
                              AudioFrameSoundRate sound_rate,
                              AudioFrameSoundSize sound_size,
-                             AudioFrameSoundType sound_type
-                             );
-    void OnRecvAudioFrame(RtmpDump* rtmpDump,
+                             AudioFrameSoundType sound_type);
+    void OnRecvAudioFrame(RtmpDump *rtmpDump,
                           AudioFrameFormat format,
                           AudioFrameSoundRate sound_rate,
                           AudioFrameSoundSize sound_size,
                           AudioFrameSoundType sound_type,
-                          char* data,
+                          char *data,
                           int size,
-                          u_int32_t timestamp
-                          );
-        
+                          u_int32_t timestamp);
+
     // 解码器回调
-    void OnDecodeVideoFrame(VideoDecoder* decoder, void* frame, u_int32_t timestamp);
-    void OnDecodeAudioFrame(AudioDecoder* decoder, void* frame, u_int32_t timestamp);
-    
-private:
+    void OnDecodeVideoFrame(VideoDecoder *decoder, void *frame, u_int32_t timestamp);
+    void OnDecodeAudioFrame(AudioDecoder *decoder, void *frame, u_int32_t timestamp);
+
+  private:
     // 播放器回调
-    void OnPlayVideoFrame(RtmpPlayer* player, void* frame);
-    void OnDropVideoFrame(RtmpPlayer* player, void* frame);
-    void OnPlayAudioFrame(RtmpPlayer* player, void* frame);
-    void OnDropAudioFrame(RtmpPlayer* player, void* frame);
-    void OnStartVideoStream(RtmpPlayer* player);
-    void OnEndVideoStream(RtmpPlayer* player);
-    void OnStartAudioStream(RtmpPlayer* player);
-    void OnEndAudioStream(RtmpPlayer* player);
-    void OnResetVideoStream(RtmpPlayer* player);
-    void OnResetAudioStream(RtmpPlayer* player);
-    void OnDelayMaxTime(RtmpPlayer* player);
-    
-private:
+    void OnPlayVideoFrame(RtmpPlayer *player, void *frame);
+    void OnDropVideoFrame(RtmpPlayer *player, void *frame);
+    void OnPlayAudioFrame(RtmpPlayer *player, void *frame);
+    void OnDropAudioFrame(RtmpPlayer *player, void *frame);
+    void OnStartVideoStream(RtmpPlayer *player);
+    void OnEndVideoStream(RtmpPlayer *player);
+    void OnStartAudioStream(RtmpPlayer *player);
+    void OnEndAudioStream(RtmpPlayer *player);
+    void OnResetVideoStream(RtmpPlayer *player);
+    void OnResetAudioStream(RtmpPlayer *player);
+    void OnDelayMaxTime(RtmpPlayer *player);
+    void OnRecvCmdLogin(RtmpDump *rtmpDump,
+                        bool bFlag,
+                        const string &userName,
+                        const string &serverAddress);
+    void OnRecvCmdMakeCall(RtmpDump *rtmpDump,
+                           const string &uuId,
+                           const string &userName);
+
+  private:
     // 传输器
     RtmpDump mRtmpDump;
     // 播放器
     RtmpPlayer mRtmpPlayer;
     // 解码器
-    VideoDecoder* mpVideoDecoder;
-    AudioDecoder* mpAudioDecoder;
+    VideoDecoder *mpVideoDecoder;
+    AudioDecoder *mpAudioDecoder;
     // 播放接口
-    VideoRenderer* mpVideoRenderer;
-    AudioRenderer* mpAudioRenderer;
+    VideoRenderer *mpVideoRenderer;
+    AudioRenderer *mpAudioRenderer;
     // 状态回调
-    PlayerStatusCallback* mpPlayerStatusCallback;
+    PlayerStatusCallback *mpPlayerStatusCallback;
     // 是否使用硬解码
     bool mUseHardDecoder;
     // 是否跳过延迟的帧

@@ -36,6 +36,7 @@ public:
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
+    void ClearVideoFrame();
     
 protected:
     void Init();

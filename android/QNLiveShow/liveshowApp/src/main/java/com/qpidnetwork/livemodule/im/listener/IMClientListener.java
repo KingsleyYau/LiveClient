@@ -77,7 +77,7 @@ public abstract class IMClientListener {
 
 		LCC_ERR_REPEAT_INVITEING_TALENT, 	// 发送才艺点播失败 上一次才艺邀请邀请待确认，不能重复发送 /*important*/(10052)
 		LCC_ERR_RECV_REGULAR_CLOSE_ROOM,    // 用户接收正常关闭直播间(10088)
-
+		LCC_ERR_PRIVTE_INVITE_AUTHORITY,    // 主播无立即私密邀请权限(17002)
 	}
 
 	//邀请答复类型
@@ -116,6 +116,12 @@ public abstract class IMClientListener {
 		FollowPlay,				// 仅关注的开播通知
 	}
 
+	// chat在线状态
+	public enum IMChatOnlineStatus {
+		Unknown,				// 未知
+		off,					// 离线
+		online,					// 在线
+	}
 
 	/**
 	 * 邀请答复类型
@@ -210,6 +216,21 @@ public abstract class IMClientListener {
 		return type;
 	}
 
+	/**
+	 * chat在线状态
+	 * @param status
+	 * @return
+	 */
+	private IMChatOnlineStatus intToIMChatOnlineStatus(int status){
+		IMChatOnlineStatus type = IMChatOnlineStatus.Unknown;
+		if( status < 0 || status >= IMChatOnlineStatus.values().length ) {
+			type = IMChatOnlineStatus.Unknown;
+		} else {
+			type = IMChatOnlineStatus.values()[status];
+		}
+		return type;
+	}
+
 
 	/**
 	 * 2.1.登录回调
@@ -239,9 +260,9 @@ public abstract class IMClientListener {
 	 * @param errMsg
 	 * @param roomInfo
 	 */
-	public abstract void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
-	public void OnRoomIn(int reqId, boolean success, int errType, String errMsg, IMRoomInItem roomInfo){
-		OnRoomIn(reqId, success, intToErrType(errType), errMsg, roomInfo);
+	public abstract void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem);
+	public void OnRoomIn(int reqId, boolean success, int errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem){
+		OnRoomIn(reqId, success, intToErrType(errType), errMsg, roomInfo, authorityItem);
 	}
 	
 	/**
@@ -264,9 +285,9 @@ public abstract class IMClientListener {
 	 * @param errMsg
 	 * @param roomInfo
 	 */
-	public abstract void OnPublicRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo);
-	public void OnPublicRoomIn(int reqId, boolean success, int errType, String errMsg, IMRoomInItem roomInfo){
-		OnPublicRoomIn(reqId, success, intToErrType(errType), errMsg, roomInfo);
+	public abstract void OnPublicRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem);
+	public void OnPublicRoomIn(int reqId, boolean success, int errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem){
+		OnPublicRoomIn(reqId, success, intToErrType(errType), errMsg, roomInfo, authorityItem);
 	}
 	
     /**
@@ -293,9 +314,9 @@ public abstract class IMClientListener {
      *  @param inviteItem       立即私密邀请
      *
      */
-	public abstract void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem);
-	public void OnGetInviteInfo(int reqId, boolean success, int errType, String errMsg, IMInviteListItem inviteItem){
-		OnGetInviteInfo(reqId, success, intToErrType(errType), errMsg, inviteItem);
+	public abstract void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem, IMAuthorityItem priv);
+	public void OnGetInviteInfo(int reqId, boolean success, int errType, String errMsg, IMInviteListItem inviteItem, IMAuthorityItem priv){
+		OnGetInviteInfo(reqId, success, intToErrType(errType), errMsg, inviteItem, priv);
 	}
 	
 	/**
@@ -347,9 +368,9 @@ public abstract class IMClientListener {
 	 * @param timeout
 	 * @param roomId
 	 */
-	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId);
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String invitationId, int timeout, String roomId){
-		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, invitationId, timeout, roomId);
+	public abstract void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId, IMInviteErrItem errItem);
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, int errType, String errMsg, String invitationId, int timeout, String roomId, IMInviteErrItem errItem){
+		OnSendImmediatePrivateInvite(reqId, success, intToErrType(errType), errMsg, invitationId, timeout, roomId, errItem);
 	}
 	
 	/**
@@ -451,9 +472,9 @@ public abstract class IMClientListener {
 	 * 3.3.直播间关闭通知（用户）
 	 * @param roomId
 	 */
-	public abstract void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg);
-	public void OnRecvRoomCloseNotice(String roomId, int errType, String errMsg){
-		OnRecvRoomCloseNotice(roomId, intToErrType(errType), errMsg);
+	public abstract void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg, IMAuthorityItem privItem);
+	public void OnRecvRoomCloseNotice(String roomId, int errType, String errMsg, IMAuthorityItem privItem){
+		OnRecvRoomCloseNotice(roomId, intToErrType(errType), errMsg, privItem);
 	}
 	
 	
@@ -492,9 +513,9 @@ public abstract class IMClientListener {
 	 * @param err
 	 * @param errMsg
 	 */
-	public abstract void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg);
-	public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, int errType, String errMsg){
-		OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, intToErrType(errType), errMsg);
+	public abstract void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem);
+	public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, int errType, String errMsg, IMAuthorityItem privItem){
+		OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, intToErrType(errType), errMsg, privItem);
 	}
 	
 	/**
@@ -504,9 +525,9 @@ public abstract class IMClientListener {
 	 * @param errMsg
 	 * @param credit
 	 */
-	public abstract void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err, String errMsg, double credit);
-	public void OnRecvRoomKickoffNotice(String roomId, int errType, String errMsg, double credit){
-		OnRecvRoomKickoffNotice(roomId, intToErrType(errType), errMsg, credit);
+	public abstract void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err, String errMsg, double credit, IMAuthorityItem privItem);
+	public void OnRecvRoomKickoffNotice(String roomId, int errType, String errMsg, double credit, IMAuthorityItem privItem){
+		OnRecvRoomKickoffNotice(roomId, intToErrType(errType), errMsg, credit, privItem);
 	}
 	
 	/**
@@ -613,21 +634,13 @@ public abstract class IMClientListener {
 	
 	/**
 	 * 7.3.接收立即私密邀请回复通知
-	 * @param inviteId
-	 * @param replyType
-	 * @param roomId
-	 * @param roomType
-	 * @param anchorId
-	 * @param nickName
-	 * @param avatarImg
-	 * @param message
+	 * @param replyItem  立即私密邀请
+
 	 */
-	public abstract void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId, 
-			String nickName, String avatarImg, String message);
-	public void OnRecvInviteReply(String inviteId, int replyType, String roomId, int roomType, String anchorId, 
-			String nickName, String avatarImg, String message){
-		OnRecvInviteReply(inviteId, intToInviteReplyType(replyType), roomId, intToLiveRoomType(roomType), anchorId, nickName, avatarImg, message);
-	}
+	public abstract void OnRecvInviteReply(IMInviteReplyItem replyItem);
+//	public void OnRecvInviteReply(IMInviteReplyItem replyItem){
+//		OnRecvInviteReply(inviteId, intToInviteReplyType(replyType), roomId, intToLiveRoomType(roomType), anchorId, nickName, avatarImg, message, intToIMChatOnlineStatus(status));
+//	}
 	
 	/**
 	 * 7.4.接收主播立即私密邀请通知

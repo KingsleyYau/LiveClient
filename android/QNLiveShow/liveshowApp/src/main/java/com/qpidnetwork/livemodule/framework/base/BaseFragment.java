@@ -13,7 +13,11 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import android.util.Log;
+
+import com.qpidnetwork.qnbridgemodule.util.AppFrontBackHelper;
+import com.qpidnetwork.qnbridgemodule.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.SystemUtils;
+
 import android.view.View;
 
 import java.lang.ref.WeakReference;
@@ -21,16 +25,13 @@ import java.lang.ref.WeakReference;
 /**
  *
  */
-public abstract class BaseFragment extends Fragment implements View.OnClickListener{
+public abstract class BaseFragment extends Fragment implements View.OnClickListener, AppFrontBackHelper.OnAppStatusListener {
 
     protected String TAG = BaseFragment.class.getName();
 
     protected Context mContext;
     private boolean isNeedOnResume = true;
-    //HOME键盘相关
-    private HomeWatcherReceiver mHomeWatcherReceiver = null;
-    private boolean isBack2Home = false;
-    private long time2Home = 0;
+    private boolean isHomeBack = false;
     protected long timeIntervalFromHome = 60 * 1000;   //从HOME返回时间间隔
 
     @Override
@@ -43,14 +44,16 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerReceiver();
+        AppFrontBackHelper.getInstance().register(this);
     }
 
-    //https://blog.csdn.net/czhpxl007/article/details/51277319
-    //
-    //setUserVisibleHint->onAttach->onCreate->onCreateView->onActivityCreated---->onResume
-    //                                                                         ^
-    //                                                                     onReVisible
+    /**
+     * https://blog.csdn.net/czhpxl007/article/details/51277319
+     *
+     * setUserVisibleHint->onAttach->onCreate->onCreateView->onActivityCreated---->onResume
+     *                                                                          ^
+     *                                                                      onReVisible
+     */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if(mContext != null && !isNeedOnResume && isVisibleToUser){
@@ -64,11 +67,17 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         isNeedOnResume = false;
         //
         onReVisible();
-        //
-        if(isBack2Home && System.currentTimeMillis() - time2Home > timeIntervalFromHome){
-            isBack2Home = false;
+        // 从HOME/后台返回
+        if(isHomeBack && System.currentTimeMillis() - AppFrontBackHelper.getInstance().getTheTime2Home() > timeIntervalFromHome){
+            isHomeBack = false;
             onBackFromHomeInTimeInterval();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
     }
 
     @Override
@@ -80,7 +89,7 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unRegisterReceiver();
+        AppFrontBackHelper.getInstance().unRegister(this);
     }
 
     /**
@@ -96,13 +105,12 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
     }
 
     /**
-     * 在指定的时间间隔内从HOME返回
+     * 在指定的时间间隔内从HOME/后台返回
      * setUserVisibleHint->onAttach->onCreate->onCreateView->onActivityCreated---->onResume
      *                                                                          ^
      *                                                             onBackFromHomeInTimeInterval
      */
     protected void onBackFromHomeInTimeInterval(){
-
     }
 
     @SuppressLint("HandlerLeak")
@@ -175,42 +183,13 @@ public abstract class BaseFragment extends Fragment implements View.OnClickListe
         // TODO Auto-generated method stub
     }
 
-    private void registerReceiver() {
-        mHomeWatcherReceiver = new HomeWatcherReceiver();
-        IntentFilter filter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
-        getActivity().registerReceiver(mHomeWatcherReceiver, filter);
+    @Override
+    public void onBack() {
+
     }
 
-    private void unRegisterReceiver(){
-        if (mHomeWatcherReceiver != null) {
-            try {
-                getActivity().unregisterReceiver(mHomeWatcherReceiver);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public class HomeWatcherReceiver extends BroadcastReceiver {
-
-        private static final String SYSTEM_DIALOG_REASON_KEY = "reason";
-//        private static final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            String intentAction = intent.getAction();
-            Log.i("Jagger", "intentAction =" + intentAction);
-            if (TextUtils.equals(intentAction, Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
-                String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
-                Log.i("Jagger", "reason =" + reason);
-//                if (TextUtils.equals(SYSTEM_DIALOG_REASON_HOME_KEY, reason)) {
-                    isBack2Home = true;
-                    time2Home = System.currentTimeMillis();
-//                }
-            }
-        }
-
+    @Override
+    public void onFront() {
+        isHomeBack = true;
     }
 }

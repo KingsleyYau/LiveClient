@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import "LiveRoom.h"
+#import "LSGoogleAnalyticsViewController.h"
 #import "PlayViewController.h"
+#import "LiveRoom.h"
+
 #import "LSUITapImageView.h"
 #import "VIPAudienceView.h"
 #import "ChardTipView.h"

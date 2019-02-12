@@ -1,27 +1,13 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseFragment;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
-import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
-import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
-import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
-import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
-import com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
-import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.livemodule.view.DotView.DotView;
 
 /**
  * Message中心

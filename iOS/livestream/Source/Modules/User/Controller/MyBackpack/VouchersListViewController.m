@@ -19,9 +19,16 @@
 @property (nonatomic, strong) NSArray * array;
 @property (nonatomic, strong) LSSessionRequestManager* sessionManager;
 @property (weak, nonatomic) IBOutlet UIImageView *noDataIcon;
+@property (nonatomic, assign) BOOL isRequstData;
+@property (nonatomic, strong) NSTimer * timer;
 @end
 
 @implementation VouchersListViewController
+
+- (void)dealloc {
+    [self.tableView unInitPullRefresh];
+    NSLog(@"VouchersListViewController dealloc");
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -39,8 +46,26 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self showLoading];
-    [self getVoucherListRequest];
+    self.isRequstData = YES;
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(loadData) userInfo:nil repeats:YES];
+}
+
+- (void)loadData
+{
+    [self.timer invalidate];
+    self.timer = nil;
+    if (self.isRequstData) {
+        [self showLoading];
+        [self getVoucherListRequest];
+    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.isRequstData = NO;
+    [self.timer invalidate];
+    self.timer = nil;
 }
 
 #pragma mark 重新加载
@@ -74,7 +99,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             [self.tableView finishPullDown:YES];
-            [self.mainVC getunreadCount];
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
             
             self.array = array;
             if (success) {

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "LSSvrItemObject.h"
-#import <httpcontroller/HttpRequestEnum.h>
+#import "LSMailPrivItemObject.h"
 
 @interface LSLoginItemObject : NSObject
 /**
@@ -25,6 +25,15 @@
  * qnMainAdUrl      QN主界面广告浮层的URL（可无，无则表示不弹广告）
  * qnMainAdTitle    QN主界面广告浮层的标题（可无）
  * qnMainAdId       QN主界面广告浮层的ID（可无，无则表示不弹广告）
+ * gaUid            Google Analytics UserID参数
+ * sessionId        唯一身份标识用于登录LiveChat服务器
+ * isLiveChatRisk    LiveChat详细风控标识（YES：有风控，NO：无，默认：NO）
+ * isHangoutRisk     Hangout风控标识（YES：有风控，NO：无，默认：NO）
+ * liveChatInviteRiskType   聊天邀请（LSHTTP_LIVECHATINVITE_RISK_NOLIMIT：不作任何限制 ，
+                                     LSHTTP_LIVECHATINVITE_RISK_LIMITSEND：限制发送信息，
+                                     LSHTTP_LIVECHATINVITE_RISK_LIMITREV：限制接受邀请，
+                                     LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
+ * mailPriv         信件及意向信权限相关
  */
 @property (nonatomic, strong) NSString* userId;
 @property (nonatomic, strong) NSString* token;
@@ -38,5 +47,12 @@
 @property (nonatomic, strong) NSString* qnMainAdUrl;
 @property (nonatomic, strong) NSString* qnMainAdTitle;
 @property (nonatomic, strong) NSString* qnMainAdId;
+@property (nonatomic, strong) NSString* gaUid;
+@property (nonatomic, copy) NSString* sessionId;
+@property (nonatomic, assign) BOOL isLiveChatRisk;
+@property (nonatomic, assign) BOOL isHangoutRisk;
+@property (nonatomic, assign) LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
+@property (nonatomic, strong) LSMailPrivItemObject* mailPriv;
+
 
 @end

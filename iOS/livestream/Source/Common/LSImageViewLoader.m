@@ -12,7 +12,7 @@
 @interface LSImageViewLoader ()
 
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, strong) UIView *view;
+@property (nonatomic, weak) UIView *view;
 @property (nonatomic, strong) UIActivityIndicatorView *loadingView;
 @property (nonatomic, strong) SDWebImageCallBack callBack;
 @property (weak) id<SDWebImageOperation> operation;
@@ -55,10 +55,6 @@
     
     // 设置默认图
     [self displayImage:placeholderImage];
-    if (self.callBack) {
-        self.callBack(placeholderImage);
-    }
-    
     // 有URL才处理
     if (url) {
         // 显示缓存
@@ -94,6 +90,10 @@
                                                      }
                                                  });
                                              }];
+        }
+    } else {
+        if (self.callBack) {
+            self.callBack(nil);
         }
     }
 }

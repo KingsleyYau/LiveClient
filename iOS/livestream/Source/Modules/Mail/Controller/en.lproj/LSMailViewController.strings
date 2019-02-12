@@ -1,0 +1,17 @@
+
+/* Class = "UIButton"; normalTitle = "Inbox"; ObjectID = "XdE-wT-B7B"; */
+"XdE-wT-B7B.normalTitle" = "Inbox";
+
+"INBOX" = "Inbox";
+
+"OUTBOX" = "Outbox";
+
+
+"Credits_Tips" = "1 stamp (or 0.8 credits) for each mail read. If you have no stamps, credits will be used instead.";
+"Not_Again" = "Don't Ask Again";
+
+"NO_INBOX_TIP" = "You haven't received any Mails.";
+
+"NO_OUTBOX_TIP" = "You haven't send any Mails.";
+
+

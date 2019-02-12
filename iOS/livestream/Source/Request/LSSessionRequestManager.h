@@ -10,7 +10,6 @@
 #include <httpcontroller/HttpRequestEnum.h>
 
 @class LSSessionRequest;
-
 #pragma mark - 需要重登陆的接口返回处理
 @protocol SessionRequestDelegate <NSObject>
 /**
@@ -21,24 +20,29 @@
  *
  *  @return YES:已经处理/NO:没有处理
  */
-- (BOOL)request:(LSSessionRequest* _Nonnull)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg;
+- (BOOL)request:(LSSessionRequest *)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg;
 
 /**
  *  请求处理完成
  *
  */
-- (void)requestFinish:(LSSessionRequest* _Nonnull)request;
+- (void)requestFinish:(LSSessionRequest *)request;
 
 @end
 
 @interface LSSessionRequestManager : NSObject <SessionRequestDelegate>
+/**
+ 身份失效错误提示
+ */
+@property (strong, readonly) NSString *sessionErrorMsg;
+
 #pragma mark - 获取实例
 /**
  *  获取实例
  *
  *  @return 实例
  */
-+ (instancetype _Nonnull)manager;
++ (instancetype)manager;
 
 /**
  *  发送请求
@@ -47,6 +51,6 @@
  *
  *  @return YES:成功发起请求/NO:发起请求失败
  */
-- (BOOL)sendRequest:(LSSessionRequest* _Nonnull)request;
+- (BOOL)sendRequest:(LSSessionRequest* )request;
 
 @end

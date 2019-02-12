@@ -192,7 +192,10 @@ public abstract class LSImageFilter {
 			checkGLError(method, null);
 		}
 	}
-	
+
+	public LSImageFilter() {
+	}
+
 	public LSImageFilter(String vertexShaderString, String fragmentShaderString, float filterVertex[]) {
 		this.vertexShaderString = vertexShaderString;
 		this.fragmentShaderString = fragmentShaderString;
@@ -266,13 +269,15 @@ public abstract class LSImageFilter {
 	 * 绘制纹理
 	 * @param textureId
 	 */
-	public void draw(int textureId, int width, int height) {
-//		if( LSConfig.DEBUG ) {
-//			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
-//		}
-		
-		GLES20.glUseProgram(glProgram);
-		
+	public int draw(int textureId, int width, int height) {
+		if( LSConfig.DEBUG ) {
+			Log.d(LSConfig.TAG, String.format("LSImageFilter::draw( this : 0x%x, textureId : %d, glProgram : %d, className : [%s] )", hashCode(), textureId, glProgram, getClass().getName()));
+		}
+
+		if( glProgram != INVALID_PROGRAM ) {
+			GLES20.glUseProgram(glProgram);
+		}
+
 		// 更新输入大小
 		ImageSize outputImageSize = changeInputSize(width, height);
 		// 更新滤镜后的大小
@@ -287,7 +292,9 @@ public abstract class LSImageFilter {
 		
 		// 绘制下一个滤镜
 		if( filter != null ) {
-			filter.draw(newTextureId, outputImageSize.width, outputImageSize.height);
+			return filter.draw(newTextureId, outputImageSize.width, outputImageSize.height);
+		} else {
+			return newTextureId;
 		}
 	}
 	

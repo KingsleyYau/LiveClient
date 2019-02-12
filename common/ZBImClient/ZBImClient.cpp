@@ -1038,7 +1038,7 @@ void ZBImClient::OnZBRecvRoomCloseNotice(const string& roomId, ZBLCC_ERR_TYPE er
 
 // 3.5.接收踢出直播间通知
 void ZBImClient::OnZBRecvRoomKickoffNotice(const string& roomId, ZBLCC_ERR_TYPE err, const string& errMsg) {
-    FileLog("ImClient", "ZBImClient::OnRecvRoomKickoffNotice() begin, ZBImClient:%p roomId:%s err:%d errMsg:%s ", this, roomId.c_str(), err, errMsg.c_str());
+    FileLog("ImClient", "ZBImClient::OnZBRecvRoomKickoffNotice() begin, ZBImClient:%p roomId:%s err:%d errMsg:%s ", this, roomId.c_str(), err, errMsg.c_str());
     m_listenerListLock->Lock();
     for (ZBImClientListenerList::const_iterator itr = m_listenerList.begin();
          itr != m_listenerList.end();

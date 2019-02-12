@@ -17,7 +17,6 @@ import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;

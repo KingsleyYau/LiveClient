@@ -12,8 +12,10 @@
 @protocol LSHomeSettingHaedViewDelegate <NSObject>
 @optional;
 - (void)didChangeSiteClick;
-- (void)didOpenProfileClick;
+- (void)didOpenPersonalCenter;
 - (void)didOpenLevelExplain;
+- (void)pushToCreditsVC;
+- (void)pushSettingInfoVC;
 @end
 
 @interface LSHomeSettingHaedView : UIView
@@ -23,7 +25,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *userIdLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *levelImageView;
 @property (weak, nonatomic) IBOutlet UIButton *changeSiteBtn;
-
+@property (weak, nonatomic) IBOutlet UILabel *balanceLabel;
+@property (weak, nonatomic) IBOutlet UIButton *addBtn;
 @property (weak, nonatomic) id<LSHomeSettingHaedViewDelegate> delegate;
 
 - (void)updateUserInfo;

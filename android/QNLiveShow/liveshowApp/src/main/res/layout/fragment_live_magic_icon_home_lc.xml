@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:paddingTop="10dp"
+    android:orientation="vertical" >
+
+    <GridView
+        android:id="@+id/gvLocalEmotion"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:listSelector="#00FFFFFF"
+        android:numColumns="6"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp"
+        android:visibility="visible" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:text="@string/live_chat_magicIcon_home_price_desc" />
+
+    <GridView
+        android:id="@+id/gvMagicIcon"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:listSelector="#00FFFFFF"
+        android:numColumns="5"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp" />
+
+</LinearLayout>

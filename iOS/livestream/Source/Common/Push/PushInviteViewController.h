@@ -16,4 +16,6 @@
 @property (strong) NSString *tips;
 @property (strong) NSString *inviteId;
 @property (strong) NSString *anchorId;
+@property (strong) NSString *nickName;
+- (void)pushMessageToCenter;
 @end

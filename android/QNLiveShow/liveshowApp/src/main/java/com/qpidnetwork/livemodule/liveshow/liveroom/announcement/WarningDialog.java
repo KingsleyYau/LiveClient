@@ -3,7 +3,7 @@ package com.qpidnetwork.livemodule.liveshow.liveroom.announcement;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;

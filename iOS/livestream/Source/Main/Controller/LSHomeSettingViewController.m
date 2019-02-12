@@ -8,27 +8,36 @@
 
 #import "LSHomeSettingViewController.h"
 
+#import "LSMessageViewController.h"
 #import "LiveWebViewController.h"
 #import "MyTicketPageViewController.h"
 #import "LSMyReservationsViewController.h"
 #import "MyBackpackViewController.h"
 #import "MeLevelViewController.h"
-
+#import "LSUserSettingViewController.h"
 #import "LiveSettingLineCell.h"
 #import "LSHomeSettingCell.h"
-#import "LSHomeSettingCreditCell.h"
-#import "UnreadNumManager.h"
+#import "LSUserUnreadCountManager.h"
 #import "LiveModule.h"
 #import "LSConfigManager.h"
-@interface LSHomeSettingViewController ()<UITableViewDelegate,UITableViewDataSource, LSHomeSettingHaedViewDelegate,                 LSHomeSettingCreditCellDelegate, UnreadNumManagerDelegate>
+#import "LSAddCreditsViewController.h"
+#import "LSUserSetUpViewController.h"
+#import "QNChatAndInvitationViewController.h"
+#import "LSGreetingsViewController.h"
+#import "LSMailViewController.h"
+#import "LiveUrlHandler.h"
+#define HeadViewH 252
+
+@interface LSHomeSettingViewController ()<UITableViewDelegate,UITableViewDataSource, LSHomeSettingHaedViewDelegate,                  LSUserUnreadCountManagerDelegate>
 @property (nonatomic, strong) NSArray * iconArray;
 @property (nonatomic, strong) NSArray * titleArray;
 
 @property (nonatomic, strong) NSArray * imageArray;
 @property (nonatomic, strong) NSArray * headArray;
 
-@property (nonatomic, strong) UnreadNumManager *unreadManager;
+@property (nonatomic, strong) LSUserUnreadCountManager *unreadManager;
 
+@property (nonatomic, strong) LSHomeSettingHaedView *headView;
 // 选站对话框
 @property (nonatomic, strong) UIViewController *siteDialogVC;
 @end
@@ -36,14 +45,14 @@
 @implementation LSHomeSettingViewController
 
 - (void)dealloc {
-    NSLog(@"%s", __func__);
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [self.unreadManager removeDelegate:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.unreadManager = [UnreadNumManager manager];
+    self.unreadManager = [LSUserUnreadCountManager shareInstance];
     [self.unreadManager addDelegate:self];
     
     self.tableView.delegate = self;
@@ -51,20 +60,16 @@
     self.tableView.backgroundColor = [UIColor whiteColor];
     
     self.bgView.alpha = 0;
-    self.tableView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - self.tableView.frame.size.width, screenSize.height);
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.sectionHeaderHeight = 0;
-    self.tableView.sectionFooterHeight = 0;
     
     UISwipeGestureRecognizer * swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(bgViewswipe:)];
     [swipe setDirection:UISwipeGestureRecognizerDirectionLeft];
     [self.view addGestureRecognizer:swipe];
     
     [self setTableHeadView];
-//    [self setTableFooterView];
     
-    self.iconArray = @[@"Setting_Mail_Icon",@"Setting_Greetings_Icon"];
-    self.titleArray = @[@"Mail",@"Greeting Mail"];
+    self.iconArray = @[@"Setting_Message_Icon",@"Setting_Mail_Icon",@"Setting_Greetings_Icon",@"Setting_Greetings_Icon"];
+    self.titleArray = @[@"Chat",@"Mail",@"Greeting Mail",@"Hang-out"];
     
     self.imageArray = @[@"Setting_Ticket_Icon",@"Setting_Bookings_Icon",@"Setting_BackPack_Icon"];
     self.headArray = @[@"My Show Tickets",@"My Bookings",@"My Backpack"];
@@ -81,41 +86,19 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
+    
     // 如果存在选站对话框, 则移除
     [[LiveModule module].siteManager closeViewController:self.siteDialogVC];
 }
 
 - (void)setTableHeadView {
-    CGFloat headH = 166;
-    CGFloat topH = 0;
-    //iPhoneX兼容
-    if ([LSDevice iPhoneXStyle]) {
-        topH = 44;
-        headH = headH + topH;
-    }
     
-    LSHomeSettingHaedView *headView = [[LSHomeSettingHaedView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, headH)];
-    headView.delegate = self;
-    [self.tableView setTableHeaderView:headView];
-    [headView updateUserInfo];
-    [self.tableView setContentInset:UIEdgeInsetsMake(-topH, 0, 0, 0)];
+    self.headView = [[LSHomeSettingHaedView alloc] init];
+    self.headView.delegate = self;
+    [self.view addSubview:self.headView];
+    [self.headView updateUserInfo];
 }
 
-- (void)setTableFooterView {
-    
-    UIButton * backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [backBtn setTitle:@"Back to CharmDate" forState:UIControlStateNormal];
-    [backBtn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-    backBtn.titleLabel.font = [UIFont systemFontOfSize:13];
-    backBtn.frame = CGRectMake(15, SCREEN_HEIGHT - 20, 150, 20);
-    [backBtn addTarget:self action:@selector(backButtonDid) forControlEvents:UIControlEventTouchUpInside];
-    [self.tableView addSubview:backBtn];
-}
-
-- (void)backButtonDid {
-    [self hideSettingView];
-}
 
 //点击背景隐藏侧滑栏
 - (IBAction)bgViewTap:(UITapGestureRecognizer *)sender {
@@ -134,16 +117,30 @@
 - (void)showSettingView
 {
     // 在消失动画前禁止主界面的操作防止动画没结束点击了界面事件,防止导航栏错乱问题
-    self.mainVC.navigationController.view.userInteractionEnabled = NO;
+    [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     self.view.frame = CGRectMake(0, 0, screenSize.width, screenSize.height);
+    
+    self.headView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - 70, HeadViewH);
+    self.tableView.frame = CGRectMake(-screenSize.width, HeadViewH, screenSize.width - 70, screenSize.height - HeadViewH);
+    
     [UIView animateWithDuration:0.3 animations:^{
         self.bgView.alpha = 0.5;
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 animations:^{
-            self.tableView.frame = CGRectMake(0, 0, screenSize.width - 70, screenSize.height);
+            CGRect tableRect = self.tableView.frame;
+            tableRect.origin.x = 0;
+            self.tableView.frame = tableRect;
+            [self.tableView reloadData];
+            
+            
+            CGRect headRect = self.headView.frame;
+            headRect.origin.x = 0;
+            headRect.size.width = tableRect.size.width;
+            headRect.size.height = HeadViewH;
+            self.headView.frame = headRect;
             // 在消失动画前禁止主界面的操作防止动画没结束点击了界面事件,防止导航栏错乱问题
-            self.mainVC.navigationController.view.userInteractionEnabled = YES;
+            [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = YES;
         }];
     }];
 }
@@ -152,10 +149,11 @@
 - (void)hideSettingView
 {
     // 在消失动画前禁止主界面的操作防止动画没结束点击了界面事件,防止导航栏错乱问题
-    self.mainVC.navigationController.view.userInteractionEnabled = NO;
+    [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = NO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
     [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - 70, screenSize.height);
+        self.tableView.frame = CGRectMake(-screenSize.width, HeadViewH, screenSize.width - 70, screenSize.height -HeadViewH);
+        self.headView.frame = CGRectMake(-screenSize.width, 0, screenSize.width - 70, HeadViewH);
     }completion:^(BOOL finished) {
         [UIView animateWithDuration:0.3 animations:^{
             self.bgView.alpha = 0;
@@ -163,10 +161,9 @@
             [UIView animateWithDuration:0.3 animations:^{
                 self.view.frame = CGRectMake(-screenSize.width, 0, screenSize.width, screenSize.height);
             }completion:^(BOOL finished) {
-                [self.view removeFromSuperview];
-                [self removeFromParentViewController];
+                [self removeHomeSettingVC];
                 // 在消失动画完成需恢复主界面的操作,防止导航栏不能点击的问题
-                self.mainVC.navigationController.view.userInteractionEnabled = YES;
+                [LiveModule module].moduleVC.navigationController.view.userInteractionEnabled = YES;
             }];
         }];
     }];
@@ -174,8 +171,10 @@
 
 - (void)removeHomeSettingVC {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault];
-    [self.view removeFromSuperview];
-    [self removeFromParentViewController];
+    self.bgView.alpha = 0;
+    if ([self.homeDelegate respondsToSelector:@selector(lsHomeSettingViewControllerDidRemoveVC:)]) {
+        [self.homeDelegate lsHomeSettingViewControllerDidRemoveVC:self];
+    }
 }
 
 #pragma mark - UnreadNumManagerDelegate
@@ -185,12 +184,12 @@
 
 #pragma mark - TableViewDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 5;
+    return 3;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     
-    if (section == 3) {
+    if (section == 1) {
         UIView * view = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 30)];
         view.backgroundColor = Color(224, 224, 224, 1);
         UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 200, 30)];
@@ -198,15 +197,23 @@
         titleLabel.textColor = Color(102, 102, 102, 1);
         [view addSubview:titleLabel];
         return view;
-        
+    }
+    else if (section == 0) {
+        UIView * lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,self.tableView.frame.size.width, 1)];
+        lineView.backgroundColor = COLOR_WITH_16BAND_RGB(0xC7D2E3);
+        return lineView;
     }
     return [[UIView alloc] init];
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 1;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
     
-    CGFloat height = 0;
-    if (section == 3) {
+    CGFloat height = 1;
+    if (section == 1) {
         height = 30;
     }
     return height;
@@ -216,26 +223,14 @@
     CGFloat height = [LSHomeSettingCell cellHeight];
     switch (indexPath.section) {
         case 0:{
-            if (indexPath.row) {
-                height = [LiveSettingLineCell cellHeight];
-            } else {
-                height = [LSHomeSettingCreditCell cellHeight];
-            }
-        }break;
-            
-        case 1:{
-            if (indexPath.row == self.iconArray.count) {
-                height = [LiveSettingLineCell cellHeight];
-            } else {
-                height = [LSHomeSettingCell cellHeight];
-            }
-        }break;
-            
-        case 2:{
             height = [LSHomeSettingCell cellHeight];
         }break;
             
-        case 4:{
+        case 1:{
+            height = [LSHomeSettingCell cellHeight];
+        }break;
+            
+        case 2:{
             height = [[LiveModule module].siteManager siteTableHeight];
         }break;
             
@@ -250,21 +245,12 @@
     NSInteger count = 1;
     switch (section) {
         case 0:{
-            count = 2;
+            count = self.titleArray.count;
         }break;
             
         case 1:{
-            count = self.titleArray.count + 1;
-        }break;
-            
-        case 2:{
             count = self.headArray.count;
         }break;
-            
-        case 4:{
-            count = 1;
-        }break;
-        
         default:{
         }break;
     }
@@ -275,52 +261,38 @@
     UITableViewCell *cell = [[UITableViewCell alloc] init];
     switch (indexPath.section) {
         case 0:{
-            if (indexPath.row) {
-                LiveSettingLineCell *setCell = [LiveSettingLineCell getUITableViewCell:tableView];
-                cell = setCell;
-            } else {
-                LSHomeSettingCreditCell *addCell = [LSHomeSettingCreditCell getUITableViewCell:tableView];
-                [addCell showMyCredits];
-                addCell.delegate = self;
-                cell = addCell;
+            LSHomeSettingCell *setCell = [LSHomeSettingCell  getUITableViewCell:tableView];
+            setCell.settingIcon.image = [UIImage imageNamed:[self.iconArray objectAtIndex:indexPath.row]];
+            setCell.contentLabel.text = [self.titleArray objectAtIndex:indexPath.row];
+            NSInteger type = indexPath.row;
+            if (type == LSUnreadType_Private_Chat) {
+                [setCell showChatListUnreadNum:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
+            }else {
+                [setCell showUnreadNum:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
             }
+
+            cell = setCell;
         }break;
-            
         case 1:{
-            NSInteger index = self.titleArray.count - 1;
-            if (indexPath.row > index) {
-                LiveSettingLineCell *setCell = [LiveSettingLineCell getUITableViewCell:tableView];
-                cell = setCell;
-            } else {
-                LSHomeSettingCell *setCell = [LSHomeSettingCell  getUITableViewCell:tableView];
-                setCell.settingIcon.image = [UIImage imageNamed:[self.iconArray objectAtIndex:indexPath.row]];
-                setCell.contentLabel.text = [self.titleArray objectAtIndex:indexPath.row];
-                NSInteger type = indexPath.row + indexPath.section;
-                [setCell showUnreadNum:[self.unreadManager getUnreadNum:(UnreadType)type]];
-                cell = setCell;
-            }
-        }break;
-            
-        case 2:{
             LSHomeSettingCell *myCell = [LSHomeSettingCell getUITableViewCell:tableView];
             myCell.settingIcon.image = [UIImage imageNamed:[self.imageArray objectAtIndex:indexPath.row]];
             myCell.contentLabel.text = [self.headArray objectAtIndex:indexPath.row];
-            NSInteger type = indexPath.row + indexPath.section + 1;
-            [myCell showUnreadPoint:[self.unreadManager getUnreadNum:(UnreadType)type]];
+            NSInteger type = indexPath.row + self.titleArray.count;
+            [myCell showUnreadPoint:[self.unreadManager getUnreadNum:(LSUnreadType)type]];
             cell = myCell;
         }break;
             
-        case 4:{
+        case 2:{
+            __weak typeof(self) weakSelf = self;
             static NSString *cellName = @"siteCell";
             cell = [tableView dequeueReusableCellWithIdentifier:cellName];
             if (!cell) {
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
                 [[LiveModule module].siteManager showTableInViewController:self view:cell handler:^{
-                    [self removeHomeSettingVC];
+                    [weakSelf removeHomeSettingVC];
                 }];
             }
         }break;
-        
         default:{
         }break;
     }
@@ -330,53 +302,53 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.selected = NO;
-    
+    [self removeHomeSettingVC];
     switch (indexPath.section) {
-        case 1:{
-            [self removeHomeSettingVC];
+        case 0:{
             switch (indexPath.row) {
-                case 0:{
-                    LiveWebViewController *vc = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
-                    vc.isIntimacy = NO;
-                    vc.isUserProtocol = YES;
-                    vc.url = [LSConfigManager manager].item.emfH5Url;
-                    vc.title = NSLocalizedString(@"MAIL", nil);
-                    vc.gaScreenName = NSLocalizedString(@"MAIL", nil);
-                    [self.mainVC.navigationController pushViewController:vc animated:YES];
+                case 0:
+                {
+                    QNChatAndInvitationViewController *vc = [[QNChatAndInvitationViewController alloc] initWithNibName:nil bundle:nil];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                    
                 case 1:{
-                    LiveWebViewController *vc = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
-                    vc.isIntimacy = NO;
-                    vc.isUserProtocol = YES;
-                    vc.url = [LSConfigManager manager].item.loiH5Url;
-                    vc.gaScreenName =  NSLocalizedString(@"GREETING", nil);
-                    vc.title =  NSLocalizedString(@"GREETING", nil);
-                    [self.mainVC.navigationController pushViewController:vc animated:YES];
+                    LSMailViewController *vc = [[LSMailViewController alloc] initWithNibName:nil bundle:nil];
+                    [self.navigationController pushViewController:vc animated:YES];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
                     
-                default:{
+                case 2:{
+                    LSGreetingsViewController *vc = [[LSGreetingsViewController alloc] initWithNibName:nil bundle:nil];
+                    [self.navigationController pushViewController:vc animated:YES];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
+                case 3:{
+                    [self removeHomeSettingVC];
+                    NSURL *url = [[LiveUrlHandler shareInstance] createUrlToHomePage:LiveUrlMainListUrlTypeHangout];
+                    [[LiveUrlHandler shareInstance] handleOpenURL:url];
+                }break;
+                    
+                default:
+                    break;
             }
         }break;
-            
-        case 2:{
-            [self removeHomeSettingVC];
+        case 1:{
             switch (indexPath.row) {
                 case 0:{
                     MyTicketPageViewController * vc = [[MyTicketPageViewController alloc] initWithNibName:nil bundle:nil];
-                    [self.mainVC.navigationController pushViewController:vc animated:YES];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
                     
                 case 1:{
                     LSMyReservationsViewController *vc = [[LSMyReservationsViewController alloc] initWithNibName:nil bundle:nil];
-                    [self.mainVC.navigationController pushViewController:vc animated:YES];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
-                    
-                default:{
+                case 2:{
                     MyBackpackViewController *vc = [[MyBackpackViewController alloc] initWithNibName:nil bundle:nil];
-                    [self.mainVC.navigationController pushViewController:vc animated:YES];
+                    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
                 }break;
+                default:
+                    break;
             }
         }break;
             
@@ -385,27 +357,37 @@
     }
 }
 
-#pragma mark - LSHomeSettingHaedViewDelegate
-- (void)didChangeSiteClick {
-    [self removeHomeSettingVC];
-    self.siteDialogVC = [[LiveModule module].siteManager showDialogInViewController:self.mainVC.navigationController];
+- (void)onGetChatlistUnreadCount:(int)count {
+    [self.tableView reloadData];
 }
 
-- (void)didOpenProfileClick {
+#pragma mark - LSHomeSettingHaedViewDelegate
+- (void)didChangeSiteClick {
+    self.siteDialogVC = [[LiveModule module].siteManager showDialogInViewController:[LiveModule module].moduleVC.navigationController handler:nil];
+}
+
+- (void)didOpenPersonalCenter {
     [self removeHomeSettingVC];
-    [self.mainVC.navigationController pushViewController:[LiveModule module].qnProfileVC animated:YES];
+    LSUserSettingViewController * vc = [[LSUserSettingViewController alloc]initWithNibName:nil bundle:nil];
+    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
 }
 
 - (void)didOpenLevelExplain {
     [self removeHomeSettingVC];
     MeLevelViewController *level = [[MeLevelViewController alloc] initWithNibName:nil bundle:nil];
-    [self.mainVC.navigationController pushViewController:level animated:YES];
+    [[LiveModule module].moduleVC.navigationController pushViewController:level animated:YES];
 }
 
-#pragma mark - LSHomeSettingCreditCellDelegate
 - (void)pushToCreditsVC {
     [self removeHomeSettingVC];
-    [self.mainVC.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)pushSettingInfoVC {
+    [self removeHomeSettingVC];
+    LSUserSetUpViewController * vc = [[LSUserSetUpViewController alloc]initWithNibName:nil bundle:nil];
+    [[LiveModule module].moduleVC.navigationController pushViewController:vc animated:YES];
 }
 
 @end

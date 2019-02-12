@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
 public class LSVideoPlayer implements ILSVideoRendererJni {
@@ -34,8 +35,8 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 	
 	/**
 	 * 绑定界面元素
-	 * @param surfaceView
-	 * @param fillMode
+	 * @param surfaceView 界面
+	 * @param fillMode 填充模式
 	 */
 	public void init(GLSurfaceView surfaceView, FillMode fillMode) {
 		// 创建预览渲染器
@@ -51,9 +52,31 @@ public class LSVideoPlayer implements ILSVideoRendererJni {
 	}
 	
 	/**
-	 * 
+	 * 反初始化
 	 */
 	public void uninit() {
+	}
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		if( playerRenderer != null ) {
+			playerRenderer.setCustomFilter(customFilter);
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		LSImageFilter filter = null;
+		if( playerRenderer != null ) {
+			filter = playerRenderer.getCustomFilter();
+		}
+		return filter;
 	}
 
 	@Override

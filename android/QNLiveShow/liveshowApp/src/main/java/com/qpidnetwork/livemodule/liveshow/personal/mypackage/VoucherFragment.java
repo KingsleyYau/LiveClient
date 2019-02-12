@@ -11,6 +11,7 @@ import com.qpidnetwork.livemodule.httprequest.OnGetVouchersListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.VoucherItem;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,10 +20,12 @@ import java.util.List;
  * Created by Hunter on 17/9/26.
  */
 
-public class VoucherFragment extends BaseListFragment{
+public class VoucherFragment extends BaseListFragment {
 
     private VoucherListAdapter mAdapter;
     private List<VoucherItem> mVoucherList;
+
+    private boolean isVisibleToUser;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -36,50 +39,60 @@ public class VoucherFragment extends BaseListFragment{
         //关闭上啦刷新
         closePullUpRefresh(true);
 
-        //刷新列表，显示菊花，解决setUserVisibleHint比onCreateView先执行，导致loading未加载完成无法显示
-        showLoadingProcess();
-        queryVoucherList();
+        //del by Jagger 2018-8-31 打开Activity时，这个列表也刷新了，导致未读会消失。
+//        //刷新列表，显示菊花，解决setUserVisibleHint比onCreateView先执行，导致loading未加载完成无法显示
+        // 2018/10/26 Hardy 避免显示第一个 Fragment 时，此 Fragment 作为第 2 个，也会请求接口，导致标签未读数消失。
+        if (isVisibleToUser) {
+            loadDataWithLoading();
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
+        android.util.Log.i("info", "VoucherFragment   setUserVisibleHint " + isVisibleToUser);
         super.setUserVisibleHint(isVisibleToUser);
+
+        this.isVisibleToUser = isVisibleToUser;
         //Fragment是否可见，用于viewpager切换时再加载
-        if(isVisibleToUser && isCreatedView()){
+        if (isVisibleToUser && isCreatedView()) {
             //切换到当前fragment
-            showLoadingProcess();
-            queryVoucherList();
+            loadDataWithLoading();
         }
+    }
+
+    private void loadDataWithLoading() {
+        showLoadingProcess();
+        queryVoucherList();
     }
 
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         hideLoadingProcess();
-        HttpRespObject response = (HttpRespObject)msg.obj;
-        if(getActivity() == null){
+        HttpRespObject response = (HttpRespObject) msg.obj;
+        if (getActivity() == null) {
             return;
         }
-        if(response.isSuccess){
+        if (response.isSuccess) {
             //列表刷新成功，更新未读
             ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();
 
             mVoucherList.clear();
-            VoucherItem[] voucherItems = (VoucherItem[])response.data;
-            if(voucherItems != null) {
+            VoucherItem[] voucherItems = (VoucherItem[]) response.data;
+            if (voucherItems != null) {
                 mVoucherList.addAll(Arrays.asList(voucherItems));
             }
             mAdapter.notifyDataSetChanged();
 
-            if(mVoucherList.size() <= 0 ){
+            if (mVoucherList.size() <= 0) {
                 showEmptyView();
-            }else{
+            } else {
                 hideNodataPage();
             }
-        }else{
-            if(mVoucherList != null && mVoucherList.size() > 0){
+        } else {
+            if (mVoucherList != null && mVoucherList.size() > 0) {
                 Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 showErrorPage();
             }
         }
@@ -89,8 +102,7 @@ public class VoucherFragment extends BaseListFragment{
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
-        showLoadingProcess();
-        queryVoucherList();
+        loadDataWithLoading();
     }
 
     @Override
@@ -102,7 +114,7 @@ public class VoucherFragment extends BaseListFragment{
     /**
      * 显示无数据页
      */
-    private void showEmptyView(){
+    private void showEmptyView() {
         setDefaultEmptyMessage(getResources().getString(R.string.my_package_voucher_empty_tips));
         setDefaultEmptyButtonText("");//无按钮，隐藏
         showNodataPage();
@@ -126,7 +138,7 @@ public class VoucherFragment extends BaseListFragment{
     /**
      * 刷新试聊券列表
      */
-    private void queryVoucherList(){
+    private void queryVoucherList() {
         LiveRequestOperator.getInstance().GetVouchersList(new OnGetVouchersListCallback() {
             @Override
             public void onGetVouchersList(boolean isSuccess, int errCode, String errMsg, VoucherItem[] voucherList, int totalCount) {

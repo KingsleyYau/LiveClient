@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.qpidnetwork.livemodule.view.ProfileItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/profile_item_view_height"
+    android:background="@drawable/touch_feedback_holo_light"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/textViewLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="left"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/live_size_16dp"
+        android:paddingRight="@dimen/live_size_16dp"
+        android:singleLine="true"
+        android:textColor="@color/text_color_dark"
+        android:textSize="@dimen/live_size_16sp"
+        tools:text="Credit Balance" />
+
+    <TextView
+        android:id="@+id/textViewRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:drawablePadding="@dimen/live_size_10dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/live_size_16dp"
+        android:paddingRight="@dimen/live_size_16dp"
+        android:textColor="@color/credits_text_color_orange"
+        android:textSize="@dimen/live_size_16sp"
+        android:textStyle="bold"
+        tools:text="805" />
+
+    <View
+        android:id="@+id/textViewLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/theme_default_activity_bg_grey" />
+
+</com.qpidnetwork.livemodule.view.ProfileItemView>

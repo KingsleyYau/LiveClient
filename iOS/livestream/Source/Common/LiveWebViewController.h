@@ -7,8 +7,9 @@
 //
 
 #import "LSGoogleAnalyticsViewController.h"
+#import "LSWKWebViewController.h"
 
-@interface LiveWebViewController : LSGoogleAnalyticsViewController
+@interface LiveWebViewController : LSWKWebViewController
 
 @property (nonatomic, copy) NSString *url;
 

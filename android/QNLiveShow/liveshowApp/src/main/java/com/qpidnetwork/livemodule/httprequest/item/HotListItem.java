@@ -1,6 +1,8 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
 
+import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+
 import java.util.List;
 
 /**
@@ -23,6 +25,7 @@ public class HotListItem {
 	 * @param roomPhotoUrl	直播间封面图url
 	 * @param roomType 		直播间类型
 	 * @param interests		爱好列表
+	 * @param priv 			权限
 	 */
 	public HotListItem(String userId,
 					String nickName,
@@ -32,7 +35,9 @@ public class HotListItem {
 					int roomType,
 					int[] interests,
 					int anchorType,
-					ProgramInfoItem showInfo){
+					ProgramInfoItem showInfo,
+					HttpAuthorityItem priv,
+					int chatOnlineStatus){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -60,6 +65,12 @@ public class HotListItem {
 			this.anchorType = AnchorLevelType.values()[anchorType];
 		}
 		this.showInfo = showInfo;
+		this.priv = priv;
+		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
+			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
+		} else {
+			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
+		}
 	}
 	
 	public String userId;
@@ -73,4 +84,6 @@ public class HotListItem {
 	public ProgramInfoItem showInfo;
 	public boolean isHasPublicVoucherFree;	//是否有公开试聊卷
 	public boolean isHasPrivateVoucherFree;	//是否有私密试聊卷
+	public HttpAuthorityItem priv;
+	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
 }

@@ -1,0 +1,65 @@
+
+/* Class = "UIButton"; normalTitle = "Full Screen"; ObjectID = "29r-vH-VVC"; */
+"29r-vH-VVC.normalTitle" = "Full Screen";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "3ke-0G-XbS"; */
+"3ke-0G-XbS.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "9aD-Oj-A6r"; */
+"9aD-Oj-A6r.text" = "Label";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "LRN-0m-Ifr"; */
+"LRN-0m-Ifr.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "send"; ObjectID = "TRy-Ik-E8D"; */
+"TRy-Ik-E8D.normalTitle" = "send";
+
+/* Class = "UILabel"; text = "You are replying to this mail bu Post Stamps(1 stamp).If you wish to use Qpid Credits instead,please tap here."; ObjectID = "WuC-aW-Hg6"; */
+"WuC-aW-Hg6.text" = "You are replying to this mail bu Post Stamps (1 stamp).If you wish to use Qpid Credits instead,please tap here.";
+
+/* Class = "UILabel"; text = "Quick Reply"; ObjectID = "bKd-xM-WHb"; */
+"bKd-xM-WHb.text" = "Quick Reply";
+
+/* Class = "UIButton"; normalTitle = "Reply"; ObjectID = "kGT-JD-Yb2"; */
+"kGT-JD-Yb2.normalTitle" = "Reply";
+
+/* Class = "UILabel"; text = "From : Randy"; ObjectID = "m9X-JG-h51"; */
+"m9X-JG-h51.text" = "From : Randy";
+
+/* Class = "UILabel"; text = "Mail ID:"; ObjectID = "mfk-cU-rBL"; */
+"mfk-cU-rBL.text" = "Mail ID:";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "swW-KR-ceb"; */
+"swW-KR-ceb.text" = "Label";
+
+"TITLE" = "Mail Viewer";
+
+"POST_STAMPS" = "Post Stamps (1 stamp)";
+
+"SEND_CREDITS" = "Credits (0.8 credits)";
+
+"TAP_HERE" = "tap here";
+
+"TYPE_YOUR_MSG" = "Type your message here...";
+
+"DEAR" = "Dear %@,\n";
+
+"MAIL_ID" = "Mail ID: %@";
+//没点提示
+"NO_CREDITS" = "You have insufficient credits to reply this letter.";
+
+//发信成功
+"SEND_MAIL_SUCCESSFULLY" = "Your mail has been sent successfully!";
+
+//发信时图片上传中
+"SEND_MAIL_UPLOADING" = "Please ensure that your photos are uploaded successfully before sending this mail.";
+
+//发信二次提示
+"SEND_MAIL_TIP" = "Do you wish to send this mail?";
+
+//回复框默认填写“Dear {主播昵称},” 若回复时判断文本框只有“Dear{主播昵称},” 则toast提示
+"NO_MAIL_TEXT" = "You haven't enter any message yet. Please enter your message before sending this mail.";
+
+//返回草稿箱提示
+"Back_Tip" = "If you choose save draft, draft will be reloaded next time when you write a mail to this member.";
+

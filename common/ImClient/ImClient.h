@@ -337,7 +337,7 @@ private:
      *  @param item        直播间信息）
      *
      */
-    void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item) override;
+    void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item, const IMAuthorityItem& priv) override;
     
     /**
      *  3.2.观众退出直播间回调
@@ -398,7 +398,7 @@ private:
      *  @param roomId            直播间ID
      *
      */
-    void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) override;
+    void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId, const IMInviteErrItem& item) override;
     
     /**
      *  7.2.观众取消立即私密邀请 回调
@@ -508,7 +508,7 @@ private:
      *  @param roomId      直播间ID
      *
      */
-    void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) override;
+    void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, const IMAuthorityItem& priv) override;
     
     /**
      *  3.4.接收观众进入直播间通知回调
@@ -556,7 +556,7 @@ private:
      *  @param errMsg      错误描述 
      *
      */
-    void OnRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, LCC_ERR_TYPE err, const string& errMsg) override;
+    void OnRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, LCC_ERR_TYPE err, const string& errMsg, const IMAuthorityItem& item) override;
     
     /**
      *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
@@ -567,7 +567,7 @@ private:
      *  @param credit      信用点
      *
      */
-    void OnRecvRoomKickoffNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, double credit) override;
+    void OnRecvRoomKickoffNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, double credit, const IMAuthorityItem& item) override;
     
     /**
      *  3.9.接收充值通知回调
@@ -617,7 +617,7 @@ private:
      *  @param item         直播间信息
      *
      */
-    void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item) override;
+    void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item, const IMAuthorityItem& priv) override;
     
     /**
      *  3.14.观众开始／结束视频互动接口 回调
@@ -639,7 +639,7 @@ private:
      *  @param item             立即私密邀请
      *
      */
-    void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item) override;
+    void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item, const IMAuthorityItem& privItem) override;
     
     /**
      *  4.2.接收直播间文本消息通知回调
@@ -697,16 +697,9 @@ private:
     /**
      *  7.3.接收立即私密邀请回复通知 回调
      *
-     *  @param inviteId      邀请ID
-     *  @param replyType     主播回复 （0:拒绝 1:同意）
-     *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
-     *  @param roomType      直播间类型
-     *  @param anchorId      主播ID
-     *  @param nickName      主播昵称
-     *  @param avatarImg     主播头像
-     *  @param msg           提示文字
+     *  @param replyItem      邀请ID
      */
-    void OnRecvInstantInviteReplyNotice(const string& inviteId, ReplyType replyType ,const string& roomId, RoomType roomType, const string& anchorId, const string& nickName, const string& avatarImg, const string& msg) override;
+    void OnRecvInstantInviteReplyNotice(const IMInviteReplyItem& replyItem) override;
     
     /**
      *  7.4.接收主播立即私密邀请通知 回调
@@ -876,6 +869,14 @@ private:
      *
      */
     void OnRecvAnchorCountDownEnterHangoutRoomNotice(const string& roomId, const string& anchorId, int leftSecond) override;
+    
+    /**
+     *  10.15.接收主播Hang-out邀请通知接口 回调
+     *
+     *  @param item         Hang-out邀请通知信息
+     *
+     */
+    void OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) override;
 
     // ------------- 节目 -------------
     /**

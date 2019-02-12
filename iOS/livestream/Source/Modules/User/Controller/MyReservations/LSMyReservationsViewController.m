@@ -90,6 +90,12 @@
     [self.pagingScrollView displayPagingViewAtIndex:self.curIndex animated:YES];
 }
 
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self hideNavgationBarBottomLine:NO];
+}
+
 - (void)getunreadCount
 {
     ManBookingUnreadUnhandleNumRequest * request = [[ManBookingUnreadUnhandleNumRequest alloc]init];

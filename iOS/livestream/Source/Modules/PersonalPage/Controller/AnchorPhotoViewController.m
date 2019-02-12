@@ -113,8 +113,9 @@
         [self showLoading];
         
         // 加载图片
+        __weak typeof(self) weakSelf = self;
         [imageViewLoader sdWebImageLoadView:photoView options:0 imageUrl:url placeholderImage:nil finishHandler:^(UIImage *image) {
-            [self hideAndResetLoading];
+            [weakSelf hideAndResetLoading];
         }];
         
 //        imageViewLoader.delegate = self;

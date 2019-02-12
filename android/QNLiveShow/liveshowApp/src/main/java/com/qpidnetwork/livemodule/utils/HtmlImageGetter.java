@@ -9,9 +9,10 @@ import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.regex.Pattern;
 

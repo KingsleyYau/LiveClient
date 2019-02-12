@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:房间主题管理类

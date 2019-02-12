@@ -12,7 +12,7 @@ import static net.qdating.filter.LSImageShader.ledChar;
 /**
  * YUV渲染滤镜
  */
-public class LSImageOutputYuvFilter extends LSImageFilter {
+public class LSImageOutputYuvFilter extends LSImageBufferFilter {
 	/**
 	 * vec2 v = vec2(10., 20.);
 	 * mat2 m = mat2(1., 2.,  3., 4.);

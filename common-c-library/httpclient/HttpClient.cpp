@@ -30,6 +30,15 @@
 #else
 #define DEVICE_TYPE DEVICE_ANDROID_TYPE
 #endif
+//
+#define QN_DEVICE_ANDROID_TYPE "device_type: 30"
+#define QN_DEVICE_IPHONE_TYPE  "device_type: 31"
+#ifdef IOS  /* IOS */
+#define QN_DEVICE_TYPE QN_DEVICE_IPHONE_TYPE
+#else
+#define QN_DEVICE_TYPE QN_DEVICE_ANDROID_TYPE
+#endif
+
 #define USER_AGENT	"Mozil1a/4.0 (compatible; MS1E 7.0; Windows NT 6.1; WOW64; )"
 
 // 增加头是否时主播
@@ -702,8 +711,9 @@ bool HttpClient::Request(const HttpEntiy* entiy) {
 		}
 		// add by Samson 2015-04-23, add "device_type" to http header
 		pList = curl_slist_append(pList, DEVICE_TYPE);
+        pList = curl_slist_append(pList, QN_DEVICE_TYPE);
 
-        if (entiy->mFileMap.empty()) {
+        if (entiy->mFileMap.empty() && !entiy->mIsGetMethod) {
             /* Contents */
             for( HttpMap::const_iterator itr = entiy->mContentMap.begin(); itr != entiy->mContentMap.end(); itr++ ) {
                 if (!postData.empty()) {

@@ -7,7 +7,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Build;
 
 
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -132,7 +132,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             
             byte[] buf = sb.toString().getBytes();
             
-            String fileName = FileCacheManager.getInstance().getCrashInfoPath();
+            String fileName = FileCacheManager.getInstance().GetCrashInfoPath();
             fileName += String.format("%d-%d-%d[%d-%d]", 
             		year, 
             		month, 
@@ -185,9 +185,9 @@ public class CrashHandler implements UncaughtExceptionHandler {
         
         sb.append("\n");
         
-        File dir = new File(FileCacheManager.getInstance().getCrashInfoPath() + "/version/");
+        File dir = new File(FileCacheManager.getInstance().GetCrashInfoPath() + "/version/");
         dir.mkdirs();
-    	File file = new File(FileCacheManager.getInstance().getCrashInfoPath() + "/version/" + versionCode);
+    	File file = new File(FileCacheManager.getInstance().GetCrashInfoPath() + "/version/" + versionCode);
     	if( !file.exists() ) {
     		try {   
     			file.createNewFile();

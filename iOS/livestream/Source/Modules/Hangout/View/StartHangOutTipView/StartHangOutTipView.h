@@ -24,7 +24,7 @@
 @property (weak, nonatomic) id<StartHangOutTipViewDelegate> delegate;
 
 // 首页显示
-- (void)showMainHangoutTip;
+- (void)showMainHangoutTip:(UIView *)view;
 // 直播间显示
 - (void)showLiveRoomHangoutTip;
 

@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
+#import "LSPrivateMessageManager.h"
+
 @interface LSChatViewController : LSGoogleAnalyticsViewController
+
+typedef void (^GetLocalMessage)();
+
++ (instancetype)initChatVCWithAnchorId:(NSString *)anchorId;
 
 @end

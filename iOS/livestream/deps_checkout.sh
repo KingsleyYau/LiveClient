@@ -52,7 +52,7 @@ else
 fi
 
 if [ "trunk" = "$livemessage_ver" ]; then
-  handle $livemessage_folder svn://192.168.8.177:8034/client/livemessage
+  handle $livemessage_folder svn://192.168.8.177:8034/client/livecommon/livemessage
 else
   handle $livemessage_folder svn://192.168.8.177:8034/client/tag/livecommon/livemessage/livemessage_v$livemessage_ver/livemessage
 fi

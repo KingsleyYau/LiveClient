@@ -9,13 +9,13 @@
 #import "PushBookingViewController.h"
 #import "LiveMutexService.h"
 #import "LiveModule.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LSImageViewLoader.h"
 #import "LSTimer.h"
 #import "LiveGobalManager.h"
 
 @interface PushBookingViewController ()<UIAlertViewDelegate>
-@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
 @property (nonatomic, strong) LSImageViewLoader *imageViewLoader;
 @property (strong) LSTimer *removeTimer;
 @end
@@ -30,7 +30,7 @@
     self.view.layer.cornerRadius = 5;
     self.view.layer.masksToBounds = NO;
     
-    self.userInfoManager = [UserInfoManager manager];
+    self.userInfoManager = [LSUserInfoManager manager];
     self.imageViewLoader = [LSImageViewLoader loader];
     
     self.removeTimer = [[LSTimer alloc] init];

@@ -11,9 +11,10 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionManager;
+import com.qpidnetwork.qnbridgemodule.util.FileProviderUtil;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.File;
 
@@ -96,20 +97,21 @@ public class OpenFileWebChromeClient  extends WebChromeClient {
                 Log.d(TAG,"takeAPicture-acceptType:"+acceptType+" isCamera:"+isCamera);
                 if(isCamera){
                     //调用系统摄像头拍照
-                    intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        //添加这一句表示对目标应用临时授权该Uri所代表的文件
-                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                        File file = new File(FileCacheManager.getInstance().GetTempCameraImageUrl());
+
+                        //
+                        FileProviderUtil.setIntentData(mContext, intent, file , true);
+
+                        mContext.startActivityForResult(intent, REQUEST_CAPTURE_PHOTO);
                     }
-                    intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-                            Uri.fromFile(new File(FileCacheManager.getInstance().getTempCameraImageUrl())));
-                    mContext.startActivityForResult(intent, REQUEST_CAPTURE_PHOTO);
                 }else{
                     //默认打开文件管理器
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                    intent.setType(!TextUtils.isEmpty(acceptType) ? acceptType : "image/*");
-                    mContext.startActivityForResult(Intent.createChooser(intent, "File Chooser"), REQUEST_FILE_PICKER);
+                    FileProviderUtil.setIntentData4SystemAlbum(intent, acceptType);
+//                    mContext.startActivityForResult(Intent.createChooser(intent, "File Chooser"), REQUEST_FILE_PICKER);
+                    // 2018/11/27 Hardy 去除多个 app 系统选择弹窗
+                    mContext.startActivityForResult(intent, REQUEST_FILE_PICKER);
                 }
             }
             @Override

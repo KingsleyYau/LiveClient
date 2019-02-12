@@ -1,17 +1,20 @@
 package com.qpidnetwork.livemodule.im;
 
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.InviteReplyType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
+import com.qpidnetwork.livemodule.im.listener.IMInviteErrItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
+import com.qpidnetwork.livemodule.im.listener.IMInviteReplyItem;
 import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMProgramInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -326,11 +329,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg) {
+	public void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg, IMAuthorityItem privItem) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomCloseNotice(roomId, errType, errMsg);
+				listener.OnRecvRoomCloseNotice(roomId, errType, errMsg, privItem);
 			}
 		}
 	}
@@ -367,22 +370,22 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg) {
+	public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, err, errMsg);
+				listener.OnRecvLeavingPublicRoomNotice(roomId, leftSeconds, err, errMsg, privItem);
 			}
 		}
 	}
 
 	@Override
 	public void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err,
-										String errMsg, double credit) {
+										String errMsg, double credit, IMAuthorityItem privItem) {
 		synchronized(mIMLiveRoomListeners){
 			for (Iterator<IMLiveRoomEventListener> iter = mIMLiveRoomListeners.iterator(); iter.hasNext(); ) {
 				IMLiveRoomEventListener listener = iter.next();
-				listener.OnRecvRoomKickoffNotice(roomId, err, errMsg, credit);
+				listener.OnRecvRoomKickoffNotice(roomId, err, errMsg, credit, privItem);
 			}
 		}
 	}
@@ -512,7 +515,7 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 
 	@Override
 	public void OnRoomIn(int reqId, boolean success, LCC_ERR_TYPE errType,
-			String errMsg, IMRoomInItem roomInfo) {
+			String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem) {
 
 		//统一豪华私密直播间和普通私密直播间
 		if(roomInfo != null){
@@ -524,7 +527,7 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnRoomIn(reqId, success, errType, errMsg, roomInfo);
+				listener.OnRoomIn(reqId, success, errType, errMsg, roomInfo, authorityItem);
 			}
 		}		
 	}
@@ -550,21 +553,22 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem) {
+	public void OnGetInviteInfo(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem, IMAuthorityItem priv) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnGetInviteInfo(reqId, success, errType, errMsg, inviteItem);
+				listener.OnGetInviteInfo(reqId, success, errType, errMsg, inviteItem, priv);
 			}
 		}
 	}
 
+
 	@Override
-	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
+	public void OnSendImmediatePrivateInvite(int reqId, boolean success, LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId, IMInviteErrItem errItem) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, invitationId, timeout, roomId);
+				listener.OnSendImmediatePrivateInvite(reqId, success, errType, errMsg, invitationId, timeout, roomId, errItem);
 			}
 		}		
 	}
@@ -581,12 +585,11 @@ public class IMEventListenerManager implements IMInviteLaunchEventListener, IMLi
 	}
 
 	@Override
-	public void OnRecvInviteReply(String inviteId, InviteReplyType replyType, String roomId, LiveRoomType roomType, String anchorId,
-								  String nickName, String avatarImg, String message) {
+	public void OnRecvInviteReply(IMInviteReplyItem replyItem) {
 		synchronized(mIMInviteLaunchListeners){
 			for (Iterator<IMInviteLaunchEventListener> iter = mIMInviteLaunchListeners.iterator(); iter.hasNext(); ) {
 				IMInviteLaunchEventListener listener = iter.next();
-				listener.OnRecvInviteReply(inviteId, replyType, roomId, roomType, anchorId, nickName, avatarImg, message);
+				listener.OnRecvInviteReply(replyItem);
 			}
 		}
 	}

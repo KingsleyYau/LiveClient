@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="livechat_text_notsupported_error"> The recipient\'s device does not support text messages.</string>
+    <string name="livechat_emotion_notsupported_error">The recipient\'s device does not support animating stickers.</string>
+    <string name="livechat_voice_notsupported_error">The recipient\'s device does not support voice messages.</string>
+    <string name="livechat_photo_notsupported_error">The recipient\'s device does not support photo exchanges.</string>
+    <string name="livechat_magicIcon_notsupported_error">The recipient\'s device does not support premium stickers.</string>
+
+    <string name="end_chat_normal_connect_fail_tips">Trouble connecting to the server, please try again later.</string>
+    <string name="livechat_msg_no_credit_warning">You don\'t have sufficient credits to continue the action,please </string>
+    <string name="livechat_msg_no_credit_warning_link">Add more credits.</string>
+    <string name="livechat_msg_trychat_start_end">Your free chat is ended. Live chat billed at 0.5 credit per 5 mins.</string>
+
+    <!--camshare-->
+    <string name="camshare_floating_invite_tips">Inviting %1$s to CamShare&#8230;</string>
+    <string name="camshare_floating_video_tips">CamShare with %1$s is ongoing&#8230;</string>
+    <string name="camshare_notify_invite_normalerror">Oops! Invition failed, tap to see more details.</string>
+    <string name="camshare_notify_nomoney_error">Oops, you are out of credits, please add more credits.</string>
+    <string name="camshare_notify_service_exception">Oops, something went wrong, tap to see more details.</string>
+    <string name="camshare_notify_inlivechat_error">Can not open Live Chat and CamShare at the same time.</string>
+    <string name="camshare_floating_video_over_time_tips">CamShare has closed due to no activity for a certain period.</string>
+    <string name="camshare_switch_to_livechat_tips">Camshare is going. Do you want to switch to LiveChat?</string>
+
+    <string name="common_risk_control_notify">Sorry, we can not process your request right now, please try later.</string>
+    <string name="type_message_here">Type message here</string>
+    <string name="livechat_price_info">Live chat billed at 0.5 credit per 5mins. Billing begins after your first message is sent.</string>
+    <string name="livechat_seesion_pause_tips">Your chat (and billing) with %1$s has been paused because you have not interacted for some time. Please send a message to resume chat.</string>
+    <string name="trychat_tips">send your first message to start free chat now.</string>
+    <string name="livechat_lady_illeage_message">Your message may contain prohibited information which has violated our Terms of Use. Your message will not be delivered.</string>
+    <string name="send_error_text_normal">Your message was not sent.</string>
+    <string name="common_btn_retry">Retry</string>
+    <string name="send_error_lady_offline">Oops! The member has gone offline.</string>
+    <string name="common_send_email">Send mail</string>
+    <string name="livechat_end_chat">End chat</string>
+    <string name="send_error_not_enough_money">Insufficient credits.</string>
+    <string name="livechat_end_chat_menu">End chat</string>
+    <string name="livechat_cancel_invitation_menu">Cancel invitation</string>
+    <string name="livechat_cancel_invite_cannnot_in_chat">You can\'t cancel the invitation when you are in chat.</string>
+    <string name="livechat_cancel_invite_cannnot_in_1minute">You can\'t cancel the invitation within 2 min.</string>
+    <string name="livechat_can_not_send_voice_message_before_the_conversation_has_started">Can not send voice messages before the conversation is started.</string>
+    <string name="livechat_record_voice_too_short">message is too short!</string>
+    <string name="livechat_can_not_send_premium_sticker_before_the_conversation_has_started">Can not send premium stickers before the conversation is started.</string>
+    <string name="livechat_kickoff_by_sever_update">You have been disconnected due to the server is now under maintenance.</string>
+    <string name="login">Login</string>
+
+
+    <string name="livechat_emotion_preview_price">%s credits</string>
+    <string name="live_chat_microphone_occupied">Your microphone has been occupied. Please try again later.</string>
+
+    <string-array name="livechat_msg_in_type">
+        <item name="received_system_message">You have a system messge</item>
+        <item name="send_a_photo">You sent a photo</item>
+        <item name="send_a_premium_sticker">You sent a premium sticker</item>
+        <item name="send_a_voice_message">You sent a voice message</item>
+        <item name="receive_a_photo">%s sent a photo</item>
+        <item name="receive_a_premium_sticker">%s sent a premium sticker</item>
+        <item name="receive_a_voice_message">%s sent a voice message</item>
+        <item name="send_a_video">You sent a video</item>
+        <item name="receive_a_video">%s sent a video</item>
+        <item name="send_a_magicicon">You sent a premium sticker</item>
+        <item name="receive_a_magicicon">%s sent a premium sticker</item>
+    </string-array>
+
+    <!-- popemotions -->
+    <item name="unblockpopupwindow_view" type="id"/>
+
+    <!--color-->
+    <color name="tiny_grey_solid">#F2F2F2</color>
+    <color name="Gray">#CECECE</color>
+
+</resources>

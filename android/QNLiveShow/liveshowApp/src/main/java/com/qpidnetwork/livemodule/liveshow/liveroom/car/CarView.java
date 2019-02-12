@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:

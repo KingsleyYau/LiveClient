@@ -195,27 +195,27 @@ public class LocalPreferenceManager {
         save(LocalPreferenceConstant.KEY_SYSTEM_STATUS_BAR_HEIGHT, statusBarHeight);
     }
 
-    /**
-     * 保存用户登录账户信息
-     */
-    public void saveLoginAccountInfoItem(LoginParam loginParam){
-        try {
-            save(LocalPreferenceConstant.KEY_LOGIN_ACCOUNT_INFO, loginParam);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     * @return
-     */
-    public LoginParam getLoginAccountInfoItem(){
-        Object object = getObject(LocalPreferenceConstant.KEY_LOGIN_ACCOUNT_INFO);
-        if(object != null && (object instanceof LoginParam)){
-            return (LoginParam)object;
-        }
-        return null;
-    }
+//    /**
+//     * 保存用户登录账户信息
+//     */
+//    public void saveLoginAccountInfoItem(LoginParam loginParam){
+//        try {
+//            save(LocalPreferenceConstant.KEY_LOGIN_ACCOUNT_INFO, loginParam);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    /**
+//     *
+//     * @return
+//     */
+//    public LoginParam getLoginAccountInfoItem(){
+//        Object object = getObject(LocalPreferenceConstant.KEY_LOGIN_ACCOUNT_INFO);
+//        if(object != null && (object instanceof LoginParam)){
+//            return (LoginParam)object;
+//        }
+//        return null;
+//    }
 
 }

@@ -16,7 +16,7 @@
 
 #import "LSTimer.h"
 #import "NSDate+ToString.h"
-
+#import "NSString+UrlCode.h"
 #import "NSString+Check.h"
 
 #import "LSDevice.h"

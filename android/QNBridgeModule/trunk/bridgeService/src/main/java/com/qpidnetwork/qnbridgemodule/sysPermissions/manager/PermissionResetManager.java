@@ -41,7 +41,9 @@ public class PermissionResetManager {
     public static boolean isPermissionReset(Context context, Bundle savedInstanceState){
         boolean isReset = false;
         if (null != savedInstanceState && (System.currentTimeMillis() - gAppStartTime < TIME_DIFFERENCE)) {
-            context.sendBroadcast(new Intent(CommonConstant.ACTION_NOTIFICATION_APP_PERMISSION_RESET));
+            Intent intent = new Intent(CommonConstant.ACTION_NOTIFICATION_APP_PERMISSION_RESET);
+            intent.setPackage(context.getPackageName());
+            context.sendBroadcast(intent);
         }
         return isReset;
     }

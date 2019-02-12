@@ -16,6 +16,9 @@
 #define IM_ROOMIN_ITEM_CLASS 					"com/qpidnetwork/livemodule/im/listener/IMRoomInItem"
 #define IM_REBATE_ITEM_CLASS 					"com/qpidnetwork/livemodule/im/listener/IMRebateItem"
 #define IM_BOOKINGREPLY_ITEM_CLASS              "com/qpidnetwork/livemodule/im/listener/IMBookingReplyItem"
+#define IM_AUTHORITY_ITEM_CLASS                 "com/qpidnetwork/livemodule/im/listener/IMAuthorityItem"
+#define IM_INVITE_REPLY_ITEM_CLASS              "com/qpidnetwork/livemodule/im/listener/IMInviteReplyItem"
+#define IM_INVITE_ERR_ITEM_CLASS                "com/qpidnetwork/livemodule/im/listener/IMInviteErrItem"
 
 #define IM_PACKAGE_UPDATE_ITEM_CLASS 			"com/qpidnetwork/livemodule/im/listener/IMPackageUpdateItem"
 #define IM_PACKAGE_UPDATE_GIFT_ITEM_CLASS 		"com/qpidnetwork/livemodule/im/listener/IMUpdateGiftItem"

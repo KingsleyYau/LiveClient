@@ -9,8 +9,10 @@ import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageFilter;
 import net.qdating.publisher.ILSAudioRecorderCallback;
 import net.qdating.publisher.ILSPublisherCallback;
 import net.qdating.publisher.ILSPublisherStatusCallback;
@@ -48,7 +50,7 @@ public class LSPublisher {
 	/**
 	 * 状态回调接口
 	 */
-	private ILSPublisherStatusCallback statusCallback;
+	protected ILSPublisherStatusCallback statusCallback;
 	/**
 	 * 主线程消息处理
 	 */
@@ -79,6 +81,9 @@ public class LSPublisher {
     private boolean useHardEncoder = false;
 
 	// 消息定义
+	/*
+	* 重连消息
+	* */
 	private final int MSG_CONNECT = 0;
 
 	/**
@@ -136,6 +141,7 @@ public class LSPublisher {
 			Log.initFileLog(filePath);
 			Log.setWriteFileLog(true);
 			LSPublisherJni.SetLogDir(filePath);
+			LSPublisherJni.SetJniLogLevel(LSConfig.LOG_LEVEL);
 		}
 
 		Log.i(LSConfig.TAG,
@@ -222,11 +228,26 @@ public class LSPublisher {
                 }
 
                 @Override
-                public void onVideoCapture(byte[] data, int size, int width, int height) {
+                public void onVideoCapture(final byte[] data, int size, final int width, final int height) {
+//					Log.d(LSConfig.TAG, String.format("LSPublisher::onVideoCapture( this : 0x%x, index : %d, width : %d, height : %d )", lsPublisher.hashCode(), index, width, height));
                     if( isRuning ) {
                         publisher.PushVideoFrame(data, size, width, height);
                     }
                 }
+
+				@Override
+				public void onVideoCaptureError(int error) {
+					Log.e(LSConfig.TAG, String.format("LSPublisher::onVideoCaptureError( this : 0x%x, error : %d )", lsPublisher.hashCode(), error));
+
+					// 暂停视频推送
+					publisher.PausePushVideo();
+
+					// 通知外部监听
+					if( statusCallback != null ) {
+						statusCallback.onVideoCaptureError(lsPublisher, error);
+					}
+				}
+
             }, rotation, fillMode, useHardEncoder, publishConfig);
 		}
 		
@@ -261,7 +282,7 @@ public class LSPublisher {
 											isRuning?"true":"false"
 									)
 							);
-							synchronized (this) {
+							synchronized (msg.obj) {
 								if( isRuning ) {
 									// 非手动停止, 准备重连
 									publisher.Stop();
@@ -317,8 +338,25 @@ public class LSPublisher {
 		// 销毁音频录制
 		audioRecorder.uninit();
 	}
-	
+
+    /**
+     * 设置自定义滤镜
+     * @param customFilter 自定义滤镜
+     */
+    public void setCustomFilter(LSImageFilter customFilter) {
+        videoCapture.setCustomFilter(customFilter);
+    }
+
 	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		LSImageFilter filter = videoCapture.getCustomFilter();
+		return filter;
+	}
+
+	/***
 	 * 开始流推送
 	 * @param url					流推送地址
 	 * @param recordH264FilePath	H264录制绝对路径
@@ -337,18 +375,20 @@ public class LSPublisher {
 	    	    this.url = url;
 	    	    this.recordH264FilePath = recordH264FilePath;
 	    	    this.recordAACFilePath = recordAACFilePath;
-	    	    
+
 	    		// 开始[视频采集/音频录制]
 	    	    bFlag = videoCapture.start() && audioRecorder.start();
 	    	    if( bFlag ) {
-		    	    // 开始消息队列
+					final LSPublisher lsPublisher = this;
+
+		    	    // 开始重连消息队列
 		    		handler.post(new Runnable() {
 		    			@Override
 		    			public void run() {
 		    				// TODO Auto-generated method stub
 							Message msg = Message.obtain();
 							msg.what = MSG_CONNECT;
-							msg.obj = this;
+							msg.obj = lsPublisher;
 							handler.sendMessage(msg);
 		    			}
 		    		});
@@ -367,7 +407,7 @@ public class LSPublisher {
 		return bFlag;
 	}
 
-	/**
+	/***
 	 * 停止推送
 	 */
 	public void stop() {
@@ -379,7 +419,7 @@ public class LSPublisher {
 		
 		// 取消事件
 		handler.removeMessages(MSG_CONNECT);
-		
+
 		// 停止视频采集
 		if( videoCapture != null ) {
 			videoCapture.stop();
@@ -397,7 +437,7 @@ public class LSPublisher {
 		Log.i(LSConfig.TAG, String.format("LSPublisher::stop( this : 0x%x, [Success] )", hashCode()));
 	}
 
-	/**
+	/***
 	 * 当前是否静音
 	 * @return true:静音/false:不静音
 	 */
@@ -405,7 +445,7 @@ public class LSPublisher {
 		return isMute;
 	}
 	
-	/**
+	/***
 	 * 设置是否静音
 	 * @param isMute 是否静音
 	 */
@@ -414,7 +454,7 @@ public class LSPublisher {
 		this.isMute = isMute;
 	}
 	
-	/**
+	/***
 	 * 切换前后摄像头
 	 * @return true:成功/false:失败
 	 */
@@ -441,7 +481,7 @@ public class LSPublisher {
 		return bFlag;
 	}
 
-	/**
+	/***
 	 * 停止预览
 	 */
 	public void stopPreview() {

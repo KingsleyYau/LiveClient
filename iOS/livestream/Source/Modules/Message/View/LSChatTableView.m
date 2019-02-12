@@ -7,15 +7,20 @@
 //
 
 #import "LSChatTableView.h"
+#import "LSDateTool.h"
+#import "LSChatEmotionManager.h"
 
 @implementation LSChatTableView
 
-
-- (id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style{
-    self = [super initWithFrame:frame style:style];
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Initialization code
         [self initialize];
+        [self registerClass:[LSChatSystemTipsTableViewCell class] forCellReuseIdentifier:[LSChatSystemTipsTableViewCell cellIdentifier]];
+        [self registerClass:[LSChatAddCreditsTableViewCell class] forCellReuseIdentifier:[LSChatAddCreditsTableViewCell cellIdentifier]];
+        [self registerClass:[LSChatTimeTableViewCell class] forCellReuseIdentifier:[LSChatTimeTableViewCell cellIdentifier]];
+        [self registerClass:[LSChatSelfMessageCell class] forCellReuseIdentifier:[LSChatSelfMessageCell cellIdentifier]];
+        [self registerClass:[LSChatLadyMessageCell class] forCellReuseIdentifier:[LSChatLadyMessageCell cellIdentifier]];
     }
     return self;
 }
@@ -27,7 +32,6 @@
 
 - (void)awakeFromNib {
     [super awakeFromNib];
-    [self initialize];
 }
 
 #pragma mark - 列表界面回调 (UITableViewDataSource / UITableViewDelegate)
@@ -42,35 +46,31 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat height = 0;
     LSMessage* item = [self.msgArray objectAtIndex:indexPath.row];
-    switch (item.type) {
-        case MessageTypeText:
-        {
-            if (item.sender == MessageSenderSelf) {
-                CGSize viewSize = CGSizeMake(self.frame.size.width, [LSChatTextSelfTableViewCell cellHeight:self.frame.size.width detailString:item.attText]);
-                height = viewSize.height;
+    switch (item.msgType) {
+        case LMMT_Text: {
+            NSMutableAttributedString *attributeStr = [[LSChatEmotionManager emotionManager] parseMessageAttributedTextEmotion:[[NSMutableAttributedString alloc] initWithAttributedString:item.attText] font:[UIFont boldSystemFontOfSize:15]];
+            if (item.sendType == LMSendType_Send) {
+                height = [LSChatSelfMessageCell cellHeight:self.frame.size.width detailString:attributeStr];
+            } else {
+                height = [LSChatLadyMessageCell cellHeight:self.frame.size.width detailString:attributeStr];
             }
-            else
-            {
-                CGSize viewSize = CGSizeMake(self.frame.size.width, [LSChatTextLadyTableViewCell cellHeight:self.frame.size.width detailString:item.attText]);
-                height = viewSize.height;
-            }
-        }
-            break;
-        case MessageTypeSystemTips:
-        {
-            CGSize viewSize = CGSizeMake(self.frame.size.width, [LSChatSystemTipsTableViewCell cellHeight:self.frame.size.width detailString:item.attText]);
-            height = viewSize.height;
-        }
-            break;
-        case MessageTypeWarningTips:
-        {
+        }break;
+            
+        case LMMT_SystemWarn: {
+            height = [LSChatSystemTipsTableViewCell cellHeight:self.frame.size.width detailString:item.attText];
+        }break;
+            
+        case LMMT_Warning: {
             height = [LSChatAddCreditsTableViewCell cellHeight];
-        }
-        default:
-        {
+        } break;
+            
+        case LMMT_Time: {
+            height = [LSChatTimeTableViewCell cellHeight];
+        }break;
+            
+        default: {
             height = 50;
-        }
-            break;
+        }break;
     }
     return height;
 }
@@ -78,71 +78,78 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *result = nil;
     LSMessage* item = [self.msgArray objectAtIndex:indexPath.row];
-    switch (item.type) {
-        case MessageTypeText:
-        {
-            if (item.sender == MessageSenderSelf) {
-                LSChatTextSelfTableViewCell* cell = [LSChatTextSelfTableViewCell getUITableViewCell:tableView];
+    switch (item.msgType) {
+        case LMMT_Text: {
+            // 文本转换
+            NSMutableAttributedString *attributeStr = [[LSChatEmotionManager emotionManager] parseMessageAttributedTextEmotion:[[NSMutableAttributedString alloc] initWithAttributedString:item.attText] font:[UIFont boldSystemFontOfSize:15]];
+            
+            if (item.sendType == LMSendType_Send) {
+                LSChatSelfMessageCell *cell = [LSChatSelfMessageCell getUITableViewCell:tableView];
+                [cell updataChatMessage:self.frame.size.width detailString:attributeStr];
+                
                 result = cell;
                 // 用于点击重发按钮
                 result.tag = indexPath.row;
                 cell.delegate = self;
-                cell.detailLabel.attributedText = item.attText;
-                //cell.detailLabel.text = item.text;
-                switch (item.status) {
-                    case MessageStatusProcessing: {
+                switch (item.statusType) {
+                    case LMStatusType_Processing: {
                         // 发送中
                         cell.activityIndicatorView.hidden = NO;
                         [cell.activityIndicatorView startAnimating];
                         cell.retryButton.hidden = YES;
                     }break;
-                    case MessageStatusFinish: {
+                    case LMStatusType_Finish: {
                         // 发送成功
                         cell.activityIndicatorView.hidden = YES;
                         cell.retryButton.hidden = YES;
                     }break;
-                    case MessageStatusFail:{
+                    case LMStatusType_Fail:{
                         // 发送失败
                         cell.activityIndicatorView.hidden = YES;
                         cell.retryButton.hidden = NO;
-                        cell.delegate = self;
+                        cell.retryButton.tag = item.sendErr;
                     }break;
                     default: {
                         // 未知
                         cell.activityIndicatorView.hidden = YES;
                         cell.retryButton.hidden = YES;
-                        cell.delegate = self;
                     }break;
                 }
-            }
-            else
-            {
-                LSChatTextLadyTableViewCell* cell = [LSChatTextLadyTableViewCell getUITableViewCell:tableView];
+            } else {
+                LSChatLadyMessageCell *cell = [LSChatLadyMessageCell getUITableViewCell:tableView];
+                [cell updataChatMessage:self.frame.size.width detailString:attributeStr];
                 result = cell;
+            }
+        }break;
+            
+        case LMMT_SystemWarn: {
+            LSChatSystemTipsTableViewCell *cell = [LSChatSystemTipsTableViewCell getUITableViewCell:tableView];
+            if (item.attText.length > 0) {
                 cell.detailLabel.attributedText = item.attText;
             }
-        }
-            break;
-        case MessageTypeSystemTips:
-        {
-            LSChatSystemTipsTableViewCell * cell = [LSChatSystemTipsTableViewCell getUITableViewCell:tableView];
             result = cell;
+        }break;
             
-        }
-            break;
-        case MessageTypeWarningTips:
-        {
-            LSChatAddCreditsTableViewCell * cell = [LSChatAddCreditsTableViewCell getUITableViewCell:tableView];
+        case LMMT_Warning: {
+            LSChatAddCreditsTableViewCell *cell = [LSChatAddCreditsTableViewCell getUITableViewCell:tableView];
+            cell.delegate = self;
             result = cell;
-        }
-            break;
-        default:
-        {
-            LSChatTextSelfTableViewCell* cell = [LSChatTextSelfTableViewCell getUITableViewCell:tableView];
+        }break;
+            
+        case LMMT_Time: {
+            LSChatTimeTableViewCell *cell = [LSChatTimeTableViewCell getUITableViewCell:tableView];
+            if (item.timeMsgItem.msgTime > 0) {
+                NSDate *date = [NSDate dateWithTimeIntervalSince1970:item.timeMsgItem.msgTime];
+                LSDateTool *tool =  [[LSDateTool alloc] init];
+                cell.timeLabel.text = [tool showChatListTimeTextOfDate:date];
+            }
             result = cell;
-            cell.detailLabel.attributedText = item.attText;
-        }
-            break;
+        }break;
+            
+        default: {
+            LSChatSelfMessageCell *cell = [LSChatSelfMessageCell getUITableViewCell:tableView];
+            result = cell;
+        }break;
     }
     return result;
 }
@@ -159,9 +166,17 @@
 }
 
 #pragma mark - 点击消息提示按钮
-- (void)chatTextSelfRetryButtonClick:(LSChatTextSelfTableViewCell *)cell {
-    NSIndexPath * path = [self indexPathForCell:cell];
-    [self handleErrorMsg:path.row];
+- (void)chatTextSelfRetryButtonClick:(LSChatSelfMessageCell *)cell sendErr:(NSInteger)sendErr{
+    if ([self.tableViewDelegate respondsToSelector:@selector(chatTextSelfRetryMessage:sendErr:)]) {
+        [self.tableViewDelegate chatTextSelfRetryMessage:cell sendErr:sendErr];
+    }
+}
+
+#pragma mark - LSChatAddCreditsTableViewCellDelegate
+- (void)pushToAddCredites {
+    if ([self.tableViewDelegate respondsToSelector:@selector(pushToAddCreditVC)]) {
+        [self.tableViewDelegate pushToAddCreditVC];
+    }
 }
 
 - (void)handleErrorMsg:(NSInteger)index {

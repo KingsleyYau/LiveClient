@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LSMailDetailFreePhotoCell" id="KGk-i7-Jjw" customClass="LSMailDetailFreePhotoCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="146"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="145.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFg-no-txJ">
+                        <rect key="frame" x="10" y="15" width="85" height="20"/>
+                        <attributedString key="attributedText">
+                            <fragment content=" Photo">
+                                <attributes>
+                                    <color key="NSColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                                    <font key="NSFont" metaFont="system" size="16"/>
+                                </attributes>
+                            </fragment>
+                            <fragment content=" ">
+                                <attributes>
+                                    <font key="NSFont" metaFont="system" size="16"/>
+                                </attributes>
+                            </fragment>
+                            <fragment content="(">
+                                <attributes>
+                                    <color key="NSColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <font key="NSFont" size="12" name=".PingFangSC-Regular"/>
+                                </attributes>
+                            </fragment>
+                            <fragment content="Free">
+                                <attributes>
+                                    <color key="NSColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <font key="NSFont" size="12" name=".AppleSystemUIFont"/>
+                                </attributes>
+                            </fragment>
+                            <fragment content=")">
+                                <attributes>
+                                    <color key="NSColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    <font key="NSFont" size="12" name=".PingFangSC-Regular"/>
+                                </attributes>
+                            </fragment>
+                        </attributedString>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yUT-Oq-aVF">
+                        <rect key="frame" x="10" y="45" width="100" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="100" id="Syf-Oo-fSq"/>
+                            <constraint firstAttribute="width" secondItem="yUT-Oq-aVF" secondAttribute="height" multiplier="1:1" id="mkf-k0-73k"/>
+                        </constraints>
+                    </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PnY-8m-ao7">
+                        <rect key="frame" x="10" y="45" width="100" height="100"/>
+                        <connections>
+                            <action selector="clickImageAction:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="ouz-gO-DDu"/>
+                        </connections>
+                    </button>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                <constraints>
+                    <constraint firstItem="nFg-no-txJ" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="2Yf-dc-obD"/>
+                    <constraint firstItem="PnY-8m-ao7" firstAttribute="trailing" secondItem="yUT-Oq-aVF" secondAttribute="trailing" id="Kwg-CJ-gcS"/>
+                    <constraint firstItem="PnY-8m-ao7" firstAttribute="leading" secondItem="yUT-Oq-aVF" secondAttribute="leading" id="WRf-sH-86P"/>
+                    <constraint firstItem="yUT-Oq-aVF" firstAttribute="leading" secondItem="nFg-no-txJ" secondAttribute="leading" id="izo-6N-9z3"/>
+                    <constraint firstItem="nFg-no-txJ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="15" id="mRa-xu-NbA"/>
+                    <constraint firstItem="yUT-Oq-aVF" firstAttribute="top" secondItem="nFg-no-txJ" secondAttribute="bottom" constant="10" id="nKv-0b-ODh"/>
+                    <constraint firstItem="PnY-8m-ao7" firstAttribute="bottom" secondItem="yUT-Oq-aVF" secondAttribute="bottom" id="rrS-Y9-MW4"/>
+                    <constraint firstItem="PnY-8m-ao7" firstAttribute="top" secondItem="yUT-Oq-aVF" secondAttribute="top" id="xM0-yg-dev"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <connections>
+                <outlet property="contentImage" destination="yUT-Oq-aVF" id="SJa-lO-uXw"/>
+                <outlet property="imageWidth" destination="Syf-Oo-fSq" id="qQV-UR-yez"/>
+            </connections>
+        </tableViewCell>
+    </objects>
+</document>

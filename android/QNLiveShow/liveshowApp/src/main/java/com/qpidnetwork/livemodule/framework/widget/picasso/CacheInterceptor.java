@@ -8,8 +8,8 @@ package com.qpidnetwork.livemodule.framework.widget.picasso;
 
 import android.content.Context;
 
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.NetworkUtil;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.IOException;
 

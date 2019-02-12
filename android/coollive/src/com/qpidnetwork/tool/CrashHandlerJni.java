@@ -6,8 +6,8 @@ package com.qpidnetwork.tool;
 public class CrashHandlerJni {
 	static {
 		try {
-			System.loadLibrary("crashhandler");
-			System.loadLibrary("crashhandler-interface");
+//			System.loadLibrary("crashhandler");
+//			System.loadLibrary("crashhandler-interface");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

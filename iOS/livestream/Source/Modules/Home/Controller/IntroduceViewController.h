@@ -6,14 +6,9 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
-#import "IntroduceView.h"
+#import "LSWKWebViewController.h"
 
-@interface IntroduceViewController : LSListViewController
-
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
-
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *introduceTop;
+@interface IntroduceViewController : LSWKWebViewController
 
 /** 链接 */
 @property (nonatomic, copy) NSString* bannerUrl;

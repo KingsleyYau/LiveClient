@@ -96,7 +96,7 @@ int VideoFrame::GetPixelFormat(VIDEO_FORMATE_TYPE type) {
         	format = AV_PIX_FMT_RGB24;
         }break;
         case VIDEO_FORMATE_BGRA: {
-        	format = AV_PIX_FMT_RGBA;
+        	format = AV_PIX_FMT_BGRA;
         }break;
         case VIDEO_FORMATE_RGBA: {
             format = AV_PIX_FMT_RGBA;

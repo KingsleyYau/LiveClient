@@ -24,7 +24,7 @@
 #import "LSImManager.h"
 #import "GiftComboManager.h"
 #import "LSImageViewLoader.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "SendGiftTheQueueManager.h"
 #import "LSLoginManager.h"
 #import "LSGiftManager.h"
@@ -73,7 +73,7 @@
 @property (nonatomic, assign) NSInteger timeOut;
 
 // 个人信息管理器
-@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
 
 /** 首次连击 **/
 @property (nonatomic, assign) int clickId;
@@ -159,7 +159,7 @@
     self.barGiftNumArray = [[NSMutableArray alloc] init];
     
     // 初始化个人信息管理器
-    self.userInfoManager = [UserInfoManager manager];
+    self.userInfoManager = [LSUserInfoManager manager];
     
     // 重置连击数量
     _starNum = 1;

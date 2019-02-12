@@ -371,7 +371,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequstJniSch
 /*********************************** 4.7.观众处理立即私密邀请  ****************************************/
 
 class RequestAcceptInstanceInviteCallback : public IRequestAcceptInstanceInviteCallback{
-	void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask* task, bool success, int errnum, const string& errmsg, const HttpAcceptInstanceInviteItem& item){
+	void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask* task, bool success, int errnum, const string& errmsg, const HttpAcceptInstanceInviteItem& item, const HttpAuthorityItem& priv){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -379,11 +379,16 @@ class RequestAcceptInstanceInviteCallback : public IRequestAcceptInstanceInviteC
         FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAcceptInstanceInvite( success : %s, task : %p, roomId:%s isAttachThread:%d )", success?"true":"false", task, item.roomId.c_str(), isAttachThread);
 
         int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
+        jobject obj = NULL;
 		/*callback object*/
         jobject callBackObject = getCallbackObjectByTask((long)task);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
-			string signature = "(ZILjava/lang/String;Ljava/lang/String;I)V";
+			string signature = "(ZILjava/lang/String;Ljava/lang/String;I";
+			signature += "L";
+			signature += HTTP_AUTHORITY_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onAcceptInstanceInvite", signature.c_str());
 			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAcceptInstanceInvite( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
@@ -391,18 +396,24 @@ class RequestAcceptInstanceInviteCallback : public IRequestAcceptInstanceInviteC
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
 				jstring jroomId = env->NewStringUTF(item.roomId.c_str());
 				jint jroomType = LiveRoomTypeToInt(item.roomType);
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jroomId, jroomType);
+				obj = getHttpAuthorityItem(env, priv);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jroomId, jroomType, obj);
 				env->DeleteLocalRef(jerrmsg);
 				env->DeleteLocalRef(jroomId);
 			}
 		}
 
-		if(callBackObject != NULL){
-			env->DeleteGlobalRef(callBackObject);
+		if(obj != NULL){
+			env->DeleteLocalRef(obj);
 		}
+
+		if(callBackObject != NULL){
+        	env->DeleteGlobalRef(callBackObject);
+        }
 
 		ReleaseEnv(isAttachThread);
 
+        FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnAcceptInstanceInvite(end)");
 	}
 };
 

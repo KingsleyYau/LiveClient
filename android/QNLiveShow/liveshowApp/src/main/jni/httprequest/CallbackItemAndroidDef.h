@@ -11,6 +11,7 @@
 /* 2.认证模块 */
 #define LOGIN_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/LoginItem"
 #define SERVER_ITEM_CLASS               "com/qpidnetwork/livemodule/httprequest/item/ServerItem"
+#define LSVALIDSITEID_ITEM_CLASS        "com/qpidnetwork/livemodule/httprequest/item/LSValidSiteIdItem"
 
 /* 3.直播间模块   */
 #define HOTLIST_ITEM_CLASS 				"com/qpidnetwork/livemodule/httprequest/item/HotListItem"
@@ -32,6 +33,8 @@
 #define BOOK_TIME_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookTimeItem"
 #define BOOK_GIFT_ITEM_CLASS   			"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteGiftItem"
 #define BOOK_PHONE_ITEM_CLASS   		"com/qpidnetwork/livemodule/httprequest/item/ScheduleInviteBookPhoneItem"
+#define HTTP_AUTHORITY_ITEM_CLASS   	"com/qpidnetwork/livemodule/httprequest/item/HttpAuthorityItem"
+
 
 /* 5.背包    */
 #define PACKAGE_GIFT_ITEM_CLASS 		            "com/qpidnetwork/livemodule/httprequest/item/PackageGiftItem"
@@ -45,6 +48,9 @@
 #define OTHER_ANCHORINFO_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/AnchorInfoItem"
 #define OTHER_USERINFO_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/UserInfoItem"
 #define OTHER_MAINUNREADNUM_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/MainUnreadNumItem"
+#define OTHER_LSPROFILE_ITEM_CLASS		    "com/qpidnetwork/livemodule/httprequest/item/LSProfileItem"
+#define OTHER_LSVERSIONCHECK_ITEM_CLASS		"com/qpidnetwork/livemodule/httprequest/item/LSOtherVersionCheckItem"
+
 
 /* 8.多人互动 */
 #define HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS 		"com/qpidnetwork/livemodule/httprequest/item/HangoutAnchorInfoItem"
@@ -53,5 +59,28 @@
 
 /* 9.节目 */
 #define PROGRAM_PROGRAMINFO_ITEM_CLASS 		        "com/qpidnetwork/livemodule/httprequest/item/ProgramInfoItem"
+
+/* 5.live chat 模块 */
+#define LIVECHAT_COUPON_ITEM_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/Coupon"
+#define LIVECHAT_GIFT_ITEM_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/Gift"
+#define LIVECHAT_RECORD_ITEM_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/Record"
+#define LIVECHAT_RECORD_MUTIPLE_ITEM_CLASS		"com/qpidnetwork/livemodule/livechathttprequest/item/RecordMutiple"
+#define LIVECHAT_SENDPHOTO_TIME_CLASS			"com/qpidnetwork/livemodule/livechathttprequest/item/LCSendPhotoItem"
+#define LIVECHAT_LCVIDEO_TIME_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/LCVideoItem"
+#define LIVECHAT_MAGIC_CONFIG_ITEM_CLASS		"com/qpidnetwork/livemodule/livechathttprequest/item/MagicIconConfig"
+#define LIVECHAT_MAGIC_ICON_TIME_CLASS			"com/qpidnetwork/livemodule/livechathttprequest/item/MagicIconItem"
+#define LIVECHAT_MAGIC_TYPE_TIME_CLASS			"com/qpidnetwork/livemodule/livechathttprequest/item/MagicIconType"
+#define LIVECHAT_THEME_CONFIG_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/ThemeConfig"
+#define LIVECHAT_THEME_TYPE_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/ThemeTypeItem"
+#define LIVECHAT_THEME_TAG_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/ThemeTagItem"
+#define LIVECHAT_THEME_ITEM_CLASS				"com/qpidnetwork/livemodule/livechathttprequest/item/ThemeItem"
+
+
+///* 8.Other模块*/
+#define OTHER_EMOTIONCONFIG_ITEM_CLASS    "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigItem"
+#define OTHER_EMOTIONCONFIG_TYPE_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigTypeItem"
+#define OTHER_EMOTIONCONFIG_TAG_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigTagItem"
+#define OTHER_EMOTIONCONFIG_EMOTION_ITEM_CLASS    "com/qpidnetwork/livemodule/livechathttprequest/item/OtherEmotionConfigEmotionItem"
+#define OTHER_GETCOUNT_ITEM_CLASS        "com/qpidnetwork/livemodule/livechathttprequest/item/LCOtherGetCountItem"
 
 #endif /* CALLBACKITEMANDROIDDEF_H_ */

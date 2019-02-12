@@ -250,8 +250,16 @@
             
             UIImageView *imageView = [[UIImageView alloc] initWithImage:emotion.image];
             imageView.frame = CGRectMake(0, 0, 21, 21);
-            // 生成表情富文本
+            
+//            NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+//            attachment.image = emotion.image;
+//            attachment.bounds = CGRectMake(0, -4, font.lineHeight, font.lineHeight);
+//
+//            // 生成表情富文本
             NSMutableAttributedString *imageString = [NSMutableAttributedString yy_attachmentStringWithContent:imageView contentMode:UIViewContentModeCenter attachmentSize:imageView.frame.size alignToFont:font alignment:YYTextVerticalAlignmentCenter];
+            
+            // 生成表情富文本
+//            NSAttributedString *imageString = [NSAttributedString attributedStringWithAttachment:attachment];
             // 生成表情富文本
             [text replaceCharactersInRange:strRange withAttributedString:imageString];
         }

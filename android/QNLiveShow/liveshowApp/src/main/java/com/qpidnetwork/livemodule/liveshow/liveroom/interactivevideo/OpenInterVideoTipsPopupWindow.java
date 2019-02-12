@@ -1,7 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.interactivevideo;
 
 import android.content.Context;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;

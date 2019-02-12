@@ -6,7 +6,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,13 +15,13 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso;
 public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.OnClickListener {
 
     private final String TAG = AudienceBalanceInfoPopupWindow.class.getSimpleName();
-    private Context context;
+    private Context mContext;
     private ImageView iv_backBalanceDialog;
     private CircleImageView civ_userIcon;
     private TextView tv_userNickName;
@@ -45,7 +45,7 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     public AudienceBalanceInfoPopupWindow(Context context) {
         super();
         Log.d(TAG, "SimpleListPopupWindow");
-        this.context = context;
+        this.mContext = context;
         this.rootView = View.inflate(context, R.layout.view_user_balance, null);
         initView();
         setContentView(rootView);
@@ -94,12 +94,12 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
     }
 
     public void updateBalanceViewData(){
-        if(null != context){
-            String userBalance =context.getResources().getString(R.string.live_balance_credits,
+        if(null != mContext){
+            String userBalance = mContext.getResources().getString(R.string.live_balance_credits,
                     ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
             SpannableString spannableString = new SpannableString(userBalance);
             ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
-                    context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
+                    mContext.getResources().getColor(R.color.custom_dialog_txt_color_simple));
             int index = userBalance.indexOf(":");
             if(index >= 0) {
                 spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
@@ -123,27 +123,30 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
                 }
                 //头像从缓存获取
                 if (!TextUtils.isEmpty(imUserBaseInfoItem.photoUrl)) {
-                    Picasso.with(context).load(imUserBaseInfoItem.photoUrl)
+//                    Picasso.with(mContext)
+                    Picasso.get()
+                            .load(imUserBaseInfoItem.photoUrl)
                             .placeholder(R.drawable.ic_default_photo_man)
                             .error(R.drawable.ic_default_photo_man)
-                            .fit().
-                            into(civ_userIcon);
+                            .fit()
+                            .into(civ_userIcon);
+
                 }
             }
             // level使用外部的直播间外部(loginItem)的数据
-            iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(context,loginItem.level));
+            iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(mContext,loginItem.level));
             //userId
-            String userId = context.getResources().getString(R.string.live_balance_userId, loginItem.userId);
+            String userId = mContext.getResources().getString(R.string.live_balance_userId, loginItem.userId);
             Log.d(TAG,"updateViewData-nickName:"+loginItem.nickName+" userId:"+userId);
             tv_userId.setText(userId);
 
         }
         //金币余额-userBalance
-        String userBalance =context.getResources().getString(R.string.live_balance_credits,
+        String userBalance = mContext.getResources().getString(R.string.live_balance_credits,
                 ApplicationSettingUtil.formatCoinValue(LiveRoomCreditRebateManager.getInstance().getCredit()));
         SpannableString spannableString = new SpannableString(userBalance);
         ForegroundColorSpan foregroundColorSpan1 = new ForegroundColorSpan(
-                context.getResources().getColor(R.color.custom_dialog_txt_color_simple));
+                mContext.getResources().getColor(R.color.custom_dialog_txt_color_simple));
         int index = userBalance.indexOf(":");
         if(index >= 0) {
             spannableString.setSpan(foregroundColorSpan1, 0, index, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
@@ -160,12 +163,12 @@ public class AudienceBalanceInfoPopupWindow extends PopupWindow implements View.
             dismiss();
 
         } else if (i == R.id.tv_gotoRecharge) {
-            LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
+            LiveModule.getInstance().onAddCreditClick(mContext, new NoMoneyParamsBean());
 
             //GA统计点击充值
-            AnalyticsManager.getsInstance().ReportEvent(context.getResources().getString(R.string.Live_Global_Category),
-                    context.getResources().getString(R.string.Live_Global_Action_AddCredit),
-                    context.getResources().getString(R.string.Live_Global_Label_AddCredit));
+            AnalyticsManager.getsInstance().ReportEvent(mContext.getResources().getString(R.string.Live_Global_Category),
+                    mContext.getResources().getString(R.string.Live_Global_Action_AddCredit),
+                    mContext.getResources().getString(R.string.Live_Global_Label_AddCredit));
         } else {
         }
     }

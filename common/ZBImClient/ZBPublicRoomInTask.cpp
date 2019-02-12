@@ -56,6 +56,18 @@ bool ZBPublicRoomInTask::Handle(const ZBTransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         
         item.Parse(tp.m_data);
+        
+        if (m_errType != ZBLCC_ERR_SUCCESS) {
+            if (tp.m_errData.isObject()) {
+                if (tp.m_errData[ZBRII_PRIV_PARAM].isObject()) {
+                    ZBAuthorityItem priv;
+                    priv.Parse(tp.m_errData[ZBRII_PRIV_PARAM]);
+                    item.priv.isHasOneOnOneAuth = priv.isHasOneOnOneAuth;
+                    item.priv.isHasBookingAuth = priv.isHasBookingAuth;
+                }
+            }
+        }
+        
     }
     
     // 协议解析失败

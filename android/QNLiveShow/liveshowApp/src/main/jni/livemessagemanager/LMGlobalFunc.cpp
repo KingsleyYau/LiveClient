@@ -6,6 +6,7 @@
  */
 
 #include "LMGlobalFunc.h"
+#include <LiveMessageManManager.h>
 
 JavaVM* gJavaVM = NULL;
 JavaItemMap gJavaItemMap;
@@ -13,21 +14,25 @@ JavaItemMap gJavaItemMap;
 bool GetEnv(JNIEnv** env, bool* isAttachThread)
 {
 	*isAttachThread = false;
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "GetEnv() begin, env:%p", env);
 	jint iRet = JNI_ERR;
 	iRet = gJavaVM->GetEnv((void**) env, JNI_VERSION_1_4);
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "GetEnv() gJavaVM->GetEnv(&gEnv, JNI_VERSION_1_4), iRet:%d", iRet);
 	if( iRet == JNI_EDETACHED ) {
 		iRet = gJavaVM->AttachCurrentThread(env, NULL);
 		*isAttachThread = (iRet == JNI_OK);
 	}
-
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "GetEnv() end, env:%p, gIsAttachThread:%d, iRet:%d", *env, *isAttachThread, iRet);
 	return (iRet == JNI_OK);
 }
 
 bool ReleaseEnv(bool isAttachThread)
 {
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "ReleaseEnv(bool) begin, isAttachThread:%d", isAttachThread);
 	if (isAttachThread) {
 		gJavaVM->DetachCurrentThread();
 	}
+	FileLog(LIVESHOW_LIVEMESSAGE_LOG, "ReleaseEnv(bool) end");
 	return true;
 }
 

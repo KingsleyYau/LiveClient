@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.view.DotView;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 
@@ -16,7 +18,8 @@ import com.qpidnetwork.livemodule.R;
 /**
  * Created by mengxn on 17-3-3.
  */
-public class DotView extends android.support.v7.widget.AppCompatTextView {
+@SuppressLint("AppCompatCustomView")
+public class DotView extends TextView {
 
     private Paint mPaint;
     private int mDotPadding;
@@ -49,11 +52,11 @@ public class DotView extends android.support.v7.widget.AppCompatTextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        final int radius = getWidth()/2;
-        if ( getText().toString().length() > 2){
-            RectF oval3 = new RectF(0, mDotPadding ,radius * 2  , radius  * 2 - mDotPadding);// 设置个新的长方形
+        final int radius = getWidth() / 2;
+        if (getText().toString().length() > 2) {
+            RectF oval3 = new RectF(0, mDotPadding, radius * 2, radius * 2 - mDotPadding);// 设置个新的长方形
             canvas.drawRoundRect(oval3, radius, radius, mPaint);//第二个参数是x半径，第三个参数是y半径
-        }else{
+        } else {
             canvas.drawCircle(radius, radius, radius, mPaint);
         }
 
@@ -100,5 +103,15 @@ public class DotView extends android.support.v7.widget.AppCompatTextView {
 
     private boolean isLegalNumber(int number) {
         return number >= 0 && number < 100;
+    }
+
+    /**
+     * 2018/11/19 Hardy
+     * 设置 padding 大小，也可以作为设置小红点的宽高大小
+     * @param pxSize
+     */
+    public void setDotPadding(int pxSize){
+        mDotPadding = pxSize;
+        invalidate();
     }
 }

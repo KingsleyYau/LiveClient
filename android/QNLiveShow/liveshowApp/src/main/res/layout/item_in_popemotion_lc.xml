@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp" >
+
+    <!-- 存入图标控件 -->
+    <LinearLayout
+        android:id="@+id/llEmotionIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <!-- loading -->
+    <com.qpidnetwork.livemodule.view.MaterialProgressBar
+        android:id="@+id/pbDownload"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:matProg_barColor="@color/blue_color"
+        app:matProg_progressIndeterminate="true" />
+
+    <!-- 价格 -->
+    <TextView
+        android:id="@+id/tvEmotionPrice"
+        android:layout_below="@id/llEmotionIcon"
+        android:layout_width="68dp"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:gravity="center" />
+
+</RelativeLayout>

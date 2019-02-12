@@ -17,7 +17,6 @@ import com.qpidnetwork.livemodule.httprequest.OnRequestCallback;
 import com.qpidnetwork.livemodule.httprequest.item.RideItem;
 import com.qpidnetwork.livemodule.liveshow.manager.ScheduleInvitePackageUnreadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.utils.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,6 +35,8 @@ public class MyRidesFragment extends BaseLoadingFragment implements SwipeRefresh
     private GridView mGridView;
     private PackageRidersAdapter mAdapter;
     private List<RideItem> mRideList;
+
+    private boolean isVisibleToUser;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,17 +62,35 @@ public class MyRidesFragment extends BaseLoadingFragment implements SwipeRefresh
             }
         });
         mGridView.setAdapter(mAdapter);
+
+
+        // 2018/10/26 Hardy
+        if (isVisibleToUser) {
+            loadDataWithLoading();
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         //Fragment是否可见，用于viewpager切换时再加载
-        if(isVisibleToUser){
-            //切换到当前fragment
-            showLoadingProcess();
-            queryPackageRiderList();
+//        if(isVisibleToUser){
+//            //切换到当前fragment
+//            showLoadingProcess();
+//            queryPackageRiderList();
+//        }
+
+        // 2018/10/26 Hardy
+        this.isVisibleToUser = isVisibleToUser;
+        if (isVisibleToUser && isCreatedView()) {
+            loadDataWithLoading();
         }
+    }
+
+    private void loadDataWithLoading() {
+        showLoadingProcess();
+        queryPackageRiderList();
     }
 
     @Override
@@ -136,8 +155,9 @@ public class MyRidesFragment extends BaseLoadingFragment implements SwipeRefresh
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
-        showLoadingProcess();
-        queryPackageRiderList();
+//        showLoadingProcess();
+//        queryPackageRiderList();
+        loadDataWithLoading();
     }
 
     /**

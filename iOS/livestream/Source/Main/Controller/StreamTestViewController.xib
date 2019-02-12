@@ -18,7 +18,6 @@
                 <outlet property="previewView0" destination="4cW-Ak-190" id="IBQ-vB-Ncr"/>
                 <outlet property="previewView1" destination="g7n-8V-m4s" id="9oj-L9-emP"/>
                 <outlet property="previewView2" destination="JB4-g3-Aww" id="YYv-QV-XMU"/>
-                <outlet property="previewViewBig" destination="Zdx-QE-jnW" id="pr6-d6-gTU"/>
                 <outlet property="textFieldAddress" destination="bL4-KM-t8R" id="iqZ-bD-DGh"/>
                 <outlet property="textFieldPublishAddress" destination="VDo-Gw-kAu" id="3OG-ea-fQZ"/>
                 <outlet property="view" destination="ZWE-DN-YWb" id="UEa-zx-vng"/>
@@ -82,13 +81,6 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="i4D-ha-MOA" secondAttribute="height" multiplier="1:1" id="tMf-nv-u5c"/>
-                    </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zdx-QE-jnW" userLabel="Preview View Big" customClass="GPUImageView">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="414"/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="width" secondItem="Zdx-QE-jnW" secondAttribute="height" multiplier="1:1" id="gJT-zm-NOl"/>
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iur-EY-slm" userLabel=" Pubilsh Label">
@@ -211,7 +203,6 @@
                 <constraint firstItem="4cW-Ak-190" firstAttribute="top" secondItem="ZWE-DN-YWb" secondAttribute="top" id="B4Q-wc-Pm9"/>
                 <constraint firstItem="jE1-rt-oIi" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="Dbl-ma-xzn"/>
                 <constraint firstItem="0Gc-rJ-oWd" firstAttribute="leading" secondItem="oyc-7U-k9Q" secondAttribute="trailing" id="DjU-sV-lAy"/>
-                <constraint firstItem="Zdx-QE-jnW" firstAttribute="width" secondItem="ZWE-DN-YWb" secondAttribute="width" id="EHI-aN-11x"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="width" secondItem="JB4-g3-Aww" secondAttribute="width" id="EmI-yE-0nc"/>
                 <constraint firstItem="oyc-7U-k9Q" firstAttribute="width" secondItem="4Lk-UT-amD" secondAttribute="width" id="Hg5-WR-iEt"/>
                 <constraint firstItem="rLf-oZ-TFx" firstAttribute="width" secondItem="4Lk-UT-amD" secondAttribute="width" id="Hjo-ZJ-3ju"/>
@@ -224,7 +215,6 @@
                 <constraint firstItem="g7n-8V-m4s" firstAttribute="width" secondItem="4cW-Ak-190" secondAttribute="width" id="Sai-ON-SI7"/>
                 <constraint firstItem="bL4-KM-t8R" firstAttribute="leading" secondItem="IhK-BJ-a65" secondAttribute="trailing" constant="5" id="SdH-d7-Voy"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="top" secondItem="JB4-g3-Aww" secondAttribute="top" id="TCi-e2-Cmz"/>
-                <constraint firstItem="Zdx-QE-jnW" firstAttribute="top" secondItem="4cW-Ak-190" secondAttribute="top" id="Tel-qP-jnl"/>
                 <constraint firstItem="oyc-7U-k9Q" firstAttribute="leading" secondItem="rLf-oZ-TFx" secondAttribute="trailing" id="UCI-pb-r0Q"/>
                 <constraint firstItem="iur-EY-slm" firstAttribute="bottom" secondItem="VDo-Gw-kAu" secondAttribute="bottom" id="Ugx-HC-JVn"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="leading" secondItem="JB4-g3-Aww" secondAttribute="trailing" id="Ujt-Ez-LRi"/>
@@ -237,7 +227,6 @@
                 <constraint firstItem="oyc-7U-k9Q" firstAttribute="height" secondItem="4Lk-UT-amD" secondAttribute="height" id="XQU-Di-uec"/>
                 <constraint firstItem="rLf-oZ-TFx" firstAttribute="height" secondItem="4Lk-UT-amD" secondAttribute="height" id="XeS-H9-h3K"/>
                 <constraint firstItem="4cW-Ak-190" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="YFc-no-mMD"/>
-                <constraint firstItem="Zdx-QE-jnW" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="YNk-8h-kzO"/>
                 <constraint firstItem="l7N-OT-dic" firstAttribute="width" secondItem="4Lk-UT-amD" secondAttribute="width" id="Ysy-11-L7Y"/>
                 <constraint firstItem="4Lk-UT-amD" firstAttribute="height" secondItem="drI-3V-bPu" secondAttribute="height" id="aw9-dC-ng2"/>
                 <constraint firstItem="drI-3V-bPu" firstAttribute="bottom" secondItem="ZWE-DN-YWb" secondAttribute="bottom" constant="-20" id="bgR-hw-VKu"/>
@@ -261,7 +250,6 @@
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="width" secondItem="drI-3V-bPu" secondAttribute="width" id="rzS-2y-9zB"/>
                 <constraint firstItem="xxA-rL-J4e" firstAttribute="top" secondItem="JB4-g3-Aww" secondAttribute="top" constant="10" id="sWa-HT-Q2i"/>
                 <constraint firstItem="JB4-g3-Aww" firstAttribute="top" secondItem="4cW-Ak-190" secondAttribute="bottom" id="t7g-7e-zil"/>
-                <constraint firstItem="Zdx-QE-jnW" firstAttribute="width" secondItem="Zdx-QE-jnW" secondAttribute="height" multiplier="1:1" id="ujn-VJ-7Gb"/>
                 <constraint firstItem="xxA-rL-J4e" firstAttribute="leading" secondItem="JB4-g3-Aww" secondAttribute="leading" constant="10" id="wIu-Og-x3F"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="leading" secondItem="Iyu-Qy-hLl" secondAttribute="trailing" id="xFh-4x-LcR"/>
                 <constraint firstItem="Hch-Gg-FZU" firstAttribute="trailing" secondItem="g7n-8V-m4s" secondAttribute="trailing" constant="-10" id="xMO-9z-afu"/>

@@ -53,6 +53,7 @@ bool GetInviteInfoTask::Handle(const TransportProtocol& tp)
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     PrivateInviteItem item;
+    IMAuthorityItem privItem;
     // 协议解析
     if (tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -60,6 +61,14 @@ bool GetInviteInfoTask::Handle(const TransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         
         item.Parse(tp.m_data);
+        
+        if (m_errType != LCC_ERR_SUCCESS) {
+            if (tp.m_errData.isObject()) {
+                privItem.Parse(tp.m_errData);
+            }
+        } else {
+            privItem.Parse(tp.m_data);
+        }
         
     }
     
@@ -74,7 +83,7 @@ bool GetInviteInfoTask::Handle(const TransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnGetInviteInfo(GetSeq(), success, m_errType, m_errMsg, item);
+        m_listener->OnGetInviteInfo(GetSeq(), success, m_errType, m_errMsg, item, privItem);
 		FileLog("ImClient", "GetInviteInfoTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -153,6 +162,7 @@ void GetInviteInfoTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
         PrivateInviteItem item;
-        m_listener->OnGetInviteInfo(m_seq, false, LCC_ERR_CONNECTFAIL, "", item);
+        IMAuthorityItem privItem;
+        m_listener->OnGetInviteInfo(m_seq, false, LCC_ERR_CONNECTFAIL, "", item, privItem);
 	}
 }

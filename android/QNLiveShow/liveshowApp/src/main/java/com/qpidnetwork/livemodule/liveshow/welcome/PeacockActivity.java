@@ -56,7 +56,7 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
                 }
                 String token = et_token.getText().toString();
                 showToast(getResources().getString(R.string.tip_waitlogin));
-                LoginManager.getInstance().login("", token , -1);
+//                LoginManager.getInstance().login("", token , -1);
             }
         });
     }
@@ -70,8 +70,8 @@ public class PeacockActivity extends BaseFragmentActivity implements IAuthorizat
 //        }else{
         ll_handlerLogin.setVisibility(View.VISIBLE);
         LoginParam param = LoginManager.getInstance().getAccountInfo();
-        if(param != null && !TextUtils.isEmpty(param.qnToken)){
-            et_token.setText(param.qnToken);
+        if(param != null && !TextUtils.isEmpty(param.account)){
+            et_token.setText(param.account);
         }
 //            String token = "Harry_HHeEoKeotNFp";
 //            showProgressDialog(getResources().getString(R.string.tip_waitlogin));

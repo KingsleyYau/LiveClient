@@ -34,6 +34,12 @@ callbackAppPublicGAEvent:function(parameter1, parameter2, parameter3){
     var message;
     message = {'CallBack':"callbackAppPublicGAEvent",'category':parameter1,'event':parameter2,'label':parameter3};
     window.webkit.messageHandlers.LiveApp.postMessage(message);
+},
+
+callbackShowNavigation:function(parameter1){
+    var message;
+    message = {'CallBack':"callbackShowNavigation",'is_show':parameter1};
+    window.webkit.messageHandlers.LiveApp.postMessage(message);
 }
 };
 

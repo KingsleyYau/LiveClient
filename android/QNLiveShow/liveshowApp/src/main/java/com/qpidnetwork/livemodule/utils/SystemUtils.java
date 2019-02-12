@@ -1,13 +1,15 @@
 package com.qpidnetwork.livemodule.utils;
 
-import com.qpidnetwork.livemodule.httprequest.RequestJni;
-
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+
+import com.qpidnetwork.livemodule.httprequest.RequestJni;
+import com.qpidnetwork.qnbridgemodule.deviceid.DeviceIdUtil;
 
 import java.io.File;
 import java.util.List;
@@ -26,6 +28,12 @@ public class SystemUtils {
 				uniqueId.length() == 0 || 
 				uniqueId.compareTo("000000000000000") == 0 ) {
 			uniqueId = RequestJni.GetLocalMacMD5();
+		}
+
+		if( uniqueId == null ||
+				uniqueId.length() == 0 ||
+				uniqueId.compareTo("000000000000000") == 0 ) {
+			uniqueId = DeviceIdUtil.getDeviceId(context);
 		}
     	return uniqueId;
     }
@@ -84,5 +92,54 @@ public class SystemUtils {
 			versionCode = pi.versionCode;
 		}
 		return versionCode;
+	}
+
+
+	public static String getVersionName(Context context) {
+		try {
+			return context.getPackageManager().getPackageInfo(
+					context.getPackageName(), 0).versionName;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "1.0";
+	}
+
+	/**
+	 * 获取前置摄像头Index
+	 * @return
+	 */
+	public static int GetFrontCameraIndex(){
+		int cameraIndex = -1;
+		Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+		int cameraCount = Camera.getNumberOfCameras();
+		for(int camIdx = 0; camIdx < cameraCount; camIdx++){
+			Camera.getCameraInfo(camIdx, cameraInfo);
+			if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT){
+				cameraIndex = camIdx;
+				break;
+			}
+		}
+		return cameraIndex;
+	}
+
+	/**
+	 * 检测前置摄像头是否可用
+	 * @return
+	 */
+	public static boolean CheckFrontCameraUsable(){
+		boolean isCanUse = false;
+		int camIndex = GetFrontCameraIndex();
+		if(camIndex != -1){
+			try{
+				Camera camera = Camera.open(camIndex);
+				camera.release();
+				camera = null;
+				isCanUse = true;
+			}catch(Exception e){
+
+			}
+		}
+		return isCanUse;
 	}
 }

@@ -13,15 +13,16 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
-// 请求参数定义
-#define INVITEID_PARAM          "invite_id"
-#define REPLYTYPE_PARAM         "reply_type"
-#define IMROOMID_PARAM          "room_id"
-#define ROOMTYPE_PARAM          "room_type"
-#define ANCHORID_PARAM          "anchor_id"
-#define NICKNAMET_PARAM         "nick_name"
-#define AVATARIMG_PARAM         "avatar_img"
-#define MSG_PARAM               "msg"
+//// 请求参数定义
+//#define INVITEID_PARAM          "invite_id"
+//#define REPLYTYPE_PARAM         "reply_type"
+//#define IMROOMID_PARAM          "room_id"
+//#define ROOMTYPE_PARAM          "room_type"
+//#define ANCHORID_PARAM          "anchor_id"
+//#define NICKNAMET_PARAM         "nick_name"
+//#define AVATARIMG_PARAM         "avatar_img"
+//#define MSG_PARAM               "msg"
+//#define RECV_CHAT_ONLINE_STATUS_PARAM         "chat_online_status"
 
 
 RecvInstantInviteReplyNoticeTask::RecvInstantInviteReplyNoticeTask(void)
@@ -67,35 +68,15 @@ bool RecvInstantInviteReplyNoticeTask::Handle(const TransportProtocol& tp)
 	FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 	
+    //IMChatOnlineStatus status = IMCHATONLINESTATUS_OFF;
+    IMInviteReplyItem replyItem;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
 		m_errType = (LCC_ERR_TYPE)tp.m_errno;
         m_errMsg = tp.m_errmsg;
-        if (tp.m_data[INVITEID_PARAM].isString()) {
-            m_inviteId = tp.m_data[INVITEID_PARAM].asString();
-        }
-        if (tp.m_data[REPLYTYPE_PARAM].isInt()) {
-            m_replyType =  GetReplyType(tp.m_data[REPLYTYPE_PARAM].asInt());
-        }
-        if (tp.m_data[IMROOMID_PARAM].isString()) {
-            m_roomId = tp.m_data[IMROOMID_PARAM].asString();
-        }
-        if (tp.m_data[ROOMTYPE_PARAM].isInt()) {
-            m_roomType = GetRoomType(tp.m_data[ROOMTYPE_PARAM].asInt());
-        }
-        if (tp.m_data[ANCHORID_PARAM].isString()) {
-            m_anchorId = tp.m_data[ANCHORID_PARAM].asString();
-        }
-        if (tp.m_data[NICKNAMET_PARAM].isString()) {
-            m_nickName = tp.m_data[NICKNAMET_PARAM].asString();
-        }
-        if (tp.m_data[AVATARIMG_PARAM].isString()) {
-            m_avatarImg = tp.m_data[AVATARIMG_PARAM].asString();
-        }
-        if (tp.m_data[MSG_PARAM].isString()) {
-            m_msg = tp.m_data[MSG_PARAM].asString();
-        }
+        replyItem.Parse(tp.m_data);
+
     }
     
     // 协议解析失败
@@ -108,7 +89,7 @@ bool RecvInstantInviteReplyNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvInstantInviteReplyNotice(m_inviteId, m_replyType, m_roomId, m_roomType, m_anchorId, m_nickName, m_avatarImg, m_msg);
+        m_listener->OnRecvInstantInviteReplyNotice(replyItem);
 		FileLog("ImClient", "RecvInstantInviteReplyNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

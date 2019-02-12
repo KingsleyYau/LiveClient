@@ -8,6 +8,7 @@
 
 #import "ShowLiveViewController.h"
 #import "LSMainViewController.h"
+#import "LSAddCreditsViewController.h"
 
 #import "SetFavoriteRequest.h"
 #import "LiveFansListRequest.h"
@@ -16,7 +17,7 @@
 #import "LiveModule.h"
 #import "AudienModel.h"
 #import "RoomTypeIsFirstManager.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "AnchorPersonalViewController.h"
 #import "DialogTip.h"
@@ -172,7 +173,7 @@
         make.top.equalTo(self.titleBackGroundView.mas_bottom);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
-        if ([LSDevice iPhoneXStyle]) {
+        if (IS_IPHONE_X) {
             make.bottom.equalTo(self.view).offset(-35);
         } else {
             make.bottom.equalTo(self.view);
@@ -185,7 +186,7 @@
     frame.origin.y = SCREEN_HEIGHT;
     self.playVC.chooseGiftListView.frame = frame;
     
-    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM) {
+    if (self.liveRoom.liveShowType == IMPUBLICROOMTYPE_PROGRAM || !self.liveRoom.priv.isHasOneOnOneAuth) {
         // 隐藏立即私密邀请控件
         self.playVC.liveVC.startOneView.backgroundColor = [UIColor clearColor];
     }
@@ -271,7 +272,7 @@
 // 更新头部直播间数据
 - (void)setupHeadViewInfo {
     // 计算StatusBar高度
-    if ([LSDevice iPhoneXStyle]) {
+    if (IS_IPHONE_X) {
         self.titleBgImageTop.constant = 44;
     } else {
         self.titleBgImageTop.constant = 20;
@@ -291,7 +292,7 @@
 
 // 获取观众列表
 - (void)setupAudienView {
-    
+    WeakObject(self, weakSelf);
     LiveFansListRequest *request = [[LiveFansListRequest alloc] init];
     request.roomId = self.liveRoom.roomId;
     request.start = 0;
@@ -302,7 +303,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 
-                [self.audienceArray removeAllObjects];
+                [weakSelf.audienceArray removeAllObjects];
                 for (ViewerFansItemObject *item in array) {
                     
                     AudienModel *model = [[AudienModel alloc] init];
@@ -314,7 +315,7 @@
                     model.level = item.level;
                     model.image = [UIImage imageNamed:@"Default_Img_Man_Circyle"];
                     model.isHasTicket = item.isHasTicket;
-                    [self.audienceArray addObject:model];
+                    [weakSelf.audienceArray addObject:model];
                     
                     // 更新并缓存本地观众数据
                     LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
@@ -326,19 +327,19 @@
                     infoItem.userLevel = item.level;
                     infoItem.isAnchor = 0;
                     infoItem.isHasTicket = item.isHasTicket;
-                    [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
+                    [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
                 }
                 
                 // 显示最大人数默认头像
-                if (self.audienceArray.count < self.liveRoom.imLiveRoom.maxFansiNum) {
-                    NSUInteger count = self.liveRoom.imLiveRoom.maxFansiNum - self.audienceArray.count;
+                if (weakSelf.audienceArray.count < weakSelf.liveRoom.imLiveRoom.maxFansiNum) {
+                    NSUInteger count = weakSelf.liveRoom.imLiveRoom.maxFansiNum - weakSelf.audienceArray.count;
                     for (NSUInteger num = 0; num < count; num++) {
                         AudienModel *model = [[AudienModel alloc] init];
                         model.image = [UIImage imageNamed:@"Default_Img_Noman_Circyle"];
-                        [self.audienceArray addObject:model];
+                        [weakSelf.audienceArray addObject:model];
                     }
                 }
-                self.audienceView.audienceArray = self.audienceArray;
+                weakSelf.audienceView.audienceArray = weakSelf.audienceArray;
             }
         });
     };
@@ -347,13 +348,15 @@
 
 #pragma mark - PlayViewControllerDelegate
 - (void)pushToAddCredit:(PlayViewController *)vc {
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *addVC = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:addVC animated:YES];
 }
 
 #pragma mark - IM回调
 
 - (void)onRecvEnterRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl riderId:(NSString *_Nonnull)riderId riderName:(NSString *_Nonnull)riderName riderUrl:(NSString *_Nonnull)riderUrl fansNum:(int)fansNum honorImg:(NSString *_Nonnull)honorImg isHasTicket:(BOOL)isHasTicket{
     NSLog(@"PublicViewController::onRecvEnterRoomNotice( [接收观众进入直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, riderId : %@, riderName : %@, riderUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, riderId, riderName, riderUrl, fansNum);
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         // 更新并缓存本地观众数据
         LSUserInfoModel *infoItem = [[LSUserInfoModel alloc] init];
@@ -365,18 +368,18 @@
         infoItem.riderUrl = riderUrl;
         infoItem.isAnchor = 0;
         infoItem.isHasTicket = isHasTicket;
-        [[UserInfoManager manager] setAudienceInfoDicL:infoItem];
+        [[LSUserInfoManager manager] setAudienceInfoDicL:infoItem];
         
         // 刷观众列表
-        [self setupAudienView];
+        [weakSelf setupAudienView];
     });
 }
 
 - (void)onRecvLeaveRoomNotice:(NSString *_Nonnull)roomId userId:(NSString *_Nonnull)userId nickName:(NSString *_Nonnull)nickName photoUrl:(NSString *_Nonnull)photoUrl fansNum:(int)fansNum {
     NSLog(@"PublicViewController::onRecvLeaveRoomNotice( [接收观众退出直播间通知] ) roomId : %@, userId : %@, nickName : %@, photoUrl : %@, fansNum : %d", roomId, userId, nickName, photoUrl, fansNum);
-    
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self setupAudienView];
+        [weakSelf setupAudienView];
     });
 }
 
@@ -392,13 +395,14 @@
 }
 
 - (IBAction)pushLiveHomePage:(id)sender {
-    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] init];
+    AnchorPersonalViewController *listViewController = [[AnchorPersonalViewController alloc] initWithNibName:nil bundle:nil];
     listViewController.anchorId = self.liveRoom.userId;
     listViewController.enterRoom = 0;
     [self.navigationController pushViewController:listViewController animated:YES];
 }
 
 - (IBAction)followLiverAction:(id)sender {
+    WeakObject(self, weakSelf);
     [[LiveModule module].analyticsManager reportActionEvent:BroadcastClickFollow eventCategory:EventCategoryBroadcast];
     SetFavoriteRequest *request = [[SetFavoriteRequest alloc] init];
     request.userId = self.liveRoom.userId;
@@ -407,10 +411,10 @@
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
-                self.followBtnWidth.constant = 0;
+                weakSelf.followBtnWidth.constant = 0;
                 //                [self.playVC.liveVC addAudienceFollowLiverMessage:self.playVC.loginManager.loginItem.nickName];
             } else {
-                [self.dialogTipView showDialogTip:self.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
+                [weakSelf.dialogTipView showDialogTip:weakSelf.liveRoom.superView tipText:NSLocalizedStringFromSelf(@"FOLLOW_FAIL")];
             }
             NSLog(@"PublicViewController::followLiverAction( success : %d, errnum : %ld, errmsg : %@ )", success, (long)errnum, errmsg);
         });
@@ -436,7 +440,7 @@
         // 退出界面
 //        [weakObj.navigationController dismissViewControllerAnimated:YES completion:nil];
         LSNavigationController *nvc = (LSNavigationController *)weakObj.navigationController;
-        [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+        [nvc forceToDismissAnimated:YES completion:nil];
     }];
 }
 

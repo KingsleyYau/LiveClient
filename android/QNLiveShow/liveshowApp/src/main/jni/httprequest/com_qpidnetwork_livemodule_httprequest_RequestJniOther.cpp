@@ -6,8 +6,9 @@
  */
 #include "RequestJniConvert.h"
 #include "com_qpidnetwork_livemodule_httprequest_RequestJniOther.h"
+#include <common/command.h>
 
-
+#define OS_TYPE "Android"
 /*********************************** 6.1. 同步配置    ****************************************/
 
 class RequestGetConfigCallback : public IRequestGetConfigCallback{
@@ -49,6 +50,8 @@ class RequestGetConfigCallback : public IRequestGetConfigCallback{
 		}
 
 		ReleaseEnv(isAttachThread);
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::onSynConfig(end)");
+
 	}
 };
 
@@ -78,7 +81,7 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 /*********************************** 6.2. 获取账号余额    ****************************************/
 
 class RequestGetLeftCreditCallback : public IRequestGetLeftCreditCallback{
-	void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, double credit){
+	void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, const HttpLeftCreditItem& leftCreditItem){
 		JNIEnv* env = NULL;
         bool isAttachThread = false;
         GetEnv(&env, &isAttachThread);
@@ -90,13 +93,13 @@ class RequestGetLeftCreditCallback : public IRequestGetLeftCreditCallback{
         int errType = HTTPErrorTypeToInt((HTTP_LCC_ERR_TYPE)errnum);
 		if(callBackObject != NULL){
 			jclass callBackCls = env->GetObjectClass(callBackObject);
-			string signature = "(ZILjava/lang/String;D)V";
+			string signature = "(ZILjava/lang/String;DI)V";
 			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetAccountBalance", signature.c_str());
 			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetCredit( callback : %p, signature : %s )",
 						callbackMethod, signature.c_str());
 			if(callbackMethod != NULL){
 				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
-				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, credit);
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, leftCreditItem.credit, leftCreditItem.coupon);
 				env->DeleteLocalRef(jerrmsg);
 			}
 		}
@@ -645,3 +648,380 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOt
 
 }
 
+/*********************************** 6.18.查询个人信息  ****************************************/
+class RequestGetMyProfileCallback : public IRequestGetMyProfileCallback {
+	void OnGetMyProfile(HttpGetMyProfileTask* task, bool success, const string& errnum, const string& errmsg, const HttpProfileItem& profileItem) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetMyProfile( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt(GetStringToHttpErrorType(errnum));
+
+		jobject jItem = getMyProfileItem(env, profileItem);
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += OTHER_LSPROFILE_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onGetMyProfile", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnGetMyProfile( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestGetMyProfileCallback gRequestGetMyProfileCallback;
+
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_GetMyProfile
+		(JNIEnv *env, jclass cls, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::GetMyProfile()");
+	jlong taskId = -1;
+	taskId = gHttpRequestController.GetMyProfile(&gDomainRequestManager,
+													  &gRequestGetMyProfileCallback);
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 6.19.修改个人信息  ****************************************/
+class RequestUpdateProfileCallback : public IRequestUpdateProfileCallback {
+	void OnUpdateProfile(HttpUpdateProfileTask* task, bool success, const string& errnum, const string& errmsg, bool isModify) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpdateProfile( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt(GetStringToHttpErrorType(errnum));
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "Z";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onUpdateMyProfile", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnUpdateProfile( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, isModify);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestUpdateProfileCallback gRequestUpdateProfileCallback;
+/*
+ * Class:     com_qpidnetwork_request_RequestJniProfile
+ * Method:    UpdateProfile
+ * Signature: (IIIIIIIIIIILjava/lang/String;Lcom/qpidnetwork/request/OnUpdateMyProfileCallback;)J
+ */
+JNIEXPORT jlong Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_UpdateProfile
+		(JNIEnv *env, jclass, jint weight, jint height, jint language, jint ethnicity, jint religion,
+		 jint education, jint profession, jint income, jint children, jint smoke,
+		 jint drink, jstring resume, jobjectArray interests, jint zodiac, jobject callback) {
+	jlong taskId = -1;
+
+
+	list<string> interestList;
+	jint len = env->GetArrayLength(interests);
+	for(int i = 0; i < len; i++) {
+		jstring interest = (jstring)env->GetObjectArrayElement(interests, i);
+		const char *cpInterest = env->GetStringUTFChars(interest, 0);
+		interestList.push_back(cpInterest);
+		env->ReleaseStringUTFChars(interest, cpInterest);
+	}
+
+	taskId = gHttpRequestController.UpdateProfile(&gDomainRequestManager, weight, height, language, ethnicity, religion,
+														education, profession, income, children, smoke, drink, JString2String(env, resume), interestList, zodiac, &gRequestUpdateProfileCallback);
+
+
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+
+	return taskId;
+}
+
+/*********************************** 6.20.检查客户端更新  ****************************************/
+class RequestVersionCheckCallback : public IRequestVersionCheckCallback {
+	void OnVersionCheck(HttpVersionCheckTask* task, bool success, const string& errnum, const string& errmsg, const HttpVersionCheckItem& versionItem) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnVersionCheck( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt(GetStringToHttpErrorType(errnum));
+
+		jobject jItem = getVersionCheckItem(env, versionItem);
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += "L";
+			signature += OTHER_LSVERSIONCHECK_ITEM_CLASS;
+			signature += ";";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onOtherVersionCheck", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnVersionCheck( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg, jItem);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+		if(jItem != NULL){
+			env->DeleteLocalRef(jItem);
+		}
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestVersionCheckCallback gRequestVersionCheckCallback;
+
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_VersionCheck
+		(JNIEnv *env, jclass cls, jint currVersion, jobject callback) {
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::VersionCheck(currVersion:%d)", currVersion);
+	jlong taskId = -1;
+	taskId = gHttpRequestController.VersionCheck(&gDomainRequestManager,
+												 currVersion,
+												 &gRequestVersionCheckCallback);
+	jobject obj = env->NewGlobalRef(callback);
+	putCallbackIntoMap(taskId, obj);
+
+	return taskId;
+}
+
+/*********************************** 6.21.开始编辑简介触发计时  ****************************************/
+class RequestStartEditResumeCallback : public IRequestStartEditResumeCallback {
+	void OnStartEditResume(HttpStartEditResumeTask* task, bool success, const string& errnum, const string& errmsg) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnStartEditResume( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt(GetStringToHttpErrorType(errnum));
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnStartEditResume( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestStartEditResumeCallback gRequestStartEditResumeCallback;
+
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_StartEditResume
+          (JNIEnv *env, jclass cls, jobject callback) {
+    FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::StartEditResume()");
+    jlong taskId = -1;
+    taskId = gHttpRequestController.StartEditResume(&gDomainRequestManager,
+          												 &gRequestStartEditResumeCallback);
+    jobject obj = env->NewGlobalRef(callback);
+    putCallbackIntoMap(taskId, obj);
+
+    return taskId;
+ }
+
+/*********************************** 6.22.开始编辑简介触发计时  ****************************************/
+class RequestPhoneInfoCallback : public IRequestPhoneInfoCallback {
+	void OnPhoneInfo(HttpPhoneInfoTask* task, bool success, const string& errnum, const string& errmsg) {
+		JNIEnv* env = NULL;
+		bool isAttachThread = false;
+		GetEnv(&env, &isAttachThread);
+
+		FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnPhoneInfo( success : %s, task : %p, isAttachThread:%d )", success?"true":"false", task, isAttachThread);
+
+		int errType = HTTPErrorTypeToInt(GetStringToHttpErrorType(errnum));
+
+		/*callback object*/
+		jobject callBackObject = getCallbackObjectByTask((long)task);
+		if(callBackObject != NULL){
+			jclass callBackCls = env->GetObjectClass(callBackObject);
+			string signature = "(ZILjava/lang/String;";
+			signature += ")V";
+			jmethodID callbackMethod = env->GetMethodID(callBackCls, "onRequest", signature.c_str());
+			FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::OnPhoneInfo( callback : %p, signature : %s )",
+					callbackMethod, signature.c_str());
+			if(callbackMethod != NULL){
+				jstring jerrmsg = env->NewStringUTF(errmsg.c_str());
+				env->CallVoidMethod(callBackObject, callbackMethod, success, errType, jerrmsg);
+				env->DeleteLocalRef(jerrmsg);
+			}
+		}
+
+
+		if(callBackObject != NULL){
+			env->DeleteGlobalRef(callBackObject);
+		}
+
+		ReleaseEnv(isAttachThread);
+	}
+};
+RequestPhoneInfoCallback gRequestPhoneInfoCallback;
+ /*
+  * Class:     com_qpidnetwork_request_RequestJniOther
+  * Method:    PhoneInfo
+  * Signature: (Ljava/lang/String;ILjava/lang/String;ZIDIILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IILjava/lang/String;)J
+  */
+ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniOther_PhoneInfo
+   (JNIEnv *env, jclass cls, jstring manId, jint verCode, jstring verName, jint action, jint siteId
+    , jdouble density, jint width, jint height, jstring lineNumber
+    , jstring simOptName, jstring simOpt, jstring simCountryIso, jstring simState
+    , jint phoneType, jint networkType, jstring deviceId
+    , jobject callback)
+ {
+ 	jlong taskId = -1;
+ 	const char *cpTemp = NULL;
+
+ 	// manId
+ 	string strManId("");
+ 	if (NULL != manId) {
+ 		cpTemp = env->GetStringUTFChars(manId, 0);
+ 		strManId = cpTemp;
+ 		env->ReleaseStringUTFChars(manId, cpTemp);
+ 	}
+
+ 	// verName
+ 	string strVerName("");
+ 	if (NULL != verName) {
+ 		cpTemp = env->GetStringUTFChars(verName, 0);
+ 		strVerName = cpTemp;
+ 		env->ReleaseStringUTFChars(verName, cpTemp);
+ 	}
+
+ 	// lineNumber
+ 	string strLineNumber("");
+ 	if (NULL != lineNumber) {
+ 		cpTemp = env->GetStringUTFChars(lineNumber, 0);
+ 		strLineNumber = cpTemp;
+ 		env->ReleaseStringUTFChars(lineNumber, cpTemp);
+ 	}
+
+ 	// simOptName
+ 	string strSimOptName("");
+ 	if (NULL != simOptName) {
+ 		cpTemp = env->GetStringUTFChars(simOptName, 0);
+ 		strSimOptName = cpTemp;
+ 		env->ReleaseStringUTFChars(simOptName, cpTemp);
+ 	}
+
+ 	// simOpt
+ 	string strSimOpt("");
+ 	if (simOpt) {
+ 		cpTemp = env->GetStringUTFChars(simOpt, 0);
+ 		strSimOpt = cpTemp;
+ 		env->ReleaseStringUTFChars(simOpt, cpTemp);
+ 	}
+
+ 	// simCountryIso
+ 	string strSimCountryIso("");
+ 	if (NULL != simCountryIso) {
+ 		cpTemp = env->GetStringUTFChars(simCountryIso, 0);
+ 		strSimCountryIso = cpTemp;
+ 		env->ReleaseStringUTFChars(simCountryIso, cpTemp);
+ 	}
+
+ 	// simState
+ 	string strSimState("");
+ 	if (NULL != simState) {
+ 		cpTemp = env->GetStringUTFChars(simState, 0);
+ 		strSimState = cpTemp;
+ 		env->ReleaseStringUTFChars(simState, cpTemp);
+ 	}
+
+ 	// deviceId
+ 	string strDeviceId("");
+ 	if (NULL != deviceId) {
+ 		cpTemp = env->GetStringUTFChars(deviceId, 0);
+ 		strDeviceId = cpTemp;
+ 		env->ReleaseStringUTFChars(deviceId, cpTemp);
+ 	}
+
+ 	string strDensityDpi = GetPhoneDensityDPI();
+ 	string strModel = GetPhoneModel();
+ 	string strManufacturer = GetPhoneManufacturer();
+ 	string strOS = OS_TYPE;
+ 	string strRelease = GetPhoneBuildVersion();
+ 	string strSDK = GetPhoneBuildSDKVersion();
+ 	string strLanguage = GetPhoneLocalLanguage();
+ 	string strCountry = GetPhoneLocalRegion();
+
+ 	// 发出请求
+ 	taskId = gHttpRequestController.PhoneInfo(&gDomainRequestManager, strManId, verCode, strVerName, action, (HTTP_OTHER_SITE_TYPE)siteId
+ 			, density, width, height, strDensityDpi, strModel, strManufacturer, strOS, strRelease, strSDK, strLanguage, strCountry
+ 			, strLineNumber , strSimOptName, strSimOpt, strSimCountryIso, strSimState
+ 			, phoneType, networkType, strDeviceId, &gRequestPhoneInfoCallback);
+
+ 	if (taskId != -1) {
+ 		// 保存callback
+ 		jobject jObj = NULL;
+ 		if (NULL != callback) {
+ 			jobject obj = env->NewGlobalRef(callback);
+            putCallbackIntoMap(taskId, obj);
+ 		}
+ 		FileLog("LIVESHOW_HTTP_LOG", "LShttprequestJNI::PhoneInfo() taskId:%lld, callback:%p, jObj:%p", taskId, callback, jObj);
+ 	}
+ 	else {
+ 		FileLog("LIVESHOW_HTTP_LOG", "LShttprequestJNI::PhoneInfo() fails. "
+ 				"taskId:%lld", taskId);
+ 	}
+
+ 	return taskId;
+ }

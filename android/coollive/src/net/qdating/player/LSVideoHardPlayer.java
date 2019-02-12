@@ -3,6 +3,7 @@ package net.qdating.player;
 import android.opengl.GLSurfaceView;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
 public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
@@ -23,10 +24,9 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 	}
 	
 	/**
-	 * 绑定界面元素
-	 * @param view
-	 * @param viewWidth
-	 * @param viewHeight
+	 * 初始化
+	 * @param surfaceView 界面
+	 * @param fillMode 填充模式
 	 */
 	public void init(GLSurfaceView surfaceView, FillMode fillMode) {
 		// 创建预览渲染器
@@ -46,6 +46,28 @@ public class LSVideoHardPlayer implements ILSVideoHardRendererJni {
 	 */
 	public void uninit() {
 		playerHardRenderer.uninit();
+	}
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		if( playerHardRenderer != null ) {
+			playerHardRenderer.setCustomFilter(customFilter);
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		LSImageFilter filter = null;
+		if( playerHardRenderer != null ) {
+			filter = playerHardRenderer.getCustomFilter();
+		}
+		return filter;
 	}
 
 	@Override

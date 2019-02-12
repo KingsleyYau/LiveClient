@@ -27,7 +27,7 @@
 #import "LSImageViewLoader.h"
 #import "LSLoginManager.h"
 #import "LSImageViewLoader.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 
 #pragma mark - 流[播放/推送]逻辑
 #define STREAM_PLAYER_RECONNECT_MAX_TIMES 5
@@ -56,7 +56,7 @@
 @property (nonatomic, strong) LSImageViewLoader *imageLoader;
 
 // 个人信息管理器
-@property (nonatomic, strong) UserInfoManager *userInfoManager;
+@property (nonatomic, strong) LSUserInfoManager *userInfoManager;
 
 // 开始视频互动
 @property (nonatomic, assign) BOOL startPush;
@@ -144,7 +144,7 @@
     self.imageLoader = [LSImageViewLoader loader];
     
     // 初始化个人信息管理器
-    self.userInfoManager = [UserInfoManager manager];
+    self.userInfoManager = [LSUserInfoManager manager];
     
     // 初始化是否方法界面标识位
     self.isBoostView = NO;

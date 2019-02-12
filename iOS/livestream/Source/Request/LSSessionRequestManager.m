@@ -14,8 +14,11 @@
 #import "LiveModule.h"
 #import "RequestErrorCode.h"
 
-static LSSessionRequestManager *gManager = nil;
-@interface LSSessionRequestManager () <LoginManagerDelegate>
+static LSSessionRequestManager *sessionRequestManager = nil;
+@interface LSSessionRequestManager () <LoginManagerDelegate> {
+    NSString *_sessionErrorMsg;
+}
+
 @property (nonatomic, strong) LSLoginManager *loginManager;
 @property (nonatomic, strong) NSMutableArray *array;
 @property (nonatomic, strong) NSMutableArray *requestArray;
@@ -24,10 +27,10 @@ static LSSessionRequestManager *gManager = nil;
 @implementation LSSessionRequestManager
 #pragma mark - 获取实例
 + (instancetype)manager {
-    if (gManager == nil) {
-        gManager = [[[self class] alloc] init];
+    if (sessionRequestManager == nil) {
+        sessionRequestManager = [[[self class] alloc] init];
     }
-    return gManager;
+    return sessionRequestManager;
 }
 
 - (id)init {
@@ -46,7 +49,7 @@ static LSSessionRequestManager *gManager = nil;
 }
 
 #pragma mark - 接口回调处理
-- (BOOL)sendRequest:(LSSessionRequest *_Nonnull)request {
+- (BOOL)sendRequest:(LSSessionRequest *)request {
     BOOL bFlag = NO;
     request.delegate = self;
     request.token = self.loginManager.loginItem.token ? self.loginManager.loginItem.token : @"";
@@ -61,13 +64,15 @@ static LSSessionRequestManager *gManager = nil;
     return bFlag;
 }
 
-- (BOOL)request:(LSSessionRequest *_Nonnull)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nullable)errmsg {
+- (BOOL)request:(LSSessionRequest *)request handleRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *)errmsg {
     BOOL bFlag = NO;
     if (!success) {
         // 判断错误码
         if (errnum == HTTP_LCC_ERR_TOKEN_EXPIRE ||
             errnum == HTTP_LCC_ERR_NO_LOGIN) {
             // session超时
+            _sessionErrorMsg = errmsg;
+
             // 插入待处理队列
             @synchronized(self) {
                 [self.array addObject:request];
@@ -78,6 +83,7 @@ static LSSessionRequestManager *gManager = nil;
                     // 已经登陆状态, 注销
                     NSLog(@"LSSessionRequestManager::handleRespond( [已经登陆状态, 注销], self.array.size : %lu )", (unsigned long)self.array.count);
                     [self.loginManager logout:LogoutTypeRelogin msg:@""];
+                    [self.loginManager autoLogin];
                 } else if (self.loginManager.status == LOGINING) {
                     // 正在登陆, 等待
                     NSLog(@"LSSessionRequestManager::handleRespond( [正在登陆状态, 等待], self.array.size : %lu )", (unsigned long)self.array.count);
@@ -93,18 +99,12 @@ static LSSessionRequestManager *gManager = nil;
 
             bFlag = YES;
         }
-        //        else if ( errnum == HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE ) {
-        //            // 主线程被踢(其他设备登录)
-        //            dispatch_async(dispatch_get_main_queue(), ^{
-        //                [self.loginManager logout:YES msg:@""];
-        //            });
-        //        }
     }
 
     return bFlag;
 }
 
-- (void)requestFinish:(LSSessionRequest *_Nonnull)request {
+- (void)requestFinish:(LSSessionRequest *)request {
     @synchronized(self) {
         [self.requestArray removeObject:request];
     }
@@ -131,7 +131,7 @@ static LSSessionRequestManager *gManager = nil;
                     }
                 }
             }
-            
+
             // 清空所有请求
             [self.array removeAllObjects];
 
@@ -139,7 +139,7 @@ static LSSessionRequestManager *gManager = nil;
     });
 }
 
-- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(LogoutType)type msg:(NSString * _Nullable)msg {
+- (void)manager:(LSLoginManager *)manager onLogout:(LogoutType)type msg:(NSString *)msg {
 }
 
 @end

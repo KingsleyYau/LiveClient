@@ -7,6 +7,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
+        <!-- 　拍照功能　buildsdk>=24时报android.os.FileUriExposedException: -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
         <!-- android:theme="@android:style/Theme.Translucent.NoTitleBar" -->
         <activity
             android:name=".sysPermissions.PermissionActivity"
@@ -14,7 +25,9 @@
             android:launchMode="standard"
             android:theme="@style/permission_PermissionActivity"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" />
-        <activity android:name=".sysPermissions.TestPActivity"></activity>
+
+        <activity android:name=".sysPermissions.TestPActivity"/>
+
     </application>
 
 </manifest>

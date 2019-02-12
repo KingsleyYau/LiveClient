@@ -3,7 +3,11 @@ package com.qpidnetwork.qnbridgemodule.sysPermissions.manager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
 
 import com.qpidnetwork.qnbridgemodule.R;
 import com.qpidnetwork.qnbridgemodule.sysPermissions.AndPermission;
@@ -104,6 +108,43 @@ public class PermissionManager {
                     }
                 })
                 .start();
+    }
+
+    /**
+     * 注:一定要在onActivityResult处理REQUEST_CODE_SYSSETTING事件
+     * @return
+     */
+    public void requestFloatWindow() {
+        DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //启动Activity让用户授权
+                        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + mContext.getPackageName()));
+                        ((Activity)mContext).startActivityForResult(intent,REQUEST_CODE_SYSSETTING);
+
+                        //一定要在onActivityResult处理REQUEST_CODE_SYSSETTING事件
+
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        mCallback.onFailure();
+                        break;
+                }
+            }
+        };
+
+        if(!AndPermission.hasPermission(mContext , Permission.OVERLAYWINDOW)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
+                    .setCancelable(false)
+                    .setTitle(R.string.permission_title_float_window)
+                    .setMessage(R.string.permission_message_float_window)
+                    .setPositiveButton(R.string.permission_setting, clickListener)
+                    .setNegativeButton(R.string.permission_cancel, clickListener);
+            builder.show();
+        }else{
+            mCallback.onSuccessful();
+        }
     }
 
     @PermissionYes(REQUEST_CODE_PERMISSION)

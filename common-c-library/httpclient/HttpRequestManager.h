@@ -37,6 +37,11 @@ public:
 	 * 设置客户端版本号
 	 */
 	void SetVersionCode(string versionKey, string versionCode);
+    
+    /**
+     * app唯一标识
+     */
+    void SetAppId(string appId);
 
 	/**
 	 * 设置认证信息
@@ -83,6 +88,7 @@ private:
 	string mPassword;
 	string mVersionKey;
 	string mVersionCode;
+    string mAppId;
 
     KMutex mRequestMutex;
 	HttpRequestMap mHttpRequestMap;

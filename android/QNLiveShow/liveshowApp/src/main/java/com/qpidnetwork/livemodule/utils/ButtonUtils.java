@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.utils;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
+
 /**
  * button连击控制工具类
  * Created by Hunter on 18/6/6.

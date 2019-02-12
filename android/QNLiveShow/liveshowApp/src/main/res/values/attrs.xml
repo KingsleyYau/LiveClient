@@ -44,6 +44,12 @@
         <attr name="sameLine" format="boolean" />
         <attr name="pst_dividerPadding" format="dimension" />
         <attr name="pst_textAllCaps" format="boolean" />
+
+        <!--2018/11/26 Hardy-->
+        <attr name="red_dot_location" format="enum">
+            <enum name="gravity_right_top" value="1"/>
+            <enum name="gravity_right_center" value="2"/>
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="EmojiTabScrollLayout">

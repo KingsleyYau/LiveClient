@@ -1,5 +1,6 @@
 package com.qpidnetwork.livemodule.im;
 
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TYPE;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
@@ -15,7 +16,7 @@ public interface IMLiveRoomEventListener {
 	 * 3.3.直播间关闭通知（用户）
 	 * @param roomId
 	 */
-    void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg);
+    void OnRecvRoomCloseNotice(String roomId, LCC_ERR_TYPE errType, String errMsg, IMAuthorityItem privItem);
 
 	/**
 	 * 3.4.接收观众进入直播间通知
@@ -53,7 +54,7 @@ public interface IMLiveRoomEventListener {
 	 * @param err
 	 * @param errMsg
 	 */
-    void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg);
+    void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem);
 
 	/**
 	 * 3.8.接收踢出直播间通知
@@ -62,7 +63,7 @@ public interface IMLiveRoomEventListener {
 	 * @param errMsg
 	 * @param credit
 	 */
-    void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err, String errMsg, double credit);
+    void OnRecvRoomKickoffNotice(String roomId, LCC_ERR_TYPE err, String errMsg, double credit, IMAuthorityItem privItem);
 
 	/**
 	 * 3.12.接收观众/主播切换视频流通知接口

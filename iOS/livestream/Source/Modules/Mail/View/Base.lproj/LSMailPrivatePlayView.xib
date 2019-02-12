@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSMailPrivatePlayView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xVs-dG-rHK" userLabel="Video View">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="UserMyProfile_background" translatesAutoresizingMaskIntoConstraints="NO" id="zu7-PZ-GRb" userLabel="Video Image View">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="zu7-PZ-GRb" secondAttribute="bottom" id="0ij-T4-ZGS"/>
+                        <constraint firstItem="zu7-PZ-GRb" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="7DJ-Bq-QnZ"/>
+                        <constraint firstAttribute="trailing" secondItem="zu7-PZ-GRb" secondAttribute="trailing" id="aUf-uG-Pey"/>
+                        <constraint firstItem="zu7-PZ-GRb" firstAttribute="leading" secondItem="xVs-dG-rHK" secondAttribute="leading" id="iBV-kB-d02"/>
+                        <constraint firstAttribute="width" secondItem="xVs-dG-rHK" secondAttribute="height" multiplier="1:1" id="kdG-kb-7Ye"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BH4-Dz-lI3" userLabel="Buy Video View">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EMF_Private_Photo_Lock" translatesAutoresizingMaskIntoConstraints="NO" id="lkR-4N-5WY">
+                            <rect key="frame" x="153.5" y="62" width="68" height="68"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is broadcaster's private video." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kcn-Pm-XW0">
+                            <rect key="frame" x="36.5" y="150" width="302" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2 post stamps or 1.6 credits for viewing this video." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rr1-u7-Iaf">
+                            <rect key="frame" x="20" y="176" width="335" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zca-Lz-t3N">
+                            <rect key="frame" x="29.5" y="233" width="315" height="44"/>
+                            <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="315" id="1K7-na-rjW"/>
+                                <constraint firstAttribute="height" constant="44" id="Vge-Yg-i6S"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="  Play by Stamps" image="EMF_Video_Play_Button">
+                                <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="playByStampAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="GaQ-eV-5eD"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="v3c-Xh-NSD">
+                            <rect key="frame" x="30" y="287" width="315" height="44"/>
+                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <state key="normal" title="  Play by Credits" image="Mail_Buy_Credits_Private_Video">
+                                <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </state>
+                            <connections>
+                                <action selector="playByCreditsAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="Ajs-eo-XYK"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Rr1-u7-Iaf" secondAttribute="trailing" constant="20" id="6Wd-5I-NZn"/>
+                        <constraint firstItem="kcn-Pm-XW0" firstAttribute="top" secondItem="lkR-4N-5WY" secondAttribute="bottom" constant="20" id="94e-UM-BpE"/>
+                        <constraint firstItem="Rr1-u7-Iaf" firstAttribute="top" secondItem="kcn-Pm-XW0" secondAttribute="bottom" constant="5" id="DDd-Ps-UD7"/>
+                        <constraint firstItem="lkR-4N-5WY" firstAttribute="centerX" secondItem="BH4-Dz-lI3" secondAttribute="centerX" id="Gu0-So-GST"/>
+                        <constraint firstItem="Rr1-u7-Iaf" firstAttribute="leading" secondItem="BH4-Dz-lI3" secondAttribute="leading" constant="20" id="Igc-Qa-U7y"/>
+                        <constraint firstItem="v3c-Xh-NSD" firstAttribute="height" secondItem="zca-Lz-t3N" secondAttribute="height" id="Vuc-K0-ylj"/>
+                        <constraint firstItem="v3c-Xh-NSD" firstAttribute="width" secondItem="zca-Lz-t3N" secondAttribute="width" id="dmC-4t-31D"/>
+                        <constraint firstItem="lkR-4N-5WY" firstAttribute="top" secondItem="BH4-Dz-lI3" secondAttribute="top" constant="62" id="f7a-Gv-Xjg"/>
+                        <constraint firstItem="v3c-Xh-NSD" firstAttribute="centerX" secondItem="BH4-Dz-lI3" secondAttribute="centerX" id="fir-NF-ruQ"/>
+                        <constraint firstItem="zca-Lz-t3N" firstAttribute="top" secondItem="Rr1-u7-Iaf" secondAttribute="bottom" constant="40" id="jbF-dL-AJ9"/>
+                        <constraint firstItem="zca-Lz-t3N" firstAttribute="centerX" secondItem="BH4-Dz-lI3" secondAttribute="centerX" id="rix-yX-SoC"/>
+                        <constraint firstItem="Rr1-u7-Iaf" firstAttribute="centerX" secondItem="BH4-Dz-lI3" secondAttribute="centerX" id="tgf-wY-DMZ"/>
+                        <constraint firstItem="kcn-Pm-XW0" firstAttribute="centerX" secondItem="BH4-Dz-lI3" secondAttribute="centerX" id="vgJ-zN-v0p"/>
+                        <constraint firstItem="v3c-Xh-NSD" firstAttribute="top" secondItem="zca-Lz-t3N" secondAttribute="bottom" constant="10" id="yB1-OF-Niq"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LGX-M2-IPd" userLabel="Unlock Play View">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Private_Video_Unlock" translatesAutoresizingMaskIntoConstraints="NO" id="17c-hW-t0z">
+                            <rect key="frame" x="18" y="14" width="32" height="32"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qJt-Zf-R2G">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                            <state key="normal" image="Mail_Video_Replay"/>
+                            <connections>
+                                <action selector="unlockPlayVideoAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="4g2-yd-RVX"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="qJt-Zf-R2G" secondAttribute="bottom" id="2r8-4K-aEw"/>
+                        <constraint firstItem="17c-hW-t0z" firstAttribute="top" secondItem="LGX-M2-IPd" secondAttribute="top" constant="14" id="F6s-lT-Ot2"/>
+                        <constraint firstItem="qJt-Zf-R2G" firstAttribute="leading" secondItem="LGX-M2-IPd" secondAttribute="leading" id="JNO-o3-yfm"/>
+                        <constraint firstItem="17c-hW-t0z" firstAttribute="leading" secondItem="LGX-M2-IPd" secondAttribute="leading" constant="18" id="KYL-qZ-ZDg"/>
+                        <constraint firstAttribute="trailing" secondItem="qJt-Zf-R2G" secondAttribute="trailing" id="SMO-aJ-cSD"/>
+                        <constraint firstItem="qJt-Zf-R2G" firstAttribute="top" secondItem="LGX-M2-IPd" secondAttribute="top" id="qie-qV-Jb1"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pgv-X1-NpT" userLabel="Expired View">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Attchments_Expired" translatesAutoresizingMaskIntoConstraints="NO" id="8lh-ZC-TvL">
+                            <rect key="frame" x="153.5" y="153.5" width="68" height="68"/>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Expired video" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d0H-z8-FrK">
+                            <rect key="frame" x="138.5" y="231.5" width="98" height="20"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="8lh-ZC-TvL" firstAttribute="centerY" secondItem="pgv-X1-NpT" secondAttribute="centerY" id="0OP-ER-8E7"/>
+                        <constraint firstItem="8lh-ZC-TvL" firstAttribute="centerX" secondItem="pgv-X1-NpT" secondAttribute="centerX" id="JyE-gk-6RN"/>
+                        <constraint firstItem="d0H-z8-FrK" firstAttribute="top" secondItem="8lh-ZC-TvL" secondAttribute="bottom" constant="10" id="NOc-Dt-NIS"/>
+                        <constraint firstItem="d0H-z8-FrK" firstAttribute="centerX" secondItem="pgv-X1-NpT" secondAttribute="centerX" id="cnY-5S-vp8"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Note: Private video and photos will be expired if they are not being viewed within 7 days after you received." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mgm-zg-QOo">
+                    <rect key="frame" x="20" y="630.5" width="335" height="26.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fxB-W6-mrP">
+                    <rect key="frame" x="20" y="599" width="335" height="19.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="mR1-Q9-1FV">
+                    <rect key="frame" x="169" y="315" width="37" height="37"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" red="0.1764705882" green="0.1764705882" blue="0.1764705882" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="pgv-X1-NpT" firstAttribute="leading" secondItem="xVs-dG-rHK" secondAttribute="leading" id="4pj-3L-1gD"/>
+                <constraint firstItem="BH4-Dz-lI3" firstAttribute="trailing" secondItem="xVs-dG-rHK" secondAttribute="trailing" id="BeX-dY-3Oe"/>
+                <constraint firstItem="BH4-Dz-lI3" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="D3F-Ib-hhS"/>
+                <constraint firstItem="xVs-dG-rHK" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="DHI-gQ-eEq"/>
+                <constraint firstItem="LGX-M2-IPd" firstAttribute="leading" secondItem="xVs-dG-rHK" secondAttribute="leading" id="F6W-cI-fe7"/>
+                <constraint firstAttribute="bottom" secondItem="Mgm-zg-QOo" secondAttribute="bottom" constant="10" id="Juh-Au-Xse"/>
+                <constraint firstItem="LGX-M2-IPd" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="MBh-3A-2kU"/>
+                <constraint firstItem="pgv-X1-NpT" firstAttribute="trailing" secondItem="xVs-dG-rHK" secondAttribute="trailing" id="PEr-GQ-1HU"/>
+                <constraint firstAttribute="trailing" secondItem="Mgm-zg-QOo" secondAttribute="trailing" constant="20" id="QyT-4R-GHe"/>
+                <constraint firstItem="mR1-Q9-1FV" firstAttribute="centerX" secondItem="xVs-dG-rHK" secondAttribute="centerX" id="U46-IL-6I7"/>
+                <constraint firstItem="BH4-Dz-lI3" firstAttribute="leading" secondItem="xVs-dG-rHK" secondAttribute="leading" id="UNh-s0-WQe"/>
+                <constraint firstItem="LGX-M2-IPd" firstAttribute="trailing" secondItem="xVs-dG-rHK" secondAttribute="trailing" id="UOg-pT-pEh"/>
+                <constraint firstItem="pgv-X1-NpT" firstAttribute="top" secondItem="xVs-dG-rHK" secondAttribute="top" id="WoR-Bp-rHL"/>
+                <constraint firstItem="Mgm-zg-QOo" firstAttribute="top" secondItem="fxB-W6-mrP" secondAttribute="bottom" constant="12" id="XBI-Pw-qDM"/>
+                <constraint firstItem="mR1-Q9-1FV" firstAttribute="centerY" secondItem="xVs-dG-rHK" secondAttribute="centerY" id="bVL-AM-bbC"/>
+                <constraint firstItem="Mgm-zg-QOo" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="dW6-1Y-hpw"/>
+                <constraint firstItem="BH4-Dz-lI3" firstAttribute="bottom" secondItem="xVs-dG-rHK" secondAttribute="bottom" id="ffW-3x-huD"/>
+                <constraint firstAttribute="trailing" secondItem="xVs-dG-rHK" secondAttribute="trailing" id="fxW-IG-NBg"/>
+                <constraint firstItem="Mgm-zg-QOo" firstAttribute="leading" secondItem="fxB-W6-mrP" secondAttribute="leading" id="iW0-Wq-O4t"/>
+                <constraint firstItem="pgv-X1-NpT" firstAttribute="bottom" secondItem="xVs-dG-rHK" secondAttribute="bottom" id="mAk-3x-lIn"/>
+                <constraint firstItem="LGX-M2-IPd" firstAttribute="bottom" secondItem="xVs-dG-rHK" secondAttribute="bottom" id="oHF-e4-Y2v"/>
+                <constraint firstAttribute="trailing" secondItem="fxB-W6-mrP" secondAttribute="trailing" constant="20" id="ttW-qZ-CuV"/>
+                <constraint firstItem="xVs-dG-rHK" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="xOd-lW-FNP"/>
+            </constraints>
+            <connections>
+                <outlet property="activiView" destination="mR1-Q9-1FV" id="C8B-JT-AZ6"/>
+                <outlet property="buyVideoTipLabel" destination="Rr1-u7-Iaf" id="7Xf-9s-4C3"/>
+                <outlet property="buyVideoView" destination="BH4-Dz-lI3" id="ZIx-Xf-Ll5"/>
+                <outlet property="creditsBuyBtn" destination="v3c-Xh-NSD" id="Tg4-UO-eDi"/>
+                <outlet property="expiredView" destination="pgv-X1-NpT" id="ein-wJ-M0y"/>
+                <outlet property="noteLabel" destination="Mgm-zg-QOo" id="VVF-lt-6pl"/>
+                <outlet property="noteLabelTop" destination="XBI-Pw-qDM" id="jjl-I8-6I7"/>
+                <outlet property="representLabel" destination="fxB-W6-mrP" id="wys-je-UBc"/>
+                <outlet property="stampsBuyBtn" destination="zca-Lz-t3N" id="gJo-iZ-psV"/>
+                <outlet property="unlockPlayView" destination="LGX-M2-IPd" id="q7o-Gh-DdD"/>
+                <outlet property="videoImageView" destination="zu7-PZ-GRb" id="tzs-Bt-Iua"/>
+                <outlet property="videoPlayView" destination="xVs-dG-rHK" id="G2j-Fe-ThC"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="EMF_Private_Photo_Lock" width="68" height="68"/>
+        <image name="EMF_Video_Play_Button" width="25" height="25"/>
+        <image name="Mail_Attchments_Expired" width="68" height="68"/>
+        <image name="Mail_Buy_Credits_Private_Video" width="25" height="25"/>
+        <image name="Mail_Private_Video_Unlock" width="32" height="32"/>
+        <image name="Mail_Video_Replay" width="50" height="50"/>
+        <image name="UserMyProfile_background" width="375" height="200"/>
+    </resources>
+</document>

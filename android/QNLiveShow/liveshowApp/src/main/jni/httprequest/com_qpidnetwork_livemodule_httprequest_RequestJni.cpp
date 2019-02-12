@@ -6,6 +6,7 @@
  */
 #include "GlobalFunc.h"
 #include "com_qpidnetwork_livemodule_httprequest_RequestJni.h"
+#include "com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni.h"
 
 #include <crashhandler/CrashHandler.h>
 #include <common/IPAddress.h>
@@ -42,9 +43,11 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetVersionCode
   (JNIEnv *env, jclass cls, jstring version){
 	const char *cpVersion = env->GetStringUTFChars(version, 0);
-	gHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gPhotoUploadRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
 	gConfigRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
+	gDomainRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
+	gHttpRequestManager.SetVersionCode(COMMON_VERSION_CODE, cpVersion);
+
 	CrashHandler::GetInstance()->SetVersion(cpVersion);
 	env->ReleaseStringUTFChars(version, cpVersion);
 }
@@ -110,6 +113,37 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 	gConfigRequestManager.SetWebSite(cpConfigSite);
 
 	env->ReleaseStringUTFChars(configSite, cpConfigSite);
+}
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetDomainSite
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetDomainSite
+		(JNIEnv *env, jclass cls, jstring domainSite) {
+	const char *cpDomainSite = env->GetStringUTFChars(domainSite, 0);
+
+	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetDomainSite ( domainSite : %s ) ", cpDomainSite);
+
+	gDomainRequestManager.SetWebSite(cpDomainSite);
+
+	env->ReleaseStringUTFChars(domainSite, cpDomainSite);
+}
+
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAuthorization
+          (JNIEnv *env, jclass cls, jstring user, jstring password) {
+   	const char *cpUser = env->GetStringUTFChars(user, 0);
+   	const char *cpPassword = env->GetStringUTFChars(password, 0);
+
+   	FileLog(LIVESHOW_HTTP_LOG, "LShttprequestJNI::SetAuthorization ( user : %s, cpPassword : %s) ", cpUser, cpPassword);
+
+	gConfigRequestManager.SetAuthorization(cpUser, cpPassword);
+    gDomainRequestManager.SetAuthorization(cpUser, cpPassword);
+    gHttpRequestManager.SetAuthorization(cpUser, cpPassword);
+
+   	env->ReleaseStringUTFChars(user, cpUser);
+   	env->ReleaseStringUTFChars(password, cpPassword);
 }
 
 
@@ -264,7 +298,17 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 }
 
 
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAppId
+  (JNIEnv *env, jclass cls, jstring appId) {
+   	const char *cpAppId = env->GetStringUTFChars(appId, 0);
+   	gPhotoUploadRequestManager.SetAppId(cpAppId);
+   	gConfigRequestManager.SetAppId(cpAppId);
+   	gDomainRequestManager.SetAppId(cpAppId);
+   	gHttpRequestManager.SetAppId(cpAppId);
+   	Java_com_qpidnetwork_livemodule_livechathttprequest_LCRequestJni_SetAppId(env, cls, appId);
+   	env->ReleaseStringUTFChars(appId, cpAppId);
 
+ }
 
 
 

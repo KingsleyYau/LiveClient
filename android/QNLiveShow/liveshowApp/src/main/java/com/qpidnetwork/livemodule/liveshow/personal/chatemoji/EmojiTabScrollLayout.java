@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -14,7 +13,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,13 +24,13 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.widget.viewpagerindicator.TabPageIndicator;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.livemodule.view.ScrollLayout;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -251,7 +249,7 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
         if(emojiPanelAutoFitWindow){
             //默认宽度全屏
             columnNumbPerPage = DisplayUtil.getScreenWidth(mContext)/gridViewItemWidth;
-            int emojiTotalHeight =emojiPanelHeight-pageIndicatorHeight-pageIndicatorTopMargin-pageIndicatorBottomMargin;
+            int emojiTotalHeight = doGetEmojiTotalHeight(this.emojiPanelHeight);
             if(showTabPageIndicator){
                 LayoutParams tabIndLp = (LayoutParams) tpi_tabIndicator.getLayoutParams();
                 emojiTotalHeight -= tabIndLp.height;
@@ -260,6 +258,10 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
             lineNumbPerPage = (emojiTotalHeight)/gridViewItemHeight;
         }
         itemNumbPerPage = columnNumbPerPage*lineNumbPerPage;
+    }
+
+    private int doGetEmojiTotalHeight(int newHeight){
+        return newHeight-pageIndicatorHeight-pageIndicatorTopMargin-pageIndicatorBottomMargin;
     }
 
     /**
@@ -370,10 +372,7 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
                 //更新页面展示状态
             }
         }else{
-            //如果没有map数据或者map数据不包含title的数据，判断req状态
-            if(HttpReqStatus.Reqing == ChatEmojiManager.getInstance().emojiListReqStatus){
 
-            }
         }
     }
 
@@ -452,7 +451,8 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
      * @param tabTitles
      */
     public void setTabTitles(List<String> tabTitles){
-        this.tabTitles = tabTitles;
+        this.tabTitles.clear();
+        this.tabTitles.addAll(tabTitles);
     }
 
     /**
@@ -496,12 +496,19 @@ public class EmojiTabScrollLayout<T> extends LinearLayout {
      */
     public void setEmojiPanelHeight(int emojiPanelHeight){
         Log.d(TAG,"setEmojiPanelHeight-emojiPanelHeight:"+emojiPanelHeight);
-        this.emojiPanelHeight = emojiPanelHeight;
-        if(null != ll_emojiRootView){
-            ll_emojiRootView.getLayoutParams().height = emojiPanelHeight;
-            Log.d(TAG,"setEmojiPanelHeight-ll_emojiRootView.height:"+ll_emojiRootView.getLayoutParams().height);
+        //add by Jagger 2018-9-6 因为会出现小于0的情况(黑莓手机，物理键盘)。如果新高度合理，则使用
+        if (doGetEmojiTotalHeight(emojiPanelHeight) > 1){
+            this.emojiPanelHeight = emojiPanelHeight;
+            if(null != ll_emojiRootView){
+//                ll_emojiRootView.getLayoutParams().height = emojiPanelHeight;
+//                Log.d(TAG,"setEmojiPanelHeight-ll_emojiRootView.height:"+ll_emojiRootView.getLayoutParams().height);
+                ViewGroup.LayoutParams layoutParams = ll_emojiRootView.getLayoutParams();
+                layoutParams.height = emojiPanelHeight;
+
+                ll_emojiRootView.setLayoutParams(layoutParams);
+            }
+            resetEmojiPanelColumnLineNum();
         }
-        resetEmojiPanelColumnLineNum();
     }
 
     /**

@@ -1,4 +1,4 @@
-include ':liveshowApp', ':Google-play-services_lib'
+include ':liveshowApp'
 
 include ':QNBridgeModule'
 project(':QNBridgeModule').projectDir=new File('../QNBridgeModule/trunk/')

@@ -10,14 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
@@ -34,11 +33,13 @@ import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.livemessage.OnSetPrivatemsgReadedCallback;
 import com.qpidnetwork.livemodule.livemessage.item.LMSystemNoticeItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.view.ButtonRaised;
 import com.qpidnetwork.livemodule.view.RefreshRecyclerView;
+import com.qpidnetwork.livemodule.view.CustomEditText;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.KeyBoardManager;
 import com.qpidnetwork.qnbridgemodule.view.keyboardLayout.SoftKeyboardSizeWatchLayout;
 
@@ -50,7 +51,7 @@ import static com.qpidnetwork.livemodule.im.listener.IMClientListener.LCC_ERR_TY
 
 /**
  * 私信聊天记录界面
- * 注：manifest中android:windowSoftInputMode="stateHidden|adjustPan"只能这样设置
+ * 注：manifest中android:windowSoftInputMode="stateHidden|adjustResize"只能这样设置
  *
  * @author Jagger 2018-6-14
  *
@@ -90,14 +91,14 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
     private LinearLayoutManager mLinearLayoutManager;
     private FrameLayout mFrameLayoutInputArea , mFrameLayoutEmoji;
     private ImageView mImageViewEmoji;
-    private EditText mEditText;
+    private CustomEditText mEditText;
     private LinearLayout listLoadingHeader;
     private ButtonRaised mBtnSend;
 
     //变量
     private int mKeyBoardHeight = 0;    //键盘高度
     private InputAreaStatus mInputAreaStatus = InputAreaStatus.HIDE;
-    private InputChangeBtnStaus mInputChangeBtnStaus = InputChangeBtnStaus.KEYBOARD;
+    private InputChangeBtnStaus mInputChangeBtnStaus = InputChangeBtnStaus.EMOJI;
     private ListScrollPosition mListScrollPosition = ListScrollPosition.BOTTOM;
     private int mTempPositonBeforeMore = 0;
     private boolean mIsTitleClicked2Profile = true;    //点击标题是否跳转到资料
@@ -176,7 +177,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
             @Override
             public void onAddCreditClick() {
                 //充值
-                LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
+                LiveModule.getInstance().onAddCreditClick(mContext, new NoMoneyParamsBean());
             }
         });
 
@@ -193,8 +194,6 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
         mRecyclerViewMsg.setRScrollLister(new RefreshRecyclerView.RScrollLister() {
             @Override
             public void onScrollToTop() {
-                Log.i("Jagger" , "onScrollToTop mCanPullDownLoadMore: " + mCanPullDownLoadMore);
-
                 if(mCanPullDownLoadMore) {
                     //本地根据第一条消息检测是否可以loadmore
                     if(checkWhetherCanLoadMore()) {
@@ -214,14 +213,12 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
 
             @Override
             public void onScrollToBottom() {
-                Log.i("Jagger" , "onScrollToBottom");
                 //更新列表位置状态
                 mListScrollPosition = ListScrollPosition.BOTTOM;
             }
 
             @Override
             public void onScrollStateChanged(int state) {
-                Log.i("Jagger" , "onScrollStateChanged");
                 //更新列表位置状态
                 mListScrollPosition = ListScrollPosition.MIDDLE;
             }
@@ -243,7 +240,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
         listLoadingHeader.setVisibility(View.GONE);
         mRecyclerViewMsg.getRecyclerView().addHeaderView(listLoadingHeader);
 
-        mEditText = (EditText) findViewById(R.id.edt_msg);
+        mEditText = (CustomEditText) findViewById(R.id.edt_msg);
         mEditText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -278,17 +275,20 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                boolean isCatch = false;
                 switch (actionId) {
-                    case EditorInfo.IME_ACTION_SEND: {
+                    case EditorInfo.IME_ACTION_SEND:
+                    case EditorInfo.IME_ACTION_UNSPECIFIED:{
                         sendPrivateMesssage(mEditText.getText().toString());
                         mEditText.setText("");
+                        isCatch = true;
                     }break;
 
                     default:
                         break;
                 }
 
-                return true;
+                return isCatch;
             }
         });
 
@@ -326,7 +326,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
             if(bundle.containsKey(PARAMS_KEY_USERNAME)){
                 mUserName = bundle.getString(PARAMS_KEY_USERNAME);
                 setTitle(mUserName);
-                Log.i("Jagger" , "PARAMS_KEY_USERNAME:"+mUserName);
+//                Log.i("Jagger" , "PARAMS_KEY_USERNAME:"+mUserName);
             }
             if(bundle.containsKey(PARAMS_KEY_USERAVASTER)){
                 mUserAvaster = bundle.getString(PARAMS_KEY_USERAVASTER);
@@ -346,9 +346,11 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
 
             //
             mKeyBoardHeight = KeyBoardManager.getKeyboardHeight(this);
-            Log.i("Jagger", "mKeyBoardHeight: " + mKeyBoardHeight);
-            if(mKeyBoardHeight < 0){
-                mKeyBoardHeight = getResources().getDimensionPixelSize(R.dimen.keyboard_height);
+//            Log.i("Jagger", "mKeyBoardHeight: " + mKeyBoardHeight);
+            //edit by Jagger 2018-9-6
+            //黑莓手机，有物理键盘，取出键盘高度只有 100＋PX，效果不好。如果取出键盘高度，小于min_keyboard_height，就用默认的吧
+            if(mKeyBoardHeight < getResources().getDimensionPixelSize(R.dimen.min_keyboard_height)){
+                mKeyBoardHeight = getResources().getDimensionPixelSize(R.dimen.min_keyboard_height);
             }
             initEmojiView();
             //读取本地显示并刷新与当前联系人的私信列表
@@ -427,11 +429,25 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      * 显示输入区
      */
     private void showInputArea(){
+        int inputAreaHeight = 0;
+        if(mInputAreaStatus == InputAreaStatus.KEYBOARD){
+            //输入区, 使用键盘高度真实
+            inputAreaHeight = mKeyBoardHeight;
+        }else{
+            //因为黑霉手机有物理键盘,当虚拟键盘很小时,mKeyBoardHeight只有100+PX,表情区会显示不全,使用最小高度.
+            inputAreaHeight = mKeyBoardHeight < getResources().getDimensionPixelSize(R.dimen.min_keyboard_height)?getResources().getDimensionPixelSize(R.dimen.min_keyboard_height):mKeyBoardHeight;
+        }
+
+        //
         ViewGroup.LayoutParams layoutParams = mFrameLayoutInputArea.getLayoutParams();
         if(layoutParams.height < 1){
-            layoutParams.height = mKeyBoardHeight;
+            layoutParams.height = inputAreaHeight;
             mFrameLayoutInputArea.setLayoutParams(layoutParams);
+            mFrameLayoutInputArea.invalidate();
         }
+
+        //更改界面InputMode, 已弹出输入区,则可以用ADJUST_PAN,当弹出输入法时不会跳动
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN| WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     /**
@@ -453,8 +469,11 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
 
                 //更改图标
                 doChangeBtnStatus(InputChangeBtnStaus.EMOJI);
+
+                //更改界面InputMode, 隐藏输入区,则可以用ADJUST_RESIZE,使系统自动适配输入法弹出时窗口缩放
+                getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
             }
-        } , 200);
+        } , 100);
     }
 
     /**
@@ -462,11 +481,11 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      */
     private void showKeyBoard(){
         if(mInputAreaStatus == InputAreaStatus.KEYBOARD) return;
-        Log.i("Jagger" ,"showKeyBoard" );
+//        Log.i("Jagger" ,"showKeyBoard" );
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
-        showInputArea();
+        hideInputArea();
         showSoftInput(mEditText);
         hideEmojiBoard();
         // ***end***
@@ -477,7 +496,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      */
     private void hideKeyBoard(){
         if(mInputAreaStatus == InputAreaStatus.KEYBOARD){
-            Log.i("Jagger" ,"hideKeyBoard" );
+//            Log.i("Jagger" ,"hideKeyBoard" );
 
             //与其它控件显示关系的约束，最好不要乱改
             // ***start***
@@ -490,16 +509,16 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      * 显示表情选择器
      */
     private void showEmojiBoard(){
-        Log.i("Jagger" ,"showEmojiBoard" );
+//        Log.i("Jagger" ,"showEmojiBoard" );
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
         hideKeyBoard();
-        showInputArea();
         //更改图标
         doChangeBtnStatus(InputChangeBtnStaus.KEYBOARD);
         //更改为另一种状态
         mInputAreaStatus = InputAreaStatus.EMOJI;
+        showInputArea();
         //显示
         mFrameLayoutEmoji.setVisibility(View.VISIBLE);
         //回调
@@ -511,7 +530,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      * 隐藏表情选择器
      */
     private void hideEmojiBoard(){
-        Log.i("Jagger" ,"hideEmojiBoard" );
+//        Log.i("Jagger" ,"hideEmojiBoard" );
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -527,7 +546,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      */
     @Override
     public void OnSoftPop(int height) {
-        Log.i("Jagger" , "OnSoftPop:" + height);
+//        Log.i("Jagger" , "OnSoftPop:" + height);
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -536,6 +555,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
             KeyBoardManager.saveKeyboardHeight(mContext , height);
         }
 
+        hideInputArea();
         doScrollToBottom();
         //更改图标
         doChangeBtnStatus(InputChangeBtnStaus.EMOJI);
@@ -549,7 +569,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      */
     @Override
     public void OnSoftClose() {
-        Log.i("Jagger" , "OnSoftClose");
+//        Log.i("Jagger" , "OnSoftClose");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -564,7 +584,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      * 表情选择器弹出响应
      */
     private void onEmojiBoardShow(){
-        Log.i("Jagger" , "onEmojiBoardShow");
+//        Log.i("Jagger" , "onEmojiBoardShow");
 
         //与其它控件显示关系的约束，最好不要乱改
         // ***start***
@@ -661,7 +681,7 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
      * @return
      */
     public boolean isRecycleViewBottom() {
-        Log.i("Jagger" , "isRecycleViewBottom:" + mListScrollPosition.name());
+//        Log.i("Jagger" , "isRecycleViewBottom:" + mListScrollPosition.name());
 
         boolean result=false;
         if(mListScrollPosition == ListScrollPosition.BOTTOM){
@@ -728,7 +748,14 @@ public class ChatTextActivity extends BaseActionBarFragmentActivity implements R
         boolean isOnListBottom = isRecycleViewBottom();
 
         if(messageList != null){
-            mDataList.addAll(Arrays.asList(messageList));
+            // add by Jagger 2018-8-31
+            // 操作：刚进入刷新数据，这时网络慢，用户在数据返回前，发送新数据，
+            // 系统ANR LOG: - locked <0x0bc3eda0> (a java.util.ArrayList) .....OnUpdatePrivateMsgWithUserId(LMManager.java:306)
+            // 推断：刷新接口的数据和新发送的数据一起返回，同时写入mDataList，导致ANR
+            // 解决方法：加个锁吧
+            synchronized (mDataList){
+                mDataList.addAll(Arrays.asList(messageList));
+            }
         }
         notifyListDataChange();
 

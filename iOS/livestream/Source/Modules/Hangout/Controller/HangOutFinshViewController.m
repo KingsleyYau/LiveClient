@@ -14,6 +14,7 @@
 #import "LiveModule.h"
 #import "LiveUrlHandler.h"
 #import "LiveMutexService.h"
+#import "LSAddCreditsViewController.h"
 
 @interface HangOutFinshViewController ()
 
@@ -73,22 +74,23 @@
 }
 
 - (IBAction)startAgainAction:(id)sender {
-    [LiveUrlHandler shareInstance].url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:@"" nickName:@""];
+//    [LiveUrlHandler shareInstance].url = [[LiveUrlHandler shareInstance] createUrlToHangoutByRoomId:@"" anchorId:@"" nickName:@""];
 
 //    [self.navigationController dismissViewControllerAnimated:NO completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:NO completion:nil];
+    [nvc forceToDismissAnimated:NO completion:nil];
     [[LiveModule module].moduleVC.navigationController popToViewController:[LiveModule module].moduleVC animated:NO];
 }
 
 - (IBAction)addCreditAciton:(id)sender {
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)closeAciton:(id)sender {
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+    [nvc forceToDismissAnimated:YES completion:nil];
 }
 
 @end

@@ -73,17 +73,25 @@ bool HttpAcceptInstanceInviteTask::ParseData(const string& url, bool bFlag, cons
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
     HttpAcceptInstanceInviteItem item;
+    HttpAuthorityItem  priv;
     bool bParse = false;
     
     if ( bFlag ) {
-        // 公共解析
+        // 公共解
         Json::Value dataJson;
-        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+        Json::Value errDataJson;
+        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson) ) {
             
             if(dataJson.isObject()) {
                 item.Parse(dataJson);
             }
             
+        }
+        
+        if ( errnum != LOCAL_LIVE_ERROR_CODE_SUCCESS && errDataJson.isObject()) {
+            if (errDataJson[LIVEROOM_HOT_PROGRAMLIST_PRIV].isObject()) {
+                priv.Parse(errDataJson[LIVEROOM_HOT_PROGRAMLIST_PRIV]);
+            }
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
@@ -95,7 +103,7 @@ bool HttpAcceptInstanceInviteTask::ParseData(const string& url, bool bFlag, cons
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnAcceptInstanceInvite(this, bParse, errnum, errmsg, item);
+        mpCallback->OnAcceptInstanceInvite(this, bParse, errnum, errmsg, item, priv);
     }
     
     return bParse;

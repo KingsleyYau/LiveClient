@@ -7,11 +7,10 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.facebook.drawee.backends.pipeline.BuildConfig;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
 import com.qpidnetwork.livemodule.utils.CrashHandler;
 import com.qpidnetwork.livemodule.utils.CrashHandlerJni;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Created by Harry on 2017/5/16.
@@ -38,10 +37,7 @@ public class LiveApplication extends MultiDexApplication {
         //FileCacheManager 单例初始化
         FileCacheManager.newInstance(this);
         // Jni错误捕捉(需要咸鱼httprequest库加载，httprequest库对CrashHandler库有依赖)
-        CrashHandlerJni.SetCrashLogDirectory(FileCacheManager.getInstance().getCrashInfoPath());
-
-        //Application初始化
-         LiveService.newInstance(this);
+        CrashHandlerJni.SetCrashLogDirectory(FileCacheManager.getInstance().GetCrashInfoPath());
 
         //Java Crash日志管理
         CrashHandler.newInstance(this);

@@ -34,7 +34,22 @@
 /** 代理 */
 @property (nonatomic, weak) id<LSListViewControllerDelegate> listDelegate;
 @property (nonatomic, assign) SEL delegateSelect;
-- (void)reloadFailViewContent;
+
+/** 修改失败页提示(已设置默认值)  */
+- (void)reloadFailViewFailTipsText:(NSString *)failTipsText failBtnText:(NSString *)failBtnText;
 
 - (void)lsListViewControllerDidClick:(UIButton *)sender;
+
+// 首页刷新列表
+- (void)viewDidAppearGetList:(BOOL)isSwitchSite;
+
+// 首页设置刷新标志位
+- (void)setupLoadData:(BOOL)isLoadData;
+
+// 首页设置第一次登录标志位
+- (void)setupFirstLogin:(BOOL)isFirstLogin;
+
+// 更新未读数量
+- (void)reloadUnreadNum;
+
 @end

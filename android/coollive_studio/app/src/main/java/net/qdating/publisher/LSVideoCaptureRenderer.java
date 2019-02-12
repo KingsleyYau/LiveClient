@@ -2,6 +2,7 @@ package net.qdating.publisher;
 
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageBeautyFilter;
 import net.qdating.filter.LSImageInputCameraFilter;
 import net.qdating.filter.LSImageCropFilter;
 import net.qdating.filter.LSImageFilter;
@@ -11,16 +12,21 @@ import net.qdating.filter.LSImageRecordFilter;
 import net.qdating.filter.LSImageRecordFilterCallback;
 import net.qdating.filter.LSImageRecordYuvFilter;
 import net.qdating.filter.LSImageUtil;
+import net.qdating.filter.LSImageWaterMarkFilter;
 import net.qdating.utils.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.SurfaceTexture;
 import android.graphics.SurfaceTexture.OnFrameAvailableListener;
 import android.media.MediaCodecInfo;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+
+import java.io.File;
 
 /**
  * 视频输入裁剪
@@ -68,8 +74,12 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 	private LSImageInputCameraFilter cameraFilter = null;
 	private LSImageCropFilter cropFilter = null;
 	private LSImageOutputFilter outputFilter = null;
-	private LSImageFlipFilter flipFilter = null;
+	private LSImageFlipFilter recordFlipFilter = null;
+	private LSImageFlipFilter outputFlipFilter = null;
 	private LSImageFilter recordFilter = null;
+
+	private boolean bCustomFilterChange = false;
+	private LSImageFilter customFilter = null;
 
 	public LSVideoCaptureRenderer(ILSVideoPreviewCallback callback, FillMode fillMode, boolean useHardEncoder, LSPublishConfig publishConfig) {
 		this.callback = callback;
@@ -78,7 +88,8 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		cameraFilter = new LSImageInputCameraFilter();
 		cropFilter = new LSImageCropFilter();
 		outputFilter = new LSImageOutputFilter();
-		flipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
+		recordFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
+		outputFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
 
 		if( useHardEncoder ) {
 			// 硬编码录制滤镜
@@ -104,15 +115,45 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::init( this : 0x%x )", hashCode()));
 
 		cameraFilter.setFilter(cropFilter);
-		cropFilter.setFilter(outputFilter);
-		outputFilter.setFilter(flipFilter);
-		flipFilter.setFilter(recordFilter);
+		cropFilter.setFilter(recordFlipFilter);
+		recordFlipFilter.setFilter(recordFilter);
+		recordFilter.setFilter(outputFlipFilter);
+		outputFlipFilter.setFilter(outputFilter);
 	}
 
 	public void uninit() {
 		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::uninit( this : 0x%x )", hashCode()));
 	}
-	
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		Log.d(LSConfig.TAG, String.format("LSVideoCaptureRenderer::setCustomFilter( this : 0x%x )", hashCode()));
+		synchronized (this) {
+			if( this.customFilter != customFilter ) {
+				this.customFilter = customFilter;
+				bCustomFilterChange = true;
+
+				if (this.customFilter != null) {
+					outputFlipFilter.setFilter(this.customFilter);
+					this.customFilter.setFilter(outputFilter);
+				} else {
+					outputFlipFilter.setFilter(outputFilter);
+				}
+			}
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		return this.customFilter;
+	}
+
 	public void setOriginalSize(int width, int height) {
 		originalWidth = width;
 		originalHeight = height;
@@ -178,18 +219,27 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
-        // 创建流输入, 只能在这里创建, 因为要保证GL的创建和渲染在同一个线程
-		createSurfaceTexture();
-		
-        // 请求输入下一帧图像
-		surfaceTexture.updateTexImage();
-		// 获取旧的图像矩阵
-		surfaceTexture.getTransformMatrix(transformMatrix);
+		synchronized (this) {
+			if( bCustomFilterChange ) {
+				if( customFilter != null ) {
+					customFilter.init();
+				}
+				bCustomFilterChange = false;
+			}
 
-		// 绘制
-		if( glCameraTextureId != null ) {
-			cameraFilter.updateMatrix(transformMatrix);
-			cameraFilter.draw(glCameraTextureId[0], originalWidth, originalHeight);
+			// 创建流输入, 只能在这里创建, 因为要保证GL的创建和渲染在同一个线程
+			createSurfaceTexture();
+
+			// 请求输入下一帧图像
+			surfaceTexture.updateTexImage();
+			// 获取旧的图像矩阵
+			surfaceTexture.getTransformMatrix(transformMatrix);
+
+			// 绘制
+			if( glCameraTextureId != null ) {
+				cameraFilter.updateMatrix(transformMatrix);
+				cameraFilter.draw(glCameraTextureId[0], originalWidth, originalHeight);
+			}
 		}
 	}
 
@@ -234,8 +284,10 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 		cropFilter.init();
 		// 预览
 		outputFilter.init();
-		// 垂直翻转
-		flipFilter.init();
+		// 录制前垂直翻转
+		recordFlipFilter.init();
+		// 录制后再垂直翻转
+		outputFlipFilter.init();
 		// 录制
 		if( recordFilter != null ) {
 			recordFilter.init();

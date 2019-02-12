@@ -261,4 +261,59 @@
         <item>Zimbabwe (+263)</item>
     </string-array>
 
+
+    <!--LiveChat-->
+    <string-array name="LiveChatTab">
+        <item>Chat List</item>
+        <item>Invitation</item>
+    </string-array>
+    <!-- 聊天表情图片 -->
+    <array name="expressions">
+        <item>@drawable/e0</item>
+        <item>@drawable/e1</item>
+        <item>@drawable/e2</item>
+        <item>@drawable/e3</item>
+        <item>@drawable/e4</item>
+        <item>@drawable/e5</item>
+        <item>@drawable/e6</item>
+        <item>@drawable/e10</item>
+        <item>@drawable/e13</item>
+        <item>@drawable/e14</item>
+        <item>@drawable/e15</item>
+        <item>@drawable/e16</item>
+        <!--
+        <item>@drawable/e7</item>
+        <item>@drawable/e8</item>
+        <item>@drawable/e17</item>
+        <item>@drawable/e18</item>
+        <item>@drawable/e19</item>
+        <item>@drawable/e11</item>
+        <item>@drawable/e12</item>
+        <item>@drawable/e9</item>
+        -->
+    </array>
+    <array name="expressions_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>10</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <!--
+        <item>7</item>
+        <item>8</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>11</item>
+        <item>12</item>
+        <item>9</item>
+        -->
+    </array>
 </resources>

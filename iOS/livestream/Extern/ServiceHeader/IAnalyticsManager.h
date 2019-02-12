@@ -1,14 +1,23 @@
 //
 //  IAnalyticsManager.h
 //  livestream
-//
+//  GA跟踪服务接口类
 //  Created by Calvin on 17/10/18.
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#ifndef IAnalyticsManager_h
+#define IAnalyticsManager_h
 
+#import <Foundation/Foundation.h>
+/**
+ GA跟踪服务接口类
+ */
 @protocol IAnalyticsManager <NSObject>
+/**
+ 重置屏幕跟踪状态
+ */
+- (void)resetTracking;
 
 /**
  跟踪屏幕创建
@@ -76,6 +85,12 @@
  */
 - (void)reportActionEvent:(NSString *)action eventCategory:(NSString *)category label:(NSString *)label value:(NSNumber *)value dimension:(NSString *)dimension dimensionIndex:(NSInteger)dimensionIndex;
 
+/**
+ 跟踪添加子控制的界面移除
+
+ @param viewController 页面控制器
+ */
+- (void)reportRemoveParentViewController:(UIViewController *)viewController;
 
 /**
  跟踪App被打开
@@ -84,5 +99,6 @@
  */
 - (void)openURL:(NSURL *)url;
 
-
 @end
+
+#endif

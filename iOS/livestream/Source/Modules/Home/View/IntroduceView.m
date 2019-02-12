@@ -7,6 +7,7 @@
 //
 
 #import "IntroduceView.h"
+#import "LSRequestManager.h"
 // js调用OC的类名
 #define LIVEAPP_JS @"LiveApp"
 // js回调的函数名
@@ -30,6 +31,7 @@
 #define LIVEAPP_CALLBACK_APPPUBLiCGAEVENT @"callbackAppPublicGAEvent"
 // app调用界面回到前台JS接口
 #define LIVEAPP_TRANSFER_NOTIFYRESUME @"notifyResume()"
+//#define LIVEAPP_NOTIFYLIVEAPPUNREADCOUNT(a)  notifyLiveAppUnreadCount(a)
 
 @interface IntroduceView()<WKScriptMessageHandler>
 
@@ -42,30 +44,31 @@
 - (instancetype)initWithCoder:(NSCoder *)coder{
     
     CGRect frame = [[UIScreen mainScreen] bounds];
-    
+
     WKWebViewConfiguration *myConfiguration = [[WKWebViewConfiguration alloc] init];
-    
-    
-    myConfiguration.preferences.minimumFontSize = 10;
+  //    在ios11上设置这属性可能会导致网页显示不全
+//    myConfiguration.preferences.minimumFontSize = 10;
     
     myConfiguration.preferences.javaScriptEnabled = YES;
     myConfiguration.allowsInlineMediaPlayback = YES;
     myConfiguration.mediaPlaybackRequiresUserAction = NO;
     myConfiguration.mediaPlaybackAllowsAirPlay = YES;
     
+    myConfiguration.preferences.javaScriptCanOpenWindowsAutomatically = true;
+    //是否支持JavaScript
+    [myConfiguration.preferences setValue:@YES forKey:@"allowFileAccessFromFileURLs"];
+    
     // 加载LiveApp.js的LiveApp类 WKUserScriptInjectionTimeAtDocumentStart在加载网页前插入js的 WKUserScriptInjectionTimeAtDocumentEnd在网页加载完成后才加入
-    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
-    
-    //通过JS与webView内容交互
-    myConfiguration.userContentController = [[WKUserContentController alloc] init];
-    [myConfiguration.userContentController addUserScript:usrScript];
-    //注入JS对象名称senderModel，当JS通过senderModel来调用时，我们可以在WKScriptMessageHandler代理中接收到
-    [myConfiguration.userContentController addScriptMessageHandler:self name:LIVEAPP_JS];
-    
+//    WKUserScript *usrScript = [[WKUserScript alloc] initWithSource:[IntroduceView getJsString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES];
+//    [userContentController addUserScript:usrScript];
+//
+//    //通过JS与webView内容交互
+//    myConfiguration.userContentController = userContentController;
+//    //注入JS对象名称senderModel，当JS通过senderModel来调用时，我们可以在WKScriptMessageHandler代理中接收到
+//    [myConfiguration.userContentController addScriptMessageHandler:self name:LIVEAPP_JS];
+//
     self = [super initWithFrame:frame configuration:myConfiguration];
-    
     self.translatesAutoresizingMaskIntoConstraints = NO;
-    
     return self;
 }
 
@@ -144,4 +147,12 @@
     }];
 }
 
+- (void)webViewNotifyLiveAppUnreadCount:(NSString *)unreadCount Handler:(JSFinshHandler)handler {
+//    NSString *jsName = LIVEAPP_NOTIFYLIVEAPPUNREADCOUNT(unreadCount);
+    NSString *jsName = [NSString stringWithFormat:@"notifyLiveAppUnreadCount('%@')",unreadCount];
+    [self webViewTransferJSName:jsName handler:^(id  _Nullable response, NSError * _Nullable error) {
+        NSLog(@"IntroduceView::webViewTransferResumeHandler ([调用js界面刷新未读事件, response : %@, error : %@])",response ,error);
+        handler(response, error);
+    }];
+}
 @end

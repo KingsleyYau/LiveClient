@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="zodiac_live">
+		<item>--</item>
+		<item>Aquarius</item>
+		<item>Pisces</item>
+		<item>Aries</item>
+		<item>Taurus</item>
+		<item>Gemini</item>
+		<item>Cancer</item>
+		<item>Leo</item>
+		<item>Virgo</item>
+		<item>Libra</item>
+		<item>Scorpio</item>
+		<item>Sagittarius</item>
+		<item>Capricorn</item>
+    </string-array>
+</resources>

@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #import "RebateInfoObject.h"
 #include "IImClientDef.h"
-
+#import "ImAuthorityItemObject.h"
 /**
  直播间Object
  */

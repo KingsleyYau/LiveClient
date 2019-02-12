@@ -95,26 +95,28 @@ public abstract class DynamicDrawableSpanJ extends ReplacementSpan {
         //如果文字换行, bottom会变, 换一次行回调一次
 //        Log.i("Jagger" , "bottom:" + bottom + ",b.getBounds().bottom:" + b.getBounds().bottom );
 
-        int transY = bottom - b.getBounds().bottom; //居底
+        if(b != null) {
+            int transY = bottom - b.getBounds().bottom; //居底
 
-        if (mVerticalAlignment == ALIGN_BASELINE) {
-            //paint.getFontMetricsInt()的值都是固定值,就算换行也是一样, 这个是有问题的, 系统的代码也是这样,所以不改动了
-            transY -= paint.getFontMetricsInt().descent;
-        }else if(mVerticalAlignment == ALIGN_VCENTER){
+            if (mVerticalAlignment == ALIGN_BASELINE) {
+                //paint.getFontMetricsInt()的值都是固定值,就算换行也是一样, 这个是有问题的, 系统的代码也是这样,所以不改动了
+                transY -= paint.getFontMetricsInt().descent;
+            } else if (mVerticalAlignment == ALIGN_VCENTER) {
 
-            //这是自定义的
-            float textHeight = paint.getFontMetricsInt().bottom - paint.getFontMetricsInt().top;
-            int rowTop = bottom - (int)textHeight;
-            int picBottom = rowTop + b.getBounds().height(); //换行后的居底坐标
-            int picBottomDis = bottom - picBottom; //换行后与底的距离
+                //这是自定义的
+                float textHeight = paint.getFontMetricsInt().bottom - paint.getFontMetricsInt().top;
+                int rowTop = bottom - (int) textHeight;
+                int picBottom = rowTop + b.getBounds().height(); //换行后的居底坐标
+                int picBottomDis = bottom - picBottom; //换行后与底的距离
 
-//            Log.i("Jagger" , "picBottom:" + picBottom +", picBottomDis:" + picBottomDis);
+                //            Log.i("Jagger" , "picBottom:" + picBottom +", picBottomDis:" + picBottomDis);
 
-            transY -= picBottomDis/2; //一定要使用 "-=",代表居底后向上移多少, 因为有多行的情况,所以只能先居底,再向上移,这样才可以保证与议定居同一行
+                transY -= picBottomDis / 2; //一定要使用 "-=",代表居底后向上移多少, 因为有多行的情况,所以只能先居底,再向上移,这样才可以保证与议定居同一行
+            }
+
+            canvas.translate(x, transY);
+            b.draw(canvas);
         }
-
-        canvas.translate(x, transY);
-        b.draw(canvas);
         canvas.restore();
     }
 

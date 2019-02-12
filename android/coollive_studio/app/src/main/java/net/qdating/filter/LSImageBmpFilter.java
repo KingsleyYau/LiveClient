@@ -9,14 +9,16 @@ import android.opengl.GLUtils;
  */
 public class LSImageBmpFilter extends LSImageInputFilter {
 	private Bitmap bitmap = null;
+
 	public LSImageBmpFilter() {
+		super();
 		updateVertexBuffer(LSImageVertex.filterVertex_180);
 	}
 
 	public void updateBmpFrame(Bitmap bitmap) {
 		this.bitmap = bitmap;
 	}
-	
+
 	@Override
 	protected int onDrawFrame(int textureId) {
 		// 绘制

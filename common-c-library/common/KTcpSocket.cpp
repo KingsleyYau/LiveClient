@@ -387,7 +387,7 @@ bool KTcpSocket::Bind(unsigned int iPort, string ip) {
 	}
 
 	localAddr.sin_port = htons(iPort);
-	if(bind(m_Socket, (struct sockaddr *)&localAddr, sizeof(localAddr)) < 0) {
+	if(::bind(m_Socket, (struct sockaddr *)&localAddr, sizeof(localAddr)) < 0) {
 		// bind socket error
 		bFlag = false;
 		goto EXIT_TCP_BIND;

@@ -60,4 +60,12 @@
     [super awakeFromNib];
 }
 
+// 防止cell重用图片显示错乱
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self.imageLoader stop];
+    [self.headImageView sd_cancelCurrentImageLoad];
+    self.headImageView.image = nil;
+}
+
 @end

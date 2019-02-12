@@ -24,6 +24,12 @@
 @property(nonatomic, strong) UIColor* _Nullable placeholderColor;
 @property(nonatomic, weak) IBOutlet id<LSChatTextViewDelegate> _Nullable chatTextViewDelegate;
 
+
+/**
+ *  清空字符串
+ */
+- (void)cleanText;
+
 /**
  *   生成富文本,用以显示表情
  *

@@ -6,8 +6,6 @@ import android.os.Message;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetCountOfUnreadAndPendingInviteCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetPackageUnreadCountCallback;
-import com.qpidnetwork.livemodule.httprequest.RequestJniPackage;
-import com.qpidnetwork.livemodule.httprequest.RequstJniSchedule;
 import com.qpidnetwork.livemodule.httprequest.item.PackageUnreadCountItem;
 import com.qpidnetwork.livemodule.httprequest.item.ScheduleInviteUnreadItem;
 import com.qpidnetwork.livemodule.im.IMManager;
@@ -15,7 +13,7 @@ import com.qpidnetwork.livemodule.im.IMOtherEventListener;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;

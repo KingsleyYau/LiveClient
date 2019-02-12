@@ -35,7 +35,7 @@
     LSEMFBoxTableViewCell *cell = (LSEMFBoxTableViewCell *)[tableView dequeueReusableCellWithIdentifier:[LSEMFBoxTableViewCell cellIdentifier]];
     
     if (nil == cell){
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamedWithFamily:[LSEMFBoxTableViewCell cellIdentifier] owner:tableView options:nil];
+        NSArray *nib = [[LiveBundle mainBundle] loadNibNamedWithFamily:[LSEMFBoxTableViewCell cellIdentifier] owner:tableView options:nil];
         cell = [nib objectAtIndex:0];
     }
     return cell;

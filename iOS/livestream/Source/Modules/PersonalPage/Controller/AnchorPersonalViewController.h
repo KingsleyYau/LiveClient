@@ -7,14 +7,12 @@
 //
 
 #import "LiveRoomInfoItemObject.h"
-#import "IntroduceView.h"
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSWKWebViewController.h"
 
-@interface AnchorPersonalViewController : LSGoogleAnalyticsViewController
-
-@property (weak, nonatomic) IBOutlet IntroduceView *webView;
+@interface AnchorPersonalViewController : LSWKWebViewController
 
 @property (nonatomic, copy) NSString *anchorId;
+// 0 不需要显示立即私密邀请按钮 1 显示立即私密邀请按钮
 @property (nonatomic, assign) int enterRoom;
 //0:Album 1:MyCalender 2:Profile
 @property (nonatomic, assign) NSInteger tabType;

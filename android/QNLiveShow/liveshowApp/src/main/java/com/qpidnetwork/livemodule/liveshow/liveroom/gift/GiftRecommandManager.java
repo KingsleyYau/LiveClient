@@ -1,7 +1,7 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom.gift;
 
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.List;
 import java.util.Random;

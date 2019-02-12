@@ -48,6 +48,7 @@
 #pragma mark - TextView
 #import "LSUITextFieldAlign.h"
 #import "LSBLTextField.h"
+#import "LSLinkTextView.h"
 
 #pragma mark - UIImage
 #import "UIImage+ImageEffects.h"

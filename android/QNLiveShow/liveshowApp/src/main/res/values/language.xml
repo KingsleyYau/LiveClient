@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="language_live">
+		<item>--</item>
+		<item>English</item>
+		<item>French</item>
+		<item>German</item>
+		<item>Spanish</item>
+		<item>Italian</item>
+		<item>Mandarin</item>
+		<item>Cantonese</item>
+		<item>Japanese</item>
+		<item>Russian</item>	
+		<item>Arabic</item>
+		<item>Portuguese</item>
+		<item>Thai</item>
+		<item>Other</item>						
+    </string-array> 
+</resources>

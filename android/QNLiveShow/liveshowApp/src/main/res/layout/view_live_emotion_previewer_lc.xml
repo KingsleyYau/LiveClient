@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center" 
+    xmlns:wheel="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto" >
+    
+    	<android.support.v7.widget.CardView 
+	    android:id="@+id/cardView" 
+	    android:layout_width="wrap_content"  
+	    android:layout_height="wrap_content"  
+	    android:orientation="horizontal"
+	    card_view:cardBackgroundColor="#FFFFFF" 
+	    card_view:cardCornerRadius="2dp"  
+	    card_view:cardElevation="3dp"
+	    card_view:cardPreventCornerOverlap="false"
+	    card_view:cardUseCompatPadding="true">
+    
+        <RelativeLayout  
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
+            
+            <TextView android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:textColor="@color/text_color_grey"
+                android:textSize="18sp"
+                android:text="@string/livechat_emotion_preview_title"
+                android:gravity="center"
+                android:visibility="gone"/>
+            
+            	<com.qpidnetwork.livemodule.view.EmotionPlayer
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/emotionPlayer"
+        android:visibility="visible"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"/>
+            	
+            	
+            	<TextView android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_grey"
+                android:textSize="16sp"
+                android:text="@string/livechat_emotion_preview_price"
+                android:gravity="center"
+                android:layout_marginTop="8dp"
+                android:layout_below="@id/emotionPlayer"
+                android:layout_centerHorizontal="true"/>
+            
+            
+            	<com.qpidnetwork.livemodule.view.MaterialProgressBar
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            wheel:matProg_barColor="@color/blue_color"
+            wheel:matProg_progressIndeterminate="true"
+            android:layout_marginBottom="16dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/progress"/>
+            
+        </RelativeLayout>
+    
+</android.support.v7.widget.CardView>
+</RelativeLayout>

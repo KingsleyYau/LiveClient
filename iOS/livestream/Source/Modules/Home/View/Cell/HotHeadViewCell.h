@@ -14,9 +14,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UIView *unreadView;
 @property (weak, nonatomic) IBOutlet UILabel *unreadNumLabel;
+@property (weak, nonatomic) IBOutlet UIView *noNumUnreadView;
 
 - (void)setUnreadNum:(int)num;
-
+- (void)showChatListUnreadNum:(int)num;
 + (NSString *)cellIdentifier;
 
 @end

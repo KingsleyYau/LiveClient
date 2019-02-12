@@ -71,6 +71,7 @@ public:
     int         m_errno;        // 错误码
     string      m_errmsg;       // 错误描述
     Json::Value m_data;         // req_data/res_data
+    Json::Value m_errData;      // 请求失败的应答业务参数（只有少部分有）
     int         m_dataNull;
 };
 

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="livehcat" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/livehcat" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/livehcat" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="../../AmfPublicParse.h" />
+		<Unit filename="../../CheckVerTask.cpp" />
+		<Unit filename="../../CheckVerTask.h" />
+		<Unit filename="../../CommonDef.h" />
+		<Unit filename="../../CommonParsing.cpp" />
+		<Unit filename="../../CommonParsing.h" />
+		<Unit filename="../../Counter.cpp" />
+		<Unit filename="../../Counter.h" />
+		<Unit filename="../../EndTalkTask.cpp" />
+		<Unit filename="../../EndTalkTask.h" />
+		<Unit filename="../../GetBlockUsersTask.cpp" />
+		<Unit filename="../../GetBlockUsersTask.h" />
+		<Unit filename="../../GetContactListTask.cpp" />
+		<Unit filename="../../GetContactListTask.h" />
+		<Unit filename="../../GetFeeRecentContactListTask.cpp" />
+		<Unit filename="../../GetFeeRecentContactListTask.h" />
+		<Unit filename="../../GetLadyChatInfoTask.cpp" />
+		<Unit filename="../../GetLadyChatInfoTask.h" />
+		<Unit filename="../../GetLadyVoiceCodeTask.cpp" />
+		<Unit filename="../../GetLadyVoiceCodeTask.h" />
+		<Unit filename="../../GetLadyVoiceCodeTask.h.bak" />
+		<Unit filename="../../GetRecentContactListTask.cpp" />
+		<Unit filename="../../GetRecentContactListTask.cpp.bak" />
+		<Unit filename="../../GetRecentContactListTask.h" />
+		<Unit filename="../../GetRecentContactListTask.h.bak" />
+		<Unit filename="../../GetRecentPaidContact.cpp.bak" />
+		<Unit filename="../../GetRecentPaidContact.h.bak" />
+		<Unit filename="../../GetTalkInfoTask.cpp" />
+		<Unit filename="../../GetTalkInfoTask.h" />
+		<Unit filename="../../GetTalkListTask.cpp" />
+		<Unit filename="../../GetTalkListTask.h" />
+		<Unit filename="../../GetUserInfoTask.cpp" />
+		<Unit filename="../../GetUserInfoTask.h" />
+		<Unit filename="../../GetUserStatusTask.cpp" />
+		<Unit filename="../../GetUserStatusTask.h" />
+		<Unit filename="../../GetUsersInfoTask.cpp" />
+		<Unit filename="../../GetUsersInfoTask.cpp.bak" />
+		<Unit filename="../../GetUsersInfoTask.h" />
+		<Unit filename="../../GetVoiceCodeTask.cpp" />
+		<Unit filename="../../GetVoiceCodeTask.h" />
+		<Unit filename="../../HearbeatTask.cpp" />
+		<Unit filename="../../HearbeatTask.h" />
+		<Unit filename="../../IAutoLock.cpp" />
+		<Unit filename="../../IAutoLock.h" />
+		<Unit filename="../../ILiveChatClient.cpp" />
+		<Unit filename="../../ILiveChatClient.h" />
+		<Unit filename="../../ILiveChatClient.h.bak" />
+		<Unit filename="../../ILiveChatClientDef.h" />
+		<Unit filename="../../ILiveChatClientDef.h.bak" />
+		<Unit filename="../../ISocketHandler.cpp" />
+		<Unit filename="../../ISocketHandler.h" />
+		<Unit filename="../../ITask.cpp" />
+		<Unit filename="../../ITask.h" />
+		<Unit filename="../../ITaskManager.h" />
+		<Unit filename="../../IThreadHandler.cpp" />
+		<Unit filename="../../IThreadHandler.h" />
+		<Unit filename="../../ITransportDataHandler.cpp" />
+		<Unit filename="../../ITransportDataHandler.h" />
+		<Unit filename="../../ITransportPacketHandler.cpp" />
+		<Unit filename="../../ITransportPacketHandler.h" />
+		<Unit filename="../../JniIntToType.h" />
+		<Unit filename="../../LadyEditingMsgTask.cpp.bak" />
+		<Unit filename="../../LadyEditingMsgTask.h.bak" />
+		<Unit filename="../../LadyEditingTask.cpp.bak" />
+		<Unit filename="../../LadyEditingTask.h.bak" />
+		<Unit filename="../../LiveChatClient.cpp" />
+		<Unit filename="../../LiveChatClient.cpp.bak" />
+		<Unit filename="../../LiveChatClient.h" />
+		<Unit filename="../../LiveChatClient.h.bak" />
+		<Unit filename="../../LiveChatJniCallbackItemDef.h" />
+		<Unit filename="../../LSLiveChatLoginTask.cpp" />
+		<Unit filename="../../LSLiveChatLoginTask.h" />
+		<Unit filename="../../PlayVideoTask.cpp" />
+		<Unit filename="../../PlayVideoTask.h" />
+		<Unit filename="../../RecvEMFNoticeTask.cpp" />
+		<Unit filename="../../RecvEMFNoticeTask.h" />
+		<Unit filename="../../RecvEditMsgTask.cpp" />
+		<Unit filename="../../RecvEditMsgTask.h" />
+		<Unit filename="../../RecvEmotionTask.cpp" />
+		<Unit filename="../../RecvEmotionTask.h" />
+		<Unit filename="../../RecvIdentifyCodeTask.cpp" />
+		<Unit filename="../../RecvIdentifyCodeTask.h" />
+		<Unit filename="../../RecvKickOfflineTask.cpp" />
+		<Unit filename="../../RecvKickOfflineTask.h" />
+		<Unit filename="../../RecvLadyVoiceCodeTask.cpp" />
+		<Unit filename="../../RecvLadyVoiceCodeTask.h" />
+		<Unit filename="../../RecvMsgTask.cpp" />
+		<Unit filename="../../RecvMsgTask.h" />
+		<Unit filename="../../RecvPhotoTask.cpp" />
+		<Unit filename="../../RecvPhotoTask.h" />
+		<Unit filename="../../RecvTalkEventTask.cpp" />
+		<Unit filename="../../RecvTalkEventTask.h" />
+		<Unit filename="../../RecvTryTalkBeginTask.cpp" />
+		<Unit filename="../../RecvTryTalkBeginTask.h" />
+		<Unit filename="../../RecvTryTalkEndTask.cpp" />
+		<Unit filename="../../RecvTryTalkEndTask.h" />
+		<Unit filename="../../RecvVideoTask.cpp" />
+		<Unit filename="../../RecvVideoTask.h" />
+		<Unit filename="../../RecvVoiceTask.cpp" />
+		<Unit filename="../../RecvVoiceTask.h" />
+		<Unit filename="../../RecvWarningTask.cpp" />
+		<Unit filename="../../RecvWarningTask.h" />
+		<Unit filename="../../RefreshIdentifyCodeTask.cpp" />
+		<Unit filename="../../RefreshIdentifyCodeTask.cpp.bak" />
+		<Unit filename="../../RefreshIdentifyCodeTask.h" />
+		<Unit filename="../../RefreshIdentifyCodeTask.h.bak" />
+		<Unit filename="../../RefreshInviteTemplate.cpp.bak" />
+		<Unit filename="../../RefreshInviteTemplate.h.bak" />
+		<Unit filename="../../RefreshInviteTemplateTask.cpp" />
+		<Unit filename="../../RefreshInviteTemplateTask.h" />
+		<Unit filename="../../ReplyIdentifyCodeTask.cpp" />
+		<Unit filename="../../ReplyIdentifyCodeTask.cpp.bak" />
+		<Unit filename="../../ReplyIdentifyCodeTask.h" />
+		<Unit filename="../../ReplyIdentifyCodeTask.h.bak" />
+		<Unit filename="../../SearchOnlineMan.cpp.bak" />
+		<Unit filename="../../SearchOnlineManTask.cpp" />
+		<Unit filename="../../SearchOnlineManTask.h" />
+		<Unit filename="../../SendEmotionTask.cpp" />
+		<Unit filename="../../SendEmotionTask.h" />
+		<Unit filename="../../SendLadyEditingMsgTask.cpp" />
+		<Unit filename="../../SendLadyEditingMsgTask.cpp.bak" />
+		<Unit filename="../../SendLadyEditingMsgTask.h" />
+		<Unit filename="../../SendMsgTask.cpp" />
+		<Unit filename="../../SendMsgTask.h" />
+		<Unit filename="../../SendPhotoTask.cpp" />
+		<Unit filename="../../SendPhotoTask.h" />
+		<Unit filename="../../SendVGiftTask.cpp" />
+		<Unit filename="../../SendVGiftTask.h" />
+		<Unit filename="../../SendVoiceTask.cpp" />
+		<Unit filename="../../SendVoiceTask.h" />
+		<Unit filename="../../SetStatusTask.cpp" />
+		<Unit filename="../../SetStatusTask.h" />
+		<Unit filename="../../ShowPhotoTask.cpp" />
+		<Unit filename="../../ShowPhotoTask.h" />
+		<Unit filename="../../TaskDef.h" />
+		<Unit filename="../../TaskManager.cpp" />
+		<Unit filename="../../TaskManager.h" />
+		<Unit filename="../../TaskMapManager.cpp" />
+		<Unit filename="../../TaskMapManager.h" />
+		<Unit filename="../../TransportDataHandler.cpp" />
+		<Unit filename="../../TransportDataHandler.h" />
+		<Unit filename="../../TransportPacketHandler.cpp" />
+		<Unit filename="../../TransportPacketHandler.h" />
+		<Unit filename="../../UpdateStatusTask.cpp" />
+		<Unit filename="../../UpdateStatusTask.h" />
+		<Unit filename="../../UpdateTicketTask.cpp" />
+		<Unit filename="../../UpdateTicketTask.h" />
+		<Unit filename="../../UploadDeviceIdTask.cpp" />
+		<Unit filename="../../UploadDeviceIdTask.h" />
+		<Unit filename="../../UploadDeviceTypeTask.cpp" />
+		<Unit filename="../../UploadDeviceTypeTask.h" />
+		<Unit filename="../../UploadTicketTask.cpp" />
+		<Unit filename="../../UploadTicketTask.h" />
+		<Unit filename="../../UploadVerTask.cpp" />
+		<Unit filename="../../UploadVerTask.h" />
+		<Unit filename="../../UseTryTicketTask.cpp" />
+		<Unit filename="../../UseTryTicketTask.h" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

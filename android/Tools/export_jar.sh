@@ -58,14 +58,19 @@ mkdir -p $VERSION/doc
 javadoc \
 -public \
 -author \
+-windowtitle "" \
 -version \
 -d $VERSION/doc \
 $ECLIPSE_PROJECT_PATH/src/net/qdating/*.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/player/ILSPlayerStatusCallback.java \
+$ECLIPSE_PROJECT_PATH/src/net/qdating/publisher/ILSPublisherStatusCallback.java \
 >> $LOG_FILE 2>&1
 
-# delete 
+# Delete tmp files
+find . -name "*crashhandler*.so" | xargs rm -rf {}; >> $LOG_FILE 2>&1
 rm -rf $TMP_PATH >> $LOG_FILE 2>&1
 
+# Package obj files
 tar zcvf ./$VERSION/obj.tar.gz --exclude ".DS_Store" -C $ECLIPSE_PROJECT_PATH obj >> $LOG_FILE 2>&1
 
 echo "# Export finish!"

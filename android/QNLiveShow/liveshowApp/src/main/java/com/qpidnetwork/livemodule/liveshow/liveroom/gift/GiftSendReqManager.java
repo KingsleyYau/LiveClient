@@ -4,10 +4,11 @@ import android.support.annotation.NonNull;
 
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.im.IMManager;
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -158,8 +159,11 @@ public class GiftSendReqManager implements IMLiveRoomEventListener {
     }
 
     //---------------------------------------------------------------------
+
     @Override
-    public void OnRecvRoomCloseNotice(String roomId, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {}
+    public void OnRecvRoomCloseNotice(String roomId, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMAuthorityItem privItem) {
+
+    }
 
     @Override
     public void OnRecvEnterRoomNotice(String roomId, String userId, String nickName, String photoUrl,
@@ -174,12 +178,14 @@ public class GiftSendReqManager implements IMLiveRoomEventListener {
     public void OnRecvRebateInfoNotice(String roomId, IMRebateItem item) {}
 
     @Override
-    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds,
-                                              IMClientListener.LCC_ERR_TYPE err, String errMsg) {}
+    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem) {
+
+    }
 
     @Override
-    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg,
-                                        double credit) {}
+    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg, double credit, IMAuthorityItem privItem) {
+
+    }
 
     @Override
     public void OnRecvChangeVideoUrl(String roomId, boolean isAnchor, String[] playUrls) {}

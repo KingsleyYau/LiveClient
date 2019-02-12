@@ -24,7 +24,7 @@ import java.util.List;
  * 才艺列表
  */
 public class TalentDetailFragment extends Fragment {
-    private String TAG = "Jagger";
+//    private String TAG = "Jagger";
 
     //控件
     private List<TalentInfoItem> mDatas = new ArrayList<>();

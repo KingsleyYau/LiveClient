@@ -14,10 +14,11 @@
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveFinshViewController.h"
 #import "ShowLiveViewController.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LiveModule.h"
 #import "BookPrivateBroadcastViewController.h"
 #import "LSShowListWithAnchorIdRequest.h"
+#import "LSAddCreditsViewController.h"
 // 10秒后显示退出按钮
 #define CANCEL_BUTTON_TIMEOUT 10
 
@@ -36,6 +37,11 @@ typedef enum ShowButtonType {
     ShowButtonType_Book, //显示预约按钮
     ShowButtonType_Add //显示购票按钮
 }ShowButtonType;
+
+// 180秒后退出界面
+#define INVITE_TIMEOUT 180
+// 10秒后显示退出按钮
+#define CANCEL_BUTTON_TIMEOUT 10
 
 @interface InterimShowViewController ()<IMLiveRoomManagerDelegate, IMManagerDelegate,LiveGobalManagerDelegate>
 
@@ -73,7 +79,15 @@ typedef enum ShowButtonType {
 @property (nonatomic, assign) BOOL isTimeOut;
 
 @property (nonatomic, strong) LSProgramItemObject * showItem;
-
+#pragma mark - 总超时控制
+// 总超时倒数
+@property (strong) LSTimer *handleTimer;
+// 总超时剩余时间
+@property (nonatomic, assign) int exitLeftSecond;
+// 显示退出按钮时间
+@property (nonatomic, assign) int showExitBtnLeftSecond;
+// 能否显示退出按钮
+@property (nonatomic, assign) BOOL canShowExitButton;
 @end
 
 @implementation InterimShowViewController
@@ -86,14 +100,10 @@ typedef enum ShowButtonType {
     
     if (self.liveRoom.roomId.length > 0 && self.status != PreLiveStatus_EnterRoomAlready && self.status != PreLiveStatus_Error) {
         NSLog(@"leaveRoom:%@",self.liveRoom.roomId);
-        [self.imManager leaveRoom:self.liveRoom.roomId];
     }
     
     [self.imManager removeDelegate:self];
     [self.imManager.client removeDelegate:self];
-    
-    // 赋值到全局变量, 用于前台计时
-    [LiveGobalManager manager].liveRoom = nil;
     
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
@@ -101,6 +111,8 @@ typedef enum ShowButtonType {
     
     // 关闭锁屏
     [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    
+    [self stopAllTimer];
 }
 
 #pragma mark - 界面初始化
@@ -145,8 +157,24 @@ typedef enum ShowButtonType {
     self.isTimeOut = NO;
 }
 
+- (void)reset {
+    // TODO:重置参数
+    // 180秒后退出界面
+    self.exitLeftSecond = INVITE_TIMEOUT;
+    // 10秒后显示退出按钮
+    self.showExitBtnLeftSecond = CANCEL_BUTTON_TIMEOUT;
+    // 能否显示退出按钮
+    self.canShowExitButton = YES;
+    // 标记当前状态
+    self.status = PreLiveStatus_None;
+    
+    self.tipsLabel.text = @"";
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self reset];
     
     // 刷新女士名字
     self.nameLabel.text = @"";
@@ -179,6 +207,10 @@ typedef enum ShowButtonType {
     self.navigationController.navigationBar.hidden = YES;
     [self.navigationController setNavigationBarHidden:YES];
     
+
+}
+
+- (void)viewDidAppear:(BOOL)animated {
     if( !self.viewDidAppearEver || self.isAddCredit ) {
         self.isAddCredit = NO;
         self.closeBtn.hidden = YES;
@@ -187,9 +219,36 @@ typedef enum ShowButtonType {
         self.bookBtn.hidden = YES;
         self.tipsLabel.text = @"";
         self.loading.hidden = NO;
-        [self getShowInfo];
+        
+        // IM登录城成功才调用
+        if ([LSImManager manager].isIMLogin){
+            // 发起请求
+            [self getShowInfo];
+        }else {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                // 发起请求
+                [self getShowInfo];
+            });
+        }
+        //        [self getShowInfo];
         [self performSelector:@selector(closeBtnShow) withObject:self afterDelay:10];
     }
+    [super viewDidAppear:animated];
+    // 开始计时
+    [self startHandleTimer];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    // 停止计时
+    [self stopAllTimer];
+    
+    // 设置允许显示立即邀请
+    [[LiveGobalManager manager] setCanShowInvite:YES];
+    
+    // 移除退入后台通知
+    [[LiveGobalManager manager] removeDelegate:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -216,7 +275,7 @@ typedef enum ShowButtonType {
         // 请求并缓存主播信息
         if (self.liveRoom.userId.length > 0) {
             WeakObject(self, weakSelf);
-            [[UserInfoManager manager] getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
+            [[LSUserInfoManager manager] getUserInfo:self.liveRoom.userId finishHandler:^(LSUserInfoModel * _Nonnull item) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 刷新女士头像
                     weakSelf.liveRoom.photoUrl = item.photoUrl;
@@ -234,11 +293,15 @@ typedef enum ShowButtonType {
     self.loading.transform = CGAffineTransformMakeScale(2, 2) ;
     LSGetShowRoomInfoRequest * request = [[LSGetShowRoomInfoRequest alloc]init];
     request.liveShowId = self.liveRoom.showId;
-    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSProgramItemObject * _Nullable item, NSString * _Nonnull roomId)
+    request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, LSProgramItemObject * _Nullable item, NSString * _Nonnull roomId, LSHttpAuthorityItemObject *_Nonnull privItem)
     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.loading.hidden = YES;
-            NSLog(@"InterimShowViewController::getShowInfo( [请求进入指定直播间, %@], roomId : %@, leftSecToStart : %d )", BOOL2SUCCESS(success), roomId, item.leftSecToStart);
+            NSLog(@"InterimShowViewController::getShowInfo( [请求进入指定直播间, %@], roomId : %@, leftSecToStart : %d, isHasOneOnOneAuth : %d, isHasBookingAuth : %d)", BOOL2SUCCESS(success), roomId, item.leftSecToStart,privItem.isHasOneOnOneAuth,privItem.isHasBookingAuth);
+            ImAuthorityItemObject * obj = [[ImAuthorityItemObject alloc]init];
+            obj.isHasBookingAuth = privItem.isHasBookingAuth;
+            obj.isHasOneOnOneAuth = privItem.isHasOneOnOneAuth;
+            self.liveRoom.priv = obj;
             if (success) {
                 if (!self.liveRoom.httpLiveRoom) {
                     LiveRoomInfoItemObject *httpLiveRoom = [[LiveRoomInfoItemObject alloc]init];
@@ -282,6 +345,52 @@ typedef enum ShowButtonType {
     [self.sessionManager sendRequest:request];
 }
 
+#pragma mark - 总超时控制
+- (void)handleCountDown {
+ 
+    self.exitLeftSecond--;
+    if (self.exitLeftSecond == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 倒数完成, 提示超时
+            [self stopHandleTimer];
+            [self handleError:LCC_ERR_INVITE_NO_RESPOND errMsg:NSLocalizedStringFromSelf(@"PRELIVE_ERR_INVITE_NO_RESPONE")];
+            // 允许显示退出按钮
+            self.closeBtn.hidden = NO;
+        });
+    }
+  
+    self.showExitBtnLeftSecond--;
+    if (self.showExitBtnLeftSecond == 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 允许显示退出按钮
+            if (self.canShowExitButton) {
+                self.closeBtn.hidden = NO;
+            }
+        });
+    }
+}
+
+- (void)startHandleTimer {
+    NSLog(@"InterimShowViewController::startHandleTimer()");
+    
+    WeakObject(self, weakSelf);
+    [self.handleTimer startTimer:nil timeInterval:1.0 * NSEC_PER_SEC starNow:YES action:^{
+        [weakSelf handleCountDown];
+    }];
+}
+
+- (void)stopHandleTimer {
+    NSLog(@"InterimShowViewController::stopHandleTimer()");
+    
+    [self.handleTimer stopTimer];
+}
+
+- (void)stopAllTimer {
+    [self stopHandleTimer];
+    [self stopEnterRoomTimer];
+    self.closeBtn.hidden = NO;
+}
+
 #pragma mark - 倒数控制
 - (void)enterRoomCountDown {
     
@@ -323,7 +432,7 @@ typedef enum ShowButtonType {
     self.status = PreLiveStatus_Canceling;
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+    [nvc forceToDismissAnimated:YES completion:nil];
 }
 
 - (IBAction)bookBtnDid:(UIButton *)sender {
@@ -337,10 +446,19 @@ typedef enum ShowButtonType {
 
 - (IBAction)addBtnDid:(UIButton *)sender {
     self.isAddCredit = YES;
-    [self.navigationController pushViewController:[LiveModule module].addCreditVc animated:YES];
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 - (IBAction)reloadBtnDid:(UIButton *)sender {
+    
+    // 重置参数
+    [self reset];
+    
+    // 开始计时
+    [self stopHandleTimer];
+    [self startHandleTimer];
+
      [self getUserInfo];
      [self getShowInfo];
 }
@@ -354,9 +472,10 @@ typedef enum ShowButtonType {
     BOOL bFlag = NO;
     // TODO:发起进入指定直播间
     bFlag = [self.imManager enterRoom:self.liveRoom.roomId
-                        finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem) {
+                        finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString *_Nonnull errMsg, ImLiveRoomObject *_Nonnull roomItem, ImAuthorityItemObject *_Nonnull priv) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                                NSLog(@"InterimShowViewController::startRequest( [请求进入指定直播间, %@], showId : %@, waitStart : %@ )", BOOL2SUCCESS(success), self.liveRoom.showId, BOOL2YES(roomItem.waitStart));
+                                NSLog(@"InterimShowViewController::startRequest( [请求进入指定直播间, %@], showId : %@, waitStart : %@ ,isHasOneOnOneAuth : %d, isHasBookingAuth : %d)", BOOL2SUCCESS(success), self.liveRoom.showId, BOOL2YES(roomItem.waitStart),priv.isHasOneOnOneAuth,priv.isHasBookingAuth);
+                                self.liveRoom.priv = priv;
                                 self.liveRoom.imLiveRoom = roomItem;
                                 [self handleEnterRoom:success errType:errType errMsg:errMsg roomItem:roomItem];
                             });
@@ -371,7 +490,6 @@ typedef enum ShowButtonType {
 #pragma mark - 界面事件
 - (void)handleEnterRoom:(BOOL)success errType:(LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg roomItem:(ImLiveRoomObject *)roomItem {
     // TODO:处理进入直播间
-    
         // 未超时
         if( self.status != PreLiveStatus_Error ) {
             if (success) {
@@ -389,7 +507,7 @@ typedef enum ShowButtonType {
                 item.userId = roomItem.userId;
                 item.nickName = roomItem.nickName;
                 item.photoUrl = roomItem.photoUrl;
-                [[UserInfoManager manager] setLiverInfoDic:item];
+                [[LSUserInfoManager manager] setLiverInfoDic:item];
                 
                 // 进入成功不能显示退出按钮
                 self.closeBtn.hidden = YES;
@@ -438,10 +556,14 @@ typedef enum ShowButtonType {
 }
 
 - (void)handleError:(LCC_ERR_TYPE)errType errMsg:(NSString *)errMsg {
-    
+    [self stopAllTimer];
+    if (errMsg.length == 0) {
+        errMsg = NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP");
+    }
     self.tipsLabel.text = errMsg;
     self.closeBtn.hidden = NO;
     self.status = PreLiveStatus_Error;
+    
     if (errType == LCC_ERR_NO_CREDIT) {
         [self setButtonType:ShowButtonType_Add];
     }
@@ -469,7 +591,7 @@ typedef enum ShowButtonType {
     else
     {
         self.reloadBtn.hidden = YES;
-        self.bookBtn.hidden = NO;
+        self.bookBtn.hidden = !self.liveRoom.priv.isHasBookingAuth;
         self.addBtn.hidden = YES;
     }
 }
@@ -479,7 +601,6 @@ typedef enum ShowButtonType {
     // 如果在后台记录进入时间
     if( self.isBackground ) {
         [LiveGobalManager manager].enterRoomBackgroundTime = [NSDate date];
-        [LiveGobalManager manager].liveRoom = self.liveRoom;
     } else {
     
         // TODO:进入节目直播间
@@ -522,6 +643,9 @@ typedef enum ShowButtonType {
                 // 不能显示退出按钮
                 self.closeBtn.hidden = YES;
                 
+                // 停止180s倒数
+                [self stopHandleTimer];
+                
                 if (self.enterRoomLeftSecond > 0) {
                     self.status = PreLiveStatus_CountingDownForEnterRoom;
                     
@@ -533,6 +657,37 @@ typedef enum ShowButtonType {
                     // 马上进入直播间
                     [self enterRoom];
                 }
+            }
+        }
+    });
+}
+
+
+// 如果该主播在节目开始时未进入直播间,会收到关闭的通知,不接受该回调会导致节目过渡页无法关闭,一直处于等待状态  lance add
+- (void)onRecvRoomCloseNotice:(NSString *_Nonnull)roomId errType:(LCC_ERR_TYPE)errType errMsg:(NSString *_Nonnull)errmsg priv:(ImAuthorityItemObject * _Nonnull)priv {
+    NSLog(@"InterimShowViewController::onRecvRoomCloseNotice( [接收关闭直播间回调], roomId : %@, errType : %d, errMsg : %@, isHasOneOnOneAuth : %d, isHasOneOnOneAuth: %d )", roomId, errType, errmsg, priv.isHasOneOnOneAuth, priv.isHasBookingAuth);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([roomId isEqualToString:self.liveRoom.roomId]) {
+            // 未进入房间并且未出现错误
+            self.liveRoom.priv = priv;
+            if( self.status != PreLiveStatus_EnterRoomAlready &&
+               self.status != PreLiveStatus_Error
+               ) {
+                // 处理错误
+                [self handleError:LCC_ERR_DEFAULT errMsg:NSLocalizedStringFromSelf(@"SERVER_ERROR_TIP")];
+                
+                // 弹出直播间关闭界面
+                LiveFinshViewController *finshController = [[LiveFinshViewController alloc] initWithNibName:nil bundle:nil];
+                finshController.liveRoom = self.liveRoom;
+                finshController.errType = errType;
+                finshController.errMsg = errmsg;
+                
+                [self addChildViewController:finshController];
+                [self.view addSubview:finshController.view];
+                [finshController.view bringSubviewToFront:self.view];
+                [finshController.view mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.edges.equalTo(self.view);
+                }];
             }
         }
     });
@@ -602,7 +757,7 @@ typedef enum ShowButtonType {
         self.isTimeOut = YES;
         
         if (self.liveRoom.roomId.length > 0) {
-            [self.imManager leaveRoom:self.liveRoom.roomId];
+            [self.imManager leaveRoom:self.liveRoom];
         }
     }
 }

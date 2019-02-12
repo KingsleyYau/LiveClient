@@ -11,13 +11,14 @@
 
 #include "HttpRequestTask.h"
 #include "item/HttpAcceptInstanceInviteItem.h"
+#include "item/HttpAuthorityItem.h"
 
 class HttpAcceptInstanceInviteTask;
 
 class IRequestAcceptInstanceInviteCallback {
 public:
 	virtual ~IRequestAcceptInstanceInviteCallback(){};
-	virtual void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask* task, bool success, int errnum, const string& errmsg, const HttpAcceptInstanceInviteItem& item) = 0;
+	virtual void OnAcceptInstanceInvite(HttpAcceptInstanceInviteTask* task, bool success, int errnum, const string& errmsg, const HttpAcceptInstanceInviteItem& item, const HttpAuthorityItem& priv) = 0;
 };
       
 class HttpAcceptInstanceInviteTask : public HttpRequestTask {

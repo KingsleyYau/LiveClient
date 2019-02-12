@@ -1,1 +1,1 @@
-LivePlayer£º°æ±¾1.0
+LivePlayer£º°æ±¾1.5

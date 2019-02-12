@@ -20,19 +20,19 @@
 
 @protocol VideoHardRendererDelegate <NSObject>
 @optional
-- (void)renderVideoFrame:(CVPixelBufferRef _Nonnull)frame;
+- (void)renderVideoFrame:(CVPixelBufferRef)frame;
 @end
 
 namespace coollive {
 class VideoHardRendererImp : public VideoRenderer {
-public:
-    VideoHardRendererImp(id<VideoHardRendererDelegate> _Nullable videoHardRendererImp);
+  public:
+    VideoHardRendererImp(id<VideoHardRendererDelegate> videoHardRendererImp);
     ~VideoHardRendererImp();
-    
-    void RenderVideoFrame(void* _Nonnull frame);
-    
-private:
-    __weak typeof(id<VideoHardRendererDelegate>) _Nullable mpVideoHardRendererImp;
+
+    void RenderVideoFrame(void *frame);
+
+  private:
+    __weak typeof(id<VideoHardRendererDelegate>) mpVideoHardRendererImp;
 };
 }
 #endif /* VideoHardRenderImp_h */

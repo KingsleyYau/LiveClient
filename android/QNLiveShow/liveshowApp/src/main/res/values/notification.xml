@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notification">
+		<item>Sound with vibrate</item>
+		<item>Vibrate only</item>
+		<item>Silent</item>
+		<item>Don\'t push</item>
+    </string-array> 
+</resources>

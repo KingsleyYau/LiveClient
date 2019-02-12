@@ -7,7 +7,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import com.squareup.picasso.Transformation;
 

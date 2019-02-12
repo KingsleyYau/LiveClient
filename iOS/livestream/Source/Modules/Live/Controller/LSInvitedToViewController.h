@@ -51,5 +51,7 @@
 // 33
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *addCreditHeight;
 
+@property (weak, nonatomic) IBOutlet UIButton *chatNowBtn;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *chatNowBtnH;
 
 @end

@@ -594,10 +594,11 @@ public class HangOutLiveRoomActivity extends BaseHangOutLiveRoomActivity impleme
             audienceInfoDialog.setOutSizeTouchHasChecked(true);
         }
 
+        audienceInfoDialog.setInvitePriLiveBtnVisible(false);
         audienceInfoDialog.show(new AudienceInfoItem(mIMHangOutRoomItem.manId,mIMHangOutRoomItem.manNickName,
                 mIMHangOutRoomItem.manPhotoUrl,null,null,mIMHangOutRoomItem.manLevel,
                 null,false));
-        audienceInfoDialog.setInvitePriLiveBtnVisible(View.INVISIBLE);
+
         /**在show之后,加上如下这段代码就能解决宽被压缩的bug*/
         WindowManager windowManager = getWindowManager();
         Display defaultDisplay = windowManager.getDefaultDisplay();

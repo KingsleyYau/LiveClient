@@ -61,6 +61,8 @@ static CGFloat headerHeight = 0;
 }
 
 - (void)unInitPullRefresh {
+    objc_setAssociatedObject(self, &delegateKey, nil, OBJC_ASSOCIATION_ASSIGN);
+    
     LSPullRefreshView *pullRefreshView = [self viewWithTag:RefreshViewTypePullDown];
     if (pullRefreshView) {
         [self removeFromSuperview];

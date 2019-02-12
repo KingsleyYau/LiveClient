@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F2F2"
+    android:id="@+id/recordPane" >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" >
+
+        <ImageView
+            android:id="@+id/backBtnBg"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_solid_red" />
+
+        <com.qpidnetwork.livemodule.liveshow.livechat.voice.RecordView
+            android:id="@+id/recordView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/foreRecordBtn"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_solid_red"
+            android:clickable="false"
+            android:focusable="false"
+            android:elevation="0dp" />
+
+        <View
+            android:id="@+id/foreCancelBtn"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_solid_white"
+            android:clickable="false"
+            android:focusable="false"
+            android:visibility="gone"
+            android:elevation="0dp" />
+
+        <TextView
+            android:id="@+id/tvRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/live_chat_voice_record"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="56dp" >
+
+        
+
+        <TextView
+            android:id="@+id/tvRecordTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/live_chat_voice_record_tips"
+            android:textColor="@color/text_color_grey"
+            android:textSize="18sp"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp" />
+    </FrameLayout>
+
+    <TextView android:id="@+id/price_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:gravity="center_horizontal"
+        android:text="@string/live_chat_voice_record_payment"
+        android:textColor="@color/text_color_grey"
+        android:textSize="14sp" />
+
+</RelativeLayout>

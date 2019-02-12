@@ -91,10 +91,14 @@ bool PlayerController::PlayUrl(const string& url, const string& recordFilePath, 
     mStatistics.Start();
     // 重置解码器
     if( bFlag ) {
-        bFlag = mpVideoDecoder->Reset();
+        if( mpVideoDecoder ) {
+            bFlag = mpVideoDecoder->Reset();
+        }
     }
     if( bFlag ) {
-        bFlag = mpAudioDecoder->Reset();
+        if( mpAudioDecoder ) {
+            bFlag = mpAudioDecoder->Reset();
+        }
     }
     // 重置音频播放器
     mpAudioRenderer->Start();
@@ -147,8 +151,18 @@ void PlayerController::Stop() {
     if( mpAudioDecoder ) {
         mpAudioDecoder->Pause();
     }
+    
     // 停止播放
     mRtmpPlayer.Stop();
+    
+    // 清空多余帧
+    if( mpVideoDecoder ) {
+        mpVideoDecoder->ClearVideoFrame();
+    }
+    if( mpAudioDecoder ) {
+        mpAudioDecoder->ClearAudioFrame();
+    }
+    
     // 停止录制
     mVideoRecorderH264.Stop();
     mAudioRecorderAAC.Stop();
@@ -419,6 +433,37 @@ void PlayerController::OnDelayMaxTime(RtmpPlayer* player) {
     if( mpPlayerStatusCallback ) {
         mpPlayerStatusCallback->OnPlayerOnDelayMaxTime(this);
     }
+}
+    
+void PlayerController::OnRecvCmdLogin(RtmpDump *rtmpDump,
+                                         bool bFlag,
+                                         const string &userName,
+                                         const string &serverAddress) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "PlayerController::OnRecvCmdLogin( "
+                 "this : %p, "
+                 "userName : %s, "
+                 "serverAddress : %s "
+                 ")",
+                 this,
+                 userName.c_str(),
+                 serverAddress.c_str());
+}
+
+void PlayerController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
+                                            const string &uuId,
+                                            const string &userName) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "PlayerController::OnRecvCmdMakeCall( "
+                 "this : %p, "
+                 "uuId : %s, "
+                 "userName : %s "
+                 ")",
+                 this,
+                 uuId.c_str(),
+                 userName.c_str());
 }
 /*********************************************** 播放器回调处理 End *****************************************************/
 

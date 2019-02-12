@@ -14,6 +14,9 @@ using namespace std;
 
 #include <json/json/json.h>
 
+#include "../HttpLoginProtocol.h"
+#include "../HttpRequestEnum.h"
+
 class HttpProductItem {
 public:
     bool Parse(const Json::Value& root) {

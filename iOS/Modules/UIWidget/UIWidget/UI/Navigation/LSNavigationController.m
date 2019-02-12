@@ -295,12 +295,10 @@
     }
 }
 
-- (void)forceToDismiss:(BOOL)force animated:(BOOL)flag completion:(void (^)(void))completion{
-    if (force) {
-        [super dismissViewControllerAnimated:flag completion:completion];
-    }else {
-        [self dismissViewControllerAnimated:flag completion:completion];
-    }
+
+// 调用父类方法关闭
+- (void)forceToDismissAnimated:(BOOL)flag completion:(void (^)(void))completion {
+    [super dismissViewControllerAnimated:flag completion:completion];
 }
 
 

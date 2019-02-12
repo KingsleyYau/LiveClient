@@ -1,0 +1,223 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:circleimage="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/bg_img"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/contentBody"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/tiny_grey_solid"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/llHead"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/actionbar_height"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <LinearLayout
+                android:id="@+id/llBack"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingRight="8dp" >
+
+                <ImageView
+                    android:id="@+id/back_button_icon"
+                    android:layout_width="@dimen/actionbar_height"
+                    android:layout_height="@dimen/actionbar_height"
+                    android:background="@drawable/touch_feedback_holo_light_circle"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_arrow_back_grey600_24dp" />
+
+                <TextView
+                    android:id="@+id/tvUnread"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(2)"
+                    android:textColor="@color/text_color_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                android:id="@+id/ivPhoto"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/female_default_profile_photo_40dp"
+                circleimage:border_width="0dp" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/text_color_dark"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnMore"
+                android:layout_width="@dimen/actionbar_height"
+                android:layout_height="@dimen/actionbar_height"
+                android:layout_marginRight="-12dp"
+                android:background="@drawable/touch_feedback_holo_light_circle"
+                android:src="@drawable/ic_more_vert_grey600_24dp"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/flChatArea"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1" >
+
+            <com.qpidnetwork.livemodule.liveshow.livechat.MessageListView
+                android:id="@+id/msgList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbarStyle="insideOverlay" >
+            </com.qpidnetwork.livemodule.liveshow.livechat.MessageListView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@drawable/rectangle_grey_shawdow" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/listview_divider_grey" />
+        <!-- 消息编辑框 -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/llEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp" >
+
+                <EditText
+                    android:id="@+id/etMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="@string/type_message_here"
+                    android:maxLines="4"
+                    android:scrollbars="vertical"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color_dark"
+                    android:textCursorDrawable="@drawable/material_text_field_cursor"
+                    android:textSize="16sp"
+                    android:imeOptions="actionSend" />
+
+                <!-- <ImageButton -->
+                <!-- android:id="@+id/btnExpression" -->
+                <!-- android:layout_width="36dp" -->
+                <!-- android:layout_height="36dp" -->
+                <!-- android:layout_marginLeft="4dp" -->
+                <!-- android:background="@drawable/touch_feedback_holo_light_circle" -->
+                <!-- android:src="@drawable/ic_tag_faces_grey600_24dp" /> -->
+
+                <ImageButton
+                    android:id="@+id/btnSend"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="4dp"
+                    android:background="@drawable/touch_feedback_holo_light_circle"
+                    android:src="@drawable/ic_send_grey600_24dp" />
+            </LinearLayout>
+
+            <!-- functional area -->
+
+            <LinearLayout
+                android:id="@+id/llFunctional"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp" >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left" >
+
+                    <ImageButton
+                        android:id="@+id/btnExpression"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/touch_feedback_holo_light_circle"
+                        android:src="@drawable/ic_tag_faces_grey600_24dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llVoiceBody"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="left|center" >
+
+                    <ImageButton
+                        android:id="@+id/btnVoice"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/touch_feedback_holo_light_circle"
+                        android:src="@drawable/ic_mic_grey600_24dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/flBottom"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:minWidth="200dp"
+                android:visibility="visible" >
+
+                <FrameLayout
+                    android:id="@+id/flPane"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#f2f2f2" />
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

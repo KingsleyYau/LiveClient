@@ -17,6 +17,7 @@ using namespace std;
 #include "../HttpLoginProtocol.h"
 #include "../HttpRequestEnum.h"
 #include "HttpProgramInfoItem.h"
+#include "HttpAuthorityItem.h"
 
 // typedef list<string> InterestList;
 typedef list<InterestType> InterestList;
@@ -89,6 +90,16 @@ public:
                 
                 
             }
+            
+            /* priv */
+            if ( root[LIVEROOM_HOT_PROGRAMLIST_PRIV].isObject()) {
+                priv.Parse(root[LIVEROOM_HOT_PROGRAMLIST_PRIV]);
+            }
+            
+            if (root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].isNumeric()) {
+                chatOnlineStatus = GetIntToIMChatOnlineStatus(root[LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS].asInt());
+            }
+            
         }
     }
 
@@ -101,6 +112,7 @@ public:
         roomType = HTTPROOMTYPE_NOLIVEROOM;
         anchorType = ANCHORLEVELTYPE_UNKNOW;
         showInfo = NULL;
+        chatOnlineStatus = IMCHATONLINESTATUS_OFF;
 	}
 
 	virtual ~HttpLiveRoomInfoItem() {
@@ -115,10 +127,12 @@ public:
      * photoUrl		    主播头像url
      * onlineStatus		主播在线状态
      * roomPhotoUrl		直播间封面图url
-     * roomType          直播间类型
-     * interest          爱好ID列表
-     * anchorType        主播类型（1:白银 2:黄金）
-     * showInfo          节目信息
+     * roomType         直播间类型
+     * interest         爱好ID列表
+     * anchorType       主播类型（1:白银 2:黄金）
+     * showInfo         节目信息
+     * priv             权限
+     * chatOnlineStatus  Chat在线状态（IMCHATONLINESTATUS_OFF：离线，IMCHATONLINESTATUS_ONLINE：在线）
      */
     string userId;
 	string nickName;
@@ -129,6 +143,8 @@ public:
     InterestList interest;
     AnchorLevelType anchorType;
     HttpProgramInfoItem* showInfo;
+    HttpAuthorityItem priv;
+    IMChatOnlineStatus chatOnlineStatus;
 };
 
 typedef list<HttpLiveRoomInfoItem* > HotItemList;

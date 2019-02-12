@@ -17,7 +17,7 @@ PublisherController::PublisherController() {
 
     mRtmpDump.SetCallback(this);
     mRtmpPublisher.SetRtmpDump(&mRtmpDump);
-    
+
     mVideoFrameLastPushTime = 0;
     mVideoFrameStartPushTime = 0;
     mVideoFrameIndex = 0;
@@ -59,10 +59,10 @@ void PublisherController::SetStatusCallback(PublisherStatusCallback *pc) {
 
 void PublisherController::SetVideoParam(int width, int height, int fps, int keyInterval) {
     mRtmpDump.SetVideoParam(width, height);
-    
+
     mPublisherMutex.lock();
     mVideoFps = fps;
-    if( fps > 0 ) {
+    if (fps > 0) {
         mVideoFrameInterval = 1000.0 / fps;
         mVideoTimestampSyncMod = 1000 % fps;
     }
@@ -81,8 +81,8 @@ bool PublisherController::PublishUrl(const string &url, const string &recordH264
                  this,
                  url.c_str());
 
-	// 开始发布
-	bFlag = mRtmpPublisher.PublishUrl();
+    // 开始发布
+    bFlag = mRtmpPublisher.PublishUrl();
     // 开始编码
     if (bFlag) {
         bFlag = mpVideoEncoder->Reset();
@@ -91,8 +91,8 @@ bool PublisherController::PublishUrl(const string &url, const string &recordH264
         bFlag = mpAudioEncoder->Reset();
     }
     if (bFlag) {
-    	// 开始连接
-    	bFlag = mRtmpDump.PublishUrl(url);
+        // 开始连接
+        bFlag = mRtmpDump.PublishUrl(url);
     }
 
     // 开始录制
@@ -143,12 +143,12 @@ void PublisherController::Stop() {
     mVideoTimestampSyncTotal = 0;
     mVideoResume = true;
     mPublisherMutex.unlock();
-    
+
     FileLevelLog("rtmpdump",
                  KLog::LOG_WARNING,
                  "PublisherController::Stop( "
                  "this : %p, "
-				 "[Success] "
+                 "[Success] "
                  ")",
                  this);
 }
@@ -167,96 +167,92 @@ void PublisherController::PushVideoFrame(void *data, int size, void *frame) {
 
     mPublisherMutex.lock();
     // 视频是否暂停录制
-    if( !mVideoPause ) {
+    if (!mVideoPause) {
         long long now = getCurrentTime();
-        
+
         // 视频是否恢复
-        if( !mVideoResume ) {
+        if (!mVideoResume) {
             // 视频未恢复
             mVideoResume = true;
             // 更新上次暂停导致的时间差
             long long videoFrameDiffTime = now - mVideoFrameLastPushTime;
             videoFrameDiffTime -= mVideoFrameInterval;
             FileLevelLog(
-                         "rtmpdump",
-                         KLog::LOG_WARNING,
-                         "PublisherController::PushVideoFrame( "
-                         "this : %p, "
-                         "[Video capture is resume], "
-                         "videoFrameDiffTime : %lld "
-                         ")",
-                         this,
-                         videoFrameDiffTime
-                         );
+                "rtmpdump",
+                KLog::LOG_WARNING,
+                "PublisherController::PushVideoFrame( "
+                "this : %p, "
+                "[Video capture is resume], "
+                "videoFrameDiffTime : %lld "
+                ")",
+                this,
+                videoFrameDiffTime);
             mRtmpDump.AddVideoTimestamp((unsigned int)videoFrameDiffTime);
             mVideoFramePauseTime += videoFrameDiffTime;
         }
-        
+
         // 控制帧率
-        if( mVideoFrameStartPushTime == 0 ) {
+        if (mVideoFrameStartPushTime == 0) {
             mVideoFrameStartPushTime = now;
         }
         long long diffTime = now - mVideoFrameStartPushTime;
         diffTime -= mVideoFramePauseTime;
         long long videoFrameInterval = diffTime - (mVideoFrameIndex * mVideoFrameInterval + mVideoTimestampSyncTotal);
-        
-        if( videoFrameInterval >= 0 ) {
+
+        if (videoFrameInterval >= 0) {
             FileLevelLog(
-                         "rtmpdump",
-                         KLog::LOG_STAT,
-                         "PublisherController::PushVideoFrame( "
-                         "this : %p, "
-                         "[Video frame pushed], "
-                         "videoFrameInterval : %lld, "
-                         "diffTime : %lld, "
-                         "videoFrameIndex : %d "
-                         ")",
-                         this,
-                         videoFrameInterval,
-                         diffTime,
-                         mVideoFrameIndex
-                         );
-            
+                "rtmpdump",
+                KLog::LOG_STAT,
+                "PublisherController::PushVideoFrame( "
+                "this : %p, "
+                "[Video frame pushed], "
+                "videoFrameInterval : %lld, "
+                "diffTime : %lld, "
+                "videoFrameIndex : %d "
+                ")",
+                this,
+                videoFrameInterval,
+                diffTime,
+                mVideoFrameIndex);
+
             // 放到编码器
             if (mpVideoEncoder) {
                 mpVideoEncoder->EncodeVideoFrame(data, size, frame);
             }
-            
+
             // 更新最后处理帧数目
             mVideoFrameIndex++;
             // 更新最后处理时间
             mVideoFrameLastPushTime = now;
             // 处理时间戳余数
-            if( mVideoTimestampSyncMod != 0 ) {
-                if( mVideoFrameIndex % mVideoFps == 0 ) {
+            if (mVideoTimestampSyncMod != 0) {
+                if (mVideoFrameIndex % mVideoFps == 0) {
                     // 每秒同步余数
                     FileLevelLog(
-                                 "rtmpdump",
-                                 KLog::LOG_STAT,
-                                 "PublisherController::PushVideoFrame( "
-                                 "this : %p, "
-                                 "[Video timestamp sync], "
-                                 "mVideoTimestampSyncMod : %u, "
-                                 "videoFrameIndex : %d "
-                                 ")",
-                                 this,
-                                 mVideoTimestampSyncMod,
-                                 mVideoFrameIndex
-                                 );
+                        "rtmpdump",
+                        KLog::LOG_STAT,
+                        "PublisherController::PushVideoFrame( "
+                        "this : %p, "
+                        "[Video timestamp sync], "
+                        "mVideoTimestampSyncMod : %u, "
+                        "videoFrameIndex : %d "
+                        ")",
+                        this,
+                        mVideoTimestampSyncMod,
+                        mVideoFrameIndex);
                     mVideoTimestampSyncTotal += mVideoTimestampSyncMod;
                 }
             }
         }
     } else {
         FileLevelLog(
-                     "rtmpdump",
-                     KLog::LOG_WARNING,
-                     "PublisherController::PushVideoFrame( "
-                     "this : %p, "
-                     "[Video capture is pausing] "
-                     ")",
-                     this
-                     );
+            "rtmpdump",
+            KLog::LOG_WARNING,
+            "PublisherController::PushVideoFrame( "
+            "this : %p, "
+            "[Video capture is pausing] "
+            ")",
+            this);
     }
     mPublisherMutex.unlock();
 }
@@ -345,8 +341,7 @@ void PublisherController::OnEncodeAudioFrame(
                  ")",
                  this,
                  timestamp,
-                 size
-				 );
+                 size);
 
     // 录制音频帧
     mAudioRecorderAAC.ChangeAudioFormat(format, sound_rate, sound_size, sound_type);
@@ -354,7 +349,6 @@ void PublisherController::OnEncodeAudioFrame(
 
     // 发送音频帧
     mRtmpPublisher.SendAudioFrame(format, sound_rate, sound_size, sound_type, frame, size, timestamp);
-
 }
 
 /*********************************************** 编码器回调处理 End *****************************************************/
@@ -445,6 +439,37 @@ void PublisherController::OnRecvAudioFrame(
                  ")",
                  this,
                  timestamp);
+}
+
+void PublisherController::OnRecvCmdLogin(RtmpDump *rtmpDump,
+                                         bool bFlag,
+                                         const string &userName,
+                                         const string &serverAddress) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "PublisherController::OnRecvCmdLogin( "
+                 "this : %p, "
+                 "userName : %s, "
+                 "serverAddress : %s "
+                 ")",
+                 this,
+                 userName.c_str(),
+                 serverAddress.c_str());
+}
+
+void PublisherController::OnRecvCmdMakeCall(RtmpDump *rtmpDump,
+                                            const string &uuId,
+                                            const string &userName) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "PublisherController::OnRecvCmdMakeCall( "
+                 "this : %p, "
+                 "uuId : %s, "
+                 "userName : %s "
+                 ")",
+                 this,
+                 uuId.c_str(),
+                 userName.c_str());
 }
 /*********************************************** 传输器回调处理 End *****************************************************/
 }

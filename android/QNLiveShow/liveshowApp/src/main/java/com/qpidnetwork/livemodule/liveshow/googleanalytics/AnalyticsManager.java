@@ -4,13 +4,12 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Application;
-import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Analytics管理类（包括GoogleAnalytics、Facebook等）

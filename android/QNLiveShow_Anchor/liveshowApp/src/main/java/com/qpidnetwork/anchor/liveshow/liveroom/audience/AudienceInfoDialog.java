@@ -45,6 +45,11 @@ public class AudienceInfoDialog extends Dialog implements View.OnClickListener{
 
     private boolean outSizeTouchHasChecked = false;
 
+    /**
+     * 设置是否显示私密按钮
+     */
+    private boolean mPrivateBtnShowFlags = true;
+
     public void setOutSizeTouchHasChecked(boolean outSizeTouchHasChecked){
         this.outSizeTouchHasChecked = outSizeTouchHasChecked;
     }
@@ -117,15 +122,21 @@ public class AudienceInfoDialog extends Dialog implements View.OnClickListener{
         }else{
             iv_audienceCar.setVisibility(View.GONE);
         }
+        if(mPrivateBtnShowFlags){
+            btn_invitePriLive.setVisibility(View.VISIBLE);
+        }else{
+            btn_invitePriLive.setVisibility(View.INVISIBLE);
+        }
+
         iv_audienceLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(getContext(),item.level));
     }
 
     /**
      * 设置ONE-ON-ONE是否可视
-     * @param visible
+     * @param isShowPrivateBtn
      */
-    public void setInvitePriLiveBtnVisible(int visible){
-        btn_invitePriLive.setVisibility(visible);
+    public void setInvitePriLiveBtnVisible(boolean isShowPrivateBtn){
+        mPrivateBtnShowFlags = isShowPrivateBtn;
     }
 
     @Override

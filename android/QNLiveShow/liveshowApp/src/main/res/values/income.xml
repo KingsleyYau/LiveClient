@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="income_live">
+		<item>--</item>
+		<item>$15,000 to $34,999</item>
+		<item>$35,000 to $49,999</item>
+		<item>$50,000 to $74,999</item>
+		<item>$75,000 to $99,999</item>
+		<item>$100,000 to $149,999</item>
+		<item>$150,000+</item>		
+		<item>Prefer Not to Say</item>						
+    </string-array> 
+</resources>

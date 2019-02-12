@@ -16,7 +16,7 @@
 
 @implementation LSChatEmotionKeyboardView
 + (instancetype)chatEmotionKeyboardView:(id)owner {
-    NSArray *nibs = [[NSBundle mainBundle] loadNibNamedWithFamily:@"LSChatEmotionKeyboardView" owner:owner options:nil];
+    NSArray *nibs = [[LiveBundle mainBundle] loadNibNamedWithFamily:@"LSChatEmotionKeyboardView" owner:owner options:nil];
     LSChatEmotionKeyboardView* view = [nibs objectAtIndex:0];
     
     view.pagingScrollView.pagingViewDelegate = view;

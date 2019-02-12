@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="LSGreetingVideoPlayView">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7RQ-BF-tHf">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Vem-JY-i1g">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="375"/>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="Vem-JY-i1g" secondAttribute="trailing" id="2TN-nl-Yn4"/>
+                        <constraint firstItem="Vem-JY-i1g" firstAttribute="top" secondItem="7RQ-BF-tHf" secondAttribute="top" id="BPC-oe-FAC"/>
+                        <constraint firstAttribute="bottom" secondItem="Vem-JY-i1g" secondAttribute="bottom" id="XTf-tz-h6i"/>
+                        <constraint firstItem="Vem-JY-i1g" firstAttribute="leading" secondItem="7RQ-BF-tHf" secondAttribute="leading" id="br8-qS-yQe"/>
+                        <constraint firstAttribute="width" secondItem="7RQ-BF-tHf" secondAttribute="height" multiplier="1:1" id="e5U-5P-LPl"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6bJ-xe-Kpb">
+                    <rect key="frame" x="0.0" y="146" width="375" height="375"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fFq-DO-4Ik" userLabel="No Reply View">
+                            <rect key="frame" x="0.0" y="106" width="375" height="163"/>
+                            <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reply this mail to watch the full video." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vnR-FZ-XGI">
+                                    <rect key="frame" x="20" y="0.0" width="335" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i9H-6f-M0f">
+                                    <rect key="frame" x="166" y="31" width="42" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="to2-e2-j3J" userLabel="Replay Button">
+                                    <rect key="frame" x="40" y="82" width="50" height="50"/>
+                                    <state key="normal" image="Mail_IsReply_Replay_Button"/>
+                                    <connections>
+                                        <action selector="noReplyReplayAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="KpH-1g-3w0"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Replay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0xL-Pw-5bR">
+                                    <rect key="frame" x="39.5" y="142" width="51.5" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sq7-KX-Emx" userLabel="Reply Button">
+                                    <rect key="frame" x="285" y="82" width="50" height="50"/>
+                                    <state key="normal" image="Mail_FullVideo_Replay"/>
+                                    <connections>
+                                        <action selector="replyAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="9ru-Kq-GyO"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Reply" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lX7-Ui-Xy5">
+                                    <rect key="frame" x="289" y="142" width="42.5" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="vnR-FZ-XGI" firstAttribute="centerX" secondItem="fFq-DO-4Ik" secondAttribute="centerX" id="5kA-El-FvM"/>
+                                <constraint firstItem="lX7-Ui-Xy5" firstAttribute="top" secondItem="Sq7-KX-Emx" secondAttribute="bottom" constant="10" id="Cbg-hH-EiE"/>
+                                <constraint firstAttribute="trailing" secondItem="vnR-FZ-XGI" secondAttribute="trailing" constant="20" id="D01-c8-yBn"/>
+                                <constraint firstItem="to2-e2-j3J" firstAttribute="leading" secondItem="fFq-DO-4Ik" secondAttribute="leading" constant="40" id="FHa-Gy-Je7"/>
+                                <constraint firstAttribute="bottom" secondItem="lX7-Ui-Xy5" secondAttribute="bottom" id="Fiq-7k-3hD"/>
+                                <constraint firstItem="vnR-FZ-XGI" firstAttribute="leading" secondItem="fFq-DO-4Ik" secondAttribute="leading" constant="20" id="H93-qf-qAv"/>
+                                <constraint firstItem="Sq7-KX-Emx" firstAttribute="centerY" secondItem="to2-e2-j3J" secondAttribute="centerY" id="Wm0-tH-qHi"/>
+                                <constraint firstItem="to2-e2-j3J" firstAttribute="top" secondItem="i9H-6f-M0f" secondAttribute="bottom" constant="30" id="Y94-DB-c4i"/>
+                                <constraint firstItem="i9H-6f-M0f" firstAttribute="centerX" secondItem="fFq-DO-4Ik" secondAttribute="centerX" id="anU-Re-5lC"/>
+                                <constraint firstItem="vnR-FZ-XGI" firstAttribute="top" secondItem="fFq-DO-4Ik" secondAttribute="top" id="dbX-CM-RqC"/>
+                                <constraint firstItem="i9H-6f-M0f" firstAttribute="top" secondItem="vnR-FZ-XGI" secondAttribute="bottom" constant="10" id="iFs-tv-WSP"/>
+                                <constraint firstItem="0xL-Pw-5bR" firstAttribute="centerX" secondItem="to2-e2-j3J" secondAttribute="centerX" id="lFg-rU-Xe0"/>
+                                <constraint firstItem="0xL-Pw-5bR" firstAttribute="top" secondItem="to2-e2-j3J" secondAttribute="bottom" constant="10" id="oyI-3V-Bkc"/>
+                                <constraint firstAttribute="trailing" secondItem="Sq7-KX-Emx" secondAttribute="trailing" constant="40" id="p54-O2-XNe"/>
+                                <constraint firstItem="Sq7-KX-Emx" firstAttribute="centerX" secondItem="lX7-Ui-Xy5" secondAttribute="centerX" id="qvQ-Zr-AAo"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kzh-nQ-deS" userLabel="Is Reply View">
+                            <rect key="frame" x="162.5" y="147.5" width="50" height="80"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dxp-zO-uUp">
+                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <state key="normal" image="Mail_IsReply_Replay_Button"/>
+                                    <connections>
+                                        <action selector="isReplyReplayAction:" destination="iN0-l3-epB" eventType="touchUpInside" id="T10-5i-DqS"/>
+                                    </connections>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Replay" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ga5-YH-JRv">
+                                    <rect key="frame" x="0.5" y="60" width="49" height="20"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="ga5-YH-JRv" firstAttribute="centerX" secondItem="kzh-nQ-deS" secondAttribute="centerX" id="3xh-N6-938"/>
+                                <constraint firstAttribute="bottom" secondItem="ga5-YH-JRv" secondAttribute="bottom" id="HYX-IP-u7F"/>
+                                <constraint firstItem="ga5-YH-JRv" firstAttribute="top" secondItem="Dxp-zO-uUp" secondAttribute="bottom" constant="10" id="QgF-0J-fAe"/>
+                                <constraint firstItem="Dxp-zO-uUp" firstAttribute="leading" secondItem="kzh-nQ-deS" secondAttribute="leading" id="U4V-xK-T9g"/>
+                                <constraint firstItem="Dxp-zO-uUp" firstAttribute="top" secondItem="kzh-nQ-deS" secondAttribute="top" id="qV3-N0-A4e"/>
+                                <constraint firstAttribute="trailing" secondItem="Dxp-zO-uUp" secondAttribute="trailing" id="rsG-k7-AAs"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="kzh-nQ-deS" firstAttribute="centerX" secondItem="6bJ-xe-Kpb" secondAttribute="centerX" id="EcU-on-rpr"/>
+                        <constraint firstAttribute="trailing" secondItem="fFq-DO-4Ik" secondAttribute="trailing" id="KR7-it-C1F"/>
+                        <constraint firstItem="kzh-nQ-deS" firstAttribute="centerY" secondItem="6bJ-xe-Kpb" secondAttribute="centerY" id="YSp-Iu-JVy"/>
+                        <constraint firstItem="fFq-DO-4Ik" firstAttribute="centerY" secondItem="6bJ-xe-Kpb" secondAttribute="centerY" id="sty-gB-mvC"/>
+                        <constraint firstItem="fFq-DO-4Ik" firstAttribute="leading" secondItem="6bJ-xe-Kpb" secondAttribute="leading" id="uZg-BT-Ai4"/>
+                    </constraints>
+                </view>
+                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="oGG-Fs-50k">
+                    <rect key="frame" x="169" y="315" width="37" height="37"/>
+                </activityIndicatorView>
+            </subviews>
+            <color key="backgroundColor" red="0.2470588235" green="0.2470588235" blue="0.2470588235" alpha="1" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="7RQ-BF-tHf" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="6tZ-fl-kFA"/>
+                <constraint firstItem="oGG-Fs-50k" firstAttribute="centerX" secondItem="7RQ-BF-tHf" secondAttribute="centerX" id="8rk-da-AvK"/>
+                <constraint firstAttribute="trailing" secondItem="7RQ-BF-tHf" secondAttribute="trailing" id="PH6-px-inh"/>
+                <constraint firstItem="6bJ-xe-Kpb" firstAttribute="trailing" secondItem="7RQ-BF-tHf" secondAttribute="trailing" id="Sdx-4c-OjL"/>
+                <constraint firstItem="6bJ-xe-Kpb" firstAttribute="leading" secondItem="7RQ-BF-tHf" secondAttribute="leading" id="TTE-N5-jK4"/>
+                <constraint firstItem="6bJ-xe-Kpb" firstAttribute="top" secondItem="7RQ-BF-tHf" secondAttribute="top" id="Vyx-Ce-te9"/>
+                <constraint firstItem="7RQ-BF-tHf" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="d3f-9W-QBH"/>
+                <constraint firstItem="oGG-Fs-50k" firstAttribute="centerY" secondItem="7RQ-BF-tHf" secondAttribute="centerY" id="haB-gH-Lnd"/>
+                <constraint firstItem="6bJ-xe-Kpb" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="n2d-un-eDk"/>
+                <constraint firstItem="6bJ-xe-Kpb" firstAttribute="bottom" secondItem="7RQ-BF-tHf" secondAttribute="bottom" id="wab-iy-JCU"/>
+            </constraints>
+            <connections>
+                <outlet property="activiView" destination="oGG-Fs-50k" id="dY1-jA-Imm"/>
+                <outlet property="endView" destination="6bJ-xe-Kpb" id="afY-86-iVB"/>
+                <outlet property="isReplyView" destination="kzh-nQ-deS" id="QOp-sY-F24"/>
+                <outlet property="noReplyView" destination="fFq-DO-4Ik" id="TjO-8l-lJu"/>
+                <outlet property="videoCoverImageView" destination="Vem-JY-i1g" id="5P4-Jf-n4Y"/>
+                <outlet property="videoPlayView" destination="7RQ-BF-tHf" id="QMo-PA-UM4"/>
+                <outlet property="videoTimeLabel" destination="i9H-6f-M0f" id="bHx-P2-5zI"/>
+            </connections>
+        </view>
+    </objects>
+    <resources>
+        <image name="Mail_FullVideo_Replay" width="50" height="50"/>
+        <image name="Mail_IsReply_Replay_Button" width="50" height="50"/>
+    </resources>
+</document>

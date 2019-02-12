@@ -22,4 +22,5 @@
 + (NSInteger)cellHeight;
 - (void)showUnreadNum:(int)num;
 - (void)showUnreadPoint:(int)num;
+- (void)showChatListUnreadNum:(int)num;
 @end

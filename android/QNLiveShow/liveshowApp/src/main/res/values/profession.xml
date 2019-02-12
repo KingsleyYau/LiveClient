@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="profression_live">
+		<item>--</item>
+		<item>Advertising/Media</item>
+		<item>Clerical/Service/Worker</item>
+		<item>Composer/Producer/Tech</item>
+		<item>Consultant</item>
+		<item>Doctor Medical Field</item>
+		<item>Finance/Accounting</item>		
+		<item>Graphic/Artist/Designer</item>
+		<item>Home Business</item>
+		<item>Home Maker</item>
+		<item>Teacher</item>
+		<item>Lawyer/Paralegal</item>
+		<item>Middle/Management</item>
+		<item>MIS/Programming</item>
+		<item>Office Manager Admin</item>
+		<item>Other</item>
+		<item>Political</item>
+		<item>Professional/Technical</item>
+		<item>Engineering</item>	
+		<item>Retired</item>
+		<item>Sales/Marketing</item>
+		<item>Scientist/Researcher</item>
+		<item>Technical/Management</item>
+		<item>Tourism/Travel Agent</item>		
+		<item>Tradesman</item>
+		<item>University Staff</item>
+		<item>University Student</item>		
+		<item>Upper Manag/Executive</item>
+		<item>Clerk</item>
+		<item>Military</item>			
+    </string-array> 
+</resources>

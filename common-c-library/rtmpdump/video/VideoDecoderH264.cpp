@@ -61,7 +61,7 @@ VideoDecoderH264::VideoDecoderH264()
     mDropFrameMutex(KMutex::MutexType_Recursive)
 {
 	// TODO Auto-generated constructor stub
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoDecoderH264::VideoDecoderH264( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoDecoderH264::VideoDecoderH264( this : %p )", this);
         
 	mCodec = NULL;
 	mContext = NULL;
@@ -90,7 +90,7 @@ VideoDecoderH264::VideoDecoderH264()
 
 VideoDecoderH264::~VideoDecoderH264() {
 	// TODO Auto-generated destructor stub
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoDecoderH264::~VideoDecoderH264( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoDecoderH264::~VideoDecoderH264( this : %p )", this);
     
     Stop();
     
@@ -162,7 +162,7 @@ void VideoDecoderH264::Pause() {
                 KLog::LOG_WARNING,
                 "VideoDecoderH264::Pause( "
                 "this : %p, "
-                "Success "
+                "[Success] "
                 ")",
                 this
                 );
@@ -181,7 +181,23 @@ void VideoDecoderH264::ResetStream() {
     
 void VideoDecoderH264::ReleaseVideoFrame(void* frame) {
     VideoFrame* videoFrame = (VideoFrame *)frame;
-    ReleaseBuffer(videoFrame);
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "VideoDecoderH264::ReleaseVideoFrame( "
+                 "this : %p, "
+                 "videoFrame : %p, "
+                 "timestamp : %u "
+                 ")",
+                 this,
+                 videoFrame,
+                 videoFrame->mTimestamp
+                 );
+    
+    mFreeBufferList.lock();
+    mFreeBufferList.push_back(videoFrame);
+    mFreeBufferList.unlock();
+    
 }
     
 bool VideoDecoderH264::Start() {
@@ -255,46 +271,8 @@ void VideoDecoderH264::Stop() {
         // 停止转换线程
         mConvertVideoThread.Stop();
         
-        // 释放解码Buffer
-        VideoFrame* frame = NULL;
-        
-        mDecodeBufferList.lock();
-        while( !mDecodeBufferList.empty() ) {
-            frame = (VideoFrame* )mDecodeBufferList.front();
-            mDecodeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mDecodeBufferList.unlock();
-        
-        // 释放转换Buffer
-        mConvertBufferList.lock();
-        while( !mConvertBufferList.empty() ) {
-            frame = (VideoFrame* )mConvertBufferList.front();
-            mConvertBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mConvertBufferList.unlock();
-        
-        // 释放空闲Buffer
-        mFreeBufferList.lock();
-        while( !mFreeBufferList.empty() ) {
-            frame = (VideoFrame* )mFreeBufferList.front();
-            mFreeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mFreeBufferList.unlock();
+        // 清空队列
+        ClearVideoFrame();
         
         // 销毁旧的解码器
         DestroyContext();
@@ -417,23 +395,6 @@ void VideoDecoderH264::DestroyContext() {
     
 }
     
-void VideoDecoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
-//    FileLog("rtmpdump",
-//            "VideoDecoderH264::ReleaseBuffer( "
-//            "this : %p, "
-//            "frame : %p, "
-//            "timestamp : %u "
-//            ")",
-//            this,
-//            videoFrame,
-//            videoFrame->mTimestamp
-//            );
-    
-	mFreeBufferList.lock();
-	mFreeBufferList.push_back(videoFrame);
-	mFreeBufferList.unlock();
-}
-
 void VideoDecoderH264::DecodeVideoKeyFrame(const char* sps, int sps_size, const char* pps, int pps_size, int naluHeaderSize) {
 	FileLog("rtmpdump",
 			"VideoDecoderH264::DecodeVideoKeyFrame( "
@@ -464,6 +425,7 @@ void VideoDecoderH264::DecodeVideoFrame(const char* data, int size, u_int32_t ti
 
 	} else {
 		videoFrame = new VideoFrame();
+        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::DecodeVideoFrame( this : %p, [New View Frame], frame : %p )", this, videoFrame);
 	}
 	mFreeBufferList.unlock();
 
@@ -680,6 +642,63 @@ void VideoDecoderH264::StartDropFrame() {
 //    mDecodeBufferList.unlock();
 }
     
+void VideoDecoderH264::ClearVideoFrame() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "VideoDecoderH264::ClearVideoFrame( "
+                 "this : %p, "
+                 "mDecodeBufferList.size() : %d, "
+                 "mConvertBufferList.size() : %d, "
+                 "mFreeBufferList.size() : %d "
+                 ")",
+                 this,
+                 mDecodeBufferList.size(),
+                 mConvertBufferList.size(),
+                 mFreeBufferList.size()
+                 );
+    
+    // 释放解码Buffer
+    VideoFrame* frame = NULL;
+    
+    mDecodeBufferList.lock();
+    while( !mDecodeBufferList.empty() ) {
+        frame = (VideoFrame* )mDecodeBufferList.front();
+        mDecodeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mDecodeBufferList.unlock();
+    
+    // 释放转换Buffer
+    mConvertBufferList.lock();
+    while( !mConvertBufferList.empty() ) {
+        frame = (VideoFrame* )mConvertBufferList.front();
+        mConvertBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mConvertBufferList.unlock();
+    
+    // 释放空闲Buffer
+    mFreeBufferList.lock();
+    while( !mFreeBufferList.empty() ) {
+        frame = (VideoFrame* )mFreeBufferList.front();
+        mFreeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mFreeBufferList.unlock();
+}
+    
 void VideoDecoderH264::SetDecoderVideoFormat(VIDEO_FORMATE_TYPE type) {
     mVideoFormatConverter.SetDstFormat(type);
 }
@@ -818,6 +837,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
                         mFreeBufferList.pop_front();
                     } else {
                         decodedVideoFrame = new VideoFrame();
+                        FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::DecodeVideoHandle( this : %p, [New View Frame], frame : %p )", this, decodedVideoFrame);
                     }
                     mFreeBufferList.unlock();
                     
@@ -891,7 +911,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
             }
 
             // 归还空闲Buffer
-            ReleaseBuffer(videoFrame);
+            ReleaseVideoFrame(videoFrame);
             
         } else {
             // 没有更多帧
@@ -907,7 +927,7 @@ void VideoDecoderH264::DecodeVideoHandle() {
         } else {
             // 归还没使用Buffer
             if( decodedVideoFrame ) {
-                ReleaseBuffer(decodedVideoFrame);
+                ReleaseVideoFrame(decodedVideoFrame);
                 decodedVideoFrame = NULL;
             }
         }
@@ -983,6 +1003,7 @@ void VideoDecoderH264::ConvertVideoHandle() {
                 mFreeBufferList.pop_front();
             } else {
                 displayFrame = new VideoFrame();
+                FileLevelLog("rtmpdump", KLog::LOG_WARNING, "VideoDecoderH264::ConvertVideoHandle( this : %p, [New View Frame], frame : %p )", this, displayFrame);
             }
             mFreeBufferList.unlock();
             
@@ -997,13 +1018,13 @@ void VideoDecoderH264::ConvertVideoHandle() {
             } else {
                 // 归还没使用Buffer
                 if( displayFrame ) {
-                    ReleaseBuffer(displayFrame);
+                    ReleaseVideoFrame(displayFrame);
                     displayFrame = NULL;
                 }
             }
             
             // 归还解码Buffer
-            ReleaseBuffer(videoFrame);
+            ReleaseVideoFrame(videoFrame);
         }
 
         Sleep(1);

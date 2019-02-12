@@ -19,4 +19,11 @@ public interface ILSPublisherStatusCallback {
 	 * @param publisher 推流器
 	 */
 	public void onDisconnect(LSPublisher publisher);
+
+	/***
+	 * 录制视频出错回调
+	 * @param publisher 推流器
+	 * @param error 错误码
+	 */
+	public void onVideoCaptureError(LSPublisher publisher, int error);
 }

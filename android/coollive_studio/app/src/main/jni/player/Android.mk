@@ -35,7 +35,7 @@ LOCAL_LDFLAGS := -L$(LIBRARY_THIRDY_PARTY_PATH)/ffmpeg/android/lib/$(TARGET_ARCH
 					-lfdk-aac
 		
 LOCAL_STATIC_LIBRARIES += rtmpdump
-LOCAL_SHARED_LIBRARIES += androidcommon
+LOCAL_STATIC_LIBRARIES += androidcommon
 
 REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))

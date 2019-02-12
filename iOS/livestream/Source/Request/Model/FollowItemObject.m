@@ -25,6 +25,8 @@
         self.interest = [coder decodeObjectForKey:@"interest"];
         self.anchorType = [coder decodeIntForKey:@"anchorType"];
         self.showInfo = [coder decodeObjectForKey:@"showInfo"];
+        self.priv = [coder decodeObjectForKey:@"priv"];
+        self.chatOnlineStatus = [coder decodeIntForKey:@"chatOnlineStatus"];
     }
     return self;
 }
@@ -41,6 +43,8 @@
     [coder encodeObject:self.interest forKey:@"interest"];
     [coder encodeInt:self.anchorType forKey:@"anchorType"];
     [coder encodeObject:self.showInfo forKey:@"showInfo"];
+    [coder encodeObject:self.priv forKey:@"priv"];
+    [coder encodeInt:self.chatOnlineStatus forKey:@"chatOnlineStatus"];
 }
 
 @end

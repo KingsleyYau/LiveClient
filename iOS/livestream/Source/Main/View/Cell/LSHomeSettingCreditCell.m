@@ -38,7 +38,7 @@
 
 - (void)showMyCredits {
     self.creditsLabel.text = [NSString stringWithFormat:@"Balance：%.2f",[LiveRoomCreditRebateManager creditRebateManager].mCredit];
-    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit) {
+    [[LiveRoomCreditRebateManager creditRebateManager] getLeftCreditRequest:^(BOOL success, double credit, int coupon, double postStamp, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         if (success) {
             self.creditsLabel.text = [NSString stringWithFormat:@"Balance：%.2f",credit];
         }

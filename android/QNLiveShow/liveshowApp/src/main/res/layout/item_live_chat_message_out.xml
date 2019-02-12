@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:paddingLeft="112dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp" >
+
+        <TextView
+            android:id="@+id/chat_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="36dp"
+            android:background="@drawable/message_bubble_out"
+            android:gravity="left|center"
+            android:minHeight="36dp"
+            android:minWidth="48dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="6dp"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/btnError"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="0dp"
+            android:background="@drawable/touch_feedback_holo_light_round_rectangle"
+            android:src="@drawable/ic_error_grey600_24dp"
+            android:visibility="gone" />
+
+        <com.qpidnetwork.livemodule.view.MaterialProgressBar
+            android:id="@+id/pbDownload"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:visibility="gone"
+            app:matProg_barColor="@color/blue_color"
+            app:matProg_progressIndeterminate="true" />
+    </RelativeLayout>
+    
+    <include 
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/item_live_chat_warning_tips"
+        android:id="@+id/includeWaring"
+        android:visibility="gone"/>
+
+</LinearLayout>

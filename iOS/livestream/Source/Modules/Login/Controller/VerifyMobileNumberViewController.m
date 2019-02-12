@@ -145,7 +145,7 @@
     
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
         
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             if (success) {
               self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(countDownTime) userInfo:nil repeats:YES];
@@ -182,7 +182,7 @@
         request.areaCode = self.country.zipCode;
         request.verifyCode = self.codeTextField.text;
         request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
-            dispatch_sync(dispatch_get_main_queue(), ^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [self hideLoading];
                 if (success) {
                     for (UIViewController * vc in self.navigationController.viewControllers) {

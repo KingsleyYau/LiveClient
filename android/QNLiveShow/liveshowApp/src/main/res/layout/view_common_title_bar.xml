@@ -1,52 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<FrameLayout-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:fresco="http://schemas.android.com/apk/res-auto"-->
+    <!--android:id="@+id/fl_commTitleBar"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:background="@color/theme_default_white"-->
+    <!--android:layout_height="@dimen/actionbar_height">-->
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_gravity="center">-->
+
+        <!--&lt;!&ndash; 标题图标 &ndash;&gt;-->
+        <!--<com.facebook.drawee.view.SimpleDraweeView-->
+            <!--android:id="@+id/img_commTitle"-->
+            <!--android:layout_width="@dimen/live_size_30dp"-->
+            <!--android:layout_height="@dimen/live_size_30dp"-->
+            <!--android:layout_marginRight="@dimen/live_size_8dp"-->
+            <!--android:visibility="gone"-->
+            <!--fresco:placeholderImage="@drawable/ic_default_photo_woman"-->
+            <!--fresco:actualImageScaleType="focusCrop"-->
+            <!--fresco:backgroundImage="@color/black4" />-->
+
+        <!--&lt;!&ndash; 标题文字 &ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:id="@+id/tv_commTitle"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:textColor="@color/theme_default_black"-->
+            <!--android:gravity="center"-->
+            <!--android:focusable="true"-->
+            <!--android:clickable="true"-->
+            <!--android:maxLength="20"-->
+            <!--android:ellipsize="end"-->
+            <!--android:text="@string/app_name" />-->
+
+    <!--</LinearLayout>-->
+
+    <!--&lt;!&ndash; 返回 &ndash;&gt;-->
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_commBack"-->
+        <!--android:src="@drawable/ic_arrow_back"-->
+        <!--android:background="@drawable/touch_feedback_holo_light_circle"-->
+        <!--android:paddingLeft="13dp"-->
+        <!--android:paddingRight="18dp"-->
+        <!--android:layout_gravity="center_vertical|left"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <!--&lt;!&ndash; 阴影 &ndash;&gt;-->
+    <!--<View-->
+        <!--android:id="@+id/bottomDivider"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1dp"-->
+        <!--android:background="@color/theme_default_divider_grey"-->
+        <!--android:layout_gravity="bottom"/>-->
+
+
+
+<!--</FrameLayout>-->
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fl_commTitleBar"
     android:layout_width="match_parent"
-    android:background="@color/theme_default_white"
-    android:layout_height="@dimen/actionbar_height">
+    android:layout_height="@dimen/actionbar_height"
+    android:background="@color/theme_default_white">
 
+    <!-- 返回 -->
+    <ImageView
+        android:id="@+id/iv_commBack"
+        android:layout_width="@dimen/actionbar_backicon_height"
+        android:layout_height="@dimen/actionbar_backicon_height"
+        android:background="@drawable/touch_feedback_holo_light_circle"
+        android:scaleType="center"
+        android:paddingLeft="13dp"
+        android:paddingRight="18dp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 主布局 -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/ll_title_body"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="center"
-        android:layout_gravity="center">
+        app:layout_constraintLeft_toRightOf="@+id/iv_commBack"
+        app:layout_constraintRight_toLeftOf="@+id/ll_title_right">
 
         <!-- 标题图标 -->
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/img_commTitle"
-            android:layout_width="@dimen/live_size_30dp"
-            android:layout_height="@dimen/live_size_30dp"
+            android:layout_width="@dimen/live_size_40dp"
+            android:layout_height="@dimen/live_size_40dp"
             android:layout_marginRight="@dimen/live_size_8dp"
             android:visibility="gone"
-            fresco:placeholderImage="@drawable/ic_default_photo_woman"
-            fresco:actualImageScaleType="focusCrop"
-            fresco:backgroundImage="@color/black4" />
+            fresco:backgroundImage="@color/black4"/>
 
         <!-- 标题文字 -->
         <TextView
             android:id="@+id/tv_commTitle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="@color/theme_default_black"
-            android:gravity="center"
-            android:focusable="true"
+            android:lines="1"
             android:clickable="true"
-            android:text="Live" />
+            android:ellipsize="end"
+            android:focusable="true"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@color/theme_default_black" />
 
     </LinearLayout>
 
-    <!-- 返回 -->
-    <ImageView
-        android:id="@+id/iv_commBack"
-        android:src="@drawable/ic_arrow_back"
-        android:background="@drawable/touch_feedback_holo_light_circle"
-        android:paddingLeft="13dp"
-        android:paddingRight="18dp"
-        android:layout_gravity="center_vertical|left"
+    <!-- 右边布局 -->
+    <LinearLayout
+        android:id="@+id/ll_title_right"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:minWidth="@dimen/actionbar_height"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        fresco:layout_constraintEnd_toEndOf="parent">
+
+    </LinearLayout>
 
     <!-- 阴影 -->
     <View
@@ -54,6 +138,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/theme_default_divider_grey"
-        android:layout_gravity="bottom"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</FrameLayout>
+</android.support.constraint.ConstraintLayout>

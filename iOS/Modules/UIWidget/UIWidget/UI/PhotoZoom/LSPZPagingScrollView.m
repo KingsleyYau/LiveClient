@@ -25,6 +25,10 @@
 @synthesize curView;
 @synthesize recycledPages;
 @synthesize visiblePages;
+- (void)dealloc {
+    self.delegate = nil;
+}
+
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -93,7 +97,11 @@
 
     if (self.pagingViewDelegate == nil)
         return CGSizeZero;
-    NSUInteger count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    
+    NSUInteger count = 0;
+    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+        count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    }
 
     if (self.alwaysBounceVertical) {
         return CGSizeMake(self.bounds.size.width * count, self.bounds.size.height);
@@ -109,7 +117,10 @@
 
 - (NSUInteger)currentPagingIndex {
     NSUInteger index = (NSUInteger)(ceil(self.contentOffset.x / self.bounds.size.width));
-    NSUInteger count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    NSUInteger count = 0;
+    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+        count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    }
     if (index >= count) {
         index = count - 1;
     }
@@ -137,7 +148,10 @@
         return;
     }
     //    assert(self.pagingViewDelegate != nil);
-    NSUInteger count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    NSUInteger count = 0;
+    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+        count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    }
     if (count == 0) {
         return;
     }
@@ -290,7 +304,10 @@
 
 - (void)resetDisplay {
     [self cleanUp];
-    NSUInteger count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    NSUInteger count = 0;
+    if( [self.pagingViewDelegate respondsToSelector:@selector(pagingScrollViewPagingViewCount:)] ) {
+        count = [self.pagingViewDelegate pagingScrollViewPagingViewCount:self];
+    }
     if (count > 0) {
         [self displayPagingViewAtIndex:0 animated:false];
     }

@@ -1,0 +1,54 @@
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "OPK-nA-3WH"; */
+"OPK-nA-3WH.normalTitle" = "Send";
+
+"Send_Error_Tips_Retry" = "Your message was not sent.";
+"Send_Error_Tips_Offline" = "Oops! The lady has gone offline.";
+"Send_Error_Tips_No_Money" = "You are running out of credits, please add credits to continue.";
+"Send_Error_Tips_Other" = "Your message was not sent.";
+"Send_Error_Tips_Space" = "Please do not send empty messages out.";
+"Send_Error_Tips_Illegal" = "Warning:Your message may contain prohibited information which has violated our Terms of Use.Your message will not be delivered.";
+
+"Local_Error_Tips_200_Input_Limited" = "200 character limited.";
+
+"Warning_Error_Tips_No_Money" = "You don't have sufficient credits to continue the action,";
+
+"Tips_Add_Credit" = "add more credits.";
+"Tips_Try_Ticket_Credit_YES" = "Send your first message to start free chat now.";
+"Tips_Try_Ticket_Credit_NO" = "Live chat billed at 0.5 credit per 5 mins.";
+"Tips_Try_Ticket_Credit_NO_Reply" = "※  Billing begins after your message is replied. 0.5 credits per 5 mins.";
+
+"Tips_Your_Free_Chat_Is_Ended" = "Your free chat is ended. Live chat billed at 0.5 credit per 5 mins.";
+"Tips_Text_Not_Support" = "The recipient's device does not support text messages.";
+"Tips_Emotion_Not_Support" = "The recipient's device does not support animating stickers.";
+"Tips_Voice_Not_Support" = "The recipient's device does not support voice messages.";
+"Tips_Photo_Not_Support" = "The recipient's device does not support photo exchanges.";
+"Tips_MagicIcon_Not_Support" = "The recipient's device does not support premium stickers.";
+
+"Tips_Input_Message_Here" = "Type message here.";
+
+"Tips_Buy_MonthFee_Success" = "Your premium membership has been activated.";
+"PAY_ERROR_NORMAL" = "We can not process your order at the moment, please try again later.";
+"20038" = "You have reached the maximum amount of daily orders. Please try tomorrow.";
+"20046" = "You do not have to purchase credits, you already certain amount of them. Please spend them before making further orders.";
+"40005" = "Unexpected errors encountered, please login to the desktop version to solve the problem.";
+"50000" = "Please do not please multiple orders at the same time.";
+"PAY_ERROR_OTHER" = "Failed to place your order. Would you like to retry?";
+"PAY_SUCCESS" = "Congratulation! Add credits finish.";
+
+"Tips_Buy_MonthFee" = "Purchase of premium membership will charge you $14.99, would you like to continue?";
+
+"Tips_InChat_Photo" = "Can not send photos before the conversation is started.";
+
+"Tips_InChat_Emotion" = "Can not send premium stickers before the conversation is started.";
+"Tips_InChat_Voice" = "Can not send voice messages before the conversation is started.";
+
+"NoNetwork" = "Trouble connecting to the server, please try again later.";
+
+"on2min" = "You can't cancel the invitation within 2 min.";
+
+"InChat_Tip" = "You can not cancel the invitation when you are in chat.";
+
+"EndChat" = "End Chat";
+
+"Cancel invitation" = "Cancel invitation";

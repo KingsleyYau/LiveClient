@@ -17,6 +17,7 @@
 //#define ROOMID_PARAM           "roomid"
 #define ERRNO_PARAM				"errno"
 #define ERRMSG_PARAM       		"errmsg"
+#define RECV_RCNT_PRIV_PARAM    "priv"
 
 RecvRoomCloseNoticeTask::RecvRoomCloseNoticeTask(void)
 {
@@ -52,7 +53,8 @@ bool RecvRoomCloseNoticeTask::Handle(const TransportProtocol& tp)
 
 	FileLog("ImClient", "RecvRoomCloseNoticeTask::Handle() begin, tp.isRespond:%d, tp.cmd:%s, tp.reqId:%d"
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
-		
+	
+    IMAuthorityItem priv;
     // 协议解析
     if (!tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -68,6 +70,9 @@ bool RecvRoomCloseNoticeTask::Handle(const TransportProtocol& tp)
         if (tp.m_data[ERRMSG_PARAM].isString()) {
         	m_errMsg = tp.m_data[ERRMSG_PARAM].asString();
         }
+        if (tp.m_data[RECV_RCNT_PRIV_PARAM].isObject()) {
+            priv.Parse(tp.m_data[RECV_RCNT_PRIV_PARAM]);
+        }
     }
     
     // 协议解析失败
@@ -80,7 +85,7 @@ bool RecvRoomCloseNoticeTask::Handle(const TransportProtocol& tp)
 
 	// 通知listener
 	if (NULL != m_listener) {
-        m_listener->OnRecvRoomCloseNotice(m_roomId, m_errType, m_errMsg);
+        m_listener->OnRecvRoomCloseNotice(m_roomId, m_errType, m_errMsg, priv);
 		FileLog("ImClient", "RecvRoomCloseNoticeTask::Handle() callback end, result:%d", result);
 	}
 	

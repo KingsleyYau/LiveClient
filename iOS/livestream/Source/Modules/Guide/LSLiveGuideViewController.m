@@ -225,7 +225,7 @@
         // 跳转用户
         NSString *url = [LSConfigManager manager].item.userProtocol;
         
-        LiveWebViewController *webViewController = [[LiveWebViewController alloc] init];
+        LiveWebViewController *webViewController = [[LiveWebViewController alloc] initWithNibName:nil bundle:nil];
         webViewController.url = url;
         self.navigationController.navigationBar.hidden = NO;
         [self.navigationController setNavigationBarHidden:NO];

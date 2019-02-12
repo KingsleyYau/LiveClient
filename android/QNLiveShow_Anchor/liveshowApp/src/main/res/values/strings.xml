@@ -523,6 +523,7 @@
     <string name="public_live_invite_privlive_timeout1">No response from&#160;</string>
     <string name="public_live_invite_privlive_timeout2">, please try again later</string>
     <string name="public_live_sendmsg_manleave_tips">The broadcast room has no viewers or the viewer you @ has left the broadcast room</string>
+    <string name="public_tran_startlive_nopermission_tips">Sorry, you don\'t have the authority to start public broadcast.</string>
     <string name="live_bullet_content">: %1$s</string>
     <string name="private_live_interactive_vedio_open">%1$s has turned on his webcam.</string>
     <string name="private_live_interactive_vedio_close">%1$s has turned off his webcam.</string>

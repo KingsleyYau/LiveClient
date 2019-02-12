@@ -3,7 +3,7 @@ package net.qdating.filter;
 import android.opengl.GLES20;
 
 /**
- * 内存滤镜
+ * RGB输入滤镜
  * @author max
  *
  */
@@ -14,6 +14,18 @@ public class LSImageInputFilter extends LSImageBufferFilter {
 
 	public LSImageInputFilter() {
 		super(LSImageShader.defaultPixelVertexShaderString, LSImageShader.dafaultPixelFragmentShaderString, LSImageVertex.filterVertex_0);
+	}
+
+	protected int getPosition() {
+		return aPosition;
+	}
+
+	protected int getTextureCoordinate() {
+		return aTextureCoordinate;
+	}
+
+	protected int getInputTexture() {
+		return uInputTexture;
 	}
 
 	@Override
@@ -51,20 +63,20 @@ public class LSImageInputFilter extends LSImageBufferFilter {
 	protected int onDrawFrame(int textureId) {
 		// 绘制
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
-		
+
 		return super.onDrawFrame(textureId);
 	}
 	
 	@Override
 	protected void onDrawFinish(int textureId) {
 		// 取消着色器参数绑定
-		GLES20.glDisableVertexAttribArray(aPosition);  
+		GLES20.glDisableVertexAttribArray(aPosition);
 		GLES20.glDisableVertexAttribArray(aTextureCoordinate);
-		
+
 		// 解除纹理绑定
 		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 
 		super.onDrawFinish(textureId);
 	}
-	
+
 }

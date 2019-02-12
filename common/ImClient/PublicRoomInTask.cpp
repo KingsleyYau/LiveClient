@@ -53,6 +53,7 @@ bool PublicRoomInTask::Handle(const TransportProtocol& tp)
             , tp.m_isRespond, tp.m_cmd.c_str(), tp.m_reqId);
 		
     RoomInfoItem item;
+    IMAuthorityItem priv;
     // 协议解析
     if (tp.m_isRespond) {
         result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
@@ -60,6 +61,16 @@ bool PublicRoomInTask::Handle(const TransportProtocol& tp)
         m_errMsg = tp.m_errmsg;
         
         item.Parse(tp.m_data);
+        priv.isHasOneOnOneAuth = item.priv.isHasOneOnOneAuth;
+        priv.isHasBookingAuth = item.priv.isHasBookingAuth;
+        
+        if (m_errType != LCC_ERR_SUCCESS) {
+            if (tp.m_errData.isObject()) {
+                if (tp.m_errData[PRIV_PARAM].isObject()) {
+                    priv.Parse(tp.m_errData[PRIV_PARAM]);
+                }
+            }
+        }
     }
     
     // 协议解析失败
@@ -73,7 +84,7 @@ bool PublicRoomInTask::Handle(const TransportProtocol& tp)
 	// 通知listener
 	if (NULL != m_listener) {
         bool success = (m_errType == LCC_ERR_SUCCESS);
-        m_listener->OnPublicRoomIn(GetSeq(), success, m_errType, m_errMsg, item);
+        m_listener->OnPublicRoomIn(GetSeq(), success, m_errType, m_errMsg, item, priv);
 		FileLog("ImClient", "PublicRoomInTask::Handle() callback end, result:%d", result);
 	}
 	
@@ -151,6 +162,7 @@ void PublicRoomInTask::OnDisconnect()
 {
 	if (NULL != m_listener) {
         RoomInfoItem item;
-        m_listener->OnPublicRoomIn(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, item);
+        IMAuthorityItem priv;
+        m_listener->OnPublicRoomIn(m_seq, false, LCC_ERR_CONNECTFAIL, IMLOCAL_ERROR_CODE_PARSEFAIL_DESC, item, priv);
 	}
 }

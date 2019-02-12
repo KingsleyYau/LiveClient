@@ -253,7 +253,7 @@ jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
 	jobject jItem = NULL;
 	jclass jItemCls = GetJClass(env, IM_ROOMIN_ITEM_CLASS);
 	if (NULL != jItemCls){
-		string signature = "(Ljava/lang/String;Ljava/lang/String;I[Ljava/lang/String;II[Ljava/lang/String;II)V";
+		string signature = "(Ljava/lang/String;Ljava/lang/String;I[Ljava/lang/String;II[Ljava/lang/String;IIZZ)V";
 		jmethodID init = env->GetMethodID(jItemCls, "<init>", signature.c_str());
 
         if (NULL != init) {
@@ -273,7 +273,9 @@ jobject getRoomInItem(JNIEnv *env, const ZBRoomInfoItem& item){
                                    item.maxFansiNum,
                                    pullUrlArray,
                                    jstatus,
-                                   jliveShowType
+                                   jliveShowType,
+                                   item.priv.isHasOneOnOneAuth,
+                                   item.priv.isHasBookingAuth
             );
             env->DeleteLocalRef(janchorId);
             env->DeleteLocalRef(jroomId);

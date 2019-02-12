@@ -12,6 +12,7 @@
 
 
 @implementation LSLoginItemObject
+
 - (id)initWithCoder:(NSCoder *)coder {
     if (self = [super init]) {
         self.userId = [coder decodeObjectForKey:@"userId"];
@@ -26,6 +27,12 @@
         self.qnMainAdUrl = [coder decodeObjectForKey:@"qnMainAdUrl"];
         self.qnMainAdTitle = [coder decodeObjectForKey:@"qnMainAdTitle"];
         self.qnMainAdId = [coder decodeObjectForKey:@"qnMainAdId"];
+        self.gaUid = [coder decodeObjectForKey:@"gaUid"];
+        self.sessionId = [coder decodeObjectForKey:@"sessionId"];
+        self.isLiveChatRisk = [coder decodeBoolForKey:@"isLiveChatRisk"];
+        self.isHangoutRisk = [coder decodeBoolForKey:@"isHangoutRisk"];
+        self.liveChatInviteRiskType = [coder decodeIntForKey:@"liveChatInviteRiskType"];
+        self.mailPriv = [coder decodeObjectForKey:@"mailPriv"];
     }
     return self;
 }
@@ -43,6 +50,12 @@
     [coder encodeObject:self.qnMainAdUrl forKey:@"qnMainAdUrl"];
     [coder encodeObject:self.qnMainAdTitle forKey:@"qnMainAdTitle"];
     [coder encodeObject:self.qnMainAdId forKey:@"qnMainAdId"];
+    [coder encodeObject:self.gaUid forKey:@"gaUid"];
+    [coder encodeObject:self.sessionId forKey:@"sessionId"];
+    [coder encodeBool:self.isLiveChatRisk forKey:@"isLiveChatRisk"];
+    [coder encodeBool:self.isHangoutRisk forKey:@"isHangoutRisk"];
+    [coder encodeInt:self.liveChatInviteRiskType forKey:@"liveChatInviteRiskType"];
+    [coder encodeObject:self.mailPriv forKey:@"mailPriv"];
 
 }
 

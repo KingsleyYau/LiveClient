@@ -51,7 +51,7 @@ bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char*
 
     int errnum = LOCAL_LIVE_ERROR_CODE_FAIL;
     string errmsg = "";
-    double credit = 0.0;
+    HttpLeftCreditItem item;
     bool bParse = false;
     
     if ( bFlag ) {
@@ -59,10 +59,7 @@ bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char*
         Json::Value dataJson;
         if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
             if (dataJson.isObject()) {
-                if (dataJson[LIVEROOM_GETCREDIT_CREDIT].isNumeric()) {
-                    credit = dataJson[LIVEROOM_GETCREDIT_CREDIT].asDouble();
-                }
-                
+                item.Parse(dataJson);
             }
         }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
@@ -75,7 +72,7 @@ bool HttpGetLeftCreditTask::ParseData(const string& url, bool bFlag, const char*
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetLeftCredit(this, bParse, errnum, errmsg, credit);
+        mpCallback->OnGetLeftCredit(this, bParse, errnum, errmsg, item);
     }
     
     return bParse;

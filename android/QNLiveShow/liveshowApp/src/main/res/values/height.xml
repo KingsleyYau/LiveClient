@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="height_live">
+		<item>--</item>
+		<item>5\'0\'\' (153 cm)</item>
+		<item>5\'1\'\' (155 cm)</item>
+		<item>5\'2\'\' (158 cm)</item>
+		<item>5\'3\'\' (160 cm)</item>  
+		<item>5\'4\'\' (163 cm)</item> 
+		<item>5\'5\'\' (165 cm)</item> 
+		<item>5\'6\'\' (168 cm)</item> 
+		<item>5\'7\'\' (170 cm)</item> 		
+		<item>5\'8\'\' (173 cm)</item> 
+		<item>5\'9\'\' (175 cm)</item> 
+		<item>5\'10\'\' (178 cm)</item>  
+		<item>5\'11\'\' (180 cm)</item>   
+		<item>6\'0\'\' (183 cm)</item>
+		<item>6\'1\'\' (186 cm)</item>
+		<item>6\'2\'\' (188 cm)</item>
+		<item>6\'3\'\' (191 cm)</item>  
+		<item>6\'4\'\' (194 cm)</item> 
+		<item>6\'6\'\' (196 cm)</item> 
+		<item>6\'6\'\' (199 cm)</item> 
+		<item>6\'7\'\' (201 cm)</item> 		
+		<item>6\'8\'\' (204 cm)</item> 
+		<item>6\'9\'\' (206 cm)</item> 
+		<item>6\'10\'\' (209 cm)</item>  
+		<item>6\'11\'\' (211 cm)</item> 
+		<item>7\'0\'\' (214 cm)</item>
+		<item>7\'1\'\' (216 cm)</item>
+		<item>7\'2\'\' (219 cm)</item>
+		<item>7\'3\'\' (221 cm)</item>  
+		<item>7\'4\'\' (224 cm)</item> 
+		<item>7\'5\'\' (226 cm)</item> 
+		<item>7\'6\'\' (229 cm)</item> 
+		<item>7\'7\'\' (231 cm)</item> 		
+		<item>7\'8\'\' (234 cm)</item> 
+		<item>7\'9\'\' (236 cm)</item> 
+		<item>7\'11\'\' (241 cm)</item>  
+		<item>8\'0\'\' (244 cm)</item>
+    </string-array> 
+</resources>

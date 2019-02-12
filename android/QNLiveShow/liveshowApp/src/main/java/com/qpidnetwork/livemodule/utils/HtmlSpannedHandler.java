@@ -3,6 +3,11 @@ package com.qpidnetwork.livemodule.utils;
 import android.text.Html;
 import android.text.Spanned;
 
+import com.qpidnetwork.qnbridgemodule.util.Log;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created by Jagger on 2018/2/5.
  */
@@ -30,6 +35,16 @@ public class HtmlSpannedHandler {
         if(giftMsg){
             msg = msg.replaceFirst("] </font>", "\"> </font>");
         }
+
+        //处理空格
+//        msg = msg.replace(" " , "&nbsp;");    //不能这样写,会把类似这种<font color="#000000">中间的空格去掉的
+//        String regEx = " {2,}";
+//        Pattern pat = Pattern.compile(regEx);
+//        Matcher mat = pat.matcher(msg);
+//        msg = mat.replaceAll("&nbsp;");
+        msg = msg.replace("  " , "&nbsp;&nbsp;");
+        //处理换行
+        msg = msg.replace("\n" , "<br>");
 
         //转出
         Log.logD(TAG,"getExpressMsgHTML-output:"+msg);

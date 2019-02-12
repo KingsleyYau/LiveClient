@@ -9,7 +9,7 @@ import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
 import com.qpidnetwork.livemodule.im.listener.IMUserBaseInfoItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.online.AudienceHeadItem;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

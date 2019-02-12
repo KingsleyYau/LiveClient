@@ -15,11 +15,17 @@ JavaItemMap gJavaItemMap;
 
 HttpRequestManager gHttpRequestManager;
 
+HttpRequestManager gDomainRequestManager;
+
 HttpRequestManager gPhotoUploadRequestManager;
 
 HttpRequestManager gConfigRequestManager;
 
 HttpRequestController gHttpRequestController;
+
+LSLiveChatHttpRequestManager gLSLiveChatHttpRequestManager;
+
+LSLiveChatHttpRequestHostManager gLSLiveChatHttpRequestHostManager;
 
 KMutex mTokenMutex;
 string gToken;
@@ -34,6 +40,28 @@ string gToken;
  	return result;
  }
 
+void InitEnumHelper(JNIEnv *env, const char *path, jobject *objptr) {
+	FileLog("httprequest", "InitEnumHelper( path : %s )", path);
+    jclass cls = env->FindClass(path);
+    if( !cls ) {
+    	FileLog("httprequest", "InitEnumHelper( !cls )");
+        return;
+    }
+
+    jmethodID constr = env->GetMethodID(cls, "<init>", "(Ljava/lang/String;I)V");
+    if( !constr ) {
+    	FileLog("httprequest", "InitEnumHelper( !constr )");
+        return;
+    }
+
+    jobject obj = env->NewObject(cls, constr, NULL, 0);
+    if( !obj ) {
+    	FileLog("httprequest", "InitEnumHelper( !obj )");
+        return;
+    }
+
+    (*objptr) = env->NewGlobalRef(obj);
+}
 
  void InitClassHelper(JNIEnv *env, const char *path, jobject *objptr) {
  	FileLog("httprequest", "InitClassHelper( path : %s )", path);
@@ -90,6 +118,8 @@ string gToken;
 
  	HttpClient::Init();
 
+ 	gLSLiveChatHttpRequestManager.SetHostManager(&gLSLiveChatHttpRequestHostManager);
+
  	//gHttpRequestManager.SetHostManager(&gHttpRequestHostManager);
 
  	//	InitEnumHelper(env, COUNTRY_ITEM_CLASS, &gCountryItem);
@@ -102,6 +132,11 @@ string gToken;
  	jobject jServerItem;
  	InitClassHelper(env, SERVER_ITEM_CLASS, &jServerItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(SERVER_ITEM_CLASS, jServerItem));
+
+	 jobject jLSValidSiteIdItem;
+	 InitClassHelper(env, LSVALIDSITEID_ITEM_CLASS, &jLSValidSiteIdItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(LSVALIDSITEID_ITEM_CLASS, jLSValidSiteIdItem));
+
 
  	/* 3.直播间模块  */
  	jobject jHotListItem;
@@ -173,6 +208,11 @@ string gToken;
  	InitClassHelper(env, BOOK_PHONE_ITEM_CLASS, &jBookPhoneItem);
  	gJavaItemMap.insert(JavaItemMap::value_type(BOOK_PHONE_ITEM_CLASS, jBookPhoneItem));
 
+ 	jobject jauthorityItem;
+    InitClassHelper(env, HTTP_AUTHORITY_ITEM_CLASS, &jauthorityItem);
+    gJavaItemMap.insert(JavaItemMap::value_type(HTTP_AUTHORITY_ITEM_CLASS, jauthorityItem));
+
+
  	/* 5.背包    */
  	jobject jPackageGiftItem;
  	InitClassHelper(env, PACKAGE_GIFT_ITEM_CLASS, &jPackageGiftItem);
@@ -211,6 +251,15 @@ string gToken;
 	 InitClassHelper(env, OTHER_MAINUNREADNUM_ITEM_CLASS, &jMainUnReadNumItem);
 	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_MAINUNREADNUM_ITEM_CLASS, jMainUnReadNumItem));
 
+	 jobject jLSProfileItem;
+	 InitClassHelper(env, OTHER_LSPROFILE_ITEM_CLASS, &jLSProfileItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_LSPROFILE_ITEM_CLASS, jLSProfileItem));
+
+	 jobject jLSVersionCheckItem;
+	 InitClassHelper(env, OTHER_LSVERSIONCHECK_ITEM_CLASS, &jLSVersionCheckItem);
+	 gJavaItemMap.insert(JavaItemMap::value_type(OTHER_LSVERSIONCHECK_ITEM_CLASS, jLSVersionCheckItem));
+
+
 	 /* 8.多人互动 */
 	 jobject jHangoutAnchorInfoItem;
 	 InitClassHelper(env, HANGOUT_HANGOUTANCHORINFO_ITEM_CLASS, &jHangoutAnchorInfoItem);
@@ -227,6 +276,76 @@ string gToken;
 	 gJavaItemMap.insert(JavaItemMap::value_type(PROGRAM_PROGRAMINFO_ITEM_CLASS, jProgramInfoItem));
 
 
+jobject jCoupon;
+	InitClassHelper(env, LIVECHAT_COUPON_ITEM_CLASS, &jCoupon);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_COUPON_ITEM_CLASS, jCoupon));
+
+	jobject jGift;
+	InitClassHelper(env, LIVECHAT_GIFT_ITEM_CLASS, &jGift);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_GIFT_ITEM_CLASS, jGift));
+
+	jobject jRecord;
+	InitClassHelper(env, LIVECHAT_RECORD_ITEM_CLASS, &jRecord);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_RECORD_ITEM_CLASS, jRecord));
+
+	jobject jRecordMutiple;
+	InitClassHelper(env, LIVECHAT_RECORD_MUTIPLE_ITEM_CLASS, &jRecordMutiple);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_RECORD_MUTIPLE_ITEM_CLASS, jRecordMutiple));
+
+	jobject jSendPhoto;
+	InitClassHelper(env, LIVECHAT_SENDPHOTO_TIME_CLASS, &jSendPhoto);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_SENDPHOTO_TIME_CLASS, jSendPhoto));
+
+	jobject jLCVideoItem;
+	InitClassHelper(env, LIVECHAT_LCVIDEO_TIME_CLASS, &jLCVideoItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_LCVIDEO_TIME_CLASS, jLCVideoItem));
+
+	jobject jLCMagicConfigItem;
+	InitClassHelper(env, LIVECHAT_MAGIC_CONFIG_ITEM_CLASS, &jLCMagicConfigItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_MAGIC_CONFIG_ITEM_CLASS, jLCMagicConfigItem));
+
+	jobject jLCMagicIconItem;
+	InitClassHelper(env, LIVECHAT_MAGIC_ICON_TIME_CLASS, &jLCMagicIconItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_MAGIC_ICON_TIME_CLASS, jLCMagicIconItem));
+
+	jobject jLCMagicTypeItem;
+	InitClassHelper(env, LIVECHAT_MAGIC_TYPE_TIME_CLASS, &jLCMagicTypeItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_MAGIC_TYPE_TIME_CLASS, jLCMagicTypeItem));
+
+	jobject jLCThemeConfigItem;
+	InitClassHelper(env, LIVECHAT_THEME_CONFIG_CLASS, &jLCThemeConfigItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_THEME_CONFIG_CLASS, jLCThemeConfigItem));
+
+	jobject jLCThemeTypeItem;
+	InitClassHelper(env, LIVECHAT_THEME_TYPE_CLASS, &jLCThemeTypeItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_THEME_TYPE_CLASS, jLCThemeTypeItem));
+
+	jobject jLCThemeTagItem;
+	InitClassHelper(env, LIVECHAT_THEME_TAG_CLASS, &jLCThemeTagItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_THEME_TAG_CLASS, jLCThemeTagItem));
+
+	jobject jLCThemeItem;
+	InitClassHelper(env, LIVECHAT_THEME_ITEM_CLASS, &jLCThemeItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(LIVECHAT_THEME_ITEM_CLASS, jLCThemeItem));
+
+	jobject jOtherEmotionConfigItem;
+	InitClassHelper(env, OTHER_EMOTIONCONFIG_ITEM_CLASS, &jOtherEmotionConfigItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_EMOTIONCONFIG_ITEM_CLASS, jOtherEmotionConfigItem));
+	jobject jOtherEmotionConfigTypeItem;
+	InitClassHelper(env, OTHER_EMOTIONCONFIG_TYPE_ITEM_CLASS, &jOtherEmotionConfigTypeItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_EMOTIONCONFIG_TYPE_ITEM_CLASS, jOtherEmotionConfigTypeItem));
+	jobject jOtherEmotionConfigTagItem;
+	InitClassHelper(env, OTHER_EMOTIONCONFIG_TAG_ITEM_CLASS, &jOtherEmotionConfigTagItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_EMOTIONCONFIG_TAG_ITEM_CLASS, jOtherEmotionConfigTagItem));
+	jobject jOtherEmotionConfigEmotionItem;
+	InitClassHelper(env, OTHER_EMOTIONCONFIG_EMOTION_ITEM_CLASS, &jOtherEmotionConfigEmotionItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_EMOTIONCONFIG_EMOTION_ITEM_CLASS, jOtherEmotionConfigEmotionItem));
+
+	jobject jOtherGetCountItem;
+	InitClassHelper(env, OTHER_GETCOUNT_ITEM_CLASS, &jOtherGetCountItem);
+	gJavaItemMap.insert(JavaItemMap::value_type(OTHER_GETCOUNT_ITEM_CLASS, jOtherGetCountItem));
+
+
  	return JNI_VERSION_1_4;
  }
 
@@ -234,20 +353,25 @@ string gToken;
  {
  	*isAttachThread = false;
  	jint iRet = JNI_ERR;
+ 	FileLog(LIVESHOW_HTTP_LOG, "GetEnv() begin, env:%p", env);
  	iRet = gJavaVM->GetEnv((void**) env, JNI_VERSION_1_4);
+ 	FileLog(LIVESHOW_HTTP_LOG, "GetEnv() gJavaVM->GetEnv(&gEnv, JNI_VERSION_1_4), iRet:%d", iRet);
  	if( iRet == JNI_EDETACHED ) {
  		iRet = gJavaVM->AttachCurrentThread(env, NULL);
  		*isAttachThread = (iRet == JNI_OK);
  	}
 
+	FileLog(LIVESHOW_HTTP_LOG, "GetEnv() end, env:%p, gIsAttachThread:%d, iRet:%d", *env, *isAttachThread, iRet);
  	return (iRet == JNI_OK);
  }
 
  bool ReleaseEnv(bool isAttachThread)
  {
+ 	FileLog(LIVESHOW_HTTP_LOG, "ReleaseEnv(bool) begin, isAttachThread:%d", isAttachThread);
  	if (isAttachThread) {
  		gJavaVM->DetachCurrentThread();
  	}
+ 	FileLog(LIVESHOW_HTTP_LOG, "ReleaseEnv(bool) end");
  	return true;
  }
 

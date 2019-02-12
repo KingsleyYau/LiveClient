@@ -62,6 +62,10 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 	 * 解码输出行对齐
 	 */
 	private int stride = 0;
+	/**
+	 * 解码输出Y的高对齐
+	 */
+	private int sliceHeight = 0;
 
 	/**
 	 * 获取支持的硬解码采样格式
@@ -363,21 +367,26 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 					width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
 					height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
 					format = videoMediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT);
+					stride = videoMediaFormat.getInteger(MediaFormat.KEY_STRIDE);
+					sliceHeight = videoMediaFormat.getInteger(MediaFormat.KEY_SLICE_HEIGHT);
 
-					int strideMod = width % 16;
-					stride = (strideMod == 0)?0:(((width / 16) + 1) * 16 - width);
+//					int strideMod = width % 16;
+//					stride = (strideMod == 0)?0:(((width / 16) + 1) * 16 - width);
+//					stride = keyStride - width;
 
 					Log.i(LSConfig.TAG,
 							String.format("LSVideoHardDecoder::getDecodeVideoFrame( "
 											+ "this : 0x%x, "
 											+ "[INFO_OUTPUT_FORMAT_CHANGED], "
 											+ "stride : %d, "
+											+ "sliceHeight : %d, "
 											+ "width : %d, "
 											+ "height : %d, "
 											+ "videoMediaFormat : %s "
 											+ ")",
 									hashCode(),
 									stride,
+									sliceHeight,
 									width,
 									height,
 									videoMediaFormat.toString()
@@ -425,7 +434,7 @@ public class LSVideoHardDecoder implements ILSVideoHardDecoderJni {
 		        	    int width = videoMediaFormat.getInteger(MediaFormat.KEY_WIDTH);
                         int height = videoMediaFormat.getInteger(MediaFormat.KEY_HEIGHT);
                         int format = videoMediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT);
-                        videoFrame.updateImage(byteBuffer, (int)bufferInfo.presentationTimeUs, format, width, height, stride);
+                        videoFrame.updateImage(byteBuffer, (int)bufferInfo.presentationTimeUs, format, width, height, stride, sliceHeight);
                         bFlag = true;
                     } else {
                         Log.e(LSConfig.TAG,

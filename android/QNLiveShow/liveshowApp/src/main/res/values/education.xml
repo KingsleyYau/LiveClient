@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="education_live">
+		<item>--</item>
+		<item>Secondary High School</item>
+		<item>Vocational School</item>
+		<item>College</item>
+		<item>Bachelor</item>  
+		<item>Master</item>
+		<item>Doctorate</item>  
+		<item>Post Doctorate</item>  
+    </string-array> 
+</resources>

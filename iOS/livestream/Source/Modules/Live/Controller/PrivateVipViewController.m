@@ -13,6 +13,7 @@
 #import "StartHangOutTipView.h"
 #import "LiveModule.h"
 #import "RoomTypeIsFirstManager.h"
+#import "LSAddCreditsViewController.h"
 
 @interface PrivateVipViewController () <PrivateViewControllerDelegate, TalentOnDemandVCDelegate, StartHangOutTipViewDelegate>
 @property (strong) PrivateViewController *vc;
@@ -96,9 +97,9 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    CGFloat y = 150;
-    CGFloat x = ([UIScreen mainScreen].bounds.size.width - 310) / 2;
-    self.hangoutTipView.frame = CGRectMake(x, y, 310, 228);
+//    CGFloat y = 150;
+//    CGFloat x = ([UIScreen mainScreen].bounds.size.width - 310) / 2;
+//    self.hangoutTipView.frame = CGRectMake(x, y, 310, 228);
 }
 
 #pragma mark 接收showTalentList 通知
@@ -230,11 +231,11 @@
     self.hangoutTipView = [[StartHangOutTipView alloc] init];
     self.hangoutTipView.hidden = YES;
     self.hangoutTipView.delegate = self;
-    self.hangoutTipView.layer.shadowColor = Color(0, 0, 0, 1).CGColor;
-    self.hangoutTipView.layer.shadowOffset = CGSizeMake(0, 0);
-    self.hangoutTipView.layer.shadowRadius = 1;
-    self.hangoutTipView.layer.shadowOpacity = 0.1;
-    [self.view addSubview:self.hangoutTipView];
+//    self.hangoutTipView.layer.shadowColor = Color(0, 0, 0, 1).CGColor;
+//    self.hangoutTipView.layer.shadowOffset = CGSizeMake(0, 0);
+//    self.hangoutTipView.layer.shadowRadius = 1;
+//    self.hangoutTipView.layer.shadowOpacity = 0.1;
+//    [self.view addSubview:self.hangoutTipView];
     
     self.closeHangoutTipBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     self.closeHangoutTipBtn.hidden = YES;
@@ -246,11 +247,9 @@
 }
 
 - (void)showHangoutTipView {
-    [self.view bringSubviewToFront:self.closeHangoutTipBtn];
-    [self.view bringSubviewToFront:self.hangoutTipView];
-    [self.hangoutTipView showLiveRoomHangoutTip];
     self.closeHangoutTipBtn.hidden = NO;
     self.hangoutTipView.hidden = NO;
+    [self.hangoutTipView showMainHangoutTip:self.navigationController.view];
 }
 
 - (void)removeHangoutTip:(id)sender {
@@ -321,10 +320,8 @@
 }
 
 - (void)pushToRechargeCredit {
-    UIViewController *vc = [LiveModule module].addCreditVc;
-    if (vc) {
-        [self.navigationController pushViewController:vc animated:YES];
-    }
+    LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 @end

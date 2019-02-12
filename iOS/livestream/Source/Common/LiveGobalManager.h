@@ -76,4 +76,9 @@
  */
 - (void)removeDelegate:(id<LiveGobalManagerDelegate> _Nonnull)delegate;
 
+- (void)presentLiveRoomVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC;
+- (void)dismissLiveRoomVC;
+- (void)pushVCWithCurrentNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC;
+- (void)popToRootVC;
+
 @end

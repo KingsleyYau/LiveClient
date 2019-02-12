@@ -68,7 +68,7 @@ int KUdpSocket::Bind(unsigned int iPort, string ip, bool bBlocking) {
 	}
 
 	localAddr.sin_port = htons(iPort);
-	if(bind(m_Socket, (struct sockaddr *)&localAddr, sizeof(localAddr)) < 0) {
+	if(::bind(m_Socket, (struct sockaddr *)&localAddr, sizeof(localAddr)) < 0) {
 		// bind socket error
 		return false;
 	}

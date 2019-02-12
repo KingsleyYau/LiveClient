@@ -18,7 +18,7 @@ import net.qdating.LSConfig.FillMode;
 
 public class TestActivity extends Activity {
 	private String playH264File = "" ;
-	private String url = "rtmp://172.25.32.17:19351/live/maxa";
+	private String url = "rtmp://172.25.32.17:19351/live/max0";
 	
 	private LSPlayer player;
 	private LSPublisher publisher;
@@ -27,7 +27,6 @@ public class TestActivity extends Activity {
 	private GLSurfaceView surfaceViewPublish;
 	private Handler handler = new Handler();
 	private Context context = this;
-	private boolean test = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,8 @@ public class TestActivity extends Activity {
 
 		surfaceView = (GLSurfaceView) this.findViewById(R.id.surfaceView);
 		surfaceView.setKeepScreenOn(true);
-		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
-		surfaceViewPublish.setKeepScreenOn(true);
+//		surfaceViewPublish = (GLSurfaceView) this.findViewById(R.id.surfaceViewPublish);
+//		surfaceViewPublish.setKeepScreenOn(true);
 
 		// 播放相关
 		player = new LSPlayer();
@@ -49,19 +48,18 @@ public class TestActivity extends Activity {
 		// 推送相关
 		final int rotation = getWindowManager().getDefaultDisplay()
 	             .getRotation();
-		publisher = new LSPublisher();
-		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null, VideoConfigType.VideoConfigType240x240, 12, 12, 500 * 1000);
-		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
+//		publisher = new LSPublisher();
+//		publisher.init(context, surfaceViewPublish, rotation, FillMode.FillModeAspectRatioFill, null, VideoConfigType.VideoConfigType240x240, 12, 12, 500 * 1000);
+//		publisher.publisherUrl(String.format("rtmp://172.25.32.17:19351/live/maxa"), "", "");
 
-//		handler.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				// TODO Auto-generated method stub
-//				Log.i(LSConfig.TAG, String.format("TestActivity::handler( time up )"));
-//				test = true;
-//				finish();
-//			}
-//		}, 10000);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Log.i(LSConfig.TAG, String.format("TestActivity::handler( time up )"));
+				finish();
+			}
+		}, 20000);
 	}
 	
 	@Override
@@ -98,8 +96,8 @@ public class TestActivity extends Activity {
 	@Override
     protected void onPause() {
 		super.onPause();
-		surfaceView.onPause();
-		surfaceViewPublish.onPause();
+//		surfaceView.onPause();
+//		surfaceViewPublish.onPause();
 //
 //		surfaceView.setVisibility(View.INVISIBLE);
 //		surfaceViewPublish.setVisibility(View.INVISIBLE);
@@ -108,11 +106,7 @@ public class TestActivity extends Activity {
     @Override
     protected void onResume() {
 		super.onResume();
-		surfaceView.onResume();
-		surfaceViewPublish.onResume();
-
-		if( test ) {
-//			finish();
-		}
+//		surfaceView.onResume();
+//		surfaceViewPublish.onResume();
     }
 }

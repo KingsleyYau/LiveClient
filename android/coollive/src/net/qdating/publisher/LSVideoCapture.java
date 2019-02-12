@@ -13,6 +13,7 @@ import android.opengl.GLSurfaceView;
 import android.view.Surface;
 import net.qdating.LSConfig;
 import net.qdating.LSConfig.FillMode;
+import net.qdating.filter.LSImageFilter;
 import net.qdating.utils.Log;
 
 @SuppressWarnings("deprecation")
@@ -82,7 +83,26 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 			previewRenderer.uninit();
 		}
 	}
-	
+
+	/**
+	 * 设置自定义滤镜
+	 * @param customFilter 自定义滤镜
+	 */
+	public void setCustomFilter(LSImageFilter customFilter) {
+		if( previewRenderer != null ) {
+			previewRenderer.setCustomFilter(customFilter);
+		}
+	}
+
+	/**
+	 * 获取自定义滤镜
+	 * @return 自定义滤镜
+	 */
+	public LSImageFilter getCustomFilter() {
+		LSImageFilter filter = previewRenderer.getCustomFilter();
+		return filter;
+	}
+
 	public boolean start() {
 		boolean bFlag = true;
 		
@@ -196,6 +216,15 @@ public class LSVideoCapture implements ILSVideoPreviewCallback {
 						previewRotation = result;
 						mCamera.setDisplayOrientation(previewRotation);
 
+						mCamera.setErrorCallback(new Camera.ErrorCallback() {
+							@Override
+							public void onError(int error, Camera camera) {
+							Log.e(LSConfig.TAG, String.format("LSVideoCapture::openCamera( this : 0x%x, [ErrorCallback], error : %d )", hashCode(), error));
+							// 停止录制
+							stop();
+							captureCallback.onVideoCaptureError(error);
+							}
+						});
 						if( captureCallback != null ) {
 							captureCallback.onChangeRotation(previewRotation);
 						}

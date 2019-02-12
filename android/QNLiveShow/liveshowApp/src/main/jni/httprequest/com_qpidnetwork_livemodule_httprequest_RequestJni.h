@@ -57,6 +57,22 @@ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_Se
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetDomainSite
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetDomainSite
+        (JNIEnv *, jclass, jstring);
+
+/*
+* Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+* Method:    SetAuthorization
+* Signature: (Ljava/lang/String;Ljava/lang/String;)V
+*/
+JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAuthorization
+          (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
  * Method:    StopRequest
  * Signature: (J)V
  */
@@ -103,6 +119,14 @@ JNIEXPORT jobjectArray JNICALL Java_com_qpidnetwork_livemodule_httprequest_Reque
  */
 JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetProxy
   (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJni
+ * Method:    SetAppId
+ * Signature: (Ljava/lang/String;)V
+ */
+ JNIEXPORT void JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJni_SetAppId
+   (JNIEnv *, jclass, jstring);
 
 #ifdef __cplusplus
 }

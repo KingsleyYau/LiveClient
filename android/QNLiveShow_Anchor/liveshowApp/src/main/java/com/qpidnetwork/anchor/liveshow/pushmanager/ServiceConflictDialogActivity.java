@@ -9,9 +9,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.qpidnetwork.anchor.R;
+import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.framework.services.LiveService;
 import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
-import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 
 public class ServiceConflictDialogActivity extends Activity {

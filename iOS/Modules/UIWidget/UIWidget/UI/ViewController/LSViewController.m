@@ -18,10 +18,12 @@
     self = [super init];
     if (self) {
         // Custom initialization
+        NSLog(@"LSViewController::init( %@, %p )", NSStringFromClass([self class]), self);
+
         self.loadingCount = 0;
         [self initCustomParam];
     }
-    
+
     return self;
 }
 
@@ -31,56 +33,62 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     NSString *nibNameOrNilReal = nibNameOrNil;
-    NSBundle *bundle = nibBundleOrNil?nibBundleOrNil:[LSUIWidgetBundle mainBundle];
-    
+    NSBundle *bundle = nibBundleOrNil ? nibBundleOrNil : [LSUIWidgetBundle mainBundle];
+
     BOOL bSupportiPad = NO;
     /*  应用是否支持iPad
      *  1:iPhone or iTouch
      *  2:iPad
      */
     NSArray *array = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"UIDeviceFamily"];
-    for(NSNumber *deviceFamily in array) {
-        if([deviceFamily integerValue] == 2) {
+    for (NSNumber *deviceFamily in array) {
+        if ([deviceFamily integerValue] == 2) {
             bSupportiPad = YES;
             break;
         }
     }
 
     // iPhone
-    if(nil == nibNameOrNil || nibNameOrNil.length == 0) {
+    if (nil == nibNameOrNil || nibNameOrNil.length == 0) {
         nibNameOrNil = NSStringFromClass([self class]);
     }
     nibNameOrNilReal = [NSString stringWithFormat:@"%@", nibNameOrNil];
-    
-    if(bSupportiPad) {
-        if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+
+    if (bSupportiPad) {
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             // iPad
             nibNameOrNilReal = [NSString stringWithFormat:@"%@-iPad", nibNameOrNil];
         }
     }
+
+    NSLog(@"LSViewController::initWithNibName( %@, %p, nibNameOrNilReal : %@ )", NSStringFromClass([self class]), self, nibNameOrNilReal);
     
     self = [super initWithNibName:nibNameOrNilReal bundle:bundle];
     if (self) {
         // Custom initialization
         [self initCustomParam];
-       
     }
-    
+
     return self;
 }
 
 - (void)awakeFromNib {
     [super awakeFromNib];
+    
+    NSLog(@"LSViewController::awakeFromNib( %@, %p )", NSStringFromClass([self class]), self);
     [self initCustomParam];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    // Do any additional setup after loading the view.
+    NSLog(@"LSViewController::viewDidLoad( %@, %p )", NSStringFromClass([self class]), self);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if( !self.viewDidAppearEver ) {
+    NSLog(@"LSViewController::viewWillAppear( %@, %p, viewDidAppearEver : %@ )", NSStringFromClass([self class]), self, self.viewDidAppearEver?@"YES":@"NO");
+    
+    if (!_viewDidAppearEver) {
         [UIView setAnimationsEnabled:YES];
         [self setupNavigationBar];
         [self setupContainView];
@@ -91,14 +99,24 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    self.viewDidAppearEver = YES;
-    self.viewIsAppear = YES;
+    
+    NSLog(@"LSViewController::viewDidAppear( %@, %p )", NSStringFromClass([self class]), self);
+    _viewDidAppearEver = YES;
+    _viewIsAppear = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    NSLog(@"LSViewController::viewWillDisappear( %@, %p )", NSStringFromClass([self class]), self);
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    self.viewIsAppear = NO;
-     [self hideLoading];
+    
+    NSLog(@"LSViewController::viewDidDisappear( %@, %p )", NSStringFromClass([self class]), self);
+    _viewIsAppear = NO;
+    [self hideLoading];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -126,18 +144,18 @@
     return self.navigationItem.backBarButtonItem.title;
 }
 
-- (void)setNavigationTitle:(NSString *)navigationTitle{
-    
+- (void)setNavigationTitle:(NSString *)navigationTitle {
+
     self.title = navigationTitle;
 }
 
 - (void)initCustomParam {
     NSLog(@"LSViewController::initCustomParam( %@, %p )", NSStringFromClass([self class]), self);
-    
+
     //self.backTitle = NSLocalizedString(@"", nil);
-//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
-    UIBarButtonItem * backButtonItem = [[UIBarButtonItem alloc] init];
+    //    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+
+    UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] init];
     backButtonItem.title = @"";
     self.navigationItem.backBarButtonItem = backButtonItem;
 }
@@ -149,7 +167,6 @@
 }
 
 - (void)setupContainView {
-
 }
 
 - (void)backAction:(id)sender {
@@ -159,11 +176,11 @@
 - (void)setupLoadingActivityView {
     UIView *loadActivityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [self.view addSubview:loadActivityView];
-    
+
     loadActivityView.layer.cornerRadius = 5.0f;
     loadActivityView.layer.masksToBounds = YES;
     loadActivityView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6];
-    
+
     UIActivityIndicatorView *loadingActivity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 80, 80)];
     [loadActivityView addSubview:loadingActivity];
 
@@ -173,12 +190,12 @@
 
     self.loadActivityView = loadActivityView;
     self.loadActivityView.hidden = YES;
-    
+
     loadingActivity.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
     [loadingActivity startAnimating];
-    
+
     [[UIApplication sharedApplication].keyWindow.rootViewController.view addSubview:loadActivityView];
-//    [[UIApplication sharedApplication].keyWindow addSubview:loadActivityView];
+    //    [[UIApplication sharedApplication].keyWindow addSubview:loadActivityView];
 }
 
 - (void)showLoading {
@@ -189,21 +206,19 @@
 
 - (void)hideLoading {
     self.loadingCount--;
-    if( self.loadingCount <= 0 ) {
+    if (self.loadingCount <= 0) {
         self.loadActivityView.hidden = YES;
         self.view.userInteractionEnabled = YES;
     }
 }
 
 - (void)hideNavgationBarBottomLine:(BOOL)isHide {
-    UIImageView* blackLineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
+    UIImageView *blackLineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
     blackLineImageView.hidden = isHide;
 }
 
-- (UIImageView *)findHairlineImageViewUnder:(UIView *)view
-{
-    if ([view isKindOfClass:UIImageView.class] && view.bounds.size.height <= 1.0)
-    {
+- (UIImageView *)findHairlineImageViewUnder:(UIView *)view {
+    if ([view isKindOfClass:UIImageView.class] && view.bounds.size.height <= 1.0) {
         return (UIImageView *)view;
     }
     for (UIView *subview in view.subviews) {
@@ -218,17 +233,13 @@
 /**
  *  重设和隐藏加载状态
  */
--(void)hideAndResetLoading
-{
+- (void)hideAndResetLoading {
     self.loadActivityView.hidden = YES;
     self.view.userInteractionEnabled = YES;
-     self.loadingCount = 0;
-
+    self.loadingCount = 0;
 }
 
-
-- (void)showAndResetLoading
-{
+- (void)showAndResetLoading {
     self.loadingCount = 0;
     self.loadingCount++;
     self.loadActivityView.hidden = NO;

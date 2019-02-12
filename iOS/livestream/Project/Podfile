@@ -11,6 +11,7 @@ def shared_pods
 	pod 'YYText', '1.0.7'
 	pod 'SDWebImage/WebP'
 	pod 'MJRefresh', '~> 3.1.15'
+	pod 'TTTAttributedLabel'
 end
 
 target 'livestream' do

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.livemsglist.interfaces.IListFunction;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 可扩展的列表控件
@@ -106,7 +106,8 @@ public class LiveMessageListView extends RelativeLayout implements IListFunction
         txtLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         mUnreadTxt.setLayoutParams(txtLP);
         mUnreadTxt.setText("??");
-        mUnreadTxt.setBackgroundResource(R.drawable.livemessagelist_paopao2);
+        mUnreadTxt.setTextColor(getResources().getColor(R.color.text_color_dark));
+        mUnreadTxt.setBackgroundResource(R.drawable.livemessagelist_paopao_default);
         mUnreadTxt.setGravity(Gravity.CENTER);
         mUnreadTxt.setVisibility(View.INVISIBLE);
 

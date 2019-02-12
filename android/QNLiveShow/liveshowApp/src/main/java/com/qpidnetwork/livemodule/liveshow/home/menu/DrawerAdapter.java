@@ -11,19 +11,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.livechat.contact.ContactManager;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
 import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.view.BadgeHelper;
 import com.qpidnetwork.livemodule.view.DotView.DotView;
 import com.qpidnetwork.qnbridgemodule.bean.WebSiteBean;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.qnbridgemodule.websitemanager.WebSiteConfigManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,25 +53,27 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     public static final int ITEM_ID_SHOWTICKETS = 4;
     public static final int ITEM_ID_BOOKS = 5;
     public static final int ITEM_ID_BACKPACK = 6;
+    // 2018/11/16 Hardy
+    public static final int ITEM_ID_CHAT = 7;
 
     private Context mContext;
 
     //列表数据
     private List<DrawerItem> dataList;
 
-    public DrawerAdapter(Context context){
+    public DrawerAdapter(Context context) {
         mContext = context;
         //初始化菜单数据，动态添加站点信息
         dataList = new ArrayList<DrawerItem>();
         dataList.addAll(Arrays.asList(
-                new DrawerItemHeader(),
-                new DrawerItemCredits(),
-                new DrawerItemDivider(),
+//                new DrawerItemHeader(),
+//                new DrawerItemCredits(),
+//                new DrawerItemDivider(),
                 new DrawerItemBlank(),
-                //私信
-                new DrawerItemNormal(ITEM_ID_MESSAGE,R.drawable.ic_live_menu_item_message, R.string.live_main_drawer_menu_Message),
-                new DrawerItemNormal(ITEM_ID_MAIL,R.drawable.ic_live_menu_item_mail, R.string.live_main_drawer_menu_Mail),
-                new DrawerItemNormal(ITEM_ID_GREETS,R.drawable.ic_live_menu_item_greet, R.string.live_main_drawer_menu_GreetMail),
+                new DrawerItemNormal(ITEM_ID_CHAT, R.drawable.ic_live_menu_item_chat, R.string.Chat),   // 2018/11/16 Hardy
+                new DrawerItemNormal(ITEM_ID_MAIL, R.drawable.ic_live_menu_item_mail, R.string.live_main_drawer_menu_Mail),
+                new DrawerItemNormal(ITEM_ID_GREETS, R.drawable.ic_live_menu_item_greet, R.string.live_main_drawer_menu_GreetMail),
+//                new DrawerItemNormal(ITEM_ID_MESSAGE, R.drawable.ic_live_menu_item_message, R.string.live_main_drawer_menu_Message),  //私信
                 new DrawerItemBlank(),
                 new DrawerItemDivider(),
                 new DrawerItemBlank(),
@@ -81,14 +83,14 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 new DrawerItemBlank()
         ));
         //初始化站点信息
-        List<WebSiteBean> loaclSiteSettings = LiveService.getInstance().getDefaultAvailableWebSettings();
-        if(loaclSiteSettings != null){
+        List<WebSiteBean> loaclSiteSettings = WebSiteConfigManager.getInstance().getDefaultAvailableWebSettings();
+        if (loaclSiteSettings != null) {
             dataList.add(new DrawerItemTypeTitle(R.string.live_main_drawer_menu_changewebsize));
-            for(int i=0; i < loaclSiteSettings.size() - 1; i++){
+            for (int i = 0; i < loaclSiteSettings.size() - 1; i++) {
                 dataList.add(new DrawerItemWebSite(loaclSiteSettings.get(i)));
                 dataList.add(new DrawerItemDivider());
             }
-            if(loaclSiteSettings.size() > 0){
+            if (loaclSiteSettings.size() > 0) {
                 dataList.add(new DrawerItemWebSite(loaclSiteSettings.get(loaclSiteSettings.size() - 1)));
             }
         }
@@ -101,15 +103,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             return TYPE_DIVIDER;
         } else if (drawerItem instanceof DrawerItemNormal) {
             return TYPE_NORMAL;
-        }else if(drawerItem instanceof DrawerItemHeader){
+        } else if (drawerItem instanceof DrawerItemHeader) {
             return TYPE_HEADER;
-        }else if(drawerItem instanceof DrawerItemCredits){
+        } else if (drawerItem instanceof DrawerItemCredits) {
             return TYPE_CREDITS;
-        }else if(drawerItem instanceof DrawerItemTypeTitle){
+        } else if (drawerItem instanceof DrawerItemTypeTitle) {
             return TYPE_TITLE;
-        }else if(drawerItem instanceof DrawerItemWebSite){
+        } else if (drawerItem instanceof DrawerItemWebSite) {
             return TYPE_WEBSITE;
-        }else if(drawerItem instanceof DrawerItemBlank){
+        } else if (drawerItem instanceof DrawerItemBlank) {
             return TYPE_BLANK;
         }
         return super.getItemViewType(position);
@@ -155,21 +157,21 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         final DrawerItem item = dataList.get(position);
         if (holder instanceof NormalViewHolder) {
             setNormalView((NormalViewHolder) holder, (DrawerItemNormal) item);
-        }else if(holder instanceof HeaderViewHolder){
+        } else if (holder instanceof HeaderViewHolder) {
             setHeaderView((HeaderViewHolder) holder);
-        }else if(holder instanceof CreditsViewHolder){
-            setCreditsView((CreditsViewHolder)holder);
-        }else if(holder instanceof TitleViewHolder){
-            setTypeTitleView((TitleViewHolder)holder, (DrawerItemTypeTitle) item);
-        }else if(holder instanceof WebSiteViewHolder){
-            setWebSiteView((WebSiteViewHolder)holder, (DrawerItemWebSite)item);
-        }else if(holder instanceof BlankViewHolder){
+        } else if (holder instanceof CreditsViewHolder) {
+            setCreditsView((CreditsViewHolder) holder);
+        } else if (holder instanceof TitleViewHolder) {
+            setTypeTitleView((TitleViewHolder) holder, (DrawerItemTypeTitle) item);
+        } else if (holder instanceof WebSiteViewHolder) {
+            setWebSiteView((WebSiteViewHolder) holder, (DrawerItemWebSite) item);
+        } else if (holder instanceof BlankViewHolder) {
 
         }
     }
 
-    private void setWebSiteView(WebSiteViewHolder holder, final DrawerItemWebSite item){
-        if(item.mWebSiteBean.getSiteDrawable() != null){
+    private void setWebSiteView(WebSiteViewHolder holder, final DrawerItemWebSite item) {
+        if (item.mWebSiteBean.getSiteDrawable() != null) {
             holder.civ_hostIcon.setImageDrawable(item.mWebSiteBean.getSiteDrawable());
         }
         holder.tv_hostDes.setText(item.mWebSiteBean.getSiteDesc());
@@ -178,25 +180,25 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             @Override
             public void onClick(View v) {
 
-                if(listener != null && !ButtonUtils.isFastDoubleClick(v.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(v.getId())) {
                     listener.onWebSiteChoose(item.mWebSiteBean);
                 }
             }
         });
     }
 
-    private void setTypeTitleView(TitleViewHolder holder, DrawerItemTypeTitle item){
+    private void setTypeTitleView(TitleViewHolder holder, DrawerItemTypeTitle item) {
         holder.tv_typeTitle.setText(mContext.getResources().getString(item.titleRes));
     }
 
-    private void setCreditsView(CreditsViewHolder holder){
+    private void setCreditsView(CreditsViewHolder holder) {
         LiveRoomCreditRebateManager liveRoomCreditRebateManager = LiveRoomCreditRebateManager.getInstance();
         String currCredits = ApplicationSettingUtil.formatCoinValue(liveRoomCreditRebateManager.getCredit());
-        holder.tv_currCredits.setText(mContext.getResources().getString(R.string.left_menu_credits_balance,currCredits));
+        holder.tv_currCredits.setText(mContext.getResources().getString(R.string.left_menu_credits_balance, currCredits));
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null && !ButtonUtils.isFastDoubleClick(v.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(v.getId())) {
                     listener.onAddCreditsClicked();
                 }
             }
@@ -224,6 +226,29 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
                 }
             }
             break;
+
+            // 2018/11/16 Hardy
+            case ITEM_ID_CHAT: {
+                holder.dv_digitalHint.setVisibility(View.GONE);
+                holder.badge.setBadgeNumber(0);
+
+                if (itemNormal.unreadNum > 0) {
+                    holder.badge.setBadgeNumber(itemNormal.unreadNum);
+                } else {
+                    holder.badge.setBadgeNumber(0);
+
+                    int inviteSize = ContactManager.getInstance().getInviteListSize();
+                    if (inviteSize > 0) {
+                        //显示红点
+                        holder.dv_digitalHint.setVisibility(View.VISIBLE);
+                        holder.dv_digitalHint.setText("");
+                    } else {
+                        holder.dv_digitalHint.setVisibility(View.GONE);
+                    }
+                }
+            }
+            break;
+
             case ITEM_ID_MESSAGE:
             case ITEM_ID_MAIL:
             case ITEM_ID_GREETS: {
@@ -241,7 +266,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null && !ButtonUtils.isFastDoubleClick(v.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(v.getId())) {
                     listener.itemClick(itemNormal);
                 }
             }
@@ -250,30 +275,32 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     private void setHeaderView(HeaderViewHolder holder) {
         LoginItem loginItem = LoginManager.getInstance().getLoginItem();
-        if(null != loginItem){
-            Picasso.with(mContext).load(loginItem.photoUrl)
-                    .error(R.drawable.ic_default_photo_man)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .noPlaceholder()
-                    .into(holder.civ_userPhoto);
+        if (null != loginItem) {
+//            Picasso.with(mContext).load(loginItem.photoUrl)
+//                    .error(R.drawable.ic_default_photo_man)
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                    .noPlaceholder()
+//                    .into(holder.civ_userPhoto);
+            PicassoLoadUtil.loadUrlNoMCache(holder.civ_userPhoto, loginItem.photoUrl,
+                    R.drawable.ic_default_photo_man);
 
             holder.tv_userName.setText(loginItem.nickName);
             holder.tv_userId.setText(loginItem.userId);
-            holder.iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(mContext,loginItem.level));
+            holder.iv_userLevel.setImageDrawable(DisplayUtil.getLevelDrawableByResName(mContext, loginItem.level));
         }
 
         holder.civ_userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(listener != null && !ButtonUtils.isFastDoubleClick(view.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(view.getId())) {
                     listener.onShowMyProfileClicked();
                 }
             }
         });
-        holder.iv_userLevel.setOnClickListener(new View.OnClickListener(){
+        holder.iv_userLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(listener != null && !ButtonUtils.isFastDoubleClick(v.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(v.getId())) {
                     listener.onShowLevelDetailClicked();
                 }
             }
@@ -281,7 +308,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         holder.ll_changeWebSite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(listener != null && !ButtonUtils.isFastDoubleClick(view.getId())){
+                if (listener != null && !ButtonUtils.isFastDoubleClick(view.getId())) {
                     listener.onChangeWebsiteClicked();
                 }
             }
@@ -290,16 +317,17 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     public OnItemClickListener listener;
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     /**
      * 菜单点击事件
      */
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         /**
          * item点击事件
+         *
          * @param drawerItemNormal
          */
         void itemClick(DrawerItemNormal drawerItemNormal);
@@ -326,6 +354,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
         /**
          * 选择指定站点换站
+         *
          * @param webSiteBean
          */
         void onWebSiteChoose(WebSiteBean webSiteBean);
@@ -333,14 +362,15 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     /**
      * 某个ITEM显示未读数
+     *
      * @param itemId
-     * @param num 0则标识没有未读红点消失 | >0则标识有未读 |""则标识仅显示红点
+     * @param num    0则标识没有未读红点消失 | >0则标识有未读 |""则标识仅显示红点
      */
-    public void showUnReadNum(int itemId , int num ){
-        for (int i = 0 ; i < dataList.size(); i ++){
+    public void showUnReadNum(int itemId, int num) {
+        for (int i = 0; i < dataList.size(); i++) {
             if (dataList.get(i) instanceof DrawerItemNormal) {
-                if(((DrawerItemNormal)dataList.get(i)).id == itemId){
-                    ((DrawerItemNormal)dataList.get(i)).unreadNum = num;
+                if (((DrawerItemNormal) dataList.get(i)).id == itemId) {
+                    ((DrawerItemNormal) dataList.get(i)).unreadNum = num;
                     notifyItemChanged(i);
                     return;
                 }
@@ -348,11 +378,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
-    public void updateHeaderView(){
-        if(null == dataList){
+    public void updateHeaderView() {
+        if (null == dataList) {
             return;
         }
-        for (int i = 0 ; i < dataList.size(); i ++){
+        for (int i = 0; i < dataList.size(); i++) {
             if (dataList.get(i) instanceof DrawerItemHeader) {
                 notifyItemChanged(i);
                 return;
@@ -360,11 +390,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
         }
     }
 
-    public void updateCreditsView(){
-        if(null == dataList){
+    public void updateCreditsView() {
+        if (null == dataList) {
             return;
         }
-        for (int i = 0 ; i < dataList.size(); i ++){
+        for (int i = 0; i < dataList.size(); i++) {
             if (dataList.get(i) instanceof DrawerItemCredits) {
                 notifyItemChanged(i);
                 return;
@@ -375,7 +405,8 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     //-------------------------item数据模型------------------------------
     // drawerlayout item统一的数据模型
-    public interface DrawerItem { }
+    public interface DrawerItem {
+    }
 
     //有图片和文字的item
     public class DrawerItemNormal implements DrawerItem {
@@ -394,7 +425,11 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     //分割线item
-    public class DrawerItemDivider implements DrawerItem { public DrawerItemDivider() {}}
+    public class DrawerItemDivider implements DrawerItem {
+        public DrawerItemDivider() {
+        }
+    }
+
     //分割线item
     public class DrawerItemTypeTitle implements DrawerItem {
 
@@ -406,7 +441,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
 
     }
 
-    public class DrawerItemBlank implements DrawerItem { public DrawerItemBlank() {}}
+    public class DrawerItemBlank implements DrawerItem {
+        public DrawerItemBlank() {
+        }
+    }
 
     public class DrawerItemWebSite implements DrawerItem {
 
@@ -419,13 +457,13 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
     }
 
     //头部item
-    public class DrawerItemHeader implements DrawerItem{
+    public class DrawerItemHeader implements DrawerItem {
         public DrawerItemHeader() {
         }
     }
 
     //头部item
-    public class DrawerItemCredits implements DrawerItem{
+    public class DrawerItemCredits implements DrawerItem {
         public DrawerItemCredits() {
         }
     }
@@ -455,7 +493,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.DrawerView
             badge = new QBadgeView(mContext).bindTarget(itemView.findViewById(R.id.tv_itemTitle));
             badge.setBadgeNumber(0);  //先隐藏, 因为初始化时取不到准确的坐标,会在右上角先显示一个图标,不好看
             badge.setBadgeGravity(Gravity.END | Gravity.CENTER_VERTICAL);
-            BadgeHelper.setBaseStyle(mContext , badge);
+            BadgeHelper.setBaseStyle(mContext, badge);
             //QBadgeView的红点效果太大了，因此仅红点显示效果用DotView来实现
             dv_digitalHint = (DotView) itemView.findViewById(R.id.dv_digitalHint);
             dv_digitalHint.setVisibility(View.GONE);

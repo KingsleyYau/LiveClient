@@ -13,7 +13,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.PackageGiftItem;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -108,10 +108,11 @@ public class PackageGiftsAdapter extends BaseAdapter{
         //礼物图片
         holder.ivGiftPhoto.setImageResource(R.drawable.ic_package_gift_default);
         if(giftItem != null && !TextUtils.isEmpty(giftItem.middleImgUrl)) {
-            Picasso.with(mContext).load(giftItem.middleImgUrl)
-                    .error(R.drawable.ic_package_gift_default)
-                    .placeholder(R.drawable.ic_package_gift_default)
-                    .into(holder.ivGiftPhoto);
+//            Picasso.with(mContext).load(giftItem.middleImgUrl)
+//                    .error(R.drawable.ic_package_gift_default)
+//                    .placeholder(R.drawable.ic_package_gift_default)
+//                    .into(holder.ivGiftPhoto);
+            PicassoLoadUtil.loadUrl(holder.ivGiftPhoto,giftItem.middleImgUrl,R.drawable.ic_package_gift_default);
         }
 
         return convertView;

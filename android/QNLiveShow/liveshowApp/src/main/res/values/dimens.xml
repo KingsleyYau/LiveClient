@@ -15,7 +15,7 @@
     <integer name="lady_hot_list_bg_max_HW">500</integer>
 
     <dimen name="liveroom_bullet_height">46dp</dimen>
-    <dimen name="keyboard_height">400dp</dimen>
+    <dimen name="min_keyboard_height">200dp</dimen>
 
     <dimen name="listmsgview_item_height_63">63dp</dimen>
 
@@ -126,7 +126,7 @@
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="layer_padding">0dp</dimen>
 
-    <!--统一样式 自定义对话框-->
+    <!-- 统一样式 自定义对话框 -->
     <dimen name="custom_dialog_left_right_margin">30dp</dimen>
     <dimen name="custom_dialog_text_size_simple">12sp</dimen>
 
@@ -153,6 +153,21 @@
     <!-- 私信 -->
     <dimen name="mesage_emoji_item_height">50dp</dimen>
     <dimen name="mesage_emoji_item_width">50dp</dimen>
-    <integer name="message_edit_max_length">200</integer>
+    <integer name="message_edit_max_length">240</integer>
 
+    <!-- 个人资料 -->
+    <dimen name="profile_item_view_height">56dp</dimen>
+    <dimen name="menu_photo_border">4dp</dimen>
+
+    <!-- liveChat -->
+    <dimen name="expre_drawable_size">25dip</dimen>
+    <dimen name="live_chat_magic_icon_height">100dp</dimen>
+
+    <!-- 按钮尺寸 -->
+    <dimen name="btnWidth">80dip</dimen>
+    <dimen name="btnHeight">40dip</dimen>
+
+    <!-- 高级表情尺寸 -->
+    <dimen name="emtWidth">80dip</dimen>
+    <dimen name="emtHeight">80dip</dimen>
 </resources>

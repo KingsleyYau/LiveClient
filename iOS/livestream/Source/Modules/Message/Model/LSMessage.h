@@ -7,36 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "LSPrivateMessageManager.h"
 
 @interface LSMessage : NSObject
 
 #pragma mark - 界面数据
-@property (nonatomic, assign) NSInteger msgId;
+@property (nonatomic, assign) int sendMsgId;
 @property (nonatomic, strong) NSAttributedString* attText;
 @property (nonatomic, copy) NSString* text;
-
-typedef enum {
-    MessageSenderUnknow = 0,
-    MessageSenderLady,
-    MessageSenderSelf,
-} Sender;
-@property (nonatomic, assign) Sender sender;
-
-typedef enum {
-    MessageTypeUnknow = 0,
-    MessageTypeSystemTips,
-    MessageTypeWarningTips,
-    MessageTypeText
-} Type;
-@property (nonatomic, assign) Type type;
-
-typedef enum {
-    MessageStatusUnknow = 0,
-    MessageStatusProcessing,
-    MessageStatusFinish,
-    MessageStatusFail,
-} Status;
-
-@property (nonatomic, assign) Status status;
+/**
+ *  接收/发送时间
+ */
+@property (nonatomic, assign) NSInteger createTime;
+@property (nonatomic, assign) LMSendType sendType;
+@property (nonatomic, assign) LMStatusType statusType;
+@property (nonatomic, assign) LCC_ERR_TYPE sendErr;
+@property (nonatomic, assign) LMMessageType msgType;
+@property (nonatomic, strong) LMPrivateMsgContactObject* _Nullable userItem;
+@property (nonatomic, strong) LMPrivateMsgItemObject* _Nullable privateItem;
+@property (nonatomic, strong) LMSystemNoticeItemObject* _Nullable systemItem;
+@property (nonatomic, strong) LMWarningItemObject* _Nullable warningItem;
+@property (nonatomic, strong) LMTimeMsgItemObject* _Nullable timeMsgItem;
 
 @end

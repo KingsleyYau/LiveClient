@@ -34,6 +34,7 @@ public final class Permission {
     public static final String[] SMS;
     public static final String[] STORAGE;
     public static final String[] AUDIO;
+    public static final String[] OVERLAYWINDOW;
 
     static {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -47,6 +48,7 @@ public final class Permission {
             SMS = new String[]{};
             STORAGE = new String[]{};
             AUDIO = new String[]{};
+            OVERLAYWINDOW = new String[]{};
         } else {
             CALENDAR = new String[]{
                     Manifest.permission.READ_CALENDAR,
@@ -93,6 +95,10 @@ public final class Permission {
             AUDIO = new String[]{
                     Manifest.permission.RECORD_AUDIO
                     };
+
+            OVERLAYWINDOW = new String[]{
+                    "android.permission.SYSTEM_OVERLAY_WINDOW"
+            };
         }
     }
 

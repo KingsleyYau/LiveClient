@@ -10,4 +10,5 @@
 
 @interface LSStringEncoder : NSObject
 + (NSString *)md5String:(NSString *)string;
++ (NSString *)htmlEntityDecode:(NSString *)string;
 @end

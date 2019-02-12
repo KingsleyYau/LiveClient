@@ -21,7 +21,8 @@ static const string ROOT_RES = "res_data";  // 返回参数
 
 static const string ROOT_ERRNO = "errno";     // 错误码（0： 成功 其它：失败）
 static const string ROOT_ERRMSG = "errmsg";   // 错误描述（用于客户端显示（可无， err＝0则无））
-static const string ROOT_DATA   = "data";  
+static const string ROOT_DATA   = "data";
+static const string ROOT_ERRDATA   = "errdata";  
 
 // ----- 命令（默认为 Client -> Server）
 // -- 登录相关命令
@@ -91,6 +92,7 @@ static const string CMD_CONTROLMANPUSHHANGOUT = "imMan/controlManPushHangout";  
 static const string CMD_HANGOUTSENDLIVECHAT = "imShare/hangoutSendLiveChat"; //10.12.发送多人互动直播间文本消息
 static const string CMD_HANGOUTSENDCHATNOTICE = "imShare/hangoutSendChatNotice"; //10.13.接收直播间文本消息
 static const string CMD_RECVANCHORCOUNTDOWNENTERROOMNOTICE = "imShare/receiveAnchorCountDownEnterRoomNotice"; //10.14.接收进入多人互动直播间倒数通知
+static const string CMD_RECVHANGOURINVITENOTICE = "imMan/receiveHangoutInviteNotice"; //10.15.接收主播Hang-out邀请通知
 
 // ------------- 节目 -------------
 static const string CMD_RECVPROGRAMPLAYNOTICE = "imMan/showToStartNotice";    // 11.1.节目开播通知

@@ -28,9 +28,10 @@
         cell.imageViewLoader = [LSImageViewLoader loader];
         cell.imageViewHeader.image = nil;
         cell.labelRoomTitle.text = @"";
-
+        [cell setExclusiveTouch:YES];
+        
         CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.colors = @[(__bridge id)[UIColor colorWithRed:125.0/255.0 green:125.0/255.0 blue:124.0/255.0 alpha:1].CGColor, (__bridge id)[UIColor clearColor].CGColor];
+        gradientLayer.colors = @[(__bridge id)COLOR_WITH_16BAND_RGB_ALPHA(0xD4000000).CGColor, (__bridge id)[UIColor clearColor].CGColor];
         gradientLayer.locations = @[@0.0, @1.0];
         gradientLayer.startPoint = CGPointMake(0, 1.0);
         gradientLayer.endPoint = CGPointMake(0, 0.0);
@@ -132,6 +133,16 @@
 - (IBAction)viewPublicFeeBtnClick:(id)sender {
     if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewPublicFeeBtn:)]) {
         [self.hotCellDelegate hotTableViewCell:self didClickViewPublicFeeBtn:sender];
+    }
+}
+- (IBAction)chatNowBtnClick:(id)sender {
+    if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewChatNowBtn:)]) {
+        [self.hotCellDelegate hotTableViewCell:self didClickViewChatNowBtn:sender];
+    }
+}
+- (IBAction)sendNowBtnClick:(id)sender {
+    if ([self.hotCellDelegate respondsToSelector:@selector(hotTableViewCell:didClickViewSendMailBtn:)]) {
+        [self.hotCellDelegate hotTableViewCell:self didClickViewSendMailBtn:sender];
     }
 }
 

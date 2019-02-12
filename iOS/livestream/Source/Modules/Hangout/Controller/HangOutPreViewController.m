@@ -82,7 +82,7 @@
         self.roomId = @"";
     }
     BOOL bFlag = [self.imManager enterHangoutRoom:self.roomId finishHandler:^(BOOL success, LCC_ERR_TYPE errType, NSString * _Nonnull errMsg, IMHangoutRoomItemObject * _Nonnull Item) {
-        NSLog(@"HangOutPreViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", success == YES ? @"成功" : @"失败", errType, errMsg, Item.roomId);
+        NSLog(@"HangOutPreViewController::enterHangoutRoom( [观众新建/进入多人互动直播间] success : %@, errType : %d, errMsg : %@, roomId : %@ )", BOOL2SUCCESS(success), errType, errMsg, Item.roomId);
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 // 创建多人互动直播间成功
@@ -168,7 +168,7 @@
 
 - (IBAction)closeAction:(id)sender {
     LSNavigationController *nvc = (LSNavigationController *)self.navigationController;
-    [nvc forceToDismiss:nvc.flag animated:YES completion:nil];
+    [nvc forceToDismissAnimated:YES completion:nil];
 //    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 

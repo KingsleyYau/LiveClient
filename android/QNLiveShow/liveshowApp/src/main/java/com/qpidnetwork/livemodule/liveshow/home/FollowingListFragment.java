@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.home;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -36,27 +35,29 @@ import com.qpidnetwork.livemodule.framework.canadapter.CanAdapter;
 import com.qpidnetwork.livemodule.framework.canadapter.CanHolderHelper;
 import com.qpidnetwork.livemodule.framework.canadapter.CanOnItemListener;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
-import com.qpidnetwork.livemodule.httprequest.OnBannerCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetFollowingListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.AnchorOnlineStatus;
 import com.qpidnetwork.livemodule.httprequest.item.FollowingListItem;
 import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
-import com.qpidnetwork.livemodule.liveshow.WebViewActivity;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
+import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
+import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.livemodule.liveshow.authorization.RegisterActivity;
 import com.qpidnetwork.livemodule.liveshow.googleanalytics.AnalyticsFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.LiveRoomTransitionActivity;
+import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
+import com.qpidnetwork.livemodule.liveshow.urlhandle.AppUrlHandler;
 import com.qpidnetwork.livemodule.utils.ButtonUtils;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.HotItemStyleManager;
-import com.qpidnetwork.livemodule.utils.IPConfigUtil;
-import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.livemodule.utils.PicassoRoundTransform;
 import com.qpidnetwork.livemodule.utils.StringUtil;
 import com.qpidnetwork.livemodule.view.ViewSmartHelper;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,27 +67,27 @@ import java.util.List;
  * Created by Hunter Mun on 2017/9/6.
  */
 
-public class FollowingListFragment extends BaseListFragment{
+public class FollowingListFragment extends BaseListFragment implements IAuthorizationListener {
 
     private static final int GET_FOLLOWING_CALLBACK = 1;
-    private static final int GET_BANNER_CALLBACK = 2;
+    //    private static final int GET_BANNER_CALLBACK = 2;
     private static final int GET_VOUCHER_CALLBACK = 3;
 
     private CanAdapter<FollowingListItem> mAdapter;
     private List<FollowingListItem> mFollowingList = new ArrayList<FollowingListItem>();
-    private BannerItem bannerItem;
-    private ImageView headerView = null;
+    //    private BannerItem bannerItem;
+//    private ImageView headerView = null;
     private HotListVoucherHelper hotListVoucherHelper = new HotListVoucherHelper();
     private boolean isNeedRefresh = true;   //是否需要刷新列表 刷新逻辑可看BUG#13060
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initListHeaderView();
+//        initListHeaderView();
         mAdapter = createAdapter();
         TAG = FollowingListFragment.class.getSimpleName();
         setContentBackground(R.color.hotlist_item_default_bg_color);
-        getPullToRefreshListView().addHeaderView(headerView);
+//        getPullToRefreshListView().addHeaderView(headerView);
         //隐藏滚动条
         getPullToRefreshListView().setVerticalScrollBarEnabled(false);
         getPullToRefreshListView().setFastScrollEnabled(false);
@@ -94,7 +95,36 @@ public class FollowingListFragment extends BaseListFragment{
 //        getPullToRefreshListView().setHeaderDividersEnabled(true);
 //        getPullToRefreshListView().setDivider(new ColorDrawable(getResources().getColor(R.color.hotlist_divider_color)));
 //        getPullToRefreshListView().setDividerHeight(DisplayUtil.dip2px(getActivity(), 2));
-        onDefaultErrorRetryClick();
+//        onDefaultErrorRetryClick();
+
+        // 2018/12/29 Hardy 滚动停止才加载图片
+        getPullToRefreshListView().setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE) {
+//                    Log.i("info","========== onScrollStateChanged =============== SCROLL_STATE_IDLE");
+                    Fresco.getImagePipeline().resume();
+                }else {
+//                    Log.i("info","========== onScrollStateChanged =============== scroll");
+                    Fresco.getImagePipeline().pause();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+
+        //监听登录
+        LoginManager.getInstance().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LoginManager.getInstance().unRegister(this);
     }
 
     @Override
@@ -130,7 +160,7 @@ public class FollowingListFragment extends BaseListFragment{
         super.onReVisible();
         if(isNeedRefresh){
             //列表为空，切换刷一次
-            onDefaultErrorRetryClick();
+            doFullRefreshList();
         }else{
             //刷新试用券信息
             updateVoucherAvailableInfo();
@@ -140,19 +170,19 @@ public class FollowingListFragment extends BaseListFragment{
     @Override
     protected void onBackFromHomeInTimeInterval() {
         super.onBackFromHomeInTimeInterval();
-        onDefaultErrorRetryClick();
+        doFullRefreshList();
     }
 
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         switch (msg.what) {
-            case GET_BANNER_CALLBACK:{
-                BannerItem bannerItem = (BannerItem) msg.obj;
-                if (null != bannerItem) {
-                    updateBannerImg(bannerItem);
-                }
-            }break;
+//            case GET_BANNER_CALLBACK:{
+//                BannerItem bannerItem = (BannerItem) msg.obj;
+//                if (null != bannerItem) {
+//                    updateBannerImg(bannerItem);
+//                }
+//            }break;
             case GET_VOUCHER_CALLBACK:{
                 mAdapter.notifyDataSetChanged();
             }break;
@@ -170,7 +200,7 @@ public class FollowingListFragment extends BaseListFragment{
                         //add by Jagger 2018-2-6
                         mFollowingList.clear();
                         //add by Jagger 2018-2-6 取Banner. 因为把所有请求放在一起, 耗时太长有时会引起ARN错误, 所以改为分步请求
-                        updateBannerData();
+//                        updateBannerData();
                     }
 
                     FollowingListItem[] followingArray = (FollowingListItem[]) response.data;
@@ -194,6 +224,9 @@ public class FollowingListFragment extends BaseListFragment{
                     }
 
                     //
+                    mAdapter.notifyDataSetChanged();
+
+                    //
                     isNeedRefresh = false;
                 }else{
                     if(mFollowingList.size()>0){
@@ -212,49 +245,65 @@ public class FollowingListFragment extends BaseListFragment{
         onRefreshComplete();
     }
 
-    public void updateBannerImg(BannerItem bannerItem){
-        this.bannerItem = bannerItem;
-        if(null != headerView && null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl)
-                && !TextUtils.isEmpty(bannerItem.bannerLinkUrl) && getActivity() != null){
-            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
-                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .fit()
-                    .into(headerView);
-        }
-    }
+//    public void updateBannerImg(BannerItem bannerItem){
+//        this.bannerItem = bannerItem;
+//        if(null != headerView && null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl)
+//                && !TextUtils.isEmpty(bannerItem.bannerLinkUrl) && getActivity() != null){
+//            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
+//                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
+//                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
+//                    .fit()
+//                    .into(headerView);
+//        }
+//    }
+//
+//    /**
+//     * 生成列表头
+//     * @return
+//     */
+//    private void initListHeaderView(){
+//        headerView = new ImageView(getActivity());
+//        headerView.setAdjustViewBounds(true);
+//        if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl) && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
+//            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
+//                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
+//                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
+//                    .config(Bitmap.Config.RGB_565)
+//                    .into(headerView);
+//        }else{
+//            headerView.setImageResource(R.drawable.hotlist_default_header);
+//        }
+//        headerView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
+//                    startActivity(WebViewActivity.getIntent(getActivity(),
+//                            bannerItem.bannerName,
+//                            IPConfigUtil.addCommonParamsToH5Url(bannerItem.bannerLinkUrl),
+//                            true));
+//                }
+//
+//            }
+//        });
+//    }
 
     /**
-     * 生成列表头
-     * @return
+     * 列表完整刷新
      */
-    private void initListHeaderView(){
-        headerView = new ImageView(getActivity());
-        headerView.setAdjustViewBounds(true);
-        if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerImgUrl) && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
-            Picasso.with(getActivity()).load(bannerItem.bannerImgUrl)
-                    .placeholder(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .error(getActivity().getResources().getDrawable(R.drawable.hotlist_default_header))
-                    .config(Bitmap.Config.RGB_565)
-                    .into(headerView);
-        }else{
-            headerView.setImageResource(R.drawable.hotlist_default_header);
-        }
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(null != bannerItem && !TextUtils.isEmpty(bannerItem.bannerLinkUrl)){
-                    startActivity(WebViewActivity.getIntent(getActivity(),
-                            bannerItem.bannerName,
-                            IPConfigUtil.addCommonParamsToH5Url(bannerItem.bannerLinkUrl),
-                            true));
-                }
-
-            }
-        });
+    private void doFullRefreshList(){
+        showLoadingProcess();
+        queryFollowingList(false);
+//        updateBannerData();
     }
 
     private void queryFollowingList(final boolean isLoadMore){
+        //未登录,引导去登录
+        if(LoginManager.getInstance().getLoginStatus() != LoginManager.LoginStatus.Logined) {
+            //显示登录
+            showLoginView();
+            return;
+        }
+
         int start = 0;
         if(isLoadMore){
             start = mFollowingList.size();
@@ -283,22 +332,48 @@ public class FollowingListFragment extends BaseListFragment{
         showNodataPage();
     }
 
+    /**
+     * 显示登录页
+     */
+    private void showLoginView(){
+        if(null != getActivity()){
+            //清空列表
+            mAdapter.clear();
+            hideLoadingProcess();
+
+            setDefaultEmptyMessage(getActivity().getResources().getString(R.string.followinglist_logout_text));
+            setDefaultEmptyButtonText(getActivity().getResources().getString(R.string.txt_login));
+        }
+        showNodataPage();
+    }
+
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
-        showLoadingProcess();
-        queryFollowingList(false);
+//        showLoadingProcess();
+//        queryFollowingList(false);
 //        Log.d(TAG,"onDefaultErrorRetryClick-updateBannerData");
 //        updateBannerData();
+
+        doFullRefreshList();
     }
 
     @Override
     protected void onDefaultEmptyGuide() {
         super.onDefaultEmptyGuide();
         if(getActivity() != null && getActivity() instanceof  MainFragmentActivity){
-            ((MainFragmentActivity)getActivity()).setCurrentPager(0);
-            //add by Jagger 2018-8-10 BUG#13276 只是跳转到hotList,但这个无数据页不能消失
-            showEmptyView();
+            if(LoginManager.getInstance().getLoginStatus() == LoginManager.LoginStatus.Logined) {
+                //已登录,应该是显示导向去HOTLIST的
+                ((MainFragmentActivity) getActivity()).setCurrentPager(0);
+                //add by Jagger 2018-8-10 BUG#13276 只是跳转到hotList,但这个无数据页不能消失
+                showEmptyView();
+            }else{
+                //未登录,去登录
+                RegisterActivity.launchRegisterActivity(mContext);
+                //add by Jagger 这个无数据登录页不能消失
+                showLoginView();
+            }
+
         }
     }
 
@@ -415,6 +490,8 @@ public class FollowingListFragment extends BaseListFragment{
                 helper.setVisibility(R.id.btnPrivate, View.GONE);
                 helper.setVisibility(R.id.btnPublic, View.GONE);
                 helper.setVisibility(R.id.btnSchedule, View.GONE);
+                helper.setVisibility(R.id.btnChat, View.GONE);
+                helper.setVisibility(R.id.btnSendMail, View.GONE);
 
                 //区别处理节目和普通直播间
                 boolean isProgram = false;
@@ -459,31 +536,33 @@ public class FollowingListFragment extends BaseListFragment{
 
                     //统一处理右上角图标（节目和付费公开直播间时显示）
                     if(isProgram){
-                        helper.setVisibility(R.id.ivPremium, View.VISIBLE);
+                        helper.setVisibility(R.id.ivPremium, View.GONE);
                         helper.setImageResource(R.id.ivPremium, R.drawable.list_program_indicator);
                     }else if(bean.roomType == LiveRoomType.PaidPublicRoom){
-                        helper.setVisibility(R.id.ivPremium, View.VISIBLE);
+                        helper.setVisibility(R.id.ivPremium, View.GONE);
                         helper.setImageResource(R.id.ivPremium, R.drawable.list_premium_public);
                     }
 
-                    if(bean.roomType != LiveRoomType.Unknown) {
+                    //左上角图标
+                    if (bean.roomType == LiveRoomType.FreePublicRoom
+                            || bean.roomType == LiveRoomType.PaidPublicRoom) {
+//                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
+                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
+                        setAndStartRoomTypeAnimation(bean.roomType, ivLiveType);
+//                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+//                            helper.setVisibility(R.id.btnPublic, View.VISIBLE);
+                    }else{
+                        //add by Jagger 2018-3-8
+                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
+                        helper.setImageResource(R.id.ivLiveType , R.drawable.ic_livetype_room_online);
+                    }
+
+//                    if(bean.roomType != LiveRoomType.Unknown) {
                         //房间类型
 //                        helper.setVisibility(R.id.btnSchedule, View.GONE);
 //                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
 //                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
-                        if (bean.roomType == LiveRoomType.FreePublicRoom
-                                || bean.roomType == LiveRoomType.PaidPublicRoom) {
-//                            helper.setImageResource(R.id.ivLiveType, R.drawable.room_type_public);
-                            helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
-                            setAndStartRoomTypeAnimation(bean.roomType, ivLiveType);
-//                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-//                            helper.setVisibility(R.id.btnPublic, View.VISIBLE);
-                        }
-//                        else {
-//                            helper.setImageResource(R.id.ivLiveType, R.drawable.anchor_status_online);
-//                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-//                            helper.setVisibility(R.id.btnPublic, View.GONE);
-//                        }
+
 
                         switch (bean.roomType) {
                             case FreePublicRoom: {
@@ -505,53 +584,112 @@ public class FollowingListFragment extends BaseListFragment{
                                         hotListVoucherHelper.checkVoucherFree(bean.userId,true),true);
                             }
                             break;
-                            case AdvancedPrivateRoom: {
-//                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                                helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                                //根据是否free更换图标，调整间距
-                                HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
-                                        helper.getImageView(R.id.btnPrivate),
-                                        hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
-                            }
-                            break;
-                            case NormalPrivateRoom: {
-//                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
-//                                setAndStartAdvancePrivateAnimation(btnPrivate);
-                                helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                                //根据是否free更换图标，调整间距
-                                HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
-                                        helper.getImageView(R.id.btnPrivate),
-                                        hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
-                            }
-                            break;
+//                            case AdvancedPrivateRoom: {
+////                                setAndStartAdvancePrivateAnimation(btnPrivate);
+//                                if(bean.priv.isHasOneOnOneAuth){
+//                                    //在线 有私密权限:显示One on One
+//                                    helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+//                                    //根据是否free更换图标，调整间距
+//                                    HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
+//                                            helper.getImageView(R.id.btnPrivate),
+//                                            hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
+//                                }else {
+//                                    if(bean.chatOnlineStatus == IMClientListener.IMChatOnlineStatus.online){
+//                                        //在线 无私密权限, IM在线:显示Chat
+//                                        helper.setVisibility(R.id.btnChat, View.VISIBLE);
+//                                    }else {
+//                                        //在线 无私密权限, IM不在线:显示SendMail
+//                                        helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
+//                                    }
+//                                }
+//                            }
+//                            break;
+//                            case NormalPrivateRoom: {
+////                                helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
+////                                setAndStartAdvancePrivateAnimation(btnPrivate);
+//                                if(bean.priv.isHasOneOnOneAuth){
+//                                    //在线 有私密权限:显示One on One
+//                                    helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+//                                    //根据是否free更换图标，调整间距
+//                                    HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
+//                                            helper.getImageView(R.id.btnPrivate),
+//                                            hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
+//                                }else {
+//                                    if(bean.chatOnlineStatus == IMClientListener.IMChatOnlineStatus.online){
+//                                        //在线 无私密权限, IM在线:显示Chat
+//                                        helper.setVisibility(R.id.btnChat, View.VISIBLE);
+//                                    }else {
+//                                        //在线 无私密权限, IM不在线:显示SendMail
+//                                        helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
+//                                    }
+//                                }
+//                            }
+//                            break;
+                            default:
+                                if(bean.priv.isHasOneOnOneAuth){
+                                    //在线 有私密权限:显示One on One
+                                    helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+                                    //根据是否free更换图标，调整间距
+                                    HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
+                                            helper.getImageView(R.id.btnPrivate),
+                                            hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
+                                }else {
+                                    if(bean.chatOnlineStatus == IMClientListener.IMChatOnlineStatus.online){
+                                        //在线 无私密权限, IM在线:显示Chat
+                                        helper.setVisibility(R.id.btnChat, View.VISIBLE);
+                                    }else {
+                                        //在线 无私密权限, IM不在线:显示SendMail
+                                        helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
+                                    }
+                                }
+                                break;
                         }
-                    }else{
-                        //在线未直播
-//                        helper.setVisibility(R.id.btnSchedule, View.GONE);
-//                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
-                        helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-                        //根据是否free更换图标，调整间距
-                        HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
-                                helper.getImageView(R.id.btnPrivate),
-                                hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
-//                        helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
-//                        helper.setVisibility(R.id.btnPublic, View.GONE);
-//                        if(bean.anchorType == AnchorLevelType.gold){
-//                            setAndStartAdvancePrivateAnimation(btnPrivate);
-//                        }else{
-////                            helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
-//                            setAndStartAdvancePrivateAnimation(btnPrivate);
+//                    }else{
+//                        //在线未直播
+////                        helper.setVisibility(R.id.btnSchedule, View.GONE);
+////                        helper.setVisibility(R.id.llStartContent, View.VISIBLE);
+//                        if(bean.priv.isHasOneOnOneAuth){
+//                            //在线 有私密权限:显示One on One
+//                            helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+//                            //根据是否free更换图标，调整间距
+//                            HotItemStyleManager.resetHotItemButtomStyle(getActivity(),
+//                                    helper.getImageView(R.id.btnPrivate),
+//                                    hotListVoucherHelper.checkVoucherFree(bean.userId,false),false);
+//                        }else {
+//                            if(bean.chatOnlineStatus == IMClientListener.IMChatOnlineStatus.online){
+//                                //在线 无私密权限, IM在线:显示Chat
+//                                helper.setVisibility(R.id.btnChat, View.VISIBLE);
+//                            }else {
+//                                //在线 无私密权限, IM不在线:显示SendMail
+//                                helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
+//                            }
 //                        }
-                        //add by Jagger 2018-3-8
-                        helper.setVisibility(R.id.ivLiveType, View.VISIBLE);
-                        helper.setImageResource(R.id.ivLiveType , R.drawable.ic_livetype_room_online);
-                    }
+////                        helper.setVisibility(R.id.btnPrivate, View.VISIBLE);
+////                        helper.setVisibility(R.id.btnPublic, View.GONE);
+////                        if(bean.anchorType == AnchorLevelType.gold){
+////                            setAndStartAdvancePrivateAnimation(btnPrivate);
+////                        }else{
+//////                            helper.setImageResource(R.id.btnPrivate, R.drawable.list_button_start_normal_private_broadcast);
+////                            setAndStartAdvancePrivateAnimation(btnPrivate);
+////                        }
+//
+//                    }
                 }else{
 //                    helper.setImageResource(R.id.ivLiveType, R.drawable.anchor_status_offline);
 //                    helper.setVisibility(R.id.llStartContent, View.GONE);
 //                    helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
-                    helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
-                    helper.setImageResource(R.id.btnSchedule, R.drawable.list_button_send_schedule);
+
+//                    if(bean.priv.isHasBookingAuth){
+//                        //离线 有预约权限:显示Book
+//                        helper.setVisibility(R.id.btnSchedule, View.VISIBLE);
+//                        helper.setImageResource(R.id.btnSchedule, R.drawable.list_button_send_schedule);
+//                    }else {
+//                        //离线 无预约权限:显示Send Mail
+//                        helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
+//                    }
+
+                    //离线 :显示Send Mail
+                    helper.setVisibility(R.id.btnSendMail, View.VISIBLE);
                 }
 
                 //背景图
@@ -569,6 +707,7 @@ public class FollowingListFragment extends BaseListFragment{
 //                            .config(Bitmap.Config.RGB_565)
 //                            .into(imgView);
 //                }
+
                 if(!TextUtils.isEmpty(bean.roomPhotoUrl) && mContext!= null){
                     //edit by Jagger 2018-6-29:picasso不会从本地取缓存，每次下载，初始化时图片显示得太慢，所以改用fresco
                     SimpleDraweeView ivRoomBg = helper.getView(R.id.iv_roomBg);
@@ -650,6 +789,8 @@ public class FollowingListFragment extends BaseListFragment{
                 helper.setItemChildClickListener(R.id.btnPrivate);
                 helper.setItemChildClickListener(R.id.btnPublic);
                 helper.setItemChildClickListener(R.id.btnSchedule);
+                helper.setItemChildClickListener(R.id.btnChat);
+                helper.setItemChildClickListener(R.id.btnSendMail);
                 helper.setItemChildClickListener(R.id.iv_roomBg);
             }
 
@@ -698,6 +839,14 @@ public class FollowingListFragment extends BaseListFragment{
                         //GA统计
                         action = getResources().getString(R.string.Live_EnterBroadcast_Action_RequestBooking);
                         label = getResources().getString(R.string.Live_EnterBroadcast_Label_RequestBooking);
+                    } else if (i == R.id.btnChat) {
+                        String chatUrl = URL2ActivityManager.createLiveChatActivityUrl(item.userId, item.nickName, item.photoUrl);
+//                        URL2ActivityManager.getInstance().URL2Activity(mContext, chatUrl);
+                        new AppUrlHandler(mContext).urlHandle(chatUrl);
+                    } else if (i == R.id.btnSendMail) {
+                        String sendMailUrl = URL2ActivityManager.createSendMailActivityUrl(item.userId);
+//                        URL2ActivityManager.getInstance().URL2Activity(mContext, sendMailUrl);
+                        new AppUrlHandler(mContext).urlHandle(sendMailUrl);
                     }
                 }
 
@@ -712,26 +861,36 @@ public class FollowingListFragment extends BaseListFragment{
         return adapter;
     }
 
-    /**
-     * 刷新banner
-     */
-    private void updateBannerData(){
-        LiveRequestOperator.getInstance().Banner(new OnBannerCallback() {
-            @Override
-            public void onBanner(boolean isSuccess, int errCode, String errMsg,
-                                 String bannerImg, String bannerLink, String bannerName) {
-                Log.d(TAG,"onBanner-isSuccess:"+isSuccess+" errCode:"+errCode
-                        +" errMsg:"+errMsg+" bannerImg:"+bannerImg+" bannerLink:"+bannerLink
-                        +" bannerName:"+bannerName);
-                if(isSuccess){
-                    BannerItem bannerItem = new BannerItem(bannerImg,bannerLink,bannerName);
-                    Message msg = Message.obtain();
-                    msg.what = GET_BANNER_CALLBACK;
-                    msg.obj = bannerItem;
-                    sendUiMessage(msg);
-
-                }
-            }
-        });
+    @Override
+    public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+        doFullRefreshList();
     }
+
+    @Override
+    public void onLogout(boolean isMannual) {
+        showLoginView();
+    }
+
+//    /**
+//     * 刷新banner
+//     */
+//    private void updateBannerData(){
+//        LiveRequestOperator.getInstance().Banner(new OnBannerCallback() {
+//            @Override
+//            public void onBanner(boolean isSuccess, int errCode, String errMsg,
+//                                 String bannerImg, String bannerLink, String bannerName) {
+//                Log.d(TAG,"onBanner-isSuccess:"+isSuccess+" errCode:"+errCode
+//                        +" errMsg:"+errMsg+" bannerImg:"+bannerImg+" bannerLink:"+bannerLink
+//                        +" bannerName:"+bannerName);
+//                if(isSuccess){
+//                    BannerItem bannerItem = new BannerItem(bannerImg,bannerLink,bannerName);
+//                    Message msg = Message.obtain();
+//                    msg.what = GET_BANNER_CALLBACK;
+//                    msg.obj = bannerItem;
+//                    sendUiMessage(msg);
+//
+//                }
+//            }
+//        });
+//    }
 }

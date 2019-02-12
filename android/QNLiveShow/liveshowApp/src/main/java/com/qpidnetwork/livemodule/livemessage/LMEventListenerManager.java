@@ -3,9 +3,8 @@ package com.qpidnetwork.livemodule.livemessage;
 
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
-import com.qpidnetwork.livemodule.livemessage.item.LMPrivateMsgContactItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;

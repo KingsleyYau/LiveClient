@@ -1,5 +1,7 @@
 package com.qpidnetwork.livemodule.httprequest.item;
 
+import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+
 import java.util.List;
 
 /**
@@ -24,6 +26,7 @@ public class FollowingListItem {
 	 * @param roomType			直播间类型
 	 * @param addDate			添加收藏时间
 	 * @param interests			兴趣爱好列表
+	 * @param priv 				权限
 	 */
 	public FollowingListItem(String userId,
 							String nickName,
@@ -35,7 +38,9 @@ public class FollowingListItem {
 							int addDate,
 							int[] interests,
 							int anchorType,
-							ProgramInfoItem showInfo){
+							ProgramInfoItem showInfo,
+							HttpAuthorityItem priv,
+							int chatOnlineStatus){
 		this.userId = userId;
 		this.nickName = nickName;
 		this.photoUrl = photoUrl;
@@ -66,6 +71,12 @@ public class FollowingListItem {
 			this.anchorType = AnchorLevelType.values()[anchorType];
 		}
 		this.showInfo = showInfo;
+		this.priv = priv;
+		if( chatOnlineStatus < 0 || chatOnlineStatus >= IMClientListener.IMChatOnlineStatus.values().length ) {
+			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.Unknown;
+		} else {
+			this.chatOnlineStatus = IMClientListener.IMChatOnlineStatus.values()[chatOnlineStatus];
+		}
 	}
 	
 	
@@ -80,4 +91,6 @@ public class FollowingListItem {
 	public List<InterestType> interests;
 	public AnchorLevelType anchorType;
 	public ProgramInfoItem showInfo;
+	public HttpAuthorityItem priv;
+	public IMClientListener.IMChatOnlineStatus chatOnlineStatus;
 }

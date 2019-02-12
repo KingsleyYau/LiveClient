@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3E22EA4D20D265C500A89BCC /* NSString+Check.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E22EA4C20D265C400A89BCC /* NSString+Check.m */; };
 		3E87B74E2007512C0028DF55 /* NSDate+ToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E87B74C2007512C0028DF55 /* NSDate+ToString.m */; };
+		3E91E76221A93AD40048D782 /* NSString+UrlCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3E91E76121A93AD40048D782 /* NSString+UrlCode.m */; };
 		50662A141FC7C62C00254F17 /* LSTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = 50662A121FC7C62B00254F17 /* LSTimer.m */; };
 		50AB7A521F94406900D23FB3 /* LSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A4E1F94406900D23FB3 /* LSDateFormatter.m */; };
 		50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 50AB7A511F94406900D23FB3 /* LSStringEncoder.m */; };
@@ -37,6 +38,8 @@
 		3E22EA4C20D265C400A89BCC /* NSString+Check.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Check.m"; sourceTree = "<group>"; };
 		3E87B74C2007512C0028DF55 /* NSDate+ToString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+ToString.m"; sourceTree = "<group>"; };
 		3E87B74D2007512C0028DF55 /* NSDate+ToString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+ToString.h"; sourceTree = "<group>"; };
+		3E91E76021A93AD40048D782 /* NSString+UrlCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UrlCode.h"; sourceTree = "<group>"; };
+		3E91E76121A93AD40048D782 /* NSString+UrlCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UrlCode.m"; sourceTree = "<group>"; };
 		50662A121FC7C62B00254F17 /* LSTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSTimer.m; sourceTree = "<group>"; };
 		50662A131FC7C62C00254F17 /* LSTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSTimer.h; sourceTree = "<group>"; };
 		5069B41B1C7070B4006ABC92 /* CommonWidget-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CommonWidget-Prefix.pch"; sourceTree = "<group>"; };
@@ -96,6 +99,8 @@
 		50AB7A4F1F94406900D23FB3 /* NSString */ = {
 			isa = PBXGroup;
 			children = (
+				3E91E76021A93AD40048D782 /* NSString+UrlCode.h */,
+				3E91E76121A93AD40048D782 /* NSString+UrlCode.m */,
 				3E22EA4B20D265C400A89BCC /* NSString+Check.h */,
 				3E22EA4C20D265C400A89BCC /* NSString+Check.m */,
 				50AB7A501F94406900D23FB3 /* LSStringEncoder.h */,
@@ -213,6 +218,7 @@
 				50AB7A531F94406900D23FB3 /* LSStringEncoder.m in Sources */,
 				50DCE68820205A9500ED28A3 /* LSDevice.m in Sources */,
 				CA23B715172127DC00458560 /* LSCommonWidget.m in Sources */,
+				3E91E76221A93AD40048D782 /* NSString+UrlCode.m in Sources */,
 				3E22EA4D20D265C500A89BCC /* NSString+Check.m in Sources */,
 				50AB7A571F9440F500D23FB3 /* LSURLQueryParam.m in Sources */,
 				50AB7A5A1F9442F500D23FB3 /* LSURLFileAttribute.m in Sources */,

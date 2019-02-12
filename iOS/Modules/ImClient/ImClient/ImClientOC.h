@@ -18,6 +18,10 @@
  *  @return 实例
  */
 + (instancetype _Nonnull)manager;
+
+#pragma mark - 其他
+- (long)getImClient;
+
 #pragma mark - 委托
 /**
  *  添加委托

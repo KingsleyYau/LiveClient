@@ -11,7 +11,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
 
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ExecutorService;

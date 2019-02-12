@@ -7,7 +7,10 @@
 //
 
 #import "LiveGobalManager.h"
+
+#import "LiveModule.h"
 #import "LSImManager.h"
+
 static LiveGobalManager *gManager = nil;
 @interface LiveGobalManager () {
     BOOL _canShowInvite;
@@ -16,9 +19,12 @@ static LiveGobalManager *gManager = nil;
 @property (assign) BOOL isBackground;
 @property (strong) NSDate *enterBackgroundTime;
 @property (strong) NSDate *startTime;
-@property (strong) dispatch_queue_t backgroundQueue;
 @property (assign) UIBackgroundTaskIdentifier bgTask;
-@property (nonatomic, strong) NSMutableArray* delegates;
+@property (nonatomic, strong) NSMutableArray *delegates;
+/**
+ 直播间弹出的导航栏
+ */
+@property (nonatomic, weak) LSNavigationController *liveRoomNVC;
 @end
 ;
 
@@ -35,19 +41,15 @@ static LiveGobalManager *gManager = nil;
     NSLog(@"LiveGobalManager::init()");
 
     if (self = [super init]) {
-        if (!self.backgroundQueue) {
-            self.backgroundQueue = dispatch_queue_create("liveBackgroundQueue", DISPATCH_QUEUE_SERIAL);
-        }
-        
         self.delegates = [NSMutableArray array];
-        
+
         // 注册前后台切换通知
         _isBackground = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterBackground:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+
         _canShowInvite = YES;
-        
+
         _isHangouting = NO;
     }
     return self;
@@ -55,7 +57,7 @@ static LiveGobalManager *gManager = nil;
 
 - (void)dealloc {
     NSLog(@"LiveGobalManager::dealloc()");
-    
+
     // 注销前后台切换通知
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
@@ -69,9 +71,9 @@ static LiveGobalManager *gManager = nil;
 
 - (void)removeDelegate:(id<LiveGobalManagerDelegate>)delegate {
     @synchronized(self) {
-        for(NSValue* value in self.delegates) {
+        for (NSValue *value in self.delegates) {
             id<LiveGobalManagerDelegate> item = (id<LiveGobalManagerDelegate>)value.nonretainedObjectValue;
-            if( item == delegate ) {
+            if (item == delegate) {
                 [self.delegates removeObject:value];
                 break;
             }
@@ -81,13 +83,13 @@ static LiveGobalManager *gManager = nil;
 
 - (BOOL)canShowInvite:(NSString *)uesrId {
     BOOL bFlag = NO;
-    
-    if( _canShowInvite ) {
-        if( self.liveRoom ) {
+
+    if (_canShowInvite) {
+        if (self.liveRoom) {
             // 当前存在直播间
-            if( self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP ) {
+            if (self.liveRoom.roomType == LiveRoomType_Public || self.liveRoom.roomType == LiveRoomType_Public_VIP) {
                 // 当前是公开直播间, 是否和邀请的主播Id一样
-                if( [self.liveRoom.userId isEqualToString:uesrId] ) {
+                if ([self.liveRoom.userId isEqualToString:uesrId]) {
                     bFlag = YES;
                 }
             } else {
@@ -106,6 +108,65 @@ static LiveGobalManager *gManager = nil;
     _canShowInvite = canShowInvite;
 }
 
+#pragma mark - 直播间界面层级处理
+- (void)presentLiveRoomVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC {
+    // TODO:创建直播间界面层级
+    NSLog(@"LiveGobalManager::presentLiveRoomVCFromVC( fromVC : %@, toVC : %@ )", [fromVC class].description, [toVC class].description);
+    
+    LSNavigationController *nvc = [[LSNavigationController alloc] initWithRootViewController:toVC];
+    nvc.flag = YES;
+    nvc.navigationBar.tintColor = fromVC.navigationController.navigationBar.tintColor;
+    nvc.navigationBar.barTintColor = fromVC.navigationController.navigationBar.barTintColor;
+    nvc.navigationBar.backgroundColor = fromVC.navigationController.navigationBar.backgroundColor;
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[UIColor blackColor], NSForegroundColorAttributeName, nil];
+    [nvc.navigationBar setTitleTextAttributes:attributes];
+    [nvc.navigationItem setHidesBackButton:YES];
+
+    self.liveRoomNVC = nvc;
+    [fromVC.navigationController presentViewController:nvc animated:NO completion:nil];
+}
+
+- (void)dismissLiveRoomVC {
+    // TODO:关闭直播间界面层级
+    NSLog(@"LiveGobalManager::dismissLiveRoomVC()");
+    
+    self.liveRoomNVC = nil;
+
+    UIViewController *moduleVC = [LiveModule module].moduleVC;
+    if (moduleVC.navigationController) {
+        UIViewController *vc = moduleVC.navigationController.topViewController;
+        [vc dismissViewControllerAnimated:NO completion:nil];
+    }
+}
+
+- (void)pushVCWithCurrentNVCFromVC:(UIViewController *)fromVC toVC:(UIViewController *)toVC {
+    // TODO:根据当前的导航栏推进界面
+    NSLog(@"LiveGobalManager::pushVCWithCurrentNVCFromVC( fromVC : %@, toVC : %@ )", [fromVC class].description, [toVC class].description);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        UINavigationController *nvc = self.liveRoomNVC;
+
+        if (!nvc) {
+            nvc = fromVC.navigationController;
+        }
+
+        if (nvc) {
+            [nvc pushViewController:toVC animated:NO];
+        }
+    });
+}
+
+- (void)popToRootVC {
+    // TODO:主导航栏推出到主界面
+    NSLog(@"LiveGobalManager::popToRootVC()");
+    
+    UIViewController *moduleVC = [LiveModule module].moduleVC;
+    if (moduleVC.navigationController) {
+        UINavigationController *nvc = moduleVC.navigationController;
+        [nvc popToRootViewControllerAnimated:NO];
+    }
+}
+
 #pragma mark - 后台处理
 - (void)willEnterBackground:(NSNotification *)notification {
     if (_isBackground == NO) {
@@ -121,30 +182,18 @@ static LiveGobalManager *gManager = nil;
                                      expirationHandler:^{
                                          // Clean up any unfinished task business by marking where you
                                          // stopped or ending the task outright.
-//                                         [self stopLive];
-                                         @synchronized(self) {
-                                             for(NSValue* value in self.delegates) {
-                                                 id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
-                                                 if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
-                                                     [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
-                                                 }
-                                             }
-                                         }
+                                         NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired] )");
 
-                                         NSLog(@"LiveGobalManager::willEnterBackground( [GobalLiveBgTask expired]] )");
-                                         
-                                         if( self.bgTask != UIBackgroundTaskInvalid ) {
+                                         if (self.bgTask != UIBackgroundTaskInvalid) {
                                              [app endBackgroundTask:self.bgTask];
                                              self.bgTask = UIBackgroundTaskInvalid;
                                          }
                                      }];
 
-        dispatch_async(self.backgroundQueue, ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             // Do the work associated with the task, preferably in chunks.
 
             while (self.isBackground) {
-                //            NSTimeInterval left = [application backgroundTimeRemaining];
-
                 NSDate *now = [NSDate date];
                 NSTimeInterval timeInterval = [now timeIntervalSinceDate:self.enterBackgroundTime];
                 NSUInteger bgTime = timeInterval;
@@ -158,21 +207,20 @@ static LiveGobalManager *gManager = nil;
 
                 // 后台进入直播间超过60秒
                 if (enterRoomBgTime > BACKGROUND_TIMEOUT) {
-                    @synchronized(self) {
-                        for(NSValue* value in self.delegates) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        for (NSValue *value in self.delegates) {
                             id<LiveGobalManagerDelegate> delegate = value.nonretainedObjectValue;
-                            if( [delegate respondsToSelector:@selector(enterBackgroundTimeOut:)] ) {
+                            if ([delegate respondsToSelector:@selector(enterBackgroundTimeOut:)]) {
                                 [delegate enterBackgroundTimeOut:self.enterRoomBackgroundTime];
                             }
                         }
-                    }
+                    });
                     break;
                 }
-
                 sleep(1);
             }
 
-            if( self.bgTask != UIBackgroundTaskInvalid  ) {
+            if (self.bgTask != UIBackgroundTaskInvalid) {
                 [app endBackgroundTask:self.bgTask];
                 self.bgTask = UIBackgroundTaskInvalid;
             }

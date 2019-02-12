@@ -11,14 +11,14 @@
 
 #include "HttpRequestTask.h"
 #include "item/HttpProgramInfoItem.h"
-
+#include "item/HttpAuthorityItem.h"
 
 class HttpGetShowRoomInfoTask;
 
 class IRequestGetShowRoomInfoCallback {
 public:
 	virtual ~IRequestGetShowRoomInfoCallback(){};
-	virtual void OnGetShowRoomInfo(HttpGetShowRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpProgramInfoItem& item, const string& roomId) = 0;
+	virtual void OnGetShowRoomInfo(HttpGetShowRoomInfoTask* task, bool success, int errnum, const string& errmsg, const HttpProgramInfoItem& item, const string& roomId, const HttpAuthorityItem& priv) = 0;
 };
       
 class HttpGetShowRoomInfoTask : public HttpRequestTask {

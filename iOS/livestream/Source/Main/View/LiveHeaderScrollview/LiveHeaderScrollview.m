@@ -8,7 +8,7 @@
 
 #import "LiveHeaderScrollview.h"
 #import "LiveHeaderScrollviewCell.h"
-#import "UnreadNumManager.h"
+#import "LSUserUnreadCountManager.h"
 
 #define BottomLineColor [UIColor colorWithRed:41/255 green:122/255 blue:243/255 alpha:1]
 

@@ -51,6 +51,7 @@ public:
 			u_int32_t timestamp
 			);
     void ReleaseAudioFrame(void* frame);
+    void ClearAudioFrame();
     
 private:
     bool Start();
@@ -58,7 +59,6 @@ private:
     
     bool CreateContext();
     void DestroyContext();
-    void ReleaseBuffer(AudioFrame* audioFrame);
     
     bool DecodeAudioFrame(AudioFrame* audioFrame, AudioFrame* newAudioFrame);
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSGreetingsViewController">
+            <connections>
+                <outlet property="noDataIcon" destination="AEd-vJ-1Qd" id="tkW-pA-ywZ"/>
+                <outlet property="noDataNote" destination="3px-Qs-V7t" id="rSU-ou-7wU"/>
+                <outlet property="noDataSearchBtn" destination="GiH-W4-19o" id="4CK-AT-Rsk"/>
+                <outlet property="noDataTips" destination="7eM-lF-SX1" id="WdW-GB-7Gb"/>
+                <outlet property="searchBtn" destination="GiH-W4-19o" id="N0k-zt-6vO"/>
+                <outlet property="tableView" destination="uyd-lp-uUd" id="pdz-a4-S5L"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uyd-lp-uUd" customClass="MailTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AME-kZ-7UE" userLabel="Scroll Top Button">
+                    <rect key="frame" x="313" y="605" width="42" height="42"/>
+                    <state key="normal" image="Greeting_Scroll_To_Top"/>
+                    <connections>
+                        <action selector="scrollTopAction:" destination="-1" eventType="touchUpInside" id="gaC-Ts-EvB"/>
+                    </connections>
+                </button>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_No_eMail" translatesAutoresizingMaskIntoConstraints="NO" id="AEd-vJ-1Qd" userLabel="No Data Icon">
+                    <rect key="frame" x="145" y="154" width="84" height="84"/>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You haven't received any Greeting Mails." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7eM-lF-SX1">
+                    <rect key="frame" x="20" y="258" width="335" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Find someone special and write a letter to her!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3px-Qs-V7t">
+                    <rect key="frame" x="20" y="285" width="335" height="17"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.76078431369999999" green="0.76078431369999999" blue="0.76078431369999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GiH-W4-19o" userLabel="Search Button">
+                    <rect key="frame" x="88" y="342" width="200" height="44"/>
+                    <color key="backgroundColor" red="0.16078431372549018" green="0.47843137254901957" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="0DE-Ai-e7C"/>
+                        <constraint firstAttribute="height" constant="44" id="5Ec-1W-q7a"/>
+                    </constraints>
+                    <state key="normal" title="Search">
+                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    </state>
+                    <connections>
+                        <action selector="searchAction:" destination="-1" eventType="touchUpInside" id="ceb-eu-XNJ"/>
+                    </connections>
+                </button>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="uyd-lp-uUd" secondAttribute="bottom" id="2oE-Yh-YdN"/>
+                <constraint firstItem="3px-Qs-V7t" firstAttribute="top" secondItem="7eM-lF-SX1" secondAttribute="bottom" constant="10" id="4ba-Rt-s9i"/>
+                <constraint firstAttribute="trailing" secondItem="uyd-lp-uUd" secondAttribute="trailing" id="4tb-Qb-RMr"/>
+                <constraint firstItem="uyd-lp-uUd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="62F-4z-Scg"/>
+                <constraint firstAttribute="trailing" secondItem="AME-kZ-7UE" secondAttribute="trailing" constant="20" id="8qA-ls-NVE"/>
+                <constraint firstAttribute="trailing" secondItem="3px-Qs-V7t" secondAttribute="trailing" constant="20" id="KQW-Pz-MyC"/>
+                <constraint firstAttribute="trailing" secondItem="7eM-lF-SX1" secondAttribute="trailing" constant="20" id="OYG-rL-GhL"/>
+                <constraint firstItem="AEd-vJ-1Qd" firstAttribute="centerX" secondItem="uyd-lp-uUd" secondAttribute="centerX" id="TQU-XG-lU4"/>
+                <constraint firstItem="uyd-lp-uUd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="WVI-03-cqg"/>
+                <constraint firstItem="7eM-lF-SX1" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="ezm-jx-3wz"/>
+                <constraint firstItem="AEd-vJ-1Qd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="154" id="iAE-V1-KkI"/>
+                <constraint firstItem="GiH-W4-19o" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="oay-8H-Qbb"/>
+                <constraint firstItem="GiH-W4-19o" firstAttribute="top" secondItem="3px-Qs-V7t" secondAttribute="bottom" constant="40" id="qlr-gg-49a"/>
+                <constraint firstItem="7eM-lF-SX1" firstAttribute="top" secondItem="AEd-vJ-1Qd" secondAttribute="bottom" constant="20" id="u5p-fk-hhz"/>
+                <constraint firstAttribute="bottom" secondItem="AME-kZ-7UE" secondAttribute="bottom" constant="20" id="uSA-jF-WU6"/>
+                <constraint firstItem="3px-Qs-V7t" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" id="xfR-k3-fxM"/>
+            </constraints>
+        </view>
+    </objects>
+    <resources>
+        <image name="Greeting_Scroll_To_Top" width="42" height="42"/>
+        <image name="Mail_No_eMail" width="84" height="84"/>
+    </resources>
+</document>

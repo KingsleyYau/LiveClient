@@ -28,6 +28,12 @@
 /** 豪华的私密直播间 */
 - (void)tableView:(HotTableView *)tableView didStartVipPrivteBroadcast:(NSInteger)index;
 
+/** 发起聊天 */
+- (void)tableView:(HotTableView *)tableView didChatNowWithAnchor:(NSInteger)index;
+
+/** 发送邮件 */
+- (void)tableView:(HotTableView *)tableView diddidSendMailToAnchor:(NSInteger)index;
+
 
 /** 预约的私密直播间 */
 - (void)tableView:(HotTableView *)tableView didBookPrivateBroadcast:(NSInteger)index;

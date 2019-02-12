@@ -43,7 +43,7 @@ AudioDecoderAAC::AudioDecoderAAC()
 :mRuningMutex(KMutex::MutexType_Recursive)
     {
 	// TODO Auto-generated constructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioDecoderAAC::AudioDecoderAAC( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::AudioDecoderAAC( this : %p )", this);
     
     avcodec_register_all();
 //    av_log_set_level(AV_LOG_TRACE);
@@ -59,7 +59,7 @@ AudioDecoderAAC::AudioDecoderAAC()
 
 AudioDecoderAAC::~AudioDecoderAAC() {
 	// TODO Auto-generated destructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioDecoderAAC::~AudioDecoderAAC( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioDecoderAAC::~AudioDecoderAAC( this : %p )", this);
     
     Stop();
     
@@ -177,32 +177,8 @@ void AudioDecoderAAC::Stop() {
         // 停止编码线程
         mDecodeAudioThread.Stop();
         
-        AudioFrame* frame = NULL;
-        // 释放未编码Buffer
-        mDecodeBufferList.lock();
-        while( !mDecodeBufferList.empty() ) {
-            frame = (AudioFrame* )mDecodeBufferList.front();
-            mDecodeBufferList.pop_front();
-            if( frame != NULL ) {
-            	delete frame;
-            } else {
-                break;
-            }
-        }
-        mDecodeBufferList.unlock();
-        
-        // 释放空闲Buffer
-        mFreeBufferList.lock();
-        while( !mFreeBufferList.empty() ) {
-            frame = (AudioFrame* )mFreeBufferList.front();
-            mFreeBufferList.pop_front();
-            if( frame != NULL ) {
-                delete frame;
-            } else {
-                break;
-            }
-        }
-        mFreeBufferList.unlock();
+        // 清空队列
+        ClearAudioFrame();
         
         DestroyContext();
     }
@@ -326,15 +302,66 @@ void AudioDecoderAAC::DestroyContext() {
     
 void AudioDecoderAAC::ReleaseAudioFrame(void* frame) {
     AudioFrame* audioFrame = (AudioFrame *)frame;
-    ReleaseBuffer(audioFrame);
+    
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "AudioDecoderAAC::ReleaseAudioFrame( "
+                 "this : %p, "
+                 "audioFrame : %p, "
+                 "timestamp : %u "
+                 ")",
+                 this,
+                 audioFrame,
+                 audioFrame->mTimestamp
+                 );
+    
+    mFreeBufferList.lock();
+    mFreeBufferList.push_back(audioFrame);
+    mFreeBufferList.unlock();
+    
 }
 
-void AudioDecoderAAC::ReleaseBuffer(AudioFrame* audioFrame) {
-	mFreeBufferList.lock();
-	mFreeBufferList.push_back(audioFrame);
-	mFreeBufferList.unlock();
+void AudioDecoderAAC::ClearAudioFrame() {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_MSG,
+                 "AudioDecoderAAC::ClearAudioFrame( "
+                 "this : %p, "
+                 "mDecodeBufferList.size() : %d, "
+                 "mFreeBufferList.size() : %d "
+                 ")",
+                 this,
+                 mDecodeBufferList.size(),
+                 mFreeBufferList.size()
+                 );
+    
+    AudioFrame* frame = NULL;
+    // 释放未编码Buffer
+    mDecodeBufferList.lock();
+    while( !mDecodeBufferList.empty() ) {
+        frame = (AudioFrame* )mDecodeBufferList.front();
+        mDecodeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mDecodeBufferList.unlock();
+    
+    // 释放空闲Buffer
+    mFreeBufferList.lock();
+    while( !mFreeBufferList.empty() ) {
+        frame = (AudioFrame* )mFreeBufferList.front();
+        mFreeBufferList.pop_front();
+        if( frame != NULL ) {
+            delete frame;
+        } else {
+            break;
+        }
+    }
+    mFreeBufferList.unlock();
 }
-
+    
 void AudioDecoderAAC::DecodeAudioFormat(
 		AudioFrameFormat format,
 		AudioFrameSoundRate sound_rate,

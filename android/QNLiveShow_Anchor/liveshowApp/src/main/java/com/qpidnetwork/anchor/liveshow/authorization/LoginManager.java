@@ -8,6 +8,7 @@ import android.os.Message;
 
 import com.qpidnetwork.anchor.R;
 import com.qpidnetwork.anchor.bean.AccountInfoBean;
+import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.httprequest.OnRequestGetVerificationCodeCallback;
 import com.qpidnetwork.anchor.httprequest.OnRequestLoginCallback;
 import com.qpidnetwork.anchor.httprequest.RequestJniAuthorization;
@@ -26,7 +27,6 @@ import com.qpidnetwork.anchor.liveshow.manager.SynConfigManager;
 import com.qpidnetwork.anchor.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.anchor.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.anchor.utils.SystemUtils;
-import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 import java.util.ArrayList;
 import java.util.Iterator;

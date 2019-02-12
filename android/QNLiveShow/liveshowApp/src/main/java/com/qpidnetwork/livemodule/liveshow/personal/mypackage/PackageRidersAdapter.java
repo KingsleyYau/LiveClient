@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.RideItem;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -116,10 +116,12 @@ public class PackageRidersAdapter extends BaseAdapter{
         //礼物图片
         holder.ivRidePhoto.setImageResource(R.drawable.ic_package_rider_default);
         if(!TextUtils.isEmpty(item.photoUrl)) {
-            Picasso.with(mContext).load(item.photoUrl)
-                    .error(R.drawable.ic_package_rider_default)
-                    .placeholder(R.drawable.ic_package_rider_default)
-                    .into(holder.ivRidePhoto);
+//            Picasso.with(mContext)
+//                    .load(item.photoUrl)
+//                    .error(R.drawable.ic_package_rider_default)
+//                    .placeholder(R.drawable.ic_package_rider_default)
+//                    .into(holder.ivRidePhoto);
+            PicassoLoadUtil.loadUrl(holder.ivRidePhoto,item.photoUrl,R.drawable.ic_package_rider_default);
         }
 
         return convertView;

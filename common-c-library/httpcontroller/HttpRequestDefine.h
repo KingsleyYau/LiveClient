@@ -59,5 +59,8 @@
 #define COMMON_INFO			"info"
 #define COMMON_IOSPAY_RESULT                      "result"
 #define COMMON_IIOSPAY_CODE                       "code"
+#define COMMON_LIVE_NEW_RESULT       "result"
+#define COMMON_LIVE_NEW_CODE         "code"
+#define COMMON_LIVE_NEW_MESSAGE      "message"
 
 #endif /* REQUESTDEFINE_H_ */

@@ -7,20 +7,19 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ImageSpan;
 
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetEmotionListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionCategory;
 import com.qpidnetwork.livemodule.httprequest.item.EmotionItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpReqStatus;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
 import com.qpidnetwork.livemodule.utils.ImageSpanJ;
 import com.qpidnetwork.livemodule.utils.ImageUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,13 +44,16 @@ public class ChatEmojiManager {
     private List<String> emotionTagNames = new ArrayList<>();
     private static ChatEmojiManager instance = null;
     private StringBuilder emojiSb = new StringBuilder();
-    public HttpReqStatus emojiListReqStatus = HttpReqStatus.NoReq;
     private Pattern emojiSignPattern = null;
     public static final int PATTERN_MODEL_EVERYSIGN = 0;//0-逐个规则
     public static final int PATTERN_MODEL_SIMPLESIGN = 1;//1-模糊规则
+
+    private List<OnGetEmotionListCallback>  mCallbackList;
+    private boolean mIsRequestEmoj = false;
 //------------------------------构造&set、get方法---------------------
 
     private ChatEmojiManager(){
+        mCallbackList = new ArrayList<OnGetEmotionListCallback>();
     }
 
     public static ChatEmojiManager getInstance(){
@@ -87,52 +89,75 @@ public class ChatEmojiManager {
      */
     public void getEmojiList(final OnGetEmotionListCallback callback){
 //        Log.d(TAG,"getEmojiList");
-        if(emojiListReqStatus == HttpReqStatus.ReqSuccess && emotionCategories != null){
+        if(emotionCategories != null){
             if(null != callback){
                 callback.onGetEmotionList(true,0,null,emotionCategories);
             }
-        }
-
-        if(HttpReqStatus.Reqing != emojiListReqStatus){
-            emojiListReqStatus = HttpReqStatus.Reqing;
-
-            LiveRequestOperator.getInstance().GetEmotionList(new OnGetEmotionListCallback() {
-                @Override
-                public void onGetEmotionList(boolean isSuccess, int errCode, String errMsg, EmotionCategory[] emotionCategoryList) {
-                    Log.d(TAG,"getEmojiList-onGetEmotionList-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
-                    if(isSuccess){
-                        emojiListReqStatus = HttpReqStatus.ReqSuccess;
-                        if(null != emotionCategoryList){
-                            emotionCategories =  emotionCategoryList;
-                            emotionSignMaps.clear();
-                            emotionIdUrlMaps.clear();
-                            tagEmotionMap.clear();
-                            emotionTagNames.clear();
-                            for(EmotionCategory emotionCategory : emotionCategoryList){
-                                if(null != emotionCategory.emotionList){
-                                    for(EmotionItem emotionItem : emotionCategory.emotionList){
-                                        //前端对应的正则规则: \|\[\w*\]\|
-                                        emotionSignMaps.put(emotionItem.emoSign,emotionItem);
-                                        emotionIdUrlMaps.put(emotionItem.emoIconUrl,emotionItem.emotionId);
-                                        downEmotionImg(emotionItem);
+        }else{
+            //增加callback
+            if(callback != null) {
+                addToCallbackList(callback);
+            }
+            if(!mIsRequestEmoj){
+                mIsRequestEmoj = true;
+                LiveRequestOperator.getInstance().GetEmotionList(new OnGetEmotionListCallback() {
+                    @Override
+                    public void onGetEmotionList(boolean isSuccess, int errCode, String errMsg, EmotionCategory[] emotionCategoryList) {
+                        Log.d(TAG,"getEmojiList-onGetEmotionList-isSuccess:"+isSuccess+" errCode:"+errCode+" errMsg:"+errMsg);
+                        mIsRequestEmoj = false;
+                        if(isSuccess){
+                            if(null != emotionCategoryList){
+                                emotionCategories =  emotionCategoryList;
+                                emotionSignMaps.clear();
+                                emotionIdUrlMaps.clear();
+                                tagEmotionMap.clear();
+                                emotionTagNames.clear();
+                                for(EmotionCategory emotionCategory : emotionCategoryList){
+                                    if(null != emotionCategory.emotionList){
+                                        for(EmotionItem emotionItem : emotionCategory.emotionList){
+                                            //前端对应的正则规则: \|\[\w*\]\|
+                                            emotionSignMaps.put(emotionItem.emoSign,emotionItem);
+                                            emotionIdUrlMaps.put(emotionItem.emoIconUrl,emotionItem.emotionId);
+                                            downEmotionImg(emotionItem);
+                                        }
                                     }
-                                }
-                                if(!emotionTagNames.contains(emotionCategory.emotionTagName)){
-                                    emotionTagNames.add(emotionCategory.emotionTagName);
-                                }
-                                if(!tagEmotionMap.containsKey(emotionCategory.emotionTagName)){
-                                    tagEmotionMap.put(emotionCategory.emotionTagName,emotionCategory);
+                                    if(!emotionTagNames.contains(emotionCategory.emotionTagName)){
+                                        emotionTagNames.add(emotionCategory.emotionTagName);
+                                    }
+                                    if(!tagEmotionMap.containsKey(emotionCategory.emotionTagName)){
+                                        tagEmotionMap.put(emotionCategory.emotionTagName,emotionCategory);
+                                    }
                                 }
                             }
                         }
-                    }else{
-                        emojiListReqStatus = HttpReqStatus.ResFailed;
+                        notifyCallback(isSuccess, errCode, errMsg, emotionCategoryList);
                     }
-                    if(null != callback){
-                        callback.onGetEmotionList(isSuccess,errCode,errMsg,emotionCategoryList);
-                    }
+                });
+            }
+
+        }
+    }
+
+    /**
+     * 加入到callbacklist
+     * @param callback
+     */
+    private void addToCallbackList(OnGetEmotionListCallback callback){
+        synchronized (mCallbackList){
+            if(callback != null) {
+                mCallbackList.add(callback);
+            }
+        }
+    }
+
+    private void notifyCallback(boolean isSuccess, int errCode, String errMsg, EmotionCategory[] emotionCategoryList){
+        synchronized (mCallbackList){
+            for(OnGetEmotionListCallback callback : mCallbackList){
+                if(callback != null) {
+                    callback.onGetEmotionList(isSuccess, errCode, errMsg, emotionCategoryList);
                 }
-            });
+            }
+            mCallbackList.clear();
         }
     }
 
@@ -159,18 +184,20 @@ public class ChatEmojiManager {
         StringBuilder patternString = new StringBuilder();
 
         patternString.append('(');
-        for(EmotionCategory emotionCategory : emotionCategories){
-            EmotionItem[] emotionItems = emotionCategory.emotionList;
-            if(null != emotionItems){
-                for(int index=0;index<emotionItems.length; index++){
-                    EmotionItem emotionItem = emotionItems[index];
-                    patternString.append(Pattern.quote(emotionItem.emoSign));
-                    if(index != emotionItems.length-1){
-                        patternString.append('|');
+        if(emotionCategories != null) {
+            for (EmotionCategory emotionCategory : emotionCategories) {
+                EmotionItem[] emotionItems = emotionCategory.emotionList;
+                if (null != emotionItems) {
+                    for (int index = 0; index < emotionItems.length; index++) {
+                        EmotionItem emotionItem = emotionItems[index];
+                        patternString.append(Pattern.quote(emotionItem.emoSign));
+                        if (index != emotionItems.length - 1) {
+                            patternString.append('|');
+                        }
                     }
                 }
-            }
 
+            }
         }
         patternString.append(')');
         String emoSign = patternString.toString();

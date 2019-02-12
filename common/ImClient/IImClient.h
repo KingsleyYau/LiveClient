@@ -32,6 +32,9 @@
 #include "item/IMRecvHangoutChatItem.h"
 #include "item/IMLoveLevelItem.h"
 #include "item/IMPrivateMessageItem.h"
+#include "item/IMInviteReplyItem.h"
+#include "item/IMInviteErrItem.h"
+#include "item/IMHangoutInviteItem.h"
 
 using namespace std;
 
@@ -155,9 +158,10 @@ public:
      *  @param err         结果类型
      *  @param errMsg      结果描述
      *  @param item        直播间信息
+     *  @param priv        权限
      *
      */
-    virtual void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item) {};
+    virtual void OnRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item, const IMAuthorityItem& priv) {};
     
     /**
      *  3.2.观众退出直播间回调
@@ -174,9 +178,10 @@ public:
      *  3.3.接收直播间关闭通知(观众)回调
      *
      *  @param roomId      直播间ID
+     *  @param priv        权限
      *
      */
-    virtual void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg) {};
+    virtual void OnRecvRoomCloseNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, const IMAuthorityItem& priv) {};
     
     /**
      *  3.4.接收观众进入直播间通知回调
@@ -223,9 +228,10 @@ public:
      *  @param leftSeconds 关闭直播间倒数秒数（整型）（可无，无或0表示立即关闭）
      *  @param err         错误码
      *  @param errMsg      错误描述
+     *  @param item        权限
      *
      */
-    virtual void OnRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, LCC_ERR_TYPE err, const string& errMsg) {};
+    virtual void OnRecvLeavingPublicRoomNotice(const string& roomId, int leftSeconds, LCC_ERR_TYPE err, const string& errMsg, const IMAuthorityItem& item) {};
     
     /**
      *  3.8.接收直播间禁言通知（观众端／主播端接收直播间禁言通知）回调
@@ -234,9 +240,10 @@ public:
      *  @param err     踢出原因错误码
      *  @param errMsg      踢出原因描述
      *  @param credit      信用点
+     *  @param item        权限
      *
      */
-    virtual void OnRecvRoomKickoffNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, double credit) {};
+    virtual void OnRecvRoomKickoffNotice(const string& roomId, LCC_ERR_TYPE err, const string& errMsg, double credit, const IMAuthorityItem& item) {};
     
     /**
      *  3.9.接收充值通知回调
@@ -286,7 +293,7 @@ public:
      *  @param item         直播间信息
      *
      */
-    virtual void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item) {};
+    virtual void OnPublicRoomIn(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const RoomInfoItem& item, const IMAuthorityItem& priv) {};
     
     /**
      *  3.14.观众开始／结束视频互动接口 回调
@@ -308,7 +315,7 @@ public:
      *  @param item             立即私密邀请
      *
      */
-    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item) {};
+    virtual void OnGetInviteInfo(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const PrivateInviteItem& item, const IMAuthorityItem& privItem) {};
     
     // ------------- 直播间处理(非消息) -------------
     /**
@@ -415,7 +422,7 @@ public:
      *  @param roomId            直播间ID
      *
      */
-    virtual void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId) {};
+    virtual void OnSendPrivateLiveInvite(SEQ_T reqId, bool success, LCC_ERR_TYPE err, const string& errMsg, const string& invitationId, int timeOut, const string& roomId, const IMInviteErrItem& item) {};
     
     /**
      *  7.2.观众取消立即私密邀请 回调
@@ -432,17 +439,10 @@ public:
     /**
      *  7.3.接收立即私密邀请回复通知 回调
      *
-     *  @param inviteId      邀请ID
-     *  @param replyType     主播回复 （0:拒绝 1:同意）
-     *  @param roomId        直播间ID （可无，m_replyType ＝ 1存在）
-     *  @param roomType      直播间类型
-     *  @param anchorId      主播ID
-     *  @param nickName      主播昵称
-     *  @param avatarImg     主播头像
-     *  @param msg           提示文字
+     *  @param replyItem      邀请ID
      *
      */
-    virtual void OnRecvInstantInviteReplyNotice(const string& inviteId, ReplyType replyType ,const string& roomId, RoomType roomType, const string& anchorId, const string& nickName, const string& avatarImg, const string& msg) {};
+    virtual void OnRecvInstantInviteReplyNotice(const IMInviteReplyItem& replyItem) {};
     
     /**
      *  7.4.接收主播立即私密邀请通知 回调
@@ -691,6 +691,14 @@ public:
      *
      */
     virtual void OnRecvAnchorCountDownEnterHangoutRoomNotice(const string& roomId, const string& anchorId, int leftSecond) {};
+    
+    /**
+     *  10.15.接收主播Hang-out邀请通知接口 回调
+     *
+     *  @param item         Hang-out邀请通知信息
+     *
+     */
+    virtual void OnRecvHandoutInviteNotice(const IMHangoutInviteItem& item) {};
     
     // ------------- 节目 -------------
     /**

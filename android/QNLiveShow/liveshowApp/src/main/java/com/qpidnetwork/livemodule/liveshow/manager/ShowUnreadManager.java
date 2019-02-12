@@ -9,12 +9,15 @@ import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnGetMainUnreadNumCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetNoReadNumProgramCallback;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
+import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.httprequest.item.MainUnreadNumItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.livemessage.LMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.livemessage.LMManager;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
+import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +49,7 @@ import java.util.List;
  * Created by Hunter on 18/4/23.
  */
 
-public class ShowUnreadManager implements LMLiveRoomEventListener {
+public class ShowUnreadManager implements LMLiveRoomEventListener, IAuthorizationListener {
 
     private static final String TAG = ShowUnreadManager.class.getName();
 
@@ -134,6 +137,11 @@ public class ShowUnreadManager implements LMLiveRoomEventListener {
                 refreshUnReadData();
             }
         };
+
+        //add by Jagger 2018-9-29
+        if(LoginManager.getInstance() != null){
+            LoginManager.getInstance().register(this);
+        }
     }
 
     /**
@@ -281,6 +289,27 @@ public class ShowUnreadManager implements LMLiveRoomEventListener {
     @Override
     public void OnRepeatSendPrivateMsgNotice(String userId, LiveMessageItem[] messageList) {
 
+    }
+
+    //登录监听
+    @Override
+    public void onLogin(boolean isSuccess, int errCode, String errMsg, LoginItem item) {
+
+    }
+
+    @Override
+    public void onLogout(boolean isMannual) {
+        //清空未读数
+        msgUnReadNum = 0;
+        mailUnReadNum = 0;
+        greetMailUnReadNum = 0;
+        mShowTicketUnreadNum = 0;
+        mBackpackUnreadNum = 0;
+        mBookingUnReadNum = 0;
+        //需要注意的是这里并不是UI线程--刷新界面
+        for(OnShowUnreadListener listener : mUnreadListenerList){
+            listener.onUnReadDataUpdate();
+        }
     }
 
 }

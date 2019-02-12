@@ -1,0 +1,21 @@
+
+/* Class = "UILabel"; text = "Note: Private video and photos will be expired if they are not being viewed within 7 days after you received."; ObjectID = "Mgm-zg-QOo"; */
+"Mgm-zg-QOo.text" = "Note: Private video and photos will be expired if they are not being viewed within 7 days after you received.";
+
+/* Class = "UILabel"; text = "2 post stamps or 1.6 credits for viewing this video."; ObjectID = "Rr1-u7-Iaf"; */
+"Rr1-u7-Iaf.text" = "2 post stamps or 1.6 credits for viewing this video.";
+
+/* Class = "UILabel"; text = "Expired video"; ObjectID = "d0H-z8-FrK"; */
+"d0H-z8-FrK.text" = "Expired video";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "fxB-W6-mrP"; */
+"fxB-W6-mrP.text" = "Label";
+
+/* Class = "UILabel"; text = "This is broadcaster's private video."; ObjectID = "kcn-Pm-XW0"; */
+"kcn-Pm-XW0.text" = "This is broadcaster's private video.";
+
+/* Class = "UIButton"; normalTitle = "  Play by Credits"; ObjectID = "v3c-Xh-NSD"; */
+"v3c-Xh-NSD.normalTitle" = "  Play by Credits";
+
+/* Class = "UIButton"; normalTitle = "  Play by Stamps"; ObjectID = "zca-Lz-t3N"; */
+"zca-Lz-t3N.normalTitle" = "  Play by Stamps";

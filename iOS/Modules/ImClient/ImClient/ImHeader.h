@@ -30,5 +30,8 @@
 #import "Model/IMProgramItemObject.h"
 #import "Model/IMRecvHangoutChatItemObject.h"
 #import "Model/IMLoveLevelItemObject.h"
+#import "Model/ImInviteReplyItemObject.h"
+#import "Model/ImInviteErrItemObject.h"
+#import "Model/IMHangoutInviteItemObject.h"
 
 #endif /* ImHeader_h */

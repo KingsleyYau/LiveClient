@@ -127,4 +127,12 @@
 
 }
 
+// 防止cell重用图片显示错乱
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self.imageLoader stop];
+    [self.giftImageView sd_cancelCurrentImageLoad];
+    self.giftImageView.image = nil;
+}
+
 @end

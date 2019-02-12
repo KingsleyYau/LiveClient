@@ -160,6 +160,12 @@ public class MaterialDialogAlert extends BaseDialog {
     	getMessage().setVisibility(View.VISIBLE);
     }
 
+    public void setMessageCenter(CharSequence msg){
+        getMessage().setText(msg);
+    	getMessage().setGravity(Gravity.CENTER_HORIZONTAL);	//设为居中	 add by Jagger 2017-5-17
+        getMessage().setVisibility(View.VISIBLE);
+    }
+
     public TextView getMessage(){
     	return (TextView)contentView.findViewById(android.R.id.message);
     }

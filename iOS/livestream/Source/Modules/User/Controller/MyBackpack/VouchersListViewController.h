@@ -10,5 +10,5 @@
 #import "MyBackpackViewController.h"
 @interface VouchersListViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, strong) MyBackpackViewController * mainVC;
+ 
 @end

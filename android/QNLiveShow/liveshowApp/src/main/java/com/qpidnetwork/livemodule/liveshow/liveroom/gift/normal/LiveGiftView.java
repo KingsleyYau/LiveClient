@@ -14,7 +14,7 @@ import android.view.Window;
 import android.widget.FrameLayout;
 
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.HashMap;
 import java.util.Iterator;

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "LSProgramItemObject.h"
-#import "LSGoogleAnalyticsViewController.h"
-@interface ShowDetailViewController : LSGoogleAnalyticsViewController
+#import "LSWKWebViewController.h"
+@interface ShowDetailViewController : LSWKWebViewController
 
 @property (nonatomic, strong) LSProgramItemObject * item;
 @end

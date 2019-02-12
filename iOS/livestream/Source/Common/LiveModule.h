@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 
 #import "IService.h"
-//#import "IServiceManager.h"
-//#import "IQNService.h"
-//#import "IAnalyticsManager.h"
 
 #pragma mark - QNToken
 #define SAMSON_TOKEN @"Samson_iy5gL22gsTDJ"
@@ -44,13 +41,6 @@
 - (void)moduleOnLogout:(LiveModule *)module type:(LogoutType)type msg:(NSString *)msg;
 
 /**
-  直播模块需要显示广告
-
- @param module 模块实例
- */
-- (void)moduleOnAdViewController:(LiveModule *)module;
-
-/**
  直播模块需要显示浮窗
 
  @param module 模块实例
@@ -69,14 +59,14 @@
 @interface LiveModule : NSObject
 #pragma mark - 界面控制器
 /**
- 模块主界面
+ 模块主界面(每次调用会创建新实例)
  */
-@property (strong) UIViewController *moduleVC;
+@property (strong, readonly) UIViewController *mainVC;
 
 /**
- 来源界面
+ 模块主界面(内部用, 不会创建新的实例)
  */
-@property (strong, nonatomic) UIViewController *fromVC;
+@property (strong, readonly) UIViewController *moduleVC;
 
 /**
  通知浮窗控制器
@@ -84,22 +74,14 @@
 @property (strong, readonly) UIViewController *notificationVC;
 
 /**
- 广告控制器
+ 通过外部链接打开测试模式
  */
-@property (strong, readonly) UIViewController *adVc;
+@property (assign) BOOL test;
 
 /**
- QN个人资料控制器
+ 通过外部链接打开Http代理模式
  */
-@property (nonatomic, strong) UIViewController *qnProfileVC;
-
-/** 是否带有test参数 */
-@property (nonatomic, assign) BOOL isForTest;
-
-/**
- Http代理
- */
-@property (nonatomic, strong) NSString *httpProxy;
+@property (strong, nonatomic) NSString *httpProxy;
 
 /**
  来源界面导航栏颜色
@@ -109,7 +91,7 @@
 @property (readonly) NSDictionary *barTitleTextAttributes;
 
 /** 买点界面 */
-@property (nonatomic, strong) UIViewController *addCreditVc;
+@property (strong) UIViewController *addCreditVc;
 
 #pragma mark - 基本属性
 /**
@@ -117,64 +99,74 @@
  */
 @property (weak) id<LiveModuleDelegate> delegate;
 /**
+ 委托
+ */
+@property (weak) id<LiveModuleDelegate> noticeDelegate;
+/**
+ 直播服务
+ */
+@property (weak, readonly) id<IMutexService> mutexService;
+/**
+ 登录服务
+ */
+@property (weak, readonly) id<ILoginService> loginService;
+/**
+ 换站服务
+ */
+@property (weak, readonly) id<ISiteService> siteService;
+/**
  互斥服务器管理器
  */
 @property (weak, nonatomic) id<IMutexServiceManager> serviceManager;
 /**
- 直播服务
- */
-@property (weak, nonatomic, readonly) id<IMutexService> service;
-/**
  GA跟踪管理器
  */
-@property (weak) id<IAnalyticsManager> analyticsManager;
+@property (weak, nonatomic) id<IAnalyticsManager> analyticsManager;
+
+/**
+ 通知链接处理服务
+ */
+@property (weak, nonatomic) id<INotificationsServiceService> notificationsServiceService;
 /**
  换站管理器
  */
 @property (weak) id<ISiteManager> siteManager;
+
 #pragma mark - 公用属性
 /**
  是否Debug模式
  */
-@property (assign, nonatomic) BOOL debug;
+@property (assign) BOOL debug;
 /**
  是否输出日志
  */
 @property (assign, nonatomic) BOOL debugLog;
 /**
- 应用版本号
+ 应用版本号,用于提交网页内部提交
  */
-@property (nonatomic, copy) NSString *appVerCode;
+@property (copy) NSString *appVerCode;
 /**
- QN的站点Id
+ 个人中心版本号
  */
-@property (nonatomic, copy) NSString *siteId;
+@property (copy) NSString *appStringVerCode;
+/**
+ 直播资源目录
+ */
+@property (strong, nonatomic, readonly) NSBundle *liveBundle;
 
-#pragma mark - 新手引导
+#pragma mark - 普通更新
 /**
- 是否显示列表引导
+ 是否需要普通更新
  */
-@property (assign, nonatomic) BOOL showListGuide;
-
-#pragma mark - 广告相关
+@property (nonatomic, assign) BOOL isUpdate;
 /**
- 广告Id
+ 客户端更新链接
  */
-@property (nonatomic, copy) NSString *qnMainAdId;
+@property (nonatomic, copy) NSString *updateStoreURL;
 /**
- 广告链接
+ 客户端更新描述
  */
-@property (nonatomic, copy) NSString *qnMainAdUrl;
-/**
- 广告标题
- */
-@property (nonatomic, copy) NSString *qnMainAdTitle;
-
-#pragma mark - 未读提示
-/**
- QN显示红点
- */
-@property (nonatomic, assign) int pushCount;
+@property (nonatomic, copy) NSString *updateDesc;
 
 #pragma mark - 外部接口
 /**
@@ -190,6 +182,11 @@
  @param url 同步配置服务器地址
  */
 - (void)setConfigUrl:(NSString *)url;
+
+/**
+ 释放模块主界面
+ */
+- (void)destroyModuleVC;
 
 /**
  开启模块
@@ -209,7 +206,10 @@
  */
 - (void)cleanCache;
 
-
+/**
+ 私密邀请push通知
+ */
+- (void)pushInviteNotice;
 #pragma mark - Application(通知)
 - (void)applicationDidEnterBackground:(UIApplication *)application;
 - (void)applicationWillEnterForeground:(UIApplication *)application;

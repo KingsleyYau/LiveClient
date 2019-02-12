@@ -10,7 +10,6 @@
 
 #pragma mark - 界面
 #import "LSMainViewController.h"
-#import "LiveChannelAdViewController.h"
 #import "PushInviteViewController.h"
 #import "PushBookingViewController.h"
 
@@ -21,7 +20,7 @@
 
 #pragma mark - 公共
 #import "LSFileCacheManager.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LiveRoomCreditRebateManager.h"
 #import "LiveBundle.h"
 #import "LSImageViewLoader.h"
@@ -33,6 +32,12 @@
 
 #pragma mark - IM
 #import "LSImManager.h"
+#import "LSLiveChatManagerOC.h"
+#import "LSIMLoginManager.h"
+#import "LSLCSessionRequestManager.h"
+
+#pragma mark - 私信
+#import "LSPrivateMessageManager.h"
 
 #pragma mark - 流媒体
 #import "LiveGobalManager.h"
@@ -47,34 +52,42 @@
 
 #pragma mark - QN
 #import "LiveMutexService.h"
+#import "LiveSiteService.h"
+#import "LiveAnalyticsManager.h"
+#import "LiveNotificationService.h"
 
+#pragma mark - 界面
 #import "PushShowViewController.h"
 
+#import "LSPaymentManager.h"
+
+#define HTTP_AUTHOR @"test"
+#define HTTP_PASSWORD @"5179"
+
 static LiveModule *gModule = nil;
-@interface LiveModule () <LoginManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate> {
+@interface LiveModule () <LoginManagerDelegate, IMLiveRoomManagerDelegate, IMManagerDelegate,LSLiveChatManagerListenerDelegate> {
     UIViewController *_moduleVC;
-    UIViewController *_adVc;
 }
+
+#pragma mark - 服务
+@property (strong, nonatomic) LiveSiteService *liveSiteService;
 
 // 是否在后台
 @property (assign, nonatomic) BOOL isBackground;
 @property (strong, nonatomic) NSString *manId;
-@property (strong, nonatomic) NSString *token;
+@property (strong, nonatomic) NSString *sessionId;
+@property (strong, nonatomic) LiveGobalManager *liveGobalManager;
 @property (strong, nonatomic) LSSessionRequestManager *sessionManager;
 @property (strong, nonatomic) LSLoginManager *loginManager;
 @property (strong, nonatomic) LSImManager *imManager;
-@property (strong, nonatomic) LiveGobalManager *liveGobalManager;
 @property (strong, nonatomic) LSGiftManager *giftDownloadManager;
 @property (strong, nonatomic) LSChatEmotionManager *emotionManager;
-@property (strong, nonatomic) LiveChannelAdViewController *liveChannel;
 @property (strong, nonatomic) LSStreamSpeedManager *speedManager;
+@property (strong, nonatomic) LSLiveChatManagerOC * liveChatManager;
 // 余额及返点信息管理器
 @property (strong, nonatomic) LiveRoomCreditRebateManager *creditRebateManager;
 // 通知界面
 @property (strong, nonatomic) UIViewController *notificationVC;
-// 广告界面
-@property (strong, nonatomic) UIViewController *adVc;
-
 @end
 
 @implementation LiveModule
@@ -97,19 +110,21 @@ static LiveModule *gModule = nil;
         _debug = NO;
         _debugLog = YES;
         _moduleVC = nil;
-        _fromVC = nil;
         _notificationVC = nil;
-        _adVc = nil;
-        _showListGuide = YES;
-        _isForTest = NO;
+        _test = NO;
         _appVerCode = @"";
-        _siteId = @"";
+
         // 创建直播服务
         [LiveMutexService service];
         // 资源全局管理
         [LiveBundle gobalInit];
         // 初始化图像下载器
         [LSImageViewLoader gobalInit];
+        // 初始化内部GA
+        [LiveAnalyticsManager manager];
+
+        [LiveNotificationService service];
+    
         // 初始化流媒体管理器
         self.liveGobalManager = [LiveGobalManager manager];
         // 初始化测速管理器
@@ -121,7 +136,15 @@ static LiveModule *gModule = nil;
         self.imManager = [LSImManager manager];
         [self.imManager addDelegate:self];
         [self.imManager.client addDelegate:self];
-
+        [LSPaymentManager manager];
+        // 初始化私信管理器
+        [LSPrivateMessageManager manager];
+        // 初始化livechat管理器
+        self.liveChatManager = [LSLiveChatManagerOC manager];
+        [self.liveChatManager addDelegate:self];
+        
+        [LSLCSessionRequestManager manager];
+        
         // 初始化礼物下载器
         self.giftDownloadManager = [LSGiftManager manager];
         // 初始化聊天表情管理器
@@ -129,7 +152,7 @@ static LiveModule *gModule = nil;
         // 初始session管理器
         self.sessionManager = [LSSessionRequestManager manager];
         // 初始化用户信息管理器
-        [UserInfoManager manager];
+        [LSUserInfoManager manager];
         // 初始化余额及返点信息管理器
         self.creditRebateManager = [LiveRoomCreditRebateManager creditRebateManager];
         // 清除webview的缓存
@@ -141,6 +164,11 @@ static LiveModule *gModule = nil;
         [LSRequestManager setLogDirectory:[[LSFileCacheManager manager] requestLogPath]];
         LSRequestManager *manager = [LSRequestManager manager];
         [manager setWebSite:@""];
+        [manager setAuthorization:HTTP_AUTHOR password:HTTP_PASSWORD];
+        //[LSRequestManager setProxy:@"http://172.25.32.80:8888"];
+
+        // 创建直播服务
+        self.liveSiteService = [[LiveSiteService alloc] init];
     }
     return self;
 }
@@ -149,12 +177,13 @@ static LiveModule *gModule = nil;
     NSLog(@"LiveModule::dealloc()");
 
     if (_serviceManager) {
-        [_serviceManager removeService:self.service];
+        [_serviceManager removeService:self.mutexService];
     }
 
     [self.imManager.client removeDelegate:self];
     [self.imManager removeDelegate:self];
     [self.loginManager removeDelegate:self];
+    [self.liveChatManager removeDelegate:self];
 }
 
 - (void)setConfigUrl:(NSString *)url {
@@ -164,34 +193,39 @@ static LiveModule *gModule = nil;
     [manager setConfigWebSite:url];
 }
 
+- (void)destroyModuleVC {
+    NSLog(@"LiveModule::destroyModuleVC()");
+    _moduleVC = nil;
+}
+
 - (BOOL)start:(NSString *)manId token:(NSString *)token {
     BOOL bFlag = YES;
 
-    NSLog(@"LiveModule::start( manId : %@, token : %@ )", manId, token);
+    NSLog(@"LiveModule::start( manId : %@, sessionId : %@ )", manId, token);
 
     @synchronized(self) {
-        self.token = token;
+        self.sessionId = token;
         self.manId = manId;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.loginManager login:self.manId userSid:self.token];
+        [self.loginManager loginWithSession:self.sessionId];
     });
 
     return bFlag;
 }
 
 - (void)stop {
-    NSLog(@"LiveModule::stop( manId : %@, token : %@ )", self.manId, self.token);
+    NSLog(@"LiveModule::stop( manId : %@, sessionId : %@ )", self.manId, self.sessionId);
 
     @synchronized(self) {
-        self.token = nil;
+        self.sessionId = nil;
         self.manId = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.loginManager logout:LogoutTypeActive msg:@""];
-        
+
         // 停止直播间, 退出到模块入口
         [[LiveMutexService service] stopService];
     });
@@ -213,79 +247,92 @@ static LiveModule *gModule = nil;
 - (void)setServiceManager:(id<IMutexServiceManager>)serviceManager {
     _serviceManager = serviceManager;
     if (_serviceManager) {
-        [_serviceManager addService:self.service];
+        [_serviceManager addService:self.mutexService];
     }
 }
 
-- (id<IMutexService>)service {
+- (id<IMutexService>)mutexService {
     return (id<IMutexService>)[LiveMutexService service];
 }
 
-- (void)setFromVC:(UIViewController *)fromVC {
-    _fromVC = fromVC;
+- (id<ILoginService>)loginService {
+    return (id<ILoginService>)[LSIMLoginManager manager];
+}
+
+- (id<ISiteService>)siteService {
+    return (id<ISiteService>)self.liveSiteService;
+}
+
+- (id<INotificationsServiceService>)notificationsServiceService {
+    return (id<INotificationsServiceService>)[LiveNotificationService service];
 }
 
 - (UIViewController *)notificationVC {
-    NSLog(@"LiveModule::notificationVC()");
     return _notificationVC;
 }
 
-- (UIViewController *)adVc {
-    NSLog(@"LiveModule::notificationVC()");
-    return _adVc;
-}
-
-- (void)setModuleVC:(UIViewController *)vc {
-    _moduleVC = vc;
+- (UIViewController *)mainVC {
+    _moduleVC = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
+    return _moduleVC;
 }
 
 - (UIViewController *)moduleVC {
-    if (!_moduleVC) {
-        _moduleVC = [[LSMainViewController alloc] initWithNibName:nil bundle:nil];
-    }
     return _moduleVC;
+}
+
+- (NSBundle *)liveBundle {
+    return [LiveBundle mainBundle];
+}
+
+
+- (void)pushInviteNotice {
+    PushInviteViewController *vc = self.notificationVC;
+    // TODO:添加判断是否存在该方法是否存在
+    if ([vc respondsToSelector:@selector(pushMessageToCenter)]) {
+        [vc pushMessageToCenter];
+    }
+
 }
 
 #pragma mark - HTTP登录回调
 - (void)manager:(LSLoginManager *_Nonnull)manager onLogin:(BOOL)success loginItem:(LSLoginItemObject *_Nullable)loginItem errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString *_Nonnull)errmsg {
     if (success) {
-        if (loginItem.isPushAd) {
-            // 调用QN弹出广告
-            LiveChannelAdViewController *vc = [[LiveChannelAdViewController alloc] initWithNibName:nil bundle:nil];
-            _adVc = vc;
-            if ([self.delegate respondsToSelector:@selector(moduleOnAdViewController:)]) {
-                [self.delegate moduleOnAdViewController:self];
-            }
-        }
-        self.qnMainAdId = loginItem.qnMainAdId;
-        self.qnMainAdUrl = loginItem.qnMainAdUrl;
-        self.qnMainAdTitle = loginItem.qnMainAdTitle;
-
         // Http登陆成功
+        // livechat登录
+        ConfigItemObject* configItem = [LSLoginManager manager].configItem;
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *cachesDirectory = [paths objectAtIndex:0];
+        NSString *appId = [[NSBundle mainBundle] bundleIdentifier];
+        [[LSLiveChatManagerOC manager] loginUser:configItem.socketHostDomain port:configItem.socketPort webSite:configItem.httpSvrUrl appSite:configItem.httpSvrUrl chatVoiceHostUrl:configItem.chatVoiceHostUrl httpUser:@"test" httpPassword:@"5179" versionCode:[LSRequestManager manager].versionCode appId:appId cachesDirectory:cachesDirectory minChat:configItem.minBalanceForChat user:loginItem.userId userName:loginItem.nickName sid:loginItem.sessionId device:[[LSRequestManager manager] getDeviceId] livechatInvite:(NSInteger)loginItem.liveChatInviteRiskType isLivechat:loginItem.isLiveChatRisk];
         if ([self.delegate respondsToSelector:@selector(moduleOnLogin:)]) {
             [self.delegate moduleOnLogin:self];
         }
     } else {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            // 继续登陆
-            if (self.token) {
-                [self.loginManager login:self.manId userSid:self.token];
-            }
-        });
+        // 停止直播间, 退出到模块入口
+        [[LiveMutexService service] stopService];
     }
 }
 
-- (void)manager:(LSLoginManager * _Nonnull)manager onLogout:(LogoutType)type msg:(NSString * _Nullable)msg {
+- (void)manager:(LSLoginManager *_Nonnull)manager onLogout:(LogoutType)type msg:(NSString *_Nullable)msg {
     NSLog(@"LiveModule::onLogout( [Http注销通知], type : %d, msg : %@ )", type, msg);
 
     // Http注销
     @synchronized(self) {
-        self.token = nil;
+        self.sessionId = nil;
         self.manId = nil;
     }
 
     dispatch_async(dispatch_get_main_queue(), ^{
-    
+
+        if (type == LogoutTypeKick || type == LogoutTypeActive) {
+            [_moduleVC.view removeFromSuperview];
+            [_moduleVC removeFromParentViewController];
+            _moduleVC = nil;
+        }
+        BOOL kick = (type != LogoutTypeRelogin);
+        [[LSLiveChatManagerOC manager]logoutUser:kick];
+        
+        [self.imManager resetIMStatus];
         // 通知外部模块停止
         if ([self.delegate respondsToSelector:@selector(moduleOnLogout:type:msg:)]) {
             [self.delegate moduleOnLogout:self type:type msg:msg];
@@ -300,7 +347,7 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId anchorId:userId roomType:LiveRoomType_Private];
         [[LiveMutexService service] openUrlByLive:url];
     });
 }
@@ -311,7 +358,7 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId userId:inviteItem.oppositeId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:inviteItem.roomId anchorId:inviteItem.oppositeId roomType:LiveRoomType_Private];
         [[LiveMutexService service] openUrlByLive:url];
     });
 }
@@ -326,16 +373,17 @@ static LiveModule *gModule = nil;
             // 当前主播私密邀请能否显示
             if ([_liveGobalManager canShowInvite:anchorId] || !_liveGobalManager.isHangouting) {
                 // 生成直播间跳转的URL
-                NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:anchorId nickName:nickName];
+                NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByInviteId:inviteId anchorId:anchorId anchorName:nickName];
                 // 调用QN弹出通知
                 PushInviteViewController *vc = [[PushInviteViewController alloc] initWithNibName:nil bundle:nil];
                 vc.url = url;
                 vc.inviteId = inviteId;
                 vc.anchorId = anchorId;
+                vc.nickName = nickName;
                 _notificationVC = vc;
 
-                if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
-                    [self.delegate moduleOnNotification:self];
+                if ([self.noticeDelegate respondsToSelector:@selector(moduleOnNotification:)]) {
+                    [self.noticeDelegate moduleOnNotification:self];
                 }
             } else {
                 // 无法显示主播立即私密邀请
@@ -355,7 +403,7 @@ static LiveModule *gModule = nil;
 
     dispatch_async(dispatch_get_main_queue(), ^{
         // 生成直播间跳转的URL
-        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId userId:userId roomType:LiveRoomType_Private];
+        NSURL *url = [[LiveUrlHandler shareInstance] createUrlToInviteByRoomId:roomId anchorId:userId roomType:LiveRoomType_Private];
         // 调用QN弹出通知
         PushBookingViewController *vc = [[PushBookingViewController alloc] initWithNibName:nil bundle:nil];
         vc.url = url;
@@ -376,15 +424,13 @@ static LiveModule *gModule = nil;
 
         dispatch_async(dispatch_get_main_queue(), ^{
             // 生成直播间跳转的URL
-            NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId userId:item.anchorId];
+            NSURL *url = [[LiveUrlHandler shareInstance] createUrlToShowRoomId:item.showLiveId anchorId:item.anchorId];
             // 调用QN弹出通知
             PushShowViewController *vc = [[PushShowViewController alloc] initWithNibName:nil bundle:nil];
             vc.url = url;
             vc.tips = msg;
             vc.anchorId = item.anchorId;
             _notificationVC = vc;
-
-            self.pushCount = 1;
 
             if ([self.delegate respondsToSelector:@selector(moduleOnNotification:)]) {
                 [self.delegate moduleOnNotification:self];
@@ -407,6 +453,28 @@ static LiveModule *gModule = nil;
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     NSLog(@"LiveModule::applicationWillEnterForeground()");
     [LiveGobalManager manager].enterRoomBackgroundTime = nil;
+    
+//    if (self.loginManager.status == LOGINED) {
+//      [[LSLiveChatManagerOC manager] relogin];
+//    }
+}
+
+#pragma mark - LiveChat
+- (void)onRecvKickOffline:(KICK_OFFLINE_TYPE)kickType {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"LiveModule::onRecvKickOffline( [接收LivechatManager被踢下线通知回调], kickType : %d )", kickType);
+        if (KOT_OTHER_LOGIN == kickType) {
+            // 注销PHP
+            [[LSLoginManager manager] logout:LogoutTypeKick msg:NSLocalizedString(@"Tips_You_Have_Been_Kick", nil)];
+            
+        }
+    });
+}
+
+- (void)onLogout:(LSLIVECHAT_LCC_ERR_TYPE)errType errmsg:(NSString *)errmsg isAutoLogin:(BOOL)isAutoLogin {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSLog(@"LiveModule::onLogout( [接收LivechatManager注销通知回调], errmsg : %@ )", errmsg);
+    });
 }
 
 @end

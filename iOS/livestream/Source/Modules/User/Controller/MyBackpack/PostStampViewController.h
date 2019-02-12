@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "LSGoogleAnalyticsViewController.h"
+#import "LSWKWebViewController.h"
 
-@interface PostStampViewController : LSGoogleAnalyticsViewController
+@interface PostStampViewController : LSWKWebViewController
 
+ 
 @end

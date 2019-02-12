@@ -69,7 +69,7 @@ private:
 VideoEncoderH264::VideoEncoderH264()
     :mRuningMutex(KMutex::MutexType_Recursive)
 {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::VideoEncoderH264( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoEncoderH264::VideoEncoderH264( this : %p )", this);
     
     mbSpsChange = false;
     mpSps = NULL;
@@ -102,7 +102,7 @@ VideoEncoderH264::VideoEncoderH264()
 }
 
 VideoEncoderH264::~VideoEncoderH264() {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoEncoderH264::~VideoEncoderH264( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoEncoderH264::~VideoEncoderH264( this : %p )", this);
     
     Stop();
     
@@ -371,24 +371,6 @@ void VideoEncoderH264::Stop() {
                  );
 }
 
-void VideoEncoderH264::ReleaseVideoFrame(VideoFrame* videoFrame) {
-    FileLevelLog("rtmpdump",
-                 KLog::LOG_STAT,
-                 "VideoEncoderH264::ReleaseVideoFrame( "
-                 "this : %p, "
-                 "videoFrame : %p, "
-                 "mFreeBufferList.size() : %d "
-                 ")",
-                 this,
-                 videoFrame,
-                 mFreeBufferList.size()
-                 );
-    
-    mFreeBufferList.lock();
-    mFreeBufferList.push_back(videoFrame);
-    mFreeBufferList.unlock();
-}
-
 bool VideoEncoderH264::ConvertVideoFrame(VideoFrame* srcFrame, VideoFrame* dstFrame) {
     bool bFlag = false;
     
@@ -614,6 +596,24 @@ void VideoEncoderH264::DestroyContext() {
     mCodec = NULL;
 }
 
+void VideoEncoderH264::ReleaseBuffer(VideoFrame* videoFrame) {
+    FileLevelLog("rtmpdump",
+                 KLog::LOG_STAT,
+                 "VideoEncoderH264::ReleaseBuffer( "
+                 "this : %p, "
+                 "videoFrame : %p, "
+                 "mFreeBufferList.size() : %d "
+                 ")",
+                 this,
+                 videoFrame,
+                 mFreeBufferList.size()
+                 );
+    
+    mFreeBufferList.lock();
+    mFreeBufferList.push_back(videoFrame);
+    mFreeBufferList.unlock();
+}
+    
 char* VideoEncoderH264::FindNalu(char* start, int size, int& startCodeSize) {
     static const char naluStartCode[] = {0x00, 0x00, 0x00, 0x01};
     static const char sliceStartCode[] = {0x00, 0x00, 0x01};
@@ -698,11 +698,11 @@ void VideoEncoderH264::ConvertVideoHandle() {
                 
             } else {
                 // 释放空闲视频帧
-                ReleaseVideoFrame(dstFrame);
+                ReleaseBuffer(dstFrame);
             }
             
             // 释放采样视频帧
-            ReleaseVideoFrame(srcFrame);
+            ReleaseBuffer(srcFrame);
         }
         
         Sleep(1);
@@ -823,7 +823,7 @@ void VideoEncoderH264::EncodeVideoHandle() {
             }
             
             // 释放待编码视频帧
-            ReleaseVideoFrame(srcFrame);
+            ReleaseBuffer(srcFrame);
         }
         
         Sleep(1);

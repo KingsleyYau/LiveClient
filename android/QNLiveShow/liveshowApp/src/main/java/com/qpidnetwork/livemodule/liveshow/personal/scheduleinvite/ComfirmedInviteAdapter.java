@@ -17,9 +17,9 @@ import com.qpidnetwork.livemodule.httprequest.item.BookInviteItem;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.view.ProgressButton;
-import com.squareup.picasso.Picasso;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -93,10 +93,11 @@ public class ComfirmedInviteAdapter extends BaseAdapter {
         //礼物图片
         holder.civAnchorPhoto.setImageResource(R.drawable.ic_default_photo_woman);
         if(!TextUtils.isEmpty(item.oppositePhotoUrl)) {
-            Picasso.with(mContext).load(item.oppositePhotoUrl)
-                    .error(R.drawable.ic_default_photo_woman)
-                    .placeholder(R.drawable.ic_default_photo_woman)
-                    .into(holder.civAnchorPhoto);
+//            Picasso.with(mContext).load(item.oppositePhotoUrl)
+//                    .error(R.drawable.ic_default_photo_woman)
+//                    .placeholder(R.drawable.ic_default_photo_woman)
+//                    .into(holder.civAnchorPhoto);
+            PicassoLoadUtil.loadUrl(holder.civAnchorPhoto,item.oppositePhotoUrl,R.drawable.ic_default_photo_woman);
         }
 
         holder.civAnchorPhoto.setOnClickListener(new View.OnClickListener() {

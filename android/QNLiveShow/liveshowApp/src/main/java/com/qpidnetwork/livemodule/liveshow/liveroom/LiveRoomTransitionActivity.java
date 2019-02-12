@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -28,7 +28,6 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.framework.base.BaseActionBarFragmentActivity;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 import com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 import com.qpidnetwork.livemodule.httprequest.OnAcceptInstanceInviteCallback;
@@ -36,33 +35,37 @@ import com.qpidnetwork.livemodule.httprequest.OnGetPromoAnchorListCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetShowRoomInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.RequestJniLiveShow;
-import com.qpidnetwork.livemodule.httprequest.item.AnchorLevelType;
 import com.qpidnetwork.livemodule.httprequest.item.HotListItem;
+import com.qpidnetwork.livemodule.httprequest.item.HttpAuthorityItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
 import com.qpidnetwork.livemodule.httprequest.item.IntToEnumUtils;
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.ProgramInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.UserInfoItem;
 import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMInviteErrItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
+import com.qpidnetwork.livemodule.im.listener.IMInviteReplyItem;
 import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.liveshow.anchor.AnchorProfileActivity;
-import com.qpidnetwork.livemodule.liveshow.bean.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
+import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
+import com.qpidnetwork.livemodule.liveshow.model.NoMoneyParamsBean;
 import com.qpidnetwork.livemodule.liveshow.personal.book.BookPrivateActivity;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
 import com.qpidnetwork.qnbridgemodule.sysPermissions.manager.PermissionManager;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -90,7 +93,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * 是否有系统权限上传视频
      */
     public static final String KEY_HAS_PERMISSION = "KEY_HAS_PERMISSION";
-    public static final String LIVEROOM_ROOMINFO_ITEM = "roomInfo";
+    public static final String LIVEROOM_ROOMINFO_ID = "roomId";
+    public static final String LIVEROOM_InviterErr_ITEM = "imInviteErrItem";
     private static final String TRANSITION_OPERATETYPE = "operateType";
     private static final String TRANSITION_ERRTYPE = "errType";
     private static final String TRANSITION_ANCHOR_ID = "anchorId";
@@ -118,6 +122,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     private Button btnViewHot;
     private Button btnAddCredit;
     private Button btnViewProfile;
+    private Button btnChat;
+    private Button btnSendMail;
     //推荐
     private LinearLayout llRecommand;
     private TextView tvRecommandName1;
@@ -153,6 +159,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     private boolean isCanShowRecommand = false; //用于解决获取推荐列表异步与用户操作冲突问题
     private boolean isBackgroudInRoomOut = false;       //记录是否后台进入直播间超时退出直播间错误
     private boolean isHasPermission = true;     //是否有上传视频权限（一般直播间不用上传视频，默认为true。私密直播询问权限后，再改变这个值）
+    private IMInviteErrItem mInviteErrItem;     //主播权限
 
     //Manager
     private IMManager mIMManager;
@@ -224,8 +231,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @return
      */
     public static final Intent getProgramShowIntent(Context context, CategoryType type,
-                                                     String anchorId, String anchorName,
-                                                     String anchorPhotoUrl, String liveshowid){
+                                                    String anchorId, String anchorName,
+                                                    String anchorPhotoUrl, String liveshowid){
         Intent intent = new Intent(context, LiveRoomTransitionActivity.class);
         intent.putExtra(TRANSITION_OPERATETYPE, type.ordinal());
         intent.putExtra(TRANSITION_ANCHOR_ID, anchorId);
@@ -290,6 +297,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         btnViewHot = (Button) findViewById(R.id.btnViewHot);
         btnAddCredit = (Button) findViewById(R.id.btnAddCredit);
         btnViewProfile = (Button) findViewById(R.id.btnViewProfile);
+        btnChat = (Button) findViewById(R.id.btnChat);
+        btnSendMail = (Button) findViewById(R.id.btnSendMail);
 
         //推荐
         llRecommand = (LinearLayout) findViewById(R.id.llRecommand);
@@ -327,6 +336,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         btnViewHot.setOnClickListener(this);
         btnAddCredit.setOnClickListener(this);
         btnViewProfile.setOnClickListener(this);
+        btnChat.setOnClickListener(this);
+        btnSendMail.setOnClickListener(this);
         civRecommand1.setOnClickListener(this);
         civRecommand2.setOnClickListener(this);
     }
@@ -365,11 +376,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         }
 
         if(!TextUtils.isEmpty(mAnchorPhotoUrl)) {
-            Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
-                    .placeholder(R.drawable.ic_default_photo_woman)
-                    .error(R.drawable.ic_default_photo_woman)
-                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                    .into(civPhoto);
+//            Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
+//                    .placeholder(R.drawable.ic_default_photo_woman)
+//                    .error(R.drawable.ic_default_photo_woman)
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                    .into(civPhoto);
+            PicassoLoadUtil.loadUrlNoMCache(civPhoto,mAnchorPhotoUrl,R.drawable.ic_default_photo_woman);
         }
 
         if(!TextUtils.isEmpty(mRoomPhotoUrl)){
@@ -400,7 +412,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 
         if(mCategoryType != null) {
             //启动本地超时逻辑
-           start();
+            start();
         }else{
             finish();
         }
@@ -422,7 +434,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             if(isBackgroudInRoomOut){
                 startActivity(LiveRoomNormalErrorActivity.getIntent(this,
                         LiveRoomNormalErrorActivity.PageErrorType.PAGE_ERROR_BACKGROUD_OVERTIME, "",
-                        mAnchorId, mAnchorName, mAnchorPhotoUrl,mRoomPhotoUrl, false));
+                        mAnchorId, mAnchorName, mAnchorPhotoUrl,mRoomPhotoUrl, false, null)
+                );
                 finish();
             }else{
                 if(mIMRoomInItem != null && !mIMRoomInItem.needWait && mIMRoomInItem.leftSeconds == 0){
@@ -463,19 +476,19 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                     CategoryType.Audience_Invite_Enter_Room, mAnchorId,
                     mAnchorName, mAnchorPhotoUrl, "", null));
             //GA统计
-            if(mAnchorInfo != null && mAnchorInfo.anchorInfo != null && mAnchorInfo.anchorInfo.anchorType != AnchorLevelType.Unknown){
-                AnchorLevelType levelType = mAnchorInfo.anchorInfo.anchorType;
-                if(levelType == AnchorLevelType.gold){
+//            if(mAnchorInfo != null && mAnchorInfo.anchorInfo != null && mAnchorInfo.anchorInfo.anchorType != AnchorLevelType.Unknown){
+//                AnchorLevelType levelType = mAnchorInfo.anchorInfo.anchorType;
+//                if(levelType == AnchorLevelType.gold){
                     //进入高级私密直播间
                     onAnalyticsEvent(getResources().getString(R.string.Live_Transition_Category),
                             getResources().getString(R.string.Live_Transition_Action_StartPrivateBroadcast),
                             getResources().getString(R.string.Live_Transition_Label_StartPrivateBroadcast));
-                }else{
-                    onAnalyticsEvent(getResources().getString(R.string.Live_Transition_Category),
-                            getResources().getString(R.string.Live_Transition_Action_StartPrivateBroadcast),
-                            getResources().getString(R.string.Live_Transition_Label_StartPrivateBroadcast));
-                }
-            }
+//                }else{
+//                    onAnalyticsEvent(getResources().getString(R.string.Live_Transition_Category),
+//                            getResources().getString(R.string.Live_Transition_Action_StartPrivateBroadcast),
+//                            getResources().getString(R.string.Live_Transition_Label_StartPrivateBroadcast));
+//                }
+//            }
             finish();
         } else if (i == R.id.btnBook) {
             startActivity(BookPrivateActivity.getIntent(mContext, mAnchorId, mAnchorName));
@@ -487,7 +500,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             finish();
         } else if (i == R.id.btnAddCredit) {
             mEnterAddCredit = true;
-            LiveService.getInstance().onAddCreditClick(new NoMoneyParamsBean());
+            LiveModule.getInstance().onAddCreditClick(mContext, new NoMoneyParamsBean());
             //GA统计点击充值
             onAnalyticsEvent(getResources().getString(R.string.Live_Global_Category),
                     getResources().getString(R.string.Live_Global_Action_AddCredit),
@@ -501,7 +514,13 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                         false,
                         AnchorProfileActivity.TagType.Album);
             }
-        } else if(i == R.id.civRecommand1 || i == R.id.civRecommand2
+        } else if (i == R.id.btnChat) {
+            String chatUrl = URL2ActivityManager.createLiveChatActivityUrl(mAnchorId, mAnchorName, mAnchorPhotoUrl);
+            URL2ActivityManager.getInstance().URL2Activity(mContext, chatUrl);
+        } else if (i == R.id.btnSendMail) {
+            String sendMailUrl = URL2ActivityManager.createSendMailActivityUrl(mAnchorId);
+            URL2ActivityManager.getInstance().URL2Activity(mContext, sendMailUrl);
+        }else if(i == R.id.civRecommand1 || i == R.id.civRecommand2
                 || i == R.id.tvRecommandName1 || i == R.id.tvRecommandName2){
             String anchorId = (String) v.getTag();
             if (!TextUtils.isEmpty(anchorId)) {
@@ -791,7 +810,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @param replyType
      * @param roomId
      */
-    private void onInviteReplyHandler(IMClientListener.InviteReplyType replyType, String roomId, String message){
+    private void onInviteReplyHandler(IMClientListener.InviteReplyType replyType, String roomId, String message, IMInviteErrItem inviteErrItem){
+        Log.i("Jagger" , "直播过渡页 onInviteReplyHandler:" + replyType.name() + ",message:" + message + ",book:" + (inviteErrItem != null?"null":inviteErrItem.priv.isHasBookingAuth));
         //重置邀请ID，清除邀请状态
         mInvatationId = "";
         //取消定时显示按钮
@@ -799,7 +819,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 
         switch (replyType){
             case Defined: {
-                showAudienceInviteInvalidError(message);
+                showAudienceInviteInvalidError(message, inviteErrItem);
             }break;
             case Accepted: {
                 startRoomIn(roomId);
@@ -821,47 +841,26 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     }
 
     @Override
-    public void OnSendImmediatePrivateInvite(int reqId, final boolean success, final IMClientListener.LCC_ERR_TYPE errType, final String errMsg, final String invitationId, int timeout, final String roomId) {
-        if(!isOverTime && mCategoryType == CategoryType.Audience_Invite_Enter_Room){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(success){
-                        //进入直播间
-                        if(!TextUtils.isEmpty(roomId)) {
-                            //表示观众已在主播直播间，不需要等邀请返回
-                            startRoomIn(roomId);
-                        }else{
-                            //发送邀请成功，需要等待主播响应
-                            mInvatationId = invitationId;
-                            //显示waiting界面,等待主播通知
-                            showWaitForAnchorStartLive();
-                            //启动显示可取消按钮
-                            sendEmptyUiMessageDelayed(IMMEDIATE_INVITE_CANCELABLE, INVITE_CANCELABLE_TIMESTAMP);
-                        }
-                    }else{
-                        onIMRequestFaiHandler(errType, errMsg);
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
     public void OnCancelImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String roomId) {
 
     }
 
     @Override
-    public void OnRecvInviteReply(String inviteId, final IMClientListener.InviteReplyType replyType, final String roomId, LiveRoomType roomType, String anchorId, String nickName, String avatarImg, final String message) {
-        if(!isOverTime && !TextUtils.isEmpty(inviteId) && inviteId.equals(mInvatationId)) {
-            //添加防守，一个邀请仅处理一次通知（多次通知后面通知无效）
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    onInviteReplyHandler(replyType, roomId, message);
-                }
-            });
+    public void OnRecvInviteReply(final IMInviteReplyItem replyItem) {
+        if(replyItem != null){
+            final IMInviteErrItem inviteErrItem = new IMInviteErrItem();
+            inviteErrItem.status = replyItem.status;
+            inviteErrItem.priv = replyItem.priv;
+
+            if(!isOverTime && !TextUtils.isEmpty(replyItem.inviteId) && replyItem.inviteId.equals(mInvatationId)) {
+                //添加防守，一个邀请仅处理一次通知（多次通知后面通知无效）
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onInviteReplyHandler(replyItem.replyType, replyItem.roomId, replyItem.message, inviteErrItem);
+                    }
+                });
+            }
         }
     }
 
@@ -889,7 +888,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @param roomInfo
      */
     public void onRoomInCallback(int reqId, final boolean success,
-                                 final IMClientListener.LCC_ERR_TYPE errType, final String errMsg, final IMRoomInItem roomInfo){
+                                 final IMClientListener.LCC_ERR_TYPE errType, final String errMsg, final IMRoomInItem roomInfo,final IMInviteErrItem inviteErrItem){
         Log.d(TAG,"onRoomInCallback-reqId:"+reqId+" success:"+success+" errType:"+errType
                 +" errMsg:"+errMsg+" roomInfo:"+roomInfo+" isOverTime:"+isOverTime);
         if(!isOverTime){
@@ -901,6 +900,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                         setClosable(false);
                         //进入房间成功
                         mIMRoomInItem = roomInfo;
+                        mInviteErrItem = inviteErrItem;
                         //是否需要等待开播通知
                         if(!roomInfo.needWait){
                             //不需要等待，进入开播倒数进入逻辑
@@ -911,8 +911,17 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                             showWaitForAnchorStartLive();
                         }
                     }else{
+                        Log.i("Jagger" , "直播过渡页 onRoomInCallback:"
+                                + (inviteErrItem == null?"inviteErrItem null":("priv:"
+                                + (inviteErrItem.priv == null?"inviteErrItem.priv null":("Book:"
+                                + inviteErrItem.priv.isHasBookingAuth
+                                + ",OneOnOne:"
+                                + inviteErrItem.priv.isHasOneOnOneAuth
+//                                + ",chat:"
+//                                + inviteErrItem.status.name()
+                        )))));
                         //进入房间失败，统一处理
-                        onIMRequestFaiHandler(errType, errMsg);
+                        onIMRequestFaiHandler(errType, errMsg, inviteErrItem);
                     }
                 }
             });
@@ -1026,7 +1035,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      */
     private void doStartActivity(Intent intent){
         if (null != intent) {
-            intent.putExtra(LIVEROOM_ROOMINFO_ITEM, mIMRoomInItem);
+            intent.putExtra(LIVEROOM_ROOMINFO_ID, mIMRoomInItem.roomId);    //只传入房间ID为了解决:BUG#14463 add by Jagger 2019-1-17
+            intent.putExtra(LIVEROOM_InviterErr_ITEM, mInviteErrItem);
             intent.putExtra(LIVEROOM_ROOMINFO_ROOMPHOTOURL, mRoomPhotoUrl);
             intent.putExtra(KEY_HAS_PERMISSION, isHasPermission);
             startActivity(intent);
@@ -1066,7 +1076,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
             }else if(mIMRoomInItem.roomType == IMRoomInItem.IMLiveRoomType.AdvancedPrivateRoom
                     || mIMRoomInItem.roomType == IMRoomInItem.IMLiveRoomType.NormalPrivateRoom){
 //                intent = new Intent(this, AdvancePrivateLiveRoomActivity.class);
-                Log.i("Jagger" , "LiveRoom enterLiveRoom checkPrivateRoomPermissions");
+//                Log.i("Jagger" , "LiveRoom enterLiveRoom checkPrivateRoomPermissions");
                 checkPrivateRoomPermissions();
                 return;
             }
@@ -1089,7 +1099,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     private void processAnchorInvite(String invitationId, boolean isComfirmed){
         LiveRequestOperator.getInstance().AcceptInstanceInvite(invitationId, isComfirmed, new OnAcceptInstanceInviteCallback() {
             @Override
-            public void onAcceptInstanceInvite(final boolean isSuccess, final int errCode, final String errMsg, final String roomId, int roomType) {
+            public void onAcceptInstanceInvite(final boolean isSuccess,final int errCode,final String errMsg,final String roomId, int roomType,final HttpAuthorityItem priv) {
                 if(!isOverTime){
                     //未超时停止响应其他
                     runOnUiThread(new Runnable() {
@@ -1098,7 +1108,13 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                             if(isSuccess){
                                 startRoomIn(roomId);
                             }else{
-                                showAcceptAnchorInvitationError(errCode, errMsg);
+                                IMAuthorityItem imAuthorityItem = new IMAuthorityItem();
+                                imAuthorityItem.HttpAuthorityItem2IMAuthorityItem(priv);
+
+                                IMInviteErrItem inviteErrItem = new IMInviteErrItem();
+                                inviteErrItem.priv = imAuthorityItem;
+
+                                showAcceptAnchorInvitationError(errCode, errMsg, inviteErrItem);
                             }
                         }
                     });
@@ -1112,21 +1128,24 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @param errCode
      * @param description
      */
-    private void showAcceptAnchorInvitationError(int errCode, String description){
+    private void showAcceptAnchorInvitationError(int errCode, String description, IMInviteErrItem inviteErrItem){
         //清除页面180秒超时设置
         removeUiMessages(OVERTIME_EVNET);
 
         pb_waiting.setVisibility(View.GONE);
         setClosable(true);
         HttpLccErrType httpError = IntToEnumUtils.intToHttpErrorType(errCode);
+
+        Log.i("Jagger" , "直播过渡页 showAcceptAnchorInvitationError:" + httpError.name() + ",inviteErrItem OneOnOne:" + inviteErrItem.priv.isHasOneOnOneAuth + ",book:" + inviteErrItem.priv.isHasBookingAuth);
+
         switch (httpError){
             case HTTP_LCC_ERR_NO_CREDIT:{
                 //信用点不足
-                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT, description);
+                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT, description, inviteErrItem);
             }break;
             case HTTP_LCC_ERR_ANCHOR_OFFLIVE:{
                 //主播不在线
-                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_ANCHOR_OFFLINE, description);
+                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_ANCHOR_OFFLINE, description, inviteErrItem);
             }break;
             case HTTP_LCC_ERR_CONNECTFAIL:{
                 //网络异常
@@ -1137,6 +1156,10 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                 //出错公共逻辑
                 onAllErrorCatch();
             }break;
+            case HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY:
+                //没有私密权限 -- 无按钮
+                tvDesc.setText(description);
+                break;
             default:{
                 //其他异常
                 if(!TextUtils.isEmpty(description)){
@@ -1144,8 +1167,10 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                 }else{
                     tvDesc.setText(getResources().getString(R.string.liveroom_transition_unknown_error_default_tips));
                 }
-                setAndShowStartPrivateInviteButton(btnStartPrivate);
-                showBookButton();
+
+                setAndShowStartPrivateInviteButton(btnStartPrivate, inviteErrItem);
+
+                showBookButton(inviteErrItem);
 
                 //出错公共逻辑
                 onAllErrorCatch();
@@ -1165,12 +1190,13 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     private void startProgramRoomIn(String liveShowId){
         LiveRequestOperator.getInstance().GetShowRoomInfo(liveShowId, new OnGetShowRoomInfoCallback() {
             @Override
-            public void onGetShowRoomInfo(final boolean isSuccess, final int errCode, final String errMsg, final ProgramInfoItem item, final String roomId) {
+            public void onGetShowRoomInfo(final boolean isSuccess, final int errCode, final String errMsg, final ProgramInfoItem item, final String roomId,final HttpAuthorityItem privItem) {
                 if(!isOverTime){
                     //未超时停止响应其他
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.i("Jagger" , "过渡页 startProgramRoomIn isSuccess:" + isSuccess + ", privItem book:" + (privItem == null?"null":privItem.isHasBookingAuth));
                             if(isSuccess && (item != null) && !TextUtils.isEmpty(roomId)){
                                 mRoomId = roomId;
                                 if(item.leftSecToStart > 0){
@@ -1180,7 +1206,13 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                     startRoomIn(roomId);
                                 }
                             }else{
-                                showProgramEnterFailed(errCode, errMsg);
+                                IMAuthorityItem imAuthorityItem = new IMAuthorityItem();
+                                imAuthorityItem.HttpAuthorityItem2IMAuthorityItem(privItem);
+
+                                IMInviteErrItem inviteErrItem = new IMInviteErrItem();
+                                inviteErrItem.priv = imAuthorityItem;
+
+                                showProgramEnterFailed(errCode, errMsg, inviteErrItem);
                             }
                         }
                     });
@@ -1249,7 +1281,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @param errCode
      * @param description
      */
-    private void showProgramEnterFailed(int errCode, String description){
+    private void showProgramEnterFailed(int errCode, String description, IMInviteErrItem inviteErrItem){
         //清除页面180秒超时设置
         removeUiMessages(OVERTIME_EVNET);
 
@@ -1259,11 +1291,11 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         switch (httpError){
             case HTTP_LCC_ERR_NO_CREDIT:{
                 //信用点不足
-                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT, description);
+                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_NO_CREDIT, description, inviteErrItem);
             }break;
             case HTTP_LCC_ERR_ANCHOR_OFFLIVE:{
                 //主播不在线
-                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_ANCHOR_OFFLINE, description);
+                onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE.LCC_ERR_ANCHOR_OFFLINE, description, inviteErrItem);
             }break;
             case HTTP_LCC_ERR_CONNECTFAIL:{
                 //网络异常
@@ -1282,7 +1314,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                     tvDesc.setText(getResources().getString(R.string.liveroom_transition_unknown_error_default_tips));
                 }
 //                setAndShowStartPrivateInviteButton(btnStartPrivate);
-                showBookButton();
+                showBookButton(inviteErrItem);
 
                 //出错公共处理
                 onAllErrorCatch();
@@ -1300,7 +1332,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      */
     private void showInviteOrRoomInRequesting(boolean descEmpty){
         if(descEmpty){
-           tvDesc.setText("");
+            tvDesc.setText("");
         }
         pb_waiting.setVisibility(View.VISIBLE);
     }
@@ -1318,7 +1350,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                 cancelInvite(mInvatationId);
                 //清除无效invitationId
                 mInvatationId = "";
-                btnBook.setVisibility(View.VISIBLE);
+                //del by Jagger 2018-12-5 本地180秒超时, 无按钮
+//                showBookButton();
             }else if(isWaitingEnterRoom()){
                 //退出直播间
                 mIMManager.RoomOut(mIMRoomInItem.roomId);
@@ -1356,31 +1389,37 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * @param errType
      * @param errMsg 服务器返回错误信息
      */
-    private void onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE errType, String errMsg){
+    private void onIMRequestFaiHandler(IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMInviteErrItem inviteErrItem){
+        Log.i("Jagger" , "直播过渡页 onIMRequestFaiHandler:" + errType.name() + ":" + errMsg);
+
         //清除页面180秒超时设置
         removeUiMessages(OVERTIME_EVNET);
         //异常处理
         pb_waiting.setVisibility(View.GONE);
         setClosable(true);
-        String decription = "";
+        String description = errMsg;
         switch (errType){
             case LCC_ERR_ANCHOR_OFFLINE:{
                 //立即私密邀请，主播不在线
 //                decription = getResources().getString(R.string.liveroom_transition_anchor_offline);
-                decription = errMsg;
-                showBookButton();
+                showBookButton(inviteErrItem);
+
             }break;
             case LCC_ERR_NO_CREDIT:{
                 //信用点不足
 //                decription = getResources().getString(R.string.live_common_noenough_money_tips);
-                decription = errMsg;
                 btnAddCredit.setVisibility(View.VISIBLE);
             }break;
             case LCC_ERR_ANCHOR_PLAYING:{
                 //主播正在私密直播中
 //                decription = getResources().getString(R.string.liveroom_transition_anchor_private_broadcast_exception);
-                decription = errMsg;
-                btnYes.setVisibility(View.VISIBLE);
+
+                //Yes按钮
+                if(inviteErrItem != null && inviteErrItem.priv.isHasOneOnOneAuth){
+                    btnYes.setVisibility(View.VISIBLE);
+                }else {
+                    btnYes.setVisibility(View.GONE);
+                }
 
                 //获取推荐列表刷新
                 getRecommandList();
@@ -1396,16 +1435,14 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 ////                    decription = getResources().getString(R.string.liveroom_transition_enterroom_network_error);
 //                    decription = getResources().getString(R.string.liveroom_transition_audience_invite_network_error);
 //                }
-                decription = errMsg;
                 btnRetry.setVisibility(View.VISIBLE);
             }break;
 
             case LCC_ERR_AUDIENCE_LIMIT:{
                 //进入直播间，人数过多错误
 //                decription = getResources().getString(R.string.liveroom_transition_enterroom_full);
-                decription = errMsg;
 //                setAndShowStartPrivateInviteButton(btnStartPrivate);
-                showBookButton();
+                showBookButton(inviteErrItem);
             }break;
 
 //            case LCC_ERR_ROOM_CLOSE:
@@ -1420,20 +1457,29 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 //                getRecommandList();
 //            }break;
 
+            case LCC_ERR_PRIVTE_INVITE_AUTHORITY:
+                // 主播无立即私密邀请权限(17002)
+
+                if(inviteErrItem.status != null && inviteErrItem.status == IMClientListener.IMChatOnlineStatus.online){
+                    showChatButton();
+                }else {
+                    showSendMailButton();
+                }
+                break;
+
             default:{
                 //同一普通错误处理，依赖服务器返回错误提示
                 if(TextUtils.isEmpty(errMsg)) {
-                    decription = getResources().getString(R.string.liveroom_transition_unknown_error_default_tips);
-                }else{
-                    decription = errMsg;
+                    description = getResources().getString(R.string.liveroom_transition_unknown_error_default_tips);
                 }
 //                if(!isInviting()){
 //                    setAndShowStartPrivateInviteButton(btnStartPrivate);
 //                }
-                showBookButton();
+                showBookButton(inviteErrItem);
+
             }break;
         }
-        tvDesc.setText(decription);
+        tvDesc.setText(description);
         //调用出错公共处理
         onAllErrorCatch();
     }
@@ -1442,9 +1488,11 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * 邀请已决绝／已超时／已完成等邀请处于无效状态错误页
      * @param message 主播留言
      */
-    private void showAudienceInviteInvalidError(String message){
+    private void showAudienceInviteInvalidError(String message,IMInviteErrItem inviteErrItem){
+        Log.i("Jagger" , "直播过渡页 showAudienceInviteInvalidError:" + message + ",book:" + (inviteErrItem != null?"null":inviteErrItem.priv.isHasBookingAuth));
+
         pb_waiting.setVisibility(View.GONE);
-        showBookButton();
+        showBookButton(inviteErrItem);
         setClosable(true);
         if(TextUtils.isEmpty(message)) {
             //无留言
@@ -1461,10 +1509,76 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     /**
      * 兼容主播id为空时错误显示
      */
-    private void showBookButton(){
-        if(!TextUtils.isEmpty(mAnchorId)){
+//    private void showBookButton(){
+//        //有BOOK权限
+////        if(mIMRoomInItem!= null && mIMRoomInItem.priv != null && mIMRoomInItem.priv.isHasBookingAuth){
+////            //ID不为空
+////            if(!TextUtils.isEmpty(mAnchorId)){
+////                btnBook.setVisibility(View.VISIBLE);
+////            }
+////        }
+//
+//        //是否有BOOK权限
+//        boolean isBookShowAuth = true;
+//
+//        if(mIMRoomInItem == null){
+//            //无直播间信息
+//            isBookShowAuth = true;
+//        }else{
+//            if(mAuthorityItem == null){
+//                //无直播间权限信息
+//                isBookShowAuth = true;
+//            }else{
+//                if(!mAuthorityItem.isHasBookingAuth){
+//                    //无Book权限
+//                    isBookShowAuth = false;
+//                }
+//            }
+//        }
+//
+//        //ID不为空
+//        if(!TextUtils.isEmpty(mAnchorId) && isBookShowAuth){
+//            btnBook.setVisibility(View.VISIBLE);
+//        }
+//    }
+
+    /**
+     * 兼容主播id为空时错误显示
+     */
+    private void showBookButton(IMInviteErrItem inviteErrItem){
+        //有BOOK权限
+//        if(mIMRoomInItem!= null && mIMRoomInItem.priv != null && mIMRoomInItem.priv.isHasBookingAuth){
+//            //ID不为空
+//            if(!TextUtils.isEmpty(mAnchorId)){
+//                btnBook.setVisibility(View.VISIBLE);
+//            }
+//        }
+
+        //是否有BOOK权限
+        boolean isBookShowAuth = true;
+        if(inviteErrItem.priv != null && !inviteErrItem.priv.isHasBookingAuth){
+            //无Book权限
+            isBookShowAuth = false;
+        }
+
+        //ID不为空
+        if(!TextUtils.isEmpty(mAnchorId) && isBookShowAuth){
             btnBook.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 显示Chat按钮
+     */
+    private void showChatButton(){
+        btnChat.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 显示SendMail按钮
+     */
+    private void showSendMailButton(){
+        btnSendMail.setVisibility(View.VISIBLE);
     }
 
     /*********************************** 公共错误处理  ***********************************************/
@@ -1487,11 +1601,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                             civRecommand1.setImageResource(R.drawable.ic_default_photo_woman);
                             civRecommand2.setImageResource(R.drawable.ic_default_photo_woman);
                             if(!TextUtils.isEmpty(anchorList[0].photoUrl)){
-                                Picasso.with(getApplicationContext()).load(anchorList[0].photoUrl)
-                                        .placeholder(R.drawable.ic_default_photo_woman)
-                                        .error(R.drawable.ic_default_photo_woman)
-                                        .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                        .into(civRecommand1);
+//                                Picasso.with(getApplicationContext()).load(anchorList[0].photoUrl)
+//                                        .placeholder(R.drawable.ic_default_photo_woman)
+//                                        .error(R.drawable.ic_default_photo_woman)
+//                                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                        .into(civRecommand1);
+                                PicassoLoadUtil.loadUrlNoMCache(civRecommand1,anchorList[0].photoUrl,R.drawable.ic_default_photo_woman);
                             }
                             civRecommand1.setTag(anchorList[0].userId);
                             tvRecommandName1.setTag(anchorList[0].userId);
@@ -1501,11 +1616,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                 tvRecommandName2.setTag(anchorList[1].userId);
                                 llRecommand2.setVisibility(View.VISIBLE);
                                 if(!TextUtils.isEmpty(anchorList[1].photoUrl)){
-                                    Picasso.with(getApplicationContext()).load(anchorList[1].photoUrl)
-                                            .placeholder(R.drawable.ic_default_photo_woman)
-                                            .error(R.drawable.ic_default_photo_woman)
-                                            .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                            .into(civRecommand2);
+//                                    Picasso.with(getApplicationContext()).load(anchorList[1].photoUrl)
+//                                            .placeholder(R.drawable.ic_default_photo_woman)
+//                                            .error(R.drawable.ic_default_photo_woman)
+//                                            .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                            .into(civRecommand2);
+                                    PicassoLoadUtil.loadUrlNoMCache(civRecommand2,anchorList[1].photoUrl,R.drawable.ic_default_photo_woman);
                                 }
                                 tvRecommandName2.setText(anchorList[1].nickName);
                             }else{
@@ -1597,9 +1713,13 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     }
 
     @Override
-    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo) {
+    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem) {
         Log.d(TAG,"OnRoomIn-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+errMsg+" roomInfo:"+roomInfo);
-        onRoomInCallback(reqId, success, errType, errMsg, roomInfo);
+
+        IMInviteErrItem inviteErrItem = new IMInviteErrItem();
+        inviteErrItem.priv = authorityItem;
+
+        onRoomInCallback(reqId, success, errType, errMsg, roomInfo, inviteErrItem);
     }
 
     @Override
@@ -1625,7 +1745,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     }
 
     @Override
-    public void OnGetInviteInfo(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, final IMInviteListItem inviteItem) {
+    public void OnGetInviteInfo(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, final IMInviteListItem inviteItem,final IMAuthorityItem priv) {
+        Log.i("Jagger" , "直播过渡页 OnGetInviteInfo:" + errType.name() + ",errMsg:" + errMsg + ",book:" + (priv != null?"null":priv.isHasBookingAuth));
         if(!isOverTime && success){
             runOnUiThread(new Runnable() {
                 @Override
@@ -1650,7 +1771,10 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                             //清除无效邀请id
                             mInvatationId = "";
                             //邀请无效，主播拒绝等统一无回复错误
-                            showAudienceInviteInvalidError("");
+                            IMInviteErrItem inviteErrItem = new IMInviteErrItem();
+                            inviteErrItem.priv = priv;
+
+                            showAudienceInviteInvalidError("", inviteErrItem);
                         }break;
                     }
                 }
@@ -1658,6 +1782,44 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
         }
     }
 
+    /**
+     *
+     * @param reqId
+     * @param success
+     * @param errType
+     * @param errMsg
+     * @param invitationId
+     * @param timeout
+     * @param roomId
+     * @param errItem 2018-12-10 add by Jagger
+     */
+    @Override
+    public void OnSendImmediatePrivateInvite(int reqId,final boolean success,final IMClientListener.LCC_ERR_TYPE errType,final String errMsg,
+                                             final String invitationId, int timeout,final  String roomId,final IMInviteErrItem errItem) {
+        if(!isOverTime && mCategoryType == CategoryType.Audience_Invite_Enter_Room){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(success){
+                        //进入直播间
+                        if(!TextUtils.isEmpty(roomId)) {
+                            //表示观众已在主播直播间，不需要等邀请返回
+                            startRoomIn(roomId);
+                        }else{
+                            //发送邀请成功，需要等待主播响应
+                            mInvatationId = invitationId;
+                            //显示waiting界面,等待主播通知
+                            showWaitForAnchorStartLive();
+                            //启动显示可取消按钮
+                            sendEmptyUiMessageDelayed(IMMEDIATE_INVITE_CANCELABLE, INVITE_CANCELABLE_TIMESTAMP);
+                        }
+                    }else{
+                        onIMRequestFaiHandler(errType, errMsg, errItem);
+                    }
+                }
+            });
+        }
+    }
 
     /*********************************  刷新主播信息start  ***********************************************/
 
@@ -1679,11 +1841,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                                     //重新加载头像
                                     mAnchorPhotoUrl = mAnchorInfo.photoUrl;
                                     if(civPhoto != null) {
-                                        Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
-                                                .placeholder(R.drawable.ic_default_photo_woman)
-                                                .error(R.drawable.ic_default_photo_woman)
-                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                                .into(civPhoto);
+//                                        Picasso.with(getApplicationContext()).load(mAnchorPhotoUrl)
+//                                                .placeholder(R.drawable.ic_default_photo_woman)
+//                                                .error(R.drawable.ic_default_photo_woman)
+//                                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+//                                                .into(civPhoto);
+                                        PicassoLoadUtil.loadUrlNoMCache(civPhoto,mAnchorPhotoUrl,R.drawable.ic_default_photo_woman);
                                     }
                                 }
                                 if(!TextUtils.isEmpty(mAnchorInfo.nickName) && TextUtils.isEmpty(mAnchorName)){
@@ -1704,14 +1867,12 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
      * 根据主播状态设置进入私密直播邀请按钮设置
      * @param btnStart
      */
-    private void setAndShowStartPrivateInviteButton(ImageView btnStart){
-        if(mAnchorInfo != null && (mAnchorInfo.isAnchor)
-                && (mAnchorInfo.anchorInfo != null) && (mAnchorInfo.anchorInfo.anchorType != AnchorLevelType.Unknown)){
-            AnchorLevelType type = mAnchorInfo.anchorInfo.anchorType;
+    private void setAndShowStartPrivateInviteButton(ImageView btnStart, IMInviteErrItem inviteErrItem){
+        if(inviteErrItem != null && inviteErrItem.priv.isHasOneOnOneAuth){
             btnStart.setVisibility(View.VISIBLE);
 //            if(type == AnchorLevelType.gold){
-                //黄金会员
-                btnStart.setImageResource(R.drawable.button_start_private_broadcast);
+            //黄金会员
+            btnStart.setImageResource(R.drawable.button_start_private_broadcast);
 //                Drawable tempDrawable = btnStart.getDrawable();
 //                if((tempDrawable != null)
 //                        && (tempDrawable instanceof AnimationDrawable)){
@@ -1726,7 +1887,7 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     /*********************************  才艺推荐  ***********************************************/
     /**
      * 隐藏才艺推荐
-      */
+     */
     private void hideAndStopAnimation(){
         if(animationDrawableTalent != null && animationDrawableTalent.isRunning()){
             animationDrawableTalent.stop();
@@ -1745,8 +1906,17 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
     }
 
     /*********************************  直播间信息回调  ***********************************************/
+    /**
+     *
+     * @param roomId
+     * @param errType
+     * @param errMsg
+     * @param privItem  2018-12-5 add by Jagger
+     */
     @Override
-    public void OnRecvRoomCloseNotice(String roomId, final IMClientListener.LCC_ERR_TYPE errType, final String errMsg) {
+    public void OnRecvRoomCloseNotice(String roomId,final IMClientListener.LCC_ERR_TYPE errType,final String errMsg,final IMAuthorityItem privItem) {
+        Log.i("Jagger" , "OnRecvRoomCloseNotice:" + (privItem == null? "":privItem.isHasBookingAuth));
+
         //直播间未超时
         if(!isOverTime && mIMRoomInItem != null && !TextUtils.isEmpty(mIMRoomInItem.roomId) && roomId.equals(mIMRoomInItem.roomId)){
             runOnUiThread(new Runnable() {
@@ -1759,7 +1929,8 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
                             isShowRecommand = true;
                         }
                         startActivity(LiveRoomNormalErrorActivity.getIntent(mContext, PAGE_ERROR_LIEV_EDN, errMsg,
-                                mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,mRoomPhotoUrl, isShowRecommand));
+                                mIMRoomInItem.userId, mIMRoomInItem.nickName, mIMRoomInItem.photoUrl,mRoomPhotoUrl, isShowRecommand, privItem)
+                        );
                         finish();
                     }
                 }
@@ -1782,14 +1953,36 @@ public class  LiveRoomTransitionActivity extends BaseActionBarFragmentActivity i
 
     }
 
+    /**
+     *
+     * @param roomId
+     * @param leftSeconds
+     * @param err
+     * @param errMsg
+     * @param privItem 2018-12-5 add by Jagger
+     */
     @Override
-    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg) {
-
+    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem) {
+        Log.i("Jagger" , "OnRecvLeavingPublicRoomNotice:" + (privItem == null? "":privItem.isHasBookingAuth));
+//        if(mIMRoomInItem!= null ){
+//            mAuthorityItem = privItem;
+//        }
     }
 
+    /**
+     *
+     * @param roomId
+     * @param err
+     * @param errMsg
+     * @param credit
+     * @param privItem  2018-12-5 add by Jagger
+     */
     @Override
-    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg, double credit) {
-
+    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg, double credit, IMAuthorityItem privItem) {
+        Log.i("Jagger" , "OnRecvRoomKickoffNotice:" + (privItem == null? "":privItem.isHasBookingAuth));
+//        if(mIMRoomInItem!= null ){
+//            mAuthorityItem = privItem;
+//        }
     }
 
     @Override

@@ -45,6 +45,7 @@ public:
     void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type);
     void ReleaseVideoFrame(void* frame);
     void StartDropFrame();
+    void ClearVideoFrame();
     
 public:
     void SetDecoderVideoFormat(VIDEO_FORMATE_TYPE type);
@@ -57,7 +58,6 @@ private:
     bool CreateContext();
     void DestroyContext();
     bool DecodeVideoFrame(VideoFrame* videoFrame, VideoFrame* newVideoFrame);
-    void ReleaseBuffer(VideoFrame* videoFrame);
     
 	AVCodec *mCodec;
 	AVCodecContext *mContext;

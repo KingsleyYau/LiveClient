@@ -60,10 +60,11 @@
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/discover_top_message"
+                android:text="@string/Chat"
                 android:textSize="13sp"
                 android:textColor="@color/dicover_top_tab_txt_big"
                 android:layout_marginTop="4dp" />
+                <!--android:text="@string/discover_top_message"-->
         </LinearLayout>
 
         <!-- Mail -->

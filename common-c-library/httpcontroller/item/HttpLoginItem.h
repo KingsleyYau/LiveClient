@@ -53,6 +53,98 @@ public:
     };
     typedef list<SvrItem> SvrList;
     
+    class HttpUserSendMailPrivItem {
+    public:
+        bool Parse(const Json::Value& root) {
+            bool result = false;
+            /* isPriv */
+            if (root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV_ISPRIV].isNumeric()) {
+                isPriv = GetLSSendImgRiskType(root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV_ISPRIV].asInt());
+            }
+            /* maxImg */
+            if (root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_MAX_IMG].isNumeric()) {
+                maxImg = root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_MAX_IMG].asInt();
+            }
+            /* postStampMsg */
+            if (root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG].isString()) {
+                postStampMsg = root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG].asString();
+            }
+            /* coinMsg */
+            if (root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_COINMSG].isString()) {
+                coinMsg = root[LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_COINMSG].asString();
+            }
+            /* quickPostStampMsg */
+            if (root[LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG].isString()) {
+                quickPostStampMsg = root[LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG].asString();
+            }
+            /* quickCoinMsg */
+            if (root[LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_COINMSG].isString()) {
+                quickCoinMsg = root[LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_COINMSG].asString();
+            }
+            result = true;
+            return result;
+        }
+        
+        HttpUserSendMailPrivItem() {
+            maxImg = 0;
+            isPriv = LSSENDIMGRISKTYPE_NORMAL;
+            postStampMsg = "";
+            coinMsg = "";
+        }
+        
+        virtual ~HttpUserSendMailPrivItem() {
+            
+        }
+        /**
+         *  发送照片相关
+         *  isPriv              发送照片权限（0：正常，1：只能发免费，2：只能发付费，3：不能发照片）
+         *  maxImg              单封信件可发照片最大数
+         *  postStampMsg        邮票回复/发送照片提示
+         *  coinMsg             信用点回复/发送照片提示
+         *  quickPostStampMsg        邮票快速回复照片提示
+         *  quickCoinMsg             信用点快速回复照片提示
+         */
+        LSSendImgRiskType      isPriv;
+        int       maxImg;
+        string    postStampMsg;
+        string    coinMsg;
+        string    quickPostStampMsg;
+        string    quickCoinMsg;
+        
+    };
+    
+    class HttpMailPrivItem {
+    public:
+        bool Parse(const Json::Value& root) {
+            bool result = false;
+            /* userSendMailPriv */
+            if (root[LOGIN_MAILPRIV_USERSENDMAILPRIV].isNumeric()) {
+                userSendMailPriv = root[LOGIN_MAILPRIV_USERSENDMAILPRIV].asInt();
+            }
+            /* userSendMailImgPriv */
+            if (root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV].isObject()) {
+                userSendMailImgPriv.Parse(root[LOGIN_MAILPRIV_USERSENDMAILIMGPRIV]);
+            }
+            result = true;
+            return result;
+        }
+        
+        HttpMailPrivItem() {
+            userSendMailPriv = true;
+        }
+        
+        virtual ~HttpMailPrivItem() {
+            
+        }
+        /**
+         *  信件及意向信权限相关
+         *  userSendMailPriv       是否有权限发送信件
+         *  userSendMailImgPriv    发送照片相关
+         */
+        bool                         userSendMailPriv;
+        HttpUserSendMailPrivItem      userSendMailImgPriv;
+    };
+    
     void Parse(const Json::Value& root) {
         if( root.isObject() ) {
             /* userId */
@@ -63,6 +155,11 @@ public:
             /* token */
             if( root[LOGIN_TOKEN].isString() ) {
                 token = root[LOGIN_TOKEN].asString();
+            }
+            
+            /* sessionId */
+            if( root[LOGIN_SESSIONID].isString() ) {
+                sessionId = root[LOGIN_SESSIONID].asString();
             }
             
             /* nickName */
@@ -121,6 +218,31 @@ public:
                 qnMainAdId = root[LOGIN_QNMAINADID].asString();
             }
             
+            /* gaUid */
+            if( root[LOGIN_GAUID].isString() ) {
+                gaUid = root[LOGIN_GAUID].asString();
+            }
+            
+            /* isLiveChatRisk */
+            if(root[LOGIN_LIVECHAT].isNumeric()) {
+                isLiveChatRisk = root[LOGIN_LIVECHAT].asInt() == 1 ? true : false;
+            }
+            
+            /* isHangoutRisk */
+            if(root[LOGIN_HANGOUTPRIV].isNumeric()) {
+                isHangoutRisk = root[LOGIN_HANGOUTPRIV].asInt() == 1 ? true : false;
+            }
+            
+            /* liveChatInviteRiskType */
+            if(root[LOGIN_LIVECHAT_INVITE].isNumeric()) {
+                liveChatInviteRiskType = GetLSHttpliveChatInviteRiskType(root[LOGIN_LIVECHAT_INVITE].asInt());
+            }
+            
+            /* mailPriv */
+            if(root[LOGIN_MAILPRIV].isObject()) {
+                mailPriv.Parse(root[LOGIN_MAILPRIV]);
+            }
+            
         }
         
     }
@@ -128,6 +250,7 @@ public:
     HttpLoginItem() {
         userId = "";
         token = "";
+        sessionId = "";
         nickName = "";
         level = 0;
         experience = 0;
@@ -137,6 +260,10 @@ public:
         qnMainAdUrl = "";
         qnMainAdTitle = "";
         qnMainAdId = "";
+        gaUid = "";
+        isLiveChatRisk = false;
+        isHangoutRisk = false;
+        liveChatInviteRiskType = LSHTTP_LIVECHATINVITE_RISK_NOLIMIT;
     }
     
     virtual ~HttpLoginItem() {
@@ -146,6 +273,7 @@ public:
      * 登录成功结构体
      * userId			用户ID
      * token            直播系统不同服务器的统一验证身份标识
+     * sessionId        唯一身份标识用于登录LiveChat服务器
      * nickName         昵称
      * levenl			级别
      * experience		经验值
@@ -156,9 +284,19 @@ public:
      * qnMainAdUrl      QN主界面广告浮层的URL（可无，无则表示不弹广告）
      * qnMainAdTitle    QN主界面广告浮层的标题（可无）
      * qnMainAdId       QN主界面广告浮层的ID（可无，无则表示不弹广告）
+     * gaUid            Google Analytics UserID参数
+     * isLiveChatRisk       LiveChat详细风控标识（1：有风控，0：无，默认：0）
+     * isHangoutRisk        多人互动风控标识（1：有风控，0：无，默认：0）
+     * liveChatInviteRiskType   聊天邀请（LSHTTP_LIVECHATINVITE_RISK_NOLIMIT：不作任何限制 ，
+                                         LSHTTP_LIVECHATINVITE_RISK_LIMITSEND：限制发送信息，
+                                         LSHTTP_LIVECHATINVITE_RISK_LIMITREV：限制接受邀请，
+                                         LSHTTP_LIVECHATINVITE_RISK_LIMITALL：收发全部限制）
+     *
+     * mailPriv   信件及意向信权限相关
      */
     string userId;
     string token;
+    string sessionId;
     string nickName;
     int level;
     int experience;
@@ -169,6 +307,11 @@ public:
     string qnMainAdUrl;
     string qnMainAdTitle;
     string qnMainAdId;
+    string gaUid;
+    bool isLiveChatRisk;
+    bool isHangoutRisk;
+    LSHttpLiveChatInviteRiskType liveChatInviteRiskType;
+    HttpMailPrivItem mailPriv;
 };
 
 #endif /* LOGINITEM_H_ */

@@ -10,9 +10,10 @@ import android.text.TextUtils;
 
 import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.gift.NormalGiftManager;
 import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import org.xml.sax.XMLReader;
 
@@ -271,6 +272,11 @@ public class CustomerHtmlTagHandler implements Html.TagHandler {
                     Log.d(TAG,"getDrawable-Emoji-emojiUrl:"+emojiUrl);
                     if(!TextUtils.isEmpty(emojiUrl)){
                         drawable = getEmojiDrawable(emojiUrl);
+                    }
+
+                    if(drawable == null){
+                        drawable = this.mBuilder.getContext().getResources().getDrawable(R.drawable.ic_live_chat_emoji_default);
+                        drawable.setBounds(0, 0, this.mBuilder.getGiftImgWidth(),this.mBuilder.getGiftImgHeight());
                     }
                 }break;
                 case AnchorA:

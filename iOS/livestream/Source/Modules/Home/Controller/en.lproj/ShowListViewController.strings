@@ -1,0 +1,12 @@
+
+/* Class = "UILabel"; text = "No shows yet."; ObjectID = "uNc-Mu-MPy"; */
+"uNc-Mu-MPy.text" = "No shows yet.";
+
+"ADD_CREDITS_SUCCESS" = "Ticket has been successfully added to your account. Enjoy the show!";
+"ADD_CREDITS_MSG" = "You don't have enough credits. Please buy more credits and try again.";
+
+"Cancel" = "Cancel";
+
+"Add Credit" = "Add Credit";
+
+"ShowTopMsg" = "Show Calendar are the calendars of specially scheduled broadcasts arranged by broadcasters.";

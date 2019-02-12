@@ -34,12 +34,14 @@
 #define LOGIN_MODEL		        "model"
 #define LOGIN_MANUFACTURER		"manufacturer"
 #define LOGIN_REGIONID          "region_id"
+#define LOGIN_USERSIDTYPE       "user_sid_type"
 
 /**
  * 返回
  */
 #define LOGIN_USERID		    "userid"
 #define LOGIN_TOKEN             "token"
+#define LOGIN_SESSIONID         "sessionid"
 #define LOGIN_NICKNAME          "nickname"
 #define LOGIN_LEVEL 			"level"
 #define LOGIN_EXPERIENCE        "experience"
@@ -52,6 +54,19 @@
 #define LOGIN_QNMAINADURL       "qn_main_ad_url"
 #define LOGIN_QNMAINADTITLE     "qn_main_ad_title"
 #define LOGIN_QNMAINADID        "qn_main_ad_id"
+#define LOGIN_GAUID             "ga_uid"
+#define LOGIN_LIVECHAT          "livechat"
+#define LOGIN_HANGOUTPRIV           "hangoutPriv"
+#define LOGIN_LIVECHAT_INVITE   "livechat_invite"
+#define LOGIN_MAILPRIV          "mailPriv"
+#define LOGIN_MAILPRIV_USERSENDMAILPRIV  "userSendMailPriv"
+#define LOGIN_MAILPRIV_USERSENDMAILIMGPRIV  "userSendMailImgPriv"
+#define LOGIN_MAILPRIV_USERSENDMAILIMGPRIV_ISPRIV           "isPriv"
+#define LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_MAX_IMG          "max_img"
+#define LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG     "reply_postStampMsg"
+#define LOGIN_MAILPRIV_REPLY_USERSENDMAILIMGPRIV_COINMSG          "reply_coinMsg"
+#define LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_POSTSTAMPMSG     "quickreply_postStampMsg"
+#define LOGIN_MAILPRIV_QUICKREPLY_USERSENDMAILIMGPRIV_COINMSG          "quickreply_coinMsg"
 
 
 /* 2.2.注销 */
@@ -175,6 +190,131 @@
 /* 接口路径 */
 #define OWN_SHOWPHOTO_PATH                   "/App/member/showphoto"
 
+/* 2.13.可登录的站点列表 */
+#define VALIDSITEID_PATH                    "/member/validsiteid"
+
+/**
+ * 请求
+ */
+#define VALIDSITEID_EMAIL                       "email"
+#define VALIDSITEID_PASSWORD                    "password"
+
+/**
+ * 返回
+ */
+#define VALIDSITEID_DATALIST                       "datalist"
+#define VALIDSITEID_DATALIST_SITEID                                 "siteid"
+#define VALIDSITEID_DATALIST_ISLIVE                                 "islive"
+
+/* 2.14.添加App token */
+#define LIVEROOM_ADDTOKEN_PATH                    "/member/add_token"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_ADDTOKEN_TOKEN                      "token"
+#define LIVEROOM_ADDTOKEN_APPID                      "app_id"
+#define LIVEROOM_ADDTOKEN_DEVICEID                   "device_id"
+
+/* 2.15.销毁App token */
+#define LIVEROOM_DESTROYTOKEN_PATH                    "/member/destroy_token"
+
+/* 2.16.找回密码 */
+#define LIVEROOM_FINDPW_PATH                    "/user/dofindPwd"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_FINDPW_SENDMAIL                      "sendmail"
+#define LIVEROOM_FINDPW_VERIFYCODE                    "verify_code"
+
+/**
+ * 返回
+ */
+#define LIVEROOM_FINDPW_ERRORMSG                   "errorMsg"
+
+/* 2.17.修改密码 */
+#define LIVEROOM_CHANGEPWD_PATH                    "/member/changepwd"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_FINDPW_PASSWORDNEW                      "passwordNew"
+#define LIVEROOM_FINDPW_PASSWORDOLD                      "passwordOld"
+
+/* 2.18.token登录认证 */
+#define LIVEROOM_DOLOGIN_PATH                           "/member/dologin"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_DOLOGIN_TOKEN                          "token"
+#define LIVEROOM_DOLOGIN_MEMBERID                       "memberid"
+#define LIVEROOM_DOLOGIN_DEVICEID                       "deviceId"
+#define LIVEROOM_DOLOGIN_VERSIONCODE                    "versioncode"
+#define LIVEROOM_DOLOGIN_MODEL                          "model"
+#define LIVEROOM_DOLOGIN_MANUFACTURER                   "manufacturer"
+
+/* 2.19.获取认证token证 */
+#define LIVEROOM_GETTOKEN_PATH                           "/user/goto"
+
+
+/**
+ * 请求
+ */
+#define LIVEROOM_DOLOGIN_URL                            "url"
+#define LIVEROOM_DOLOGIN_SITEID                         "siteid"
+
+/**
+ * 返回
+ */
+#define LIVEROOM_DOLOGIN_MEMBERID                        "memberid"
+#define LIVEROOM_DOLOGIN_SID                             "sid"
+
+/* 2.20.帐号密码登录 */
+#define LIVEROOM_PASSWORDLOGIN_PATH                      "/user/dologin"
+
+
+/**
+ * 请求
+ */
+#define LIVEROOM_PASSWORDLOGIN_EMAIL                            "email"
+#define LIVEROOM_PASSWORDLOGIN_PASSWORD                        "password"
+#define LIVEROOM_PASSWORDLOGIN_AUTHCODE                        "auth_code"
+#define LIVEROOM_PASSWORDLOGIN_SOURCE                          "source"
+#define LIVEROOM_PASSWORDLOGIN_AF_DEVICEID                     "af_deviceid"
+#define LIVEROOM_PASSWORDLOGIN_GAID                            "gaid"
+#define LIVEROOM_PASSWORDLOGIN_DEVICEID                        "deviceId"
+
+/**
+ * 返回
+ */
+#define LIVEROOM_PASSWORDLOGIN_USERSID                        "user_sid"
+#define LIVEROOM_PASSWORDLOGIN_MANID                          "manid"
+
+/* 2.21.token登录 */
+#define LIVEROOM_AUTH_PATH                                    "/user/auth"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_AUTH_MEMBERID                            "memberid"
+#define LIVEROOM_AUTH_SID                                 "sid"
+
+/**
+ * 返回
+ */
+#define LIVEROOM_AUTH_USERSID                        "user_sid"
+#define LIVEROOM_AUTH_MANID                          "manid"
+
+/* 2.22.获取验证码 */
+#define LIVEROOM_VALIDATECODE_PATH                   "/index/validateCode"
+
+/**
+ * 请求
+ */
+#define LIVEROOM_VALIDATECODE_ID                     "id"
+
 /* ########################	直播间 模块  ######################## */
 /* 直播间公共部分 */
 /**
@@ -231,6 +371,10 @@
 #define LIVEROOM_HOT_PROGRAMLIST_TICKETSTATUS               "ticket_status"
 #define LIVEROOM_HOT_PROGRAMLIST_HASFOLLOW                  "has_follow"
 #define LIVEROOM_HOT_PROGRAMLIST_TICKETISFULL               "ticket_is_full"
+#define LIVEROOM_HOT_PROGRAMLIST_PRIV                       "priv"
+#define LIVEROOM_HOT_PROGRAMLIST_PRIV_ONEONONE                      "oneonone"
+#define LIVEROOM_HOT_PROGRAMLIST_PRIV_BOOKING                       "booking"
+#define LIVEROOM_HOT_PROGRAMLIST_CHAT_ONLINE_STATUS         "chat_online_status"
 
 /* 3.2.获取Follow列表 */
 /* 接口路径 */
@@ -720,6 +864,7 @@
  */
 #define LIVEROOM_IMSVR_URL                      "imsvr_url"
 #define LIVEROOM_HTTPSVR_URL                    "httpsvr_url"
+#define LIVEROOM_HTTPSVR_MOBILE_URL             "httpsvr_mobile_url"
 #define LIVEROOM_ADDCREDITS_URL                 "addcredits_url"
 #define LIVEROOM_ANCHOR_PAGE                    "anchor_page"
 #define LIVEROOM_USER_LEVEL                     "user_level"
@@ -739,10 +884,17 @@
 #define LIVEROOM_SVRLIST_TURL                                   "turl"
 #define LIVEROOM_HANGOUT                        "hangout"
 #define LIVEROOM_HANGOUT_CREDITPERMINUTE                        "credit_per_minute"
+#define LIVEROOM_HANGOUT_CREDITPRICE                            "credit_price"
 #define LIVEROOM_LOIHURL                        "loi_h5_url"
 #define LIVEROOM_EMFHURL                        "emf_h5_url"
 #define LIVEROOM_PMSTARTNOTICE                  "pm_start_notice"
 #define LIVEROOM_POSTSTAMPURL                   "post_stamp_url"
+#define LIVEROOM_SOCKET_HOST                    "socket_host"
+#define LIVEROOM_SOCKET_HOST_DOMAIN             "socket_host_domain"
+#define LIVEROOM_SOCKET_PORT                    "socket_port"
+#define LIVEROOM_MIN_BALANCE_FOR_CHAT           "min_balance_for_chat"
+#define LIVEROOM_CHAT_VOICE_HOSTURL             "chat_voice_hosturl"
+#define LIVEROOM_SEND_LETTER                    "send_letter"
 
 /* 6.2.获取账号余额 */
 /* 接口路径 */
@@ -752,6 +904,8 @@
  * 返回
  */
 #define LIVEROOM_GETCREDIT_CREDIT                 "credit"
+#define LIVEROOM_GETCREDIT_COUPON                 "coupon"
+#define LIVEROOM_GETCREDIT_POSTSTAMP              "poststamp"
 
 /* 6.3.添加／取消收藏 */
 /* 接口路径 */
@@ -939,11 +1093,131 @@
 #define LIVEROOM_GETTOTALNOREADNUM_BACKPACKUNREADNUM              "backpack_unread_num"
 
 
+/* 6.18.查询个人信息 */
+/* 接口路径 */
+#define LIVEROOM_MYPROFILE                              "/member/myprofile"
+
+/**
+ *  返回
+ */
+/* 个人信息 */
+#define LIVEROOM_MYPROFILE_MANID            "manid"
+#define LIVEROOM_MYPROFILE_FIRSTNAME        "firstname"
+#define LIVEROOM_MYPROFILE_LASTNAME         "lastname"
+#define LIVEROOM_MYPROFILE_BIRTHDAY         "birthday"
+#define LIVEROOM_MYPROFILE_AGE               "age"
+#define LIVEROOM_MYPROFILE_GENDER            "gender"
+#define LIVEROOM_MYPROFILE_EMAIL            "email"
+#define LIVEROOM_MYPROFILE_COUNTRY            "country"
+#define LIVEROOM_MYPROFILE_MARRY            "marry"
+#define LIVEROOM_MYPROFILE_WEIGHT             "weight"
+#define LIVEROOM_MYPROFILE_HEIGHT            "height"
+#define LIVEROOM_MYPROFILE_SMOKE            "smoke"
+#define LIVEROOM_MYPROFILE_DRINK            "drink"
+#define LIVEROOM_MYPROFILE_LANGUAGE        "language"
+#define LIVEROOM_MYPROFILE_RELIGION        "religion"
+#define LIVEROOM_MYPROFILE_EDUCATION        "education"
+#define LIVEROOM_MYPROFILE_PROFESSION        "profession"
+#define LIVEROOM_MYPROFILE_ETHNICITY        "ethnicity"
+#define LIVEROOM_MYPROFILE_INCOME            "income"
+#define LIVEROOM_MYPROFILE_CHILDREN        "children"
+#define LIVEROOM_MYPROFILE_JJ                "jj"
+#define LIVEROOM_MYPROFILE_RS_STATUS        "rs_status"
+#define LIVEROOM_MYPROFILE_RS_CONTENT        "rs_content"
+#define LIVEROOM_MYPROFILE_ADDRESS1        "address1"
+#define LIVEROOM_MYPROFILE_ADDRESS2        "address2"
+#define LIVEROOM_MYPROFILE_CITY            "city"
+#define LIVEROOM_MYPROFILE_PROVINCE        "province"
+#define LIVEROOM_MYPROFILE_ZIPCODE            "zipcode"
+#define LIVEROOM_MYPROFILE_TELEPHONE        "telephone"
+#define LIVEROOM_MYPROFILE_TELEPHONE_CC    "telephone_cc"
+#define LIVEROOM_MYPROFILE_FAX                "fax"
+#define LIVEROOM_MYPROFILE_ALTERNATE_EMAIL    "alternate_email"
+#define LIVEROOM_MYPROFILE_MONEY            "money"
+#define LIVEROOM_MYPROFILE_V_ID            "v_id"
+#define LIVEROOM_MYPROFILE_PHOTO            "photo"
+#define LIVEROOM_MYPROFILE_PHOTOURL        "photoURL"
+#define LIVEROOM_MYPROFILE_INTEGRAL        "integral"
+#define LIVEROOM_MYPROFILE_MOBILE            "mobile"
+#define LIVEROOM_MYPROFILE_MOBILE_CC        "mobile_cc"
+#define LIVEROOM_MYPROFILE_MOBILE_STATUS    "mobile_status"
+#define LIVEROOM_MYPROFILE_LANDLINE        "landline"
+#define LIVEROOM_MYPROFILE_LANDLINE_CC        "landline_cc"
+#define LIVEROOM_MYPROFILE_LANDLINE_AC        "landline_ac"
+#define LIVEROOM_MYPROFILE_LANDLINE_STATUS    "landline_status"
+#define LIVEROOM_MYPROFILE_INTERESTS        "interests"
+#define LIVEROOM_MYPROFILE_ZODIAC          "zodiac"
+
+
+/* 6.19.修改个人信息 */
+/* 接口路径 */
+#define LIVEROOM_UPDATEPRO                              "/member/updatepro"
+
+#define LIVEROOM_UPDATEPRO_JJRESULT                     "jj_result"
+
+/* 6.20.检查客户端更新 */
+/* 接口路径 */
+#define LIVEROOM_VERSIONCHECK                              "/other/versioncheck"
+
+/*
+ 请求
+ */
+#define LIVEROOM_VERSIONCHECK_CURRVERSION                   "currVersion"
+
+/*
+ 返回
+ */
+#define LIVEROOM_VERSIONCHECK_VERCODE        "versionCode"
+#define LIVEROOM_VERSIONCHECK_VERNAME        "versionName"
+#define LIVEROOM_VERSIONCHECK_VERDESC        "versionDesc"
+#define LIVEROOM_VERSIONCHECK_FORCEUPDATE    "forceUpdate"
+#define LIVEROOM_VERSIONCHECK_URL            "url"
+#define LIVEROOM_VERSIONCHECK_STOREURL       "store_url"
+#define LIVEROOM_VERSIONCHECK_PUBTIME        "pubtime"
+#define LIVEROOM_VERSIONCHECK_CHECKTIME      "checktime"
+
+/* 6.21.开始编辑简介触发计时 */
+/* 接口路径 */
+#define LIVEROOM_INTROEDIT                              "/member/intro_edit"
+
+/* 6.22.收集手机硬件信息 */
+/* 接口路径 */
+#define LIVEROOM_PHONEINFO                              "/other/phoneinfo"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_PHONEINFO_MODEL                        "model"
+#define LIVEROOM_PHONEINFO_MANUFACTURER                 "manufacturer"
+#define LIVEROOM_PHONEINFO_OS                           "os"
+#define LIVEROOM_PHONEINFO_RELEASE                      "release"
+#define LIVEROOM_PHONEINFO_SDK                          "sdk"
+#define LIVEROOM_PHONEINFO_DENSITY                      "density"
+#define LIVEROOM_PHONEINFO_DENSITYDPI                   "densityDpi"
+#define LIVEROOM_PHONEINFO_WIDTH                        "width"
+#define LIVEROOM_PHONEINFO_HEIGHT                       "height"
+#define LIVEROOM_PHONEINFO_DATA                         "data"
+#define LIVEROOM_PHONEINFO_VERSIONCODE                  "versionCode"
+#define LIVEROOM_PHONEINFO_VERSIONNAME                  "versionName"
+#define LIVEROOM_PHONEINFO_PHONETYPE                    "PhoneType"
+#define LIVEROOM_PHONEINFO_NETWORKTYPE                  "NetworkType"
+#define LIVEROOM_PHONEINFO_LANGUAGE                     "language"
+#define LIVEROOM_PHONEINFO_COUNTRY                      "country"
+#define LIVEROOM_PHONEINFO_SITEID                       "siteid"
+#define LIVEROOM_PHONEINFO_ACTION                       "action"
+#define LIVEROOM_PHONEINFO_LINENUMBER                   "line1Number"
+#define LIVEROOM_PHONEINFO_DEVICEID                     "deviceId"
+#define LIVEROOM_PHONEINFO_SIMOPERATORNAME              "SimOperatorName"
+#define LIVEROOM_PHONEINFO_SIMOPERATOR                  "SimOperator"
+#define LIVEROOM_PHONEINFO_SIMCOUNTRYISO                "simCountryIso"
+#define LIVEROOM_PHONEINFO_SIMSTATE                     "SimState"
+
+
 /* ########################   支付 模块  ######################## */
 
 /* 7.1.获取买点信息（仅独立）（仅iOS） */
 /* 接口路径 */
-#define LIVEROOM_PREMIUM_MEMBERSHIP                                 "/member/premium_membership"
+#define LIVEROOM_PREMIUM_MEMBERSHIP                                 "/App/member/premium_membership"
 
 /**
  *  请求
@@ -964,7 +1238,7 @@
 
 /* 7.2.获取订单信息（仅独立）（仅iOS） */
 /* 接口路径 */
-#define LIVEROOM_ORDER_IOSPAY                                 "/member/ios_pay"
+#define LIVEROOM_ORDER_IOSPAY                                 "/App/member/ios_pay"
 
 /**
  *  请求
@@ -982,7 +1256,7 @@
 
 /* 7.3.验证订单信息（仅独立）（仅iOS） */
 /* 接口路径 */
-#define LIVEROOM_ORDER_IOSCALLBACK                                 "/member/ios_callback"
+#define LIVEROOM_ORDER_IOSCALLBACK                                 "/App/member/ios_callback"
 
 /**
  *  请求
@@ -993,6 +1267,76 @@
 #define LIVEROOM_ORDER_IOSCALLBACK_ORDERNO                          "orderno"
 #define LIVEROOM_ORDER_IOSCALLBACK_CODE                             "code"
 
+
+/* 7.4.获取订单信息 (仅iOS） */
+/* 接口路径 */
+#define LIVEROOM_IOSPAY                                 "/member/ios_pay"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_IOSPAY_MANID                         "manid"
+#define LIVEROOM_IOSPAY_SID                           "sid"
+#define LIVEROOM_IOSPAY_NUMBER                        "number"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_IOSPAY_ORDERNO                           "orderno"
+#define LIVEROOM_IOSPAY_PRODUCTID                         "product_id"
+
+/* 7.5.验证订单信息（仅iOS） */
+/* 接口路径 */
+#define LIVEROOM_IOSCALLBACK                                 "/member/ios_callback"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_IOSCALLBACK_MANID                            "manid"
+#define LIVEROOM_IOSCALLBACK_SID                              "sid"
+#define LIVEROOM_IOSCALLBACK_RECEIPT                          "receipt"
+#define LIVEROOM_IOSCALLBACK_ORDERNO                          "orderno"
+#define LIVEROOM_IOSCALLBACK_CODE                             "code"
+
+/* 7.6.获取产品列表（仅iOS） */
+/* 接口路径 */
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP                                 "/member/premium_membership"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_SITEID                       "siteid"
+
+
+/**
+ *  返回
+ */
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_TITLE                           "title"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_SUBTITLE                        "subtitle"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_PRODUCTS                        "products"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_PRODUCTS_ID                          "id"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_PRODUCTS_NAME                        "name"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_PRODUCTS_PRICE                       "price"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_DESC                            "desc"
+#define LIVEROOM_IOSPREMIUM_MEMBERSHIP_MORE                            "more"
+
+/* 7.7.获取h5买点页面URL（仅Android */
+/* 接口路径 */
+#define LIVEROOM_MOBILEPAYGOTO_PATH                            "/user/mobilePayGoto"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_MOBILEPAYGOTO_url                              "url"
+#define LIVEROOM_MOBILEPAYGOTO_SITEID                           "siteid"
+#define LIVEROOM_MOBILEPAYGOTO_ORDERTYPE                        "orderType"
+#define LIVEROOM_MOBILEPAYGOTO_CLICKFROM                        "clickFrom"
+#define LIVEROOM_MOBILEPAYGOTO_NUMBER                           "number"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_MOBILEPAYGOTO_REDIRECT                         "redirect"
 
 /* ########################   多人互动模块  ######################## */
 /* 8.1.获取可邀请多人互动的主播列表 */
@@ -1085,6 +1429,65 @@
 #define LIVEROOM_HANGOUTGIFTLIST_NORMALLIST                            "normal_list"
 #define LIVEROOM_HANGOUTGIFTLIST_CELEBRATIONLIST                       "celebration_list"
 #define LIVEROOM_HANGOUTGIFTLIST_BUYFORLIST_ID                                              "id"
+
+/* 8.7.获取Hang-out列表*/
+/* 接口路径 */
+#define LIVEROOM_GETRECENTCONTACEANCHOR                                 "/pman/hangout/api/getHtOnlineAnchor"
+
+
+/**
+ *  返回
+ */
+//#define LIVEROOM_GETRECENTCONTACEANCHOR_LIST                             "list"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_ANCHORID                         "anchor_id"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_NICKNAME                         "nickname"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_AVATARIMG                        "avatar_img"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_COVERIMG                         "cover_img"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_ONLINESTATUS                     "online_status"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSNUM                       "friends_num"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_INVITATION_MSG                   "invitation_msg"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSINFO                      "friends_info"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSINFO_ANCHORID             "anchor_id"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSINFO_AVATARIMG            "avatar_img"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSINFO_COVERIMG             "cover_img"
+#define LIVEROOM_GETRECENTCONTACEANCHOR_FRIENDSINFO_NICKNAME             "nickname"
+
+/* 8.8.获取指定主播的Hang-out好友列表*/
+/* 接口路径 */
+#define LIVEROOM_GETHANGOUTFRIENDS                                      "/pman/hangout/api/getHangoutFriends"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETHANGOUTFRIENDS_ANCHORID                              "anchorid"
+
+/* 8.9.自动邀请Hangout直播邀請展示條件*/
+/* 接口路径 */
+#define LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY                        "/man/v1/autoInvitationHangoutLiveDisplay"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_AUTOINVITATIONHANGOUTLIVEDISPLAY_ANCHORID               "anchorid"
+
+/* 8.10.自动邀请hangout点击记录*/
+/* 接口路径 */
+#define LIVEROOM_AUTOINVITATIONCLICKLOG                                  "/man/v1/autoInvitationHangoutClickLog"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_AUTOINVITATIONCLICKLOG_ANCHORID                          "anchorid"
+
+/* 8.11.获取当前会员Hangout直播状态*/
+/* 接口路径 */
+#define LIVEROOM_GETHANGOUTATUS                                         "/pman/hangout/api/getHangoutStatus"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETHANGOUTATUS_LIVE_ROOM_ID                           "live_room_id"
+#define LIVEROOM_GETHANGOUTATUS_LIVEROOMANCHOR                         "liveroomanchor"
 
 /* 9.1.获取节目列表未读 */
 /* 接口路径 */
@@ -1239,5 +1642,141 @@
  *  返回
  */
 #define SETPRIVATEMESSAGEREADED_RESULT                                             "result"
+
+
+/* 11.1.获取推送设置 */
+/* 接口路径 */
+#define GETPUSHCONFIG_PATH                                              "/member/priv/api/getPushConfig"
+
+/**
+ *  返回
+ */
+#define GETPUSHCONFIG_PRIVMSG_PUSH                                            "priv_mb_privmsg_app_push"
+#define GETPUSHCONFIG_MAIL_PUSH                                               "priv_mb_mail_app_push"
+
+
+/* 11.2.修改推送设置 */
+/* 接口路径 */
+#define SETPUSHCONFIG_PATH                                                  "/member/priv/api/setPushConfig"
+
+/**
+ *  请求
+ */
+#define SETPUSHCONFIG_PRIVMSG_PUSH                                                "priv_mb_privmsg_app_push"
+#define SETPUSHCONFIG_MAIL_PUSH                                                   "priv_mb_mail_app_push"
+
+/**************************** 意向信及信件 *****************************/
+/* 信件公共部分 */
+#define LETTER_TAG                              "tag"
+#define LETTER_START                            "start"
+#define LETTER_STEP                             "step"
+#define LETTER_TYPE                             "type"
+#define LETTER_LIST                             "list"
+#define LETTER_OPP_ANCHOR                       "opp_anchor"
+#define LETTER_OPP_USER                         "opp_user"
+#define LETTER_ANCHOR_ID                        "anchor_id"
+#define LETTER_ANCHOR_AVATAR                    "anchor_avatar"
+#define LETTER_ANCHOR_NICKNAME                  "anchor_nickname"
+#define LETTER_ANCHOR_COVER                     "anchor_cover"
+#define LETTER_AGE                              "age"
+#define LETTER_COUNTRY                          "country"
+#define LETTER_ONLINE_STATUS                    "online_status"
+#define LETTER_IS_IN_PUBLIC                     "is_in_public"
+#define LETTER_IS_FOLLOW                        "is_follow"
+#define LETTER_LOI_ID                           "loi_id"
+#define LETTER_LOI_SEND_TIME                    "loi_send_time"
+#define LETTER_LOI_BRIEF                        "loi_brief"
+#define LETTER_HAS_IMG                          "has_img"
+#define LETTER_HAS_VIDEO                        "has_video"
+#define LETTER_HAS_READ                         "has_read"
+#define LETTER_HAS_REPLIED                      "has_replied"
+#define LETTER_LOI_CONTENT                      "loi_content"
+#define LETTER_LOI_IMG_LIST                     "loi_img_list"
+#define LETTER_ORIGIN_IMG                       "origin_img"
+#define LETTER_SMALL_IMG                        "small_img"
+#define LETTER_BLUR_IMG                         "blur_img"
+#define LETTER_LOI_VIDEO_LIST                   "loi_video_list"
+#define LETTER_COVER                            "cover"
+#define LETTER_VIDEO                            "video"
+#define LETTER_VIDEO_TOTAL_TIME                 "video_total_time"
+#define LETTER_EMF_ID                           "emf_id"
+#define LETTER_EMF_SEND_TIME                    "emf_send_time"
+#define LETTER_EMF_BRIEF                        "emf_brief"
+#define LETTER_EMF_CONTENT                      "emf_content"
+#define LETTER_EMF_IMG_LIST                     "emf_img_list"
+#define LETTER_RESOURCE_ID                      "resource_id"
+#define LETTER_IS_FREE                           "is_free"
+#define LETTER_STATUS                           "status"
+#define LETTER_DESCRIBE                         "describe"
+#define LETTER_EMF_VIDEO_LIST                   "emf_video_list"
+#define LETTER_COVER_SMALL_IMG                  "cover_small_img"
+#define LETTER_COVER_ORIGIN_IMG                 "cover_origin_img"
+#define LETTER_CONTENT                          "content"
+#define LETTER_IMG_LIST                         "img_list"
+#define LETTER_IMGURL                           "imgUrl"
+#define LETTER_COMSUME_TYPE                     "comsume_type"
+#define LETTER_FILE                             "file"
+#define LETTER_URL                              "url"
+#define LETTER_MD5                              "md5"
+#define LETTER_CLICK_TYPE                       "click_type"
+#define LETTER_VIDEO_URL                        "video_url"
+
+/* 13.1.获取意向信列表 */
+/* 接口路径 */
+#define LETTER_GETLOILIST                       "/pman/loi/api/getLoiList"
+
+/* 13.2.获取意向信详情 */
+/* 接口路径 */
+#define LETTER_GETLOIDETAIL                     "/pman/loi/api/getLoiDetail"
+
+/* 13.3.获取信件列表 */
+/* 接口路径 */
+#define LETTER_GETEMFLIST                        "/pman/emf/api/getEmfList"
+
+/* 13.4.获取信件详情 */
+/* 接口路径 */
+#define LETTER_GETEMFDETAIL                     "/pman/emf/api/getEmfDetail"
+
+/* 13.5.发送信件 */
+/* 接口路径 */
+#define LETTER_SENDEMF                           "/pman/emf/api/sendEmf"
+
+/* 13.6.上传附件 */
+/* 接口路径 */
+#define LETTER_UPLOADLETTERPHOTO                 "/api/?act=uploadManPhoto"
+
+/* 13.7.购买信件附件 */
+/* 接口路径 */
+#define LETTER_BUYPRIVATEPHOTOVIDEO              "/pman/member/emf/api/buyPrivatePhotoVideo"
+
+/* 13.8.获取发送信件所需的余额 */
+/* 接口路径 */
+#define LIVEROOM_GETSENDMAILPRICE                       "/member/emf/api/getSendMailPrice"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_GETSENDMAILPRICE_IMGNUMBER            "imgNumber"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_GETSENDMAILPRICE_CREDIT_PRICE                 "credit_price"
+#define LIVEROOM_GETSENDMAILPRICE_STAMP_PRICE                  "stamp_price"
+
+/* 13.9.获取主播信件权限 */
+/* 接口路径 */
+#define LIVEROOM_CANSENDEMF                       "/member/emf/api/canSendEmf"
+
+/**
+ *  请求
+ */
+#define LIVEROOM_CANSENDEMF_ANCHOR_ID                       "anchor_id"
+
+/**
+ *  返回
+ */
+#define LIVEROOM_CANSENDEMF_USER_CAN_SEND                 "user_can_send"
+#define LIVEROOM_CANSENDEMF_ANCHOR_CAN_SEND               "anchor_can_send"
 
 #endif /* REQUESTAUTHORIZATIONDEFINE_H_ */

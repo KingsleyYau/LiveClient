@@ -28,6 +28,9 @@
 @property (nonatomic, strong) LSGiftManager *giftManager;
 // 显示的礼物数组
 @property (nonatomic, strong) NSArray<LSGiftManagerItem *> *giftArray;
+// 是否改变选中礼物
+@property (nonatomic, assign) BOOL isChanceSelect;
+
 @end
 
 @implementation GiftCollectionViewController
@@ -36,6 +39,7 @@
     [super initCustomParam];
 
     self.selectedIndexPath = -1;
+    self.isChanceSelect = YES;
 
     self.giftManager = [LSGiftManager manager];
 }
@@ -87,15 +91,16 @@
 
 #pragma mark - 数据逻辑
 - (void)reloadData {
+    WeakObject(self, weakSelf);
     // TODO:获取礼物列表
     switch (self.type) {
         case GiftListTypeNormal: {
             // 普通礼物
             [self.giftManager getRoomGiftList:self.liveRoom.roomId
                                  finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                                     [self reloadDataWithArray:success giftList:giftList];
-                                     if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftList:)]) {
-                                         [self.vcDelegate didChangeGiftList:self];
+                                     [weakSelf reloadDataWithArray:success giftList:giftList];
+                                     if ([weakSelf.vcDelegate respondsToSelector:@selector(didChangeGiftList:)]) {
+                                         [weakSelf.vcDelegate didChangeGiftList:self];
                                      }
                                  }];
         } break;
@@ -103,7 +108,7 @@
             // 背包礼物
             [self.giftManager getRoomBackpackGiftList:self.liveRoom.roomId
                                          finshHandler:^(BOOL success, NSArray<LSGiftManagerItem *> *giftList) {
-                                             [self reloadDataWithArray:success giftList:giftList];
+                                             [weakSelf reloadDataWithArray:success giftList:giftList];
                                          }];
         } break;
         default:
@@ -115,7 +120,14 @@
 
 - (void)selectItem:(LSGiftManagerItem *)item {
     // 选中指定礼物
-    self.selectedIndexPath = [self.giftArray indexOfObject:item];
+    NSInteger nextIndexPath = [self.giftArray indexOfObject:item];
+    
+    if (self.selectedIndexPath != nextIndexPath) {
+        self.selectedIndexPath = nextIndexPath;
+        self.isChanceSelect = YES;
+    } else {
+        self.isChanceSelect = NO;
+    }
     
     NSInteger index = [self.giftArray indexOfObject:item];
     self.pageControl.currentPage = index / 8;
@@ -186,8 +198,11 @@
             cell.selectCell = YES;
             self.selectGiftItem = item;
             
-            if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftItem:item:)]) {
-                [self.vcDelegate didChangeGiftItem:self item:item];
+            if (self.isChanceSelect) {
+                if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftItem:item:)]) {
+                    [self.vcDelegate didChangeGiftItem:self item:item];
+                }
+                self.isChanceSelect = NO;
             }
         }
 
@@ -207,14 +222,18 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     // 设置选中礼物cell的可选按钮
     if (indexPath.row < self.giftArray.count) {
-        LSGiftManagerItem *item = self.giftArray[indexPath.row];
+//        LSGiftManagerItem *item = self.giftArray[indexPath.row];
 
         if (self.selectedIndexPath != indexPath.row) {
             self.selectedIndexPath = indexPath.row;
-
-            if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftItem:item:)]) {
-                [self.vcDelegate didChangeGiftItem:self item:item];
-            }
+            
+            self.isChanceSelect = YES;
+            
+//            if ([self.vcDelegate respondsToSelector:@selector(didChangeGiftItem:item:)]) {
+//                [self.vcDelegate didChangeGiftItem:self item:item];
+//            }
+        } else {
+            self.isChanceSelect = NO;
         }
 
         [self.collectionView reloadData];

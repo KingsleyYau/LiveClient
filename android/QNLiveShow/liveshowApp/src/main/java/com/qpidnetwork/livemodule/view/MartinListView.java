@@ -30,6 +30,9 @@ public class MartinListView extends LinearLayout implements OnRefreshListener {
 	// local objects
 	private LinearLayout listFooter;
 
+	// 2018/11/20 Hardy
+	private View mRootView;
+
 	// local various
 	private boolean is_loading = false;
 	private boolean can_pull_up = true;
@@ -45,19 +48,16 @@ public class MartinListView extends LinearLayout implements OnRefreshListener {
 	}
 
 	private void createView() {
+//		View v = LayoutInflater.from(getContext()).inflate(R.layout.martin_listview, null);
+		mRootView = LayoutInflater.from(getContext()).inflate(R.layout.martin_listview, null);
 
-		View v = LayoutInflater.from(getContext()).inflate(
-				R.layout.martin_listview, null);
-		swipeRefreshLayout = (SwipeRefreshLayout) v
-				.findViewById(R.id.swipeRefreshLayout);
-		listView = (ListView) v.findViewById(R.id.listView);
-		swipeLayoutEmpty = (SwipeRefreshLayout) v
-				.findViewById(R.id.swipeLayoutEmpty);
-		emptyView = (TextView) v.findViewById(R.id.emptyView);
-		this.addView(v);
+		swipeRefreshLayout = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeRefreshLayout);
+		listView = (ListView) mRootView.findViewById(R.id.listView);
+		swipeLayoutEmpty = (SwipeRefreshLayout) mRootView.findViewById(R.id.swipeLayoutEmpty);
+		emptyView = (TextView) mRootView.findViewById(R.id.emptyView);
+		this.addView(mRootView);
 
-		listFooter = (LinearLayout) LayoutInflater.from(getContext()).inflate(
-				R.layout.item_list_view_footer, null);
+		listFooter = (LinearLayout) LayoutInflater.from(getContext()).inflate(R.layout.item_list_view_footer, null);
 		listFooter.setBackgroundColor(Color.WHITE);
 		/*隐藏footerview*/
 		listFooter.setVisibility(View.GONE);
@@ -119,7 +119,15 @@ public class MartinListView extends LinearLayout implements OnRefreshListener {
 		listView.setEmptyView(swipeLayoutEmpty);
 
 	}
-	
+
+	/**
+	 * 2018/11/20 Hardy
+	 * @param colorResId
+	 */
+	public void setBackgroundColorRes(int colorResId){
+		mRootView.setBackgroundResource(colorResId);
+	}
+
 	/**
 	 * 设置列表空时显示
 	 * @param emptyText

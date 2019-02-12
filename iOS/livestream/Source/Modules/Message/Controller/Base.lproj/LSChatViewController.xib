@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSChatViewController">
+            <connections>
+                <outlet property="emotionBtn" destination="0iA-y2-rLX" id="SPv-qd-4eI"/>
+                <outlet property="inputMessageView" destination="jod-bJ-Amn" id="DSc-gs-4aW"/>
+                <outlet property="inputMessageViewBottom" destination="J5F-7H-HMA" id="yS6-Qr-cW0"/>
+                <outlet property="inputMessageViewHeight" destination="4PD-DS-cLK" id="4sM-vF-n4S"/>
+                <outlet property="tableView" destination="aUV-Ol-gAv" id="rEh-Ow-xpF"/>
+                <outlet property="textView" destination="NJB-MM-jLD" id="SO2-vB-pLw"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="aUV-Ol-gAv" customClass="LSChatTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="611"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jod-bJ-Amn">
+                    <rect key="frame" x="0.0" y="611" width="375" height="56"/>
+                    <subviews>
+                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="NJB-MM-jLD" customClass="LSChatTextView">
+                            <rect key="frame" x="11" y="11" width="312" height="34"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences" returnKeyType="send"/>
+                            <connections>
+                                <outlet property="delegate" destination="-1" id="08X-kE-ces"/>
+                            </connections>
+                        </textView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0iA-y2-rLX" customClass="LSCheckButton">
+                            <rect key="frame" x="331" y="10" width="36" height="36"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="0iA-y2-rLX" secondAttribute="height" multiplier="1:1" id="FlD-xq-Cu6"/>
+                                <constraint firstAttribute="width" constant="36" id="Uh8-PM-DOJ"/>
+                            </constraints>
+                            <state key="normal" image="Chat_Emotion_Icon"/>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.83529411764705885" green="0.90196078431372551" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="56" id="4PD-DS-cLK"/>
+                        <constraint firstItem="0iA-y2-rLX" firstAttribute="leading" secondItem="NJB-MM-jLD" secondAttribute="trailing" constant="8" id="Puu-7H-jiD"/>
+                        <constraint firstItem="0iA-y2-rLX" firstAttribute="centerY" secondItem="NJB-MM-jLD" secondAttribute="centerY" id="Uo9-p0-UsF"/>
+                        <constraint firstItem="NJB-MM-jLD" firstAttribute="leading" secondItem="jod-bJ-Amn" secondAttribute="leading" constant="11" id="acc-Wl-LTy"/>
+                        <constraint firstAttribute="bottom" secondItem="NJB-MM-jLD" secondAttribute="bottom" constant="11" id="cgE-VN-iUv"/>
+                        <constraint firstAttribute="trailing" secondItem="0iA-y2-rLX" secondAttribute="trailing" constant="8" id="qVI-dU-O0d"/>
+                        <constraint firstItem="NJB-MM-jLD" firstAttribute="top" secondItem="jod-bJ-Amn" secondAttribute="top" constant="11" id="rRM-qM-fjX"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="jod-bJ-Amn" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="5Av-b8-tdk"/>
+                <constraint firstItem="jod-bJ-Amn" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="97N-WQ-Vxp"/>
+                <constraint firstItem="aUV-Ol-gAv" firstAttribute="leading" secondItem="jod-bJ-Amn" secondAttribute="leading" id="CIT-qq-fAB"/>
+                <constraint firstItem="aUV-Ol-gAv" firstAttribute="trailing" secondItem="jod-bJ-Amn" secondAttribute="trailing" id="DGp-O0-XXD"/>
+                <constraint firstAttribute="trailing" secondItem="aUV-Ol-gAv" secondAttribute="trailing" id="DNy-Hp-gaq"/>
+                <constraint firstItem="jod-bJ-Amn" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="J5F-7H-HMA"/>
+                <constraint firstItem="aUV-Ol-gAv" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Qd3-GD-wJC"/>
+                <constraint firstItem="jod-bJ-Amn" firstAttribute="top" secondItem="aUV-Ol-gAv" secondAttribute="bottom" id="T8c-ye-Iol"/>
+                <constraint firstItem="aUV-Ol-gAv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="tLa-dG-9nF"/>
+            </constraints>
+            <point key="canvasLocation" x="25.5" y="51.5"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="Chat_Emotion_Icon" width="28" height="28"/>
+    </resources>
+</document>

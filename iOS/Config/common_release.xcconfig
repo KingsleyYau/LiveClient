@@ -1,0 +1,15 @@
+
+//:configuration = Release
+ONLY_ACTIVE_ARCH = NO
+SKIP_INSTALL = YES
+OTHER_LDFLAGS = -ObjC
+PRODUCT_NAME = $(TARGET_NAME)
+HEADER_SEARCH_PATHS = $(SRCROOT)/../../Config ${COMMON_C_OPENSSL_ROOT}/include ${COMMON_C_CURL_ROOT}/include ${COMMON_C_SRC_ROOT} ${COMMON_C_SRC_THIRD_PARTY_ROOT}
+LIBRARY_SEARCH_PATHS = $(inherited) ${COMMON_C_CURL_ROOT}/lib ${COMMON_C_OPENSSL_ROOT}/lib
+OTHER_CFLAGS = -DIOS -fpermissive -fvisibility=hidden -DPRINT_JNI_LOG -DFILE_JNI_LOG
+WARNING_CFLAGS = -Wno-documentation -Wno-unused-variable
+GCC_INPUT_FILETYPE = automatic
+COMMON_C_CURL_ROOT = ${SRCROOT}/Common-C-Library/third-party/curl
+COMMON_C_OPENSSL_ROOT = ${SRCROOT}/Common-C-Library/third-party/openssl
+COMMON_C_SRC_ROOT = ${SRCROOT}/../../../common-c-library
+COMMON_C_SRC_THIRD_PARTY_ROOT = ${COMMON_C_SRC_ROOT}/third_party

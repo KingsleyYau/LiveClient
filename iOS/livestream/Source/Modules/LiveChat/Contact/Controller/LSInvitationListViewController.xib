@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSInvitationListViewController">
+            <connections>
+                <outlet property="noDataView" destination="jDp-n3-kdH" id="Loe-hA-lso"/>
+                <outlet property="searchBtn" destination="iRp-Pt-18u" id="sUL-dJ-61H"/>
+                <outlet property="tableView" destination="gZo-YG-Pxv" id="hSd-TV-HfD"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gZo-YG-Pxv" customClass="LSInviteListTableView">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </tableView>
+                <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jDp-n3-kdH">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your Invitation is empty." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7K4-7J-OeG">
+                            <rect key="frame" x="10" y="208.5" width="355" height="21"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iRp-Pt-18u">
+                            <rect key="frame" x="97.5" y="315.5" width="180" height="36"/>
+                            <color key="backgroundColor" red="0.16078431369999999" green="0.47843137250000001" blue="0.95294117649999999" alpha="1" colorSpace="calibratedRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="36" id="2Ke-zM-4w2"/>
+                                <constraint firstAttribute="width" constant="180" id="89n-x5-wsL"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                            <state key="normal" title="Search">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </state>
+                            <connections>
+                                <action selector="searchAction:" destination="-1" eventType="touchUpInside" id="viT-AK-6A3"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" broadcasters?" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Euv-CZ-lK3">
+                            <rect key="frame" x="10" y="262.5" width="355" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Why not take the invitatiion to chat with the" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OuG-3g-8WD">
+                            <rect key="frame" x="10" y="239.5" width="355" height="18"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstItem="iRp-Pt-18u" firstAttribute="centerY" secondItem="jDp-n3-kdH" secondAttribute="centerY" id="9Hb-Pv-xeC"/>
+                        <constraint firstAttribute="trailing" secondItem="Euv-CZ-lK3" secondAttribute="trailing" constant="10" id="BGa-ee-Zgu"/>
+                        <constraint firstItem="OuG-3g-8WD" firstAttribute="leading" secondItem="jDp-n3-kdH" secondAttribute="leading" constant="10" id="GQY-XJ-7Vn"/>
+                        <constraint firstItem="Euv-CZ-lK3" firstAttribute="top" secondItem="OuG-3g-8WD" secondAttribute="bottom" constant="5" id="PUa-qC-Nrq"/>
+                        <constraint firstItem="iRp-Pt-18u" firstAttribute="top" secondItem="Euv-CZ-lK3" secondAttribute="bottom" constant="35" id="VGm-yD-CF2"/>
+                        <constraint firstAttribute="trailing" secondItem="7K4-7J-OeG" secondAttribute="trailing" constant="10" id="fuS-6a-hhx"/>
+                        <constraint firstAttribute="trailing" secondItem="OuG-3g-8WD" secondAttribute="trailing" constant="10" id="h5L-zj-cXE"/>
+                        <constraint firstItem="Euv-CZ-lK3" firstAttribute="leading" secondItem="jDp-n3-kdH" secondAttribute="leading" constant="10" id="nua-XO-BHV"/>
+                        <constraint firstItem="7K4-7J-OeG" firstAttribute="leading" secondItem="jDp-n3-kdH" secondAttribute="leading" constant="10" id="wdy-01-g7O"/>
+                        <constraint firstItem="OuG-3g-8WD" firstAttribute="top" secondItem="7K4-7J-OeG" secondAttribute="bottom" constant="10" id="xR3-dT-Cfg"/>
+                        <constraint firstItem="iRp-Pt-18u" firstAttribute="centerX" secondItem="jDp-n3-kdH" secondAttribute="centerX" id="zZr-a7-3LT"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="gZo-YG-Pxv" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="KIO-oj-PrE"/>
+                <constraint firstItem="gZo-YG-Pxv" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Xmr-1u-nJb"/>
+                <constraint firstAttribute="trailing" secondItem="gZo-YG-Pxv" secondAttribute="trailing" id="au8-1Y-tDT"/>
+                <constraint firstItem="jDp-n3-kdH" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="hfu-e5-Z6l"/>
+                <constraint firstItem="jDp-n3-kdH" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="imz-Gh-eOu"/>
+                <constraint firstAttribute="bottom" secondItem="gZo-YG-Pxv" secondAttribute="bottom" id="jcM-xa-w2A"/>
+                <constraint firstAttribute="bottom" secondItem="jDp-n3-kdH" secondAttribute="bottom" id="mY3-3b-Xgz"/>
+                <constraint firstAttribute="trailing" secondItem="jDp-n3-kdH" secondAttribute="trailing" id="qVw-ew-ykN"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

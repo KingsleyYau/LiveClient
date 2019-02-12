@@ -13,7 +13,7 @@ extern "C" {
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILcom/qpidnetwork/livemodule/httprequest/OnRequestLoginCallback;)J
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_Login
-  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jint, jobject);
+  (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jobject);
 
 /*
  * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
@@ -30,6 +30,87 @@ JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAu
  */
 JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_UploadPushTokenId
   (JNIEnv *, jclass, jstring, jobject);
+
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
+ * Method:    GetValidSiteId
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnGetValidSiteIdCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_GetValidSiteId
+        (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
+ * Method:    AddToken
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_AddToken
+        (JNIEnv *, jclass, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
+ * Method:    DestroyToken
+ * Signature: (Lcom/qpidnetwork/livemodule/httprequest/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_DestroyToken
+        (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
+ * Method:    FindPassword
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_FindPassword
+        (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization
+ * Method:    ChangePassword
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/livemodule/httprequest/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_ChangePassword
+        (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    DoLogin
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_DoLogin
+        (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    GetToken
+ * Signature: (ILcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_GetAuthToken
+        (JNIEnv *, jclass, jint, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    PasswordLogin
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_PasswordLogin
+        (JNIEnv *, jclass, jstring, jstring, jstring, jstring, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    TokenLogin
+ * Signature: (Ljava/lang/String;Ljava/lang/String;Lcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_TokenLogin
+        (JNIEnv *, jclass, jstring, jstring, jobject);
+
+/*
+ * Class:     com_qpidnetwork_request_RequestJniAuthorization
+ * Method:    GetValidateCode
+ * Signature: (ILcom/qpidnetwork/request/OnRequestCommonCallback;)J
+ */
+JNIEXPORT jlong JNICALL Java_com_qpidnetwork_livemodule_httprequest_RequestJniAuthorization_GetValidateCode
+        (JNIEnv *, jclass, jint , jobject);
 
 #ifdef __cplusplus
 }

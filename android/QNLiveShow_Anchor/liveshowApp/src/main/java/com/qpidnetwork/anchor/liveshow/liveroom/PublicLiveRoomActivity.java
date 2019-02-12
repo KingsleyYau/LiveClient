@@ -280,12 +280,15 @@ public class PublicLiveRoomActivity extends BaseAnchorLiveRoomActivity {
             public void onCircleImageClicked(CircleImageHorizontScrollView.CircleImageObj obj) {
                 AudienceInfoItem item = (AudienceInfoItem) obj.obj;
                 if(!item.userId.equals(defaultAudienceInfoItem.userId)){
-                    audienceInfoDialog.show(item);
+                    boolean isShowPrivateBtn = true;
                     //add by Jagger 2018-5-9
-                    //节目隐藏ONE-ON-ONE
-                    if(mIMRoomInItem.liveShowType == IMRoomInItem.IMPublicRoomType.Program){
-                        audienceInfoDialog.setInvitePriLiveBtnVisible(View.INVISIBLE);
+                    //节目隐藏ONE-ON-ONE(主播无立即私密邀请权限)
+                    if(mIMRoomInItem.liveShowType == IMRoomInItem.IMPublicRoomType.Program || !mIMRoomInItem.isHasOneOnOneAuth){
+                        isShowPrivateBtn = false;
                     }
+                    audienceInfoDialog.setInvitePriLiveBtnVisible(isShowPrivateBtn);
+                    audienceInfoDialog.show(item);
+
                     /**在show之后,加上如下这段代码就能解决宽被压缩的bug*/
                     WindowManager windowManager = getWindowManager();
                     Display defaultDisplay = windowManager.getDefaultDisplay();

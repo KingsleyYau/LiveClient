@@ -32,10 +32,12 @@ LOCAL_STATIC_LIBRARIES += common
 LOCAL_STATIC_LIBRARIES += json
 LOCAL_STATIC_LIBRARIES += xml
 LOCAL_STATIC_LIBRARIES += amf
-LOCAL_STATIC_LIBRARIES += httpclient
+# manrequesthandler 里面已经有httpclient了，manrequesthandler是livechat的http库。这样就使用同一个httpclient库
+#LOCAL_STATIC_LIBRARIES += httpclient
 LOCAL_SHARED_LIBRARIES += crashhandler
 LOCAL_STATIC_LIBRARIES += androidcommon
 LOCAL_STATIC_LIBRARIES += httpcontroller
+LOCAL_STATIC_LIBRARIES += manrequesthandler
 
 LOCAL_CPPFLAGS  := -std=c++11
 LOCAL_CPPFLAGS	+= -fpermissive

@@ -96,7 +96,7 @@
                             </constraints>
                             <state key="normal" title="Mute"/>
                             <connections>
-                                <action selector="mute0:" destination="-1" eventType="touchUpInside" id="euc-bE-OUC"/>
+                                <action selector="mute1:" destination="-1" eventType="touchUpInside" id="Pjo-WG-fgo"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I54-oP-OFK" userLabel="Play Button 1">
@@ -148,7 +148,7 @@
                             </constraints>
                             <state key="normal" title="Mute"/>
                             <connections>
-                                <action selector="mute0:" destination="-1" eventType="touchUpInside" id="qsV-BD-YPk"/>
+                                <action selector="mute2:" destination="-1" eventType="touchUpInside" id="Kqk-9f-STq"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jjQ-AU-L6S" userLabel="Play Button 2">
@@ -227,7 +227,7 @@
                     </connections>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="drI-3V-bPu" userLabel="Play">
-                    <rect key="frame" x="5" y="573" width="102.66666666666667" height="30"/>
+                    <rect key="frame" x="5" y="573" width="81.333333333333329" height="30"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="hnb-Cd-cCC"/>
                     </constraints>
@@ -237,21 +237,21 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iyu-Qy-hLl" userLabel="Publisher">
-                    <rect key="frame" x="107.66666666666669" y="573" width="102" height="30"/>
+                    <rect key="frame" x="86.333333333333343" y="573" width="81.333333333333343" height="30"/>
                     <state key="normal" title="Publish"/>
                     <connections>
                         <action selector="publish:" destination="-1" eventType="touchUpInside" id="xnD-a3-RYY"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RM2-Fk-mCo" userLabel="StopPlay">
-                    <rect key="frame" x="209.66666666666663" y="573" width="102" height="30"/>
+                    <rect key="frame" x="167.66666666666666" y="573" width="80.666666666666657" height="30"/>
                     <state key="normal" title="StopPlay"/>
                     <connections>
                         <action selector="stopPlay:" destination="-1" eventType="touchUpInside" id="X2Q-J9-LZ7"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jE1-rt-oIi" userLabel="StopPush">
-                    <rect key="frame" x="311.66666666666669" y="573" width="102.33333333333331" height="30"/>
+                    <rect key="frame" x="248.33333333333334" y="573" width="80.333333333333343" height="30"/>
                     <state key="normal" title="StopPush"/>
                     <connections>
                         <action selector="stopPush:" destination="-1" eventType="touchUpInside" id="hE5-dk-QhW"/>
@@ -297,19 +297,28 @@
                         <action selector="stopCam:" destination="-1" eventType="touchUpInside" id="T5U-Y8-lwi"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3NY-ve-6GV" userLabel="NewPage">
+                    <rect key="frame" x="328.66666666666669" y="573" width="80.333333333333314" height="30"/>
+                    <state key="normal" title="NewPage"/>
+                    <connections>
+                        <action selector="newPage:" destination="-1" eventType="touchUpInside" id="gzb-WZ-AtS"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="height" secondItem="drI-3V-bPu" secondAttribute="height" id="06U-hE-YNl"/>
+                <constraint firstItem="3NY-ve-6GV" firstAttribute="top" secondItem="drI-3V-bPu" secondAttribute="top" id="20v-0W-thj"/>
                 <constraint firstItem="0Gc-rJ-oWd" firstAttribute="width" secondItem="4Lk-UT-amD" secondAttribute="width" id="2Iv-AH-5Rw"/>
                 <constraint firstItem="PCz-ew-zQ9" firstAttribute="width" secondItem="InE-UV-TZR" secondAttribute="width" id="2vb-b8-oyy"/>
                 <constraint firstItem="VDo-Gw-kAu" firstAttribute="bottom" secondItem="bL4-KM-t8R" secondAttribute="top" constant="-5" id="3SL-th-dlA"/>
+                <constraint firstItem="3NY-ve-6GV" firstAttribute="leading" secondItem="jE1-rt-oIi" secondAttribute="trailing" id="3kM-yn-GV2"/>
                 <constraint firstItem="bL4-KM-t8R" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-20" id="4Fh-oO-XhQ"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="height" secondItem="drI-3V-bPu" secondAttribute="height" id="4xb-gK-17U"/>
                 <constraint firstItem="l7N-OT-dic" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-5" id="5nG-yQ-mXU"/>
                 <constraint firstItem="VDo-Gw-kAu" firstAttribute="leading" secondItem="iur-EY-slm" secondAttribute="trailing" constant="5" id="9kz-y5-Sss"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="width" secondItem="CQa-Ah-dxL" secondAttribute="width" id="AW5-Cg-fVs"/>
-                <constraint firstItem="jE1-rt-oIi" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="Dbl-ma-xzn"/>
+                <constraint firstItem="3NY-ve-6GV" firstAttribute="height" secondItem="drI-3V-bPu" secondAttribute="height" id="B8O-lb-WVT"/>
                 <constraint firstItem="0Gc-rJ-oWd" firstAttribute="leading" secondItem="oyc-7U-k9Q" secondAttribute="trailing" id="DjU-sV-lAy"/>
                 <constraint firstItem="InE-UV-TZR" firstAttribute="leading" secondItem="PCz-ew-zQ9" secondAttribute="trailing" id="F9s-v3-Mfa"/>
                 <constraint firstItem="oyc-7U-k9Q" firstAttribute="width" secondItem="4Lk-UT-amD" secondAttribute="width" id="Hg5-WR-iEt"/>
@@ -340,12 +349,14 @@
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="leading" secondItem="drI-3V-bPu" secondAttribute="trailing" id="eXQ-Oh-AB9"/>
                 <constraint firstItem="l7N-OT-dic" firstAttribute="leading" secondItem="0Gc-rJ-oWd" secondAttribute="trailing" id="f5P-GP-pCg"/>
                 <constraint firstItem="PCz-ew-zQ9" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" id="fuE-nt-bpI"/>
+                <constraint firstItem="3NY-ve-6GV" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" constant="-5" id="g1g-mY-mma"/>
                 <constraint firstItem="InE-UV-TZR" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="hn8-G3-K9n"/>
                 <constraint firstItem="rLf-oZ-TFx" firstAttribute="top" secondItem="4Lk-UT-amD" secondAttribute="top" id="jER-Un-leb"/>
                 <constraint firstItem="IhK-BJ-a65" firstAttribute="leading" secondItem="ZWE-DN-YWb" secondAttribute="leading" constant="10" id="jYM-PU-HbV"/>
                 <constraint firstItem="RM2-Fk-mCo" firstAttribute="width" secondItem="drI-3V-bPu" secondAttribute="width" id="kJy-FF-3yf"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="leading" secondItem="CQa-Ah-dxL" secondAttribute="trailing" id="l2q-dm-zMe"/>
                 <constraint firstItem="IhK-BJ-a65" firstAttribute="bottom" secondItem="bL4-KM-t8R" secondAttribute="bottom" id="lqw-gs-FVg"/>
+                <constraint firstItem="3NY-ve-6GV" firstAttribute="width" secondItem="jE1-rt-oIi" secondAttribute="width" id="mBB-Zw-m4w"/>
                 <constraint firstItem="4Lk-UT-amD" firstAttribute="bottom" secondItem="drI-3V-bPu" secondAttribute="top" id="mb8-is-D1C"/>
                 <constraint firstItem="Iyu-Qy-hLl" firstAttribute="top" secondItem="drI-3V-bPu" secondAttribute="top" id="n7p-Mi-n8r"/>
                 <constraint firstItem="i4D-ha-MOA" firstAttribute="trailing" secondItem="ZWE-DN-YWb" secondAttribute="trailing" id="nsd-zf-Dy2"/>

@@ -8,6 +8,7 @@ cd %~dp0
 set common_fodler=..\..\common
 set common_c_library_folder=..\..\common-c-library
 set livemessage_folder=..\..\livemessage
+set exit_b=%1
 
 :: ---- load config file
 for /f "delims=" %%i in (deps_config.txt) do set %%i
@@ -53,8 +54,12 @@ if exist "%module_folder%" (
     echo. current svn path: %svn_url%
     echo. target svn path: %module_svn%
     echo.
-    pause
-    exit 0
+    	if "%exit_b%"=="1" (
+		exit /b 1
+	) else (
+		pause
+        exit 0
+	)
   )
 ) else (
   svn checkout %module_svn% %module_folder%
@@ -70,6 +75,10 @@ echo. common-c-library: %common_c_library_ver%
 echo. common: %common_ver%
 echo. livemessage: %livemessage_ver%
 echo.
-pause
-exit 0
+if "%exit_b%"=="1" (
+	exit /b 0
+) else (
+	pause
+    exit 0
+)
 

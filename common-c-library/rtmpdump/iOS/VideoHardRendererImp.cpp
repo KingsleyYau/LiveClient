@@ -7,21 +7,25 @@
 //
 
 #include "VideoHardRendererImp.h"
+
+#include <common/KLog.h>
+
 namespace coollive {
-VideoHardRendererImp::VideoHardRendererImp(id<VideoHardRendererDelegate> _Nullable VideoHardRendererImp) {
+VideoHardRendererImp::VideoHardRendererImp(id<VideoHardRendererDelegate> VideoHardRendererImp) {
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardRendererImp::VideoHardRendererImp( this : %p )", this);
+    
     mpVideoHardRendererImp = VideoHardRendererImp;
 }
 
 VideoHardRendererImp::~VideoHardRendererImp() {
-    
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardRendererImp::~VideoHardRendererImp( this : %p )", this);
 }
 
-void VideoHardRendererImp::RenderVideoFrame(void* _Nonnull frame) {
+void VideoHardRendererImp::RenderVideoFrame(void *frame) {
     // 播放视频
-    if( [mpVideoHardRendererImp respondsToSelector:@selector(renderVideoFrame:)] ) {
-        CVPixelBufferRef buffer = (CVPixelBufferRef)frame;
-        [mpVideoHardRendererImp renderVideoFrame:buffer];
-
+    if ([mpVideoHardRendererImp respondsToSelector:@selector(renderVideoFrame:)]) {
+        CVPixelBufferRef pixelBuffer = (CVPixelBufferRef)frame;
+        [mpVideoHardRendererImp renderVideoFrame:pixelBuffer];
     }
 }
 }

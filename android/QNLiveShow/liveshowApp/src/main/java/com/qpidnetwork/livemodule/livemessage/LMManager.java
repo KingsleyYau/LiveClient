@@ -3,11 +3,7 @@ package com.qpidnetwork.livemodule.livemessage;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
 
-import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.framework.services.LiveService;
 //import com.qpidnetwork.livemodule.httprequest.LiveRequestOperator;
 //import com.qpidnetwork.livemodule.httprequest.OnGetUserInfoCallback;
 //import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
@@ -49,22 +45,12 @@ import com.qpidnetwork.livemodule.framework.services.LiveService;
 //import com.qpidnetwork.livemodule.liveshow.manager.ShowUnreadManager;
 //import com.qpidnetwork.livemodule.liveshow.manager.URL2ActivityManager;
 //import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.httprequest.RequestJni;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
-import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
 import com.qpidnetwork.livemodule.im.IMClient;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
 import com.qpidnetwork.livemodule.livemessage.item.LMClientListener;
 import com.qpidnetwork.livemodule.livemessage.item.LMPrivateMsgContactItem;
 import com.qpidnetwork.livemodule.livemessage.item.LiveMessageItem;
-import com.qpidnetwork.livemodule.liveshow.authorization.IAuthorizationListener;
-import com.qpidnetwork.livemodule.utils.Log;
-import com.qpidnetwork.qnbridgemodule.sysPermissions.Request;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * IM聊天管理器（自动登录，事件分发等）

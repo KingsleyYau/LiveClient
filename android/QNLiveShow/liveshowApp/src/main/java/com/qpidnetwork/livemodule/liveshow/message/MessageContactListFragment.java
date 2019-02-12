@@ -59,17 +59,24 @@ public class MessageContactListFragment extends BaseListFragment implements LMLi
     @Override
     public void onResume() {
         super.onResume();
-        if(mIsNeedRefreshContact){
-            //与服务器同步联系人列表未成功，重新同步
-            queryContactList();
-        }
+//        if(mIsNeedRefreshContact){
+//            //与服务器同步联系人列表未成功，重新同步
+//            queryContactList();
+//        }
+
+        //edit by Jagger 2018-8-31
+        //测试妹妹说返回列表，人的顺序没有改变。　所以改为全刷新 BUG#13583
+        queryContactList();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         //解除私信事件监听
-        LMManager.getInstance().registerLMLiveRoomEventListener(this);
+//        LMManager.getInstance().registerLMLiveRoomEventListener(this);
+
+        // 2018/11/6 Hardy
+        LMManager.getInstance().unregisterLMLiveRoomEventListener(this);
     }
 
     @Override

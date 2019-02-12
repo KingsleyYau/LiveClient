@@ -9,12 +9,12 @@ import com.qpidnetwork.livemodule.httprequest.OnGetGiftDetailCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetGiftListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
 import com.qpidnetwork.livemodule.httprequest.item.HttpLccErrType;
-import com.qpidnetwork.livemodule.liveshow.datacache.file.FileCacheManager;
+import com.qpidnetwork.qnbridgemodule.datacache.FileCacheManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.FileDownloadManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
 import com.qpidnetwork.livemodule.liveshow.model.http.HttpRespObject;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -269,6 +269,11 @@ public class NormalGiftManager {
                                 listener.onCompleted(isSuccess, localFilePath, fileUrl);
                             }
                         }
+
+                        @Override
+                        public void onProgress(String fileUrl, int progress) {
+
+                        }
                     });
                 }
             }
@@ -305,6 +310,11 @@ public class NormalGiftManager {
 //                                Log.d(TAG,"图片下载成功,localPath:"+localPath);
                                 listener.onCompleted( isSuccess, localFilePath, fileUrl);
                             }
+                        }
+
+                        @Override
+                        public void onProgress(String fileUrl, int progress) {
+
                         }
                     });
                 }

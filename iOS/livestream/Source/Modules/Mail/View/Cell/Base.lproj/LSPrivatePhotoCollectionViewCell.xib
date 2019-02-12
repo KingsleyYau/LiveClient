@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="LSPrivatePhotoCollectionViewCell" id="gTV-IL-0wX" customClass="LSPrivatePhotoCollectionViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="120" height="135"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="120" height="135"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="mef-aQ-DeV">
+                        <rect key="frame" x="10" y="0.0" width="100" height="100"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="mef-aQ-DeV" secondAttribute="height" multiplier="1:1" id="qND-sN-aP0"/>
+                        </constraints>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Mail_Private_Video_Unlock" translatesAutoresizingMaskIntoConstraints="NO" id="YEo-Ab-pNo">
+                        <rect key="frame" x="12" y="2" width="32" height="32"/>
+                    </imageView>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xru-Ad-22b" userLabel="Tip View">
+                        <rect key="frame" x="37.5" y="23" width="45" height="54"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EMF_Private_Lock" translatesAutoresizingMaskIntoConstraints="NO" id="98P-5m-owx">
+                                <rect key="frame" x="4.5" y="0.0" width="36" height="36"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="axA-EL-g1h">
+                                <rect key="frame" x="0.0" y="37" width="45" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="axA-EL-g1h" secondAttribute="bottom" id="2RD-Jj-ZNl"/>
+                            <constraint firstItem="axA-EL-g1h" firstAttribute="top" secondItem="98P-5m-owx" secondAttribute="bottom" constant="1" id="7Ab-7T-56T"/>
+                            <constraint firstItem="98P-5m-owx" firstAttribute="top" secondItem="xru-Ad-22b" secondAttribute="top" id="CjM-tE-MtD"/>
+                            <constraint firstItem="98P-5m-owx" firstAttribute="centerX" secondItem="xru-Ad-22b" secondAttribute="centerX" id="MTX-WM-j71"/>
+                            <constraint firstItem="axA-EL-g1h" firstAttribute="leading" secondItem="xru-Ad-22b" secondAttribute="leading" id="buw-Y6-Gpb"/>
+                            <constraint firstAttribute="trailing" secondItem="axA-EL-g1h" secondAttribute="trailing" id="fee-ie-6SQ"/>
+                        </constraints>
+                    </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Url-ng-Tn6" userLabel="Label View">
+                        <rect key="frame" x="10" y="100" width="100" height="25"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XOl-FH-ivu">
+                                <rect key="frame" x="4" y="4" width="92" height="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="0.16078431369999999" green="0.47843137250000001" blue="0.95294117649999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="XOl-FH-ivu" firstAttribute="leading" secondItem="Url-ng-Tn6" secondAttribute="leading" constant="4" id="5X7-zw-ZbJ"/>
+                            <constraint firstAttribute="height" constant="25" id="B36-Yt-w2t"/>
+                            <constraint firstItem="XOl-FH-ivu" firstAttribute="centerY" secondItem="Url-ng-Tn6" secondAttribute="centerY" id="geR-5n-07o"/>
+                            <constraint firstAttribute="trailing" secondItem="XOl-FH-ivu" secondAttribute="trailing" constant="4" id="xn2-fo-ASB"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="Url-ng-Tn6" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="0IJ-AL-HtX"/>
+                <constraint firstItem="xru-Ad-22b" firstAttribute="centerX" secondItem="mef-aQ-DeV" secondAttribute="centerX" id="1GH-My-KnM"/>
+                <constraint firstItem="mef-aQ-DeV" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="33p-rw-93a"/>
+                <constraint firstAttribute="trailing" secondItem="Url-ng-Tn6" secondAttribute="trailing" constant="10" id="DZV-qV-PS0"/>
+                <constraint firstItem="mef-aQ-DeV" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="10" id="JVl-aG-sLx"/>
+                <constraint firstItem="xru-Ad-22b" firstAttribute="centerY" secondItem="mef-aQ-DeV" secondAttribute="centerY" id="Knn-IG-J8t"/>
+                <constraint firstItem="YEo-Ab-pNo" firstAttribute="leading" secondItem="mef-aQ-DeV" secondAttribute="leading" constant="2" id="Q2S-yP-YXc"/>
+                <constraint firstItem="Url-ng-Tn6" firstAttribute="top" secondItem="mef-aQ-DeV" secondAttribute="bottom" id="oLn-SA-NsA"/>
+                <constraint firstItem="YEo-Ab-pNo" firstAttribute="top" secondItem="mef-aQ-DeV" secondAttribute="top" constant="2" id="r2S-36-owR"/>
+                <constraint firstAttribute="trailing" secondItem="mef-aQ-DeV" secondAttribute="trailing" constant="10" id="rzP-Dh-r82"/>
+            </constraints>
+            <connections>
+                <outlet property="desLabel" destination="XOl-FH-ivu" id="8Oo-C0-9EO"/>
+                <outlet property="privateImageView" destination="mef-aQ-DeV" id="bAq-CV-Jaf"/>
+                <outlet property="tipImageView" destination="98P-5m-owx" id="LxJ-Cr-EAK"/>
+                <outlet property="tipLabel" destination="axA-EL-g1h" id="fGP-ka-Y3f"/>
+                <outlet property="tipView" destination="xru-Ad-22b" id="eSS-We-3Dd"/>
+                <outlet property="unlockImageView" destination="YEo-Ab-pNo" id="cyf-0d-8vI"/>
+            </connections>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="EMF_Private_Lock" width="36" height="36"/>
+        <image name="Mail_Private_Video_Unlock" width="32" height="32"/>
+    </resources>
+</document>

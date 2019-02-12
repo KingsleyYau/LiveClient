@@ -7,7 +7,8 @@ import android.text.TextUtils;
 import com.qpidnetwork.livemodule.framework.base.BaseWebViewFragment;
 import com.qpidnetwork.livemodule.httprequest.item.ConfigItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.CoreUrlHelper;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:
@@ -22,7 +23,7 @@ public class PostStampFragment extends BaseWebViewFragment {
         Log.d(TAG,"initViewData");
         ConfigItem configItem = LoginManager.getInstance().getLocalConfigItem();
         if(null != configItem && !TextUtils.isEmpty(configItem.postStampUrl)){
-            mUrl = configItem.postStampUrl;
+            mUrl = CoreUrlHelper.packageWebviewUrl(getActivity(), configItem.postStampUrl);
         }
         loadUrl(false,false);
     }
@@ -45,4 +46,5 @@ public class PostStampFragment extends BaseWebViewFragment {
         TAG = PostStampFragment.class.getSimpleName();
         super.setUserVisibleHint(isVisibleToUser);
     }
+
 }

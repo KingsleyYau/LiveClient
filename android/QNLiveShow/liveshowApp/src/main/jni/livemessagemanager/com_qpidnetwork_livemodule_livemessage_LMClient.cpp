@@ -21,77 +21,65 @@ static jobject gListener = NULL;
 static ILiveMessageManManager* g_lmMessageManager = NULL;
 
 
-long long OnHandlePrivateMsgFriendListRequest(IRequestGetPrivateMsgFriendListCallback* callback);
-long long OnHandleFollowPrivateMsgFriendListRequest(IRequestGetFollowPrivateMsgFriendListCallback* callback);
-void OnHandlePrivateMsgWithUserIdRequest(const string& userId, const string& startMsgId, PrivateMsgOrderType order, int limit, int reqId, IRequestGetPrivateMsgHistoryByIdCallback* callback);
-long long OnHandleSetPrivateMsgReaded(const string& userId, const string& msgId,IRequestSetPrivateMsgReadedCallback* callback);
-static IHttpRequestPrivateMsgControllerCallback gHttpRequestPrivateMsgControllerCallback {
-        OnHandlePrivateMsgFriendListRequest,
-        OnHandleFollowPrivateMsgFriendListRequest,
-        OnHandlePrivateMsgWithUserIdRequest,
-        OnHandleSetPrivateMsgReaded
+long long HandlePrivateMsgFriendListRequest(IRequestGetPrivateMsgFriendListCallback* callback);
+long long HandleFollowPrivateMsgFriendListRequest(IRequestGetFollowPrivateMsgFriendListCallback* callback);
+void HandlePrivateMsgWithUserIdRequest(const string& userId, const string& startMsgId, PrivateMsgOrderType order, int limit, int reqId, IRequestGetPrivateMsgHistoryByIdCallback* callback);
+long long HandleSetPrivateMsgReaded(const string& userId, const string& msgId,IRequestSetPrivateMsgReadedCallback* callback);
+static IHttpRequestPrivateMsgControllerHandler gHttpRequestPrivateMsgControllerHandler {
+        HandlePrivateMsgFriendListRequest,
+        HandleFollowPrivateMsgFriendListRequest,
+        HandlePrivateMsgWithUserIdRequest,
+        HandleSetPrivateMsgReaded
 };
 
-long long OnHandlePrivateMsgFriendListRequest(IRequestGetPrivateMsgFriendListCallback* callback)
+long long HandlePrivateMsgFriendListRequest(IRequestGetPrivateMsgFriendListCallback* callback)
 {
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleRequestPrivateMsgFriendList() begin");
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleRequestPrivateMsgFriendList() begin");
 
     jlong taskId = -1;
 
     /* turn object to java object here */
-    JNIEnv* env;
-    jint iRet = JNI_ERR;
-    gJavaVM->GetEnv((void**)&env, JNI_VERSION_1_4);
-    if( env == NULL ) {
-        iRet = gJavaVM->AttachCurrentThread((JNIEnv **)&env, NULL);
-    }
+    JNIEnv* env = NULL;
+    bool isAttachThread = false;
+    GetEnv(&env, &isAttachThread);
 
     jlong jcallback = (jlong)callback;
     taskId = Java_com_qpidnetwork_livemodule_httprequest_RequestJniPrivateMsg_GetPrivateMsgFriendList(env, NULL, jcallback);
 
 
-    if( iRet == JNI_OK ) {
-        gJavaVM->DetachCurrentThread();
-    }
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleRequestPrivateMsgFriendList() end");
+    ReleaseEnv(isAttachThread);
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleRequestPrivateMsgFriendList() end");
     return (long long)taskId;
 }
 
-long long OnHandleFollowPrivateMsgFriendListRequest(IRequestGetFollowPrivateMsgFriendListCallback* callback)
+long long HandleFollowPrivateMsgFriendListRequest(IRequestGetFollowPrivateMsgFriendListCallback* callback)
 {
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleFollowPrivateMsgFriendListRequest( ) begin");
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleFollowPrivateMsgFriendListRequest( ) begin");
 
     jlong taskId = -1;
     /* turn object to java object here */
-    JNIEnv* env;
-    jint iRet = JNI_ERR;
-    gJavaVM->GetEnv((void**)&env, JNI_VERSION_1_4);
-    if( env == NULL ) {
-        iRet = gJavaVM->AttachCurrentThread((JNIEnv **)&env, NULL);
-    }
+    JNIEnv* env = NULL;
+    bool isAttachThread = false;
+    GetEnv(&env, &isAttachThread);
     jlong jcallback = (jlong)callback;
     taskId = Java_com_qpidnetwork_livemodule_httprequest_RequestJniPrivateMsg_GetFollowPrivateMsgFriendList(env, NULL, jcallback);
 
-    if( iRet == JNI_OK ) {
-        gJavaVM->DetachCurrentThread();
-    }
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleFollowPrivateMsgFriendListRequest(taskId:%ld ) end", taskId);
+    ReleaseEnv(isAttachThread);
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleFollowPrivateMsgFriendListRequest(taskId:%ld ) end", taskId);
 
     return taskId;
 }
 
 
-void OnHandlePrivateMsgWithUserIdRequest(const string& userId, const string& startMsgId, PrivateMsgOrderType order, int limit, int reqId, IRequestGetPrivateMsgHistoryByIdCallback* callback)
+void HandlePrivateMsgWithUserIdRequest(const string& userId, const string& startMsgId, PrivateMsgOrderType order, int limit, int reqId, IRequestGetPrivateMsgHistoryByIdCallback* callback)
 {
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleRequestPrivateMsgWithUserId() begin");
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleRequestPrivateMsgWithUserId() begin");
 
     /* turn object to java object here */
-    JNIEnv* env;
-    jint iRet = JNI_ERR;
-    gJavaVM->GetEnv((void**)&env, JNI_VERSION_1_4);
-    if( env == NULL ) {
-        iRet = gJavaVM->AttachCurrentThread((JNIEnv **)&env, NULL);
-    }
+
+    JNIEnv* env = NULL;
+    bool isAttachThread = false;
+    GetEnv(&env, &isAttachThread);
 
     jstring juserId = env->NewStringUTF(userId.c_str());
     jstring jstartMsgId = env->NewStringUTF(startMsgId.c_str());
@@ -100,33 +88,28 @@ void OnHandlePrivateMsgWithUserIdRequest(const string& userId, const string& sta
     env->DeleteLocalRef(juserId);
     env->DeleteLocalRef(jstartMsgId);
 
-    if( iRet == JNI_OK ) {
-        gJavaVM->DetachCurrentThread();
-    }
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleRequestPrivateMsgWithUserId() end");
+    ReleaseEnv(isAttachThread);
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleRequestPrivateMsgWithUserId() end");
 }
 
-long long OnHandleSetPrivateMsgReaded(const string& userId, const string& msgId,IRequestSetPrivateMsgReadedCallback* callback) {
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleSetPrivateMsgReaded(userId:%s, msgId:%s ) begin", userId.c_str(), msgId.c_str());
+long long HandleSetPrivateMsgReaded(const string& userId, const string& msgId,IRequestSetPrivateMsgReadedCallback* callback) {
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleSetPrivateMsgReaded(userId:%s, msgId:%s ) begin", userId.c_str(), msgId.c_str());
 
     jlong taskId = -1;
     /* turn object to java object here */
-    JNIEnv* env;
-    jint iRet = JNI_ERR;
-    gJavaVM->GetEnv((void**)&env, JNI_VERSION_1_4);
-    if( env == NULL ) {
-        iRet = gJavaVM->AttachCurrentThread((JNIEnv **)&env, NULL);
-    }
+    JNIEnv* env = NULL;
+    bool isAttachThread = false;
+    GetEnv(&env, &isAttachThread);
+
+
     jstring juserId = env->NewStringUTF(userId.c_str());
     jstring jmsgId = env->NewStringUTF(msgId.c_str());
     jlong jcallback = (jlong)callback;
     taskId = Java_com_qpidnetwork_livemodule_httprequest_RequestJniPrivateMsg_SetPrivateMsgReaded(env, NULL, juserId, jmsgId, jcallback);
     env->DeleteLocalRef(juserId);
     env->DeleteLocalRef(jmsgId);
-    if( iRet == JNI_OK ) {
-        gJavaVM->DetachCurrentThread();
-    }
-    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnHandleSetPrivateMsgReaded(taskId:%lld, userId:%s, msgId:%s ) end", taskId, userId.c_str(), msgId.c_str());
+    ReleaseEnv(isAttachThread);
+    FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::HandleSetPrivateMsgReaded(taskId:%lld, userId:%s, msgId:%s ) end", taskId, userId.c_str(), msgId.c_str());
 
     return taskId;
 }
@@ -249,7 +232,7 @@ public:
         FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnLMRefreshPrivateMsgWithUserId() end ");
     }
 	// 这个是上层调用的返回，获取指定用户Id的用户更多私信消息（不能直接返回的，需要考虑刷新消息标记和是否有本地数据），返回是以前的的数据，插在数据前面，不是全部(userId 为接收者的用户id，用于上层判断是否为当前的聊天用户)
-    virtual void OnLMGetMorePrivateMsgWithUserId(const string& userId, bool success, int errnum, const string& errmsg, const LMMessageList& msgList, int reqId, bool isMuchMore) override {
+    virtual void OnLMGetMorePrivateMsgWithUserId(const string& userId, bool success, int errnum, const string& errmsg, const LMMessageList& msgList, int reqId, bool isMuchMore, bool isInsertHead) override {
         FileLog(LIVESHOW_LIVEMESSAGE_LOG, "LMClientJni::OnLMGetMorePrivateMsgWithUserId(userId:%s success:%d) begin ", userId.c_str(), success);
         JNIEnv* env = NULL;
         bool isAttachThread = false;
@@ -518,7 +501,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
     // 获取支持私信类型
     PrivateSupportTypeList supportList;
     jint *tempArray;
-    tempArray = env->GetIntArrayElements(supportArray, NULL); //推荐使用
+    tempArray = env->GetIntArrayElements(supportArray, NULL); 
     if (NULL != supportArray) {
         for (int i = 0; i < len; i++) {
             LMPrivateMsgSupportType type = IntToLMPrivateMsgSupportType(tempArray[i]);
@@ -547,7 +530,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
             }
 
             gListener = env->NewGlobalRef(listener);
-            result = g_lmMessageManager->Init(jimClient, gHttpRequestPrivateMsgControllerCallback, &g_listener);
+            result = g_lmMessageManager->Init(jimClient, gHttpRequestPrivateMsgControllerHandler, &g_listener);
 
         }
 
@@ -599,7 +582,7 @@ JNIEXPORT jboolean JNICALL Java_com_qpidnetwork_livemodule_livemessage_LMClient_
         }
 
         gListener = env->NewGlobalRef(listener);
-        result = g_lmMessageManager->Init(jimClient, gHttpRequestPrivateMsgControllerCallback, &g_listener);
+        result = g_lmMessageManager->Init(jimClient, gHttpRequestPrivateMsgControllerHandler, &g_listener);
     }
 
 

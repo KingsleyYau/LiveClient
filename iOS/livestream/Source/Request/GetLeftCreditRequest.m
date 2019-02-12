@@ -23,7 +23,7 @@
 - (BOOL)sendRequest {
     if( self.manager ) {
         __weak typeof(self) weakSelf = self;
-        NSInteger request = [self.manager getLeftCredit:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, double credit) {
+        NSInteger request = [self.manager getLeftCredit:^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg, double credit, int coupon, double postStamp) {
             BOOL bFlag = NO;
             
             // 没有处理过, 才进入LSSessionRequestManager处理
@@ -33,7 +33,7 @@
             }
             
             if( !bFlag && weakSelf.finishHandler ) {
-                weakSelf.finishHandler(success, errnum, errmsg, credit);
+                weakSelf.finishHandler(success, errnum, errmsg, credit, coupon, postStamp);
                 [weakSelf finishRequest];
             }
         }];
@@ -44,7 +44,7 @@
 
 - (void)callRespond:(BOOL)success errnum:(HTTP_LCC_ERR_TYPE)errnum errmsg:(NSString* _Nullable)errmsg {
     if( self.finishHandler && !success ) {
-        self.finishHandler(NO, errnum, errmsg, 0.0);
+        self.finishHandler(NO, errnum, errmsg, 0.0, 0, 0.0);
     }
     
     [super callRespond:success errnum:errnum errmsg:errmsg];

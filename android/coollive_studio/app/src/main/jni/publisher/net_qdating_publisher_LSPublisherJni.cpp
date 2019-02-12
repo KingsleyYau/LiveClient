@@ -34,7 +34,16 @@ JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_SetLogDir
       string logDir = JString2String(env, jLogDir);
       KLog::SetLogDirectory(logDir);
       FileLevelLog("rtmpdump", KLog::LOG_ERR_SYS, "JNI_OnLoad( lspublisher, version : %s )", LS_VERSION);
-  }
+}
+
+
+JNIEXPORT void JNICALL Java_net_qdating_publisher_LSPublisherJni_SetLogLevel
+  (JNIEnv *env, jclass cls, jint jLogLevel) {
+    if( jLogLevel >= KLog::LOG_OFF && jLogLevel <= KLog::LOG_STAT ) {
+        int level = KLog::LOG_STAT - jLogLevel;
+        KLog::SetLogLevel((KLog::LogLevel)level);
+    }
+}
 
 JNIEXPORT jlong JNICALL Java_net_qdating_publisher_LSPublisherJni_Create
   (JNIEnv *env, jobject thiz, jobject callback, jboolean useHardEncoder, jobject videoEncoder, jint width, jint height, jint bitRate, jint keyFrameInterval, jint fps) {

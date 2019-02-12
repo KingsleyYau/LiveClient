@@ -14,6 +14,7 @@ using namespace std;
 
 #include <json/json/json.h>
 #include "ZBRebateInfoItem.h"
+#include "ZBAuthorityItem.h"
 #define ZBRII_ANCHORID_PARAM          "anchor_id"
 #define ZBRII_ROOMID_PARAM            "room_id"
 #define ZBRII_ROOMTYPE_PARAM          "room_type"
@@ -23,6 +24,7 @@ using namespace std;
 #define ZBRII_STATUS_PARAM            "status"
 #define ZBRII_MAXFANSINUM_PARAM       "max_fansi_num"
 #define ZBRII_PULLURL_PARAM           "pull_url"
+#define ZBRII_PRIV_PARAM              "priv"
 
 class ZBRoomInfoItem {
 public:
@@ -77,6 +79,10 @@ public:
                 }
                 
             }
+            
+            if (root[ZBRII_PRIV_PARAM].isObject()) {
+                priv.Parse(root[ZBRII_PRIV_PARAM]);
+            }
 
         }
 
@@ -110,6 +116,7 @@ public:
      * status                   直播间状态（整型）（ZBLIVESTATUS_INIT：初始，ZBLIVESTATUSE_RECIPROCALSTART：开始倒数中，ZBLIVESTATUS_ONLINE：在线，ZBLIVESTATUS_ARREARAGE：欠费中，ZBLIVESTATUS_RECIPROCALEND：结束倒数中，ZBLIVESTATUS_CLOSE：关闭）
      * maxFansiNum		        最大人数限制
      * PullUrl                  男士视频流url
+     * priv                     权限
      */
     string          anchorId;
     string          roomId;
@@ -120,6 +127,7 @@ public:
     ZBLiveStatus    status;
     int             maxFansiNum;
     list<string>    pullUrl;
+    ZBAuthorityItem priv;
 };
 
 

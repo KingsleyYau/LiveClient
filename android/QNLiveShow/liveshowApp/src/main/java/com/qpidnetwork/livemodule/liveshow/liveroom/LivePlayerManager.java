@@ -58,6 +58,8 @@ public class LivePlayerManager implements ILSPlayerStatusCallback {
             mIsInit = false;
             mLSPlayer.stop();
             mLSPlayer.uninit(); //防止内存泄漏
+            //uninit需要置空，否则uninit后调用其他接口可能死机
+            mLSPlayer = null;
         }
     }
 

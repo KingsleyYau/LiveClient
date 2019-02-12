@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LSMotifyAboutYouViewController">
+            <connections>
+                <outlet property="aboutYouPlaceholderLabel" destination="6DK-I0-pA6" id="fod-Ek-xs5"/>
+                <outlet property="aboutYouTextView" destination="YgG-38-4kM" id="Tv9-17-uvV"/>
+                <outlet property="bottomDistance" destination="sZJ-4z-NaM" id="f5H-m0-50F"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="YgG-38-4kM">
+                    <rect key="frame" x="13" y="20" width="349" height="602"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="textColor" red="0.2196078431372549" green="0.2196078431372549" blue="0.2196078431372549" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="1ZZ-Co-qTU"/>
+                    </connections>
+                </textView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Say something about you." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6DK-I0-pA6">
+                    <rect key="frame" x="18" y="28" width="178" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.58431372550000005" green="0.58431372550000005" blue="0.58431372550000005" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="6DK-I0-pA6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="18" id="D0A-fK-sVc"/>
+                <constraint firstAttribute="trailing" secondItem="YgG-38-4kM" secondAttribute="trailing" constant="13" id="Nse-3N-CuM"/>
+                <constraint firstItem="YgG-38-4kM" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="13" id="QY9-tT-AoD"/>
+                <constraint firstItem="YgG-38-4kM" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" id="WKz-54-h9f"/>
+                <constraint firstItem="6DK-I0-pA6" firstAttribute="top" secondItem="YgG-38-4kM" secondAttribute="top" constant="8" id="ioE-ZG-aVI"/>
+                <constraint firstAttribute="bottom" secondItem="YgG-38-4kM" secondAttribute="bottom" constant="45" id="sZJ-4z-NaM"/>
+            </constraints>
+        </view>
+    </objects>
+</document>

@@ -34,7 +34,7 @@
 // 主播不在线
 "PRELIVE_ERR_BOARDCAST_OFFLINE" = "The broadcaster offline, please check back later.";
 // 若用户断线，不断重连，但180秒后连接失败，则提示
-"RECONNECTION_TIMEOUT" = "Failed to connect.Please try again later.";
+"RECONNECTION_TIMEOUT" = "Failed to enter the broadcast room, please try again later.";
 
 
 /************** 发送即时私密邀请状态提示 *****************/
@@ -54,9 +54,6 @@
 /************** 进入付费公开直播间通用错误提示 *****************/
 // 房间满人
 "LIVE_ROOM_FULL" = "Broadcast room is full. \nPlease check back later.";
-// 网络中断(公共错误)
-//"LOCAL_ERROR_CODE_TIMEOUT" = "Failed to send a One-on-One broadcast invitation, please try again.";
-
 
 /************** 预约直播开始错误提示 *****************/
 // 统一提示

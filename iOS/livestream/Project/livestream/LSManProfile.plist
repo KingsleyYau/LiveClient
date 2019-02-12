@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<array>
+		<string>Member ID</string>
+		<string>Height</string>
+		<string>Weight</string>
+		<string>Smoke</string>
+		<string>Education</string>
+		<string>Profession</string>
+		<string>Primary Language</string>
+		<string>Children</string>
+		<string>Current Income</string>
+		<string>Zodiac</string>
+	</array>
+	<array>
+		<array/>
+		<array>
+			<string>---</string>
+			<string>5&apos;0&quot; (153 cm)</string>
+			<string>5&apos;1&quot;(155 cm)</string>
+			<string>5&apos;2&quot; (158 cm)</string>
+			<string>5&apos;3&quot; (160 cm)</string>
+			<string>5&apos;4&quot; (163 cm)</string>
+			<string>5&apos;5&quot; (165 cm)</string>
+			<string>5&apos;6&quot; (168 cm)</string>
+			<string>5&apos;7&quot; (170 cm)</string>
+			<string>5&apos;8&quot; (173 cm)</string>
+			<string>5&apos;9&quot; (175 cm)</string>
+			<string>5&apos;10&quot; (178 cm)</string>
+			<string>5&apos;11&quot; (180 cm)</string>
+			<string>6&apos;0&quot; (183 cm)</string>
+			<string>6&apos;1&quot; (186 cm)</string>
+			<string>6&apos;2&quot; (188 cm)</string>
+			<string>6&apos;3&quot; (191 cm)</string>
+			<string>6&apos;4&quot; (194 cm)</string>
+			<string>6&apos;6&quot; (196 cm)</string>
+			<string>6&apos;6&quot; (199 cm)</string>
+			<string>6&apos;7&quot; (201 cm)</string>
+			<string>6&apos;8&quot; (204 cm)</string>
+			<string>6&apos;9&quot; (206 cm)</string>
+			<string>6&apos;10&quot; (209 cm)</string>
+			<string>6&apos;11&quot; (211 cm)</string>
+			<string>7&apos;0&quot; (214 cm)</string>
+			<string>7&apos;1&quot; (216 cm)</string>
+			<string>7&apos;2&quot; (219 cm)</string>
+			<string>7&apos;3&quot; (221 cm)</string>
+			<string>7&apos;4&quot; (224 cm)</string>
+			<string>7&apos;5&quot; (226 cm)</string>
+			<string>7&apos;6&quot; (229 cm)</string>
+			<string>7&apos;7&quot; (231 cm)</string>
+			<string>7&apos;8&quot; (234 cm)</string>
+			<string>7&apos;9&quot; (236 cm)</string>
+			<string>7&apos;11&quot; (241 cm)</string>
+			<string>8&apos;0&quot; (244 cm)</string>
+			<string>&gt;8&apos;0&quot; (244 cm)</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>98 lbs (45kg)</string>
+			<string>100 lbs (46kg)</string>
+			<string>103 lbs (47kg)</string>
+			<string>105 lbs (48kg)</string>
+			<string>108 lbs (49kg)</string>
+			<string>110 lbs (50kg)</string>
+			<string>113 lbs (52kg)</string>
+			<string>115 lbs (53kg)</string>
+			<string>118 lbs (54kg)</string>
+			<string>120 lbs (55kg)</string>
+			<string>123 lbs (56kg)</string>
+			<string>125 lbs (57kg)</string>
+			<string>128 lbs (58kg)</string>
+			<string>130 lbs (59kg)</string>
+			<string>133 lbs (61kg)</string>
+			<string>135 lbs (62kg)</string>
+			<string>138 lbs (63kg)</string>
+			<string>140 lbs (64kg)</string>
+			<string>143 lbs (65kg)</string>
+			<string>145 lbs (66kg)</string>
+			<string>148 lbs (68kg)</string>
+			<string>150 lbs (69kg)</string>
+			<string>153 lbs (70kg)</string>
+			<string>155 lbs (71kg)</string>
+			<string>158 lbs (72kg)</string>
+			<string>160 lbs (73kg)</string>
+			<string>163 lbs (74kg)</string>
+			<string>165 lbs (75kg)</string>
+			<string>168 lbs (77kg)</string>
+			<string>170 lbs (78kg)</string>
+			<string>173 lbs (79kg)</string>
+			<string>175 lbs (80kg)</string>
+			<string>178 lbs (81kg)</string>
+			<string>180 lbs (82kg)</string>
+			<string>183 lbs (84kg)</string>
+			<string>185 lbs (85kg)</string>
+			<string>188 lbs (86kg)</string>
+			<string>190 lbs (87kg)</string>
+			<string>193 lbs (88kg)</string>
+			<string>195 lbs (89kg)</string>
+			<string>198 lbs (90kg)</string>
+			<string>200 lbs (91kg)</string>
+			<string>203 lbs (93kg)</string>
+			<string>205 lbs (94kg)</string>
+			<string>208 lbs (95kg)</string>
+			<string>210 lbs (96kg)</string>
+			<string>213 lbs (97kg)</string>
+			<string>215 lbs (98kg)</string>
+			<string>218 lbs (99kg)</string>
+			<string>220 lbs (100kg)</string>
+			<string>223 lbs (102kg)</string>
+			<string>225 lbs (103kg)</string>
+			<string>228 lbs (104kg)</string>
+			<string>230 lbs (105kg)</string>
+			<string>233 lbs (106kg)</string>
+			<string>235 lbs (107kg)</string>
+			<string>238 lbs (108kg)</string>
+			<string>240 lbs (109kg)</string>
+			<string>243 lbs (111kg)</string>
+			<string>245 lbs (112kg)</string>
+			<string>248 lbs (113kg)</string>
+			<string>250 lbs (114kg)</string>
+			<string>253 lbs (115kg)</string>
+			<string>255 lbs (116kg)</string>
+			<string>258 lbs (117kg)</string>
+			<string>260 lbs (118kg)</string>
+			<string>263 lbs (120kg)</string>
+			<string>265 lbs (121kg)</string>
+			<string>268 lbs (122kg)</string>
+			<string>270 lbs (123kg)</string>
+			<string>273 lbs (124kg)</string>
+			<string>275 lbs (125kg)</string>
+			<string>278 lbs (127kg)</string>
+			<string>280 lbs (128kg)</string>
+			<string>283 lbs (129kg)</string>
+			<string>285 lbs (130kg)</string>
+			<string>288 lbs (131kg)</string>
+			<string>290 lbs (132kg)</string>
+			<string>293 lbs (133kg)</string>
+			<string>295 lbs (134kg)</string>
+			<string>298 lbs (136kg)</string>
+			<string>300 lbs (137kg)</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>Nonsmoker</string>
+			<string>Occasionally</string>
+			<string>Daily</string>
+			<string>Trying to quit</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>Secondary High School</string>
+			<string>Vocational School</string>
+			<string>College</string>
+			<string>Bachelor</string>
+			<string>Master</string>
+			<string>Doctorate</string>
+			<string>Post Doctorate</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>Advertising/Media</string>
+			<string>Clerical/Service Worker</string>
+			<string>Composer/Producer/Tech</string>
+			<string>Consultant</string>
+			<string>Doctor/Medical Field</string>
+			<string>Finance/Accounting</string>
+			<string>Graphic Artist/Designer</string>
+			<string>Home Business</string>
+			<string>Home Maker</string>
+			<string>Teacher</string>
+			<string>Lawyer/Paralegal</string>
+			<string>Middle Management</string>
+			<string>MIS/Programming</string>
+			<string>Office Manager/Admin</string>
+			<string>Other</string>
+			<string>Political</string>
+			<string>Professional/Technical</string>
+			<string>R&amp;D  Engineering</string>
+			<string>Retired</string>
+			<string>Sales/Marketing</string>
+			<string>Scientist/Researcher</string>
+			<string>Technical Management</string>
+			<string>Tourism/Travel Agent</string>
+			<string>Tradesman</string>
+			<string>University Staff</string>
+			<string>University Student</string>
+			<string>Upper Manag/Executive</string>
+			<string>Clerk</string>
+			<string>Military</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>English</string>
+			<string>French</string>
+			<string>German</string>
+			<string>Spanish</string>
+			<string>Italian</string>
+			<string>Mandarin</string>
+			<string>Cantonese</string>
+			<string>Japanese</string>
+			<string>Russian</string>
+			<string>Arabic</string>
+			<string>Portuguese</string>
+			<string>Other</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>NO</string>
+			<string>YES</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>$15,000 to $34,999</string>
+			<string>$35,000 to $49,999</string>
+			<string>$50,000 to $74,999</string>
+			<string>$75,000 to $99,999</string>
+			<string>$100,000 to $149,999</string>
+			<string>$150,000+</string>
+			<string>Prefer Not to Say</string>
+		</array>
+		<array>
+			<string>---</string>
+			<string>Aquarius</string>
+			<string>Pisces</string>
+			<string>Aries</string>
+			<string>Taurus</string>
+			<string>Gemini</string>
+			<string>Cancer</string>
+			<string>Leo</string>
+			<string>Virgo</string>
+			<string>Libra</string>
+			<string>Scorpio</string>
+			<string>Sagittarius</string>
+			<string>Capricorn</string>
+		</array>
+	</array>
+</array>
+</plist>

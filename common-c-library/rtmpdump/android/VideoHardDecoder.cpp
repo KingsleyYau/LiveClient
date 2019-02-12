@@ -575,7 +575,25 @@ void VideoHardDecoder::ReleaseVideoFrame(void* frame) {
 }
 
 void VideoHardDecoder::StartDropFrame() {
+    FileLevelLog(
+    		"rtmpdump",
+    		KLog::LOG_MSG,
+			"VideoHardDecoder::StartDropFrame( "
+			"this : %p "
+			")",
+			this
+			);
+}
 
+void VideoHardDecoder::ClearVideoFrame() {
+    FileLevelLog(
+    		"rtmpdump",
+    		KLog::LOG_MSG,
+			"VideoHardDecoder::ClearVideoFrame( "
+			"this : %p "
+			")",
+			this
+			);
 }
 
 void VideoHardDecoder::DecodeVideoHandle() {

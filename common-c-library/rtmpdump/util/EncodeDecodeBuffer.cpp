@@ -12,6 +12,8 @@
 namespace coollive {
 EncodeDecodeBuffer::EncodeDecodeBuffer()
 {
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "EncodeDecodeBuffer::EncodeDecodeBuffer( this : %p )", this);
+    
     mBuffer = NULL;
     mBufferLen = 0;
     mBufferSize = 0;
@@ -20,6 +22,8 @@ EncodeDecodeBuffer::EncodeDecodeBuffer()
 
 EncodeDecodeBuffer::~EncodeDecodeBuffer()
 {
+    FileLevelLog("rtmpdump", KLog::LOG_STAT, "EncodeDecodeBuffer::~EncodeDecodeBuffer( this : %p )", this);
+    
     // 释放缓存
     ReleaseBuffer();
 }

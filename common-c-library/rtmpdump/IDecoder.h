@@ -39,6 +39,7 @@ public:
     virtual void DecodeVideoFrame(const char* data, int size, u_int32_t timestamp, VideoFrameType video_type) = 0;
     virtual void ReleaseVideoFrame(void* frame) = 0;
     virtual void StartDropFrame() = 0;
+    virtual void ClearVideoFrame() = 0;
 };
     
 class AudioDecoder;
@@ -70,6 +71,7 @@ public:
 			u_int32_t timestamp
 			) = 0;
     virtual void ReleaseAudioFrame(void* frame) = 0;
+    virtual void ClearAudioFrame() = 0;
 };
 }
 #endif /* IDecoder_h */

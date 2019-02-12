@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
@@ -20,8 +19,8 @@ import com.qpidnetwork.livemodule.liveshow.personal.chatemoji.ChatEmojiManager;
 import com.qpidnetwork.livemodule.utils.CustomerHtmlTagHandler;
 import com.qpidnetwork.livemodule.utils.DateUtil;
 import com.qpidnetwork.livemodule.utils.HtmlSpannedHandler;
+import com.qpidnetwork.livemodule.utils.PicassoLoadUtil;
 import com.qpidnetwork.livemodule.view.BadgeHelper;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -95,10 +94,11 @@ public class MessageContactAdapter extends BaseAdapter {
         //加载主播头像
         holder.civAnchor.setImageResource(R.drawable.ic_default_photo_woman);
         if(!TextUtils.isEmpty(item.avatarImg)) {
-            Picasso.with(mContext).load(item.avatarImg)
-                    .error(R.drawable.ic_default_photo_woman)
-                    .placeholder(R.drawable.ic_default_photo_woman)
-                    .into(holder.civAnchor);
+//            Picasso.with(mContext).load(item.avatarImg)
+//                    .error(R.drawable.ic_default_photo_woman)
+//                    .placeholder(R.drawable.ic_default_photo_woman)
+//                    .into(holder.civAnchor);
+            PicassoLoadUtil.loadUrl(holder.civAnchor,item.avatarImg,R.drawable.ic_default_photo_woman);
         }
 
         holder.tvName.setText(item.nickName);

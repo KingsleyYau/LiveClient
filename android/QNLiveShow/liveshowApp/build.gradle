@@ -2,12 +2,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
     defaultConfig {
 //        applicationId "com.qpidnetwork.livemodule"
         minSdkVersion 15
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0a"
         //testInstrumentationRunner "android.support.test.runner.Android  JUnitRunner"
@@ -43,34 +43,48 @@ android {
 //        }*/
 //    }
 
+    // 2018/11/15 Hardy
+    // https://www.cnblogs.com/bellkosmos/p/6146349.html
+    repositories {
+        flatDir {
+//        dirs 'libs'
+//            2018/11/15 Hardy 这里的路径在 svn 上是固定的，所以这里不用修改前面的 ../ 上级数
+            dirs 'libs', "../../QNBridgeModule/trunk/bridgeService/libs"
+        }
+    }
+
 }
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
+// old
+//repositories {
+//    flatDir {
+////        dirs 'libs'
+//        dirs 'libs',"../../QNBridgeModule/trunk/bridgeService/libs"
+//    }
+//}
 
 
 dependencies {
     //    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile fileTree(include: ['*.jar'], excludes: ['bolts-tasks-1.4.0.jar',
-                                                    'picasso-2.5.2.jar',
                                                     'haha-2.0.3.jar',
                                                     'leakcanary-watcher-1.5.4.jar',
-                                                    'okhttp-3.9.1.jar',
+                                                    'okhttp-3.11.0.jar',
                                                     'okio-1.13.0.jar',
                                                     'rxjava-2.0.0-RC1.jar',
                                                     'rxandroid-2.0.0.jar',
                                                     'reactive-streams-1.0.0.jar'
     ], dir: 'libs')
+
     provided files('libs/bolts-tasks-1.4.0.jar')
-    provided files('libs/picasso-2.5.2.jar')
-    provided files('libs/okhttp-3.9.1.jar')
+    provided files('libs/okhttp-3.11.0.jar')
     provided files('libs/okio-1.13.0.jar')
     provided files('libs/rxjava-2.0.0-RC1.jar')
     provided files('libs/rxandroid-2.0.0.jar')
     provided files('libs/reactive-streams-1.0.0.jar')
+
+//  2018/11/09   Hardy
+    compile(name: 'picasso-2.71828', ext: 'aar')
 
     //
     compile(name: 'filedownloader-1.6.8', ext: 'aar')
@@ -93,50 +107,73 @@ dependencies {
     //头尾RecyclerView
     compile(name: 'hf-recyclerview-0.0.2', ext: 'aar')
     //cardview
-    compile(name: 'cardview-v7-25.3.1', ext: 'aar')
+    compile(name: 'cardview-v7-27.1.1', ext: 'aar')
     //未读红点制件
     compile(name: 'badgeview-1.1.0', ext: 'aar')
     //QN公共模块（本地引用）
     compile project(':QNBridgeModule:bridgeService')
     //modules
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.3.1'
-    compile project(':Google-play-services_lib')
+    compile 'com.android.support.constraint:constraint-layout:1.1.3'
+    compile 'com.android.support:multidex:1.0.3'
+    androidTestCompile 'com.android.support:multidex:1.0.3'
+    androidTestCompile 'com.android.support:multidex-instrumentation:1.0.3'
+
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:design:27.1.1'
+
     compile project(':Customdialog')
     compile 'org.jetbrains:annotations-java5:15.0'
 }
 
-tasks.withType(JavaCompile) {
+/*
+  2019/1/22 Hardy
+  更换第三方引用库里的 support 包的版本，全部统一为 27.1.1
+  Warn:
+  All com.android.support libraries must use the exact same version specification (mixing versions can lead to runtime crashes).
+  Found versions 27.1.1, 26.1.0. Examples include com.android.support:animated-vector-drawable:27.1.1 and com.android.support:customtabs:26.1.0
+*/
+configurations.all {
+    resolutionStrategy.eachDependency {
+        DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+//                    details.useVersion '27.1.1'
+                    details.useVersion ANDROID_SUPPORT_LIBRARY_VERSION
+                }
+            }
+    }
+}
+
+//tasks.withType(JavaCompile) {
 //    compileTask -> compileTask.dependsOn ndkBuild
-}
-
-task ndkBuild(type: Exec) {
-    workingDir file('src/main')
-    commandLine getNdkBuildCmd()
-}
-
-task cleanNative(type: Exec) {
-    workingDir file('src/main/jni')
-    commandLine getNdkBuildCmd(), 'clean'
-}
-
+//}
+//
+//task ndkBuild(type: Exec) {
+//    workingDir file('src/main')
+//    commandLine getNdkBuildCmd()
+//}
+//
+//task cleanNative(type: Exec) {
+//    workingDir file('src/main/jni')
+//    commandLine getNdkBuildCmd(), 'clean'
+//}
+//
 //clean.dependsOn cleanNative
-
-def getNdkDir() {
-    if (System.env.ANDROID_NDK_ROOT != null)
-        return System.env.ANDROID_NDK_ROOT
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    def ndkdir = properties.getProperty('ndk.dir', null)
-    if (ndkdir == null)
-        throw new GradleException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
-    return ndkdir
-}
-
-def getNdkBuildCmd() {
-    def ndkbuild = getNdkDir() + "/ndk-build"
-    ndkbuild += ".cmd"
-    return ndkbuild
-}
+//
+//def getNdkDir() {
+//    if (System.env.ANDROID_NDK_ROOT != null)
+//        return System.env.ANDROID_NDK_ROOT
+//    Properties properties = new Properties()
+//    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//    def ndkdir = properties.getProperty('ndk.dir', null)
+//    if (ndkdir == null)
+//        throw new GradleException("NDK location not found. Define location with ndk.dir in the local.properties file or with an ANDROID_NDK_ROOT environment variable.")
+//    return ndkdir
+//}
+//
+//def getNdkBuildCmd() {
+//    def ndkbuild = getNdkDir() + "/ndk-build"
+//    ndkbuild += ".cmd"
+//    return ndkbuild
+//}

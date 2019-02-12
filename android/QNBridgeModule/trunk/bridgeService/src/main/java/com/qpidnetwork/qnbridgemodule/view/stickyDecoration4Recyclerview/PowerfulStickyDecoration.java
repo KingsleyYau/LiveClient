@@ -6,7 +6,7 @@ import android.graphics.Paint;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 

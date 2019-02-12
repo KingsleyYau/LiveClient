@@ -8,15 +8,56 @@
 
 #import <UIKit/UIKit.h>
 #import "IntroduceView.h"
-#import "LSRequestManager.h"
 #import "LSConfigManager.h"
 #import "LiveUrlHandler.h"
 #import "IntroduceViewController.h"
 
 @protocol LSLiveWKWebViewManagerDelegate<NSObject>
 @optional
-- (void)webViewTransferJSIsResume:(BOOL)isResume;
+
+/**
+ 开始获取界面内容是返回
+ */
+- (void)webViewdidCommitNavigation;
+
+/**
+ 界面加载完成
+ */
 - (void)webViewDidFinishNavigation;
+
+/**
+ 界面跳转失败
+ */
+- (void)webViewdidFailProvisionalNavigation;
+
+
+/**
+ 缓存过载
+ */
+- (void)webViewdidRecvWebContentProcessDidTerminate;
+
+/**
+ url重定向 解析需要关闭当前webview
+ */
+- (void)webViewdecidePolicyForNavigationCloseUrl;
+
+/**
+ url重定向 打开新的webview界面
+
+ @param urlStr 请求url
+ @param title 标题
+ @param screenName ga跟踪
+ @param alphaType 是否显示导航栏
+ @param isResume 是否需要显示界面请求js接口
+ */
+- (void)webViewdidOpenNewWebView:(NSString *)urlStr title:(NSString *)title screenName:(NSString *)screenName alphaType:(BOOL)alphaType isResume:(BOOL)isResume;
+
+/**
+ url重定向 是否需要显示界面请求js接口
+
+ @param isResume 标志位
+ */
+- (void)webViewTransferJSIsResume:(BOOL)isResume;
 @end
 
 @interface LSLiveWKWebViewManager : NSObject

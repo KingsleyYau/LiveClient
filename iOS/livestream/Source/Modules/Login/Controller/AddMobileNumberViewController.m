@@ -128,7 +128,7 @@
     
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString * _Nonnull errmsg) {
     
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             if (success) {
                 VerifyMobileNumberViewController * vc = [[VerifyMobileNumberViewController alloc]initWithNibName:nil bundle:nil];

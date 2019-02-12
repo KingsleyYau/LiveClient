@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadingEdge="none"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--HeadView-->
+            <!--<FrameLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/act_my_profile_detail_new_iv_head_bg"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="fitXY"-->
+            <!--tools:src="@drawable/bg_profile_detail" />-->
+
+            <LinearLayout
+                android:id="@+id/act_my_profile_detail_new_ll_head_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_profile_detail_live"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/live_size_16dp">
+
+                <ImageButton
+                    android:id="@+id/buttonCancel"
+                    android:layout_width="@dimen/actionbar_height"
+                    android:layout_height="@dimen/actionbar_height"
+                    android:background="@drawable/touch_feedback_holo_dark_circle"
+                    android:onClick="onClickCancel"
+                    android:src="@drawable/ic_arrow_back_white_24dp" />
+
+                <!--<FrameLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:minHeight="100dp">-->
+
+                <!--&lt;!&ndash;<com.qpidnetwork.framework.widget.CircleImageView&ndash;&gt;-->
+                <!--<com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView-->
+                <!--android:id="@+id/imageViewHeader"-->
+                <!--android:layout_width="96dp"-->
+                <!--android:layout_height="96dp"-->
+                <!--android:onClick="onClickImageViewHeader"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@drawable/ic_user_icon"-->
+                <!--app:border_color="@color/white"-->
+                <!--app:border_width="1dp" />-->
+
+                <!--<ImageButton-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom|center_horizontal"-->
+                <!--android:background="@drawable/touch_feedback_holo_dark_circle"-->
+                <!--android:onClick="onClickImageViewTakePhoto"-->
+                <!--android:padding="@dimen/live_size_6dp"-->
+                <!--android:src="@drawable/ic_photo_camera_white_24dp" />-->
+                <!--</FrameLayout>-->
+                <com.qpidnetwork.livemodule.framework.widget.circleimageview.CircleImageView
+                    android:id="@+id/imageViewHeader"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="onClickImageViewHeader"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_user_icon"
+                    app:civ_border_color="@color/white"
+                    app:civ_border_width="@dimen/menu_photo_border" />
+
+                <TextView
+                    android:id="@+id/textViewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/live_size_16dp"
+                    android:paddingRight="@dimen/live_size_16dp"
+                    android:singleLine="true"
+                    android:text="Your name"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textViewAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:textStyle="bold"
+                        tools:text="22" />
+
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="-"-->
+                    <!--android:textColor="@color/white"-->
+                    <!--android:textSize="@dimen/live_size_14sp" />-->
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_margin="6dp"
+                        android:background="@drawable/circle_ffffff_bg" />
+
+                    <TextView
+                        android:id="@+id/textViewCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:textStyle="bold"
+                        tools:text="China" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <!--</FrameLayout>-->
+
+
+            <!--Your Interests-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/layoutMyInterests"
+                    layout="@layout/my_profile_info_item_live" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/live_size_16dp"
+                    android:paddingRight="@dimen/live_size_16dp">
+
+                    <TextView
+                        android:id="@+id/act_my_profile_detail_new_tv_interest_no_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:gravity="center"
+                        android:text="Select your interests."
+                        android:textColor="@color/text_color_grey_light"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <!--<com.qpidnetwork.framework.widget.wrap.WrapListView-->
+                    <com.qpidnetwork.livemodule.view.wrap.WrapListView
+                        android:id="@+id/wrapListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/live_size_10dp"
+                        android:paddingBottom="@dimen/live_size_10dp" />
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/live_size_10dp"
+                    android:background="@color/theme_default_activity_bg_grey" />
+            </LinearLayout>
+
+
+            <!--About you-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/layoutSelfIntro"
+                    layout="@layout/my_profile_info_item_live" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/live_size_16dp"
+                    android:paddingTop="6dp"
+                    android:paddingRight="@dimen/live_size_16dp"
+                    android:paddingBottom="@dimen/live_size_6dp">
+
+                    <TextView
+                        android:id="@+id/act_my_profile_detail_new_tv_about_you_no_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:gravity="center"
+                        android:text="Say something about you."
+                        android:textColor="@color/text_color_grey_light"
+                        android:textSize="@dimen/live_size_14sp"
+                        android:visibility="gone"
+                        tools:visibility="visible" />
+
+                    <LinearLayout
+                        android:id="@+id/act_my_profile_detail_new_ll_about_you"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textViewSelfInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:singleLine="false"
+                            android:textColor="@color/text_color_dark"
+                            android:textSize="16sp" />
+
+                        <!--<Button-->
+                        <!--android:id="@+id/buttonMoreSelfInfo"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="24dp"-->
+                        <!--android:background="@drawable/touch_feedback_holo_light_round_rectangle"-->
+                        <!--android:text="@string/more"-->
+                        <!--android:textColor="@color/blue_color"-->
+                        <!--android:textSize="14sp" />-->
+                    </LinearLayout>
+                </FrameLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/live_size_10dp"
+                    android:background="@color/theme_default_activity_bg_grey" />
+            </LinearLayout>
+
+
+            <!--Your Information-->
+            <include
+                android:id="@+id/layoutYourInformation"
+                layout="@layout/my_profile_info_item_live" />
+
+
+            <include
+                android:id="@+id/layoutMemberId"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutHeight"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutWeight"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutSmoke"
+                layout="@layout/my_profile_info_item_live" />
+            <!--<include-->
+            <!--android:id="@+id/layoutDrink"-->
+            <!--layout="@layout/my_profile_info_item_live" />-->
+            <include
+                android:id="@+id/layoutEducation"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutProfession"
+                layout="@layout/my_profile_info_item_live" />
+            <!--<include-->
+            <!--android:id="@+id/layoutEthnicity"-->
+            <!--layout="@layout/my_profile_info_item_live" />-->
+            <!--<include-->
+            <!--android:id="@+id/layoutReligion"-->
+            <!--layout="@layout/my_profile_info_item_live" />-->
+            <include
+                android:id="@+id/layoutPrimaryLanguage"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutHaveChildren"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutCurrentIncome"
+                layout="@layout/my_profile_info_item_live" />
+
+            <include
+                android:id="@+id/layoutZodiac"
+                layout="@layout/my_profile_info_item_live" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/live_size_10dp"
+                android:background="@color/theme_default_activity_bg_grey" />
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

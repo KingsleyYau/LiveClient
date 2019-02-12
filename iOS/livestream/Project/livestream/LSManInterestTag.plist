@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>Going to Restaurants</string>
+		<key>icon</key>
+		<string>UserMyProfile_dinning</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Cooking</string>
+		<key>icon</key>
+		<string>UserMyProfile_cooking</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Travel</string>
+		<key>icon</key>
+		<string>UserMyProfile_traveling</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Hiking/outdoor activities</string>
+		<key>icon</key>
+		<string>UserMyProfile_hiking</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Dancing</string>
+		<key>icon</key>
+		<string>UserMyProfile_dance</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Watching movies</string>
+		<key>icon</key>
+		<string>UserMyProfile_moives</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Shopping</string>
+		<key>icon</key>
+		<string>UserMyProfile_shopping</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Having pets</string>
+		<key>icon</key>
+		<string>UserMyProfile_pets</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Reading</string>
+		<key>icon</key>
+		<string>UserMyProfile_reading</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Sports/exercise</string>
+		<key>icon</key>
+		<string>UserMyProfile_sports</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Playing cards/chess</string>
+		<key>icon</key>
+		<string>UserMyProfile_cards</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>Music/play instruments</string>
+		<key>icon</key>
+		<string>UserMyProfile_music</string>
+	</dict>
+</array>
+</plist>

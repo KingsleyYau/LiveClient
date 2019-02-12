@@ -38,7 +38,7 @@ public:
      * @param deviceid		    设备唯一标识
      * @param model				设备型号（格式：设备型号－系统版本号）
      * @param manufacturer		制造厂商
-     * @param regionId          站点ID
+     * @param userSidType       sid类型（0：QN登录成功返回的，1：直播登录成功返回的）
      */
     void SetParam(
                   string manId,
@@ -46,7 +46,7 @@ public:
                   string deviceid,
                   string model,
                   string manufacturer,
-                  RegionIdType regionId
+                  LSLoginSidType userSidType
                   );
 
     /**
@@ -83,7 +83,7 @@ protected:
     string mManufacturer;    // 制造厂商
     string mManId;           // QN会员ID
     string mUserSid;         // QN系统登录验证返回的标识
-    RegionIdType mRegionId;   // 站点ID
+    LSLoginSidType mUserSidType; // sid类型（0：QN登录成功返回的，1：直播登录成功返回的）
 };
 
 #endif /* HttpLoginTask_H_ */

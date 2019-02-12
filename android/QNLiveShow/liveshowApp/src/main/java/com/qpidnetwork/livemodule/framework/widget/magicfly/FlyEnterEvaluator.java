@@ -3,7 +3,7 @@ package com.qpidnetwork.livemodule.framework.widget.magicfly;
 import android.animation.TypeEvaluator;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 点赞动画第一阶段，平移，缩放，晃动，alpha渐进

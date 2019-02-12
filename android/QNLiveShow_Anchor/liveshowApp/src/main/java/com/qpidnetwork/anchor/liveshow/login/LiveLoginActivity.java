@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.qpidnetwork.anchor.R;
 import com.qpidnetwork.anchor.bean.AccountInfoBean;
+import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.anchor.framework.services.LiveService;
 import com.qpidnetwork.anchor.httprequest.OnRequestGetVerificationCodeCallback;
@@ -35,10 +36,8 @@ import com.qpidnetwork.anchor.liveshow.manager.UpdateManager;
 import com.qpidnetwork.anchor.liveshow.model.http.HttpRespObject;
 import com.qpidnetwork.anchor.utils.DisplayUtil;
 import com.qpidnetwork.anchor.utils.Log;
-import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 
 import static com.qpidnetwork.anchor.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_CONNECTFAIL;
-import static com.qpidnetwork.anchor.httprequest.item.HttpLccErrType.HTTP_LCC_ERR_VERIFICATIONCODE;
 
 /**
  * Created by Hunter Mun on 2018/3/5.

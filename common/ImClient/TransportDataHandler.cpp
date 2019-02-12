@@ -24,6 +24,7 @@ CTransportDataHandler::CTransportDataHandler(void)
 	m_startLock = NULL;
 	m_bStart = false;
     
+    
     m_client = NULL;
 
 	m_sendTaskListLock = NULL;

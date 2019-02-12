@@ -1,7 +1,6 @@
 package com.qpidnetwork.livemodule.liveshow.liveroom;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,7 +9,7 @@ import com.qpidnetwork.livemodule.R;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMSysNoticeMessageContent;
 import com.qpidnetwork.livemodule.utils.ApplicationSettingUtil;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 
 /**
@@ -28,7 +27,8 @@ public class AdvancePrivateLiveRoomActivity extends BaseCommonLiveRoomActivity {
     }
 
     private void initAdvancePrivateRoomView(){
-        ll_privateRoomHeader.setVisibility(View.VISIBLE);
+        //edit by Jagger 2018-11-10 BUG#14431不需要了,去掉
+        ll_privateRoomHeader.setVisibility(View.INVISIBLE);
         include_audience_area.setVisibility(View.VISIBLE);
         ll_buttom_audience.setVisibility(View.VISIBLE);
     }

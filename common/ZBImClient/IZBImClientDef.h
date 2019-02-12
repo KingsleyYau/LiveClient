@@ -75,6 +75,8 @@ typedef enum {
     ZBLCC_ERR_SEND_GIFT_BACKPACK_NO_EXIST = 16151,       // 主播发礼物,背包礼物不存在
     ZBLCC_ERR_SEND_GIFT_BACKPACK_LESSTHAN = 16152,       // 主播发礼物,背包礼物数量不足
     ZBLCC_ERR_SEND_GIFT_PARAM_ERR = 16153,               // 发礼物,参数错误
+    ZBLCC_ERR_PRIVTE_INVITE_AUTHORITY = 17002,           // 主播无立即私密邀请权限
+    ZBLCC_ERR_NO_PUBLIC_LIVE_AUTHORITY = 17004,          // 主播无公开开播权限
 //    // 其它错误码
 //    ZBLCC_ERR_ENTER_ROOM_ERR = 10022,                    // 进入房间失败 数据库操作失败（添加记录or删除扣费记录）
 //
@@ -110,10 +112,10 @@ typedef enum {
     ZBCLIENTTYPE_END = ZBCLIENTTYPE_UNKNOW // 有效范围结束值
 } ZBClientType;
 
-// int 转换 CLIENT_TYPE
-inline ZBClientType ZBGetClientType(int value) {
-    return ZBCLIENTTYPE_BEGIN <= value && value < ZBCLIENTTYPE_END ? (ZBClientType)value : ZBCLIENTTYPE_UNKNOW;
-}
+//// int 转换 CLIENT_TYPE
+//inline ZBClientType ZBGetClientType(int value) {
+//    return ZBCLIENTTYPE_BEGIN <= value && value < ZBCLIENTTYPE_END ? (ZBClientType)value : ZBCLIENTTYPE_UNKNOW;
+//}
 
 // socket所在的页面
 typedef enum {

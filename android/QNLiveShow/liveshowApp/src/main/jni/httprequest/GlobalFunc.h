@@ -16,6 +16,9 @@
  #include <string>
  #include <list>
 
+ #include <manrequesthandler/LSLiveChatHttpRequestManager.h>
+ #include <manrequesthandler/LSLiveChatHttpRequestHostManager.h>
+
  using namespace std;
 
  extern JavaVM* gJavaVM;
@@ -24,6 +27,10 @@
  extern HttpRequestManager gPhotoUploadRequestManager;
  extern HttpRequestManager gConfigRequestManager;
  extern HttpRequestController gHttpRequestController;
+ extern HttpRequestManager gDomainRequestManager;
+
+ extern LSLiveChatHttpRequestHostManager gLSLiveChatHttpRequestHostManager;
+ extern LSLiveChatHttpRequestManager gLSLiveChatHttpRequestManager;
 
  /* java callback object */
  typedef KSafeMap<long, jobject> CallbackMap;

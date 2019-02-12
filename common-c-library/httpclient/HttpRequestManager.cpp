@@ -7,9 +7,11 @@
  */
 
 #include "HttpRequestManager.h"
-
 #include <common/CommonFunc.h>
 #include <common/KLog.h>
+
+#define QN_COMMON_VERSION_CODE    "versioncode"
+#define LS_COMMON_APPID             "appid"
 
 HttpRequestManager::HttpRequestManager()
 :mRequestMutex(KMutex::MutexType_Recursive)
@@ -33,6 +35,10 @@ void HttpRequestManager::SetWebSite(string website) {
 void HttpRequestManager::SetVersionCode(string versionKey, string versionCode) {
 	mVersionKey = versionKey;
 	mVersionCode = versionCode;
+}
+
+void HttpRequestManager::SetAppId(string appId) {
+    mAppId = appId;
 }
 
 void HttpRequestManager::SetAuthorization(string user, string password) {
@@ -61,6 +67,12 @@ const HttpRequest* HttpRequestManager::StartRequest(
         entiy.SetAuthorization(mUser, mPassword);
         // 配置客户端版本
         entiy.AddHeader(mVersionKey, mVersionCode);
+        
+        // 配置QN客户端版本
+        entiy.AddHeader(QN_COMMON_VERSION_CODE, mVersionCode);
+        
+        // app唯一标识
+        entiy.AddHeader(LS_COMMON_APPID, mAppId);
 
         // 开始请求
         request->SetCallback(this);

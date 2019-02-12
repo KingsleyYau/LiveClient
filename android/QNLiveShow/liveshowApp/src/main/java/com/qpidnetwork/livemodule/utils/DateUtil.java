@@ -129,4 +129,26 @@ public class DateUtil {
         return cal.getTimeInMillis();
     }
 
+    /**
+     * 获取分秒的时间显示
+     *
+     * @param t单位为妙
+     * @return
+     */
+    public static String getTime(long t) {
+        String time;
+        long m = t / 60;
+        long s = t % 60;
+        if (m < 10) {
+            time = "0" + m + ":";
+        } else {
+            time = m + ":";
+        }
+        if (s < 10) {
+            time = time + "0" + s;
+        } else {
+            time = time + s;
+        }
+        return time;
+    }
 }

@@ -6,6 +6,7 @@
     <item name="common_button_search" type="id"/>
     <item name="common_button_back" type="id"/>
     <item name="common_button_overflow" type="id"/>
+    <item name="common_button_ok" type="id"/>
 
     <!--CanRefresh需要的ID定义-->
     <item name="can_content_view" type="id" />
@@ -28,4 +29,12 @@
 
     <!-- dialog -->
     <item name="live_dialog_custom_view" type="id"/>
+
+    <!-- livechat -->
+    <item name="item_position" type="id">false</item>
+    <item name="emo_item_img" type="id">false</item>
+    <item name="emo_item_progress" type="id">false</item>
+
+    <!-- hotlist -->
+    <item type="id" name="hotlist_programme_des" />
 </resources>

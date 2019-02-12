@@ -54,6 +54,7 @@
 		50F089031D1A692900D7FDDF /* Arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 50F089021D1A692900D7FDDF /* Arrow@2x.png */; };
 		50F089051D1A69C700D7FDDF /* UIWidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 50F089041D1A69C700D7FDDF /* UIWidgetAssets.xcassets */; };
 		50F125411D1BE4FA00435C12 /* LSUIImageViewTopFit.m in Sources */ = {isa = PBXBuildFile; fileRef = 50F125401D1BE4FA00435C12 /* LSUIImageViewTopFit.m */; };
+		5240E5EB215E0F6C00B43159 /* LSLinkTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5240E5E9215E0F6C00B43159 /* LSLinkTextView.m */; };
 		52702C041F79DFF5009AAE55 /* Fail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 52702C031F79DFF5009AAE55 /* Fail@2x.png */; };
 		529DA2EB1F78AC7E00651318 /* LSListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 529DA2EA1F78AC7E00651318 /* LSListViewController.m */; };
 		52F65B762044F174007DA957 /* LSProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52F65B742044F174007DA957 /* LSProgressView.m */; };
@@ -174,6 +175,8 @@
 		50F089041D1A69C700D7FDDF /* UIWidgetAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = UIWidgetAssets.xcassets; sourceTree = "<group>"; };
 		50F1253F1D1BE4FA00435C12 /* LSUIImageViewTopFit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSUIImageViewTopFit.h; sourceTree = "<group>"; };
 		50F125401D1BE4FA00435C12 /* LSUIImageViewTopFit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSUIImageViewTopFit.m; sourceTree = "<group>"; };
+		5240E5E9215E0F6C00B43159 /* LSLinkTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSLinkTextView.m; sourceTree = "<group>"; };
+		5240E5EA215E0F6C00B43159 /* LSLinkTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSLinkTextView.h; sourceTree = "<group>"; };
 		52702C031F79DFF5009AAE55 /* Fail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Fail@2x.png"; sourceTree = "<group>"; };
 		529DA2E91F78AC7E00651318 /* LSListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LSListViewController.h; sourceTree = "<group>"; };
 		529DA2EA1F78AC7E00651318 /* LSListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LSListViewController.m; sourceTree = "<group>"; };
@@ -552,6 +555,8 @@
 		CAF53808171FDB71005DCB49 /* TextView */ = {
 			isa = PBXGroup;
 			children = (
+				5240E5EA215E0F6C00B43159 /* LSLinkTextView.h */,
+				5240E5E9215E0F6C00B43159 /* LSLinkTextView.m */,
 				5063A4101ECF1A9400361942 /* LSBLTextField.h */,
 				5063A4111ECF1A9400361942 /* LSBLTextField.m */,
 				5063A3E81ECE91D000361942 /* LSUITextFieldAlign.h */,
@@ -730,6 +735,7 @@
 				50DA55451C76A75F001E1D98 /* LSButtonBar.m in Sources */,
 				3EEAFAAD20AAFEBD00DEA419 /* LSYYCache.m in Sources */,
 				50511F461F9450D0009E4C88 /* LSColor.m in Sources */,
+				5240E5EB215E0F6C00B43159 /* LSLinkTextView.m in Sources */,
 				5063A3EA1ECE91D000361942 /* LSUITextFieldAlign.m in Sources */,
 				3EEAFABB20AAFEBD00DEA419 /* LSYYSpriteSheetImage.m in Sources */,
 				CAF5383F171FDB71005DCB49 /* LSViewController.m in Sources */,
@@ -905,10 +911,6 @@
 					"\"$(SRCROOT)/../../Config\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"/Users/drcom/Library/Developer/Xcode/DerivedData/DrPalm-etapmlqnyhngoofhqkcivoqgomqm/Build/Products/Debug-iphoneos\"",
-				);
 				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
@@ -941,10 +943,6 @@
 					"\"$(SRCROOT)/../../Config\"",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"/Users/drcom/Library/Developer/Xcode/DerivedData/DrPalm-etapmlqnyhngoofhqkcivoqgomqm/Build/Products/Debug-iphoneos\"",
-				);
 				MACH_O_TYPE = staticlib;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (

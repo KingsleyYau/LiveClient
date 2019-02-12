@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.AppOpsManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -60,6 +61,11 @@ public class AndPermission {
     public static boolean hasPermission(@NonNull Context context, @NonNull List<String> permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true;
         for (String permission : permissions) {
+            //浮窗权限
+            if(permission.equals("android.permission.SYSTEM_OVERLAY_WINDOW")){
+                return Settings.canDrawOverlays(context.getApplicationContext());
+            }
+
             int result = ContextCompat.checkSelfPermission(context, permission);
             if (result == PackageManager.PERMISSION_DENIED) return false;
 

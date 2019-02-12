@@ -47,12 +47,31 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 					));
 
 					if (audioTrack != null) {
-						audioTrack.pause();
-						audioTrack.flush();
-						audioTrack.play();
+						try {
+							audioTrack.pause();
+							audioTrack.flush();
+							audioTrack.play();
+
+							isRunning = true;
+
+						} catch (IllegalStateException e) {
+							Log.e(LSConfig.TAG,
+									String.format("LSAudioPlayer:handleMessage( "
+													+ "this : 0x%x, "
+													+ "exception : %s "
+													+ ")",
+											msg.obj.hashCode(),
+											e.toString()
+									)
+							);
+
+							isRunning = false;
+
+							audioTrack.release();
+							audioTrack = null;
+						}
 					}
 
-					isRunning = true;
 				}
 			}
 		};
@@ -76,7 +95,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 					int audioFormat = (bitPerSample == 16) ? AudioFormat.ENCODING_PCM_16BIT : AudioFormat.ENCODING_PCM_8BIT;
 					int bufferSizeInBytes = AudioTrack.getMinBufferSize(sampleRateInHz, channelConfig, audioFormat);
 
-					Log.d(LSConfig.TAG,
+					Log.i(LSConfig.TAG,
 							String.format("LSAudioPlayer:changeAudioFormat( "
 											+ "this : 0x%x, "
 											+ "sampleRateInHz : %d, "
@@ -114,7 +133,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 
 				}
 			} catch (IllegalStateException e) {
-				Log.d(LSConfig.TAG,
+				Log.e(LSConfig.TAG,
 						String.format("LSAudioPlayer:changeAudioFormat( "
 										+ "this : 0x%x, "
 										+ "exception : %s "
@@ -124,8 +143,13 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 						)
 				);
 
-				audioTrack = null;
 				isRunning = false;
+
+				if (audioTrack != null) {
+					audioTrack.release();
+					audioTrack = null;
+				}
+
 				bFlag = false;
 			}
 
@@ -140,14 +164,23 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	public void stop() {
 		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:stop( this : 0x%x )", hashCode()));
 		synchronized (statusLock) {
-			try {
-				if (audioTrack != null) {
+			if (audioTrack != null) {
+				try {
 					audioTrack.stop();
+				} catch (IllegalStateException e) {
+					Log.e(LSConfig.TAG,
+							String.format("LSAudioPlayer:stop( "
+											+ "this : 0x%x, "
+											+ "exception : %s "
+											+ ")",
+									hashCode(),
+									e.toString()
+							)
+					);
 				}
-			} catch (IllegalStateException e) {
-
+				audioTrack.release();
+				audioTrack = null;
 			}
-			audioTrack = null;
 		}
 	}
 
@@ -196,7 +229,7 @@ public class LSAudioPlayer implements ILSAudioRendererJni {
 	@Override
 	public void reset() {
 		// TODO Auto-generated method stub
-		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:reset( this : 0x%x )", hashCode()));
+		Log.d(LSConfig.TAG, String.format("LSAudioPlayer:reset( this : 0x%x, isRunning : %b )", hashCode(), isRunning));
 		// 如果在当前线程处理声卡会阻塞造成延迟
 		synchronized (statusLock) {
 			if( isRunning ) {

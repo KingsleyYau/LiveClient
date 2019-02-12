@@ -204,11 +204,6 @@
 
 #pragma mark 重新请求按钮事件
 - (IBAction)reloadBtnDid:(id)sender {
-    
-    self.tableView.hidden = NO;
-    self.failedView.hidden = YES;
-    self.talentShowBtn.hidden = NO;
-    self.talentInfoLabel.hidden = NO;
     [self.talentOnDemandManager getTalentList:self.roomId];
 }
 
@@ -326,19 +321,19 @@
 
 #pragma mark 才艺点播回调
 - (void)onSendTalent:(SEQ_T)reqId success:(BOOL)success err:(LCC_ERR_TYPE)err errMsg:(NSString *)errMsg talentInviteId:(NSString *)talentInviteId talentId:(NSString * _Nonnull)talentId {
-    
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         NSLog(@"TalentOnDemandViewController::onSendTalent( [发送直播间才艺点播邀请, %@], errType : %d, errmsg : %@ talentInviteId:%@ talentId:%@)", (err == LCC_ERR_SUCCESS) ? @"成功" : @"失败", err, errMsg, talentInviteId, talentId);
         if (err != LCC_ERR_SUCCESS) {
             //信用点不足
             if (err == LCC_ERR_NO_CREDIT) {
-                if (self.dialogOK) {
-                    [self.dialogOK removeFromSuperview];
+                if (weakSelf.dialogOK) {
+                    [weakSelf.dialogOK removeFromSuperview];
                 }
-                WeakObject(self, weakSelf);
-                self.dialogOK = [DialogOK dialog];
-                self.dialogOK.tipsLabel.text = NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT");
-                [self.dialogOK showDialog:self.liveRoom.superView
+                
+                weakSelf.dialogOK = [DialogOK dialog];
+                weakSelf.dialogOK.tipsLabel.text = NSLocalizedStringFromSelf(@"TALENT_ERR_ADD_CREDIT");
+                [weakSelf.dialogOK showDialog:weakSelf.liveRoom.superView
                               actionBlock:^{
                                   NSLog(@"跳转到充值界面");
                                   [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
@@ -348,20 +343,20 @@
                               }];
             }
             else  {
-                [self showDialog:errMsg];
+                [weakSelf showDialog:errMsg];
             }
             
         } else {
             
-            self.talentInviteId = talentInviteId;
-            for (GetTalentItemObject *item in self.data) {
+            weakSelf.talentInviteId = talentInviteId;
+            for (GetTalentItemObject *item in weakSelf.data) {
                 if ([item.talentId isEqualToString:talentId]) {
-                    self.checkedTalentName = item.name;
-                    self.checkedTalentId = item.talentId;
+                    weakSelf.checkedTalentName = item.name;
+                    weakSelf.checkedTalentId = item.talentId;
                     
                     //发送成功
-                    NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_TALENT_SUCCESS"), self.checkedTalentName];
-                    [self sendTalentMessage:message];
+                    NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"SEND_TALENT_SUCCESS"), weakSelf.checkedTalentName];
+                    [weakSelf sendTalentMessage:message];
                     break;
                 }
             }
@@ -370,19 +365,19 @@
 }
 
 - (void)onRecvSendTalentNotice:(ImTalentReplyObject *)item {
+    NSLog(@"TalentOnDemandViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSLog(@"TalentOnDemandViewController::onRecvSendTalentNotice( [接收直播间才艺点播回复通知] )");
-        
         NSString *message = @"";
         //接受
         if (item.status == TALENTSTATUS_AGREE) {
-            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), self.liveRoom.userName, item.name];
-            [self sendTalentMessage:message];
+            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), weakSelf.liveRoom.userName, item.name];
+            [weakSelf sendTalentMessage:message];
         }
         //拒绝
         else if (item.status == TALENTSTATUS_REJECT) {
-            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), self.liveRoom.userName, item.name];
-            [self sendTalentMessage:message];
+            message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), weakSelf.liveRoom.userName, item.name];
+            [weakSelf sendTalentMessage:message];
         } else //其他
         {
             
@@ -412,35 +407,36 @@
 
 #pragma mark 直播重连回调
 - (void)onLogin:(LCC_ERR_TYPE)errType errMsg:(NSString *)errmsg item:(ImLoginReturnObject *)item {
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
         if (errType == LCC_ERR_SUCCESS) {
-            if (self.talentInviteId.length > 0) {
+            if (weakSelf.talentInviteId.length > 0) {
                 //获取才艺点播状态
-                [self.talentOnDemandManager getTalentStatusRoomId:self.roomId talentId:self.talentInviteId];
+                [weakSelf.talentOnDemandManager getTalentStatusRoomId:weakSelf.roomId talentId:weakSelf.talentInviteId];
             }
         }
     });
 }
 
 #pragma mark 获取才艺点播状态
-- (void)onGetTalentStatus:(GetTalentStatusItemObject *)statusItemObject
-{
+- (void)onGetTalentStatus:(GetTalentStatusItemObject *)statusItemObject {
+    WeakObject(self, weakSelf);
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.talentInviteId.length > 0) {
+        if (weakSelf.talentInviteId.length > 0) {
             if (statusItemObject.status == HTTPTALENTSTATUS_ACCEPT) {
                 //同意
-                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), self.liveRoom.userName,statusItemObject.name];
-                [self sendTalentMessage:message];
+                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"ACCEPT_YOUR_REQUEST"), weakSelf.liveRoom.userName,statusItemObject.name];
+                [weakSelf sendTalentMessage:message];
             }
             else if (statusItemObject.status == HTTPTALENTSTATUS_REJECT)
             {
                 //拒绝
-                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), self.liveRoom.userName, statusItemObject.name];
-                [self sendTalentMessage:message];
+                NSString *message = [NSString stringWithFormat:NSLocalizedStringFromSelf(@"DECLINED_YOUR_REQUEST"), weakSelf.liveRoom.userName, statusItemObject.name];
+                [weakSelf sendTalentMessage:message];
             }
             else
             {
-                self.talentInviteId = nil;
+                weakSelf.talentInviteId = nil;
             }
         }
     });

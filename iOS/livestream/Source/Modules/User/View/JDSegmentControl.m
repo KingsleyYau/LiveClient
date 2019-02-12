@@ -18,6 +18,7 @@
 
 @property (nonatomic, weak) UIView *lineView;
 @property (nonatomic, weak) UILabel * unreadLabel;
+@property (nonatomic, weak) UILabel * noNumUnreadlabel;
 @end
 
 @implementation JDUnreadButton
@@ -35,16 +36,27 @@
         label.textColor = [UIColor whiteColor];
         label.textAlignment = NSTextAlignmentCenter;
         label.font = [UIFont systemFontOfSize:9];
-        label.layer.cornerRadius = label.frame.size.height/2;
+        label.layer.cornerRadius = label.frame.size.height/2.0f;
         label.layer.masksToBounds = YES;
         label.hidden = YES;
         _unreadLabel = label;
+        
+        UILabel * noNumUnreadlabel = [[UILabel alloc]initWithFrame:CGRectMake(self.frame.size.width - 15, 5, 8, 8)];
+        noNumUnreadlabel.backgroundColor = [UIColor redColor];
+        noNumUnreadlabel.textColor = [UIColor whiteColor];
+        noNumUnreadlabel.textAlignment = NSTextAlignmentCenter;
+        noNumUnreadlabel.font = [UIFont systemFontOfSize:9];
+        noNumUnreadlabel.layer.cornerRadius = label.frame.size.height/2.0f;
+        noNumUnreadlabel.layer.masksToBounds = YES;
+        noNumUnreadlabel.hidden = YES;
+        _noNumUnreadlabel = noNumUnreadlabel;
         
         [self setTitleColor:kNormalColor forState:UIControlStateNormal];
         self.titleLabel.font = [UIFont systemFontOfSize:12];
         [self setBackgroundColor:[UIColor whiteColor]];
         [self addSubview:lineView];
         [self addSubview:label];
+        [self addSubview:noNumUnreadlabel];
         
     }
     return self;
@@ -54,13 +66,16 @@
 {
     if ([count intValue] == 0) {
         _unreadLabel.hidden = YES;
+    }else if ([count intValue] < 0){
+        _noNumUnreadlabel.hidden = NO;
+        _noNumUnreadlabel.frame = CGRectMake(self.frame.size.width - 15, 5, 8, 8);
     }
     else
     {
         _unreadLabel.hidden = NO;
         if ([count intValue] > 99) {
             _unreadLabel.frame = CGRectMake(self.frame.size.width - 20, 5, 20, 12);
-            _unreadLabel.text = @"99+";
+            _unreadLabel.text = @"...";
         }
         else
         {
@@ -107,6 +122,16 @@
               button = [[JDUnreadButton alloc] initWithFrame:CGRectMake(x, 0, [array[i+1] floatValue], frame.size.height)];;
             }
            
+            
+            // 自定义
+//            CGFloat titleWidth =    [JDSegmentControl getSegmentControlW:titles];
+//            CGRect frame = button.lineView.frame;
+//            frame.size.width = titleWidth;
+//            button.lineView.frame = frame;
+//            CGPoint center = button.lineView.center;
+//            center.x = symmetryW / 2.0f;
+//            button.lineView.center = center;
+            
             // 默认选中第一个 设置状态
             if (i == 0) {
                 [button setTitleColor:kTextSelectedColor forState:UIControlStateNormal];

@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--old-->
+    <!--android:startColor="#7d7d7c"-->
+
+    <!--2018/11/15  Hardy-->
+    <!--#000000 83% 不透明到 #000000 0%-->
+    <!--android:startColor="#D4000000"-->
     <gradient
-        android:startColor="#7d7d7c"
-        android:endColor="@android:color/transparent"
         android:angle="90"
-        android:type="linear"
-        />
+        android:endColor="@android:color/transparent"
+        android:startColor="#D4000000"
+        android:type="linear" />
 
 </shape>

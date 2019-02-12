@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "LSGoogleAnalyticsViewController.h"
-@interface MyTicketPageViewController : LSGoogleAnalyticsViewController
+#import "LSGoogleAnalyticsPageViewController.h"
+
+@interface MyTicketPageViewController : LSGoogleAnalyticsPageViewController
 @property (nonatomic, assign) NSInteger curIndex;
 
 @end

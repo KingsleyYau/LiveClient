@@ -30,7 +30,7 @@ function handle()
       echo "current: $svn_url"
       echo "target: $module_svn"
       echo ""
-      exit 0
+      exit 1
     fi
   else
     svn checkout $module_svn $module_folder
@@ -52,7 +52,7 @@ handle $common_fodler svn://192.168.8.177:8034/client/tag/livecommon/common/comm
 fi
 
 if [ "trunk" = "$livemessage_ver" ]; then
-  handle $livemessage_folder svn://192.168.8.177:8034/client/livemessage
+  handle $livemessage_folder svn://192.168.8.177:8034/client/livecommon/livemessage
 else
   handle $livemessage_folder svn://192.168.8.177:8034/client/tag/livecommon/livemessage/livemessage_v$livemessage_ver/livemessage
 fi

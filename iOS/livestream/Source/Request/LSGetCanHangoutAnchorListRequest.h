@@ -1,7 +1,7 @@
 //
 // LSGetCanHangoutAnchorListRequest.h
 //  dating
-//  8.1.获取可邀请多人互动的主播列表
+//  8.1.获取可邀请多人互动的主播列表（已废弃）
 //  Created by Max on 18/04/12.
 //  Copyright © 2018年 qpidnetwork. All rights reserved.
 //

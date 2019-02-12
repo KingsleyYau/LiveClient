@@ -1,108 +1,108 @@
 <!--<?xml version="1.0" encoding="utf-8"?>-->
 <!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:button="http://schemas.android.com/apk/res-auto"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:button="http://schemas.android.com/apk/res-auto"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent">-->
 
-    <!--&lt;!&ndash; Title &ndash;&gt;-->
-    <!--<include-->
-        <!--android:id="@+id/includeTitle"-->
-        <!--layout="@layout/include_main_title"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/actionbar_height"-->
-        <!--android:layout_alignParentLeft="true"-->
-        <!--android:layout_alignParentStart="true"-->
-        <!--android:layout_alignParentTop="true" />-->
+<!--&lt;!&ndash; Title &ndash;&gt;-->
+<!--<include-->
+<!--android:id="@+id/includeTitle"-->
+<!--layout="@layout/include_main_title"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="@dimen/actionbar_height"-->
+<!--android:layout_alignParentLeft="true"-->
+<!--android:layout_alignParentStart="true"-->
+<!--android:layout_alignParentTop="true" />-->
 
-    <!--&lt;!&ndash; 列表 &ndash;&gt;-->
-    <!--<RelativeLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/includeTitle"-->
-        <!--android:background="@color/white">-->
-        <!--&lt;!&ndash; tab &ndash;&gt;-->
-        <!--<com.qpidnetwork.livemodule.view.BottomNavigationViewEx-->
-            <!--android:id="@+id/navigation"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentBottom="true"-->
-            <!--android:background="@color/white"-->
-            <!--app:itemIconTint="@color/selector_nav_item_color"-->
-            <!--app:itemTextColor="@color/selector_nav_item_color"-->
-            <!--app:menu="@menu/live_main_navigation" />-->
+<!--&lt;!&ndash; 列表 &ndash;&gt;-->
+<!--<RelativeLayout-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:layout_below="@id/includeTitle"-->
+<!--android:background="@color/white">-->
+<!--&lt;!&ndash; tab &ndash;&gt;-->
+<!--<com.qpidnetwork.livemodule.view.BottomNavigationViewEx-->
+<!--android:id="@+id/navigation"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_alignParentBottom="true"-->
+<!--android:background="@color/white"-->
+<!--app:itemIconTint="@color/selector_nav_item_color"-->
+<!--app:itemTextColor="@color/selector_nav_item_color"-->
+<!--app:menu="@menu/live_main_navigation" />-->
 
-        <!--<android.support.v4.view.ViewPager-->
-            <!--android:id="@+id/viewPagerContent"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_above="@id/navigation" />-->
+<!--<android.support.v4.view.ViewPager-->
+<!--android:id="@+id/viewPagerContent"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:layout_above="@id/navigation" />-->
 
-    <!--</RelativeLayout>-->
+<!--</RelativeLayout>-->
 
-    <!--&lt;!&ndash; 登录中遮罩 &ndash;&gt;-->
-    <!--<RelativeLayout-->
-        <!--android:id="@+id/rl_login_loading"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_below="@id/includeTitle"-->
-        <!--android:background="@color/white">-->
+<!--&lt;!&ndash; 登录中遮罩 &ndash;&gt;-->
+<!--<RelativeLayout-->
+<!--android:id="@+id/rl_login_loading"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:layout_below="@id/includeTitle"-->
+<!--android:background="@color/white">-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/ll_main_login"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical">-->
-            <!--<ProgressBar-->
-                <!--android:id="@+id/progressBar1"-->
-                <!--style="@android:style/Widget.ProgressBar.Small"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content" />-->
+<!--<LinearLayout-->
+<!--android:id="@+id/ll_main_login"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_centerInParent="true"-->
+<!--android:gravity="center"-->
+<!--android:orientation="vertical">-->
+<!--<ProgressBar-->
+<!--android:id="@+id/progressBar1"-->
+<!--style="@android:style/Widget.ProgressBar.Small"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content" />-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
-                <!--android:text="@string/tip_loading"/>-->
-        <!--</LinearLayout>-->
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="@dimen/live_size_8dp"-->
+<!--android:text="@string/tip_loading"/>-->
+<!--</LinearLayout>-->
 
-        <!--<LinearLayout-->
-            <!--android:id="@+id/ll_main_login_fail"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerInParent="true"-->
-            <!--android:gravity="center"-->
-            <!--android:orientation="vertical"-->
-            <!--android:visibility="gone">-->
+<!--<LinearLayout-->
+<!--android:id="@+id/ll_main_login_fail"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_centerInParent="true"-->
+<!--android:gravity="center"-->
+<!--android:orientation="vertical"-->
+<!--android:visibility="gone">-->
 
-            <!--<ImageView-->
-                <!--android:layout_width="@dimen/live_size_60dp"-->
-                <!--android:layout_height="@dimen/live_size_60dp"-->
-                <!--android:src="@drawable/icon_data_empty"/>-->
+<!--<ImageView-->
+<!--android:layout_width="@dimen/live_size_60dp"-->
+<!--android:layout_height="@dimen/live_size_60dp"-->
+<!--android:src="@drawable/icon_data_empty"/>-->
 
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
-                <!--android:text="@string/tip_failed_to_load"/>-->
+<!--<TextView-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="@dimen/live_size_8dp"-->
+<!--android:text="@string/tip_failed_to_load"/>-->
 
-            <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
-                <!--android:id="@+id/btn_reload"-->
-                <!--android:layout_width="@dimen/live_size_140dp"-->
-                <!--android:layout_height="@dimen/live_size_40dp"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_marginTop="@dimen/live_size_8dp"-->
-                <!--button:background="@color/blue_color"-->
-                <!--button:title="@string/tip_reload"-->
-                <!--button:title_color="@color/white"-->
-                <!--button:raisebutton_radius="@dimen/live_size_16dp"-->
-                <!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />-->
+<!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+<!--android:id="@+id/btn_reload"-->
+<!--android:layout_width="@dimen/live_size_140dp"-->
+<!--android:layout_height="@dimen/live_size_40dp"-->
+<!--android:layout_gravity="center_horizontal"-->
+<!--android:layout_marginTop="@dimen/live_size_8dp"-->
+<!--button:background="@color/blue_color"-->
+<!--button:title="@string/tip_reload"-->
+<!--button:title_color="@color/white"-->
+<!--button:raisebutton_radius="@dimen/live_size_16dp"-->
+<!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />-->
 
-        <!--</LinearLayout>-->
+<!--</LinearLayout>-->
 
-    <!--</RelativeLayout>-->
+<!--</RelativeLayout>-->
 
 
 <!--</RelativeLayout>-->
@@ -113,23 +113,24 @@
     xmlns:button="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dl_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
 
+    <!-- 则状态栏会保持与设置fitsSystemWindow属性的控件的背景颜色一致 -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:fitsSystemWindows="true">
 
         <!-- Title -->
         <LinearLayout
             android:id="@+id/ll_title"
             android:layout_width="match_parent"
-            android:layout_height="44dp"
+            android:layout_height="@dimen/actionbar_height"
             android:orientation="horizontal"
             android:layout_gravity="top"
-            android:background="@android:color/white"
+            android:background="@color/theme_default_white"
             android:outlineProvider="bounds"
             android:elevation="4dp">
 
@@ -141,10 +142,10 @@
                 <ImageView
                     android:id="@+id/iv_menu"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginLeft="13dp"
-                    android:layout_marginRight="13dp"
+                    android:layout_marginRight="18dp"
                     android:src="@drawable/live_main_nav_menu"/>
             </FrameLayout>
 
@@ -179,83 +180,101 @@
         <!-- 内容 -->
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPagerContent"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="@dimen/actionbar_height"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <!-- 登录中遮罩 -->
-        <RelativeLayout
-            android:id="@+id/rl_login_loading"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="44dp"
-            android:background="@color/white">
+        <!--<RelativeLayout-->
+        <!--android:id="@+id/rl_login_loading"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_marginTop="44dp"-->
+        <!--android:background="@color/white">-->
 
-            <LinearLayout
-                android:id="@+id/ll_main_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/ll_main_login"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
 
-                <ProgressBar
-                    android:id="@+id/progressBar1"
-                    style="@android:style/Widget.ProgressBar.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+        <!--<ProgressBar-->
+        <!--android:id="@+id/progressBar1"-->
+        <!--style="@android:style/Widget.ProgressBar.Small"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/live_size_8dp"
-                    android:text="@string/tip_loading" />
-            </LinearLayout>
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+        <!--android:text="@string/tip_loading" />-->
+        <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/ll_main_login_fail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+        <!--<LinearLayout-->
+        <!--android:id="@+id/ll_main_login_fail"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical"-->
+        <!--android:visibility="gone">-->
 
-                <ImageView
-                    android:layout_width="@dimen/live_size_60dp"
-                    android:layout_height="@dimen/live_size_60dp"
-                    android:src="@drawable/icon_data_empty" />
+        <!--<ImageView-->
+        <!--android:layout_width="@dimen/live_size_60dp"-->
+        <!--android:layout_height="@dimen/live_size_60dp"-->
+        <!--android:src="@drawable/icon_data_empty" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/live_size_8dp"
-                    android:text="@string/tip_failed_to_load" />
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+        <!--android:text="@string/tip_failed_to_load" />-->
 
-                <com.qpidnetwork.livemodule.view.ButtonRaised
-                    android:id="@+id/btn_reload"
-                    android:layout_width="@dimen/live_size_140dp"
-                    android:layout_height="@dimen/live_size_40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="@dimen/live_size_8dp"
-                    button:background="@color/blue_color"
-                    button:raisebutton_radius="@dimen/live_size_16dp"
-                    button:title="@string/tip_reload"
-                    button:title_color="@color/white"
-                    button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />
+        <!--<com.qpidnetwork.livemodule.view.ButtonRaised-->
+        <!--android:id="@+id/btn_reload"-->
+        <!--android:layout_width="@dimen/live_size_140dp"-->
+        <!--android:layout_height="@dimen/live_size_40dp"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:layout_marginTop="@dimen/live_size_8dp"-->
+        <!--button:background="@color/blue_color"-->
+        <!--button:raisebutton_radius="@dimen/live_size_16dp"-->
+        <!--button:title="@string/tip_reload"-->
+        <!--button:title_color="@color/white"-->
+        <!--button:touch_feedback="@drawable/touch_feedback_holo_light_round_rectangle" />-->
 
-            </LinearLayout>
+        <!--</LinearLayout>-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
     </FrameLayout>
 
-    <!-- 左则菜单 -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_drawer"
+    <!-- 左则菜单 (必须指定菜单视图组件android:layout_gravity="start"属性)-->
+    <LinearLayout
+        android:id="@+id/ll_drawer"
         android:layout_width="297dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/white" />
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/ll_header_drawer"
+            layout="@layout/view_live_drawer_header_item"/>
+
+        <include
+            android:id="@+id/ll_credit_drawer"
+            layout="@layout/view_live_drawer_normal_credits"/>
+
+        <include layout="@layout/view_live_drawer_divider_item"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_drawer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
 
 
 </android.support.v4.widget.DrawerLayout>

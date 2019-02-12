@@ -7,8 +7,10 @@ import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.liulishuo.filedownloader.util.FileDownloadLog;
 import com.liulishuo.filedownloader.util.FileDownloadUtils;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.livemodule.liveshow.LiveModule;
 import com.qpidnetwork.livemodule.utils.SystemUtils;
+import com.qpidnetwork.qnbridgemodule.util.Authorization5179Util;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -115,6 +117,12 @@ public class FileDownloadManager {
      */
     private BaseDownloadTask createDownloadTask(String url, String localPath){
         BaseDownloadTask task = FileDownloader.getImpl().create(url);
+        if ( LiveModule.mIsDebug ) {
+//            String basicAuth = "Basic " + new String(Base64.encode("test:5179".getBytes(), Base64.NO_WRAP));
+//            task.addHeader("Authorization", basicAuth);
+            task.addHeader(Authorization5179Util.getDemoAuthorizationHeaderKey(),
+                    Authorization5179Util.getDemoAuthorizationHeaderValue());
+        }
         task.setPath(localPath);
         task.setCallbackProgressTimes(500);
         task.setForceReDownload(false);
@@ -155,7 +163,7 @@ public class FileDownloadManager {
      * @param url
      * @return
      */
-    private boolean isDownloading(String url){
+    public boolean isDownloading(String url){
         boolean isDownloading = false;
         synchronized (singleTaskMap){
             if(singleTaskMap.containsKey(url)){
@@ -203,7 +211,7 @@ public class FileDownloadManager {
     private synchronized void clearAllSingleTask(){
         if(null != singleTaskMap){
             BaseDownloadTask task;
-            for(Iterator<Map.Entry<String,BaseDownloadTask>> iterator = singleTaskMap.entrySet().iterator();iterator.hasNext();){
+            for(Iterator<Map.Entry<String,BaseDownloadTask>> iterator = singleTaskMap.entrySet().iterator(); iterator.hasNext();){
                 task = iterator.next().getValue();
                 task.pause();
             }
@@ -236,7 +244,47 @@ public class FileDownloadManager {
         }
     }
 
-    private class SingleTaskFileDownListener extends FileDownloadListener{
+    /**
+     * 统一处理下载进度事件回调
+     * @param task
+     * @param soFarBytes
+     * @param totalBytes
+     */
+    private void notifyDownloadProgress(BaseDownloadTask task, int soFarBytes, int totalBytes){
+        int progress = 0;
+        if(totalBytes > 0){
+            progress = (soFarBytes * 100) % soFarBytes;
+        }else{
+            progress = 100;
+        }
+        String url = task.getUrl();
+        synchronized (singleTaskListenerMap){
+            if(singleTaskListenerMap.containsKey(url)){
+                List<IFileDownloadedListener> listeners = singleTaskListenerMap.get(url);
+                for(IFileDownloadedListener listener : listeners){
+                    listener.onProgress(url, progress);
+                }
+            }
+        }
+    }
+
+    /**
+     * 统一处理完成事件回调
+     * @param result
+     * @param task
+     */
+    private void notifyDownloadComplete(boolean result, BaseDownloadTask task){
+        //清除监听器
+        List<IFileDownloadedListener> listeners = removeSingleTaskListener(task.getUrl());
+        if(null != listeners && listeners.size()>0){
+            for(IFileDownloadedListener listener : listeners){
+//                Log.d(TAG,"notifyDownloadComplete:" + listener.toString());
+                listener.onCompleted(result, task.getPath(), task.getUrl());
+            }
+        }
+    }
+
+    private class SingleTaskFileDownListener extends FileDownloadListener {
 
         public SingleTaskFileDownListener(){
 
@@ -256,6 +304,7 @@ public class FileDownloadManager {
         @Override
         protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
             Log.d(TAG,"progress-task.url: " + task.getUrl()+" soFarBytes:"+soFarBytes+" totalBytes:"+totalBytes);
+            notifyDownloadProgress(task, soFarBytes, totalBytes);
         }
 
         @Override
@@ -272,14 +321,8 @@ public class FileDownloadManager {
         protected void completed(BaseDownloadTask task) {
             Log.d(TAG,"completed isReuseOldFile:"+task.isReusedOldFile() +
                     " task.isForceReDownload:"+task.isForceReDownload()+ " task url: " + task.getUrl());
-            //清除监听器
-            List<IFileDownloadedListener> listeners = removeSingleTaskListener(task.getUrl());
-            if(null != listeners && listeners.size()>0){
-                for(IFileDownloadedListener listener : listeners){
-                    listener.onCompleted(true, task.getPath(), task.getUrl());
-                }
-            }
-
+            //统一处理分发回调结果
+            notifyDownloadComplete(true, task);
             //清除正在下载任务
             removeDownloadingTask(task.getUrl());
             //清除临时文件及本地文件
@@ -298,8 +341,8 @@ public class FileDownloadManager {
         protected void error(BaseDownloadTask task, Throwable e) {
 //            Log.d(TAG,"error-task.url:"+task.getUrl()+" errmsg:"+e.getMessage());
             e.printStackTrace();
-            //清除监听器
-            removeSingleTaskListener(task.getUrl());
+            //统一处理分发回调结果
+            notifyDownloadComplete(false, task);
             //清除正在下载任务
             removeDownloadingTask(task.getUrl());
             //清除临时文件及本地文件
@@ -309,8 +352,9 @@ public class FileDownloadManager {
         @Override
         protected void warn(BaseDownloadTask task) {
             Log.d(TAG,"warn");
-            //清除监听器
-            removeSingleTaskListener(task.getUrl());
+            //统一处理分发回调结果
+            notifyDownloadComplete(false, task);
         }
+
     }
 }

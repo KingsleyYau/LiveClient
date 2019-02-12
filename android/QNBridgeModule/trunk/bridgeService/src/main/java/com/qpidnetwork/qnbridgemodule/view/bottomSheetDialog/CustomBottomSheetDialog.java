@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.FrameLayout;
 
+import com.qpidnetwork.qnbridgemodule.R;
+
 /*
  * Copyright (C) 2015 The Android Open Source Project
  *
@@ -107,12 +109,12 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
     }
 
     private View wrapInBottomSheet(int layoutResId, View view, ViewGroup.LayoutParams params) {
-        final CoordinatorLayout coordinator = (CoordinatorLayout) View.inflate(getContext(),
-                android.support.design.R.layout.design_bottom_sheet_dialog, null);
+        final ViewGroup coordinator = (ViewGroup) View.inflate(getContext(),
+                R.layout.custom_bottom_sheet_dialog, null);
         if (layoutResId != 0 && view == null) {
             view = getLayoutInflater().inflate(layoutResId, coordinator, false);
         }
-        FrameLayout bottomSheet = (FrameLayout) coordinator.findViewById(android.support.design.R.id.design_bottom_sheet);
+        FrameLayout bottomSheet = (FrameLayout) coordinator.findViewById(R.id.design_bottom_sheet);
         mBehavior = BottomSheetBehavior.from(bottomSheet);
         mBehavior.setBottomSheetCallback(mBottomSheetCallback);
         //edit by Jagger 2018-6-1
@@ -124,7 +126,7 @@ public class CustomBottomSheetDialog extends AppCompatDialog {
             bottomSheet.addView(view, params);
         }
         // We treat the CoordinatorLayout as outside the dialog though it is technically inside
-        coordinator.findViewById(android.support.design.R.id.touch_outside).setOnClickListener(new View.OnClickListener() {
+        coordinator.findViewById(R.id.touch_outside).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mCancelable && isShowing() && shouldWindowCloseOnTouchOutside()) {

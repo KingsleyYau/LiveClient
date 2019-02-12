@@ -11,5 +11,5 @@
 #import "GiftListWaterfallView.h"
 @interface GiftListViewController : LSGoogleAnalyticsViewController
 
-@property (nonatomic, strong) MyBackpackViewController * mainVC;
+ 
 @end

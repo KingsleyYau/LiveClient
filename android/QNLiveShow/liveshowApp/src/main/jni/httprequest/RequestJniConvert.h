@@ -60,7 +60,33 @@ static const int HTTPErrorTypeArray[] = {
 	    HTTP_LCC_ERR_ANCHOR_OFFLIVE,            // 主播不在线，不能操作
 		HTTP_LCC_ERR_VIEWER_AGREEED_BOOKING, 	// 观众已同意预约
 		HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING, 	// 预约邀请已超时（当观众拒绝时）
+
 		HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING,   	// 预约邀请已超时（当观众同意时）
+
+		/* 换站的错误码和域名的错误吗*/
+        HTTP_LCC_ERR_PLOGIN_PASSWORD_INCORRECT,      // 帐号或密码不正确
+        HTTP_LCC_ERR_PLOGIN_ENTER_VERIFICATION ,      // 需要验证码 和 MBCE21002: Please enter the verification code.
+        HTTP_LCC_ERR_PLOGIN_VERIFICATION_WRONG,      // 验证码不正确 和 MBCE21003:The verification code is wrong
+        HTTP_LCC_ERR_TLOGIN_SID_NULL,                // sid无效
+        HTTP_LCC_ERR_TLOGIN_SID_OUTTIME,             // sid超时
+
+        HTTP_LCC_ERR_DEMAIN_NO_FIND_MAIL,            // MBCE21001：(没有找到匹配的邮箱。)
+        HTTP_LCC_ERR_DEMAIN_CURRENT_PASSWORD_WRONG,  // MBCE13001：Sorry, the current password you entered is wrong!
+        HTTP_LCC_ERR_DEMAIN_ALL_FIELDS_WRONG,       // MBCE13002：Please check if all fields are filled and correct!
+        HTTP_LCC_ERR_DEMAIN_THE_OPERATION_FAILED,       // MBCE13003：The operation failed  /mobile/changepwd.ph
+        HTTP_LCC_ERR_DEMAIN_PASSWORD_FORMAT_WRONG,      // MBCE13004：Password format error
+
+        HTTP_LCC_ERR_DEMAIN_NO_FIND_USERID,         // MBCE11001：(QpidNetWork男士会员ID未找到) /mobile/myprofile.php
+        HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_ERR,        // MBCE12001：Data update error. ( 数据更新失败)  /mobile/updatepro.php
+        HTTP_LCC_ERR_DEMAIN_DATA_NO_EXIST_KEY ,            // MBCE12002:( 更新失败：Key不存在。)  /mobile/updatepro.php
+        HTTP_LCC_ERR_DEMAIN_DATA_UNCHANGE_VALUE,            // MBCE12003：( 更新失败：Value值没有改变。)
+        HTTP_LCC_ERR_DEMAIN_DATA_UNPASS_VALUE,            // MBCE12004：( 更新失败：Value值检测没通过。)
+
+        HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFO_DESC_LOG,            // MBCE12005：update info_desc_log
+        HTTP_LCC_ERR_DEMAIN_DATA_INSERT_INFO_DESC_LOG,            // MBCE12006：insert into info_desc_log
+        HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFODESCLOG_SETGROUPID,   // MBCE12007：update info_desc_log set group_id
+        HTTP_LCC_ERR_DEMAIN_APP_EXIST_LOGS,                       // MBCE22001：(APP安装记录已存在。)
+        HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY,                     // 主播无立即私密邀请权限(17002)
 };
 
 // 底层状态转换JAVA坐标
@@ -195,10 +221,19 @@ static const int VoucherAnchorTypeArray[]{
 int  VoucherAnchorTypeToInt(AnchorType voucherAnchorType);
 
 /*观众用户类型（1：A1类型 2：A2类型） （A1类型：仅可看付费公开及豪华私密直播间， A2类型:可看所有直播间）*/
+static const int LSHttpLiveChatInviteRiskTypeArray[] = {
+		LSHTTP_LIVECHATINVITE_RISK_NOLIMIT,    // 不作任何限制
+		LSHTTP_LIVECHATINVITE_RISK_LIMITSEND,    // 限制发送信息
+		LSHTTP_LIVECHATINVITE_RISK_LIMITREV,    // 限制接受邀请
+		LSHTTP_LIVECHATINVITE_RISK_LIMITALL    // 收发全部限制
+};
+int LSHttpLiveChatInviteRiskTypeToInt(LSHttpLiveChatInviteRiskType type);
+
+/*观众用户类型（1：A1类型 2：A2类型） （A1类型：仅可看付费公开及豪华私密直播间， A2类型:可看所有直播间）*/
 static const int UserTypeArray[] = {
-	    USERTYPEUNKNOW,             // 未知
-	    USERTYPEA1,             // A1类型：仅可看付费公开及豪华私密直播间
-	    USERTYPEA2                // A2类型:可看所有直播间
+		USERTYPEUNKNOW,             // 未知
+		USERTYPEA1,             // A1类型：仅可看付费公开及豪华私密直播间
+		USERTYPEA2                // A2类型:可看所有直播间
 };
 int UserTypeToInt(UserType userType);
 
@@ -297,6 +332,44 @@ static const int ProgramTicketStatusArray[] = {
 };
 int ProgramTicketStatusToInt(ProgramTicketStatus type);
 
+/*主播在线状态状态*/
+static const int LSLoginSidTypeArray[] = {
+    LSLOGINSIDTYPE_UNKNOW,    // 未知
+    LSLOGINSIDTYPE_QNLOGIN,       // QN登录成功返回的
+    LSLOGINSIDTYPE_LSLOGIN        // 直播登录成功返回的
+};
+//Java层转底层枚举
+LSLoginSidType IntToLSLoginSidType(int value);
+
+/*验证码类型*/
+static const int LSValidateCodeTypeArray[] = {
+		LSVALIDATECODETYPE_UNKNOW,    // 未知
+		LSVALIDATECODETYPE_LOGIN,       // login：登录获取
+		LSVALIDATECODETYPE_FINDPW        // 找回密码获取
+};
+//Java层转底层枚举
+LSValidateCodeType IntToLSValidateCodeType(int value);
+
+/*验证码类型*/
+static const int LSOrderTypeArray[] = {
+		LSORDERTYPE_CREDIT,      // 信用点
+		LSORDERTYPE_MONTHFEE,    // 月费服务
+		LSORDERTYPE_STAMP        // 邮票
+};
+//Java层转底层枚举
+LSOrderType IntToLSOrderType(int value);
+
+/*主播状态类型*/
+static const int ComIMChatOnlineStatusArray[] = {
+    IMCHATONLINESTATUS_UNKNOW,    // 未知
+    IMCHATONLINESTATUS_OFF,      // 离线
+    IMCHATONLINESTATUS_ONLINE   // 在线
+
+};
+
+// 底层状态转换JAVA坐标
+int ComIMChatOnlineStatusToInt(IMChatOnlineStatus type);
+
 //c++对象转Java对象
 jobjectArray getJavaStringArray(JNIEnv *env, const list<string>& sourceList);
 jintArray getJavaIntArray(JNIEnv *env, const list<int>& sourceList);
@@ -347,5 +420,13 @@ jobject getProgramInfoItem(JNIEnv *env, const HttpProgramInfoItem& item);
 jobjectArray getProgramInfoArray(JNIEnv *env, const ProgramInfoList& list);
 
 jobject getMainNoReadNumItem(JNIEnv *env, const HttpMainNoReadNumItem& item);
+
+jobjectArray getValidSiteIdListArray(JNIEnv *env, HttpValidSiteIdList siteIdList);
+
+jobject getMyProfileItem(JNIEnv *env, const HttpProfileItem& item);
+
+jobject getVersionCheckItem(JNIEnv *env, const HttpVersionCheckItem& item);
+
+jobject getHttpAuthorityItem(JNIEnv *env, const HttpAuthorityItem& item);
 
 #endif

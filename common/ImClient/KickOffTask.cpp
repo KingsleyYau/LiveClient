@@ -13,7 +13,8 @@
 #include <common/KLog.h>
 #include <common/CheckMemoryLeak.h>
 
-
+#define ERRNO_PARAM                "errno"
+#define ERRMSG_PARAM               "errmsg"
 
 KickOffTask::KickOffTask(void)
 {
@@ -51,10 +52,16 @@ bool KickOffTask::Handle(const TransportProtocol& tp)
 		
     // 协议解析
     if (!tp.m_isRespond) {
-        result = (LCC_ERR_PROTOCOLFAIL != tp.m_errno);
-        m_errType = (LCC_ERR_TYPE)tp.m_errno;
-        m_errMsg = tp.m_errmsg;
+        if (tp.m_data.isObject()) {
+            if (tp.m_data[ERRNO_PARAM].isNumeric()) {
+                m_errType = (LCC_ERR_TYPE)tp.m_data[ERRNO_PARAM].asInt();
+            }
+            if (tp.m_data[ERRMSG_PARAM].isString()) {
+                m_errMsg = tp.m_data[ERRMSG_PARAM].asString();
+            }
+        }
         
+        result = (LCC_ERR_PROTOCOLFAIL != m_errType);
 
     }
     

@@ -6,9 +6,8 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSGoogleAnalyticsViewController.h"
+#import "LSListViewController.h"
 
-#import "LSChatTextView.h"
 #import "GPUImageView.h"
 #import "LSUITextFieldAlign.h"
 #import "TableSuperView.h"
@@ -46,7 +45,7 @@
 - (void)showHangoutTipView:(LiveViewController *)vc;
 @end
 
-@interface LiveViewController : LSGoogleAnalyticsViewController
+@interface LiveViewController : LSListViewController
 #pragma mark - 调试信息
 @property (nonatomic, weak) IBOutlet UILabel *debugLabel;
 

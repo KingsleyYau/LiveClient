@@ -165,6 +165,18 @@ void RtmpPlayer::Stop() {
         // 清除缓存
         FrameBuffer* frame = NULL;
 
+        FileLevelLog("rtmpdump",
+                     KLog::LOG_MSG,
+                     "RtmpPlayer::Stop( "
+                     "this : %p, "
+                     "mVideoBufferList() : %d, "
+                     "mAudioBufferList() : %d "
+                     ")",
+                     this,
+                     mVideoBufferList.size(),
+                     mAudioBufferList.size()
+                     );
+        
         // 清除视频缓存帧
         mVideoBufferList.lock();
         while( !mVideoBufferList.empty() ) {

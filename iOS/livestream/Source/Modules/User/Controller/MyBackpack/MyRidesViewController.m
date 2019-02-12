@@ -38,6 +38,7 @@
 
 - (void)dealloc {
     [self.myRidesWaterfallView unInitPullRefresh];
+    NSLog(@"MyRidesViewController dealloc");
 }
 
 
@@ -77,8 +78,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self hideLoading];
             [self.myRidesWaterfallView finishPullDown:YES];
-            [self.mainVC getunreadCount];
-            
+            [[NSNotificationCenter defaultCenter]postNotificationName:@"MyBackPackGetUnreadCount" object:nil];
             self.myRidesWaterfallView.items = array;
             if (success) {
 

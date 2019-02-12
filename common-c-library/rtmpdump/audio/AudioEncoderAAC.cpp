@@ -42,7 +42,7 @@ AudioEncoderAAC::AudioEncoderAAC()
 :mRuningMutex(KMutex::MutexType_Recursive)
     {
 	// TODO Auto-generated constructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioEncoderAAC::AudioEncoderAAC( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioEncoderAAC::AudioEncoderAAC( this : %p )", this);
 
     avcodec_register_all();
 //    av_log_set_level(AV_LOG_ERROR);
@@ -66,7 +66,7 @@ AudioEncoderAAC::AudioEncoderAAC()
 
 AudioEncoderAAC::~AudioEncoderAAC() {
 	// TODO Auto-generated destructor stub
-	FileLevelLog("rtmpdump", KLog::LOG_STAT, "AudioEncoderAAC::~AudioEncoderAAC( this : %p )", this);
+	FileLevelLog("rtmpdump", KLog::LOG_MSG, "AudioEncoderAAC::~AudioEncoderAAC( this : %p )", this);
 
     Stop();
 

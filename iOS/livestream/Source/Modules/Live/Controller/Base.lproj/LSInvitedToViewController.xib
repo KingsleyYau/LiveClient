@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -17,6 +16,8 @@
                 <outlet property="bgImageView" destination="OHh-Hp-Te2" id="Ngi-kW-CkD"/>
                 <outlet property="bookPrivateBtn" destination="jNR-4v-UQS" id="G9B-Jd-ixs"/>
                 <outlet property="bookPrivateHeight" destination="LUp-g2-i8Y" id="Zzh-Un-Hge"/>
+                <outlet property="chatNowBtn" destination="ooh-Hw-ylc" id="YDQ-DP-7MC"/>
+                <outlet property="chatNowBtnH" destination="3s7-T8-Q2L" id="d1T-4L-4Wq"/>
                 <outlet property="closeButton" destination="gUx-DB-bJi" id="0X7-Ns-cGm"/>
                 <outlet property="countDownLabel" destination="LZm-JT-vzK" id="D7h-Fs-UKq"/>
                 <outlet property="handleCountDownLabel" destination="T6X-hR-I9A" id="hVO-yB-XzY"/>
@@ -46,7 +47,7 @@
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="180s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T6X-hR-I9A">
-                    <rect key="frame" x="168.5" y="49" width="37" height="21"/>
+                    <rect key="frame" x="169" y="49" width="37" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -146,6 +147,16 @@
                         <constraint firstAttribute="height" constant="100" id="nj4-2t-xtl"/>
                     </constraints>
                 </activityIndicatorView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ooh-Hw-ylc">
+                    <rect key="frame" x="84" y="269" width="207" height="36"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="36" id="3s7-T8-Q2L"/>
+                    </constraints>
+                    <state key="normal" image="Home_ChatNow"/>
+                    <connections>
+                        <action selector="chatNowBtnDid:" destination="-1" eventType="touchUpInside" id="6QI-g8-aR0"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -172,6 +183,7 @@
                 <constraint firstItem="gUx-DB-bJi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="15" id="MpZ-Lj-AJb"/>
                 <constraint firstAttribute="trailing" secondItem="gUx-DB-bJi" secondAttribute="trailing" id="NIv-yL-eYx"/>
                 <constraint firstAttribute="trailing" secondItem="OHh-Hp-Te2" secondAttribute="trailing" id="NwR-Mx-wX4"/>
+                <constraint firstItem="ooh-Hw-ylc" firstAttribute="top" secondItem="c1g-oJ-bRc" secondAttribute="bottom" constant="30" id="TVs-W4-Ugh"/>
                 <constraint firstItem="qxN-aH-iPl" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Uqj-Xm-pjZ"/>
                 <constraint firstItem="VXu-nW-w1J" firstAttribute="top" secondItem="qxN-aH-iPl" secondAttribute="bottom" constant="20" id="Uup-h1-3gj"/>
                 <constraint firstItem="OjW-T5-DOg" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Wat-n3-uhq"/>
@@ -183,6 +195,7 @@
                 <constraint firstItem="c1g-oJ-bRc" firstAttribute="trailing" secondItem="i5M-Pr-FkT" secondAttribute="trailing" constant="-40" id="gVh-bY-eo0"/>
                 <constraint firstItem="JQa-0o-nVh" firstAttribute="top" secondItem="jNR-4v-UQS" secondAttribute="bottom" constant="70" id="ifG-ym-fIX"/>
                 <constraint firstItem="JQa-0o-nVh" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="k2B-aD-WIW"/>
+                <constraint firstItem="ooh-Hw-ylc" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="oSa-14-zRh"/>
                 <constraint firstItem="c1g-oJ-bRc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="40" id="rW1-gg-jnE"/>
                 <constraint firstAttribute="trailing" secondItem="OjW-T5-DOg" secondAttribute="trailing" constant="15" id="sXX-7q-YTC"/>
                 <constraint firstItem="adJ-NW-gs6" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="yHi-0Y-OeT"/>
@@ -192,6 +205,7 @@
     </objects>
     <resources>
         <image name="Default_Img_Lady_Circyle" width="97" height="97"/>
+        <image name="Home_ChatNow" width="207" height="36"/>
         <image name="Home_HotAndFollow_Btn_BookPrivateBroadcast" width="207" height="35"/>
         <image name="Home_HotAndFollow_Btn_StartVipPrivateBroadcastAnimaition" width="207" height="35"/>
         <image name="Live_PreLive_Btn_AddCredit" width="131" height="33"/>

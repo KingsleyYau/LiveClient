@@ -12,14 +12,14 @@
 
 namespace coollive {
 VideoHardEncoder::VideoHardEncoder() {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoHardEncoder::VideoHardEncoder( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::VideoHardEncoder( this : %p )", this);
     
     mVideoEncodeQueue = dispatch_queue_create("_mVideoEncodeQueue", NULL);
     mVideoCompressionSession = NULL;
 }
     
 VideoHardEncoder::~VideoHardEncoder() {
-    FileLevelLog("rtmpdump", KLog::LOG_STAT, "VideoHardEncoder::~VideoHardEncoder( this : %p )", this);
+    FileLevelLog("rtmpdump", KLog::LOG_MSG, "VideoHardEncoder::~VideoHardEncoder( this : %p )", this);
     
     DestroyContext();
 }

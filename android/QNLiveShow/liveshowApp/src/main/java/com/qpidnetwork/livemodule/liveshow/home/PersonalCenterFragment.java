@@ -22,8 +22,8 @@ import com.qpidnetwork.livemodule.liveshow.personal.mypackage.MyPackageActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.tickets.MyTicketsActivity;
 import com.qpidnetwork.livemodule.liveshow.personal.scheduleinvite.ScheduleInviteActivity;
 import com.qpidnetwork.livemodule.utils.DisplayUtil;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.DotView.DotView;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * 个人中心

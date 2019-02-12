@@ -129,6 +129,8 @@
 		50E88B911EA07C9000696279 /* RtmpPlayerOC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RtmpPlayerOC.m; sourceTree = "<group>"; };
 		50E88B931EA09ECC00696279 /* RtmpPublisherOC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmpPublisherOC.h; sourceTree = "<group>"; };
 		50E88B941EA09ECC00696279 /* RtmpPublisherOC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RtmpPublisherOC.m; sourceTree = "<group>"; };
+		FA7B657221ED8ACB006F481B /* common_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = common_release.xcconfig; path = ../../Config/common_release.xcconfig; sourceTree = "<group>"; };
+		FA7B657321ED8ACB006F481B /* common_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = common_debug.xcconfig; path = ../../Config/common_debug.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +276,8 @@
 		50C994AF1E8F9281001E1355 = {
 			isa = PBXGroup;
 			children = (
+				FA7B657321ED8ACB006F481B /* common_debug.xcconfig */,
+				FA7B657221ED8ACB006F481B /* common_release.xcconfig */,
 				50C994BA1E8F9281001E1355 /* RtmpClient */,
 				50C994B91E8F9281001E1355 /* Products */,
 				5005201C1E94A39900C45E22 /* Frameworks */,
@@ -403,6 +407,7 @@
 /* Begin XCBuildConfiguration section */
 		50C994BF1E8F9281001E1355 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA7B657321ED8ACB006F481B /* common_debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -450,6 +455,7 @@
 		};
 		50C994C01E8F9281001E1355 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA7B657221ED8ACB006F481B /* common_release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -494,38 +500,20 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libc++";
-				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
-				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
+				COMMON_C_SRC_THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_THIRD_PARTY_ROOT}/ffmpeg/iOS";
 				DEVELOPMENT_TEAM = MK37J4UMHH;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/RtmpClient-PrefixHeader.pch";
 				GPUIMAGE_SRC_ROOT = "${SRCROOT}/../GPUImage/Source";
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../Config",
-					"${COMMON_C_SRC_ROOT}",
-					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
-					"${GPUIMAGE_SRC_ROOT}",
-					"${THIRD_PARTY_FFMPEG_ROOT}/include",
-				);
-				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"${SRCROOT}/RtmpClient/third_party/lib",
+					"${GPUIMAGE_SRC_ROOT}",
+					"${COMMON_C_SRC_THIRD_PARTY_FFMPEG_ROOT}/include",
 				);
 				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = (
-					"-DIOS",
-					"-DPRINT_JNI_LOG",
-					"-DFILE_JNI_LOG",
-				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
-				WARNING_CFLAGS = (
-					"-Wno-documentation",
-					"-Wno-unused-variable",
-				);
 			};
 			name = Debug;
 		};
@@ -534,37 +522,19 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++98";
 				CLANG_CXX_LIBRARY = "libc++";
-				COMMON_C_SRC_ROOT = "${SRCROOT}/../../../common-c-library";
-				COMMON_C_SRC_THIRD_PARTY_ROOT = "${COMMON_C_SRC_ROOT}/third_party";
+				COMMON_C_SRC_THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_THIRD_PARTY_ROOT}/ffmpeg/iOS";
 				DEVELOPMENT_TEAM = MK37J4UMHH;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_PREFIX_HEADER = "${SRCROOT}/${PROJECT_NAME}/RtmpClient-PrefixHeader.pch";
 				GPUIMAGE_SRC_ROOT = "${SRCROOT}/../GPUImage/Source";
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../Config",
-					"${COMMON_C_SRC_ROOT}",
-					"${COMMON_C_SRC_THIRD_PARTY_ROOT}",
-					"${GPUIMAGE_SRC_ROOT}",
-					"${THIRD_PARTY_FFMPEG_ROOT}/include",
-				);
-				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"${SRCROOT}/RtmpClient/third_party/lib",
+					"${GPUIMAGE_SRC_ROOT}",
+					"${COMMON_C_SRC_THIRD_PARTY_FFMPEG_ROOT}/include",
 				);
-				OTHER_CFLAGS = (
-					"-DIOS",
-					"-DPRINT_JNI_LOG",
-					"-DFILE_JNI_LOG",
-				);
-				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				THIRD_PARTY_FFMPEG_ROOT = "${COMMON_C_SRC_ROOT}/third_party/ffmpeg/iOS";
-				WARNING_CFLAGS = (
-					"-Wno-documentation",
-					"-Wno-unused-variable",
-				);
 			};
 			name = Release;
 		};

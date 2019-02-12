@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.qpidnetwork.anchor.R;
+import com.qpidnetwork.anchor.bean.CommonConstant;
 import com.qpidnetwork.anchor.framework.base.BaseFragmentActivity;
 import com.qpidnetwork.anchor.framework.widget.circleimageview.CircleImageView;
 import com.qpidnetwork.anchor.httprequest.LiveRequestOperator;
@@ -35,7 +36,6 @@ import com.qpidnetwork.anchor.liveshow.authorization.LoginManager;
 import com.qpidnetwork.anchor.liveshow.home.MainFragmentActivity;
 import com.qpidnetwork.anchor.liveshow.manager.CameraMicroPhoneCheckManager;
 import com.qpidnetwork.anchor.utils.SystemUtils;
-import com.qpidnetwork.qnbridgemodule.bean.CommonConstant;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 

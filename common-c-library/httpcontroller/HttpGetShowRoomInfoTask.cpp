@@ -60,11 +60,12 @@ bool HttpGetShowRoomInfoTask::ParseData(const string& url, bool bFlag, const cha
     bool bParse = false;
     HttpProgramInfoItem item;
     string roomId;
-    
+    HttpAuthorityItem privItem;
     if ( bFlag ) {
         // 公共解析
         Json::Value dataJson;
-        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson) ) {
+        Json::Value errDataJson;
+        if( ParseLiveCommon(buf, size, errnum, errmsg, &dataJson, &errDataJson) ) {
             bParse = true;
             if (dataJson.isObject()) {
                 if (dataJson[GETSHOWROOMINFO_SHOWINFO].isObject()) {
@@ -76,6 +77,11 @@ bool HttpGetShowRoomInfoTask::ParseData(const string& url, bool bFlag, const cha
             }
             
         }
+        if ( errnum != LOCAL_LIVE_ERROR_CODE_SUCCESS && errDataJson.isObject()) {
+            if (errDataJson[LIVEROOM_HOT_PROGRAMLIST_PRIV].isObject()) {
+                privItem.Parse(errDataJson[LIVEROOM_HOT_PROGRAMLIST_PRIV]);
+            }
+        }
         bParse = (errnum == LOCAL_LIVE_ERROR_CODE_SUCCESS ? true : false);
         
         
@@ -86,7 +92,7 @@ bool HttpGetShowRoomInfoTask::ParseData(const string& url, bool bFlag, const cha
     }
     
     if( mpCallback != NULL ) {
-        mpCallback->OnGetShowRoomInfo(this, bParse, errnum, errmsg, item, roomId);
+        mpCallback->OnGetShowRoomInfo(this, bParse, errnum, errmsg, item, roomId, privItem);
     }
     
     return bParse;

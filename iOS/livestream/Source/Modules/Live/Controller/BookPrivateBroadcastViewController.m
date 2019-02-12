@@ -16,6 +16,7 @@
 #import "DialogOK.h"
 #import "AddMobileNumberViewController.h"
 #import "LiveModule.h"
+#import "LSAddCreditsViewController.h"
 @interface BookPrivateBroadcastViewController () <UITableViewDelegate, UITableViewDataSource, AddVirtualGiftsCellDelegate, UIPickerViewDelegate, UIPickerViewDataSource, AddPhoneNumCellDelegate>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, assign) NSInteger tableRow;
@@ -197,10 +198,11 @@
     GetCreateBookingInfoRequest *request = [[GetCreateBookingInfoRequest alloc] init];
     request.userId = self.userId;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg, GetCreateBookingInfoItemObject *_Nonnull item) {
+        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self hideLoading];
+            [weakSelf hideLoading];
             if (success) {
-                self.bookDeposit = item.bookDeposit;
+                weakSelf.bookDeposit = item.bookDeposit;
 
                 if (item.bookTime.count > 0) {
                     
@@ -211,28 +213,28 @@
                         return [time1 compare:time2]; //升序
                     }];
                     
-                    [self getBookTimeData:result];
+                    [weakSelf getBookTimeData:result];
                 }
 
-                self.bookGift = item.bookGift;
+                weakSelf.bookGift = item.bookGift;
 
-                if (self.bookGift.count > 0) {
-                    self.tableRow = 3;
+                if (weakSelf.bookGift.count > 0) {
+                    weakSelf.tableRow = 3;
                 } else {
-                    self.tableRow = 2;
+                    weakSelf.tableRow = 2;
                 }
 
-                self.bookPhoneItem = item.bookPhone;
+                weakSelf.bookPhoneItem = item.bookPhone;
                 
                 if (item.bookPhone) {
-                    self.needSms = item.bookPhone.phoneNo.length > 0 ? YES : NO;
+                    weakSelf.needSms = item.bookPhone.phoneNo.length > 0 ? YES : NO;
                 }
 
-                [self setTableFooterView];
+                [weakSelf setTableFooterView];
 
-                [self.tableView reloadData];
+                [weakSelf.tableView reloadData];
             } else {
-                [self showDialog:errmsg];
+                [weakSelf showDialog:errmsg];
             }
         });
     };
@@ -257,45 +259,43 @@
     request.timeId = self.timeId;
     request.needSms = self.needSms;
     request.finishHandler = ^(BOOL success, HTTP_LCC_ERR_TYPE errnum, NSString *_Nonnull errmsg) {
+        WeakObject(self, weakSelf);
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.bookNowBtn.userInteractionEnabled = YES;
-            [self.buttonLoading stopAnimating];
-            [self.bookNowBtn setTitle:NSLocalizedStringFromSelf(@"BOOK_NOW") forState:UIControlStateNormal];
+            weakSelf.bookNowBtn.userInteractionEnabled = YES;
+            [weakSelf.buttonLoading stopAnimating];
+            [weakSelf.bookNowBtn setTitle:NSLocalizedStringFromSelf(@"BOOK_NOW") forState:UIControlStateNormal];
             if (success) {
                 NSLog(@"预约成功");
                 BookPrivateBroadcastSucceedViewController *vc = [[BookPrivateBroadcastSucceedViewController alloc] initWithNibName:nil bundle:nil];
-                vc.userName = self.userName;
-                vc.time = [NSString stringWithFormat:@"%@.%@", self.dayStr, self.timeStr];
-                if (self.bookGift.count > 0 && self.isShowVG) {
-                    vc.giftId = self.giftId;
-                    vc.giftNum = self.giftNum;
+                vc.userName = weakSelf.userName;
+                vc.time = [NSString stringWithFormat:@"%@.%@", weakSelf.dayStr, weakSelf.timeStr];
+                if (weakSelf.bookGift.count > 0 && weakSelf.isShowVG) {
+                    vc.giftId = weakSelf.giftId;
+                    vc.giftNum = weakSelf.giftNum;
                 }
                 vc.view.frame = CGRectMake(0, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT);
-                [self addChildViewController:vc];
-                [self.view addSubview:vc.view];
+                [weakSelf addChildViewController:vc];
+                [weakSelf.view addSubview:vc.view];
                 
                 [UIView animateWithDuration:0.2 animations:^{
                     vc.view.frame = CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
                 }];
             } else {
                 if (errnum == HTTP_LCC_ERR_NO_CREDIT) {
-                    if (self.dialogBookAddCredit) {
-                        [self.dialogBookAddCredit removeFromSuperview];
+                    if (weakSelf.dialogBookAddCredit) {
+                        [weakSelf.dialogBookAddCredit removeFromSuperview];
                     }
-                    WeakObject(self, weakSelf);
-                    self.dialogBookAddCredit = [DialogOK dialog];
-                    self.dialogBookAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"BOOKPRIVATE_ERR_ADD_CREDIT");
-                    [self.dialogBookAddCredit showDialog:self.view
+                    weakSelf.dialogBookAddCredit = [DialogOK dialog];
+                    weakSelf.dialogBookAddCredit.tipsLabel.text = NSLocalizedStringFromSelf(@"BOOKPRIVATE_ERR_ADD_CREDIT");
+                    [weakSelf.dialogBookAddCredit showDialog:weakSelf.view
                                              actionBlock:^{
                                                  NSLog(@"跳转到充值界面");
                                                      [[LiveModule module].analyticsManager reportActionEvent:BuyCredit eventCategory:EventCategoryGobal];
-                                                 UIViewController *vc = [LiveModule module].addCreditVc;
-                                                 if (vc) {
-                                                     [weakSelf.navigationController pushViewController:vc animated:YES];
-                                                 }
+                                                 LSAddCreditsViewController *vc = [[LSAddCreditsViewController alloc] initWithNibName:nil bundle:nil];
+                                                 [weakSelf.navigationController pushViewController:vc animated:YES];
                                              }];
                 } else {
-                    [self showDialog:errmsg];
+                    [weakSelf showDialog:errmsg];
                 }
             }
         });

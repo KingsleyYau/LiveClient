@@ -35,14 +35,16 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     private List<PackageGiftItem> mPackageGifts;
     private PackageGiftsAdapter mAdapter;
 
+    private boolean isVisibleToUser;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         setCustomContent(R.layout.fragment_package_gifts);
-        swipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        mGridView = (GridView)view.findViewById(R.id.gridView);
+        mGridView = (GridView) view.findViewById(R.id.gridView);
         return view;
     }
 
@@ -52,51 +54,68 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
         mPackageGifts = new ArrayList<PackageGiftItem>();
         mAdapter = new PackageGiftsAdapter(getActivity(), mPackageGifts);
         mGridView.setAdapter(mAdapter);
+
+        // 2018/10/26 Hardy
+        if (isVisibleToUser) {
+            loadDataWithLoading();
+        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+
         //Fragment是否可见，用于viewpager切换时再加载
-        if(isVisibleToUser){
-            //切换到当前fragment
-            showLoadingProcess();
-            queryPackageGifts();
+//        if(isVisibleToUser){
+//            //切换到当前fragment
+//            showLoadingProcess();
+//            queryPackageGifts();
+//        }
+
+        // 2018/10/26 Hardy
+        this.isVisibleToUser = isVisibleToUser;
+        if (isVisibleToUser && isCreatedView()) {
+            loadDataWithLoading();
         }
+    }
+
+    private void loadDataWithLoading() {
+        showLoadingProcess();
+        queryPackageGifts();
     }
 
     @Override
     protected void handleUiMessage(Message msg) {
         super.handleUiMessage(msg);
         onRefreshComplete();
-        HttpRespObject response = (HttpRespObject)msg.obj;
-        if(getActivity() == null){
+        HttpRespObject response = (HttpRespObject) msg.obj;
+        if (getActivity() == null) {
             return;
         }
-        if(response.isSuccess){
+        if (response.isSuccess) {
             //列表刷新成功，更新未读
             ScheduleInvitePackageUnreadManager.getInstance().GetPackageUnreadCount();
 
             mPackageGifts.clear();
-            PackageGiftItem[] packageGifts = (PackageGiftItem[])response.data;
-            if(packageGifts != null) {
+            PackageGiftItem[] packageGifts = (PackageGiftItem[]) response.data;
+            if (packageGifts != null) {
                 mPackageGifts.addAll(Arrays.asList(packageGifts));
                 //过滤本地是否已有礼物详情
                 filterToCompleteGiftDetail();
             }
             mAdapter.notifyDataSetChanged();
 
-            if(mPackageGifts.size() <= 0 ){
+            if (mPackageGifts.size() <= 0) {
                 showEmptyView();
-            }else{
+            } else {
                 hideNodataPage();
             }
-        }else{
-            if(mPackageGifts != null && mPackageGifts.size() > 0){
-                if(getActivity() != null) {
+        } else {
+            if (mPackageGifts != null && mPackageGifts.size() > 0) {
+                if (getActivity() != null) {
                     Toast.makeText(getActivity(), response.errMsg, Toast.LENGTH_LONG).show();
                 }
-            }else{
+            } else {
                 showErrorPage();
             }
         }
@@ -105,16 +124,16 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     /**
      * 检查本地礼物详情是否足够展示
      */
-    private void filterToCompleteGiftDetail(){
+    private void filterToCompleteGiftDetail() {
         NormalGiftManager giftManager = NormalGiftManager.getInstance();
-        for(PackageGiftItem packageGiftItem : mPackageGifts){
+        for (PackageGiftItem packageGiftItem : mPackageGifts) {
             GiftItem item = giftManager.getLocalGiftDetail(packageGiftItem.giftId);
-            if(item == null){
+            if (item == null) {
                 //本地没有，需要单独同步
                 giftManager.getGiftDetail(packageGiftItem.giftId, new OnGetGiftDetailCallback() {
                     @Override
                     public void onGetGiftDetail(boolean isSuccess, int errCode, String errMsg, GiftItem giftDetail) {
-                        if(getActivity() != null){
+                        if (getActivity() != null) {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -132,8 +151,9 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     @Override
     protected void onDefaultErrorRetryClick() {
         super.onDefaultErrorRetryClick();
-        showLoadingProcess();
-        queryPackageGifts();
+//        showLoadingProcess();
+//        queryPackageGifts();
+        loadDataWithLoading();
     }
 
     @Override
@@ -145,7 +165,7 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     /**
      * 显示无数据页
      */
-    private void showEmptyView(){
+    private void showEmptyView() {
         setDefaultEmptyMessage(getResources().getString(R.string.my_package_gift_empty_tips));
         setDefaultEmptyButtonText("");
         showNodataPage();
@@ -154,7 +174,7 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     /**
      * 获取背包礼物列表
      */
-    private void queryPackageGifts(){
+    private void queryPackageGifts() {
         LiveRequestOperator.getInstance().GetPackageGiftList(new OnGetPackageGiftListCallback() {
             @Override
             public void onGetPackageGiftList(boolean isSuccess, int errCode, String errMsg, PackageGiftItem[] packageGiftList, int totalCount) {
@@ -169,7 +189,7 @@ public class ReceivedGiftFragment extends BaseLoadingFragment implements SwipeRe
     /**
      * 刷新完成UI
      */
-    private void onRefreshComplete(){
+    private void onRefreshComplete() {
         swipeRefreshLayout.setRefreshing(false);
         hideLoadingProcess();
     }

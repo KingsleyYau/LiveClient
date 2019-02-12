@@ -17,6 +17,14 @@ JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogDir
 
 /*
  * Class:     net_qdating_player_LSPlayerJni
+ * Method:    SetLogLevel
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_net_qdating_player_LSPlayerJni_SetLogLevel
+  (JNIEnv *, jclass, jint);
+
+/*
+ * Class:     net_qdating_player_LSPlayerJni
  * Method:    Create
  * Signature: (Lnet/qdating/player/ILSPlayerCallbackJni;ZLnet/qdating/player/ILSVideoRendererJni;Lnet/qdating/player/ILSAudioRendererJni;Lnet/qdating/player/ILSVideoHardDecoderJni;Lnet/qdating/player/ILSVideoHardRendererJni;)J
  */

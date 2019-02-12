@@ -6,10 +6,9 @@
 //  Copyright © 2017年 net.qdating. All rights reserved.
 //
 
-#import "LSListViewController.h"
+#import "LSWKWebViewController.h"
 
-#import "LSGoogleAnalyticsViewController.h"
-@interface MeLevelViewController : LSListViewController
+@interface MeLevelViewController : LSWKWebViewController
 
 
 @end

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <httpcontroller/HttpRequestEnum.h>
 #import "LSProgramItemObject.h"
+#import "LSHttpAuthorityItemObject.h"
 
 @interface LiveRoomInfoItemObject : NSObject
 {
@@ -25,6 +26,8 @@
  * interest          爱好ID列表
  * anchorType        主播类型（1:白银 2:黄金）
  * showInfo          节目信息
+ * isHasOneONOneAuth 是否有私密直播权限
+ * isHasBookingAuth  是否有预约私密直播权限
  */
 
 @property (nonatomic, strong) NSString* userId;
@@ -42,9 +45,12 @@
 @property (nonatomic, assign) AnchorLevelType anchorType;
 // 节目信息
 @property (nonatomic, strong) LSProgramItemObject* showInfo;
+@property (nonatomic, strong) LSHttpAuthorityItemObject* priv;
+@property (nonatomic, assign) IMChatOnlineStatus chatOnlineStatus;
 
 @property (nonatomic, assign) int loveLevel;
 @property (nonatomic, assign) NSInteger addDate;
+
 // - (void)SetInterestWithIndex:(InterestType)type index:(int)index;
 
 @end

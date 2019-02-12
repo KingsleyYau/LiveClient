@@ -105,7 +105,9 @@ public class MediaUtility {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } finally {
+        } catch (Exception ex){
+
+        }finally {
             if (cursor != null) cursor.close();
         }
         return null;

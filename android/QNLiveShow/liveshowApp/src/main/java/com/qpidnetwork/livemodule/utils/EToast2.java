@@ -19,6 +19,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.qpidnetwork.livemodule.R;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

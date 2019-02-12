@@ -11,34 +11,26 @@
 #import "LiveModule.h"
 
 @implementation LSGoogleAnalyticsViewController
-
-- (void)dealloc {
-    // 跟踪屏幕销毁[LSRequestManager manager].invalidRequestId 
-    [[LiveModule module].analyticsManager reportDeallocScreen:self];
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // 跟踪屏幕创建
-    [[LiveModule module].analyticsManager reportAllocScreen:self assignScreenName:self.gaScreenName];
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     // 跟踪显示屏幕
-    [[LiveModule module].analyticsManager reportShowScreen:self assignScreenName:self.gaScreenName];
+    if( !self.isPage ) {
+        [[LiveModule module].analyticsManager reportShowScreen:self assignScreenName:self.screenName];
+    }
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
-    // 跟踪屏幕消失
-    [[LiveModule module].analyticsManager reportDismissScreen:self];
+- (void)reportScreenForce {
+    [[LiveModule module].analyticsManager reportShowScreen:self assignScreenName:self.screenName];
 }
 
-- (void)reportDidShowPage:(NSUInteger)index {
-    // 跟踪屏幕页切换
-    [[LiveModule module].analyticsManager reportDidShowPage:self pageIndex:index];
+- (BOOL)isPage {
+    return NO;
+}
+
+- (void)removeFromParentViewController {
+    [[LiveModule module].analyticsManager reportRemoveParentViewController:self];
+    [super removeFromParentViewController];
 }
 
 @end

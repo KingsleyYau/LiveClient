@@ -1,0 +1,50 @@
+
+/* Class = "UILabel"; text = "Send mail to Name"; ObjectID = "SPL-2M-6Rx"; */
+"SPL-2M-6Rx.text" = "Send mail to Name";
+
+/* Class = "UIButton"; normalTitle = "Send"; ObjectID = "SdZ-b3-dcy"; */
+"SdZ-b3-dcy.normalTitle" = "Send";
+
+//上传图片超过数量提示
+"Upload_maxNum_error" = "Sorry, you have exceeded to maximum number of attachments.";
+
+//返回草稿箱提示
+"Back_Tip" = "If you choose save draft, draft will be reloaded next time when you write a mail to this member.";
+
+"Camera" = "Camera";
+"Album" = "Album";
+
+"Save Draft" = "Save Draft";
+
+"Delete Draft"= "Delete Draft";
+
+
+"MailInfo_Stamps_Tip" = "The basic fee of mail is 1 post stamp; First photo is free; 1 stamp for each extra photo. If you wish to send by Qpid Credits, please ";
+
+"MailInfo_Credits_Tip" = "The basic fee of mail is 0.8 credits; First photo is free; 0.8 credits for each extra photo. If you wish to send by Post Stamps, please ";
+
+//没权限发信提示
+"SEND_MAIL_PERMISSOINS_TIP" = "Oops! You can't send this mail at the moment.Please try again later.";
+
+//没点提示
+"NO_CREDITS" = "You have insufficient credits to send this mail.";
+
+//发信成功
+"SEND_MAIL_SUCCESSFULLY" = "Your mail has been sent successfully!";
+
+//发信时图片上传中
+"SEND_MAIL_UPLOADING" = "Please ensure that your photos are uploaded successfully before sending this mail.";
+
+//发信二次提示
+"SENDMAIL_CREDIT_TIP" = "Sending this mail cost you %0.1f credit. Do you wish to send this mail?";
+
+"SENDMAIL_STAMPS_TIP" = "Sending this mail cost you %0.0f stamps. Do you wish to send this mail?";
+
+//回复框默认填写“Dear {主播昵称},” 若回复时判断文本框只有“Dear{主播昵称},” 则toast提示
+"NO_MAIL_TEXT" = "You haven't enter any message yet. Please enter your message before sending this mail.";
+
+"SEND_MAIL_NAME" = "Send mail to %@";
+
+"TAP_HERE" = "tap here";
+
+"UPLOAD_ERROR_MSG" = "You have already attached this photo to this mail, please do not add 2 same photos in one mail.";

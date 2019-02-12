@@ -8,7 +8,7 @@
 
 #import "LSGoogleAnalyticsViewController.h"
 #import "LSCheckButton.h"
-#import "UserInfoManager.h"
+#import "LSUserInfoManager.h"
 #import "LSGiftManager.h"
 #import "LiveRoom.h"
 

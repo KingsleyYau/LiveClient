@@ -13,9 +13,6 @@ public class LSImageCropFilter extends LSImageInputFilter {
     private float width = 1f;
     private float height = 1f;
 	private float filterVertex[];
-	private boolean bChange = false;
-
-	static private int bTest;
 
 	public LSImageCropFilter() {
 		super();

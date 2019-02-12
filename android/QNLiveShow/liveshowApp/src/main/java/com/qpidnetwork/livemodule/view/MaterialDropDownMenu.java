@@ -22,7 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.qpidnetwork.livemodule.R;
-import com.qpidnetwork.livemodule.utils.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 public class MaterialDropDownMenu {
 

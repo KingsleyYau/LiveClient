@@ -3,7 +3,6 @@ package com.qpidnetwork.livemodule.liveshow.liveroom;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.SurfaceView;
 
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;

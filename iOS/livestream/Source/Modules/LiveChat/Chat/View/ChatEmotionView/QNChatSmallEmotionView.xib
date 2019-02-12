@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="XVq-Ua-Ja7" customClass="QNChatSmallEmotionView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="174"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="pss-qv-yV6">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="174"/>
+                    <color key="backgroundColor" red="0.96362179489999999" green="0.96362179489999999" blue="0.96362179489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <collectionViewLayout key="collectionViewLayout" id="lEs-gf-0Bq" customClass="QNChatEmotionCreditsCollectionViewLayout"/>
+                    <connections>
+                        <outlet property="dataSource" destination="XVq-Ua-Ja7" id="GS2-CB-Jls"/>
+                        <outlet property="delegate" destination="XVq-Ua-Ja7" id="t9j-q5-ag9"/>
+                    </connections>
+                </collectionView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Premium stickers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhS-B9-ZXc">
+                    <rect key="frame" x="16" y="10" width="117" height="16"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
+                    <fontDescription key="fontDescription" name="Arial-BoldMT" family="Arial" pointSize="14"/>
+                    <color key="textColor" red="0.47450980392156861" green="0.47450980392156861" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <pageControl hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="kpu-P0-fgo">
+                    <rect key="frame" x="140.5" y="135" width="39" height="37"/>
+                    <color key="pageIndicatorTintColor" red="0.66666666669999997" green="0.66666666669999997" blue="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="currentPageIndicatorTintColor" red="0.33333333329999998" green="0.33333333329999998" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </pageControl>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" (0.1 credits each time sent)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OLt-U8-60b">
+                    <rect key="frame" x="136" y="11" width="157" height="14.5"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.47450980392156861" green="0.47450980392156861" blue="0.47450980392156861" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" red="0.96362179489999999" green="0.96362179489999999" blue="0.96362179489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="kpu-P0-fgo" firstAttribute="bottom" secondItem="XVq-Ua-Ja7" secondAttribute="bottom" constant="-2" id="8WB-sW-orI"/>
+                <constraint firstItem="kpu-P0-fgo" firstAttribute="centerX" secondItem="XVq-Ua-Ja7" secondAttribute="centerX" id="GSh-Aa-fXz"/>
+                <constraint firstItem="pss-qv-yV6" firstAttribute="top" secondItem="XVq-Ua-Ja7" secondAttribute="top" id="HjQ-HM-4wc"/>
+                <constraint firstItem="mhS-B9-ZXc" firstAttribute="top" secondItem="XVq-Ua-Ja7" secondAttribute="top" constant="10" id="NLv-PS-UxV"/>
+                <constraint firstItem="pss-qv-yV6" firstAttribute="trailing" secondItem="XVq-Ua-Ja7" secondAttribute="trailing" id="RCT-Fw-lbc"/>
+                <constraint firstItem="OLt-U8-60b" firstAttribute="leading" secondItem="mhS-B9-ZXc" secondAttribute="trailing" constant="3" id="Wu9-Hu-Gfe"/>
+                <constraint firstItem="OLt-U8-60b" firstAttribute="centerY" secondItem="mhS-B9-ZXc" secondAttribute="centerY" id="ljO-JW-wGf"/>
+                <constraint firstItem="pss-qv-yV6" firstAttribute="leading" secondItem="XVq-Ua-Ja7" secondAttribute="leading" id="mWv-NJ-FII"/>
+                <constraint firstItem="mhS-B9-ZXc" firstAttribute="leading" secondItem="XVq-Ua-Ja7" secondAttribute="leading" constant="16" id="yDs-fd-koy"/>
+                <constraint firstItem="pss-qv-yV6" firstAttribute="bottom" secondItem="XVq-Ua-Ja7" secondAttribute="bottom" id="z0J-Ml-fTU"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="creditPrice" destination="OLt-U8-60b" id="cai-fg-Yov"/>
+                <outlet property="creditsTip" destination="mhS-B9-ZXc" id="T2F-fU-vbT"/>
+                <outlet property="emotionCollectionView" destination="pss-qv-yV6" id="jaD-wj-5Wg"/>
+                <outlet property="pageView" destination="kpu-P0-fgo" id="vlw-eK-XXB"/>
+            </connections>
+            <point key="canvasLocation" x="191.5" y="117"/>
+        </view>
+    </objects>
+</document>

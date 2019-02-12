@@ -8,6 +8,37 @@
 #ifndef REQUESTENUM_H_
 #define REQUESTENUM_H_
 
+#include <common_item/CommonItemDef.h>
+
+#define HTTP_OTHER_SYNCONFIG_CL                "0"
+#define HTTP_OTHER_SYNCONFIG_IDA               "1"
+#define HTTP_OTHER_SYNCONFIG_CD                "4"
+#define HTTP_OTHER_SYNCONFIG_LA                "5"
+#define HTTP_OTHER_SYNCONFIG_AD                "6"
+#define HTTP_OTHER_SYNCONFIG_LIVE              "41"
+#define HTTP_OTHER_SYNCONFIG_PAYMENT           "99"
+
+
+#define HTTP_STRING_ERROR_NOLOGIN              "MBCE0003"
+#define HTTP_STRING_ERROR_NOMATCHMAIL          "MBCE21001"              // 没有找到匹配的邮箱
+#define HTTP_STRING_ERROR_NOENTERCODE          "MBCE21002"              // Please enter the verification code
+#define HTTP_STRING_ERROR_CODEERROR            "MBCE21003"             // The verification code is wrong
+#define HTTP_STRING_ERROR_CURRENTPASSWORD      "MBCE13001"
+#define HTTP_STRING_ERROR_ALLFIELDS            "MBCE13002"
+#define HTTP_STRING_ERROR_THEOPERATIONFSILED   "MBCE13003"
+#define HTTP_STRING_ERROR_PASSWORDFORMAT       "MBCE13004"
+#define HTTP_STRING_ERROR_DATAUPDATE           "MBCE12001"
+#define HTTP_STRING_ERROR_NOEXISTKEY           "MBCE12002"
+#define HTTP_STRING_ERROR_UNCHANGEVALUE         "MBCE12003"
+#define HTTP_STRING_ERROR_UNPASSVALUE           "MBCE12004"
+#define HTTP_STRING_ERROR_UPDATEINFODESCLOG     "MBCE12005"
+#define HTTP_STRING_ERROR_INSERTINFODESCLOG     "MBCE12006"
+#define HTTP_STRING_ERROR_UPDATEINFODESCLOGSETGROUPID             "MBCE12007"
+#define HTTP_STRING_ERROR_APPEXISTLOGS             "MBCE22001"       // (APP安装记录已存在。)
+
+#define PROFILE_WEIGHT_BEGINVALUE    5
+#define PROFILE_HEIGHT_BEGINVALUE    12
+#define PROFILE_ETHNICITY_BEGINVALUE    1
 
 // 处理结果
 typedef enum {
@@ -26,7 +57,7 @@ typedef enum {
     HTTP_LCC_ERR_NO_CREDIT = 10025,   // 信用点不足
     
     /* IM公用错误码 */
-    HTTP_LCC_ERR_NO_LOGIN = 10002,   // 未登录
+    HTTP_LCC_ERR_NO_LOGIN = 10002,   // 未登录 域名的MBCE0003：Need to login. (未登录)
     HTTP_LCC_ERR_SYSTEM = 10003,     // 系统错误
     HTTP_LCC_ERR_TOKEN_EXPIRE = 10004, // Token 过期了
     HTTP_LCC_ERR_NOT_FOUND_ROOM = 10021, // 进入房间失败 找不到房间信息or房间关闭
@@ -61,23 +92,68 @@ typedef enum {
     HTTP_LCC_ERR_OUTTIME_REJECT_BOOKING = 10073, // 预约邀请已超时（当观众拒绝时）
     
     HTTP_LCC_ERR_OUTTIME_AGREE_BOOKING = 10078,   // 预约邀请已超时（当观众同意时）
+    
+    
+    /* 独立的错误码*/
     HTTP_LCC_ERR_FACEBOOK_NO_MAILBOX = 61001,     // Facebook没有邮箱（需要提交邮箱）
     HTTP_LCC_ERR_FACEBOOK_EXIST_QN_MAILBOX = 61002, // Facebook邮箱已在QN注册（需要换邮箱）
     HTTP_LCC_ERR_FACEBOOK_EXIST_LS_MAILBOX = 61003,  // Facebook邮箱已在直播独立站注册（需要输入密码）
     HTTP_LCC_ERR_FACEBOOK_TOKEN_INVALID = 61004,     // Facebook token无效登录失败
-    
     HTTP_LCC_ERR_FACEBOOK_PARAMETER_FAIL = 61005,    // 参数错误
+    
     HTTP_LCC_ERR_FACEBOOK_ALREADY_REGISTER = 61006,  // Facebook帐号已在QN注册（提示错误）
     HTTP_LCC_ERR_MAILREGISTER_EXIST_QN_MAILBOX = 62001,          // 邮箱已在QN注册
     HTTP_LCC_ERR_MAILREGISTER_EXIST_LS_MAILBOX = 62002,          // 邮箱已在直播独立站注册
     HTTP_LCC_ERR_MAILREGISTER_LESS_THAN_EIGHTEEN = 62003,        // 年龄小于18岁
-    
     HTTP_LCC_ERR_MAILREGISTER_PARAMETER_FAIL = 62004,            // 参数错误
+    
     HTTP_LCC_ERR_MAILLOGIN_PASSWORD_INCORRECT = 63001,           // 密码不正确
     HTTP_LCC_ERR_MAILLOGIN_NOREGISTER_MAIL = 63002,              // 邮箱未注册
     HTTP_LCC_ERR_FINDPASSWORD_NOREGISTER_MAIL = 64001,           // 邮箱未注册
     HTTP_LCC_ERR_FINDPASSWORD_VERIFICATION_WRONG = 4,            // 验证码错误
     
+    /* 换站的错误码和域名的错误吗*/
+    HTTP_LCC_ERR_PLOGIN_PASSWORD_INCORRECT = 200006,      // 帐号或密码不正确
+    HTTP_LCC_ERR_PLOGIN_ENTER_VERIFICATION = 200003,      // 需要验证码 和 MBCE21002: Please enter the verification code.
+    HTTP_LCC_ERR_PLOGIN_VERIFICATION_WRONG = 200004,      // 验证码不正确 和 MBCE21003:The verification code is wrong
+    HTTP_LCC_ERR_TLOGIN_SID_NULL = 200017,                // sid无效
+    HTTP_LCC_ERR_TLOGIN_SID_OUTTIME = 200018,             // sid超时
+    
+    HTTP_LCC_ERR_DEMAIN_NO_FIND_MAIL = 921001,            // MBCE21001：(没有找到匹配的邮箱。)
+    HTTP_LCC_ERR_DEMAIN_CURRENT_PASSWORD_WRONG = 913001,  // MBCE13001：Sorry, the current password you entered is wrong!
+    HTTP_LCC_ERR_DEMAIN_ALL_FIELDS_WRONG = 913002,       // MBCE13002：Please check if all fields are filled and correct!
+    HTTP_LCC_ERR_DEMAIN_THE_OPERATION_FAILED = 913003,       // MBCE13003：The operation failed  /mobile/changepwd.ph
+    HTTP_LCC_ERR_DEMAIN_PASSWORD_FORMAT_WRONG = 913004,      // MBCE13004：Password format error
+    
+    HTTP_LCC_ERR_DEMAIN_NO_FIND_USERID = 911001,         // MBCE11001：(QpidNetWork男士会员ID未找到) /mobile/myprofile.php
+    HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_ERR = 912001,        // MBCE12001：Data update error. ( 数据更新失败)  /mobile/updatepro.php
+    HTTP_LCC_ERR_DEMAIN_DATA_NO_EXIST_KEY = 912002,            // MBCE12002:( 更新失败：Key不存在。)  /mobile/updatepro.php
+    HTTP_LCC_ERR_DEMAIN_DATA_UNCHANGE_VALUE = 912003,            // MBCE12003：( 更新失败：Value值没有改变。)
+    HTTP_LCC_ERR_DEMAIN_DATA_UNPASS_VALUE = 912004,            // MBCE12004：( 更新失败：Value值检测没通过。)
+    
+    HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFO_DESC_LOG = 912005,            // MBCE12005：update info_desc_log
+    HTTP_LCC_ERR_DEMAIN_DATA_INSERT_INFO_DESC_LOG = 912006,            // MBCE12006：insert into info_desc_log
+    HTTP_LCC_ERR_DEMAIN_DATA_UPDATE_INFODESCLOG_SETGROUPID = 912007,   // MBCE12007：update info_desc_log set group_id
+    HTTP_LCC_ERR_DEMAIN_APP_EXIST_LOGS = 912008,                       // MBCE22001：(APP安装记录已存在。)
+    HTTP_LCC_ERR_PRIVTE_INVITE_AUTHORITY = 17002,                   // 主播无立即私密邀请权限(17002)
+
+    /* 信件*/
+    HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_HASCREDIT = 17213,          // 购买图片使用邮票支付时，邮票不足，但信用点可用(17213)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_BUYPHOTO_USESTAMP_NOSTAMP_NOCREDIT = 17214,          // 购买图片使用邮票支付时，邮票不足，且信用点不足(17214)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOCREDIT_HASSTAMP = 17215,          // 购买图片使用信用点支付时，信用点不足，但邮票可用(17215)(调用13.7.购买信件附件接口)
+    
+    HTTP_LCC_ERR_LETTER_BUYPHOTO_USECREDIT_NOSTAMP_NOCREDIT = 17216,          // 购买图片使用信用点支付时，信用点不足，且邮票不足(17216)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_PHOTO_OVERTIME = 17217,                     // 照片已过期(17217)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_HASCREDIT = 17218,          // 购买视频使用邮票支付时，邮票不足，但信用点可用(17218)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USESTAMP_NOSTAMP_NOCREDIT = 17219,          // 购买视频使用邮票支付时，邮票不足，且信用点不足(17219)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOCREDIT_HASSTAMP = 17220,          // 购买视频使用信用点支付时，信用点不足，但邮票可用(17220)(调用13.7.购买信件附件接口)
+    
+    HTTP_LCC_ERR_LETTER_BUYPVIDEO_USECREDIT_NOSTAMP_NOCREDIT = 17221,          // 购买视频使用信用点支付时，信用点不足，且邮票不足(17221)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_VIDEO_OVERTIME = 17222,                                // 视频已过期(17222)(调用13.7.购买信件附件接口)
+    HTTP_LCC_ERR_LETTER_NO_CREDIT_OR_NO_STAMP = 17208,                         // 信用点或者邮票不足(17208):(调用13.4.信件详情接口, 调用13.5.发送信件接口)
+    HTTP_LCC_ERR_EXIST_HANGOUT = 18003,                                        // 当前会员已在hangout直播间（调用8.11.获取当前会员Hangout直播状态接口）
+    
+    /* IOS本地 */
     HTTP_LCC_ERR_FORCED_TO_UPDATE = -22334,                      // 强制更新，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_LOGIN_BY_OTHER_DEVICE = -22335,                 // 其他设备登录，这里时本地返回的，仅用于ios
     HTTP_LCC_ERR_SESSION_REQUEST_WITHOUT_LOGIN = -22336         // 其他设备登录，这里时本地返回的，仅用于ios
@@ -644,6 +720,138 @@ typedef enum {
 // int 转换 ProgramTicketStatus
 inline PrivateMsgType GetIntToPrivateMsgType(int value) {
     return PRIVATEMSGTYPE_BEGIN <= value && value <= PRIVATEMSGTYPE_END ? (PrivateMsgType)value : PRIVATEMSGTYPE_UNKNOW;
+}
+
+// 站点类型定义
+typedef enum {
+    HTTP_OTHER_SITE_ALL = 0,        // All
+    HTTP_OTHER_SITE_CL = 1,        // ChnLove
+    HTTP_OTHER_SITE_IDA = 2,        // iDateAsia
+    HTTP_OTHER_SITE_CD = 4,        // CharmingDate
+    HTTP_OTHER_SITE_LA = 8,        // LatamDate
+    HTTP_OTHER_SITE_AD = 16,        // AsiaDear
+    HTTP_OTHER_SITE_LIVE = 32,   // CharmLive
+    HTTP_OTHER_SITE_PAYMENT = 64, // 支付中心
+    HTTP_OTHER_SITE_UNKNOW = HTTP_OTHER_SITE_ALL,    // Unknow
+} HTTP_OTHER_SITE_TYPE;
+
+// 体重转code/code转体重
+inline int WeightToCode(int value) {
+    return value > 0 ? value - PROFILE_WEIGHT_BEGINVALUE : value;
+}
+inline int CodeToWeight(int code) {
+    return code > 0 ? code + PROFILE_WEIGHT_BEGINVALUE : code;
+}
+// 身高转code/code转身高
+inline int HeightToCode(int value) {
+    return value > 0 ? value - PROFILE_HEIGHT_BEGINVALUE : value;
+}
+inline int CodeToHeight(int code) {
+    return code > 0 ? code + PROFILE_HEIGHT_BEGINVALUE : code;
+}
+// 人种转code/code转人种
+inline int EthnicityToCode(int value) {
+    return value > 0 ? value - PROFILE_ETHNICITY_BEGINVALUE : value;
+}
+inline int CodeToEthnicity(int code) {
+    return code > 0 ? code + PROFILE_ETHNICITY_BEGINVALUE : code;
+}
+
+
+// 登录Sid类型
+typedef enum {
+    LSLOGINSIDTYPE_UNKNOW = 0,    // 未知
+    LSLOGINSIDTYPE_QNLOGIN = 1,       // QN登录成功返回的
+    LSLOGINSIDTYPE_LSLOGIN = 2        // 直播登录成功返回的
+}LSLoginSidType;
+
+// 验证码类型
+typedef enum {
+    LSVALIDATECODETYPE_UNKNOW = 0,    // 未知
+    LSVALIDATECODETYPE_LOGIN = 1,       // login：登录获取
+    LSVALIDATECODETYPE_FINDPW = 2        // 找回密码获取
+}LSValidateCodeType;
+
+// 购买产品类型
+typedef enum {
+    LSORDERTYPE_CREDIT = 0,    // 信用点
+    LSORDERTYPE_MONTHFEE = 5,  // 月费服务
+    LSORDERTYPE_STAMP = 7,      // 邮票
+    LSORDERTYPE_BEGIN = LSORDERTYPE_CREDIT,
+    LSORDERTYPE_END = LSORDERTYPE_STAMP
+}LSOrderType;
+
+// 聊天邀请风控类型
+typedef enum {
+    LSHTTP_LIVECHATINVITE_RISK_NOLIMIT     = 0,    // 不作任何限制
+    LSHTTP_LIVECHATINVITE_RISK_LIMITSEND   = 1,    // 限制发送信息
+    LSHTTP_LIVECHATINVITE_RISK_LIMITREV    = 2,    // 限制接受邀请
+    LSHTTP_LIVECHATINVITE_RISK_LIMITALL    = 3,    // 收发全部限制
+    LSHTTP_LIVECHATINVITE_RISK_BEGIN       = LSHTTP_LIVECHATINVITE_RISK_NOLIMIT,    // 有效范围起始值
+    LSHTTP_LIVECHATINVITE_RISK_END         = LSHTTP_LIVECHATINVITE_RISK_LIMITALL,    // 有效范围结束值
+} LSHttpLiveChatInviteRiskType;
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline LSHttpLiveChatInviteRiskType GetLSHttpliveChatInviteRiskType(int value) {
+    return LSHTTP_LIVECHATINVITE_RISK_BEGIN <= value && value <= LSHTTP_LIVECHATINVITE_RISK_END ? (LSHttpLiveChatInviteRiskType)value : LSHTTP_LIVECHATINVITE_RISK_NOLIMIT;
+}
+
+// 查询信件类型
+typedef enum {
+    LSLETTERTAG_UNKNOW = 0,    // 信用点
+    LSLETTERTAG_ALL = 1,
+    LSLETTERTAG_UNREAD = 2,
+    LSLETTERTAG_UNREPLIED = 3,
+    LSLETTERTAG_REPLIED = 4,
+    LSLETTERTAG_FOLLOW = 5,
+    LSLETTERTAG_BEGIN = LSLETTERTAG_UNKNOW,
+    LSLETTERTAG_END = LSLETTERTAG_FOLLOW,
+}LSLetterTag;
+
+// emf类型
+typedef enum {
+    LSEMFTYPE_UNKNOW = 0,
+    LSEMFTYPE_INBOX = 1,
+    LSEMFTYPE_OUTBOX = 2,
+    LSEMFTYPE_BEGIN = LSEMFTYPE_UNKNOW,
+    LSEMFTYPE_END = LSEMFTYPE_OUTBOX,
+}LSEMFType;
+
+// 付费类型
+typedef enum {
+    LSPAYFEESTATUS_UNPAID = 0,
+    LSPAYFEESTATUS_PAID = 1,
+    LSPAYFEESTATUS_OVERTIME = 2,
+    LSPAYFEESTATUS_BEGIN = LSPAYFEESTATUS_UNPAID,
+    LSPAYFEESTATUS_END = LSPAYFEESTATUS_OVERTIME,
+}LSPayFeeStatus;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline LSPayFeeStatus GetLSPayFeeStatus(int value) {
+    return LSPAYFEESTATUS_BEGIN <= value && value <= LSPAYFEESTATUS_END ? (LSPayFeeStatus)value : LSPAYFEESTATUS_UNPAID;
+}
+
+// 付费类型
+typedef enum {
+    LSLETTERCOMSUMETYPE_UNKNOW = 0,
+    LSLETTERCOMSUMETYPE_CREDIT = 1,
+    LSLETTERCOMSUMETYPE_STAMP = 2,
+    LSLETTERCOMSUMETYPE_BEGIN = LSLETTERCOMSUMETYPE_UNKNOW,
+    LSLETTERCOMSUMETYPE_END = LSLETTERCOMSUMETYPE_STAMP,
+}LSLetterComsumeType;
+
+// 是否有权限发送信件
+typedef enum {
+    LSSENDIMGRISKTYPE_NORMAL = 0,
+    LSSENDIMGRISKTYPE_ONLYFREE = 1,
+    LSSENDIMGRISKTYPE_ONLYPAYMENT = 2,
+    LSSENDIMGRISKTYPE_NOSEND = 3,
+    LSSENDIMGRISKTYPE_BEGIN = LSSENDIMGRISKTYPE_NORMAL,
+    LSSENDIMGRISKTYPE_END = LSSENDIMGRISKTYPE_NOSEND,
+}LSSendImgRiskType;
+
+// int 转换 LIVECHATINVITE_RISK_TYPE
+inline LSSendImgRiskType GetLSSendImgRiskType(int value) {
+    return LSSENDIMGRISKTYPE_BEGIN <= value && value <= LSSENDIMGRISKTYPE_END ? (LSSendImgRiskType)value : LSSENDIMGRISKTYPE_NORMAL;
 }
 
 #endif

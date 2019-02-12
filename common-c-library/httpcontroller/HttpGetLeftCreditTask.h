@@ -10,14 +10,14 @@
 #define HttpGetLeftCreditTask_H_
 
 #include "HttpRequestTask.h"
-#include "HttpLoginProtocol.h"
+#include "item/HttpLeftCreditItem.h"
 
 class HttpGetLeftCreditTask;
 
 class IRequestGetLeftCreditCallback {
 public:
 	virtual ~IRequestGetLeftCreditCallback(){};
-	virtual void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, double credit) = 0;
+	virtual void OnGetLeftCredit(HttpGetLeftCreditTask* task, bool success, int errnum, const string& errmsg, const HttpLeftCreditItem& leftCreditItem) = 0;
 };
       
 class HttpGetLeftCreditTask : public HttpRequestTask {

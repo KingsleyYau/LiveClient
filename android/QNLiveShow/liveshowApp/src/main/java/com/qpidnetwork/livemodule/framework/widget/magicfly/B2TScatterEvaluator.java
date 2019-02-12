@@ -25,7 +25,7 @@ package com.qpidnetwork.livemodule.framework.widget.magicfly;
 
 import android.graphics.Bitmap;
 import android.graphics.PointF;
-import android.util.Log;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 import java.util.Random;
 

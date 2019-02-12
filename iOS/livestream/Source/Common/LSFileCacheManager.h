@@ -35,6 +35,23 @@
 - (NSString *)tmpPath;
 
 /**
+ *  手机信息收集
+ *
+ *  @param fileName 文件名称
+ *
+ *  @return 手机信息目录
+ */
+- (NSString *)phoneInfoWithFileName:(NSString *)fileName;
+
+/**
+ *  语音已读plist
+ *
+ *  @param fileName 文件名称
+ *
+ *  @return 语音已读目录
+ */
+- (NSString *)voiceReadWithFileName:(NSString *)fileName;
+/**
  *  图片缓存目录
  *
  *  @param url 图片URL
@@ -89,6 +106,26 @@
  *  @return 图片缓存路径
  */
 - (NSString *)imageCacheFromPhoneAlbumnPath:(UIImage *)image fileName:(NSString *)fileName;
+
+/**
+ 获取私密照缓存照片图片
+ 
+ @param sendId 发送的的id
+ @param photoId 图片的id
+ @return 图片缓存路径
+ */
+- (NSString *)cachePrivatePhotoImagePath:(NSString *)mailId photoId:(NSString *)photoId;
+
+/**
+ 获取emf视频流图片
+ 
+ @param womanId 女士id
+ @param sendId 发送id
+ @param videoId 视频id
+ @param messageId 消息id
+ @return 图片缓存路径
+ */
+- (NSString *)cacheVideoThumbPhotoPath:(NSString *)womanId sendId:(NSString *)sendId videoId:(NSString *)videoId messageId:(NSString *)messageId;
 
 /**
  *  删除目录

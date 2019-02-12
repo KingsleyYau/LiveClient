@@ -12,17 +12,17 @@ import com.qpidnetwork.livemodule.httprequest.OnGetAudienceDetailInfoCallback;
 import com.qpidnetwork.livemodule.httprequest.OnGetAudienceListCallback;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceBaseInfoItem;
 import com.qpidnetwork.livemodule.httprequest.item.AudienceInfoItem;
-import com.qpidnetwork.livemodule.httprequest.item.GiftItem;
-import com.qpidnetwork.livemodule.httprequest.item.LiveRoomType;
 import com.qpidnetwork.livemodule.httprequest.item.LoginItem;
-import com.qpidnetwork.livemodule.httprequest.item.SendableGiftItem;
 import com.qpidnetwork.livemodule.im.IMInviteLaunchEventListener;
 import com.qpidnetwork.livemodule.im.IMLiveRoomEventListener;
 import com.qpidnetwork.livemodule.im.IMLoginStatusListener;
 import com.qpidnetwork.livemodule.im.IMManager;
 import com.qpidnetwork.livemodule.im.IMOtherEventListener;
+import com.qpidnetwork.livemodule.im.listener.IMAuthorityItem;
 import com.qpidnetwork.livemodule.im.listener.IMClientListener;
+import com.qpidnetwork.livemodule.im.listener.IMInviteErrItem;
 import com.qpidnetwork.livemodule.im.listener.IMInviteListItem;
+import com.qpidnetwork.livemodule.im.listener.IMInviteReplyItem;
 import com.qpidnetwork.livemodule.im.listener.IMLoveLeveItem;
 import com.qpidnetwork.livemodule.im.listener.IMMessageItem;
 import com.qpidnetwork.livemodule.im.listener.IMPackageUpdateItem;
@@ -30,12 +30,11 @@ import com.qpidnetwork.livemodule.im.listener.IMRebateItem;
 import com.qpidnetwork.livemodule.im.listener.IMRoomInItem;
 import com.qpidnetwork.livemodule.liveshow.authorization.LoginManager;
 import com.qpidnetwork.livemodule.liveshow.datacache.file.downloader.IFileDownloadedListener;
-import com.qpidnetwork.livemodule.liveshow.liveroom.gift.GiftRecommandManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.LiveRoomCreditRebateManager;
 import com.qpidnetwork.livemodule.liveshow.liveroom.rebate.OnRoomRebateCountTimeEndListener;
 import com.qpidnetwork.livemodule.liveshow.liveroom.tariffprompt.TariffPromptManager;
-import com.qpidnetwork.livemodule.utils.Log;
 import com.qpidnetwork.livemodule.view.SoftKeyboradListenFrameLayout;
+import com.qpidnetwork.qnbridgemodule.util.Log;
 
 /**
  * Description:直播间接口实现基类
@@ -53,7 +52,9 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         OnRoomRebateCountTimeEndListener {
 
     //数据及管理
+    protected String mRoomInId;           //房间ID,从过渡页传入
     public IMRoomInItem mIMRoomInItem;    //房间信息
+    public IMAuthorityItem mAuthorityItem;     //主播权限
     protected int mRoomAudienceNum = 0;
     protected String roomPhotoUrl = null;
     protected LoginItem loginItem = null;
@@ -70,6 +71,8 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
         initData();
         //后绑定listener，防止未初始化完成收到通知异常
         initIMListener();
+        //
+        getRoomInItem();
     }
 
     /**
@@ -78,9 +81,15 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     private void initData(){
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
-            if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ITEM)){
-                mIMRoomInItem = (IMRoomInItem)bundle.getSerializable(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ITEM);
-                Log.d(TAG,"initData-mIMRoomInItem:"+mIMRoomInItem);
+            if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ID)){
+                mRoomInId = bundle.getString(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ID);
+                Log.d(TAG,"initData-mRoomInId:"+mRoomInId);
+            }
+
+            if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_InviterErr_ITEM)){
+                IMInviteErrItem inviteErrItem = (IMInviteErrItem)bundle.getSerializable(LiveRoomTransitionActivity.LIVEROOM_InviterErr_ITEM);
+                mAuthorityItem = inviteErrItem.priv;
+                Log.d(TAG,"initData-mAuthorityItem:"+mAuthorityItem);
             }
 
             if(bundle.containsKey(LiveRoomTransitionActivity.LIVEROOM_ROOMINFO_ROOMPHOTOURL)){
@@ -109,6 +118,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     protected void onDestroy() {
         super.onDestroy();
         clearIMListener();
+        mIMManager.cleanRoomInItems();
     }
 
     /**
@@ -117,7 +127,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     public void GetCredit(){
         LiveRequestOperator.getInstance().GetAccountBalance(new OnGetAccountBalanceCallback() {
             @Override
-            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance) {
+            public void onGetAccountBalance(boolean isSuccess, int errCode, String errMsg, final double balance, int coupon) {
                 if(isSuccess){
                     mLiveRoomCreditRebateManager.setCredit(balance);
                     //通知信用点刷新
@@ -125,6 +135,16 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
                 }
             }
         });
+    }
+
+    /**
+     * 在IMManager中找出对应房间信息
+     */
+    private void getRoomInItem(){
+        if(!TextUtils.isEmpty(mRoomInId)){
+            mIMRoomInItem = mIMManager.getRoomInItem(mRoomInId);
+            Log.d(TAG,"getRoomInItem:"+ mIMRoomInItem.roomId);
+        }
     }
 
     /**************************** 公共统一处理逻辑  *****************************************/
@@ -213,13 +233,19 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
 
     }
 
-    //------------------用户进入房间、退出房间、直播开始、发送私密邀请、取消私密邀请、邀请响应--------------
     @Override
-    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType,
-                         String errMsg, final IMRoomInItem roomInfo) {
+    public void onProgress(String fileUrl, int progress) {
+
+    }
+
+    //------------------用户进入房间、退出房间、直播开始、发送私密邀请、取消私密邀请、邀请响应--------------
+
+    @Override
+    public void OnRoomIn(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMRoomInItem roomInfo, IMAuthorityItem authorityItem) {
         Log.d(TAG,"OnRoomIn-reqId:"+reqId+" success:"+success+" errType:"+errType+" errMsg:"+roomInfo+" roomInfo:"+roomInfo);
         if(success){
             mIMRoomInItem = roomInfo;
+            mAuthorityItem = authorityItem;
             if(mIMRoomInItem != null){
                 //更新本地信用点/返点及房间人数信息
                 mLiveRoomCreditRebateManager.setCredit(mIMRoomInItem.credit);
@@ -246,12 +272,12 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnGetInviteInfo(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem) {
+    public void OnGetInviteInfo(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMInviteListItem inviteItem, IMAuthorityItem priv) {
 
     }
 
     @Override
-    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId) {
+    public void OnSendImmediatePrivateInvite(int reqId, boolean success, IMClientListener.LCC_ERR_TYPE errType, String errMsg, String invitationId, int timeout, String roomId, IMInviteErrItem errItem) {
 
     }
 
@@ -261,17 +287,15 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvInviteReply(String inviteId, IMClientListener.InviteReplyType replyType,
-                                  String roomId, LiveRoomType roomType, String anchorId,
-                                  String nickName, String avatarImg, String message) {
-        Log.d(TAG,"OnRecvInviteReply-inviteId:"+inviteId +" replyType:"+replyType +" roomId:"+roomId
-                +" roomType:"+roomType +" anchorId:"+anchorId +" nickName:"+nickName +" avatarImg:"+avatarImg
-                +" message:"+message);
+    public void OnRecvInviteReply(IMInviteReplyItem replyItem) {
+        Log.d(TAG,"OnRecvInviteReply-inviteId:"+replyItem.inviteId +" replyType:"+replyItem.replyType +" roomId:"+replyItem.roomId
+                +" roomType:"+replyItem.roomType +" anchorId:"+replyItem.anchorId +" nickName:"+replyItem.nickName +" avatarImg:"+replyItem.avatarImg
+                +" message:"+replyItem.message);
     }
 
     //------------------直播间IM事件监听--------------
     @Override
-    public void OnRecvRoomCloseNotice(String roomId, IMClientListener.LCC_ERR_TYPE errType, String errMsg) {
+    public void OnRecvRoomCloseNotice(String roomId, IMClientListener.LCC_ERR_TYPE errType, String errMsg, IMAuthorityItem privItem) {
         Log.d(TAG,"OnRecvRoomCloseNotice-roomId:"+" errType:"+errType+" errMsg:"+errMsg);
         if(!isCurrentRoom(roomId)){
             return;
@@ -319,8 +343,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err,
-                                              String errMsg) {
+    public void OnRecvLeavingPublicRoomNotice(String roomId, int leftSeconds, IMClientListener.LCC_ERR_TYPE err, String errMsg, IMAuthorityItem privItem) {
         if(!isCurrentRoom(roomId)){
             return;
         }
@@ -328,8 +351,7 @@ public class BaseImplLiveRoomActivity extends BaseFragmentActivity
     }
 
     @Override
-    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err,
-                                        String errMsg, double credit) {
+    public void OnRecvRoomKickoffNotice(String roomId, IMClientListener.LCC_ERR_TYPE err, String errMsg, double credit, IMAuthorityItem privItem) {
         if(!isCurrentRoom(roomId)){
             return;
         }
