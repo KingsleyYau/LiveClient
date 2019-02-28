@@ -21,6 +21,11 @@ function configure_toolchain {
 	$ANDROID_NDK_ROOT/build/tools/make-standalone-toolchain.sh \
 	    --toolchain=$ANDROID_EABI \
 	    --platform=$ANDROID_API --install-dir=$TOOLCHAIN 
+	
+	export EXTRA_CFLAGS=""
+	export EXTRA_LDFLAGS=""
+	export CFLAGS=""
+	export LDFLAGS=""
 }
 
 function configure_toolchain_prefix {
@@ -289,7 +294,7 @@ function build_ffmpeg_so {
 
 # Start Build
 BUILD_ARCH=(arm armv7a arm64 x86 x86_64)
-#BUILD_ARCH=(arm)
+#BUILD_ARCH=(x86_64)
 
 echo "# Starting building..."
 
@@ -297,11 +302,11 @@ for var in ${BUILD_ARCH[@]};do
 	configure_$var
 	show_enviroment
 	configure_toolchain
-	echo "# Starting building for $ARCH_ABI..."
+	echo "# Building start for $ARCH_ABI..."
 	build_x264 || exit 1
 	build_fdk_aac || exit 1
 	build_ffmpeg || exit 1
-	echo "# Starting building for $ARCH_ABI finish..."
+	echo "# Building finish for $ARCH_ABI..."
 done
 
-echo "# Build finish" 
+echo "# Build all finish" 

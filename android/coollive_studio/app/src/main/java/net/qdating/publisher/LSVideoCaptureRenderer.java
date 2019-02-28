@@ -87,9 +87,9 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 
 		cameraFilter = new LSImageInputCameraFilter();
 		cropFilter = new LSImageCropFilter();
-		outputFilter = new LSImageOutputFilter();
 		recordFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
 		outputFlipFilter = new LSImageFlipFilter(LSImageFlipFilter.FlipType.FlipType_Vertical);
+		outputFilter = new LSImageOutputFilter();
 
 		if( useHardEncoder ) {
 			// 硬编码录制滤镜
@@ -137,10 +137,10 @@ public class LSVideoCaptureRenderer implements Renderer, LSImageRecordFilterCall
 				bCustomFilterChange = true;
 
 				if (this.customFilter != null) {
-					outputFlipFilter.setFilter(this.customFilter);
-					this.customFilter.setFilter(outputFilter);
+					cropFilter.setFilter(this.customFilter);
+					this.customFilter.setFilter(recordFlipFilter);
 				} else {
-					outputFlipFilter.setFilter(outputFilter);
+					cropFilter.setFilter(recordFlipFilter);
 				}
 			}
 		}

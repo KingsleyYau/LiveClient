@@ -36,7 +36,8 @@ LOCAL_CPPFLAGS += -fexceptions -fpermissive -frtti
 
 LOCAL_LDLIBS = -llog -lz
 LOCAL_LDFLAGS = -L$(LOCAL_PATH)/libs/$(TARGET_ARCH_ABI)/ \
-                 -ldlib
+                 -ldlib \
+                 -Wl,--gc-sections
 
 LOCAL_STATIC_LIBRARIES += common
 LOCAL_STATIC_LIBRARIES += androidcommon

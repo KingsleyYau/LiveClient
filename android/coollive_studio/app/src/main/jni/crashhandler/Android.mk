@@ -30,4 +30,4 @@ LOCAL_CPPFLAGS := -std=c++11
 REAL_PATH := $(realpath $(LOCAL_PATH))
 LOCAL_SRC_FILES := $(call all-cpp-files-under, $(REAL_PATH))
 
-#include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_SHARED_LIBRARY)
